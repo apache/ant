@@ -15,8 +15,8 @@
     such that this new type or task can be used in the current project.
   </p>
   <p>
-    Tasks are any class that extend org.apache.tools.ant.Task or
-    a class that is adapted to a Task using an adapter class.
+    A Task is any class that extends org.apache.tools.ant.Task or
+    can be adapted as a Task using an adapter class.
   </p>
   <p>
     Data types are things like <a href="../using.html#path">paths</a> or
@@ -25,10 +25,9 @@
     Custom data types usually need custom tasks to put them to good use.
   </p>
   <p>
-    Two attributes are needed to make a definition,
-    the name that identifies this data type uniquely, and the full
-    name of the class (including the packages) that implements this
-    type.
+    Two attributes are needed to make a definition: the name that
+    identifies this data type uniquely, and the full name of the class
+    (including its package name) that implements this type.
   </p>
   <p>
     You can also define a group of definitions at once using the file or
@@ -44,8 +43,7 @@
     
   <p>
     The xml format is described in the
-    <a href="../CoreTypes/antlib.html">Antlib</a>
-    section.
+    <a href="../CoreTypes/antlib.html">Antlib</a> section.
   </p>
 
 <h3>Parameters</h3>
@@ -64,7 +62,7 @@
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the full class name implementing the data type</td>
-    <td valign="top" align="center">Yes, unless file or  resource
+    <td valign="top" align="center">Yes, unless file or resource
       have been specified.</td>
   </tr>
   <tr>
@@ -75,10 +73,10 @@
   <tr>
     <td valign="top">resource</td>
     <td valign="top">
-    Name of the resource to load definitions from.
-    If there is multiple resources of this name in the classpath, and the
-    format is "properties", the first resource will be loaded, otherwise
-    all the resources will be loaded.
+      Name of the resource to load definitions from.
+      If multiple resources by this name are found along the classpath,
+      and the format is "properties", the first resource will be loaded;
+      otherwise all such resources will be loaded.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -88,41 +86,42 @@
       are "properties" or "xml". If the value is "properties" the file/resource
       is a property file contains name to classname pairs. If the value
       is "xml", the file/resource is an xml file/resource structured according
-      to   <a href="../CoreTypes/antlib.html">Antlib</a>.
+      to <a href="../CoreTypes/antlib.html">Antlib</a>.
       The default is "properties" unless the file/resource name ends with
       ".xml", in which case the format attribute will have the value "xml".
-      (introduced in ant1.6)
+      <b>since Ant 1.6</b>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">classpath</td> <td valign="top">the classpath to
-      use when looking up <code>classname</code>.</td> <td
-    align="center" valign="top">No</td>
+      use when looking up <code>classname</code>.</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
     <td valign="top">
-      a reference to a classpath to use when looking up <code>classname</code>.</td>
+      a reference to a classpath to use when looking up <code>classname</code>.
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">loaderRef</td> <td valign="top">the name of the loader that is
-    used to load the class, constructed from the specified classpath. Use this to
-    allow multiple tasks/types to be loaded with the same loader, so they can call
-    each other. ( introduced in ant1.5 )</td>
+    <td valign="top">loaderRef</td>
+    <td valign="top">the name of the loader that is
+      used to load the class, constructed from the specified classpath. Use
+      this to allow multiple tasks/types to be loaded with the same loader,
+      so they can call each other. <b>since Ant 1.5</b> </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">onerror</td>
     <td valign="top">The action to take if there was a failure in defining the
-      type. The values are <i>fail</i> - cause a build exception, <i>report</i>,
-      output a warning, but continue, <i>ignore</i>, do nothing.
-      (introduced in ant1.6)
-      An additional value is <i>failall</i> - causes all behavior of fail but also
-      causes a build exception for the resource or file attribute
-      if the resource or file is not found.
-      (introduced in ant1.7) 
+      type. The values are <i>fail</i>: cause a build exception; <i>report</i>:
+      output a warning, but continue; <i>ignore</i>: do nothing.
+      <b>since Ant 1.6</b>
+      An additional value is <i>failall</i>: cause all behavior of fail,
+      as well as a build exception for the resource or file attribute
+      if the resource or file is not found. <b>since Ant 1.7</b>
       The default is <i>fail</i>.
     </td>
     <td valign="top" align="center">No</td>
@@ -134,9 +133,8 @@
       "org.apache.tools.ant.TypeAdapter". The adapter class will be used
       to wrap the defined class unless the defined class implements/extends
       the class defined by the attribute "adaptto".
-      If "adaptto" is not set,
-      the defined class will always be wrapped.
-      (introduced in ant1.6)
+      If "adaptto" is not set, the defined class will always be wrapped.
+      <b>since Ant 1.6</b>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -146,8 +144,7 @@
       adapter attribute.
       If the defined class does not implement/extend the interface/class
       specified by this attribute, the adaptor class will be used
-      to wrap the class.
-      (introduced in ant1.6)
+      to wrap the class. <b>since Ant 1.6</b>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -155,7 +152,7 @@
     <td valign="top">uri</td>
     <td valign="top">
       The uri that this definition should live in.
-      <em>since Ant1.6</em>
+      <b>since Ant 1.6</b>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -163,7 +160,7 @@
   <h3>Parameters specified as nested elements</h3>
   <h4>classpath</h4>
   <p><code>Typedef</code>'s <i>classpath</i> attribute is a 
-    <a href="../using.html#path">PATH like structure</a> and can also be set
+    <a href="../using.html#path">path-like structure</a> and can also be set
     via a nested <i>classpath</i> element.</p>
 
 <h3>Examples</h3>
@@ -177,7 +174,7 @@
     extends Task and implements <i>org.apache.tools.ant.TypeAdapter</i>,
     and in the execute method invokes <i>run</i> on the proxied object,
     one may use a Runnable class as an Ant task. The following fragment
-    defines  a task called <i>runclock</i>.
+    defines a task called <i>runclock</i>.
   </p>
   <pre>
     &lt;typedef name="runclock"
