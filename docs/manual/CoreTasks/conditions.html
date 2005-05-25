@@ -630,20 +630,20 @@ Probe for the maven repository being reachable using the hostname, ten second ti
   <b>Since Ant 1.6.3</b>
 </p>
 
-Verify a string is of a certain length:
 <pre>
-&lt;length string=&quot; foo &quot; trim="true" length=&quot;3&quot;/&gt;
+&lt;length string=&quot; foo &quot; trim="true" length=&quot;3&quot; /&gt;
 </pre>
+<p>Verify a string is of a certain length.</p>
 
-Verify a file is not empty:
 <pre>
-&lt;length file=&quot;foo&quot; when=&quot;greater&quot; length=&quot;0&quot;/&gt;
+&lt;length file=&quot;foo&quot; when=&quot;greater&quot; length=&quot;0&quot; /&gt;
 </pre>
+<p>Verify that file <i>foo</i> is not empty.</p>
 
 <h4>isfailure</h4>
 
-<p>Test the return code of an executable (see
-<a href="exec.html">&lt;exec&gt;</a>) for failure. <b>Since Ant 1.7</b></p>
+<p>Test the return code of an executable (see the
+<a href="exec.html">Exec</a> task) for failure. <b>Since Ant 1.7</b></p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -658,6 +658,18 @@ Verify a file is not empty:
   </tr>
 </table>
 
+<h4>resourcecount</h4>
+<p>This condition is a facet of the
+  <a href="resourcecount.html">ResourceCount</a> task.
+  It is used to test the size of a 
+  <a href="../CoreTypes/resources.html#collection">resource collection</a>.
+  <b>Since Ant 1.7</b>
+</p>
+
+<pre>
+&lt;resourcecount refid=&quot;myresourcecollection&quot; when=&quot;greater&quot; length=&quot;0&quot; /&gt;
+</pre>
+<p>Verify that a resource collection is not empty.</p>
 <hr>
 <p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>
