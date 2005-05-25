@@ -326,8 +326,7 @@ public class Ant extends Task {
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
             if (thisAntFile != null
-                && newProject.resolveFile(newProject.getProperty("ant.file"))
-                .equals(getProject().resolveFile(thisAntFile))
+                && file.equals(getProject().resolveFile(thisAntFile))
                 && getOwningTarget() != null) {
 
                 if (getOwningTarget().getName().equals("")) {
@@ -342,7 +341,7 @@ public class Ant extends Task {
             }
 
             try {
-                ProjectHelper.configureProject(newProject, new File(antFile));
+                ProjectHelper.configureProject(newProject, file);
             } catch (BuildException ex) {
                 throw ProjectHelper.addLocationToBuildException(
                     ex, getLocation());
