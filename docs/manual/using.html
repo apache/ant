@@ -380,14 +380,16 @@ supports <code>path</code> and
 <pre>
     &lt;classpath path=&quot;${classpath}&quot;/&gt;
 </pre>
-<p>In addition, <a href="CoreTypes/dirset.html">DirSet</a>s,
-<a href="CoreTypes/fileset.html">FileSet</a>s, and
-<a href="CoreTypes/filelist.html">FileList</a>s
-can be specified via nested <code>&lt;dirset&gt;</code>,
-<code>&lt;fileset&gt;</code>, and <code>&lt;filelist&gt;</code>
-elements, respectively. <em>Note</em>: The order in which the files
-building up a FileSet are added to the path-like structure is not
-defined.</p>
+<p>In addition, one or more
+<a href="CoreTypes/resources.html#collection">Resource Collection</a>s
+can be specified as nested elements (these must consist of
+<a href="CoreTypes/resources.html#file">file</a>-type resources only).
+Additionally, it should be noted that although resource collections are
+processed in the order encountered, certain resource collection types
+such as <a href="CoreTypes/fileset.html">fileset</a>,
+<a href="CoreTypes/dirset.html">dirset</a> and
+<a href="CoreTypes/resources.html#files">files</a>
+are undefined in terms of order.</p>
 <pre>
     &lt;classpath&gt;
       &lt;pathelement path=&quot;${classpath}&quot;/&gt;
@@ -412,10 +414,11 @@ the files specified in the referenced FileList.</p>
 <p>If you want to use the same path-like structure for several tasks,
 you can define them with a <code>&lt;path&gt;</code> element at the
 same level as <i>target</i>s, and reference them via their
-<i>id</i> attribute - see <a href="#references">References</a> for an
+<i>id</i> attribute--see <a href="#references">References</a> for an
 example.</p>
 <p>A path-like structure can include a reference to another path-like
-structure via nested <code>&lt;path&gt;</code> elements:</p>
+structure (a path being itself a resource collection)
+via nested <code>&lt;path&gt;</code> elements:</p>
 <pre>
     &lt;path id=&quot;base.path&quot;&gt;
       &lt;pathelement path=&quot;${classpath}&quot;/&gt;
