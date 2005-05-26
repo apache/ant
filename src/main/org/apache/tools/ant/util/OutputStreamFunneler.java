@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Manages a set of <CODE>OutputStream</CODE>s to
+ * Manages a set of <code>OutputStream</code>s to
  * write to a single underlying stream, which is
  * closed only when the last &quot;funnel&quot;
  * has been closed.
@@ -82,20 +82,20 @@ public class OutputStreamFunneler {
     private long timeoutMillis;
 
     /**
-     * Create a new <CODE>OutputStreamFunneler</CODE> for
-     * the specified <CODE>OutputStream</CODE>.
-     * @param out   <CODE>OutputStream</CODE>.
+     * Create a new <code>OutputStreamFunneler</code> for
+     * the specified <code>OutputStream</code>.
+     * @param out   <code>OutputStream</code>.
      */
     public OutputStreamFunneler(OutputStream out) {
         this(out, DEFAULT_TIMEOUT_MILLIS);
     }
 
     /**
-     * Create a new <CODE>OutputStreamFunneler</CODE> for
-     * the specified <CODE>OutputStream</CODE>, with the
+     * Create a new <code>OutputStreamFunneler</code> for
+     * the specified <code>OutputStream</code>, with the
      * specified timeout value.
-     * @param out             <CODE>OutputStream</CODE>.
-     * @param timeoutMillis   <CODE>long</CODE>.
+     * @param out             <code>OutputStream</code>.
+     * @param timeoutMillis   <code>long</code>.
      * @see #setTimeout(long)
      */
     public OutputStreamFunneler(OutputStream out, long timeoutMillis) {
@@ -109,21 +109,21 @@ public class OutputStreamFunneler {
     }
 
     /**
-     * Set the timeout for this <CODE>OutputStreamFunneler</CODE>.
+     * Set the timeout for this <code>OutputStreamFunneler</code>.
      * This is the maximum time that may elapse between the closure
      * of the last &quot;funnel&quot; and the next call to
-     * <CODE>getOutputStream()</CODE> without closing the
+     * <code>getOutputStream()</code> without closing the
      * underlying stream.
-     * @param timeoutMillis   <CODE>long</CODE> timeout value.
+     * @param timeoutMillis   <code>long</code> timeout value.
      */
     public synchronized void setTimeout(long timeoutMillis) {
         this.timeoutMillis = timeoutMillis;
     }
 
     /**
-     * Get a &quot;funnel&quot; <CODE>OutputStream</CODE> instance to
-     * write to this <CODE>OutputStreamFunneler</CODE>'s underlying
-     * <CODE>OutputStream</CODE>.
+     * Get a &quot;funnel&quot; <code>OutputStream</code> instance to
+     * write to this <code>OutputStreamFunneler</code>'s underlying
+     * <code>OutputStream</code>.
      * @return <code>OutputStream</code>.
      * @throws IOException if unable to create the funnel.
      */
