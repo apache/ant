@@ -230,6 +230,9 @@ Other changes:
 
 * Add the echoxml task.
 
+* Try to make subprojects of custom Project subclasses instances of the
+  same type. Bugzilla report 17901.
+
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================
 
