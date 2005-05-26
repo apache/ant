@@ -143,8 +143,7 @@ public class Ant extends Task {
      * Creates a Project instance for the project to call.
      */
     public void init() {
-        newProject = new Project();
-        newProject.setDefaultInputStream(getProject().getDefaultInputStream());
+        newProject = getProject().createSubProject();
         newProject.setJavaVersionProperty();
     }
 
@@ -194,9 +193,6 @@ public class Ant extends Task {
                 log("Ant: Can't set output to " + output);
             }
         }
-
-        getProject().initSubProject(newProject);
-
         // set user-defined properties
         getProject().copyUserProperties(newProject);
 

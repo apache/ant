@@ -235,12 +235,31 @@ public class Project {
     }
 
     /**
-     * Init a sub project--used by taskdefs.Ant .
+     * Create and initialize a subproject. By default the subproject will be of
+     * the same type as its parent. If a no-arg constructor is unavailable, the
+     * <code>Project</code> class will be used.
+     * @return a Project instance configured as a subproject of this Project.
+     * @since Ant 1.7
+     */
+    public Project createSubProject() {
+        Project subProject = null;
+        try {
+            subProject = (Project) (getClass().newInstance());
+        } catch (Exception e) {
+            subProject = new Project();
+        }
+        initSubProject(subProject);
+        return subProject;
+    }
+
+    /**
+     * Initialize a subproject.
      * @param subProject the subproject to initialize.
      */
     public void initSubProject(Project subProject) {
         ComponentHelper.getComponentHelper(subProject)
             .initSubProject(ComponentHelper.getComponentHelper(this));
+        subProject.setDefaultInputStream(getDefaultInputStream());
         subProject.setKeepGoingMode(this.isKeepGoingMode());
         subProject.setExecutor(getExecutor().getSubProjectExecutor());
     }
