@@ -998,6 +998,6 @@ public class Main implements AntMain {
             }
             msg.append(lSep);
         }
-        project.log(msg.toString());
+        project.log(msg.toString(), Project.MSG_WARN);
     }
 }
