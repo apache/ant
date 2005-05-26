@@ -122,7 +122,8 @@ installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
 <h3>Setup</h3>
 <p>
 Before you can run ant there is some additional set up you
-will need to do:</p>
+will need to do unless you are installing the <a href="#jpackage">RPM 
+version from jpackage.org</a>:</p>
 <ul>
 <li>Add the <code>bin</code> directory to your path.</li>
 <li>Set the <code>ANT_HOME</code> environment variable to the
@@ -168,6 +169,42 @@ export PATH=${PATH}:${ANT_HOME}/bin</pre>
 setenv JAVA_HOME /usr/local/jdk-1.2.2
 set path=( $path $ANT_HOME/bin )</pre>
 
+<a name="jpackage"></a>
+<h3>RPM version from jpackage.org</h3>
+<p>
+The <a href="www.jpackage.org">JPackage project</a> distributes an RPM version of Ant.  
+With this version, it is not necessary to set <code> JAVA_HOME </code>or 
+<code> ANT_HOME </code>environment variables and the RPM installer will correctly
+place the Ant executable on your path.  The <code> ANT_HOME </code>environment variable will
+be ignored, if set, when running the JPackage version of Ant.
+</p><p>
+Optional jars for the JPackage version are handled in two ways.  The easiest, and
+best way is to get these external libraries from JPackage if JPackage has them 
+available.  (Note: for each such library, you will have to get both the external 
+package itself (e.g. <code>oro-2.0.8-2jpp.noarch.rpm</code>) and the small library that links 
+ant and the external package (e.g. <code>ant-apache-oro-1.6.2-3jpp.noarch.rpm</code>).
+</p><p>
+However, JPackage does not package proprietary software, and since some of the
+optional packages depend on proprietary jars, they must be handled as follows.  
+This may violate the spirit of JPackage, but it is necessary if you need these proprietary packages.
+For example, suppose you want to install support for starteam, which jpackage does not 
+support:
+<ol>
+<li>Decide where you want to deploy the extra jars.  One option is in <code>$ANT_HOME/lib</code>, 
+which, for JPackage is usually <code>/usr/share/ant/lib</code>.  Another, less messy option
+is to create an <code>.ant/lib</code> subdirectory of your home directory and place your 
+non-jpackage ant jars there, thereby avoiding mixing jpackage
+libraries with non-jpacakge stuff in the same folder.  More information on where Ant finds its libraries is available 
+<a href="http://ant.apache.org/manual/running.html#libs">here</a></li>
+<li>Download a non-jpackage binary distribution from the regular <a href="http://ant.apache.org/bindownload.cgi">Apache Ant site</a></li>
+<li>Unzip or untar the distribution into a temporary directory</li>
+<li>Copy the linking jar, in this case <code>ant-starteam.jar</code>, into the library directory you 
+chose in step 1 above.</li>
+<li>Copy the proprietary jar itself into the same directory.</li>
+</ol>
+Finally, if for some reason you are running on a system with both the JPackage and Apache versions of Ant
+available, if you should want to run the Apache version (which will have to be specified with an absolute file name,
+not found on the path), you should use Ant's <code>--noconfig</code> command-line switch to avoid JPackage's classpath mechanism.
 
 <h3><a name="advanced">Advanced</a></h3>
 
