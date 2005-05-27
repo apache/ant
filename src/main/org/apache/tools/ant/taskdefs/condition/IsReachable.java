@@ -34,22 +34,22 @@ import java.net.UnknownHostException;
  * but they do not get through any well-configured firewall. Echo (port 7) may.
  * <p/>
  * This condition turns unknown host exceptions into false conditions. This is
- * because on a laptop, DNS is one of the first services when the network goes;
- * you are implicitly offline.
+ * because on a laptop, DNS is one of the first services lost when the network
+ * goes; you are implicitly offline.
  * <p/>
  * If a URL is supplied instead of a host, the hostname is extracted and used in
- * the test - all other parts of the URL are discarded.
+ * the test--all other parts of the URL are discarded.
  * <p/>
- * The test may not work through firewalls, that is, something may be reachable
+ * The test may not work through firewalls; that is, something may be reachable
  * using a protocol such as HTTP, while the lower level ICMP packets get dropped
- * on the floor. Similarly, a host may detected as reachable with ICMP, but not
+ * on the floor. Similarly, a host may be detected as reachable with ICMP, but not
  * reachable on other ports (i.e. port 80), because of firewalls.
  * <p/>
- * Requires Java1.5+ to work properly. On Java1.4 and earlier, if a hostname is
- * resolveable, the destination is assumed to be reachable.
+ * Requires Java1.5+ to work properly. On Java1.4 and earlier, if a hostname
+ * can be resolved, the destination is assumed to be reachable.
  *
  * @ant.condition name="isreachable"
- * @since Ant1.7
+ * @since Ant 1.7
  */
 public class IsReachable extends ProjectComponent implements Condition {
 
@@ -72,19 +72,20 @@ public class IsReachable extends ProjectComponent implements Condition {
     /**
      * Unknown host message is seen.
      */
-    public static final String WARN_UNKNOWN_HOST = "Unknown host:";
+    public static final String WARN_UNKNOWN_HOST = "Unknown host: ";
     /**
      * Network error message is seen.
      */
     public static final String ERROR_ON_NETWORK = "network error to ";
     public static final String ERROR_BOTH_TARGETS = "Both url and host have been specified";
-    public static final String MSG_NO_REACHABLE_TEST = "cannot do a proper reachability test on this Java version";
+    public static final String MSG_NO_REACHABLE_TEST
+        = "cannot do a proper reachability test on this Java version";
     public static final String ERROR_BAD_URL = "Bad URL ";
     public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
     private static final String METHOD_NAME = "isReachable";
 
     /**
-     * The host to ping.
+     * Set the host to ping.
      *
      * @param host the host to ping.
      */
@@ -93,16 +94,16 @@ public class IsReachable extends ProjectComponent implements Condition {
     }
 
     /**
-     * A URL to extract the hostname from
+     * Set the URL from which to extract the hostname.
      *
-     * @param url
+     * @param url a URL object.
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     * Timeout for the reachability test -in seconds.
+     * Set the timeout for the reachability test in seconds.
      *
      * @param timeout the timeout in seconds.
      */
@@ -121,10 +122,10 @@ public class IsReachable extends ProjectComponent implements Condition {
         return string == null || string.length() == 0;
     }
 
-    private static Class[] parameterTypes = {Integer.class};
+    private static Class[] parameterTypes = {Integer.TYPE};
 
     /**
-     * Is this condition true?
+     * Evaluate the condition.
      *
      * @return true if the condition is true.
      *
@@ -163,7 +164,7 @@ public class IsReachable extends ProjectComponent implements Condition {
             return false;
 
         }
-        log("Host address =" + address.getHostAddress(),
+        log("Host address = " + address.getHostAddress(),
                 Project.MSG_VERBOSE);
         boolean reachable;
         //Java1.5: reachable = address.isReachable(timeout * 1000);
@@ -188,14 +189,13 @@ public class IsReachable extends ProjectComponent implements Condition {
             }
         } catch (NoSuchMethodException e) {
             //java1.4 or earlier
-            log("Not found: InetAddress."+METHOD_NAME,Project.MSG_VERBOSE);
+            log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
             log(MSG_NO_REACHABLE_TEST);
             reachable = true;
 
         }
 
-        log("host is " + (reachable ? "" : "not") + " reachable",
-                Project.MSG_VERBOSE);
+        log("host is" + (reachable ? "" : " not") + " reachable", Project.MSG_VERBOSE);
         return reachable;
     }
 }
