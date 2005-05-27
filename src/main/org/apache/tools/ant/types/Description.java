@@ -99,9 +99,9 @@ public class Description extends DataType {
                 continue;
             }
             UnknownElement ue = ((UnknownElement) task);
-            StringBuffer descComp = ue.getWrapper().getText();
+            String descComp = ue.getWrapper().getText().toString();
             if (descComp != null) {
-                description.append((Object) descComp);
+                description.append(project.replaceProperties(descComp));
             }
         }
     }
