@@ -29,12 +29,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
 
 /**
- * This class implements a security manager meant for useage by tasks that run inside the
- * ant VM. An examples are the Java Task and JUnitTask.
+ * This class implements a security manager meant for usage by tasks that run inside the
+ * Ant VM. An examples are the Java Task and JUnitTask.
  *
  * The basic functionality is that nothing (except for a base set of permissions) is allowed, unless
  * the permission is granted either explicitly or implicitly.
- * If an permission is granted this can be overruled by explicitly revoking the permission.
+ * If a permission is granted this can be overruled by explicitly revoking the permission.
  *
  * It is not permissible to add permissions (either granted or revoked) while the Security Manager
  * is active (after calling setSecurityManager() but before calling restoreSecurityManager()).
@@ -48,23 +48,26 @@ public class Permissions {
     private java.security.Permissions granted = null;
     private SecurityManager origSm = null;
     private boolean active = false;
-    private boolean delegateToOldSM = false;
+    private boolean delegateToOldSM;
 
     /**
-     * default constructor
+     * Create a set of Permissions.  Equivalent to calling
+     * <code>new Permissions(false)</code>.
      */
     public Permissions() {
+        this(false);
     }
+
     /**
-     * create a new set of permissions
+     * Create a set of permissions.
      * @param delegateToOldSM  if <code>true</code> the old security manager
      * will be used if the permission has not been explicitly granted or revoked
-     * in this instance
-     * if false, it behaves like the default constructor
+     * in this instance.
      */
     public Permissions(boolean delegateToOldSM) {
         this.delegateToOldSM = delegateToOldSM;
     }
+
     /**
      * Adds a permission to be granted.
      * @param perm The Permissions.Permission to be granted.
@@ -88,7 +91,7 @@ public class Permissions {
      * The classloader for the new situation is supposed to be present.
      * @throws BuildException on error
      */
-    public void setSecurityManager() throws BuildException {
+    public synchronized void setSecurityManager() throws BuildException {
         origSm = System.getSecurityManager();
         init();
         System.setSecurityManager(new MySM());
@@ -143,7 +146,7 @@ public class Permissions {
     /**
      * To be used by tasks that just finished executing the parts subject to these permissions.
      */
-    public void restoreSecurityManager() {
+    public synchronized void restoreSecurityManager() {
         active = false;
         System.setSecurityManager(origSm);
     }
@@ -200,6 +203,7 @@ public class Permissions {
                 }
             }
         }
+
         /**
          * throws an exception if this permission is revoked
          * @param perm the permission being checked
@@ -222,14 +226,15 @@ public class Permissions {
         private Set actions;
 
         /**
-         * Sets the class, mandatory.
+         * Set the class, mandatory.
          * @param aClass The class name of the permission.
          */
         public void setClass(String aClass) {
                 className = aClass.trim();
         }
 
-        /** Get the class of the permission
+        /**
+         * Get the class of the permission.
          * @return The class name of the permission.
          */
         public String getClassName() {
@@ -237,7 +242,7 @@ public class Permissions {
         }
 
         /**
-         * Sets the name of the permission.
+         * Set the name of the permission.
          * @param aName The name of the permission.
          */
         public void setName(String aName) {
@@ -246,14 +251,14 @@ public class Permissions {
 
         /**
          * Get the name of the permission.
-         * @return  The name of the permission.
+         * @return The name of the permission.
          */
         public String getName() {
             return name;
         }
 
         /**
-         * Sets the actions.
+         * Set the actions.
          * @param actions The actions of the permission.
          */
         public void setActions(String actions) {
@@ -264,7 +269,7 @@ public class Permissions {
         }
 
         /**
-         * Gets the actions.
+         * Get the actions.
          * @return The actions of the permission.
          */
         public String getActions() {
@@ -272,15 +277,13 @@ public class Permissions {
         }
 
         /**
-         *  Checks if the permission matches in case of a revoked permission.
+         * Learn whether the permission matches in case of a revoked permission.
          * @param perm The permission to check against.
          */
         boolean matches(java.security.Permission perm) {
-
             if (!className.equals(perm.getClass().getName())) {
                 return false;
             }
-
             if (name != null) {
                 if (name.endsWith("*")) {
                     if (!perm.getName().startsWith(name.substring(0, name.length() - 1))) {
@@ -292,7 +295,6 @@ public class Permissions {
                     }
                 }
             }
-
             if (actions != null) {
                 Set as = parseActions(perm.getActions());
                 int size = as.size();
@@ -302,7 +304,6 @@ public class Permissions {
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -321,9 +322,10 @@ public class Permissions {
             }
             return result;
         }
+
         /**
-         * get a string description of the permissions
-         * @return  string description of the permissions
+         * Get a string description of the permissions.
+         * @return string description of the permissions.
          */
         public String toString() {
             return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
