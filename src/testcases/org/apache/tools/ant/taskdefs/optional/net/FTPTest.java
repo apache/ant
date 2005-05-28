@@ -16,25 +16,23 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildLogger;
-import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.taskdefs.optional.net.FTP;
-import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.util.regexp.RegexpMatcher;
-import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-import org.apache.tools.ant.taskdefs.condition.Os;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
 public class FTPTest extends BuildFileTest{
     // keep track of what operating systems are supported here.
@@ -593,6 +591,42 @@ public class FTPTest extends BuildFileTest{
     }
     
     /**
+     * This class enables the use of the log to count the number
+     * of times a message has been emitted.
+     */
+    private class LogCounter extends DefaultLogger {
+        private Map searchMap = new HashMap();
+        private int matchCount;
+
+        public void addLogMessageToSearch(String message) {
+            searchMap.put(message, new Integer(0));
+        }
+        
+        /* 
+         * @param event the build event that is being logged.
+         */
+        public void messageLogged(BuildEvent event) {
+            String message = event.getMessage();
+            Integer mcnt = (Integer) searchMap.get(message);
+            if (null != mcnt) {
+                searchMap.put(message, new Integer(mcnt.intValue() + 1));
+            }
+            super.messageLogged(event);
+        }
+        
+        /**
+         * @return the number of times that the looked for message was sent 
+         * to the log
+         */
+        public int getMatchCount(String message) {
+            Integer mcnt = (Integer) searchMap.get(message);
+            if (null != mcnt) {
+                return mcnt.intValue();
+            }
+            return 0;
+        }
+    }
+    /**
      * Tests the combination of the newer parameter and the 
      * serverTimezoneConfig  parameter in the PUT action.  The default 
      * configuration is an ftp server on localhost which formats 
@@ -619,7 +653,76 @@ public class FTPTest extends BuildFileTest{
         getProject().executeTarget("timed.test.get.older");
         assertEquals(3, log.getCount());
     }
+   
+    
+    /**
+     * Tests that the presence of one of the server config params forces
+     * the system type to Unix if not specified.
+     */
+    public void testConfiguration1() {
+        int[] expectedCounts = {
+                1,1,0,1,0,0
+        };
+        performConfigTest("configuration.1", expectedCounts);
+        
+    }
 
+    /**
+     * Tests the systemTypeKey attribute.
+     */
+    public void testConfiguration2() {
+        int[] expectedCounts = {
+                1,0,0,1,1,0
+        };
+        performConfigTest("configuration.2", expectedCounts);
+        
+    }
+
+    /**
+     * Tests the systemTypeKey attribute with UNIX specified.
+     */
+    public void testConfiguration3() {
+        int[] expectedCounts = {
+                1,0,1,0,0,1
+        };
+        performConfigTest("configuration.3", expectedCounts);
+        
+    }
+    /**
+     * Tests the systemTypeKey attribute.
+     */
+    public void testConfigurationNone() {
+        int[] expectedCounts = {
+                0,0,0,0,0,0
+        };
+        performConfigTest("configuration.none", expectedCounts);
+ 
+    }
+    
+    private void performConfigTest(String target, int[] expectedCounts) {
+        String[] messages = new String[]{
+                "custom configuration",
+                "custom config: system key = default (UNIX)",
+                "custom config: system key = UNIX",
+                "custom config: server time zone ID = " + getProject().getProperty("ftp.server.timezone"),
+                "custom config: system key = WINDOWS",
+                "custom config: default date format = yyyy/MM/dd HH:mm" 
+
+        };
+        LogCounter counter = new LogCounter();
+        for (int i=0; i < messages.length; i++) {
+            counter.addLogMessageToSearch(messages[i]);
+        }
+            
+        getProject().addBuildListener(counter);
+        getProject().executeTarget(target);
+        for (int i=0; i < messages.length; i++) {
+            assertEquals("target "+target+":message "+ i, expectedCounts[i], counter.getMatchCount(messages[i]));
+        }
+        
+    }
+
+    
     /**
      *  this test is inspired by a user reporting that deletions of directories with the ftp task do not work
      */

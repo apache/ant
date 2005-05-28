@@ -101,6 +101,7 @@ public class FTP
     private boolean verbose = false;
     private boolean newerOnly = false;
     private long timeDiffMillis = 0;
+    private long granularityMillis = 0L;
     private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
     private Vector filesets = new Vector();
@@ -114,14 +115,13 @@ public class FTP
     private boolean preserveLastModified = false;
     private String chmod = null;
     private String umask = null;
-    private String systemTypeKey = null;
+    private FTPSystemType systemTypeKey = FTPSystemType.getDefault();
     private String defaultDateFormatConfig = null;
     private String recentDateFormatConfig = null;
     private String serverLanguageCodeConfig = null;
     private String serverTimeZoneConfig = null;
     private String shortMonthNamesConfig = null;
-    private String timestampGranularity = null;
-    private long serverTimestampGranularity = 0L;
+    private Granularity timestampGranularity = Granularity.getDefault();
     private boolean isConfigurationSet = false;
 
     protected static final String[] ACTION_STRS = {
@@ -1268,8 +1268,8 @@ public class FTP
      * the default value of null will be kept.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
-    public void setSystemTypeKey(String systemKey) {
-        if (systemKey != null && !systemKey.equals(""))
+    public void setSystemTypeKey(FTPSystemType systemKey) {
+        if (systemKey != null && !systemKey.getValue().equals(""))
         {
             this.systemTypeKey = systemKey;
             configurationHasBeenSet();
@@ -1361,7 +1361,7 @@ public class FTP
      * @return Returns the systemTypeKey.
      */
     String getSystemTypeKey() {
-        return systemTypeKey;
+        return systemTypeKey.getValue();
     }
     /**
      * @return Returns the defaultDateFormatConfig.
@@ -1396,13 +1396,13 @@ public class FTP
     /**
      * @return Returns the timestampGranularity.
      */
-    String getTimestampGranularity() {
+    Granularity getTimestampGranularity() {
         return timestampGranularity;
     }
     /**
      * @param timestampGranularity The timestampGranularity to set.
      */
-    public void setTimestampGranularity(String timestampGranularity) {
+    public void setTimestampGranularity(Granularity timestampGranularity) {
         if (null == timestampGranularity || "".equals(timestampGranularity)) {
             return;
         }
@@ -1517,29 +1517,8 @@ public class FTP
                 }
             } else {
                 if (this.newerOnly) {
-	                if (action == SEND_FILES) {
-	                    if ("NONE".equalsIgnoreCase(this.timestampGranularity)) 
-	                    {
-	                        this.serverTimestampGranularity = 0L;
-	                    }
-	                    else if ("MINUTE".equalsIgnoreCase(this.timestampGranularity)) 
-	                    {
-	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
-	                    } 
-	                    else 
-	                    {
-	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
-	                    }
-	                } else if (action == GET_FILES) {
-	                    if ("MINUTE".equalsIgnoreCase(this.timestampGranularity)) 
-	                    {
-	                        this.serverTimestampGranularity = GRANULARITY_MINUTE;
- 	                    }
-	                    else 
-	                    {
-	                        this.serverTimestampGranularity = 0L;
-	                    }
-	                }
+                    this.granularityMillis = 
+                        this.timestampGranularity.getMilliseconds(action);
                 }
                 for (int i = 0; i < dsfiles.length; i++) {
                     switch (action) {
@@ -1799,13 +1778,13 @@ public class FTP
         if (this.action == SEND_FILES) {
             return remoteTimestamp 
             		+ this.timeDiffMillis 
-            		+ this.serverTimestampGranularity 
+            		+ this.granularityMillis 
             	>= localTimestamp;
         } else {
             return localTimestamp 
             	>= remoteTimestamp 
                 	+ this.timeDiffMillis
-                	+ this.serverTimestampGranularity;
+                	+ this.granularityMillis;
         }
     }
 
@@ -2299,6 +2278,85 @@ public class FTP
             }
             return SEND_FILES;
         }
+    }
+    /**
+     * represents one of the valid timestamp adjustment values 
+     * recognized by the <code>timestampGranularity</code> attribute.<p>
+
+     * A timestamp adjustment may be used in file transfers for checking 
+     * uptodateness. MINUTE means to add one minute to the server 
+     * timestamp.  This is done because FTP servers typically list 
+     * timestamps HH:mm and client FileSystems typically use HH:mm:ss.
+     * 
+     * The default is to use MINUTE for PUT actions and NONE for GET 
+     * actions, since GETs have the <code>preserveLastModified</code>
+     * option, which takes care of the problem in most use cases where
+     * this level of granularity is an issue.
+     * 
+     */
+    public static class Granularity extends EnumeratedAttribute {
+
+        private static final String[] VALID_GRANULARITIES = {
+                "", "MINUTE", "NONE"
+        };
+         /* 
+         * @return the list of valid Granularity values
+         */
+        public String[] getValues() {
+            // TODO Auto-generated method stub
+            return VALID_GRANULARITIES;
+        }
+        /**
+         * returns the number of milliseconds associated with 
+         * the attribute, which can vary in some cases depending
+         * on the value of the action parameter.
+         * @param action SEND_FILES or GET_FILES
+         * @return the number of milliseconds associated with 
+         * the attribute, in the context of the supplied action
+         */
+        public long getMilliseconds(int action) {
+            String granularityU = getValue().toUpperCase(Locale.US);
+            long granularity = 0L;
+            if ("".equals(granularityU)) {
+                if (action == SEND_FILES) {
+                    return GRANULARITY_MINUTE;                   
+                }
+            } else if ("MINUTE".equals(granularityU)) {
+                return GRANULARITY_MINUTE;
+        	}  
+        	return 0L;
+        }
+        static final Granularity getDefault() {
+            Granularity g = new Granularity();
+            g.setValue("");
+            return g;
+        }
+        
+   }
+   /**
+	 * one of the valid system type keys recognized by the systemTypeKey
+	 * attribute.
+	 */
+    public static class FTPSystemType extends EnumeratedAttribute {
+
+       private static final String[] VALID_SYSTEM_TYPES = {
+	           "", "UNIX", "VMS", "WINDOWS", "OS/2", "OS/400",
+	           "MVS"
+	   };
+       
+       
+	    /* 
+	     * @return the list of valid system types.
+	     */
+	    public String[] getValues() {
+	        return VALID_SYSTEM_TYPES;
+	    }
+	    
+	    static final FTPSystemType getDefault() {
+	        FTPSystemType ftpst = new FTPSystemType();
+	        ftpst.setValue("");
+	        return ftpst;
+	    }
     }
 }
 

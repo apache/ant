@@ -37,14 +37,17 @@ class FTPConfigurator {
      * @return the client as configured.
      */
     static FTPClient configure(FTPClient client, FTP task) {
+        task.log("custom configuration", Project.MSG_VERBOSE);
         FTPClientConfig config;
         String systemTypeKey = task.getSystemTypeKey(); 
-        if (systemTypeKey != null) {
+        if (systemTypeKey != null && !"".equals(systemTypeKey)) {
             config = new FTPClientConfig(systemTypeKey);
             task.log("custom config: system key = " 
                     + systemTypeKey, Project.MSG_VERBOSE);
         } else {
             config = new FTPClientConfig();
+            task.log("custom config: system key = default (UNIX)", 
+                    Project.MSG_VERBOSE);
         }
         
         String defaultDateFormatConfig = task.getDefaultDateFormatConfig();

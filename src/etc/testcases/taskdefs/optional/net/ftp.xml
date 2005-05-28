@@ -14,6 +14,7 @@
     <property name="tstamp.format" value="yyyy-MM-dd HH:mm"/>
     <property name="server.timestamp.granularity.millis" value="60000"/>
     <property name="ftp.server.timezone" value="GMT"/>
+    <property name="ftp.listing.file" value="/dev/null"/>
 
     <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
         <include name="alpha/**"/>
@@ -190,6 +191,60 @@
                 <patternset refid="timed-test-files"/>
             </fileset>
         </ftp>
+    </target>
+    
+    <target name="configuration.1">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.2">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            listing="${ftp.listing.file}"
+            systemTypeKey="WINDOWS"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.3">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            defaultDateFormatConfig="yyyy/MM/dd HH:mm"
+            listing="${ftp.listing.file}"
+            systemTypeKey="UNIX"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.none">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
     </target>
 
 </project>
