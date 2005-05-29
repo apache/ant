@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.DirectoryScanner;
@@ -661,7 +662,7 @@ public class FTPTest extends BuildFileTest{
      */
     public void testConfiguration1() {
         int[] expectedCounts = {
-                1,1,0,1,0,0
+                1,1,0,1,0,0,0
         };
         performConfigTest("configuration.1", expectedCounts);
         
@@ -672,7 +673,7 @@ public class FTPTest extends BuildFileTest{
      */
     public void testConfiguration2() {
         int[] expectedCounts = {
-                1,0,0,1,1,0
+                1,0,0,1,1,0,0
         };
         performConfigTest("configuration.2", expectedCounts);
         
@@ -683,17 +684,31 @@ public class FTPTest extends BuildFileTest{
      */
     public void testConfiguration3() {
         int[] expectedCounts = {
-                1,0,1,0,0,1
+                1,0,1,0,0,1,0
         };
         performConfigTest("configuration.3", expectedCounts);
         
+    }
+    
+    public void testConfigurationLang() {
+        int[] expectedCounts = {
+                1,1,0,0,0,0,1
+        };
+        performConfigTest("configuration.lang.good", expectedCounts);
+        
+        try {
+            performConfigTest("configuration.lang.bad", expectedCounts);
+            fail("BuildException Expected");
+        } catch (Exception bx) {
+            assertTrue(bx instanceof BuildException); 
+        }
     }
     /**
      * Tests the systemTypeKey attribute.
      */
     public void testConfigurationNone() {
         int[] expectedCounts = {
-                0,0,0,0,0,0
+                0,0,0,0,0,0,0
         };
         performConfigTest("configuration.none", expectedCounts);
  
@@ -706,7 +721,8 @@ public class FTPTest extends BuildFileTest{
                 "custom config: system key = UNIX",
                 "custom config: server time zone ID = " + getProject().getProperty("ftp.server.timezone"),
                 "custom config: system key = WINDOWS",
-                "custom config: default date format = yyyy/MM/dd HH:mm" 
+                "custom config: default date format = yyyy/MM/dd HH:mm",
+                "custom config: server language code = de" 
 
         };
         LogCounter counter = new LogCounter();

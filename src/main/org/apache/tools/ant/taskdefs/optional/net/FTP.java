@@ -16,9 +16,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -29,16 +26,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -118,7 +121,7 @@ public class FTP
     private FTPSystemType systemTypeKey = FTPSystemType.getDefault();
     private String defaultDateFormatConfig = null;
     private String recentDateFormatConfig = null;
-    private String serverLanguageCodeConfig = null;
+    private LanguageCode serverLanguageCodeConfig = LanguageCode.getDefault();
     private String serverTimeZoneConfig = null;
     private String shortMonthNamesConfig = null;
     private Granularity timestampGranularity = Granularity.getDefault();
@@ -1316,7 +1319,7 @@ public class FTP
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
-    public void setServerLanguageCodeConfig(String serverLanguageCode) {
+    public void setServerLanguageCodeConfig(LanguageCode serverLanguageCode) {
         if (serverLanguageCode != null && !serverLanguageCode.equals(""))
         {
             this.serverLanguageCodeConfig = serverLanguageCode;
@@ -1379,7 +1382,7 @@ public class FTP
      * @return Returns the serverLanguageCodeConfig.
      */
     String getServerLanguageCodeConfig() {
-        return serverLanguageCodeConfig;
+        return serverLanguageCodeConfig.getValue();
     }
     /**
      * @return Returns the serverTimeZoneConfig.
@@ -2358,5 +2361,37 @@ public class FTP
 	        return ftpst;
 	    }
     }
+    public static class LanguageCode extends EnumeratedAttribute {
+
+        
+        private static final String[] VALID_LANGUAGE_CODES = 
+            getValidLanguageCodes();
+ 	   
+        private static final String[] getValidLanguageCodes() {
+            Collection c = FTPClientConfig.getSupportedLanguageCodes();
+            String[] ret = new String[c.size() + 1];
+            int i = 0;
+            ret[i++] = "";
+            for (Iterator it = c.iterator(); it.hasNext(); i++) {
+                ret[i] = (String) it.next();
+            }
+            return ret; 
+        }
+        
+        
+ 	    /* 
+ 	     * @return the list of valid system types.
+ 	     */
+ 	    public String[] getValues() {
+ 	        return VALID_LANGUAGE_CODES;
+ 	    }
+ 	    
+ 	    static final LanguageCode getDefault() {
+ 	        LanguageCode lc = new LanguageCode();
+ 	        lc.setValue("");
+ 	        return lc;
+ 	    }
+     }
+
 }
 

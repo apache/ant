@@ -234,6 +234,32 @@
              <fileset dir="${tmp.local}"/>
          </ftp>
     </target>
+    <target name="configuration.lang.good">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverLanguageCodeConfig="de"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>    
+    <target name="configuration.lang.bad">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverLanguageCodeConfig="QQ"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>    
     <target name="configuration.none">
         <ftp action="list"
             server="${ftp.host}"
