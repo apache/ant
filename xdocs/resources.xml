@@ -91,7 +91,7 @@
     <section name="Books">
       <p>The most recent books come first</p>
 
-      <subsection name="Ant: The Definitive Guide, 2nd edition">
+      <subsection name="Ant: The Definitive Guide, 2nd edition" isbn="0596006098">
         <p>Published April 2005, and covers Ant release 1.6.1.</p>
 
         <p>This is a complete rewrite of the first edition; this book is
@@ -117,11 +117,11 @@
         </table>
       </subsection>
 
-      <subsection name="Pragmatic Project Automation">
+      <subsection name="Pragmatic Project Automation" isbn="0974514039">
         <p>
 
         How to Build, Deploy, and Monitor Java Applications.
-        Published: July 2004 ISBN:	0-9745140-3-9
+        Published: July 2004 ISBN:        0-9745140-3-9
         </p>
         <p>
           This is not a reference guide to Ant, but a book on how to automate the build process.
@@ -144,7 +144,7 @@
 
 
 
-      <subsection name="Extreme Programming with Ant">
+      <subsection name="Extreme Programming with Ant" isbn="0672325624">
          <p> This book shows how to implement an XP project using Ant 1.5.3, and many other 3rd party tools.  Covers:</p>
             <ul>
                <li>The fundamentals of Ant: concepts, core and optional tasks</li>
@@ -172,7 +172,7 @@
         </table>
       </subsection>
 
-      <subsection name="Ant. Das Java-Build-Tool in der Praxis">
+      <subsection name="Ant. Das Java-Build-Tool in der Praxis" isbn="3827320666">
         <p>A German language book on Ant that covers Ant 1.5.
         This is the original description:</p>
         <source>
@@ -200,7 +200,7 @@
         </table>
       </subsection>
 
-      <subsection name="Java Development with Ant">
+      <subsection name="Java Development with Ant" isbn="1930110588">
         <p>Published 2002. This book covers Ant 1.5, including:</p>
             <ul>
                 <li>The new Ant 1.5 features</li>
@@ -235,7 +235,7 @@
         </table>
       </subsection>
 
-      <subsection name="Ant: The Definitive Guide, 1st edition">
+      <subsection name="Ant: The Definitive Guide, 1st edition" isbn="0596001843">
           <!-- a soon as somebody submits a description, let's add it -->
         <p>Published 2002, Covers Ant release 1.4.1.</p>
         <table class="externals">
@@ -250,7 +250,7 @@
         </table>
       </subsection>
 
-      <subsection name="Ant. Kurz und Gut.">
+      <subsection name="Ant. Kurz und Gut." isbn="3897212412">
 
         <p>A German language short reference for Ant that covers Ant
         1.4.  This is the original description:</p>
@@ -274,7 +274,7 @@
         </table>
       </subsection>
 
-      <subsection name="Java Tools for eXtreme Programming">
+      <subsection name="Java Tools for eXtreme Programming" isbn="047120708X">
         <p>This book covers the following XP subjects:</p>
             <ul>
                 <li>Automated unit and functional testing</li>
