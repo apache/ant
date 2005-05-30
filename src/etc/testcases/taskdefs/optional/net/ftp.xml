@@ -15,6 +15,7 @@
     <property name="server.timestamp.granularity.millis" value="60000"/>
     <property name="ftp.server.timezone" value="GMT"/>
     <property name="ftp.listing.file" value="/dev/null"/>
+    <property name="ftp.retries" value="2"/>
 
     <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
         <include name="alpha/**"/>
@@ -271,6 +272,18 @@
             >
              <fileset dir="${tmp.local}"/>
          </ftp>
+    </target>
+    <target name="ftp-get-with-selector-retryable">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.dir}"
+            retriesAllowed="${ftp.retries}"
+            >
+            <fileset refid="fileset-destination-with-selector"/>
+        </ftp>
     </target>
 
 </project>

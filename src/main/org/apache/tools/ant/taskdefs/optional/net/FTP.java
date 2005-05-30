@@ -51,6 +51,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.RetryHandler;
+import org.apache.tools.ant.util.Retryable;
 
 /**
  * Basic FTP client. Performs the following actions:
@@ -126,6 +128,7 @@ public class FTP
     private String shortMonthNamesConfig = null;
     private Granularity timestampGranularity = Granularity.getDefault();
     private boolean isConfigurationSet = false;
+    private int retriesAllowed = 0;
 
     protected static final String[] ACTION_STRS = {
         "sending",
@@ -1360,6 +1363,37 @@ public class FTP
     }
 
 
+
+    /**
+     * How many times to retry executing FTP command before giving up?
+     * Default is 0 - try once and if failure then give up.
+     * 
+     * @param retriesAllowed number of retries to allow.  -1 means
+     * keep trying forever. "forever" may also be specified as a 
+     * synonym for -1.
+     */
+    public void setRetriesAllowed(String retriesAllowed) {
+        if ("FOREVER".equalsIgnoreCase(retriesAllowed)) {
+            this.retriesAllowed = Retryable.RETRY_FOREVER;
+        } else {
+            try {
+                int retries = Integer.parseInt(retriesAllowed);
+                if (retries < Retryable.RETRY_FOREVER) {
+                    throw new BuildException(
+                            "Invalid value for retriesAllowed attribute: " 
+                            + retriesAllowed);
+
+                }
+                this.retriesAllowed = retries;
+            } catch (NumberFormatException px) {
+                throw new BuildException(
+                        "Invalid value for retriesAllowed attribute: " 
+                        + retriesAllowed);
+             
+            }
+            
+        }
+    }
     /**
      * @return Returns the systemTypeKey.
      */
@@ -1451,6 +1485,12 @@ public class FTP
             }
         }
     }
+    
+    protected void executeRetryable(RetryHandler h, Retryable r, String filename) 
+    throws IOException
+    {
+        h.execute(r, filename);
+    }
 
 
     /**
@@ -1465,7 +1505,7 @@ public class FTP
      * @throws IOException if there is a problem reading a file
      * @throws BuildException if there is a problem in the configuration.
      */
-    protected int transferFiles(FTPClient ftp, FileSet fs)
+    protected int transferFiles(final FTPClient ftp, FileSet fs)
          throws IOException, BuildException {
         DirectoryScanner ds;
         if (action == SEND_FILES) {
@@ -1512,38 +1552,51 @@ public class FTP
                 }
                 bw = new BufferedWriter(new FileWriter(listing));
             }
+            RetryHandler h = new RetryHandler(this.retriesAllowed, this);
             if (action == RM_DIR) {
                 // to remove directories, start by the end of the list
                 // the trunk does not let itself be removed before the leaves
                 for (int i = dsfiles.length - 1; i >= 0; i--) {
-                    rmDir(ftp, dsfiles[i]);
+                    final String dsfile = dsfiles[i];
+                    executeRetryable(h, new Retryable() {
+                        public void execute() throws IOException {
+                            rmDir(ftp, dsfile);
+                        }
+                    }, dsfile);
                 }
             } else {
+                final BufferedWriter fbw = bw;
+                final String fdir = dir;
                 if (this.newerOnly) {
                     this.granularityMillis = 
                         this.timestampGranularity.getMilliseconds(action);
                 }
                 for (int i = 0; i < dsfiles.length; i++) {
-                    switch (action) {
-                        case SEND_FILES:
-                            sendFile(ftp, dir, dsfiles[i]);
-                            break;
-                        case GET_FILES:
-                            getFile(ftp, dir, dsfiles[i]);
-                            break;
-                        case DEL_FILES:
-                            delFile(ftp, dsfiles[i]);
-                            break;
-                        case LIST_FILES:
-                            listFile(ftp, bw, dsfiles[i]);
-                            break;
-                        case CHMOD:
-                            doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfiles[i]));
-                            transferred++;
-                            break;
-                        default:
-                            throw new BuildException("unknown ftp action " + action);
-                    }
+                    final String dsfile = dsfiles[i];
+                    executeRetryable(h, new Retryable() {
+                        public void execute() throws IOException {
+                            switch (action) {
+                                case SEND_FILES:
+                                    sendFile(ftp, fdir, dsfile);
+                                    break;
+                                case GET_FILES:
+                                    getFile(ftp, fdir, dsfile);
+                                    break;
+                                case DEL_FILES:
+                                    delFile(ftp, dsfile);
+                                    break;
+                                case LIST_FILES:
+                                    listFile(ftp, fbw, dsfile);
+                                    break;
+                                case CHMOD:
+                                    doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfile));
+                                    transferred++;
+                                    break;
+                                default:
+                                    throw new BuildException("unknown ftp action " + action);
+                            }
+                        }
+                    }, dsfile);
                 }
             }
         } finally {
@@ -2198,7 +2251,13 @@ public class FTP
             // directory is the directory to create.
 
             if (action == MK_DIR) {
-                makeRemoteDir(ftp, remotedir);
+                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
+                final FTPClient lftp = ftp;
+                executeRetryable(h, new Retryable() {
+                    public void execute() throws IOException {
+                        makeRemoteDir(lftp, remotedir);
+                    }
+                }, remotedir);
             } else {
                 if (remotedir != null) {
                     log("changing the remote directory", Project.MSG_VERBOSE);

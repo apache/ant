@@ -21,17 +21,21 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.RetryHandler;
+import org.apache.tools.ant.util.Retryable;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
@@ -779,6 +783,88 @@ public class FTPTest extends BuildFileTest{
         public String resolveFile(String file) {
             return super.resolveFile(file);
         }
-
     }
+
+
+    public abstract static class myRetryableFTP extends FTP {
+        private final int numberOfFailuresToSimulate;
+        private int simulatedFailuresLeft;
+        
+        protected myRetryableFTP(int numberOfFailuresToSimulate) {
+            this.numberOfFailuresToSimulate = numberOfFailuresToSimulate;
+            this.simulatedFailuresLeft = numberOfFailuresToSimulate;
+        }
+
+        protected void getFile(FTPClient ftp, String dir, String filename)
+                throws IOException, BuildException 
+        {
+            if (this.simulatedFailuresLeft > 0) {
+                this.simulatedFailuresLeft--;
+                throw new IOException("Simulated failure for testing");
+            }
+           super.getFile(ftp, dir, filename);
+        }
+        protected void executeRetryable(RetryHandler h, Retryable r,
+                String filename) throws IOException 
+        {
+            this.simulatedFailuresLeft = this.numberOfFailuresToSimulate;    
+            super.executeRetryable(h, r, filename);
+        }
+    }
+    public static class oneFailureFTP extends myRetryableFTP {
+        public oneFailureFTP() {
+            super(1);
+        }
+    }
+    public static class twoFailureFTP extends myRetryableFTP {
+        public twoFailureFTP() {
+            super(2);
+        }
+    }
+    public static class threeFailureFTP extends myRetryableFTP {
+        public threeFailureFTP() {
+            super(3);
+        }
+    }
+    
+    public static class randomFailureFTP extends myRetryableFTP {
+        public randomFailureFTP() {
+            super(new Random(30000).nextInt());
+        }
+    }
+    public void testGetWithSelectorRetryable1() {
+        getProject().addTaskDefinition("ftp", oneFailureFTP.class);
+        try {
+            getProject().executeTarget("ftp-get-with-selector-retryable");
+        } catch (BuildException bx) {
+            fail("Two retries expected, failed after one.");
+        }
+    }
+    public void testGetWithSelectorRetryable2() {
+        getProject().addTaskDefinition("ftp", twoFailureFTP.class);
+        try {
+            getProject().executeTarget("ftp-get-with-selector-retryable");
+        } catch (BuildException bx) {
+            fail("Two retries expected, failed after two.");
+        }
+    }
+    
+    public void testGetWithSelectorRetryable3() {
+        getProject().addTaskDefinition("ftp", threeFailureFTP.class);
+        try {
+            getProject().executeTarget("ftp-get-with-selector-retryable");
+            fail("Two retries expected, continued after two.");
+        } catch (BuildException bx) {
+        }
+    }
+    public void testGetWithSelectorRetryableRandom() {
+        getProject().addTaskDefinition("ftp", threeFailureFTP.class);
+        try {
+            getProject().setProperty("ftp.retries", "forever");
+            getProject().executeTarget("ftp-get-with-selector-retryable");
+        } catch (BuildException bx) {
+            fail("Retry forever specified, but failed.");
+        }
+    }
+
 }

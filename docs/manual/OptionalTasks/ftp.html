@@ -192,6 +192,14 @@ coming from your ftp server (ls -l on the ftp prompt).
       (<em>Note</em>: Ignored on Java 1.1)</td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
+  <tr>
+    <td valign="top">retriesAllowed</td>
+    <td valign="top">Set the number of retries allowed on an file-transfer operation.
+    If a number > 0 specified, each file transfer can fail up to that
+    many times before the operation is failed.  If -1 or "forever" specified, the
+    operation will keep trying until it succeeds.</td>
+    <td valign="top" align="center">No; defaults to 0</td>
+  </tr>
 
     <tr>
     <td colspan="3">
