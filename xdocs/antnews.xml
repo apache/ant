@@ -25,10 +25,17 @@
   </properties>
 
 <body>
+  <section name="Ant 1.6.5">
+    <h3>June 2, 2005 - Ant 1.6.5 Available</h3>
+    <p>Apache Ant 1.6.5 is now available for <a
+    href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
+    <p>This is a bug fix release.</p>
+  </section>
+
   <section name="Ant 1.6.4">
     <h3>May 19, 2005 - Ant 1.6.4 Available</h3>
     <p>Apache Ant 1.6.4 is now available for <a
-    href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
+    href="http://archive.apache.org/dist/ant/">download</a>.</p>
     <p>This is a bug fix release.</p>
   </section>
 
