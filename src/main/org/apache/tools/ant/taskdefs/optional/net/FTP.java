@@ -26,7 +26,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1817,6 +1819,10 @@ public class FTP
         }
         return null;
     }
+    
+    private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF = 
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
     /**
      * Checks to see if the remote file is current as compared with the local
      * file. Returns true if the target file is up to date.
@@ -1853,16 +1859,30 @@ public class FTP
 
         long remoteTimestamp = files[0].getTimestamp().getTime().getTime();
         long localTimestamp = localFile.lastModified();
+        long adjustedRemoteTimestamp = 
+            remoteTimestamp + this.timeDiffMillis + this.granularityMillis; 
+        
+        StringBuffer msg = new StringBuffer("   [")
+        	.append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
+        	.append("] local");
+        log(msg.toString(), Project.MSG_VERBOSE);
+        
+        msg = new StringBuffer("   [")
+          	.append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
+        	.append("] remote");
+        if (remoteTimestamp != adjustedRemoteTimestamp) {
+            msg.append(" - (raw: ")
+        	.append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
+            .append(")");
+        }
+        log(msg.toString(), Project.MSG_VERBOSE);
+        
+
+        
         if (this.action == SEND_FILES) {
-            return remoteTimestamp 
-            		+ this.timeDiffMillis 
-            		+ this.granularityMillis 
-            	>= localTimestamp;
+            return adjustedRemoteTimestamp >= localTimestamp;
         } else {
-            return localTimestamp 
-            	>= remoteTimestamp 
-                	+ this.timeDiffMillis
-                	+ this.granularityMillis;
+            return localTimestamp >= adjustedRemoteTimestamp;
         }
     }
 
