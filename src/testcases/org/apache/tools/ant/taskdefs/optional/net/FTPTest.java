@@ -866,5 +866,31 @@ public class FTPTest extends BuildFileTest{
             fail("Retry forever specified, but failed.");
         }
     }
+    
+    public void testInitialCommand() {
+        performCommandTest("test-initial-command", new int[] { 1,0 });
+    }
+    public void testSiteAction() {
+        performCommandTest("test-site-action", new int[] { 1,0 });
+    }
+    
+    private void performCommandTest(String target, int[] expectedCounts) {
+        String[] messages = new String[]{
+                "Doing Site Command: umask 222",
+                "Failed to issue Site Command: umask 222",
 
+        };
+        LogCounter counter = new LogCounter();
+        for (int i=0; i < messages.length; i++) {
+            counter.addLogMessageToSearch(messages[i]);
+        }
+            
+        getProject().addBuildListener(counter);
+        getProject().executeTarget(target);
+        for (int i=0; i < messages.length; i++) {
+            assertEquals("target "+target+":message "+ i, expectedCounts[i], counter.getMatchCount(messages[i]));
+        }
+
+    }
+    
 }

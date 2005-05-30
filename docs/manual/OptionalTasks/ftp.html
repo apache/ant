@@ -77,7 +77,7 @@ coming from your ftp server (ls -l on the ftp prompt).
     <td valign="top">the ftp action to perform, defaulting to "send".
                      Currently supports "put", "get",
                      "del", "list", "chmod",
-                     "mkdir" and "rmdir".</td>
+                     "mkdir", "rmdir", and "site".</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -199,6 +199,18 @@ coming from your ftp server (ls -l on the ftp prompt).
     many times before the operation is failed.  If -1 or "forever" specified, the
     operation will keep trying until it succeeds.</td>
     <td valign="top" align="center">No; defaults to 0</td>
+  </tr>
+  <tr>
+    <td valign="top">siteCommand</td>
+    <td valign="top">Set the server-specific SITE command to execute if
+    the <code>action</code> attribute has been specified as <code>"site"</code>.
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">initialSiteCommand</td>
+    <td valign="top">Set a server-specific SITE command to execute immediately
+    after login.
+    <td valign="top" align="center">No</td>
   </tr>
 
     <tr>

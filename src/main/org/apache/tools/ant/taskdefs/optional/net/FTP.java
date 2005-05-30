@@ -84,6 +84,7 @@ public class FTP
     protected static final int MK_DIR = 4;
     protected static final int CHMOD = 5;
     protected static final int RM_DIR = 6;
+    protected static final int SITE_CMD = 7;
     /** return code of ftp - not implemented in commons-net version 1.0 */
     private static final int CODE_521 = 521;
     
@@ -129,6 +130,8 @@ public class FTP
     private Granularity timestampGranularity = Granularity.getDefault();
     private boolean isConfigurationSet = false;
     private int retriesAllowed = 0;
+    private String siteCommand = null;
+    private String initialSiteCommand = null;
 
     protected static final String[] ACTION_STRS = {
         "sending",
@@ -137,7 +140,8 @@ public class FTP
         "listing",
         "making directory",
         "chmod",
-        "removing"
+        "removing",
+        "site"
         };
 
     protected static final String[] COMPLETED_ACTION_STRS = {
@@ -147,7 +151,8 @@ public class FTP
         "listed",
         "created directory",
         "mode changed",
-        "removed"
+        "removed",
+        "site command executed"
         };
 
     protected static final String[] ACTION_TARGET_STRS = {
@@ -157,7 +162,8 @@ public class FTP
         "files",
         "directory",
         "files",
-        "directories"
+        "directories",
+        "site command"
         };
 
 
@@ -1193,7 +1199,7 @@ public class FTP
 
     /**
      * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
-     * "mkdir" and "list".
+     * "mkdir", "chmod", "list", and "site".
      *
      * @deprecated setAction(String) is deprecated and is replaced with
      *      setAction(FTP.Action) to make Ant's Introspection mechanism do the
@@ -1218,7 +1224,7 @@ public class FTP
 
     /**
      * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
-     * "mkdir", "chmod" and "list".
+     * "mkdir", "chmod", "list", and "site".
      *
      * @param action the FTP action to be performed.
      *
@@ -1268,10 +1274,11 @@ public class FTP
     }
 
     /**
+     * Sets the systemTypeKey attribute.
      * Method for setting <code>FTPClientConfig</code> remote system key.
      * 
      * @param systemTypeKey the key to be set - BUT if blank 
-     * the default value of null will be kept.
+     * the default value of null (which signifies "autodetect") will be kept.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(FTPSystemType systemKey) {
@@ -1283,9 +1290,7 @@ public class FTP
     }
 
     /**
-     * Delegate method for
-     * <code>FTPClientConfig.setDefaultDateFormatStr(String)</code>.
-     * 
+     * Sets the defaultDateFormatConfig attribute.
      * @param defaultDateFormatConfig configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
@@ -1299,9 +1304,7 @@ public class FTP
     }
 
     /**
-     * Delegate method for
-     * <code>FTPClientConfig.setRecentDateFormatStr(String)</code>.
-     * 
+     * Sets the recentDateFormatConfig attribute.
      * @param recentDateFormatConfig configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
@@ -1315,9 +1318,7 @@ public class FTP
     }
 
     /**
-     * Delegate method for
-     * <code>FTPClientConfig.setServerLanguageCode(String)</code>.
-     * 
+     * Sets the serverLanguageCode attribute.
      * @param serverLanguageCodeConfig configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
@@ -1331,9 +1332,7 @@ public class FTP
     }
 
     /**
-     * Delegate method for
-     * <code>FTPClientConfig.setServerTimeZoneId(String)</code>.
-     * 
+     * Sets the serverTimeZoneConfig attribute.
      * @param serverTimeZoneConfig configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
@@ -1347,8 +1346,7 @@ public class FTP
     }
 
     /**
-     * Delegate method for
-     * <code>FTPClientConfig.setShortMonthNames(String)</code>.
+     * Sets the shortMonthNamesConfig attribute
      * 
      * @param shortMonthNamesConfig configuration to be set, unless it is
      * null or empty string, in which case ignored.
@@ -1437,6 +1435,7 @@ public class FTP
         return timestampGranularity;
     }
     /**
+     * Sets the timestampGranularity attribute
      * @param timestampGranularity The timestampGranularity to set.
      */
     public void setTimestampGranularity(Granularity timestampGranularity) {
@@ -1445,6 +1444,24 @@ public class FTP
         }
         this.timestampGranularity = timestampGranularity;
      }
+    /**
+     * Sets the siteCommand attribute.  This attribute
+     * names the command that will be executed if the action
+     * is "site".
+     * @param siteCommand The siteCommand to set.
+     */
+    public void setSiteCommand(String siteCommand) {
+        this.siteCommand = siteCommand;
+    }
+    /**
+     * Sets the initialSiteCommand attribute.  This attribute
+     * names a site command that will be executed immediately
+     * after connection. 
+     * @param initialSiteCommand The initialSiteCommand to set.
+     */
+    public void setInitialSiteCommand(String initialCommand) {
+        this.initialSiteCommand = initialCommand;
+    }
     /**
      * Checks to see that all required parameters are set.
      *
@@ -1475,6 +1492,11 @@ public class FTP
             throw new BuildException("chmod attribute must be set for chmod "
                  + "action!");
         }
+        if (action == SITE_CMD && siteCommand == null) {
+            throw new BuildException("sitecommand attribute must be set for site "
+                 + "action!");
+        }
+
         
         if (this.isConfigurationSet) {
             try {
@@ -1486,10 +1508,10 @@ public class FTP
         }
     }
     
-    protected void executeRetryable(RetryHandler h, Retryable r, String filename) 
+    protected void executeRetryable(RetryHandler h, Retryable r, String descr) 
     throws IOException
     {
-        h.execute(r, filename);
+        h.execute(r, descr);
     }
 
 
@@ -2239,12 +2261,33 @@ public class FTP
                          + "mode: " + ftp.getReplyString());
                 }
             }
+            
+            // If an initial command was configured then send it.
+            // Some FTP servers offer different modes of operation,
+            // E.G. switching between a UNIX file system mode and
+            // a legacy file system.
+            if (this.initialSiteCommand != null) {
+                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
+                final FTPClient lftp = ftp;
+                executeRetryable(h, new Retryable() {
+                    public void execute() throws IOException {
+                        doSiteCommand(lftp, FTP.this.initialSiteCommand);
+                    }
+                }, "initial site command: "+ this.initialSiteCommand);
+            }
+
 
             // For a unix ftp server you can set the default mask for all files
             // created.
 
             if (umask != null) {
-                doSiteCommand(ftp, "umask " + umask);
+                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
+                final FTPClient lftp = ftp;
+                executeRetryable(h, new Retryable() {
+                    public void execute() throws IOException {
+                        doSiteCommand(lftp, "umask " + umask);
+                    }
+                }, "umask " + umask);
             }
 
             // If the action is MK_DIR, then the specified remote
@@ -2258,6 +2301,14 @@ public class FTP
                         makeRemoteDir(lftp, remotedir);
                     }
                 }, remotedir);
+            } else if (action == SITE_CMD) {
+                    RetryHandler h = new RetryHandler(this.retriesAllowed, this);
+                    final FTPClient lftp = ftp;
+                    executeRetryable(h, new Retryable() {
+                        public void execute() throws IOException {
+                            doSiteCommand(lftp, FTP.this.siteCommand);
+                        }
+                    }, "Site Command: " + this.siteCommand);
             } else {
                 if (remotedir != null) {
                     log("changing the remote directory", Project.MSG_VERBOSE);
@@ -2301,7 +2352,7 @@ public class FTP
 
         private static final String[] VALID_ACTIONS = {
             "send", "put", "recv", "get", "del", "delete", "list", "mkdir",
-            "chmod", "rmdir"
+            "chmod", "rmdir", "site"
             };
 
 
@@ -2337,6 +2388,8 @@ public class FTP
                 return MK_DIR;
             } else if (actionL.equals("rmdir")) {
                 return RM_DIR;
+            } else if (actionL.equals("site")) {
+                return SITE_CMD;
             }
             return SEND_FILES;
         }
