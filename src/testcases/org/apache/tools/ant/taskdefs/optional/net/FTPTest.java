@@ -829,7 +829,7 @@ public class FTPTest extends BuildFileTest{
     
     public static class randomFailureFTP extends myRetryableFTP {
         public randomFailureFTP() {
-            super(new Random(30000).nextInt());
+            super(new Random().nextInt(Short.MAX_VALUE));
         }
     }
     public void testGetWithSelectorRetryable1() {
@@ -858,7 +858,7 @@ public class FTPTest extends BuildFileTest{
         }
     }
     public void testGetWithSelectorRetryableRandom() {
-        getProject().addTaskDefinition("ftp", threeFailureFTP.class);
+        getProject().addTaskDefinition("ftp", randomFailureFTP.class);
         try {
             getProject().setProperty("ftp.retries", "forever");
             getProject().executeTarget("ftp-get-with-selector-retryable");
