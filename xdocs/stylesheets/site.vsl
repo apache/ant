@@ -34,6 +34,15 @@
 
 ## This is where the common page macro's live
 
+#macro ( isbn $isbn)
+<p><b>Available from:</b><br>
+    <a href="http://www.amazon.com/exec/obidos/tg/detail/-/$!isbn/apachesoftwar-20/" target="_blank">Amazon.com</a>
+  | <a href="http://service.bfast.com/bfast/click?bfmid=2181&amp;bfmtype=book&amp;sourceid=41462544&amp;bfpid=$!isbn" target="_blank">Barnes &amp; Noble</a>
+  | <a href="http://www.booksense.com/product/info.jsp?affiliateId=Apache&amp;isbn=$!isbn" target="_blank">Book Sense</a>
+  | <a href="http://www.powells.com/cgi-bin/biblio?isbn=$!isbn&amp;partner_id=29693" target="_blank">Powells.com</a>
+<br></p>
+#end
+
 #macro ( subsection $subsection)
       <h4 class="subsection">
         <a name="$escape.getText($subsection.getAttributeValue("name"))"></a>
@@ -51,6 +60,10 @@
         #else
           $xmlout.outputString($items)
         #end
+      #end
+      #if ($subsection.getAttributeValue("isbn"))
+        #set ($isbn = $subsection.getAttributeValue("isbn"))
+        #isbn ($isbn)
       #end
 #end
 

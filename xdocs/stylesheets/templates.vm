@@ -1,4 +1,4 @@
-#* 
+#*
  * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  *#
 
 ## This is where the common macro's live
@@ -28,6 +28,10 @@
     #if ($items.getName().equals("tr"))
       #tr ($items)
     #end
+  #end
+  #if ($table.getParent().getAttributeValue("isbn"))
+    #set ($isbn = $table.getParent().getAttributeValue("isbn"))
+    <tr><th>ISBN:</th><td>$!isbn</td></tr>
   #end
   </table>
 #end
