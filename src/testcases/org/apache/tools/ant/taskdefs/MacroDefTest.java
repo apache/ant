@@ -108,6 +108,11 @@ public class MacroDefTest extends BuildFileTest {
             "attribute.description",
             "description is hello world");
     }
+    public void testOverrideDefault() {
+        expectLog(
+            "override.default",
+            "value is new");
+    }
     public void testImplicit() {
         expectLog(
             "implicit", "Before implicitIn implicitAfter implicit");

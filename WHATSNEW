@@ -10,6 +10,9 @@ Fixed bugs:
 * <move> was unable to replace existing files or write into
   existing directories.  Bugzilla report 34962.
 
+* <macrodef> with redefined default values was incorrect. (Fix for
+   31215 had a bug). Bugzilla report 35109.
+
 Changes from Ant 1.6.3 to Ant 1.6.4
 ===================================
 

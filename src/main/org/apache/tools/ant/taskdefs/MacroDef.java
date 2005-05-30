@@ -622,13 +622,14 @@ public class MacroDef extends AntlibDefinition  {
     }
 
     /**
-     * similar equality method for macrodef, ignores project and
+     * same or similar equality method for macrodef, ignores project and
      * runtime info.
      *
      * @param obj an <code>Object</code> value
+     * @param same if true test for sameness, otherwise just similiar
      * @return a <code>boolean</code> value
      */
-    public boolean similar(Object obj) {
+    private boolean sameOrSimilar(Object obj, boolean same) {
         if (obj == this) {
             return true;
         }
@@ -649,7 +650,8 @@ public class MacroDef extends AntlibDefinition  {
         // Allow two macro definitions with the same location
         // to be treated as similar - bugzilla 31215
         if (other.getLocation() != null
-            && other.getLocation().equals(getLocation())) {
+            && other.getLocation().equals(getLocation())
+            && !same) {
             return true;
         }
         if (text == null) {
@@ -683,6 +685,26 @@ public class MacroDef extends AntlibDefinition  {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Similar method for this definition
+     *
+     * @param obj another definition
+     * @return true if the definitions are similar
+     */
+    public boolean similar(Object obj) {
+        return sameOrSimilar(obj, false);
+    }
+
+    /**
+     * Equality method for this definition
+     *
+     * @param obj another definition
+     * @return true if the definitions are the same
+     */
+    public boolean sameDefinition(Object obj) {
+        return sameOrSimilar(obj, true);
     }
 
     /**
@@ -729,7 +751,7 @@ public class MacroDef extends AntlibDefinition  {
                 return false;
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
-            return macroDef.similar(otherDef.macroDef);
+            return macroDef.sameDefinition(otherDef.macroDef);
         }
 
         /**

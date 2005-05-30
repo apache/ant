@@ -220,7 +220,24 @@
         <explicit/>
       </sequential>
     </macrodef>
+  </target>
 
+  <property name="default.override" value="old"/>
+  <macrodef name="simple.override">
+    <attribute name="attr" default="${default.override}"/>
+    <sequential>
+      <echo>value is @{attr}</echo>
+    </sequential>
+  </macrodef>
+
+  <target name="override.default">
+    <antcall target="override.call">
+      <param name="default.override" value="new"/>
+    </antcall>
+  </target>
+
+  <target name="override.call">
+    <simple.override/>
   </target>
 
 </project>
