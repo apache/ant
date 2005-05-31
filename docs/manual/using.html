@@ -245,6 +245,19 @@ if there is a &quot;builddir&quot; property with the value
 &quot;build&quot;, then this could be used in an attribute like this:
 <code>${builddir}/classes</code>.
 This is resolved at run-time as <code>build/classes</code>.</p>
+<p>In the event you should need to include this construct literally
+(i.e. without property substitutions), simply "escape" the '$' character
+by doubling it. To continue the previous example:
+<pre>  &lt;echo&gt;$${builddir}=${builddir}&lt;/echo&gt;</pre>
+will echo this message:
+<pre>  ${builddir}=build/classes</pre></p>
+<p>In order to maintain backward compatibility with older Ant releases,
+a single '$' character encountered apart from a property-like construct
+(including a matched pair of french braces) will be interpreted literally;
+that is, as '$'.  The "correct" way to specify this literal character,
+however, is by using the escaping mechanism unconditionally, so that "$$"
+is obtained by specifying "$$$$".  Mixing the two approaches yields
+unpredictable results, as "$$$" results in "$$".</p>
 
 <h3><a name="built-in-props">Built-in Properties</a></h3>
 <p>Ant provides access to all system properties as if they had been
