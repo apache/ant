@@ -1905,7 +1905,11 @@ public class Javadoc extends Task {
                 String sourceFileName = sf.getFile().getAbsolutePath();
                 if (useExternalFile) {
                     if (javadoc4 && sourceFileName.indexOf(" ") > -1) {
-                        srcListWriter.println("\"" + sourceFileName + "\"");
+                        String name = sourceFileName;
+                        if (File.separatorChar == '\\') {
+                            name = sourceFileName.replace(File.separatorChar, '/');
+                        }
+                        srcListWriter.println("\"" + name + "\"");
                     } else {
                         srcListWriter.println(sourceFileName);
                     }
