@@ -248,7 +248,7 @@ Fixed bugs:
 * <macrodef> with redefined default values was incorrect. (Fix for
    31215 had a bug). Bugzilla report 35109.
 
-* <javadoc> will convert baskslashes to forwardslashes when generating file
+* <javadoc> will convert backslashes to forwardslashes when generating file
   list by useexternalfile. Bugzilla report 27814.
 
 Changes from Ant 1.6.3 to Ant 1.6.4
