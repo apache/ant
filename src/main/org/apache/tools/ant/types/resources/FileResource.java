@@ -40,7 +40,7 @@ public class FileResource extends Resource implements Touchable {
         = Resource.getMagicNumber("null file".getBytes());
 
     private File file;
-    private File base;
+    private File baseDir;
 
     /**
      * Default constructor.
@@ -49,13 +49,13 @@ public class FileResource extends Resource implements Touchable {
     }
 
     /**
-     * Construct a new FileResource using the specified base File and relative name.
-     * @param b      the base File (directory).
+     * Construct a new FileResource using the specified basedir and relative name.
+     * @param b      the basedir as File.
      * @param name   the relative filename.
      */
     public FileResource(File b, String name) {
         setFile(FILE_UTILS.resolveFile(b, name));
-        setBase(b);
+        setBaseDir(b);
     }
 
     /**
@@ -95,21 +95,21 @@ public class FileResource extends Resource implements Touchable {
     }
 
     /**
-     * Set the base File for this FileResource.
-     * @param b the base File.
+     * Set the basedir for this FileResource.
+     * @param b the basedir as File.
      */
-    public void setBase(File b) {
+    public void setBaseDir(File b) {
         checkAttributesAllowed();
-        base = b;
+        baseDir = b;
     }
 
     /**
-     * Return the base to which the name is relative.
-     * @return the base File.
+     * Return the basedir to which the name is relative.
+     * @return the basedir as File.
      */
-    public File getBase() {
+    public File getBaseDir() {
         return isReference()
-            ? ((FileResource) getCheckedRef()).getBase() : base;
+            ? ((FileResource) getCheckedRef()).getBaseDir() : baseDir;
     }
 
     /**
@@ -117,21 +117,21 @@ public class FileResource extends Resource implements Touchable {
      * @param r the Reference to set.
      */
     public void setRefid(Reference r) {
-        if (file != null || base != null) {
+        if (file != null || baseDir != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
     }
 
     /**
-     * Get the name of this FileResource relative to its base, if any.
+     * Get the name of this FileResource relative to its baseDir, if any.
      * @return the name of this resource.
      */
     public String getName() {
         if (isReference()) {
             return ((Resource) getCheckedRef()).getName();
         }
-        File b = getBase();
+        File b = getBaseDir();
         return b == null ? getNotNullFile().getAbsolutePath()
             : FILE_UTILS.removeLeadingPath(b, getNotNullFile());
     }

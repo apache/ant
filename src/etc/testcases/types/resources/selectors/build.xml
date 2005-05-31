@@ -31,7 +31,7 @@
               <resources>
                 <file file="foo" />
                 <resource name="foo" />
-                <file file="foo" base="${basedir}" />
+                <file file="foo" basedir="${basedir}" />
               </resources>
               <rsel:name name="foo" />
             </restrict>
