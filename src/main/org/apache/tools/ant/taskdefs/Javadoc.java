@@ -1965,8 +1965,10 @@ public class Javadoc extends Task {
                 if (useExternalFile) {
                     // XXX what is the following doing? should it run if !javadoc4 && executable != null?
                     if (javadoc4 && sourceFileName.indexOf(" ") > -1) {
-                        String name = 
-                            sourceFileName.replace(File.separatorChar, '/');
+                        String name = sourceFileName;
+                        if (File.separatorChar == '\\') {
+                            name = sourceFileName.replace(File.separatorChar, '/');
+                        }
                         srcListWriter.println("\"" + name + "\"");
                     } else {
                         srcListWriter.println(sourceFileName);
