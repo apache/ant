@@ -63,7 +63,7 @@ can also be declared using a syntax similar to the above syntax.
 However, they can be declared using some simpler syntax also.<P>
 Example:
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
   &lt;/filterchain&gt;
@@ -71,7 +71,7 @@ Example:
 </PRE></BLOCKQUOTE>
 is equivalent to:
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
       &lt;param name=&quot;lines&quot; value=&quot;15&quot;/&gt;
@@ -259,9 +259,9 @@ This filter reads the first few lines from the data supplied to it.
 <P>
 <H4>Example:</H4>
 
-This stores the first 15 lines of the supplied data in the property ${src.file.head}
+This stores the first 15 lines of the supplied data in the property src.file.head
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
       &lt;param name=&quot;lines&quot; value=&quot;15&quot;/&gt;
@@ -272,7 +272,7 @@ This stores the first 15 lines of the supplied data in the property ${src.file.h
 
 Convenience method:
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
   &lt;/filterchain&gt;
@@ -280,9 +280,9 @@ Convenience method:
 </PRE></BLOCKQUOTE>
 
 This stores the first 15 lines, skipping the first 2 lines, of the supplied data
-in the property ${src.file.head}. (Means: lines 3-17)
+in the property src.file.head. (Means: lines 3-17)
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot; skip=&quot;2&quot;/&gt;
   &lt;/filterchain&gt;
@@ -769,10 +769,10 @@ Convenience method:
 
 
 This stores the last 10 lines, skipping the last 2 lines, of the supplied data
-in the property ${src.file.head}. (Means: if supplied data contains 60 lines,
+in the property src.file.head. (Means: if supplied data contains 60 lines,
 lines 49-58 are extracted)
 <BLOCKQUOTE><PRE>
-&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;tailfilter lines=&quot;10&quot; skip=&quot;2&quot;/&gt;
   &lt;/filterchain&gt;
