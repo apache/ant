@@ -71,12 +71,12 @@ Other mirrors: <select name="Preferred">
 
 <section name="Current Release of Ant">
 
-<p>Currently, Apache Ant 1.6.4 is the best available version, see the
+<p>Currently, Apache Ant 1.6.5 is the best available version, see the
 <a href="[preferred]/ant/README.html">release notes</a>.</p>
 
 <div class="warning">
 <div class="label">Note</div>
-<div class="content">Ant 1.6.4 has been released on 19-May-2005 and
+<div class="content">Ant 1.6.5 has been released on 02-Jun-2005 and
 may not be available on all mirrors for a few days.</div>
 </div>
 <br></br>
@@ -88,22 +88,22 @@ may not be available on all mirrors for a few days.</div>
 
 <ul>
 <li><code>.zip</code> archive: 
-<a href="[preferred]/ant/source/apache-ant-1.6.4-src.zip">apache-ant-1.6.4-src.zip</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.zip.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.zip.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.zip.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.6.5-src.zip">apache-ant-1.6.5-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive: 
-<a href="[preferred]/ant/source/apache-ant-1.6.4-src.tar.gz">apache-ant-1.6.4-src.tar.gz</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.gz.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.gz.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.gz.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.6.5-src.tar.gz">apache-ant-1.6.5-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive: 
-<a href="[preferred]/ant/source/apache-ant-1.6.4-src.tar.bz2">apache-ant-1.6.4-src.tar.bz2</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.bz2.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.bz2.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.4-src.tar.bz2.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.6.5-src.tar.bz2">apache-ant-1.6.5-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </section>
 
@@ -147,17 +147,17 @@ using</p>
 
 <p><code>
 % pgpk -a KEYS<br />
-% pgpv apache-ant-1.6.4-src.tar.gz.asc<br />
+% pgpv apache-ant-1.6.5-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % pgp -ka KEYS<br />
-% pgp apache-ant-1.6.4-src.tar.gz.asc<br />
+% pgp apache-ant-1.6.5-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % gpg --import KEYS<br />
-% gpg --verify apache-ant-1.6.4-src.tar.gz.asc
+% gpg --verify apache-ant-1.6.5-src.tar.gz.asc
 </code></p>
 
 <p>Alternatively, you can verify the checksums on the files.  Unix
