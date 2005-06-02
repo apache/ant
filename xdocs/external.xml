@@ -2240,6 +2240,32 @@
         </table>
       </subsection>
 
+      <subsection name="properties2java">
+
+        <p>Properties2Java is an Ant task for automatic conversion of
+        java ".properties" files to ".java" files extending the
+        java.util.ListResourceBundle.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 or above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://properties2java.jayefem.de/">http://properties2java.jayefem.de/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:properties2java@jayefem.de">properties2java@jayefem.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Purge">
 
         <p>Purge deletes all but the most recent few files from a fileset.
