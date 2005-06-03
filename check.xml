@@ -49,28 +49,28 @@
 
   <target name="htmlreport" description="--> generates a html checkstyle report">
     <mkdir dir="${checkstyle.reportdir}"/>
-    <style in="${checkstyle.raw}" style="${stylesheet.html}"
+    <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
            out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
-    </style>
+    </xslt>
   </target>
 
   <target name="textreport" description="--> generates a text checkstyle report">
-    <style in="${checkstyle.raw}" style="${stylesheet.text}"
+    <xslt in="${checkstyle.raw}" style="${stylesheet.text}"
            out="${checkstyle.reportdir}/report.txt">
-    </style>
+    </xslt>
   </target>
-  
+
   <target name="textreport-display" depends="textreport" description="--> generates a text checkstyle report and displays it immediately">
       <loadfile property="report" srcfile="${checkstyle.reportdir}/report.txt"/>
       <echo>${report}</echo>
   </target>
 
   <target name="xdocreport" description="--> generates a xdoc checkstyle report">
-    <style in="${checkstyle.raw}" style="${stylesheet.xdoc}"
+    <xslt in="${checkstyle.raw}" style="${stylesheet.xdoc}"
            out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
-    </style>
+    </xslt>
   </target>
 
   <target name="dumphtml" depends="checkstyle, htmlreport" description="--> runs the checkstyle and generates a html report"/>
