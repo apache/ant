@@ -102,7 +102,7 @@ public class URLResource extends Resource {
     /**
      * Set the resource name with which to expose a Java resource.
      * @param s the Java resource name.
-     * @see java.lang.ClassLoader#getResource()
+     * @see java.lang.ClassLoader#getResource(String)
      */
     public synchronized void setJavaResource(String s) {
         checkAttributesAllowed();

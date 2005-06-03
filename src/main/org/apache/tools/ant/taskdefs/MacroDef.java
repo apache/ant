@@ -473,7 +473,7 @@ public class MacroDef extends AntlibDefinition  {
 
         /**
          * Get the default value for this attibute.
-         * This returns the name "prefix#this classname#<a counter>.
+         * This returns the name "prefix#this classname#<aCounter>".
          * @return the generated name
          */
         public String getDefault() {

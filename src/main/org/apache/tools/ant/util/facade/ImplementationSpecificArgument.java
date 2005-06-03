@@ -45,7 +45,7 @@ public class ImplementationSpecificArgument extends Commandline.Argument {
     /**
      * Return the parts this Argument consists of, if the
      * implementation matches the chosen implementation.
-     * @see Commandline.Argument#getParts()
+     * @see org.apache.tools.ant.types.Commandline.Argument#getParts()
      * @param chosenImpl the implementation to check against.
      * @return the parts if the implemention matches or an zero length
      *         array if not.
