@@ -32,7 +32,7 @@ public class Reverse extends ResourceComparator {
 
     /**
      * Add the ResourceComparator to reverse.
-     * @param nested the ResourceComparator to add.
+     * @param c the ResourceComparator to add.
      */
     public void add(ResourceComparator c) {
         if (nested != null) {

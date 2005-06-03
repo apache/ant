@@ -56,7 +56,7 @@ public class Restrict
 
     /**
      * Add a ResourceSelector.
-     * @param the ResourceSelector to add.
+     * @param s the ResourceSelector to add.
      */
     public synchronized void add(ResourceSelector s) {
         super.add(s);

@@ -239,7 +239,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
 
     /**
-     * @see BuildLogger#setEmacMode(boolean)
+     * @see BuildLogger#setEmacsMode(boolean)
      */
     public void setEmacsMode(boolean emacsMode) {
         this.emacsMode = emacsMode;
@@ -342,4 +342,3 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
 }
-

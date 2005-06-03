@@ -33,9 +33,7 @@ import com.jcraft.jsch.Session;
 
 /**
  * Executes a command on a remote machine via ssh.
- *
- * @created   February 2, 2003
- * @since     Ant 1.6
+ * @since     Ant 1.6 (created February 2, 2003)
  */
 public class SSHExec extends SSHBase {
 
@@ -261,4 +259,3 @@ public class SSHExec extends SSHBase {
     }
 
 }
-

@@ -205,7 +205,7 @@ public class NetCommand {
      *  add an argument to a command line; do nothing if the arg is null or
      *  empty string
      *
-     *@param  argument  The feature to be added to the Argument attribute
+     *@param  arguments  The features to be added to the Argument attribute
      */
     public void addArguments(String[] arguments) {
         if (arguments != null && arguments.length != 0) {
@@ -397,4 +397,3 @@ public class NetCommand {
         return filesOutOfDate;
     }
 }
-

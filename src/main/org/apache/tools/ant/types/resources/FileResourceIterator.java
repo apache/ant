@@ -50,7 +50,7 @@ public class FileResourceIterator implements Iterator {
      * Construct a new FileResourceIterator over the specified filenames,
      * relative to the specified base directory.
      * @param f the base directory of this instance.
-     * @param files the String[] of filenames.
+     * @param s the String[] of filenames.
      */
     public FileResourceIterator(File f, String[] s) {
         this(f);

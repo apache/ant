@@ -21,7 +21,7 @@ import java.util.Vector;
 
 /**
  *
- * @see org.apache.tools.ant.tasks.optional.image.Image
+ * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public abstract class ImageOperation extends DataType {
     protected Vector instructions = new Vector();

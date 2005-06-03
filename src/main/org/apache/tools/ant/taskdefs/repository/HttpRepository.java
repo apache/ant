@@ -33,7 +33,7 @@ import java.net.URL;
  *
  * Although it is biased towards HTTP, because the underlying &lt;get&gt; task
  * supports different protocols, one is actually able to use other protocols
- * such as ftp: or file: to retrieve content. 
+ * such as ftp: or file: to retrieve content.
  *
  * @since Ant1.7
  */
@@ -189,7 +189,7 @@ public abstract class HttpRepository extends Repository {
 
     /**
      * Test for a repository being reachable. This method is called after {@link
-     * #connect(org.apache.tools.ant.taskdefs.repository.GetLibraries)}
+     * #connect(org.apache.tools.ant.taskdefs.repository.Libraries)}
      * is called, before any files are to be retrieved.
      * <p/>
      * If it returns false the repository considers itself offline. Similarly,

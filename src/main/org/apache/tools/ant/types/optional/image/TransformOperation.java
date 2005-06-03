@@ -19,7 +19,7 @@ import javax.media.jai.PlanarImage;
 
 /**
  *
- * @see org.apache.tools.ant.tasks.optional.image.Image
+ * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public abstract class TransformOperation extends ImageOperation {
     public abstract PlanarImage executeTransformOperation(PlanarImage img);

@@ -88,7 +88,7 @@ public class ConcatResourceInputStream extends InputStream {
     /**
      * Set a managing <code>ProjectComponent</code> for
      * this <code>ConcatResourceInputStream</code>.
-     * @param task   the managing <code>Task</code>.
+     * @param pc   the managing <code>ProjectComponent</code>.
      */
     public void setManagingComponent(ProjectComponent pc) {
         this.managingPc = pc;

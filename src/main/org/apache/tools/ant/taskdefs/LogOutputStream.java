@@ -49,7 +49,7 @@ public class LogOutputStream extends LineOrientedOutputStream {
     /**
      * Creates a new instance of this class.
      *
-     * @param task the task for whom to log
+     * @param pc the project component for whom to log
      * @param level loglevel used to log data written to this stream.
      * @since Ant 1.6.3
      */

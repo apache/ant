@@ -393,7 +393,7 @@ public abstract class JDBCTask extends Task {
 
 
     /**
-     * Set the caching attribute. (!)
+     * Set the caching attribute.
      * @param value a <code>boolean</code> value
      */
     public void isCaching(boolean value) {

@@ -123,7 +123,7 @@ public class CovReport extends CovBase {
 
     /** Enumerated type for format attribute. */
     public static class ReportFormat extends EnumeratedAttribute {
-        /** @see EnumeratedAttribute@getValues() */
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[]{"html", "text", "xml"};
         }
@@ -139,7 +139,7 @@ public class CovReport extends CovBase {
 
     /** Enumerated type for type attribute. */
     public static class ReportType extends EnumeratedAttribute {
-        /** @see EnumeratedAttribute@getValues() */
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[]{"executive", "summary", "detailed", "verydetailed"};
         }

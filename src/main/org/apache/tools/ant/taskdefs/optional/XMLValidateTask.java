@@ -318,7 +318,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * handler called on successful file validation.
-     * @param fileProcessed number of files processed. 
+     * @param fileProcessed number of files processed.
      */
     protected void onSuccessfulValidation(int fileProcessed) {
         log(fileProcessed + MESSAGE_FILES_VALIDATED);
@@ -370,7 +370,7 @@ public class XMLValidateTask extends Task {
      * falling back to a default reader if not.
      * If the returned reader is an instance of {@link ParserAdapter} then
      * we have created and wrapped a SAX1 parser.
-     * @returns the new XMLReader.
+     * @return the new XMLReader.
      */
     protected XMLReader createXmlReader() {
         Object reader = null;

@@ -85,7 +85,7 @@ public abstract class Repository extends DataType {
 
     /**
      * Test for a repository being reachable. This method is called after {@link
-     * #connect(GetLibraries)} is called, before any files are to be retrieved.
+     * #connect(Libraries)} is called, before any files are to be retrieved.
      * <p/>
      * If it returns false the repository considers itself offline. Similarly,
      * any ioexception is interpreted as being offline.

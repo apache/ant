@@ -188,8 +188,8 @@ public abstract class DataType extends ProjectComponent {
      * Allow DataTypes outside org.apache.tools.ant.types to indirectly call
      * dieOnCircularReference on nested DataTypes.
      * @param dt the DataType to check.
-     * @param stack the stack of references to check.
-     * @param project the project to use to dereference the references.
+     * @param stk the stack of references to check.
+     * @param p the project to use to dereference the references.
      * @throws BuildException on error.
      * @since Ant 1.7
      */
@@ -212,7 +212,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Performs the check for circular references and returns the
      * referenced object.
-     * @param project the Ant Project instance against which to resolve references.
+     * @param p the Ant Project instance against which to resolve references.
      * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      * @since Ant 1.7

@@ -89,11 +89,11 @@ public class FTP
     protected static final int SITE_CMD = 7;
     /** return code of ftp - not implemented in commons-net version 1.0 */
     private static final int CODE_521 = 521;
-    
+
     /** adjust uptodate calculations where server timestamps are HH:mm and client's
      * are HH:mm:ss */
     private static final long GRANULARITY_MINUTE = 60000L;
-    
+
     /** Default port for FTP */
     public static final int DEFAULT_FTP_PORT = 21;
 
@@ -223,7 +223,7 @@ public class FTP
                 String cwd = ftp.printWorkingDirectory();
                 // always start from the current ftp working dir
                 forceRemoteSensitivityCheck();
-                
+
                 checkIncludePatterns();
                 clearCaches();
                 ftp.changeWorkingDirectory(cwd);
@@ -539,7 +539,7 @@ public class FTP
             }
             return result;
         }
-        
+
         private void forceRemoteSensitivityCheck()
         {
             if (!remoteSensitivityChecked) {
@@ -897,7 +897,7 @@ public class FTP
                 }
                 return traversesSymlinks;
             }
-            
+
             public String toString() {
                 return "AntFtpFile: "+curpwd+"%"+ftpFile;
             }
@@ -1278,8 +1278,8 @@ public class FTP
     /**
      * Sets the systemTypeKey attribute.
      * Method for setting <code>FTPClientConfig</code> remote system key.
-     * 
-     * @param systemTypeKey the key to be set - BUT if blank 
+     *
+     * @param systemKey the key to be set - BUT if blank
      * the default value of null (which signifies "autodetect") will be kept.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1293,7 +1293,7 @@ public class FTP
 
     /**
      * Sets the defaultDateFormatConfig attribute.
-     * @param defaultDateFormatConfig configuration to be set, unless it is
+     * @param defaultDateFormat configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1307,7 +1307,7 @@ public class FTP
 
     /**
      * Sets the recentDateFormatConfig attribute.
-     * @param recentDateFormatConfig configuration to be set, unless it is
+     * @param recentDateFormat configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1321,7 +1321,7 @@ public class FTP
 
     /**
      * Sets the serverLanguageCode attribute.
-     * @param serverLanguageCodeConfig configuration to be set, unless it is
+     * @param serverLanguageCode configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1335,7 +1335,7 @@ public class FTP
 
     /**
      * Sets the serverTimeZoneConfig attribute.
-     * @param serverTimeZoneConfig configuration to be set, unless it is
+     * @param serverTimeZoneId configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1349,8 +1349,8 @@ public class FTP
 
     /**
      * Sets the shortMonthNamesConfig attribute
-     * 
-     * @param shortMonthNamesConfig configuration to be set, unless it is
+     *
+     * @param shortMonthNames configuration to be set, unless it is
      * null or empty string, in which case ignored.
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
@@ -1365,11 +1365,11 @@ public class FTP
 
 
     /**
-     * How many times to retry executing FTP command before giving up?
+     * Defines how many times to retry executing FTP command before giving up.
      * Default is 0 - try once and if failure then give up.
-     * 
+     *
      * @param retriesAllowed number of retries to allow.  -1 means
-     * keep trying forever. "forever" may also be specified as a 
+     * keep trying forever. "forever" may also be specified as a
      * synonym for -1.
      */
     public void setRetriesAllowed(String retriesAllowed) {
@@ -1380,18 +1380,18 @@ public class FTP
                 int retries = Integer.parseInt(retriesAllowed);
                 if (retries < Retryable.RETRY_FOREVER) {
                     throw new BuildException(
-                            "Invalid value for retriesAllowed attribute: " 
+                            "Invalid value for retriesAllowed attribute: "
                             + retriesAllowed);
 
                 }
                 this.retriesAllowed = retries;
             } catch (NumberFormatException px) {
                 throw new BuildException(
-                        "Invalid value for retriesAllowed attribute: " 
+                        "Invalid value for retriesAllowed attribute: "
                         + retriesAllowed);
-             
+
             }
-            
+
         }
     }
     /**
@@ -1458,8 +1458,8 @@ public class FTP
     /**
      * Sets the initialSiteCommand attribute.  This attribute
      * names a site command that will be executed immediately
-     * after connection. 
-     * @param initialSiteCommand The initialSiteCommand to set.
+     * after connection.
+     * @param initialCommand The initialSiteCommand to set.
      */
     public void setInitialSiteCommand(String initialCommand) {
         this.initialSiteCommand = initialCommand;
@@ -1499,7 +1499,7 @@ public class FTP
                  + "action!");
         }
 
-        
+
         if (this.isConfigurationSet) {
             try {
                 Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
@@ -1509,8 +1509,8 @@ public class FTP
             }
         }
     }
-    
-    protected void executeRetryable(RetryHandler h, Retryable r, String descr) 
+
+    protected void executeRetryable(RetryHandler h, Retryable r, String descr)
     throws IOException
     {
         h.execute(r, descr);
@@ -1592,7 +1592,7 @@ public class FTP
                 final BufferedWriter fbw = bw;
                 final String fdir = dir;
                 if (this.newerOnly) {
-                    this.granularityMillis = 
+                    this.granularityMillis =
                         this.timestampGranularity.getMilliseconds(action);
                 }
                 for (int i = 0; i < dsfiles.length; i++) {
@@ -1819,10 +1819,10 @@ public class FTP
         }
         return null;
     }
-    
-    private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF = 
+
+    private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF =
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
+
     /**
      * Checks to see if the remote file is current as compared with the local
      * file. Returns true if the target file is up to date.
@@ -1859,26 +1859,26 @@ public class FTP
 
         long remoteTimestamp = files[0].getTimestamp().getTime().getTime();
         long localTimestamp = localFile.lastModified();
-        long adjustedRemoteTimestamp = 
-            remoteTimestamp + this.timeDiffMillis + this.granularityMillis; 
-        
+        long adjustedRemoteTimestamp =
+            remoteTimestamp + this.timeDiffMillis + this.granularityMillis;
+
         StringBuffer msg = new StringBuffer("   [")
-        	.append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
-        	.append("] local");
+                .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
+                .append("] local");
         log(msg.toString(), Project.MSG_VERBOSE);
-        
+
         msg = new StringBuffer("   [")
-          	.append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
-        	.append("] remote");
+                  .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
+                .append("] remote");
         if (remoteTimestamp != adjustedRemoteTimestamp) {
             msg.append(" - (raw: ")
-        	.append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
+                .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
             .append(")");
         }
         log(msg.toString(), Project.MSG_VERBOSE);
-        
 
-        
+
+
         if (this.action == SEND_FILES) {
             return adjustedRemoteTimestamp >= localTimestamp;
         } else {
@@ -2281,7 +2281,7 @@ public class FTP
                          + "mode: " + ftp.getReplyString());
                 }
             }
-            
+
             // If an initial command was configured then send it.
             // Some FTP servers offer different modes of operation,
             // E.G. switching between a UNIX file system mode and
@@ -2415,26 +2415,26 @@ public class FTP
         }
     }
     /**
-     * represents one of the valid timestamp adjustment values 
+     * represents one of the valid timestamp adjustment values
      * recognized by the <code>timestampGranularity</code> attribute.<p>
 
-     * A timestamp adjustment may be used in file transfers for checking 
-     * uptodateness. MINUTE means to add one minute to the server 
-     * timestamp.  This is done because FTP servers typically list 
+     * A timestamp adjustment may be used in file transfers for checking
+     * uptodateness. MINUTE means to add one minute to the server
+     * timestamp.  This is done because FTP servers typically list
      * timestamps HH:mm and client FileSystems typically use HH:mm:ss.
-     * 
-     * The default is to use MINUTE for PUT actions and NONE for GET 
+     *
+     * The default is to use MINUTE for PUT actions and NONE for GET
      * actions, since GETs have the <code>preserveLastModified</code>
      * option, which takes care of the problem in most use cases where
      * this level of granularity is an issue.
-     * 
+     *
      */
     public static class Granularity extends EnumeratedAttribute {
 
         private static final String[] VALID_GRANULARITIES = {
                 "", "MINUTE", "NONE"
         };
-         /* 
+         /*
          * @return the list of valid Granularity values
          */
         public String[] getValues() {
@@ -2442,11 +2442,11 @@ public class FTP
             return VALID_GRANULARITIES;
         }
         /**
-         * returns the number of milliseconds associated with 
+         * returns the number of milliseconds associated with
          * the attribute, which can vary in some cases depending
          * on the value of the action parameter.
          * @param action SEND_FILES or GET_FILES
-         * @return the number of milliseconds associated with 
+         * @return the number of milliseconds associated with
          * the attribute, in the context of the supplied action
          */
         public long getMilliseconds(int action) {
@@ -2454,51 +2454,51 @@ public class FTP
             long granularity = 0L;
             if ("".equals(granularityU)) {
                 if (action == SEND_FILES) {
-                    return GRANULARITY_MINUTE;                   
+                    return GRANULARITY_MINUTE;
                 }
             } else if ("MINUTE".equals(granularityU)) {
                 return GRANULARITY_MINUTE;
-        	}  
-        	return 0L;
+                }
+                return 0L;
         }
         static final Granularity getDefault() {
             Granularity g = new Granularity();
             g.setValue("");
             return g;
         }
-        
+
    }
    /**
-	 * one of the valid system type keys recognized by the systemTypeKey
-	 * attribute.
-	 */
+         * one of the valid system type keys recognized by the systemTypeKey
+         * attribute.
+         */
     public static class FTPSystemType extends EnumeratedAttribute {
 
        private static final String[] VALID_SYSTEM_TYPES = {
-	           "", "UNIX", "VMS", "WINDOWS", "OS/2", "OS/400",
-	           "MVS"
-	   };
-       
-       
-	    /* 
-	     * @return the list of valid system types.
-	     */
-	    public String[] getValues() {
-	        return VALID_SYSTEM_TYPES;
-	    }
-	    
-	    static final FTPSystemType getDefault() {
-	        FTPSystemType ftpst = new FTPSystemType();
-	        ftpst.setValue("");
-	        return ftpst;
-	    }
+                   "", "UNIX", "VMS", "WINDOWS", "OS/2", "OS/400",
+                   "MVS"
+           };
+
+
+            /*
+             * @return the list of valid system types.
+             */
+            public String[] getValues() {
+                return VALID_SYSTEM_TYPES;
+            }
+
+            static final FTPSystemType getDefault() {
+                FTPSystemType ftpst = new FTPSystemType();
+                ftpst.setValue("");
+                return ftpst;
+            }
     }
     public static class LanguageCode extends EnumeratedAttribute {
 
-        
-        private static final String[] VALID_LANGUAGE_CODES = 
+
+        private static final String[] VALID_LANGUAGE_CODES =
             getValidLanguageCodes();
- 	   
+
         private static final String[] getValidLanguageCodes() {
             Collection c = FTPClientConfig.getSupportedLanguageCodes();
             String[] ret = new String[c.size() + 1];
@@ -2507,23 +2507,22 @@ public class FTP
             for (Iterator it = c.iterator(); it.hasNext(); i++) {
                 ret[i] = (String) it.next();
             }
-            return ret; 
+            return ret;
         }
-        
-        
- 	    /* 
- 	     * @return the list of valid system types.
- 	     */
- 	    public String[] getValues() {
- 	        return VALID_LANGUAGE_CODES;
- 	    }
- 	    
- 	    static final LanguageCode getDefault() {
- 	        LanguageCode lc = new LanguageCode();
- 	        lc.setValue("");
- 	        return lc;
- 	    }
+
+
+             /*
+              * @return the list of valid system types.
+              */
+             public String[] getValues() {
+                 return VALID_LANGUAGE_CODES;
+             }
+
+             static final LanguageCode getDefault() {
+                 LanguageCode lc = new LanguageCode();
+                 lc.setValue("");
+                 return lc;
+             }
      }
 
 }
-

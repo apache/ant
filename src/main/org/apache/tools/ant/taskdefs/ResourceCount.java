@@ -106,7 +106,7 @@ public class ResourceCount extends Task implements Condition {
 
     /**
      * Set the comparison for use as a Condition.
-     * @param w EnumeratedAttribute When.
+     * @param c Comparison (an EnumeratedAttribute) When.
      * @see org.apache.tools.ant.types.Comparison
      */
     public void setWhen(Comparison c) {

@@ -203,7 +203,7 @@ public class WsdlToDotnet extends Task  {
     }
 
     /**
-     * Should errors be machine parseable?
+     * Defines wether errors are machine parseable.
      * Optional, default=true
      *
      * @since Ant 1.7
@@ -558,4 +558,3 @@ public class WsdlToDotnet extends Task  {
     }
 
 }
-
