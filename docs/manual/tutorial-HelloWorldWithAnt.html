@@ -1,7 +1,7 @@
 <html>
 <head>
   <title>Tutorial: Hello World with Ant</title>
-  <meta name="author" content="Jan Mat&egrave;rne">
+  <meta name="author" content="Jan Matèrne">
   <style type="text/css">
   <!--
   .code { background: #EFEFEF; margin-top: }
@@ -24,6 +24,7 @@ to let you see, how to do the easiest steps in Ant.</p>
 <li><a href="#four-steps">Enhance the build file</a></li>
 <li><a href="#enhance">Enhance the build file</a></li>
 <li><a href="#ext-libs">Using external libraries</a></li>
+<li><a href="#resources">Resources</a></li>
 </ul></p>
 
 
@@ -189,12 +190,12 @@ degree (including switching off during usual life (= not development) execution)
 <li>it's from Apache :-)</li>
 </ul></p>
 <p>We store our external libraries in a new directory <tt>lib</tt>. Log4J can be
-<a href="http://www.apache.org/dist/logging/log4j/1.2.9/logging-log4j-1.2.9.zip">downloaded</a> from Logging's Homepage.
+<a href="http://www.apache.org/dist/logging/log4j/1.2.9/logging-log4j-1.2.9.zip">downloaded [1]</a> from Logging's Homepage.
 Create the <tt>lib</tt> directory and extract the log4j-1.2.9.jar into that lib-directory. After that we have to modify
 our java source to use that library and our buildfile so that this library could be accessed during compilation and run.
 </p>
 <p>Working with Log4J is documented inside its manual. Here we use the <i>MyApp</i>-example from the
-<a href="http://logging.apache.org/log4j/docs/manual.html">Short Manual</a>. First we have to modify the java source to
+<a href="http://logging.apache.org/log4j/docs/manual.html">Short Manual [2]</a>. First we have to modify the java source to
 use the logging framework:</p>
 
 <pre class="code">
@@ -306,6 +307,15 @@ finished yet. We should deliver the configuration file, too. So we change the bu
 
 <p>This copies all resources (as long as they haven't the suffix ".java") to the build directory, so we could
 start the application from that directory and these files will included into the jar.</p>
+
+
+<a name="resources"></a>
+<h2>Resources</h2>
+<pre>
+    [1] <a href="http://www.apache.org/dist/logging/log4j/1.2.9/logging-log4j-1.2.9.zip">http://www.apache.org/dist/logging/log4j/1.2.9/logging-log4j-1.2.9.zip</a>
+    [2] <a href="http://logging.apache.org/log4j/docs/manual.html">http://logging.apache.org/log4j/docs/manual.html</a>
+</pre>
+
 
 <hr>
 <p align="center">Copyright &copy; 2005 The Apache Software Foundation. All rights Reserved.</p>
