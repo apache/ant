@@ -38,8 +38,8 @@ public class TarInputStream extends FilterInputStream {
 
     protected boolean debug;
     protected boolean hasHitEOF;
-    protected int entrySize;
-    protected int entryOffset;
+    protected long entrySize;
+    protected long entryOffset;
     protected byte[] readBuf;
     protected TarBuffer buffer;
     protected TarEntry currEntry;
@@ -119,13 +119,18 @@ public class TarInputStream extends FilterInputStream {
      * is left in the entire archive, only in the current entry.
      * This value is determined from the entry's size header field
      * and the amount of data already read from the current entry.
-     *
+     * Integer.MAX_VALUE is returen in case more than Integer.MAX_VALUE
+     * bytes are left in the current entry in the archive.
      *
      * @return The number of available bytes for the current entry.
      * @throws IOException for signature
      */
     public int available() throws IOException {
-        return this.entrySize - this.entryOffset;
+        if (this.entrySize - this.entryOffset > Integer.MAX_VALUE)
+        {
+            return Integer.MAX_VALUE;
+        }
+        return (int) (this.entrySize - this.entryOffset);
     }
 
     /**
@@ -198,7 +203,7 @@ public class TarInputStream extends FilterInputStream {
         }
 
         if (this.currEntry != null) {
-            int numToSkip = this.entrySize - this.entryOffset;
+            long numToSkip = this.entrySize - this.entryOffset;
 
             if (this.debug) {
                 System.err.println("TarInputStream: SKIP currENTRY '"
@@ -249,8 +254,7 @@ public class TarInputStream extends FilterInputStream {
 
             this.entryOffset = 0;
 
-            // REVIEW How do we resolve this discrepancy?!
-            this.entrySize = (int) this.currEntry.getSize();
+            this.entrySize = this.currEntry.getSize();
         }
 
         if (this.currEntry != null && this.currEntry.isGNULongNameEntry()) {
@@ -308,7 +312,7 @@ public class TarInputStream extends FilterInputStream {
         }
 
         if ((numToRead + this.entryOffset) > this.entrySize) {
-            numToRead = (this.entrySize - this.entryOffset);
+            numToRead = (int) (this.entrySize - this.entryOffset);
         }
 
         if (this.readBuf != null) {

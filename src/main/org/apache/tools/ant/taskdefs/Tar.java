@@ -371,6 +371,11 @@ public class Tar extends MatchingTask {
             TarEntry te = new TarEntry(vPath);
             te.setModTime(file.lastModified());
             if (!file.isDirectory()) {
+                if (file.length() > TarConstants.MAXSIZE)
+                {
+                    throw new BuildException("File: " + file + " larger than " +
+                            TarConstants.MAXSIZE + " bytes.");
+                }
                 te.setSize(file.length());
                 te.setMode(tarFileSet.getMode());
             } else {

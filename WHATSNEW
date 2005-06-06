@@ -109,6 +109,9 @@ Fixed bugs:
 
 * <xmlvalidate> and <schemavalidate> create a new parser for every file in a
   fileset, and so validate multiple files properly. Bugzilla Report 32791
+  
+* <tar> / <untar> now accepts files upto 8GB, <tar> gives an error if larger 
+  files are to be included. This is the POSIX size limit.
 
 Other changes:
 --------------

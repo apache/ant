@@ -58,6 +58,11 @@ public interface TarConstants {
      * The length of the size field in a header buffer.
      */
     int    SIZELEN = 12;
+    
+    /**
+     * The maximum size of a file in a tar archive (That's 11 sevens, octal).
+     */
+    long   MAXSIZE = 077777777777L;
 
     /**
      * The length of the magic field in a header buffer.

@@ -43,8 +43,8 @@ public class TarOutputStream extends FilterOutputStream {
     public static final int LONGFILE_GNU = 2;
 
     protected boolean   debug;
-    protected int       currSize;
-    protected int       currBytes;
+    protected long      currSize;
+    protected long      currBytes;
     protected byte[]    oneBuf;
     protected byte[]    recordBuf;
     protected int       assemLen;
@@ -189,7 +189,7 @@ public class TarOutputStream extends FilterOutputStream {
         if (entry.isDirectory()) {
             this.currSize = 0;
         } else {
-            this.currSize = (int) entry.getSize();
+            this.currSize = entry.getSize();
         }
     }
 
