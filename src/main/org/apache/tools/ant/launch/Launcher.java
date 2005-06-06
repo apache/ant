@@ -50,7 +50,8 @@ public class Launcher {
     public static final String ANT_PRIVATELIB = "lib";
 
     /** The location of a per-user library directory */
-    public static final String USER_LIBDIR = ANT_PRIVATEDIR + "/" + ANT_PRIVATELIB;
+    public static final String USER_LIBDIR = 
+        ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB;
 
     /** The startup class that is to be run */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
@@ -206,8 +207,7 @@ public class Launcher {
         URL[] systemJars = Locator.getLocationURLs(antLibDir);
 
         File userLibDir
-            = new File(System.getProperty(USER_HOMEDIR),
-                    ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB);
+            = new File(System.getProperty(USER_HOMEDIR), USER_LIBDIR);
 
         URL[] userJars = noUserLib ? new URL[0] : Locator.getLocationURLs(userLibDir);
 

@@ -802,10 +802,7 @@ public class ComponentHelper  {
         boolean definitions = false;
         boolean antTask;
         String home = System.getProperty(Launcher.USER_HOMEDIR);
-        File libDir = new File(home,
-                Launcher.ANT_PRIVATEDIR +
-                File.separator +
-                Launcher.ANT_PRIVATELIB);
+        File libDir = new File(home, Launcher.USER_LIBDIR);
         //look up the name
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
