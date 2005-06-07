@@ -126,8 +126,7 @@ public class TarInputStream extends FilterInputStream {
      * @throws IOException for signature
      */
     public int available() throws IOException {
-        if (this.entrySize - this.entryOffset > Integer.MAX_VALUE)
-        {
+        if (this.entrySize - this.entryOffset > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
         }
         return (int) (this.entrySize - this.entryOffset);

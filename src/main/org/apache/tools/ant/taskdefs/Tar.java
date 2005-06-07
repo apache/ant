@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -371,8 +371,7 @@ public class Tar extends MatchingTask {
             TarEntry te = new TarEntry(vPath);
             te.setModTime(file.lastModified());
             if (!file.isDirectory()) {
-                if (file.length() > TarConstants.MAXSIZE)
-                {
+                if (file.length() > TarConstants.MAXSIZE) {
                     throw new BuildException("File: " + file + " larger than " +
                             TarConstants.MAXSIZE + " bytes.");
                 }
