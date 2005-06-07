@@ -20,6 +20,7 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
 import org.apache.tools.ant.taskdefs.repository.Libraries;
 import org.apache.tools.ant.taskdefs.repository.Library;
+import org.apache.tools.ant.taskdefs.repository.Maven2Layout;
 
 /**
  * test the test libraries stuff.
@@ -36,7 +37,6 @@ public class LibrariesTest extends BuildFileTest {
     public void setUp() {
         configureProject(TASKDEFS_DIR + "libraries.xml");
     }
-
 
     protected boolean offline() {
         return "true".equals(System.getProperty("offline"));
@@ -103,7 +103,7 @@ public class LibrariesTest extends BuildFileTest {
     /**
      * exec a target if we are online; expect an eception
      * @param target
-     * @param cause caue of the faule
+     * @param cause cause of the fault
      * @param message
      */
     private void expectExceptionIfOnline(String target, String cause,String message) {
@@ -116,7 +116,6 @@ public class LibrariesTest extends BuildFileTest {
 
     public void testRenaming() {
         execIfOnline("testRenaming");
-
     }
 
     public void testOverwrite() {
@@ -206,5 +205,21 @@ public class LibrariesTest extends BuildFileTest {
 
     public void testFlatten() {
         execIfOnline("testFlatten");
+    }
+
+    public void testMavenNaming() {
+        Library lib=new Library();
+        lib.setProject("unknown");
+        lib.setArchive("test");
+        lib.setVersion("3.4");
+        assertEquals(".jar",lib.getSuffix());
+        assertNull("lib.getClassifier()!=null", lib.getClassifier());
+        String shortname=Maven2Layout.createFilename(lib);
+        assertEquals("test-3.4.jar",shortname);
+        //add a classifierand test that works
+        lib.setClassifier("src");
+        assertNotNull("lib.getClassifier()==null", lib.getClassifier());
+        shortname = Maven2Layout.createFilename(lib);
+        assertEquals("test-3.4-src.jar", shortname);
     }
 }
