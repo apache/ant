@@ -670,7 +670,7 @@ public class XMLCatalog extends DataType
             }
         }
 
-        if (url != null) {
+        if (url != null && url.getProtocol().equals("file")) {
             String fileName = FILE_UTILS.fromURI(url.toString());
             if (fileName != null) {
                 log("fileName " + fileName, Project.MSG_DEBUG);
