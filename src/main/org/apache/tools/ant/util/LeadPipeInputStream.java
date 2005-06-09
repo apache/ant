@@ -26,22 +26,22 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
 /**
- * Special <CODE>PipedInputStream</CODE> that will not die
- * when the writing <CODE>Thread</CODE> is no longer alive.
+ * Special <code>PipedInputStream</code> that will not die
+ * when the writing <code>Thread</code> is no longer alive.
  * @since Ant 1.6.2
  */
 public class LeadPipeInputStream extends PipedInputStream {
     private ProjectComponent managingPc;
 
     /**
-     * Construct a new <CODE>LeadPipeInputStream</CODE>.
+     * Construct a new <code>LeadPipeInputStream</code>.
      */
     public LeadPipeInputStream() {
         super();
     }
 
     /**
-     * Construct a new <CODE>LeadPipeInputStream</CODE>
+     * Construct a new <code>LeadPipeInputStream</code>
      * with the specified buffer size.
      * @param size   the size of the circular buffer.
      */
@@ -51,9 +51,9 @@ public class LeadPipeInputStream extends PipedInputStream {
     }
 
     /**
-     * Construct a new <CODE>LeadPipeInputStream</CODE> to pull
-     * from the specified <CODE>PipedOutputStream</CODE>.
-     * @param src   the <CODE>PipedOutputStream</CODE> source.
+     * Construct a new <code>LeadPipeInputStream</code> to pull
+     * from the specified <code>PipedOutputStream</code>.
+     * @param src   the <code>PipedOutputStream</code> source.
      * @throws IOException if unable to construct the stream.
      */
     public LeadPipeInputStream(PipedOutputStream src) throws IOException {
@@ -61,10 +61,10 @@ public class LeadPipeInputStream extends PipedInputStream {
     }
 
     /**
-     * Construct a new <CODE>LeadPipeInputStream</CODE> to pull
-     * from the specified <CODE>PipedOutputStream</CODE>, using a
+     * Construct a new <code>LeadPipeInputStream</code> to pull
+     * from the specified <code>PipedOutputStream</code>, using a
      * circular buffer of the specified size.
-     * @param src    the <CODE>PipedOutputStream</CODE> source.
+     * @param src    the <code>PipedOutputStream</code> source.
      * @param size   the size of the circular buffer.
      */
     public LeadPipeInputStream(PipedOutputStream src, int size) throws IOException {
@@ -114,18 +114,18 @@ public class LeadPipeInputStream extends PipedInputStream {
     }
 
     /**
-     * Set a managing <CODE>Task</CODE> for
-     * this <CODE>LeadPipeInputStream</CODE>.
-     * @param task   the managing <CODE>Task</CODE>.
+     * Set a managing <code>Task</code> for
+     * this <code>LeadPipeInputStream</code>.
+     * @param task   the managing <code>Task</code>.
      */
     public void setManagingTask(Task task) {
         setManagingComponent(task);
     }
 
     /**
-     * Set a managing <CODE>ProjectComponent</CODE> for
-     * this <CODE>LeadPipeInputStream</CODE>.
-     * @param pc   the managing <CODE>ProjectComponent</CODE>.
+     * Set a managing <code>ProjectComponent</code> for
+     * this <code>LeadPipeInputStream</code>.
+     * @param pc   the managing <code>ProjectComponent</code>.
      */
     public void setManagingComponent(ProjectComponent pc) {
         this.managingPc = pc;
@@ -133,8 +133,8 @@ public class LeadPipeInputStream extends PipedInputStream {
 
     /**
      * Log a message with the specified logging level.
-     * @param message    the <CODE>String</CODE> message.
-     * @param loglevel   the <CODE>int</CODE> logging level.
+     * @param message    the <code>String</code> message.
+     * @param loglevel   the <code>int</code> logging level.
      */
     public void log(String message, int loglevel) {
         if (managingPc != null) {
