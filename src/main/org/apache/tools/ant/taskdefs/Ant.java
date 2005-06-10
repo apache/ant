@@ -36,6 +36,8 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Main;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -117,8 +119,6 @@ public class Ant extends Task {
     public Ant(Task owner) {
         bindToOwner(owner);
     }
-
-
 
 
     /**
@@ -297,7 +297,7 @@ public class Ant extends Task {
                 newProject.setBaseDir(dir);
                 if (savedDir != null) {
                     // has been set explicitly
-                    newProject.setInheritedProperty("basedir" ,
+                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR ,
                                                     dir.getAbsolutePath());
                 }
             } else {
@@ -307,7 +307,7 @@ public class Ant extends Task {
             overrideProperties();
 
             if (antFile == null) {
-                antFile = "build.xml";
+                antFile = Main.DEFAULT_BUILD_FILENAME;
             }
 
             File file = FILE_UTILS.resolveFile(dir, antFile);
@@ -316,9 +316,9 @@ public class Ant extends Task {
             log("calling target(s) "
                 + ((locals.size() > 0) ? locals.toString() : "[default]")
                 + " in build file " + antFile, Project.MSG_VERBOSE);
-            newProject.setUserProperty("ant.file" , antFile);
+            newProject.setUserProperty(MagicNames.ANT_FILE , antFile);
 
-            String thisAntFile = getProject().getProperty("ant.file");
+            String thisAntFile = getProject().getProperty(MagicNames.ANT_FILE);
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
             if (thisAntFile != null
@@ -350,8 +350,8 @@ public class Ant extends Task {
                 }
             }
 
-            if (newProject.getProperty("ant.file")
-                .equals(getProject().getProperty("ant.file"))
+            if (newProject.getProperty(MagicNames.ANT_FILE)
+                .equals(getProject().getProperty(MagicNames.ANT_FILE))
                 && getOwningTarget() != null) {
 
                 String owningTargetName = getOwningTarget().getName();
@@ -558,7 +558,7 @@ public class Ant extends Task {
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
             String key = e.nextElement().toString();
-            if ("basedir".equals(key) || "ant.file".equals(key)) {
+            if (MagicNames.PROJECT_BASEDIR.equals(key) || MagicNames.ANT_FILE.equals(key)) {
                 // basedir and ant.file get special treatment in execute()
                 continue;
             }

@@ -46,7 +46,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Main implements AntMain {
 
-    /** The default build file name. */
+    /** The default build file name. {@value} */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";
 
     /** Our current message output status. Follows Project.MSG_XXX. */
@@ -628,7 +628,7 @@ public class Main implements AntMain {
                 }
 
                 project.init();
-                project.setUserProperty("ant.version", getAntVersion());
+                project.setUserProperty(MagicNames.ANT_VERSION, getAntVersion());
 
                 // set user-define properties
                 Enumeration e = definedProps.keys();
@@ -638,7 +638,7 @@ public class Main implements AntMain {
                     project.setUserProperty(arg, value);
                 }
 
-                project.setUserProperty("ant.file",
+                project.setUserProperty(MagicNames.ANT_FILE,
                                         buildFile.getAbsolutePath());
 
                 project.setKeepGoingMode(keepGoingMode);

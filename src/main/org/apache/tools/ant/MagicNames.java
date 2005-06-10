@@ -23,7 +23,16 @@ package org.apache.tools.ant;
  *
  * @since Ant 1.6
  */
-public class MagicNames {
+public final class MagicNames {
+    /**
+     * Ant version property. {@value}
+     */
+    public static final String ANT_VERSION = "ant.version";
+
+    private MagicNames() {
+    }
+
+
     /**
      * The name of the script repository used by the script repo task
      * Value {@value}
@@ -61,6 +70,28 @@ public class MagicNames {
      */
     public static final String TYPEDEFS_PROPERTIES_RESOURCE =
             "/org/apache/tools/ant/types/defaults.properties";
+
+    /**
+     * Reference to the current Ant executor
+     * Value: {@value}
+     */
+    public static final String ANT_EXECUTOR_REFERENCE = "ant.executor";
+
+    /**
+     * Property defining the classname of an executor.
+     * Value: {@value}
+     */
+    public static final String ANT_EXECUTOR_CLASSNAME = "ant.executor.class";
+    /**
+     * property name for basedir of the project
+     * Value: {@value}
+     */
+    public static final String PROJECT_BASEDIR = "basedir";
+    /**
+     * property for ant file name
+     * Value: {@value}
+     */
+    public static final String ANT_FILE = "ant.file";
 
 }
 

@@ -184,6 +184,7 @@ public class Project {
      * Flag which catches Listeners which try to use System.out or System.err .
      */
     private boolean loggingMessage = false;
+    public static final String ANT_JAVA_VERSION = "ant.java.version";
 
     /**
      * Set the input handler.
@@ -794,7 +795,7 @@ public class Project {
      */
     public void setJavaVersionProperty() throws BuildException {
         String javaVersion = JavaEnvUtils.getJavaVersion();
-        setPropertyInternal("ant.java.version", javaVersion);
+        setPropertyInternal(ANT_JAVA_VERSION, javaVersion);
 
         // sanity check
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)) {
@@ -1038,7 +1039,7 @@ public class Project {
      * @param e the Executor to use.
      */
     public void setExecutor(Executor e) {
-        addReference("ant.executor", e);
+        addReference(MagicNames.ANT_EXECUTOR_REFERENCE, e);
     }
 
     /**
@@ -1046,9 +1047,9 @@ public class Project {
      * @return an Executor instance.
      */
     public Executor getExecutor() {
-        Object o = getReference("ant.executor");
+        Object o = getReference(MagicNames.ANT_EXECUTOR_REFERENCE);
         if (o == null) {
-            String classname = getProperty("ant.executor.class");
+            String classname = getProperty(MagicNames.ANT_EXECUTOR_CLASSNAME);
             if (classname == null) {
                 classname = DefaultExecutor.class.getName();
             }
