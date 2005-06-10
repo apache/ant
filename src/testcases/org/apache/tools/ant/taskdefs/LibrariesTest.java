@@ -207,6 +207,7 @@ public class LibrariesTest extends BuildFileTest {
         execIfOnline("testFlatten");
     }
 
+    /*
     public void testMavenNaming() {
         Library lib=new Library();
         lib.setProject("unknown");
@@ -222,4 +223,5 @@ public class LibrariesTest extends BuildFileTest {
         shortname = Maven2Layout.createFilename(lib);
         assertEquals("test-3.4-src.jar", shortname);
     }
+    */
 }
