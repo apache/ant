@@ -20,7 +20,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
 import org.apache.tools.ant.taskdefs.repository.Libraries;
 import org.apache.tools.ant.taskdefs.repository.Library;
-import org.apache.tools.ant.taskdefs.repository.Maven2Layout;
 
 /**
  * test the test libraries stuff.
