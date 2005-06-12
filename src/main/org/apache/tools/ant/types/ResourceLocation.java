@@ -39,12 +39,6 @@ import java.net.URL;
 public class ResourceLocation {
 
     //-- Fields ----------------------------------------------------------------
-
-    /**
-     * name of the catalog entry type, as per OASIS spec.
-     */
-    private String name = null;
-
     /** publicId of the dtd/entity. */
     private String publicId = null;
 

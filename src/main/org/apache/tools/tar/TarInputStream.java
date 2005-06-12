@@ -43,7 +43,6 @@ public class TarInputStream extends FilterInputStream {
     protected byte[] readBuf;
     protected TarBuffer buffer;
     protected TarEntry currEntry;
-    private boolean v7Format;
 
     /**
      * This contents of this array is not used at all in this class,
@@ -83,7 +82,6 @@ public class TarInputStream extends FilterInputStream {
         this.oneBuf = new byte[1];
         this.debug = false;
         this.hasHitEOF = false;
-        this.v7Format = false;
     }
 
     /**
@@ -237,12 +235,6 @@ public class TarInputStream extends FilterInputStream {
             this.currEntry = null;
         } else {
             this.currEntry = new TarEntry(headerBuf);
-
-            if (!(headerBuf[257] == 'u' && headerBuf[258] == 's'
-                    && headerBuf[259] == 't' && headerBuf[260] == 'a'
-                    && headerBuf[261] == 'r')) {
-                this.v7Format = true;
-            }
 
             if (this.debug) {
                 System.err.println("TarInputStream: SET CURRENTRY '"

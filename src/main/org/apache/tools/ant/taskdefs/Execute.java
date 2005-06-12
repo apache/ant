@@ -59,7 +59,7 @@ public class Execute {
     private File workingDirectory = null;
     private Project project = null;
     private boolean newEnvironment = false;
-    //TODO: nothing appears to read this.
+    //TODO: nothing appears to read this but is set using a public setter.
     private boolean spawn = false;
 
 

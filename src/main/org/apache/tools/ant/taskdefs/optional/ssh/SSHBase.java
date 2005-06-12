@@ -36,7 +36,6 @@ public abstract class SSHBase extends Task implements LogListener {
     private static final int SSH_PORT = 22;
 
     private String host;
-    private String keyfile;
     private String knownHosts;
     private int port = SSH_PORT;
     private boolean failOnError = true;

@@ -182,9 +182,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
      */
     protected static final int QSORT_STACK_SIZE = 1000;
 
-    private static final int FALLBACK_QSORT_SMALL_THRESH = 10;
-    private static final int FALLBACK_QSORT_STACK_SIZE = 100;
-
     /**
      * Knuth's increments seem to work better than Incerpi-Sedgewick
      * here.  Possibly because the number of elems to sort is usually

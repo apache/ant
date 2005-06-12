@@ -45,6 +45,8 @@ public class CopyPath extends Task {
 
     private File destDir;
     protected FileUtils fileUtils;
+    
+    //TODO not read, yet in a public setter
     private long granularity = 0;
     protected boolean preserveLastModified = false;
 
