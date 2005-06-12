@@ -18,7 +18,6 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DTDLocation;
 import org.apache.tools.ant.util.XmlConstants;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.XMLReader;
@@ -29,8 +28,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.io.File;

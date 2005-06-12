@@ -20,11 +20,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.Stack;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.apache.tools.ant.BuildException;
 
 /**
  * Describes a "File-like" resource (File, ZipEntry, etc.).

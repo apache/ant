@@ -19,19 +19,14 @@ package org.apache.tools.ant.types.resources;
 import java.io.File;
 import java.util.List;
 import java.util.Stack;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.NoSuchElementException;
-import java.util.ConcurrentModificationException;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**

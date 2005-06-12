@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.compilers.AptExternalCompilerAdapter;
-import org.apache.tools.ant.taskdefs.compilers.AptCompilerAdapter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.JavaEnvUtils;

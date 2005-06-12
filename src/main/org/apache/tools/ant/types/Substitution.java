@@ -17,8 +17,6 @@
 package org.apache.tools.ant.types;
 
 
-import java.util.Stack;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /***

@@ -43,7 +43,6 @@ import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;

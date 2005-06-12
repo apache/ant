@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.ResourceCollection;
 

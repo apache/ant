@@ -16,9 +16,6 @@
  */
 package org.apache.tools.ant.types;
 
-
-import java.util.Stack;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpFactory;

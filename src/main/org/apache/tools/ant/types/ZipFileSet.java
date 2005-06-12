@@ -17,7 +17,6 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Stack;
 import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;

@@ -18,14 +18,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Set;
-import java.util.Stack;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Collection;
-import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;

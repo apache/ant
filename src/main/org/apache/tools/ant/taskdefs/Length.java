@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
 import org.apache.tools.ant.Task;
@@ -34,7 +33,6 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.PropertyOutputStream;
 
 /**

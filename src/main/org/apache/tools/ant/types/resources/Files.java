@@ -17,13 +17,9 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.util.Stack;
-import java.util.Arrays;
 import java.util.Vector;
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;

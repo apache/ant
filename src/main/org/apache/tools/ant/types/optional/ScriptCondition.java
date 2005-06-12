@@ -16,12 +16,8 @@
  */
 package org.apache.tools.ant.types.optional;
 
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.ScriptRunner;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-
-import java.io.File;
 
 /**
  * A condition that lets you include script.

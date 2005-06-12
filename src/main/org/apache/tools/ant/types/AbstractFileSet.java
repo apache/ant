@@ -17,9 +17,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Stack;
 import java.util.Vector;
-import java.util.Hashtable;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.Project;

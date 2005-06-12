@@ -17,9 +17,7 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**

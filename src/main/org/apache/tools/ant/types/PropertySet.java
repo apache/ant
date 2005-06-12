@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;

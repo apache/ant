@@ -17,8 +17,6 @@
 package org.apache.tools.ant.types.optional;
 
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.util.ScriptRunner;
-import org.apache.tools.ant.ProjectComponent;
 
 import java.util.ArrayList;
 

@@ -17,7 +17,6 @@
 
 package org.apache.tools.ant.types.resources;
 
-import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;

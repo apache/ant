@@ -18,7 +18,6 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Iterator;
