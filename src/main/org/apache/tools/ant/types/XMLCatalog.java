@@ -178,22 +178,6 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Set the list of ResourceLocation objects in the catalog.
-     * Not allowed if this catalog is itself a reference to another catalog --
-     * that is, a catalog cannot both refer to another <em>and</em> contain
-     * elements or other attributes.
-     *
-     * @param aVector the new list of ResourceLocations
-     * to use in the catalog.
-     */
-    private void setElements(Vector aVector) {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        elements = aVector;
-    }
-
-    /**
      * Allows nested classpath elements. Not allowed if this catalog
      * is itself a reference to another catalog -- that is, a catalog
      * cannot both refer to another <em>and</em> contain elements or
