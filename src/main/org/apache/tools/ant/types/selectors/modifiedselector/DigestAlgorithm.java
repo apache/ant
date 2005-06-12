@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -154,7 +153,7 @@ public class DigestAlgorithm implements Algorithm {
                 return null;
             }
             FileInputStream fis = null;
-            FileOutputStream fos = null;
+
             byte[] buf = new byte[readBufferSize];
             try {
                 messageDigest.reset();

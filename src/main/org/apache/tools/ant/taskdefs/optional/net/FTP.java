@@ -893,7 +893,7 @@ public class FTP
             public boolean isTraverseSymlinks() throws IOException, BuildException {
                 if (!relativePathCalculated) {
                     // getRelativePath also finds about symlinks
-                    String relpath = getRelativePath();
+                    getRelativePath();
                 }
                 return traversesSymlinks;
             }
@@ -2451,7 +2451,7 @@ public class FTP
          */
         public long getMilliseconds(int action) {
             String granularityU = getValue().toUpperCase(Locale.US);
-            long granularity = 0L;
+
             if ("".equals(granularityU)) {
                 if (action == SEND_FILES) {
                     return GRANULARITY_MINUTE;

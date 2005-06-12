@@ -393,12 +393,6 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
         }
         configParameter = new Vector();
 
-        //
-        // -----  Instantiate the interfaces  -----
-        //
-        String className = null;
-        String pkg = "org.apache.tools.ant.types.selectors.modifiedselector";
-
         // specify the algorithm classname
         if (algoName != null) {
             // use Algorithm defined via name

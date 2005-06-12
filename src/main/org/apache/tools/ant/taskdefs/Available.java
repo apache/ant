@@ -414,14 +414,13 @@ public class Available extends Task implements Condition {
      */
     private boolean checkClass(String classname) {
         try {
-            Class requiredClass = null;
             if (ignoreSystemclasses) {
                 loader = getProject().createClassLoader(classpath);
                 loader.setParentFirst(false);
                 loader.addJavaLibraries();
                 if (loader != null) {
                     try {
-                        requiredClass = loader.findClass(classname);
+                        loader.findClass(classname);
                     } catch (SecurityException se) {
                         // class found but restricted name; this is
                         // actually the case we're looking for in JDK 1.3+,
@@ -432,15 +431,15 @@ public class Available extends Task implements Condition {
                     return false;
                 }
             } else if (loader != null) {
-                requiredClass = loader.loadClass(classname);
+                loader.loadClass(classname);
             } else {
                 ClassLoader l = this.getClass().getClassLoader();
                 // Can return null to represent the bootstrap class loader.
                 // see API docs of Class.getClassLoader.
                 if (l != null) {
-                    requiredClass = Class.forName(classname, true, l);
+                    Class.forName(classname, true, l);
                 } else {
-                    requiredClass = Class.forName(classname);
+                    Class.forName(classname);
                 }
             }
             return true;

@@ -169,8 +169,7 @@ public abstract class HttpRepository extends Repository {
 
         try {
             //validate the URL
-            URL repository;
-            repository = new URL(url);
+            new URL(url);
         } catch (MalformedURLException e) {
             throw new BuildException(e);
         }

@@ -590,7 +590,6 @@ public class ProjectHelper2 extends ProjectHelper {
                                    Attributes attrs,
                                    AntXMLContext context)
             throws SAXParseException {
-            String id = null;
             String baseDir = null;
             boolean nameAttributeSet = false;
 

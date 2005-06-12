@@ -169,7 +169,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         }
         StringBuffer ret = new StringBuffer();
         StringBuffer macroName = null;
-        boolean inMacro = false;
+
         int state = STATE_NORMAL;
         for (int i = 0; i < s.length(); ++i) {
             char ch = s.charAt(i);

@@ -431,6 +431,10 @@ public class Concat extends Task {
             if (!outofdate) {
                 for (Iterator i = existRc.iterator(); !outofdate && i.hasNext();) {
                     Resource r = (Resource) i.next();
+                    //TODO jkf, Seems the following code, or code like the 
+                    //following code is missing, can someone confirm?
+                    //outofdate = (r.getLastModified()==0L || 
+                    //        r.getLastModified() > destinationFile.lastModified())
                 }
             }
             if (!outofdate) {
@@ -473,7 +477,6 @@ public class Concat extends Task {
             + " resources to " + destinationFile);
         FileOutputStream out = null;
         InputStream in = null;
-        byte[] buffer = new byte[BUFFER_SIZE];
         try {
             try {
                 out = new FileOutputStream(destinationFile);

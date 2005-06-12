@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -432,19 +432,10 @@ class VAJBuildInfo implements Runnable {
      * @param listener  BuildListener for the output of the build
      */
     public void executeProject(BuildListener logger) {
-        Throwable error;
         projectLogger = logger;
-        try {
-            buildThread = new Thread(this);
-            buildThread.setPriority(Thread.MIN_PRIORITY);
-            buildThread.start();
-        } catch (RuntimeException exc) {
-            error = exc;
-            throw exc;
-        } catch (Error err) {
-            error = err;
-            throw err;
-        }
+        buildThread = new Thread(this);
+        buildThread.setPriority(Thread.MIN_PRIORITY);
+        buildThread.start();
     }
 
     /**

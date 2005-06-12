@@ -1137,7 +1137,6 @@ public final class IntrospectionHelper implements BuildListener {
                         "Not allowed to use the polymorphic form"
                         + " for this element");
                 }
-                Class elementClass = nestedCreator.getElementClass();
                 ComponentHelper helper =
                     ComponentHelper.getComponentHelper(project);
                 nestedObject = helper.createComponent(polyType);
@@ -1221,9 +1220,6 @@ public final class IntrospectionHelper implements BuildListener {
         boolean isPolyMorphic() {
             return false;
         }
-        Class getElementClass() {
-            return null;
-        }
         Object getRealObject() {
             return null;
         }
@@ -1267,10 +1263,6 @@ public final class IntrospectionHelper implements BuildListener {
 
         boolean isPolyMorphic() {
             return true;
-        }
-
-        Class getElementClass() {
-            return constructor.getDeclaringClass();
         }
 
         Object create(Project project, Object parent, Object child)

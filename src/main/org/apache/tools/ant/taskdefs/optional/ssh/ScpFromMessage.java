@@ -140,7 +140,6 @@ public class ScpFromMessage extends AbstractSshMessage {
                                    InputStream in) throws IOException {
         int start = 0;
         int end = serverResponse.indexOf(" ", start + 1);
-        String command = serverResponse.substring(start, end);
         start = end + 1;
         end = serverResponse.indexOf(" ", start + 1);
         int filesize = Integer.parseInt(serverResponse.substring(start, end));
