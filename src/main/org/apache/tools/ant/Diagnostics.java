@@ -259,10 +259,23 @@ public final class Diagnostics {
      * @param out the stream to print the properties to.
      */
     private static void doReportSystemProperties(PrintStream out) {
-        for (Enumeration keys = System.getProperties().propertyNames();
+        Properties sysprops = null;
+        try {
+            sysprops = System.getProperties();
+        } catch (SecurityException  e) {
+            out.println("Access to System.getProperties() blocked " +
+                    "by a security manager");
+        }
+        for (Enumeration keys = sysprops.propertyNames();
             keys.hasMoreElements();) {
             String key = (String) keys.nextElement();
-            out.println(key + " : " + System.getProperty(key));
+            String value;
+            try {
+                value = System.getProperty(key);
+            } catch (SecurityException e) {
+                value = "Access to this property blocked by a security manager";
+            }
+            out.println(key + " : " + value);
         }
     }
 
