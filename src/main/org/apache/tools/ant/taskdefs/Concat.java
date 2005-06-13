@@ -431,10 +431,8 @@ public class Concat extends Task {
             if (!outofdate) {
                 for (Iterator i = existRc.iterator(); !outofdate && i.hasNext();) {
                     Resource r = (Resource) i.next();
-                    //TODO jkf, Seems the following code, or code like the 
-                    //following code is missing, can someone confirm?
-                    //outofdate = (r.getLastModified()==0L || 
-                    //        r.getLastModified() > destinationFile.lastModified())
+                    outofdate = (r.getLastModified() == 0L || 
+                        r.getLastModified() > destinationFile.lastModified());
                 }
             }
             if (!outofdate) {
