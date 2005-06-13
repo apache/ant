@@ -293,12 +293,12 @@
 
       <subsection name="AntSpaces">
 
-	<p>AntSpaces provides Ant integration with JavaSpaces. This
-	allows you to coordinate Ant tasks via JavaSpaces, pull out
-	work units from a JavaSpace for distributed Ant tasks to work
-	on, and so forth.</p>
+        <p>AntSpaces provides Ant integration with JavaSpaces. This
+        allows you to coordinate Ant tasks via JavaSpaces, pull out
+        work units from a JavaSpace for distributed Ant tasks to work
+        on, and so forth.</p>
 
-	<table class="externals">
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.5 and later</td>
@@ -348,11 +348,11 @@
       </subsection>
 
       <subsection name="Ant Web Start Task">
- 
+
         <p>Ant Web Start Task is an Ant task allowing developers to
         package a desktop application as a WAR (Web Application
         Archive) to be distributed over the net via Java Web Start</p>
- 
+
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
@@ -1059,6 +1059,31 @@
         </table>
       </subsection>
 
+      <subsection name="Incanto">
+
+        <p>Ant tasks to provide support for Oracle database tools
+        (such as SQL*Plus, Import, Export)</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://incanto.sourceforge.net/">http://incanto.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:alexrk@users.sourceforge.net">Alexander Karnstedt</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License, Version 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Interactive">
 
         <p>Task allowing to run a dialog within a build used to setup
@@ -1608,7 +1633,7 @@
           <tr>
             <th>Task Documentation:</th>
             <td>
-            <a 
+            <a
             href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/javadiff/jdiff/jdiff.html?rev=HEAD&amp;content-type=text/html#JDiffAntTask"
             >
             (in CVS)</a></td>
@@ -1619,7 +1644,7 @@
           </tr>
         </table>
       </subsection>
-        
+
       <subsection name="JFlex">
 
         <p>JFlex is a lexical analyzer generator (also known as
@@ -3222,7 +3247,7 @@
               or
               <a href="http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html">
                 http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html
-              </a> 
+              </a>
             </td>
           </tr>
           <tr>
