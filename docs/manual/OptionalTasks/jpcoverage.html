@@ -58,12 +58,12 @@ Perform code covering functions by comparing source code line execution to the p
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">home</td> 
+    <td valign="top">home</td>
     <td valign="top">The directory where JProbe is installed.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
-    <td valign="top">vm</td> 
+    <td valign="top">vm</td>
     <td valign="top">
     Indicates which virtual machine to run.
     Must be one of "jdk117", "jdk118" or "java2".If "java2" is specified, the user is
@@ -73,13 +73,13 @@ Perform code covering functions by comparing source code line execution to the p
     <td align="center" valign="top">No, default to embedded VM if 1.2+</td>
   </tr>
   <tr>
-    <td valign="top">javaexe</td> 
+    <td valign="top">javaexe</td>
     <td valign="top">The path to the java executable.</td>
     <td align="center" valign="top">No, use only for java2 vm.</td>
   </tr>
-  
+
   <tr>
-    <td valign="top">applet</td> 
+    <td valign="top">applet</td>
     <td valign="top">Run an applet. The default is false, unless the file under
     analysis ends with htm or html.</td>
     <td align="center" valign="top">No, default is "false".</td>
@@ -90,19 +90,19 @@ Perform code covering functions by comparing source code line execution to the p
     seed.jpc, seed1.jpc, seed2.jpc, ...)</td>
     <td align="center" valign="top">No, default to &quot;snapshot&quot;</td>
   </tr>
-  
+
   <tr>
-    <td valign="top">exitprompt</td> 
+    <td valign="top">exitprompt</td>
     <td valign="top">Toggles display of the console prompt: &quot;Press Enter to close
     this window.&quot; &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
     prompt. &quot;error&quot;: Only displays prompt after an error.</td>
     <td align="center" valign="top">No, default is "never"</td>
   </tr>
-  
+
   <tr>
-    <td valign="top">finalsnapshot</td> 
+    <td valign="top">finalsnapshot</td>
     <td valign="top">Type of snapshot to send at program termination. Must be one
-    of &quot;none&quot;,&quot;coverage&quot;,&quot;all&quot;</td> 
+    of &quot;none&quot;,&quot;coverage&quot;,&quot;all&quot;</td>
     <td align="center" valign="top">No, default to &quot;coverage&quot;</td>
   </tr>
   <tr>
@@ -128,13 +128,13 @@ Perform code covering functions by comparing source code line execution to the p
     <td valign="top">workingdir</td>
     <td valign="top">The physical path to the working directory for the VM.</td>
     <td align="center" valign="top">No, default is current directory.</td>
-  </tr> 
+  </tr>
   <tr>
     <td valign="top">tracknatives</td>
     <td valign="top">Test native methods. Note that testing native methods with
     Java 2 disables the JIT</td>
     <td align="center" valign="top">No, default to &quot;false&quot;.</td>
-  </tr> 
+  </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the name of the class to analyze.</td>
@@ -175,7 +175,7 @@ attributes, as described in <a href="../using.html#arg">Command line arguments</
 </p>
 
 <h4>socket</h4>
-<p>Define a host and port to connect to if you want to do remote viewing. 
+<p>Define a host and port to connect to if you want to do remote viewing.
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
@@ -184,15 +184,15 @@ attributes, as described in <a href="../using.html#arg">Command line arguments</
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">host</td> 
+    <td valign="top">host</td>
     <td valign="top">the host name/ip of the machine on which the Viewer is running</td>
     <td align="center">No, default to localhost</td>
   </tr>
   <tr>
-    <td valign="top">port</td> 
+    <td valign="top">port</td>
     <td valign="top">The port number on which you will connect to the Viewer</td>
     <td align="center">No, default to 4444</td>
-  </tr>  
+  </tr>
 </table>
 
 
@@ -200,7 +200,7 @@ attributes, as described in <a href="../using.html#arg">Command line arguments</
 <h4>filters</h4>
 
 <p>Defines class/method filters based on pattern matching.
-The syntax is filters is similar to a <a href="../CoreTypes/fileset.html">fileset</a>.
+The syntax for filters is similar to a <a href="../CoreTypes/fileset.html">fileset</a>.
 </p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -210,14 +210,14 @@ The syntax is filters is similar to a <a href="../CoreTypes/fileset.html">filese
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">defaultexclude</td> 
+    <td valign="top">defaultexclude</td>
     <td valign="top">As a default, the coverage excludes all classes and methods.
      Default filters are equivalent to
 <pre>
   &lt;filters&gt;
     &lt;exclude class=&quot;*&quot; method=&quot;*&quot;/&gt;
   &lt;/filters&gt;
-</pre>  
+</pre>
     </td>
     <td align="center">No, default to "true"</td>
   </tr>
@@ -234,17 +234,17 @@ with a <tt>name</tt> attribute.
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">class</td> 
+    <td valign="top">class</td>
     <td valign="top">The class mask as a simple regular expression</td>
     <td align="center">No, defaults to "*"</td>
   </tr>
   <tr>
-    <td valign="top">method</td> 
+    <td valign="top">method</td>
     <td valign="top">The method mask as a simple regular expression</td>
     <td align="center">No, defaults to "*"</td>
   </tr>
   <tr>
-    <td valign="top">enabled</td> 
+    <td valign="top">enabled</td>
     <td valign="top">is the filter enabled?</td>
     <td align="center">No, defaults to true</td>
   </tr>
@@ -281,22 +281,22 @@ on method) and it has the following attributes:
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">name</td> 
+    <td valign="top">name</td>
     <td valign="top">The name of the method(s) as a regular expression. The name
     is the fully qualified name on the form <tt>package.classname.method</tt></td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
-    <td valign="top">event</td> 
+    <td valign="top">event</td>
     <td valign="top">the event on the method that will trigger the action. Must be
     &quot;enter&quot; or &quot;exit&quot;.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
-    <td valign="top">action</td> 
+    <td valign="top">action</td>
     <td valign="top">the action to execute. Must be one of &quot;clear&quot;,
     &quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
-    or &quot;exit&quot;. They respectively clear recording, pause recording, 
+    or &quot;exit&quot;. They respectively clear recording, pause recording,
     resume recording, take a snapshot, suspend the recording and exit the program.
 </td>
     <td align="center" valign="top">Yes</td>
@@ -307,7 +307,7 @@ on method) and it has the following attributes:
 <blockquote>
 <pre>&lt;triggers&gt;
   &lt;method name=&quot;ClassName.*()&quot; event=&quot;enter&quot; action=&quot;snapshot&quot;/&gt;
-  &lt;method name=&quot;ClassName.MethodName()&quot; event=&quot;exit&quot; action=&quot;exit&quot;/&gt;  
+  &lt;method name=&quot;ClassName.MethodName()&quot; event=&quot;exit&quot; action=&quot;exit&quot;/&gt;
 &lt;/triggers&gt;
 </pre>
 </blockquote>
@@ -476,12 +476,12 @@ with a <tt>class </tt>and&nbsp; <tt>method </tt>attribute.
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">class</td> 
+    <td valign="top">class</td>
     <td valign="top">The class mask as a simple regular expression</td>
     <td align="center">No, default to *</td>
   </tr>
   <tr>
-    <td valign="top">method</td> 
+    <td valign="top">method</td>
     <td valign="top">The method mask as a simple regular expression</td>
     <td align="center">No, default to *</td>
   </tr>
