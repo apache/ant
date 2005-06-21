@@ -62,7 +62,7 @@ public class EchoXML extends XMLFragment {
         try {
             OutputStream os = null;
             if (file != null) {
-                os = new FileOutputStream(file, append);
+                os = new FileOutputStream(file.getAbsolutePath(), append);
             } else {
                 os = new LogOutputStream(this, Project.MSG_INFO);
             }
