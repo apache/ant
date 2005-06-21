@@ -18,7 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
+import java.io.FileReader;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Small testcase for the junitreporttask.
@@ -86,6 +88,22 @@ public class JUnitReportTest extends BuildFileTest {
     public void testWrongElement() throws Exception {
         expectReportWithText("testWrongElement",
                 XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT);
+    }
+
+    // Bugzilla Report 34963
+    public void XtestStackTraceLineBreaks() throws Exception {
+        expectReportWithText("testStackTraceLineBreaks", null);
+        FileReader r = null;
+        try {
+            r = new FileReader(new File(System.getProperty("root"),
+                                        "src/etc/testcases/taskdefs/optional/junitreport/test/html/sampleproject/coins/0_CoinTest.html"));
+            String report = FileUtils.readFully(r);
+            assertTrue("output must contain <br>",
+                       report.indexOf("junit.framework.AssertionFailedError: DOEG<br/>")
+                   > -1);
+        } finally {
+            FileUtils.close(r);
+        }
     }
 
 }
