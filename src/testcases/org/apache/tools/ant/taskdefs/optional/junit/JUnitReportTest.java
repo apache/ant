@@ -91,7 +91,7 @@ public class JUnitReportTest extends BuildFileTest {
     }
 
     // Bugzilla Report 34963
-    public void XtestStackTraceLineBreaks() throws Exception {
+    public void testStackTraceLineBreaks() throws Exception {
         expectReportWithText("testStackTraceLineBreaks", null);
         FileReader r = null;
         try {

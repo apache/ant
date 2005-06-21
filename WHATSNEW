@@ -1,5 +1,5 @@
-Changes from current Ant 1.6 CVS version to current CVS version
-=============================================
+Changes from current Ant 1.6.5 version to current CVS version
+=============================================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -112,6 +112,9 @@ Fixed bugs:
   
 * <tar> / <untar> now accepts files upto 8GB, <tar> gives an error if larger 
   files are to be included. This is the POSIX size limit.
+
+* <junitreport> removed line-breaks from stack-traces.  Bugzilla
+  Report 34963.
 
 Other changes:
 --------------

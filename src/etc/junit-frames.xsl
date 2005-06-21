@@ -701,8 +701,7 @@ h6 {
 -->
 <xsl:template name="br-replace">
     <xsl:param name="word"/>
-    <xsl:param name="br"><br/></xsl:param>
-    <xsl:value-of select='stringutils:replace(string($word),"&#xA;",$br)'/>
+    <xsl:value-of disable-output-escaping="yes" select='stringutils:replace(string($word),"&#xA;","&lt;br/>")'/>
 </xsl:template>
 
 <xsl:template name="display-time">
