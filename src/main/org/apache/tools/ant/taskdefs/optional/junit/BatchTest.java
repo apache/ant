@@ -142,7 +142,8 @@ public final class BatchTest extends BaseTest {
      * @return the classname matching the filename.
      */
     public static final String javaToClass(String filename) {
-        return filename.replace(File.separatorChar, '.');
+        return filename.replace(File.separatorChar, '.').replace('/', '.')
+                .replace('\\', '.');
     }
 
     /**
