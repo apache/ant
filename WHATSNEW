@@ -239,6 +239,8 @@ Other changes:
 * Try to make subprojects of custom Project subclasses instances of the
   same type. Bugzilla report 17901.
 
+* <ssh> and <scp> support keyboard-interactive authentication now.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

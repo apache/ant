@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import com.jcraft.jsch.UserInfo;
+import com.jcraft.jsch.UIKeyboardInteractive;
 
 /**
  */
-public class SSHUserInfo implements UserInfo {
+public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
 
     private String name;
     private String password = null;
@@ -166,6 +167,19 @@ public class SSHUserInfo implements UserInfo {
 
     public void showMessage(String message) {
         //log(message, Project.MSG_DEBUG);
+    }
+    
+    public String[] promptKeyboardInteractive(String destination,
+                                              String name,
+                                              String instruction,
+                                              String[] prompt,
+                                              boolean[] echo) {
+    	if (prompt.length != 1 || echo[0] != false || this.password == null) {
+            return null;
+    	}
+    	String[] response=new String[1];
+    	response[0]=this.password;
+    	return response;
     }
 
 }
