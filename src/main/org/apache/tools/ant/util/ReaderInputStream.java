@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -196,8 +196,10 @@ public class ReaderInputStream extends InputStream {
      * @exception IOException if the original StringReader fails to be closed
      */
     public synchronized void close() throws IOException {
-        in.close();
-        slack = null;
-        in = null;
+        if (in != null) {
+            in.close();
+            slack = null;
+            in = null;
+        }
     }
 }

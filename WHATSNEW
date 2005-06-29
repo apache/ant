@@ -60,6 +60,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* Calling close twice on ReaderInputStream gave a nullpointer exception.
+  Bugzilla Report 35544.
+
 * Memory leak from IntrospectionHelper.getHelper(Class) in embedded
   environments. Bugzilla Report 30162.
 
