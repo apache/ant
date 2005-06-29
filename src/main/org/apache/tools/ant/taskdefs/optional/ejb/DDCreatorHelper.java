@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import javax.ejb.deployment.DeploymentDescriptor;
  * interface class files referenced in the deployment descriptors being built.
  *
  */
-public class DDCreatorHelper {
+public final class DDCreatorHelper {
     /**
      * The root directory of the tree containing the textual deployment descriptors.
      */
@@ -49,6 +49,8 @@ public class DDCreatorHelper {
      *
      * The main method creates an instance of the DDCreatorHelper, passing it the
      * args which it then processes.
+     * @param args the arguments
+     * @throws Exception on error
      */
     public static void main(String[] args) throws Exception {
         DDCreatorHelper helper = new DDCreatorHelper(args);
