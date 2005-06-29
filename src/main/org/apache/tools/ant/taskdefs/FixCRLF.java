@@ -317,7 +317,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         File tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null);
         tmpFile.deleteOnExit();
         try {
-            FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, false, 
+            FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, false,
                                 false, encoding, getProject());
 
             File destFile = new File(destD, file);

@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class CvsVersion extends AbstractCvsTask {
     private String serverVersion;
     private String clientVersionProperty;
     private String serverVersionProperty;
-    
+
     /**
      * Get the CVS client version
      * @return CVS client version
