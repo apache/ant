@@ -59,6 +59,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Wrong replacement of file separator chars prevens junitbatchtest
+  from running correctly on files from a zipfileset. Bugzilla Report 35499
 
 * Calling close twice on ReaderInputStream gave a nullpointer exception.
   Bugzilla Report 35544.
