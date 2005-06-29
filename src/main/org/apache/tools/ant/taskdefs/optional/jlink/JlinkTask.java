@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ public class JlinkTask extends MatchingTask {
 
     /**
      * The output file for this run of jlink. Usually a jar or zip file.
+     * @param outfile the output file
      */
     public  void setOutfile(File outfile) {
         this.outfile = outfile;
@@ -62,6 +63,7 @@ public class JlinkTask extends MatchingTask {
     /**
      * Establishes the object that contains the files to
      * be merged into the output.
+     * @return a path to be configured
      */
     public  Path createMergefiles() {
         if (this.mergefiles == null) {
@@ -72,6 +74,7 @@ public class JlinkTask extends MatchingTask {
 
     /**
      * Sets the files to be merged into the output.
+     * @param mergefiles a path
      */
     public  void setMergefiles(Path mergefiles) {
         if (this.mergefiles == null) {
@@ -84,6 +87,7 @@ public class JlinkTask extends MatchingTask {
     /**
      * Establishes the object that contains the files to
      * be added to the output.
+     * @return a path to be configured
      */
     public  Path createAddfiles() {
         if (this.addfiles == null) {
@@ -94,6 +98,7 @@ public class JlinkTask extends MatchingTask {
 
     /**
      * Sets the files to be added into the output.
+     * @param addfiles a path
      */
     public  void setAddfiles(Path addfiles) {
         if (this.addfiles == null) {
@@ -105,6 +110,7 @@ public class JlinkTask extends MatchingTask {
 
     /**
      * Defines whether or not the output should be compacted.
+     * @param compress a <code>boolean</code> value
      */
     public  void setCompress(boolean compress) {
         this.compress = compress;
@@ -112,6 +118,7 @@ public class JlinkTask extends MatchingTask {
 
     /**
      * Does the adding and merging.
+     * @throws BuildException on error
      */
     public  void execute() throws BuildException {
         //Be sure everything has been set.
