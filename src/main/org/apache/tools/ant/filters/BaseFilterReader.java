@@ -47,11 +47,7 @@ public abstract class BaseFilterReader extends FilterReader {
      */
     public BaseFilterReader() {
         super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        FileUtils.close(this);
     }
 
     /**
