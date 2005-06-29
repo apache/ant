@@ -110,6 +110,7 @@ public class WLStop extends Task {
     /**
      * The classpath to be used with the Java Virtual Machine that runs the Weblogic
      * Shutdown command;
+     * @return the path to be configured.
      */
     public Path createClasspath() {
         if (classpath == null) {

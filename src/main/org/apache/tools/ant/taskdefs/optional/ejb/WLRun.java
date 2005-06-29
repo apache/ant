@@ -108,6 +108,7 @@ public class WLRun extends Task {
 
     /**
      * Add the classpath for the user classes
+     * @return a path to be configured
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -118,6 +119,7 @@ public class WLRun extends Task {
 
     /**
      * Get the classpath to the weblogic classpaths
+     * @return a path to be configured
      */
     public Path createWLClasspath() {
         if (weblogicClasspath == null) {
@@ -402,6 +404,7 @@ public class WLRun extends Task {
     /**
      * Additional argument string passed to the Weblogic instance;
      * optional.
+     * @param args the argument string
      */
     public void setArgs(String args) {
         additionalArgs = args;
@@ -409,6 +412,7 @@ public class WLRun extends Task {
 
     /**
      * name of the main class for weblogic; optional.
+     * @param c the name of the class
      */
     public void setWeblogicMainClass(String c) {
         weblogicMainClass = c;
