@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,7 +47,8 @@ public class Tstamp extends Task {
 
     /**
      * Set a prefix for the properties. If the prefix does not end with a "."
-     * one is automatically added
+     * one is automatically added.
+     * @param prefix the prefix to use.
      * @since Ant 1.5
      */
     public void setPrefix(String prefix) {
@@ -60,7 +61,7 @@ public class Tstamp extends Task {
     /**
      * create the timestamps. Custom ones are done before
      * the standard ones, to get their retaliation in early.
-     * @throws BuildException
+     * @throws BuildException on error.
      */
     public void execute() throws BuildException {
         try {
@@ -132,7 +133,7 @@ public class Tstamp extends Task {
 
         /**
          *  The property to receive the date/time string in the given pattern
-         * @param propertyName
+         * @param propertyName the name of the property.
          */
         public void setProperty(String propertyName) {
             this.propertyName = propertyName;
@@ -182,7 +183,7 @@ public class Tstamp extends Task {
         /**
          * The timezone to use for displaying time.
          * The values are as defined by the Java TimeZone class.
-         * @param id
+         * @param id the timezone value.
          * @see java.util.TimeZone
          */
         public void setTimezone(String id) {
@@ -191,13 +192,15 @@ public class Tstamp extends Task {
 
         /**
          * The numeric offset to the current time.
-         * @param offset
+         * @param offset the offset to use.
          */
         public void setOffset(int offset) {
             this.offset = offset;
         }
 
         /**
+         * Set the unit type (using String).
+         * @param unit the unit to use.
          * @deprecated setUnit(String) is deprecated and is replaced with
          *             setUnit(Tstamp.Unit) to make Ant's
          *             Introspection mechanism do the work and also to
@@ -226,16 +229,16 @@ public class Tstamp extends Task {
          *    <li>year</li>
          * </ul>
          * The default unit is day.
-         * @param unit
+         * @param unit the unit to use.
          */
         public void setUnit(Unit unit) {
             field = unit.getCalendarField();
         }
 
         /**
-         * validate parameter and execute the format
-         * @param project project to set property in
-         * @param date date to use as a starting point
+         * validate parameter and execute the format.
+         * @param project project to set property in.
+         * @param date date to use as a starting point.
          * @param location line in file (for errors)
          */
         public void execute(Project project, Date date, Location location) {
@@ -287,7 +290,7 @@ public class Tstamp extends Task {
         private static final String MONTH = "month";
         private static final String YEAR = "year";
 
-        private static final String[] units = {
+        private static final String[] UNITS = {
                                                 MILLISECOND,
                                                 SECOND,
                                                 MINUTE,
@@ -300,6 +303,7 @@ public class Tstamp extends Task {
 
         private Hashtable calendarFields = new Hashtable();
 
+        /** Constructor for Unit enumerated type. */
         public Unit() {
             calendarFields.put(MILLISECOND,
                                new Integer(Calendar.MILLISECOND));
@@ -312,14 +316,22 @@ public class Tstamp extends Task {
             calendarFields.put(YEAR, new Integer(Calendar.YEAR));
         }
 
+        /**
+         * Convert the value to int unit value.
+         * @return an int value.
+         */
         public int getCalendarField() {
             String key = getValue().toLowerCase();
             Integer i = (Integer) calendarFields.get(key);
             return i.intValue();
         }
 
+        /**
+         * Get the valid values.
+         * @return the value values.
+         */
         public String[] getValues() {
-            return units;
+            return UNITS;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -101,9 +101,18 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
     /** factory attributes */
     private Vector attributes = new Vector();
 
+    /**
+     * Constructor for TraXLiaison.
+     * @throws Exception never
+     */
     public TraXLiaison() throws Exception {
     }
 
+    /**
+     * Set the stylesheet file.
+     * @param stylesheet a <code>File</code> value
+     * @throws Exception on error
+     */
     public void setStylesheet(File stylesheet) throws Exception {
         if (this.stylesheet != null) {
             // resetting the stylesheet - reset transformer
@@ -118,6 +127,12 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
         this.stylesheet = stylesheet;
     }
 
+    /**
+     * Transform an input file.
+     * @param infile the file to transform
+     * @param outfile the result file
+     * @throws Exception on error
+     */
     public void transform(File infile, File outfile) throws Exception {
         if (transformer == null) {
             createTransformer();
@@ -316,36 +331,61 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
         outputProperties.addElement(pair);
     }
 
-    /** Set the class to resolve entities during the transformation
+    /**
+     * Set the class to resolve entities during the transformation.
+     * @param aResolver the resolver class.
      */
     public void setEntityResolver(EntityResolver aResolver) {
         entityResolver = aResolver;
     }
 
-    /** Set the class to resolve URIs during the transformation
+    /**
+     * Set the class to resolve URIs during the transformation
+     * @param aResolver a <code>EntityResolver</code> value
      */
     public void setURIResolver(URIResolver aResolver) {
         uriResolver = aResolver;
     }
 
+    /**
+     * Add a parameter.
+     * @param name the name of the parameter
+     * @param value the value of the parameter
+     */
     public void addParam(String name, String value) {
         final String[] pair = new String[]{name, value};
         params.addElement(pair);
     }
 
+    /**
+     * Set a logger.
+     * @param l a logger.
+     */
     public void setLogger(XSLTLogger l) {
         logger = l;
     }
 
+    /**
+     * Log an error.
+     * @param e the exception to log.
+     */
     public void error(TransformerException e) {
         logError(e, "Error");
     }
 
+    /**
+     * Log a fatal error.
+     * @param e the exception to log.
+     */
     public void fatalError(TransformerException e) {
         logError(e, "Fatal Error");
         throw new BuildException("Fatal error during transformation", e);
     }
 
+    /**
+     * Log a warning.
+     * @param e the exception to log.
+     */
     public void warning(TransformerException e) {
         logError(e, "Warning");
     }
@@ -388,6 +428,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
 
     // kept for backwards compatibility
     /**
+     * @param file the filename to use for the systemid
+     * @return the systemid
      * @deprecated use org.apache.tools.ant.util.JAXPUtils#getSystemId instead
      */
     protected String getSystemId(File file) {

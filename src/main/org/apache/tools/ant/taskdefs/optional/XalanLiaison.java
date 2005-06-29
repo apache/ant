@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,14 +37,29 @@ public class XalanLiaison implements XSLTLiaison {
     protected XSLTProcessor processor;
     protected File stylesheet;
 
+    /**
+     * Constructor for XalanLiaison.
+     * @throws Exception on error
+     */
     public XalanLiaison() throws Exception {
         processor = XSLTProcessorFactory.getProcessor();
     }
 
+    /**
+     * Set the style sheet to use.
+     * @param stylesheet the style sheet file to use
+     * @throws Exception on error
+     */
     public void setStylesheet(File stylesheet) throws Exception {
         this.stylesheet = stylesheet;
     }
 
+    /**
+     * Carry out the transformation.
+     * @param infile the input file
+     * @param outfile the output file
+     * @throws Exception on error
+     */
     public void transform(File infile, File outfile) throws Exception {
         FileInputStream fis = null;
         FileOutputStream fos = null;
@@ -89,6 +104,11 @@ public class XalanLiaison implements XSLTLiaison {
         }
     }
 
+    /**
+     * Add a parameter.
+     * @param name the name of the parameter
+     * @param value the value of the parameter
+     */
     public void addParam(String name, String value) {
         processor.setStylesheetParam(name, value);
     }

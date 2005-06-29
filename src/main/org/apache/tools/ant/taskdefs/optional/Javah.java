@@ -86,6 +86,7 @@ public class Javah extends Task {
 
     /**
      * the fully-qualified name of the class (or classes, separated by commas).
+     * @param cls the classname (or classnames).
      */
     public void setClass(String cls) {
         this.cls = cls;
@@ -93,6 +94,7 @@ public class Javah extends Task {
 
     /**
      * Adds class to process.
+     * @return a <code>ClassArgument</code> to be configured.
      */
     public ClassArgument createClass() {
         ClassArgument ga = new ClassArgument();
@@ -100,16 +102,29 @@ public class Javah extends Task {
         return ga;
     }
 
+    /**
+     * A class corresponding the the nested "class" element.
+     * It contains a "name" attribute.
+     */
     public class ClassArgument {
         private String name;
 
+        /** Constructor for ClassArgument. */
         public ClassArgument() {
         }
 
+        /**
+         * Set the name attribute.
+         * @param name the name attribute.
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * Get the name attribute.
+         * @return the name attribute.
+         */
         public String getName() {
             return name;
         }
@@ -140,6 +155,7 @@ public class Javah extends Task {
     /**
      * Set the destination directory into which the Java source
      * files should be compiled.
+     * @param destDir the destination directory.
      */
     public void setDestdir(File destDir) {
         this.destDir = destDir;
@@ -156,6 +172,7 @@ public class Javah extends Task {
 
     /**
      * the classpath to use.
+     * @param src the classpath.
      */
     public void setClasspath(Path src) {
         if (classpath == null) {
@@ -167,6 +184,7 @@ public class Javah extends Task {
 
     /**
      * Path to use for classpath.
+     * @return a path to be configured.
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -177,7 +195,8 @@ public class Javah extends Task {
 
     /**
      * Adds a reference to a classpath defined elsewhere.
-     * @todo this needs to be documented in the HTML docs
+     * @param r a reference to a classpath.
+     * @todo this needs to be documented in the HTML docs.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -194,6 +213,7 @@ public class Javah extends Task {
 
     /**
      * location of bootstrap class files.
+     * @param src the bootstrap classpath.
      */
     public void setBootclasspath(Path src) {
         if (bootclasspath == null) {
@@ -205,6 +225,7 @@ public class Javah extends Task {
 
     /**
      * Adds path to bootstrap class files.
+     * @return a path to be configured.
      */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
@@ -214,8 +235,9 @@ public class Javah extends Task {
     }
 
     /**
-     * Adds a reference to a classpath defined elsewhere.
-     * @todo this needs to be documented in the HTML
+     * To the bootstrap path, this adds a reference to a classpath defined elsewhere.
+     * @param r a reference to a classpath
+     * @todo this needs to be documented in the HTML.
      */
     public void setBootClasspathRef(Reference r) {
         createBootclasspath().setRefid(r);
@@ -233,6 +255,7 @@ public class Javah extends Task {
     /**
      * Concatenates the resulting header or source files for all
      * the classes listed into this file.
+     * @param outputFile the output file.
      */
     public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
@@ -249,6 +272,7 @@ public class Javah extends Task {
 
     /**
      * If true, output files should always be written (JDK1.2 only).
+     * @param force the value to use.
      */
     public void setForce(boolean force) {
         this.force = force;
@@ -266,7 +290,9 @@ public class Javah extends Task {
     /**
      * If true, specifies that old JDK1.0-style header files should be
      * generated.
-     * (otherwise output file contain JNI-style native method function prototypes) (JDK1.2 only)
+     * (otherwise output file contain JNI-style native method function
+     *  prototypes) (JDK1.2 only).
+     * @param old if true use old 1.0 style header files.
      */
     public void setOld(boolean old) {
         this.old = old;
@@ -283,6 +309,7 @@ public class Javah extends Task {
 
     /**
      * If true, generate C declarations from the Java object file (used with old).
+     * @param stubs if true, generated C declarations.
      */
     public void setStubs(boolean stubs) {
         this.stubs = stubs;
@@ -300,6 +327,7 @@ public class Javah extends Task {
     /**
      * If true, causes Javah to print a message concerning
      * the status of the generated files.
+     * @param verbose if true, do verbose printing.
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
@@ -316,7 +344,7 @@ public class Javah extends Task {
 
     /**
      * Choose the implementation for this particular task.
-     * @param impl the name of the implemenation
+     * @param impl the name of the implemenation.
      * @since Ant 1.6.3
      */
     public void setImplementation(String impl) {
@@ -329,7 +357,7 @@ public class Javah extends Task {
 
     /**
      * Adds an implementation specific command-line argument.
-     * @return a ImplementationSpecificArgument to be configured
+     * @return a ImplementationSpecificArgument to be configured.
      *
      * @since Ant 1.6.3
      */
@@ -404,6 +432,7 @@ public class Javah extends Task {
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
+     * @param cmd the command line to add parameters to.
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         log("Compilation " + cmd.describeArguments(),
