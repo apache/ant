@@ -759,8 +759,8 @@ public class IContract extends MatchingTask {
                     if (targetPrinter != null) {
                         targetPrinter.println(srcFile.getAbsolutePath());
                     }
-                    File classFile
-                        = new File(buildDir, files[i].substring(0, files[i].indexOf(".java")) + ".class");
+                    File classFile = new File(
+                        buildDir, files[i].substring(0, files[i].indexOf(".java")) + ".class");
 
                     if (srcFile.lastModified() > now) {
                         log("Warning: file modified in the future: "
@@ -820,8 +820,9 @@ public class IContract extends MatchingTask {
     /**
      * Creates the -m option based on the values of controlFile, pre, post and
      * invariant.
+     * @return the string containing the -m option.
      */
-    private final String directiveString() {
+    private String directiveString() {
         StringBuffer sb = new StringBuffer();
         boolean comma = false;
 
@@ -875,7 +876,8 @@ public class IContract extends MatchingTask {
 
 
         public void messageLogged(BuildEvent event) {
-            if ("java.lang.NoClassDefFoundError: com/reliablesystems/iContract/Tool".equals(event.getMessage())) {
+            if ("java.lang.NoClassDefFoundError: com/reliablesystems/iContract/Tool"
+                .equals(event.getMessage())) {
                 iContractMissing = true;
             }
         }
