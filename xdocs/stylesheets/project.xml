@@ -69,6 +69,12 @@
             <menu name="Projects">
                 <item name="Welcome"               href="/projects/index.html"/>
             </menu>
+            <menu name="Ant Libraries">
+                <item name="Introduction"          href="/antlibs/index.html"/>
+                <item name="Charter"               href="/antlibs/charter.html"/>
+                <item name="Ant Libraries"         href="/antlibs/proper.html"/>
+                <item name="Sandbox Ant Libraries" href="/antlibs/sandbox.html"/>
+            </menu>
         </menusection>
     </body>
 </project>
