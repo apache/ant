@@ -121,6 +121,8 @@ Fixed bugs:
 * <junitreport> removed line-breaks from stack-traces.  Bugzilla
   Report 34963.
 
+* off-by-one error in environment setup for execution under OpenVMS fixed.
+
 Other changes:
 --------------
 
