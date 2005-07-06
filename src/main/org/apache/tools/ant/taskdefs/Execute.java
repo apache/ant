@@ -1153,7 +1153,7 @@ public class Execute {
                 // add the environment as logicals to the DCL script
                 if (env != null) {
                     int eqIndex;
-                    for (int i = 1; i < env.length; i++) {
+                    for (int i = 0; i < env.length; i++) {
                         eqIndex = env[i].indexOf('=');
                         if (eqIndex != -1) {
                             out.print("$ DEFINE/NOLOG ");
