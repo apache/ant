@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -304,6 +304,7 @@ public abstract class StarTeamTask extends Task {
      *
      * @param rawview the unconfigured <code>View</code>
      * @return the snapshot <code>View</code> appropriately configured.
+     * @throws BuildException on error
      */
     protected abstract View createSnapshotView(View rawview)
     throws BuildException;
@@ -317,6 +318,7 @@ public abstract class StarTeamTask extends Task {
      * @return the <code>View</code> that will be used for processing.
      * @see #createSnapshotView(View)
      * @see #getServer()
+     * @throws BuildException on error
      */
     protected View openView() throws BuildException {
 

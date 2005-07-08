@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Iterator;
 
+/**
+ * Utility class to carry out an upload scp transfer.
+ */
 public class ScpToMessage extends AbstractSshMessage {
 
     private static final int BUFFER_SIZE = 1024;
@@ -37,6 +40,11 @@ public class ScpToMessage extends AbstractSshMessage {
     private List directoryList;
 
     /**
+     * Constructor for a local file to remote.
+     * @param verbose if true do verbose logging
+     * @param session the scp session to use
+     * @param aLocalFile the local file
+     * @param aRemotePath the remote path
      * @since Ant 1.6.2
      */
     public ScpToMessage(boolean verbose,
@@ -49,6 +57,11 @@ public class ScpToMessage extends AbstractSshMessage {
     }
 
     /**
+     * Constructor for a local directories to remote.
+     * @param verbose if true do verbose logging
+     * @param session the scp session to use
+     * @param aDirectoryList a list of directories
+     * @param aRemotePath the remote path
      * @since Ant 1.6.2
      */
     public ScpToMessage(boolean verbose,
@@ -61,6 +74,10 @@ public class ScpToMessage extends AbstractSshMessage {
     }
 
     /**
+     * Constructor for ScpToMessage.
+     * @param verbose if true do verbose logging
+     * @param session the scp session to use
+     * @param aRemotePath the remote path
      * @since Ant 1.6.2
      */
     private ScpToMessage(boolean verbose,
@@ -70,18 +87,35 @@ public class ScpToMessage extends AbstractSshMessage {
         this.remotePath = aRemotePath;
     }
 
+    /**
+     * Constructor for ScpToMessage.
+     * @param session the scp session to use
+     * @param aLocalFile the local file
+     * @param aRemotePath the remote path
+     */
     public ScpToMessage(Session session,
                         File aLocalFile,
                         String aRemotePath) {
         this(false, session, aLocalFile, aRemotePath);
     }
 
+    /**
+     * Constructor for ScpToMessage.
+     * @param session the scp session to use
+     * @param aDirectoryList a list of directories
+     * @param aRemotePath the remote path
+     */
     public ScpToMessage(Session session,
                          List aDirectoryList,
                          String aRemotePath) {
         this(false, session, aDirectoryList, aRemotePath);
     }
 
+    /**
+     * Carry out the transfer.
+     * @throws IOException on i/o errors
+     * @throws JSchException on errors detected by scp
+     */
     public void execute() throws IOException, JSchException {
         if (directoryList != null) {
             doMultipleTransfer();
@@ -212,10 +246,18 @@ public class ScpToMessage extends AbstractSshMessage {
         }
     }
 
+    /**
+     * Get the local file
+     * @return the local file
+     */
     public File getLocalFile() {
         return localFile;
     }
 
+    /**
+     * Get the remote path
+     * @return the remote path
+     */
     public String getRemotePath() {
         return remotePath;
     }

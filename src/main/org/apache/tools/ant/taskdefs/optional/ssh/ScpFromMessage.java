@@ -28,6 +28,9 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.Channel;
 
+/**
+ * A helper object representing an scp download.
+ */
 public class ScpFromMessage extends AbstractSshMessage {
 
     private static final byte LINE_FEED = 0x0a;
@@ -38,6 +41,12 @@ public class ScpFromMessage extends AbstractSshMessage {
     private boolean isRecursive = false;
 
     /**
+     * Constructor for ScpFromMessage.
+     * @param verbose if true log extra information
+     * @param session the Scp session to use
+     * @param aRemoteFile the remote file name
+     * @param aLocalFile  the local file
+     * @param recursive   if true use recursion (-r option to scp)
      * @since Ant 1.6.2
      */
     public ScpFromMessage(boolean verbose,
@@ -51,6 +60,13 @@ public class ScpFromMessage extends AbstractSshMessage {
         this.isRecursive = recursive;
     }
 
+    /**
+     * Constructor for ScpFromMessage.
+     * @param session the Scp session to use
+     * @param aRemoteFile the remote file name
+     * @param aLocalFile  the local file
+     * @param recursive   if true use recursion (-r option to scp)
+     */
     public ScpFromMessage(Session session,
                            String aRemoteFile,
                            File aLocalFile,
@@ -58,6 +74,11 @@ public class ScpFromMessage extends AbstractSshMessage {
         this(false, session, aRemoteFile, aLocalFile, recursive);
     }
 
+    /**
+     * Carry out the transfer.
+     * @throws IOException on i/o errors
+     * @throws JSchException on errors detected by scp
+     */
     public void execute() throws IOException, JSchException {
         String command = "scp -f ";
         if (isRecursive) {

@@ -21,6 +21,7 @@ import com.jcraft.jsch.UserInfo;
 import com.jcraft.jsch.UIKeyboardInteractive;
 
 /**
+ * Class containing information on an SSH user.
  */
 public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
 
@@ -31,11 +32,17 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
     private boolean firstTime = true;
     private boolean trustAllCertificates;
 
+    /** Constructor for SSHUserInfo. */
     public SSHUserInfo() {
         super();
         this.trustAllCertificates = false;
     }
 
+    /**
+     * Constructor for SSHUserInfo.
+     * @param password the user's password
+     * @param trustAllCertificates if true trust hosts whose identity is unknown
+     */
     public SSHUserInfo(String password, boolean trustAllCertificates) {
         super();
         this.password = password;
@@ -147,10 +154,22 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         this.keyfile = keyfile;
     }
 
+    // (NOTE: this method does not seem to be called
+    /**
+     * Whether to prompt for a passphase.
+     * @param message ignored
+     * @return true always
+     */
     public boolean promptPassphrase(String message) {
         return true;
     }
 
+    // (NOTE: this method does not seem to be called
+    /**
+     * Whether to prompt for a password.
+     * @param passwordPrompt ignored
+     * @return true the first time this is called, false otherwise
+     */
     public boolean promptPassword(String passwordPrompt) {
         //log(passwordPrompt, Project.MSG_DEBUG);
         if (firstTime) {
@@ -160,11 +179,22 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         return firstTime;
     }
 
+    // (NOTE: this method does not seem to be called
+    /**
+     * Whether to prompt yes or no.
+     * @param message ignored
+     * @return the value of trustAllCertificates
+     */
     public boolean promptYesNo(String message) {
         //log(prompt, Project.MSG_DEBUG);
         return trustAllCertificates;
     }
 
+    // (NOTE: this method does not seem to be called
+    /**
+     * Do nothing.
+     * @param message ignored
+     */
     public void showMessage(String message) {
         //log(message, Project.MSG_DEBUG);
     }
