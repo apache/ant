@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -150,6 +150,7 @@ public class StarTeamList extends TreeBasedTask {
      * @param starteamFolder the StarTeam folder from which files to be
      *                       checked out
      * @param targetFolder the local mapping of rootStarteamFolder
+     * @throws BuildException on error
      */
     protected void visit(Folder starteamFolder, java.io.File targetFolder)
             throws BuildException {
@@ -214,6 +215,12 @@ public class StarTeamList extends TreeBasedTask {
     private static final SimpleDateFormat SDF =
         new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzz");
 
+    /**
+     * Log a repositary file and it's corresponding local file.
+     * @param reposFile the repositary file to log
+     * @param localFile the corresponding local file
+     * @throws IOException on error getting information from files
+     */
     protected void list(File reposFile, java.io.File localFile)
             throws IOException {
         StringBuffer b = new StringBuffer();
@@ -235,7 +242,7 @@ public class StarTeamList extends TreeBasedTask {
         log(b.toString());
     }
 
-    private static final String blankstr = blanks(30);
+    private static final String BLANK_STRING = blanks(30);
 
     private static String blanks(int len) {
         StringBuffer b = new StringBuffer();
@@ -245,12 +252,24 @@ public class StarTeamList extends TreeBasedTask {
         return b.toString();
     }
 
+    /**
+     * Return a padded string.
+     * @param s the string to pad
+     * @param padlen the size of the padded string
+     * @return the padded string
+     */
     protected static String pad(String s, int padlen) {
-        return (s + blankstr).substring(0, padlen);
+        return (s + BLANK_STRING).substring(0, padlen);
     }
 
+    /**
+     * Return a right padded string.
+     * @param s the string to pad
+     * @param padlen the size of the padded string
+     * @return the padded string
+     */
     protected static String rpad(String s, int padlen) {
-        s = blankstr + s;
+        s = BLANK_STRING + s;
         return s.substring(s.length() - padlen);
     }
 
