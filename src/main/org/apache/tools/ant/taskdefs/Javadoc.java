@@ -1569,6 +1569,8 @@ public class Javadoc extends Task {
         boolean javadoc4 =
             !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) &&
             !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
+        boolean javadoc5 = javadoc4 &&
+            !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
@@ -1886,7 +1888,7 @@ public class Javadoc extends Task {
             if (linksource && doclet == null) {
                 toExecute.createArgument().setValue("-linksource");
             }
-            if (breakiterator && doclet == null) {
+            if (breakiterator && (doclet == null || javadoc5)) {
                 toExecute.createArgument().setValue("-breakiterator");
             }
             if (noqualifier != null && doclet == null) {

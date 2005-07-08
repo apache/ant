@@ -248,6 +248,9 @@ Other changes:
 
 * <ssh> and <scp> support keyboard-interactive authentication now.
 
+* <javadoc> now supports -breakiterator for custom doclets if Ant is
+  running on JSE 5.0 or higher.  Bugzilla Report: 34580.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 
