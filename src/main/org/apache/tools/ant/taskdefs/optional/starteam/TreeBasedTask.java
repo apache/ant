@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -555,7 +555,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @exception BuildException
      *                   if the root folder cannot be found in the repository
      */
-    private final Folder configureRootStarteamFolder()
+    private Folder configureRootStarteamFolder()
         throws BuildException {
         Folder starteamrootfolder = null;
         try {
@@ -622,7 +622,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @return the local folder corresponding to the root Starteam folder.
      * @see findRootStarteamFolder
      */
-    private final java.io.File getLocalRootMapping(Folder starteamrootfolder) {
+    private java.io.File getLocalRootMapping(Folder starteamrootfolder) {
         // set the local folder.
         String localrootfolder;
         if (null != this.rootLocalFolder) {
@@ -722,6 +722,11 @@ public abstract class TreeBasedTask extends StarTeamTask {
         return -1;
     }
 
+    /**
+     * Get the id of the label in use.
+     * @return id of the label in use, if labelinuse is present,
+     *         otherwise return null
+     */
     protected int getIDofLabelInUse() {
         if (null != this.labelInUse) {
             return this.labelInUse.getID();
@@ -738,7 +743,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @param rootLocalFolder
      *               the local mapping of rootStarteamFolder
      *
-     * @exception BuildException
+     * @throws BuildException on error
      */
     protected abstract void visit(Folder rootStarteamFolder,
                                   java.io.File rootLocalFolder)
