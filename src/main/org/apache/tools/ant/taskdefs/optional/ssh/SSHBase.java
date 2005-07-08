@@ -59,26 +59,44 @@ public abstract class SSHBase extends Task implements LogListener {
         this.host = host;
     }
 
+    /**
+     * Get the host.
+     * @return the host
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     * Set the failonerror flag.
+     * Default is true
+     * @param failure if true throw a build exception when a failure occuries,
+     *                otherwise just log the failure and continue
+     */
     public void setFailonerror(boolean failure) {
         failOnError = failure;
     }
 
+    /**
+     * Get the failonerror flag.
+     * @return the failonerror flag
+     */
     public boolean getFailonerror() {
         return failOnError;
     }
 
     /**
+     * Set the verbose flag.
+     * @param verbose if true output more verbose logging
      * @since Ant 1.6.2
      */
-    public void setVerbose(boolean failure) {
-        verbose = failure;
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     /**
+     * Get the verbose flag.
+     * @return the verbose flag
      * @since Ant 1.6.2
      */
     public boolean getVerbose() {
@@ -152,16 +170,30 @@ public abstract class SSHBase extends Task implements LogListener {
         this.port = port;
     }
 
+    /**
+     * Get the port attribute.
+     * @return the port
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Initialize the task.
+     * This initializizs the known hosts and sets the default port.
+     * @throws BuildException on error
+     */
     public void init() throws BuildException {
         super.init();
         this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
         this.port = SSH_PORT;
     }
 
+    /**
+     * Open an ssh seession.
+     * @return the opened session
+     * @throws JSchException on error
+     */
     protected Session openSession() throws JSchException {
         JSch jsch = new JSch();
         if (null != userInfo.getKeyfile()) {
@@ -180,6 +212,10 @@ public abstract class SSHBase extends Task implements LogListener {
         return session;
     }
 
+    /**
+     * Get the user information.
+     * @return the user information
+     */
     protected SSHUserInfo getUserInfo() {
         return userInfo;
     }
