@@ -497,7 +497,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
         &lt;path path="Aj.Java"/&gt;
         &lt;chainedmapper&gt;
           &lt;flattenmapper/&gt;
-          &lt;regexpmapper from="a(*.)java" to="\1.java.bak" casesensitive="no"/&gt;
+          &lt;regexpmapper from="a(.*)\.java" to="\1.java.bak" casesensitive="no"/&gt;
         &lt;/chainedmapper&gt;
       &lt;/pathconvert&gt;
       &lt;echo&gt;x is ${x}&lt;/echo&gt;
