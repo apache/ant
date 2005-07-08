@@ -792,6 +792,9 @@ public class JUnitTask extends Task {
         }
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
+            if (summary) {
+                log("Running " + test.getName(), Project.MSG_INFO);
+            }
             cmd.createArgument().setValue(test.getName());
         } else {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
@@ -821,7 +824,6 @@ public class JUnitTask extends Task {
         }
 
         if (summary) {
-            log("Running " + test.getName(), Project.MSG_INFO);
             String prefix = "";
             if ("withoutanderr".equalsIgnoreCase(summaryValue)) {
                 prefix = "OutErr";
