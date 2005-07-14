@@ -79,9 +79,9 @@
       dest="${dest.dir}/${m2.jar.name}" 
       verbose="true"
       usetimestamp="false"/>
-<!--     <fail>
-    Fetch the ant task JAR from http://maven.apache.org/maven2/ant-tasks.html
-    </fail> -->
+    <fail status="0">
+      The Maven2 JAR has been installed; rerun ant to load it. 
+    </fail>
   </target>  
   
   
