@@ -20,21 +20,15 @@
   -Ddest=system   ant lib dir   ${ant.home}/lib --Default--
   -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
   
-  You may also need to set proxy settings. This can be done on the command line,
-  or in ${user.home}/.ant/proxy.properties 
-    proxy.host  hostname of proxy
-    proxy.port  port (default 80)
-    proxy.user  user (default="")
-    proxy.pass  pass (default="" )
-
-  Note that this project does not download any scripting language implementations.
+  You may also need to set proxy settings. This can be done by
+  setting the JVM proxy values in the ANT_OPTS environment
+  variables.
     
 </description>
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D each time it compiles it) -->
-  <property file=".ant.properties"/>
-  <property file="${user.home}/.ant.properties"/>
+  <property file="${user.home}/.ant/ant.properties"/>
   <property name="lib.dir" location="lib" />
   <property name="optional.dir" location="${lib.dir}/optional" />
   <property name="userlib.dir" location="${user.home}/.ant/lib" />
@@ -42,21 +36,7 @@
   <!-- load in our properties table -->
   <property file="${lib.dir}/libraries.properties"/>
   
-    <!-- configure an HTTP proxy -->
-  <property file="${user.home}/.ant/proxy.properties" />
-  <target name="setproxy" unless="setproxy.disabled" >
-    <property name="proxy.host" value="" />
-    <property name="proxy.port" value="80" />
-    <property name="proxy.user" value="" />
-    <property name="proxy.pass" value="" />
-    <echo level="verbose">
-      proxy: ${proxy.host}:${proxy.port} [${proxy.user}/${proxy.pass}]
-    </echo>
-      <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
-        proxyuser="${proxy.user}" proxypassword="${proxy.pass}" />
-  </target> 
-  
-  
+ 
   <target name="pick-dest">
     <condition property="dest.dir" 
       value="${lib.dir}">
@@ -83,7 +63,7 @@
   </target>
 
   
-  <target name="probe-m2" >
+  <target name="probe-m2" depends="pick-dest">
     <!-- Look for M2 ant tasks in our classpath-->
     <available property="m2.antlib.found"
       resource="org/apache/maven/artifact/ant/antlib.xml" />
@@ -93,12 +73,15 @@
   </target>
   
 
-  <target name="get-m2" depends="setproxy,probe-m2" unless="m2.antlib.found">
+  <target name="get-m2" depends="probe-m2,pick-dest" unless="m2.antlib.found">
     <!-- fetch M2 ant tasks into our repository, if it is not there-->
-    <!-- <property name="" /> -->
-    <fail>
+    <get src="${m2.antlib.url}" 
+      dest="${dest.dir}/${m2.jar.name}" 
+      verbose="true"
+      usetimestamp="false"/>
+<!--     <fail>
     Fetch the ant task JAR from http://maven.apache.org/maven2/ant-tasks.html
-    </fail>
+    </fail> -->
   </target>  
   
   
@@ -134,7 +117,7 @@
 
   
   <!-- any init stuff -->
-  <target name="init" depends="setproxy,pick-dest,macros" >
+  <target name="init" depends="pick-dest,macros" >
 
   </target>
   
