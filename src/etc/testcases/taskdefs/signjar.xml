@@ -75,10 +75,9 @@
   </target>
 
   
-  <!--TODO: change this when we move to SUBVERSION-->
   <target name="urlKeystoreHTTP" depends="jar">
     <sign
-      keystore="http://cvs.apache.org/viewcvs.cgi/*checkout*/ant/src/etc/testcases/testkeystore?rev=HEAD"
+      keystore="http://ant.apache.org/webtest/testkeystore"
       />
     <assertSigned/>             
   </target>
