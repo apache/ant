@@ -1267,7 +1267,7 @@ public class JUnitTask extends Task {
      */
     private void logVmExit(FormatterElement[] feArray, JUnitTest test,
                            String message) {
-        createClassLoader();  
+        createClassLoader();
         test.setCounts(1, 0, 1);
         test.setProperties(getProject().getProperties());
         for (int i = 0; i < feArray.length; i++) {
@@ -1354,8 +1354,7 @@ public class JUnitTask extends Task {
      */
     private void deleteClassLoader()
     {
-        if (classLoader != null)
-        {
+        if (classLoader != null) {
             classLoader.cleanup();
             classLoader = null;
         }
