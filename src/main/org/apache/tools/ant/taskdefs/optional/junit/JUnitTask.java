@@ -671,10 +671,7 @@ public class JUnitTask extends Task {
                 }
             }
         } finally {
-            if (classLoader != null && reloading) {
-                classLoader.cleanup();
-            }
-            classLoader = null;
+            deleteClassLoader();
         }
     }
 
@@ -1112,9 +1109,6 @@ public class JUnitTask extends Task {
             }
             if (classLoader != null) {
                 classLoader.resetThreadContextLoader();
-                if (!reloading) {
-                    classLoader.cleanup();
-                }
             }
         }
     }
@@ -1273,7 +1267,7 @@ public class JUnitTask extends Task {
      */
     private void logVmExit(FormatterElement[] feArray, JUnitTest test,
                            String message) {
-        createClassLoader();
+        createClassLoader();  
         test.setCounts(1, 0, 1);
         test.setProperties(getProject().getProperties());
         for (int i = 0; i < feArray.length; i++) {
@@ -1330,6 +1324,7 @@ public class JUnitTask extends Task {
         Path userClasspath = getCommandline().getClasspath();
         if (userClasspath != null) {
             if (reloading || classLoader == null) {
+                deleteClassLoader();
                 Path classpath = (Path) userClasspath.clone();
                 if (includeAntRuntime) {
                     log("Implicitly adding " + antRuntimeClasses
@@ -1350,6 +1345,19 @@ public class JUnitTask extends Task {
                 // will cause trouble in JDK 1.1 if omitted
                 classLoader.addSystemPackageRoot("org.apache.tools.ant");
             }
+        }
+    }
+    
+    /**
+     * Removes a classloader if needed.
+     * @since Ant 1.7
+     */
+    private void deleteClassLoader()
+    {
+        if (classLoader != null)
+        {
+            classLoader.cleanup();
+            classLoader = null;
         }
     }
 
