@@ -43,7 +43,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Unit tests for ModifiedSelector.
  *
- * @version 2004-07-12
+ * @version 2005-07-19
  * @since  Ant 1.6
  */
 public class ModifiedSelectorTest extends BaseSelectorTest {

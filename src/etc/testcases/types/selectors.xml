@@ -261,4 +261,92 @@
       <property name="fs.full.value" refid="fs.full"/>
   </target>
 
+
+	<target name="modifiedselectortest-ResourceSimple">
+		<fail message="Didnt get the required numbers of Resources.">
+			<condition>
+				<not>
+					<resourcecount when="equal" count="3">
+						<restrict>
+							<resources>
+								<file file="foo" />
+								<resource name="foo" />
+								<file file="foo" basedir="${basedir}" />
+							</resources>
+							<modified selres="true" xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+						</restrict>
+					</resourcecount>
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+	<target name="modifiedselectortest-ResourceSelresTrue">
+		<fail message="Got the Resource, but should.">
+			<condition>
+				<not>
+					<resourcecount when="equal" count="1">
+						<restrict>
+							<resources>
+								<resource name="notExisting" />
+							</resources>
+							<modified selres="true" xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+						</restrict>
+					</resourcecount>
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+	<target name="modifiedselectortest-ResourceSelresFalse">
+		<fail message="Got the Resource, but should not.">
+			<condition>
+				<not>
+					<resourcecount when="equal" count="0">
+						<restrict>
+							<resources>
+								<resource name="notExisting" />
+							</resources>
+							<modified selres="false" xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+						</restrict>
+					</resourcecount>
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+	<target name="modifiedselectortest-scenario-resourceSimple" depends="modifiedselectortest-scenario-prepare">
+		<macrodef name="check">
+			<attribute name="count"/>
+			<attribute name="message"/>
+			<sequential>
+				<fail message="@{message}">
+					<condition>
+						<not>
+							<resourcecount when="equal" count="@{count}">
+								<restrict>
+									<resources>
+										<fileset dir="${test.dir}/src"/>
+									</resources>
+									<modified selres="false" xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+								</restrict>
+							</resourcecount>
+						</not>
+					</condition>
+				</fail>	
+			</sequential>
+		</macrodef>
+		<!-- select first time and create cachefile -->
+		<check count="14" message="Initial set of files not ok."/>
+		
+		<!-- check second time: nothing should be selected -->
+		<check count="0" message="Selected files but shouldnt."/>
+		
+		<!-- 'modify' the source files -->
+		<antcall target="modifiedselectortest-scenario-makeDirty"/>
+
+		<!-- copy third time: only the files with new CONTENT should be copied -->
+		<check count="2" message="Didnt select the 2 modified files."/>
+	</target>	
+	
 </project>

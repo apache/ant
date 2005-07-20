@@ -659,6 +659,12 @@
     The comparison, computing of the hashvalue and the store is done by implementation
     of special interfaces. Therefore they may provide additional parameters.</p>
 
+    <p>The <code>&lt;modified&gt;</code> selector can be used as ResourceSelector.
+    In that case it maps simple file resources to files and does its job. If the
+    resource is from another type, the <code>&lt;modified&gt;</code> selector tries
+    to (<b>attention!</b>) copy the content into a local file for computing the
+    hashvalue.</p>
+
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
         <td valign="top"><b>Attribute</b></td>
@@ -728,6 +734,13 @@
         <td valign="top"> seldirs </td>
         <td valign="top"> Should directories be selected? (boolean) </td>
         <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> selres </td>
+        <td valign="top"> Should Resources whithout an InputStream, and
+           therefore without checking, be selected?  (boolean) </td>
+        <td valign="top" align="center"> No, defaults to <i>true</i>. Only relevant
+           when used as ResourceSelector. </td>
       </tr>
       <tr>
         <td valign="top"> delayupdate </td>
@@ -932,7 +945,7 @@
       <h4>Script Selector</h4>
 
       <p>
-        The <code>&lt;scriptselector&gt;</code> element enables you 
+        The <code>&lt;scriptselector&gt;</code> element enables you
         to write a complex selection algorithm in any
         <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
         supported language.</p>
@@ -958,22 +971,22 @@
           <td valign="top">filename of the script</td>
           <td valign="top" align="center">no</td>
         </tr>
-      </table>      
+      </table>
       <p>
       If no <code>src</code> attribute is supplied, the script must be nested
-      inside the selector declaration. 
+      inside the selector declaration.
       </p>
       <p>The embedded script is invoked for every test, with
-         the bean <code>self</code> 
+         the bean <code>self</code>
         is bound to the selector. It has an attribute <code>selected</code>
         must can be set using <code>setSelected(boolean)</code> to select that
         file.
-         
+
       <p>
-      
+
       The following beans are configured for every script, alongside
       the classic set of project, properties, and targets.
-      
+
       <table border="1" cellpadding="2" cellspacing="0">
         <tr>
           <td valign="top"><b>Bean</b></td>
@@ -1000,13 +1013,13 @@
           <td valign="top">Fileset base directory</td>
           <td valign="top" >java.io.File</td>
         </tr>
-        
-      </table>       
+
+      </table>
       <p>
       The <code>self</code> bean maps to the selector, which has the following
-      attributes. Only the <code>selected</code> flag is writeable, the rest 
+      attributes. Only the <code>selected</code> flag is writeable, the rest
       are read only via their getter methods.
-      
+
             <table border="1" cellpadding="2" cellspacing="0">
         <tr>
           <td valign="top"><b>Attribute</b></td>
@@ -1034,7 +1047,7 @@
           <td valign="top" >java.io.File</td>
         </tr>
       </table>
-      
+
       <p>
       Example
       </p>
@@ -1053,7 +1066,7 @@
     &lt;/scriptselector&gt;
 </pre>
 Select files whose filename length is even.
-      
+
     <a name="selectcontainers"></a>
     <h3>Selector Containers</h3>
 

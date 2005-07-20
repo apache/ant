@@ -407,4 +407,12 @@
   <target name="all"
     depends="name,testexists,instanceof,testtype,testdate,testsize,logical" />
 
+
+	
+  <!-- 
+    The tests for oata.types.selectors.ModifiedSelectorTest as 
+    ResourceSelector are in its test-buildfile src\etc\testcases\types\selectors.xml. 
+  -->
+		
+	
 </project>

@@ -33,7 +33,11 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.selectors.BaseExtendSelector;
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -228,10 +232,11 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * a nested <i><param name="algorithm.provider" value="MyProvider"/></i>.
  *
  *
- * @version 2004-07-12
+ * @version 2005-07-19
  * @since  Ant 1.6
  */
-public class ModifiedSelector extends BaseExtendSelector implements BuildListener {
+public class ModifiedSelector extends BaseExtendSelector
+                              implements BuildListener, ResourceSelector {
 
 
     // -----  attributes  -----
@@ -260,6 +265,12 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
 
     /** Are directories selected? */
     private boolean selectDirectories = true;
+
+    /**
+     * Should Resources whithout an InputStream, and
+     * therefore without checking, be selected?
+     */
+    private boolean selectResourcesWithoutInputStream = true;
 
     /** Delay the writing of the cache file */
     private boolean delayUpdate = true;
@@ -507,13 +518,72 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
 
 
     /**
+     * Implementation of ResourceSelector.isSelected().
+     *
+     * @param resource The resource to check
+     * @return whether the resource is selected
+     * @see org.apache.tools.ant.types.resources.selectors.ResourceSelector#isSelected(org.apache.tools.ant.types.Resource)
+     */
+    public boolean isSelected(Resource resource) {
+        if (resource.isFilesystemOnly()) {
+            // We have a 'resourced' file, so reconvert it and use
+            // the 'old' implementation.
+            FileResource fileResource = (FileResource) resource;
+            File file = fileResource.getFile();
+            String filename = fileResource.getName();
+            File basedir = fileResource.getBaseDir();
+            return isSelected(basedir, filename, file);
+        } else {
+            try {
+                // How to handle non-file-Resources? I copy temporarily the
+                // resource to a file and use the file-implementation.
+                FileUtils fu = FileUtils.getFileUtils();
+                File tmpFile = fu.createTempFile("modified-", ".tmp", null);
+                Resource tmpResource = new FileResource(tmpFile);
+                fu.copyResource(resource, tmpResource);
+                boolean isSelected = isSelected(tmpFile.getParentFile(),
+                                                tmpFile.getName(),
+                                                resource.toLongString());
+                tmpFile.delete();
+                return isSelected;
+            } catch (UnsupportedOperationException uoe) {
+                log("The resource '"
+                  + resource.getName()
+                  + "' does not provide an InputStream, so it is not checked. "
+                  + "Akkording to 'selres' attribute value it is "
+                  + ((selectResourcesWithoutInputStream) ? "" : " not")
+                  + "selected.", Project.MSG_INFO);
+                return selectResourcesWithoutInputStream;
+            } catch (Exception e) {
+                throw new BuildException(e);
+            }
+        }
+    }
+
+
+    /**
      * Implementation of BaseExtendSelector.isSelected().
+     *
      * @param basedir as described in BaseExtendSelector
      * @param filename as described in BaseExtendSelector
      * @param file as described in BaseExtendSelector
      * @return as described in BaseExtendSelector
      */
     public boolean isSelected(File basedir, String filename, File file) {
+        return isSelected(basedir, filename, file.getAbsolutePath());
+    }
+
+
+    /**
+     * The business logic of this selector for use as ResourceSelector of
+     * FileSelector.
+     *
+     * @param basedir as described in BaseExtendSelector
+     * @param filename as described in BaseExtendSelector
+     * @param cacheKey the name for the key for storing the hashvalue
+     * @return
+     */
+    private boolean isSelected(File basedir, String filename, String cacheKey) {
         validate();
         File f = new File(basedir, filename);
 
@@ -524,7 +594,7 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
 
         // Get the values and do the comparison
         String cachedValue = String.valueOf(cache.get(f.getAbsolutePath()));
-        String newValue    = algorithm.getValue(f);
+        String newValue = algorithm.getValue(f);
 
         boolean rv = (comparator.compare(cachedValue, newValue) != 0);
 
@@ -597,6 +667,15 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
      */
     public void setSeldirs(boolean seldirs) {
         selectDirectories = seldirs;
+    }
+
+
+    /**
+     * Support for <i>selres</i> attribute.
+     * @param newValue the new value
+     */
+    public void setSelres(boolean newValue) {
+        this.selectResourcesWithoutInputStream = newValue;
     }
 
 
@@ -964,4 +1043,5 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
             return new String[] {"equal", "rule" };
         }
     }
+
 }

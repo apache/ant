@@ -21,4 +21,6 @@
     classname="org.apache.tools.ant.types.resources.selectors.Size" />
   <typedef name="date"
     classname="org.apache.tools.ant.types.resources.selectors.Date" />
+  <typedef name="modified"
+    classname="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector" />
 </antlib>
