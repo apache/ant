@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Path;
 
 // inside MockProject
+import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
@@ -589,12 +590,35 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         }
     }
 
-
+    
     public void _testCustomComparator() {
         // same logic as on algorithm, no testcases created
     }
 
-
+    
+    public void testResourceSelectorSimple() {
+        BFT bft = new BFT("modifiedselector");
+        bft.doTarget("modifiedselectortest-ResourceSimple");
+        bft.deleteCachefile();
+        //new File("src/etc/testcases/types/resources/selectors/cache.properties").delete();
+    }
+    public void testResourceSelectorSelresTrue() {
+        BFT bft = new BFT("modifiedselector");
+        bft.doTarget("modifiedselectortest-ResourceSelresTrue");
+        bft.assertLogContaining("does not provide an InputStream");
+        bft.deleteCachefile();
+    }
+    public void testResourceSelectorSelresFalse() {
+        BFT bft = new BFT("modifiedselector");
+        bft.doTarget("modifiedselectortest-ResourceSelresFalse");
+        bft.deleteCachefile();  
+    }
+    public void testResourceSelectorScenarioSimple() {
+        BFT bft = new BFT("modifiedselector");
+        bft.doTarget("modifiedselectortest-scenario-resourceSimple");
+        bft.doTarget("modifiedselectortest-scenario-clean");
+        bft.deleteCachefile();  
+    }
     /**
      * Test the interface semantic of Comparators.
      * This method does some common test for comparator implementations.
@@ -874,16 +898,19 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      * and property transfer to that project.
      */
     private class BFT extends org.apache.tools.ant.BuildFileTest {
+        String buildfile = "src/etc/testcases/types/selectors.xml";
+
         BFT() { super("nothing"); }
         BFT(String name) {
             super(name);
         }
+        
         String propfile = "ModifiedSelectorTest.properties";
 
         boolean isConfigured = false;
 
         public void setUp() {
-            configureProject("src/etc/testcases/types/selectors.xml");
+            configureProject(buildfile);
             isConfigured = true;
         }
 
@@ -892,6 +919,13 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         public void doTarget(String target) {
             if (!isConfigured) setUp();
             executeTarget(target);
+        }
+        
+        protected void assertLogContaining(String substring) {
+            super.assertLogContaining(substring);
+        }
+        protected void assertOutputContaining(String substring) {
+            super.assertOutputContaining(substring);
         }
 
         public String getProperty(String property) {
@@ -919,8 +953,20 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             new File(getProject().getBaseDir(), propfile).delete();
         }
 
+        public void deleteCachefile() {
+            File basedir = new File(buildfile).getParentFile();
+            File cacheFile = new File(basedir, "cache.properties");
+            cacheFile.delete();
+        }
+
         public org.apache.tools.ant.Project getProject() {
             return super.getProject();
+        }
+        public String getBuildfile() {
+            return buildfile;
+        }
+        public void setBuildfile(String buildfile) {
+            this.buildfile = buildfile;
         }
     }//class-BFT
 
