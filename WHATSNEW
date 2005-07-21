@@ -59,6 +59,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Backward incompatible change in ZipFileSet, Bugzilla Report 35824.
+
 * Wrong replacement of file separator chars prevens junitbatchtest
   from running correctly on files from a zipfileset. Bugzilla Report 35499
 

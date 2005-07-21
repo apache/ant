@@ -130,6 +130,7 @@ public class ZipFileSet extends FileSet {
      * to have a reference to a ZipFileSet, only to a FileSet.
      * @param p the project to use
      * @return the source file
+     * @since Ant 1.6
      */
     public File getSrc(Project p) {
         if (isReference()) {
@@ -138,6 +139,16 @@ public class ZipFileSet extends FileSet {
         return srcFile;
     }
 
+    /**
+     * Get the zip file from which entries will be extracted.
+     * References are not followed, since it is not possible
+     * to have a reference to a ZipFileSet, only to a FileSet.
+     * @deprecated 
+     */
+    public File getSrc() {
+        return srcFile;
+    }
+    
     /**
      * Prepend this prefix to the path for each zip entry.
      * Prevents both prefix and fullpath from being specified
@@ -155,6 +166,7 @@ public class ZipFileSet extends FileSet {
      * Return the prefix prepended to entries in the zip file.
      * @param p the project to use
      * @return the prefix
+     * @since Ant 1.6
      */
     public String getPrefix(Project p) {
         if (isReference()) {
@@ -163,6 +175,14 @@ public class ZipFileSet extends FileSet {
         return prefix;
     }
 
+    /**
+     * Return the prefix prepended to entries in the zip file.
+     * @deprecated
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+    
     /**
      * Set the full pathname of the single entry in this fileset.
      * Prevents both prefix and fullpath from being specified
@@ -180,11 +200,20 @@ public class ZipFileSet extends FileSet {
      * Return the full pathname of the single entry in this fileset.
      * @param p the project to use
      * @return the full path
+     * @since Ant 1.6
      */
     public String getFullpath(Project p) {
         if (isReference()) {
             return ((ZipFileSet) getRef(p)).getFullpath(p);
         }
+        return fullpath;
+    }
+    
+    /**
+     * Return the full pathname of the single entry in this fileset.
+     * @deprecated
+     */
+    public String getFullpath() {
         return fullpath;
     }
 
@@ -290,7 +319,7 @@ public class ZipFileSet extends FileSet {
      * Get the mode of the zip fileset
      * @param p the project to use
      * @return the mode
-     * @since Ant 1.5.2
+     * @since Ant 1.6
      */
     public int getFileMode(Project p) {
         if (isReference()) {
@@ -298,6 +327,15 @@ public class ZipFileSet extends FileSet {
         }
         return fileMode;
     }
+    
+    /**
+     * @since Ant 1.5.2
+     * @deprecated
+     */
+    public int getFileMode() {
+        return fileMode;
+    }
+
 
     /**
      * Whether the user has specified the mode explicitly.
@@ -329,12 +367,20 @@ public class ZipFileSet extends FileSet {
      * Get the dir mode of the zip fileset
      * @param p the project to use
      * @return the mode
-     * @since Ant 1.5.2
+     * @since Ant 1.6
      */
     public int getDirMode(Project p) {
         if (isReference()) {
             return ((ZipFileSet) getRef(p)).getDirMode(p);
         }
+        return dirMode;
+    }
+    
+    /**
+     * @since Ant 1.5.2
+     * @deprecated
+     */
+    public int getDirMode() {
         return dirMode;
     }
 
