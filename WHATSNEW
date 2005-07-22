@@ -73,7 +73,7 @@ Fixed bugs:
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
-* Incorrect task name with invalid "javac" task after a "presetdef.
+* Incorrect task name with invalid "javac" task after a "presetdef".
   Bugzilla reports 31389 and 29499.
   
 * <manifest> was not printing warnings about invalid manifest elements.
@@ -239,6 +239,9 @@ Other changes:
 
 * Added initial support for Resource Collections, including the
   resourcecount task.
+
+* property attribute of pathconvert is now optional. If omitted the
+  result will be written to the log.
 
 * New mapper, <scriptmapper>, supports scripted mapping of source files/strings
   to destination strings.
