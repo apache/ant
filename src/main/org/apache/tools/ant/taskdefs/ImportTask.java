@@ -91,7 +91,8 @@ public class ImportTask extends Task {
         }
 
         ProjectHelper helper =
-                (ProjectHelper) getProject().getReference("ant.projectHelper");
+                (ProjectHelper) getProject().
+                    getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
         Vector importStack = helper.getImportStack();
 
         if (importStack.size() == 0) {

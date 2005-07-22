@@ -72,6 +72,11 @@ public class ProjectHelper {
      */
     public static final String SERVICE_ID =
         "META-INF/services/org.apache.tools.ant.ProjectHelper";
+    
+    /**
+     * name of project helper reference that we add to a project
+     */ 
+    public static final String PROJECTHELPER_REFERENCE = "ant.projectHelper";
 
     /**
      * Configures the project with the contents of the specified XML file.
@@ -86,7 +91,7 @@ public class ProjectHelper {
     public static void configureProject(Project project, File buildFile)
         throws BuildException {
         ProjectHelper helper = ProjectHelper.getProjectHelper();
-        project.addReference("ant.projectHelper", helper);
+        project.addReference(PROJECTHELPER_REFERENCE, helper);
         helper.parse(project, buildFile);
     }
 
