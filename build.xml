@@ -1029,6 +1029,7 @@
     <mkdir dir="${dist.etc}"/>
 
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
+    <copy todir="${dist.lib}" file="${lib.dir}/libraries.properties"/>
 
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
@@ -1056,6 +1057,7 @@
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
         <include name="welcome.html"/>
+        <include name="fetch.xml"/>
       </fileset>
     </copy>
 
@@ -1123,6 +1125,7 @@
         <include name="*.jar"/>
         <include name="*.zip"/>
         <include name="README"/>
+        <include name="libraries.properties"/>
       </fileset>
     </copy>
 
@@ -1154,6 +1157,7 @@
         <include name="bootstrap.bat"/>
         <include name="bootstrap.sh"/>
         <include name="build.xml"/>
+        <include name="fetch.xml"/>
         <include name="welcome.html"/>
       </fileset>
     </copy>
@@ -1326,17 +1330,55 @@
          Upload the distribution to cvs.apache.org for final releases
        ===================================================================
   -->
-  <target name="upload" description="upload distribution">
+
+  <target name="init-upload" >
     <fail unless="apache.user" message="set a property apache.user with your apache user"/>
     <fail unless="ssh.passphrase" message="set a property with your ssh passphrase"/>
     <fail unless="ssh.keyfile" message="set a property with your ssh keyfile"/>
-    <fail unless="ssh.knownhosts" message="set a property with your ssh knownhosts"/>
-    <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/ant" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
+    <property name="ssh.knownhosts" location="${user.home}/.ssh/known_hosts" />
+    <property name="ssh.host" value="cvs.apache.org"/>
+    <property name="ssh.verbose" value="false"/>
+    <property name="ssh.base.directory" value="/www/www.apache.org/dist"/>
+    <property name="ssh.dist.directory" value="${ssh.base.directory}/ant"/>
+    <property name="ssh.jars.directory" value="${ssh.base.directory}/java-repository/ant/jars"/>
+    <echo >
+      Uploading Ant version ${version}
+      to host ${ssh.host} as ${apache.user}
+      distribution to ${ssh.dist.directory}
+      JAR files to ${ssh.jars.directory}
+      Known hosts = ${ssh.knownhosts}
+    </echo>
+  </target>
+
+  <!-- create the directories if absent-->
+  <target name="ssh-mkdirs"
+    depends="init-upload">
+    <sshexec username="${apache.user}" host="${ssh.host}"
+      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
+      knownhosts="${ssh.knownhosts}"
+      failonerror="false"
+      command="mkdir ${ssh.dist.directory}" />
+    <sshexec username="${apache.user}" host="${ssh.host}"
+      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
+      knownhosts="${ssh.knownhosts}"
+      failonerror="false"
+      command="mkdir ${ssh.jars.directory}"/>
+  </target>
+
+  <target name="upload" description="--> uploads the distribution"
+      depends="init-upload,ssh-mkdirs">
+    <scp todir="${apache.user}@${ssh.host}:${ssh.dist.directory}"
+      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
+      knownhosts="${ssh.knownhosts}"
+      verbose="${ssh.verbose}" >
       <fileset dir="${dist.base}">
         <include name="**/*${version}*"/>
       </fileset>
      </scp>
-    <scp todir="${apache.user}@cvs.apache.org:/www/www.apache.org/dist/java-repository/ant/jars" keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}" knownhosts="${ssh.knownhosts}">
+    <scp todir="${apache.user}@${ssh.host}:${ssh.jars.directory}"
+      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
+      knownhosts="${ssh.knownhosts}"
+      verbose="${ssh.verbose}">
       <fileset dir="java-repository/ant/jars">
         <include name="*${version}*"/>
       </fileset>
