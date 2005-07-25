@@ -1356,12 +1356,10 @@
     <sshexec username="${apache.user}" host="${ssh.host}"
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
-      failonerror="false"
       command="mkdir -p ${ssh.dist.directory}" />
     <sshexec username="${apache.user}" host="${ssh.host}"
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
-      failonerror="false"
       command="mkdir -p ${ssh.jars.directory}"/>
   </target>
 
