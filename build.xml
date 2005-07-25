@@ -941,7 +941,7 @@
   <!--   Creates jar of test utility classes -->
   <target name="test-jar"
     depends="compile-tests"
-    description="--> creates the Apache Ant Test Utilties jar">
+    description="--> creates the Apache Ant Test Utilities jar">
 
     <fail unless="junit.present">
       We cannot build the test jar unless JUnit is present,
@@ -1357,12 +1357,12 @@
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
       failonerror="false"
-      command="mkdir ${ssh.dist.directory}" />
+      command="mkdir -p ${ssh.dist.directory}" />
     <sshexec username="${apache.user}" host="${ssh.host}"
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
       failonerror="false"
-      command="mkdir ${ssh.jars.directory}"/>
+      command="mkdir -p ${ssh.jars.directory}"/>
   </target>
 
   <target name="upload" description="--> uploads the distribution"
