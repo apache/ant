@@ -49,7 +49,7 @@ import org.apache.tools.ant.Task;
  * used against SOCKS5 servers.
  * </p>
  * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">
- *  java 1.4 network property list</a>
+ *  java 1.5 network property list</a>
   *@since       Ant 1.5
  * @ant.task category="network"
  */
