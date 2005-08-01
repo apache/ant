@@ -112,7 +112,7 @@ ant compile jar run
 <h2>Enhance the build file</h2>
 </p>Ok, the build works - but it is not as nice as it should: many time you are referencing the same directories,
 main-class and jar-name are hard coded, and while invocation you have to remember the right order of build steps.</p>
-<p>The first and second point would be adressed with <i>properties</i>, the thirs with a special property - an attribute
+<p>The first and second point would be adressed with <i>properties</i>, the third with a special property - an attribute
 of the &lt;project&gt;-tag and the fourth problem can be solved using dependencies.</p>
 
 <pre class="code">
@@ -214,7 +214,7 @@ public class HelloWorld {
 }
 </pre>
 
-<p>Most of the modifications are "framework overhead" which has to be done once. The red line is our "old System-out"
+<p>Most of the modifications are "framework overhead" which has to be done once. The blue line is our "old System-out"
 statement.</p>
 <p>Don't try to run <tt>ant</tt> - you will only get lot of compiler errors. Log4J is not inside the classpath so we have
 to do a little work here. But do not change the CLASSPATH environment variable! This is only for this project and maybe
@@ -265,7 +265,7 @@ a jarname <i>and</i> a classpath. So add our class in the red line to the alread
 <li><i>[main]</i> the running thread from our application </li>
 <li><i>INFO</i> log level of that statement</i>
 <li><i>oata.HelloWorld</i> source of that statement</i>
-<li><i>-</i> <font size="-1">sorry don't know - some Log4J stuff</font></li>
+<li><i>-</i> separator</li>
 <li><i>Hello World</i> the message</li>
 </ul>
 For another layout ... have a look inside Log4J's documentation about using other PatternLayout's.</p>
