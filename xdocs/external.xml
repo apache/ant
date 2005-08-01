@@ -2569,6 +2569,36 @@
         </table>
       </subsection>
 
+      <subsection name="SQLUnit">
+
+        <p>Unit Testing Stored Procedures<br/>
+        SQLUnit is a regression and unit testing harness for testing 
+        database stored procedures. An SQLUnit test suite would be written 
+        as an XML file. The SQLUnit harness, which is written in Java, uses 
+        the JUnit unit testing framework to convert the XML test 
+        specifications to JDBC calls and compare the results generated from 
+        the calls with the specified results.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sqlunit.sourceforge.net">http://sqlunit.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="">Pavel Vlasov</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
