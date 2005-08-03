@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -35,13 +36,21 @@ class ChangeLogParser {
     private static final int GET_REVISION = 4;
     private static final int GET_PREVIOUS_REV = 5;
 
+// FIXME formatters are not thread-safe
+
     /** input format for dates read in from cvs log */
     private static final SimpleDateFormat INPUT_DATE
-        = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+    /**
+     * New formatter used to parse CVS date/timestamp.
+     */
+    private static final SimpleDateFormat CVS1129_INPUT_DATE =
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
     static {
         TimeZone utc = TimeZone.getTimeZone("UTC");
         INPUT_DATE.setTimeZone(utc);
+        CVS1129_INPUT_DATE.setTimeZone(utc);
     }
 
     //The following is data used while processing stdout of CVS command
@@ -168,9 +177,15 @@ class ChangeLogParser {
      */
     private void processDate(final String line) {
         if (line.startsWith("date:")) {
-            date = line.substring(6, 25);
-            String lineData = line.substring(line.indexOf(";") + 1);
-            author = lineData.substring(10, lineData.indexOf(";"));
+            // The date format is using a - format since 1.12.9 so we have:
+            // 1.12.9-: 'date: YYYY/mm/dd HH:mm:ss;  author: name;'
+            // 1.12.9+: 'date: YYYY-mm-dd HH:mm:ss Z;  author: name'
+            int endOfDateIndex = line.indexOf(';');
+            date = line.substring("date: ".length(), endOfDateIndex);
+
+            int startOfAuthorIndex = line.indexOf("author: ", endOfDateIndex + 1);
+            int endOfAuthorIndex = line.indexOf(';', startOfAuthorIndex + 1);
+            author = line.substring("author: ".length() + startOfAuthorIndex, endOfAuthorIndex);
 
             status = GET_COMMENT;
 
@@ -186,11 +201,11 @@ class ChangeLogParser {
      * @param line the line to process
      */
     private void processGetPreviousRevision(final String line) {
-        if (!line.startsWith("revision")) {
+        if (!line.startsWith("revision ")) {
             throw new IllegalStateException("Unexpected line from CVS: "
                 + line);
         }
-        previousRevision = line.substring(9);
+        previousRevision = line.substring("revision ".length());
 
         saveEntry();
 
@@ -205,7 +220,8 @@ class ChangeLogParser {
         final String entryKey = date + author + comment;
         CVSEntry entry;
         if (!entries.containsKey(entryKey)) {
-            entry = new CVSEntry(parseDate(date), author, comment);
+            Date dateObject = parseDate(date);
+            entry = new CVSEntry(dateObject, author, comment);
             entries.put(entryKey, entry);
         } else {
             entry = (CVSEntry) entries.get(entryKey);
@@ -224,9 +240,11 @@ class ChangeLogParser {
         try {
             return INPUT_DATE.parse(date);
         } catch (ParseException e) {
-            //final String message = REZ.getString( "changelog.bat-date.error", date );
-            //getContext().error( message );
-            return null;
+            try {
+                return CVS1129_INPUT_DATE.parse(date);
+            } catch (ParseException e2) {
+                throw new IllegalStateException("Invalid date format: " + date);
+            }
         }
     }
 
