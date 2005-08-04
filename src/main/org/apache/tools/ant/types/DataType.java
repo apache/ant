@@ -338,4 +338,15 @@ public abstract class DataType extends ProjectComponent {
             throw noChildrenAllowed();
         }
     }
+
+    /**
+     * Basic DataType toString().
+     * @return this DataType formatted as a String.
+     */
+    public String toString() {
+        String d = getDescription();
+        return d == null ? getDataTypeName() : getDataTypeName() + " " + d;
+    }
+
 }
+
