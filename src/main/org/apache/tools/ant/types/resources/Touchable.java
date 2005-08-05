@@ -18,7 +18,7 @@ package org.apache.tools.ant.types.resources;
 
 /**
  * Interface to be implemented by "touchable" resources;
- * for example those whose modification time can be altered.
+ * that is, those whose modification time can be altered.
  * @since Ant 1.7
  */
 public interface Touchable {
