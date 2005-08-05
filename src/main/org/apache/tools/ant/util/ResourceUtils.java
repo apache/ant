@@ -79,14 +79,13 @@ public class ResourceUtils {
                                                     FileNameMapper mapper,
                                                     ResourceFactory targets,
                                                     long granularity) {
-        long now = (new java.util.Date()).getTime() + granularity;
+        long now = System.currentTimeMillis() + granularity;
 
         Vector vresult = new Vector();
         for (int counter = 0; counter < source.length; counter++) {
             if (source[counter].getLastModified() > now) {
                 logTo.log("Warning: " + source[counter].getName()
-                         + " modified in the future.",
-                         Project.MSG_WARN);
+                         + " modified in the future.", Project.MSG_WARN);
             }
             String[] targetnames =
                 mapper.mapFileName(source[counter].getName()
