@@ -445,6 +445,50 @@ depends="testfileurl,testfileurlref,testhttpurl1,testhttpurl2,testjarurl,testres
   <target name="single"
     depends="testresource,url,testfile,string,testzipentry,testproperty" />
 
-  <target name="all" depends="legacy,files,resources,setlogic,single" />
+  <target name="testfirst0">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount count="0">
+            <first count="0">
+              <filelist dir="${dir}" files="1,2,3,4,5" />
+            </first>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testfirst1">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount count="1">
+            <first>
+              <filelist dir="${dir}" files="1,2,3,4,5" />
+            </first>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testfirst2">
+    <fail>
+      <condition>
+        <not>
+          <resourcecount count="2">
+            <first count="2">
+              <filelist dir="${dir}" files="1,2,3,4,5" />
+            </first>
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="first" depends="testfirst0,testfirst1,testfirst2" />
+
+  <target name="all" depends="legacy,files,resources,setlogic,single,first" />
 
 </project>

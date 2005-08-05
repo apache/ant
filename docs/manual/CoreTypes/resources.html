@@ -222,6 +222,8 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
   <li><a href="#restrict">restrict</a> - restrict a resource collection
     to include only resources meeting specified criteria</li>
   <li><a href="#sort">sort</a> - sorted resource collection</li>
+  <li><a href="#first">first</a> - first <i>n</i> resources from a
+    nested collection</li>
   <li><a href="#union">union</a> - set union of nested resource collections</li>
   <li><a href="#intersect">intersect</a> - set intersection
     of nested resource collections</li>
@@ -514,6 +516,19 @@ platforms.
 <p>Sorts another nested resource collection according to the resources'
 natural order, or by one or more nested resource comparators:</p>
 <blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
   <h4>Parameters specified as nested elements</h4>
   <p>A single resource collection is required.</p>
   <p>The sort can be controlled and customized by specifying one or more
@@ -532,7 +547,7 @@ natural order, or by one or more nested resource comparators:</p>
     <li><a href="#rcmp.size">size</a> - sort resources by size</li>
     <li><a href="#rcmp.content">content</a> - sort resources by content</li>
     <li><a href="#rcmp.reverse">reverse</a> - reverse the natural sort order,
-      or a single nested resource comparator</li>
+      or that of a single nested resource comparator</li>
   </ul>
 
   <h4><a name="rcmp.name">name</a></h4>
@@ -570,8 +585,36 @@ natural order, or by one or more nested resource comparators:</p>
   </table>
 
   <h4><a name="rcmp.reverse">reverse</a></h4>
-  <p>Reverse the natural sort order, or a single nested comparator.</p>
+  <p>Reverse the natural sort order, or that of a single nested comparator.</p>
 
+</blockquote>
+
+<h4><a name="first">first</a></h4>
+<p>Includes the first <i>count</i> resources from a nested resource collection.
+This can be used in conjunction with the <a href="#sort">sort</a> collection,
+for example, to select the first few oldest, largest, etc. resources from a
+larger collection.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">count</td>
+      <td valign="top">The number of resources to include</td>
+      <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
 </blockquote>
 
 <h4><a name="setlogic">Set operations</a></h4>
@@ -592,6 +635,21 @@ natural order, or by one or more nested resource comparators:</p>
   <h4><a name="difference">difference</a></h4>
   <p>Difference of nested resource collections.</p>
 
+  <p>The following attributes apply to all set-operation resource collections:
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
 </blockquote>
 
 <hr>

@@ -73,6 +73,14 @@ public class ResourceCollectionsTest extends BuildFileTest {
         executeTarget("testfileurlref");
     }
 
+    public void testfirst1() {
+        executeTarget("testfirst1");
+    }
+
+    public void testfirst2() {
+        executeTarget("testfirst2");
+    }
+
     public void testhttpurl1() {
         executeTarget("testhttpurl1");
     }
