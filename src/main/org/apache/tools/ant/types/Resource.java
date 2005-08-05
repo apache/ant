@@ -269,16 +269,7 @@ public class Resource extends DataType
             throw new IllegalArgumentException(
                 "Can only be compared with Resources");
         }
-        Resource r = (Resource) other;
-        String name = getName();
-        String oname = r.getName();
-        if (name == null && oname == null) {
-            return 0;
-        }
-        if (name == null) {
-            return -1;
-        }
-        return oname == null ? 1 : name.compareTo(oname);
+        return toString().compareTo(other.toString());
     }
 
     /**
@@ -392,11 +383,7 @@ public class Resource extends DataType
             return getCheckedRef().toString();
         }
         String n = getName();
-        if (n != null) {
-            return n;
-        }
-        String classname = getClass().getName();
-        return "anonymous " + classname.substring(classname.lastIndexOf('.') + 1);
+        return n == null ? "(anonymous)" : n;
     }
 
     /**
