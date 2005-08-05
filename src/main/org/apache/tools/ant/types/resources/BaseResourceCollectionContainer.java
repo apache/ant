@@ -37,6 +37,23 @@ public abstract class BaseResourceCollectionContainer
     extends DataType implements ResourceCollection, Cloneable {
     private List rc = new ArrayList();
     private Collection coll = null;
+    private boolean cache = true;
+
+    /**
+     * Set whether to cache collections.
+     * @param b boolean cache flag.
+     */
+    public synchronized void setCache(boolean b) {
+        cache = b;
+    }
+
+    /**
+     * Learn whether to cache collections. Default is <code>true</code>.
+     * @return boolean cache flag.
+     */
+    public synchronized boolean isCache() {
+        return cache;
+    }
 
     /**
      * Add a ResourceCollection to the container.
@@ -85,8 +102,7 @@ public abstract class BaseResourceCollectionContainer
             return ((BaseResourceCollectionContainer) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        cacheCollection();
-        return new FailFast(this, coll.iterator());
+        return new FailFast(this, cacheCollection().iterator());
     }
 
     /**
@@ -98,8 +114,7 @@ public abstract class BaseResourceCollectionContainer
             return ((BaseResourceCollectionContainer) getCheckedRef()).size();
         }
         dieOnCircularReference();
-        cacheCollection();
-        return coll.size();
+        return cacheCollection().size();
     }
 
     /**
@@ -121,8 +136,7 @@ public abstract class BaseResourceCollectionContainer
         }
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
-        cacheCollection();
-        for (Iterator i = coll.iterator(); i.hasNext();) {
+        for (Iterator i = cacheCollection().iterator(); i.hasNext();) {
             if (!(i.next() instanceof FileResource)) {
                 return false;
             }
@@ -137,7 +151,7 @@ public abstract class BaseResourceCollectionContainer
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -193,12 +207,11 @@ public abstract class BaseResourceCollectionContainer
      * Format this BaseResourceCollectionContainer as a String.
      * @return a descriptive <code>String</code>.
      */
-    public String toString() {
+    public synchronized String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
         }
-        cacheCollection();
-        if (coll.size() == 0) {
+        if (cacheCollection().size() == 0) {
             return "";
         }
         StringBuffer sb = new StringBuffer();
@@ -211,8 +224,11 @@ public abstract class BaseResourceCollectionContainer
         return sb.toString();
     }
 
-    private synchronized void cacheCollection() {
-        coll = (coll == null) ? getCollection() : coll;
+    private synchronized Collection cacheCollection() {
+        if (coll == null || !isCache()) {
+            coll = getCollection();
+        }
+        return coll;
     }
 
 }
