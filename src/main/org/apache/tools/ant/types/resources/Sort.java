@@ -18,10 +18,15 @@ package org.apache.tools.ant.types.resources;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
+import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Collections;
+import java.util.AbstractCollection;
+import java.util.NoSuchElementException;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -33,49 +38,114 @@ import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
  * ResourceCollection that sorts another ResourceCollection.
  * @since Ant 1.7
  */
-public class Sort extends BaseResourceCollectionContainer {
-    private static final String ONE_NESTED_MESSAGE
-        = "Sorting is to be applied to exactly one nested resource collection.";
+public class Sort extends BaseResourceCollectionWrapper {
 
-    private Stack compStack = new Stack();
+    private class MultiComparator implements Comparator {
+        private Vector v = null;
+        synchronized void add(ResourceComparator c) {
+            if (c == null) {
+                return;
+            }
+            v = (v == null) ? new Vector() : v;
+            v.add(c);
+        }
+        public synchronized int compare(Object o1, Object o2) {
+            int result = 0;
+            //if no nested, natural order:
+            if (v == null || v.size() == 0) {
+                result = ((Comparable) o1).compareTo((Comparable) o2);
+            } else {
+                for (Iterator i = v.iterator(); result == 0 && i.hasNext();) {
+                    result = ((Comparator) i.next()).compare(o1, o2);
+                }
+            }
+            return result;
+        }
+    }
+
+    //sorted bag impl. borrowed from commons-collections TreeBag:
+    private class SortedBag extends AbstractCollection {
+        private class MutableInt {
+            int value = 0;
+        }
+        private class MyIterator implements Iterator {
+            private Iterator keyIter = t.keySet().iterator();
+            private Object current;
+            private int occurrence;
+            public synchronized boolean hasNext() {
+                return occurrence > 0 || keyIter.hasNext();
+            }
+            public synchronized Object next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                if (occurrence == 0) {
+                    current = keyIter.next();
+                    occurrence = ((MutableInt) t.get(current)).value;
+                }
+                --occurrence;
+                return current;
+            }
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        }
+        private TreeMap t;
+        private int size;
+
+        SortedBag(Comparator c) {
+            t = new TreeMap(c);
+        }
+        public synchronized Iterator iterator() {
+            return new MyIterator();
+        }
+        public synchronized boolean add(Object o) {
+            if (size < Integer.MAX_VALUE) {
+                ++size;
+            }
+            MutableInt m = (MutableInt) (t.get(o));
+            if (m == null) {
+                m = new MutableInt();
+                t.put(o, m);
+            }
+            m.value++;
+            return true;
+        }
+        public synchronized int size() {
+            return size;
+        }
+    }
+
+    private MultiComparator comp = new MultiComparator();
 
     /**
      * Sort the contained elements.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection() {
-        List rcs = getResourceCollections();
-        if (rcs.size() != 1) {
-            throw new BuildException(ONE_NESTED_MESSAGE);
-        }
-        Iterator nested = ((ResourceCollection) (rcs.get(0))).iterator();
-        if (!(nested.hasNext())) {
+    protected synchronized Collection getCollection() {
+        ResourceCollection rc = getResourceCollection();
+        Iterator iter = rc.iterator();
+        if (!(iter.hasNext())) {
             return Collections.EMPTY_SET;
         }
-        ArrayList al = new ArrayList();
-        while (nested.hasNext()) {
-            al.add(nested.next());
+        SortedBag b = new SortedBag(comp);
+        while (iter.hasNext()) {
+            b.add(iter.next());
         }
-        if (compStack.empty()) {
-            Collections.sort(al);
-        } else {
-            for (Stack s = (Stack) compStack.clone(); !s.empty();) {
-                Collections.sort(al, (ResourceComparator) s.pop());
-            }
-        }
-        return al;
+        return b;
     }
 
     /**
      * Add a ResourceComparator to this Sort ResourceCollection.
-     * If multiple ResourceComparator are added, they will be processed in LIFO order.
+     * If multiple ResourceComparators are added, they will be processed in LIFO order.
      * @param c the ResourceComparator to add.
      */
-    public void add(ResourceComparator c) {
+    public synchronized void add(ResourceComparator c) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        compStack.push(c);
+        comp.add(c);
+        FailFast.invalidate(this);
     }
 
     /**
@@ -85,7 +155,7 @@ public class Sort extends BaseResourceCollectionContainer {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -93,7 +163,7 @@ public class Sort extends BaseResourceCollectionContainer {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = compStack.iterator(); i.hasNext();) {
+            for (Iterator i = comp.v.iterator(); i.hasNext();) {
                 Object o = i.next();
                 if (o instanceof DataType) {
                     stk.push(o);
