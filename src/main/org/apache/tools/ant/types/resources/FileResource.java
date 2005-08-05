@@ -124,7 +124,9 @@ public class FileResource extends Resource implements Touchable {
     }
 
     /**
-     * Get the name of this FileResource relative to its baseDir, if any.
+     * Get the name of this FileResource.  If the basedir is set,
+     * the name will be relative to that.  Otherwise the basename
+     * only will be returned.
      * @return the name of this resource.
      */
     public String getName() {
@@ -132,7 +134,7 @@ public class FileResource extends Resource implements Touchable {
             return ((Resource) getCheckedRef()).getName();
         }
         File b = getBaseDir();
-        return b == null ? getNotNullFile().getAbsolutePath()
+        return b == null ? getNotNullFile().getName()
             : FILE_UTILS.removeLeadingPath(b, getNotNullFile());
     }
 
@@ -220,7 +222,22 @@ public class FileResource extends Resource implements Touchable {
         if (isReference()) {
             return ((Comparable) getCheckedRef()).compareTo(another);
         }
-        return this.equals(another) ? 0 : super.compareTo(another);
+        if (this.equals(another)) {
+            return 0;
+        }
+        if (another.getClass().equals(getClass())) {
+            FileResource otherfr = (FileResource) another;
+            File f = getFile();
+            if (f == null) {
+                return -1;
+            }
+            File of = otherfr.getFile();
+            if (of == null) {
+                return 1;
+            }
+            return f.compareTo(of);
+        }
+        return super.compareTo(another);
     }
 
     /**
