@@ -189,7 +189,7 @@ public final class Locator {
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
         String javaHome = System.getProperty("java.home");
-        if (javaHome.toLowerCase(Locale.US).endsWith("jre")) {
+        if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
         }
         File toolsJar = new File(javaHome + "/lib/tools.jar");
