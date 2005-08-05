@@ -20,8 +20,9 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.util.Vector;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceFactory;
+import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * Utility class that collects the functionality of the various
@@ -158,9 +159,8 @@ public class SourceFileScanner implements ResourceFactory {
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {
-        File src = FILE_UTILS.resolveFile(destDir, name);
-        return new Resource(name, src.exists(), src.lastModified(),
-                            src.isDirectory());
+        return new FileResource(destDir, name);
     }
+
 }
 
