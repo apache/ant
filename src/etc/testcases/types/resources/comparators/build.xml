@@ -3,6 +3,7 @@
 
   <property name="dirname" value="work" />
   <property name="dir" location="${dirname}" />
+  <property name="echolevel" value="debug" />
 
   <target name="tearDown">
     <delete dir="${dir}" />
@@ -39,6 +40,7 @@
           </sort>
           <flattenmapper />
         </pathconvert>
+        <echo level="${echolevel}">@{property}=${@{property}}</echo>
       </sequential>
     </macrodef>
 
