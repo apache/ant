@@ -88,6 +88,9 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
      * @param s the ResourceSelector to add.
      */
     public synchronized void add(ResourceSelector s) {
+        if (s == null) {
+            return;
+        }
         super.add(s);
         FailFast.invalidate(this);
     }
@@ -101,7 +104,7 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
             return ((Restrict) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        return new FailFast(this, w.iterator());
+        return w.iterator();
     }
 
     /**
