@@ -87,7 +87,7 @@ public abstract class BaseResourceCollectionWrapper
             return ((BaseResourceCollectionWrapper) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        return cacheCollection().iterator();
+        return new FailFast(this, cacheCollection().iterator());
     }
 
     /**
