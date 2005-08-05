@@ -1079,8 +1079,7 @@ public class DirectoryScanner
                     noLinks.addElement(newfiles[i]);
                 }
             }
-            newfiles = new String[noLinks.size()];
-            noLinks.copyInto(newfiles);
+            newfiles = (String[]) (noLinks.toArray(new String[noLinks.size()]));
         }
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath + newfiles[i];
