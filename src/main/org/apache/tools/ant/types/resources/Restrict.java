@@ -35,10 +35,26 @@ import org.apache.tools.ant.types.resources.selectors.ResourceSelectorContainer;
 public class Restrict
     extends ResourceSelectorContainer implements ResourceCollection {
 
-    private static final String ONE_NESTED_MESSAGE
-        = "Restriction is to be applied to exactly one nested resource collection.";
+    private BaseResourceCollectionWrapper w = new BaseResourceCollectionWrapper() {
+        /**
+         * Restrict the nested ResourceCollection based on the nested selectors.
+         * @return a Collection of Resources.
+         */
+        protected Collection getCollection() {
+            ArrayList result = new ArrayList();
+outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext();) {
+                Resource r = (Resource) ri.next();
+                for (Iterator i = getSelectors(); i.hasNext();) {
+                    if (!((ResourceSelector) (i.next())).isSelected(r)) {
+                        continue outer;
+                    }
+                }
+                result.add(r);
+            }
+            return result;
+        }
 
-    private ResourceCollection rc;
+    };
 
     /**
      * Add the ResourceCollection.
@@ -48,10 +64,7 @@ public class Restrict
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        if (rc != null) {
-            throw new BuildException(ONE_NESTED_MESSAGE);
-        }
-        rc = c;
+        w.add(c);
     }
 
     /**
@@ -72,10 +85,7 @@ public class Restrict
             return ((Restrict) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        if (rc == null) {
-            throw new BuildException(ONE_NESTED_MESSAGE);
-        }
-        return new FailFast(this, getCollection().iterator());
+        return new FailFast(this, w.iterator());
     }
 
     /**
@@ -87,7 +97,7 @@ public class Restrict
             return ((Restrict) getCheckedRef()).size();
         }
         dieOnCircularReference();
-        return getCollection().size();
+        return w.size();
     }
 
     /**
@@ -99,39 +109,7 @@ public class Restrict
             return ((Restrict) getCheckedRef()).isFilesystemOnly();
         }
         dieOnCircularReference();
-        if (rc == null) {
-            throw new BuildException(ONE_NESTED_MESSAGE);
-        }
-        //first the easy way, if child is filesystem-only, return true:
-        if (rc.isFilesystemOnly()) {
-            return true;
-        }
-        /* now check each Resource in case the child only
-           lets through files from any children IT may have: */
-        for (Iterator i = getCollection().iterator(); i.hasNext();) {
-            if (!(i.next() instanceof FileResource)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Restrict the nested ResourceCollection based on the nested selectors.
-     * @return a Collection of Resources.
-     */
-    protected Collection getCollection() {
-        ArrayList result = new ArrayList();
-outer:  for (Iterator ri = rc.iterator(); ri.hasNext();) {
-            Resource r = (Resource) ri.next();
-            for (Iterator i = getSelectors(); i.hasNext();) {
-                if (!((ResourceSelector) (i.next())).isSelected(r)) {
-                    continue outer;
-                }
-            }
-            result.add(r);
-        }
-        return result;
+        return w.isFilesystemOnly();
     }
 
 }
