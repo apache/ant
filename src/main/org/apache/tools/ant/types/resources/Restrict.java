@@ -68,6 +68,22 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
     }
 
     /**
+     * Set whether to cache collections.
+     * @param b boolean cache flag.
+     */
+    public synchronized void setCache(boolean b) {
+        w.setCache(b);
+    }
+
+    /**
+     * Learn whether to cache collections. Default is <code>true</code>.
+     * @return boolean cache flag.
+     */
+    public synchronized boolean isCache() {
+        return w.isCache();
+    }
+
+    /**
      * Add a ResourceSelector.
      * @param s the ResourceSelector to add.
      */
