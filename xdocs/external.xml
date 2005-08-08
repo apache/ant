@@ -2185,6 +2185,28 @@
         </table>
       </subsection>
 
+      <subsection name="PesterCat Ant Toolkit">
+         <p>PesterCat is a web testing tool that was designed to 
+           perform functional testing for web applications. The PesterCat 
+           Ant Toolkit contains tasks to playback test scripts and create 
+           HTML reports.
+         </p>
+         <table class="externals">
+           <tr>
+             <th>Compatibility:</th>
+             <td>Ant 1.6 and later</td>
+           </tr>
+           <tr>
+             <th>URL:</th>
+             <td><a href="http://www.pestercat.com/">http://www.pestercat.com/</a></td>
+           </tr>
+           <tr>
+             <th>License:</th>
+             <td>Commercial</td>
+           </tr>
+         </table>
+       </subsection>
+
       <subsection name="PMD">
 
         <p>PMD checks Java source code for unused variables,
