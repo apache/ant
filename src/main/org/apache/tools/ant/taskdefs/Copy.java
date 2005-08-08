@@ -31,6 +31,10 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
@@ -274,7 +278,42 @@ public class Copy extends Task {
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
-
+    
+    /* JHM: It would be the finest solution to use this method directly.
+     * But if I understood the IntrospectionHelper(final Class bean) 
+     * right - especially line 258ff (the last "else if" statement), 
+     * I must have a <b>class</b> with an no-arg constructor. But I only 
+     * have an interface. :-(
+     * So I have to add the three methods ... But I can reuse this
+     * method :-)
+     *  
+     */
+    public void add(ResourceCollection res) {
+    	//TODO: implement resources
+    }
+    /**
+     * Adds a <code>path</code> element as a nested ResourceCollection.
+     * @param path
+     */
+    public void addPath(Path path) {
+    	//add((ResourceCollection)path);
+    }
+    /**
+     * Adds a Resource element as a nested ResourceCollection.
+     * @param path
+     * /
+    public void add(Resource res) {
+    	add((ResourceCollection)res);
+    }
+    /**
+     * Adds a <code>resources</code> element as a nested ResourceCollection.
+     * @param path
+     * /
+    public void add(Resources res) {
+    	add((ResourceCollection)res);
+    }
+    */
+    
     /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.

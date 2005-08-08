@@ -121,7 +121,76 @@ a=b=
     </copy>
   </target>
 
+<!--	
+  <typedef name="resource" classname="org.apache.tools.ant.types.Resource"/>
+  <typedef name="resources" classname="org.apache.tools.ant.types.resources.Resources"/>
+-->  
+	
+  <target name="testFileResourcePlain" depends="testResource.prepare">
+  	<copy todir="${to.dir}">
+      <resources>
+        <file file="${from.dir}/file1.txt"/>
+        <file file="${from.dir}/file2.txt"/>
+        <file file="${from.dir}/file3.txt"/>
+	  </resources>  	  
+  	</copy>
+  </target>
+
+  <target name="testFileResourceWithMapper" depends="testResource.prepare">
+  	<copy todir="${to.dir}">
+      <resources>
+        <file file="${from.dir}/file1.txt"/>
+        <file file="${from.dir}/file2.txt"/>
+        <file file="${from.dir}/file3.txt"/>
+	  </resources>  	  
+      <regexpmapper from="^(.*)\.txt$$" to="\1.txt.bak"/>
+  	</copy>
+  </target>
+
+
+  <property name="to.dir" value="copy-todir-tmp"/>
+  <property name="from.dir" value="copy-todir-tmp"/>
+	
+  <target name="testResource.prepare">
+  	<mkdir dir="${from.dir}"/>
+  	<concat destfile="${to.dir}/file1.txt">This is file 1</concat>
+  	<concat destfile="${to.dir}/file2.txt">This is file 2</concat>
+  	<concat destfile="${to.dir}/file3.txt">This is file 3</concat>
+  	<concat destfile="${to.dir}/fileNR.txt">This is file @nr@</concat>
+  </target>
+	
+  <target name="testFileResourceWithFilter" depends="testResource.prepare">
+  	<copy todir="${to.dir}">
+      <resources>
+        <file file="${from.dir}/fileNR.txt"/>
+	  </resources>  	  
+      <filterset>
+  	    <filter token="NR" value="42"/>
+  	  </filterset>
+  	</copy>
+  </target>
+		
+  <target name="testResourcePlain">
+  </target>
+  	
+  <target name="testResourcePlainWithMapper">
+  </target>
     
+  <target name="testResourcePlainWithFilter">
+  </target>
+	
+  <target name="testOnlineResources">
+  </target>
+	
+  <target name="testPathAsResource">
+    <copy todir="${to.dir}">
+      <path>
+        <fileset dir="${from.dir}"/>
+      </path> 	
+    </copy>  	
+  </target>
+	
+	
   
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
@@ -135,7 +204,7 @@ a=b=
     <delete dir="copytest1dir"/>
     <delete quiet="yes" file="copy.filter.out"/>
     <delete quiet="yes" file="copy.filter.inp"/>
+  	<delete dir="${to.dir}"/>
   </target>
-
 
 </project>
