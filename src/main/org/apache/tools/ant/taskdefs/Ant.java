@@ -381,7 +381,7 @@ public class Ant extends Task {
             addReferences();
 
             if (locals.size() > 0 && !(locals.size() == 1 
-                                       && locals.get(0) == "")) {
+                                       && "".equals(locals.get(0)))) {
                 BuildException be = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
