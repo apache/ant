@@ -294,7 +294,7 @@ public class Resource extends DataType
             return getCheckedRef().hashCode();
         }
         String name = getName();
-        return MAGIC * (name == null ? name.hashCode() : NULL_NAME);
+        return MAGIC * (name == null ? NULL_NAME : name.hashCode());
     }
 
     /**
