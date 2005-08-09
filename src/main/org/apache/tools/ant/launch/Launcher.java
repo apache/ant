@@ -174,7 +174,7 @@ public class Launcher {
         if (libPaths.size() == 0 && cpString == null) {
             newArgs = args;
         } else {
-            newArgs = (String[]) argList.toArray(new String[0]);
+            newArgs = (String[]) argList.toArray(new String[argList.size()]);
         }
 
         List libPathURLs = new ArrayList();
@@ -188,7 +188,7 @@ public class Launcher {
             addPath(libPath, true, libPathURLs);
         }
 
-        URL[] libJars = (URL[]) libPathURLs.toArray(new URL[0]);
+        URL[] libJars = (URL[]) libPathURLs.toArray(new URL[libPathURLs.size()]);
 
         // Now try and find JAVA_HOME
         File toolsJar = Locator.getToolsJar();

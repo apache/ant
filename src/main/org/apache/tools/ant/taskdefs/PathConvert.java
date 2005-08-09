@@ -341,7 +341,7 @@ public class PathConvert extends Task {
                         ret.add(mapped[m]);
                     }
                 }
-                elems = (String[]) ret.toArray(new String[] {});
+                elems = (String[]) ret.toArray(new String[ret.size()]);
             }
             for (int i = 0; i < elems.length; i++) {
                 String elem = mapElement(elems[i]); // Apply the path prefix map

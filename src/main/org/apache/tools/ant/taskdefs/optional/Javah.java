@@ -149,7 +149,7 @@ public class Javah extends Task {
             ClassArgument arg = (ClassArgument) e.nextElement();
             al.add(arg.getName());
         }
-        return (String[]) al.toArray(new String[0]);
+        return (String[]) al.toArray(new String[al.size()]);
     }
 
     /**

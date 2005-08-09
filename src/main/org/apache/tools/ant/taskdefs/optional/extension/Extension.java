@@ -209,7 +209,7 @@ public final class Extension {
             }
         }
 
-        return (Extension[]) results.toArray(new Extension[0]);
+        return (Extension[]) results.toArray(new Extension[results.size()]);
     }
 
     /**
@@ -580,7 +580,7 @@ public final class Extension {
             getExtension(attributes, results, listKey);
         }
 
-        return (Extension[]) results.toArray(new Extension[ 0 ]);
+        return (Extension[]) results.toArray(new Extension[results.size()]);
     }
 
     /**

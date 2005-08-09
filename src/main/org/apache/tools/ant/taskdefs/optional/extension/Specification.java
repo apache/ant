@@ -183,7 +183,7 @@ public final class Specification {
         }
 
         final ArrayList trimmedResults = removeDuplicates(results);
-        return (Specification[]) trimmedResults.toArray(new Specification[0]);
+        return (Specification[]) trimmedResults.toArray(new Specification[trimmedResults.size()]);
     }
 
     /**
