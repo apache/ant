@@ -447,7 +447,7 @@ public class SignJar extends AbstractJarSignerTask {
      * @return true if the signedjarFile is considered up to date
      */
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
-        if (null == jarFile && !jarFile.exists()) {
+        if (null == jarFile || !jarFile.exists()) {
             //these are pathological cases, but retained in case somebody
             //subclassed us.
             return false;
