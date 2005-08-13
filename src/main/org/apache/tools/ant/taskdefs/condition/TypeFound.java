@@ -22,6 +22,7 @@ import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.AntTypeDefinition;
+import org.apache.tools.ant.Project;
 
 /**
  * looks for a task or other Ant type that exists. Existence is defined as
@@ -59,13 +60,18 @@ public class TypeFound extends ProjectComponent implements Condition {
 
         ComponentHelper helper =
             ComponentHelper.getComponentHelper(getProject());
-        AntTypeDefinition def = helper.getDefinition(
-            ProjectHelper.genComponentName(uri, typename));
+        String componentName = ProjectHelper.genComponentName(uri, typename);
+        AntTypeDefinition def = helper.getDefinition(componentName);
         if (def == null) {
             return false;
         }
         //now verify that the class has an implementation
-        return def.getExposedClass(getProject()) != null;
+        boolean found = def.getExposedClass(getProject()) != null;
+        if(!found) {
+            String text= helper.diagnoseCreationFailure(componentName,"type");
+            log(text, Project.MSG_VERBOSE);
+        }
+        return found;
     }
 
 

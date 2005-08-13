@@ -789,7 +789,7 @@ public class ComponentHelper  {
     /**
      * Handler called to do decent diagnosis on instantiation failure.
      * @param componentName component name.
-     * @param type component type.
+     * @param type component type, used in error messages
      * @return a string containing as much diagnostics info as possible.
      */
     public String diagnoseCreationFailure(String componentName, String type) {
