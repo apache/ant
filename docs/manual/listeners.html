@@ -83,6 +83,12 @@ listeners and loggers.</p>
     <td width="33%">Writes the build information to an XML file.</td>
     <td width="34%">BuildLogger</td>
   </tr>
+  <tr>
+    <td width="33%"><code><a href="#TimestampedLogger">org.apache.tools.ant.TimestampedLogger</a></code></td>
+    <td width="33%">Prints the time that a build finished</td>
+    <td width="34%">BuildLogger</td>
+  </tr>
+
 </table>
 <h3><a name="DefaultLogger">DefaultLogger</a></h3>
 
@@ -313,10 +319,6 @@ ANT_HOME/etc for one of these. You can set the property
 this can be a relative or absolute file path, or an http URL.
 If you set the property to the empty string, "", no XSLT transform
 is declared at all.
-
-
-
-
 </p>
 
 <blockquote>
@@ -325,6 +327,24 @@ is declared at all.
 <code>ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</code></p>
 
 </blockquote>
+
+
+<h3><a name="TimestampedLogger">TimestampedLogger</a></h3>
+
+<p>
+  Acts like the default logger, except that the final success/failure message also includes
+  the time that the build completed. For example:
+</p>
+<pre>
+  BUILD SUCCESSFUL - at 16/08/05 16:24
+</pre>
+
+<blockquote>
+
+<code>ant  -logger org.apache.tools.ant.listener.TimestampedLogger</code>
+
+</blockquote>
+
 
 <h2><a name="dev">Writing your own</a></h2>
 

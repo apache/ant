@@ -58,6 +58,15 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     private LogFactory logFactory;
 
     /**
+     * name of the category under which target events are logged
+     */
+    public static final String TARGET_LOG = "org.apache.tools.ant.Target";
+    /**
+     * name of the category under which project events are logged
+     */
+    public static final String PROJECT_LOG = "org.apache.tools.ant.Project";
+
+    /**
      * Construct the listener and make sure that a LogFactory
      * can be obtained.
      */
@@ -95,7 +104,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#buildStarted
      */
     public void buildStarted(BuildEvent event) {
-        String categoryString = "org.apache.tools.ant.Project";
+        String categoryString = PROJECT_LOG;
         Log log = getLog(categoryString, null);
 
         if (initialized) {
@@ -108,7 +117,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      */
     public void buildFinished(BuildEvent event) {
         if (initialized) {
-            String categoryString = "org.apache.tools.ant.Project";
+            String categoryString = PROJECT_LOG;
             Log log = getLog(categoryString, event.getProject().getName());
 
             if (event.getException() == null) {
@@ -125,7 +134,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      */
     public void targetStarted(BuildEvent event) {
         if (initialized) {
-            Log log = getLog("org.apache.tools.ant.Target",
+            Log log = getLog(TARGET_LOG,
                     event.getTarget().getName());
             // Since task log category includes target, we don't really
             // need this message
@@ -140,7 +149,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     public void targetFinished(BuildEvent event) {
         if (initialized) {
             String targetName = event.getTarget().getName();
-            Log log = getLog("org.apache.tools.ant.Target",
+            Log log = getLog(TARGET_LOG,
                     event.getTarget().getName());
             if (event.getException() == null) {
                 realLog(log, "Target end: " + targetName, Project.MSG_DEBUG, null);
@@ -214,10 +223,10 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
                 categoryObject = event.getTarget();
                 if (categoryObject == null) {
                     categoryObject = event.getProject();
-                    categoryString = "org.apache.tools.ant.Project";
+                    categoryString = PROJECT_LOG;
                     categoryDetail = event.getProject().getName();
                 } else {
-                    categoryString = "org.apache.tools.ant.Target";
+                    categoryString = TARGET_LOG;
                     categoryDetail = event.getTarget().getName();
                 }
             } else {

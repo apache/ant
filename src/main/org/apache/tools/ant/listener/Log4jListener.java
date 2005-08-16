@@ -36,11 +36,16 @@ public class Log4jListener implements BuildListener {
     private boolean initialized = false;
 
     /**
+     * log category we log into
+     */
+    public static final String LOG_ANT = "org.apache.tools.ant";
+
+    /**
      * Construct the listener and make sure there is a valid appender.
      */
     public Log4jListener() {
         initialized = false;
-        Logger log = Logger.getLogger("org.apache.tools.ant");
+        Logger log = Logger.getLogger(LOG_ANT);
         Logger rootLog = Logger.getRootLogger();
         if (!(rootLog.getAllAppenders() instanceof NullEnumeration)) {
             initialized = true;

@@ -256,6 +256,9 @@ Other changes:
 * <javadoc> now supports -breakiterator for custom doclets if Ant is
   running on JSE 5.0 or higher.  Bugzilla Report: 34580.
 
+* New logger, TimestampedLogger, that prints the wall time that a build finished/failed
+  Use with  -logger org.apache.tools.ant.listener.TimestampedLogger
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 
