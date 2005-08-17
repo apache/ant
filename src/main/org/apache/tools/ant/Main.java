@@ -31,6 +31,7 @@ import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ProxySetup;
 
 
 /**
@@ -119,6 +120,11 @@ public class Main implements AntMain {
      * optional thread priority
      */
     private Integer threadPriority = null;
+
+    /**
+     * proxy flag: default is true
+     */
+    private boolean proxy=true;
 
     /**
      * Prints the message of the Throwable if it (the message) is not
@@ -423,6 +429,8 @@ public class Main implements AntMain {
                         + "\nThis can be caused by a version mismatch between "
                         + "the ant script/.bat file and Ant itself.";
                 throw new BuildException(msg);
+            } else if (arg.equals("-noproxy")) {
+                proxy=false;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
@@ -627,6 +635,8 @@ public class Main implements AntMain {
                     }
                 }
 
+
+
                 project.init();
                 project.setUserProperty(MagicNames.ANT_VERSION, getAntVersion());
 
@@ -642,6 +652,11 @@ public class Main implements AntMain {
                                         buildFile.getAbsolutePath());
 
                 project.setKeepGoingMode(keepGoingMode);
+                if (proxy) {
+                    //proxy setup if enabled
+                    ProxySetup proxySetup = new ProxySetup(project);
+                    proxySetup.enableProxies();
+                }
 
                 ProjectHelper.configureProject(project, buildFile);
 
@@ -809,7 +824,8 @@ public class Main implements AntMain {
                    + lSep);
         msg.append("  -nouserlib             Run ant without using the jar files from" + lSep
                    + "                         ${user.home}/.ant/lib" + lSep);
-        msg.append("  -noclasspath           Run ant without using CLASSPATH");
+        msg.append("  -noclasspath           Run ant without using CLASSPATH" + lSep);
+        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies");
         System.out.println(msg.toString());
     }
 
