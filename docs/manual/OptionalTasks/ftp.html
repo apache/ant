@@ -14,7 +14,10 @@
 list, delete files, and create directories.  See below for descriptions and examples of how
 to perform each task.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
-See <a href="../install.html#commons-net">Library Dependencies</a> for more information.</p>
+See <a href="../install.html#commons-net">Library Dependencies</a> for more information.
+<i>Get the latest version of this library, for the best support in Ant</i>
+
+</p>
 <p>The ftp task attempts to determine what file system is in place on the FTP server.
 Supported server types are Unix, NT, OS2, VMS, and OS400.  In addition, NT and OS400 servers
 which have been configured to display the directory in Unix style are also supported correctly.
@@ -31,11 +34,17 @@ This task does not currently use the proxy information set by the
 <a href="setproxy.html"><code>&lt;setproxy&gt;</code></a> task, and cannot go through
 a firewall via socks. 
 <p>
-<b>Warning: </b> there have been problems reported concerning the ftp get with newer attribute.
+<b>Warning: </b> there have been problems reported concerning the ftp get with the <code>newer</code> attribute.
 Problems might be due to format of ls -l differing from what is expected by commons-net,
 for instance due to specificities of language used by the ftp server in the directory listing.
 If you encounter such a problem, please send an email including a sample directory listing
 coming from your ftp server (ls -l on the ftp prompt).
+</p>
+<p>
+If you can connect but not upload or download, try setting the <code>passive</code>
+attribute to true to use the existing (open) channel, instead of having the server
+try to set up a new connection.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -89,7 +98,9 @@ coming from your ftp server (ls -l on the ftp prompt).
   </tr>
   <tr>
     <td valign="top">passive</td>
-    <td valign="top">selects passive-mode ("yes") transfers.
+    <td valign="top">selects passive-mode ("yes") transfers, for
+                     better through-firewall connectivity, at the price
+                     of performance.
                      Defaults to "no"</td>
     <td valign="top" align="center">No</td>
   </tr>
