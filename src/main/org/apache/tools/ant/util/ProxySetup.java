@@ -20,12 +20,16 @@ package org.apache.tools.ant.util;
 import org.apache.tools.ant.Project;
 
 /**
- * Code to do proxy setup. This is just factored out of the main system just for
+ * Code to do proxy setup. This is just factored out of the main system just to
+ * keep everything else less convoluted.
  * @since Ant1.7
  */
 
 public class ProxySetup {
 
+    /**
+     * owner project; used for logging and extracting properties
+     */
     private Project owner;
 
     /**
@@ -51,7 +55,7 @@ public class ProxySetup {
         try {
             return System.getProperty(USE_SYSTEM_PROXIES);
         } catch (SecurityException e) {
-            //if you cannot read it, you wont be able to write it either
+            //if you cannot read it, you won't be able to write it either
             return null;
         }
     }
@@ -73,6 +77,8 @@ public class ProxySetup {
                 owner.log(message,Project.MSG_DEBUG);
                 System.setProperty(USE_SYSTEM_PROXIES,proxies);
             } catch (SecurityException e) {
+                //log security exceptions and continue; it aint that
+                //important and may be quite common running Ant embedded.
                 owner.log("Security Exception when "+message);
             }
         }
