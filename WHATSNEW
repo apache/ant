@@ -265,6 +265,9 @@ Other changes:
 
 * New logger, TimestampedLogger, that prints the wall time that a build finished/failed
   Use with  -logger org.apache.tools.ant.listener.TimestampedLogger
+  
+* <junitreport> now generates pages alltests-errors.html and alltests-fails.html, 
+that list only the errors and failures, respectively. Bugzilla Report: 36226
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================

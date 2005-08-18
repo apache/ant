@@ -58,6 +58,25 @@
         <xsl:apply-templates select="." mode="all.classes"/>
     </redirect:write>
 
+    <!-- create the all-tests.html at the root -->
+    <redirect:write file="{$output.dir}/all-tests.html">
+        <xsl:apply-templates select="." mode="all.tests"/>
+    </redirect:write>
+
+    <!-- create the alltests-fails.html at the root -->
+    <redirect:write file="{$output.dir}/alltests-fails.html">
+        <xsl:apply-templates select="." mode="all.tests">
+	    <xsl:with-param name="type" select="'fails'"/>
+	</xsl:apply-templates>
+    </redirect:write>
+
+    <!-- create the alltests-errors.html at the root -->
+    <redirect:write file="{$output.dir}/alltests-errors.html">
+        <xsl:apply-templates select="." mode="all.tests">
+	    <xsl:with-param name="type" select="'errors'"/>
+	</xsl:apply-templates>
+    </redirect:write>
+
     <!-- process all packages -->
     <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
         <xsl:call-template name="package">
@@ -104,6 +123,20 @@
                 <xsl:value-of disable-output-escaping="yes" select="./system-err" />
             </redirect:write>
         </xsl:if>
+	<xsl:if test="@failures != 0">
+	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-fails.html">
+		<xsl:apply-templates select="." mode="class.details">
+		    <xsl:with-param name="type" select="'fails'"/>
+		</xsl:apply-templates>
+	    </redirect:write>
+	</xsl:if>
+	<xsl:if test="@errors != 0">
+	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
+		<xsl:apply-templates select="." mode="class.details">
+		    <xsl:with-param name="type" select="'errors'"/>
+		</xsl:apply-templates>
+	    </redirect:write>
+	</xsl:if>
     </xsl:for-each>
 </xsl:template>
 
@@ -179,6 +212,69 @@ h6 {
 }
 </xsl:template>
 
+<!-- Create list of all/failed/errored tests -->
+<xsl:template match="testsuites" mode="all.tests">
+    <xsl:param name="type" select="'all'"/>
+    <html>
+	<xsl:variable name="title">
+	    <xsl:choose>
+		<xsl:when test="$type = 'fails'">
+		    <xsl:text>All Failures</xsl:text>
+		</xsl:when>
+		<xsl:when test="$type = 'errors'">
+		    <xsl:text>All Errors</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+		    <xsl:text>All Tests</xsl:text>
+		</xsl:otherwise>
+	    </xsl:choose>
+	</xsl:variable>
+	<head>
+	    <title>Unit Test Results: <xsl:value-of select="$title"/></title>
+	    <xsl:call-template name="create.stylesheet.link">
+                <xsl:with-param name="package.name"/>
+            </xsl:call-template>
+	</head>
+	<body>
+	    <xsl:attribute name="onload">open('allclasses-frame.html','classListFrame')</xsl:attribute>
+            <xsl:call-template name="pageHeader"/>
+            <h2><xsl:value-of select="$title"/></h2>
+
+            <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+		<xsl:call-template name="testcase.test.header">
+		    <xsl:with-param name="show.class" select="'yes'"/>
+		</xsl:call-template>
+		<!--
+                test can even not be started at all (failure to load the class)
+		so report the error directly
+		-->
+                <xsl:if test="./error">
+                    <tr class="Error">
+                        <td colspan="4"><xsl:apply-templates select="./error"/></td>
+                    </tr>
+                </xsl:if>
+		<xsl:choose>
+		    <xsl:when test="$type = 'fails'">
+			<xsl:apply-templates select=".//testcase[failure]" mode="print.test">
+			    <xsl:with-param name="show.class" select="'yes'"/>
+			</xsl:apply-templates>
+		    </xsl:when>
+		    <xsl:when test="$type = 'errors'">
+			<xsl:apply-templates select=".//testcase[error]" mode="print.test">
+			    <xsl:with-param name="show.class" select="'yes'"/>
+			</xsl:apply-templates>
+		    </xsl:when>
+		    <xsl:otherwise>
+			<xsl:apply-templates select=".//testcase" mode="print.test">
+			    <xsl:with-param name="show.class" select="'yes'"/>
+			</xsl:apply-templates>
+		    </xsl:otherwise>
+		</xsl:choose>
+            </table>
+        </body>
+    </html>
+</xsl:template>
+
 
 <!-- ======================================================================
     This page is created for every testsuite class.
@@ -186,6 +282,7 @@ h6 {
     testcase methods.
      ====================================================================== -->
 <xsl:template match="testsuite" mode="class.details">
+    <xsl:param name="type" select="'all'"/>
     <xsl:variable name="package.name" select="@package"/>
     <xsl:variable name="class.name"><xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></xsl:variable>
     <html>
@@ -239,19 +336,39 @@ h6 {
                 <xsl:apply-templates select="." mode="print.test"/>
             </table>
 
-            <h2>Tests</h2>
+	    <xsl:choose>
+		<xsl:when test="$type = 'fails'">
+		    <h2>Failures</h2>
+		</xsl:when>
+		<xsl:when test="$type = 'errors'">
+		    <h2>Errors</h2>
+		</xsl:when>
+		<xsl:otherwise>
+		    <h2>Tests</h2>
+		</xsl:otherwise>
+	    </xsl:choose>
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
-        <xsl:call-template name="testcase.test.header"/>
-              <!--
-              test can even not be started at all (failure to load the class)
-              so report the error directly
-              -->
+		<xsl:call-template name="testcase.test.header"/>
+		<!--
+                test can even not be started at all (failure to load the class)
+		so report the error directly
+		-->
                 <xsl:if test="./error">
                     <tr class="Error">
                         <td colspan="4"><xsl:apply-templates select="./error"/></td>
                     </tr>
                 </xsl:if>
-                <xsl:apply-templates select="./testcase" mode="print.test"/>
+		<xsl:choose>
+		    <xsl:when test="$type = 'fails'">
+			<xsl:apply-templates select="./testcase[failure]" mode="print.test"/>
+		    </xsl:when>
+		    <xsl:when test="$type = 'errors'">
+			<xsl:apply-templates select="./testcase[error]" mode="print.test"/>
+		    </xsl:when>
+		    <xsl:otherwise>
+			<xsl:apply-templates select="./testcase" mode="print.test"/>
+		    </xsl:otherwise>
+		</xsl:choose>
             </table>
             <div class="Properties">
                 <a>
@@ -445,9 +562,9 @@ h6 {
                     <xsl:otherwise>Pass</xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <td><xsl:value-of select="$testCount"/></td>
-            <td><xsl:value-of select="$failureCount"/></td>
-            <td><xsl:value-of select="$errorCount"/></td>
+            <td><a title="Display all tests" href="all-tests.html"><xsl:value-of select="$testCount"/></a></td>
+            <td><a title="Display all failures" href="alltests-fails.html"><xsl:value-of select="$failureCount"/></a></td>
+            <td><a title="Display all errors" href="alltests-errors.html"><xsl:value-of select="$errorCount"/></a></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -593,7 +710,11 @@ h6 {
 
 <!-- method header -->
 <xsl:template name="testcase.test.header">
+    <xsl:param name="show.class" select="''"/>
     <tr valign="top">
+	<xsl:if test="boolean($show.class)">
+	    <th>Class</th>
+	</xsl:if>
         <th>Name</th>
         <th>Status</th>
         <th width="80%">Type</th>
@@ -612,10 +733,28 @@ h6 {
                 <xsl:otherwise>Pass</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
-        <td><a href="{@id}_{@name}.html"><xsl:value-of select="@name"/></a></td>
-        <td><xsl:apply-templates select="@tests"/></td>
-        <td><xsl:apply-templates select="@errors"/></td>
-        <td><xsl:apply-templates select="@failures"/></td>
+        <td><a title="Display all tests" href="{@id}_{@name}.html"><xsl:value-of select="@name"/></a></td>
+        <td><a title="Display all tests" href="{@id}_{@name}.html"><xsl:apply-templates select="@tests"/></a></td>
+        <td>
+	    <xsl:choose>
+		<xsl:when test="@errors != 0">
+		    <a title="Display only errors" href="{@id}_{@name}-errors.html"><xsl:apply-templates select="@errors"/></a>
+		</xsl:when>
+		<xsl:otherwise>
+		    <xsl:apply-templates select="@errors"/>
+		</xsl:otherwise>
+	    </xsl:choose>
+	</td>
+        <td>
+	    <xsl:choose>
+		<xsl:when test="@failures != 0">
+		    <a title="Display only failures" href="{@id}_{@name}-fails.html"><xsl:apply-templates select="@failures"/></a>
+		</xsl:when>
+		<xsl:otherwise>
+		    <xsl:apply-templates select="@failures"/>
+		</xsl:otherwise>
+	    </xsl:choose>
+	</td>
         <td><xsl:call-template name="display-time">
                 <xsl:with-param name="value" select="@time"/>
             </xsl:call-template>
@@ -626,6 +765,7 @@ h6 {
 </xsl:template>
 
 <xsl:template match="testcase" mode="print.test">
+    <xsl:param name="show.class" select="''"/>
     <tr valign="top">
         <xsl:attribute name="class">
             <xsl:choose>
@@ -634,7 +774,23 @@ h6 {
                 <xsl:otherwise>TableRowColor</xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
-        <td><xsl:value-of select="@name"/></td>
+	<xsl:variable name="class.href">
+	    <xsl:value-of select="concat(translate(../@package,'.','/'), '/', ../@id, '_', ../@name, '.html')"/>
+	</xsl:variable>
+	<xsl:if test="boolean($show.class)">
+	    <td><a href="{$class.href}"><xsl:value-of select="../@name"/></a></td>
+	</xsl:if>
+        <td>
+	    <a name="{@name}"/>
+	    <xsl:choose>
+		<xsl:when test="boolean($show.class)">
+		    <a href="{concat($class.href, '#', @name)}"><xsl:value-of select="@name"/></a>
+		</xsl:when>
+		<xsl:otherwise>
+		    <xsl:value-of select="@name"/>
+		</xsl:otherwise>
+	    </xsl:choose>
+	</td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>
