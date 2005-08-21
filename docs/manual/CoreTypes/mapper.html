@@ -259,7 +259,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
       <td valign="top">
         If this is false, the mapper will ignore case when matching the glob pattern.
         This attribute can be true or false, the default is true.
-      <em>Since ant 1.6.3.</em>
+      <em>Since Ant 1.6.3.</em>
       </td>
       <td align="center" valign="top">No</td>
     </tr>
@@ -270,7 +270,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
         directory separator characters - \ and /.
         This attribute can be true or false, the default is false.
         This attribute is useful for cross-platform build files.
-        <em>Since ant 1.6.3.</em>
+        <em>Since Ant 1.6.3.</em>
         <td align="center" valign="top">No</td>
       </tr>
     </table>
@@ -474,7 +474,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
       <td valign="top">
         If this is false, the mapper will ignore case when matching the pattern.
         This attribute can be true or false, the default is true.
-      <em>Since ant 1.6.3.</em>
+      <em>Since Ant 1.6.3.</em>
       </td>
       <td align="center" valign="top">No</td>
     </tr>
@@ -485,7 +485,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
         as a / for the purposes of matching.
         This attribute can be true or false, the default is false.
         This attribute is useful for cross-platform build files.
-        <em>Since ant 1.6.3.</em>
+        <em>Since Ant 1.6.3.</em>
         <td align="center" valign="top">No</td>
       </tr>
     </table>
@@ -544,7 +544,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <td valign="top">ignored</td>
   </tr>
 </table>
-<h4><a name="unpackage-mapper">unpackage (since ant 1.6.0)</a></h4>
+<h4><a name="unpackage-mapper">unpackage (since Ant 1.6.0)</a></h4>
   <p>This mapper is the inverse of the <a href="#package-mapper">package</a> mapper.
     It replaces the dots in a package name with directory separators. This
     is useful for matching XML formatter results against their JUnit test
@@ -566,7 +566,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <td valign="top"><code>${test.src.dir}/org/acme/AcmeTest.java</code></td>
   </tr>
 </table>
-<h4><a name="composite-mapper">composite (since ant 1.6.2)</a></h4>
+<h4><a name="composite-mapper">composite (since Ant 1.6.2)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to each nested
     <code>&lt;mapper&gt;</code> in turn, returning all results.
@@ -594,7 +594,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
   <p>The composite mapper has no corresponding
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
-<h4><a name="chained-mapper">chained (since ant 1.6.2)</a></h4>
+<h4><a name="chained-mapper">chained (since Ant 1.6.2)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to the first
     nested mapper, its results to the second, and so on.  The target filenames
@@ -639,7 +639,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <!--             Filter Mapper              -->
     <!--                                        -->
 
-<h4><a name="filter-mapper">filtermapper (since ant 1.6.3)</a></h4>
+<h4><a name="filter-mapper">filtermapper (since Ant 1.6.3)</a></h4>
     <p>
       This mapper implementation applies a <a href="filterchain.html">filterchain</a>
       to the source file name.
@@ -688,7 +688,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <!--             Script Mapper              -->
     <!--                                        -->
 
-<h4><a name="script-mapper">scriptmapper (since ant 1.7)</a></h4>
+<h4><a name="script-mapper">scriptmapper (since Ant 1.7)</a></h4>
 <p>
 This mapper executes a script written in <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
 supported language, once per file to map.</p>
