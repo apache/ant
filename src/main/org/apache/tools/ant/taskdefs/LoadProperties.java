@@ -156,11 +156,11 @@ public class LoadProperties extends Task {
 
         if (srcFile != null) {
             if (!srcFile.exists()) {
-                throw new BuildException("Source file does not exist.");
+                throw new BuildException("Source file does not exist :"+srcFile);
             }
 
             if (!srcFile.isFile()) {
-                throw new BuildException("Source file is not a file.");
+                throw new BuildException("Source file is not a file :"+srcFile);
             }
 
             try {
