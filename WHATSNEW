@@ -218,7 +218,7 @@ Other changes:
   Bugzilla Report 34374.
 
 * <os> condition adds "winnt" as a family which can be tested. This is
-  all windows platforms other than the Win9x line, and windows CE.  
+  all windows platforms other than the Win9x line or Windows CE.  
 
 * <exec> (and hence, <apply> and any other derived classes) have an OsFamily
   attribute, which can restrict execution to a single OS family.
@@ -242,7 +242,9 @@ Other changes:
 
 * check for 1.5.* Ant main class. (weblogic.jar in classpath reports)
 
-* New condition <isfailure> that tests the return-code of an executable.
+* New condition <isfailure> that tests the return-code of an executable. This
+  contains platform-specific logic and is better than comparing the result with
+  "0". 
 
 * Added initial support for Resource Collections, including the
   resourcecount task.
@@ -253,7 +255,8 @@ Other changes:
 * New mapper, <scriptmapper>, supports scripted mapping of source files/strings
   to destination strings.
 
-* Add the echoxml task.
+* Add the echoxml task. This will echo nested XML to a file, with
+  the normal <?xml ?> processor instruction. UTF-8 encoding only.  
 
 * Try to make subprojects of custom Project subclasses instances of the
   same type. Bugzilla report 17901.
@@ -268,6 +271,11 @@ Other changes:
   
 * <junitreport> now generates pages alltests-errors.html and alltests-fails.html, 
 that list only the errors and failures, respectively. Bugzilla Report: 36226
+
+* New task <makeurl> that can turn a file reference into an absolute file:// url; and
+  nested filesets/paths into a (space, comma, whatever) separated list of URLs. Useful
+  for RMI classpath setup, amongst other things. 
+
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
