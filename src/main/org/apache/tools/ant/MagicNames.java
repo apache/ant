@@ -24,14 +24,19 @@ package org.apache.tools.ant;
  * @since Ant 1.6
  */
 public final class MagicNames {
+
+    private MagicNames() {
+    }
+
     /**
      * Ant version property. {@value}
      */
     public static final String ANT_VERSION = "ant.version";
 
-    private MagicNames() {
-    }
-
+    /**
+     * System classpath policy. {@value}
+     */
+    public static final String BUILD_SYSCLASSPATH = "build.sysclasspath";
 
     /**
      * The name of the script repository used by the script repo task

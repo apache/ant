@@ -41,24 +41,40 @@ public class Launcher {
     /** The Ant Library Directory property */
     public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
 
-    /** The directory name of the per-user ant directory */
+    /** 
+     * The directory name of the per-user ant directory 
+     * {@value}
+     */
     public static final String ANT_PRIVATEDIR = ".ant";
 
     /**
-     * The location of a per-user library directory
+     * The name of a per-user library directory
+     * {@value}
      */
     public static final String ANT_PRIVATELIB = "lib";
 
-    /** The location of a per-user library directory */
+    /** The location of a per-user library directory
+     * {@value}
+     */
     public static final String USER_LIBDIR = 
         ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB;
 
-    /** The startup class that is to be run */
+    /** 
+     * The startup class that is to be run 
+     * {@value}
+     */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
     /**
      * system property with user home directory
+     * {@value}
      */
     public static final String USER_HOMEDIR = "user.home";
+
+    /**
+     * System property of 
+     * {@value}
+     */
+    private static final String JAVA_CLASS_PATH = "java.class.path";
 
     /**
      *  Entry point for starting command line Ant
@@ -228,7 +244,7 @@ public class Launcher {
 
         // now update the class.path property
         StringBuffer baseClassPath
-            = new StringBuffer(System.getProperty("java.class.path"));
+            = new StringBuffer(System.getProperty(JAVA_CLASS_PATH));
         if (baseClassPath.charAt(baseClassPath.length() - 1)
                 == File.pathSeparatorChar) {
             baseClassPath.setLength(baseClassPath.length() - 1);
@@ -239,7 +255,7 @@ public class Launcher {
             baseClassPath.append(Locator.fromURI(jars[i].toString()));
         }
 
-        System.setProperty("java.class.path", baseClassPath.toString());
+        System.setProperty(JAVA_CLASS_PATH, baseClassPath.toString());
 
         URLClassLoader loader = new URLClassLoader(jars);
         Thread.currentThread().setContextClassLoader(loader);

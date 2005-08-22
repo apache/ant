@@ -94,6 +94,12 @@ public class ComponentHelper  {
     private static final String ANTLIB_PREFIX = "antlib:";
 
     /**
+     * string used to control build.syspath policy {@value}
+     */
+    private static final String BUILD_SYSCLASSPATH_ONLY = "only";
+    private static final String ANT_PROPERTY_TASK = "property";
+
+    /**
      * Find a project component for a specific project, creating
      * it if it does not exist.
      * @param project the project.
@@ -435,10 +441,10 @@ public class ComponentHelper  {
      */
     public Task createTask(String taskType) throws BuildException {
         Task task = createNewTask(taskType);
-        if (task == null && taskType.equals("property")) {
+        if (task == null && taskType.equals(ANT_PROPERTY_TASK)) {
             // quick fix for Ant.java use of property before
             // initializing the project
-            addTaskDefinition("property",
+            addTaskDefinition(ANT_PROPERTY_TASK,
                               org.apache.tools.ant.taskdefs.Property.class);
             task = createNewTask(taskType);
         }
@@ -676,7 +682,7 @@ public class ComponentHelper  {
     private void initTasks() {
         ClassLoader classLoader = null;
         if (project.getCoreLoader() != null
-            && !("only".equals(project.getProperty("build.sysclasspath")))) {
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
             classLoader = project.getCoreLoader();
         }
         String dataDefs = MagicNames.TASKDEF_PROPERTIES_RESOURCE;
@@ -721,7 +727,7 @@ public class ComponentHelper  {
     private void initTypes() {
         ClassLoader classLoader = null;
         if (project.getCoreLoader() != null
-            && !("only".equals(project.getProperty("build.sysclasspath")))) {
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
             classLoader = project.getCoreLoader();
         }
         String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
