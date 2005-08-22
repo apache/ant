@@ -18,8 +18,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 
 /**
  */
@@ -30,6 +30,15 @@ public class AntlibTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/antlib.xml");
+    }
+
+    /**
+     * only do the antlib tests if we are in the same JVM as ant.
+     * @return
+     */
+    private boolean isSharedJVM() {
+        String property = System.getProperty("tests.and.ant.share.classloader");
+        return property!=null && Project.toBoolean(property);
     }
 
     public void testAntlibFile() {
@@ -49,6 +58,25 @@ public class AntlibTest extends BuildFileTest {
         expectLog("ns.current", "Echo2 inside a macroHello from x:p");
     }
 
+
+    public void testAntlib_uri() {
+        if (isSharedJVM()) {
+            executeTarget("antlib_uri");
+        }
+    }
+
+    public void testAntlib_uri_auto() {
+        if (isSharedJVM()) {
+            executeTarget("antlib_uri_auto");
+        }
+    }
+
+    public void testAntlib_uri_auto2() {
+        if (isSharedJVM()) {
+            executeTarget("antlib_uri_auto2");
+        }
+    }
+    
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");

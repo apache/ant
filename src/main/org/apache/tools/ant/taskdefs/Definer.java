@@ -33,6 +33,8 @@ import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -44,6 +46,13 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @noinspection ParameterHidesMemberVariable
  */
 public abstract class Definer extends DefBase {
+
+    /**
+     * the extension of an antlib file for autoloading.
+     * {@value[
+     */
+    private static final String ANTLIB_XML = "/antlib.xml";
+
     private static class ResourceStack extends ThreadLocal {
         public Object initialValue() {
             return new HashMap();
@@ -188,10 +197,20 @@ public abstract class Definer extends DefBase {
         ClassLoader al = createLoader();
 
         if (!definerSet) {
-            throw new BuildException(
-                "name, file or resource attribute of "
-                + getTaskName() + " is undefined", getLocation());
-        }
+            //we arent fully defined yet. this is an error unless
+            //we are in an antlib, in which case the resource name is determined
+            //automatically.
+            //NB: URIs in the ant core package will be "" at this point.
+            if (getURI()!=null && getURI().startsWith(MagicNames.ANTLIB_PREFIX)) {
+                //convert the URI to a resource
+                String uri1 = getURI();
+                setResource(makeResourceFromURI(uri1));
+            } else {
+                    throw new BuildException(
+                        "name, file or resource attribute of "
+                        + getTaskName() + " is undefined", getLocation());
+                }
+            }
 
         if (name != null) {
             if (classname == null) {
@@ -262,6 +281,38 @@ public abstract class Definer extends DefBase {
         }
     }
 
+    /**
+     * This is where the logic to map from a URI to an antlib resource
+     * is kept. 
+     * @return the name of a resource. It may not exist
+     */
+
+    public static String makeResourceFromURI(String uri) {
+        String path = uri.substring(MagicNames.ANTLIB_PREFIX.length());
+        String resource;
+        if (path.startsWith("//")) {
+            //handle new style full paths to an antlib, in which 
+            //all but the forward slashes are allowed. 
+            resource = path.substring("//".length());
+            if (!resource.endsWith(".xml")) {
+                //if we haven't already named an XML file, it gets antlib.xml
+                resource = resource + ANTLIB_XML;
+            }
+        } else {
+            //convert from a package to a path
+            resource = path.replace('.', '/') + ANTLIB_XML;
+        }
+        return resource;
+    }
+
+    /**
+     * Convert a file to a file: URL. 
+     * 
+     * @return the URL, or null if it isn't valid and the active error policy
+     * is not to raise a fault
+     * @throws BuildException if the file is missing/not a file and the 
+     * policy requires failure at this point.
+     */
     private URL fileToURL() {
         String message = null;
         if (!(file.exists())) {
@@ -330,7 +381,7 @@ public abstract class Definer extends DefBase {
     }
 
     /**
-     * Load type definitions as properties from a url.
+     * Load type definitions as properties from a URL.
      *
      * @param al the classloader to use
      * @param url the url to get the definitions from
@@ -355,18 +406,12 @@ public abstract class Definer extends DefBase {
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(is);
         }
     }
 
     /**
-     * Load an antlib from a url.
+     * Load an antlib from a URL.
      *
      * @param classLoader the classloader to use.
      * @param url the url to load the definitions from.
@@ -551,9 +596,13 @@ public abstract class Definer extends DefBase {
         }
     }
 
+    /**
+     * handle too many definitions by raising an exception.
+     * @throws BuildException always.
+     */
     private void tooManyDefinitions() {
         throw new BuildException(
-            "Only one of the attributes name,file,resource"
+            "Only one of the attributes name, file and resource"
             + " can be set", getLocation());
     }
 }

@@ -36,6 +36,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.tools.ant.taskdefs.Typedef;
+import org.apache.tools.ant.taskdefs.Definer;
 import org.apache.tools.ant.launch.Launcher;
 
 /**
@@ -91,7 +92,6 @@ public class ComponentHelper  {
     private static final String ERROR_NO_TASK_LIST_LOAD = "Can't load default task list";
     private static final String ERROR_NO_TYPE_LIST_LOAD = "Can't load default type list";
     public static final String COMPONENT_HELPER_REFERENCE = "ant.ComponentHelper";
-    private static final String ANTLIB_PREFIX = "antlib:";
 
     /**
      * string used to control build.syspath policy {@value}
@@ -782,13 +782,15 @@ public class ComponentHelper  {
         checkedNamespaces.add(uri);
         Typedef definer = new Typedef();
         definer.setProject(project);
+        definer.init();
         definer.setURI(uri);
-        definer.setResource(
-            uri.substring(ANTLIB_PREFIX.length()).replace('.', '/')
-            + "/antlib.xml");
+        //there to stop error messages being "null"
+        definer.setTaskName(uri);
+        //if this is left out, bad things happen. like all build files break
+        //on the first element encountered.
+        definer.setResource(Definer.makeResourceFromURI(uri));
         // a fishing expedition :- ignore errors if antlib not present
         definer.setOnError(new Typedef.OnError(Typedef.OnError.POLICY_IGNORE));
-        definer.init();
         definer.execute();
     }
 
@@ -813,7 +815,7 @@ public class ComponentHelper  {
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
             //not a known type
-            boolean isAntlib = componentName.indexOf(ANTLIB_PREFIX) == 0;
+            boolean isAntlib = componentName.indexOf(MagicNames.ANTLIB_PREFIX) == 0;
             out.println("Cause: The name is undefined.");
             out.println("Action: Check the spelling.");
             out.println("Action: Check that any custom tasks/types have been declared.");

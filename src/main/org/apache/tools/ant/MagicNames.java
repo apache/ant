@@ -29,6 +29,12 @@ public final class MagicNames {
     }
 
     /**
+     * prefix for antlib URIs:
+     * {@value}
+     */
+    public static final String ANTLIB_PREFIX = "antlib:";
+
+    /**
      * Ant version property. {@value}
      */
     public static final String ANT_VERSION = "ant.version";

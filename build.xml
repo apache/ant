@@ -1602,7 +1602,8 @@
         value="${tests-classpath.value}"/>
       <sysproperty key="root" file="${basedir}"/>
       <sysproperty key="build.compiler" value="${build.compiler}"/>
-
+      <sysproperty key="tests.and.ant.share.classloader" 
+                   value="${tests.and.ant.share.classloader}"/>
       <formatter type="brief" usefile="false"/>
 
       <batchtest>
@@ -1775,6 +1776,8 @@
         value="${tests-classpath.value}"/>
       <sysproperty key="root" file="${basedir}"/>
       <sysproperty key="build.compiler" value="${build.compiler}"/>
+      <sysproperty key="tests.and.ant.share.classloader"
+                   value="${tests.and.ant.share.classloader}"/>
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}"/>
