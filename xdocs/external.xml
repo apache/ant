@@ -148,9 +148,6 @@
         </table>
       </subsection>
 
-
-
-
       <subsection name="ant4eclipse">
 
         <p>ant4eclipse provides a set of Ant tasks to make several 
@@ -181,11 +178,6 @@
           </tr>
         </table>
       </subsection>
-
-
-
-
-
 
       <subsection name="AntDoc">
 
