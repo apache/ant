@@ -148,6 +148,45 @@
         </table>
       </subsection>
 
+
+
+
+      <subsection name="ant4eclipse">
+
+        <p>ant4eclipse provides a set of Ant tasks to make several 
+		configurations from the Eclipse IDE available in Ant 
+		buildscripts. The tasks are aimed to avoid redundancy between 
+		Eclipse and Ant configurations in order to build small but 
+		powerful build systems for the continuous integration 
+		process</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.1 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant4eclipse.sf.net">http://ant4eclipse.sf.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=137377">
+              ant4eclipse user mailing list</a> 
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Sun Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+
+
+
+
+
       <subsection name="AntDoc">
 
         <p>AntDoc is a tool that generates HTML documentation from Ant
@@ -435,15 +474,15 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.3</td>
+            <td>Ant 1.3 and up</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.euronet.nl/users/tomb/cleanImports/index.html">http://www.euronet.nl/users/tomb/cleanImports/index.html</a></td>
+            <td><a href="http://www.cleanimports.tombrus.nl">http://www.cleanimports.tombrus.nl</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:tomb@euronet.nl">Tom Brus</a></td>
+            <td><a href="mailto:cleanimports@tombrus.nl">Tom Brus</a></td>
           </tr>
           <tr>
             <th>License:</th>
