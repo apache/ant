@@ -41,6 +41,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * handling is handled by DefBase
  *
  * @since Ant 1.4
+ * @noinspection ParameterHidesMemberVariable
  */
 public abstract class Definer extends DefBase {
     private static class ResourceStack extends ThreadLocal {
@@ -74,6 +75,24 @@ public abstract class Definer extends DefBase {
     public static class OnError extends EnumeratedAttribute {
         /** Enumerated values */
         public static final int  FAIL = 0, REPORT = 1, IGNORE = 2, FAIL_ALL = 3;
+
+        /**
+         * text value of onerror option {@value}
+         */
+        public static final String POLICY_FAIL = "fail";
+        /**
+         * text value of onerror option {@value}
+         */
+        public static final String POLICY_REPORT = "report";
+        /**
+         * text value of onerror option {@value}
+         */
+        public static final String POLICY_IGNORE = "ignore";
+        /**
+         * text value of onerror option {@value}
+         */
+        public static final String POLICY_FAILALL = "failall";
+
         /**
          * Constructor
          */
@@ -94,7 +113,7 @@ public abstract class Definer extends DefBase {
          * @return an array of the allowed values for this attribute.
          */
         public String[] getValues() {
-            return new String[] {"fail", "report", "ignore", "failall"};
+            return new String[] {POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE, POLICY_FAILALL};
         }
     }
 
@@ -270,7 +289,9 @@ public abstract class Definer extends DefBase {
                 log(message, Project.MSG_WARN);
                 break;
             case OnError.IGNORE:
-                // Fall Through
+                // log at a lower level
+                log(message, Project.MSG_VERBOSE);
+                break;
             default:
                 // Ignore the problem
                 break;
@@ -298,7 +319,8 @@ public abstract class Definer extends DefBase {
                     log(message, Project.MSG_WARN);
                     break;
                 case OnError.IGNORE:
-                    // Fall Through
+                    log(message, Project.MSG_VERBOSE);
+                    break;
                 default:
                     // Ignore the problem
                     break;

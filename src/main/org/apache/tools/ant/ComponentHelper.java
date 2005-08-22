@@ -781,7 +781,7 @@ public class ComponentHelper  {
             uri.substring(ANTLIB_PREFIX.length()).replace('.', '/')
             + "/antlib.xml");
         // a fishing expedition :- ignore errors if antlib not present
-        definer.setOnError(new Typedef.OnError("ignore"));
+        definer.setOnError(new Typedef.OnError(Typedef.OnError.POLICY_IGNORE));
         definer.init();
         definer.execute();
     }
