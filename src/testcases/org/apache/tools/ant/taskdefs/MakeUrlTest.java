@@ -96,7 +96,7 @@ public class MakeUrlTest extends BuildFileTest {
 
     public void testPath() {
         executeTarget("testPath");
-        assertPropertyContains("testPath", "to-url.xml");
+        assertPropertyContains("testPath", "makeurl.xml");
     }
 
     /**
