@@ -186,8 +186,7 @@ public class Launcher {
         //decide whether to copy the existing arg set, or
         //build a new one from the list of all args excluding the special
         //operations that only we handle
-
-        if (libPaths.size() == 0 && cpString == null) {
+        if (argList.size() == args.length) {
             newArgs = args;
         } else {
             newArgs = (String[]) argList.toArray(new String[argList.size()]);

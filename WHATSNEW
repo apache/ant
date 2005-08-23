@@ -132,6 +132,9 @@ Fixed bugs:
 
 * off-by-one error in environment setup for execution under OpenVMS fixed.
 
+* Bugzilla report 36171: -noclasspath crashes ant if no system classpath is set. 
+
+
 Other changes:
 --------------
 
