@@ -21,11 +21,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -37,7 +37,7 @@ import java.util.ListIterator;
  * nested filesets are supported; if present, these are turned into the
  * url with the given separator between them (default = " ").
  *
- * @ant.task category="core" name="tourl"
+ * @ant.task category="core" name="makeurl"
  */
 
 public class MakeUrl extends Task {
@@ -263,6 +263,10 @@ public class MakeUrl extends Task {
         getProject().setNewProperty(property, url);
     }
 
+    /**
+     * check for errors
+     * @throws BuildException if we are not configured right
+     */
     private void validate() {
         //validation
         if (property == null) {
@@ -278,17 +282,13 @@ public class MakeUrl extends Task {
      *
      * @param fileToConvert
      * @return the file converted to a URL
-     * @throws BuildException if the file would not convert
      */
     private String toURL(File fileToConvert) {
         String url;
-        try {
-            //create the URL
-            url = fileToConvert.toURI().toURL().toExternalForm();
-            //set the property
-        } catch (MalformedURLException e) {
-            throw new BuildException("Could not convert " + fileToConvert, e);
-        }
+        //create the URL
+        //ant equivalent of  fileToConvert.toURI().toURL().toExternalForm();
+        url = FileUtils.getFileUtils().toURI(fileToConvert.getAbsolutePath());
+
         return url;
     }
 
