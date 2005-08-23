@@ -87,16 +87,40 @@ public class ComponentHelper  {
      */
     private Hashtable createdTasks = new Hashtable();
 
+    /**
+     * this does not appear to be used anywhere in the Ant codebase
+     * even via its accessors
+     */
     private ComponentHelper next;
+
+    /**
+     * Project that owns a component helper
+     */
     private Project project;
+
+    /**
+     * Error string when the file taskdefs/defaults.properties cannot be found
+     */
     private static final String ERROR_NO_TASK_LIST_LOAD = "Can't load default task list";
+    /**
+     * Error string when the typedefs/defaults.properties cannot be found
+     */
     private static final String ERROR_NO_TYPE_LIST_LOAD = "Can't load default type list";
+
+    /**
+     * reference under which we register ourselves with a project -{@value}
+     */
     public static final String COMPONENT_HELPER_REFERENCE = "ant.ComponentHelper";
 
     /**
      * string used to control build.syspath policy {@value}
      */
     private static final String BUILD_SYSCLASSPATH_ONLY = "only";
+
+    /**
+     * special name of ant's property task -{@value}. There is some
+     * contrived work here to enable this early.
+     */
     private static final String ANT_PROPERTY_TASK = "property";
 
     /**
