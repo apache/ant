@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.TeeOutputStream;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -131,7 +132,7 @@ public class SSHExec extends SSHBase {
         }
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        TeeOutputStream tee = new TeeOutputStream(out, System.out);
+        TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
 
         Session session = null;
         try {
