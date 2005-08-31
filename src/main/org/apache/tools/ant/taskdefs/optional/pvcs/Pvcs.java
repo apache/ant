@@ -232,7 +232,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                     + getPromotiongroup());
             } else {
                 if (getLabel() != null) {
-                    commandLine.createArgument().setValue("-r" + getLabel());
+                    commandLine.createArgument().setValue("-v" + getLabel());
                 } else {
                     if (getRevision() != null) {
                         commandLine.createArgument().setValue("-r"

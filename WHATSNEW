@@ -132,8 +132,10 @@ Fixed bugs:
 
 * off-by-one error in environment setup for execution under OpenVMS fixed.
 
-* Bugzilla report 36171: -noclasspath crashes ant if no system classpath is set. 
+* Bugzilla report 36171: -noclasspath crashes ant if no system classpath is set.
 
+* <pvcs> used wrong switch for retrieving revisions by label.
+  Bugzilla Report 36359.
 
 Other changes:
 --------------
