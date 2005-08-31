@@ -137,6 +137,9 @@ Fixed bugs:
 * <pvcs> used wrong switch for retrieving revisions by label.
   Bugzilla Report 36359.
 
+* <sshexec> closed System.out, disabling output on second and subsequent
+  invocations.  Bugzilla report 36302.
+
 Other changes:
 --------------
 
