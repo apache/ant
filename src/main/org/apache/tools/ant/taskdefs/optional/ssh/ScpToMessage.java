@@ -197,7 +197,7 @@ public class ScpToMessage extends AbstractSshMessage {
                                    InputStream in,
                                    OutputStream out) throws IOException {
         // send "C0644 filesize filename", where filename should not include '/'
-        int filesize = (int) localFile.length();
+        long filesize = localFile.length();
         String command = "C0644 " + filesize + " ";
         command += localFile.getName();
         command += "\n";
@@ -211,13 +211,13 @@ public class ScpToMessage extends AbstractSshMessage {
         FileInputStream fis = new FileInputStream(localFile);
         byte[] buf = new byte[BUFFER_SIZE];
         long startTime = System.currentTimeMillis();
-        int totalLength = 0;
+        long totalLength = 0;
 
         // only track progress for files larger than 100kb in verbose mode
         boolean trackProgress = getVerbose() && filesize > 102400;
         // since filesize keeps on decreasing we have to store the
         // initial filesize
-        int initFilesize = filesize;
+        long initFilesize = filesize;
         int percentTransmitted = 0;
 
         try {

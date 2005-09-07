@@ -163,7 +163,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         int end = serverResponse.indexOf(" ", start + 1);
         start = end + 1;
         end = serverResponse.indexOf(" ", start + 1);
-        int filesize = Integer.parseInt(serverResponse.substring(start, end));
+        long filesize = Long.parseLong(serverResponse.substring(start, end));
         String filename = serverResponse.substring(end + 1);
         log("Receiving: " + filename + " : " + filesize);
         File transferFile = (localFile.isDirectory())
@@ -175,7 +175,7 @@ public class ScpFromMessage extends AbstractSshMessage {
     }
 
     private void fetchFile(File localFile,
-                            int filesize,
+                            long filesize,
                             OutputStream out,
                             InputStream in) throws IOException {
         byte[] buf = new byte[BUFFER_SIZE];
@@ -184,20 +184,21 @@ public class ScpFromMessage extends AbstractSshMessage {
         // read a content of lfile
         FileOutputStream fos = new FileOutputStream(localFile);
         int length;
-        int totalLength = 0;
+        long totalLength = 0;
         long startTime = System.currentTimeMillis();
 
         // only track progress for files larger than 100kb in verbose mode
         boolean trackProgress = getVerbose() && filesize > 102400;
         // since filesize keeps on decreasing we have to store the
         // initial filesize
-        int initFilesize = filesize;
+        long initFilesize = filesize;
         int percentTransmitted = 0;
 
         try {
             while (true) {
                 length = in.read(buf, 0,
-                        (buf.length < filesize) ? buf.length : filesize);
+                                 (BUFFER_SIZE < filesize) ? BUFFER_SIZE 
+                                                          : (int) filesize);
                 if (length < 0) {
                     throw new EOFException("Unexpected end of stream.");
                 }

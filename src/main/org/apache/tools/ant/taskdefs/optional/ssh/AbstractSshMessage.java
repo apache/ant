@@ -157,7 +157,7 @@ public abstract class AbstractSshMessage {
      */
     protected void logStats(long timeStarted,
                              long timeEnded,
-                             int totalLength) {
+                             long totalLength) {
         double duration = (timeEnded - timeStarted) / 1000.0;
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(2);
@@ -184,7 +184,7 @@ public abstract class AbstractSshMessage {
      * @param percentTransmitted the current percent transmitted
      * @return the percent that the file is of the total
      */
-    protected final int trackProgress(int filesize, int totalLength,
+    protected final int trackProgress(long filesize, long totalLength,
                                       int percentTransmitted) {
 
         int percent = (int) Math.round(Math.floor((totalLength
