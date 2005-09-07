@@ -59,6 +59,9 @@
                    property="AnakiaTask.present">
             <classpath refid="anakia.classpath"/>
         </available>
+        <condition property="onwindows">
+            <os family="windows"/>
+        </condition>
     </target>
 
     <target depends="prepare" name="prepare-error" unless="AnakiaTask.present">
@@ -68,7 +71,7 @@
         </echo>
     </target>
 
-    <target name="docs" if="AnakiaTask.present" depends="prepare-error" description="Create XDocs.">
+    <target name="anakia" if="AnakiaTask.present" depends="prepare-error">
         <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
             <classpath refid="anakia.classpath"/>
         </taskdef>
@@ -84,6 +87,12 @@
         </anakia>
     </target>
 
+    <target name="fixcrlf" if="onwindows">
+        <fixcrlf srcDir="${docs.dest}" eol="dos" includes="*.html"/>
+    </target>
+
+    <target name="docs" if="AnakiaTask.present" depends="anakia,fixcrlf" description="Create XDocs.">
+    </target>
     <target name="javadocs" description="Create Javadoc.">
       <ant antfile="build.xml" target="dist_javadocs">
         <property name="dist.javadocs" value="${docs.dest}/manual/api" />

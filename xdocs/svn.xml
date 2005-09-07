@@ -35,7 +35,9 @@ svn co http://svn.apache.org/repos/asf/ant/[project]/trunk/ ant-[project]</sourc
       <p>Modules available for access are:</p>
 
       <ul>
-        <li>ant - The &quot;main&quot; Ant module.</li>
+        <li><a href="http://svn.apache.org/repos/asf/ant/core/trunk/">ant</a> - The &quot;main&quot; Ant module.</li>
+        <li><a href="http://svn.apache.org/repos/asf/ant/antlibs/">antlibs</a> - Libraries developed as antlib.</li>
+        <li><a href="http://svn.apache.org/repos/asf/ant/sandbox/">sandbox</a> - New developments.</li>
       </ul>
 
       <p>If you are not familiar with Subversion, <a
