@@ -158,11 +158,10 @@ public class IsReachable extends ProjectComponent implements Condition {
         log("Probing host " + target, Project.MSG_VERBOSE);
         InetAddress address;
         try {
-            log(WARN_UNKNOWN_HOST + target);
             address = InetAddress.getByName(target);
         } catch (UnknownHostException e1) {
+            log(WARN_UNKNOWN_HOST + target);
             return false;
-
         }
         log("Host address = " + address.getHostAddress(),
                 Project.MSG_VERBOSE);
