@@ -339,6 +339,8 @@ public class MacroDef extends AntlibDefinition  {
             getProject());
 
         helper.addDataTypeDefinition(def);
+        log("creating macro  " + name,Project.MSG_VERBOSE);
+
     }
 
 

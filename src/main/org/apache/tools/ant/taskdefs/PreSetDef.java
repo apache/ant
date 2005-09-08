@@ -95,6 +95,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
         newDef.setName(name);
 
         helper.addDataTypeDefinition(newDef);
+        log("defining preset "+name,Project.MSG_VERBOSE);
     }
 
     /**
