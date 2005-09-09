@@ -338,13 +338,11 @@ public class PropertySet extends DataType implements ResourceCollection {
      *         avoid needless duplication of the Hashtable during recursion.
      */
     private void addPropertyNames(Set names, Hashtable properties) {
-        Project prj = getProject();
-
         // Add this PropertySet's property names.
         for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
             PropertyRef r = (PropertyRef) e.nextElement();
             if (r.name != null) {
-                if (prj != null && prj.getProperty(r.name) != null) {
+                if (properties.get(r.name) != null) {
                     names.add(r.name);
                 }
             } else if (r.prefix != null) {
