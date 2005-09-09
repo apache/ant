@@ -343,7 +343,7 @@ public class NetCommand {
             FileOutputStream fos = null;
 
             temporaryCommandFile = FILE_UTILS.createTempFile("cmd", ".txt", null);
-            owner.log("Using response file" + temporaryCommandFile, Project.MSG_VERBOSE);
+            owner.log("Using response file " + temporaryCommandFile, Project.MSG_VERBOSE);
 
             try {
                 fos = new FileOutputStream(temporaryCommandFile);
@@ -361,6 +361,7 @@ public class NetCommand {
             String newCommandLine[] = new String[2];
             newCommandLine[0] = commands[0];
             newCommandLine[1] = "@" + temporaryCommandFile.getAbsolutePath();
+            logVerbose(newCommandLine.describeCommand());
             executable.setCommandline(newCommandLine);
         }
     }
