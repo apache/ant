@@ -361,7 +361,7 @@ public class NetCommand {
             String newCommandLine[] = new String[2];
             newCommandLine[0] = commands[0];
             newCommandLine[1] = "@" + temporaryCommandFile.getAbsolutePath();
-            logVerbose(newCommandLine.describeCommand());
+            logVerbose(Commandline.describeCommand(newCommandLine));
             executable.setCommandline(newCommandLine);
         }
     }
