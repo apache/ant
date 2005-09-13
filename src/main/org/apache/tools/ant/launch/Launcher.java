@@ -27,57 +27,66 @@ import java.util.Iterator;
 
 
 /**
- *  This is a launcher for Ant.
+ * This is a launcher for Ant.
  *
  * @since Ant 1.6
  */
 public class Launcher {
+
     /**
-     * Ant home directory
-     * Value : {@value}
+     * The Ant Home (installation) Directory property.
+     * {@value}
      */
     public static final String ANTHOME_PROPERTY = "ant.home";
 
-    /** The Ant Library Directory property */
+    /**
+     * The Ant Library Directory property.
+     * {@value}
+     */
     public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
 
-    /** 
-     * The directory name of the per-user ant directory 
+    /**
+     * The directory name of the per-user ant directory.
      * {@value}
      */
     public static final String ANT_PRIVATEDIR = ".ant";
 
     /**
-     * The name of a per-user library directory
+     * The name of a per-user library directory.
      * {@value}
      */
     public static final String ANT_PRIVATELIB = "lib";
 
-    /** The location of a per-user library directory
-     * {@value}
+    /**
+     * The location of a per-user library directory.
+     * <p>
+     * It's value is the concatenation of {@link #ANT_PRIVATEDIR}
+     * with {@link #ANT_PRIVATELIB}, with an appropriate file separator
+     * in between. For example, on Unix, it's <code>.ant/lib</code>.
      */
-    public static final String USER_LIBDIR = 
+    public static final String USER_LIBDIR =
         ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB;
 
-    /** 
-     * The startup class that is to be run 
+    /**
+     * The startup class that is to be run.
      * {@value}
      */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
+
     /**
-     * system property with user home directory
+     * System property with user home directory.
      * {@value}
      */
     public static final String USER_HOMEDIR = "user.home";
 
     /**
-     * System property of 
+     * System property with application classpath.
      * {@value}
      */
     private static final String JAVA_CLASS_PATH = "java.class.path";
 
     /**
-     *  Entry point for starting command line Ant
+     * Entry point for starting command line Ant.
      *
      * @param  args commandline arguments
      */
@@ -93,16 +102,17 @@ public class Launcher {
     }
 
     /**
-      * Add a CLASSPATH or -lib to lib path urls.
-      * @param path        the classpath or lib path to add to the libPathULRLs
-      * @param getJars     if true and a path is a directory, add the jars in
-      *                    the directory to the path urls
-      * @param libPathURLs the list of paths to add to
-      */
+     * Add a CLASSPATH or -lib to lib path urls.
+     *
+     * @param path        the classpath or lib path to add to the libPathULRLs
+     * @param getJars     if true and a path is a directory, add the jars in
+     *                    the directory to the path urls
+     * @param libPathURLs the list of paths to add to
+     */
     private void addPath(String path, boolean getJars, List libPathURLs)
-        throws MalformedURLException {
+            throws MalformedURLException {
         StringTokenizer myTokenizer
-            = new StringTokenizer(path, System.getProperty("path.separator"));
+            = new StringTokenizer(path, File.pathSeparator);
         while (myTokenizer.hasMoreElements()) {
             String elementName = myTokenizer.nextToken();
             File element = new File(elementName);
@@ -122,14 +132,15 @@ public class Launcher {
     }
 
     /**
-     * Run the launcher to launch Ant
+     * Run the launcher to launch Ant.
      *
      * @param args the command line arguments
      *
      * @exception MalformedURLException if the URLs required for the classloader
      *            cannot be created.
      */
-    private void run(String[] args) throws LaunchException, MalformedURLException {
+    private void run(String[] args)
+            throws LaunchException, MalformedURLException {
         String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
         File antHome = null;
 
@@ -273,5 +284,5 @@ public class Launcher {
             t.printStackTrace();
         }
     }
-}
 
+}
