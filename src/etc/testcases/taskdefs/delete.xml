@@ -6,15 +6,18 @@
     <delete/>
   </target>
 
-  <target name="test2">
-    <copydir src="." 
-             dest="taskdefs.tmp"/>
+  <target name="init">
+    <mkdir dir="taskdefs.tmp" />
+    <copy todir="taskdefs.tmp">
+      <fileset dir="." excludes="taskdefs.tmp,taskdefs.tmp/**" />
+    </copy>
+  </target>
+
+  <target name="test2" depends="init">
     <delete file="taskdefs.tmp"/>
   </target>
 
-  <target name="test4">
-    <copydir src="." 
-             dest="taskdefs.tmp"/>
+  <target name="test4" depends="init">
     <delete dir="taskdefs.tmp"/>
   </target>
 
