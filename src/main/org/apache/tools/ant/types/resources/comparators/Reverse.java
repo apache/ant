@@ -31,6 +31,20 @@ public class Reverse extends ResourceComparator {
     private ResourceComparator nested;
 
     /**
+     * Default constructor.
+     */
+    public Reverse() {
+    }
+
+    /**
+     * Construct a new Reverse, supplying the ResourceComparator to be reversed.
+     * @param c the ResourceComparator to reverse.
+     */
+    public Reverse(ResourceComparator c) {
+        add(c);
+    }
+
+    /**
      * Add the ResourceComparator to reverse.
      * @param c the ResourceComparator to add.
      */
