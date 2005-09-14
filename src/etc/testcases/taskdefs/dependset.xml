@@ -22,7 +22,7 @@
     <touch file="test4.tmp"/>
     <dependset>
       <srcfilelist dir="." files="test4.tmp"/>
-      <targetfileset dir="." includes="i-do-not-exist"/>
+      <targetfileset id="targetfs" dir="." includes="i-do-not-exist"/>
     </dependset>
   </target>
 
@@ -34,6 +34,11 @@
       <srcfilelist dir="." files="newer.tmp"/>
       <targetfilelist dir="." files="older.tmp"/>
     </dependset>
+    <fail>
+      <condition>
+        <available file="older.tmp" />
+      </condition>
+    </fail>
   </target>
   
   <target name="cleanup"> 
