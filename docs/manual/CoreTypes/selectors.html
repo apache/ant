@@ -305,32 +305,30 @@
     <a name="differentselect">
     <h4>Different Selector</h4>
 
-    <p>The <code>&lt;different&gt;</code> tag selects files
-    who are deemed to be 'different' from another, equivalent file in
-    another location. The rules for determining difference between two
-    files are as follows:
+    <p>The <code>&lt;different&gt;</code> selector will select a file
+    if it is deemed to be 'different' from an equivalent file in
+    another location. The rules for determining difference between
+    the two files are as follows:
     <ol>
     <li> If there is no 'other' file, it's different.
     <li> Files with different lengths are different.
     <li> If <tt>ignoreFileTimes</tt> is turned off, then differing file
     timestamps will cause files to be regarded as different.
-    <li> Unless<tt>ignoreContents</tt> is set to true, a byte-for-byte check is run
-    against the two files
+    <li> Unless <tt>ignoreContents</tt> is set to true,
+         a byte-for-byte check is run against the two files.
     </ol>
 
     This is a useful selector to work with programs and tasks that don't handle
-    dependency checking properly; Even if a predecessor task always creates its
-    output files, followup tasks can be driven off copies made with a different selector,
-    so their dependencies are driven on the absolute state of the files, not just
-    a timestamp. For example: anything fetched from a web site, or the output of
-    some program. To reduce the amount of checking, when using this task inside
-    a <code>&lt;copy&gt;</code> task, set the <tt>preservelastmodified</tt> to propagate the timestamp
-    from source file to destintaion file.
+    dependency checking properly; even if a predecessor task always creates its
+    output files, followup tasks can be driven off copies made with a different
+    selector, so their dependencies are driven on the absolute state of the
+    files, not just a timestamp. For example: anything fetched from a web site,
+    or the output of some program. To reduce the amount of checking, when using
+    this task inside a <code>&lt;copy&gt;</code> task, set
+    <tt>preservelastmodified</tt> to <i>true</i> to propagate the timestamp
+    from the source file to the destination file.<p>
 
-
-    <p>
-
-    The <code>&lt;different&gt;</code> tag supports the use of a
+    The <code>&lt;different&gt;</code> selector supports the use of a
     contained <a href="mapper.html"><code>&lt;mapper&gt;</code></a> element
     to define the location of the file to be compared against. If no
     <code>&lt;mapper&gt;</code> element is specified, the
