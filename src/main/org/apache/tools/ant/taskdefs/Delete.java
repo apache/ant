@@ -19,12 +19,21 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.Vector;
+import java.util.Iterator;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Sort;
+import org.apache.tools.ant.types.resources.BCFileSet;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.comparators.FileSystem;
+import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.selectors.AndSelector;
 import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.ContainsSelector;
@@ -70,6 +79,7 @@ public class Delete extends MatchingTask {
     private boolean quiet = false;
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
+    private Vector rcs = new Vector();
 
     /**
      * Set the name of a single file to be removed.
@@ -87,6 +97,7 @@ public class Delete extends MatchingTask {
      */
     public void setDir(File dir) {
         this.dir = dir;
+        getImplicitFileSet().setDir(dir);
     }
 
     /**
@@ -153,6 +164,14 @@ public class Delete extends MatchingTask {
     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Add an arbitrary ResourceCollection to be deleted.
+     * @param rc the filesystem-only ResourceCollection.
+     */
+    public void add(ResourceCollection rc) {
+        rcs.add(rc);
     }
 
     /**
@@ -442,9 +461,9 @@ public class Delete extends MatchingTask {
                 + "Use a nested fileset element instead.");
         }
 
-        if (file == null && dir == null && filesets.size() == 0) {
+        if (file == null && dir == null && filesets.size() == 0 && rcs.size() == 0) {
             throw new BuildException("At least one of the file or dir "
-                                     + "attributes, or a fileset element, "
+                                     + "attributes, or a nested resource collection, "
                                      + "must be set.");
         }
 
@@ -452,7 +471,6 @@ public class Delete extends MatchingTask {
             throw new BuildException("quiet and failonerror cannot both be "
                                      + "set to true", getLocation());
         }
-
 
         // delete the single file
         if (file != null) {
@@ -497,39 +515,32 @@ public class Delete extends MatchingTask {
             }
             removeDir(dir);
         }
-
-        // delete the files in the filesets
+        Path p = new Path(getProject());
+        p.addAll(rcs);
         for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            try {
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] files = ds.getIncludedFiles();
-                String[] dirs = ds.getIncludedDirectories();
-                removeFiles(fs.getDir(getProject()), files, dirs);
-            } catch (BuildException be) {
-                // directory doesn't exist or is not readable
-                if (failonerror) {
-                    throw be;
-                } else {
-                    log(be.getMessage(),
-                        quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                }
-            }
+            FileSet fs = (FileSet) filesets.get(i);
+            p.add(includeEmpty ? new BCFileSet(fs) : fs);
         }
-
-        // delete the files from the default fileset
         if (usedMatchingTask && dir != null) {
-            try {
-                DirectoryScanner ds = super.getDirectoryScanner(dir);
-                String[] files = ds.getIncludedFiles();
-                String[] dirs = ds.getIncludedDirectories();
-                removeFiles(dir, files, dirs);
-            } catch (BuildException be) {
-                // directory doesn't exist or is not readable
-                if (failonerror) {
-                    throw be;
-                } else {
-                    log(be.getMessage(),
+            //add the files from the default fileset:
+            FileSet implicit = getImplicitFileSet();
+            p.add(includeEmpty ? new BCFileSet(implicit) : implicit);
+        }
+        // delete the files in the resource collections; sort to files, then dirs
+        Sort s = new Sort();
+        s.add(new Reverse(new FileSystem()));
+        s.add(p);
+        for (Iterator iter = s.iterator(); iter.hasNext();) {
+            FileResource r = (FileResource) iter.next();
+            if (!(r.isDirectory()) || r.getFile().list().length == 0) {
+                log("Deleting " + r, verbosity);
+                if (!delete(r.getFile())) {
+                    String message = "Unable to delete "
+                        + (r.isDirectory() ? "directory " : "file ") + r;
+                    if (failonerror) {
+                        throw new BuildException(message);
+                    }
+                    log(message,
                         quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }

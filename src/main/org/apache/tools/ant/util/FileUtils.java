@@ -1342,6 +1342,27 @@ public class FileUtils {
     }
 
     /**
+     * Learn whether one path "leads" another.
+     * @param leading The leading path, must not be null, must be absolute.
+     * @param path The path to remove from, must not be null, must be absolute.
+     * @return true if path starts with leading; false otherwise.
+     * @since Ant 1.7
+     */
+    public boolean isLeadingPath(File leading, File path) {
+        String l = normalize(leading.getAbsolutePath()).getAbsolutePath();
+        String p = normalize(path.getAbsolutePath()).getAbsolutePath();
+        if (l.equals(p)) {
+            return true;
+        }
+        // ensure that l ends with a /
+        // so we never think /foo was a parent directory of /foobar
+        if (!l.endsWith(File.separator)) {
+            l += File.separator;
+        }
+        return p.startsWith(l);
+    }
+
+    /**
      * Constructs a <code>file:</code> URI that represents the
      * external form of the given pathname.
      *

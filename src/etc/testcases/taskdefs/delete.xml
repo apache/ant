@@ -2,27 +2,107 @@
 
 <project name="delete-test" basedir="." default="test1">
 
-  <target name="test1">
-    <delete/>
-  </target>
+  <property name="dirname" value="taskdefs.tmp" />
+  <property name="dir" location="${dirname}" />
+
+  <macrodef name="expectabsent">
+    <sequential>
+      <fail>
+        <condition>
+          <available file="${dir}" />
+        </condition>
+    </fail>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="expectdirsonly">
+    <sequential>
+      <fail>
+        <condition>
+          <or>
+            <resourcecount when="greater" count="0">
+              <fileset refid="fs" />
+            </resourcecount>
+            <not>
+              <resourcecount count="${srcdirs}">
+                <dirset dir="${dir}" />
+              </resourcecount>
+            </not>
+          </or>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
 
   <target name="init">
-    <mkdir dir="taskdefs.tmp" />
-    <copy todir="taskdefs.tmp">
-      <fileset dir="." excludes="taskdefs.tmp,taskdefs.tmp/**" />
+    <resourcecount property="srcdirs">
+      <dirset dir="${basedir}" />
+    </resourcecount>
+
+    <resourcecount property="srcsize">
+      <files includes="${basedir}/" />
+    </resourcecount>
+
+    <mkdir dir="${dir}" />
+
+    <copy todir="${dir}">
+      <fileset dir="${basedir}" excludes="${dirname},${dirname}/**" />
     </copy>
   </target>
 
+  <target name="test1">
+    <delete />
+  </target>
+
   <target name="test2" depends="init">
-    <delete file="taskdefs.tmp"/>
+    <delete file="${dir}" />
+    <fail>
+      <condition>
+        <not>
+          <resourcecount count="${srcsize}">
+            <files includes="${dir}/" />
+          </resourcecount>
+        </not>
+      </condition>
+    </fail>
   </target>
 
   <target name="test4" depends="init">
-    <delete dir="taskdefs.tmp"/>
+    <delete dir="${dir}" />
+    <expectabsent />
   </target>
 
-  <target name="cleanup">
-    <delete dir="taskdefs.tmp" />
+  <target name="test5" depends="init">
+    <delete dir="${dir}" includes="**" />
+    <expectdirsonly />
   </target>
+
+  <target name="test6" depends="init">
+    <delete dir="${dir}" includes="**" includeemptydirs="true" />
+    <expectabsent />
+  </target>
+
+  <target name="test7" depends="init">
+    <delete>
+      <fileset id="fs" dir="${dir}" />
+    </delete>
+    <expectdirsonly />
+  </target>
+
+  <target name="test8" depends="init">
+    <delete includeemptydirs="true">
+      <fileset dir="${dir}" />
+    </delete>
+    <expectabsent />
+  </target>
+
+  <target name="test9" depends="init">
+    <delete>
+      <files includes="${dir}/**" />
+    </delete>
+    <expectabsent />
+  </target>
+
+  <target name="cleanup" depends="test4" />
 
 </project>

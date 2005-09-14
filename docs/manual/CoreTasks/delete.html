@@ -12,11 +12,14 @@
 <h3>Description</h3>
 <p>Deletes a single file, a specified directory and all its files and
 subdirectories, or a set of files specified by one or more
-<a href="../CoreTypes/fileset.html">FileSet</a>s.
-When specifying a set of files, empty directories are <i>not</i> removed by
-default.
-To remove empty directories, use the <code>includeEmptyDirs</code> attribute.
-</p>
+<a href="../CoreTypes/resources.html#collection">resource collection</a>s.
+The literal implication of <code>&lt;fileset&gt;</code> is that
+directories are not included; however the removal of empty directories can
+be triggered when using nested filesets by setting the
+<code>includeEmptyDirs</code> attribute to <i>true</i>. Note that this
+attribute is meaningless in the context of any of the various resource
+collection types that <i>do</i> include directories, but that no attempt
+will be made to delete non-empty directories in any case.</p>
 <p>
 If you use this task to delete temporary files created by editors
 and it doesn't seem to work, read up on the 
@@ -37,7 +40,7 @@ in <strong>Directory-based Tasks</strong>, and see the
      filename (if the file exists in the current base directory), a
      relative-path filename, or a full-path filename.</td>
     <td align="center" valign="middle" rowspan="2">At least one of the two,
-     unless a <code>&lt;fileset&gt;</code> is specified.</td>
+     unless nested resource collections are specified
   </tr>
   <tr>
     <td valign="top">dir</td>
@@ -88,7 +91,7 @@ in <strong>Directory-based Tasks</strong>, and see the
   </tr>
   <tr>
     <td valign="top">includes</td>
-    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+    <td valign="top"><em>Deprecated.</em>  Use resource collections.
       Comma- or space-separated list of patterns of
       files that must be deleted. All files are relative to the directory
       specified in <code>dir</code>.</td>
@@ -96,14 +99,14 @@ in <strong>Directory-based Tasks</strong>, and see the
   </tr>
   <tr>
     <td valign="top">includesfile</td>
-    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+    <td valign="top"><em>Deprecated.</em>  Use resource collections.
       The name of a file. Each line of
       this file is taken to be an include pattern.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
-    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+    <td valign="top"><em>Deprecated.</em>  Use resource collections.
       Comma- or space-separated list of patterns of
       files that must be excluded from the deletion list.
       All files are relative to the directory specified in <code>dir</code>.
@@ -112,14 +115,14 @@ in <strong>Directory-based Tasks</strong>, and see the
   </tr>
   <tr>
     <td valign="top">excludesfile</td>
-    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+    <td valign="top"><em>Deprecated.</em>  Use resource collections.
       The name of a file. Each line of
       this file is taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">defaultexcludes</td>
-    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+    <td valign="top"><em>Deprecated.</em>  Use resource collections.
       Whether to use <a href="../dirtasks.html#defaultexcludes">
       default excludes.</a></td>
     <td align="center" valign="top">No, default &quot;true&quot;</td>
@@ -131,7 +134,7 @@ in <strong>Directory-based Tasks</strong>, and see the
       failure to delete a file, this causes the jvm to attempt
       to delete the file when the jvm process is terminating.
       <em>Since Ant 1.6.2</em></td>
-    <td align="center" valign="top">No, default &quot;false&quot;.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -158,7 +161,7 @@ and any subdirectories.</p>
 </pre>
 <p>deletes all files and subdirectories of <code>build</code>, without
 <code>build</code> itself.</p>
-<hr><p align="center">Copyright &copy; 2000-2002,2004-2005 The Apache Software Foundation.
+<hr><p align="center">Copyright &copy; 2000-2002, 2004-2005 The Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>

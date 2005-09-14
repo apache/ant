@@ -42,8 +42,23 @@ public class DeleteTest extends BuildFileTest {
     public void test2() {
         executeTarget("test2");
     }
-
+//where oh where has my test case 3 gone?
     public void test4() {
         executeTarget("test4");
+    }
+    public void test5() {
+        executeTarget("test5");
+    }
+    public void test6() {
+        executeTarget("test6");
+    }
+    public void test7() {
+        executeTarget("test7");
+    }
+    public void test8() {
+        executeTarget("test8");
+    }
+    public void test9() {
+        executeTarget("test9");
     }
 }
