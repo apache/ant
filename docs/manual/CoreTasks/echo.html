@@ -72,8 +72,11 @@ This is a longer message stretching over
 three lines; the first line is a blank
 &lt;/echo&gt;
 </pre>
-As XML parsers are wont to do, the first newline in the text element
-has been included in the text. 
+The newline immediately following the &lt;echo&gt; tag will be part of the output.<br>
+Newlines in character data within the content of an element are not discarded by XML parsers.<br>
+See <a href="http://www.w3.org/TR/2004/REC-xml-20040204/#sec-line-ends">
+W3C Recommendation 04 February 2004 / End of Line handling
+</a> for more details.
 
 <pre>&lt;echo message=&quot;Deleting drive C:&quot; level=&quot;debug&quot;/&gt;</pre>
 A message which only appears in <tt>-debug</tt> mode.
