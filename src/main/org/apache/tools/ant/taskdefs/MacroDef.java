@@ -345,7 +345,6 @@ public class MacroDef extends AntlibDefinition  {
 
         helper.addDataTypeDefinition(def);
         log("creating macro  " + name,Project.MSG_VERBOSE);
-
     }
 
     /**
@@ -413,7 +412,7 @@ public class MacroDef extends AntlibDefinition  {
               return true;
             }
             if (obj != null && obj.getClass().equals(getClass())) {
-              equals((Member) obj);
+              return equals((Member) obj);
             }
             return false;
         }
@@ -481,7 +480,7 @@ public class MacroDef extends AntlibDefinition  {
     /**
      * A nested define element for the MacroDef task.
      *
-     * It provides an attribute with a guatanteed unique value
+     * It provides an attribute with a guaranteed unique value
      * on every instantiation of the macro. This allows to use
      * this uniquely named attribute in property names used
      * internally by the macro, thus creating unique property
