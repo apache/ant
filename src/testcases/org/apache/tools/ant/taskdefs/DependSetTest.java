@@ -57,4 +57,13 @@ public class DependSetTest extends BuildFileTest {
         executeTarget("test5");
     }
 
+    public void test6() {
+        executeTarget("test6");
+    }
+    public void test7() {
+        executeTarget("test7");
+    }
+    public void test8() {
+        executeTarget("test8");
+    }
 }

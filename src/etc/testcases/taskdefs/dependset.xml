@@ -40,7 +40,63 @@
       </condition>
     </fail>
   </target>
-  
+
+  <target name="test6">
+    <touch file="older.tmp"/>
+    <sleep seconds="3" />
+    <touch file="newer.tmp"/>
+    <dependset>
+      <sources>
+        <file file="newer.tmp" />
+      </sources>
+      <targets>
+        <filelist dir="." files="older.tmp" />
+      </targets>
+    </dependset>
+    <fail>
+      <condition>
+        <available file="older.tmp" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="test7">
+    <touch file="older.tmp"/>
+    <dependset>
+      <sources>
+        <propertyresource name="thereisnosuchproperty" />
+      </sources>
+      <targets>
+        <filelist dir="." files="older.tmp" />
+      </targets>
+    </dependset>
+    <fail>
+      <condition>
+        <available file="older.tmp" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="test8">
+    <touch file="older.tmp" />
+    <property name="foo" value="bar" />
+    <dependset>
+      <sources>
+        <propertyresource name="foo" />
+      </sources>
+      <targets>
+        <filelist dir="." files="older.tmp" />
+      </targets>
+    </dependset>
+    <fail>
+      <condition>
+        <not>
+          <available file="older.tmp" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup"> 
     <delete file="test4.tmp"/>
     <delete file="older.tmp"/>

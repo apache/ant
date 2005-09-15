@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright 2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,24 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.TimeComparison;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Sort;
+import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.selectors.Not;
+import org.apache.tools.ant.types.resources.selectors.Exists;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import org.apache.tools.ant.types.resources.comparators.Reverse;
+import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -39,36 +48,32 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * nested arguments:
  * <ul>
+ * <li>sources        (resource union describing the source resources to examine)
  * <li>srcfileset     (fileset describing the source files to examine)
  * <li>srcfilelist    (filelist describing the source files to examine)
+ * <li>targets        (path describing the target files to examine)
  * <li>targetfileset  (fileset describing the target files to examine)
  * <li>targetfilelist (filelist describing the target files to examine)
  * </ul>
- * At least one instance of either a fileset or filelist for both source and
- * target are required.
+ * At least one of both source and target entities is required.
  * <p>
- * This task will examine each of the source files against each of the target
- * files. If any target files are out of date with respect to any of the source
- * files, all targets are removed. If any files named in a (src or target)
- * filelist do not exist, all targets are removed.
+ * This task will examine each of the sources against each of the target files. If
+ * any target files are out of date with respect to any of the sources, all targets
+ * are removed. If any sources or targets do not exist, all targets are removed.
  * Hint: If missing files should be ignored, specify them as include patterns
  * in filesets, rather than using filelists.
  * </p><p>
- * This task attempts to optimize speed of dependency checking.  It will stop
- * after the first out of date file is found and remove all targets, rather
- * than exhaustively checking every source vs target combination unnecessarily.
+ * This task attempts to optimize speed of dependency checking
+ * by comparing only the dates of the oldest target file and the newest source.
  * </p><p>
  * Example uses:
  * <ul><li>
- * Record the fact that an XML file must be up to date
- * with respect to its XSD (Schema file), even though the XML file
- * itself includes no reference to its XSD.
+ * Record the fact that an XML file must be up to date with respect to its XSD
+ * (Schema file), even though the XML file itself includes no reference to its XSD.
  * </li><li>
- * Record the fact that an XSL stylesheet includes other
- * sub-stylesheets
+ * Record the fact that an XSL stylesheet includes other sub-stylesheets
  * </li><li>
- * Record the fact that java files must be recompiled if the ant build
- * file changes
+ * Record the fact that java files must be recompiled if the ant build file changes
  * </li></ul>
  *
  * @ant.task category="filesystem"
@@ -76,25 +81,53 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class DependSet extends MatchingTask {
 
-    private static final FileUtils     FILE_UTILS = FileUtils.getFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final ResourceSelector NOT_EXISTS = new Not(new Exists());
+    private static final ResourceComparator DATE_ASC
+        = new org.apache.tools.ant.types.resources.comparators.Date();
+    private static final ResourceComparator DATE_DESC = new Reverse(DATE_ASC);
 
-    private Vector sourceFileSets  = new Vector();
-    private Vector sourceFileLists = new Vector();
-    private Vector targetFileSets  = new Vector();
-    private Vector targetFileLists = new Vector();
+    private static class NonExistent extends Restrict {
+        private NonExistent(ResourceCollection rc) {
+            super.add(rc);
+            super.add(NOT_EXISTS);
+        }
+    }
+    private static class Xest extends Sort {
+        private Xest(ResourceCollection rc, ResourceComparator c) {
+            super.add(c);
+            super.add(rc);
+        }
+    }
+    private static class Oldest extends Xest {
+        private Oldest(ResourceCollection rc) {
+            super(rc, DATE_ASC);
+        }
+    }
+    private static class Newest extends Xest {
+        private Newest(ResourceCollection rc) {
+            super(rc, DATE_DESC);
+        }
+    }
+
+    private Union sources = null;
+    private Path targets = null;
 
     /**
-     * Creates a new DependSet Task.
-     **/
-    public DependSet() {
-    } //-- DependSet
+     * Create a nested sources element.
+     * @return a Union instance.
+     */
+    public synchronized Union createSources() {
+        sources = (sources == null) ? new Union() : sources;
+        return sources;
+    }
 
     /**
      * Add a set of source files.
      * @param fs the FileSet to add.
      */
     public void addSrcfileset(FileSet fs) {
-        sourceFileSets.addElement(fs);
+        createSources().add(fs);
     }
 
     /**
@@ -102,7 +135,16 @@ public class DependSet extends MatchingTask {
      * @param fl the FileList to add.
      */
     public void addSrcfilelist(FileList fl) {
-        sourceFileLists.addElement(fl);
+        createSources().add(fl);
+    }
+
+    /**
+     * Create a nested targets element.
+     * @return a Union instance.
+     */
+    public synchronized Path createTargets() {
+        targets = (targets == null) ? new Path(getProject()) : targets;
+        return targets;
     }
 
     /**
@@ -110,7 +152,7 @@ public class DependSet extends MatchingTask {
      * @param fs the FileSet to add.
      */
     public void addTargetfileset(FileSet fs) {
-        targetFileSets.addElement(fs);
+        createTargets().add(fs);
     }
 
     /**
@@ -118,158 +160,65 @@ public class DependSet extends MatchingTask {
      * @param fl the FileList to add.
      */
     public void addTargetfilelist(FileList fl) {
-        targetFileLists.addElement(fl);
+        createTargets().add(fl);
     }
 
     /**
-     * Executes the task.
+     * Execute the task.
      * @throws BuildException if errors occur.
      */
     public void execute() throws BuildException {
-
-        if ((sourceFileSets.size() == 0) && (sourceFileLists.size() == 0)) {
-          throw new BuildException("At least one <srcfileset> or <srcfilelist>"
-                                   + " element must be set");
+        if (sources == null) {
+          throw new BuildException(
+              "At least one set of source resources must be specified");
         }
-        if ((targetFileSets.size() == 0) && (targetFileLists.size() == 0)) {
-          throw new BuildException("At least one <targetfileset> or"
-                                   + " <targetfilelist> element must be set");
+        if (targets == null) {
+          throw new BuildException(
+              "At least one set of target files must be specified");
         }
-        long now = (new Date()).getTime();
-        /*
-          We have to munge the time to allow for the filesystem time
-          granularity.
-        */
-        now += FILE_UTILS.getFileTimestampGranularity();
-
-        // Grab all the target files specified via filesets:
-        Vector allTargets = new Vector();
-        long oldestTargetTime = 0;
-        File oldestTarget = null;
-        Enumeration enumTargetSets = targetFileSets.elements();
-        while (enumTargetSets.hasMoreElements()) {
-
-           FileSet targetFS          = (FileSet) enumTargetSets.nextElement();
-           if (!targetFS.getDir(getProject()).exists()) {
-               // this is the same as if it was empty, no target files found
-               continue;
-           }
-           DirectoryScanner targetDS = targetFS.getDirectoryScanner(getProject());
-           String[] targetFiles      = targetDS.getIncludedFiles();
-
-           for (int i = 0; i < targetFiles.length; i++) {
-
-              File dest = new File(targetFS.getDir(getProject()), targetFiles[i]);
-              allTargets.addElement(dest);
-
-              if (dest.lastModified() > now) {
-                 log("Warning: " + targetFiles[i] + " modified in the future.",
-                     Project.MSG_WARN);
-              }
-              if (oldestTarget == null
-                || dest.lastModified() < oldestTargetTime) {
-                  oldestTargetTime = dest.lastModified();
-                  oldestTarget = dest;
-              }
-           }
+        //no sources = nothing to compare; no targets = nothing to delete:
+        if (sources.size() > 0 && targets.size() > 0 && !uptodate(sources, targets)) {
+           log("Deleting all target files.", Project.MSG_VERBOSE);
+           Delete delete = new Delete();
+           delete.bindToOwner(this);
+           delete.add(targets);
+           delete.perform();
         }
-        // Grab all the target files specified via filelists:
-        boolean upToDate = true;
-        Enumeration enumTargetLists = targetFileLists.elements();
-        while (enumTargetLists.hasMoreElements()) {
+    }
 
-           FileList targetFL    = (FileList) enumTargetLists.nextElement();
-           String[] targetFiles = targetFL.getFiles(getProject());
+    private boolean uptodate(ResourceCollection src, ResourceCollection target) {
+        org.apache.tools.ant.types.resources.selectors.Date datesel
+            = new org.apache.tools.ant.types.resources.selectors.Date();
+        datesel.setMillis(System.currentTimeMillis());
+        datesel.setWhen(TimeComparison.AFTER);
+        logFuture(targets, datesel);
 
-           for (int i = 0; i < targetFiles.length; i++) {
-
-              File dest = new File(targetFL.getDir(getProject()), targetFiles[i]);
-              if (!dest.exists()) {
-                 log(targetFiles[i] + " does not exist.", Project.MSG_VERBOSE);
-                 upToDate = false;
-                 continue;
-              } else {
-                 allTargets.addElement(dest);
-              }
-              if (dest.lastModified() > now) {
-                 log("Warning: " + targetFiles[i] + " modified in the future.",
-                     Project.MSG_WARN);
-              }
-              if (oldestTarget == null
-                  || dest.lastModified() < oldestTargetTime) {
-                  oldestTargetTime = dest.lastModified();
-                  oldestTarget = dest;
-              }
-           }
+        int neTargets = new NonExistent(targets).size();
+        if (neTargets > 0) {
+            log(neTargets + " nonexistent targets", Project.MSG_VERBOSE);
+            return false;
         }
-        if (oldestTarget != null) {
-            log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
-        } else {
-            // no target files, then we cannot remove any target files and
-            // skip the following tests right away
-            upToDate = false;
+        FileResource oldestTarget = (FileResource) (new Oldest(targets).iterator().next());
+        log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
+
+        logFuture(sources, datesel);
+
+        int neSources = new NonExistent(sources).size();
+        if (neSources > 0) {
+            log(neSources + " nonexistent sources", Project.MSG_VERBOSE);
+            return false;
         }
-        // Check targets vs source files specified via filelists:
-        if (upToDate) {
-           Enumeration enumSourceLists = sourceFileLists.elements();
-           while (upToDate && enumSourceLists.hasMoreElements()) {
+        Resource newestSource = (Resource) (new Newest(sources).iterator().next());
+        log(newestSource.toLongString() + " is newest source", Project.MSG_VERBOSE);
+        return oldestTarget.getLastModified() >= newestSource.getLastModified();
+    }
 
-              FileList sourceFL    = (FileList) enumSourceLists.nextElement();
-              String[] sourceFiles = sourceFL.getFiles(getProject());
-
-              for (int i = 0; upToDate && i < sourceFiles.length; i++) {
-                 File src = new File(sourceFL.getDir(getProject()), sourceFiles[i]);
-
-                 if (src.lastModified() > now) {
-                    log("Warning: " + sourceFiles[i]
-                        + " modified in the future.", Project.MSG_WARN);
-                 }
-                 if (!src.exists()) {
-                    log(sourceFiles[i] + " does not exist.",
-                        Project.MSG_VERBOSE);
-                    upToDate = false;
-                    break;
-                 }
-                 if (src.lastModified() > oldestTargetTime) {
-                    upToDate = false;
-                    log(oldestTarget + " is out of date with respect to "
-                        + sourceFiles[i], Project.MSG_VERBOSE);
-                 }
-              }
-           }
-        }
-        // Check targets vs source files specified via filesets:
-        if (upToDate) {
-           Enumeration enumSourceSets = sourceFileSets.elements();
-           while (upToDate && enumSourceSets.hasMoreElements()) {
-
-              FileSet sourceFS          = (FileSet) enumSourceSets.nextElement();
-              DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(getProject());
-              String[] sourceFiles      = sourceDS.getIncludedFiles();
-
-              for (int i = 0; upToDate && i < sourceFiles.length; i++) {
-                 File src = new File(sourceFS.getDir(getProject()), sourceFiles[i]);
-
-                 if (src.lastModified() > now) {
-                    log("Warning: " + sourceFiles[i]
-                        + " modified in the future.", Project.MSG_WARN);
-                 }
-                 if (src.lastModified() > oldestTargetTime) {
-                    upToDate = false;
-                    log(oldestTarget + " is out of date with respect to "
-                        + sourceFiles[i], Project.MSG_VERBOSE);
-                 }
-              }
-           }
-        }
-        if (!upToDate) {
-           log("Deleting all target files. ", Project.MSG_VERBOSE);
-           for (Enumeration e = allTargets.elements(); e.hasMoreElements();) {
-              File fileToRemove = (File) e.nextElement();
-              log("Deleting file " + fileToRemove.getAbsolutePath(),
-                  Project.MSG_VERBOSE);
-              fileToRemove.delete();
-           }
+    private void logFuture(ResourceCollection rc, ResourceSelector rsel) {
+        Restrict r = new Restrict();
+        r.add(rsel);
+        r.add(rc);
+        for (Iterator i = r.iterator(); i.hasNext();) {
+            log("Warning: " + i.next() + " modified in the future.", Project.MSG_WARN);
         }
     }
 }
