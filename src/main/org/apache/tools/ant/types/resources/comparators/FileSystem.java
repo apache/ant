@@ -26,7 +26,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @since Ant 1.7
  */
 public class FileSystem extends ResourceComparator {
-    private static FileUtils fileUtils = FileUtils.getFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Compare two Resources.
@@ -40,9 +40,9 @@ public class FileSystem extends ResourceComparator {
         File foofile = ((FileResource) foo).getFile();
         File barfile = ((FileResource) bar).getFile();
         return foofile.equals(barfile) ? 0
-            : fileUtils.isLeadingPath(foofile, barfile) ? -1
-            : fileUtils.normalize(foofile.getAbsolutePath()).compareTo(
-                fileUtils.normalize(barfile.getAbsolutePath()));
+            : FILE_UTILS.isLeadingPath(foofile, barfile) ? -1
+            : FILE_UTILS.normalize(foofile.getAbsolutePath()).compareTo(
+                FILE_UTILS.normalize(barfile.getAbsolutePath()));
     }
 
 }
