@@ -155,6 +155,7 @@ public class CopyPath extends Task {
                 File destFile=new File(destDir,destFileName);
 
 
+                
                 if (sourceFile.equals(destFile)) {
                     log("Skipping self-copy of " + sourceFileName,
                             Project.MSG_VERBOSE);
