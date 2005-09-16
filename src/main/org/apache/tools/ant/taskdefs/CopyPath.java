@@ -160,6 +160,10 @@ public class CopyPath extends Task {
                             Project.MSG_VERBOSE);
                     continue;
                 }
+                if(sourceFile.isDirectory()) {
+                    log("Skipping directory " + sourceFileName);
+                    continue;
+                }
                 try {
                     log("Copying " + sourceFile + " to " + destFile,
                             Project.MSG_VERBOSE);
