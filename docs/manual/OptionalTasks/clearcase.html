@@ -33,7 +33,7 @@ Sean Egan    (sean at cm-logic dot com)</p>
   <li><A href="#ccmkbl">CCMkbl</a>
   <li><A href="#ccmkattr">CCMkattr</a>
   <li><A href="#ccmkdir">CCMkdir</a>
- <li><A href="#ccmkelem">CCMkelem</a></li>
+  <li><A href="#ccmkelem">CCMkelem</a></li>
 
 </ul>
 
@@ -45,6 +45,11 @@ a few of the significant ClearCase commands.</p>
 
 <p>More tasks can be easily added by deriving from the ClearCase class and then adding
 functionality that is specific to that ClearCase command.</p>
+<p>
+    Important: these tasks all require <code>cleartool</code> on the command line.
+    If a task fails with an IOException, especially error code 2 on Windows,
+    this is your problem.
+</p>
 
 
 <hr>
