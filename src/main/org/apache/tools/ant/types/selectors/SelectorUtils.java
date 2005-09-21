@@ -595,12 +595,31 @@ public final class SelectorUtils {
      *
      * @param src the original resource
      * @param target the resource being compared against
-     * @param granularity the amount in seconds of slack we will give in
+     * @param granularity the int amount in seconds of slack we will give in
      *        determining out of dateness
      * @return whether the target is out of date
      */
     public static boolean isOutOfDate(Resource src, Resource target,
                                       int granularity) {
+        return isOutOfDate(src, target, (long) granularity);
+    }
+
+    /**
+     * Returns dependency information on these two resources. If src has been
+     * modified later than target, it returns true. If target doesn't exist,
+     * it likewise returns true. Otherwise, target is newer than src and
+     * is not out of date, thus the method returns false. It also returns
+     * false if the src file doesn't even exist, since how could the
+     * target then be out of date.
+     *
+     * @param src the original resource
+     * @param target the resource being compared against
+     * @param granularity the long amount in seconds of slack we will give in
+     *        determining out of dateness
+     * @return whether the target is out of date
+     */
+    public static boolean isOutOfDate(Resource src, Resource target,
+                                      long granularity) {
         if (!src.isExists()) {
             return false;
         }
