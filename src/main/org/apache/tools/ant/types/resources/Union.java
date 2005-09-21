@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**
@@ -29,6 +30,29 @@ import org.apache.tools.ant.types.ResourceCollection;
  * @since Ant 1.7
  */
 public class Union extends BaseResourceCollectionContainer {
+
+    /**
+     * Static convenience method to union an arbitrary set of Resources.
+     * @param rc a ResourceCollection.
+     * @return a Union.
+     */
+    public static Union getInstance(ResourceCollection rc) {
+        return rc instanceof Union ? (Union) rc : new Union(rc);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public Union() {
+    }
+
+    /**
+     * Convenience constructor.
+     * @param rc the ResourceCollection to add.
+     */
+    public Union(ResourceCollection rc) {
+        add(rc);
+    }
 
     /**
      * Returns all Resources in String format. Moved up from
@@ -41,6 +65,18 @@ public class Union extends BaseResourceCollectionContainer {
         }
         Collection result = getCollection(true);
         return (String[]) (result.toArray(new String[result.size()]));
+    }
+
+    /**
+     * Convenience method.
+     * @return Resource[]
+     */
+    public Resource[] listResources() {
+        if (isReference()) {
+            return ((Union) getCheckedRef()).listResources();
+        }
+        Collection result = getCollection();
+        return (Resource[]) (result.toArray(new Resource[result.size()]));
     }
 
     /**

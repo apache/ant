@@ -17,6 +17,7 @@
 
 package org.apache.tools.ant.types.resources;
 
+import java.io.File;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
@@ -35,6 +36,28 @@ import org.apache.tools.ant.types.ResourceCollection;
  * @since Ant 1.7
  */
 public class Resources extends DataType implements ResourceCollection {
+    /** static empty ResourceCollection */
+    public static final ResourceCollection NONE = new ResourceCollection() {
+        public boolean isFilesystemOnly() {
+            return true;
+        }
+        public Iterator iterator() {
+            return new Iterator() {
+                public Object next() {
+                    throw new NoSuchElementException();
+                }
+                public boolean hasNext() {
+                    return false;
+                }
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+        public int size() {
+            return 0;
+        }
+    };
 
     private class MyCollection extends AbstractCollection {
         int size;
@@ -181,6 +204,27 @@ public class Resources extends DataType implements ResourceCollection {
             throw new BuildException("Resources:  no resources specified.");
         }
         coll = (coll == null) ? new MyCollection() : coll;
+    }
+
+    /**
+     * Format this BaseResourceCollectionContainer as a String.
+     * @return a descriptive <code>String</code>.
+     */
+    public synchronized String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        if (coll.size() == 0) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer();
+        for (Iterator i = coll.iterator(); i.hasNext();) {
+            if (sb.length() > 0) {
+                sb.append(File.pathSeparatorChar);
+            }
+            sb.append(i.next());
+        }
+        return sb.toString();
     }
 
 }
