@@ -27,6 +27,20 @@ import org.apache.tools.ant.types.Resource;
 public class Or extends ResourceSelectorContainer implements ResourceSelector {
 
     /**
+     * Default constructor.
+     */
+    public Or() {
+    }
+
+    /**
+     * Convenience constructor.
+     * @param r the ResourceSelector[] to add.
+     */
+    public Or(ResourceSelector[] r) {
+        super(r);
+    }
+
+    /**
      * Return true if this Resource is selected.
      * @param r the Resource to check.
      * @return whether the Resource was selected.

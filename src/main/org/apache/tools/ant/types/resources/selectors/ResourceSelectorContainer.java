@@ -34,6 +34,22 @@ public class ResourceSelectorContainer extends DataType {
     private Vector v = new Vector();
 
     /**
+     * Default constructor.
+     */
+    public ResourceSelectorContainer() {
+    }
+
+    /**
+     * Construct a new ResourceSelectorContainer with the specified array of selectors.
+     * @param r the ResourceSelector[] to add.
+     */
+    public ResourceSelectorContainer(ResourceSelector[] r) {
+        for (int i = 0; i < r.length; i++) {
+            add(r[i]);
+        }
+    }
+
+    /**
      * Add a ResourceSelector to the container.
      * @param s the ResourceSelector to add.
      */

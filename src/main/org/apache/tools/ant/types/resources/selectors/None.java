@@ -28,6 +28,20 @@ public class None
     extends ResourceSelectorContainer implements ResourceSelector {
 
     /**
+     * Default constructor.
+     */
+    public None() {
+    }
+
+    /**
+     * Convenience constructor.
+     * @param r the ResourceSelector[] to add.
+     */
+    public None(ResourceSelector[] r) {
+        super(r);
+    }
+
+    /**
      * Return true if this Resource is selected.
      * @param r the Resource to check.
      * @return whether the Resource was selected.

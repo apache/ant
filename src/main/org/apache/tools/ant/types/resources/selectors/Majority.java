@@ -30,6 +30,20 @@ public class Majority
     private boolean tie = true;
 
     /**
+     * Default constructor.
+     */
+    public Majority() {
+    }
+
+    /**
+     * Convenience constructor.
+     * @param r the ResourceSelector[] to add.
+     */
+    public Majority(ResourceSelector[] r) {
+        super(r);
+    }
+
+    /**
      * Set whether ties are allowed.
      * @param b whether a tie is a pass.
      */
