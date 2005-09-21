@@ -53,7 +53,6 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
             }
             return result;
         }
-
     };
 
     /**
@@ -129,6 +128,18 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
         }
         dieOnCircularReference();
         return w.isFilesystemOnly();
+    }
+
+    /**
+     * Format this Restrict collection as a String.
+     * @return the String value of this collection.
+     */
+    public synchronized String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        dieOnCircularReference();
+        return w.toString();
     }
 
 }
