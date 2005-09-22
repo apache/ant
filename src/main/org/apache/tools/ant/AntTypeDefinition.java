@@ -264,15 +264,13 @@ public class AntTypeDefinition {
             throw new BuildException(msg, ncdfe);
         } catch (NoSuchMethodException nsme) {
             throw new BuildException("Could not create type " + name
-                    + " as the class " + c +" has no compatible constructor" );
+                    + " as the class " + c + " has no compatible constructor");
         } catch (InstantiationException nsme) {
-            throw new BuildException("Could not create type " +
-                    name
-                    + " as the class " + c + " is abstract");
-        } catch(IllegalAccessException e) {
-            throw new BuildException("Could not create type " +
-                    name
-                    + " as the constructor " + c + " is not accessible");
+            throw new BuildException("Could not create type "
+                    + name + " as the class " + c + " is abstract");
+        } catch (IllegalAccessException e) {
+            throw new BuildException("Could not create type "
+                    + name + " as the constructor " + c + " is not accessible");
         } catch (Throwable t) {
             throw new BuildException(
                 "Could not create type " + name + " due to " + t, t);
