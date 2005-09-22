@@ -44,6 +44,12 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class Diagnostics {
 
+    private static final int BIG_DRIFT_LIMIT = 10000;
+    private static final int TEST_FILE_SIZE = 32;
+    private static final int KILOBYTE = 1024;
+    private static final int SECONDS_PER_MILLISECOND = 1000;
+    private static final int SECONDS_PER_MINUTE = 60;
+    private static final int MINUTES_PER_HOUR = 60;
     private static final String TEST_CLASS
         = "org.apache.tools.ant.taskdefs.optional.Test";
 
@@ -263,8 +269,8 @@ public final class Diagnostics {
         try {
             sysprops = System.getProperties();
         } catch (SecurityException  e) {
-            out.println("Access to System.getProperties() blocked " +
-                    "by a security manager");
+            out.println("Access to System.getProperties() blocked "
+                    + "by a security manager");
         }
         for (Enumeration keys = sysprops.propertyNames();
             keys.hasMoreElements();) {
@@ -411,47 +417,47 @@ public final class Diagnostics {
      * @param out
      */
     private static void doReportTempDir(PrintStream out) {
-        String tempdir=System.getProperty("java.io.tmpdir");
-        if( tempdir == null ) {
+        String tempdir = System.getProperty("java.io.tmpdir");
+        if (tempdir == null) {
             out.println("Warning: java.io.tmpdir is undefined");
             return;
         }
-        out.println("Temp dir is "+ tempdir);
-        File tempDirectory=new File(tempdir);
-        if(!tempDirectory.exists()) {
-            out.println("Warning, java.io.tmpdir directory does not exist: "+
-                    tempdir);
+        out.println("Temp dir is " + tempdir);
+        File tempDirectory = new File(tempdir);
+        if (!tempDirectory.exists()) {
+            out.println("Warning, java.io.tmpdir directory does not exist: "
+                    + tempdir);
             return;
         }
         //create the file
-        long now=System.currentTimeMillis();
-        File tempFile=null;
+        long now = System.currentTimeMillis();
+        File tempFile = null;
         FileOutputStream fileout = null;
         try {
-            tempFile = File.createTempFile("diag","txt",tempDirectory);
+            tempFile = File.createTempFile("diag", "txt", tempDirectory);
             //do some writing to it
             fileout = new FileOutputStream(tempFile);
-            byte buffer[]=new byte[1024];
-            for(int i=0;i<32;i++) {
+            byte[] buffer = new byte[KILOBYTE];
+            for (int i = 0; i < TEST_FILE_SIZE; i++) {
                 fileout.write(buffer);
             }
             fileout.close();
-            fileout=null;
-            long filetime=tempFile.lastModified();
+            fileout = null;
+            long filetime = tempFile.lastModified();
             tempFile.delete();
             out.println("Temp dir is writeable");
-            long drift=filetime-now;
-            out.println("temp dir alignment with system clock is "+drift+" ms");
-            if(Math.abs(drift)>10000) {
+            long drift = filetime - now;
+            out.println("temp dir alignment with system clock is " + drift + " ms");
+            if (Math.abs(drift) > BIG_DRIFT_LIMIT) {
                 out.println("Warning: big clock drift -maybe a network filesystem");
             }
         } catch (IOException e) {
             out.println("Failed to create a temporary file in the temp dir "
                 + tempdir);
-            out.println("File  "+ tempFile + " could not be created/written to");
+            out.println("File  " + tempFile + " could not be created/written to");
         } finally {
             FileUtils.close(fileout);
-            if(tempFile!=null && tempFile.exists()) {
+            if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }
         }
@@ -466,14 +472,14 @@ public final class Diagnostics {
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
         out.println("Timezone " + tz.getDisplayName()
-                + " offset=" + tz.getOffset(cal.get(Calendar.ERA), 
+                + " offset=" + tz.getOffset(cal.get(Calendar.ERA),
                         cal.get(Calendar.YEAR),
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH),
                         cal.get(Calendar.DAY_OF_WEEK),
-                        ((cal.get(Calendar.HOUR_OF_DAY) * 60
-                         + cal.get(Calendar.MINUTE)) * 60
-                         + cal.get(Calendar.SECOND)) * 1000
+                        ((cal.get(Calendar.HOUR_OF_DAY) * MINUTES_PER_HOUR
+                         + cal.get(Calendar.MINUTE)) * SECONDS_PER_MINUTE
+                         + cal.get(Calendar.SECOND)) * SECONDS_PER_MILLISECOND
                          + cal.get(Calendar.MILLISECOND)));
     }
 }

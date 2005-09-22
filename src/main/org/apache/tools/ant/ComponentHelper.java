@@ -705,10 +705,7 @@ public class ComponentHelper  {
      */
     private void initTasks() {
         ClassLoader classLoader = null;
-        if (project.getCoreLoader() != null
-            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
-            classLoader = project.getCoreLoader();
-        }
+        classLoader = getClassLoader(classLoader);
         String dataDefs = MagicNames.TASKDEF_PROPERTIES_RESOURCE;
 
         InputStream in = null;
@@ -745,15 +742,21 @@ public class ComponentHelper  {
         }
     }
 
+    private ClassLoader getClassLoader(ClassLoader classLoader) {
+        String buildSysclasspath = project.getProperty(MagicNames.BUILD_SYSCLASSPATH);
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
+            classLoader = project.getCoreLoader();
+        }
+        return classLoader;
+    }
+
     /**
      * Load ant's datatypes.
      */
     private void initTypes() {
         ClassLoader classLoader = null;
-        if (project.getCoreLoader() != null
-            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
-            classLoader = project.getCoreLoader();
-        }
+        classLoader = getClassLoader(classLoader);
         String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
 
         InputStream in = null;
@@ -890,7 +893,7 @@ public class ComponentHelper  {
                 }
                 out.println("Action: Determine what extra JAR files are needed, and place them");
                 out.println("        in ANT_HOME/lib or");
-                out.println("        in " + libDir );
+                out.println("        in " + libDir);
             }
             //here we successfully loaded the class or failed.
             if (clazz != null) {
@@ -931,27 +934,28 @@ public class ComponentHelper  {
             out.println();
             out.println("Do not panic, this is a common problem.");
             if (definitions) {
-                out.println("It may just be a typographical error in the build file " +
-                        "or the task/type declaration.");
+                out.println("It may just be a typographical error in the build file "
+                        + "or the task/type declaration.");
             }
             if (jars) {
                 out.println("The commonest cause is a missing JAR.");
             }
             if (lowlevel) {
-                out.println("This is quite a low level problem, which may need " +
-                        "consultation with the author of the task.");
+                out.println("This is quite a low level problem, which may need "
+                        + "consultation with the author of the task.");
                 if (antTask) {
-                    out.println("This may be the Ant team. Please file a " +
-                            "defect or contact the developer team.");
+                    out.println("This may be the Ant team. Please file a "
+                            + "defect or contact the developer team.");
                 } else {
                     out.println("This does not appear to be a task bundled with Ant.");
-                    out.println("Please take it up with the supplier of the third-party " + type + ".");
+                    out.println("Please take it up with the supplier of the third-party "
+                            + type + ".");
                     out.println("If you have written it yourself, you probably have a bug to fix.");
                 }
             } else {
                 out.println();
-                out.println("It is not an Ant bug; there is no need to file a bug" +
-                        " report or contact the developers.");
+                out.println("It is not an Ant bug; there is no need to file a bug"
+                        + " report or contact the developers.");
             }
         }
         out.flush();
