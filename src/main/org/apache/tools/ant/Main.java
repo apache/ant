@@ -124,7 +124,7 @@ public class Main implements AntMain {
     /**
      * proxy flag: default is true
      */
-    private boolean proxy=true;
+    private boolean proxy = true;
 
     /**
      * Prints the message of the Throwable if it (the message) is not
@@ -425,12 +425,12 @@ public class Main implements AntMain {
                 //we could ignore it, but there are likely to be other
                 //version problems, so we stamp down on the configuration now
                 String msg = "Ant's Main method is being handed "
-                        + "an option "+arg+" that is only for the launcher class."
+                        + "an option " + arg + " that is only for the launcher class."
                         + "\nThis can be caused by a version mismatch between "
                         + "the ant script/.bat file and Ant itself.";
                 throw new BuildException(msg);
             } else if (arg.equals("-noproxy")) {
-                proxy=false;
+                proxy = false;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;

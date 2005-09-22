@@ -72,10 +72,10 @@ public class ProjectHelper {
      */
     public static final String SERVICE_ID =
         "META-INF/services/org.apache.tools.ant.ProjectHelper";
-    
+
     /**
      * name of project helper reference that we add to a project
-     */ 
+     */
     public static final String PROJECTHELPER_REFERENCE = "ant.projectHelper";
 
     /**

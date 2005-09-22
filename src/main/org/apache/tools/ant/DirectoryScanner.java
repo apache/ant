@@ -985,10 +985,10 @@ public class DirectoryScanner
 
                 String[] excl = new String[dirsExcluded.size()];
                 dirsExcluded.copyInto(excl);
-        
+
                 String[] notIncl = new String[dirsNotIncluded.size()];
                 dirsNotIncluded.copyInto(notIncl);
-        
+
                 for (int i = 0; i < excl.length; i++) {
                     if (!couldHoldIncluded(excl[i])) {
                         scandir(new File(basedir, excl[i]),
