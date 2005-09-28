@@ -121,6 +121,13 @@ public class CopyTest extends BuildFileTest {
         assertTrue(file.exists());
     }
 
+    public void testSingleFilePath() {
+        executeTarget("test_single_file_path");
+        File file  = new File(getProjectDir(),
+                                        "copytest_single_file_path.tmp");
+        assertTrue(file.exists());
+    }
+
     public void testTranscoding() throws IOException {
         executeTarget("testTranscoding");
         File f1 = getProject().resolveFile("copy/expected/utf-8");
@@ -148,7 +155,7 @@ public class CopyTest extends BuildFileTest {
         assertTrue(getBuildException().getMessage().endsWith(" not found."));
     }
     
-    public void _testFileResourcePlain() {
+    public void testFileResourcePlain() {
     	executeTarget("testFileResourcePlain");
     	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
     	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
@@ -168,23 +175,23 @@ public class CopyTest extends BuildFileTest {
     	assertTrue(file3.exists());
     }
     
-    public void _testFileResourceWithFilter() {
+    public void testFileResourceWithFilter() {
     	executeTarget("testFileResourceWithFilter");
     	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/fileNR.txt");
     	assertTrue(file1.exists());
     	try {
-			String file1Content = FILE_UTILS.readFully(new FileReader(file1));
-			assertEquals(file1Content, "This is file 42");
-		} catch (IOException e) {
-			// no-op: not a real business error
-		}
+	    String file1Content = FILE_UTILS.readFully(new FileReader(file1));
+	    assertEquals("This is file 42", file1Content);
+	} catch (IOException e) {
+	    // no-op: not a real business error
+	}
     }
     
-    public void _testPathAsResource() {
+    public void testPathAsResource() {
     	executeTarget("testPathAsResource");
-    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt.bak");
-    	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt.bak");
-    	File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt.bak");
+    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
+    	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
+    	File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
     	assertTrue(file1.exists());
     	assertTrue(file2.exists());
     	assertTrue(file3.exists());

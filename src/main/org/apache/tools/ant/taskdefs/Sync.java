@@ -35,6 +35,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
 
@@ -212,9 +213,11 @@ public class Sync extends Task {
         // delete them.
         for (int i = dirs.length - 1; i >= 0; --i) {
             File f = new File(toDir, dirs[i]);
+	    if (f.list().length < 1) {
             log("Removing orphan directory: " + f, Project.MSG_DEBUG);
             f.delete();
             ++removedCount[0];
+	    }
         }
         return removedCount;
     }
@@ -310,7 +313,16 @@ public class Sync extends Task {
      * @param set a fileset
      */
     public void addFileset(FileSet set) {
-        myCopy.addFileset(set);
+        add(set);
+    }
+
+    /**
+     * Adds a collection of filesystem resources to copy.
+     * @param rc a resource collection
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        myCopy.add(rc);
     }
 
     /**

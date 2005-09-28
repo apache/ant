@@ -10,15 +10,18 @@
 
 <h2><a name="copy">Copy</a></h2>
 <h3>Description</h3>
-<p>Copies a file or FileSet to a new file or directory.  By default, files are
+<p>Copies a file or resource collection to a new file or directory.  By default, files are
 only copied if the source file is newer than the destination file,
 or when the destination file does not exist.  However, you can explicitly
 overwrite files with the <code>overwrite</code> attribute.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select a
-set of files to copy.
-To use a <code>&lt;fileset&gt;</code>, the <code>todir</code> attribute
-must be set.</p>
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select a group of files to copy.  Only
+file system based resource collections are supported, this includes <a
+href="../CoreTypes/fileset.html">fileset</a>s, <a
+href="../CoreTypes/filelist.html">filelist</a> and <a
+href="../using.html#path">path</a>.  To use a resource collection, the
+<code>todir</code> attribute must be set.</p>
 
 <p>
 <strong>Note: </strong>If you employ filters in your copy operation, you should 
@@ -39,7 +42,7 @@ operation as <a href="../CoreTypes/filterset.html">filtersets</a>
     <td valign="top">file</td>
     <td valign="top">The file to copy.</td>
     <td valign="top" align="center">Yes, unless a nested
-    <code>&lt;fileset&gt;</code> element is used.</td>
+    resource collection element is used.</td>
   </tr>
   <tr>
     <td valign="top">preservelastmodified</td>
@@ -52,7 +55,7 @@ operation as <a href="../CoreTypes/filterset.html">filtersets</a>
     <td valign="top">The file to copy to.</td>
     <td valign="top" align="center" rowspan="2">With the <code>file</code>
       attribute, either <code>tofile</code> or <code>todir</code> can be used.
-      With nested <code>&lt;fileset&gt;</code> elements, if the set of files
+      With nested resource collection elements, if the number of included files
       is greater than 1, or if only the <code>dir</code> attribute is
       specified in the <code>&lt;fileset&gt;</code>, or if the
       <code>file</code> attribute is also specified, then only
@@ -141,10 +144,12 @@ operation as <a href="../CoreTypes/filterset.html">filtersets</a>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
-<h4>fileset</h4>
- <p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select
-sets of files to copy.
- To use a fileset, the <code>todir</code> attribute must be set.</p>
+<h4>fileset or any other filesystem based resource collection</h4>
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select groups of files to copy.  To use a
+resource collection, the <code>todir</code> attribute must be set.</p>
+<p>Prior to Ant 1.7 only <code>&lt;fileset&gt;</code> has been
+supported as a nested element.</p>
 
 <h4>mapper</h4>
  <p>You can define filename transformations by using a nested <a
@@ -155,6 +160,13 @@ sets of files to copy.
     <em>Since Ant 1.6.3</em>,
     one can use a filenamemapper type in place of the mapper element.
   </p>
+
+<p>Note that the source name handed to the mapper depends on the
+resource collection you use.  If you use <code>&lt;fileset&gt;</code>
+or any other collection that provides a base directory, the name
+passed to the mapper will be a relative filename, relative to the base
+directory.  In any other case the absolute filename of the source will
+be used.</p>
 
 <h4>filterset</h4>
  <p><a href="../CoreTypes/filterset.html">FilterSet</a>s are used to replace
@@ -207,7 +219,6 @@ followed by <code>&lt;filterset&gt;</code> elements.
   &lt;/copy&gt;
 </pre>
 
-
 <p><b>Copy a set of files to a directory, replacing @TITLE@ with Foo Bar
 in all files.</b></p>
 <pre>
@@ -216,6 +227,16 @@ in all files.</b></p>
     &lt;filterset&gt;
       &lt;filter token=&quot;TITLE&quot; value=&quot;Foo Bar&quot;/&gt;
     &lt;/filterset&gt;
+  &lt;/copy&gt;
+</pre>
+
+<p><b>Collect all items from the current CLASSPATH setting into a
+destination directory, flattening the directory structure.</b></p>
+<pre>
+  &lt;copy todir="dest" flatten="true"&gt;
+    &lt;path&gt;
+      &lt;pathelement path="${java.class.path}"/&gt;
+    &lt;/path&gt;
   &lt;/copy&gt;
 </pre>
 

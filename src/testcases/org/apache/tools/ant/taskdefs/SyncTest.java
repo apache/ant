@@ -60,7 +60,15 @@ public class SyncTest extends BuildFileTest {
     }
 
     public void testCopyAndRemove() {
-        executeTarget("copyandremove");
+	testCopyAndRemove("copyandremove");
+    }
+
+    public void testCopyAndRemoveWithFileList() {
+	testCopyAndRemove("copyandremove-with-filelist");
+    }
+
+    private void testCopyAndRemove(String target) {
+        executeTarget(target);
         String d = getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
         String f = getProject().getProperty("dest") + "/e/f";

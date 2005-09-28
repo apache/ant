@@ -13,10 +13,10 @@
 <h3>Description</h3>
 
 <p>Synchronize a target directory from the files defined in one or
-more filesets.</p>
+more filesystem based <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.</p>
 
 <p>Any file in the target directory that has not been matched by at
-least one of the nested filesets gets removed.  I.e. if you exclude a
+least one of the nested resource collection gets removed.  I.e. if you exclude a
 file in your sources and a file of that name is present in the target
 dir, it will get removed from the target.</p>
 
@@ -29,7 +29,7 @@ dir, it will get removed from the target.</p>
   </tr>
   <tr>
     <td valign="top">todir</td>
-    <td valign="top">the target directory to sync with the filesets</td>
+    <td valign="top">the target directory to sync with the resource collections</td>
     <td align="center" valign="top">Yes</td>
   </tr>  
   <tr>
@@ -40,7 +40,7 @@ dir, it will get removed from the target.</p>
   </tr>
   <tr>
     <td valign="top">includeEmptyDirs</td>
-     <td valign="top">Copy any empty directories included in the FileSet(s).
+     <td valign="top">Copy any empty directories included in the resource collection(s).
      </td>
      <td valign="top" align="center">No; defaults to true.</td>
   </tr>
@@ -72,9 +72,12 @@ dir, it will get removed from the target.</p>
 
 <h3>Parameters specified as nested elements</h3>
 
-<h4>fileset</h4>
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select
-sets of files and directories.</p>
+<h4>fileset or any other filesystem based resource collection</h4>
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select groups of files to copy.  To use a
+resource collection, the <code>todir</code> attribute must be set.</p>
+<p>Prior to Ant 1.7 only <code>&lt;fileset&gt;</code> has been
+supported as a nested element.</p>
 
 <h4>preserveInTarget</h4>
 

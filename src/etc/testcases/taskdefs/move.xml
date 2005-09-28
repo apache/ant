@@ -59,6 +59,26 @@
     </move>
   </target>
 
+  <target name="testCompleteDirectoryMove2">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move todir="E">
+      <path>
+        <fileset dir="A"/>
+      </path>
+    </move>
+  </target>
+
+  <target name="testPathElementMove">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move todir="E" flatten="true">
+      <path>
+        <pathelement location="A/1"/>
+      </path>
+    </move>
+  </target>
+
   <target name="testMoveFileAndFileset">
     <mkdir dir="A" />
     <touch>

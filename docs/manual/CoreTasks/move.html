@@ -10,13 +10,22 @@
 
 <h2><a name="move">Move</a></h2>
 <h3>Description</h3>
-<p>Moves a file to a new file or directory, or sets of files to
+<p>Moves a file to a new file or directory, or collections of files to
 a new directory.  By default, the
 destination file is overwritten if it already exists.  When <var>overwrite</var> is
 turned off, then files are only moved if the source file is newer than
 the destination file, or when the destination file does not exist.</p>
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select sets of files
-to move to the <var>todir</var> directory.</p>
+
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select a group of files to move.  Only
+file system based resource collections are supported, this includes <a
+href="../CoreTypes/fileset.html">fileset</a>s, <a
+href="../CoreTypes/filelist.html">filelist</a> and <a
+href="../using.html#path">path</a>.  Prior to Ant 1.7 only
+<code>&lt;fileset&gt;</code> has been supported as a nested element.
+To use a resource collection, the <code>todir</code> attribute must be
+set.</p>
+
 <p><b>Since Ant 1.6.3</b>, the <i>file</i> attribute may be used to move
 (rename) an entire directory.  If <i>tofile</i> denotes an existing file, or
 there is a directory by the same name in <i>todir</i>, the action will fail.
@@ -32,7 +41,7 @@ there is a directory by the same name in <i>todir</i>, the action will fail.
     <td valign="top">file</td>
     <td valign="top">the file or directory to move</td>
     <td valign="top" align="center">One of <var>file</var> or
-     at least one nested fileset element</td>
+     at least one nested resource collection element</td>
   </tr>
   <tr>
     <td valign="top">preservelastmodified</td>
@@ -135,6 +144,12 @@ there is a directory by the same name in <i>todir</i>, the action will fail.
 href="../CoreTypes/mapper.html">mapper</a> element. The default mapper used by
 <code>&lt;move&gt;</code> is the <a
 href="../CoreTypes/mapper.html#identity-mapper">identity</a>.</p>
+<p>Note that the source name handed to the mapper depends on the
+resource collection you use.  If you use <code>&lt;fileset&gt;</code>
+or any other collection that provides a base directory, the name
+passed to the mapper will be a relative filename, relative to the base
+directory.  In any other case the absolute filename of the source will
+be used.</p>
 <h4>filterchain</h4>
 <p>The Move task supports nested <a href="../CoreTypes/filterchain.html">
 FilterChain</a>s.</p>
@@ -171,6 +186,15 @@ followed by <code>&lt;filterset&gt;</code> elements.
       &lt;include name=&quot;**/*.jar&quot;/&gt;
       &lt;exclude name=&quot;**/ant.jar&quot;/&gt;
     &lt;/fileset&gt;
+  &lt;/move&gt;
+</pre>
+<p><b>Move a list of files to a new directory</b></p>
+<pre>
+  &lt;move todir=&quot;some/new/dir&quot;&gt;
+    &lt;filelist dir=&quot;my/src/dir&quot;&gt;
+      &lt;file name="file1.txt"/&gt;
+      &lt;file name="file2.txt"/&gt;
+    &lt;/filelist&gt;
   &lt;/move&gt;
 </pre>
 <p><b>Append <code>&quot;.bak&quot;</code> to the names of all files

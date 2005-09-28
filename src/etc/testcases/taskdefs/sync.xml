@@ -35,6 +35,19 @@
     </sync>
   </target>
 
+  <target name="copyandremove-with-filelist" depends="setup">
+    <mkdir dir="${src}/a/b/c"/>
+    <touch file="${src}/a/b/c/d"/>
+    <mkdir dir="${dest}/e"/>
+    <touch file="${dest}/e/f"/>
+    <sync todir="${dest}">
+      <filelist dir="${src}">
+        <file name="a/b/c/d"/>
+        <file name="not-there"/>
+      </filelist>
+    </sync>
+  </target>
+
   <target name="copyandremove-emptypreserve" depends="setup">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>

@@ -19,9 +19,15 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -32,9 +38,8 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.Resources;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
@@ -57,10 +62,12 @@ import org.apache.tools.ant.util.FlatFileNameMapper;
  * @ant.task category="filesystem"
  */
 public class Copy extends Task {
+    private static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
+
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
-    protected Vector filesets = new Vector();
+    protected Vector rcs = new Vector();
 
     private boolean enableMultipleMappings = false;
     protected boolean filtering = false;
@@ -276,43 +283,17 @@ public class Copy extends Task {
      * @param set a set of files to copy.
      */
     public void addFileset(FileSet set) {
-        filesets.addElement(set);
+	add(set);
     }
     
-    /* JHM: It would be the finest solution to use this method directly.
-     * But if I understood the IntrospectionHelper(final Class bean) 
-     * right - especially line 258ff (the last "else if" statement), 
-     * I must have a <b>class</b> with an no-arg constructor. But I only 
-     * have an interface. :-(
-     * So I have to add the three methods ... But I can reuse this
-     * method :-)
-     *  
+    /**
+     * Add a collection of files to copy.
+     * @param res a resource collection to copy.
+     * @since Ant 1.7
      */
     public void add(ResourceCollection res) {
-    	//TODO: implement resources
+	rcs.add(res);
     }
-    /**
-     * Adds a <code>path</code> element as a nested ResourceCollection.
-     * @param path
-     */
-    public void addPath(Path path) {
-    	//add((ResourceCollection)path);
-    }
-    /**
-     * Adds a Resource element as a nested ResourceCollection.
-     * @param path
-     * /
-    public void add(Resource res) {
-    	add((ResourceCollection)res);
-    }
-    /**
-     * Adds a <code>resources</code> element as a nested ResourceCollection.
-     * @param path
-     * /
-    public void add(Resources res) {
-    	add((ResourceCollection)res);
-    }
-    */
     
     /**
      * Define the mapper to map source to destination files.
@@ -400,10 +381,10 @@ public class Copy extends Task {
         File savedFile = file; // may be altered in validateAttributes
         File savedDestFile = destFile;
         File savedDestDir = destDir;
-        FileSet savedFileSet = null;
-        if (file == null && destFile != null && filesets.size() == 1) {
+	ResourceCollection savedRc = null;
+        if (file == null && destFile != null && rcs.size() == 1) {
             // will be removed in validateAttributes
-            savedFileSet = (FileSet) filesets.elementAt(0);
+	    savedRc = (ResourceCollection) rcs.elementAt(0);
         }
         // make sure we don't have an illegal set of options
         validateAttributes();
@@ -434,30 +415,96 @@ public class Copy extends Task {
                     }
                 }
             }
-            // deal with the filesets
-            for (int i = 0; i < filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = null;
-                try {
-                    ds = fs.getDirectoryScanner(getProject());
-                } catch (BuildException e) {
-                    if (failonerror
-                        || !e.getMessage().endsWith(" not found.")) {
-                        throw e;
-                    } else {
-                        log("Warning: " + e.getMessage());
-                        continue;
-                    }
-                }
-                File fromDir = fs.getDir(getProject());
+            // deal with the ResourceCollections
 
-                String[] srcFiles = ds.getIncludedFiles();
-                String[] srcDirs = ds.getIncludedDirectories();
-                if (!flatten && mapperElement == null
-                    && ds.isEverythingIncluded() && !fs.hasPatterns()) {
-                    completeDirMap.put(fromDir, destDir);
-                }
-                scan(fromDir, destDir, srcFiles, srcDirs);
+	    /* for historical and performance reasons we have to do
+	       things in a rather complex way.
+	    
+	       (1) Move is optimized to move directories if a fileset
+	       has been included completely, therefore FileSets need a
+	       special treatment.  This is also required to support
+	       the failOnError semantice (skip filesets with broken
+	       basedir but handle the remaining collections).
+
+	       (2) We carry around a few protected methods that work
+	       on basedirs and arrays of names.  To optimize stuff, all
+	       resources with the same basedir get collected in
+	       separate lists and then each list is handled in one go.
+	    */
+
+	    HashMap filesByBasedir = new HashMap();
+	    HashMap dirsByBasedir = new HashMap();
+	    HashSet baseDirs = new HashSet();
+            for (int i = 0; i < rcs.size(); i++) {
+		ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
+
+		if (rc.isFilesystemOnly()) {
+
+		    // Step (1)
+		    if (rc instanceof FileSet) {
+			FileSet fs = (FileSet) rc;
+			DirectoryScanner ds = null;
+			try {
+			    ds = fs.getDirectoryScanner(getProject());
+			} catch (BuildException e) {
+			    if (failonerror
+				|| !e.getMessage().endsWith(" not found.")) {
+				throw e;
+			    } else {
+				log("Warning: " + e.getMessage());
+				continue;
+			    }
+			}
+			File fromDir = fs.getDir(getProject());
+
+			String[] srcFiles = ds.getIncludedFiles();
+			String[] srcDirs = ds.getIncludedDirectories();
+			if (!flatten && mapperElement == null
+			    && ds.isEverythingIncluded() && !fs.hasPatterns()) {
+			    completeDirMap.put(fromDir, destDir);
+			}
+			add(fromDir, srcFiles, filesByBasedir);
+			add(fromDir, srcDirs, dirsByBasedir);
+			baseDirs.add(fromDir);
+		    } else { // not a fileset
+
+			Iterator resources = rc.iterator();
+			while (resources.hasNext()) {
+			    FileResource fr = (FileResource) resources.next();
+			    if (!fr.isExists()) {
+				continue;
+			    }
+			    File baseDir = getKeyFile(fr.getBaseDir());
+			    add(baseDir, 
+				baseDir == NULL_FILE_PLACEHOLDER
+				? fr.getFile().getAbsolutePath() : fr.getName(),
+				fr.isDirectory() ? dirsByBasedir 
+				                 : filesByBasedir);
+			    baseDirs.add(baseDir);
+			}
+		    }
+
+		    Iterator iter = baseDirs.iterator();
+		    while (iter.hasNext()) {
+			File f = (File) iter.next();
+			List files = (List) filesByBasedir.get(f);
+			List dirs = (List) dirsByBasedir.get(f);
+
+			String[] srcFiles = new String[0];
+			if (files != null) {
+			    srcFiles = (String[]) files.toArray(srcFiles);
+			}
+			String[] srcDirs = new String[0];
+			if (dirs != null) {
+			    srcDirs = (String[]) dirs.toArray(srcDirs);
+			}
+			scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir,
+			     srcFiles, srcDirs);
+		    }
+		} else { // not a File resource collection
+		    throw new BuildException("Only FileSystem resources are"
+					     + " supported.");
+		}
             }
             // do all the copy operations now...
             try {
@@ -475,8 +522,8 @@ public class Copy extends Task {
             file = savedFile;
             destFile = savedDestFile;
             destDir = savedDestDir;
-            if (savedFileSet != null) {
-                filesets.insertElementAt(savedFileSet, 0);
+            if (savedRc != null) {
+                rcs.insertElementAt(savedRc, 0);
             }
             fileCopyMap.clear();
             dirCopyMap.clear();
@@ -495,9 +542,9 @@ public class Copy extends Task {
      * @exception BuildException if an error occurs.
      */
     protected void validateAttributes() throws BuildException {
-        if (file == null && filesets.size() == 0) {
+        if (file == null && rcs.size() == 0) {
             throw new BuildException(
-                "Specify at least one source--a file or a fileset.");
+                "Specify at least one source--a file or a resource collection.");
         }
         if (destFile != null && destDir != null) {
             throw new BuildException(
@@ -507,24 +554,26 @@ public class Copy extends Task {
             throw new BuildException("One of tofile or todir must be set.");
         }
         if (file != null && file.isDirectory()) {
-            throw new BuildException("Use a fileset to copy directories.");
+            throw new BuildException("Use a resource collection to copy directories.");
         }
-        if (destFile != null && filesets.size() > 0) {
-            if (filesets.size() > 1) {
+        if (destFile != null && rcs.size() > 0) {
+            if (rcs.size() > 1) {
                 throw new BuildException(
                     "Cannot concatenate multiple files into a single file.");
             } else {
-                FileSet fs = (FileSet) filesets.elementAt(0);
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] srcFiles = ds.getIncludedFiles();
-
-                if (srcFiles.length == 0) {
+		ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
+		if (!rc.isFilesystemOnly()) {
+		    throw new BuildException("Only FileSystem resources are"
+					     + " supported.");
+		}
+		if (rc.size() == 0) {
                     throw new BuildException(
                         "Cannot perform operation from directory to file.");
-                } else if (srcFiles.length == 1) {
+                } else if (rc.size() == 1) {
+		    FileResource r = (FileResource) rc.iterator().next();
                     if (file == null) {
-                        file = new File(ds.getBasedir(), srcFiles[0]);
-                        filesets.removeElementAt(0);
+                        file = r.getFile();
+                        rcs.removeElementAt(0);
                     } else {
                         throw new BuildException(
                             "Cannot concatenate multiple files into a single file.");
@@ -688,5 +737,38 @@ public class Copy extends Task {
                     + destDir.getAbsolutePath());
             }
         }
+    }
+
+    /**
+     * Adds the given strings to a list contained in the given map.
+     * The file is the key into the map.
+     */
+    private static void add(File baseDir, String[] names, Map m) {
+	if (names != null) {
+	    baseDir = getKeyFile(baseDir);
+	    List l = (List) m.get(baseDir);
+	    if (l == null) {
+		l = new ArrayList(names.length);
+		m.put(baseDir, l);
+	    }
+	    l.addAll(java.util.Arrays.asList(names));
+	}
+    }
+
+    /**
+     * Adds the given string to a list contained in the given map.
+     * The file is the key into the map.
+     */
+    private static void add(File baseDir, String name, Map m) {
+	if (name != null) {
+	    add(baseDir, new String[] {name}, m);
+	}
+    }
+
+    /**
+     * Either returns its argument or a plaeholder if the argument is null.
+     */
+    private static File getKeyFile(File f) {
+	return f == null ? NULL_FILE_PLACEHOLDER : f;
     }
 }
