@@ -103,6 +103,12 @@
     <expectabsent />
   </target>
 
+  <target name="test10">
+    <delete>
+      <filelist dir="${dir}" files="test10absentfile" />
+    </delete>
+  </target>
+
   <target name="cleanup" depends="test4" />
 
 </project>

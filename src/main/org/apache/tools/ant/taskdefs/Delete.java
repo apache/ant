@@ -29,10 +29,14 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Sort;
+import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.BCFileSet;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.resources.comparators.FileSystem;
+import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
+import org.apache.tools.ant.types.resources.selectors.Exists;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.selectors.OrSelector;
 import org.apache.tools.ant.types.selectors.AndSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
@@ -67,6 +71,9 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  */
 public class Delete extends MatchingTask {
     private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
+    private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
+    private static final ResourceSelector EXISTS = new Exists();
+
     protected File file = null;
     protected File dir = null;
     protected Vector filesets = new Vector();
@@ -525,10 +532,13 @@ public class Delete extends MatchingTask {
             FileSet implicit = getImplicitFileSet();
             p.add(includeEmpty ? new BCFileSet(implicit) : implicit);
         }
+        Restrict e = new Restrict();
+        e.add(EXISTS);
+        e.add(p);
         // delete the files in the resource collections; sort to files, then dirs
         Sort s = new Sort();
-        s.add(new Reverse(new FileSystem()));
-        s.add(p);
+        s.add(REVERSE_FILESYSTEM);
+        s.add(e);
         for (Iterator iter = s.iterator(); iter.hasNext();) {
             FileResource r = (FileResource) iter.next();
             if (!(r.isDirectory()) || r.getFile().list().length == 0) {

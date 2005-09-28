@@ -61,4 +61,7 @@ public class DeleteTest extends BuildFileTest {
     public void test9() {
         executeTarget("test9");
     }
+    public void test10() {
+        executeTarget("test10");
+    }
 }
