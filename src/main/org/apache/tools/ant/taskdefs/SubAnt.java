@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.ResourceCollection;
 
 
 /**
@@ -419,7 +420,7 @@ public class SubAnt
      * @param  set the directory set to add.
      */
     public void addDirset(DirSet set) {
-        getBuildpath().addDirset(set);
+        add(set);
     }
 
     /**
@@ -432,7 +433,7 @@ public class SubAnt
      * @param  set the file set to add.
      */
     public void addFileset(FileSet set) {
-        getBuildpath().addFileset(set);
+        add(set);
     }
 
     /**
@@ -444,7 +445,17 @@ public class SubAnt
      * @param  list the file list to add.
      */
     public void addFilelist(FileList list) {
-        getBuildpath().addFilelist(list);
+        add(list);
+    }
+
+    /**
+     * Adds a resource collection to the implicit build path.
+     *
+     * @param  rc the resource collection to add.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        getBuildpath().add(rc);
     }
 
     /**
