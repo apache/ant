@@ -20,10 +20,14 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Resources;
 
 /**
  * <p> Create then run <code>JUnitTest</code>'s based on the list of files
@@ -42,7 +46,7 @@ public final class BatchTest extends BaseTest {
     private Project project;
 
     /** the list of filesets containing the testcase filename rules */
-    private Vector filesets = new Vector();
+    private Resources resources = new Resources();
 
     /**
      * create a new batchtest instance
@@ -59,7 +63,21 @@ public final class BatchTest extends BaseTest {
      * @param     fs the new fileset containing the rules to get the testcases.
      */
     public void addFileSet(FileSet fs) {
-        filesets.addElement(fs);
+	add(fs);
+    }
+
+
+    /**
+     * Add a new ResourceCollection instance to this
+     * batchtest. Whatever the collection is, only names that are
+     * <tt>.java</tt> or <tt>.class</tt> will be considered as
+     * 'candidates'.
+     * @param rc the new ResourceCollection containing the rules to
+     * get the testcases.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        resources.add(rc);
     }
 
     /**
@@ -113,20 +131,17 @@ public final class BatchTest extends BaseTest {
      */
     private String[] getFilenames() {
         Vector v = new Vector();
-        final int size = this.filesets.size();
-        for (int j = 0; j < size; j++) {
-            FileSet fs = (FileSet) filesets.elementAt(j);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            ds.scan();
-            String[] f = ds.getIncludedFiles();
-            for (int k = 0; k < f.length; k++) {
-                String pathname = f[k];
+	Iterator iter = resources.iterator();
+	while (iter.hasNext()) {
+	    Resource r = (Resource) iter.next();
+	    if (r.isExists()) {
+		String pathname = r.getName();
                 if (pathname.endsWith(".java")) {
                     v.addElement(pathname.substring(0, pathname.length() - ".java".length()));
                 } else if (pathname.endsWith(".class")) {
                     v.addElement(pathname.substring(0, pathname.length() - ".class".length()));
                 }
-            }
+	    }
         }
 
         String[] files = new String[v.size()];

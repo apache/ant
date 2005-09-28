@@ -448,11 +448,15 @@ time.</p>
 
 <p>Define a number of tests based on pattern matching.</p>
 
-<p><code>batchtest</code> collects the included files from any number
+<p><code>batchtest</code> collects the included <a href="../CoreTypes/resources.html">resources</a> from any number
 of nested <a
-href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a>s. It then
-generates a test class name for each file that ends in
+href="../CoreTypes/resources.html#collection">Resource Collection</a>s. It then
+generates a test class name for each resource that ends in
 <code>.java</code> or <code>.class</code>.</p>
+
+<p>Any type of Resource Collection is supported as a nested element,
+prior to Ant 1.7 only <code>&lt;fileset&gt;</code> has been
+supported.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
