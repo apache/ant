@@ -6,4 +6,20 @@
     <antstructure/>
   </target>
 
+  <target name="testCustomPrinter">
+    <typedef name="myprinter"
+             classname="org.apache.tools.ant.taskdefs.AntStructureTest$MyPrinter">
+      <classpath>
+        <pathelement path="${tests-classpath.value}"/>
+      </classpath>
+    </typedef>
+    <antstructure output="foo.dtd">
+      <myprinter/>
+    </antstructure>
+  </target>
+
+  <target name="tearDown">
+    <delete file="foo.dtd" quiet="true"/>
+  </target>
+
 </project>
