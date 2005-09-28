@@ -31,6 +31,7 @@ import java.io.OutputStream;
 public class ExecuteOnTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
     private static final String BUILD_FILE = BUILD_PATH + "apply.xml";
+    private static final String LINE_SEP = System.getProperty("line.separator");
     
     public ExecuteOnTest(String name) {
         super(name);
@@ -560,6 +561,26 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testNoDest() {
         executeTarget("testNoDest");
+    }
+
+    public void testLsPath() {
+	testLsPath("lsPath");
+    }
+
+    public void testLsPathParallel() {
+	testLsPath("lsPathParallel");
+    }
+
+    private void testLsPath(String target) {
+        executeTarget(target);
+        if (getProject().getProperty("ls.can.run") == null) {
+            return;
+        }
+	String foo = getProject().getProperty("foo");
+	assertNotNull(foo);
+	int indNoExt = foo.indexOf("ls" + LINE_SEP);
+	int indExe = foo.indexOf("ls.exe" + LINE_SEP);
+	assertTrue(indNoExt >= 0 || indExe >= 0);
     }
 
     //borrowed from TokenFilterTest

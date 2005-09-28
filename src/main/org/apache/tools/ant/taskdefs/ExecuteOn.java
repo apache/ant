@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -31,6 +32,10 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 
@@ -43,13 +48,20 @@ import org.apache.tools.ant.util.SourceFileScanner;
  */
 public class ExecuteOn extends ExecTask {
 
+    // filesets has been protected so we need to keep that even after
+    // switching to resource collections.  In fact, they will still
+    // get a different treatment form the other resource collections
+    // even in execute since we have some subtle special features like
+    // switching type to "dir" when we encounter a DirSet that would
+    // be more difficult to achieve otherwise.
+
     protected Vector filesets = new Vector(); // contains AbstractFileSet
                                               // (both DirSet and FileSet)
-    private Vector filelists = new Vector();
+    private Union resources = new Union();
     private boolean relative = false;
     private boolean parallel = false;
     private boolean forwardSlash = false;
-    protected String type = "file";
+    protected String type = FileDirBoth.FILE;
     protected Commandline.Marker srcFilePos = null;
     private boolean skipEmpty = false;
     protected Commandline.Marker targetFilePos = null;
@@ -91,7 +103,18 @@ public class ExecuteOn extends ExecTask {
      * @param list the FileList to add.
      */
     public void addFilelist(FileList list) {
-        filelists.addElement(list);
+	add(list);
+    }
+
+    /**
+     * Add a collection of resources upon which to operate.
+     * @param rc resource collection to add.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+	if (rc instanceof FileSet)
+	    throw new BuildException("Huh?");
+	resources.add(rc);
     }
 
     /**
@@ -273,8 +296,8 @@ public class ExecuteOn extends ExecTask {
             log("!! execon is deprecated. Use apply instead. !!");
         }
         super.checkConfiguration();
-        if (filesets.size() == 0 && filelists.size() == 0) {
-            throw new BuildException("no filesets and no filelists specified",
+        if (filesets.size() == 0 && resources.size() == 0) {
+            throw new BuildException("no resources specified",
                                      getLocation());
         }
         if (targetFilePos != null && mapperElement == null) {
@@ -326,19 +349,19 @@ public class ExecuteOn extends ExecTask {
                 String currentType = type;
                 AbstractFileSet fs = (AbstractFileSet) filesets.elementAt(i);
                 if (fs instanceof DirSet) {
-                    if (!"dir".equals(type)) {
+                    if (!FileDirBoth.DIR.equals(type)) {
                         log("Found a nested dirset but type is " + type + ". "
                             + "Temporarily switching to type=\"dir\" on the"
                             + " assumption that you really did mean"
                             + " <dirset> not <fileset>.", Project.MSG_DEBUG);
-                        currentType = "dir";
+                        currentType = FileDirBoth.DIR;
                     }
                 }
                 File base = fs.getDir(getProject());
 
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
-                if (!"dir".equals(currentType)) {
+                if (!FileDirBoth.DIR.equals(currentType)) {
                     String[] s = getFiles(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalFiles++;
@@ -346,7 +369,7 @@ public class ExecuteOn extends ExecTask {
                         baseDirs.addElement(base);
                     }
                 }
-                if (!"file".equals(currentType)) {
+                if (!FileDirBoth.FILE.equals(currentType)) {
                     String[] s = getDirs(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalDirs++;
@@ -356,9 +379,9 @@ public class ExecuteOn extends ExecTask {
                 }
                 if (fileNames.size() == 0 && skipEmpty) {
                     int includedCount
-                        = ((!"dir".equals(currentType))
+                        = ((!FileDirBoth.DIR.equals(currentType))
                         ? ds.getIncludedFilesCount() : 0)
-                        + ((!"file".equals(currentType))
+                        + ((!FileDirBoth.FILE.equals(currentType))
                         ? ds.getIncludedDirsCount() : 0);
 
                     log("Skipping fileset for directory " + base + ". It is "
@@ -392,68 +415,67 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-            for (int i = 0; i < filelists.size(); i++) {
-                FileList list = (FileList) filelists.elementAt(i);
-                File base = list.getDir(getProject());
-                String[] names = getFilesAndDirs(list);
+	
+	    Iterator iter = resources.iterator();
+	    while (iter.hasNext()) {
+		Resource res = (Resource) iter.next();
 
-                for (int j = 0; j < names.length; j++) {
-                    File f = new File(base, names[j]);
-                    if ((!ignoreMissing) || (f.isFile() && !"dir".equals(type))
-                        || (f.isDirectory() && !"file".equals(type))) {
+		if (!res.isExists() && ignoreMissing) {
+		    continue;
+		}
 
-                        if (ignoreMissing || f.isFile()) {
-                            totalFiles++;
-                        } else {
-                            totalDirs++;
-                        }
-                        fileNames.addElement(names[j]);
-                        baseDirs.addElement(base);
-                    }
-                }
-                if (fileNames.size() == 0 && skipEmpty) {
-                    DirectoryScanner ds = new DirectoryScanner();
-                    ds.setBasedir(base);
-                    ds.setIncludes(list.getFiles(getProject()));
-                    ds.scan();
-                    int includedCount
-                        = ds.getIncludedFilesCount() + ds.getIncludedDirsCount();
+		File base = null;
+		String name = res.getName();
+		if (res instanceof FileResource) {
+		    FileResource fr = (FileResource) res;
+		    base = fr.getBaseDir();
+		    if (base == null) {
+			name = fr.getFile().getAbsolutePath();
+		    }
+		}
 
-                    log("Skipping filelist for directory " + base + ". It is "
-                        + ((includedCount > 0) ? "up to date." : "empty."),
-                        Project.MSG_INFO);
-                    continue;
-                }
+		if (restrict(new String[] {name}, base).length == 0) {
+		    continue;
+		}
+
+		if ((!res.isDirectory() || !res.isExists())
+		    && !FileDirBoth.DIR.equals(type)) {
+		    totalFiles++;
+		} else if (res.isDirectory() && !FileDirBoth.FILE.equals(type)) {
+		    totalDirs++;
+		} else {
+		    continue;
+		}
+
+		baseDirs.add(base);
+		fileNames.add(name);
+
                 if (!parallel) {
-                    String[] s = new String[fileNames.size()];
-                    fileNames.copyInto(s);
-                    for (int j = 0; j < s.length; j++) {
-                        String[] command = getCommandline(s[j], base);
-                        log(Commandline.describeCommand(command),
-                            Project.MSG_VERBOSE);
-                        exe.setCommandline(command);
+		    String[] command = getCommandline(name, base);
+		    log(Commandline.describeCommand(command),
+			Project.MSG_VERBOSE);
+		    exe.setCommandline(command);
 
-                        if (redirectorElement != null) {
-                            setupRedirector();
-                            redirectorElement.configure(redirector, s[j]);
-                        }
-                        if (redirectorElement != null || haveExecuted) {
-                            // need to reset the stream handler to restart
-                            // reading of pipes;
-                            // go ahead and do it always w/ nested redirectors
-                            exe.setStreamHandler(redirector.createHandler());
-                        }
-                        runExecute(exe);
-                        haveExecuted = true;
-                    }
-                    fileNames.removeAllElements();
-                    baseDirs.removeAllElements();
-                }
+		    if (redirectorElement != null) {
+			setupRedirector();
+			redirectorElement.configure(redirector, name);
+		    }
+		    if (redirectorElement != null || haveExecuted) {
+			// need to reset the stream handler to restart
+			// reading of pipes;
+			// go ahead and do it always w/ nested redirectors
+			exe.setStreamHandler(redirector.createHandler());
+		    }
+		    runExecute(exe);
+		    haveExecuted = true;
+		    fileNames.removeAllElements();
+		    baseDirs.removeAllElements();
+		}
             }
             if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
                 runParallel(exe, fileNames, baseDirs);
                 haveExecuted = true;
-            }
+	    }
             if (haveExecuted) {
                 log("Applied " + cmdl.getExecutable() + " to "
                     + totalFiles + " file"
@@ -697,11 +719,13 @@ public class ExecuteOn extends ExecTask {
      * for the type attribute.
      */
     public static class FileDirBoth extends EnumeratedAttribute {
+	public static final String FILE = "file";
+	public static final String DIR = "dir";
         /**
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return new String[] {"file", "dir", "both"};
+            return new String[] {FILE, DIR, "both"};
         }
     }
 }
