@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -33,6 +34,10 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
@@ -56,7 +61,7 @@ public class Expand extends Task {
     private boolean overwrite = true;
     private Mapper mapperElement = null;
     private Vector patternsets = new Vector();
-    private Vector filesets = new Vector();
+    private Union resources = new Union();
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
@@ -76,8 +81,8 @@ public class Expand extends Task {
             log("!! expand is deprecated. Use unzip instead. !!");
         }
 
-        if (source == null && filesets.size() == 0) {
-            throw new BuildException("src attribute and/or filesets must be "
+        if (source == null && resources.size() == 0) {
+            throw new BuildException("src attribute and/or resources must be "
                                      + "specified");
         }
 
@@ -98,19 +103,19 @@ public class Expand extends Task {
                 expandFile(FILE_UTILS, source, dest);
             }
         }
-        if (filesets.size() > 0) {
-            for (int j = 0, size = filesets.size(); j < size; j++) {
-                FileSet fs = (FileSet) filesets.elementAt(j);
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                File fromDir = fs.getDir(getProject());
+	Iterator iter = resources.iterator();
+	while (iter.hasNext()) {
+	    Resource r = (Resource) iter.next();
+	    if (!r.isExists()) {
+		continue;
+	    }
 
-                String[] files = ds.getIncludedFiles();
-                for (int i = 0; i < files.length; ++i) {
-                    File file = new File(fromDir, files[i]);
-                    expandFile(FILE_UTILS, file, dest);
-                }
-            }
-        }
+	    if (r instanceof FileResource) {
+		expandFile(FILE_UTILS, ((FileResource) r).getFile(), dest);
+	    } else {
+		expandResource(r, dest);
+	    }
+	}
     }
 
     /**
@@ -141,6 +146,17 @@ public class Expand extends Task {
         } finally {
             ZipFile.closeQuietly(zf);
         }
+    }
+
+    /**
+     * This method is to be overridden by extending unarchival tasks.
+     *
+     * @param r         the source resource
+     * @param dir       the destination directory
+     */
+    protected void expandResource(Resource srcR, File dir) {
+	throw new BuildException("only filesystem based resources are"
+				 + " supported by this task.");
     }
 
     /**
@@ -322,7 +338,16 @@ public class Expand extends Task {
      * @param set a file set
      */
     public void addFileset(FileSet set) {
-        filesets.addElement(set);
+	add(set);
+    }
+
+    /**
+     * Add a resource collection.
+     * @param rc a resource collection.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+	resources.add(rc);
     }
 
     /**

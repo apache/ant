@@ -27,6 +27,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.bzip2.CBZip2InputStream;
@@ -91,31 +92,59 @@ public class Untar extends Expand {
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         FileInputStream fis = null;
-        TarInputStream tis = null;
         try {
-            log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-            fis = new FileInputStream(srcF);
-            tis = new TarInputStream(
-                compression.decompress(srcF, new BufferedInputStream(fis)));
-            TarEntry te = null;
-            FileNameMapper mapper = getMapper();
-            while ((te = tis.getNextEntry()) != null) {
-                extractFile(fileUtils, srcF, dir, tis,
-                            te.getName(), te.getModTime(),
-                            te.isDirectory(), mapper);
-            }
-            log("expand complete", Project.MSG_VERBOSE);
-
+	    fis = new FileInputStream(srcF);
+	    expandStream(srcF.getPath(), fis, dir);
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe, getLocation());
         } finally {
-            FileUtils.close(tis);
-            if (tis == null) {
-                FileUtils.close(fis);
-            }
-            
+	    FileUtils.close(fis);
         }
+    }
+
+    /**
+     * This method is to be overridden by extending unarchival tasks.
+     *
+     * @param r         the source resource
+     * @param dir       the destination directory
+     * @since Ant 1.7
+     */
+    protected void expandResource(Resource srcR, File dir) {
+	InputStream i = null;
+        try {
+	    i = srcR.getInputStream();
+	    expandStream(srcR.getName(), i, dir);
+        } catch (IOException ioe) {
+            throw new BuildException("Error while expanding " + srcR.getName(),
+                                     ioe, getLocation());
+        } finally {
+	    FileUtils.close(i);
+        }
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    private void expandStream(String name, InputStream stream, File dir)
+	throws IOException {
+	TarInputStream tis = null;
+        try {
+	    tis = 
+		new TarInputStream(compression.decompress(name,
+							  new BufferedInputStream(stream)));
+	    log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
+	    TarEntry te = null;
+	    FileNameMapper mapper = getMapper();
+	    while ((te = tis.getNextEntry()) != null) {
+		extractFile(FileUtils.getFileUtils(), null, dir, tis,
+			    te.getName(), te.getModTime(),
+			    te.isDirectory(), mapper);
+	    }
+	    log("expand complete", Project.MSG_VERBOSE);
+        } finally {
+            FileUtils.close(tis);
+	}
     }
 
     /**
@@ -168,7 +197,7 @@ public class Untar extends Expand {
          *  @exception BuildException thrown if bzip stream does not
          *     start with expected magic values
          */
-        private InputStream decompress(final File file,
+        private InputStream decompress(final String name,
                                        final InputStream istream)
             throws IOException, BuildException {
             final String v = getValue();
@@ -180,7 +209,7 @@ public class Untar extends Expand {
                     for (int i = 0; i < magic.length; i++) {
                         if (istream.read() != magic[i]) {
                             throw new BuildException(
-                                "Invalid bz2 file." + file.toString());
+                                "Invalid bz2 file." + name);
                         }
                     }
                     return new CBZip2InputStream(istream);
