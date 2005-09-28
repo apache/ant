@@ -18,6 +18,7 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.XmlConstants;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.XMLReader;
@@ -389,8 +390,10 @@ public class SchemaValidate extends XMLValidateTask {
                 if (!file.exists()) {
                     throw new BuildException(ERROR_NO_FILE + file);
                 }
+		
                 try {
-                    schema = file.toURL().toString();
+                    schema =
+			FileUtils.getFileUtils().getFileURL(file).toString();
                 } catch (MalformedURLException e) {
                     //this is almost implausible, but required handling
                     throw new BuildException(ERROR_NO_URL_REPRESENTATION + file,e);
