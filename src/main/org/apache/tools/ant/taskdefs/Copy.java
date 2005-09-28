@@ -417,20 +417,20 @@ public class Copy extends Task {
             }
             // deal with the ResourceCollections
 
-        /* for historical and performance reasons we have to do
-           things in a rather complex way.
+            /* for historical and performance reasons we have to do
+               things in a rather complex way.
+            
+               (1) Move is optimized to move directories if a fileset
+               has been included completely, therefore FileSets need a
+               special treatment.  This is also required to support
+               the failOnError semantice (skip filesets with broken
+               basedir but handle the remaining collections).
 
-           (1) Move is optimized to move directories if a fileset
-           has been included completely, therefore FileSets need a
-           special treatment.  This is also required to support
-           the failOnError semantice (skip filesets with broken
-           basedir but handle the remaining collections).
-
-           (2) We carry around a few protected methods that work
-           on basedirs and arrays of names.  To optimize stuff, all
-           resources with the same basedir get collected in
-           separate lists and then each list is handled in one go.
-        */
+               (2) We carry around a few protected methods that work
+               on basedirs and arrays of names.  To optimize stuff, all
+               resources with the same basedir get collected in
+               separate lists and then each list is handled in one go.
+            */
 
             HashMap filesByBasedir = new HashMap();
             HashMap dirsByBasedir = new HashMap();
@@ -488,7 +488,7 @@ public class Copy extends Task {
                         File f = (File) iter.next();
                         List files = (List) filesByBasedir.get(f);
                         List dirs = (List) dirsByBasedir.get(f);
-    
+
                         String[] srcFiles = new String[0];
                         if (files != null) {
                             srcFiles = (String[]) files.toArray(srcFiles);
@@ -498,7 +498,7 @@ public class Copy extends Task {
                             srcDirs = (String[]) dirs.toArray(srcDirs);
                         }
                         scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir,
-                            srcFiles, srcDirs);
+                             srcFiles, srcDirs);
                     }
                 } else { // not a File resource collection
                     throw new BuildException(
@@ -563,7 +563,7 @@ public class Copy extends Task {
                 ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
                 if (!rc.isFilesystemOnly()) {
                     throw new BuildException("Only FileSystem resources are"
-                                 + " supported.");
+                                             + " supported.");
                 }
                 if (rc.size() == 0) {
                     throw new BuildException(
