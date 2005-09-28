@@ -112,11 +112,7 @@ public class ExecuteOn extends ExecTask {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
-        if (rc instanceof FileSet) {
-            addFileset((FileSet) rc);
-        } else {
-            resources.add(rc);
-        }
+        resources.add(rc);
     }
 
     /**
@@ -417,7 +413,7 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-
+        
             Iterator iter = resources.iterator();
             while (iter.hasNext()) {
                 Resource res = (Resource) iter.next();
@@ -455,7 +451,7 @@ public class ExecuteOn extends ExecTask {
                 if (!parallel) {
                     String[] command = getCommandline(name, base);
                     log(Commandline.describeCommand(command),
-                    Project.MSG_VERBOSE);
+                        Project.MSG_VERBOSE);
                     exe.setCommandline(command);
 
                     if (redirectorElement != null) {
