@@ -103,7 +103,7 @@ public class ExecuteOn extends ExecTask {
      * @param list the FileList to add.
      */
     public void addFilelist(FileList list) {
-	add(list);
+        add(list);
     }
 
     /**
@@ -112,9 +112,11 @@ public class ExecuteOn extends ExecTask {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
-	if (rc instanceof FileSet)
-	    throw new BuildException("Huh?");
-	resources.add(rc);
+        if (rc instanceof FileSet) {
+            addFileset((FileSet) rc);
+        } else {
+            resources.add(rc);
+        }
     }
 
     /**
@@ -415,67 +417,67 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-	
-	    Iterator iter = resources.iterator();
-	    while (iter.hasNext()) {
-		Resource res = (Resource) iter.next();
 
-		if (!res.isExists() && ignoreMissing) {
-		    continue;
-		}
+            Iterator iter = resources.iterator();
+            while (iter.hasNext()) {
+                Resource res = (Resource) iter.next();
 
-		File base = null;
-		String name = res.getName();
-		if (res instanceof FileResource) {
-		    FileResource fr = (FileResource) res;
-		    base = fr.getBaseDir();
-		    if (base == null) {
-			name = fr.getFile().getAbsolutePath();
-		    }
-		}
+                if (!res.isExists() && ignoreMissing) {
+                    continue;
+                }
 
-		if (restrict(new String[] {name}, base).length == 0) {
-		    continue;
-		}
+                File base = null;
+                String name = res.getName();
+                if (res instanceof FileResource) {
+                    FileResource fr = (FileResource) res;
+                    base = fr.getBaseDir();
+                    if (base == null) {
+                        name = fr.getFile().getAbsolutePath();
+                    }
+                }
 
-		if ((!res.isDirectory() || !res.isExists())
-		    && !FileDirBoth.DIR.equals(type)) {
-		    totalFiles++;
-		} else if (res.isDirectory() && !FileDirBoth.FILE.equals(type)) {
-		    totalDirs++;
-		} else {
-		    continue;
-		}
+                if (restrict(new String[] {name}, base).length == 0) {
+                    continue;
+                }
 
-		baseDirs.add(base);
-		fileNames.add(name);
+                if ((!res.isDirectory() || !res.isExists())
+                    && !FileDirBoth.DIR.equals(type)) {
+                    totalFiles++;
+                } else if (res.isDirectory() && !FileDirBoth.FILE.equals(type)) {
+                    totalDirs++;
+                } else {
+                    continue;
+                }
+
+                baseDirs.add(base);
+                fileNames.add(name);
 
                 if (!parallel) {
-		    String[] command = getCommandline(name, base);
-		    log(Commandline.describeCommand(command),
-			Project.MSG_VERBOSE);
-		    exe.setCommandline(command);
+                    String[] command = getCommandline(name, base);
+                    log(Commandline.describeCommand(command),
+                    Project.MSG_VERBOSE);
+                    exe.setCommandline(command);
 
-		    if (redirectorElement != null) {
-			setupRedirector();
-			redirectorElement.configure(redirector, name);
-		    }
-		    if (redirectorElement != null || haveExecuted) {
-			// need to reset the stream handler to restart
-			// reading of pipes;
-			// go ahead and do it always w/ nested redirectors
-			exe.setStreamHandler(redirector.createHandler());
-		    }
-		    runExecute(exe);
-		    haveExecuted = true;
-		    fileNames.removeAllElements();
-		    baseDirs.removeAllElements();
-		}
+                    if (redirectorElement != null) {
+                        setupRedirector();
+                        redirectorElement.configure(redirector, name);
+                    }
+                    if (redirectorElement != null || haveExecuted) {
+                        // need to reset the stream handler to restart
+                        // reading of pipes;
+                        // go ahead and do it always w/ nested redirectors
+                        exe.setStreamHandler(redirector.createHandler());
+                    }
+                    runExecute(exe);
+                    haveExecuted = true;
+                    fileNames.removeAllElements();
+                    baseDirs.removeAllElements();
+                }
             }
             if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
                 runParallel(exe, fileNames, baseDirs);
                 haveExecuted = true;
-	    }
+            }
             if (haveExecuted) {
                 log("Applied " + cmdl.getExecutable() + " to "
                     + totalFiles + " file"
@@ -719,8 +721,8 @@ public class ExecuteOn extends ExecTask {
      * for the type attribute.
      */
     public static class FileDirBoth extends EnumeratedAttribute {
-	public static final String FILE = "file";
-	public static final String DIR = "dir";
+        public static final String FILE = "file";
+        public static final String DIR = "dir";
         /**
          * @see EnumeratedAttribute#getValues
          */
