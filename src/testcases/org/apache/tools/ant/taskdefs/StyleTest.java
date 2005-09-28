@@ -84,11 +84,11 @@ public class StyleTest extends BuildFileTest {
 
 
     public void testDefaultMapper() throws Exception {
-	testDefaultMapper("testDefaultMapper");
+        testDefaultMapper("testDefaultMapper");
     }
 
     public void testExplicitFileset() throws Exception {
-	testDefaultMapper("testExplicitFileset");
+        testDefaultMapper("testExplicitFileset");
     }
 
     public void testDefaultMapper(String target) throws Exception {

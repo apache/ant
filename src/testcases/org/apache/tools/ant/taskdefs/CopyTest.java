@@ -156,61 +156,61 @@ public class CopyTest extends BuildFileTest {
     }
     
     public void testFileResourcePlain() {
-    	executeTarget("testFileResourcePlain");
-    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
-    	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
-    	File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
-    	assertTrue(file1.exists());
-    	assertTrue(file2.exists());
-    	assertTrue(file3.exists());
+        executeTarget("testFileResourcePlain");
+        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        assertTrue(file1.exists());
+        assertTrue(file2.exists());
+        assertTrue(file3.exists());
     }
     
     public void _testFileResourceWithMapper() {
-    	executeTarget("testFileResourceWithMapper");
-    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt.bak");
-    	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt.bak");
-    	File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt.bak");
-    	assertTrue(file1.exists());
-    	assertTrue(file2.exists());
-    	assertTrue(file3.exists());
+        executeTarget("testFileResourceWithMapper");
+        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt.bak");
+        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt.bak");
+        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt.bak");
+        assertTrue(file1.exists());
+        assertTrue(file2.exists());
+        assertTrue(file3.exists());
     }
     
     public void testFileResourceWithFilter() {
-    	executeTarget("testFileResourceWithFilter");
-    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/fileNR.txt");
-    	assertTrue(file1.exists());
-    	try {
-	    String file1Content = FILE_UTILS.readFully(new FileReader(file1));
-	    assertEquals("This is file 42", file1Content);
-	} catch (IOException e) {
-	    // no-op: not a real business error
-	}
+        executeTarget("testFileResourceWithFilter");
+        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/fileNR.txt");
+        assertTrue(file1.exists());
+        try {
+            String file1Content = FILE_UTILS.readFully(new FileReader(file1));
+            assertEquals("This is file 42", file1Content);
+        } catch (IOException e) {
+            // no-op: not a real business error
+        }
     }
     
     public void testPathAsResource() {
-    	executeTarget("testPathAsResource");
-    	File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
-    	File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
-    	File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
-    	assertTrue(file1.exists());
-    	assertTrue(file2.exists());
-    	assertTrue(file3.exists());
+        executeTarget("testPathAsResource");
+        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        assertTrue(file1.exists());
+        assertTrue(file2.exists());
+        assertTrue(file3.exists());
     }
     
     public void _testResourcePlain() {
-    	executeTarget("testResourcePlain");
+        executeTarget("testResourcePlain");
     }
     
     public void _testResourcePlainWithMapper() {
-    	executeTarget("testResourcePlainWithMapper");
+        executeTarget("testResourcePlainWithMapper");
     }
     
     public void _testResourcePlainWithFilter() {
-    	executeTarget("testResourcePlainWithFilter");
+        executeTarget("testResourcePlainWithFilter");
     }
     
     public void _testOnlineResources() {
-    	executeTarget("testOnlineResources");
+        executeTarget("testOnlineResources");
     }
     
 }

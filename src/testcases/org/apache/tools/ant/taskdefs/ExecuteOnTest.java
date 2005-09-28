@@ -564,11 +564,11 @@ public class ExecuteOnTest extends BuildFileTest {
     }
 
     public void testLsPath() {
-	testLsPath("lsPath");
+        testLsPath("lsPath");
     }
 
     public void testLsPathParallel() {
-	testLsPath("lsPathParallel");
+        testLsPath("lsPathParallel");
     }
 
     private void testLsPath(String target) {
@@ -576,11 +576,11 @@ public class ExecuteOnTest extends BuildFileTest {
         if (getProject().getProperty("ls.can.run") == null) {
             return;
         }
-	String foo = getProject().getProperty("foo");
-	assertNotNull(foo);
-	int indNoExt = foo.indexOf("ls" + LINE_SEP);
-	int indExe = foo.indexOf("ls.exe" + LINE_SEP);
-	assertTrue(indNoExt >= 0 || indExe >= 0);
+        String foo = getProject().getProperty("foo");
+        assertNotNull(foo);
+        int indNoExt = foo.indexOf("ls" + LINE_SEP);
+        int indExe = foo.indexOf("ls.exe" + LINE_SEP);
+        assertTrue(indNoExt >= 0 || indExe >= 0);
     }
 
     //borrowed from TokenFilterTest

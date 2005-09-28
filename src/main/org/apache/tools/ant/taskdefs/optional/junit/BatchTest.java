@@ -63,7 +63,7 @@ public final class BatchTest extends BaseTest {
      * @param     fs the new fileset containing the rules to get the testcases.
      */
     public void addFileSet(FileSet fs) {
-	add(fs);
+        add(fs);
     }
 
 
@@ -131,17 +131,17 @@ public final class BatchTest extends BaseTest {
      */
     private String[] getFilenames() {
         Vector v = new Vector();
-	Iterator iter = resources.iterator();
-	while (iter.hasNext()) {
-	    Resource r = (Resource) iter.next();
-	    if (r.isExists()) {
-		String pathname = r.getName();
+        Iterator iter = resources.iterator();
+        while (iter.hasNext()) {
+            Resource r = (Resource) iter.next();
+            if (r.isExists()) {
+                String pathname = r.getName();
                 if (pathname.endsWith(".java")) {
                     v.addElement(pathname.substring(0, pathname.length() - ".java".length()));
                 } else if (pathname.endsWith(".class")) {
                     v.addElement(pathname.substring(0, pathname.length() - ".class".length()));
                 }
-	    }
+            }
         }
 
         String[] files = new String[v.size()];
@@ -158,7 +158,7 @@ public final class BatchTest extends BaseTest {
      */
     public static final String javaToClass(String filename) {
         return filename.replace(File.separatorChar, '.').replace('/', '.')
-                .replace('\\', '.');
+            .replace('\\', '.');
     }
 
     /**

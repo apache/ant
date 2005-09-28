@@ -60,11 +60,11 @@ public class SyncTest extends BuildFileTest {
     }
 
     public void testCopyAndRemove() {
-	testCopyAndRemove("copyandremove");
+        testCopyAndRemove("copyandremove");
     }
 
     public void testCopyAndRemoveWithFileList() {
-	testCopyAndRemove("copyandremove-with-filelist");
+        testCopyAndRemove("copyandremove-with-filelist");
     }
 
     private void testCopyAndRemove(String target) {

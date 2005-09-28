@@ -103,19 +103,19 @@ public class Expand extends Task {
                 expandFile(FILE_UTILS, source, dest);
             }
         }
-	Iterator iter = resources.iterator();
-	while (iter.hasNext()) {
-	    Resource r = (Resource) iter.next();
-	    if (!r.isExists()) {
-		continue;
-	    }
+        Iterator iter = resources.iterator();
+        while (iter.hasNext()) {
+            Resource r = (Resource) iter.next();
+            if (!r.isExists()) {
+                continue;
+            }
 
-	    if (r instanceof FileResource) {
-		expandFile(FILE_UTILS, ((FileResource) r).getFile(), dest);
-	    } else {
-		expandResource(r, dest);
-	    }
-	}
+            if (r instanceof FileResource) {
+                expandFile(FILE_UTILS, ((FileResource) r).getFile(), dest);
+            } else {
+                expandResource(r, dest);
+            }
+        }
     }
 
     /**
@@ -155,8 +155,8 @@ public class Expand extends Task {
      * @param dir       the destination directory
      */
     protected void expandResource(Resource srcR, File dir) {
-	throw new BuildException("only filesystem based resources are"
-				 + " supported by this task.");
+        throw new BuildException("only filesystem based resources are"
+                                 + " supported by this task.");
     }
 
     /**
@@ -338,7 +338,7 @@ public class Expand extends Task {
      * @param set a file set
      */
     public void addFileset(FileSet set) {
-	add(set);
+        add(set);
     }
 
     /**
@@ -347,7 +347,7 @@ public class Expand extends Task {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
-	resources.add(rc);
+        resources.add(rc);
     }
 
     /**

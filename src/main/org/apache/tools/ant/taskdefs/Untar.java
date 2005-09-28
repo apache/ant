@@ -93,13 +93,13 @@ public class Untar extends Expand {
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         FileInputStream fis = null;
         try {
-	    fis = new FileInputStream(srcF);
-	    expandStream(srcF.getPath(), fis, dir);
+            fis = new FileInputStream(srcF);
+            expandStream(srcF.getPath(), fis, dir);
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe, getLocation());
         } finally {
-	    FileUtils.close(fis);
+            FileUtils.close(fis);
         }
     }
 
@@ -111,15 +111,15 @@ public class Untar extends Expand {
      * @since Ant 1.7
      */
     protected void expandResource(Resource srcR, File dir) {
-	InputStream i = null;
+        InputStream i = null;
         try {
-	    i = srcR.getInputStream();
-	    expandStream(srcR.getName(), i, dir);
+            i = srcR.getInputStream();
+            expandStream(srcR.getName(), i, dir);
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcR.getName(),
                                      ioe, getLocation());
         } finally {
-	    FileUtils.close(i);
+            FileUtils.close(i);
         }
     }
 
@@ -127,24 +127,24 @@ public class Untar extends Expand {
      * @since Ant 1.7
      */
     private void expandStream(String name, InputStream stream, File dir)
-	throws IOException {
-	TarInputStream tis = null;
+        throws IOException {
+        TarInputStream tis = null;
         try {
-	    tis = 
-		new TarInputStream(compression.decompress(name,
-							  new BufferedInputStream(stream)));
-	    log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
-	    TarEntry te = null;
-	    FileNameMapper mapper = getMapper();
-	    while ((te = tis.getNextEntry()) != null) {
-		extractFile(FileUtils.getFileUtils(), null, dir, tis,
-			    te.getName(), te.getModTime(),
-			    te.isDirectory(), mapper);
-	    }
-	    log("expand complete", Project.MSG_VERBOSE);
+            tis = 
+                new TarInputStream(compression.decompress(name,
+                                                          new BufferedInputStream(stream)));
+            log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
+            TarEntry te = null;
+            FileNameMapper mapper = getMapper();
+            while ((te = tis.getNextEntry()) != null) {
+                extractFile(FileUtils.getFileUtils(), null, dir, tis,
+                            te.getName(), te.getModTime(),
+                            te.isDirectory(), mapper);
+            }
+            log("expand complete", Project.MSG_VERBOSE);
         } finally {
             FileUtils.close(tis);
-	}
+        }
     }
 
     /**
@@ -209,7 +209,7 @@ public class Untar extends Expand {
                     for (int i = 0; i < magic.length; i++) {
                         if (istream.read() != magic[i]) {
                             throw new BuildException(
-                                "Invalid bz2 file." + name);
+                                                     "Invalid bz2 file." + name);
                         }
                     }
                     return new CBZip2InputStream(istream);

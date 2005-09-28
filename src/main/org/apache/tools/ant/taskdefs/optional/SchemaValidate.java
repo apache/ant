@@ -390,10 +390,10 @@ public class SchemaValidate extends XMLValidateTask {
                 if (!file.exists()) {
                     throw new BuildException(ERROR_NO_FILE + file);
                 }
-		
+
                 try {
                     schema =
-			FileUtils.getFileUtils().getFileURL(file).toString();
+                        FileUtils.getFileUtils().getFileURL(file).toString();
                 } catch (MalformedURLException e) {
                     //this is almost implausible, but required handling
                     throw new BuildException(ERROR_NO_URL_REPRESENTATION + file,e);
