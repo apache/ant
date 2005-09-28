@@ -84,8 +84,16 @@ public class StyleTest extends BuildFileTest {
 
 
     public void testDefaultMapper() throws Exception {
+	testDefaultMapper("testDefaultMapper");
+    }
+
+    public void testExplicitFileset() throws Exception {
+	testDefaultMapper("testExplicitFileset");
+    }
+
+    public void testDefaultMapper(String target) throws Exception {
         assertTrue(!getProject().resolveFile("out/data.html").exists());
-        expectFileContains("testDefaultMapper",
+        expectFileContains(target,
                            "out/data.html",
                            "set='myvalue'");
     }

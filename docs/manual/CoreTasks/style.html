@@ -42,6 +42,11 @@ the files matched by those patterns because the parent directory has
 been matched.  If this behavior is not what you want, set the
 scanincludedirectories attribute to false.</p>
 
+<p>Starting with Ant 1.7 this task supports nested <a
+href="../CoreTypes/resources.html#collection">resource collection</a>s
+in addition to (or instead of, depending on the useImplicitFileset
+attribute) the implicit fileset formed by this task.</p>
+
 <p>This task supports the use of a nested <code>&lt;param&gt;</code> element which is used to pass values
   to an <code>&lt;xsl:param&gt;</code> declaration.</p>
 <p>This task supports the use of a nested <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a>
@@ -176,8 +181,27 @@ element which is used to perform Entity and URI resolution</p>
     Default is <code>false</code>.  <em>Since Ant 1.5.2</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">useImplicitFileset</td>
+    <td valign="top">Whether the implicit fileset formed by this task
+    shall be used.  If you set this to false you must use nested
+    resource collections - or the in attribute, in which case this
+    attribute has no impact anyway.  Default is <code>true</code>.
+    <em>Since Ant 1.7</em>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
+
+<h4>any <a href="../CoreTypes/resources.html#collection">resource
+collection</a></h4>
+
+<p><em>since Ant 1.7</em></p>
+
+<p>Use resource collections to specify resources that the stylesheet
+should be applied to.  Use a nested mapper and the task's destdir
+attribute to specify the output files.</p>
+
 <h4>classpath</h4>
 <p>The classpath to load the processor from can be specified via a
 nested <code>&lt;classpath&gt;</code>, as well - that is, a

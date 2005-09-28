@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -28,7 +29,11 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -141,6 +146,20 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private Mapper mapperElement = null;
 
     /**
+     * Additional resource collections to process.
+     *
+     * @since Ant 1.7
+     */
+    private Union resources = new Union();
+
+    /**
+     * Whether to use the implicit fileset.
+     *
+     * @since Ant 1.7
+     */
+    private boolean useImplicitFileset = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -181,6 +200,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                                      getLocation());
         }
         mapperElement = mapper;
+    }
+
+    /**
+     * Adds a collection of resources to style in addition to the
+     * given file or the implicit fileset.
+     *
+     * @param rc the collection of resources to style
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+	resources.add(rc);
     }
 
     /**
@@ -248,11 +278,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              * in batch processing mode.
              */
 
-            //-- make sure Source directory exists...
-            if (destDir == null) {
-                String msg = "destdir attributes must be set!";
-                throw new BuildException(msg);
-            }
+            //-- make sure destination directory exists...
+	    checkDest();
+
+	    if (useImplicitFileset) {
             scanner = getDirectoryScanner(baseDir);
             log("Transforming into " + destDir, Project.MSG_INFO);
 
@@ -272,6 +301,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     }
                 }
             }
+	    } else { // only resource collections, there better be some
+		if (resources.size() == 0) {
+		    throw new BuildException("no resources specified");
+		}
+	    }
+	    processResources(stylesheet);
         } finally {
             if (loader != null) {
                 loader.resetThreadContextLoader();
@@ -283,7 +318,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             baseDir = savedBaseDir;
         }
     }
-
+    
     /**
      * Set whether to check dependencies, or always generate;
      * optional, default is false.
@@ -377,6 +412,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
+     * Whether to use the implicit fileset.
+     *
+     * <p>Set this to false if you want explicit control with nested
+     * resource collections.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setUseImplicitFileset(boolean b) {
+	useImplicitFileset = b;
+    }
+
+    /**
      * Add the catalog to our internal catalog
      *
      * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
@@ -449,6 +496,43 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setIn(File inFile) {
         this.inFile = inFile;
+    }
+
+    /**
+     * Throws a BuildException if the destination directory hasn't
+     * been specified.
+     * @since Ant 1.7
+     */
+    private void checkDest() {
+	if (destDir == null) {
+	    String msg = "destdir attributes must be set!";
+	    throw new BuildException(msg);
+	}
+    }
+
+    /**
+     * Styles all existing resources.
+     *
+     * @since Ant 1.7
+     */
+    private void processResources(File stylesheet) {
+	Iterator iter = resources.iterator();
+	while (iter.hasNext()) {
+	    Resource r = (Resource) iter.next();
+	    if (!r.isExists()) {
+		continue;
+	    }
+	    File base = baseDir;
+	    String name = r.getName();
+	    if (r instanceof FileResource) {
+		FileResource f = (FileResource) r;
+		base = f.getBaseDir();
+		if (base == null) {
+		    name = f.getFile().getAbsolutePath();
+		}
+	    }
+	    process(base, name, destDir, stylesheet);
+	}
     }
 
     /**

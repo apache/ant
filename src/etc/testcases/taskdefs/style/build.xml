@@ -57,6 +57,15 @@
     </xslt>
   </target>
 
+  <target name="testExplicitFileset">
+    <property name="value" value="myvalue"/>
+    <xslt style="printParams.xsl" destDir="${out.dir}"
+          useImplicitFileset="false" basedir="..">
+      <param name="set" expression="${value}"/>
+      <fileset dir="."/>
+    </xslt>
+  </target>
+
   <target name="testNewerStylesheet">
       <antcall target="copyXsl">
         <param name="xsl.value" value="old-value"/>
