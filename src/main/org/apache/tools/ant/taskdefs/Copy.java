@@ -283,7 +283,7 @@ public class Copy extends Task {
      * @param set a set of files to copy.
      */
     public void addFileset(FileSet set) {
-	add(set);
+        add(set);
     }
     
     /**
@@ -292,7 +292,7 @@ public class Copy extends Task {
      * @since Ant 1.7
      */
     public void add(ResourceCollection res) {
-	rcs.add(res);
+        rcs.add(res);
     }
     
     /**
@@ -381,10 +381,10 @@ public class Copy extends Task {
         File savedFile = file; // may be altered in validateAttributes
         File savedDestFile = destFile;
         File savedDestDir = destDir;
-	ResourceCollection savedRc = null;
+        ResourceCollection savedRc = null;
         if (file == null && destFile != null && rcs.size() == 1) {
             // will be removed in validateAttributes
-	    savedRc = (ResourceCollection) rcs.elementAt(0);
+            savedRc = (ResourceCollection) rcs.elementAt(0);
         }
         // make sure we don't have an illegal set of options
         validateAttributes();
@@ -417,94 +417,93 @@ public class Copy extends Task {
             }
             // deal with the ResourceCollections
 
-	    /* for historical and performance reasons we have to do
-	       things in a rather complex way.
-	    
-	       (1) Move is optimized to move directories if a fileset
-	       has been included completely, therefore FileSets need a
-	       special treatment.  This is also required to support
-	       the failOnError semantice (skip filesets with broken
-	       basedir but handle the remaining collections).
+        /* for historical and performance reasons we have to do
+           things in a rather complex way.
 
-	       (2) We carry around a few protected methods that work
-	       on basedirs and arrays of names.  To optimize stuff, all
-	       resources with the same basedir get collected in
-	       separate lists and then each list is handled in one go.
-	    */
+           (1) Move is optimized to move directories if a fileset
+           has been included completely, therefore FileSets need a
+           special treatment.  This is also required to support
+           the failOnError semantice (skip filesets with broken
+           basedir but handle the remaining collections).
 
-	    HashMap filesByBasedir = new HashMap();
-	    HashMap dirsByBasedir = new HashMap();
-	    HashSet baseDirs = new HashSet();
+           (2) We carry around a few protected methods that work
+           on basedirs and arrays of names.  To optimize stuff, all
+           resources with the same basedir get collected in
+           separate lists and then each list is handled in one go.
+        */
+
+            HashMap filesByBasedir = new HashMap();
+            HashMap dirsByBasedir = new HashMap();
+            HashSet baseDirs = new HashSet();
             for (int i = 0; i < rcs.size(); i++) {
-		ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
+                ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
 
-		if (rc.isFilesystemOnly()) {
+                if (rc.isFilesystemOnly()) {
 
-		    // Step (1)
-		    if (rc instanceof FileSet) {
-			FileSet fs = (FileSet) rc;
-			DirectoryScanner ds = null;
-			try {
-			    ds = fs.getDirectoryScanner(getProject());
-			} catch (BuildException e) {
-			    if (failonerror
-				|| !e.getMessage().endsWith(" not found.")) {
-				throw e;
-			    } else {
-				log("Warning: " + e.getMessage());
-				continue;
-			    }
-			}
-			File fromDir = fs.getDir(getProject());
+                    // Step (1)
+                    if (rc instanceof FileSet) {
+                        FileSet fs = (FileSet) rc;
+                        DirectoryScanner ds = null;
+                        try {
+                            ds = fs.getDirectoryScanner(getProject());
+                        } catch (BuildException e) {
+                            if (failonerror
+                                || !e.getMessage().endsWith(" not found.")) {
+                                throw e;
+                            } else {
+                                log("Warning: " + e.getMessage());
+                                continue;
+                            }
+                        }
+                        File fromDir = fs.getDir(getProject());
 
-			String[] srcFiles = ds.getIncludedFiles();
-			String[] srcDirs = ds.getIncludedDirectories();
-			if (!flatten && mapperElement == null
-			    && ds.isEverythingIncluded() && !fs.hasPatterns()) {
-			    completeDirMap.put(fromDir, destDir);
-			}
-			add(fromDir, srcFiles, filesByBasedir);
-			add(fromDir, srcDirs, dirsByBasedir);
-			baseDirs.add(fromDir);
-		    } else { // not a fileset
+                        String[] srcFiles = ds.getIncludedFiles();
+                        String[] srcDirs = ds.getIncludedDirectories();
+                        if (!flatten && mapperElement == null
+                            && ds.isEverythingIncluded() && !fs.hasPatterns()) {
+                            completeDirMap.put(fromDir, destDir);
+                        }
+                        add(fromDir, srcFiles, filesByBasedir);
+                        add(fromDir, srcDirs, dirsByBasedir);
+                        baseDirs.add(fromDir);
+                    } else { // not a fileset
 
-			Iterator resources = rc.iterator();
-			while (resources.hasNext()) {
-			    FileResource fr = (FileResource) resources.next();
-			    if (!fr.isExists()) {
-				continue;
-			    }
-			    File baseDir = getKeyFile(fr.getBaseDir());
-			    add(baseDir, 
-				baseDir == NULL_FILE_PLACEHOLDER
-				? fr.getFile().getAbsolutePath() : fr.getName(),
-				fr.isDirectory() ? dirsByBasedir 
-				                 : filesByBasedir);
-			    baseDirs.add(baseDir);
-			}
-		    }
+                        Iterator resources = rc.iterator();
+                        while (resources.hasNext()) {
+                            FileResource fr = (FileResource) resources.next();
+                            if (!fr.isExists()) {
+                                continue;
+                            }
+                            File baseDir = getKeyFile(fr.getBaseDir());
+                            add(baseDir, baseDir == NULL_FILE_PLACEHOLDER
+                                ? fr.getFile().getAbsolutePath() : fr.getName(),
+                                fr.isDirectory() ? dirsByBasedir
+                                                 : filesByBasedir);
+                            baseDirs.add(baseDir);
+                        }
+                    }
 
-		    Iterator iter = baseDirs.iterator();
-		    while (iter.hasNext()) {
-			File f = (File) iter.next();
-			List files = (List) filesByBasedir.get(f);
-			List dirs = (List) dirsByBasedir.get(f);
-
-			String[] srcFiles = new String[0];
-			if (files != null) {
-			    srcFiles = (String[]) files.toArray(srcFiles);
-			}
-			String[] srcDirs = new String[0];
-			if (dirs != null) {
-			    srcDirs = (String[]) dirs.toArray(srcDirs);
-			}
-			scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir,
-			     srcFiles, srcDirs);
-		    }
-		} else { // not a File resource collection
-		    throw new BuildException("Only FileSystem resources are"
-					     + " supported.");
-		}
+                    Iterator iter = baseDirs.iterator();
+                    while (iter.hasNext()) {
+                        File f = (File) iter.next();
+                        List files = (List) filesByBasedir.get(f);
+                        List dirs = (List) dirsByBasedir.get(f);
+    
+                        String[] srcFiles = new String[0];
+                        if (files != null) {
+                            srcFiles = (String[]) files.toArray(srcFiles);
+                        }
+                        String[] srcDirs = new String[0];
+                        if (dirs != null) {
+                            srcDirs = (String[]) dirs.toArray(srcDirs);
+                        }
+                        scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir,
+                            srcFiles, srcDirs);
+                    }
+                } else { // not a File resource collection
+                    throw new BuildException(
+                        "Only FileSystem resources are supported.");
+                }
             }
             // do all the copy operations now...
             try {
@@ -561,16 +560,16 @@ public class Copy extends Task {
                 throw new BuildException(
                     "Cannot concatenate multiple files into a single file.");
             } else {
-		ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
-		if (!rc.isFilesystemOnly()) {
-		    throw new BuildException("Only FileSystem resources are"
-					     + " supported.");
-		}
-		if (rc.size() == 0) {
+                ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
+                if (!rc.isFilesystemOnly()) {
+                    throw new BuildException("Only FileSystem resources are"
+                                 + " supported.");
+                }
+                if (rc.size() == 0) {
                     throw new BuildException(
                         "Cannot perform operation from directory to file.");
                 } else if (rc.size() == 1) {
-		    FileResource r = (FileResource) rc.iterator().next();
+                    FileResource r = (FileResource) rc.iterator().next();
                     if (file == null) {
                         file = r.getFile();
                         rcs.removeElementAt(0);
@@ -744,15 +743,15 @@ public class Copy extends Task {
      * The file is the key into the map.
      */
     private static void add(File baseDir, String[] names, Map m) {
-	if (names != null) {
-	    baseDir = getKeyFile(baseDir);
-	    List l = (List) m.get(baseDir);
-	    if (l == null) {
-		l = new ArrayList(names.length);
-		m.put(baseDir, l);
-	    }
-	    l.addAll(java.util.Arrays.asList(names));
-	}
+        if (names != null) {
+            baseDir = getKeyFile(baseDir);
+            List l = (List) m.get(baseDir);
+            if (l == null) {
+                l = new ArrayList(names.length);
+                m.put(baseDir, l);
+            }
+            l.addAll(java.util.Arrays.asList(names));
+        }
     }
 
     /**
@@ -760,15 +759,15 @@ public class Copy extends Task {
      * The file is the key into the map.
      */
     private static void add(File baseDir, String name, Map m) {
-	if (name != null) {
-	    add(baseDir, new String[] {name}, m);
-	}
+        if (name != null) {
+            add(baseDir, new String[] {name}, m);
+        }
     }
 
     /**
      * Either returns its argument or a plaeholder if the argument is null.
      */
     private static File getKeyFile(File f) {
-	return f == null ? NULL_FILE_PLACEHOLDER : f;
+        return f == null ? NULL_FILE_PLACEHOLDER : f;
     }
 }
