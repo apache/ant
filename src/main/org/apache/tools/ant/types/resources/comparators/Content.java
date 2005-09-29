@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Compares Resources by content.
@@ -60,7 +60,7 @@ public class Content extends ResourceComparator {
      */
     protected int resourceCompare(Resource foo, Resource bar) {
         try {
-            return FileUtils.getFileUtils().compareContent(foo, bar, !binary);
+            return ResourceUtils.compareContent(foo, bar, !binary);
         } catch (IOException e) {
             throw new BuildException(e);
         }

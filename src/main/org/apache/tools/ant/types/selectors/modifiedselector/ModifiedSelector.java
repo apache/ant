@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.selectors.BaseExtendSelector;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
 
 
 /**
@@ -540,7 +541,7 @@ public class ModifiedSelector extends BaseExtendSelector
                 FileUtils fu = FileUtils.getFileUtils();
                 File tmpFile = fu.createTempFile("modified-", ".tmp", null);
                 Resource tmpResource = new FileResource(tmpFile);
-                fu.copyResource(resource, tmpResource);
+                ResourceUtils.copyResource(resource, tmpResource);
                 boolean isSelected = isSelected(tmpFile.getParentFile(),
                                                 tmpFile.getName(),
                                                 resource.toLongString());

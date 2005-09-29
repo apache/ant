@@ -34,6 +34,7 @@ import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.types.resources.ImmutableResourceException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
 
 public class ResourceOutputTest extends BuildFileTest {
 
@@ -147,7 +148,7 @@ public class ResourceOutputTest extends BuildFileTest {
     }
 
     private void testoutput(Resource dest) throws IOException {
-        FILE_UTILS.copyResource(new StringResource("foo"), dest, null);
+        ResourceUtils.copyResource(new StringResource("foo"), dest, null);
     }
 
 }
