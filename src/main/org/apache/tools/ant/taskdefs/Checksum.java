@@ -42,6 +42,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -543,20 +544,8 @@ public class Checksum extends MatchingTask implements Condition {
         } catch (Exception e) {
             throw new BuildException(e, getLocation());
         } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(fis);
+            FileUtils.close(fos);
         }
         return checksumMatches;
     }
