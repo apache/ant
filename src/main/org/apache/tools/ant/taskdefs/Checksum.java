@@ -320,7 +320,8 @@ public class Checksum extends MatchingTask implements Condition {
                                              + "when Property is specified");
                 }
             } else {
-                if (filesets.size() > 1) {
+                if (filesets.size() > 1
+                    || ((FileSet) filesets.get(0)).size() > 1) {
                     throw new BuildException("Multiple files cannot be used "
                                              + "when Property is specified");
                 }
