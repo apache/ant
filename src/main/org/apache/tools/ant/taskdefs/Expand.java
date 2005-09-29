@@ -62,6 +62,7 @@ public class Expand extends Task {
     private Mapper mapperElement = null;
     private Vector patternsets = new Vector();
     private Union resources = new Union();
+    private boolean resourcesSpecified = false;
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
@@ -81,7 +82,7 @@ public class Expand extends Task {
             log("!! expand is deprecated. Use unzip instead. !!");
         }
 
-        if (source == null && resources.size() == 0) {
+        if (source == null && !resourcesSpecified) {
             throw new BuildException("src attribute and/or resources must be "
                                      + "specified");
         }
@@ -347,6 +348,7 @@ public class Expand extends Task {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
+        resourcesSpecified = true;
         resources.add(rc);
     }
 
