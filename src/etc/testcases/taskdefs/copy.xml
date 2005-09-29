@@ -206,6 +206,7 @@ a=b=
     <delete file="copytest3b.tmp"/>
     <delete file="copytest3c.tmp"/>
     <delete file="copytest_single_file_fileset.tmp"/>
+    <delete file="copytest_single_file_path.tmp"/>
     <delete file="copy.filterset.tmp"/>
     <delete file="copy.filterchain.tmp"/>
     <delete dir="copytest1dir"/>
