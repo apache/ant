@@ -64,6 +64,18 @@ public final class BatchTest extends BaseTest {
      */
     public void addFileSet(FileSet fs) {
         add(fs);
+
+        // this one is here because the changes to support ResourceCollections
+        // have broken Magic's JUnitTestTask.
+        //
+        // The task adds a FileSet to a BatchTest instance using the
+        // Java API and without telling the FileSet about its project
+        // instance.  The original code would pass in project on the
+        // call to getDirectoryScanner - which is now hidden deep into
+        // Resources.iterator() and not reachable.
+        if (fs.getProject() == null) {
+            fs.setProject(project);
+        }
     }
 
 
