@@ -3,7 +3,7 @@
 
 <!-- apt tests -->
 
-<property name="build.dir" location="aptbuild/classes" />
+<property name="build.dir" location="aptbuild" />
 <property name="classes.dir" location="${build.dir}/classes" />
 <property name="classes2.dir" location="${build.dir}/classes2" />
 <property name="preprocess.dir" location="${build.dir}/source" />
