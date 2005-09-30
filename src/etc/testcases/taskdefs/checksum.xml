@@ -21,6 +21,47 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="testverify">
+    <attribute name="checknologo" default="false" />
+    <element name="stuff" implicit="true" />
+    <sequential>
+      <fail>
+        <condition>
+          <or>
+            <isset property="logo.MD5" />
+            <isset property="no.logo.MD5" />
+          </or>
+        </condition>
+      </fail>
+      <stuff />
+      <fail>
+        <condition>
+          <not>
+            <istrue value="${logo.MD5}" /> 
+          </not>
+        </condition>
+      </fail>
+      <fail>
+        <condition>
+          <and>
+            <istrue value="@{checknologo}" />
+            <not>
+              <isfalse value="${no.logo.MD5}" />
+            </not>
+          </and>
+        </condition>
+      </fail>
+      <fail>
+        <condition>
+          <and>
+            <isfalse value="@{checknologo}" />
+            <isset property="no.logo.MD5" />
+          </and>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
   <target name="cleanup">
     <delete file="../asf-logo.gif.MD5" />
     <delete file="../asf-logo.gif.md5" />
@@ -60,47 +101,76 @@
 
   <target name="setProperty">
     <checksum file="../asf-logo.gif" property="logo.MD5" />
+    <fail>
+      <condition>
+        <or>
+          <not>
+            <equals arg1="0541d3df42520911f268abc730f3afe0"
+                    arg2="${logo.MD5}" />
+          </not>
+          <available file="../asf-logo.gif.MD5" />
+        </or>
+      </condition>
+    </fail>
   </target>
 
   <target name="verifyAsTask">
-    <copy file="expected/asf-logo.gif.md5" todir=".." />
-    <checksum file="../asf-logo.gif" fileext=".md5"
-              verifyproperty="logo.MD5" />
+    <testverify checknologo="true">
+      <copy file="expected/asf-logo.gif.md5" todir=".." />
+      <checksum file="../asf-logo.gif" fileext=".md5"
+                verifyproperty="logo.MD5" />
 
-    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
-          overwrite="true" />
-    <checksum file="../asf-logo.gif" fileext=".MD5"
-              verifyproperty="no.logo.MD5" />
+      <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
+            overwrite="true" />
+      <checksum file="../asf-logo.gif" fileext=".MD5"
+                verifyproperty="no.logo.MD5" />
+    </testverify>
   </target>
 
   <target name="verifyMD5SUMAsTask">
-    <copy file="expected/asf-logo.gif.md5sum" todir=".." />
-    <checksum file="../asf-logo.gif" fileext=".md5sum"
-              verifyproperty="logo.MD5" format="MD5SUM"/>
+    <testverify checknologo="true">
+      <copy file="expected/asf-logo.gif.md5sum" todir=".." />
+      <checksum file="../asf-logo.gif" fileext=".md5sum"
+                verifyproperty="logo.MD5" format="MD5SUM"/>
 
-    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5SUM"
-          overwrite="true" />
-    <checksum file="../asf-logo.gif" fileext=".MD5SUM"
-              verifyproperty="no.logo.MD5" format="MD5SUM"/>
+      <copy file="checksum.xml" tofile="../asf-logo.gif.MD5SUM"
+            overwrite="true" />
+      <checksum file="../asf-logo.gif" fileext=".MD5SUM"
+                verifyproperty="no.logo.MD5" format="MD5SUM"/>
+    </testverify>
   </target>
 
   <target name="verifyAsCondition">
-    <copy file="expected/asf-logo.gif.md5" todir=".." />
-    <condition property="logo.MD5">
-      <checksum file="../asf-logo.gif" fileext=".md5" />
-    </condition>
+    <testverify>
+      <copy file="expected/asf-logo.gif.md5" todir=".." />
+      <condition property="logo.MD5">
+        <checksum file="../asf-logo.gif" fileext=".md5" />
+      </condition>
 
-    <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
-          overwrite="true" />
-    <condition property="no.logo.MD5">
-      <checksum file="../asf-logo.gif" fileext=".MD5" />
-    </condition>
+      <copy file="checksum.xml" tofile="../asf-logo.gif.MD5"
+            overwrite="true" />
+      <condition property="no.logo.MD5">
+        <checksum file="../asf-logo.gif" fileext=".MD5" />
+      </condition>
+    </testverify>
   </target>
 
   <target name="verifyFromProperty">
+    <fail>
+      <condition>
+        <isset property="verify" />
+      </condition>
+    </fail>
     <checksum property="checksum" file="checksum.xml"/>
     <checksum property="${checksum}" file="checksum.xml"
               verifyproperty="verify"/>
+    <fail>
+      <condition>
+        <not>
+          <istrue value="${verify}" />
+        </not>
+      </condition>
+    </fail>
   </target>
 
   <target name="verifyTotal">
@@ -109,6 +179,13 @@
         <exclude name="**/*.MD5"/>
       </fileset>
     </checksum>
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="ef8f1477fcc9bf93832c1a74f629c626" arg2="${total}" />
+        </not>
+      </condition>
+    </fail>
   </target>
 
   <target name="verifyChecksumdir">
@@ -117,13 +194,40 @@
         <exclude name="**/*.MD5"/>
       </fileset>
     </checksum>
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="ef8f1477fcc9bf93832c1a74f629c626" arg2="${total}" />
+        </not>
+      </condition>
+    </fail>
+    <pathconvert property="srcdirfile">
+      <file file="checksum/foo/zap/Eenie.MD5" />
+    </pathconvert>
+    <pathconvert property="destdirfile">
+      <file file="checksum/checksums/foo/zap/Eenie.MD5" />
+    </pathconvert>
+    <fail message="Checksums should be written to ${destdirfile}">
+      <condition>
+        <not>
+          <available file="${destdirfile}" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="Checksums should not be written to ${srcdirfile}">
+      <condition>
+        <available file="${srcdirfile}" />
+      </condition>
+    </fail>
   </target>
-    <!-- bug report 25606 -->
-    <target name="verifyChecksumdirNoTotal">
-      <checksum todir="${basedir}/checksum/checksums">
-        <fileset dir="${basedir}/checksum">
-          <exclude name="**/*.MD5"/>
-        </fileset>
-      </checksum>
-    </target>
+
+  <!-- bug report 25606 -->
+  <target name="verifyChecksumdirNoTotal">
+    <checksum todir="${basedir}/checksum/checksums">
+      <fileset dir="${basedir}/checksum">
+        <exclude name="**/*.MD5"/>
+      </fileset>
+    </checksum>
+  </target>
+
 </project>
