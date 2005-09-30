@@ -188,6 +188,23 @@
     </fail>
   </target>
 
+  <target name="verifyTotalRC">
+    <checksum totalproperty="total">
+      <resources>
+        <fileset dir="${basedir}/checksum">
+          <exclude name="**/*.MD5"/>
+        </fileset>
+      </resources>
+    </checksum>
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="ef8f1477fcc9bf93832c1a74f629c626" arg2="${total}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="verifyChecksumdir">
     <checksum totalproperty="total" todir="${basedir}/checksum/checksums">
       <fileset dir="${basedir}/checksum">

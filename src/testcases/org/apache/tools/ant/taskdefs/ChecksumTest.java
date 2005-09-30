@@ -62,6 +62,10 @@ public class ChecksumTest extends BuildFileTest {
         executeTarget("verifyTotal");
     }
 
+    public void testVerifyTotalRC() {
+        executeTarget("verifyTotalRC");
+    }
+
     public void testVerifyChecksumdir() {
         executeTarget("verifyChecksumdir");
     }

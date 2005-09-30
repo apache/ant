@@ -46,7 +46,7 @@ or set the <tt>fileext</tt> attribute.
     <td valign="top">file</td>
     <td valign="top">The file to generate checksum for.</td>
     <td valign="top" align="center">One of either <var>file</var> or
-    at least one nested fileset element.</td>
+    at least one nested (filesystem-only) resource collection.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
@@ -116,8 +116,8 @@ or set the <tt>fileext</tt> attribute.
     <td valign="top">totalproperty</td>
     <td valign="top">If specified, this attribute specifies the name of
       the property that will hold a checksum of all the checksums and
-      file paths. The individual checksums and the relative paths to
-      the files within the filesets they are defined in will be used to
+      file paths. The individual checksums and the relative paths to the files
+      within the resource collections in which they are defined will be used to
       compute this checksum. (The file separators in the paths will be
       converted to '/' before computation to ensure platform portability).
       <em>since Ant 1.6</em>
@@ -150,10 +150,10 @@ or set the <tt>fileext</tt> attribute.
 </table>
 <h3>Parameters specified as nested elements</h3>
 
-<h4>fileset</h4>
+<h4>resource collection</h4>
  <p>
- <a href="../CoreTypes/fileset.html">FileSets</a> are used to select files to
- generate checksums for.
+ <a href="../CoreTypes/resources.html#collection">Resource collections</a> are
+ used to select files for which checksums should be generated.
  </p>
 
 <h3>Examples</h3>
