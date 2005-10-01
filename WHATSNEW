@@ -142,6 +142,7 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Fixed references to obsoleted CVS web site. Burzilla Report 36854.
 
 * Log fine-grained events at verbose level from JUnit. Bugzilla report 31885.
 
