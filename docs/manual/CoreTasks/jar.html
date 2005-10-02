@@ -43,6 +43,13 @@ note that ZIP files store file modification times with a granularity
 of two seconds.  If a file is less than two seconds newer than the
 entry in the archive, Ant will not consider it newer.</p>
 
+<p>The <code>whenmanifestonly</code> parameter controls what happens when no 
+files, apart from the manifest file, match.
+If <code>skip</code>, the JAR is not created and a warning is issued.
+If <code>fail</code>, the JAR is not created and the build is halted with an error.
+If <code>create</code>, (default) an empty JAR file (only containing a manifest) 
+is created.</p>
+
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the
@@ -153,6 +160,11 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top">update</td>
     <td valign="top">indicates whether to update or overwrite
       the destination file if it already exists.  Default is &quot;false&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">whenmanifestonly</td>
+    <td valign="top">behavior when no files match.  Valid values are &quot;fail&quot;, &quot;skip&quot;, and &quot;create&quot;.  Default is &quot;create&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>

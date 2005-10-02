@@ -140,6 +140,8 @@ public class Jar extends Zip {
     private ZipExtraField[] JAR_MARKER = new ZipExtraField[] {
         JarMarker.getInstance()
     };
+    
+    protected String emptyBehavior = "create";
 
     /** constructor */
     public Jar() {
@@ -160,6 +162,16 @@ public class Jar extends Zip {
             Project.MSG_WARN);
     }
 
+    /**
+     * Not used for jar files.
+     * @param we not used
+     * @ant.attribute ignore="true"
+     */
+    public void setWhenmanifestonly(WhenEmpty we) {
+        emptyBehavior = we.getValue();
+    }
+
+    
     /**
      * Set the destination file.
      * @param jarFile the destination file
@@ -677,6 +689,18 @@ public class Jar extends Zip {
             return true;
         }
 
+        if (emptyBehavior.equals("skip")) {
+                log("Warning: skipping " + archiveType + " archive "
+                    + zipFile + " because no files were included.",
+                    Project.MSG_WARN);
+                return true;
+        } else if (emptyBehavior.equals("fail")) {
+            throw new BuildException("Cannot create " + archiveType
+                                     + " archive " + zipFile
+                                     + ": no files were included.",
+                                     getLocation());
+        }
+        
         ZipOutputStream zOut = null;
         try {
             log("Building MANIFEST-only jar: "
@@ -737,6 +761,7 @@ public class Jar extends Zip {
      */
     public void reset() {
         super.reset();
+        emptyBehavior = "create";
         configuredManifest = null;
         filesetManifestConfig = null;
         mergeManifestsMain = false;

@@ -777,7 +777,8 @@
     </manifest>
 
     <jar destfile="${build.lib}/${name}-launcher.jar"
-      basedir="${build.classes}">
+      basedir="${build.classes}"
+      whenmanifestonly="fail">
       <selector refid="ant.launcher"/>
       <manifest>
         <attribute name="Main-Class" value="org.apache.tools.ant.launch.Launcher"/>
@@ -786,7 +787,8 @@
 
     <jar destfile="${build.lib}/${name}.jar"
       basedir="${build.classes}"
-      manifest="${manifest}">
+      manifest="${manifest}"
+      whenmanifestonly="fail">
       <not>
         <selector id="non-core">
           <or>
@@ -835,7 +837,8 @@
 
     <jar destfile="${build.lib}/${bootstrap.jar}"
       basedir="${build.classes}"
-      manifest="${manifest}">
+      manifest="${manifest}"
+      whenmanifestonly="fail">
       <include name="${ant.package}/Main.class"/>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
@@ -849,7 +852,8 @@
 
     <jar destfile="${build.lib}/ant-nodeps.jar"
       basedir="${build.classes}"
-      manifest="${manifest.tmp}">
+      manifest="${manifest.tmp}"
+      whenmanifestonly="skip">
       <and>
         <selector refid="non-core"/>
         <not>
@@ -895,7 +899,8 @@
       <sequential>
         <jar destfile="${build.lib}/${optional.jars.prefix}-@{dep}.jar"
           basedir="${build.classes}"
-          manifest="${manifest.tmp}">
+	  manifest="${manifest.tmp}"
+	  whenmanifestonly="skip">
           <selector refid="needs.@{dep}"/>
         </jar>
       </sequential>
@@ -928,7 +933,8 @@
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
       basedir="${build.classes}"
-      manifest="${manifest.tmp}">
+      manifest="${manifest.tmp}"
+      whenmanifestonly="skip">
       <or>
         <selector refid="needs.weblogic.ejbc"/>
         <selector refid="needs.weblogic.ddcreator"/>
