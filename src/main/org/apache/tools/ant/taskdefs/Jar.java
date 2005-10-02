@@ -163,9 +163,14 @@ public class Jar extends Zip {
     }
 
     /**
-     * Not used for jar files.
-     * @param we not used
-     * @ant.attribute ignore="true"
+     * Indicates if a jar file should be created when it would only contain a
+     * manifest file.
+     * Possible values are: <code>fail</code> (throw an exception
+     * and halt the build); <code>skip</code> (do not create
+     * any archive, but issue a warning); <code>create</code>
+     * (make an archive with only a manifest file).
+     * Default is <code>create</code>;
+     * @param we a <code>WhenEmpty</code> enumerated value
      */
     public void setWhenmanifestonly(WhenEmpty we) {
         emptyBehavior = we.getValue();
