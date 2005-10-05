@@ -41,6 +41,7 @@
   <property name="regexp.package" value="${util.package}/regexp"/>
 
   <property name="optional.jars.prefix" value="ant"/>
+  <property name="optional.jars.whenmanifestonly" value="skip"/>
 
   <!--
        ===================================================================
@@ -166,7 +167,7 @@
       <filename name="${taskdefs.package}/AptTest*"/>
     </or>
   </selector>
-  
+
   <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,
        but not all of them -->
   <selector id="not.in.kaffe">
@@ -899,8 +900,8 @@
       <sequential>
         <jar destfile="${build.lib}/${optional.jars.prefix}-@{dep}.jar"
           basedir="${build.classes}"
-	  manifest="${manifest.tmp}"
-	  whenmanifestonly="skip">
+          manifest="${manifest.tmp}"
+          whenmanifestonly="${optional.jars.whenmanifestonly}">
           <selector refid="needs.@{dep}"/>
         </jar>
       </sequential>
@@ -1262,7 +1263,7 @@
     <checksum fileext=".sha1" algorithm="SHA">
       <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
     </checksum>
-    
+
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
       <fileset dir="${dist.base.binaries}/">
@@ -1608,7 +1609,7 @@
         value="${tests-classpath.value}"/>
       <sysproperty key="root" file="${basedir}"/>
       <sysproperty key="build.compiler" value="${build.compiler}"/>
-      <sysproperty key="tests.and.ant.share.classloader" 
+      <sysproperty key="tests.and.ant.share.classloader"
                    value="${tests.and.ant.share.classloader}"/>
       <formatter type="brief" usefile="false"/>
 
