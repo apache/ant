@@ -854,7 +854,7 @@
     <jar destfile="${build.lib}/ant-nodeps.jar"
       basedir="${build.classes}"
       manifest="${manifest.tmp}"
-      whenmanifestonly="skip">
+      whenmanifestonly="${optional.jars.whenmanifestonly}">
       <and>
         <selector refid="non-core"/>
         <not>
@@ -935,7 +935,7 @@
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
       basedir="${build.classes}"
       manifest="${manifest.tmp}"
-      whenmanifestonly="skip">
+      whenmanifestonly="${optional.jars.whenmanifestonly}">
       <or>
         <selector refid="needs.weblogic.ejbc"/>
         <selector refid="needs.weblogic.ddcreator"/>
