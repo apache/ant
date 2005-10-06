@@ -28,9 +28,6 @@ import java.io.OutputStream;
  */
 public class StreamPumper implements Runnable {
 
-    // TODO: make SIZE an instance variable.
-
-    private static final int SIZE = 128;
     private InputStream is;
     private OutputStream os;
     private volatile boolean finish;
@@ -38,6 +35,8 @@ public class StreamPumper implements Runnable {
     private boolean closeWhenExhausted;
     private boolean autoflush = false;
     private Exception exception = null;
+    private int bufferSize = 128;
+    private boolean started = false;
 
     /**
      * Create a new stream pumper.
@@ -79,10 +78,13 @@ public class StreamPumper implements Runnable {
      * Terminates as soon as the input stream is closed or an error occurs.
      */
     public void run() {
+        synchronized (this) {
+            started = true;
+        }
         finished = false;
         finish = false;
 
-        final byte[] buf = new byte[SIZE];
+        final byte[] buf = new byte[bufferSize];
 
         int length;
         try {
@@ -129,6 +131,27 @@ public class StreamPumper implements Runnable {
         while (!isFinished()) {
             wait();
         }
+    }
+
+    /**
+     * Set the size in bytes of the read buffer.
+     * @param bufferSize the buffer size to use.
+     * @throws IllegalStateException if the StreamPumper is already running.
+     */
+    public synchronized void setBufferSize(int bufferSize) {
+        if (started) {
+            throw new IllegalStateException(
+                "Cannot set buffer size on a running StreamPumper");
+        }
+        this.bufferSize = bufferSize;
+    }
+
+    /**
+     * Get the size in bytes of the read buffer.
+     * @return the int size of the read buffer.
+     */
+    public synchronized int getBufferSize() {
+        return bufferSize;
     }
 
     /**
