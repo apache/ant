@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2005 The Apache Software Foundation
+ * Copyright 2000, 2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import java.io.OutputStream;
 public class StreamPumper implements Runnable {
 
     // TODO: make SIZE an instance variable.
-    // TODO: add a status flag to note if an error occurred in run.
 
     private static final int SIZE = 128;
     private InputStream is;
@@ -38,6 +37,7 @@ public class StreamPumper implements Runnable {
     private volatile boolean finished;
     private boolean closeWhenExhausted;
     private boolean autoflush = false;
+    private Exception exception = null;
 
     /**
      * Create a new stream pumper.
@@ -94,7 +94,9 @@ public class StreamPumper implements Runnable {
             }
             os.flush();
         } catch (Exception e) {
-            // ignore errors
+            synchronized (this) {
+                exception = e;
+            }
         } finally {
             if (closeWhenExhausted) {
                 try {
@@ -127,6 +129,14 @@ public class StreamPumper implements Runnable {
         while (!isFinished()) {
             wait();
         }
+    }
+
+    /**
+     * Get the exception encountered, if any.
+     * @return the Exception encountered.
+     */
+    public synchronized Exception getException() {
+        return exception;
     }
 
     /**
