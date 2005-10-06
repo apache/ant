@@ -115,7 +115,7 @@ public class StreamPumper implements Runnable {
     /**
      * Tells whether the end of the stream has been reached.
      * @return true is the stream has been exhausted.
-     **/
+     */
     public boolean isFinished() {
         return finished;
     }
@@ -123,7 +123,7 @@ public class StreamPumper implements Runnable {
     /**
      * This method blocks until the stream pumper finishes.
      * @see #isFinished()
-     **/
+     */
     public synchronized void waitFor()
         throws InterruptedException {
         while (!isFinished()) {
