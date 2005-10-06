@@ -26,6 +26,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
@@ -35,6 +37,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
@@ -385,6 +388,21 @@ public class Sync extends Task {
         }
 
         /**
+         * @see Copy#scan(Resource[], File)
+         */
+        protected Map scan(Resource[] resources, File toDir) {
+            assertTrue("No mapper", mapperElement == null);
+
+            Map m = super.scan(resources, toDir);
+
+            Iterator iter = m.keySet().iterator();
+            while (iter.hasNext()) {
+                nonOrphans.add(((Resource) iter.next()).getName());
+            }
+            return m;
+        }
+
+        /**
          * Get the destination directory.
          * @return the destination directory
          */
@@ -400,6 +418,13 @@ public class Sync extends Task {
             return includeEmpty;
         }
 
+        /**
+         * Yes, we can.
+         * @since Ant 1.7
+         */
+        protected boolean supportsNonFileResources() {
+            return true;
+        }
     }
 
     /**

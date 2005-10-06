@@ -48,6 +48,19 @@
     </sync>
   </target>
 
+  <target name="copyandremove-with-zipfileset" depends="setup">
+    <mkdir dir="${src}/a/b/c"/>
+    <touch file="${src}/a/b/c/d"/>
+    <mkdir dir="${dest}/e"/>
+    <touch file="${dest}/e/f"/>
+    <zip destfile="${src}/test.zip">
+      <fileset dir="${src}" excludes="*.zip"/>
+    </zip>
+    <sync todir="${dest}">
+      <zipfileset src="${src}/test.zip"/>
+    </sync>
+  </target>
+
   <target name="copyandremove-emptypreserve" depends="setup">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>

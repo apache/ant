@@ -197,7 +197,14 @@ a=b=
     </copy>     
   </target>
         
-        
+  <target name="testZipfileset" depends="testResource.prepare">
+    <zip destfile="${from.dir}/test.zip" roundup="false">
+      <fileset dir="${from.dir}" excludes="*.zip"/>
+    </zip>
+    <copy todir="${to.dir}">
+      <zipfileset src="${from.dir}/test.zip"/>
+    </copy>
+  </target>
   
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>

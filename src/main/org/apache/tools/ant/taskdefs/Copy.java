@@ -39,10 +39,12 @@ import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.FlatFileNameMapper;
 
@@ -435,76 +437,94 @@ public class Copy extends Task {
             HashMap filesByBasedir = new HashMap();
             HashMap dirsByBasedir = new HashMap();
             HashSet baseDirs = new HashSet();
+            ArrayList nonFileResources = new ArrayList();
             for (int i = 0; i < rcs.size(); i++) {
                 ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
 
-                if (rc.isFilesystemOnly()) {
+                // Step (1) - beware of the ZipFileSet
+                if (rc instanceof FileSet && rc.isFilesystemOnly()) {
+                    FileSet fs = (FileSet) rc;
+                    DirectoryScanner ds = null;
+                    try {
+                        ds = fs.getDirectoryScanner(getProject());
+                    } catch (BuildException e) {
+                        if (failonerror
+                            || !e.getMessage().endsWith(" not found.")) {
+                            throw e;
+                        } else {
+                            log("Warning: " + e.getMessage());
+                            continue;
+                        }
+                    }
+                    File fromDir = fs.getDir(getProject());
 
-                    // Step (1)
-                    if (rc instanceof FileSet) {
-                        FileSet fs = (FileSet) rc;
-                        DirectoryScanner ds = null;
-                        try {
-                            ds = fs.getDirectoryScanner(getProject());
-                        } catch (BuildException e) {
-                            if (failonerror
-                                || !e.getMessage().endsWith(" not found.")) {
-                                throw e;
-                            } else {
-                                log("Warning: " + e.getMessage());
-                                continue;
+                    String[] srcFiles = ds.getIncludedFiles();
+                    String[] srcDirs = ds.getIncludedDirectories();
+                    if (!flatten && mapperElement == null
+                        && ds.isEverythingIncluded() && !fs.hasPatterns()) {
+                        completeDirMap.put(fromDir, destDir);
+                    }
+                    add(fromDir, srcFiles, filesByBasedir);
+                    add(fromDir, srcDirs, dirsByBasedir);
+                    baseDirs.add(fromDir);
+                } else { // not a fileset or contains non-file resources
+
+                    if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
+                        throw new BuildException(
+                                   "Only FileSystem resources are supported.");
+                    }
+
+                    Iterator resources = rc.iterator();
+                    while (resources.hasNext()) {
+                        Resource r = (Resource) resources.next();
+                        if (!r.isExists()) {
+                            continue;
+                        }
+
+                        File baseDir = NULL_FILE_PLACEHOLDER;
+                        String name = r.getName();
+                        if (r instanceof FileResource) {
+                            FileResource fr = (FileResource) r;
+                            baseDir = getKeyFile(fr.getBaseDir());
+                            if (fr.getBaseDir() == null) {
+                                name = fr.getFile().getAbsolutePath();
                             }
                         }
-                        File fromDir = fs.getDir(getProject());
 
-                        String[] srcFiles = ds.getIncludedFiles();
-                        String[] srcDirs = ds.getIncludedDirectories();
-                        if (!flatten && mapperElement == null
-                            && ds.isEverythingIncluded() && !fs.hasPatterns()) {
-                            completeDirMap.put(fromDir, destDir);
-                        }
-                        add(fromDir, srcFiles, filesByBasedir);
-                        add(fromDir, srcDirs, dirsByBasedir);
-                        baseDirs.add(fromDir);
-                    } else { // not a fileset
-
-                        Iterator resources = rc.iterator();
-                        while (resources.hasNext()) {
-                            FileResource fr = (FileResource) resources.next();
-                            if (!fr.isExists()) {
-                                continue;
-                            }
-                            File baseDir = getKeyFile(fr.getBaseDir());
-                            add(baseDir, baseDir == NULL_FILE_PLACEHOLDER
-                                ? fr.getFile().getAbsolutePath() : fr.getName(),
-                                fr.isDirectory() ? dirsByBasedir
-                                                 : filesByBasedir);
+                        // copying of dirs is trivial and can be done
+                        // for non-file resources as well as for real
+                        // files.
+                        if (r.isDirectory() || r instanceof FileResource) {
+                            add(baseDir, name,
+                                r.isDirectory() ? dirsByBasedir 
+                                                : filesByBasedir);
                             baseDirs.add(baseDir);
+                        } else { // a not-directory file resource
+                            // needs special treatment
+                            nonFileResources.add(r);
                         }
                     }
-
-                    Iterator iter = baseDirs.iterator();
-                    while (iter.hasNext()) {
-                        File f = (File) iter.next();
-                        List files = (List) filesByBasedir.get(f);
-                        List dirs = (List) dirsByBasedir.get(f);
-
-                        String[] srcFiles = new String[0];
-                        if (files != null) {
-                            srcFiles = (String[]) files.toArray(srcFiles);
-                        }
-                        String[] srcDirs = new String[0];
-                        if (dirs != null) {
-                            srcDirs = (String[]) dirs.toArray(srcDirs);
-                        }
-                        scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir,
-                             srcFiles, srcDirs);
-                    }
-                } else { // not a File resource collection
-                    throw new BuildException(
-                        "Only FileSystem resources are supported.");
                 }
             }
+
+            Iterator iter = baseDirs.iterator();
+            while (iter.hasNext()) {
+                File f = (File) iter.next();
+                List files = (List) filesByBasedir.get(f);
+                List dirs = (List) dirsByBasedir.get(f);
+
+                String[] srcFiles = new String[0];
+                if (files != null) {
+                    srcFiles = (String[]) files.toArray(srcFiles);
+                }
+                String[] srcDirs = new String[0];
+                if (dirs != null) {
+                    srcDirs = (String[]) dirs.toArray(srcDirs);
+                }
+                scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir, srcFiles,
+                     srcDirs);
+            }
+
             // do all the copy operations now...
             try {
                 doFileOperations();
@@ -513,6 +533,22 @@ public class Copy extends Task {
                     log("Warning: " + e.getMessage(), Project.MSG_ERR);
                 } else {
                     throw e;
+                }
+            }
+
+            if (nonFileResources.size() > 0) {
+                Resource[] nonFiles =
+                    (Resource[]) nonFileResources.toArray(new Resource[0]);
+                // restrict to out-of-date resources
+                Map map = scan(nonFiles, destDir);
+                try {
+                    doResourceOperations(map);
+                } catch (BuildException e) {
+                    if (!failonerror) {
+                        log("Warning: " + e.getMessage(), Project.MSG_ERR);
+                    } else {
+                        throw e;
+                    }
                 }
             }
         } finally {
@@ -563,7 +599,8 @@ public class Copy extends Task {
                 ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
                 if (!rc.isFilesystemOnly()) {
                     throw new BuildException("Only FileSystem resources are"
-                                             + " supported.");
+                                             + " supported when concatenating"
+                                             + " files.");
                 }
                 if (rc.size() == 0) {
                     throw new BuildException(
@@ -599,19 +636,28 @@ public class Copy extends Task {
      */
     protected void scan(File fromDir, File toDir, String[] files,
                         String[] dirs) {
-        FileNameMapper mapper = null;
-        if (mapperElement != null) {
-            mapper = mapperElement.getImplementation();
-        } else if (flatten) {
-            mapper = new FlatFileNameMapper();
-        } else {
-            mapper = new IdentityMapper();
-        }
+        FileNameMapper mapper = getMapper();
         buildMap(fromDir, toDir, files, mapper, fileCopyMap);
 
         if (includeEmpty) {
             buildMap(fromDir, toDir, dirs, mapper, dirCopyMap);
         }
+    }
+
+    /**
+     * Compares source resources to destination files to see if they
+     * should be copied.
+     *
+     * @param fromResources  The source resources.
+     * @param toDir          The destination directory.
+     *
+     * @return a Map with the out-of-date resources as keys and an
+     * array of target file names as values.
+     *
+     * @since Ant 1.7
+     */
+    protected Map scan(Resource[] fromResources, File toDir) {
+        return buildMap(fromResources, toDir, getMapper());
     }
 
     /**
@@ -641,7 +687,6 @@ public class Copy extends Task {
         }
         for (int i = 0; i < toCopy.length; i++) {
             File src = new File(fromDir, toCopy[i]);
-
             String[] mappedFiles = mapper.mapFileName(toCopy[i]);
 
             if (!enableMultipleMappings) {
@@ -655,6 +700,56 @@ public class Copy extends Task {
                 map.put(src.getAbsolutePath(), mappedFiles);
             }
         }
+    }
+
+    /**
+     * Create a map of resources to copy.
+     *
+     * @param fromResources  The source resources.
+     * @param toDir   the destination directory.
+     * @param mapper  a <code>FileNameMapper</code> value.
+     * @return a map of source resource to array of destination files.
+     * @since Ant 1.7
+     */
+    protected Map buildMap(Resource[] fromResources, final File toDir,
+                           FileNameMapper mapper) {
+        HashMap map = new HashMap();
+        Resource[] toCopy = null;
+        if (forceOverwrite) {
+            Vector v = new Vector();
+            for (int i = 0; i < fromResources.length; i++) {
+                if (mapper.mapFileName(fromResources[i].getName()) != null) {
+                    v.addElement(fromResources[i]);
+                }
+            }
+            toCopy = new Resource[v.size()];
+            v.copyInto(toCopy);
+        } else {
+            toCopy =
+                ResourceUtils.selectOutOfDateSources(this, fromResources,
+                                                     mapper,
+                                                     new ResourceFactory() {
+                           public Resource getResource(String name) {
+                               return new FileResource(toDir, name);
+                           }
+                                                     },
+                                                     granularity);
+        }
+        for (int i = 0; i < toCopy.length; i++) {
+            String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
+
+            if (!enableMultipleMappings) {
+                map.put(toCopy[i],
+                        new String[] {new File(toDir, mappedFiles[0]).getAbsolutePath()});
+            } else {
+                // reuse the array created by the mapper
+                for (int k = 0; k < mappedFiles.length; k++) {
+                    mappedFiles[k] = new File(toDir, mappedFiles[k]).getAbsolutePath();
+                }
+                map.put(toCopy[i], mappedFiles);
+            }
+        }
+        return map;
     }
 
     /**
@@ -739,6 +834,84 @@ public class Copy extends Task {
     }
 
     /**
+     * Actually does the resource copies.
+     * This is a good method for subclasses to override.
+     * @param map a map of source resource to array of destination files.
+     * @since Ant 1.7
+     */
+    protected void doResourceOperations(Map map) {
+        if (map.size() > 0) {
+            log("Copying " + map.size()
+                + " resource" + (map.size() == 1 ? "" : "s")
+                + " to " + destDir.getAbsolutePath());
+
+            Iterator iter = map.keySet().iterator();
+            while (iter.hasNext()) {
+                Resource fromResource = (Resource) iter.next();
+                String[] toFiles = (String[]) map.get(fromResource);
+
+                for (int i = 0; i < toFiles.length; i++) {
+                    String toFile = toFiles[i];
+
+                    try {
+                        log("Copying " + fromResource + " to " + toFile,
+                            verbosity);
+
+                        FilterSetCollection executionFilters =
+                            new FilterSetCollection();
+                        if (filtering) {
+                            executionFilters
+                                .addFilterSet(getProject().getGlobalFilterSet());
+                        }
+                        for (Enumeration filterEnum = filterSets.elements();
+                            filterEnum.hasMoreElements();) {
+                            executionFilters
+                                .addFilterSet((FilterSet) filterEnum.nextElement());
+                        }
+                        ResourceUtils.copyResource(fromResource,
+                                                   new FileResource(destDir,
+                                                                    toFile),
+                                                   executionFilters,
+                                                   filterChains,
+                                                   forceOverwrite,
+                                                   preserveLastModified,
+                                                   inputEncoding,
+                                                   outputEncoding,
+                                                   getProject());
+                    } catch (IOException ioe) {
+                        String msg = "Failed to copy " + fromResource
+                            + " to " + toFile
+                            + " due to " + ioe.getMessage();
+                        File targetFile = new File(toFile);
+                        if (targetFile.exists() && !targetFile.delete()) {
+                            msg += " and I couldn't delete the corrupt " + toFile;
+                        }
+                        throw new BuildException(msg, ioe, getLocation());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>&lt;copy&gt; can while &lt;move&gt; can't since we don't
+     * know how to remove non-file resources.</p>
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;copy&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(Copy.class);
+    }
+
+    /**
      * Adds the given strings to a list contained in the given map.
      * The file is the key into the map.
      */
@@ -770,4 +943,21 @@ public class Copy extends Task {
     private static File getKeyFile(File f) {
         return f == null ? NULL_FILE_PLACEHOLDER : f;
     }
+
+    /**
+     * returns the mapper to use based on nested elements or the
+     * flatten attribute.
+     */
+    private FileNameMapper getMapper() {
+        FileNameMapper mapper = null;
+        if (mapperElement != null) {
+            mapper = mapperElement.getImplementation();
+        } else if (flatten) {
+            mapper = new FlatFileNameMapper();
+        } else {
+            mapper = new IdentityMapper();
+        }
+        return mapper;
+    }
+
 }

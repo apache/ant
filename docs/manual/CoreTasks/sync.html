@@ -13,10 +13,10 @@
 <h3>Description</h3>
 
 <p>Synchronize a target directory from the files defined in one or
-more filesystem based <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.</p>
+more <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.</p>
 
 <p>Any file in the target directory that has not been matched by at
-least one of the nested resource collection gets removed.  I.e. if you exclude a
+least one of the nested resource collections gets removed.  I.e. if you exclude a
 file in your sources and a file of that name is present in the target
 dir, it will get removed from the target.</p>
 
@@ -72,7 +72,7 @@ dir, it will get removed from the target.</p>
 
 <h3>Parameters specified as nested elements</h3>
 
-<h4>fileset or any other filesystem based resource collection</h4>
+<h4>fileset or any other resource collection</h4>
 <p><a href="../CoreTypes/resources.html#collection">Resource
 Collection</a>s are used to select groups of files to copy.  To use a
 resource collection, the <code>todir</code> attribute must be set.</p>

@@ -67,6 +67,10 @@ public class SyncTest extends BuildFileTest {
         testCopyAndRemove("copyandremove-with-filelist");
     }
 
+    public void testCopyAndRemoveWithZipfileset() {
+        testCopyAndRemove("copyandremove-with-zipfileset");
+    }
+
     private void testCopyAndRemove(String target) {
         executeTarget(target);
         String d = getProject().getProperty("dest") + "/a/b/c/d";

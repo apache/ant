@@ -197,6 +197,16 @@ public class CopyTest extends BuildFileTest {
         assertTrue(file3.exists());
     }
     
+    public void testZipfileset() {
+        executeTarget("testZipfileset");
+        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        assertTrue(file1.exists());
+        assertTrue(file2.exists());
+        assertTrue(file3.exists());
+    }
+    
     public void _testResourcePlain() {
         executeTarget("testResourcePlain");
     }
