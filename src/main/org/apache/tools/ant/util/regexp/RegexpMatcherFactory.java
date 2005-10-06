@@ -17,14 +17,15 @@
 
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * Simple Factory Class that produces an implementation of
  * RegexpMatcher based on the system property
- * <code>ant.regexp.matcherimpl</code> and the classes
+ * <code>ant.regexp.regexpimpl</code> and the classes
  * available.
  *
  * <p>In a more general framework this class would be abstract and
@@ -57,9 +58,9 @@ public class RegexpMatcherFactory {
         throws BuildException {
         String systemDefault = null;
         if (p == null) {
-            systemDefault = System.getProperty("ant.regexp.regexpimpl");
+            systemDefault = System.getProperty(MagicNames.REGEXP_IMPL);
         } else {
-            systemDefault = p.getProperty("ant.regexp.regexpimpl");
+            systemDefault = p.getProperty(MagicNames.REGEXP_IMPL);
         }
 
         if (systemDefault != null) {

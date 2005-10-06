@@ -103,6 +103,11 @@ public final class MagicNames {
      * Value: {@value}
      */
     public static final String ANT_FILE = "ant.file";
+    /**
+     * property for regular expression implementation.
+     * Value: {@value}
+     */
+    public static final String REGEXP_IMPL = "ant.regexp.regexpimpl";
 
 }
 
