@@ -57,7 +57,7 @@ public class ExecuteOn extends ExecTask {
 
     protected Vector filesets = new Vector(); // contains AbstractFileSet
                                               // (both DirSet and FileSet)
-    private Union resources = new Union();
+    private Union resources = null;
     private boolean relative = false;
     private boolean parallel = false;
     private boolean forwardSlash = false;
@@ -112,6 +112,9 @@ public class ExecuteOn extends ExecTask {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
+        if (resources == null) {
+            resources = new Union();
+        }
         resources.add(rc);
     }
 
@@ -294,7 +297,7 @@ public class ExecuteOn extends ExecTask {
             log("!! execon is deprecated. Use apply instead. !!");
         }
         super.checkConfiguration();
-        if (filesets.size() == 0 && resources.size() == 0) {
+        if (filesets.size() == 0 && resources == null) {
             throw new BuildException("no resources specified",
                                      getLocation());
         }
@@ -414,6 +417,7 @@ public class ExecuteOn extends ExecTask {
                 }
             }
         
+            if (resources != null) {
             Iterator iter = resources.iterator();
             while (iter.hasNext()) {
                 Resource res = (Resource) iter.next();
@@ -481,6 +485,7 @@ public class ExecuteOn extends ExecTask {
                     + totalDirs + " director"
                     + (totalDirs != 1 ? "ies" : "y") + ".",
                     verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
+            }
             }
         } catch (IOException e) {
             throw new BuildException("Execute failed: " + e, e, getLocation());
