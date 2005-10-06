@@ -39,39 +39,27 @@ public class UntarTest extends BuildFileTest {
     }
 
     public void testRealTest() throws java.io.IOException {
-        executeTarget("realTest");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("realTest");
     }
 
     public void testRealGzipTest() throws java.io.IOException {
-        executeTarget("realGzipTest");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("realGzipTest");
     }
 
     public void testRealBzip2Test() throws java.io.IOException {
-        executeTarget("realBzip2Test");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("realBzip2Test");
     }
 
     public void testTestTarTask() throws java.io.IOException {
-        executeTarget("testTarTask");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("testTarTask");
     }
 
     public void testTestGzipTarTask() throws java.io.IOException {
-        executeTarget("testGzipTarTask");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("testGzipTarTask");
     }
 
     public void testTestBzip2TarTask() throws java.io.IOException {
-        executeTarget("testBzip2TarTask");
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        testLogoExtraction("testBzip2TarTask");
     }
 
     public void testSrcDirTest() {
@@ -85,4 +73,13 @@ public class UntarTest extends BuildFileTest {
                                      + "encoding attribute");
     }
 
+    public void testResourceCollection() throws java.io.IOException {
+        testLogoExtraction("resourceCollection");
+    }
+
+    private void testLogoExtraction(String target) throws java.io.IOException {
+        executeTarget(target);
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
 }

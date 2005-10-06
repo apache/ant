@@ -4,6 +4,7 @@
 
   <target name="cleanup">
     <delete file="asf-logo.gif" />
+    <delete dir="untartestout"/>
   </target>
 
   <target name="testTarTask">
@@ -43,5 +44,19 @@
 
   <target name="encoding">
     <untar src="expected/asf-logo.gif.tar" dest="." encoding="foo"/>
+  </target>
+
+  <target name="resourceCollection">
+    <mkdir dir="untartestout"/>
+    <zip destfile="untartestout/test.zip">
+      <fileset dir="expected">
+        <include name="asf-logo.gif.tar"/>
+      </fileset>
+    </zip>
+    <untar dest=".">
+      <zipfileset src="untartestout/test.zip">
+        <include name="*.tar"/>
+      </zipfileset>
+    </untar>
   </target>
 </project>

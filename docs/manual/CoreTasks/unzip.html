@@ -14,9 +14,17 @@
 <p><a href="../CoreTypes/patternset.html">PatternSet</a>s are used to select files to extract
 <I>from</I> the archive.  If no patternset is used, all files are extracted.
 </p>
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s may be used to select archived files
-to perform unarchival upon.
-</p>
+
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s may be used to select archived files to perform
+unarchival upon.  Only file system based resource collections are
+supported by Unjar/Unwar/Unzip, this includes <a
+href="../CoreTypes/fileset.html">fileset</a>s, <a
+href="../CoreTypes/filelist.html">filelist</a> and <a
+href="../using.html#path">path</a>.  Untar supports arbitrary resource
+collections.  Prior to Ant 1.7 only fileset has been supported as a
+nested element.</p>
+
 <p>You can define filename transformations by using a nested <a href="../CoreTypes/mapper.html">mapper</a> element.  The default mapper is the
 <a href="../CoreTypes/mapper.html#identity-mapper">identity mapper</a>.
 </p>

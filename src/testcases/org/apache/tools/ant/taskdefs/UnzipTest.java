@@ -173,4 +173,9 @@ public class UnzipTest extends BuildFileTest {
         expectBuildException("testTwoMappers",Expand.ERROR_MULTIPLE_MAPPERS);
     }
 
+    public void testResourceCollections() {
+        executeTarget("testResourceCollection");
+        assertFileExists("junit.jar has been extracted",
+                         "unziptestout/junit/framework/Assert.class");
+    }
 }

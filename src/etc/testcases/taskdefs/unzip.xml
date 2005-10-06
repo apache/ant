@@ -122,4 +122,16 @@
       <mapper type="flatten"/>      
     </unzip>
   </target>
+
+  <target name="testResourceCollection">
+    <unzip dest="unziptestout">
+      <patternset>
+        <include name="junit/**"/>
+      </patternset>
+      <restrict>
+        <path path="${java.class.path}"/>
+        <type type="file" xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+      </restrict>
+    </unzip>
+  </target>
 </project>
