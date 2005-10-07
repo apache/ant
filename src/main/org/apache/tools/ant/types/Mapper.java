@@ -39,8 +39,8 @@ public class Mapper extends DataType implements Cloneable {
     private ContainerMapper container = null;
 
     /**
-     * Construct a new <CODE>Mapper</CODE> element.
-     * @param p   the owning Ant <CODE>Project</CODE>.
+     * Construct a new <code>Mapper</code> element.
+     * @param p   the owning Ant <code>Project</code>.
      */
     public Mapper(Project p) {
         setProject(p);
@@ -48,7 +48,7 @@ public class Mapper extends DataType implements Cloneable {
 
     /**
      * Set the type of <code>FileNameMapper</code> to use.
-     * @param type   the <CODE>MapperType</CODE> enumerated attribute.
+     * @param type   the <code>MapperType</code> enumerated attribute.
      */
     public void setType(MapperType type) {
         if (isReference()) {
@@ -58,8 +58,8 @@ public class Mapper extends DataType implements Cloneable {
     }
 
     /**
-     * Add a nested <CODE>FileNameMapper</CODE>.
-     * @param fileNameMapper   the <CODE>FileNameMapper</CODE> to add.
+     * Add a nested <code>FileNameMapper</code>.
+     * @param fileNameMapper   the <code>FileNameMapper</code> to add.
      */
     public void add(FileNameMapper fileNameMapper) {
         if (isReference()) {
@@ -223,7 +223,7 @@ public class Mapper extends DataType implements Cloneable {
 
      /**
      * Gets the Class object associated with the mapper implementation.
-     * @return <CODE>Class</CODE>.
+     * @return <code>Class</code>.
      * @throws ClassNotFoundException if the class cannot be found
      */
     protected Class getImplementationClass() throws ClassNotFoundException {
