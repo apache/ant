@@ -100,7 +100,7 @@ true within the specified time.</p>
 <p>waits up to 3 minutes (and checks every 500 milliseconds) for a web server on localhost
   to serve up the specified URL.</p>
 <blockquote><pre>
-&lt;waitfor maxwait="10" maxwait="second"&gt;
+&lt;waitfor maxwait="10" maxwaitunit="second"&gt;
         &lt;and&gt;
             &lt;socket server="dbserver" port="1521"/&gt;
             &lt;http url="http://webserver/mypage.html"/&gt;
@@ -110,7 +110,7 @@ true within the specified time.</p>
 <p>waits up to 10 seconds for a server on the dbserver machine to begin listening
   on port 1521 and for the http://webserver/mypage.html web page
   to become available.</p>
-<hr><p align="center">Copyright &copy; 2001,2004-2005 The Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001, 2004-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
