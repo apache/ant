@@ -60,7 +60,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
     }
 
     /**
-     * Add nested text.
+     * Add nested text, expanding properties as we go
      * @param s the text to add
      */
     public void addText(String s) {
@@ -80,9 +80,16 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
         return new Child(e);
     }
 
+    /**
+     * Add text to a node. 
+     * @param n node
+     * @param s value
+     */
     private void addText(Node n, String s) {
+        s = getProject().replaceProperties(s);
+        //only text nodes that are non null after property expansion are added
         if (s != null && !s.trim().equals("")) {
-            Text t = doc.createTextNode(s);
+            Text t = doc.createTextNode(s.trim());
             n.appendChild(t);
         }
     }

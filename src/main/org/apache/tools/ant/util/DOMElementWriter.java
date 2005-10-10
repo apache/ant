@@ -30,7 +30,7 @@ import org.w3c.dom.Text;
 
 /**
  * Writes a DOM tree to a given Writer.
- *
+ * warning: this utility currently does not declare XML Namespaces.
  * <p>Utility class used by {@link org.apache.tools.ant.XmlLogger
  * XmlLogger} and
  * org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
@@ -38,6 +38,26 @@ import org.w3c.dom.Text;
  *
  */
 public class DOMElementWriter {
+
+    /** xml declaration is on by default */
+    private boolean xmlDeclaration=true;
+
+    /**
+     * Create an element writer.
+     * The ?xml? declaration will be included.
+     */
+    public DOMElementWriter() {
+    }
+
+    /**
+     * Create an element writer 
+     * @param xmlDeclaration flag to indicate whether the ?xml? declaration
+     * should be included.
+     * @since Ant1.7
+     */
+    public DOMElementWriter(boolean xmlDeclaration) {
+        this.xmlDeclaration = xmlDeclaration;
+    }
 
     private static String lSep = System.getProperty("line.separator");
 
@@ -50,7 +70,8 @@ public class DOMElementWriter {
 
     /**
      * Writes a DOM tree to a stream in UTF8 encoding. Note that
-     * it prepends the &lt;?xml version='1.0' encoding='UTF-8'?&gt;.
+     * it prepends the &lt;?xml version='1.0' encoding='UTF-8'?&gt; if
+     * the xmlDeclaration field is true.
      * The indent number is set to 0 and a 2-space indent.
      * @param root the root element of the DOM tree.
      * @param out the outputstream to write to.
@@ -58,7 +79,9 @@ public class DOMElementWriter {
      */
     public void write(Element root, OutputStream out) throws IOException {
         Writer wri = new OutputStreamWriter(out, "UTF8");
-        wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        if(xmlDeclaration) {
+            wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        }
         write(root, wri, 0, "  ");
         wri.flush();
     }

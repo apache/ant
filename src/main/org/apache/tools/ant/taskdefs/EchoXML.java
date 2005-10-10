@@ -34,10 +34,10 @@ import org.w3c.dom.Element;
  */
 public class EchoXML extends XMLFragment {
 
-    private static final DOMElementWriter writer = new DOMElementWriter();
 
     private File file;
     private boolean append;
+    public static final String ERROR_NO_XML = "No nested XML specified";
 
     /**
      * Set the output file.
@@ -59,6 +59,7 @@ public class EchoXML extends XMLFragment {
      * Execute the task.
      */
     public void execute() {
+        DOMElementWriter writer = new DOMElementWriter(!append);
         try {
             OutputStream os = null;
             if (file != null) {
@@ -68,7 +69,7 @@ public class EchoXML extends XMLFragment {
             }
             Node n = getFragment().getFirstChild();
             if (n == null) {
-                throw new BuildException("No nested XML specified");
+                throw new BuildException(ERROR_NO_XML);
             }
             writer.write((Element) n, os);
         } catch (Exception e) {
