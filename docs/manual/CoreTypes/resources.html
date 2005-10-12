@@ -23,7 +23,10 @@ explicit use beginning in <b>Ant 1.7</b>.
 <ul>
   <li><a href="#basic">resource</a> - a basic resource.</li>
   <li><a href="#file">file</a> - a file.</li>
+  <li><a href="#tarentry">zipentry</a> - an entry in a tar file.</li>
   <li><a href="#zipentry">zipentry</a> - an entry in a zip file.</li>
+  <li><a href="#gzipresource">gzipresource</a> - a GZip compressed resource.</li>
+  <li><a href="#bzip2resource">bzip2resource</a> - a BZip2 compressed resource.</li>
   <li><a href="#url">url</a> - a URL.</li>
   <li><a href="#string">string</a> - a text string.</li>
   <li><a href="#property">property</a> - an Ant property.</li>
@@ -97,7 +100,10 @@ implementations are also usable as single-element
 
 <h4><a name="zipentry">zipentry</a></h4>
 
-<p>Represents an entry in a ZIP archive.</p>
+<p>Represents an entry in a ZIP archive.  The archive can be specified
+using the archive attribute or a nested single-element resource
+collection.  <code>zipentry</code> only supports file system resources
+as nested elements.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -106,9 +112,10 @@ implementations are also usable as single-element
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">zipfile</td>
+    <td valign="top">zipfile or its alias name archive</td>
     <td valign="top">The zip file containing this resource</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, unless a nested resource
+    collection has been specified.</td>
   </tr>
   <tr>
     <td valign="top">name</td>
@@ -122,6 +129,45 @@ implementations are also usable as single-element
       platform default used if unspecified</td>
   </tr>
 </table>
+
+<h4><a name="tarentry">tarentry</a></h4>
+
+<p>Represents an entry in a TAR archive.  The archive can be specified
+using the archive attribute or a nested single-element resource
+collection.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">archive</td>
+    <td valign="top">The tar archive containing this resource</td>
+    <td align="center" valign="top">Yes, unless a nested resource
+    collection has been specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the archived resource</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h4><a name="gzipresource">gzipresource</a></h4>
+
+<p>This is not a stand-alone reource, but a wrapper around another
+resource providing compression of the resource's contents on the fly.
+A single element resource collection must be specified as a nested
+element.</p>
+
+<h4><a name="bzip2resource">bzip2resource</a></h4>
+
+<p>This is not a stand-alone reource, but a wrapper around another
+resource providing compression of the resource's contents on the fly.
+A single element resource collection must be specified as a nested
+element.</p>
 
 <h4><a name="url">url</a></h4>
 
@@ -204,6 +250,10 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
     <a href="filelist.html">filelist</a>, and
     <a href="../using.html#path">path</a>
     (and derivative types) expose <a href="#file">file</a> resources
+  </li>
+  <li><a href="zipfileset.html">tarfileset</a>
+    can expose <a href="#file">file</a> or <a href="#tarentry">tarentry</a>
+    resources depending on configuration
   </li>
   <li><a href="zipfileset.html">zipfileset</a>
     can expose <a href="#file">file</a> or <a href="#zipentry">zipentry</a>

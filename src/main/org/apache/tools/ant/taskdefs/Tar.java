@@ -434,18 +434,14 @@ public class Tar extends MatchingTask {
      * This is a FileSet with the option to specify permissions
      * and other attributes.
      */
-    public static class TarFileSet extends FileSet {
+    public static class TarFileSet
+        extends org.apache.tools.ant.types.TarFileSet {
         private String[] files = null;
-
-        private int fileMode = UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
-        private int dirMode = UnixStat.DIR_FLAG | UnixStat.DEFAULT_DIR_PERM;
 
         private String userName = "";
         private String groupName = "";
         private int    uid;
         private int    gid;
-        private String prefix = "";
-        private String fullpath = "";
         private boolean preserveLeadingSlashes = false;
 
         /**
@@ -493,36 +489,14 @@ public class Tar extends MatchingTask {
          * @param octalString a 3 digit octal string.
          */
         public void setMode(String octalString) {
-            this.fileMode =
-                UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
+            setFileMode(octalString);
         }
 
         /**
          * @return the current mode.
          */
         public int getMode() {
-            return fileMode;
-        }
-
-        /**
-         * A 3 digit octal string, specify the user, group and
-         * other modes in the standard Unix fashion;
-         * optional, default=0755
-         *
-         * @param octalString a 3 digit octal string.
-         * @since Ant 1.6
-         */
-        public void setDirMode(String octalString) {
-            this.dirMode =
-                UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
-        }
-
-        /**
-         * @return the current directory mode
-         * @since Ant 1.6
-         */
-        public int getDirMode() {
-            return dirMode;
+            return getFileMode();
         }
 
         /**
@@ -587,41 +561,6 @@ public class Tar extends MatchingTask {
          */
         public int getGid() {
             return gid;
-        }
-
-        /**
-         * If the prefix attribute is set, all files in the fileset
-         * are prefixed with that path in the archive.
-         * optional.
-         * @param prefix the path prefix.
-         */
-        public void setPrefix(String prefix) {
-            this.prefix = prefix;
-        }
-
-        /**
-         * @return the path prefix for the files in the fileset.
-         */
-        public String getPrefix() {
-            return prefix;
-        }
-
-        /**
-         * If the fullpath attribute is set, the file in the fileset
-         * is written with that path in the archive. The prefix attribute,
-         * if specified, is ignored. It is an error to have more than one file specified in
-         * such a fileset.
-         * @param fullpath the path to use for the file in a fileset.
-         */
-        public void setFullpath(String fullpath) {
-            this.fullpath = fullpath;
-        }
-
-        /**
-         * @return the path to use for a single file fileset.
-         */
-        public String getFullpath() {
-            return fullpath;
         }
 
         /**

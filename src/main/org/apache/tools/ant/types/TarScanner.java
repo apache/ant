@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright 2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,22 +17,18 @@
 
 package org.apache.tools.ant.types;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.zip.ZipException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.types.resources.ZipResource;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
+import org.apache.tools.ant.types.resources.TarResource;
+import org.apache.tools.tar.TarEntry;
+import org.apache.tools.tar.TarInputStream;
 
 /**
- * Scans zip archives for resources.
+ * Scans tar archives for resources.
  */
-public class ZipScanner extends ArchiveScanner {
+public class TarScanner extends ArchiveScanner {
 
     /**
      * Fills the file and directory maps with resources read from the
@@ -54,28 +50,17 @@ public class ZipScanner extends ArchiveScanner {
     protected void fillMapsFromArchive(Resource src, String encoding,
                                        Map fileEntries, Map matchFileEntries,
                                        Map dirEntries, Map matchDirEntries) {
-        ZipEntry entry = null;
-        ZipFile zf = null;
-
-        File srcFile = null;
-        if (src instanceof FileResource) {
-            srcFile = ((FileResource) src).getFile();
-        } else {
-            throw new BuildException("only file resources are supported");
-        }
+        TarEntry entry = null;
+        TarInputStream ti = null;
 
         try {
             try {
-                zf = new ZipFile(srcFile, encoding);
-            } catch (ZipException ex) {
-                throw new BuildException("problem reading " + srcFile, ex);
+                ti = new TarInputStream(src.getInputStream());
             } catch (IOException ex) {
                 throw new BuildException("problem opening " + srcFile, ex);
             }
-            Enumeration e = zf.getEntries();
-            while (e.hasMoreElements()) {
-                entry = (ZipEntry) e.nextElement();
-                Resource r = new ZipResource(srcFile, encoding, entry);
+            while ((entry = ti.getNextEntry()) != null) {
+                Resource r = new TarResource(src, entry);
                 String name = entry.getName();
                 if (entry.isDirectory()) {
                     name = trimSeparator(name);
@@ -90,10 +75,12 @@ public class ZipScanner extends ArchiveScanner {
                     }
                 }
             }
+        } catch (IOException ex) {
+            throw new BuildException("problem reading " + srcFile, ex);
         } finally {
-            if (zf != null) {
+            if (ti != null) {
                 try {
-                    zf.close();
+                    ti.close();
                 } catch (IOException ex) {
                     // swallow
                 }

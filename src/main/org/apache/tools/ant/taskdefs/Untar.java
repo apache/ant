@@ -197,7 +197,7 @@ public class Untar extends Expand {
          *  @exception BuildException thrown if bzip stream does not
          *     start with expected magic values
          */
-        private InputStream decompress(final String name,
+        public InputStream decompress(final String name,
                                        final InputStream istream)
             throws IOException, BuildException {
             final String v = getValue();

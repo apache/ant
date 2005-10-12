@@ -25,6 +25,7 @@ import java.io.FilterInputStream;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipFile;
@@ -34,13 +35,9 @@ import org.apache.tools.zip.ZipEntry;
  * A Resource representation of an entry in a zipfile.
  * @since Ant 1.7
  */
-public class ZipResource extends Resource {
-    private static final int NULL_ZIPFILE
-        = Resource.getMagicNumber("null zipfile".getBytes());
+public class ZipResource extends ArchiveResource {
 
     private String encoding;
-    private File zipfile;
-    private boolean haveEntry = false;
 
     /**
      * Default constructor.
@@ -56,9 +53,9 @@ public class ZipResource extends Resource {
      * @param e the ZipEntry.
      */
     public ZipResource(File z, String enc, ZipEntry e) {
-        setEntry(e);
-        setZipfile(z);
+        super(z, true);
         setEncoding(enc);
+        setEntry(e);
     }
 
     /**
@@ -66,8 +63,7 @@ public class ZipResource extends Resource {
      * @param z the zipfile as a File.
      */
     public void setZipfile(File z) {
-        checkAttributesAllowed();
-        zipfile = z;
+        setArchive(z);
     }
 
     /**
@@ -75,8 +71,20 @@ public class ZipResource extends Resource {
      * @return the zipfile as a File.
      */
     public File getZipfile() {
-        return isReference()
-            ? ((ZipResource) getCheckedRef()).getZipfile() : zipfile;
+        FileResource r = (FileResource) getArchive();
+        return r.getFile();
+    }
+
+    /**
+     * Sets the archive that holds this as a single element Resource
+     * collection.
+     * @param a the archive as a single element Resource collection.
+     */
+    public void addConfigured(ResourceCollection a) {
+        super.addConfigured(a);
+        if (!a.isFilesystemOnly()) {
+            throw new BuildException("only filesystem resources are supported");
+        }
     }
 
     /**
@@ -98,59 +106,11 @@ public class ZipResource extends Resource {
     }
 
     /**
-     * Get the last modified date of this ZipResource.
-     * @return the last modification date.
-     */
-    public long getLastModified() {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).getLastModified();
-        }
-        checkEntry();
-        return super.getLastModified();
-    }
-
-    /**
-     * Get the size of this ZipResource.
-     * @return the long size of this ZipResource.
-     */
-    public long getSize() {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).getSize();
-        }
-        checkEntry();
-        return super.getSize();
-    }
-
-    /**
-     * Learn whether this ZipResource represents a directory.
-     * @return boolean flag indicating whether the zip entry is a directory.
-     */
-    public boolean isDirectory() {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).isDirectory();
-        }
-        checkEntry();
-        return super.isDirectory();
-    }
-
-    /**
-     * Find out whether this ZipResource represents an existing Resource.
-     * @return boolean existence flag.
-     */
-    public boolean isExists() {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).isExists();
-        }
-        checkEntry();
-        return super.isExists();
-    }
-
-    /**
      * Overrides the super version.
      * @param r the Reference to set.
      */
     public void setRefid(Reference r) {
-        if (encoding != null || zipfile != null) {
+        if (encoding != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -199,76 +159,13 @@ public class ZipResource extends Resource {
     }
 
     /**
-     * Compare this ZipResource to another Resource.
-     * @param another the other Resource against which to compare.
-     * @return a negative integer, zero, or a positive integer as this ZipResource
-     *         is less than, equal to, or greater than the specified Resource.
+     * fetches information from the named entry inside the archive.
      */
-    public int compareTo(Object another) {
-        return this.equals(another) ? 0 : super.compareTo(another);
-    }
-
-    /**
-     * Compare another Object to this ZipResource for equality.
-     * @param another the other Object to compare.
-     * @return true if another is a ZipResource representing
-     *              the same entry in the same zipfile.
-     */
-    public boolean equals(Object another) {
-        if (this == another) {
-            return true;
-        }
-        if (isReference()) {
-            return getCheckedRef().equals(another);
-        }
-        if (!(another.getClass().equals(getClass()))) {
-            return false;
-        }
-        ZipResource r = (ZipResource) another;
-        return getZipfile().equals(r.getZipfile())
-            && getName().equals(r.getName());
-    }
-
-    /**
-     * Get the hash code for this Resource.
-     * @return hash code as int.
-     */
-    public int hashCode() {
-        return super.hashCode()
-            * (getZipfile() == null ? NULL_ZIPFILE : getZipfile().hashCode());
-    }
-
-    /**
-     * Format this ZipResource as a String.
-     * @return String representatation of this ZipResource.
-     */
-    public String toString() {
-        return isReference() ? getCheckedRef().toString()
-            : getZipfile().toString() + ':' + getName();
-    }
-
-    private synchronized void checkEntry() throws BuildException {
-        if (haveEntry) {
-            return;
-        }
-        String name = getName();
-        if (name == null) {
-            throw new BuildException("zip entry name not set");
-        }
-        File f = getZipfile();
-        if (f == null) {
-            throw new BuildException("zipfile attribute not set");
-        }
-        if (!f.exists()) {
-            throw new BuildException(f.getAbsolutePath() + " does not exist.");
-        }
-        if (f.isDirectory()) {
-            throw new BuildException(f + " denotes a directory.");
-        }
+    protected void fetchEntry() {
         ZipFile z = null;
         try {
-            z = new ZipFile(f, getEncoding());
-            setEntry(z.getEntry(name));
+            z = new ZipFile(getZipfile(), getEncoding());
+            setEntry(z.getEntry(getName()));
         } catch (IOException e) {
             log(e.getMessage(), Project.MSG_DEBUG);
             throw new BuildException(e);
@@ -283,8 +180,7 @@ public class ZipResource extends Resource {
         }
     }
 
-    private synchronized void setEntry(ZipEntry e) {
-        haveEntry = true;
+    private void setEntry(ZipEntry e) {
         if (e == null) {
             super.setExists(false);
             return;

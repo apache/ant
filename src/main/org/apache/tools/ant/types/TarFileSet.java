@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright 2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,22 +24,20 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.zip.UnixStat;
 
 /**
- * A ZipFileSet is a FileSet with extra attributes useful in the context of
- * Zip/Jar tasks.
+ * A TarFileSet is a FileSet with extra attributes useful in the context of
+ * Tar/Jar tasks.
  *
- * A ZipFileSet extends FileSets with the ability to extract a subset of the
- * entries of a Zip file for inclusion in another Zip file.  It also includes
- * a prefix attribute which is prepended to each entry in the output Zip file.
+ * A TarFileSet extends FileSets with the ability to extract a subset of the
+ * entries of a Tar file for inclusion in another Tar file.  It also includes
+ * a prefix attribute which is prepended to each entry in the output Tar file.
  *
- * Since ant 1.6 ZipFileSet can be defined with an id and referenced in packaging tasks
+ * Since ant 1.6 TarFileSet can be defined with an id and referenced in packaging tasks
  *
  */
-public class ZipFileSet extends ArchiveFileSet {
+public class TarFileSet extends ArchiveFileSet {
 
-    private String encoding = null;
-
-    /** Constructor for ZipFileSet */
-    public ZipFileSet() {
+    /** Constructor for TarFileSet */
+    public TarFileSet() {
         super();
     }
 
@@ -47,45 +45,25 @@ public class ZipFileSet extends ArchiveFileSet {
      * Constructor using a fileset arguement.
      * @param fileset the fileset to use
      */
-    protected ZipFileSet(FileSet fileset) {
+    protected TarFileSet(FileSet fileset) {
         super(fileset);
     }
 
     /**
-     * Constructor using a zipfileset arguement.
-     * @param fileset the zipfileset to use
+     * Constructor using a tarfileset arguement.
+     * @param fileset the tarfileset to use
      */
-    protected ZipFileSet(ZipFileSet fileset) {
+    protected TarFileSet(TarFileSet fileset) {
         super(fileset);
-        encoding = fileset.encoding;
-    }
-
-    /**
-     * Set the encoding used for this ZipFileSet.
-     * @param enc encoding as String.
-     * @since Ant 1.7
-     */
-    public void setEncoding(String enc) {
-        this.encoding = enc;
-    }
-
-    /**
-     * Get the encoding used for this ZipFileSet.
-     * @return String encoding.
-     * @since Ant 1.7
-     */
-    public String getEncoding() {
-        return encoding;
     }
 
     protected ArchiveScanner newArchiveScanner() {
-        ZipScanner zs = new ZipScanner();
-        zs.setEncoding(encoding);
+        TarScanner zs = new TarScanner();
         return zs;
     }
 
     /**
-     * A ZipFileset accepts another ZipFileSet or a FileSet as reference
+     * A TarFileset accepts another TarFileSet or a FileSet as reference
      * FileSets are often used by the war task for the lib attribute
      * @param p the project to use
      * @return the abstract fileset instance
@@ -93,26 +71,26 @@ public class ZipFileSet extends ArchiveFileSet {
     protected AbstractFileSet getRef(Project p) {
         dieOnCircularReference(p);
         Object o = getRefid().getReferencedObject(p);
-        if (o instanceof ZipFileSet) {
+        if (o instanceof TarFileSet) {
             return (AbstractFileSet) o;
         } else if (o instanceof FileSet) {
-            ZipFileSet zfs = new ZipFileSet((FileSet) o);
+            TarFileSet zfs = new TarFileSet((FileSet) o);
             configureFileSet(zfs);
             return zfs;
         } else {
-            String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
+            String msg = getRefid().getRefId() + " doesn\'t denote a tarfileset or a fileset";
             throw new BuildException(msg);
         }
     }
 
     /**
-     * Return a ZipFileSet that has the same properties
+     * Return a TarFileSet that has the same properties
      * as this one.
-     * @return the cloned zipFileSet
+     * @return the cloned tarFileSet
      */
     public Object clone() {
         if (isReference()) {
-            return ((ZipFileSet) getRef(getProject())).clone();
+            return ((TarFileSet) getRef(getProject())).clone();
         } else {
             return super.clone();
         }
