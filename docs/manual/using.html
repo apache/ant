@@ -107,10 +107,26 @@ to the empty string is still an existing property.  For example:</p>
   <pre>&lt;target name=&quot;build-own-fake-module-A&quot; unless=&quot;module-A-present&quot;/&gt;</pre>
 </blockquote>
 <p>In the first example, if the <code>module-A-present</code>
-property is set (to any value), the target will be run. In the second
+property is set (to any value, e.g. <i>false</i>), the target will be run. In the second
 example, if the <code>module-A-present</code> property is set
 (again, to any value), the target will not be run.
 </p>
+<p>Only one propertyname can be specified in the if/unless clause. If you want to check
+multiple conditions, you can use a dependend target for computing the result for the check:</p>
+<blockquote><pre>
+&lt;target name="myTarget" depends="myTarget.check" if="myTarget.run"&gt;
+    &lt;echo&gt;Files foo.txt and bar.txt are present.&lt;/echo&gt;
+&lt/target&gt;
+
+&lt;target name="myTarget.check"&gt;
+    &lt;condition property="myTarget.run"&gt;
+        &lt;and&gt;
+            &lt;available file="foo.txt"/&gt;
+            &lt;available file="bar.txt"/&gt;
+        &lt;/and&gt;
+    &lt;/condition&gt;
+&lt/target&gt;
+</pre></blockquote>
 <p>If no <code>if</code> and no <code>unless</code> attribute is present,
 the target will always be executed.</p>
 
