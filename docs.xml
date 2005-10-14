@@ -85,7 +85,7 @@
              templatePath="${templ.path}"
              velocityPropertiesFile="${velocity.props}">
         </anakia>
-        <fixcrlf srcdir="${docs.dest}" inlcudes="**/*.html"/>
+        <fixcrlf srcdir="${docs.dest}" includes="**/*.html"/>
     </target>
 
     <target name="fixcrlf" if="onwindows">
