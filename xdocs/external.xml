@@ -150,12 +150,12 @@
 
       <subsection name="ant4eclipse">
 
-        <p>ant4eclipse provides a set of Ant tasks to make several 
-		configurations from the Eclipse IDE available in Ant 
-		buildscripts. The tasks are aimed to avoid redundancy between 
-		Eclipse and Ant configurations in order to build small but 
-		powerful build systems for the continuous integration 
-		process</p>
+        <p>ant4eclipse provides a set of Ant tasks to make several
+                configurations from the Eclipse IDE available in Ant
+                buildscripts. The tasks are aimed to avoid redundancy between
+                Eclipse and Ant configurations in order to build small but
+                powerful build systems for the continuous integration
+                process</p>
 
         <table class="externals">
           <tr>
@@ -169,7 +169,7 @@
           <tr>
             <th>Contact:</th>
             <td><a href="http://sourceforge.net/mail/?group_id=137377">
-              ant4eclipse user mailing list</a> 
+              ant4eclipse user mailing list</a>
             </td>
           </tr>
           <tr>
@@ -2048,6 +2048,35 @@
         </table>
       </subsection>
 
+      <subsection name="LaTeX Task">
+
+        <p>Simple Task to use (PDF)LaTeX, BibTeX, Makeindex and GlossTeX to
+        create your documentation.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.2 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.dokutransdata.de/">http://www.dokutransdata.de/</a><br/>
+              <a href="http://www.dokutransdata.de/ant_latex/">http://www.dokutransdata.de/ant_latex/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:jaloma@dokutransdata.de">jaloma@dokutransdata.de</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
+          </tr>
+        </table>
+      </subsection>
+
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
@@ -2102,6 +2131,34 @@
           <tr>
             <th>License:</th>
             <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="nsd2LaTeX Task">
+
+        <p>Simple Task to use nsd2ltx to build your Nassi-Shneiderman diagrams.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.2 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.dokutransdata.de/">http://www.dokutransdata.de/</a><br/>
+              <a href="http://www.dokutransdata.de/ant_nsd2ltx/">http://www.dokutransdata.de/ant_nsd2ltx/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:jaloma@dokutransdata.de">jaloma@dokutransdata.de</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
           </tr>
         </table>
       </subsection>
@@ -2217,9 +2274,9 @@
       </subsection>
 
       <subsection name="PesterCat Ant Toolkit">
-         <p>PesterCat is a web testing tool that was designed to 
-           perform functional testing for web applications. The PesterCat 
-           Ant Toolkit contains tasks to playback test scripts and create 
+         <p>PesterCat is a web testing tool that was designed to
+           perform functional testing for web applications. The PesterCat
+           Ant Toolkit contains tasks to playback test scripts and create
            HTML reports.
          </p>
          <table class="externals">
@@ -2623,7 +2680,7 @@
       </subsection>
 
       <subsection name="SQLUnit">
-         <p>SQLUnit is a regression and unit testing harness for testing 
+         <p>SQLUnit is a regression and unit testing harness for testing
          database stored procedures. The test suite is written as an XML file.
          The SQLUnit harness itself is written in Java and uses the JUnit unit
          testing framework to convert the XML test specifications to JDBC calls
@@ -3449,7 +3506,7 @@
 
         <p>A module that integrates Ant into the NetBeans IDE, as well as derivative products such as Sun Java
         Studio (formerly Forte for Java and Sun ONE Studio) and Sun Java Studio Creator.
-        This IDE uses Ant as its <i>sole</i> means of building applications, 
+        This IDE uses Ant as its <i>sole</i> means of building applications,
         with custom tasks and an Ant-aware editor.</p>
 
         <table class="externals">
@@ -3468,6 +3525,32 @@
           <tr>
             <th>License:</th>
             <td>Sun Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Optistic IDX Java IDE">
+        <p>Java IDE with deep Ant integration. IDX is a native Microsoft Windows program.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.optistic.com/idx">http://optistic.com/idx</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:support@optistic.com">support@optistic.com</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial; Academic and OpenSource licenses available.</td>
           </tr>
         </table>
       </subsection>
