@@ -134,4 +134,14 @@
       </restrict>
     </unzip>
   </target>
+
+  <target name="testDocumentationClaimsOnCopy" depends="prepareTestZip">
+    <copy todir="unziptestout" preservelastmodified="true"> 
+      <zipfileset src="unziptest.zip">
+        <patternset>
+          <include name="2/"/>
+        </patternset>
+      </zipfileset>
+    </copy>
+  </target>
 </project>

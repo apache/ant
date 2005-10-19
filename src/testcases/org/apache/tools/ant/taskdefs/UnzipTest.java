@@ -178,4 +178,10 @@ public class UnzipTest extends BuildFileTest {
         assertFileExists("junit.jar has been extracted",
                          "unziptestout/junit/framework/Assert.class");
     }
+
+    public void testDocumentationClaimsOnCopy() {
+        executeTarget("testDocumentationClaimsOnCopy");
+        assertFileMissing("1/foo is excluded", "unziptestout/1/foo");
+        assertFileExists("2/bar is not excluded", "unziptestout/2/bar");
+    }
 }
