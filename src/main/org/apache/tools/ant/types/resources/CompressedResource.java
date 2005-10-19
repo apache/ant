@@ -25,12 +25,14 @@ import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A compressed resource.
  *
- * <p>Wraps around another resource, delegates all queries to that
- * other resource but uncompresses/compresses streams on the fly.</p>
+ * <p>Wraps around another resource, delegates all queries (except
+ * getSize) to that other resource but uncompresses/compresses streams
+ * on the fly.</p>
  *
  * @since Ant 1.7
  */
@@ -124,7 +126,26 @@ public abstract class CompressedResource extends Resource
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
     public long getSize() {
-        return getResource().getSize();
+        if (isExists()) {
+            InputStream in = null;
+            try {
+                in = getInputStream();
+                byte[] buf = new byte[8192];
+                int size = 0;
+                int readNow;
+                while ((readNow = in.read(buf, 0, buf.length)) > 0) {
+                    size += readNow;
+                }
+                return size;
+            } catch (IOException ex) {
+                throw new BuildException("caught exception while reading "
+                                         + getName(), ex);
+            } finally {
+                FileUtils.close(in);
+            }
+        } else {
+            return 0;
+        }
     }
 
     public void setSize(long size) {
