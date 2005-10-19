@@ -140,6 +140,9 @@ Fixed bugs:
 * <sshexec> closed System.out, disabling output on second and subsequent
   invocations.  Bugzilla report 36302.
 
+* <cvschangelog> was crashing with CVS versions >= 1.12.x due to change in
+  the date format. Bugzilla report 30962.
+
 Other changes:
 --------------
 * Fixed references to obsoleted CVS web site. Burzilla Report 36854.
