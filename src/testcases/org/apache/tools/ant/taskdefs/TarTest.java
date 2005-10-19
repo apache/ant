@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.IOException;
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  */
@@ -63,7 +65,19 @@ public class TarTest extends BuildFileTest {
     }
 
     public void test7() {
-        executeTarget("test7");
+        test7("test7");
+    }
+
+    public void test7UsingPlainFileSet() {
+        test7("test7UsingPlainFileSet");
+    }
+
+    public void test7UsingFileList() {
+        test7("test7UsingFileList");
+    }
+
+    private void test7(String target) {
+        executeTarget(target);
         File f1
             = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test7-prefix");
 
@@ -80,7 +94,27 @@ public class TarTest extends BuildFileTest {
     }
 
     public void test8() {
-        executeTarget("test8");
+        test8("test8");
+    }
+
+    public void test8UsingZipFileset() {
+        test8("test8UsingZipFileset");
+    }
+
+    public void test8UsingZipFilesetSrc() {
+        test8("test8UsingZipFilesetSrc");
+    }
+
+    public void test8UsingTarFilesetSrc() {
+        test8("test8UsingTarFilesetSrc");
+    }
+
+    public void test8UsingZipEntry() {
+        test8("test8UsingZipEntry");
+    }
+
+    private void test8(String target) {
+        executeTarget(target);
         File f1
             = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test8.xml");
         if (! f1.exists()) {
@@ -110,6 +144,12 @@ public class TarTest extends BuildFileTest {
         }
     }
 
+    public void testGZipResource() throws IOException {
+        executeTarget("testGZipResource");
+        assertTrue(FileUtils.getFileUtils()
+                   .contentEquals(getProject().resolveFile("../asf-logo.gif"),
+                                  getProject().resolveFile("testout/asf-logo.gif.gz")));
+    }
 
     public void tearDown() {
         executeTarget("cleanup");

@@ -64,7 +64,7 @@ import org.apache.tools.ant.util.FlatFileNameMapper;
  * @ant.task category="filesystem"
  */
 public class Copy extends Task {
-    private static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
+    static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
 
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file

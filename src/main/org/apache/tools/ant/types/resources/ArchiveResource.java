@@ -33,6 +33,8 @@ public abstract class ArchiveResource extends Resource {
 
     private Resource archive;
     private boolean haveEntry = false;
+    private boolean modeSet = false;
+    private int mode = 0;
 
     /**
      * Default constructor.
@@ -78,6 +80,16 @@ public abstract class ArchiveResource extends Resource {
     public void setArchive(File a) {
         checkAttributesAllowed();
         archive = new FileResource(a);
+    }
+
+    /**
+     * Sets the file or dir mode for this resource.
+     * @param integer representation of Unix permission mask.
+     */
+    public void setMode(int mode) {
+        checkAttributesAllowed();
+        this.mode = mode;
+        modeSet = true;
     }
 
     /**
@@ -156,11 +168,23 @@ public abstract class ArchiveResource extends Resource {
     }
 
     /**
+     * Get the file or dir mode for this Resource.
+     * @return integer representation of Unix permission mask.
+     */
+    public int getMode() {
+        if (isReference()) {
+            return ((ArchiveResource) getCheckedRef()).getMode();
+        }
+        checkEntry();
+        return mode;
+    }
+
+    /**
      * Overrides the super version.
      * @param r the Reference to set.
      */
     public void setRefid(Reference r) {
-        if (archive != null) {
+        if (archive != null || modeSet) {
             throw tooManyAttributes();
         }
         super.setRefid(r);

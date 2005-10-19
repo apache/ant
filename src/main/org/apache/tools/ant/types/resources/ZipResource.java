@@ -127,7 +127,13 @@ public class ZipResource extends ArchiveResource {
             return ((Resource) getCheckedRef()).getInputStream();
         }
         final ZipFile z = new ZipFile(getZipfile(), getEncoding());
-        return new FilterInputStream(z.getInputStream(z.getEntry(getName()))) {
+        ZipEntry ze = z.getEntry(getName());
+        if (ze == null) {
+            z.close();
+            throw new BuildException("no entry " + getName() + " in "
+                                     + getArchive());
+        }
+        return new FilterInputStream(z.getInputStream(ze)) {
             public void close() throws IOException {
                 FileUtils.close(in);
                 z.close();
@@ -182,14 +188,15 @@ public class ZipResource extends ArchiveResource {
 
     private void setEntry(ZipEntry e) {
         if (e == null) {
-            super.setExists(false);
+            setExists(false);
             return;
         }
-        super.setName(e.getName());
-        super.setExists(true);
-        super.setLastModified(e.getTime());
-        super.setDirectory(e.isDirectory());
-        super.setSize(e.getSize());
+        setName(e.getName());
+        setExists(true);
+        setLastModified(e.getTime());
+        setDirectory(e.isDirectory());
+        setSize(e.getSize());
+        setMode(e.getUnixMode());
     }
 
 }

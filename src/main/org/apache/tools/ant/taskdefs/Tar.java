@@ -19,18 +19,29 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.ArchiveFileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.ArchiveResource;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.types.resources.TarResource;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.bzip2.CBZip2OutputStream;
@@ -79,7 +90,12 @@ public class Tar extends MatchingTask {
 
     private TarLongFileMode longFileMode = new TarLongFileMode();
 
+    // need to keep the package private version for backwards compatibility
     Vector filesets = new Vector();
+    // we must keep two lists since other classes may modify the
+    // filesets Vector (it is package private) without us noticing
+    private Vector resourceCollections = new Vector();
+
     Vector fileSetFiles = new Vector();
 
     /**
@@ -95,10 +111,19 @@ public class Tar extends MatchingTask {
      */
     public TarFileSet createTarFileSet() {
         TarFileSet fs = new TarFileSet();
+        fs.setProject(getProject());
         filesets.addElement(fs);
         return fs;
     }
 
+    /**
+     * Add a collection of resources to archive.
+     * @param res a resource collection to archive.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection res) {
+        resourceCollections.add(res);
+    }
 
     /**
      * Set is the name/location of where to create the tar file.
@@ -217,9 +242,10 @@ public class Tar extends MatchingTask {
                 filesets.addElement(mainFileSet);
             }
 
-            if (filesets.size() == 0) {
+            if (filesets.size() == 0 && resourceCollections.size() == 0) {
                 throw new BuildException("You must supply either a basedir "
-                                         + "attribute or some nested filesets.",
+                                         + "attribute or some nested resource"
+                                         + " collections.",
                                          getLocation());
             }
 
@@ -227,20 +253,11 @@ public class Tar extends MatchingTask {
             // fileset
             boolean upToDate = true;
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-                TarFileSet fs = (TarFileSet) e.nextElement();
-                String[] files = fs.getFiles(getProject());
-
-                if (!archiveIsUpToDate(files, fs.getDir(getProject()))) {
-                    upToDate = false;
-                }
-
-                for (int i = 0; i < files.length; ++i) {
-                    if (tarFile.equals(new File(fs.getDir(getProject()),
-                                                files[i]))) {
-                        throw new BuildException("A tar file cannot include "
-                                                 + "itself", getLocation());
-                    }
-                }
+                upToDate &= check((TarFileSet) e.nextElement());
+            }
+            for (Enumeration e = resourceCollections.elements();
+                 e.hasMoreElements();) {
+                upToDate &= check((ResourceCollection) e.nextElement());
             }
 
             if (upToDate) {
@@ -271,19 +288,11 @@ public class Tar extends MatchingTask {
                 longWarningGiven = false;
                 for (Enumeration e = filesets.elements();
                      e.hasMoreElements();) {
-                    TarFileSet fs = (TarFileSet) e.nextElement();
-                    String[] files = fs.getFiles(getProject());
-                    if (files.length > 1 && fs.getFullpath().length() > 0) {
-                        throw new BuildException("fullpath attribute may only "
-                                                 + "be specified for "
-                                                 + "filesets that specify a "
-                                                 + "single file.");
-                    }
-                    for (int i = 0; i < files.length; i++) {
-                        File f = new File(fs.getDir(getProject()), files[i]);
-                        String name = files[i].replace(File.separatorChar, '/');
-                        tarFile(f, tOut, name, fs);
-                    }
+                    tar((TarFileSet) e.nextElement(), tOut);
+                }
+                for (Enumeration e = resourceCollections.elements();
+                     e.hasMoreElements();) {
+                    tar((ResourceCollection) e.nextElement(), tOut);
                 }
             } catch (IOException ioe) {
                 String msg = "Problem creating TAR: " + ioe.getMessage();
@@ -314,95 +323,144 @@ public class Tar extends MatchingTask {
     protected void tarFile(File file, TarOutputStream tOut, String vPath,
                            TarFileSet tarFileSet)
         throws IOException {
-        FileInputStream fIn = null;
+        tarResource(new FileResource(file), tOut, vPath, tarFileSet);
+    }
 
-        String fullpath = tarFileSet.getFullpath();
-        if (fullpath.length() > 0) {
-            vPath = fullpath;
-        } else {
-            // don't add "" to the archive
-            if (vPath.length() <= 0) {
-                return;
-            }
+    /**
+     * tar a resource
+     * @param file the resource to tar
+     * @param tOut the output stream
+     * @param vPath the path name of the file to tar
+     * @param tarFileSet the fileset that the file came from, may be null.
+     * @throws IOException on error
+     * @since Ant 1.7
+     */
+    protected void tarResource(Resource r, TarOutputStream tOut, String vPath,
+                               TarFileSet tarFileSet)
+        throws IOException {
 
-            if (file.isDirectory() && !vPath.endsWith("/")) {
-                vPath += "/";
-            }
-
-            String prefix = tarFileSet.getPrefix();
-            // '/' is appended for compatibility with the zip task.
-            if (prefix.length() > 0 && !prefix.endsWith("/")) {
-                prefix = prefix + "/";
-            }
-            vPath = prefix + vPath;
+        if (!r.isExists()) {
+            return;
         }
 
-        if (vPath.startsWith("/") && !tarFileSet.getPreserveLeadingSlashes()) {
-            int l = vPath.length();
-            if (l <= 1) {
-                // we would end up adding "" to the archive
-                return;
-            }
-            vPath = vPath.substring(1, l);
-        }
-
-        try {
-            if (vPath.length() >= TarConstants.NAMELEN) {
-                if (longFileMode.isOmitMode()) {
-                    log("Omitting: " + vPath, Project.MSG_INFO);
+        if (tarFileSet != null) {
+            String fullpath = tarFileSet.getFullpath();
+            if (fullpath.length() > 0) {
+                vPath = fullpath;
+            } else {
+                // don't add "" to the archive
+                if (vPath.length() <= 0) {
                     return;
-                } else if (longFileMode.isWarnMode()) {
-                    log("Entry: " + vPath + " longer than "
-                        + TarConstants.NAMELEN + " characters.",
+                }
+
+                String prefix = tarFileSet.getPrefix();
+                // '/' is appended for compatibility with the zip task.
+                if (prefix.length() > 0 && !prefix.endsWith("/")) {
+                    prefix = prefix + "/";
+                }
+                vPath = prefix + vPath;
+            }
+
+            if (vPath.startsWith("/")
+                && !tarFileSet.getPreserveLeadingSlashes()) {
+                int l = vPath.length();
+                if (l <= 1) {
+                    // we would end up adding "" to the archive
+                    return;
+                }
+                vPath = vPath.substring(1, l);
+            }
+        }
+
+        if (r.isDirectory() && !vPath.endsWith("/")) {
+            vPath += "/";
+        }
+
+        if (vPath.length() >= TarConstants.NAMELEN) {
+            if (longFileMode.isOmitMode()) {
+                log("Omitting: " + vPath, Project.MSG_INFO);
+                return;
+            } else if (longFileMode.isWarnMode()) {
+                log("Entry: " + vPath + " longer than "
+                    + TarConstants.NAMELEN + " characters.",
+                    Project.MSG_WARN);
+                if (!longWarningGiven) {
+                    log("Resulting tar file can only be processed "
+                        + "successfully by GNU compatible tar commands",
                         Project.MSG_WARN);
-                    if (!longWarningGiven) {
-                        log("Resulting tar file can only be processed "
-                            + "successfully by GNU compatible tar commands",
-                            Project.MSG_WARN);
-                        longWarningGiven = true;
-                    }
-                } else if (longFileMode.isFailMode()) {
-                    throw new BuildException("Entry: " + vPath
+                    longWarningGiven = true;
+                }
+            } else if (longFileMode.isFailMode()) {
+                throw new BuildException("Entry: " + vPath
                         + " longer than " + TarConstants.NAMELEN
                         + "characters.", getLocation());
-                }
             }
+        }
 
-            TarEntry te = new TarEntry(vPath);
-            te.setModTime(file.lastModified());
-            if (!file.isDirectory()) {
-                if (file.length() > TarConstants.MAXSIZE) {
-                    throw new BuildException("File: " + file + " larger than " +
-                            TarConstants.MAXSIZE + " bytes.");
-                }
-                te.setSize(file.length());
+        TarEntry te = new TarEntry(vPath);
+        te.setModTime(r.getLastModified());
+        // preserve permissions
+        if (r instanceof ArchiveResource) {
+            ArchiveResource ar = (ArchiveResource) r;
+            te.setMode(ar.getMode());
+            if (r instanceof TarResource) {
+                TarResource tr = (TarResource) r;
+                te.setUserName(tr.getUserName());
+                te.setUserId(tr.getUid());
+                te.setGroupName(tr.getGroup());
+                te.setGroupId(tr.getGid());
+            }
+        }
+
+        if (!r.isDirectory()) {
+            if (r.size() > TarConstants.MAXSIZE) {
+                throw new BuildException("Resource: " + r + " larger than " +
+                                         TarConstants.MAXSIZE + " bytes.");
+            }
+            te.setSize(r.getSize());
+            // override permissions if set explicitly
+            if (tarFileSet != null && tarFileSet.hasFileModeBeenSet()) {
                 te.setMode(tarFileSet.getMode());
-            } else {
-                te.setMode(tarFileSet.getDirMode());
             }
-            te.setUserName(tarFileSet.getUserName());
-            te.setGroupName(tarFileSet.getGroup());
-            te.setUserId(tarFileSet.getUid());
-            te.setGroupId(tarFileSet.getGid());
+        } else if (tarFileSet != null && tarFileSet.hasDirModeBeenSet()) {
+            // override permissions if set explicitly
+            te.setMode(tarFileSet.getDirMode());
+        }
 
+        if (tarFileSet != null) {
+            // only override permissions if set explicitly
+            if (tarFileSet.hasUserNameBeenSet()) {
+                te.setUserName(tarFileSet.getUserName());
+            }
+            if (tarFileSet.hasGroupBeenSet()) {
+                te.setGroupName(tarFileSet.getGroup());
+            }
+            if (tarFileSet.hasUserIdBeenSet()) {
+                te.setUserId(tarFileSet.getUid());
+            }
+            if (tarFileSet.hasGroupIdBeenSet()) {
+                te.setGroupId(tarFileSet.getGid());
+            }
+        }
+
+        InputStream in = null;
+        try {
             tOut.putNextEntry(te);
 
-            if (!file.isDirectory()) {
-                fIn = new FileInputStream(file);
+            if (!r.isDirectory()) {
+                in = r.getInputStream();
 
                 byte[] buffer = new byte[8 * 1024];
                 int count = 0;
                 do {
                     tOut.write(buffer, 0, count);
-                    count = fIn.read(buffer, 0, buffer.length);
+                    count = in.read(buffer, 0, buffer.length);
                 } while (count != -1);
             }
 
             tOut.closeEntry();
         } finally {
-            if (fIn != null) {
-                fIn.close();
-            }
+            FileUtils.close(in);
         }
     }
 
@@ -431,6 +489,243 @@ public class Tar extends MatchingTask {
     }
 
     /**
+     * Is the archive up to date in relationship to a list of files.
+     * @param files the files to check
+     * @return true if the archive is up to date.
+     * @since Ant 1.7
+     */
+    protected boolean archiveIsUpToDate(Resource r) {
+        return SelectorUtils.isOutOfDate(new FileResource(tarFile), r,
+                                         FileUtils.getFileUtils()
+                                         .getFileTimestampGranularity());
+    }
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;tar&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(Tar.class);
+    }
+
+    /**
+     * Checks whether the archive is out-of-date with respect to the resources
+     * of the given collection.
+     *
+     * <p>Also checks that either all collections only contain file
+     * resources or this class supports non-file collections.</p>
+     *
+     * <p>And - in case of file-collections - ensures that the archive won't
+     * contain itself.</p>
+     *
+     * @param rc the resource collection to check
+     * @return whether the archive is up-to-date
+     * @since Ant 1.7
+     */
+    protected boolean check(ResourceCollection rc) {
+        boolean upToDate = true;
+        if (isFileFileSet(rc)) {
+            FileSet fs = (FileSet) rc;
+            upToDate = check(fs.getDir(getProject()), getFileNames(fs));
+        } else if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
+            throw new BuildException("only filesystem resources are supported");
+        } else if (rc.isFilesystemOnly()) {
+            HashSet basedirs = new HashSet();
+            HashMap basedirToFilesMap = new HashMap();
+            Iterator iter = rc.iterator();
+            while (iter.hasNext()) {
+                FileResource r = (FileResource) iter.next();
+                File base = r.getBaseDir();
+                if (base == null) {
+                    base = Copy.NULL_FILE_PLACEHOLDER;
+                }
+                basedirs.add(base);
+                Vector files = (Vector) basedirToFilesMap.get(base);
+                if (files == null) {
+                    files = new Vector();
+                    basedirToFilesMap.put(base, new Vector());
+                }
+                files.add(r.getName());
+            }
+            iter = basedirs.iterator();
+            while (iter.hasNext()) {
+                File base = (File) iter.next();
+                Vector f = (Vector) basedirToFilesMap.get(base);
+                String[] files = (String[]) f.toArray(new String[f.size()]);
+                upToDate &=
+                    check(base == Copy.NULL_FILE_PLACEHOLDER ? null : base,
+                          files);
+            }
+        } else { // non-file resources
+            Iterator iter = rc.iterator();
+            while (upToDate && iter.hasNext()) {
+                Resource r = (Resource) iter.next();
+                upToDate &= archiveIsUpToDate(r);
+            }
+        }
+
+        return upToDate;
+    }
+
+    /**
+     * Checks whether the archive is out-of-date with respect to the
+     * given files, ensures that the archive won't contain itself.</p>
+     *
+     * @param basedir base directory for file names
+     * @param files array of relative file names
+     * @return whether the archive is up-to-date
+     * @since Ant 1.7
+     */
+    protected boolean check(File basedir, String[] files) {
+        boolean upToDate = true;
+        if (!archiveIsUpToDate(files, basedir)) {
+            upToDate = false;
+        }
+
+        for (int i = 0; i < files.length; ++i) {
+            if (tarFile.equals(new File(basedir, files[i]))) {
+                throw new BuildException("A tar file cannot include "
+                                         + "itself", getLocation());
+            }
+        }
+        return upToDate;
+    }
+
+    /**
+     * Adds the resources contained in this collection to the archive.
+     *
+     * <p>Uses the file based methods for file resources for backwards
+     * compatibility.</p>
+     *
+     * @param rc the collection containing resources to add
+     * @param tOut stream writing to the archive.
+     * @since Ant 1.7
+     */
+    protected void tar(ResourceCollection rc, TarOutputStream tOut)
+        throws IOException {
+        ArchiveFileSet afs = null;
+        if (rc instanceof ArchiveFileSet) {
+            afs = (ArchiveFileSet) rc;
+        }
+        if (afs != null && afs.size() > 1
+            && afs.getFullpath().length() > 0) {
+            throw new BuildException("fullpath attribute may only "
+                                     + "be specified for "
+                                     + "filesets that specify a "
+                                     + "single file.");
+        }
+        TarFileSet tfs = asTarFileSet(afs);
+
+        if (isFileFileSet(rc)) {
+            FileSet fs = (FileSet) rc;
+            String[] files = getFileNames(fs);
+            for (int i = 0; i < files.length; i++) {
+                File f = new File(fs.getDir(getProject()), files[i]);
+                String name = files[i].replace(File.separatorChar, '/');
+                tarFile(f, tOut, name, tfs);
+            }
+        } else if (rc.isFilesystemOnly()) {
+            Iterator iter = rc.iterator();
+            while (iter.hasNext()) {
+                FileResource r = (FileResource) iter.next();
+                File f = r.getFile();
+                if (f == null) {
+                    f = new File(r.getBaseDir(), r.getName());
+                }
+                tarFile(f, tOut, f.getName(), tfs);
+            }
+        } else { // non-file resources
+            Iterator iter = rc.iterator();
+            while (iter.hasNext()) {
+                Resource r = (Resource) iter.next();
+                tarResource(r, tOut, r.getName(), tfs);
+            }
+        }
+    }
+
+    /**
+     * whether the given resource collection is a (subclass of)
+     * FileSet that only contains file system resources.
+     * @since Ant 1.7
+     */
+    protected static final boolean isFileFileSet(ResourceCollection rc) {
+        return rc instanceof FileSet && rc.isFilesystemOnly();
+    }
+
+    /**
+     * Grabs all included files and directors from the FileSet and
+     * returns them as an array of (relative) file names.
+     *
+     * @since Ant 1.7
+     */
+    protected static final String[] getFileNames(FileSet fs) {
+        DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
+        String[] directories = ds.getIncludedDirectories();
+        String[] filesPerSe = ds.getIncludedFiles();
+        String[] files = new String [directories.length + filesPerSe.length];
+        System.arraycopy(directories, 0, files, 0, directories.length);
+        System.arraycopy(filesPerSe, 0, files, directories.length,
+                         filesPerSe.length);
+        return files;
+    }
+
+    /**
+     * Copies fullpath, prefix and permission attributes from the
+     * ArchiveFileSet to a new TarFileSet (or returns it unchanged if
+     * it already is a TarFileSet).
+     *
+     * @param archiveFileSet fileset to copy attributes from, may be null
+     * @since Ant 1.7
+     */
+    protected TarFileSet asTarFileSet(ArchiveFileSet archiveFileSet) {
+        TarFileSet tfs = null;
+        if (archiveFileSet != null && archiveFileSet instanceof TarFileSet) {
+            tfs = (TarFileSet) archiveFileSet;
+        } else {
+            tfs = new TarFileSet();
+            tfs.setProject(getProject());
+            if (archiveFileSet != null) {
+                tfs.setPrefix(archiveFileSet.getPrefix(getProject()));
+                tfs.setFullpath(archiveFileSet.getFullpath(getProject()));
+                if (archiveFileSet.hasFileModeBeenSet()) {
+                    tfs.integerSetFileMode(archiveFileSet
+                                           .getFileMode(getProject()));
+                }
+                if (archiveFileSet.hasDirModeBeenSet()) {
+                    tfs.integerSetDirMode(archiveFileSet
+                                          .getDirMode(getProject()));
+                }
+                
+                if (archiveFileSet instanceof
+                    org.apache.tools.ant.types.TarFileSet) {
+                    org.apache.tools.ant.types.TarFileSet t =
+                        (org.apache.tools.ant.types.TarFileSet) archiveFileSet;
+                    if (t.hasUserNameBeenSet()) {
+                        tfs.setUserName(t.getUserName());
+                    }
+                    if (t.hasGroupBeenSet()) {
+                        tfs.setGroup(t.getGroup());
+                    }
+                    if (t.hasUserIdBeenSet()) {
+                        tfs.setUid(t.getUid());
+                    }
+                    if (t.hasGroupIdBeenSet()) {
+                        tfs.setGid(t.getGid());
+                    }
+                }
+            }
+        }
+        return tfs;
+    }
+
+    /**
      * This is a FileSet with the option to specify permissions
      * and other attributes.
      */
@@ -438,10 +733,6 @@ public class Tar extends MatchingTask {
         extends org.apache.tools.ant.types.TarFileSet {
         private String[] files = null;
 
-        private String userName = "";
-        private String groupName = "";
-        private int    uid;
-        private int    gid;
         private boolean preserveLeadingSlashes = false;
 
         /**
@@ -470,13 +761,7 @@ public class Tar extends MatchingTask {
          */
         public String[] getFiles(Project p) {
             if (files == null) {
-                DirectoryScanner ds = getDirectoryScanner(p);
-                String[] directories = ds.getIncludedDirectories();
-                String[] filesPerSe = ds.getIncludedFiles();
-                files = new String [directories.length + filesPerSe.length];
-                System.arraycopy(directories, 0, files, 0, directories.length);
-                System.arraycopy(filesPerSe, 0, files, directories.length,
-                        filesPerSe.length);
+                files = getFileNames(this);
             }
 
             return files;
@@ -497,70 +782,6 @@ public class Tar extends MatchingTask {
          */
         public int getMode() {
             return getFileMode();
-        }
-
-        /**
-         * The username for the tar entry
-         * This is not the same as the UID.
-         * @param userName the user name for the tar entry.
-         */
-        public void setUserName(String userName) {
-            this.userName = userName;
-        }
-
-        /**
-         * @return the user name for the tar entry
-         */
-        public String getUserName() {
-            return userName;
-        }
-
-        /**
-         * The uid for the tar entry
-         * This is not the same as the User name.
-         * @param uid the id of the user for the tar entry.
-         */
-        public void setUid(int uid) {
-            this.uid = uid;
-        }
-
-        /**
-         * @return the uid for the tar entry
-         */
-        public int getUid() {
-            return uid;
-        }
-
-        /**
-         * The groupname for the tar entry; optional, default=""
-         * This is not the same as the GID.
-         * @param groupName the group name string.
-         */
-        public void setGroup(String groupName) {
-            this.groupName = groupName;
-        }
-
-        /**
-         * @return the group name string.
-         */
-        public String getGroup() {
-            return groupName;
-        }
-
-        /**
-         * The GID for the tar entry; optional, default="0"
-         * This is not the same as the group name.
-         * @param gid the group id.
-         */
-        public void setGid(int gid) {
-            this.gid = gid;
-        }
-
-        /**
-         * @return the group identifier.
-         */
-        public int getGid() {
-            return gid;
         }
 
         /**

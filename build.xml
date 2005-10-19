@@ -1231,6 +1231,10 @@
     </zip>
     <tar longfile="gnu"
       destfile="${dist.base.binaries}/${dist.name}-bin.tar">
+      <!-- removes redundant definition of permissions, but seems to
+           drop dirs (and to be slow)
+      <zipfileset src="${dist.base.binaries}/${dist.name}-bin.zip"/>
+      -->
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
@@ -1296,6 +1300,9 @@
     </zip>
     <tar longfile="gnu"
       destfile="${dist.base.source}/${dist.name}-src.tar">
+      <!--
+      <zipfileset src="${dist.base.source}/${dist.name}-src.zip"/>
+      -->
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>

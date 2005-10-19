@@ -36,6 +36,11 @@ import org.apache.tools.tar.TarInputStream;
  */
 public class TarResource extends ArchiveResource {
 
+    private String userName = "";
+    private String groupName = "";
+    private int    uid;
+    private int    gid;
+
     /**
      * Default constructor.
      */
@@ -105,6 +110,46 @@ public class TarResource extends ArchiveResource {
     }
 
     /**
+     * @return the user name for the tar entry
+     */
+    public String getUserName() {
+        if (isReference()) {
+            return ((TarResource) getCheckedRef()).getUserName();
+        }
+        return userName;
+    }
+
+    /**
+     * @return the group name for the tar entry
+     */
+    public String getGroup() {
+        if (isReference()) {
+            return ((TarResource) getCheckedRef()).getGroup();
+        }
+        return groupName;
+    }
+
+    /**
+     * @return the uid for the tar entry
+     */
+    public int getUid() {
+        if (isReference()) {
+            return ((TarResource) getCheckedRef()).getUid();
+        }
+        return uid;
+    }
+
+    /**
+     * @return the uid for the tar entry
+     */
+    public int getGid() {
+        if (isReference()) {
+            return ((TarResource) getCheckedRef()).getGid();
+        }
+        return uid;
+    }
+
+    /**
      * fetches information from the named entry inside the archive.
      */
     protected void fetchEntry() {
@@ -132,14 +177,19 @@ public class TarResource extends ArchiveResource {
 
     private void setEntry(TarEntry e) {
         if (e == null) {
-            super.setExists(false);
+            setExists(false);
             return;
         }
-        super.setName(e.getName());
-        super.setExists(true);
-        super.setLastModified(e.getModTime().getTime());
-        super.setDirectory(e.isDirectory());
-        super.setSize(e.getSize());
+        setName(e.getName());
+        setExists(true);
+        setLastModified(e.getModTime().getTime());
+        setDirectory(e.isDirectory());
+        setSize(e.getSize());
+        setMode(e.getMode());
+        userName = e.getUserName();
+        groupName = e.getGroupName();
+        uid = e.getUserId();
+        gid = e.getGroupId();
     }
 
 }

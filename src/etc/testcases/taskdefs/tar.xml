@@ -44,11 +44,76 @@
     <untar src="test7.tar" dest="."/>
   </target>
 
+  <target name="test7UsingPlainFileSet">
+    <mkdir dir="test7dir"/>
+    <tar destfile="test7.tar">
+      <tarfileset dir="." prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <fileset dir=".">
+        <include name="test7dir"/>
+      </fileset>
+    </tar>
+    <untar src="test7.tar" dest="."/>
+  </target>
+
+  <target name="test7UsingFileList">
+    <mkdir dir="test7dir"/>
+    <tar destfile="test7.tar">
+      <tarfileset dir="." prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <filelist dir=".">
+        <file name="test7dir"/>
+      </filelist>
+    </tar>
+    <untar src="test7.tar" dest="."/>
+  </target>
+
   <target name="test8">
     <tar destfile="test8.tar">
       <tarfileset dir="." fullpath="/test8.xml">
         <include name="tar.xml"/>
       </tarfileset>
+    </tar>
+    <untar src="test8.tar" dest="."/>
+  </target>
+
+  <target name="test8UsingZipFileset">
+    <tar destfile="test8.tar">
+      <zipfileset dir="." fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </zipfileset>
+    </tar>
+    <untar src="test8.tar" dest="."/>
+  </target>
+
+  <target name="test8UsingZipFilesetSrc">
+    <zip destfile="test7.tar" basedir="." includes="tar.xml"/>
+    <tar destfile="test8.tar">
+      <zipfileset src="test7.tar" fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </zipfileset>
+    </tar>
+    <untar src="test8.tar" dest="."/>
+  </target>
+
+  <target name="test8UsingTarFilesetSrc">
+    <tar destfile="test7.tar" basedir="." includes="tar.xml"/>
+    <tar destfile="test8.tar">
+      <tarfileset src="test7.tar" fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="test8.tar" dest="."/>
+  </target>
+
+  <target name="test8UsingZipEntry">
+    <zip destfile="test7.tar">
+      <zipfileset dir="." includes="tar.xml" fullpath="/test8.xml"/>
+    </zip>
+    <tar destfile="test8.tar">
+      <zipentry archive="test7.tar" name="/test8.xml"/>
     </tar>
     <untar src="test8.tar" dest="."/>
   </target>
@@ -79,6 +144,7 @@
     <delete file="test4.tar"/>
     <delete file="test5.tar"/>
     <delete file="asf-logo.gif.tar"/>
+    <delete dir="testout"/>
     <delete dir="test5dir"/>
     <delete dir="test7dir"/>
     <delete dir="test7-prefix"/>
@@ -107,5 +173,14 @@
          compression="bzip2" />
   </target>
 
+  <target name="testGZipResource">
+    <mkdir dir="testout"/>
+    <tar destfile="testout/test.tar">
+      <gzipresource>
+        <file file="expected/asf-logo.gif.gz"/>
+      </gzipresource>
+    </tar>
+    <untar src="testout/test.tar" dest="testout"/>
+  </target>
 
 </project>

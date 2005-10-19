@@ -18,7 +18,8 @@ defines which files, relative to the <i>basedir</i>, will be included in the
 archive. The tar task supports all the attributes of Fileset to refine the
 set of files to be included in the implicit fileset.</p>
 
-<p>In addition to the implicit fileset, the tar task supports nested filesets. These
+<p>In addition to the implicit fileset, the tar task supports nested
+      resource collections and a special form of filesets. These
 filesets are extended to allow control over the access mode, username and groupname
 to be applied to the tar entries. This is useful, for example, when preparing archives for
 Unix systems where some files need to have execute permission.</p>
@@ -110,8 +111,11 @@ or "bzip2".</p>
 </table>
 
 <h3>Nested Elements</h3>
-The tar task supports nested <a href="../CoreTypes/fileset.html">tarfileset</a> elements. These are
-extended Filesets which, in addition to the standard fileset elements, support three additional
+
+The tar task supports nested <a
+href="../CoreTypes/fileset.html">tarfileset</a> elements. These are
+extended <a href="../CoreTypes/tarfileset.html">TarFilesets</a> which,
+in addition to the standard elements, support one additional
 attributes
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -121,65 +125,19 @@ attributes
     <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">mode</td>
-    <td valign="top">A 3 digit octal string, specify the user, group
-    and other modes in the standard Unix fashion.  Only applies to
-    plain files.  Default is 644.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">dirmode</td>
-    <td valign="top">A 3 digit octal string, specify the user, group
-    and other modes in the standard Unix fashion.  Only applies to
-    directories.  Default is 755. <em>since Ant 1.6</em>.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">username</td>
-    <td valign="top">The username for the tar entry. This is not the same as the UID.
-                     </td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">group</td>
-    <td valign="top">The groupname for the tar entry. This is not the same as the GID.
-                     </td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">uid</td>
-    <td valign="top">The user identifier (UID) for the tar entry. This is an integer value
-      and is not the same as the username. <em>since Ant 1.6.2</em>.
-                     </td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">gid</td>
-    <td valign="top">The group identifier (GID) for the tar entry. <em>since Ant 1.6.2</em>.
-                     </td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">prefix</td>
-    <td valign="top">If the prefix attribute is set, all files in the fileset
-    are prefixed with that path in the archive.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">fullpath</td>
-    <td valign="top">If the fullpath attribute is set, the file in the fileset
-    is written with that path in the archive. The prefix attribute, if specified, is
-    ignored. It is an error to have more than one file specified in
-    such a fileset.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
     <td valign="top">preserveLeadingSlashes</td>
     <td valign="top">Indicates whether leading `/'s should
     be preserved in the file names. Default is <code>false</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h4>any other resource collection</h4>
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select groups of files to copy.  To use a
+resource collection, the <code>todir</code> attribute must be set.</p>
+<p>Prior to Ant 1.7 only <code>&lt;fileset&gt;</code> has been
+supported as a nested element.</p>
 
 <h3>Examples</h3>
 <pre>
@@ -242,8 +200,10 @@ and the rest are use the default mode (read-write by owner). The first
 fileset selects just the executable files. The second fileset must exclude
 the executable files and include all others. </p>
 
+
+
 <p><strong>Note: </strong> The tar task does not ensure that a file is only selected
-by one fileset. If the same file is selected by more than one fileset, it will be included in the
+by one resource collection. If the same file is selected by more than one collection, it will be included in the
 tar file twice, with the same path.</p>
 
 <p><strong>Note:</strong> The patterns in the include and exclude
@@ -252,6 +212,16 @@ attribute as with all other filesets.  In the example above,
 <code>${dist.name}</code> is not an absolute path, but a simple name
 of a directory, so <code>${dist.name}</code> is a valid path relative
 to <code>${dist.name}/..</code>.</p>
+
+<pre>
+&lt;tar dest="release.tar.gz" compress="gzip"&gt;
+  &lt;zipfileset src="release.zip"/&gt;
+&lt;/tar&gt;
+</pre>
+
+<p>Re-packages a ZIP archive as a GZip compressed tar archive.  If
+Unix file permissions have been stored as part of the ZIP file, they
+will be retained in the resulting tar archive.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000-2002,2004-2005 The Apache Software Foundation. All rights

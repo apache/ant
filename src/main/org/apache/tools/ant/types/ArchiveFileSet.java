@@ -310,9 +310,22 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setFileMode(String octalString) {
+        integerSetFileMode(Integer.parseInt(octalString, 8));
+    }
+
+    /**
+     * specify the user, group and
+     * other modes in the standard Unix fashion;
+     * optional, default=0644
+     *
+     * <p>We use the strange name so this method doesn't appear in
+     * IntrospectionHelpers list of attribute setters.</p>
+     * @param mode a <code>int</code> value
+     * @since Ant 1.7
+     */
+    public void integerSetFileMode(int mode) {
         fileModeHasBeenSet = true;
-        this.fileMode =
-            UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
+        this.fileMode = UnixStat.FILE_FLAG | mode;
     }
 
     /**
@@ -353,9 +366,21 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setDirMode(String octalString) {
+        integerSetDirMode(Integer.parseInt(octalString, 8));
+    }
+
+    /**
+     * specify the user, group and
+     * other modes in the standard Unix fashion;
+     * optional, default=0755
+     * <p>We use the strange name so this method doesn't appear in
+     * IntrospectionHelpers list of attribute setters.</p>
+     * @param mode a <code>int</code> value
+     * @since Ant 1.7
+     */
+    public void integerSetDirMode(int mode) {
         dirModeHasBeenSet = true;
-        this.dirMode =
-            UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
+        this.dirMode = UnixStat.DIR_FLAG | mode;
     }
 
     /**
@@ -395,7 +420,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param p the project to use
      * @return the abstract fileset instance
      */
-    protected final void configureFileSet(ArchiveFileSet zfs) {
+    protected void configureFileSet(ArchiveFileSet zfs) {
         zfs.setPrefix(prefix);
         zfs.setFullpath(fullpath);
         zfs.fileModeHasBeenSet = fileModeHasBeenSet;
