@@ -4,6 +4,8 @@
 
   <target name="cleanup">
     <delete file="asf-logo.gif" />
+    <delete file="untartest.tar" />
+    <delete dir="untartestin"/>
     <delete dir="untartestout"/>
   </target>
 
@@ -59,4 +61,26 @@
       </zipfileset>
     </untar>
   </target>
+
+  <target name="prepareTestTar">
+    <mkdir dir="untartestin/1"/>
+    <mkdir dir="untartestin/2"/>
+    <touch file="untartestin/1/foo"/>
+    <touch file="untartestin/2/bar"/>
+    <copy todir="untartestin/2">
+      <fileset dir="expected" includes="*md5*"/>
+    </copy>
+    <tar destfile="untartest.tar" basedir="untartestin"/>
+  </target>
+
+  <target name="testDocumentationClaimsOnCopy" depends="prepareTestTar">
+    <copy todir="untartestout" preservelastmodified="true"> 
+      <tarfileset src="untartest.tar">
+        <patternset>
+          <include name="2/"/>
+        </patternset>
+      </tarfileset>
+    </copy>
+  </target>
+  
 </project>

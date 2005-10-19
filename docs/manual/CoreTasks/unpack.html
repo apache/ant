@@ -56,6 +56,31 @@ does not exist.</p>
 <p>expands <i>test.tar.gz</i> to <i>subdir/test.tar</i> (assuming
 subdir is a directory).</p>
 
+<h3>Related tasks</h3>
+
+<pre>
+&lt;gunzip src="some-archive.gz" dest="some-dest-dir"/&gt;
+</pre>
+
+is identical to
+
+<pre>
+&lt;copy todir="some-dest-dir"&gt;
+  &lt;gzipresource&gt;
+    &lt;file file="some-archive.gz"/&gt;
+  &lt;/gzipresource&gt;
+  &lt;mapper type="glob" from="*.gz" to="*"/&gt;
+&lt;/copy&gt;
+</pre>
+
+<p>The same is also true for <code>&lt;bunzip2&gt;</code> and
+<code>&lt;bzip2resource&gt;</code>.  <code>&lt;copy&gt;</code> offers
+additional features like <a
+href="../CoreTypes/filterchains.html">filtering files</a> on the fly,
+allowing a file to be mapped to multiple destinations, preserving the
+last modified time or a configurable file system timestamp
+granularity.</p>
+
 <hr>
 <p align="center">Copyright &copy; 2000-2001,2004-2005 The Apache Software Foundation. All rights
 Reserved.</p>

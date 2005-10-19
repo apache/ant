@@ -24,4 +24,13 @@
     <gunzip src="expected/asf-logo.gif.gz" dest="asf-logo.gif" />
   </target>
 
+  <target name="testDocumentationClaimsOnCopy">
+    <copy todir=".">
+      <gzipresource>
+        <file file="expected/asf-logo.gif.gz"/>
+      </gzipresource>
+      <mapper type="glob" from="*.gz" to="*"/>
+    </copy>
+  </target>
+
 </project>

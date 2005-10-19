@@ -14,4 +14,13 @@
   <target name="prepare">
     <gunzip src="expected/asf-logo-huge.tar.gz"/>
   </target>
+
+  <target name="testDocumentationClaimsOnCopy">
+    <copy todir=".">
+      <bzip2resource>
+        <file file="expected/asf-logo-huge.tar.bz2"/>
+      </bzip2resource>
+      <mapper type="glob" from="*.bz2" to="*"/>
+    </copy>
+  </target>
 </project>

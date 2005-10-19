@@ -117,6 +117,38 @@ nested element.</p>
     &lt;mapper type=&quot;flatten&quot;/&gt;
 &lt;/unzip&gt;
 </pre>
+
+<h3>Related tasks</h3>
+
+<pre>
+&lt;unzip src="some-archive" dest="some-dir"&lt;
+  &lt;patternset&gt;
+    &lt;include name="some-pattern"/&gt;
+  &lt;/patternset&gt;
+  &lt;mapper type=&quot;some-mapper&quot;/&gt;
+&lt;/unzip&gt;
+</pre>
+
+is identical to
+
+<pre>
+&lt;copy todir="some-dir" preservelastmodified="true"&lt;
+  &lt;zipfileset src="some-archive"&gt;
+    &lt;patternset&gt;
+      &lt;include name="some-pattern"/&gt;
+    &lt;/patternset&gt;
+  &lt;/zipfileset&gt;
+  &lt;mapper type=&quot;some-mapper&quot;/&gt;
+&lt;/copy&gt;
+</pre>
+
+<p>The same is also true for <code>&lt;untar&gt;</code> and
+<code>&lt;tarfileset&gt;</code>.  <code>&lt;copy&gt;</code> offers
+additional features like <a
+href="../CoreTypes/filterchains.html">filtering files</a> on the fly,
+allowing a file to be mapped to multiple destinations or a
+configurable file system timestamp granularity.</p>
+
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>

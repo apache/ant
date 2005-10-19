@@ -82,4 +82,10 @@ public class UntarTest extends BuildFileTest {
         assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
+
+    public void testDocumentationClaimsOnCopy() {
+        executeTarget("testDocumentationClaimsOnCopy");
+        assertFalse(getProject().resolveFile("untartestout/1/foo").exists());
+        assertTrue(getProject().resolveFile("untartestout/2/bar").exists());
+    }
 }

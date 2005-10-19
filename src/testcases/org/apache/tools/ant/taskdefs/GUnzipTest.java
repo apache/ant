@@ -58,4 +58,9 @@ public class GUnzipTest extends BuildFileTest {
                                            project.resolveFile("asf-logo.gif")));
     }
 
+    public void testDocumentationClaimsOnCopy() throws java.io.IOException {
+        executeTarget("testDocumentationClaimsOnCopy");
+        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
 }
