@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.zip.UnixStat;
 
@@ -61,6 +62,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     private boolean fileModeHasBeenSet = false;
     private boolean dirModeHasBeenSet  = false;
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** Constructor for ArchiveFileSet */
     public ArchiveFileSet() {
@@ -134,14 +136,18 @@ public abstract class ArchiveFileSet extends FileSet {
      * Set the source Archive file for the archivefileset.  Prevents both
      * "dir" and "src" from being specified.
      *
-     * @param srcFile The archive from which to extract entries.
+     * @param src The archive from which to extract entries.
      */
     public void setSrcResource(Resource src) {
         checkAttributesAllowed();
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
-        this.src = src;
+        if (getProject()!=null) {
+            this.src = new FileResource(FILE_UTILS.resolveFile(getProject().getBaseDir(),src.toString()));
+        } else {
+            this.src = new FileResource(new File(src.toString()));
+        }
     }
 
     /**
@@ -417,8 +423,7 @@ public abstract class ArchiveFileSet extends FileSet {
     /**
      * A ArchiveFileset accepts another ArchiveFileSet or a FileSet as reference
      * FileSets are often used by the war task for the lib attribute
-     * @param p the project to use
-     * @return the abstract fileset instance
+     * @param zfs the project to use
      */
     protected void configureFileSet(ArchiveFileSet zfs) {
         zfs.setPrefix(prefix);
@@ -440,6 +445,22 @@ public abstract class ArchiveFileSet extends FileSet {
             return ((ArchiveFileSet) getRef(getProject())).clone();
         } else {
             return super.clone();
+        }
+    }
+
+    /**
+     * for file based zipfilesets, return the same as for normal filesets
+     * else just return the path of the zip
+     * @return  for file based archivefilesets, included files as a list
+     * of semicolon-separated filenames. else just the name of the zip.
+     */
+    public String toString() {
+        if (hasDir && getProject() != null) {
+            return super.toString();
+        } else if (src != null) {
+            return src.getName();
+        } else {
+            return null;
         }
     }
 }
