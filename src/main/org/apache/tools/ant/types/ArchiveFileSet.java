@@ -117,7 +117,7 @@ public abstract class ArchiveFileSet extends FileSet {
             throw new BuildException("only single argument resource collections"
                                      + " are supported as archives");
         }
-        setSrc((Resource) a.iterator().next());
+        setSrcResource((Resource) a.iterator().next());
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param srcFile The archive from which to extract entries.
      */
     public void setSrc(File srcFile) {
-        setSrc(new FileResource(srcFile));
+        setSrcResource(new FileResource(srcFile));
     }
 
     /**
@@ -136,7 +136,7 @@ public abstract class ArchiveFileSet extends FileSet {
      *
      * @param srcFile The archive from which to extract entries.
      */
-    public void setSrc(Resource src) {
+    public void setSrcResource(Resource src) {
         checkAttributesAllowed();
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
