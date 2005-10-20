@@ -44,6 +44,7 @@ public class TarOutputStream extends FilterOutputStream {
 
     protected boolean   debug;
     protected long      currSize;
+    protected String    currName;
     protected long      currBytes;
     protected byte[]    oneBuf;
     protected byte[]    recordBuf;
@@ -191,6 +192,7 @@ public class TarOutputStream extends FilterOutputStream {
         } else {
             this.currSize = entry.getSize();
         }
+        currName = entry.getName();
     }
 
     /**
@@ -216,7 +218,8 @@ public class TarOutputStream extends FilterOutputStream {
         }
 
         if (this.currBytes < this.currSize) {
-            throw new IOException("entry closed at '" + this.currBytes
+            throw new IOException("entry '" + currName + "' closed at '"
+                                  + this.currBytes
                                   + "' before the '" + this.currSize
                                   + "' bytes specified in the header were written");
         }
@@ -266,7 +269,8 @@ public class TarOutputStream extends FilterOutputStream {
         if ((this.currBytes + numToWrite) > this.currSize) {
             throw new IOException("request to write '" + numToWrite
                                   + "' bytes exceeds size in header of '"
-                                  + this.currSize + "' bytes");
+                                  + this.currSize + "' bytes for entry '"
+                                  + currName + "'");
 
             //
             // We have to deal with assembly!!!
