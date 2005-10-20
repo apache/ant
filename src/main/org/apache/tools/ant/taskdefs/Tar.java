@@ -323,6 +323,18 @@ public class Tar extends MatchingTask {
     protected void tarFile(File file, TarOutputStream tOut, String vPath,
                            TarFileSet tarFileSet)
         throws IOException {
+        if (file.equals(tarFile)) {
+            // If the archive is built for the first time and it is
+            // matched by a resource collection, then it hasn't been
+            // found in check (it hasn't been there) but will be
+            // included now.
+            //
+            // for some strange reason the old code would simply skip
+            // the entry and not fail, do the same now for backwards
+            // compatibility reasons.  Without this, the which4j build
+            // fails in Gump
+            return;
+        }
         tarResource(new FileResource(file), tOut, vPath, tarFileSet);
     }
 
