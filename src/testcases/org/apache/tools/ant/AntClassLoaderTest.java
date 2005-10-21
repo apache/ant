@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,24 +18,13 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import junit.framework.TestCase;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Test case for ant class loader
  *
  */
-public class AntClassLoaderTest extends TestCase {
+public class AntClassLoaderTest extends BuildFileTest {
 
     private Project p;
 
@@ -46,8 +35,24 @@ public class AntClassLoaderTest extends TestCase {
     public void setUp() {
         p = new Project();
         p.init();
+        configureProject("src/etc/testcases/core/antclassloader.xml");
+        getProject().executeTarget("setup");
     }
 
+    public void tearDown() {
+        getProject().executeTarget("cleanup");
+    }
+    //test inspired by bug report 37085
+    public void testJarWithManifestInDirWithSpace() {
+        String mainjarstring = getProject().getProperty("main.jar");
+        String extjarstring = getProject().getProperty("ext.jar");
+        Path myPath = new Path(getProject());
+        myPath.setLocation(new File(mainjarstring));
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        AntClassLoader myLoader = getProject().createClassLoader(myPath);
+        String path = myLoader.getClasspath();
+        assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
+    }
     public void testCleanup() throws BuildException {
         Path path = new Path(p, ".");
         AntClassLoader loader = new AntClassLoader(p, path);
