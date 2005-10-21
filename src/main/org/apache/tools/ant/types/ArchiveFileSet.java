@@ -21,7 +21,6 @@ import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.zip.UnixStat;
 
@@ -62,7 +61,6 @@ public abstract class ArchiveFileSet extends FileSet {
 
     private boolean fileModeHasBeenSet = false;
     private boolean dirModeHasBeenSet  = false;
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** Constructor for ArchiveFileSet */
     public ArchiveFileSet() {
@@ -143,11 +141,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
-        if (getProject()!=null) {
-            this.src = new FileResource(FILE_UTILS.resolveFile(getProject().getBaseDir(),src.toString()));
-        } else {
-            this.src = new FileResource(new File(src.toString()));
-        }
+        this.src = src;
     }
 
     /**
