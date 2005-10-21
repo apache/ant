@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -499,7 +500,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                         + " loader", Project.MSG_VERBOSE);
                     continue;
                 }
-                File libraryFile = new File(libraryURL.getFile());
+                File libraryFile = new File(URLDecoder.decode(libraryURL.getFile()));
                 if (libraryFile.exists() && !isInPath(libraryFile)) {
                     addPathFile(libraryFile);
                 }
