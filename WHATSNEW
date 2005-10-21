@@ -66,6 +66,10 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* problem refering jars specfied by Class-Path attribute in manifest
+  of a ant task jar file, when this ant task jar file is located in
+  a directory with space, Bugzilla Report 37085 
+
 * Backward incompatible change in ZipFileSet, Bugzilla Report 35824.
 
 * Wrong replacement of file separator chars prevens junitbatchtest
