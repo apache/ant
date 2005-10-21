@@ -415,6 +415,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (!file.isAbsolute()) {
                     file = FILE_UTILS.resolveFile(context.getBuildFileParent(), path);
                 }
+                context.getProject().log("file=" + file, Project.MSG_DEBUG);
                 try {
                     InputSource inputSource =
                             new InputSource(new FileInputStream(file));
@@ -427,6 +428,8 @@ public class ProjectHelper2 extends ProjectHelper {
 
             }
             // use default if not file or file not found
+            context.getProject().log(
+                "could not resolve systemId", Project.MSG_DEBUG);
             return null;
         }
 

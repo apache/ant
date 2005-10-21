@@ -17,6 +17,8 @@
 
 package org.apache.tools.ant;
 
+import junit.framework.AssertionFailedError;
+
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -109,7 +111,12 @@ public class IncludeTest extends BuildFileTest {
 
     public void testWithSpaceInclude() {
         configureProject("src/etc/testcases/core/include/with space/include.xml");
-        expectLog("test1", "from included entity in 'with space'");
+        try {
+            expectLog("test1", "from included entity in 'with space'");
+        } catch (Throwable t) {
+            throw new AssertionFailedError(
+                t.toString() + "; log=\n" + getFullLog());
+        }
     }
 
     public void testWithSpaceSimple() {
