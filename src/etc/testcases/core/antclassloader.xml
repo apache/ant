@@ -1,0 +1,26 @@
+<project name="antclassloader-test" basedir=".">
+
+    <property name="tmp.dir" location="tmp space"/>
+    <property name="ext.dir.relative" value="ext"/>
+    <property name="main.jar" location="${tmp.dir}/main.jar"/>
+    <property name="ext.jar.relative" value="${ext.dir.relative}/ext.jar"/>
+    <property name="ext.jar" location="${tmp.dir}/${ext.jar.relative}"/>
+    <property name="build.sysclasspath" value="first"/>
+
+    <target name="setup">
+        <mkdir dir="${tmp.dir}/${ext.dir.relative}"/>
+        <jar destfile="${main.jar}" whenempty="create">
+          <manifest>
+            <attribute name="Class-Path" value="${ext.jar.relative}"/>
+          </manifest>
+        </jar>
+        <jar destfile="${ext.jar}"/>
+    </target>
+
+
+    <target name="cleanup">
+        <delete dir="${tmp.dir}" quiet="true"/>
+    </target>
+
+
+</project>
