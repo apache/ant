@@ -84,7 +84,7 @@ public class AntStructure extends Task {
             } catch (UnsupportedEncodingException ue) {
                 /*
                  * Plain impossible with UTF8, see
-                 * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
+                 * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html
                  *
                  * fallback to platform specific anyway.
                  */

@@ -90,8 +90,8 @@ public class LoadProperties extends Task {
      * encoding. <p>
      *
      * For a list of possible values see
-     * <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
-     * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
+     * <a href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">
+     * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html
      * </a>.</p>
      *
      * @param encoding The new Encoding value

@@ -291,7 +291,7 @@ public class Zip extends MatchingTask {
      * default encoding.
      *
      * <p>For a list of possible values see <a
-     * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.</p>
+     * href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.</p>
      * @param encoding the encoding name
      */
     public void setEncoding(String encoding) {

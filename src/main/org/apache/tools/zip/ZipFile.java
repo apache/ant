@@ -79,7 +79,7 @@ public class ZipFile {
      * The encoding to use for filenames and the file comment.
      *
      * <p>For a list of possible values see <a
-     * href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>.
+     * href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.
      * Defaults to the platform's default character encoding.</p>
      */
     private String encoding = null;
