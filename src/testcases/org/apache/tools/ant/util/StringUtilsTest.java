@@ -55,4 +55,51 @@ public class StringUtilsTest extends TestCase {
         assertEquals("bcbcbc", res);
     }
 
+    public void testEndsWithBothEmpty() {
+        assertTrue( StringUtils.endsWith( new StringBuffer(), "") );
+    }
+
+    public void testEndsWithEmptyString() {
+        assertTrue( StringUtils.endsWith( new StringBuffer("12234545"), "") );
+    }
+
+    public void testEndsWithShorterString() {
+        assertTrue( StringUtils.endsWith( new StringBuffer("12345678"), "78"));
+    }
+
+    public void testEndsWithSameString() {
+        assertTrue( StringUtils.endsWith( new StringBuffer("123"), "123"));
+    }
+
+    public void testEndsWithLongerString() {
+        assertFalse( StringUtils.endsWith( new StringBuffer("12"), "1245"));
+    }
+
+    public void testEndsWithNoMatch() {
+        assertFalse( StringUtils.endsWith( new StringBuffer("12345678"), "789"));
+    }
+
+    public void testEndsWithEmptyBuffer() {
+        assertFalse( StringUtils.endsWith( new StringBuffer(""), "12345667") );
+    }
+
+    public void testEndsWithJDKPerf() {
+        StringBuffer buf = getFilledBuffer(1024*300, 'a');
+        for (int i = 0; i < 1000; i++) {
+            assertTrue(buf.toString().endsWith("aa"));
+        }
+    }
+
+    public void testEndsWithPerf() {
+        StringBuffer buf = getFilledBuffer(1024*300, 'a');
+        for (int i = 0; i < 1000; i++) {
+            assertTrue(StringUtils.endsWith(buf, "aa"));
+        }
+    }
+
+    private StringBuffer getFilledBuffer(int size, char ch) {
+        StringBuffer buf = new StringBuffer(size);
+        for (int i = 0; i < size; i++) { buf.append(ch); };
+        return buf;
+    }
 }

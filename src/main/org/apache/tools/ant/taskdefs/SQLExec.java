@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
@@ -441,7 +442,7 @@ public class SQLExec extends JDBCTask {
     protected void runStatements(Reader reader, PrintStream out)
         throws SQLException, IOException {
         StringBuffer sql = new StringBuffer();
-        String line = "";
+        String line;
 
         BufferedReader in = new BufferedReader(reader);
 
@@ -481,7 +482,7 @@ public class SQLExec extends JDBCTask {
                 }
             }
             if ((delimiterType.equals(DelimiterType.NORMAL)
-                 && sql.toString().endsWith(delimiter))
+                 && StringUtils.endsWith(sql, delimiter))
                 ||
                 (delimiterType.equals(DelimiterType.ROW)
                  && line.equals(delimiter))) {
@@ -574,8 +575,7 @@ public class SQLExec extends JDBCTask {
      * @throws SQLException on SQL problems.
      */
     protected void printResults(PrintStream out) throws SQLException {
-        ResultSet rs = null;
-        rs = statement.getResultSet();
+        ResultSet rs = statement.getResultSet();
         try {
             printResults(rs, out);
         } finally {
