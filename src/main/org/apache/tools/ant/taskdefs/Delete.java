@@ -532,27 +532,33 @@ public class Delete extends MatchingTask {
             FileSet implicit = getImplicitFileSet();
             p.add(includeEmpty ? new BCFileSet(implicit) : implicit);
         }
-        Restrict e = new Restrict();
-        e.add(EXISTS);
-        e.add(p);
+        Restrict exists = new Restrict();
+        exists.add(EXISTS);
+        exists.add(p);
         // delete the files in the resource collections; sort to files, then dirs
         Sort s = new Sort();
         s.add(REVERSE_FILESYSTEM);
-        s.add(e);
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-            FileResource r = (FileResource) iter.next();
-            if (!(r.isDirectory()) || r.getFile().list().length == 0) {
-                log("Deleting " + r, verbosity);
-                if (!delete(r.getFile())) {
-                    String message = "Unable to delete "
-                        + (r.isDirectory() ? "directory " : "file ") + r;
-                    if (failonerror) {
-                        throw new BuildException(message);
+        s.add(exists);
+        String errorMessage = null;
+        try {
+            for (Iterator iter = s.iterator(); iter.hasNext();) {
+                FileResource r = (FileResource) iter.next();
+                if (!(r.isDirectory()) || r.getFile().list().length == 0) {
+                    log("Deleting " + r, verbosity);
+                    if (!delete(r.getFile())) {
+                        errorMessage = "Unable to delete "
+                            + (r.isDirectory() ? "directory " : "file ") + r;
                     }
-                    log(message,
-                        quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
+        } catch (Exception e) {
+            errorMessage = e.getMessage();
+        }
+        if (errorMessage != null) {
+            if (failonerror) {
+                throw new BuildException(errorMessage);
+            }
+            log(errorMessage, quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
         }
     }
 

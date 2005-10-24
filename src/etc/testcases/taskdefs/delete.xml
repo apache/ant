@@ -109,6 +109,12 @@
     </delete>
   </target>
 
+  <target name="test11">
+    <delete failonerror="false">
+      <fileset dir="thisdenotesadirectorythatwillneverexistblah" />
+    </delete>
+  </target>
+
   <target name="cleanup" depends="test4" />
 
 </project>
