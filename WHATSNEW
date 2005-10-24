@@ -147,6 +147,9 @@ Fixed bugs:
 * <cvschangelog> was crashing with CVS versions >= 1.12.x due to change in
   the date format. Bugzilla report 30962.
 
+* The same IntrospectionHelper instance was contineously added as a listener
+  to project. Bugzilla report 37184.
+
 Other changes:
 --------------
 * Fixed references to obsoleted CVS web site. Burzilla Report 36854.

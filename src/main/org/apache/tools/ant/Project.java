@@ -327,6 +327,10 @@ public class Project {
      *                 Must not be <code>null</code>.
      */
     public synchronized void addBuildListener(BuildListener listener) {
+        // If the listeners already has this listener, do nothing
+        if (listeners.contains(listener)) {
+            return;
+        }
         // create a new Vector to avoid ConcurrentModificationExc when
         // the listeners get added/removed while we are in fire
         Vector newListeners = getBuildListeners();
