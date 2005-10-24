@@ -324,18 +324,12 @@ public class Project {
      * be notified of build events for this project.
      *
      * @param listener The listener to add to the list.
-     *                 Must not be <code>null</code>.
+     *                 Ignored if <code>null</code>.
      */
     public synchronized void addBuildListener(BuildListener listener) {
-        // If the listeners already has this listener, do nothing
-        if (listeners.contains(listener)) {
-            return;
+        if (!(listener == null || listeners.contains(listener))) {
+            listeners.add(listener);
         }
-        // create a new Vector to avoid ConcurrentModificationExc when
-        // the listeners get added/removed while we are in fire
-        Vector newListeners = getBuildListeners();
-        newListeners.addElement(listener);
-        listeners = newListeners;
     }
 
     /**
@@ -346,11 +340,7 @@ public class Project {
      *                 Should not be <code>null</code>.
      */
     public synchronized void removeBuildListener(BuildListener listener) {
-        // create a new Vector to avoid ConcurrentModificationExc when
-        // the listeners get added/removed while we are in fire
-        Vector newListeners = getBuildListeners();
-        newListeners.removeElement(listener);
-        listeners = newListeners;
+        listeners.remove(listener);
     }
 
     /**
@@ -1847,7 +1837,7 @@ public class Project {
      * Send a &quot;build started&quot; event
      * to the build listeners for this project.
      */
-    public void fireBuildStarted() {
+    public synchronized void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         Iterator iter = listeners.iterator();
         while (iter.hasNext()) {
@@ -1863,7 +1853,7 @@ public class Project {
      *                  failure. May be <code>null</code>, indicating
      *                  a successful build.
      */
-    public void fireBuildFinished(Throwable exception) {
+    public synchronized void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         Iterator iter = listeners.iterator();
@@ -1879,7 +1869,7 @@ public class Project {
      *
      * @since Ant 1.6.2
      */
-    public void fireSubBuildStarted() {
+    public synchronized void fireSubBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         Iterator iter = listeners.iterator();
         while (iter.hasNext()) {
@@ -1899,7 +1889,7 @@ public class Project {
      *
      * @since Ant 1.6.2
      */
-    public void fireSubBuildFinished(Throwable exception) {
+    public synchronized void fireSubBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         Iterator iter = listeners.iterator();
@@ -1918,7 +1908,7 @@ public class Project {
      * @param target The target which is starting to build.
      *               Must not be <code>null</code>.
      */
-    protected void fireTargetStarted(Target target) {
+    protected synchronized void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
         Iterator iter = listeners.iterator();
         while (iter.hasNext()) {
@@ -1937,7 +1927,8 @@ public class Project {
      *                  failure. May be <code>null</code>, indicating
      *                  a successful build.
      */
-    protected void fireTargetFinished(Target target, Throwable exception) {
+    protected synchronized void fireTargetFinished(Target target,
+                                                   Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
         Iterator iter = listeners.iterator();
@@ -1954,7 +1945,7 @@ public class Project {
      * @param task The target which is starting to execute.
      *               Must not be <code>null</code>.
      */
-    protected void fireTaskStarted(Task task) {
+    protected synchronized void fireTaskStarted(Task task) {
         // register this as the current task on the current thread.
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
@@ -1975,7 +1966,7 @@ public class Project {
      *                  failure. May be <code>null</code>, indicating
      *                  a successful build.
      */
-    protected void fireTaskFinished(Task task, Throwable exception) {
+    protected synchronized void fireTaskFinished(Task task, Throwable exception) {
         registerThreadTask(Thread.currentThread(), null);
         System.out.flush();
         System.err.flush();
@@ -1999,8 +1990,9 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    private void fireMessageLoggedEvent(BuildEvent event, String message,
-                                        int priority) {
+    private synchronized void fireMessageLoggedEvent(BuildEvent event,
+                                                     String message,
+                                                     int priority) {
 
         if (message.endsWith(StringUtils.LINE_SEP)) {
             int endIndex = message.length() - StringUtils.LINE_SEP.length();
@@ -2047,8 +2039,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Project project, String message,
-                                     int priority) {
+    protected synchronized void fireMessageLogged(Project project, String message,
+                                                  int priority) {
         BuildEvent event = new BuildEvent(project);
         fireMessageLoggedEvent(event, message, priority);
     }
@@ -2062,8 +2054,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Target target, String message,
-                                     int priority) {
+    protected synchronized void fireMessageLogged(Target target, String message,
+                                                  int priority) {
         BuildEvent event = new BuildEvent(target);
         fireMessageLoggedEvent(event, message, priority);
     }
@@ -2077,7 +2069,8 @@ public class Project {
      * @param message  The message to send. Should not be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Task task, String message, int priority) {
+    protected synchronized void fireMessageLogged(Task task, String message,
+                                                  int priority) {
         BuildEvent event = new BuildEvent(task);
         fireMessageLoggedEvent(event, message, priority);
     }
