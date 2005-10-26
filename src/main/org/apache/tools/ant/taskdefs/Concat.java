@@ -571,7 +571,7 @@ public class Concat extends Task {
             throw new BuildException("Error while concatenating: "
                                      + ioex.getMessage(), ioex);
         } finally {
-            FILE_UTILS.close(os);
+            FileUtils.close(os);
         }
     }
 
