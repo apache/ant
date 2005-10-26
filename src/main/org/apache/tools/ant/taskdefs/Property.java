@@ -26,9 +26,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -603,8 +604,8 @@ public class Property extends Task {
         String propertyValue = props.getProperty(name);
         Vector fragments = new Vector();
         Vector propertyRefs = new Vector();
-        ProjectHelper.parsePropertyString(propertyValue, fragments,
-                                          propertyRefs);
+        PropertyHelper.getPropertyHelper(this.getProject()).parsePropertyString(propertyValue, fragments,
+                propertyRefs);
 
         if (propertyRefs.size() != 0) {
             referencesSeen.push(name);
