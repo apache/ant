@@ -35,7 +35,6 @@ import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Examines and removes out of date target files.  If any of the target files
@@ -81,7 +80,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class DependSet extends MatchingTask {
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final ResourceSelector NOT_EXISTS = new Not(new Exists());
     private static final ResourceComparator DATE_ASC
         = new org.apache.tools.ant.types.resources.comparators.Date();
