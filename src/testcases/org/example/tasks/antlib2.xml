@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<antlib>
+<macrodef name="simple">
+   <element name="some-tasks" optional="yes" implicit="yes"/>
+   <sequential>
+      <some-tasks/>
+   </sequential>
+</macrodef>
+</antlib>
+      
