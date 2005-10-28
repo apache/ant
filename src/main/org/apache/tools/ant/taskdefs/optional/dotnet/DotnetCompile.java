@@ -220,7 +220,7 @@ public abstract class DotnetCompile
         //bail on no references
         if (notEmpty(references)) {
             if (isWindows) {
-                return REFERENCE_OPTION + '\"' + references + '\"';
+                return '\"' + REFERENCE_OPTION + references + '\"';
             } else {
                 return REFERENCE_OPTION + references;
             }
@@ -871,7 +871,7 @@ public abstract class DotnetCompile
         Enumeration e = resources.elements();
         while (e.hasMoreElements()) {
             DotnetResource resource = (DotnetResource) e.nextElement();
-            command.addArgument(createResourceParameter(resource));
+            createResourceParameter(command, resource);
         }
     }
 
@@ -881,7 +881,7 @@ public abstract class DotnetCompile
      * @return a string containing the resource param, or a null string
      * to conditionally exclude a resource.
      */
-    protected abstract String createResourceParameter(DotnetResource resource);
+    protected abstract void createResourceParameter(NetCommand command, DotnetResource resource);
 
 
     /**
@@ -904,37 +904,20 @@ public abstract class DotnetCompile
         if (filesToBuild.size() == 0) {
             return 0;
         }
-        StringBuffer referenceList = new StringBuffer(REFERENCE_OPTION);
         //now scan the hashtable and add the files
         Enumeration files = filesToBuild.elements();
-        boolean firstEntry = true;
         while (files.hasMoreElements()) {
             File file = (File) files.nextElement();
             if (isFileManagedBinary(file)) {
-                if (!firstEntry) {
-                    referenceList.append(getReferenceDelimiter());
-                } else if (isWindows) {
-                    referenceList.append('\"');
-                }
-                referenceList.append(file.toString());
-                firstEntry = false;
+                if (isWindows) command.addArgument('"'+REFERENCE_OPTION+file.toString()+'"');
+                else command.addArgument(REFERENCE_OPTION+file.toString());
             } else {
                 log("ignoring " + file + " as it is not a managed executable",
                         Project.MSG_VERBOSE);
             }
 
         }
-        // hack: This means we've added at least one reference that's
-        // a managed binary
-        if (!firstEntry) {
-            //add it all to an argument
-            if (isWindows) {
-                command.addArgument(referenceList.toString() + '\"');
-            } else {
-                command.addArgument(referenceList.toString());
-            }
-        }
-        
+
         return filesOutOfDate;
     }
 

@@ -91,6 +91,13 @@ public class DotnetTest extends BuildFileTest {
     }
 
     /**
+     * A unit test for JUnit
+     */
+    public void testCscResources() throws Exception {
+        executeTarget("testCSCResources");
+    }
+
+    /**
      * test we can assemble
      */
     public void testILASM() throws Exception {

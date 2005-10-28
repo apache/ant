@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import org.apache.tools.ant.BuildException;
 
 import java.io.File;
+import java.util.ArrayList;
+import org.apache.tools.ant.types.FileSet;
+import java.util.Iterator;
+import org.apache.tools.ant.*;
 
 /**
  * class used by DotnetCompile to name resources, could be upgraded to a datatype
@@ -47,6 +51,16 @@ public class DotnetResource {
      * name of the object
      */
     private String name = null;
+
+    /**
+     * A list of filesets with resources.
+     */
+    private ArrayList fileSets=new ArrayList();
+
+    /**
+     * a namespace to be used with <filesets>
+     */
+    private String namespace = null;
 
     public boolean isEmbed() {
         return embed;
@@ -97,47 +111,103 @@ public class DotnetResource {
     }
 
     /**
+     * Filesets root namespace. The value always ends with '.' .
+     * @return String namespace name
+     */
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Sets filesets root namespace.
+     * @param namespace String root namespace
+     */
+    public void setNamespace(String namespace) {
+        if (namespace==null) this.namespace=null;
+        else this.namespace=(namespace.length()==0 || namespace.endsWith(".") ? namespace : namespace+'.');
+    }
+
+    private void checkParameters() {
+        if (hasFilesets()) {
+            if (getName()!=null) throw new BuildException(
+                "Cannot use <resource name=\"...\"> attribute with filesets");
+            if (getFile()!=null) throw new BuildException(
+                "Cannot use <resource file=\"...\"> attribute with filesets");
+        }
+        else {
+            if (getNamespace()!=null) throw new BuildException(
+                "Cannot use <resource namespace=\"...\"> attribute without filesets");
+        }
+    }
+    /**
      * build the C# style parameter (which has no public/private option)
      * @return the built C# style parameter
      */
-    public String getCSharpStyleParameter() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(isEmbed() ? "/resource" : "/linkresource");
-        buffer.append(':');
-        buffer.append(getFile().toString());
-        if (getName() != null) {
-            buffer.append(',');
-            buffer.append(getName());
+    public void getParameters(Project p, NetCommand command, boolean csharpStyle) {
+        checkParameters();
+        if (hasFilesets()) {
+            for (Iterator listIter=fileSets.iterator(); listIter.hasNext();) {
+                FileSet fs=(FileSet)listIter.next();;
+                String baseDirectory=fs.getDir(p).toString();
+                String namespace=getNamespace(); // ends with '.' or null
+                DirectoryScanner ds = fs.getDirectoryScanner(p);
+                String[] files = ds.getIncludedFiles();
+                for (int i=0; i<files.length; i++) {
+                    String file=files[i];
+                    command.addArgument(getParameter(baseDirectory+File.separatorChar+file, (namespace==null ? null : namespace+file.replace(File.separatorChar, '.')), csharpStyle));
+                }
+            }
         }
-        if (getPublic() != null) {
-            throw new BuildException("This compiler does not support the "
-                    + "public/private option.");
+        else {
+            command.addArgument(getParameter(getFile().toString(), getName(),
+                                             csharpStyle));
+        }
+    }
+
+    private String getParameter(String fileName, String name, boolean csharpStyle) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(isEmbed()?"/resource":"/linkresource");
+        buffer.append(':');
+        buffer.append(fileName);
+        if (name!=null) {
+            buffer.append(',');
+            buffer.append(name);
+            if (csharpStyle) {
+                if (getPublic()!=null) {
+                    throw new BuildException(
+                        "This compiler does not support the "
+                        +"public/private option.");
+                }
+                else {
+                    if (getPublic()!=null) {
+                        buffer.append(',');
+                        buffer.append(getPublic().booleanValue()
+                                      ?"public":"private");
+
+                    }
+                }
+            }
+            else if (getPublic()!=null) {
+                throw new BuildException("You cannot have a public or private "
+                                         +"option without naming the resource");
+            }
         }
         return buffer.toString();
     }
 
     /**
-     * This method gets the style of param used by VB and javascript
-     * @return The style VB parameter being used.
+     * Adds a resource file set.
+     * @param fileset FileSet
      */
-    public String getVbStyleParameter() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(isEmbed() ? "/resource" : "/linkresource");
-        buffer.append(':');
-        buffer.append(getFile().toString());
-        if (getName() != null) {
-            buffer.append(',');
-            buffer.append(getName());
-            if (getPublic() != null) {
-                buffer.append(',');
-                buffer.append(getPublic().booleanValue()
-                        ? "public" : "private");
+    public void addFileset(FileSet fileset) {
+        fileSets.add(fileset);
+    }
 
-            }
-        } else if (getPublic() != null) {
-            throw new BuildException("You cannot have a public or private "
-                    + "option without naming the resource");
-        }
-        return buffer.toString();
+    /**
+     * Checks that <resource> node has embedded <filesets>
+     * @return boolean
+     */
+    public boolean hasFilesets() {
+        return fileSets.size()>0;
     }
 }

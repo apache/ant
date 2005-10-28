@@ -352,8 +352,8 @@ public class VisualBasicCompile extends DotnetCompile {
      * @return a string containing the resource param, or a null string
      * to conditionally exclude a resource.
      */
-    protected String createResourceParameter(DotnetResource resource) {
-        return resource.getVbStyleParameter();
+    protected void createResourceParameter(NetCommand command, DotnetResource resource) {
+        resource.getParameters(getProject(), command, false);
     }
 
     /**

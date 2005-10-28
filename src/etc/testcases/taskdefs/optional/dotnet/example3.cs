@@ -17,10 +17,13 @@
 
 using System;
 
-public class Example {
+/**
+ * this is just here to create confusion
+ */
+public class Example3 {
 
-    public static void Main(String[] args) {
-            Example2.echo();
-            Example3.echo();
+    public static void echo() {
+        Console.WriteLine("hello, I look like Java, but I'm really .NET");
     }
+
 }
