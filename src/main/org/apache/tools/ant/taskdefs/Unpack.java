@@ -21,6 +21,9 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * Abstract Base class for unpack tasks.
@@ -32,6 +35,7 @@ public abstract class Unpack extends Task {
 
     protected File source;
     protected File dest;
+    protected Resource srcResource;
 
     /**
      * @deprecated setSrc(String) is deprecated and is replaced with
@@ -66,7 +70,39 @@ public abstract class Unpack extends Task {
      * @param src file to expand
      */
     public void setSrc(File src) {
-        source = src;
+        setSrcResource(new FileResource(src));
+    }
+
+    /**
+     * The resource to expand; required.
+     * @param src resource to expand
+     */
+    public void setSrcResource(Resource src) {
+        if (!src.isExists()) {
+            throw new BuildException("the archive doesn't exist");
+        }
+        if (src.isDirectory()) {
+            throw new BuildException("the archive can't be a directory");
+        }
+        if (src instanceof FileResource) {
+            source = ((FileResource) src).getFile();
+        } else if (!supportsNonFileResources()) {
+            throw new BuildException("Only FileSystem resources are"
+                                     + " supported.");
+        }
+        srcResource = src;
+    }
+
+    /**
+     * Set the source Archive resource.
+     * @param a the archive as a single element Resource collection.
+     */
+    public void addConfigured(ResourceCollection a) {
+        if (a.size() != 1) {
+            throw new BuildException("only single argument resource collections"
+                                     + " are supported as archives");
+        }
+        setSrcResource((Resource) a.iterator().next());
     }
 
     /**
@@ -78,16 +114,8 @@ public abstract class Unpack extends Task {
     }
 
     private void validate() throws BuildException {
-        if (source == null) {
+        if (srcResource == null) {
             throw new BuildException("No Src specified", getLocation());
-        }
-
-        if (!source.exists()) {
-            throw new BuildException("Src doesn't exist", getLocation());
-        }
-
-        if (source.isDirectory()) {
-            throw new BuildException("Cannot expand a directory", getLocation());
         }
 
         if (dest == null) {
@@ -140,4 +168,16 @@ public abstract class Unpack extends Task {
      * This is to be overridden by subclasses.
      */
     protected abstract void extract();
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns false.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return false;
+    }
+
 }

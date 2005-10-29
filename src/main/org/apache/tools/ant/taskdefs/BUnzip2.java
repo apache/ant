@@ -19,9 +19,9 @@ package org.apache.tools.ant.taskdefs;
 
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.bzip2.CBZip2InputStream;
@@ -58,11 +58,11 @@ public class BUnzip2 extends Unpack {
 
             FileOutputStream out = null;
             CBZip2InputStream zIn = null;
-            FileInputStream fis = null;
+            InputStream fis = null;
             BufferedInputStream bis = null;
             try {
                 out = new FileOutputStream(dest);
-                fis = new FileInputStream(source);
+                fis = srcResource.getInputStream();
                 bis = new BufferedInputStream(fis);
                 int b = bis.read();
                 if (b != 'B') {
@@ -89,5 +89,20 @@ public class BUnzip2 extends Unpack {
                 FileUtils.close(zIn);
             }
         }
+    }
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;gunzip&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(BUnzip2.class);
     }
 }

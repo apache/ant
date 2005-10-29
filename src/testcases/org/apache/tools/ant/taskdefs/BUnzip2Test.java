@@ -42,17 +42,22 @@ public class BUnzip2Test extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void testRealTest() throws IOException {
-        executeTarget("realTest");
+    public void testRealTest() throws java.io.IOException {
+        testRealTest("realTest");
+    }
+
+    public void testRealTestWithResource() throws java.io.IOException {
+        testRealTest("realTestWithResource");
+    }
+
+    private void testRealTest(String target) throws java.io.IOException {
+        executeTarget(target);
         assertTrue("File content mismatch after bunzip2",
             FILE_UTILS.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
                                     project.resolveFile("asf-logo-huge.tar")));
     }
 
     public void testDocumentationClaimsOnCopy() throws java.io.IOException {
-        executeTarget("testDocumentationClaimsOnCopy");
-        assertTrue("File content mismatch after bunzip2",
-            FILE_UTILS.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
-                                    project.resolveFile("asf-logo-huge.tar")));
+        testRealTest("testDocumentationClaimsOnCopy");
     }
 }
