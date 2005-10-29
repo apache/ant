@@ -43,11 +43,11 @@ note that ZIP files store file modification times with a granularity
 of two seconds.  If a file is less than two seconds newer than the
 entry in the archive, Ant will not consider it newer.</p>
 
-<p>The <code>whenmanifestonly</code> parameter controls what happens when no 
+<p>The <code>whenmanifestonly</code> parameter controls what happens when no
 files, apart from the manifest file, match.
 If <code>skip</code>, the JAR is not created and a warning is issued.
 If <code>fail</code>, the JAR is not created and the build is halted with an error.
-If <code>create</code>, (default) an empty JAR file (only containing a manifest) 
+If <code>create</code>, (default) an empty JAR file (only containing a manifest)
 is created.</p>
 
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
@@ -230,9 +230,9 @@ If both an inline manifest and an external file are both specified, the
 manifests are merged.
 </p>
 
-<p>When using inline manifests, the Jar task will check whether the manifest 
-contents have changed (i.e. the manifest as specified is different in any way 
-from the manifest that exists in the Jar, if it exists. 
+<p>When using inline manifests, the Jar task will check whether the manifest
+contents have changed (i.e. the manifest as specified is different in any way
+from the manifest that exists in the Jar, if it exists.
 If the manifest values have changed the jar will be updated or rebuilt, as
 appropriate.
 </p>
@@ -314,9 +314,9 @@ produced by the above would look like this:
 </p>
 <pre><code>Manifest-Version: 1.0
 Built-By: conor
-Created-By: Apache Ant 1.5alpha
+Created-By: Apache Ant 1.6.5
 
-Name: common/class1.class
+Name: common/MyClass.class
 Sealed: false</code></pre>
 
 <hr>
@@ -325,4 +325,3 @@ Reserved.</p>
 
 </body>
 </html>
-
