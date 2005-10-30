@@ -20,13 +20,13 @@ Collection</a>s are used to select a group of files to copy.  To use a
 resource collection, the <code>todir</code> attribute must be set.</p>
 
 <p>
-<strong>Note: </strong>If you employ filters in your copy operation, you should 
+<strong>Note: </strong>If you employ filters in your copy operation, you should
 limit the copy to text files. Binary files will be corrupted by the copy operation.
-This applies whether the filters are implicitly defined by the 
+This applies whether the filters are implicitly defined by the
 <a href="filter.html">filter</a> task or explicitly provided to the copy
 operation as <a href="../CoreTypes/filterset.html">filtersets</a>
 </p>
- 
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -229,12 +229,41 @@ in all files.</b></p>
 <p><b>Collect all items from the current CLASSPATH setting into a
 destination directory, flattening the directory structure.</b></p>
 <pre>
-  &lt;copy todir="dest" flatten="true"&gt;
+  &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
     &lt;path&gt;
-      &lt;pathelement path="${java.class.path}"/&gt;
+      &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
     &lt;/path&gt;
   &lt;/copy&gt;
 </pre>
+
+<p><b>Copies some resources to a given directory.</b></p>
+<pre>
+  &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
+    &lt;resources&gt;
+      &lt;file file=&quot;src_dir/file1.txt&quot;/&gt;
+      &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt;
+    &lt;/resources&gt;
+  &lt;/copy&gt;
+</pre>
+
+<p><b>Copies the two newest resources into a destination directory.</b></p>
+<pre>
+  &lt;typedef name="date" classname="org.apache.tools.ant.types.resources.comparators.Date"/&gt;
+  &lt;copy todir="${to.dir}" flatten="true"&gt;
+    &lt;first count="2"&gt;
+      &lt;sort&gt;
+        &lt;date/&gt;
+        &lt;resources&gt;
+          &lt;file file="${from.dir}/file1.txt"/&gt;
+          &lt;file file="${from.dir}/file2.txt"/&gt;
+          &lt;file file="${from.dir}/file3.txt"/&gt;
+          &lt;url url="http://ant.apache.org/index.html"/&gt;
+        &lt;/resources&gt;
+      &lt;/sort&gt;
+    &lt;/first&gt;
+  &lt;/copy&gt;
+</pre>
+
 
 <p><strong>Unix Note:</strong> File permissions are not retained when files
 are copied; they end up with the default <code>UMASK</code> permissions
@@ -256,4 +285,3 @@ All rights Reserved.</p>
 
 </body>
 </html>
-
