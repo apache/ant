@@ -248,16 +248,16 @@ destination directory, flattening the directory structure.</b></p>
 
 <p><b>Copies the two newest resources into a destination directory.</b></p>
 <pre>
-  &lt;typedef name="date" classname="org.apache.tools.ant.types.resources.comparators.Date"/&gt;
-  &lt;copy todir="${to.dir}" flatten="true"&gt;
-    &lt;first count="2"&gt;
+  &lt;typedef name=&quot;date&quot; classname=&quot;org.apache.tools.ant.types.resources.comparators.Date&quot;/&gt;
+  &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
+    &lt;first count=&quot;2&quot;&gt;
       &lt;sort&gt;
-        &lt;date/&gt;
+        &lt;date xmlns=&quot;antlib:org.apache.tools.ant.types.resources.comparators&quot;/&gt;
         &lt;resources&gt;
-          &lt;file file="${from.dir}/file1.txt"/&gt;
-          &lt;file file="${from.dir}/file2.txt"/&gt;
-          &lt;file file="${from.dir}/file3.txt"/&gt;
-          &lt;url url="http://ant.apache.org/index.html"/&gt;
+          &lt;file file=&quot;src_dir/file1.txt&quot;/&gt;
+          &lt;file file=&quot;src_dir/file2.txt&quot;/&gt;
+          &lt;file file=&quot;src_dir/file3.txt&quot;/&gt;
+          &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt;
         &lt;/resources&gt;
       &lt;/sort&gt;
     &lt;/first&gt;
