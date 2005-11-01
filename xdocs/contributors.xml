@@ -57,7 +57,12 @@ Java Development with Ant</a> and speaks on Ant and other topics at
 symposiums</a> as well as other venues.  Erik is the President of
 <a href="http://www.ehatchersolutions.com">eHatcher Solutions, Inc</a>.
 </p>
-
+            <p>
+                <b>Martijn (J.M.) Kruithof</b> (ant at kruithof xs4all nl)
+<br/>
+Martijn Kruithof is a system engineer working with and on Java products 
+in a telecommunication network setting.
+</p>
             <p>
                 <b>Antoine Levy-Lambert</b> (antoine at apache.org)
 <br/>
@@ -188,13 +193,6 @@ part of the company that produced the NetBeans IDE. After discovering
 Ant in the 1.2 days, he wrote most of NetBeans' Ant integration.
 Recently he has worked on the NetBeans 4.0 project system, based heavily
 on Ant as a build tool.
-</p>
-
-            <p>
-                <b>Martijn (J.M.) Kruithof</b> (ant at kruithof xs4all nl)
-<br/>
-Martijn Kruithof is a system engineer working with and on Java products 
-in a telecommunication network setting.
 </p>
 <p>
    <b>Alexey Solofnenko</b> (trelony at gmail.com)<br />
