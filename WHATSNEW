@@ -66,6 +66,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Problem when adding multiple filter files, Bugzilla Report 37341
+
 * problem refering jars specfied by Class-Path attribute in manifest
   of a ant task jar file, when this ant task jar file is located in
   a directory with space, Bugzilla Report 37085 
