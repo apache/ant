@@ -326,6 +326,7 @@ public class FilterSet extends DataType implements Cloneable {
            throw new BuildException("Must specify a file not a directory in "
             + "the filtersfile attribute:" + filtersFile);
         }
+        filterHash = null;
     }
 
     /**
