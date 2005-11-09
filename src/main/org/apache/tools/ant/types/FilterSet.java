@@ -24,8 +24,9 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A set of filters to be applied to something.
@@ -314,13 +315,7 @@ public class FilterSet extends DataType implements Cloneable {
               throw new BuildException("Could not read filters from file: "
                 + filtersFile);
            } finally {
-              if (in != null) {
-                 try {
-                    in.close();
-                 } catch (IOException ioex) {
-                     // ignore
-                 }
-              }
+              FileUtils.close(in);
            }
         } else {
            throw new BuildException("Must specify a file not a directory in "
