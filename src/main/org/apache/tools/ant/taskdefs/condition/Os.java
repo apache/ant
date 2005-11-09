@@ -250,7 +250,7 @@ public class Os implements Condition {
                 boolean isWindows = OS_NAME.indexOf(FAMILY_WINDOWS) > -1;
                 boolean is9x = false;
                 boolean isNT = false;
-                if(isWindows) {
+                if (isWindows) {
                     //there are only four 9x platforms that we look for
                     is9x = (OS_NAME.indexOf("95") >= 0
                             || OS_NAME.indexOf("98") >= 0
