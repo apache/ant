@@ -20,9 +20,11 @@
   -Ddest=system   ant lib dir   ${ant.home}/lib --Default--
   -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
   
-  You may also need to set proxy settings. This can be done by
-  setting the JVM proxy values in the ANT_OPTS environment
-  variables.
+  You may also need to set proxy settings. On Java1.5, Ant tries to get
+  this from the OS, unless you use the -noproxy option. 
+  
+  Proxies can be configured manually setting the JVM proxy values in the
+  ANT_OPTS environment variable.
 
   For example, to set the proxy up in the tcsh shell, the command would be
   something like:
@@ -32,7 +34,8 @@
   For bash:
     export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
   For Windows, set the environment variable in the appropriate dialog box
-  and open a new console.
+  and open a new console. or, by hand
+    set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
 </description>
 
   <!-- Give user a chance to override without editing this file

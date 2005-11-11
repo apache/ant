@@ -60,7 +60,7 @@ Changes that could break older environments:
   java.net.useSystemProxies to true, which gives it automatic use of the local
   IE (Windows) or Gnome2 (Unix/Linux) proxy settings. This may break any build
   file that somehow relied on content outside the firewall being unreachable:
-  use the -noproxy command-line option to disable this new feature, or set
+  use the -noproxy command-line option to disable this new feature.
   
 
 
