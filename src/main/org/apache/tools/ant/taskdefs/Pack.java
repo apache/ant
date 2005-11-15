@@ -17,14 +17,15 @@
 
 package org.apache.tools.ant.taskdefs;
 
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * Abstract Base class for pack tasks.
@@ -36,6 +37,7 @@ public abstract class Pack extends Task {
 
     protected File zipFile;
     protected File source;
+    private Resource src;
 
     /**
      * the required destination file.
@@ -58,9 +60,37 @@ public abstract class Pack extends Task {
      * @param src the source file
      */
     public void setSrc(File src) {
-        source = src;
+        setSrcResource(new FileResource(src));
     }
 
+    /**
+     * The resource to pack; required.
+     * @param src resource to expand
+     */
+    public void setSrcResource(Resource src) {
+        if (src.isDirectory()) {
+            throw new BuildException("the source can't be a directory");
+        }
+        if (src instanceof FileResource) {
+            source = ((FileResource) src).getFile();
+        } else if (!supportsNonFileResources()) {
+            throw new BuildException("Only FileSystem resources are"
+                                     + " supported.");
+        }
+        this.src = src;
+    }
+
+    /**
+     * Set the source resource.
+     * @param a the resource to pack as a single element Resource collection.
+     */
+    public void addConfigured(ResourceCollection a) {
+        if (a.size() != 1) {
+            throw new BuildException("only single argument resource collections"
+                                     + " are supported as archives");
+        }
+        setSrcResource((Resource) a.iterator().next());
+    }
 
     /**
      * validation routine
@@ -76,13 +106,9 @@ public abstract class Pack extends Task {
                                     + "represent a directory!", getLocation());
         }
 
-        if (source == null) {
-            throw new BuildException("src attribute is required", getLocation());
-        }
-
-        if (source.isDirectory()) {
-            throw new BuildException("Src attribute must not "
-                                    + "represent a directory!", getLocation());
+        if (getSrcResource() == null) {
+            throw new BuildException("src attribute or nested resource is"
+                                     + " required", getLocation());
         }
     }
 
@@ -93,10 +119,11 @@ public abstract class Pack extends Task {
     public void execute() throws BuildException {
         validate();
 
-        if (!source.exists()) {
-            log("Nothing to do: " + source.getAbsolutePath()
+        Resource s = getSrcResource();
+        if (!s.isExists()) {
+            log("Nothing to do: " + s.toString()
                 + " doesn't exist.");
-        } else if (zipFile.lastModified() < source.lastModified()) {
+        } else if (zipFile.lastModified() < s.getLastModified()) {
             log("Building: " + zipFile.getAbsolutePath());
             pack();
         } else {
@@ -129,11 +156,22 @@ public abstract class Pack extends Task {
      */
     protected void zipFile(File file, OutputStream zOut)
         throws IOException {
-        FileInputStream fIn = new FileInputStream(file);
+        zipResource(new FileResource(file), zOut);
+    }
+
+    /**
+     * zip a resource to an output stream
+     * @param resource the resource to zip
+     * @param zOut the output stream
+     * @throws IOException on error
+     */
+    protected void zipResource(Resource resource, OutputStream zOut)
+        throws IOException {
+        InputStream rIn = resource.getInputStream();
         try {
-            zipFile(fIn, zOut);
+            zipFile(rIn, zOut);
         } finally {
-            fIn.close();
+            rIn.close();
         }
     }
 
@@ -141,4 +179,24 @@ public abstract class Pack extends Task {
      * subclasses must implement this method to do their compression
      */
     protected abstract void pack();
+
+    /**
+     * The source resource.
+     *
+     * @since Ant 1.7
+     */
+    public Resource getSrcResource() {
+        return src;
+    }
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns false.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return false;
+    }
 }

@@ -10,9 +10,9 @@
 
 <h2><a name="pack">GZip/BZip2</a></h2>
 <h3>Description</h3>
-<p>Packs a file using the GZip or BZip2 algorithm.
+<p>Packs a resource using the GZip or BZip2 algorithm.
 The output file is only generated if it doesn't exist or the source
-file is newer.</p>
+resource is newer.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -23,7 +23,7 @@ file is newer.</p>
   <tr>
     <td valign="top">src</td>
     <td valign="top">the file to gzip/bzip.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes, or a nested resource collection.</td>
   </tr>
   <tr>
     <td valign="top">destfile</td>
@@ -35,6 +35,11 @@ file is newer.</p>
     <td valign="top">the <i>deprecated</i> old name of destfile.</td>
   </tr>
 </table>
+<h4>any <a href="../CoreTypes/resources.html">resource</a> or single element
+resource collection</h4>
+
+<p>The specified resource will be used as src.</p>
+
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;gzip src=&quot;test.tar&quot; destfile=&quot;test.tar.gz&quot;/&gt;
@@ -42,6 +47,13 @@ file is newer.</p>
 <blockquote><pre>
 &lt;bzip2 src=&quot;test.tar&quot; destfile=&quot;test.tar.bz2&quot;/&gt;
 </pre></blockquote>
+<blockquote><pre>
+&lt;gzip destfile=&quot;archive.tar.gz&quot;&gt;
+  &lt;url url="http://example.org/archive.tar"/&gt;
+&lt;/gzip&gt;
+</pre></blockquote>
+<p>downloads <i>http://example.org/archive.tar</i> and compresses it
+to <i>archive.tar.gz</i> in the project's basedir on the fly.</p>
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>

@@ -95,6 +95,10 @@ public class BZip2Test extends BuildFileTest {
         actualIn.close();
     }
 
+    public void testResource(){
+        executeTarget("realTestWithResource");
+    }
+
     public void testDateCheck(){
         executeTarget("testDateCheck");
         String log = getLog();

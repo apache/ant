@@ -22,6 +22,12 @@
     <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
   </target>
 
+  <target name="realTestWithResource">
+    <gzip zipfile="asf-logo.gif.gz">
+      <file file="../asf-logo.gif"/>
+    </gzip>    
+  </target>
+
   <target name="testDateCheck">
     <touch file="asf-logo.gif.gz"/>
     <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />

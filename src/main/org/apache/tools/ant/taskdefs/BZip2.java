@@ -22,6 +22,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**
@@ -42,19 +43,27 @@ public class BZip2 extends Pack {
             bos.write('B');
             bos.write('Z');
             zOut = new CBZip2OutputStream(bos);
-            zipFile(source, zOut);
+            zipResource(getSrcResource(), zOut);
         } catch (IOException ioe) {
             String msg = "Problem creating bzip2 " + ioe.getMessage();
             throw new BuildException(msg, ioe, getLocation());
         } finally {
-            if (zOut != null) {
-                try {
-                    // close up
-                    zOut.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
+            FileUtils.close(zOut);
         }
+    }
+
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;bzip2&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(BZip2.class);
     }
 }
