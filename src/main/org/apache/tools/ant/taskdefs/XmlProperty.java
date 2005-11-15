@@ -26,7 +26,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -171,7 +174,7 @@ import org.xml.sax.EntityResolver;
 
 public class XmlProperty extends org.apache.tools.ant.Task {
 
-    private File src;
+    private Resource src;
     private String prefix = "";
     private boolean keepRoot = true;
     private boolean validate = false;
@@ -226,22 +229,29 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     public void execute()
             throws BuildException {
 
-        if (getFile() == null) {
-            String msg = "XmlProperty task requires a file attribute";
+        Resource r = getResource();
+
+        if (r == null) {
+            String msg = "XmlProperty task requires a source resource";
             throw new BuildException(msg);
         }
 
         try {
-            log("Loading " + src.getAbsolutePath(), Project.MSG_VERBOSE);
+            log("Loading " + src, Project.MSG_VERBOSE);
 
-            if (src.exists()) {
+            if (r.isExists()) {
 
               DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
               factory.setValidating(validate);
               factory.setNamespaceAware(false);
               DocumentBuilder builder = factory.newDocumentBuilder();
               builder.setEntityResolver(getEntityResolver());
-              Document document = builder.parse(src);
+              Document document = null;
+              if (src instanceof FileResource) {
+                  document = builder.parse(((FileResource) src).getFile());
+              } else {
+                  document = builder.parse(src.getInputStream());
+              }
               Element topElement = document.getDocumentElement();
 
               // Keep a hashtable of attributes added by this task.
@@ -261,7 +271,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               }
 
             } else {
-                log("Unable to find property file: " + src.getAbsolutePath(),
+                log("Unable to find property resource: " + r,
                     Project.MSG_VERBOSE);
             }
 
@@ -547,7 +557,34 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * @param src the file to parse
      */
     public void setFile(File src) {
+        setSrcResource(new FileResource(src));
+    }
+
+    /**
+     * The resource to pack; required.
+     * @param src resource to expand
+     */
+    public void setSrcResource(Resource src) {
+        if (src.isDirectory()) {
+            throw new BuildException("the source can't be a directory");
+        }
+        if (src instanceof FileResource && !supportsNonFileResources()) {
+            throw new BuildException("Only FileSystem resources are"
+                                     + " supported.");
+        }
         this.src = src;
+    }
+
+    /**
+     * Set the source resource.
+     * @param a the resource to pack as a single element Resource collection.
+     */
+    public void addConfigured(ResourceCollection a) {
+        if (a.size() != 1) {
+            throw new BuildException("only single argument resource collections"
+                                     + " are supported as archives");
+        }
+        setSrcResource((Resource) a.iterator().next());
     }
 
     /**
@@ -626,7 +663,25 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * @return the file attribute.
      */
     protected File getFile () {
-        return this.src;
+        if (src instanceof FileResource) {
+            return ((FileResource) src).getFile();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return the resource.
+     */
+    protected Resource getResource() {
+        // delegate this way around to support subclasses that
+        // overwrite getFile
+        File f = getFile();
+        if (f != null) {
+            return new FileResource(f);
+        } else {
+            return src;
+        }
     }
 
     /**
@@ -689,4 +744,18 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         return FILE_UTILS.resolveFile(rootDirectory, fileName);
     }
 
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;gzip&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(XmlProperty.class);
+    }
 }

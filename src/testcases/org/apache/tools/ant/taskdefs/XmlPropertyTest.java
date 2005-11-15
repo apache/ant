@@ -44,8 +44,16 @@ public class XmlPropertyTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/xmlproperty.xml");
     }
 
-    public void testProperties() {
-        executeTarget("test");
+    public void testFile() {
+        testProperties("test");
+    }
+
+    public void testResource() {
+        testProperties("testResource");
+    }
+
+    private void testProperties(String target) {
+        executeTarget(target);
         assertEquals("true", getProject().getProperty("root-tag(myattr)"));
         assertEquals("Text", getProject().getProperty("root-tag.inner-tag"));
         assertEquals("val",
