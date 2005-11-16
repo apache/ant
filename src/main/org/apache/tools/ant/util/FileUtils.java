@@ -68,6 +68,8 @@ public class FileUtils {
 
     static final int BUF_SIZE = 8192;
 
+    // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
+    // of the Xerces-J team
     // which ASCII characters need to be escaped
     private static boolean gNeedEscaping[] = new boolean[128];
     // the first hex character if a character needs to be escaped
