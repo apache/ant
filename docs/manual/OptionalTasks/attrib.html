@@ -82,6 +82,19 @@ directory tree), so you'll have to experiment a little.</p>
       Defaults to <code>false</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">parallel</td>
+    <td valign="top">process all specified files using a single
+      <code>chmod</code> command. Defaults to true.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">maxparallel</td>
+    <td valign="top">Limit the amount of parallelism by passing at
+      most this many sourcefiles at once.  Set it to &lt;= 0 for
+      unlimited.  Defaults to unlimited.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
   <blockquote>
