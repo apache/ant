@@ -266,8 +266,8 @@ Resource Collection</a>s are used to
       <p><b>Concatenate a number of binary files.</b></p>
         <pre>
    &lt;concat destfile="${build.dir}/dist.bin" binary="yes"&gt;
-     &lt;fileset file="${src.dir}/scripts/dist.sh"&gt;
-     &lt;fileset file="${build.dir}/dist.tar.bz2"&gt;
+     &lt;fileset file="${src.dir}/scripts/dist.sh" /&gt;
+     &lt;fileset file="${build.dir}/dist.tar.bz2" /&gt;
    &lt;/concat&gt;
         </pre>
 
