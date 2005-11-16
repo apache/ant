@@ -470,6 +470,10 @@ public class FileUtilsTest extends TestCase {
         assertEquals("file:///" + dosRoot + "foo%20bar", FILE_UTILS.toURI("\\foo bar"));
         assertEquals("file:///" + dosRoot + "foo%23bar", FILE_UTILS.toURI("/foo#bar"));
         assertEquals("file:///" + dosRoot + "foo%23bar", FILE_UTILS.toURI("\\foo#bar"));
+        // a test with ant for germans
+        // i would expect here %E4NT ???
+        // anyway, this is the fix for the bug 37348wh
+        assertEquals("file:///" + dosRoot + "%C3%A4nt", FILE_UTILS.toURI("/\u00E4nt"));
     }
 
     /**

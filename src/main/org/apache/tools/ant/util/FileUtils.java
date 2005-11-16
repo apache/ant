@@ -44,6 +44,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.launch.Locator;
+import org.apache.xerces.util.URI;
 
 /**
  * This class also encapsulates methods which allow Files to be
@@ -67,10 +68,35 @@ public class FileUtils {
 
     static final int BUF_SIZE = 8192;
 
-    // for toURI
-    private static boolean[] isSpecial = new boolean[256];
-    private static char[] escapedChar1 = new char[256];
-    private static char[] escapedChar2 = new char[256];
+    // which ASCII characters need to be escaped
+    private static boolean gNeedEscaping[] = new boolean[128];
+    // the first hex character if a character needs to be escaped
+    private static char gAfterEscaping1[] = new char[128];
+    // the second hex character if a character needs to be escaped
+    private static char gAfterEscaping2[] = new char[128];
+    private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    // initialize the above 3 arrays
+    static {
+        for (int i = 0; i <= 0x1f; i++) {
+            gNeedEscaping[i] = true;
+            gAfterEscaping1[i] = gHexChs[i >> 4];
+            gAfterEscaping2[i] = gHexChs[i & 0xf];
+        }
+        gNeedEscaping[0x7f] = true;
+        gAfterEscaping1[0x7f] = '7';
+        gAfterEscaping2[0x7f] = 'F';
+        char[] escChs = {' ', '<', '>', '#', '%', '"', '{', '}',
+                         '|', '\\', '^', '~', '[', ']', '`'};
+        int len = escChs.length;
+        char ch;
+        for (int i = 0; i < len; i++) {
+            ch = escChs[i];
+            gNeedEscaping[ch] = true;
+            gAfterEscaping1[ch] = gHexChs[ch >> 4];
+            gAfterEscaping2[ch] = gHexChs[ch & 0xf];
+        }
+    }
 
     /**
      * The granularity of timestamps under FAT.
@@ -89,27 +115,6 @@ public class FileUtils {
      */
     public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
 
-    // stolen from FilePathToURI of the Xerces-J team
-    static {
-        for (int i = 0; i <= 0x20; i++) {
-            isSpecial[i] = true;
-            escapedChar1[i] = Character.forDigit(i >> 4, 16);
-            escapedChar2[i] = Character.forDigit(i & 0xf, 16);
-        }
-        isSpecial[0x7f] = true;
-        escapedChar1[0x7f] = '7';
-        escapedChar2[0x7f] = 'F';
-        char[] escChs = {'<', '>', '#', '%', '"', '{', '}',
-                         '|', '\\', '^', '~', '[', ']', '`'};
-        int len = escChs.length;
-        char ch;
-        for (int i = 0; i < len; i++) {
-            ch = escChs[i];
-            isSpecial[ch] = true;
-            escapedChar1[ch] = Character.forDigit(ch >> 4, 16);
-            escapedChar2[ch] = Character.forDigit(ch & 0xf, 16);
-        }
-    }
 
     /**
      * Factory method.
@@ -1025,8 +1030,9 @@ public class FileUtils {
      *
      * <p>Will be an absolute URI if the given path is absolute.</p>
      *
-     * <p>This code doesn't handle non-ASCII characters properly.</p>
+     * <p>This code encodes non ASCII characters too.</p>
      *
+     * <p>The coding of the output is the same as what File.toURI().toASCIIString() produces</p>
      * @param path the path in the local file system.
      * @return the URI version of the local path.
      * @since Ant 1.6
@@ -1037,6 +1043,7 @@ public class FileUtils {
         StringBuffer sb = new StringBuffer("file:");
 
         path = resolveFile(null, path).getPath();
+        int len = path.length(), ch;
         sb.append("//");
         // add an extra slash for filesystems with drive-specifiers
         if (!path.startsWith(File.separator)) {
@@ -1044,17 +1051,57 @@ public class FileUtils {
         }
         path = path.replace('\\', '/');
 
-        CharacterIterator iter = new StringCharacterIterator(path);
-        for (char c = iter.first(); c != CharacterIterator.DONE;
-             c = iter.next()) {
-            if (c < 256 && isSpecial[c]) {
+        int i = 0;
+        for (; i < len; i++) {
+            ch = path.charAt(i);
+            // if it's not an ASCII character, break here, and use UTF-8 encoding
+            if (ch >= 128)
+                break;
+            if (gNeedEscaping[ch]) {
                 sb.append('%');
-                sb.append(escapedChar1[c]);
-                sb.append(escapedChar2[c]);
-            } else {
-                sb.append(c);
+                sb.append(gAfterEscaping1[ch]);
+                sb.append(gAfterEscaping2[ch]);
+                // record the fact that it's escaped
+            }
+            else {
+                sb.append((char)ch);
             }
         }
+
+        // we saw some non-ascii character
+        if (i < len) {
+            // get UTF-8 bytes for the remaining sub-string
+            byte[] bytes = null;
+            byte b;
+            try {
+                bytes = path.substring(i).getBytes("UTF-8");
+            } catch (java.io.UnsupportedEncodingException e) {
+                // should never happen
+                throw new BuildException(e);
+            }
+            len = bytes.length;
+
+            // for each byte
+            for (i = 0; i < len; i++) {
+                b = bytes[i];
+                // for non-ascii character: make it positive, then escape
+                if (b < 0) {
+                    ch = b + 256;
+                    sb.append('%');
+                    sb.append(gHexChs[ch >> 4]);
+                    sb.append(gHexChs[ch & 0xf]);
+                }
+                else if (gNeedEscaping[b]) {
+                    sb.append('%');
+                    sb.append(gAfterEscaping1[b]);
+                    sb.append(gAfterEscaping2[b]);
+                }
+                else {
+                    sb.append((char)b);
+                }
+            }
+        }
+
         if (isDir && !path.endsWith("/")) {
             sb.append('/');
         }

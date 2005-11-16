@@ -152,6 +152,10 @@ Fixed bugs:
 * The same IntrospectionHelper instance was contineously added as a listener
   to project. Bugzilla report 37184.
 
+* FileUtils.toURI() was not encoding non ASCII characters to ASCII,
+  causing impossibility to process XML entities referenced by XML
+  documents in non ASCII paths. Bugzilla report 37348.
+
 Other changes:
 --------------
 * Fixed references to obsoleted CVS web site. Burzilla Report 36854.
