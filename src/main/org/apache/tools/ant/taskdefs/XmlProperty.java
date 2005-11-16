@@ -748,7 +748,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * Whether this task can deal with non-file resources.
      *
      * <p>This implementation returns true only if this task is
-     * &lt;gzip&gt;.  Any subclass of this class that also wants to
+     * &lt;xmlproperty&gt;.  Any subclass of this class that also wants to
      * support non-file resources needs to override this method.  We
      * need to do so for backwards compatibility reasons since we
      * can't expect subclasses to support resources.</p>
