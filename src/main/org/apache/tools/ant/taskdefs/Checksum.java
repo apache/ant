@@ -28,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -38,12 +37,10 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
@@ -621,13 +618,7 @@ public class Checksum extends MatchingTask implements Condition {
         } catch (ParseException e) {
             throw new BuildException("Couldn't read checksum file " + f, e);
         } finally {
-            if (diskChecksumReader != null) {
-                try {
-                    diskChecksumReader.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+        	FileUtils.close(diskChecksumReader);
         }
     }
 
