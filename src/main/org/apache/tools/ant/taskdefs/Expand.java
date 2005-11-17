@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
@@ -281,13 +280,7 @@ public class Expand extends Task {
                     fos.close();
                     fos = null;
                 } finally {
-                    if (fos != null) {
-                        try {
-                            fos.close();
-                        } catch (IOException e) {
-                            // ignore
-                        }
-                    }
+                    FileUtils.close(fos);
                 }
             }
 
