@@ -85,5 +85,8 @@ public class XsltTest extends BuildFileTest {
     public void testAttribute() throws Exception {
         executeTarget("testAttribute");
     }
+    public void testXMLWithEntitiesInNonAsciiPath() throws Exception {
+        executeTarget("testXMLWithEntitiesInNonAsciiPath");
+    }
 }
 

@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project name="xslt" default="xslt" basedir=".">
+  <property name="nonasciidir" value="xml/&#0227;nt"/>
   <target name="init">
       <mkdir dir="xml/out"/>
   </target>
 
+  <target name="initNonAscii">
+      <mkdir dir="${nonasciidir}"/>
+      <copy todir="${nonasciidir}">
+        <fileset dir="xml">
+          <include name="docwithentity.xml"/>
+          <include name="entity.xml"/>
+        </fileset>
+      </copy>
+  </target>
+
   <target name="teardown">
       <delete dir="xml/out"/>
+      <delete dir="${nonasciidir}" quiet="true"/>
   </target>
   
   <target name="testCatchNoDtd" depends="init">
@@ -60,6 +72,11 @@
            </factory>
     </xslt>
   </target>
-
-  
+  <!-- inspired by bug report 37348 -->
+  <target name="testXMLWithEntitiesInNonAsciiPath" depends="initNonAscii">
+    <xslt in="${nonasciidir}/docwithentity.xml"
+           out="xml/out/test-out.xml"
+           style="xml/apache.xsl">
+    </xslt>
+  </target>
 </project>
