@@ -4,6 +4,9 @@ Changes from current Ant 1.6.5 version to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* Use alternative names for the command line arguments in javac. Bugzilla
+  Report 37546.
+
 * Use org.apache.log4j.Logger instead of org.apache.log4j.Category.
   Category has been deprecated for ~2 years and has been removed from
   the log4j code.  Logger was introduced in log4j 1.2 so users of

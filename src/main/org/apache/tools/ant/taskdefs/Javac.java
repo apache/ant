@@ -69,6 +69,15 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC15 = "javac1.5";
+    private static final String JAVAC14 = "javac1.4";
+    private static final String JAVAC13 = "javac1.3";
+    private static final String JAVAC12 = "javac1.2";
+    private static final String JAVAC11 = "javac1.1";
+    private static final String MODERN = "modern";
+    private static final String CLASSIC = "classic";
+    private static final String EXTJAVAC = "extJavac";
+
     private Path src;
     private File destDir;
     private Path compileClasspath;
@@ -103,18 +112,22 @@ public class Javac extends MatchingTask {
      * Javac task for compilation of Java files.
      */
     public Javac() {
+        facade = new FacadeTaskHelper(assumedJavaVersion());
+    }
+
+    private String assumedJavaVersion() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            facade = new FacadeTaskHelper("javac1.1");
+            return JAVAC11;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
-            facade = new FacadeTaskHelper("javac1.2");
+            return JAVAC12;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
-            facade = new FacadeTaskHelper("javac1.3");
+            return JAVAC13;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
-            facade = new FacadeTaskHelper("javac1.4");
+            return JAVAC14;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            facade = new FacadeTaskHelper("javac1.5");
+            return JAVAC15;
         } else {
-            facade = new FacadeTaskHelper("classic");
+            return CLASSIC;
         }
     }
 
@@ -700,13 +713,52 @@ public class Javac extends MatchingTask {
      */
     public String[] getCurrentCompilerArgs() {
         String chosen = facade.getExplicitChoice();
-        // make sure facade knows about magic properties and fork setting
-        facade.setImplementation(getCompiler());
         try {
-            return facade.getArgs();
+            // make sure facade knows about magic properties and fork setting
+            String appliedCompiler = getCompiler();
+            facade.setImplementation(appliedCompiler);
+
+            String[] result = facade.getArgs();
+
+            String altCompilerName = getAltCompilerName(facade.getImplementation());
+
+            if (result.length == 0 && altCompilerName != null) {
+                facade.setImplementation(altCompilerName);
+                result = facade.getArgs();
+            }
+
+            return result;
+
         } finally {
             facade.setImplementation(chosen);
         }
+    }
+
+    private String getAltCompilerName(String anImplementation) {
+        if (JAVAC15.equalsIgnoreCase(anImplementation)
+                || JAVAC14.equalsIgnoreCase(anImplementation)
+                || JAVAC13.equalsIgnoreCase(anImplementation)) {
+            return MODERN;
+        }
+        if (JAVAC12.equalsIgnoreCase(anImplementation)
+                || JAVAC11.equalsIgnoreCase(anImplementation)) {
+            return CLASSIC;
+        }
+        if (MODERN.equalsIgnoreCase(anImplementation)) {
+            String nextSelected = assumedJavaVersion();
+            if (JAVAC15.equalsIgnoreCase(nextSelected)
+                    || JAVAC14.equalsIgnoreCase(nextSelected)
+                    || JAVAC13.equalsIgnoreCase(nextSelected)) {
+                return nextSelected;
+            }
+        }
+        if (CLASSIC.equals(anImplementation)) {
+            return assumedJavaVersion();
+        }
+        if (EXTJAVAC.equalsIgnoreCase(anImplementation)) {
+            return assumedJavaVersion();
+        }
+        return null;
     }
 
     /**
@@ -806,13 +858,13 @@ public class Javac extends MatchingTask {
      *                 "javac1.2", "javac1.3", "javac1.4" or "javac1.5".
      */
     protected boolean isJdkCompiler(String compilerImpl) {
-        return "modern".equals(compilerImpl)
-            || "classic".equals(compilerImpl)
-            || "javac1.1".equals(compilerImpl)
-            || "javac1.2".equals(compilerImpl)
-            || "javac1.3".equals(compilerImpl)
-            || "javac1.4".equals(compilerImpl)
-            || "javac1.5".equals(compilerImpl);
+        return MODERN.equals(compilerImpl)
+            || CLASSIC.equals(compilerImpl)
+            || JAVAC15.equals(compilerImpl)
+            || JAVAC14.equals(compilerImpl)
+            || JAVAC13.equals(compilerImpl)
+            || JAVAC12.equals(compilerImpl)
+            || JAVAC11.equals(compilerImpl);
     }
 
     /**
