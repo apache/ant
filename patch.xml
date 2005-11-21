@@ -14,24 +14,28 @@
     <property name="patch.package" value="patch.tar.gz"/>
     <property name="patch.file" value="patch.txt"/>
 
-    <condition property="cvs.found">
+    <condition property="svn.found">
         <or>
-            <available file="cvs" filepath="${env.PATH}"/>
-            <available file="cvs.exe" filepath="${env.PATH}"/>
-            <available file="cvs.exe" filepath="${env.Path}"/>
+            <available file="svn" filepath="${env.PATH}"/>
+            <available file="svn.exe" filepath="${env.PATH}"/>
+            <available file="svn.exe" filepath="${env.Path}"/>
         </or>
     </condition>
 
     <target name="createpatch">
-        <fail unless="cvs.found"
-              message="You need a version of cvs to create the patch"/>
-        <cvs command="-q diff -u" output="${patch.file}"/>
+        <fail unless="svn.found"
+              message="You need a version of svn to create the patch"/>
+        <exec executable="svn" output="${patch.file}">
+            <arg value="diff"/>
+        </exec>
     </target>
 
     <target name="newfiles" depends="createpatch">
         <delete file="${patch.package}"/>
-        <cvs command="-q diff -N" output="${patch.file}.tmp"/>
-        <replace file="${patch.file}.tmp" token="? " value=""/>
+        <exec executable="svn" output="${patch.file}.tmp">
+            <arg value="status"/>
+        </exec>
+        <replace file="${patch.file}.tmp" token="?      " value=""/>
         <tstamp>
             <format property="year" pattern="yyyy"/>
         </tstamp>
