@@ -52,8 +52,7 @@
             <menu name="Contributing">
                 <item name="Mailing Lists"         href="/mail.html"/>
                 <item name="Subversion Repositories"      href="/svn.html"/>
-                <item name="Bug Database"          href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
-                <item name="Enhancement Requests"  href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;amp;bug_severity=enhancement"/>
+                <item name="Bug Database"          href="/bugs.html"/>
                 <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>
 
