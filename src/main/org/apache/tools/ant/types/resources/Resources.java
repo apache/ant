@@ -77,11 +77,14 @@ public class Resources extends DataType implements ResourceCollection {
         private class MyIterator implements Iterator {
             Iterator rci = rc.iterator();
             Iterator ri = null;
+
             public boolean hasNext() {
-                if ((ri == null || !ri.hasNext()) && rci.hasNext()) {
+                boolean result = ri != null && ri.hasNext();
+                while (!result && rci.hasNext()) {
                     ri = ((ResourceCollection) rci.next()).iterator();
+                    result = ri.hasNext();
                 }
-                return ri != null && ri.hasNext();
+                return result;
             }
             public Object next() {
                 if (!hasNext()) {
@@ -95,7 +98,7 @@ public class Resources extends DataType implements ResourceCollection {
         }
     }
 
-    private Vector rc = null;
+    private Vector rc = new Vector();
     private Collection coll = null;
 
     /**
@@ -106,7 +109,9 @@ public class Resources extends DataType implements ResourceCollection {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        rc = (rc == null) ? new Vector() : rc;
+        if (c == null) {
+            return;
+        }
         rc.add(c);
         FailFast.invalidate(this);
         coll = null;
@@ -146,18 +151,9 @@ public class Resources extends DataType implements ResourceCollection {
             return getRef().isFilesystemOnly();
         }
         validate();
-        //first the easy way, if all children are filesystem-only, return true:
-        boolean goEarly = true;
-        for (Iterator i = rc.iterator(); goEarly && i.hasNext();) {
-            goEarly &= ((ResourceCollection) i.next()).isFilesystemOnly();
-        }
-        if (goEarly) {
-            return true;
-        }
-        /* now check each Resource in case the child only
-           lets through files from any children IT may have: */
-        for (Iterator i = coll.iterator(); i.hasNext();) {
-            if (!(i.next() instanceof FileResource)) {
+
+        for (Iterator i = rc.iterator(); i.hasNext();) {
+            if ((!((ResourceCollection) i.next()).isFilesystemOnly())) {
                 return false;
             }
         }
@@ -200,9 +196,6 @@ public class Resources extends DataType implements ResourceCollection {
 
     private synchronized void validate() {
         dieOnCircularReference();
-        if (rc == null || rc.size() == 0) {
-            throw new BuildException("Resources:  no resources specified.");
-        }
         coll = (coll == null) ? new MyCollection() : coll;
     }
 
