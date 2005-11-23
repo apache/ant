@@ -517,7 +517,7 @@ public class Manifest {
         }
 
         /**
-         * Remove tge given attribute from the section
+         * Remove the given attribute from the section
          *
          * @param attributeName the name of the attribute to be removed.
          */
