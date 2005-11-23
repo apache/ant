@@ -29,7 +29,6 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
     private String password = null;
     private String keyfile;
     private String passphrase = null;
-    private boolean firstTime = true;
     private boolean trustAllCertificates;
 
     /** Constructor for SSHUserInfo. */
@@ -154,9 +153,8 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         this.keyfile = keyfile;
     }
 
-    // (NOTE: this method does not seem to be called
     /**
-     * Whether to prompt for a passphase.
+     * Implement the UserInfo interface.
      * @param message ignored
      * @return true always
      */
@@ -164,35 +162,27 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         return true;
     }
 
-    // (NOTE: this method does not seem to be called
     /**
-     * Whether to prompt for a password.
+     * Implement the UserInfo interface.
      * @param passwordPrompt ignored
      * @return true the first time this is called, false otherwise
      */
     public boolean promptPassword(String passwordPrompt) {
-        //log(passwordPrompt, Project.MSG_DEBUG);
-        if (firstTime) {
-            firstTime = false;
-            return true;
-        }
-        return firstTime;
+        return true;
     }
 
-    // (NOTE: this method does not seem to be called
     /**
-     * Whether to prompt yes or no.
+     * Implement the UserInfo interface.
      * @param message ignored
      * @return the value of trustAllCertificates
      */
     public boolean promptYesNo(String message) {
-        //log(prompt, Project.MSG_DEBUG);
         return trustAllCertificates;
     }
 
-    // (NOTE: this method does not seem to be called
+//why do we do nothing?
     /**
-     * Do nothing.
+     * Implement the UserInfo interface (noop).
      * @param message ignored
      */
     public void showMessage(String message) {

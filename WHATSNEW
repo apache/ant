@@ -159,9 +159,11 @@ Fixed bugs:
   causing impossibility to process XML entities referenced by XML
   documents in non ASCII paths. Bugzilla report 37348.
 
+* > 1 ssh invocations to a given host would fail. Bugzilla report 36207.
+
 Other changes:
 --------------
-* Fixed references to obsoleted CVS web site. Burzilla Report 36854.
+* Fixed references to obsoleted CVS web site. Bugzilla Report 36854.
 
 * Log fine-grained events at verbose level from JUnit. Bugzilla report 31885.
 
