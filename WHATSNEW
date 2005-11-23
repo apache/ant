@@ -309,7 +309,10 @@ Other changes:
 
 * New task <makeurl> that can turn a file reference into an absolute file://
   url; and nested filesets/paths into a (space, comma, whatever) separated
-  list of URLs. Useful for RMI classpath setup, amongst other things. 
+  list of URLs. Useful for RMI classpath setup, amongst other things.
+
+* <xslt> now accepts nested FileNameMappers e.g. <globmapper>.
+  Bugzilla report 37604.
 
 
 Changes from Ant 1.6.4 to Ant 1.6.5

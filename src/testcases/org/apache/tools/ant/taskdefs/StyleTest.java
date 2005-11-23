@@ -105,6 +105,13 @@ public class StyleTest extends BuildFileTest {
                            "set='myvalue'");
     }
 
+    public void testTypedMapper() throws Exception {
+        assertTrue(!getProject().resolveFile("out/out.xml").exists());
+        expectFileContains("testTypedMapper",
+                           "out/out.xml",
+                           "set='myvalue'");
+    }
+
     public void testDirectoryHierarchyWithDirMatching() throws Exception {
         executeTarget("testDirectoryHierarchyWithDirMatching");
         assertTrue(getProject().resolveFile("out/dest/level1/data.html")

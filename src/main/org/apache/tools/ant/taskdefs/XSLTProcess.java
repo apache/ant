@@ -214,6 +214,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
+     * Adds a nested filenamemapper.
+     * @param fileNameMapper the mapper to add
+     * @exception BuildException if more than one mapper is defined
+     * @since Ant 1.7.0
+     */
+    public void add(FileNameMapper fileNameMapper) throws BuildException {
+       Mapper mapper = new Mapper(getProject());
+       mapper.add(fileNameMapper);
+       addMapper(mapper);
+    }
+    
+    /**
      * Executes the task.
      *
      * @exception BuildException if there is an execution problem.

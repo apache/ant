@@ -57,6 +57,14 @@
     </xslt>
   </target>
 
+  <target name="testTypedMapper">
+    <property name="value" value="myvalue"/>
+    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
+      <param name="set" expression="${value}"/>
+      <globmapper from="data.*" to="out.*"/>
+    </xslt>
+  </target>
+
   <target name="testExplicitFileset">
     <property name="value" value="myvalue"/>
     <xslt style="printParams.xsl" destDir="${out.dir}"
