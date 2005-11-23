@@ -163,6 +163,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* New task <manifestclasspath> converts a path into a property
+  suitable as the value for a manifest's Class-Path attribute.
+
 * Fixed references to obsoleted CVS web site. Bugzilla Report 36854.
 
 * Log fine-grained events at verbose level from JUnit. Bugzilla report 31885.
