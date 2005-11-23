@@ -44,9 +44,19 @@ called Cello.
 
             <p>
                 <b>Stefan Bodewig</b> (stefan.bodewig at freenet.de -
-          <a href="http://stefan.samaflost.de/">http://stefan.samaflost.de/</a>>)
+          <a href="http://stefan.samaflost.de/">http://stefan.samaflost.de/</a>)
 <br/>
 </p>
+
+            <p>
+                <b>Dominique Devienne</b> (ddevienne at apache.org)
+<br/>
+Dominique has been involved non-stop with the Ant user community since
+the 1.4 days, trying without success to answer posts as well or as often
+as Diane Holt after she left the user list. He is opinionated, always
+striving for the best possible design. While at Landmark Graphics, he
+designed and implemented large Ant/CppTasks builds for mixed Java/C++ projects.
+            </p>
 
             <p>
                 <b>Erik Hatcher</b> (ehatcher at apache.org)
@@ -170,16 +180,6 @@ Project a reality and served as the first Chairman of the Jakarta PMC.
             <p>
                 <b>Steve Cohen</b>
             </p>
-
-            <p>
-                <b>Dominique Devienne</b> (ddevienne at apache.org)
-<br/>
-Dominique has been involved non-stop with the Ant user community since
-the 1.4 days, trying without success to answer posts as well or as often
-as Diane Holt after she left the user list. He is opinionated (to a fault
-sometimes), but always striving for the best possible design. Dominique
-currently works for <a href="http://www.lgc.com">Landmark Graphics</a>.
-</p>
 
             <p>
                 <b>Jose Alberto Fernandez</b>
