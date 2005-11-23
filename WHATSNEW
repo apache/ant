@@ -161,6 +161,8 @@ Fixed bugs:
 
 * > 1 ssh invocations to a given host would fail. Bugzilla report 36207.
 
+* EmailTask was eating SMTP error messages. Bugzilla report 37547.  
+
 Other changes:
 --------------
 * New task <manifestclasspath> converts a path into a property

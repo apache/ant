@@ -529,12 +529,13 @@ public class EmailTask extends Task {
             log("Sent email with " + count + " attachment"
                  + (count == 1 ? "" : "s"), Project.MSG_INFO);
         } catch (BuildException e) {
-            log("Failed to send email", Project.MSG_WARN);
+            Throwable t = e.getCause() == null ? e : e.getCause();
+            log("Failed to send email: " + t.getMessage(), Project.MSG_WARN);
             if (failOnError) {
                 throw e;
             }
         } catch (Exception e) {
-          log("Failed to send email", Project.MSG_WARN);
+          log("Failed to send email: " + e.getMessage(), Project.MSG_WARN);
           if (failOnError) {
             throw new BuildException(e);
           }
