@@ -257,8 +257,8 @@ Other changes:
   as this is indicative of a script mismatch. Bugzilla report 34860
 
 * <junitreport> prints a special message if supplied an empty XML File. This
-  can be caused by the test JVM exiting during a test, either via a System.exit()
-  call or a JVM crash.
+  can be caused by the test JVM exiting during a test, either via a
+  System.exit() call or a JVM crash.
 
 * project name is now used for *all* targets so one can write consistent import
   build file. bugzilla report 28444.
@@ -294,15 +294,17 @@ Other changes:
 * <javadoc> now supports -breakiterator for custom doclets if Ant is
   running on JSE 5.0 or higher.  Bugzilla Report: 34580.
 
-* New logger, TimestampedLogger, that prints the wall time that a build finished/failed
-  Use with  -logger org.apache.tools.ant.listener.TimestampedLogger
+* New logger, TimestampedLogger, that prints the wall time that a build
+  finished/failed. Use with
+  -logger org.apache.tools.ant.listener.TimestampedLogger
   
-* <junitreport> now generates pages alltests-errors.html and alltests-fails.html, 
-that list only the errors and failures, respectively. Bugzilla Report: 36226
+* <junitreport> now generates pages alltests-errors.html and
+  alltests-fails.html, that list only the errors and failures, respectively.
+  Bugzilla Report: 36226
 
-* New task <makeurl> that can turn a file reference into an absolute file:// url; and
-  nested filesets/paths into a (space, comma, whatever) separated list of URLs. Useful
-  for RMI classpath setup, amongst other things. 
+* New task <makeurl> that can turn a file reference into an absolute file://
+  url; and nested filesets/paths into a (space, comma, whatever) separated
+  list of URLs. Useful for RMI classpath setup, amongst other things. 
 
 
 Changes from Ant 1.6.4 to Ant 1.6.5
@@ -489,7 +491,8 @@ Other changes:
 * Added isfileselected condition.
 
 * Added verbose="true|false" attribute to <subant>. When verbose is enabled,
-  the directory name is logged on entry and exit of the sub-build. Bugzilla 33787.
+  the directory name is logged on entry and exit of the sub-build.
+  Bugzilla 33787.
 
 * Added -nouserlib option to allow running ant without automatically loading
   up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
@@ -1206,11 +1209,11 @@ Fixed bugs:
   element tagdiff of the xml output
   Bugzilla Report 16081.
 
-* <cvstagdiff> had a problem with aliased modules and with requests for multiple modules
-  Bugzilla Reports 21373 and 22877.
+* <cvstagdiff> had a problem with aliased modules and with requests for
+  multiple modules. Bugzilla Reports 21373 and 22877.
 
-* <cvstagdiff> could not parse properly the revision number of new files with CVS 1.11.9 or higher
-  Bugzilla Report 24406.
+* <cvstagdiff> could not parse properly the revision number of new files with
+  CVS 1.11.9 or higher. Bugzilla Report 24406.
 
 * <fixcrlf> make fixcrlf create its temporary files in the default directory
   of FileUtils#createTempFile instead of the destination dir of fixcrlf.
@@ -1237,8 +1240,8 @@ Fixed bugs:
 * Don't multiply Class-Path attributes when updating jars.  Bugzilla
   Report 21170.
 
-* Do not overwrite the value (increment) attribute of PropertyFile nested Entry element.
-  Bugzilla Report 21505.
+* Do not overwrite the value (increment) attribute of PropertyFile nested
+  Entry element. Bugzilla Report 21505.
 
 * Prevent sysproperties with no key or no value from being added in <junit>.
   Bugzilla Report 21684.
@@ -1249,14 +1252,14 @@ Fixed bugs:
 * ftp chmod failed when the remote system was UNIX and local system Windows
   Bugzilla Report 21865.
 
-* ftp put with chmod failed when the remote system was UNIX and local system Windows
-  Bugzilla Report 23143.
+* ftp put with chmod failed when the remote system was UNIX and local system
+  Windows. Bugzilla Report 23143.
 
 * ftp did not set the ascii mode explicity, causing problems with ftp servers
   having binary as default
 
-* ftp was not able to download files when they were pointed to by symbolic links
-  Bugzilla Report 14063.
+* ftp was not able to download files when they were pointed to by symbolic
+  links. Bugzilla Report 14063.
 
 * ftp is able to download also directories pointed to by symbolic links.
 
@@ -2063,14 +2066,13 @@ Changes that could break older environments:
 --------------------------------------------
 
 * Properties will now be expanded in mail message bodies.  This means
-that one $ sign will be stripped if your mail message contains the text
-$$.
+  that one $ sign will be stripped if your mail message contains the text $$.
 
 * org.apache.tools.ant.taskdefs.Expand no longer extends MatchingTask.
 
 * Available#setFile now again uses a File argument as it did in 1.4,
-this may break environments that have been adapted to the String
-argument version present in 1.5beta1.
+  this may break environments that have been adapted to the String
+  argument version present in 1.5beta1.
 
 Fixed bugs:
 -----------
@@ -2082,69 +2084,69 @@ Fixed bugs:
 * Make CVS Tasks to work under Cygwin.
 
 * Fix LineContains to handle huge files elegantly without causing
-Stack Overflows.
+  Stack Overflows.
 
 * if you ask for the "classic" compiler on Java1.4, you get upgraded to
-"modern" because there is no classic compiler any more.
+  "modern" because there is no classic compiler any more.
 
 * the <http> condition was viewing 404 'not found' exceptions as success. Now
-it defaults to viewing any response >=400 as an error, and has an errorsBeginAt
-attribute you can use if you want a higher or lower value.
+  it defaults to viewing any response >=400 as an error, and has an
+  errorsBeginAt attribute you can use if you want a higher or lower value.
 
 * <get> throws a build exception on an http authorization error, unless you
-have set ignoreerrors to true.
+  have set ignoreerrors to true.
 
 * <wsdltodotnet> was spelt in Wintel case: <WsdlToDotnet>. It is now lower
-case, though the old spelling is retained for anyone who used it.
+  case, though the old spelling is retained for anyone who used it.
 
 * Merging of Manifests in jar now works as documented.
 
 * paths that have been separated by colons would be incorrectly parsed
-on NetWare.
+  on NetWare.
 
 * runant.pl now supports NetWare.
 
 * <tempfile> and <setproxy> tasks were in beta1, but not defined by
-default; They now are. <tempfile> fills a property with the name of a
-temporary file; <setproxy> lets you set the JVM's http, ftp and socks proxy
-settings.
+  default; They now are. <tempfile> fills a property with the name of a
+  temporary file; <setproxy> lets you set the JVM's http, ftp and socks proxy
+  settings.
 
 * <available classname="foo" ignoresystemclasses="true"> failed for
-JDK 1.1 and 1.2, even if the class could be found on the
-user-specified classpath.
+  JDK 1.1 and 1.2, even if the class could be found on the
+  user-specified classpath.
 
 * <property environment=... /> now works on z/OS.
 
 * forked <javac> failed for the wrong reason on JDK 1.1 - Ant would
-use a temporary file to hold the names of the files to compile under
-some conditons, but 1.1 doesn't support this feature.  Ant will no
-longer try this, but you may run into problems with the length of the
-command line now.
+  use a temporary file to hold the names of the files to compile under
+  some conditons, but 1.1 doesn't support this feature.  Ant will no
+  longer try this, but you may run into problems with the length of the
+  command line now.
 
 * the refid attribute for <property>s nested into <ant> or <param>s
-nested into <antcall> didn't work.
+  nested into <antcall> didn't work.
 
 * <replaceregexp> didn't work for nested <fileset>s.
 
 * <javadoc> dropped sourcepath entries if no "interesting" .java
-source files  could be found below them.  This has been backwards
-incompatible and caused problems with custom doclets like xdoclet.
+  source files  could be found below them.  This has been backwards
+  incompatible and caused problems with custom doclets like xdoclet.
 
 * Using the doclet, docletpath or docletpathref attributes of
-<javadoc> may have caused NullPointerExceptions.
+  <javadoc> may have caused NullPointerExceptions.
 
 * nested <filesets> of <javadoc> would include too much.
 
 * <dependset> will no longer choke on <targetfileset>s that point to
-non-existing directories.
+  non-existing directories.
 
 * <patch> didn't work at all.
 
 * <replace> and <replaceregexp> now fail if the file they are working
-on is locked.
+  on is locked.
 
 * <javadoc> would pick up the wrong executable in the combination JDK
-1.2  and AIX.
+  1.2 and AIX.
 
 Other changes:
 --------------
@@ -2152,7 +2154,7 @@ Other changes:
 * z/OS now gets detected by the os condition.
 
 * <fileset> and <dirset> now have an optional followsymlink attribute
-that can prevent Ant from following symbolic links on some platforms.
+  that can prevent Ant from following symbolic links on some platforms.
 
 * BeanShell is now supported in the <script> task.
 
@@ -2353,7 +2355,8 @@ Other changes:
 
 * ejbjar now supports Borland Enterprise Server 5 and Jonas 2.5
 
-* added **/.svn and **/.svn/** to the default excludes
+* added **/.svn and **/.svn/** to the default excludes.
+
 * Selector Elements now provide a way to create filesets based on
   sophisticated selection criteria.
 
@@ -2366,8 +2369,8 @@ Other changes:
 
 * <ejbjar> now allows control over which additional classes and interfaces
   are added to the generated EJB jars. A new attribute "dependency" can be
-  defined which controls what classes are added. The addition of classes now uses
-  the Jakarta-BCEL library rather than reflection, meaning bean classes are
+  defined which controls what classes are added. The addition of classes now
+  uses the Jakarta-BCEL library rather than reflection, meaning bean classes are
   no longer loaded into Ant's JVM. The default dependency analyzer is known as
   the ancestor analyzer. It provides the same behaviour as the 1.4.1 version of
   <ejbjar>. If the BCEL library is not present, a warning will be issued stating
@@ -3134,17 +3137,17 @@ Changes that could break older environments:
 --------------------------------------------
 
 * Semantics of <property> has changed again in the hope to be more
-intuitive. ${} expansion now happens at runtime and <property> tags
-living inside of targets only take effect if they are visited at
-runtime.
+  intuitive. ${} expansion now happens at runtime and <property> tags
+  living inside of targets only take effect if they are visited at
+  runtime.
 
-As a side effect of this change, task's attributes get set at runtime
-not at parser time as well, which might change the results of
-<script>s or other custom tasks that reference other tasks by their id
-attribute.
+  As a side effect of this change, task's attributes get set at runtime
+  not at parser time as well, which might change the results of
+  <script>s or other custom tasks that reference other tasks by their id
+  attribute.
 
 * copying of support files in <javac> has been removed - as well as
-the filtering attribute.
+  the filtering attribute.
 
 * the <expand> and <keysubst> tasks have been removed.
 
@@ -3153,10 +3156,10 @@ the filtering attribute.
 * the command line switches _not_ starting with - have been removed.
 
 * Path and EnumeratedAttribute have been moved from
-org.apache.tools.ant to org.apache.tools.ant.types.
+  org.apache.tools.ant to org.apache.tools.ant.types.
 
 * the class attributes of <available>, <java>, <rmic> and <taskdef>
-have been removed.
+  have been removed.
 
 * the src attribute of <chmod> has been removed.
 
@@ -3165,53 +3168,53 @@ have been removed.
 * <java> and <cvs> have lost some undocumented attributes.
 
 * the Unix antRun script would search for command.sh in the directory
-it changed to and invoke this instead of command if present. This
-behavior has been dropped.
+  it changed to and invoke this instead of command if present. This
+  behavior has been dropped.
 
 * <ejbjar> task syntax has been changed significantly
 
 * <exec> is no longer implemented by org.apache.tool.ant.taskdefs.Exec.
-Custom tasks that rely on Project.createTask("exec") to return an
-instance of this class are going to fail.
+  Custom tasks that rely on Project.createTask("exec") to return an
+  instance of this class are going to fail.
 
 * nested <include> and <exclude> elements expect the value of their
-name attribute to be a single pattern, they don't accept multiple
-patterns anymore. Split them into multiple elements of the same type.
+  name attribute to be a single pattern, they don't accept multiple
+  patterns anymore. Split them into multiple elements of the same type.
 
 * <delete dir="somedir" /> will now delete the directory itself as
-well as all included files. If you just want to clean out the
-directory and keep the empty one, use a nested fileset.
+  well as all included files. If you just want to clean out the
+  directory and keep the empty one, use a nested fileset.
 
 Other changes:
 --------------
 
 * New tasks: antstructure, cab, execon, fail, ftp, genkey, jlink,
-junit, sql, javacc, jjtree, starteam, war, unwar, uptodate,
-native2ascii, copy, move, mparse.
+  junit, sql, javacc, jjtree, starteam, war, unwar, uptodate,
+  native2ascii, copy, move, mparse.
 
 * copydir, copyfile, deltree and rename are now deprecated. They
-should be replaced with the new copy, delete and move tasks.
+  should be replaced with the new copy, delete and move tasks.
 
 * <java> uses a ClassLoader of its own in no-fork mode if a classpath is
-specified.
+  specified.
 
 * <style> will create the necessary target directories and reprocess
-all files if the stylesheet changes.
+  all files if the stylesheet changes.
 
 * New data types fileset and patternset - expected to get a broader use.
-They, as well as PATH like structures, can now be defined on a global
-level and later be referenced by their id attribute.
+  They, as well as PATH like structures, can now be defined on a global
+  level and later be referenced by their id attribute.
 
 * You can specify environment variables to <exec>.
 
 * <get> can check whether a remote file is actually newer than a local
-copy before it starts a download (HTTP only).
+  copy before it starts a download (HTTP only).
 
 * Added a -logger option to allow the class which performs logging to be
-specified on the command line.
+  specified on the command line.
 
 * Added a -emacs option to tell the logger to leave out taskname adornments
-on log output.
+  on log output.
 
 * <chmod> works on all files in parallel and supports multiple filesets.
 
@@ -3224,8 +3227,8 @@ on log output.
 * Added a -debug option to make -verbose less verbose (and more useful)
 
 * Ant will now search for a file named build.xml in the parent directory
-and above (towards the root of the filesystem) if you didn't specify
--buildfile and there is no build.xml in the current directory.
+  and above (towards the root of the filesystem) if you didn't specify
+  -buildfile and there is no build.xml in the current directory.
 
 * <echo> can now write to a file and accepts nested text.
 
@@ -3235,10 +3238,10 @@ Fixed bugs:
 * <chmod> didn't work when used as a directory based task.
 
 * Path, Available, Property didn't resolve relative filenames with
-respect to the Project's basedir.
+  respect to the Project's basedir.
 
 * Project didn't interpret the basedir attribute correctly in all
-cases.
+  cases.
 
 * Nested <src> in <javac> caused NullPointerException.
 
