@@ -500,7 +500,15 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                         + " loader", Project.MSG_VERBOSE);
                     continue;
                 }
-                File libraryFile = new File(URLDecoder.decode(libraryURL.getFile()));
+                String decodedPath = null;
+                // try catch block required because URLDecoder.decode throws
+                // exception on JDK 1.2
+                try {
+                    decodedPath = URLDecoder.decode(libraryURL.getFile());
+                } catch (Exception exc) {
+                    throw new BuildException(exc);
+                }
+                File libraryFile = new File(decodedPath);
                 if (libraryFile.exists() && !isInPath(libraryFile)) {
                     addPathFile(libraryFile);
                 }
