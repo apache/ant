@@ -74,6 +74,9 @@ public class PropertyHelper {
     protected PropertyHelper() {
     }
 
+    //override facility for subclasses to put custom hashtables in
+
+
     // --------------------  Hook management  --------------------
 
     /**
@@ -480,6 +483,36 @@ public class PropertyHelper {
     public Hashtable getUserProperties() {
         return new Hashtable(userProperties);
     }
+
+    /**
+     * special back door for subclasses, internal access to
+     * the hashtables
+     * @return the live hashtable of all properties
+     */
+    protected Hashtable getInternalProperties() {
+        return properties;
+    }
+
+    /**
+     * special back door for subclasses, internal access to
+     * the hashtables
+     *
+     * @return the live hashtable of user properties
+     */
+    protected Hashtable getInternalUserProperties() {
+        return userProperties;
+    }
+
+    /**
+     * special back door for subclasses, internal access to
+     * the hashtables
+     *
+     * @return the live hashtable inherited properties
+     */
+    protected Hashtable getInternalInheritedProperties() {
+        return inheritedProperties;
+    }
+
 
     /**
      * Copies all user properties that have not been set on the
