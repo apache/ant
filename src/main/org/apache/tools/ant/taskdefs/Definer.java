@@ -421,7 +421,7 @@ public abstract class Definer extends DefBase {
             Antlib antlib = Antlib.createAntlib(getProject(), url, getURI());
             antlib.setClassLoader(classLoader);
             antlib.setURI(getURI());
-            antlib.perform();
+            antlib.execute();
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
