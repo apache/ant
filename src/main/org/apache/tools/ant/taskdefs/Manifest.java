@@ -162,7 +162,7 @@ public class Manifest {
                 return false;
             }
 
-            return CollectionUtils.equals(values, rhsAttribute.values);
+            return values.equals(rhsAttribute.values);
         }
 
         /**
@@ -674,7 +674,7 @@ public class Manifest {
 
             Section rhsSection = (Section) rhs;
 
-            return CollectionUtils.equals(attributes, rhsSection.attributes);
+            return attributes.equals(rhsSection.attributes);
         }
     }
 
@@ -988,7 +988,7 @@ public class Manifest {
             return false;
         }
 
-        return CollectionUtils.equals(sections, rhsManifest.sections);
+        return sections.equals(rhsManifest.sections);
     }
 
     /**
