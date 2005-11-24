@@ -259,9 +259,6 @@ public class Apt
      */
     public void execute()
             throws BuildException {
-        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            throw new BuildException(ERROR_WRONG_JAVA_VERSION);
-        }
         super.execute();
     }
 }
