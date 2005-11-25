@@ -86,7 +86,7 @@ public final class ChainReaderHelper {
     }
 
     /**
-     * Sets the buffer size to be used.  Defaults to 4096,
+     * Sets the buffer size to be used.  Defaults to 8192,
      * if this method is not invoked.
      * @param size the buffer size to use
      */
