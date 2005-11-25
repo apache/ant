@@ -1,0 +1,64 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>LoadResource Task</title>
+</head>
+
+<body>
+
+
+<h2><a name="loadresource">LoadResource</a></h2>
+<h3>Description</h3>
+<p>
+Load a text resource into a single property. Unless an encoding is
+specified, the encoding of the current locale is used.  Resources to
+load are specified as nested <a
+href="../CoreTypes/resources.html">resource</a> elements or single
+element resource collections.
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">property</td>
+    <td valign="top">property to save to</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">encoding</td>
+    <td valign="top">encoding to use when loading the resource</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Whether to halt the build on failure</td>
+    <td align="center" valign="top">No, default "true"</td>
+  </tr>
+</table>
+<p>
+The LoadResource task supports nested <a href="../CoreTypes/filterchain.html">
+FilterChain</a>s.
+
+<h3>Examples</h3>
+<pre>
+&lt;loadresource property="homepage"&gt;
+  &lt;url url="http://ant.apache.org/index.html"/&gt;
+&lt;/loadresource&gt;
+</pre>
+Load the entry point of Ant's homepage into property "homepage"; an
+<tt>&lt;echo&gt;</tt> can print this.
+
+<p>For more examples see the <a href="loadfile.html">loadfile</a> task.</p>
+<hr>
+
+<p align="center">Copyright &copy; 2001-2002,2004-2005 The Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

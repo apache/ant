@@ -317,6 +317,8 @@ Other changes:
   Bugzilla report 37604.
 
 
+* New task loadresource that accompanies loadfile for non file resources.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

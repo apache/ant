@@ -78,7 +78,7 @@ public class LoadFileTest extends BuildFileTest {
     public void testNoSourcefilefound() {
         expectBuildExceptionContaining("testNoSourcefilefound",
                 "File not found",
-                "Unable to load file");
+                "Unable to load resource");
     }
 
     /**

@@ -10,9 +10,10 @@
 <h2><a name="loadfile">LoadFile</a></h2>
 <h3>Description</h3>
 <p>
- Load a text file into a single property. Unless an encoding is specified,
- the encoding of the current locale is used.
-
+Specialization of <a href="loadresource.html">loadresource</a> that
+works on files exclusively and provides a srcFile attribute for
+convenience.  Unless an encoding is specified, the encoding of the
+current locale is used.
 </p>
 
 <h3>Parameters</h3>
@@ -52,7 +53,12 @@ FilterChain</a>s.
       srcFile="message.txt"/&gt;
 </pre>
 Load file message.txt into property "message"; an <tt>&lt;echo&gt;</tt>
-can print this.
+can print this.  This is identical to
+<pre>    &lt;loadresource property="message"&gt;
+       &lt;file file="message.txt"/&gt;
+    &lt;/loadresource&gt;
+</pre>
+</p>
 
 <pre>    &lt;loadfile property="encoded-file"
       srcFile="loadfile.xml"
