@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,9 +17,13 @@
 
 package org.apache.tools.ant.util;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Tests for org.apache.tools.ant.util.DOMElementWriter.
@@ -92,4 +96,51 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("A&#x5d;&#x5d;&gt;B&#x5d;&#x5d;&gt;C",
                      w.encodedata("A]]>B]]>C"));
     }
+
+    public void testNoAdditionalWhiteSpaceForText() throws IOException {
+        Document d = DOMUtils.newDocument();
+        Element root = d.createElement("root");
+        DOMUtils.appendTextElement(root, "textElement", "content");
+
+        StringWriter sw = new StringWriter();
+        DOMElementWriter w = new DOMElementWriter();
+        w.write(root, sw, 0, "  ");
+        assertEquals("<root>" + StringUtils.LINE_SEP
+                     + "  <textElement>content</textElement>"
+                     + StringUtils.LINE_SEP
+                     + "</root>" + StringUtils.LINE_SEP,
+                     sw.toString());
+    }
+
+    public void testNoAdditionalWhiteSpaceForCDATA() throws IOException {
+        Document d = DOMUtils.newDocument();
+        Element root = d.createElement("root");
+        DOMUtils.appendCDATAElement(root, "cdataElement", "content");
+
+        StringWriter sw = new StringWriter();
+        DOMElementWriter w = new DOMElementWriter();
+        w.write(root, sw, 0, "  ");
+        assertEquals("<root>" + StringUtils.LINE_SEP
+                     + "  <cdataElement><![CDATA[content]]></cdataElement>"
+                     + StringUtils.LINE_SEP
+                     + "</root>" + StringUtils.LINE_SEP,
+                     sw.toString());
+    }
+
+    public void testNoAdditionalWhiteSpaceForEmptyElement() throws IOException {
+        Document d = DOMUtils.newDocument();
+        Element root = d.createElement("root");
+        DOMUtils.createChildElement(root, "emptyElement");
+
+        StringWriter sw = new StringWriter();
+        DOMElementWriter w = new DOMElementWriter();
+        w.write(root, sw, 0, "  ");
+        assertEquals("<root>" + StringUtils.LINE_SEP
+                     //                     + "  <emptyElement></emptyElement>"
+                     + "  <emptyElement />"
+                     + StringUtils.LINE_SEP
+                     + "</root>" + StringUtils.LINE_SEP,
+                     sw.toString());
+    }
+
 }

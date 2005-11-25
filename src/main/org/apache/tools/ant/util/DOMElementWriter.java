@@ -103,6 +103,7 @@ public class DOMElementWriter {
         // Write child elements and text
         NodeList children = element.getChildNodes();
         boolean hasChildren = (children.getLength() > 0);
+        boolean hasChildElements = false;
         openElement(element, out, indent, indentWith, hasChildren);
 
         if (hasChildren) {
@@ -112,6 +113,7 @@ public class DOMElementWriter {
                 switch (child.getNodeType()) {
     
                 case Node.ELEMENT_NODE:
+                    hasChildElements = true;
                     if (i == 0) {
                         out.write(lSep);
                     }
@@ -154,7 +156,7 @@ public class DOMElementWriter {
                     // Do nothing
                 }
             }
-            closeElement(element, out, indent, indentWith, true);
+            closeElement(element, out, indent, indentWith, hasChildElements);
         }
     }
 
