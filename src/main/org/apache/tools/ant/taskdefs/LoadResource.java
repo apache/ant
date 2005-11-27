@@ -115,6 +115,9 @@ public class LoadResource extends Task {
         if (property == null) {
             throw new BuildException("output property not defined");
         }
+        if (!src.isExists()) {
+            throw new BuildException(src + " doesn't exist");
+        }
         InputStream is = null;
         BufferedInputStream bis = null;
         Reader instream = null;
