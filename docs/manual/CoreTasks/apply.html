@@ -141,7 +141,7 @@ to send input to it is via the input and inputstring attributes.</p>
   </tr>
   <tr>
     <td valign="top">errorproperty</td>
-    <td valign="top">The name of a property in which the standard error of the 
+    <td valign="top">The name of a property in which the standard error of the
       command should be stored.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -239,7 +239,7 @@ to send input to it is via the input and inputstring attributes.</p>
     commands in the user's path, set this to false.
     <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
-  </tr>                     
+  </tr>
   <tr>
     <td valign="top">maxparallel</td>
     <td valign="top">Limit the amount of parallelism by passing at
@@ -290,7 +290,7 @@ elements to define the directories for this task and refer to
 
 <h4>Any other <a href="../CoreTypes/resources.html#collection">Resource
 Collection</a></h4>
-<p><em>since Ant 1.7</em></p> 
+<p><em>since Ant 1.7</em></p>
 <p>You can use any number of nested resource collections.</p>
 
 <h4>mapper</h4>
@@ -406,6 +406,27 @@ dependency checking against output files--the target files in this case.
 </pre></blockquote>
 Applies the "ls" executable to all directories in the PATH, effectively
 listing all executables that are available on the PATH.
+
+<blockquote><pre>
+&lt;apply executable="jsmin" addsourcefile="false"&gt;
+    &lt;!-- Collect the JS-files --&gt;
+    &lt;fileset dir="src" includes="*.js"/&gt;
+    &lt;redirector&gt;
+        &lt;!-- redirect STDIN; fileset collects relative to its dir, but we need --&gt;
+        &lt;!-- relative to basedir --&gt;
+        &lt;inputmapper type="glob" from="*" to="src/*"/&gt;
+        &lt;!-- redirect STDOUT to file in dest-dir --&gt;
+        &lt;outputmapper id="out" type="glob" from="*.js" to="dest/*.js"/&gt;
+    &lt;/redirector&gt;
+&lt;/apply&gt;
+</pre></blockquote>
+Conversion of the command <code>jsmin &lt; src/a.js &gt; dest/a.js</code> but for
+all files in the src-directory. Because the filename itself should not be passed
+to the <code>jsmin</code> program, the <code>addsourcefile</code> is set to
+<code>false</code>.
+
+
+
 
 <hr><p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
