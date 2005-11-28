@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;
@@ -32,6 +34,10 @@ import java.util.Locale;
  * @since Ant 1.6
  */
 public final class Locator {
+    /**
+     * encoding used to represent URIs
+     */
+    public static String URI_ENCODING = "UTF-8";
     /**
      * Not instantiable
      */
@@ -96,6 +102,10 @@ public final class Locator {
      * <p>Swallows '%' that are not followed by two characters,
      * doesn't deal with non-ASCII characters.</p>
      *
+     * @see <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * which makes some mention of how
+     * characters not supported by URI Reference syntax should be escaped.
+     *
      * @param uri the URI designating a file in the local filesystem.
      * @return the local file system path for the file.
      * @since Ant 1.6
@@ -124,21 +134,30 @@ public final class Locator {
             && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
         }
-        String path = decodeUri(uri);
+        String path = null;
+        try {
+            path = decodeUri(uri);
+        } catch (UnsupportedEncodingException exc) {
+            // not sure whether this is clean, but this method is declared not to throw exceptions.
+            throw new IllegalStateException("Could not convert URI to path", exc);
+        }
         return path;
     }
 
     /**
      * Decodes an Uri with % characters.
+     * The URI is escaped
      * @param uri String with the uri possibly containing % characters.
      * @return The decoded Uri
+     * @throws UnsupportedEncodingException if UTF-8 is not available
+     * @since Ant 1.7
      */
-    private static String decodeUri(String uri) {
+    public static String decodeUri(String uri) throws UnsupportedEncodingException{
         if (uri.indexOf('%') == -1)
         {
             return uri;
         }
-        StringBuffer sb = new StringBuffer();
+        ByteArrayOutputStream sb = new ByteArrayOutputStream(uri.length());
         CharacterIterator iter = new StringCharacterIterator(uri);
         for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
@@ -149,14 +168,14 @@ public final class Locator {
                     char c2 = iter.next();
                     if (c2 != CharacterIterator.DONE) {
                         int i2 = Character.digit(c2, 16);
-                        sb.append((char) ((i1 << 4) + i2));
+                        sb.write((char) ((i1 << 4) + i2));
                     }
                 }
             } else {
-                sb.append(c);
+                sb.write(c);
             }
         }
-        String path = sb.toString();
+        String path = sb.toString("UTF-8");
         return path;
     }
 

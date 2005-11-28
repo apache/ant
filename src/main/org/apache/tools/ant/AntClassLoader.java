@@ -46,6 +46,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.launch.Locator;
 
 /**
  * Used to load classes within ant with a different classpath from
@@ -500,14 +501,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                         + " loader", Project.MSG_VERBOSE);
                     continue;
                 }
-                String decodedPath = null;
-                // try catch block required because URLDecoder.decode throws
-                // exception on JDK 1.2
-                try {
-                    decodedPath = URLDecoder.decode(libraryURL.getFile());
-                } catch (Exception exc) {
-                    throw new BuildException(exc);
-                }
+                String decodedPath = Locator.decodeUri(libraryURL.getFile());
                 File libraryFile = new File(decodedPath);
                 if (libraryFile.exists() && !isInPath(libraryFile)) {
                     addPathFile(libraryFile);

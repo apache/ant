@@ -1026,6 +1026,11 @@ public class FileUtils {
      * <p>This code encodes non ASCII characters too.</p>
      *
      * <p>The coding of the output is the same as what File.toURI().toASCIIString() produces</p>
+     *
+     * @see <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * which makes some mention of how
+     * characters not supported by URI Reference syntax should be escaped.
+     *
      * @param path the path in the local file system.
      * @return the URI version of the local path.
      * @since Ant 1.6
@@ -1067,7 +1072,7 @@ public class FileUtils {
             byte[] bytes = null;
             byte b;
             try {
-                bytes = path.substring(i).getBytes("UTF-8");
+                bytes = path.substring(i).getBytes(Locator.URI_ENCODING);
             } catch (java.io.UnsupportedEncodingException e) {
                 // should never happen
                 throw new BuildException(e);

@@ -53,6 +53,16 @@ public class AntClassLoaderTest extends BuildFileTest {
         String path = myLoader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
+    public void testJarWithManifestInNonAsciiDir() {
+        String mainjarstring = getProject().getProperty("main.jar.nonascii");
+        String extjarstring = getProject().getProperty("ext.jar.nonascii");
+        Path myPath = new Path(getProject());
+        myPath.setLocation(new File(mainjarstring));
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        AntClassLoader myLoader = getProject().createClassLoader(myPath);
+        String path = myLoader.getClasspath();
+        assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
+    }
     public void testCleanup() throws BuildException {
         Path path = new Path(p, ".");
         AntClassLoader loader = new AntClassLoader(p, path);
