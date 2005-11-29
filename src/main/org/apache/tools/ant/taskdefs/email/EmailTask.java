@@ -17,9 +17,9 @@
 package org.apache.tools.ant.taskdefs.email;
 
 import java.io.File;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -27,6 +27,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
@@ -88,8 +90,7 @@ public class EmailTask extends Task {
     private Vector headers = new Vector();
 
     /** file list  */
-    private Vector files = new Vector();
-    private Vector filesets = new Vector();
+    private Path attachments = null;
     /** Character set for MimeMailer*/
     private String charset = null;
     /** User for SMTP auth */
@@ -342,7 +343,8 @@ public class EmailTask extends Task {
         StringTokenizer t = new StringTokenizer(filenames, ", ");
 
         while (t.hasMoreTokens()) {
-            files.addElement(getProject().resolveFile(t.nextToken()));
+            createAttachments()
+                .add(new FileResource(getProject().resolveFile(t.nextToken())));
         }
     }
 
@@ -352,7 +354,20 @@ public class EmailTask extends Task {
      * @param fs The fileset.
      */
     public void addFileset(FileSet fs) {
-        filesets.addElement(fs);
+        createAttachments().add(fs);
+    }
+
+    /**
+     * Creates a Path as container for attachments.  Supports any
+     * filesystem resource-collections that way.
+     *
+     * @since Ant 1.7
+     */
+    public Path createAttachments() {
+        if (attachments == null) {
+            attachments = new Path(getProject());
+        }
+        return attachments.createPath();
     }
 
     /**
@@ -389,7 +404,6 @@ public class EmailTask extends Task {
      */
     public void execute() {
         Message savedMessage = message;
-        Vector savedFiles = (Vector) files.clone();
 
         try {
             Mailer mailer = null;
@@ -480,18 +494,15 @@ public class EmailTask extends Task {
                 }
                 message.setCharset(charset);
             }
+
             // identify which files should be attached
-            Enumeration e = filesets.elements();
+            Vector files = new Vector();
+            if (attachments != null) {
+                Iterator iter = attachments.iterator();
 
-            while (e.hasMoreElements()) {
-                FileSet fs = (FileSet) e.nextElement();
-
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] includedFiles = ds.getIncludedFiles();
-                File baseDir = ds.getBasedir();
-
-                for (int j = 0; j < includedFiles.length; ++j) {
-                    files.addElement(new File(baseDir, includedFiles[j]));
+                while (iter.hasNext()) {
+                    FileResource fr = (FileResource) iter.next();
+                    files.addElement(fr.getFile());
                 }
             }
             // let the user know what's going to happen
@@ -541,7 +552,6 @@ public class EmailTask extends Task {
           }
         } finally {
             message = savedMessage;
-            files = savedFiles;
         }
     }
 
@@ -552,7 +562,7 @@ public class EmailTask extends Task {
      * @since Ant 1.6
      */
     public void setCharset(String charset) {
-      this.charset = charset;
+        this.charset = charset;
     }
 
     /**
@@ -562,7 +572,7 @@ public class EmailTask extends Task {
      * @since Ant 1.6
      */
     public String getCharset() {
-      return charset;
+        return charset;
     }
 
 }

@@ -22,7 +22,14 @@
   </p>
   <p>
     Attachments may be sent using nested
-    <a href="../CoreTypes/fileset.html">fileset</a> elements.
+    <code>&lt;attachments&gt;</code> elements, which are <a
+    href="../using.html#path">path-like structures</a>.  This means
+    any filesystem based <a
+    href="../CoreTypes/resources.html">resource</a> or resource
+    collection can be used to point to attachments.  Prior to Ant 1.7
+    only <code>&lt;fileset&gt;</code> has been supported as a nested
+    element, you can still use this directly without an
+    <code>&lt;attachments&gt;</code> container.
   </p>
   <p>
     <strong>Note:</strong> This task may depend on external libraries
@@ -266,9 +273,11 @@ the <code>&lt;message&gt;</code> element.</p>
   &lt;replyto address=&quot;me@myisp.com&quot;/&gt;
   &lt;to address=&quot;all@xyz.com&quot;/&gt;
   &lt;message&gt;The ${buildname} nightly build has completed&lt;/message&gt;
-  &lt;fileset dir=&quot;dist&quot;&gt;
-    &lt;include name=&quot;**/*.zip&quot;/&gt;
-  &lt;/fileset&gt;
+  &lt;attachments&gt;
+    &lt;fileset dir=&quot;dist&quot;&gt;
+      &lt;include name=&quot;**/*.zip&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/attachments&gt;
 &lt;/mail&gt;
 </pre></blockquote>
 
