@@ -32,7 +32,8 @@ filter.</p>
   <tr>
     <td valign="top">srcFile</td>
     <td valign="top">source file</td>
-    <td valign="top" rowspan="2" align="center">One of these</td>
+    <td valign="top" rowspan="2" align="center">One of these or a
+          nested resource</td>
   </tr>
   <tr>
     <td valign="top">resource</td>
@@ -56,13 +57,28 @@ filter.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
-<p>
-The LoadProperties task supports nested <a href="../CoreTypes/filterchain.html">
-FilterChain</a>s, as well as a nested <code>&lt;classpath&gt;</code>
-element for use with the <i>resource</i> attribute.
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>any <a href="../CoreTypes/resources.html">resource</a> or single element
+resource collection</h4>
+
+<p>The specified resource will be used as src. <em>Since Ant 1.7</em></p>
+
+<h4><a href="../CoreTypes/filterchain.html">FilterChain</a></h4>
+
+<h4>classpath</h4>
+
+<p>for use with the <i>resource</i> attribute.</p>
 
 <h3>Examples</h3>
 <pre>    &lt;loadproperties srcFile="file.properties"/&gt;
+</pre>
+or
+<pre>
+    &lt;loadproperties&gt;
+      &lt;file file="file.properties"/&gt;
+    &lt;/loadproperties&gt;
 </pre>
 Load contents of file.properties as Ant properties.
 
@@ -77,6 +93,17 @@ Load contents of file.properties as Ant properties.
 Read the lines that contain the string &quot;import.&quot;
 from the file &quot;file.properties&quot; and load them as
 Ant properties.
+
+<pre>
+    &lt;loadproperties&gt;
+      &lt;<a href="../CoreTypes/resources.html#gzipresource">gzipresource</a>&gt;
+        &lt;<a href="../CoreTypes/resources.html#url">url</a> url="http://example.org/url.properties.gz"/&gt;
+      &lt;/gzipresource&gt;
+    &lt;/loadproperties&gt;
+</pre>
+Load contents of http://example.org/url.properties.gz, uncompress it
+on the fly and load the contents as Ant properties.
+
 <hr>
 
 <p align="center">Copyright &copy; 2002-2005 The Apache Software Foundation. All rights
