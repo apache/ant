@@ -1731,9 +1731,11 @@ public class Project implements ResourceFactory {
 
         // Make sure we exist
         if (target == null) {
-            StringBuffer sb = new StringBuffer("Target `");
+            StringBuffer sb = new StringBuffer("Target \"");
             sb.append(root);
-            sb.append("' does not exist in this project. ");
+            sb.append("\" does not exist in the project \"");
+            sb.append(name);
+            sb.append("\". ");
             visiting.pop();
             if (!visiting.empty()) {
                 String parent = (String) visiting.peek();
@@ -2192,7 +2194,7 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Resolve the file realtive to the project's basedir and return it as a 
+     * Resolve the file realtive to the project's basedir and return it as a
      * FileResource.
      * @since Ant 1.7
      */
