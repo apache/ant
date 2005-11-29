@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -31,6 +32,11 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Touchable;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 
@@ -78,7 +84,7 @@ public class Touch extends Task {
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
-    private Vector filelists = new Vector();
+    private Union resources = new Union();
     private boolean dateTimeConfigured;
     private boolean mkdirs;
     private boolean verbose = true;
@@ -188,7 +194,8 @@ public class Touch extends Task {
      * @param set the <code>Fileset</code> to add.
      */
     public void addFileset(FileSet set) {
-        filesets.addElement(set);
+        filesets.add(set);
+        add(set);
     }
 
     /**
@@ -196,7 +203,16 @@ public class Touch extends Task {
      * @param list the <code>Filelist</code> to add.
      */
     public void addFilelist(FileList list) {
-        filelists.addElement(list);
+        add(list);
+    }
+
+    /**
+     * Add a collection of resources to touch.
+     *
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        resources.add(rc);
     }
 
     /**
@@ -205,12 +221,12 @@ public class Touch extends Task {
      * @since Ant 1.6.3
      */
     protected synchronized void checkConfiguration() throws BuildException {
-        if (file == null && filesets.size() + filelists.size() == 0) {
+        if (file == null && resources.size() == 0) {
             throw new BuildException("Specify at least one source"
-                                   + "--a file, filelist or a fileset.");
+                                   + "--a file or resource collection.");
         }
         if (file != null && file.exists() && file.isDirectory()) {
-            throw new BuildException("Use a fileset to touch directories.");
+            throw new BuildException("Use a resource collection to touch directories.");
         }
         if (dateTime != null && !dateTimeConfigured) {
             long workmillis = millis;
@@ -266,33 +282,31 @@ public class Touch extends Task {
         long defaultTimestamp = getTimestamp();
 
         if (file != null) {
-            touch(file.getParentFile(), file.getName(), defaultTimestamp);
+            touch(new FileResource(file.getParentFile(), file.getName()),
+                  defaultTimestamp);
         }
-        // deal with the filesets
+        // deal with the resource collections
+        Iterator iter = resources.iterator();
+        while (iter.hasNext()) {
+            Resource r = (Resource) iter.next();
+            if (!(r instanceof Touchable)) {
+                throw new BuildException("Can't touch " + r);
+            }
+            touch(r, defaultTimestamp);
+        }
+
+        // deal with filesets in a special way since the task
+        // originally also used the directories and Union won't return
+        // them.
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File fromDir = fs.getDir(getProject());
 
-            String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();
 
-            for (int j = 0; j < srcFiles.length; j++) {
-                touch(fromDir, srcFiles[j], defaultTimestamp);
-            }
             for (int j = 0; j < srcDirs.length; j++) {
-                touch(fromDir, srcDirs[j], defaultTimestamp);
-            }
-        }
-        // deal with the filelists
-        for (int i = 0; i < filelists.size(); i++) {
-            FileList fl = (FileList) filelists.elementAt(i);
-            File fromDir = fl.getDir(getProject());
-
-            String[] srcFiles = fl.getFiles(getProject());
-
-            for (int j = 0; j < srcFiles.length; j++) {
-                touch(fromDir, srcFiles[j], defaultTimestamp);
+                touch(new FileResource(fromDir, srcDirs[j]), defaultTimestamp);
             }
         }
     }
@@ -313,14 +327,19 @@ public class Touch extends Task {
         return (millis < 0) ? System.currentTimeMillis() : millis;
     }
 
-    private void touch(File fromDir, String filename, long defaultTimestamp) {
-        File f = FILE_UTILS.resolveFile(fromDir, filename);
+    private void touch(Resource r, long defaultTimestamp) {
         if (fileNameMapper == null) {
-            touch(f, defaultTimestamp);
+            if (r instanceof FileResource) {
+                // use this to create file and deal with non-writable files
+                touch(((FileResource) r).getFile(), defaultTimestamp);
+            } else {
+                ((Touchable) r).touch(defaultTimestamp);
+            }
         } else {
-            String[] mapped = fileNameMapper.mapFileName(filename);
+            String[] mapped = fileNameMapper.mapFileName(r.getName());
             if (mapped != null && mapped.length > 0) {
-                long modTime = (f.exists()) ? f.lastModified() : defaultTimestamp;
+                long modTime = (r.isExists()) ? r.getLastModified()
+                    : defaultTimestamp;
                 for (int i = 0; i < mapped.length; i++) {
                     touch(getProject().resolveFile(mapped[i]), modTime);
                 }

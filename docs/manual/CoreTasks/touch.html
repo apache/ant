@@ -10,11 +10,14 @@
 
 <h2><a name="touch">Touch</a></h2>
 <h3>Description</h3>
-<p>Changes the modification time of a file and possibly creates it at
-the same time. In addition to working with a single file, this Task
-can also work a <a href="../CoreTypes/fileset.html">Fileset</a> (which
-also includes directories)
-or a <a href="../CoreTypes/filelist.html">Filelist</a> (since Ant 1.6).</p>
+
+<p>Changes the modification time of a resource and possibly creates it
+at the same time. In addition to working with a single file, this Task
+can also work on <a href="../CoreTypes/resource.html">resource</a> and
+resource collections (which also includes directories).  Prior to Ant
+1.7 only FileSet or <a href="../CoreTypes/filelist.html">Filelist</a>
+(since Ant 1.6) have been supported.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -25,8 +28,8 @@ or a <a href="../CoreTypes/filelist.html">Filelist</a> (since Ant 1.6).</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">The name of the file.</td>
-    <td valign="top" align="center">Unless a nested fileset element
-       or a nested filelist element has been specified.</td>
+    <td valign="top" align="center">Unless a nested resource collection element
+       has been specified.</td>
   </tr>
   <tr>
     <td valign="top">millis</td>
@@ -60,15 +63,20 @@ or a <a href="../CoreTypes/filelist.html">Filelist</a> (since Ant 1.6).</p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>fileset</h4>
-<p>You can use any number of nested <code>&lt;fileset&gt;</code>
-elements to define the files for this task and refer to
-<code>&lt;fileset&gt;</code>s defined elsewhere.</p>
-<h4>filelist</h4>
-<p><em>Since Ant 1.6</em></p>
-<p>You can use any number of nested <code>&lt;filelist&gt;</code>
-elements to define the files for this task and refer to
-<code>&lt;filelist&gt;</code>s defined elsewhere.</p>
+<h4>any resource collection</h4>
+
+<p>You can use any number of nested resource collection elements to
+define the resource for this task and refer to resources defined
+elsewhere.  <b>Note:</b> resource passed to this task must implement
+the <code>org.apache.tools.ant.types.resources.Touchable</code>
+interface, this is true for all filesystem-based resources like those
+returned by path, fileset ot filelist.</p>
+
+<p>For backwards compatibility directories matched by nested filesets
+will be "touched" as well, use a &lt;type&gt; selector to suppress
+this.  This only applies to filesets nested into the task directly,
+not to filesets nested into a path or any other resource
+collection.</p>
 
 <h4>mapper</h4>
 <p><em>Since Ant 1.6.3,</em> a nested <a href="../CoreTypes/mapper.html">

@@ -53,6 +53,12 @@
     </touch>
   </target>
 
+  <target name="testResourceCollection">
+    <touch millis="1662256000000">
+      <file file="touchtest"/>
+    </touch>
+  </target>
+
   <target name="testMappedFileset">
     <touch file="touchtest" millis="${mappermillis}" />
     <touch>

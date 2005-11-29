@@ -106,6 +106,13 @@ public class TouchTest extends BuildFileTest {
     }
 
     /**
+     * test the resource collection
+     */
+    public void testResourceCollection() {
+        touchFile("testResourceCollection", 1662256000000L);
+    }
+
+    /**
      * test the mapped file set
      */
     public void testMappedFileset() {
