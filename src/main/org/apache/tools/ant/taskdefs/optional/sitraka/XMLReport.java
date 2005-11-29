@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
@@ -194,7 +195,7 @@ public class XMLReport {
         InputSource is = new InputSource(new FileInputStream(file));
         if (jprobeHome != null) {
             File dtdDir = new File(jprobeHome, "dtd");
-            is.setSystemId("file:///" + dtdDir.getAbsolutePath() + "/");
+            is.setSystemId(JAXPUtils.getSystemId(dtdDir));
         }
         report = dbuilder.parse(is);
         report.normalize();
