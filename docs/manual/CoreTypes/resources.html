@@ -22,14 +22,16 @@ explicit use beginning in <b>Ant 1.7</b>.
 
 <ul>
   <li><a href="#basic">resource</a> - a basic resource.</li>
-  <li><a href="#file">file</a> - a file.</li>
-  <li><a href="#tarentry">tarentry</a> - an entry in a tar file.</li>
-  <li><a href="#zipentry">zipentry</a> - an entry in a zip file.</li>
-  <li><a href="#gzipresource">gzipresource</a> - a GZip compressed resource.</li>
   <li><a href="#bzip2resource">bzip2resource</a> - a BZip2 compressed resource.</li>
-  <li><a href="#url">url</a> - a URL.</li>
-  <li><a href="#string">string</a> - a text string.</li>
+  <li><a href="#file">file</a> - a file.</li>
+  <li><a href="#gzipresource">gzipresource</a> - a GZip compressed resource.</li>
+  <li><a href="#javaresource">javaresource</a> - a resource loadable
+        via a Java classloader.</li>
   <li><a href="#property">property</a> - an Ant property.</li>
+  <li><a href="#string">string</a> - a text string.</li>
+  <li><a href="#tarentry">tarentry</a> - an entry in a tar file.</li>
+  <li><a href="#url">url</a> - a URL.</li>
+  <li><a href="#zipentry">zipentry</a> - an entry in a zip file.</li>
 </ul>
 
 <h4><a name="basic">resource</a></h4>
@@ -98,6 +100,45 @@ implementations are also usable as single-element
   </tr>
 </table>
 
+<h4><a name="javaresource">javaresource</a></h4>
+
+<p>Represents a resource loadable via a Java classloader.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The namer of the resource.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to use when looking up a resource.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use when looking up a resource,
+      given as <a href="../using.html#references">reference</a>
+      to a <code>&lt;path&gt;</code> defined elsewhere..</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">loaderRef</td>
+    <td valign="top">the name of the loader that is
+      used to load the resource, constructed from the specified classpath.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<p>The classpath can also be specified as nested classpath element,
+where <b>&lt;classpath&gt;</b> is a <a
+href="../using.html#path">path-like</a> structure.</p>
+
 <h4><a name="zipentry">zipentry</a></h4>
 
 <p>Represents an entry in a ZIP archive.  The archive can be specified
@@ -157,14 +198,14 @@ collection.</p>
 
 <h4><a name="gzipresource">gzipresource</a></h4>
 
-<p>This is not a stand-alone reource, but a wrapper around another
+<p>This is not a stand-alone resource, but a wrapper around another
 resource providing compression of the resource's contents on the fly.
 A single element resource collection must be specified as a nested
 element.</p>
 
 <h4><a name="bzip2resource">bzip2resource</a></h4>
 
-<p>This is not a stand-alone reource, but a wrapper around another
+<p>This is not a stand-alone resource, but a wrapper around another
 resource providing compression of the resource's contents on the fly.
 A single element resource collection must be specified as a nested
 element.</p>
