@@ -41,6 +41,9 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceFactory;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -56,7 +59,7 @@ import org.apache.tools.ant.util.StringUtils;
  * file paths at runtime.
  *
  */
-public class Project {
+public class Project implements ResourceFactory {
     /** Message priority of &quot;error&quot;. */
     public static final int MSG_ERR = 0;
     /** Message priority of &quot;warning&quot;. */
@@ -2186,5 +2189,14 @@ public class Project {
             // a set project method or the method
             // is private/protected.
         }
+    }
+
+    /**
+     * Resolve the file realtive to the project's basedir and return it as a 
+     * FileResource.
+     * @since Ant 1.7
+     */
+    public Resource getResource(String name) {
+        return new FileResource(getBaseDir(), name);
     }
 }
