@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,10 +25,14 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
@@ -47,6 +51,7 @@ public class UpToDate extends Task implements Condition {
     private File sourceFile;
     private File targetFile;
     private Vector sourceFileSets = new Vector();
+    private Union sourceResources = new Union();
 
     protected Mapper mapperElement = null;
 
@@ -106,6 +111,14 @@ public class UpToDate extends Task implements Condition {
     }
 
     /**
+     * Nested resource collections as sources.
+     * @since Ant 1.7
+     */
+    public Union createSrcResources() {
+        return sourceResources;
+    }
+
+    /**
      * Defines the FileNameMapper to use (nested mapper element).
      * @return a mapper to be configured
      * @throws BuildException if more than one mapper is defined
@@ -134,15 +147,18 @@ public class UpToDate extends Task implements Condition {
      * @return true if the target(s) is/are up-to-date
      */
     public boolean eval() {
-        if (sourceFileSets.size() == 0 && sourceFile == null) {
+        if (sourceFileSets.size() == 0 && sourceResources.size() == 0
+            && sourceFile == null) {
             throw new BuildException("At least one srcfile or a nested "
-                                     + "<srcfiles> element must be set.");
+                                     + "<srcfiles> or <srcresources> element "
+                                     + "must be set.");
         }
 
-        if (sourceFileSets.size() > 0 && sourceFile != null) {
+        if ((sourceFileSets.size() > 0 || sourceResources.size() > 0)
+            && sourceFile != null) {
             throw new BuildException("Cannot specify both the srcfile "
                                      + "attribute and a nested <srcfiles> "
-                                     + "element.");
+                                     + "or <srcresources> element.");
         }
 
         if (targetFile == null && mapperElement == null) {
@@ -163,15 +179,7 @@ public class UpToDate extends Task implements Condition {
                                      + " not found.");
         }
 
-        Enumeration e = sourceFileSets.elements();
         boolean upToDate = true;
-        while (upToDate && e.hasMoreElements()) {
-            FileSet fs = (FileSet) e.nextElement();
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            upToDate = upToDate && scanDir(fs.getDir(getProject()),
-                                           ds.getIncludedFiles());
-        }
-
         if (sourceFile != null) {
             if (mapperElement == null) {
                 upToDate = upToDate
@@ -184,6 +192,27 @@ public class UpToDate extends Task implements Condition {
                                   mapperElement.getImplementation()).length == 0);
             }
         }
+
+        // filesets are separate from the rest for performance
+        // reasons.  If we use the code for union below, we'll always
+        // scan all filesets, even if we know the target is out of
+        // date after the first test.
+        Enumeration e = sourceFileSets.elements();
+        while (upToDate && e.hasMoreElements()) {
+            FileSet fs = (FileSet) e.nextElement();
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+            upToDate = upToDate && scanDir(fs.getDir(getProject()),
+                                           ds.getIncludedFiles());
+        }
+
+        if (upToDate) {
+            Resource[] r = sourceResources.listResources();
+            upToDate = upToDate &&
+                (ResourceUtils.selectOutOfDateSources(this, r, getMapper(),
+                                                      getProject()).length
+                 == 0);
+        }
+
         return upToDate;
     }
 
@@ -219,16 +248,23 @@ public class UpToDate extends Task implements Condition {
      */
     protected boolean scanDir(File srcDir, String[] files) {
         SourceFileScanner sfs = new SourceFileScanner(this);
-        FileNameMapper mapper = null;
+        FileNameMapper mapper = getMapper();
         File dir = srcDir;
+        if (mapperElement == null) {
+            dir = null;
+        }
+        return sfs.restrict(files, srcDir, dir, mapper).length == 0;
+    }
+
+    private FileNameMapper getMapper() {
+        FileNameMapper mapper = null;
         if (mapperElement == null) {
             MergingMapper mm = new MergingMapper();
             mm.setTo(targetFile.getAbsolutePath());
             mapper = mm;
-            dir = null;
         } else {
             mapper = mapperElement.getImplementation();
         }
-        return sfs.restrict(files, srcDir, dir, mapper).length == 0;
+        return mapper;
     }
 }
