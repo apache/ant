@@ -138,8 +138,10 @@ public final class Locator {
         try {
             path = decodeUri(uri);
         } catch (UnsupportedEncodingException exc) {
-            // not sure whether this is clean, but this method is declared not to throw exceptions.
-            throw new IllegalStateException("Could not convert URI to path", exc);
+            // not sure whether this is clean, but this method is
+            // declared not to throw exceptions.
+            throw new IllegalStateException("Could not convert URI to path: "
+                                            + exc.getMessage());
         }
         return path;
     }
