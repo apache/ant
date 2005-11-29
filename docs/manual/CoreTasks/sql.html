@@ -171,12 +171,20 @@ on the same schema.</p>
     <td valign="top" align="center">Yes, unless statements enclosed within tags</td>
   </tr>
 </table>
-<h4>fileset</h4>
-<p>You can specify multiple source files via nested <a
-href="../CoreTypes/fileset.html">fileset</a> elements.  Each file of
-the fileset will be run in a transaction of its own, the order by
-which the files of a single fileset will be executed is not
-defined.</p>
+<p>The <code>&lt;transaction&gt;</code> element supports any <a
+href="../CoreTypes/resources.html">resource</a> or single element
+resource collection as nested element to specify the resource
+containing the SQL statements.</p>
+
+<h4>any <a href="../CoreTypes/resources.html">resource</a> or resource
+collection</h4>
+
+<p>You can specify multiple sources via nested resource collection
+elements.  Each resource of the collection will be run in a
+transaction of its own.  Prior to Ant 1.7 only filesets were
+supported.  Use a sort resource collection to get a predictable order
+of transactions. </p>
+
 <h4>classpath</h4>
 <p><code>Sql</code>'s <em>classpath</em> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
@@ -260,9 +268,11 @@ run before <code>data2.sql</code>.</p>
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
     password=&quot;pass&quot;&gt;
-  &lt;fileset dir=&quot;.&quot;&gt;
-    &lt;include name=&quot;data*.sql&quot;/&gt;
-  &lt;/fileset&gt;
+  &lt;path&gt;
+    &lt;fileset dir=&quot;.&quot;&gt;
+      &lt;include name=&quot;data*.sql&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;path&gt;
   &lt;transaction&gt;
     truncate table some_other_table;
   &lt;/transaction&gt;

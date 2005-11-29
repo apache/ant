@@ -20,9 +20,14 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -32,10 +37,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -100,7 +105,7 @@ public class SQLExec extends JDBCTask {
     /**
      * files to load
      */
-    private Vector filesets = new Vector();
+    private Union resources = new Union();
 
     /**
      * SQL statement
@@ -200,9 +205,18 @@ public class SQLExec extends JDBCTask {
      *            a separate transaction.
      */
     public void addFileset(FileSet set) {
-        filesets.addElement(set);
+        add(set);
     }
 
+    /**
+     * Adds a collection of resources (nested element).
+     * @param set a collection of resources containing SQL commands,
+     * each resource is run in a separate transaction.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        resources.add(rc);
+    }
 
     /**
      * Add a SQL transaction to execute
@@ -327,9 +341,10 @@ public class SQLExec extends JDBCTask {
 
         try {
             if (srcFile == null && sqlCommand.length() == 0
-                && filesets.isEmpty()) {
+                && resources.size() == 0) {
                 if (transactions.size() == 0) {
-                    throw new BuildException("Source file or fileset, "
+                    throw new BuildException("Source file or resource "
+                                             + "collection, "
                                              + "transactions or sql statement "
                                              + "must be set!", getLocation());
                 }
@@ -339,19 +354,13 @@ public class SQLExec extends JDBCTask {
                 throw new BuildException("Source file does not exist!", getLocation());
             }
 
-            // deal with the filesets
-            for (int i = 0; i < filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                File srcDir = fs.getDir(getProject());
-
-                String[] srcFiles = ds.getIncludedFiles();
-
-                // Make a transaction for each file
-                for (int j = 0; j < srcFiles.length; j++) {
-                    Transaction t = createTransaction();
-                    t.setSrc(new File(srcDir, srcFiles[j]));
-                }
+            // deal with the resources
+            Iterator iter = resources.iterator();
+            while (iter.hasNext()) {
+                Resource r = (Resource) iter.next();
+                // Make a transaction for each resource
+                Transaction t = createTransaction();
+                t.setSrcResource(r);
             }
 
             // Make a transaction group for the outer command
@@ -648,7 +657,7 @@ public class SQLExec extends JDBCTask {
      * operation in between.
      */
     public class Transaction {
-        private File tSrcFile = null;
+        private Resource tSrcResource = null;
         private String tSqlCommand = "";
 
         /**
@@ -656,7 +665,19 @@ public class SQLExec extends JDBCTask {
          * @param src the source file
          */
         public void setSrc(File src) {
-            this.tSrcFile = src;
+            setSrcResource(new FileResource(src));
+        }
+
+        /**
+         * Set the source file attribute.
+         * @param src the source file
+         * @since Ant 1.7
+         */
+        public void setSrcResource(Resource src) {
+            if (tSrcResource != null) {
+                throw new BuildException("only one resource per transaction");
+            }
+            tSrcResource = src;
         }
 
         /**
@@ -665,6 +686,18 @@ public class SQLExec extends JDBCTask {
          */
         public void addText(String sql) {
             this.tSqlCommand += sql;
+        }
+
+        /**
+         * Set the source resource.
+         * @since Ant 1.7
+         */
+        public void addConfigured(ResourceCollection a) {
+            if (a.size() != 1) {
+                throw new BuildException("only single argument resource "
+                                         + "collections are supported.");
+            }
+            setSrcResource((Resource) a.iterator().next());
         }
 
         /**
@@ -677,18 +710,20 @@ public class SQLExec extends JDBCTask {
                 runStatements(new StringReader(tSqlCommand), out);
             }
 
-            if (tSrcFile != null) {
-                log("Executing file: " + tSrcFile.getAbsolutePath(),
+            if (tSrcResource != null) {
+                log("Executing resource: " + tSrcResource.toString(),
                     Project.MSG_INFO);
-                Reader reader =
-                    (encoding == null) ? new FileReader(tSrcFile)
-                                       : new InputStreamReader(
-                                             new FileInputStream(tSrcFile),
-                                             encoding);
+                InputStream is = null;
+                Reader reader = null;
                 try {
+                    is = tSrcResource.getInputStream();
+                    reader =
+                        (encoding == null) ? new InputStreamReader(is)
+                        : new InputStreamReader(is, encoding);
                     runStatements(reader, out);
                 } finally {
-                    reader.close();
+                    FileUtils.close(is);
+                    FileUtils.close(reader);
                 }
             }
         }
