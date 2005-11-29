@@ -86,7 +86,21 @@ public class SignJarTest extends BuildFileTest {
     public void testFilesetAndSignedJar() {
         expectBuildExceptionContaining("testFilesetAndSignedJar",
                 "incompatible attributes",
-                SignJar.ERROR_SIGNEDJAR_AND_FILESETS);
+                SignJar.ERROR_SIGNEDJAR_AND_PATHS);
+    }
+
+    public void testPath() {
+        executeTarget("testPath");
+    }
+
+    public void testPathAndJar() {
+        executeTarget("testPathAndJar");
+    }
+
+    public void testPathAndSignedJar() {
+        expectBuildExceptionContaining("testPathAndSignedJar",
+                "incompatible attributes",
+                SignJar.ERROR_SIGNEDJAR_AND_PATHS);
     }
 
     public void testSignedJar() {
@@ -100,7 +114,13 @@ public class SignJarTest extends BuildFileTest {
     public void testDestDirAndSignedJar() {
         expectBuildExceptionContaining("testFilesetAndSignedJar",
                 "incompatible attributes",
-                SignJar.ERROR_SIGNEDJAR_AND_FILESETS);
+                SignJar.ERROR_SIGNEDJAR_AND_PATHS);
+    }
+
+    public void testDestDirAndSignedJar2() {
+        expectBuildExceptionContaining("testPathAndSignedJar",
+                "incompatible attributes",
+                SignJar.ERROR_SIGNEDJAR_AND_PATHS);
     }
 
     public void testDestDirFileset() {
@@ -109,6 +129,14 @@ public class SignJarTest extends BuildFileTest {
 
     public void testMapperFileset() {
         executeTarget("testMapperFileset");
+    }
+
+    public void testDestDirPath() {
+        executeTarget("testDestDirPath");
+    }
+
+    public void testMapperPath() {
+        executeTarget("testMapperPath");
     }
 
     public void testMapperNoDest() {
@@ -178,6 +206,10 @@ public class SignJarTest extends BuildFileTest {
 
     public void testVerifyFileset() {
         executeTarget("testVerifyFileset");
+    }
+
+    public void testVerifyPath() {
+        executeTarget("testVerifyPath");
     }
 
 }

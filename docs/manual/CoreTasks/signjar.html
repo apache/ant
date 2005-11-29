@@ -12,7 +12,7 @@
 <h3>Description</h3>
 <p>Signs JAR files with the <tt>jarsigner</tt> command line tool. 
 It will take a named file in the <tt>jar</tt> attribute, and an optional
-<tt>destDir</tt> or <tt>signedJar</tt> attribute. Nested filesets are also
+<tt>destDir</tt> or <tt>signedJar</tt> attribute. Nested paths are also
 supported; here only an (optional) <tt>destDir</tt> is allowed. If a destination
 directory or explicit JAR file name is not provided, JARs are signed in place.
 </p>
@@ -39,7 +39,7 @@ and <tt>lazy</tt> is false, the JAR is signed.</li>
   <tr>
     <td valign="top">jar</td>
     <td valign="top">the jar file to sign</td>
-    <td valign="top" align="center">Yes, unless nested filesets have
+    <td valign="top" align="center">Yes, unless nested paths have
       been used.</td>
   </tr>
   <tr>
@@ -135,6 +135,11 @@ block</td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
+    <td valign="top">path</td>
+    <td valign="top">path of JAR files to sign. <em>since Ant 1.7</em></td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">fileset</td>
     <td valign="top">fileset of JAR files to sign. </td>
     <td valign="top" align="center">No</td>
@@ -167,7 +172,9 @@ alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
     alias="testonly" keystore="testkeystore"
     storepass="apacheant"
     preservelastmodified="true"&gt;
-  &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;path&gt;
+    &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;/path&gt;
   &lt;flattenmapper /&gt;
 &lt;/signjar&gt;
 </pre></blockquote>
@@ -183,7 +190,9 @@ all be copied to this directory, not to subdirectories.
     storepass="apacheant"
     lazy="true"
     &gt;
-  &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;path&gt;
+    &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;/path&gt;
 &lt;/signjar&gt;
 </pre></blockquote>
 <p>

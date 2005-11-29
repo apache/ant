@@ -118,6 +118,32 @@
     </sign-base>
   </target>
   
+  <target name="testPath" depends="jar">
+    <sign-base>
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned/>
+  </target>
+
+  <target name="testPathAndJar" depends="jar">
+    <sign-base jar="${test.jar}" lazy="true">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned/>
+  </target>
+  
+  <target name="testPathAndSignedJar" depends="jar">
+    <sign-base signedjar="${sign.dir}/newfile.jar">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+  </target>
+  
   <target name="testSignedJar" depends="jar">
     <sign signedjar="${subdirtest.jar}"/>
     <assertSigned jar="${subdirtest.jar}"/>
@@ -139,6 +165,15 @@
     <assertSigned jar="${subdirtest.jar}"/>
   </target>
   
+  <target name="testDestDirPath" depends="jar">
+    <sign-base destDir="${subdir}">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+  
   <target name="testMapperNoDest" depends="jar">
     <sign-base >
       <flattenmapper />
@@ -149,6 +184,16 @@
   <target name="testMapperFileset" depends="jar">
     <sign-base destDir="${subdir}">
       <fileset file="${test.jar}" />
+      <flattenmapper />
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+
+  <target name="testMapperPath" depends="jar">
+    <sign-base destDir="${subdir}">
+      <path>
+        <pathelement location="${test.jar}" />
+      </path>
       <flattenmapper />
     </sign-base>
     <assertSigned jar="${subdirtest.jar}"/>
@@ -208,6 +253,14 @@
   <target name="testVerifyFileset" depends="basic">
     <verify-base >
       <fileset file="${test.jar}" />
+    </verify-base>
+  </target>
+
+  <target name="testVerifyPath" depends="basic">
+    <verify-base >
+      <path>
+        <pathelement location="${test.jar}" />
+      </path>
     </verify-base>
   </target>
 

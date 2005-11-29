@@ -21,6 +21,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.types.Environment;
 
@@ -89,6 +90,13 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     public static final String ERROR_NO_SOURCE = "jar must be set through jar attribute "
             + "or nested filesets";
+
+    /**
+     * Path holding all non-filesets of filesystem resources we want to sign.
+     *
+     * @since Ant 1.7
+     */
+    private Path path = null;
 
     /**
      * Set the maximum memory to be used by the jarsigner process
@@ -181,6 +189,20 @@ public abstract class AbstractJarSignerTask extends Task {
     public void addSysproperty(Environment.Variable sysp) {
         sysProperties.addVariable(sysp);
     }
+
+    /**
+     * Adds a path of files to sign.
+     *
+     * @param a path of files to sign.
+     * @since Ant 1.7
+     */
+    public Path createPath() {
+        if (path == null) {
+            path = new Path(getProject());
+        }
+        return path.createPath();
+    }
+
     /**
      * init processing logic; this is retained through our execution(s)
      */
@@ -306,11 +328,37 @@ public abstract class AbstractJarSignerTask extends Task {
             //this lets us combine our logic for handling output directories,
             //mapping etc.
             FileSet sourceJar = new FileSet();
+            sourceJar.setProject(getProject());
             sourceJar.setFile(jar);
             sourceJar.setDir(jar.getParentFile());
             sources.add(sourceJar);
         }
         return sources;
+    }
+
+    /**
+     * clone our path and add all explicitly specified FileSets as
+     * well, patch in the jar attribute as a new fileset if it is
+     * defined.
+     * @return a path that contains all files to sign
+     * @since Ant 1.7
+     */
+    protected Path createUnifiedSourcePath() {
+        Path p = path == null ? new Path(getProject()) : (Path) path.clone();
+        Vector s = createUnifiedSources();
+        Enumeration e = s.elements();
+        while (e.hasMoreElements()) {
+            p.add((FileSet) e.nextElement());
+        }
+        return p;
+    }
+
+    /**
+     * Has either a path or a fileset been specified?
+     * @since Ant 1.7
+     */
+    protected boolean hasResources() {
+        return path != null || filesets.size() > 0;
     }
 
     /**

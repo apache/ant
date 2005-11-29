@@ -19,13 +19,14 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.IsSigned;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -80,7 +81,7 @@ public class SignJar extends AbstractJarSignerTask {
     protected boolean lazy;
 
     /**
-     * the output directory when using filesets.
+     * the output directory when using paths.
      */
     protected File destDir;
 
@@ -111,7 +112,7 @@ public class SignJar extends AbstractJarSignerTask {
     /**
      * error string for unit test verification {@value}
      */
-    public static final String ERROR_SIGNEDJAR_AND_FILESETS = "You cannot specify the signed JAR when using filesets";
+    public static final String ERROR_SIGNEDJAR_AND_PATHS = "You cannot specify the signed JAR when using paths or filesets";
     /**
      * error string for unit test verification: {@value}
      */
@@ -252,13 +253,12 @@ public class SignJar extends AbstractJarSignerTask {
      */
     public void execute() throws BuildException {
         //validation logic
-        final boolean hasFileset = filesets.size() > 0;
         final boolean hasJar = jar != null;
         final boolean hasSignedJar = signedjar != null;
         final boolean hasDestDir = destDir != null;
         final boolean hasMapper = mapper != null;
 
-        if (!hasJar && !hasFileset) {
+        if (!hasJar && !hasResources()) {
             throw new BuildException(ERROR_NO_SOURCE);
         }
         if (null == alias) {
@@ -274,8 +274,8 @@ public class SignJar extends AbstractJarSignerTask {
         }
 
 
-        if (hasFileset && hasSignedJar) {
-            throw new BuildException(ERROR_SIGNEDJAR_AND_FILESETS);
+        if (hasResources() && hasSignedJar) {
+            throw new BuildException(ERROR_SIGNEDJAR_AND_PATHS);
         }
 
         //this isnt strictly needed, but by being fussy now,
@@ -297,9 +297,9 @@ public class SignJar extends AbstractJarSignerTask {
             }
 
             //the rest of the method treats single jar like
-            //a nested fileset with one file
+            //a nested path with one file
 
-            Vector sources = createUnifiedSources();
+            Path sources = createUnifiedSourcePath();
             //set up our mapping policy
             FileNameMapper destMapper;
             if (hasMapper) {
@@ -310,34 +310,26 @@ public class SignJar extends AbstractJarSignerTask {
             }
 
 
-            //at this point the filesets are set up with lists of files,
+            //at this point the paths are set up with lists of files,
             //and the mapper is ready to map from source dirs to dest files
             //now we iterate through every JAR giving source and dest names
-            // deal with the filesets
-            for (int i = 0; i < sources.size(); i++) {
-                FileSet fs = (FileSet) sources.elementAt(i);
-                //get all included files in a fileset
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] jarFiles = ds.getIncludedFiles();
-                File baseDir = fs.getDir(getProject());
+            // deal with the paths
+            Iterator iter = sources.iterator();
+            while (iter.hasNext()) {
+                FileResource fr = (FileResource) iter.next();
 
                 //calculate our destination directory; it is either the destDir
                 //attribute, or the base dir of the fileset (for in situ updates)
-                File toDir = hasDestDir ? destDir : baseDir;
+                File toDir = hasDestDir ? destDir : fr.getBaseDir();
 
-                //loop through all jars in the fileset
-                for (int j = 0; j < jarFiles.length; j++) {
-                    String jarFile = jarFiles[j];
-                    //determine the destination filename via the mapper
-                    String[] destFilenames = destMapper.mapFileName(jarFile);
-                    if (destFilenames == null || destFilenames.length != 1) {
-                        //we only like simple mappers.
-                        throw new BuildException(ERROR_BAD_MAP + jarFile);
-                    }
-                    File destFile = new File(toDir, destFilenames[0]);
-                    File jarSource = new File(baseDir, jarFile);
-                    signOneJar(jarSource, destFile);
+                //determine the destination filename via the mapper
+                String[] destFilenames = destMapper.mapFileName(fr.getName());
+                if (destFilenames == null || destFilenames.length != 1) {
+                    //we only like simple mappers.
+                    throw new BuildException(ERROR_BAD_MAP + fr.getFile());
                 }
+                File destFile = new File(toDir, destFilenames[0]);
+                signOneJar(fr.getFile(), destFile);
             }
         } finally {
             endExecution();
