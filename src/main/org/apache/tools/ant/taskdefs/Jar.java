@@ -46,6 +46,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
@@ -633,7 +634,7 @@ public class Jar extends Zip {
      * third arg if they already know that the archive is
      * out-of-date.</p>
      *
-     * @param filesets The filesets to grab resources from
+     * @param rcs The resource collections to grab resources from
      * @param zipFile intended archive file (may or may not exist)
      * @param needsUpdate whether we already know that the archive is
      * out-of-date.  Subclasses overriding this method are supposed to
@@ -644,7 +645,7 @@ public class Jar extends Zip {
      *
      * @exception BuildException if it likes
      */
-    protected ArchiveState getResourcesToAdd(FileSet[] filesets,
+    protected ArchiveState getResourcesToAdd(ResourceCollection[] rcs,
                                              File zipFile,
                                              boolean needsUpdate)
         throws BuildException {
@@ -680,7 +681,7 @@ public class Jar extends Zip {
         }
 
         createEmpty = needsUpdate;
-        return super.getResourcesToAdd(filesets, zipFile, needsUpdate);
+        return super.getResourcesToAdd(rcs, zipFile, needsUpdate);
     }
 
     /**
