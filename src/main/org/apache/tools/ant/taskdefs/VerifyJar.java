@@ -21,11 +21,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.filters.ChainableReader;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.FileResource;
 
-import java.util.Vector;
+import java.util.Iterator;
 import java.io.File;
 import java.io.Reader;
 import java.io.IOException;
@@ -70,10 +71,9 @@ public class VerifyJar extends AbstractJarSignerTask {
      */
     public void execute() throws BuildException {
         //validation logic
-        final boolean hasFileset = filesets.size() > 0;
         final boolean hasJar = jar != null;
 
-        if (!hasJar && !hasFileset) {
+        if (!hasJar && !hasResources()) {
             throw new BuildException(ERROR_NO_SOURCE);
         }
 
@@ -86,20 +86,11 @@ public class VerifyJar extends AbstractJarSignerTask {
         outputFilterChain.add(outputCache);
 
         try {
-            Vector sources = createUnifiedSources();
-            for (int i = 0; i < sources.size(); i++) {
-                FileSet fs = (FileSet) sources.elementAt(i);
-                //get all included files in a fileset
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] jarFiles = ds.getIncludedFiles();
-                File baseDir = fs.getDir(getProject());
-
-                //loop through all jars in the fileset
-                for (int j = 0; j < jarFiles.length; j++) {
-                    String jarFile = jarFiles[j];
-                    File jarSource = new File(baseDir, jarFile);
-                    verifyOneJar(jarSource);
-                }
+            Path sources = createUnifiedSourcePath();
+            Iterator iter = sources.iterator();
+            while (iter.hasNext()) {
+                FileResource fr = (FileResource) iter.next();
+                verifyOneJar(fr.getFile());
             }
 
         } finally {
