@@ -16,7 +16,9 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.zip.UnixStat;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,6 +164,29 @@ public class ZipTest extends BuildFileTest {
         } finally {
             if (f != null) {
                 f.close();
+            }
+        }
+    }
+
+    public void testFileResource() {
+        executeTarget("testFileResource");
+    }
+
+    public void testNonFileResource() {
+        executeTarget("testNonFileResource");
+    }
+
+    public void testTarFileSet() throws IOException {
+        executeTarget("testTarFileSet");
+        org.apache.tools.zip.ZipFile zf = null;
+        try {
+            zf = new org.apache.tools.zip.ZipFile(getProject()
+                                                  .resolveFile("test3.zip"));
+            org.apache.tools.zip.ZipEntry ze = zf.getEntry("asf-logo.gif");
+            assertEquals(UnixStat.FILE_FLAG | 0446, ze.getUnixMode());
+        } finally {
+            if (zf != null) {
+                zf.close();
             }
         }
     }

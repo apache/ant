@@ -199,16 +199,12 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>fileset</h4>
-<p>The zip task supports any number of nested <a
-href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify
-the files to be included in the archive.</p>
 
-<h4>zipfileset</h4>
-
-<p>The zip task supports any number of nested <a
-href="../CoreTypes/zipfileset.html"><code>&lt;zipfileset&gt;</code></a> elements to specify
-the files to be included in the archive.</p>
+<h4>any resource collection</h4>
+<p><a href="../CoreTypes/resources.html#collection">Resource
+Collection</a>s are used to select groups of files to archive.</p>
+<p>Prior to Ant 1.7 only <code>&lt;fileset&gt;</code> and
+<code>&lt;zipfileset&gt;</code> have been supported as nested elements.</p>
 
 <h4>zipgroupfileset</h4>
 <p>A <code>&lt;zipgroupfileset&gt;</code> allows for multiple zip files to be 
@@ -273,6 +269,17 @@ The code
 </pre>
 <p>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
+
+<pre>
+&lt;zip dest="release.zip"&gt;
+  &lt;tarfileset src="release.tar"/&gt;
+&lt;/zip&gt;
+</pre>
+
+<p>Re-packages a TAR archive as a ZIP archive.  If Unix file
+permissions have been stored as part of the TAR file, they will be
+retained in the resulting ZIP archive.</p>
+
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>

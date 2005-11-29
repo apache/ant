@@ -167,6 +167,25 @@
       update="true"/>
   </target>
 
+  <target name="testFileResource">
+    <zip destfile="test3.zip">
+      <file file="zip.xml"/>
+    </zip>
+  </target>
+
+  <target name="testNonFileResource">
+    <zip destfile="test3.zip">
+      <javaresource name="META-INF/MANIFEST.MF"/>
+    </zip>
+  </target>
+
+  <target name="testTarFileSet">
+    <ant antfile="tar.xml" target="feather"/>
+    <zip destfile="test3.zip">
+      <tarfileset src="asf-logo.gif.tar" filemode="446"/>
+    </zip>
+  </target>
+
   <target name="cleanup">
     <delete file="testLevel.zip"/>
     <delete file="test3.zip"/>
@@ -181,5 +200,6 @@
     <delete file="../dummyfile" />
     <delete dir="ziptest"/>
     <delete dir="empty"/>
+    <ant antfile="tar.xml" target="cleanup"/>
   </target>
 </project>
