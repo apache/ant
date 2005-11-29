@@ -2194,7 +2194,7 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Resolve the file realtive to the project's basedir and return it as a
+     * Resolve the file relative to the project's basedir and return it as a
      * FileResource.
      * @since Ant 1.7
      */
