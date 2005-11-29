@@ -39,6 +39,9 @@ public class Resource extends DataType
     /** Constant unknown size */
     public static final long UNKNOWN_SIZE = -1;
 
+    /** Constant unknown datetime for getLastModified */
+    public static final long UNKNOWN_DATETIME = 0L;
+
     /** Magic number */
     protected static final int MAGIC = getMagicNumber("Resource".getBytes());
 
@@ -181,10 +184,10 @@ public class Resource extends DataType
             return ((Resource) getCheckedRef()).getLastModified();
         }
         if (!isExists() || lastmodified == null) {
-            return 0L;
+            return UNKNOWN_DATETIME;
         }
         long result = lastmodified.longValue();
-        return result < 0L ? 0L : result;
+        return result < UNKNOWN_DATETIME ? UNKNOWN_DATETIME : result;
     }
 
     /**
@@ -237,7 +240,9 @@ public class Resource extends DataType
         if (isReference()) {
             return ((Resource) getCheckedRef()).getSize();
         }
-        return isExists() && size != null ? size.longValue() : 0L;
+        return isExists() ?
+            (size != null ? size.longValue() : UNKNOWN_SIZE)
+            : 0L;
     }
 
     /**
