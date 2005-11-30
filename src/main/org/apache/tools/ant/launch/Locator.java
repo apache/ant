@@ -185,7 +185,7 @@ public final class Locator {
      * @throws UnsupportedEncodingException if UTF-8 is not available
      * @since Ant 1.7
      */
-    public static String decodeUri(String uri) throws UnsupportedEncodingException{
+    public static String decodeUri(String uri) throws UnsupportedEncodingException {
         if (uri.indexOf('%') == -1) {
             return uri;
         }
