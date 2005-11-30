@@ -155,8 +155,7 @@ public final class Locator {
      * @since Ant 1.7
      */
     public static String decodeUri(String uri) throws UnsupportedEncodingException{
-        if (uri.indexOf('%') == -1)
-        {
+        if (uri.indexOf('%') == -1) {
             return uri;
         }
         ByteArrayOutputStream sb = new ByteArrayOutputStream(uri.length());
@@ -177,8 +176,7 @@ public final class Locator {
                 sb.write(c);
             }
         }
-        String path = sb.toString("UTF-8");
-        return path;
+        return sb.toString("UTF-8");
     }
 
     /**
