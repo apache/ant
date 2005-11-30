@@ -38,6 +38,37 @@ public final class Locator {
      * encoding used to represent URIs
      */
     public static String URI_ENCODING = "UTF-8";
+    // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
+    // of the Xerces-J team
+    // which ASCII characters need to be escaped
+    private static boolean gNeedEscaping[] = new boolean[128];
+    // the first hex character if a character needs to be escaped
+    private static char gAfterEscaping1[] = new char[128];
+    // the second hex character if a character needs to be escaped
+    private static char gAfterEscaping2[] = new char[128];
+    private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    // initialize the above 3 arrays
+    static {
+        for (int i = 0; i <= 0x1f; i++) {
+            gNeedEscaping[i] = true;
+            gAfterEscaping1[i] = gHexChs[i >> 4];
+            gAfterEscaping2[i] = gHexChs[i & 0xf];
+        }
+        gNeedEscaping[0x7f] = true;
+        gAfterEscaping1[0x7f] = '7';
+        gAfterEscaping2[0x7f] = 'F';
+        char[] escChs = {' ', '<', '>', '#', '%', '"', '{', '}',
+                         '|', '\\', '^', '~', '[', ']', '`'};
+        int len = escChs.length;
+        char ch;
+        for (int i = 0; i < len; i++) {
+            ch = escChs[i];
+            gNeedEscaping[ch] = true;
+            gAfterEscaping1[ch] = gHexChs[ch >> 4];
+            gAfterEscaping2[ch] = gHexChs[ch & 0xf];
+        }
+    }
     /**
      * Not instantiable
      */
@@ -176,7 +207,66 @@ public final class Locator {
                 sb.write(c);
             }
         }
-        return sb.toString("UTF-8");
+        return sb.toString(URI_ENCODING);
+    }
+    /**
+     * Encodes an Uri with % characters.
+     * The URI is escaped
+     * @param path String to encode.
+     * @return The encoded string, according to URI norms
+     * @throws UnsupportedEncodingException if UTF-8 is not available
+     * @since Ant 1.7
+     */
+    public static String encodeUri(String path) throws UnsupportedEncodingException {
+        int i = 0;
+        int len = path.length();
+        int ch = 0;
+        StringBuffer sb = new StringBuffer(len);
+        for (; i < len; i++) {
+            ch = path.charAt(i);
+            // if it's not an ASCII character, break here, and use UTF-8 encoding
+            if (ch >= 128)
+                break;
+            if (gNeedEscaping[ch]) {
+                sb.append('%');
+                sb.append(gAfterEscaping1[ch]);
+                sb.append(gAfterEscaping2[ch]);
+                // record the fact that it's escaped
+            }
+            else {
+                sb.append((char)ch);
+            }
+        }
+
+        // we saw some non-ascii character
+        if (i < len) {
+            // get UTF-8 bytes for the remaining sub-string
+            byte[] bytes = null;
+            byte b;
+            bytes = path.substring(i).getBytes(URI_ENCODING);
+            len = bytes.length;
+
+            // for each byte
+            for (i = 0; i < len; i++) {
+                b = bytes[i];
+                // for non-ascii character: make it positive, then escape
+                if (b < 0) {
+                    ch = b + 256;
+                    sb.append('%');
+                    sb.append(gHexChs[ch >> 4]);
+                    sb.append(gHexChs[ch & 0xf]);
+                }
+                else if (gNeedEscaping[b]) {
+                    sb.append('%');
+                    sb.append(gAfterEscaping1[b]);
+                    sb.append(gAfterEscaping2[b]);
+                }
+                else {
+                    sb.append((char)b);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**

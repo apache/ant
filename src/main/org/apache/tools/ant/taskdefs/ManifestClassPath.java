@@ -17,10 +17,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -123,10 +125,15 @@ public class ManifestClassPath
             if (File.separatorChar != '/') {
                 relPath = relPath.replace(File.separatorChar, '/');
             }
-            buffer.append(relPath);
             if (pathEntry.isDirectory()) {
-                buffer.append('/');
+                relPath = relPath + '/';
             }
+            try {
+                relPath = Locator.encodeUri(relPath);
+            } catch (UnsupportedEncodingException exc) {
+                throw new BuildException(exc);
+            }
+            buffer.append(relPath);
             buffer.append(' ');
         }
         
