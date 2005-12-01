@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -1010,7 +1011,6 @@ public class FileUtils {
         StringBuffer sb = new StringBuffer("file:");
 
         path = resolveFile(null, path).getPath();
-        int len = path.length(), ch;
         sb.append("//");
         // add an extra slash for filesystems with drive-specifiers
         if (!path.startsWith(File.separator)) {
