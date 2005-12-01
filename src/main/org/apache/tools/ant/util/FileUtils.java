@@ -1042,14 +1042,7 @@ public class FileUtils {
      */
     public String fromURI(String uri) {
         String path = Locator.fromURI(uri);
-
-        // catch exception if normalize thinks this is not an absolute path
-        try {
-            path = normalize(path).getAbsolutePath();
-        } catch (BuildException e) {
-            // relative path
-        }
-        return path;
+        return isAbsolutePath(path) ? normalize(path).getAbsolutePath() : path;
     }
 
     /**
