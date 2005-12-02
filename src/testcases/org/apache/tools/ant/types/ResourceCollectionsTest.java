@@ -117,10 +117,6 @@ public class ResourceCollectionsTest extends BuildFileTest {
         executeTarget("testresourcesref");
     }
 
-    public void testresourceurl() {
-        executeTarget("testresourceurl");
-    }
-
     public void teststring1() {
         executeTarget("teststring1");
     }

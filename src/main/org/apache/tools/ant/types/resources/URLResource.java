@@ -43,9 +43,7 @@ public class URLResource extends Resource {
         = Resource.getMagicNumber("null URL".getBytes());
 
     private URL url;
-    private String javaResource;
     private URLConnection conn;
-    private Path classpath;
 
     /**
      * Default constructor.
@@ -100,62 +98,12 @@ public class URLResource extends Resource {
     }
 
     /**
-     * Set the resource name with which to expose a Java resource.
-     * @param s the Java resource name.
-     * @see java.lang.ClassLoader#getResource(String)
-     */
-    public synchronized void setJavaResource(String s) {
-        checkAttributesAllowed();
-        javaResource = s;
-    }
-
-    /**
-     * Set the classpath for this URLResource.
-     * @param p the Path against which to resolve Java resources.
-     */
-    public synchronized void setClasspath(Path p) {
-        checkAttributesAllowed();
-        addConfiguredClasspath(p);
-    }
-
-    /**
-     * Create a nested classpath element.
-     * @return a Path object.
-     */
-    public synchronized void addConfiguredClasspath(Path p) {
-        checkChildrenAllowed();
-        if (classpath == null) {
-            classpath = new Path(getProject());
-        }
-        classpath.add(p);
-    }
-
-    /**
      * Get the URL used by this URLResource.
      * @return a URL object.
      */
     public synchronized URL getURL() {
         if (isReference()) {
             return ((URLResource) getCheckedRef()).getURL();
-        }
-        if (url == null && javaResource != null) {
-            ClassLoader cl = null;
-            AntClassLoader acl = null;
-            if (classpath != null) {
-                acl = getProject().createClassLoader(classpath);
-                cl = acl;
-            } else {
-                cl = getClass().getClassLoader();
-                if (cl == null) {
-                    cl = ClassLoader.getSystemClassLoader();
-                }
-            }
-            if (cl != null) {
-                setURL(cl.getResource(javaResource));
-                if (acl != null) {
-                    acl.cleanup();
-                }
-            }
         }
         return url;
      }
@@ -166,7 +114,7 @@ public class URLResource extends Resource {
      */
     public synchronized void setRefid(Reference r) {
         //not using the accessor in this case to avoid side effects
-        if (url != null || javaResource != null) {
+        if (url != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);

@@ -346,24 +346,8 @@ depends="testfileset,testdirset,testfilelist,testpath,testzipfileset,testpropert
     </fail>
   </target>
 
-  <target name="testresourceurl" depends="createjar">
-    <!-- test ref while we're at it -->
-    <url id="resourceurl"
-         javaresource="foo/c/z" classpath="${jar}" />
-    <fail>
-      <condition>
-        <resourcecount count="0">
-          <restrict>
-            <url refid="resourceurl" />
-            <rsel:exists />
-          </restrict>
-        </resourcecount>
-      </condition>
-    </fail>
-  </target>
-
   <target name="url"
-depends="testfileurl,testfileurlref,testhttpurl1,testhttpurl2,testjarurl,testresourceurl" />
+depends="testfileurl,testfileurlref,testhttpurl1,testhttpurl2,testjarurl" />
 
   <target name="testfile" depends="init">
     <echo file="${file}">This is a test.</echo>
