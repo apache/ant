@@ -161,7 +161,10 @@ Fixed bugs:
 
 * > 1 ssh invocations to a given host would fail. Bugzilla report 36207.
 
-* EmailTask was eating SMTP error messages. Bugzilla report 37547.  
+* EmailTask was eating SMTP error messages. Bugzilla report 37547.
+
+* PropertySet API setMapper(...) didn't properly set up the Mapper.
+  Bugzilla report 37760.
 
 Other changes:
 --------------

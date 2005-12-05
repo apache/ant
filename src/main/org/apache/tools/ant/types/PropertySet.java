@@ -170,6 +170,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         Mapper m = createMapper();
         Mapper.MapperType mapperType = new Mapper.MapperType();
         mapperType.setValue(type);
+        m.setType(mapperType);
         m.setFrom(from);
         m.setTo(to);
     }
