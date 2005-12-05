@@ -599,7 +599,7 @@ public class TaskTagsHandler extends XDocletTagSupport
             attributeMethods.add(method);
         }
 
-        return (XMethod[]) attributeMethods.toArray(new XMethod[0]);
+        return (XMethod[]) attributeMethods.toArray(new XMethod[attributeMethods.size()]);
     }
 
     /**
@@ -708,7 +708,7 @@ public class TaskTagsHandler extends XDocletTagSupport
             elementMethods.add(method);
         }
 
-        return (XMethod[]) elementMethods.toArray(new XMethod[0]);
+        return (XMethod[]) elementMethods.toArray(new XMethod[elementMethods.size()]);
     }
 
     /**
@@ -849,7 +849,7 @@ public class TaskTagsHandler extends XDocletTagSupport
                 }
             });
 
-        return (XMethod[]) methods.toArray(new XMethod[0]);
+        return (XMethod[]) methods.toArray(new XMethod[methods.size()]);
     }
 }
 
