@@ -69,6 +69,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Some potential NullPointerExceptions, Bugzilla Report 37765
+
 * Problem when adding multiple filter files, Bugzilla Report 37341
 
 * problem refering jars specfied by Class-Path attribute in manifest
@@ -170,6 +172,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Minor performance improvements Bugzilla report 37777
+
 * New task <manifestclasspath> converts a path into a property
   suitable as the value for a manifest's Class-Path attribute.
 
