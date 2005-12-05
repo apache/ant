@@ -39,7 +39,7 @@ public class P4Reopen extends P4Base {
      * @throws BuildException if the change parameter is null or empty
      */
     public void setToChange(String toChange) throws BuildException {
-        if (toChange == null && !toChange.equals("")) {
+        if (toChange == null || toChange.equals("")) {
             throw new BuildException("P4Reopen: tochange cannot be null or empty");
         }
 

@@ -58,7 +58,7 @@ public class P4Sync extends P4Base {
      * @throws BuildException if label is null or empty string
      */
     public void setLabel(String label) throws BuildException {
-        if (label == null && !label.equals("")) {
+        if (label == null || label.equals("")) {
             throw new BuildException("P4Sync: Labels cannot be Null or Empty");
         }
 
