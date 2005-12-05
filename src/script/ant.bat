@@ -92,14 +92,23 @@ if not "%JIKESPATH%"=="" goto runAntWithJikes
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
 if not "%CLASSPATH%"=="" goto runAntWithClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
 goto end
 
 :runAntNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
 goto end
 
 :runAntWithClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
 goto end
 
 :runAntWithJikes
@@ -108,19 +117,57 @@ if not "%CLASSPATH%"=="" goto runAntWithJikesAndClasspath
 
 :runAntWithJikesNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
 goto end
 
 :runAntWithJikesAndClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS%  -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
 goto end
+
+:onError
+rem Windows 9x way of checking the error code.  It matches via brute force.
+for %%i in (1 10 100) do set err%%i=
+for %%i in (0 1 2) do if errorlevel %%i00 set err100=%%i
+if %err100%==2 goto onError200
+if %err100%==0 set err100=
+for %%i in (0 1 2 3 4 5 6 7 8 9) do if errorlevel %err100%%%i0 set err10=%%i
+if "%err100%"=="" if %err10%==0 set err10=
+:onError1
+for %%i in (0 1 2 3 4 5 6 7 8 9) do if errorlevel %err100%%err10%%%i set err1=%%i
+goto onErrorEnd
+:onError200
+for %%i in (0 1 2 3 4 5) do if errorlevel 2%%i0 set err10=%%i
+if err10==5 for %%i in (0 1 2 3 4 5) do if errorlevel 25%%i set err1=%%i
+if not err10==5 goto onError1
+:onErrorEnd
+set ANT_ERROR=%err100%%err10%%err1%
+for %%i in (1 10 100) do set err%%i=
 
 :end
 set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
+rem Set the return code if we are not in NT.  We can only set
+rem a value of 1, but it's better than nothing.
+if not "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="" set ANT_ERROR=255
+if not "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="0" goto quit
+if not "%OS%"=="Windows_NT" echo 1 > nul | choice /n /c:1
+rem Set the ERRORLEVEL if we are running NT.
+if "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="" set ANT_ERROR=255
+if "%OS%"=="Windows_NT" if not %ANT_ERROR%==0 color 00
+goto quit
+
+rem If there were no errors, we run the post script.
 if "%OS%"=="Windows_NT" @endlocal
 if "%OS%"=="WINNT" @endlocal
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
+
+:quit
 

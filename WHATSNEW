@@ -166,6 +166,8 @@ Fixed bugs:
 * PropertySet API setMapper(...) didn't properly set up the Mapper.
   Bugzilla report 37760.
 
+* Proper return code for ant.bat. Bugzilla report 13655.  
+
 Other changes:
 --------------
 * New task <manifestclasspath> converts a path into a property

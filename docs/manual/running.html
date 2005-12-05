@@ -445,7 +445,14 @@ very good reason to use another prefix. Accordingly, please avoid using
 properties that begin with these prefixes. This protects you from future
 Ant releases breaking your build file.
 </p>
-
+<h3>return code</h3>
+<p>the ant start up scripts (in their Windows and Unix version) return
+the return code of the java program. So a successful build returns 0,
+failed builds return other values.
+</p>
+<p>Under Windows95 and 98, a special environment variable ANT_ERROR will be set
+by the script ant.bat, because it is not possible to exit the script with a
+specific errorlevel.</p>
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
