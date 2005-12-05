@@ -27,6 +27,7 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Invokes the Metamata Audit/ Webgain Quality Analyzer on a set of Java files.
@@ -298,12 +299,7 @@ public class MAudit extends AbstractMetamataTask {
         } catch (IOException e) {
             throw new BuildException(e);
         } finally {
-            if (out == null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                }
-            }
+            FileUtils.close(out);
         }
         return handler;
     }
