@@ -16,12 +16,8 @@
  */
 package org.apache.tools.ant.types;
 
-import java.io.File;
-import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.zip.UnixStat;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
