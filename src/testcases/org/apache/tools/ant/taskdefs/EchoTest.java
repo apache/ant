@@ -50,4 +50,23 @@ public class EchoTest extends BuildFileTest {
                               "    message\n"+
                               "    ");
     }
+
+    public void testFile() throws Exception {
+        executeTarget("testFile");
+    }
+
+    public void testAppend() throws Exception {
+        executeTarget("testAppend");
+    }
+
+    public void testEmptyEncoding() throws Exception {
+        executeTarget("testEmptyEncoding");
+    }
+
+    public void testUTF16Encoding() throws Exception {
+        executeTarget("testUTF16Encoding");
+    }
+    public void testUTF8Encoding() throws Exception {
+        executeTarget("testUTF8Encoding");
+    }
 }

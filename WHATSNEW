@@ -300,7 +300,8 @@ Other changes:
   to destination strings.
 
 * Add the echoxml task. This will echo nested XML to a file, with
-  the normal <?xml ?> processor instruction. UTF-8 encoding only.  
+  the normal <?xml ?> processor instruction. UTF-8 encoding only; no-namespace
+  support.
 
 * Try to make subprojects of custom Project subclasses instances of the
   same type. Bugzilla report 17901.
@@ -325,8 +326,9 @@ Other changes:
 * <xslt> now accepts nested FileNameMappers e.g. <globmapper>.
   Bugzilla report 37604.
 
-
 * New task loadresource that accompanies loadfile for non file resources.
+
+* <echo> now supports an encoding when saving to a file
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================

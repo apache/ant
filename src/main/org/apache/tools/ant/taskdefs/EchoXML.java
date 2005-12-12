@@ -24,12 +24,22 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.XMLFragment;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.FileUtils;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 /**
  * Echo XML.
+ * Notice how this is a ProjectComponent and not a task, which means that certain
+ * well-known task operations (such as {@link org.apache.tools.ant.Task#getLocation()}) do not work.
+ *
+ * Other limitations
+ * <ol>
+ * <li>Currently no XMLNS support</li>
+ * <li>Processing Instructions get ignored</li>
+ * <li>Encoding is always UTF-8</li>
+ *
  * @since Ant 1.7
  */
 public class EchoXML extends XMLFragment {
@@ -60,8 +70,8 @@ public class EchoXML extends XMLFragment {
      */
     public void execute() {
         DOMElementWriter writer = new DOMElementWriter(!append);
+        OutputStream os = null;
         try {
-            OutputStream os = null;
             if (file != null) {
                 os = new FileOutputStream(file.getAbsolutePath(), append);
             } else {
@@ -72,8 +82,12 @@ public class EchoXML extends XMLFragment {
                 throw new BuildException(ERROR_NO_XML);
             }
             writer.write((Element) n, os);
+        } catch (BuildException e) {
+            throw e;
         } catch (Exception e) {
             throw new BuildException(e);
+        } finally {
+            FileUtils.close(os);
         }
     }
 
