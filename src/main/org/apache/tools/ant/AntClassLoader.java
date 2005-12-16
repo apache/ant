@@ -1217,8 +1217,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
         if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
             try {
-                // XXX should be using FileUtils!
-                sealBase = new URL("file:" + container.getPath());
+                sealBase = new URL(FileUtils.getFileUtils().toURI(container.getAbsolutePath()));
             } catch (MalformedURLException e) {
                 // ignore
             }

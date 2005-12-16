@@ -33,6 +33,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
@@ -246,7 +247,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                 log("Parsing file: '" + file + "'", Project.MSG_VERBOSE);
                 if(file.length()>0) {
                     Document testsuiteDoc
-                            = builder.parse("file:///" + file.getAbsolutePath());
+                            = builder.parse(FileUtils.getFileUtils().toURI(files[i].getAbsolutePath()));
                     Element elem = testsuiteDoc.getDocumentElement();
                     // make sure that this is REALLY a testsuite.
                     if (TESTSUITE.equals(elem.getNodeName())) {

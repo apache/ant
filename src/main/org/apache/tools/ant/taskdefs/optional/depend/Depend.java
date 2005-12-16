@@ -35,6 +35,7 @@ import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.WLRmic;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 /**
@@ -393,14 +394,15 @@ public class Depend extends MatchingTask {
                             if (classURL != null) {
                                 if (classURL.getProtocol().equals("jar")) {
                                     String jarFilePath = classURL.getFile();
+                                    int classMarker = jarFilePath.indexOf('!');
+                                    jarFilePath = jarFilePath.substring(0, classMarker);
                                     if (jarFilePath.startsWith("file:")) {
-                                        int classMarker = jarFilePath.indexOf('!');
-                                        jarFilePath = jarFilePath.substring(5, classMarker);
+                                        classpathFileObject = new File(FileUtils.getFileUtils().fromURI(jarFilePath));
+                                    } else {
+                                        throw new IOException("Bizarre nested path in jar: protocol: " + jarFilePath);
                                     }
-                                    classpathFileObject = new File(jarFilePath);
                                 } else if (classURL.getProtocol().equals("file")) {
-                                    String classFilePath = classURL.getFile();
-                                    classpathFileObject = new File(classFilePath);
+                                    classpathFileObject = new File(FileUtils.getFileUtils().fromURI(classURL.toExternalForm()));
                                 }
                                 log("Class " + className
                                     + " depends on " + classpathFileObject
@@ -544,9 +546,9 @@ public class Depend extends MatchingTask {
 
     /**
      * test for being an RMI stub
-     * @param affectedClass
-     * @param className
-     * @return
+     * @param affectedClass  class being tested
+     * @param className      possible origin of the RMI stub
+     * @return whether the class affectedClass is a RMI stub
      */
     private boolean isRmiStub(String affectedClass, String className) {
         return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)

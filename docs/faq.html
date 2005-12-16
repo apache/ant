@@ -1390,7 +1390,7 @@ while(&lt;STDIN&gt;) {
 &lt;?xml version=&quot;1.0&quot;?&gt;
 
 &lt;!DOCTYPE project [
-    &lt;!ENTITY common SYSTEM &quot;file:./common.xml&quot;&gt;
+       &lt;!ENTITY common SYSTEM &quot;common.xml&quot;&gt;
 ]&gt;
 
 &lt;project name=&quot;test&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
@@ -1407,10 +1407,13 @@ while(&lt;STDIN&gt;) {
 </pre>
                         <p>will literally include the contents of <code>common.xml</code> where
         you've placed the <code>&amp;common;</code> entity.</p>
+                        <p>(The filename <code>common.xml</code> in this example is resolved
+        relative to the containing XML file by the XML parser. You may also use
+        an absolute <code>file:</code> protocol URI.)</p>
                         <p>In combination with a DTD, this would look like this:</p>
                         <pre class="code">
-&lt;!DOCTYPE project PUBLIC &quot;-//ANT//DTD project//EN&quot; &quot;file:./ant.dtd&quot; [
-   &lt;!ENTITY include SYSTEM &quot;file:./header.xml&quot;&gt;
+&lt;!DOCTYPE project PUBLIC &quot;-//ANT//DTD project//EN&quot; &quot;ant.dtd&quot; [
+   &lt;!ENTITY include SYSTEM &quot;header.xml&quot;&gt;
 ]&gt;
 </pre>
                         <p>Starting with Ant 1.6, there is a new

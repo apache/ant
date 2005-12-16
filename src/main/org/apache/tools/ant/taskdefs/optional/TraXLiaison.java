@@ -47,6 +47,7 @@ import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -401,8 +402,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
             String systemid = locator.getSystemId();
             if (systemid != null) {
                 String url = systemid;
-                if (url.startsWith("file:///")) {
-                    url = url.substring(8);
+                if (url.startsWith("file:")) {
+                    url = FileUtils.newFileUtils().fromURI(url);
                 }
                 msg.append(url);
             } else {

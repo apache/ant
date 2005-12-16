@@ -1067,7 +1067,7 @@ while(<STDIN>) {
 <?xml version="1.0"?>
 
 <!DOCTYPE project [
-    <!ENTITY common SYSTEM "file:./common.xml">
+       <!ENTITY common SYSTEM "common.xml">
 ]>
 
 <project name="test" default="test" basedir=".">
@@ -1086,11 +1086,15 @@ while(<STDIN>) {
         <p>will literally include the contents of <code>common.xml</code> where
         you&apos;ve placed the <code>&amp;common;</code> entity.</p>
 
+        <p>(The filename <code>common.xml</code> in this example is resolved
+        relative to the containing XML file by the XML parser. You may also use
+        an absolute <code>file:</code> protocol URI.)</p>
+
         <p>In combination with a DTD, this would look like this:</p>
 
         <source><![CDATA[
-<!DOCTYPE project PUBLIC "-//ANT//DTD project//EN" "file:./ant.dtd" [
-   <!ENTITY include SYSTEM "file:./header.xml">
+<!DOCTYPE project PUBLIC "-//ANT//DTD project//EN" "ant.dtd" [
+   <!ENTITY include SYSTEM "header.xml">
 ]>
 ]]></source>
 

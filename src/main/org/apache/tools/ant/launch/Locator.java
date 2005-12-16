@@ -130,8 +130,8 @@ public final class Locator {
      *
      * <p>Will be an absolute path if the given URI is absolute.</p>
      *
-     * <p>Swallows '%' that are not followed by two characters,
-     * doesn't deal with non-ASCII characters.</p>
+     * <p>Prior to Java 1.4,
+     * swallows '%' that are not followed by two characters.</p>
      *
      * @see <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
      * which makes some mention of how
@@ -139,9 +139,45 @@ public final class Locator {
      *
      * @param uri the URI designating a file in the local filesystem.
      * @return the local file system path for the file.
+     * @throws IllegalArgumentException if the URI is malformed or not a legal file: URL
      * @since Ant 1.6
      */
     public static String fromURI(String uri) {
+        // #8031: first try Java 1.4.
+        Class uriClazz = null;
+        try {
+            uriClazz = Class.forName("java.net.URI");
+        } catch (ClassNotFoundException cnfe) {
+            // Fine, Java 1.3 or earlier, do it by hand.
+        }
+        // Also check for properly formed URIs. Ant formerly recommended using
+        // nonsense URIs such as "file:./foo.xml" in XML includes. You shouldn't
+        // do that (just "foo.xml" is correct) but for compatibility we special-case
+        // things when the path is not absolute, and fall back to the old parsing behavior.
+        if (uriClazz != null && uri.startsWith("file:/")) {
+            try {
+                java.lang.reflect.Method createMethod = uriClazz.getMethod("create", new Class[] {String.class});
+                Object uriObj = createMethod.invoke(null, new Object[] {uri});
+                java.lang.reflect.Constructor fileConst = File.class.getConstructor(new Class[] {uriClazz});
+                File f = (File)fileConst.newInstance(new Object[] {uriObj});
+                return f.getAbsolutePath();
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                Throwable e2 = e.getTargetException();
+                if (e2 instanceof IllegalArgumentException) {
+                    // Bad URI, pass this on.
+                    throw (IllegalArgumentException)e2;
+                } else {
+                    // Unexpected target exception? Should not happen.
+                    e2.printStackTrace();
+                }
+            } catch (Exception e) {
+                // Reflection problems? Should not happen, debug.
+                e.printStackTrace();
+            }
+        }
+
+        // Fallback method for Java 1.3 or earlier.
+
         URL url = null;
         try {
             url = new URL(uri);

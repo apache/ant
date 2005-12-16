@@ -399,7 +399,7 @@ public class CovReport extends CovBase {
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty(OutputKeys.METHOD, "xml");
                 Source src = new DOMSource(doc);
-                Result res = new StreamResult("file:///" + tofile.toString());
+                Result res = new StreamResult(tofile);
                 transformer.transform(src, res);
             } catch (Exception e) {
                 throw new BuildException("Error while performing enhanced XML "

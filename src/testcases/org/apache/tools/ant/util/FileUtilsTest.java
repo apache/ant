@@ -452,45 +452,66 @@ public class FileUtilsTest extends TestCase {
             dosRoot = "";
         }
         if (Os.isFamily("dos")) {
-            assertEquals("file:///C:/foo", FILE_UTILS.toURI("c:\\foo"));
+            assertEquals("file:/c:/foo", removeExtraneousAuthority(FILE_UTILS.toURI("c:\\foo")));
         }
         if (Os.isFamily("netware")) {
-            assertEquals("file:///SYS:/foo", FILE_UTILS.toURI("sys:\\foo"));
+            assertEquals("file:/SYS:/foo", removeExtraneousAuthority(FILE_UTILS.toURI("sys:\\foo")));
         }
-        assertEquals("file:///" + dosRoot + "foo", FILE_UTILS.toURI("/foo"));
-        /* May fail if the directory ${user.dir}/foo/ exists
-         * (and anyway is the tested behavior actually desirable?):
-        assertEquals("file:./foo",  fu.toURI("./foo"));
-         */
-        assertEquals("file:///" + dosRoot + "foo", FILE_UTILS.toURI("\\foo"));
-        /* See above:
-        assertEquals("file:./foo",  fu.toURI(".\\foo"));
-         */
-        assertEquals("file:///" + dosRoot + "foo%20bar", FILE_UTILS.toURI("/foo bar"));
-        assertEquals("file:///" + dosRoot + "foo%20bar", FILE_UTILS.toURI("\\foo bar"));
-        assertEquals("file:///" + dosRoot + "foo%23bar", FILE_UTILS.toURI("/foo#bar"));
-        assertEquals("file:///" + dosRoot + "foo%23bar", FILE_UTILS.toURI("\\foo#bar"));
+        if (File.pathSeparatorChar == '/') {
+            assertEquals("file:/foo", removeExtraneousAuthority(FILE_UTILS.toURI("/foo")));
+            assertTrue("file: URIs must name absolute paths", FILE_UTILS.toURI("./foo").startsWith("file:/"));
+            assertTrue(FILE_UTILS.toURI("./foo").endsWith("/foo"));
+            assertEquals("file:/" + dosRoot + "foo%20bar", removeExtraneousAuthority(FILE_UTILS.toURI("/foo bar")));
+            assertEquals("file:/" + dosRoot + "foo%23bar", removeExtraneousAuthority(FILE_UTILS.toURI("/foo#bar")));
+        } else if (File.pathSeparatorChar == '\\') {
+            assertEquals("file:/" + dosRoot + "foo", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo")));
+            assertTrue("file: URIs must name absolute paths", FILE_UTILS.toURI(".\\foo").startsWith("file:/"));
+            assertTrue(FILE_UTILS.toURI(".\\foo").endsWith("/foo"));
+            assertEquals("file:/" + dosRoot + "foo%20bar", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo bar")));
+            assertEquals("file:/" + dosRoot + "foo%23bar", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo#bar")));
+        }
         // a test with ant for germans
-        // i would expect here %E4NT ???
-        // anyway, this is the fix for the bug 37348wh
-        assertEquals("file:///" + dosRoot + "%C3%A4nt", FILE_UTILS.toURI("/\u00E4nt"));
+        // the escaped character used for the test is the "a umlaut"
+        // this is the fix for the bug 37348
+        assertEquals("file:/" + dosRoot + "%C3%A4nt", removeExtraneousAuthority(FILE_UTILS.toURI("/\u00E4nt")));
     }
 
+    /**
+     * Authority field is unnecessary, but harmless, in file: URIs.
+     * Java 1.4 does not produce it when using File.toURI.
+     */
+    private static String removeExtraneousAuthority(String uri) {
+        String prefix = "file:///";
+        if (uri.startsWith(prefix)) {
+            return "file:/" + uri.substring(prefix.length());
+        } else {
+            return uri;
+        }
+    }
     /**
      * test fromUri
      */
     public void testFromURI() {
+        String dosRoot = null;
+        if (Os.isFamily("dos") || Os.isFamily("netware")) {
+            dosRoot = Character.toUpperCase(
+                System.getProperty("user.dir").charAt(0)) + ":";
+        }
+        else
+        {
+            dosRoot = "";
+        }
         if (Os.isFamily("netware")) {
             assertEqualsIgnoreDriveCase("SYS:\\foo", FILE_UTILS.fromURI("file:///sys:/foo"));
         }
         if (Os.isFamily("dos")) {
             assertEqualsIgnoreDriveCase("C:\\foo", FILE_UTILS.fromURI("file:///c:/foo"));
         }
-        assertEqualsIgnoreDriveCase(File.separator + "foo", FILE_UTILS.fromURI("file:///foo"));
+        assertEqualsIgnoreDriveCase(dosRoot + File.separator + "foo", FILE_UTILS.fromURI("file:///foo"));
         assertEquals("." + File.separator + "foo",
                      FILE_UTILS.fromURI("file:./foo"));
-        assertEquals(File.separator + "foo bar", FILE_UTILS.fromURI("file:///foo%20bar"));
-        assertEquals(File.separator + "foo#bar", FILE_UTILS.fromURI("file:///foo%23bar"));
+        assertEquals(dosRoot + File.separator + "foo bar", FILE_UTILS.fromURI("file:///foo%20bar"));
+        assertEquals(dosRoot + File.separator + "foo#bar", FILE_UTILS.fromURI("file:///foo%23bar"));
     }
 
     public void testModificationTests() {

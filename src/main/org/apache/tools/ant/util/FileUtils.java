@@ -1006,6 +1006,25 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String toURI(String path) {
+        // #8031: first try Java 1.4.
+        Class uriClazz = null;
+        try {
+            uriClazz = Class.forName("java.net.URI");
+        } catch (ClassNotFoundException e) {
+            // OK, Java 1.3.
+        }
+        if (uriClazz != null) {
+            try {
+                File f = new File(path).getAbsoluteFile();
+                java.lang.reflect.Method toURIMethod = File.class.getMethod("toURI", new Class[0]);
+                Object uriObj = toURIMethod.invoke(f, new Object[] {});
+                java.lang.reflect.Method toASCIIStringMethod = uriClazz.getMethod("toASCIIString", new Class[0]);
+                return (String) toASCIIStringMethod.invoke(uriObj, new Object[] {});
+            } catch (Exception e) {
+                // Reflection problems? Should not happen, debug.
+                e.printStackTrace();
+            }
+        }
         boolean isDir = new File(path).isDirectory();
 
         StringBuffer sb = new StringBuffer("file:");

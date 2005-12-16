@@ -36,7 +36,7 @@ public class JAXPUtilsTest extends TestCase {
             file = new File("/user/local/bin");
         }
         String systemid = JAXPUtils.getSystemId(file);
-        assertTrue("SystemIDs should start by file:///", systemid.startsWith("file:///"));
+        assertTrue("SystemIDs should start by file:/", systemid.startsWith("file:/"));
         assertTrue("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
     }
 }
