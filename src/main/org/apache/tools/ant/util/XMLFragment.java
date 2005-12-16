@@ -76,11 +76,11 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
      */
     public Object createDynamicElement(String uri, String name, String qName) {
         Element e = null;
-	if (uri.equals("")) {
-	    e = doc.createElement(name);
-	} else {
-	    e = doc.createElementNS(uri, qName);
-	}
+        if (uri.equals("")) {
+            e = doc.createElement(name);
+        } else {
+            e = doc.createElementNS(uri, qName);
+        }
         fragment.appendChild(e);
         return new Child(e);
     }
