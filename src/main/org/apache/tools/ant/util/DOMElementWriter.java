@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -30,7 +33,6 @@ import org.w3c.dom.Text;
 
 /**
  * Writes a DOM tree to a given Writer.
- * warning: this utility currently does not declare XML Namespaces.
  * <p>Utility class used by {@link org.apache.tools.ant.XmlLogger
  * XmlLogger} and
  * org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
@@ -39,24 +41,99 @@ import org.w3c.dom.Text;
  */
 public class DOMElementWriter {
 
+    /** prefix for genefrated prefixes */
+    private static final String NS = "ns";
+
     /** xml declaration is on by default */
     private boolean xmlDeclaration=true;
 
     /**
+     * XML Namespaces are ignored by default.
+     */
+    private XmlNamespacePolicy namespacePolicy = XmlNamespacePolicy.IGNORE;
+
+    /**
+     * Map (URI to prefix) of known namespaces.
+     */
+    private HashMap nsPrefixMap = new HashMap();
+
+    /**
+     * Number of generated prefix to use next.
+     */
+    private int nextPrefix = 0;
+
+    /**
+     * Map (Element to URI) of namespaces defined on a given element.
+     */
+    private HashMap nsURIByElement = new HashMap();
+
+    /**
+     * Whether namespaces should be ignored for elements and attributes.
+     *
+     * @since Ant 1.7
+     */
+    public static class XmlNamespacePolicy {
+        private boolean qualifyElements;
+        private boolean qualifyAttributes;
+
+        /**
+         * Ignores namespaces for elements and attributes, the default.
+         */
+        public static final XmlNamespacePolicy IGNORE =
+            new XmlNamespacePolicy(false, false);
+
+        /**
+         * Ignores namespaces for attributes.
+         */
+        public static final XmlNamespacePolicy ONLY_QUALIFY_ELEMENTS =
+            new XmlNamespacePolicy(true, false);
+
+        /**
+         * Qualifies namespaces for elements and attributes.
+         */
+        public static final XmlNamespacePolicy QUALIFY_ALL =
+            new XmlNamespacePolicy(true, true);
+
+        /**
+         * @param qualifyElements whether to qualify elements
+         * @param qualifyAttributes whether to qualify elements
+         */
+        public XmlNamespacePolicy(boolean qualifyElements,
+                                  boolean qualifyAttributes) {
+            this.qualifyElements = qualifyElements;
+            this.qualifyAttributes = qualifyAttributes;
+        }
+    }
+
+    /**
      * Create an element writer.
-     * The ?xml? declaration will be included.
+     * The ?xml? declaration will be included, namespaces ignored.
      */
     public DOMElementWriter() {
     }
 
     /**
      * Create an element writer 
+     * XML namespaces will be ignored.
      * @param xmlDeclaration flag to indicate whether the ?xml? declaration
      * should be included.
      * @since Ant1.7
      */
     public DOMElementWriter(boolean xmlDeclaration) {
+        this(xmlDeclaration, XmlNamespacePolicy.IGNORE);
+    }
+
+    /**
+     * Create an element writer 
+     * XML namespaces will be ignored.
+     * @param xmlDeclaration flag to indicate whether the ?xml? declaration
+     * should be included.
+     * @since Ant1.7
+     */
+    public DOMElementWriter(boolean xmlDeclaration,
+                            XmlNamespacePolicy namespacePolicy) {
         this.xmlDeclaration = xmlDeclaration;
+        this.namespacePolicy = namespacePolicy;
     }
 
     private static String lSep = System.getProperty("line.separator");
@@ -200,6 +277,23 @@ public class DOMElementWriter {
 
         // Write element
         out.write("<");
+        if (namespacePolicy.qualifyElements) {
+            String prefix = (String) nsPrefixMap.get(element.getNamespaceURI());
+            if (prefix == null) {
+                if (nsPrefixMap.isEmpty()) {
+                    // steal default namespace
+                    prefix = "";
+                } else {
+                    prefix = NS + (nextPrefix++);
+                }
+                nsPrefixMap.put(element.getNamespaceURI(), prefix);
+                addNSDefinition(element, element.getNamespaceURI());
+            }
+            if (!"".equals(prefix)) {
+                out.write(prefix);
+                out.write(":");
+            }
+        }
         out.write(element.getTagName());
 
         // Write attributes
@@ -207,14 +301,45 @@ public class DOMElementWriter {
         for (int i = 0; i < attrs.getLength(); i++) {
             Attr attr = (Attr) attrs.item(i);
             out.write(" ");
+            if (namespacePolicy.qualifyAttributes) {
+                String prefix =
+                    (String) nsPrefixMap.get(attr.getNamespaceURI());
+                if (prefix == null) {
+                    prefix = NS + (nextPrefix++);
+                    nsPrefixMap.put(attr.getNamespaceURI(), prefix);
+                    addNSDefinition(element, attr.getNamespaceURI());
+                }
+                out.write(prefix);
+                out.write(":");
+            }
             out.write(attr.getName());
             out.write("=\"");
             out.write(encode(attr.getValue()));
             out.write("\"");
         }
+
+        // write namespace declarations
+        ArrayList al = (ArrayList) nsURIByElement.get(element);
+        if (al != null) {
+            Iterator iter = al.iterator();
+            while (iter.hasNext()) {
+                String uri = (String) iter.next();
+                String prefix = (String) nsPrefixMap.get(uri);
+                out.write(" xmlns");
+                if (!"".equals(prefix)) {
+                    out.write(":");
+                    out.write(prefix);
+                }
+                out.write("=\"");
+                out.write(uri);
+                out.write("\"");
+            }
+        }
+
         if (hasChildren) {
             out.write(">");
         } else {
+            removeNSDefinitions(element);
             out.write(" />");
             out.write(lSep);
             out.flush();
@@ -245,6 +370,16 @@ public class DOMElementWriter {
 
         // Write element close
         out.write("</");
+        if (namespacePolicy.qualifyElements
+            || namespacePolicy.qualifyAttributes) {
+            String prefix =
+                (String) nsPrefixMap.get(element.getNamespaceURI());
+            if (prefix != null && !"".equals(prefix)) {
+                out.write(prefix);
+                out.write(":");
+            }
+            removeNSDefinitions(element);
+        }
         out.write(element.getTagName());
         out.write(">");
         out.write(lSep);
@@ -392,5 +527,25 @@ public class DOMElementWriter {
             return true;
         }
         return false;
+    }
+
+    private void removeNSDefinitions(Element element) {
+        ArrayList al = (ArrayList) nsURIByElement.get(element);
+        if (al != null) {
+            Iterator iter = al.iterator();
+            while (iter.hasNext()) {
+                nsPrefixMap.remove(iter.next());
+            }
+            nsURIByElement.remove(element);
+        }
+    }
+
+    private void addNSDefinition(Element element, String uri) {
+        ArrayList al = (ArrayList) nsURIByElement.get(element);
+        if (al == null) {
+            al = new ArrayList();
+            nsURIByElement.put(element, al);
+        }
+        al.add(uri);
     }
 }
