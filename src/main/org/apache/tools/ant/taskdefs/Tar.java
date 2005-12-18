@@ -48,7 +48,6 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
 import org.apache.tools.tar.TarConstants;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
-import org.apache.tools.zip.UnixStat;
 
 /**
  * Creates a tar archive.

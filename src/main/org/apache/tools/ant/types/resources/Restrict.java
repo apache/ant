@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;

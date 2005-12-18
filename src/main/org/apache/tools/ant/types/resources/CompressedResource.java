@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;

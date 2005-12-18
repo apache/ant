@@ -29,7 +29,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * Holds the data of a jar manifest.

@@ -16,14 +16,11 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.ResourceCollection;
 
 /**
  * ResourceCollection that contains the first <code>count</code> elements of

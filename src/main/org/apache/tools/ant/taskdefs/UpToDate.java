@@ -26,7 +26,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.Mapper;

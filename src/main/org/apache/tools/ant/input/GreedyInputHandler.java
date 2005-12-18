@@ -18,7 +18,6 @@
 package org.apache.tools.ant.input;
 
 import java.io.InputStream;
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.StreamPumper;
