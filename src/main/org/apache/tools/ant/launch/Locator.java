@@ -156,6 +156,11 @@ public final class Locator {
         // things when the path is not absolute, and fall back to the old parsing behavior.
         if (uriClazz != null && uri.startsWith("file:/")) {
             try {
+                uri = encodeUri(uri);
+            } catch (UnsupportedEncodingException e) {
+                //leave as-is?
+            }
+            try {
                 java.lang.reflect.Method createMethod = uriClazz.getMethod("create", new Class[] {String.class});
                 Object uriObj = createMethod.invoke(null, new Object[] {uri});
                 java.lang.reflect.Constructor fileConst = File.class.getConstructor(new Class[] {uriClazz});
@@ -257,25 +262,31 @@ public final class Locator {
         int i = 0;
         int len = path.length();
         int ch = 0;
-        StringBuffer sb = new StringBuffer(len);
+        StringBuffer sb = null;
         for (; i < len; i++) {
             ch = path.charAt(i);
             // if it's not an ASCII character, break here, and use UTF-8 encoding
             if (ch >= 128)
                 break;
             if (gNeedEscaping[ch]) {
+                if (sb == null) {
+                    sb = new StringBuffer(path.substring(0, i));
+                }
                 sb.append('%');
                 sb.append(gAfterEscaping1[ch]);
                 sb.append(gAfterEscaping2[ch]);
                 // record the fact that it's escaped
             }
-            else {
-                sb.append((char)ch);
+            else if (sb != null) {
+                sb.append((char) ch);
             }
         }
 
         // we saw some non-ascii character
         if (i < len) {
+            if (sb == null) {
+                sb = new StringBuffer(path.substring(0, i));
+            }
             // get UTF-8 bytes for the remaining sub-string
             byte[] bytes = null;
             byte b;
@@ -291,18 +302,17 @@ public final class Locator {
                     sb.append('%');
                     sb.append(gHexChs[ch >> 4]);
                     sb.append(gHexChs[ch & 0xf]);
-                }
-                else if (gNeedEscaping[b]) {
+                } else if (gNeedEscaping[b]) {
                     sb.append('%');
                     sb.append(gAfterEscaping1[b]);
                     sb.append(gAfterEscaping2[b]);
                 }
                 else {
-                    sb.append((char)b);
+                    sb.append((char) b);
                 }
             }
         }
-        return sb.toString();
+        return sb == null ? path : sb.toString();
     }
 
     /**
