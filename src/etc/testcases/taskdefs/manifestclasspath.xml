@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <project name="manifestclasspath" default="tearDown">
-
+  <!-- hebrew -->
+  <property name="jom" value="&#1501;&#1493;&#1497;"/>
+  <!-- german -->
+  <property name="aent" value="&#227;nt"/> 
   <target name="setUp">
     <property name="tmp" location="${basedir}/${ant.project.name}.tmp" />
     <mkdir dir="${tmp}" />
@@ -161,4 +164,40 @@
     </manifestclasspath>
   </target>
 
+  <target name="international-german" depends="setUp">
+      <antcall target="run-two-jars">
+          <param name="ext.dir" value="${aent}"/>
+      </antcall>
+  </target>
+  <target name="international-hebrew" depends="setUp">
+      <antcall target="run-two-jars">
+          <param name="ext.dir" value="${jom}"/>
+      </antcall>
+  </target>
+  <target name="run-two-jars">
+     <mkdir dir="${tmp}/${ext.dir}"/>
+      <javac srcdir="manifestclasspath" destdir="${tmp}" />
+       <jar destfile="${tmp}/${ext.dir}/alpha.jar">
+          <fileset dir="${tmp}">
+              <include name="Alpha.class"/>
+          </fileset>
+       </jar>
+        <manifestclasspath property="jar.classpath"
+                       jarfile="${tmp}/beta.jar">
+        <classpath>
+           <pathelement location="${tmp}/beta.jar"/>
+           <pathelement location="${tmp}/${ext.dir}/alpha.jar"/>
+        </classpath>
+       </manifestclasspath>
+      <jar destfile="${tmp}/beta.jar" >
+          <fileset dir="${tmp}">
+              <include name="Beta.class"/>
+          </fileset>
+          <manifest>
+             <attribute name="Main-Class" value="Beta"/>
+             <attribute name="Class-Path" value="${jar.classpath}"/>
+          </manifest>
+      </jar>
+      <java fork="true" jar="${tmp}/beta.jar"/>
+    </target>
 </project>

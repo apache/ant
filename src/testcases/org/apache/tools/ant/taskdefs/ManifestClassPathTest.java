@@ -16,11 +16,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
 
-import java.util.Map;
-import java.util.Properties;
-
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -133,6 +130,19 @@ public class ManifestClassPathTest
                                               "../../resources/dsp-core/ " +
                                               "../../resources/dsp-pres/ " +
                                               "../../resources/dsp-void/");
+    }
+    public void testInternationalGerman() {
+        executeTarget("international-german");
+        expectLogContaining("run-two-jars", "beta alpha");
+    }
+    public void testInternationalHebrew() {
+        if (!Os.isFamily("windows")) {
+            executeTarget("international-hebrew");
+            expectLogContaining("run-two-jars", "beta alpha");
+        } else {
+            System.out.println("Test with hebrew path not attempted under Windows");
+        }
+
     }
 
 } // END class ManifestClassPathTest
