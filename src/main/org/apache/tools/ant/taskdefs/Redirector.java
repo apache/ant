@@ -531,6 +531,7 @@ public class Redirector {
 
                 if (outputFilterChains != null && outputFilterChains.size() > 0) {
                     ChainReaderHelper helper = new ChainReaderHelper();
+                    helper.setProject(managingTask.getProject());
                     helper.setPrimaryReader(reader);
                     helper.setFilterChains(outputFilterChains);
                     reader = helper.getAssembledReader();
@@ -560,6 +561,7 @@ public class Redirector {
 
                 if (errorFilterChains != null && errorFilterChains.size() > 0) {
                     ChainReaderHelper helper = new ChainReaderHelper();
+                    helper.setProject(managingTask.getProject());
                     helper.setPrimaryReader(reader);
                     helper.setFilterChains(errorFilterChains);
                     reader = helper.getAssembledReader();
@@ -603,6 +605,7 @@ public class Redirector {
         if (inputStream != null
             && inputFilterChains != null && inputFilterChains.size() > 0) {
             ChainReaderHelper helper = new ChainReaderHelper();
+            helper.setProject(managingTask.getProject());
             try {
                 helper.setPrimaryReader(
                     new InputStreamReader(inputStream, inputEncoding));
