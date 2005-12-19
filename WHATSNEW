@@ -1,4 +1,4 @@
-Changes from current Ant 1.6.5 version to current CVS version
+Changes from current Ant 1.6.5 version to current RCS version
 =============================================================
 
 Changes that could break older environments:
@@ -64,8 +64,6 @@ Changes that could break older environments:
   IE (Windows) or Gnome2 (Unix/Linux) proxy settings. This may break any build
   file that somehow relied on content outside the firewall being unreachable:
   use the -noproxy command-line option to disable this new feature.
-  
-
 
 Fixed bugs:
 -----------
@@ -168,7 +166,10 @@ Fixed bugs:
 * PropertySet API setMapper(...) didn't properly set up the Mapper.
   Bugzilla report 37760.
 
-* Proper return code for ant.bat. Bugzilla report 13655.  
+* Proper return code for ant.bat. Bugzilla report 13655.
+
+* Project not set on ChainReaderHelpers used by the Redirector.
+  Bugzilla report 37958.
 
 Other changes:
 --------------
