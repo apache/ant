@@ -156,11 +156,6 @@ public final class Locator {
         // things when the path is not absolute, and fall back to the old parsing behavior.
         if (uriClazz != null && uri.startsWith("file:/")) {
             try {
-                uri = encodeUri(uri);
-            } catch (UnsupportedEncodingException e) {
-                //leave as-is?
-            }
-            try {
                 java.lang.reflect.Method createMethod = uriClazz.getMethod("create", new Class[] {String.class});
                 Object uriObj = createMethod.invoke(null, new Object[] {uri});
                 java.lang.reflect.Constructor fileConst = File.class.getConstructor(new Class[] {uriClazz});
