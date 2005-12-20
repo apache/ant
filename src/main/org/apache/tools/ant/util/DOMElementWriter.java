@@ -33,6 +33,7 @@ import org.w3c.dom.Text;
 
 /**
  * Writes a DOM tree to a given Writer.
+ * warning: this utility currently does not declare XML Namespaces.
  * <p>Utility class used by {@link org.apache.tools.ant.XmlLogger
  * XmlLogger} and
  * org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
@@ -278,7 +279,8 @@ public class DOMElementWriter {
         // Write element
         out.write("<");
         if (namespacePolicy.qualifyElements) {
-            String prefix = (String) nsPrefixMap.get(element.getNamespaceURI());
+            String uri = getNamespaceURI(element);
+            String prefix = (String) nsPrefixMap.get(uri);
             if (prefix == null) {
                 if (nsPrefixMap.isEmpty()) {
                     // steal default namespace
@@ -286,8 +288,8 @@ public class DOMElementWriter {
                 } else {
                     prefix = NS + (nextPrefix++);
                 }
-                nsPrefixMap.put(element.getNamespaceURI(), prefix);
-                addNSDefinition(element, element.getNamespaceURI());
+                nsPrefixMap.put(uri, prefix);
+                addNSDefinition(element, uri);
             }
             if (!"".equals(prefix)) {
                 out.write(prefix);
@@ -302,12 +304,12 @@ public class DOMElementWriter {
             Attr attr = (Attr) attrs.item(i);
             out.write(" ");
             if (namespacePolicy.qualifyAttributes) {
-                String prefix =
-                    (String) nsPrefixMap.get(attr.getNamespaceURI());
+                String uri = getNamespaceURI(attr);
+                String prefix = (String) nsPrefixMap.get(uri);
                 if (prefix == null) {
                     prefix = NS + (nextPrefix++);
-                    nsPrefixMap.put(attr.getNamespaceURI(), prefix);
-                    addNSDefinition(element, attr.getNamespaceURI());
+                    nsPrefixMap.put(uri, prefix);
+                    addNSDefinition(element, uri);
                 }
                 out.write(prefix);
                 out.write(":");
@@ -370,10 +372,9 @@ public class DOMElementWriter {
 
         // Write element close
         out.write("</");
-        if (namespacePolicy.qualifyElements
-            || namespacePolicy.qualifyAttributes) {
-            String prefix =
-                (String) nsPrefixMap.get(element.getNamespaceURI());
+        if (namespacePolicy.qualifyElements) {
+            String uri = getNamespaceURI(element);
+            String prefix = (String) nsPrefixMap.get(uri);
             if (prefix != null && !"".equals(prefix)) {
                 out.write(prefix);
                 out.write(":");
@@ -547,5 +548,14 @@ public class DOMElementWriter {
             nsURIByElement.put(element, al);
         }
         al.add(uri);
+    }
+
+    private static String getNamespaceURI(Node n) {
+        String uri = n.getNamespaceURI();
+        if (uri == null) {
+            // FIXME: Is "No Namespace is Empty Namespace" really OK?
+            uri = "";
+        }
+        return uri;
     }
 }
