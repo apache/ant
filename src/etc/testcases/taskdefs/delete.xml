@@ -115,6 +115,20 @@
     </delete>
   </target>
 
+  <target name="test12">
+    <delete failonerror="false" includeemptydirs="true">
+      <fileset dir="thisdenotesadirectorythatwillneverexistblah" />
+    </delete>
+  </target>
+
+  <target name="test13" depends="init">
+    <delete includeemptydirs="true">
+      <fileset dir="${dir}" />
+      <fileset dir="${dir}" />
+    </delete>
+    <expectabsent />
+  </target>
+
   <target name="cleanup" depends="test4" />
 
 </project>

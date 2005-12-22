@@ -552,12 +552,12 @@ public class Delete extends MatchingTask {
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.get(i);
             resourcesToDelete.add(fs);
-            if (includeEmpty) {
+            if (includeEmpty && fs.getDir().isDirectory()) {
               filesetDirs.add(new ReverseDirs(fs.getDir(),
                   fs.getDirectoryScanner().getIncludedDirectories()));
             }
         }
-        if (usedMatchingTask && dir != null) {
+        if (usedMatchingTask && dir != null && dir.isDirectory()) {
             //add the files from the default fileset:
             FileSet implicit = getImplicitFileSet();
             resourcesToDelete.add(implicit);
