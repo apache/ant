@@ -72,6 +72,12 @@ be a Java system property, not an Ant property.  I.e. you cannot
 define it as a simple parameter to <code>ant</code>, but you can
 define it inside the <code>ANT_OPTS</code> environment variable.</p>
 
+<h3>GreedyInputHandler</h3>
+
+<p>Like the default implementation, this InputHandler reads from standard
+input. However, it consumes <i>all</i> available input. This behavior is
+useful for sending Ant input via an OS pipe. <b>Since Ant 1.7</b>.</p>
+
 <h2>InputRequest</h2>
 
 <p>Instances of <code>org.apache.tools.ant.input.InputRequest</code>

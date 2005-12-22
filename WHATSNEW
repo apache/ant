@@ -278,7 +278,7 @@ Other changes:
   System.exit() call or a JVM crash.
 
 * project name is now used for *all* targets so one can write consistent import
-  build file. bugzilla report 28444.
+  build files. Bugzilla report 28444.
 
 * New condition <typefound> that can be used to probe for the declaration 
   and implementation of a task, type, preset, macro, scriptdef, whatever. 
@@ -289,7 +289,7 @@ Other changes:
 
 * New condition <isfailure> that tests the return-code of an executable. This
   contains platform-specific logic and is better than comparing the result with
-  "0". 
+  "0".
 
 * Added initial support for Resource Collections, including the
   resourcecount task.
@@ -329,7 +329,9 @@ Other changes:
 
 * New task loadresource that accompanies loadfile for non file resources.
 
-* <echo> now supports an encoding when saving to a file
+* <echo> now supports an encoding when saving to a file.
+
+* new GreedyInputHandler added.
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
