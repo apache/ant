@@ -31,6 +31,10 @@ public class EchoTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/echo.xml");
     }
 
+    public void tearDown() {
+        executeTarget("clean");
+    }
+
     // Output an empty String
     public void test1() {
         expectLog("test1", "");
