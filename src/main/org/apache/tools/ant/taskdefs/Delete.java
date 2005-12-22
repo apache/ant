@@ -18,20 +18,23 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Sort;
 import org.apache.tools.ant.types.resources.Restrict;
-import org.apache.tools.ant.types.resources.BCFileSet;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileResourceIterator;
 import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.resources.comparators.FileSystem;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
@@ -74,6 +77,29 @@ public class Delete extends MatchingTask {
     private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
     private static final ResourceSelector EXISTS = new Exists();
 
+    private static class ReverseDirs implements ResourceCollection {
+        static final Comparator REVERSE = new Comparator() {
+            public int compare(Object foo, Object bar) {
+                return ((Comparable) foo).compareTo(bar) * -1;
+            }
+        };
+        File basedir;
+        String[] dirs;
+        ReverseDirs(File basedir, String[] dirs) {
+            this.basedir = basedir;
+            this.dirs = dirs;
+            Arrays.sort(this.dirs, REVERSE);
+            //ArrayList al = new ArrayList(Arrays.asList(dirs));
+            //Collections.reverse(al);
+            //this.dirs = (String[]) (al.toArray(new String[dirs.length]));
+        }
+        public Iterator iterator() {
+            return new FileResourceIterator(basedir, dirs);
+        }
+        public boolean isFilesystemOnly() { return true; }
+        public int size() { return dirs.length; }
+    }
+
     protected File file = null;
     protected File dir = null;
     protected Vector filesets = new Vector();
@@ -85,7 +111,7 @@ public class Delete extends MatchingTask {
     private boolean quiet = false;
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
-    private Vector rcs = new Vector();
+    private Resources rcs = null;
 
     /**
      * Set the name of a single file to be removed.
@@ -177,6 +203,10 @@ public class Delete extends MatchingTask {
      * @param rc the filesystem-only ResourceCollection.
      */
     public void add(ResourceCollection rc) {
+        if (rc == null) {
+            return;
+        }
+        rcs = (rcs == null) ? new Resources() : rcs;
         rcs.add(rc);
     }
 
@@ -467,7 +497,7 @@ public class Delete extends MatchingTask {
                 + "Use a nested fileset element instead.");
         }
 
-        if (file == null && dir == null && filesets.size() == 0 && rcs.size() == 0) {
+        if (file == null && dir == null && filesets.size() == 0 && rcs == null) {
             throw new BuildException("At least one of the file or dir "
                                      + "attributes, or a nested resource collection, "
                                      + "must be set.");
@@ -489,14 +519,7 @@ public class Delete extends MatchingTask {
                     log("Deleting: " + file.getAbsolutePath());
 
                     if (!delete(file)) {
-                        String message = "Unable to delete file "
-                            + file.getAbsolutePath();
-                        if (failonerror) {
-                            throw new BuildException(message);
-                        } else {
-                            log(message, quiet ? Project.MSG_VERBOSE
-                                               : Project.MSG_WARN);
-                        }
+                        handle("Unable to delete file " + file.getAbsolutePath());
                     }
                 }
             } else {
@@ -521,50 +544,80 @@ public class Delete extends MatchingTask {
             }
             removeDir(dir);
         }
-        Path p = new Path(getProject());
-        p.addAll(rcs);
+        Resources resourcesToDelete = new Resources();
+        resourcesToDelete.setProject(getProject());
+        Resources filesetDirs = new Resources();
+        filesetDirs.setProject(getProject());
+
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.get(i);
-            p.add(includeEmpty ? new BCFileSet(fs) : fs);
+            resourcesToDelete.add(fs);
+            if (includeEmpty) {
+              filesetDirs.add(new ReverseDirs(fs.getDir(),
+                  fs.getDirectoryScanner().getIncludedDirectories()));
+            }
         }
         if (usedMatchingTask && dir != null) {
             //add the files from the default fileset:
             FileSet implicit = getImplicitFileSet();
-            p.add(includeEmpty ? new BCFileSet(implicit) : implicit);
+            resourcesToDelete.add(implicit);
+            if (includeEmpty) {
+              filesetDirs.add(new ReverseDirs(dir,
+                  implicit.getDirectoryScanner().getIncludedDirectories()));
+            }
         }
-        Restrict exists = new Restrict();
-        exists.add(EXISTS);
-        exists.add(p);
-        // delete the files in the resource collections; sort to files, then dirs
-        Sort s = new Sort();
-        s.add(REVERSE_FILESYSTEM);
-        s.add(exists);
-        String errorMessage = null;
+        resourcesToDelete.add(filesetDirs);
+        if (rcs != null) {
+            // sort first to files, then dirs
+            Restrict exists = new Restrict();
+            exists.add(EXISTS);
+            exists.add(rcs);
+            Sort s = new Sort();
+            s.add(REVERSE_FILESYSTEM);
+            s.add(exists);
+            resourcesToDelete.add(s);
+        }
         try {
-            for (Iterator iter = s.iterator(); iter.hasNext();) {
-                FileResource r = (FileResource) iter.next();
-                if (!(r.isDirectory()) || r.getFile().list().length == 0) {
-                    log("Deleting " + r, verbosity);
-                    if (!delete(r.getFile())) {
-                        errorMessage = "Unable to delete "
-                            + (r.isDirectory() ? "directory " : "file ") + r;
+            if (resourcesToDelete.isFilesystemOnly()) {
+                for (Iterator iter = resourcesToDelete.iterator(); iter.hasNext();) {
+                    FileResource r = (FileResource) iter.next();
+                    // nonexistent resources could only occur if we already
+                    // deleted something from a fileset:
+                    if (!r.isExists()) {
+                        continue;
+                    }
+                    if (!(r.isDirectory()) || r.getFile().list().length == 0) {
+                        log("Deleting " + r, verbosity);
+                        if (!delete(r.getFile()) && failonerror) {
+                            handle("Unable to delete "
+                                + (r.isDirectory() ? "directory " : "file ") + r);
+                        }
                     }
                 }
+            } else {
+                 handle(getTaskName() + " handles only filesystem resources");
             }
         } catch (Exception e) {
-            errorMessage = e.getMessage();
-        }
-        if (errorMessage != null) {
-            if (failonerror) {
-                throw new BuildException(errorMessage);
-            }
-            log(errorMessage, quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
+            handle(e);
         }
     }
 
 //************************************************************************
 //  protected and private methods
 //************************************************************************
+
+    private void handle(String msg) {
+        handle(new BuildException(msg));
+    }
+
+    private void handle(Exception e) {
+        if (failonerror) {
+            throw (e instanceof BuildException)
+                ? (BuildException) e : new BuildException(e);
+        }
+        log(e.getMessage(), quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
+    }
+
     /**
      * Accommodate Windows bug encountered in both Sun and IBM JDKs.
      * Others possible. If the delete does not work, call System.gc(),
@@ -613,27 +666,13 @@ public class Delete extends MatchingTask {
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!delete(f)) {
-                    String message = "Unable to delete file "
-                        + f.getAbsolutePath();
-                    if (failonerror) {
-                        throw new BuildException(message);
-                    } else {
-                        log(message,
-                            quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                    }
+                    handle("Unable to delete file " + f.getAbsolutePath());
                 }
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!delete(d)) {
-            String message = "Unable to delete directory "
-                + dir.getAbsolutePath();
-            if (failonerror) {
-                throw new BuildException(message);
-            } else {
-                log(message,
-                    quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-            }
+            handle("Unable to delete directory " + dir.getAbsolutePath());
         }
     }
 
@@ -652,14 +691,7 @@ public class Delete extends MatchingTask {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!delete(f)) {
-                    String message = "Unable to delete file "
-                        + f.getAbsolutePath();
-                    if (failonerror) {
-                        throw new BuildException(message);
-                    } else {
-                        log(message,
-                            quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                    }
+                    handle("Unable to delete file " + f.getAbsolutePath());
                 }
             }
         }
@@ -672,14 +704,8 @@ public class Delete extends MatchingTask {
                 if (dirFiles == null || dirFiles.length == 0) {
                     log("Deleting " + currDir.getAbsolutePath(), verbosity);
                     if (!delete(currDir)) {
-                        String message = "Unable to delete directory "
-                                + currDir.getAbsolutePath();
-                        if (failonerror) {
-                            throw new BuildException(message);
-                        } else {
-                            log(message,
-                                quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                        }
+                        handle("Unable to delete directory "
+                                + currDir.getAbsolutePath());
                     } else {
                         dirCount++;
                     }
