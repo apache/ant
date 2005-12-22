@@ -260,7 +260,7 @@ public class Redirector {
     /**
      * Set the output encoding.
      *
-     * @param outputEncoding   <CODE>String</CODE>.
+     * @param outputEncoding   <code>String</code>.
      */
     public synchronized void setOutputEncoding(String outputEncoding) {
         if (outputEncoding == null) {
@@ -274,7 +274,7 @@ public class Redirector {
     /**
      * Set the error encoding.
      *
-     * @param errorEncoding   <CODE>String</CODE>.
+     * @param errorEncoding   <code>String</code>.
      */
     public synchronized void setErrorEncoding(String errorEncoding) {
         if (errorEncoding == null) {
@@ -288,7 +288,7 @@ public class Redirector {
     /**
      * Set the input encoding.
      *
-     * @param inputEncoding   <CODE>String</CODE>.
+     * @param inputEncoding   <code>String</code>.
      */
     public synchronized void setInputEncoding(String inputEncoding) {
         if (inputEncoding == null) {
@@ -312,9 +312,9 @@ public class Redirector {
     }
 
     /**
-     * This <CODE>Redirector</CODE>'s subordinate
-     * <CODE>PropertyOutputStream</CODE>s will not set their respective
-     * properties <CODE>while (appendProperties && append)</CODE>.
+     * This <code>Redirector</code>'s subordinate
+     * <code>PropertyOutputStream</code>s will not set their respective
+     * properties <code>while (appendProperties && append)</code>.
      *
      * @param appendProperties whether to append properties.
      */
@@ -380,7 +380,7 @@ public class Redirector {
     /**
      * Whether output and error files should be created even when empty.
      * Defaults to true.
-     * @param createEmptyFiles <CODE>boolean</CODE>.
+     * @param createEmptyFiles <code>boolean</code>.
      */
     public synchronized void setCreateEmptyFiles(boolean createEmptyFiles) {
         this.createEmptyFiles = createEmptyFiles;
@@ -402,27 +402,27 @@ public class Redirector {
     }
 
     /**
-     * Set the input <CODE>FilterChain</CODE>s.
+     * Set the input <code>FilterChain</code>s.
      *
-     * @param inputFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param inputFilterChains <code>Vector</code> containing <code>FilterChain</code>.
      */
     public synchronized void setInputFilterChains(Vector inputFilterChains) {
         this.inputFilterChains = inputFilterChains;
     }
 
     /**
-     * Set the output <CODE>FilterChain</CODE>s.
+     * Set the output <code>FilterChain</code>s.
      *
-     * @param outputFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param outputFilterChains <code>Vector</code> containing <code>FilterChain</code>.
      */
     public synchronized void setOutputFilterChains(Vector outputFilterChains) {
         this.outputFilterChains = outputFilterChains;
     }
 
     /**
-     * Set the error <CODE>FilterChain</CODE>s.
+     * Set the error <code>FilterChain</code>s.
      *
-     * @param errorFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param errorFilterChains <code>Vector</code> containing <code>FilterChain</code>.
      */
     public synchronized void setErrorFilterChains(Vector errorFilterChains) {
         this.errorFilterChains = errorFilterChains;
@@ -786,7 +786,7 @@ public class Redirector {
    }
 
     /**
-     * Notify the <CODE>Redirector</CODE> that it is now okay
+     * Notify the <code>Redirector</code> that it is now okay
      * to set any output and/or error properties.
      */
     public synchronized void setProperties() {
