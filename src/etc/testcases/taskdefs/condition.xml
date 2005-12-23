@@ -219,7 +219,7 @@
         <filesmatch file1="match7.txt" file2="match8.txt" />
       </condition>
     </fail>
-  </target>   
+  </target>
 
   <target name="filesmatch-same-eol" >
     <echo file="match9.txt" message="012345676890" />
@@ -233,7 +233,7 @@
         </not>
       </condition>
     </fail>
-  </target>   
+  </target>
 
   <target name="filesmatch-different-sizes">
     <echo file="match5.txt" message="012345676890" />
