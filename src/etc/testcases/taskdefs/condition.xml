@@ -185,6 +185,16 @@
     <echo>${filesmatch-existence}</echo>
   </target>
 
+  <target name="filesmatch-neitherexist">
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="idonotexist" file2="andneitherdoi" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="filesmatch-different">
     <echo file="match1.txt" message="012345676890" />
     <echo file="match2.txt" message="012345676889" />
@@ -391,6 +401,97 @@
             </and>
           </not>
         </or>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-error">
+    <condition property="errorexpected">
+      <resourcesmatch />
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-empty">
+    <condition property="errorexpected">
+      <resourcesmatch>
+        <resources />
+      </resourcesmatch>
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-one">
+    <condition property="errorexpected">
+      <resourcesmatch>
+        <string value="foo" />
+      </resourcesmatch>
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-binary">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <string value="foo" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-match-multiple-binary">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <string value="foo" />
+            <string value="foo" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-differ">
+    <echo file="match11.txt" message="foo" />
+    <fixcrlf file="match11.txt" eol="crlf" fixlast="true" />
+    <fail>
+      <condition>
+        <resourcesmatch>
+          <file file="match11.txt" />
+          <string value="foo" />
+        </resourcesmatch>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-match-text">
+    <echo file="match11.txt" message="foo" />
+    <fixcrlf file="match11.txt" eol="crlf" />
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch astext="true">
+            <file file="match11.txt" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-noneexist">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <resource name="foo" exists="false" />
+            <resource name="bar" exists="false" />
+            <resource name="baz" exists="false" />
+          </resourcesmatch>
+        </not>
       </condition>
     </fail>
   </target>

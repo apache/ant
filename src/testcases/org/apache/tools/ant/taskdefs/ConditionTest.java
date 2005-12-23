@@ -170,6 +170,10 @@ public class ConditionTest extends BuildFileTest {
         executeTarget("filesmatch-same-eol");
     }
 
+    public void testFilesmatchNeitherExist() {
+        executeTarget("filesmatch-neitherexist");
+    }
+
     public void testContains() {
         expectPropertySet("contains","contains");
     }
@@ -237,5 +241,37 @@ public class ConditionTest extends BuildFileTest {
     public void testElse() {
         executeTarget("testElse");
     }
-}
 
+    public void testResourcesmatchError() {
+        expectBuildException("resourcesmatch-error",
+            "should fail because no resources specified");
+    }
+
+    public void testResourcesmatchEmpty() {
+        executeTarget("resourcesmatch-match-empty");
+    }
+
+    public void testResourcesmatchOne() {
+        executeTarget("resourcesmatch-match-one");
+    }
+
+    public void testResourcesmatchBinary() {
+        executeTarget("resourcesmatch-match-binary");
+    }
+
+    public void testResourcesmatchMultipleBinary() {
+        executeTarget("resourcesmatch-match-multiple-binary");
+    }
+
+    public void testResourcesmatchDiffer() {
+        executeTarget("resourcesmatch-differ");
+    }
+
+    public void testResourcesmatchText() {
+        executeTarget("resourcesmatch-match-text");
+    }
+
+    public void testResourcesmatchNoneExist() {
+        executeTarget("resourcesmatch-noneexist");
+    }
+}

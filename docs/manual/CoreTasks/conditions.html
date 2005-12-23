@@ -221,7 +221,8 @@ TCP/IP listener at the specified host and port.</p>
 </table>
 
 <h4>filesmatch</h4>
-<p>Test two files for matching. Nonexistence of either file results in "false".
+<p>Test two files for matching. Nonexistence of one file results in "false",
+although if neither exists they are considered equal in terms of content.
 This test does a byte for byte comparision, so test time scales with
 byte size. NB: if the files are different sizes, one of them is missing
 or the filenames match the answer is so obvious the detailed test is omitted.
@@ -245,8 +246,9 @@ or the filenames match the answer is so obvious the detailed test is omitted.
   </tr>
   <tr>
     <td valign="top">textfile</td>
-    <td valign="top">Whether to ignore line endings when comparing files;
-        default <i>false</i>
+    <td valign="top">Whether to ignore line endings
+        when comparing files; defaults to <i>false</i>, while
+        <i>true</i> bypasses the size comparison.
     </td>
     <td align="center">No</td>
   </tr>
@@ -676,6 +678,34 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 &lt;resourcecount refid=&quot;myresourcecollection&quot; when=&quot;greater&quot; length=&quot;0&quot; /&gt;
 </pre>
 <p>Verify that a resource collection is not empty.</p>
+
+<h4>resourcesmatch</h4>
+<p>Test resources for matching. Nonexistence of one or more resources results in
+"false", although if none exists they are considered equal in terms of content.
+By default this test does a byte for byte comparision, so test time scales with
+byte size. NB: if the files are different sizes, one of them is missing
+or the filenames match the answer is so obvious the detailed test is omitted.
+The resources to check are specified as nested
+<a href="../CoreTypes/resources.html#collection">resource collections</a>,
+meaning that more than two resources can be checked; in this case all resources
+must match. <b>Since Ant 1.7</b>
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">astext</td>
+    <td valign="top">Whether to ignore line endings
+        when comparing resource content; defaults to <i>false</i>,
+        while <i>true</i> bypasses the size comparison.
+    </td>
+    <td align="center">No</td>
+  </tr>
+</table>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2005 Apache Software
 Foundation. All rights Reserved.</p>
