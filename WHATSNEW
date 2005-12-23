@@ -333,6 +333,8 @@ Other changes:
 
 * new GreedyInputHandler added.
 
+* add textfile attribute to the filesmatch condition.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

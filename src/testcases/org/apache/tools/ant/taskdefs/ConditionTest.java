@@ -162,6 +162,14 @@ public class ConditionTest extends BuildFileTest {
             "filesmatch-different-onemissing");
     }
 
+    public void testFilesmatchDifferentEol() {
+        executeTarget("filesmatch-different-eol");
+    }
+
+    public void testFilesmatchSameEol() {
+        executeTarget("filesmatch-same-eol");
+    }
+
     public void testContains() {
         expectPropertySet("contains","contains");
     }

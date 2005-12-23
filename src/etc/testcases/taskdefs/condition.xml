@@ -196,9 +196,8 @@
         file2="match2.txt" />
     </condition>
     <echo>${filesmatch-different}</echo>
-  </target>   
+  </target>
 
-  
   <target name="filesmatch-match" >
     <echo file="match3.txt" message="012345676890" />
     <echo file="match4.txt" message="012345676890" />
@@ -208,6 +207,32 @@
         file2="match4.txt" />
     </condition>
     <echo>${filesmatch-match}</echo>
+  </target>   
+
+  <target name="filesmatch-different-eol" >
+    <echo file="match7.txt" message="012345676890" />
+    <echo file="match8.txt" message="012345676890" />
+    <fixcrlf file="match7.txt" eol="cr" fixlast="true" />
+    <fixcrlf file="match8.txt" eol="lf" fixlast="true" />
+    <fail>
+      <condition>
+        <filesmatch file1="match7.txt" file2="match8.txt" />
+      </condition>
+    </fail>
+  </target>   
+
+  <target name="filesmatch-same-eol" >
+    <echo file="match9.txt" message="012345676890" />
+    <echo file="match10.txt" message="012345676890" />
+    <fixcrlf file="match9.txt" eol="cr" fixlast="true" />
+    <fixcrlf file="match10.txt" eol="lf" fixlast="true" />
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="match9.txt" file2="match10.txt" textfile="true" />
+        </not>
+      </condition>
+    </fail>
   </target>   
 
   <target name="filesmatch-different-sizes">
@@ -374,12 +399,9 @@
   </target>
   
   <target name="cleanup" >
-    <delete file="match1.txt" />
-    <delete file="match2.txt" />
-    <delete file="match3.txt" />
-    <delete file="match4.txt" />
-    <delete file="match5.txt" />
-    <delete file="match6.txt" />
+    <delete>
+      <fileset dir="." includes="match?.txt,match??.txt" />
+    </delete>
   </target>
    
 </project>
