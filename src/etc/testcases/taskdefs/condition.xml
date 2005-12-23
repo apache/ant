@@ -224,7 +224,7 @@
   <target name="filesmatch-same-eol" >
     <echo file="match9.txt" message="012345676890" />
     <echo file="match10.txt" message="012345676890" />
-    <fixcrlf file="match9.txt" eol="cr" fixlast="true" />
+    <fixcrlf file="match9.txt" eol="crlf" fixlast="true" />
     <fixcrlf file="match10.txt" eol="lf" fixlast="true" />
     <fail>
       <condition>
