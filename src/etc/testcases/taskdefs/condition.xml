@@ -14,13 +14,13 @@
     <condition >
       <equals arg1="a" arg2="a" />
     </condition>
-  </target>  
+  </target>
 
   <target name="condition-empty">
     <condition property="condition-empty"/>
     <echo>${condition-empty}</echo>
-  </target>  
-  
+  </target>
+
   <target name="shortcut">
     <property name="shortcut" value="set"/>
     <condition property="shortcut">
@@ -51,7 +51,7 @@
     </condition>
     <echo>${negation}</echo>
   </target>
-  
+
   <target name="negationfalse">
     <condition property="negationfalse">
       <not>
@@ -60,14 +60,14 @@
     </condition>
     <echo>${negationfalse}</echo>
   </target>
-  
+
   <target name="negationincomplete">
     <condition property="negationincomplete">
       <not />
     </condition>
     <echo>${negationincomplete}</echo>
   </target>
-  
+
   <target name="and">
     <condition property="and">
       <and>
@@ -86,8 +86,8 @@
       </and>
     </condition>
     <echo>${andfails}</echo>
-  </target>  
-  
+  </target>
+
   <target name="andincomplete">
     <condition property="andincomplete">
       <and>
@@ -96,16 +96,14 @@
     </condition>
     <echo>${andincomplete}</echo>
   </target>
-    
-  
+
   <target name="andempty">
     <condition property="andempty">
       <and/>
     </condition>
     <echo>${andempty}</echo>
   </target>
-    
-    
+
   <target name="or">
     <condition property="or">
       <or>
@@ -115,7 +113,7 @@
     </condition>
     <echo>${or}</echo>
   </target>
-    
+
   <target name="orincomplete">
     <condition property="orincomplete">
       <or>
@@ -124,14 +122,14 @@
     </condition>
     <echo>${orincomplete}</echo>
   </target>
-  
+
   <target name="orempty">
     <condition property="orempty">
       <or/>
     </condition>
     <echo>${orempty}</echo>
   </target>
-  
+
   <target name="orfails">
     <condition property="orfails">
       <or>
@@ -140,7 +138,7 @@
       </or>
     </condition>
     <echo>${orfails}</echo>
-  </target>  
+  </target>
 
   <target name="orboth">
     <condition property="orboth">
@@ -150,49 +148,49 @@
       </or>
     </condition>
     <echo>${orboth}</echo>
-  </target>   
-  
+  </target>
+
   <target name="filesmatch-identical" >
     <condition property="filesmatch-identical">
-        <filesmatch 
+        <filesmatch
           file1="condition.xml"
           file2="condition.xml" />
     </condition>
     <echo>${filesmatch-identical}</echo>
-  </target>   
-  
+  </target>
+
   <target name="filesmatch-incomplete" >
     <condition property="filesmatch-incomplete">
-        <filesmatch 
+        <filesmatch
           file1="condition.xml"/>
     </condition>
     <echo>${filesmatch-incomplete}</echo>
-  </target> 
-  
+  </target>
+
   <target name="filesmatch-oddsizes" >
     <condition property="filesmatch-oddsizes">
-        <filesmatch 
+        <filesmatch
           file1="condition.xml"
           file2="property.xml" />
     </condition>
     <echo>${filesmatch-oddsizes}</echo>
-  </target>   
+  </target>
 
   <target name="filesmatch-existence" >
     <condition property="filesmatch-existence">
-      <filesmatch 
-        file1="condition.xml" 
+      <filesmatch
+        file1="condition.xml"
         file2="this-file-doesnt-exist.xml" />
     </condition>
     <echo>${filesmatch-existence}</echo>
-  </target>   
+  </target>
 
   <target name="filesmatch-different">
     <echo file="match1.txt" message="012345676890" />
     <echo file="match2.txt" message="012345676889" />
     <condition property="filesmatch-different">
-      <filesmatch 
-        file1="match1.txt" 
+      <filesmatch
+        file1="match1.txt"
         file2="match2.txt" />
     </condition>
     <echo>${filesmatch-different}</echo>
@@ -202,12 +200,12 @@
     <echo file="match3.txt" message="012345676890" />
     <echo file="match4.txt" message="012345676890" />
     <condition property="filesmatch-match">
-      <filesmatch 
-        file1="match3.txt" 
+      <filesmatch
+        file1="match3.txt"
         file2="match4.txt" />
     </condition>
     <echo>${filesmatch-match}</echo>
-  </target>   
+  </target>
 
   <target name="filesmatch-different-eol" >
     <echo file="match7.txt" message="012345676890" />
@@ -239,64 +237,64 @@
     <echo file="match5.txt" message="012345676890" />
     <echo file="match6.txt" message="0123456768" />
     <condition property="filesmatch-different-sizes">
-      <filesmatch 
-        file1="match5.txt" 
+      <filesmatch
+        file1="match5.txt"
         file2="match6.txt" />
     </condition>
     <echo>${filesmatch-different-sizes}</echo>
-  </target>   
+  </target>
 
   <target name="filesmatch-different-onemissing">
     <condition property="filesmatch-different-sizes">
-      <filesmatch 
-        file1="condition.xml" 
+      <filesmatch
+        file1="condition.xml"
         file2="missing-file.txt" />
     </condition>
     <echo>${filesmatch-different-onemissing}</echo>
-  </target>   
-  
+  </target>
+
   <target name="contains" >
     <condition property="contains">
-      <contains 
-        string="abcd" 
+      <contains
+        string="abcd"
         substring="cd" />
     </condition>
     <echo>${contains}</echo>
-  </target> 
-  
+  </target>
+
   <target name="contains-doesnt" >
     <condition property="contains-doesnt">
-      <contains 
-        string="abcd" 
+      <contains
+        string="abcd"
         substring="CD" />
     </condition>
     <echo>${contains-doesnt}</echo>
-  </target> 
-  
+  </target>
+
   <target name="contains-anycase" >
     <condition property="contains-anycase">
       <contains casesensitive="false"
-        string="abcd" 
+        string="abcd"
         substring="CD" />
     </condition>
     <echo>${contains-anycase}</echo>
-  </target> 
-  
+  </target>
+
   <target name="contains-incomplete1" >
     <condition property="contains-incomplete1">
-      <contains 
+      <contains
         string="abcd" />
     </condition>
     <echo>${contains-incomplete1}</echo>
-  </target> 
+  </target>
 
   <target name="contains-incomplete2" >
     <condition property="contains-incomplete2">
-      <contains 
+      <contains
         substring="CD" />
     </condition>
     <echo>${contains-incomplete2}</echo>
-  </target> 
+  </target>
 
   <target name="istrue" >
     <property name="t" value="true" />
@@ -313,15 +311,15 @@
       </and>
     </condition>
     <echo>${istrue}</echo>
-  </target> 
+  </target>
 
   <target name="istrue-not" >
     <condition property="istrue-not">
-      <istrue 
+      <istrue
         value="this sentence is true" />
     </condition>
     <echo>${istrue-not}</echo>
-  </target> 
+  </target>
 
   <target name="istrue-false" >
     <condition property="istrue-false">
@@ -331,41 +329,40 @@
       </or>
     </condition>
     <echo>${istrue-false}</echo>
-  </target> 
-  
+  </target>
+
   <target name="istrue-incomplete" >
     <condition property="istrue-incomplete">
       <istrue />
     </condition>
     <echo>${istrue-incomplete}</echo>
   </target>
-  
-  
+
   <target name="isfalse-true" >
     <property name="t" value="true" />
     <condition property="isfalse-true">
-      <isfalse 
+      <isfalse
         value="${t}" />
     </condition>
     <echo>${isfalse-true}</echo>
-  </target> 
+  </target>
 
   <target name="isfalse-not" >
     <condition property="isfalse-not">
-      <isfalse 
+      <isfalse
         value="this sentence is true" />
     </condition>
     <echo>${isfalse-not}</echo>
-  </target> 
+  </target>
 
   <target name="isfalse-false" >
     <condition property="isfalse-false">
-      <isfalse 
+      <isfalse
         value="false" />
     </condition>
     <echo>${isfalse-false}</echo>
-  </target> 
-  
+  </target>
+
   <target name="isfalse-incomplete" >
     <condition property="isfalse-incomplete">
       <isfalse />
@@ -397,11 +394,11 @@
       </condition>
     </fail>
   </target>
-  
+
   <target name="cleanup" >
     <delete>
       <fileset dir="." includes="match?.txt,match??.txt" />
     </delete>
   </target>
-   
+
 </project>
