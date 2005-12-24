@@ -160,6 +160,22 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean useImplicitFileset = true;
 
     /**
+     * The default processor is trax
+     * @since Ant 1.7
+     */
+    public static final String PROCESSOR_TRAX = "trax";
+    /**
+     * The xalan1 processor (deprecated option)
+     * @since Ant 1.7
+     */
+    public static final String PROCESSOR_XALAN1 = "xalan";
+    /**
+     * The xsl:p processor (deprecated option)
+     * @since Ant 1.7
+     */
+    public static final String PROCESSOR_XSLP = "xslp";
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -273,9 +289,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                  * the wrong version has been used.
                  */
                 if (stylesheet.exists()) {
-                    log("DEPRECATED - the style attribute should be relative "
-                        + "to the project\'s");
-                    log("             basedir, not the tasks\'s basedir.");
+                    log("DEPRECATED - the 'style' attribute should be relative "
+                        + "to the project's");
+                    log("             basedir, not the tasks's basedir.");
                 }
             }
 
@@ -314,9 +330,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             }
 	    } else { // only resource collections, there better be some
-		if (resources.size() == 0) {
-		    throw new BuildException("no resources specified");
-		}
+            if (resources.size() == 0) {
+                throw new BuildException("no resources specified");
+            }
 	    }
 	    processResources(stylesheet);
         } finally {
@@ -453,28 +469,30 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception Exception if the processor cannot be loaded.
      */
     private void resolveProcessor(String proc) throws Exception {
-        if (proc.equals("trax")) {
-            final Class clazz = loadClass(TRAX_LIAISON_CLASS);
-            liaison = (XSLTLiaison) clazz.newInstance();
-        } else if (proc.equals("xslp")) {
+        String classname;
+        if (proc.equals(PROCESSOR_TRAX)) {
+            classname= TRAX_LIAISON_CLASS;
+        } else if (proc.equals(PROCESSOR_XSLP)) {
             log("DEPRECATED - xslp processor is deprecated. Use trax "
                 + "instead.");
-            final Class clazz = loadClass(XSLP_LIAISON_CLASS);
-            liaison = (XSLTLiaison) clazz.newInstance();
-        } else if (proc.equals("xalan")) {
+            classname = XSLP_LIAISON_CLASS;
+        } else if (proc.equals(PROCESSOR_XALAN1)) {
             log("DEPRECATED - xalan processor is deprecated. Use trax "
                 + "instead.");
-            final Class clazz = loadClass(XALAN_LIAISON_CLASS);
-            liaison = (XSLTLiaison) clazz.newInstance();
+            classname = XALAN_LIAISON_CLASS;
         } else {
-            liaison = (XSLTLiaison) loadClass(proc).newInstance();
+            //anything else is a classname
+            classname = proc;
         }
+        Class clazz = loadClass(classname);
+        liaison = (XSLTLiaison) clazz.newInstance();
     }
 
     /**
      * Load named class either via the system classloader or a given
      * custom classloader.
      *
+     * As a side effect, the loader is set as the thread context classloader
      * @param classname the name of the class to load.
      * @return the requested class.
      * @exception Exception if the class could not be loaded.
@@ -516,10 +534,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     private void checkDest() {
-	if (destDir == null) {
-	    String msg = "destdir attributes must be set!";
-	    throw new BuildException(msg);
-	}
+        if (destDir == null) {
+            String msg = "destdir attributes must be set!";
+            throw new BuildException(msg);
+        }
     }
 
     /**
@@ -716,13 +734,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             } else {
                 try {
-                    resolveProcessor("trax");
+                    resolveProcessor(PROCESSOR_TRAX);
                 } catch (Throwable e1) {
                     try {
-                        resolveProcessor("xalan");
+                        resolveProcessor(PROCESSOR_XALAN1);
                     } catch (Throwable e2) {
                         try {
-                            resolveProcessor("xslp");
+                            resolveProcessor(PROCESSOR_XSLP);
                         } catch (Throwable e3) {
                             e3.printStackTrace();
                             e2.printStackTrace();
