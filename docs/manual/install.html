@@ -34,7 +34,10 @@ Ant CVS repository</a> on-line. </p>
 <h2><a name="sysrequirements">System Requirements</a></h2>
 Ant has been used successfully on many platforms, including Linux,
 commercial flavours of Unix such as Solaris and HP-UX,
-Windows 9x and NT, OS/2 Warp, Novell Netware 6 and MacOS X.
+Windows 9x and NT, OS/2 Warp, Novell Netware 6, OpenVMS and MacOS X.
+The platforms used most for development are, in no particular order,
+Linux, MacOS X, Windows XP and Unix; these are therefore that platforms
+that work best.
 <p>
 To build and use Ant, you must have a JAXP-compliant XML parser installed and
 available on your classpath.</p>
@@ -49,13 +52,15 @@ If you wish to use a different JAXP-compliant parser, you should remove
 from Ant's <code>lib</code> directory.
 
 You can then either put the jars from your preferred parser into Ant's
-<code>lib</code> directory or put the jars on the system classpath.</p>
+<code>lib</code> directory or put the jars on the system classpath. 
+Some parts of Ant will fail if you use an old parser, especially one
+that is not namespace-aware. In particular, avoid the Crimson parser.</p>
+
+<p>Tip: "ant -diagnostics" will list the XML parser used and its location.</p>
 
 <p>
 For the current version of Ant, you will also need a JDK installed on
 your system, version 1.2 or later.
-</p><p>
-<strong>Note: </strong>The Microsoft JVM/JDK is not supported.
 </p>
 <p>
 <strong>Note #2: </strong>If a JDK is not present, only the JRE runtime, then many tasks will not work.
@@ -65,6 +70,7 @@ your system, version 1.2 or later.
 <p>The binary distribution of Ant consists of the following directory layout:
 <pre>
   ant
+   +--- README, LICENSE, fetch.xml, other text files. //basic information
    +--- bin  // contains launcher scripts
    |
    +--- lib  // contains Ant jars plus necessary dependencies
@@ -121,7 +127,7 @@ installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
 
 <h3>Setup</h3>
 <p>
-Before you can run ant there is some additional set up you
+Before you can run Ant there is some additional set up you
 will need to do unless you are installing the <a href="#jpackage">RPM 
 version from jpackage.org</a>:</p>
 <ul>
@@ -147,28 +153,129 @@ packaged together with the core Ant tasks.</p>
 <p>The external libraries required by each of the optional tasks is detailed
 in the <a href="#librarydependencies">Library Dependencies</a> section. These external
 libraries may either be placed in Ant's lib directory, where they will be picked up
-automatically, or made available on the system CLASSPATH environment variable.
+automatically.
 </p>
 
-<h3>Windows and OS/2</h3>
+<h3><a name="classpath">The CLASSPATH environment variable</a></h3>
+<p>
+
+The CLASSPATH environment variable is a source of many Ant support queries. As
+the round trip time for diagnosis on the Ant user mailing list can be slow, and
+because filing bug reports complaining about 'ant.bat' not working will be
+rejected by the developers as WORKSFORME "this is a configuration problem, not a
+bug", you can save yourself a lot of time and frustration by following some
+simple steps.
+
+</p>
+<ol>
+
+<li>Do not ever set CLASSPATH. Ant does not need it, it only causes confusion
+and breaks things.
+
+</li>
+
+<li>If you ignore the previous rule, do not ever, ever, put quotes in the
+CLASSPATH, even if there is a space in a directory. This will break Ant, and it
+is not needed. </li>
+
+<li>If you ignore the first rule, do not ever, ever, have a trailing backslash
+in a CLASSPATH, as it breaks Ant's ability to quote the string. Again, this is
+not needed for the correct operation of the CLASSPATH environment variable, even
+if a DOS directory is to be added to the path. </li>
+
+<li>You can stop Ant using the CLASSPATH environment variable by setting the
+<code>-noclasspath</code> option on the command line.</li>
+
+</ol>
+
+<p>
+
+The usual symptom of CLASSPATH problems is that ant will not run with some error
+about not being able to find org.apache.tools.Ant.main, or, if you have got the
+quotes/backslashes wrong, some very wierd Java startup error. To see if this is
+the case, run <code>ant -noclasspath</code> or unset the CLASSPATH environment
+variable.
+
+</p>
+
+
+<h3><a name="proxy">Proxy Configuration</a></h3>
+
+<p> Many Ant built-in and third-party tasks use network connections to retrieve
+files from HTTP servers. If you are behind a firewall with a proxy server, then
+Ant needs to be configured with the proxy. Here are the different ways to do
+this. </p>
+
+<ul>
+
+<li><b>With Java1.5</b><br>. 
+
+When you run Ant on Java1.5, it tries to use the automatic proxy setup
+mechanism. If this works -and it is a big if, as we see little evidence of it
+doing so on Linux or WinXP, then your proxy is set up without you doing
+anything. You can disable this feature with the <code>-noproxy</code> option.
+
+</li>
+
+<li><b>With explicit JVM properties.</b><br>.
+
+These are documented <a
+href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">by Sun</a>,
+and control the proxy behaviour of the entire JVM. To set them in Ant, declare
+them in the <code>ANT_OPTS</code> environment variable. This is the best option
+for a non-mobile system. For a laptop, you have to change these settings as you
+roam.
+
+</li>
+
+<li><b>In the build file itself</b><br>
+
+If you are writing an build file that is always to be used behind the firewall,
+the &lt;setproxy&gt; task lets you configure the proxy (which it does by setting
+the JVM properties). If you do this, we strongly recommend using ant properties
+to define the proxy host, port, etc, so that individuals can override the
+defaults.</li>
+
+</ul>
+
+<p> The Ant team acknowledges that this is unsatisfactory. Until the JVM
+automatic proxy setup works properly everywhere, explicit JVM options via
+ANT_ARGS are probably the best solution. Note that setting properties on Ant's
+command line do not work, because those are <i>Ant properties</i> being set, not
+JVM options. This means the following does not set up the command line:
+
+</p>
+
+<pre>ant -Dhttp.proxyHost=proxy -Dhttp.proxyPort=81</pre>
+
+<p> All it does is set up two Ant properties.</p> <p>One other troublespot with
+proxies is with authenticating proxies. Ant cannot go beyond what the JVM does
+here, and as it is very hard to remotely diagnose, test and fix proxy-related
+problems, users who work behind a secure proxy will have to spend much time
+configuring the JVM properties until they are happy. </p>
+
+
+<h3><a name="windows">Windows and OS/2</a></h3>
 <p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
 environment:</p>
 <pre>set ANT_HOME=c:\ant
-set JAVA_HOME=c:\jdk1.2.2
+set JAVA_HOME=c:\jdk-1.5.0.05
 set PATH=%PATH%;%ANT_HOME%\bin</pre>
 
-<h3>Unix (bash)</h3>
+<h3>Linux/Unix (bash)</h3>
 <p>Assume Ant is installed in <code>/usr/local/ant</code>. The following sets up
 the environment:</p>
 <pre>export ANT_HOME=/usr/local/ant
-export JAVA_HOME=/usr/local/jdk-1.2.2
+export JAVA_HOME=/usr/local/jdk-1.5.0.05
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
 
-<h3>Unix (csh)</h3>
+<h3>Linux/Unix (csh)</h3>
 <pre>setenv ANT_HOME /usr/local/ant
-setenv JAVA_HOME /usr/local/jdk-1.2.2
+setenv JAVA_HOME /usr/local/jdk/jdk-1.5.0.05
 set path=( $path $ANT_HOME/bin )</pre>
 
+<p>
+Having a symbolic link set up to point to the JVM/JSK version makes updates more seamless. </p>
 <a name="jpackage"></a>
 <h3>RPM version from jpackage.org</h3>
 <p>
@@ -206,6 +313,7 @@ Finally, if for some reason you are running on a system with both the JPackage a
 available, if you should want to run the Apache version (which will have to be specified with an absolute file name,
 not found on the path), you should use Ant's <code>--noconfig</code> command-line switch to avoid JPackage's classpath mechanism.
 
+
 <h3><a name="advanced">Advanced</a></h3>
 
 <p>There are lots of variants that can be used to run Ant. What you need is at
@@ -215,8 +323,7 @@ least the following:</p>
 needed for your chosen JAXP-compliant XML parser.</li>
 <li>When you need JDK functionality
 (such as for the <a href="CoreTasks/javac.html">javac</a> task or the
-<a href="CoreTasks/rmic.html">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
-file of the JDK must be added to the classpath; for JDK 1.2 or JDK 1.3, <code>tools.jar</code>
+<a href="CoreTasks/rmic.html">rmic</a> task), then <code>tools.jar</code>
 must be added. The scripts supplied with Ant,
 in the <code>bin</code> directory, will add
 the required JDK classes automatically, if the <code>JAVA_HOME</code>
@@ -308,8 +415,8 @@ the current Ant version in <code>ANT_HOME</code>.</p>
 
 <hr>
 <h2><a name="librarydependencies">Library Dependencies</a></h2>
-<p>The following libraries are needed in your CLASSPATH or in the
-install directory's <code>lib</code> directory if you are using the
+<p>The following libraries are needed in Ant's classpath 
+if you are using the
 indicated feature. Note that only one of the regexp libraries is
 needed for use with the mappers
 (and Java 1.4 and higher includes a regexp implementation which
@@ -329,12 +436,10 @@ Installing Ant / Optional Tasks</a> section above.</p>
     <td>An XSL transformer like Xalan or XSL:P</td>
     <td>style task</td>
     <td>
-    <b>If you use JDK 1.4, an XSL transformer is already included, so you need not do anything special.</b><br>
+    <b>If you use JDK 1.4+, an XSL transformer is already included, so you need not do anything special.</b><br>
     <ul><li>XALAN : <a href="http://xml.apache.org/xalan-j/index.html"
     target="_top">http://xml.apache.org/xalan-j/index.html</a></li>
-    <li>XSL:P : used to live at <a href="http://www.clc-marketing.com/xslp/"
-    target="_top">http://www.clc-marketing.com/xslp/</a>, but the link
-    doesn't work any longer and we are not aware of a replacement site.</li></ul>
+    </ul>
     </td>
   </tr>
   <tr>
@@ -533,6 +638,65 @@ Already included in jdk 1.4</td>
   </tr>
 </table>
 <br>
+<h2><a name="Troubleshooting">Troubleshooting</a></h2>
+
+
+<h3><a name="diagnostics">Diagnostics</a></h3>
+
+<p> Ant has a built in diagnostics feature. If you run <code>ant
+-diagnostics</code> ant will look at its internal state and print it out. This
+code will check and print the following things. </p>
+
+<ul>
+
+<li>The version of ant.jar and ant-optional.jar -and that they match</li>
+
+<li>Which JAR files are int ANT_HOME/lib
+
+<li>Which optional tasks are available. If a task is not listed as being
+available, either it is not present, or libraries that it depends on are
+absent.</li>
+
+
+<li>XML Parser information</li>
+
+<li>JVM system properties
+</li>
+
+<li>The status of the temp directory. If this is not writeable, or its clock is
+horribly wrong (possible if it is on a network drive), a lot of tasks will fail
+with obscure error messages.</li>
+
+<li>The current time zone as Java sees it. If this is not what it should be for
+your location, then dependency logic may get confused.
+
+</ul>
+
+<p>
+Running <code>ant -diagnostics</code> is a good way to check that ant is installed. It is also a first step towards self-diagnosis of any problem. Any configuration problem reported to the user mailing list will probably result ins someone asking you to run the command and show the results, so save time by using it yourself.
+</p>
+
+<p>
+For under-IDE diagostics, use the &lt;diagnostics&gt; task to run the same tests as an ant task. This can be added to a diagnostics target in a build file to see what tasks are available under the IDE, what the XML parser and classpath is, etc. 
+</p>
+
+<h3><a name="ant-user">user mailing list</a></h3>
+
+<p> If you cannot get Ant installed or working, the Ant user mailing list is the
+best place to start with any problem. Please do your homework first, make sure
+that it is not a <a href="classpath">CLASSPATH</a> problem, and run a <a
+href="diagnostics">diagnostics check</a> to see what Ant thinks of its own
+state. Why the user list, and not the developer list? Because there are more users than developers, so more people who can help you. </p>
+
+<p>
+
+Please only file a bug report against Ant for a configuration/startup problem if
+there really is a fixable bug in Ant related to configuration, such as it not
+working on a particular platform, with a certain JVM version, etc, or if you are
+advised to do it by the user mailing list.
+</p>
+
+
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
