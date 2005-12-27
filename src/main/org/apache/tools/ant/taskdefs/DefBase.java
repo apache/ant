@@ -25,8 +25,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
- * Base class for Definitions
- * handling uri and class loading.
+ * Base class for Definitions handling uri and class loading.
  * (This was part of Definer)
  *
  * @since Ant 1.6
@@ -78,7 +77,7 @@ public abstract class DefBase extends AntlibDefinition {
     }
 
     /**
-     * Set the classpath to be used when searching for component being defined
+     * Set the classpath to be used when searching for component being defined.
      *
      * @param classpath an Ant Path object containing the classpath.
      */
@@ -88,7 +87,7 @@ public abstract class DefBase extends AntlibDefinition {
 
     /**
      * Create the classpath to be used when searching for component being
-     * defined
+     * defined.
      * @return the classpath of the this definition
      */
     public Path createClasspath() {
@@ -96,7 +95,7 @@ public abstract class DefBase extends AntlibDefinition {
     }
 
     /**
-     * reference to a classpath to use when loading the files.
+     * Set a reference to a classpath to use when loading the files.
      * To actually share the same loader, set loaderref as well
      * @param r the reference to the classpath
      */
@@ -106,11 +105,11 @@ public abstract class DefBase extends AntlibDefinition {
 
     /**
      * Use the reference to locate the loader. If the loader is not
-     * found, taskdef will use the specified classpath and register it
+     * found, the specified classpath will be used and registered
      * with the specified name.
      *
-     * This allow multiple taskdef/typedef to use the same class loader,
-     * so they can be used together. It eliminate the need to
+     * This allows multiple taskdef/typedef to use the same class loader,
+     * so they can be used together, eliminating the need to
      * put them in the CLASSPATH.
      *
      * @param r the reference to locate the loader.
