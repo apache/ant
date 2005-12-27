@@ -78,6 +78,55 @@ file and load in before the input task.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+<h3>Parameters Specified as Nested Elements</h3>
+<h4>Handler</h4>
+<p>Since <b>Ant 1.7</b>, a nested &lt;handler&gt; element can be used to
+specify an InputHandler, so that different InputHandlers may be used
+among different Input tasks.
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">one of "default","propertyfile", or "greedy".
+    </td>
+    <td align="center" valign="top" rowspan="3">One of these</td>
+  </tr>
+  <tr>
+    <td valign="top">refid</td>
+    <td valign="top">Reference to an <code>InputHandler</code>
+        defined elsewhere in the project.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">classname</td>
+    <td valign="top">The name of an <code>InputHandler</code> subclass.</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to use with <i>classname</i>.</td>
+    <td valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">The refid of a classpath to use with <i>classname</i>.</td>
+    <td valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">loaderref</td>
+    <td valign="top">The refid of a classloader to use with <i>classname</i>.
+    </td>
+    <td valign="top">No</td>
+  </tr>
+</table>
+<br />
+The classpath can also be specified by means of one or more nested
+&lt;classpath&gt; elements.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;input/&gt;</pre>
 <p>Will pause the build run until return key is pressed when using the

@@ -28,4 +28,76 @@
            />
   </target>
 
+  <target name="testPropertyFileInlineHandler">
+    <input message="Press Return key to continue..." addproperty="test">
+      <handler type="propertyfile" />
+    </input>
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="${test}" arg2="test" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testDefaultInlineHandler">
+    <input message="Press Return key to continue..." addproperty="test">
+      <handler type="default" />
+    </input>
+    <fail message="$${test} = ${test}">
+      <condition>
+        <not>
+          <equals arg1="${test}" arg2="foo" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testGreedyInlineHandler">
+    <input message="Press Return key to continue..." addproperty="test">
+      <handler type="greedy" />
+    </input>
+    <fail message="$${test} = ${test}">
+      <condition>
+        <not>
+          <equals arg1="${test}"
+                  arg2="foo${line.separator}bar${line.separator}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testGreedyInlineHandlerClassname">
+    <input message="Press Return key to continue..." addproperty="test">
+      <handler classname="org.apache.tools.ant.input.GreedyInputHandler" />
+    </input>
+    <fail message="$${test} = ${test}">
+      <condition>
+        <not>
+          <equals arg1="${test}"
+                  arg2="foo${line.separator}bar${line.separator}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testGreedyInlineHandlerRefid">
+    <typedef name="greedy"
+             classname="org.apache.tools.ant.input.GreedyInputHandler" />
+    <greedy id="greedy" />
+
+    <input message="Press Return key to continue..." addproperty="test">
+      <handler refid="greedy" />
+    </input>
+    <fail message="$${test} = ${test}">
+      <condition>
+        <not>
+          <equals arg1="${test}"
+                  arg2="foo${line.separator}bar${line.separator}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
 </project>

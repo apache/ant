@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright 2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,11 +18,20 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.InputRequest;
+import org.apache.tools.ant.input.GreedyInputHandler;
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.input.MultipleChoiceInputRequest;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 /**
  * Reads an input line from the console.
@@ -32,10 +41,108 @@ import org.apache.tools.ant.util.StringUtils;
  * @ant.task category="control"
  */
 public class Input extends Task {
+
+    /**
+     * Represents an InputHandler.
+     */
+    public class Handler extends DefBase {
+
+        private String refid = null;
+        private HandlerType type = null;
+        private String classname = null;
+
+        /**
+         * Specify that the handler is a reference on the project;
+         * this allows the use of a custom inputhandler.
+         * @param refid the String refid.
+         */
+        public void setRefid(String refid) {
+            this.refid = refid;
+        }
+        /**
+         * Get the refid of this Handler.
+         * @return String refid.
+         */
+        public String getRefid() {
+            return refid;
+        }
+        /**
+         * Set the InputHandler classname.
+         * @param classname the String classname.
+         */
+        public void setClassname(String classname) {
+            this.classname = classname;
+        }
+        /**
+         * Get the classname of the InputHandler.
+         * @return String classname.
+         */
+        public String getClassname() {
+            return classname;
+        }
+        /**
+         * Set the handler type.
+         * @param type a HandlerType.
+         */
+        public void setType(HandlerType type) {
+            this.type = type;
+        }
+        /**
+         * Get the handler type.
+         * @return a HandlerType object.
+         */
+        public HandlerType getType() {
+            return type;
+        }
+        private InputHandler getInputHandler() {
+            if (type != null) {
+               return type.getInputHandler();
+            }
+            if (refid != null) {
+               try {
+                   return (InputHandler) (getProject().getReference(refid));
+               } catch (ClassCastException e) {
+                   throw new BuildException(
+                       refid + " does not denote an InputHandler", e);
+               }
+            }
+            if (classname != null) {
+               return (InputHandler) (ClasspathUtils.newInstance(classname,
+                   createLoader(), InputHandler.class));
+            }
+            throw new BuildException(
+                "Must specify refid, classname or type");
+        }
+    }
+
+    /**
+     * EnumeratedAttribute representing the built-in input handler types:
+     * "default", "propertyfile", "greedy".
+     */
+    public static class HandlerType extends EnumeratedAttribute {
+        private static final String[] VALUES
+            = {"default", "propertyfile", "greedy"};
+
+        private static final InputHandler[] HANDLERS
+            = {new DefaultInputHandler(),
+               new PropertyFileInputHandler(),
+               new GreedyInputHandler()};
+
+        //inherit doc
+        public String[] getValues() {
+            return VALUES;
+        }
+        private InputHandler getInputHandler() {
+            return HANDLERS[getIndex()];
+        }
+    }
+
     private String validargs = null;
     private String message = "";
     private String addproperty = null;
     private String defaultvalue = null;
+    private Handler handler = null;
+    private boolean messageAttribute;
 
     /**
      * Defines valid input parameters as comma separated strings. If set, input
@@ -66,6 +173,7 @@ public class Input extends Task {
      */
     public void setMessage (String message) {
         this.message = message;
+        messageAttribute = true;
     }
 
     /**
@@ -84,7 +192,11 @@ public class Input extends Task {
      * @param msg The message to be displayed.
      */
     public void addText(String msg) {
-        message += getProject().replaceProperties(msg);
+        msg = getProject().replaceProperties(msg);
+        if (messageAttribute && "".equals(msg.trim())) {
+            return;
+        }
+        message += msg;
     }
 
     /**
@@ -113,7 +225,11 @@ public class Input extends Task {
             request = new InputRequest(message);
         }
 
-        getProject().getInputHandler().handleInput(request);
+        InputHandler h = handler == null
+            ? getProject().getInputHandler()
+            : handler.getInputHandler();
+
+        h.handleInput(request);
 
         String value = request.getInput();
         if ((value == null || value.trim().length() == 0)
@@ -123,6 +239,19 @@ public class Input extends Task {
         if (addproperty != null && value != null) {
             getProject().setNewProperty(addproperty, value);
         }
+    }
+
+    /**
+     * Create a nested handler element.
+     * @return a Handler for this Input task.
+     */
+    public Handler createHandler() {
+        if (handler != null) {
+            throw new BuildException(
+                "Cannot define > 1 nested input handler");
+        }
+        handler = new Handler();
+        return handler;
     }
 
 }

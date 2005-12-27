@@ -339,6 +339,8 @@ Other changes:
 
 * added the onmissingfiltersfile attribute to filterset. Bugzilla report 19845.
 
+* added the inline handler element to the input task.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

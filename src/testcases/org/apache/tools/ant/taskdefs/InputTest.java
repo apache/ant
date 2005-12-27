@@ -17,6 +17,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.InputStream;
+import java.io.FileInputStream;
+
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
 
@@ -60,6 +63,40 @@ public class InputTest extends BuildFileTest {
     public void test6() {
         executeTarget("test6");
         assertEquals("scott", project.getProperty("db.user"));
+    }
+
+    public void testPropertyFileInlineHandler() {
+        executeTarget("testPropertyFileInlineHandler");
+    }
+
+    public void testDefaultInlineHandler() {
+        stdin();
+        executeTarget("testDefaultInlineHandler");
+    }
+
+    public void testGreedyInlineHandler() {
+        stdin();
+        executeTarget("testGreedyInlineHandler");
+    }
+
+    public void testGreedyInlineHandlerClassname() {
+        stdin();
+        executeTarget("testGreedyInlineHandlerClassname");
+    }
+
+    public void testGreedyInlineHandlerRefid() {
+        stdin();
+        executeTarget("testGreedyInlineHandlerRefid");
+    }
+
+    private void stdin() {
+        try {
+            System.setIn(new FileInputStream(
+                getProject().resolveFile("input.stdin")));
+        } catch (Exception e) {
+            throw e instanceof RuntimeException
+                ? (RuntimeException) e : new RuntimeException(e.getMessage());
+        }
     }
 
     private String getKey(String key) {
