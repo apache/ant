@@ -118,7 +118,44 @@ public class FilterSet extends DataType implements Cloneable {
          * @param file the file from which filters will be read.
          */
         public void setFile(File file) {
-           readFiltersFromFile(file);
+           filtersFiles.add(file);
+        }
+    }
+
+    /**
+     * EnumeratedAttribute to set behavior WRT missing filtersfiles:
+     * "fail" (default), "warn", "ignore".
+     * @since Ant 1.7
+     */
+    public static class OnMissing extends EnumeratedAttribute {
+        private static final String[] VALUES
+            = new String[] {"fail", "warn", "ignore"};
+
+        public static final OnMissing FAIL = new OnMissing("fail");
+        public static final OnMissing WARN = new OnMissing("warn");
+        public static final OnMissing IGNORE = new OnMissing("ignore");
+
+        private static final int FAIL_INDEX = 0;
+        private static final int WARN_INDEX = 1;
+        private static final int IGNORE_INDEX = 2;
+
+        /**
+         * Default constructor.
+         */
+        public OnMissing() {
+        }
+
+        /**
+         * Convenience constructor.
+         * @param value the value to set.
+         */
+        public OnMissing(String value) {
+            setValue(value);
+        }
+
+        //inherit doc
+        public String[] getValues() {
+            return VALUES;
         }
     }
 
@@ -138,6 +175,9 @@ public class FilterSet extends DataType implements Cloneable {
 
     private boolean recurse = true;
     private Hashtable filterHash = null;
+    private Vector filtersFiles = new Vector();
+    private OnMissing onMissingFiltersFile = OnMissing.FAIL;
+    private boolean readingFiles = false;
 
     /**
      * List of ordered filters and filter files.
@@ -168,6 +208,15 @@ public class FilterSet extends DataType implements Cloneable {
     protected synchronized Vector getFilters() {
         if (isReference()) {
             return getRef().getFilters();
+        }
+        //silly hack to avoid stack overflow...
+        if (!readingFiles) {
+            readingFiles = true;
+            for (int i = 0, sz = filtersFiles.size(); i < sz; i++) {
+                readFiltersFromFile((File) filtersFiles.get(i));
+            }
+            filtersFiles.clear();
+            readingFiles = false;
         }
         return filters;
     }
@@ -202,13 +251,12 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @param filtersFile sets the filter file from which to read filters
      *        for this filter set.
-     * @exception BuildException if there is a problem reading the filters.
      */
     public void setFiltersfile(File filtersFile) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        readFiltersFromFile(filtersFile);
+        filtersFiles.add(filtersFile);
     }
 
     /**
@@ -292,7 +340,7 @@ public class FilterSet extends DataType implements Cloneable {
             throw tooManyAttributes();
         }
         if (!filtersFile.exists()) {
-            throw new BuildException("Could not read filters from file "
+           handleMissingFile("Could not read filters from file "
                                      + filtersFile + " as it doesn't exist.");
         }
         if (filtersFile.isFile()) {
@@ -312,13 +360,14 @@ public class FilterSet extends DataType implements Cloneable {
               }
            } catch (Exception ex) {
               throw new BuildException("Could not read filters from file: "
-                + filtersFile);
+                  + filtersFile);
            } finally {
               FileUtils.close(in);
            }
         } else {
-           throw new BuildException("Must specify a file not a directory in "
-            + "the filtersfile attribute:" + filtersFile);
+           handleMissingFile(
+               "Must specify a file rather than a directory in "
+               + "the filtersfile attribute:" + filtersFile);
         }
         filterHash = null;
     }
@@ -336,6 +385,104 @@ public class FilterSet extends DataType implements Cloneable {
     public synchronized String replaceTokens(String line) {
         passedTokens = null; // reset for new line
         return iReplaceTokens(line);
+    }
+
+    /**
+     * Add a new filter.
+     *
+     * @param filter the filter to be added.
+     */
+    public synchronized void addFilter(Filter filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        filters.addElement(filter);
+        filterHash = null;
+    }
+
+    /**
+     * Create a new FiltersFile.
+     *
+     * @return The filtersfile that was created.
+     */
+    public FiltersFile createFiltersfile() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        return new FiltersFile();
+    }
+
+    /**
+     * Add a new filter made from the given token and value.
+     *
+     * @param token The token for the new filter.
+     * @param value The value for the new filter.
+     */
+    public synchronized void addFilter(String token, String value) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        addFilter(new Filter(token, value));
+    }
+
+    /**
+     * Add a Filterset to this filter set.
+     *
+     * @param filterSet the filterset to be added to this filterset
+     */
+    public synchronized void addConfiguredFilterSet(FilterSet filterSet) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        for (Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements();) {
+            addFilter((Filter) e.nextElement());
+        }
+    }
+
+    /**
+    * Test to see if this filter set has filters.
+    *
+    * @return Return true if there are filters in this set.
+    */
+    public synchronized boolean hasFilters() {
+        return getFilters().size() > 0;
+    }
+
+    /**
+     * Clone the filterset.
+     *
+     * @return a deep clone of this filterset.
+     *
+     * @throws BuildException if the clone cannot be performed.
+     */
+    public synchronized Object clone() throws BuildException {
+        if (isReference()) {
+            return ((FilterSet) getRef()).clone();
+        }
+        try {
+            FilterSet fs = (FilterSet) super.clone();
+            fs.filters = (Vector) getFilters().clone();
+            fs.setProject(getProject());
+            return fs;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Set the behavior WRT missing filtersfiles.
+     * @param onMissingFiltersFile the OnMissing describing the behavior.
+     */
+    public void setOnMissingFiltersFile(OnMissing onMissingFiltersFile) {
+        this.onMissingFiltersFile = onMissingFiltersFile;
+    }
+
+    /**
+     * Get the onMissingFiltersFile setting.
+     * @return the OnMissing instance.
+     */
+    public OnMissing getOnMissingFiltersFile() {
+        return onMissingFiltersFile;
     }
 
     /**
@@ -438,87 +585,21 @@ public class FilterSet extends DataType implements Cloneable {
         return value;
     }
 
-    /**
-     * Add a new filter.
-     *
-     * @param filter the filter to be added.
-     */
-    public synchronized void addFilter(Filter filter) {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        filters.addElement(filter);
-        filterHash = null;
-    }
-
-    /**
-     * Create a new FiltersFile.
-     *
-     * @return The filtersfile that was created.
-     */
-    public FiltersFile createFiltersfile() {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        return new FiltersFile();
-    }
-
-    /**
-     * Add a new filter made from the given token and value.
-     *
-     * @param token The token for the new filter.
-     * @param value The value for the new filter.
-     */
-    public synchronized void addFilter(String token, String value) {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        addFilter(new Filter(token, value));
-    }
-
-    /**
-     * Add a Filterset to this filter set.
-     *
-     * @param filterSet the filterset to be added to this filterset
-     */
-    public synchronized void addConfiguredFilterSet(FilterSet filterSet) {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        for (Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements();) {
-            addFilter((Filter) e.nextElement());
+    private void addFiltersFile(File f) {
+        if (!filtersFiles.contains(f)) {
+            filtersFiles.add(f);
         }
     }
 
-    /**
-    * Test to see if this filter set has filters.
-    *
-    * @return Return true if there are filters in this set.
-    */
-    public synchronized boolean hasFilters() {
-        return getFilters().size() > 0;
-    }
-
-    /**
-     * Clone the filterset.
-     *
-     * @return a deep clone of this filterset.
-     *
-     * @throws BuildException if the clone cannot be performed.
-     */
-    public synchronized Object clone() throws BuildException {
-        if (isReference()) {
-            return ((FilterSet) getRef()).clone();
-        } else {
-            try {
-                FilterSet fs = (FilterSet) super.clone();
-                fs.filters = (Vector) getFilters().clone();
-                fs.setProject(getProject());
-                return fs;
-            } catch (CloneNotSupportedException e) {
-                throw new BuildException(e);
-            }
+    private void handleMissingFile(String message) {
+        switch (onMissingFiltersFile.getIndex()) {
+        case OnMissing.IGNORE_INDEX:
+            return;
+        case OnMissing.FAIL_INDEX:
+            throw new BuildException(message);
+        case OnMissing.WARN_INDEX:
+            log(message, Project.MSG_WARN);
         }
     }
+
 }
-

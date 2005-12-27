@@ -337,6 +337,8 @@ Other changes:
 
 * new resourcesmatch condition.
 
+* added the onmissingfiltersfile attribute to filterset. Bugzilla report 19845.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

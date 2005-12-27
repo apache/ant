@@ -62,7 +62,7 @@ you should ensure that the set of files being filtered are all text files.
   <tr>
     <td vAlign=top>filtersfile</td>
     <td vAlign=top>Specify a single filtersfile.</td>
-    <td vAlign=top><i>n/a</i></td>
+    <td vAlign=top><i>none</i></td>
     <td vAlign=top align="center">No</td>
   </tr>
   <tr>
@@ -70,6 +70,13 @@ you should ensure that the set of files being filtered are all text files.
     <td vAlign=top>Indicates whether the replacement text of tokens
       should be searched for more tokens. <b>Since Ant 1.6.3</b></td>
     <td vAlign=top><i>true</i></td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+  <tr>
+    <td vAlign=top>onmissingfiltersfile</td>
+    <td vAlign=top>Indicate behavior when a nonexistent <i>filtersfile</i>
+      is specified.  One of "fail", "warn", "ignore". <b>Since Ant 1.7</b></td>
+    <td vAlign=top>"fail"</td>
     <td vAlign=top align="center">No</td>
   </tr>
 </table>

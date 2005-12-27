@@ -141,6 +141,27 @@ public class FilterSetTest extends BuildFileTest {
         assertEquals("value1", filters.get("token1"));
     }
 
+    public void testFiltersFileElement() {
+        executeTarget("testFiltersFileElement");
+    }
+
+    public void testFiltersFileAttribute() {
+        executeTarget("testFiltersFileAttribute");
+    }
+
+    public void testMultipleFiltersFiles() {
+        executeTarget("testMultipleFiltersFiles");
+    }
+
+    public void testMissingFiltersFile() {
+        expectBuildException("testMissingFiltersFile",
+            "should fail due to missing filtersfile");
+    }
+
+    public void testAllowMissingFiltersFile() {
+        executeTarget("testAllowMissingFiltersFile");
+    }
+
     private boolean compareFiles(String name1, String name2) {
         File file1 = new File(System.getProperty("root"), name1);
         File file2 = new File(System.getProperty("root"), name2);

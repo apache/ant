@@ -48,10 +48,82 @@
     </filterset>
   </target>
 
+  <target name="testFiltersFileElement">
+    <copy file="filtersetd.txt" tofile="dest4.txt">
+      <filterset>
+        <filtersfile file="filtersfile1" />
+      </filterset>
+    </copy>
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch asText="true">
+            <file file="dest4.txt" />
+            <string value="FOO BAR @baz@ @blah@" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testFiltersFileAttribute">
+    <copy file="filtersetd.txt" tofile="dest5.txt">
+      <filterset filtersfile="filtersfile1" />
+    </copy>
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch asText="true">
+            <file file="dest5.txt" />
+            <string value="FOO BAR @baz@ @blah@" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testMultipleFiltersFiles">
+    <copy file="filtersetd.txt" tofile="dest6.txt">
+      <filterset filtersfile="filtersfile1">
+        <filtersfile file="filtersfile2" />
+      </filterset>
+    </copy>
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch asText="true">
+            <file file="dest6.txt" />
+            <string value="FOO BAR BAZ @blah@" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testMissingFiltersFile">
+    <copy file="filtersetd.txt" tofile="dest7.txt">
+      <filterset filtersfile="nonexistentfiltersfile" />
+    </copy>
+  </target>
+
+  <target name="testAllowMissingFiltersFile">
+    <copy file="filtersetd.txt" tofile="dest8.txt">
+      <filterset filtersfile="nonexistentfiltersfile"
+                 onmissingfiltersfile="ignore" />
+    </copy>
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="filtersetd.txt" file2="dest8.txt" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup">
-    <delete file="dest1.txt" quiet="true" />
-    <delete file="dest2.txt" quiet="true" />
-    <delete file="dest3.txt" quiet="true" />
+    <delete quiet="true">
+      <fileset dir="." includes="dest?.txt" />
+    </delete>
   </target>
 
 </project>
