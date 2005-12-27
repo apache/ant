@@ -115,7 +115,7 @@ public class ImportTask extends Task {
         // *not* the current directory (same as entity includes).
 
         File buildFileParent = new File(buildFile.getParent());
-        File importedFile = FILE_UTILS.resolveFile(buildFileParent,  file);
+        File importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
 
         if (!importedFile.exists()) {
             String message =
