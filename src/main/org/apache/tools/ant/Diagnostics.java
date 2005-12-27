@@ -18,7 +18,9 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.launch.Launcher;
+import org.xml.sax.XMLReader;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -92,6 +94,7 @@ public final class Diagnostics {
             }
         } catch (ClassNotFoundException e) {
             // ignore
+            ignoreThrowable(e);
         }
     }
 
@@ -176,6 +179,7 @@ public final class Diagnostics {
             saxParser = saxParserFactory.newSAXParser();
         } catch (Exception e) {
             // ignore
+            ignoreThrowable(e);
         }
         return saxParser;
     }
@@ -194,6 +198,37 @@ public final class Diagnostics {
         return location;
     }
 
+    private static String getNamespaceParserName() {
+        try {
+            XMLReader reader = JAXPUtils.getNamespaceXMLReader();
+            return reader.getClass().getName();
+        } catch (BuildException e) {
+            //ignore
+            ignoreThrowable(e);
+            return null;
+        }
+    }
+
+    private static String getNamespaceParserLocation() {
+        try {
+            XMLReader reader = JAXPUtils.getNamespaceXMLReader();
+            return getClassLocation(reader.getClass());
+        } catch (BuildException e) {
+            //ignore
+            ignoreThrowable(e);
+            return null;
+        }
+    }
+
+    /**
+     * ignore exceptions. This is to allow future 
+     * implementations to log at a verbose level
+     * @param thrown
+     */
+    private static void ignoreThrowable(Throwable thrown) {
+        
+    }
+    
     /**
      * get the location of a class. Stolen from axis/webapps/happyaxis.jsp
      * @param clazz
@@ -223,6 +258,7 @@ public final class Diagnostics {
             out.println("optional tasks : "
                 + getImplementationVersion(optional));
         } catch (ClassNotFoundException e) {
+            ignoreThrowable(e);
             out.println("optional tasks : not available");
         }
 
@@ -269,6 +305,7 @@ public final class Diagnostics {
         try {
             sysprops = System.getProperties();
         } catch (SecurityException  e) {
+            ignoreThrowable(e);
             out.println("Access to System.getProperties() blocked "
                     + "by a security manager");
         }
@@ -400,14 +437,24 @@ public final class Diagnostics {
     private static void doReportParserInfo(PrintStream out) {
         String parserName = getXmlParserName();
         String parserLocation = getXMLParserLocation();
+        printParserInfo(out, "XML Parser", parserName, parserLocation);
+        printParserInfo(out, "Namespace-aware parser", 
+                getNamespaceParserName(), 
+                getNamespaceParserLocation());
+    }
+
+    private static void printParserInfo(PrintStream out,
+                                        String parserType,
+                                        String parserName,
+                                        String parserLocation) {
         if (parserName == null) {
             parserName = "unknown";
         }
         if (parserLocation == null) {
             parserLocation = "unknown";
         }
-        out.println("XML Parser : " + parserName);
-        out.println("XML Parser Location: " + parserLocation);
+        out.println(parserType +" : " + parserName);
+        out.println(parserType +" Location: " + parserLocation);
     }
 
     /**
@@ -452,6 +499,7 @@ public final class Diagnostics {
                 out.println("Warning: big clock drift -maybe a network filesystem");
             }
         } catch (IOException e) {
+            ignoreThrowable(e);
             out.println("Failed to create a temporary file in the temp dir "
                 + tempdir);
             out.println("File  " + tempFile + " could not be created/written to");
