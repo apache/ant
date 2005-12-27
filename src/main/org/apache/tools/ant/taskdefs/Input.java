@@ -192,11 +192,10 @@ public class Input extends Task {
      * @param msg The message to be displayed.
      */
     public void addText(String msg) {
-        msg = getProject().replaceProperties(msg);
         if (messageAttribute && "".equals(msg.trim())) {
             return;
         }
-        message += msg;
+        message += getProject().replaceProperties(msg);
     }
 
     /**
