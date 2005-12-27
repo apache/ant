@@ -184,7 +184,6 @@ public class ClasspathUtils {
                 throw new BuildException("The specified loader id " + loaderId
                     + " does not reference a class loader");
             }
-
             cl = (ClassLoader) reusedLoader;
         }
         if (cl == null) {
@@ -193,7 +192,6 @@ public class ClasspathUtils {
                 p.addReference(loaderId, cl);
             }
         }
-
         return cl;
     }
 
@@ -219,7 +217,6 @@ public class ClasspathUtils {
             acl.setParentFirst(false);
             acl.addJavaLibraries();
         }
-
         return acl;
     }
 
@@ -352,7 +349,7 @@ public class ClasspathUtils {
      * <li> attribute @classname </li></ul>
      *
      * <p> This class functions as a delegate handling the configuration
-     * issues for this recuring pattern.  Its usage pattern, as the name
+     * issues for this recurring pattern.  Its usage pattern, as the name
      * suggests, is delegation rather than inheritance. </p>
      *
      * @since Ant 1.6
@@ -461,14 +458,12 @@ public class ClasspathUtils {
          * @return The class loader.
          */
         public ClassLoader getClassLoader() {
-            ClassLoader cl;
-            cl = ClasspathUtils.getClassLoaderForPath(
+            return ClasspathUtils.getClassLoaderForPath(
                     getContextProject(),
                     this.classpath,
                     getClassLoadId(),
                     this.reverseLoader,
                     loaderId != null || isMagicPropertySet(getContextProject()));
-            return cl;
         }
 
         /**
@@ -483,11 +478,9 @@ public class ClasspathUtils {
          * @return a loader identifier.
          */
         public String getClassLoadId() {
-            if (this.loaderId == null && this.classpathId != null) {
-                return ClasspathUtils.LOADER_ID_PREFIX + this.classpathId;
-            } else {
-                return this.loaderId;
-            }
+            return this.loaderId == null && this.classpathId != null
+                ? ClasspathUtils.LOADER_ID_PREFIX + this.classpathId
+                : this.loaderId;
         }
 
         /**
@@ -497,8 +490,7 @@ public class ClasspathUtils {
          * @return the fresh instantiated object.
          */
         public Object newInstance() {
-            ClassLoader cl = getClassLoader();
-            return ClasspathUtils.newInstance(this.className, cl);
+            return ClasspathUtils.newInstance(this.className, getClassLoader());
         }
 
         /**
