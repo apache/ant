@@ -56,6 +56,20 @@ public abstract class BaseResourceCollectionContainer
     }
 
     /**
+     * Clear the container.
+     * @throws BuildException on error.
+     */
+    public synchronized void clear() throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        rc.clear();
+        FailFast.invalidate(this);
+        coll = null;
+        setChecked(false);
+    }
+
+    /**
      * Add a ResourceCollection to the container.
      * @param c the ResourceCollection to add.
      * @throws BuildException on error.
