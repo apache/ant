@@ -118,4 +118,13 @@
     </javac>
   </target>
 
+    <target name="presetdef-with-nested-element-twice">
+        <copy todir=".">
+            <fileset dir="." includes="nonexistent"/>
+        </copy>
+        <presetdef name="copy">
+            <copy verbose="true"/>
+        </presetdef>
+    </target>
+
 </project>

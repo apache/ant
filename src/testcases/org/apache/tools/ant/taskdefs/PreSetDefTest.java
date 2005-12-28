@@ -80,6 +80,10 @@ public class PreSetDefTest extends BuildFileTest {
             "correct_taskname_badel", "element message", "javac doesn't support the");
     }
     
+    public void testPresetdefWithNestedElementTwice() { // #38056
+        executeTarget("presetdef-with-nested-element-twice");
+        executeTarget("presetdef-with-nested-element-twice");
+    }
     
     /**
      * A test class to check default properties

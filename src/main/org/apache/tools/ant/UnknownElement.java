@@ -41,7 +41,7 @@ public class UnknownElement extends Task {
     /**
      * Holds the namespace of the element.
      */
-    private String namespace;
+    private String namespace = "";
 
     /**
      * Holds the namespace qname of the element.
@@ -111,7 +111,7 @@ public class UnknownElement extends Task {
                 getProject());
             namespace = helper.getCurrentAntlibUri();
         }
-        this.namespace = namespace;
+        this.namespace = namespace == null ? "" : namespace;
     }
 
     /** Return the qname of the XML element associated with this component.

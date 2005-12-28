@@ -67,7 +67,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
-* Some potential NullPointerExceptions, Bugzilla Report 37765
+
+* Some potential NullPointerExceptions, Bugzilla Reports 37765 and 38056
 
 * Problem when adding multiple filter files, Bugzilla Report 37341
 
