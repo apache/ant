@@ -1312,7 +1312,7 @@ public class DirectoryScanner
      */
     public synchronized String[] getIncludedFiles() {
         if (filesIncluded == null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Must call scan() first");
         }
         String[] files = new String[filesIncluded.size()];
         filesIncluded.copyInto(files);
@@ -1327,7 +1327,7 @@ public class DirectoryScanner
      */
     public synchronized int getIncludedFilesCount() {
         if (filesIncluded == null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Must call scan() first");
         }
         return filesIncluded.size();
     }
@@ -1395,7 +1395,7 @@ public class DirectoryScanner
      */
     public synchronized String[] getIncludedDirectories() {
         if (dirsIncluded == null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Must call scan() first");
         }
         String[] directories = new String[dirsIncluded.size()];
         dirsIncluded.copyInto(directories);
@@ -1410,7 +1410,7 @@ public class DirectoryScanner
      */
     public synchronized int getIncludedDirsCount() {
         if (dirsIncluded == null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Must call scan() first");
         }
         return dirsIncluded.size();
     }
