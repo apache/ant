@@ -65,6 +65,9 @@ Changes that could break older environments:
   file that somehow relied on content outside the firewall being unreachable:
   use the -noproxy command-line option to disable this new feature.
 
+* A bug in SQLExec would prevent the execution of trailing,
+  non-semicolon-delimited statements.  Bugzilla Report 37764.
+
 Fixed bugs:
 -----------
 

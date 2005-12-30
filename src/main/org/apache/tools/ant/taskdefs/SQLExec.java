@@ -500,7 +500,7 @@ public class SQLExec extends JDBCTask {
             }
         }
         // Catch any statements not followed by ;
-        if (!sql.equals("")) {
+        if (sql.length() > 0) {
             execSQL(sql.toString(), out);
         }
     }
