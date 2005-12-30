@@ -172,6 +172,7 @@ public class FileList extends DataType implements ResourceCollection {
      * Add a nested &lt;file&gt; nested element.
      *
      * @param name a configured file element with a name.
+     * @since Ant 1.6.2
      */
     public void addConfiguredFile(FileName name) {
         if (name.getName() == null) {
