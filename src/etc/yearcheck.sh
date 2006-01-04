@@ -1,5 +1,5 @@
 #
-#  Copyright  2002-2005 Apache Software Foundation
+#  Copyright  2002-2006 Apache Software Foundation
 # 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 #
 # Use this script instead of your usual cvs update command.
 #
-# Usage YEAR [all]
+# Usage YEAR [precommit]
 #
 # If the optional all argument has been omitted, the proposal directory will
 # be skipped.
@@ -47,22 +47,38 @@ if [ $YEAR = yearcheck.sh ]; then
     YEAR=`date -R | cut -d ' ' -f 4`
 fi
 
+precommit_call=false
+for arg in "$@" ; do
+  if [ "$arg" = "precommit" ] ; then
+    precommit_call=true
+  fi
+done
+
 if [ -d ".svn" ]; then
-    svn up | fgrep -v 'At revision' > "$TEMP_DIR"/update
+  SCM_COMMAND=svn
+  if $precommit_call ; then
+    SCM_ARGS=status
+    CUT_ARGS="-c 8-"
+  else
+    SCM_ARGS=up
+    CUT_ARGS="-c 4-"
+  fi
 else
-    cvs -z3 update -dP > "$TEMP_DIR"/update
+  SCM_COMMAND=cvs
+  SCM_ARGS="-z3 update -dP"
+  CUT_ARGS="-d ' ' -f 2"
 fi
 
-if [ -z "$1" ]; then
-   fgrep -v proposal < "$TEMP_DIR"/update | cut -f 2 -d ' ' > "$TEMP_DIR"/changed-files
+"$SCM_COMMAND" $SCM_ARGS > "$TEMP_DIR"/update-prefilter
+
+# filter out boring lines
+if [ "$SCM_COMMAND" = "svn" ]; then
+  < "$TEMP_DIR"/update-prefilter fgrep -v 'At revision' | fgrep -v 'Updated to revision' | egrep -v '^\?' > "$TEMP_DIR"/update
 else
-  if [ "all" == "$1" ]; then
-    cut -f 2 -d ' ' < "$TEMP_DIR"/update > "$TEMP_DIR"/changed-files
-  else
-    echo "Usage: $YEAR [all]"
-    exit
-  fi
+  cp "$TEMP_DIR"/update-prefilter "$TEMP_DIR"/update
 fi
+
+cut $CUT_ARGS < "$TEMP_DIR"/update > "$TEMP_DIR"/changed-files
 
 echo "Changed:"
 echo "========"
@@ -82,4 +98,4 @@ echo "No Copyright line for year $YEAR"
 echo "================================"
 cat "$TEMP_DIR"/no-$YEAR
 
-rm "$TEMP_DIR"/no-$YEAR "$TEMP_DIR"/no-copyright "$TEMP_DIR"/changed-files "$TEMP_DIR"/update
+rm "$TEMP_DIR"/no-$YEAR "$TEMP_DIR"/no-copyright "$TEMP_DIR"/changed-files "$TEMP_DIR"/update "$TEMP_DIR"/update-prefilter
