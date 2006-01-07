@@ -574,7 +574,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
                 String[] props = new String[] {pn.FILE_NAME, pn.FILE_PATH,
                                                pn.FILE_STATUS, pn.MODIFIED_TIME,
                                                pn.FILE_FILE_TIME_AT_CHECKIN,
-                                               pn.MODIFIED_USER_ID, pn.FILE_SIZE};
+                                               pn.MODIFIED_USER_ID, pn.FILE_SIZE,
+                                               pn.FILE_ENCODING};
 
                 int depth = this.isRecursive() ? -1 : 0;
                 starteamrootfolder.populateNow(getServer().getTypeNames().FILE,

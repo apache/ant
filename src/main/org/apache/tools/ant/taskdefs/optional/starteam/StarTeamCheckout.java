@@ -529,7 +529,7 @@ public class StarTeamCheckout extends TreeBasedTask {
                 log("Checking out: " + describeCheckout(eachFile));
                 break;
             default:
-                if (isForced()) {
+                if (isForced() && fileStatus != Status.CURRENT) {
                     log("Forced checkout of "
                         + describeCheckout(eachFile)
                         + " over status " + Status.name(fileStatus));
@@ -550,7 +550,7 @@ public class StarTeamCheckout extends TreeBasedTask {
                     }
                 }
                 eachFile.checkout(this.lockStatus,
-                                 !this.useRepositoryTimeStamp, this.convertEOL, true);
+                                 !this.useRepositoryTimeStamp, this.convertEOL, false);
             }
         }
     }
