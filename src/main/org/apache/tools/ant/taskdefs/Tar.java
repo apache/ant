@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -297,14 +297,7 @@ public class Tar extends MatchingTask {
                 String msg = "Problem creating TAR: " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
             } finally {
-                if (tOut != null) {
-                    try {
-                        // close up
-                        tOut.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(tOut);
             }
         } finally {
             filesets = savedFileSets;
@@ -355,7 +348,7 @@ public class Tar extends MatchingTask {
         }
 
         if (tarFileSet != null) {
-            String fullpath = tarFileSet.getFullpath();
+            String fullpath = tarFileSet.getFullpath(this.getProject());
             if (fullpath.length() > 0) {
                 vPath = fullpath;
             } else {
@@ -364,7 +357,7 @@ public class Tar extends MatchingTask {
                     return;
                 }
 
-                String prefix = tarFileSet.getPrefix();
+                String prefix = tarFileSet.getPrefix(this.getProject());
                 // '/' is appended for compatibility with the zip task.
                 if (prefix.length() > 0 && !prefix.endsWith("/")) {
                     prefix = prefix + "/";
@@ -435,7 +428,7 @@ public class Tar extends MatchingTask {
             }
         } else if (tarFileSet != null && tarFileSet.hasDirModeBeenSet()) {
             // override permissions if set explicitly
-            te.setMode(tarFileSet.getDirMode());
+            te.setMode(tarFileSet.getDirMode(this.getProject()));
         }
 
         if (tarFileSet != null) {
@@ -626,7 +619,7 @@ public class Tar extends MatchingTask {
             afs = (ArchiveFileSet) rc;
         }
         if (afs != null && afs.size() > 1
-            && afs.getFullpath().length() > 0) {
+            && afs.getFullpath(this.getProject()).length() > 0) {
             throw new BuildException("fullpath attribute may only "
                                      + "be specified for "
                                      + "filesets that specify a "
@@ -792,7 +785,7 @@ public class Tar extends MatchingTask {
          * @return the current mode.
          */
         public int getMode() {
-            return getFileMode();
+            return getFileMode(this.getProject());
         }
 
         /**
