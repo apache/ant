@@ -799,7 +799,10 @@ public class Copy extends Task {
                         if (targetFile.exists() && !targetFile.delete()) {
                             msg += " and I couldn't delete the corrupt " + toFile;
                         }
-                        throw new BuildException(msg, ioe, getLocation());
+                        if (failonerror) {
+                            throw new BuildException(msg, ioe, getLocation());
+                        }
+                        log(msg, Project.MSG_ERR);
                     }
                 }
             }

@@ -175,6 +175,9 @@ Fixed bugs:
 * Project not set on ChainReaderHelpers used by the Redirector.
   Bugzilla report 37958.
 
+* Copy task would fail on locked (or otherwise uncopyable) files even if
+  failonerror set to false. Bugzilla report 38175.
+
 Other changes:
 --------------
 * Minor performance improvements Bugzilla report 37777
