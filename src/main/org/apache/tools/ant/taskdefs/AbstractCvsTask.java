@@ -30,6 +30,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * original Cvs.java 1.20
@@ -397,21 +398,8 @@ public abstract class AbstractCvsTask extends Task {
                 removeCommandline(cloned);
             }
             setCommand(savedCommand);
-
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
-            if (errorStream != null) {
-                try {
-                    errorStream.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
+            FileUtils.close(outputStream);
+            FileUtils.close(errorStream);
         }
     }
 
