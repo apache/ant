@@ -212,10 +212,13 @@ Scan all XML files in the project, using the catalog defined inline.
   &lt;attribute name="http://xml.org/sax/features/namespaces" value="true"/&gt;
 &lt;/xmlvalidate&gt;
 </pre>
-Validate all .xml files in xml directory with the parser configured to perform schema validation. Note: The parser must support the
-<pre>http://apache.org/xml/features/validation/schema</pre> feature.
+Validate all .xml files in xml directory with the parser configured to perform XSD validation.
+Note: The parser must support the feature
+<code>http://apache.org/xml/features/validation/schema</code>.
+The <a href="schemavalidate.html">schemavalidate</a> task is better for validating
+W3C XML Schemas, as it extends this task with the right options automatically enabled,
+and makes it easy to add a list of schema files/URLs to act as sources.
 
-<br>
 <pre>
 <!-- Converts path to URL format -->
 &lt;pathconvert dirsep="/" property="xsd.file"&gt;
