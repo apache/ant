@@ -300,7 +300,7 @@ public abstract class JDBCTask extends Task {
      */
     protected Connection getConnection() throws BuildException {
         if (userId == null) {
-            throw new BuildException("User Id attribute must be set!", getLocation());
+            throw new BuildException("UserId attribute must be set!", getLocation());
         }
         if (password == null) {
             throw new BuildException("Password attribute must be set!", getLocation());
@@ -378,14 +378,17 @@ public abstract class JDBCTask extends Task {
         } catch (ClassNotFoundException e) {
             throw new BuildException(
                     "Class Not Found: JDBC driver " + driver + " could not be loaded",
+                    e,
                     getLocation());
         } catch (IllegalAccessException e) {
             throw new BuildException(
                     "Illegal Access: JDBC driver " + driver + " could not be loaded",
+                    e,
                     getLocation());
         } catch (InstantiationException e) {
             throw new BuildException(
                     "Instantiation Exception: JDBC driver " + driver + " could not be loaded",
+                    e,
                     getLocation());
         }
         return driverInstance;

@@ -146,8 +146,15 @@ and <b>abort</b> execution and transaction and fail task.</p>
     object will perform escape substitution.<br>
     See <a
     href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Statement.html#setEscapeProcessing(boolean)">Statement's
-    API docs</a> for details.  <em>since Ant 1.6</em>.
+    API docs</a> for details.  <emSsince Ant 1.6</em>.
   <td width="10%" valign="top">No (default=true)</td>
+</tr>
+
+<tr>
+  <td width="12%" valign="top">expandproperties</td>
+  <td width="78%" valign="top">Set to true to turn on property expansion in
+  nested SQL, inline in the task or nested transactions. <em>Since Ant 1.7</em>.
+  <td width="10%" valign="top">No (default=false)</td>
 </tr>
 
 </table>
@@ -220,7 +227,8 @@ truncate table some_other_table;
 
 <p>Connects to the database given in <i>url</i> as the sa
  user using the org.database.jdbcDriver and executes the two SQL statements 
- inserting data into some_table and truncating some_other_table </p>
+ inserting data into some_table and truncating some_other_table. Ant Properties
+ in the nested text will not be expanded.</p>
 
 <p>Note that you may want to enclose your statements in
 <code>&lt;![CDATA[</code> ... <code>]]&gt;</code> sections so you don't
@@ -238,6 +246,23 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 
 ]]&gt;&lt;/sql&gt;
 </pre></blockquote>
+
+The following command turns property expansion in nested text on (it is off purely for backwards
+compatibility), then creates a new user in the HSQLDB database using Ant properties. 
+
+<blockquote><pre>&lt;sql
+    driver="org.hsqldb.jdbcDriver";
+    url="jdbc:hsqldb:file:${database.dir}"
+    userid="sa"
+    password=""
+    expandProperties="true"
+    &gt;
+  &lt;transaction&gt;
+    CREATE USER ${newuser} PASSWORD ${newpassword}
+  &lt;/transaction&gt;
+&lt;/sql&gt;
+</pre></blockquote>
+
 
 <p>The following connects to the database given in url as the sa user using 
 the org.database.jdbcDriver and executes the SQL statements contained within 

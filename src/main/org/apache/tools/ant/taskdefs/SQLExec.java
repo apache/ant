@@ -181,6 +181,14 @@ public class SQLExec extends JDBCTask {
     private boolean escapeProcessing = true;
 
     /**
+     * should properties be expanded in text?
+     * false for backwards compatibility
+     *
+     * @since Ant 1.7
+     */
+    private boolean expandProperties = false;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      * @param srcFile the file containing the SQL command.
@@ -190,11 +198,34 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Enable property expansion inside nested text
+     *
+     * @param expandProperties
+     * @since Ant 1.7
+     */
+    public void setExpandProperties(boolean expandProperties) {
+        this.expandProperties = expandProperties;
+    }
+
+    /**
+     * is property expansion inside inline text enabled?
+     *
+     * @return true if properties are to be expanded.
+     * @since Ant 1.7
+     */
+    public boolean getExpandProperties() {
+        return expandProperties;
+    }
+
+    /**
      * Set an inline SQL command to execute.
-     * NB: Properties are not expanded in this text.
-     * @param sql a inline string containing the SQL command.
+     * NB: Properties are not expanded in this text unless {@link #expandProperties}
+     * is set.
+     * @param sql an inline string containing the SQL command.
      */
     public void addText(String sql) {
+        //there is no need to expand properties here as that happens when Transaction.addText is
+        //called; to do so here would be an error.
         this.sqlCommand += sql;
     }
 
@@ -209,7 +240,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Adds a collection of resources (nested element).
-     * @param set a collection of resources containing SQL commands,
+     * @param rc a collection of resources containing SQL commands,
      * each resource is run in a separate transaction.
      * @since Ant 1.7
      */
@@ -664,11 +695,15 @@ public class SQLExec extends JDBCTask {
          * @param src the source file
          */
         public void setSrc(File src) {
-            setSrcResource(new FileResource(src));
+            //there are places (in this file, and perhaps elsewhere, where it is assumed
+            //that null is an acceptable parameter.
+            if(src!=null) {
+                setSrcResource(new FileResource(src));
+            }
         }
 
         /**
-         * Set the source file attribute.
+         * Set the source resource attribute.
          * @param src the source file
          * @since Ant 1.7
          */
@@ -684,7 +719,12 @@ public class SQLExec extends JDBCTask {
          * @param sql the inline text
          */
         public void addText(String sql) {
-            this.tSqlCommand += sql;
+            if (sql != null) {
+                if (getExpandProperties()) {
+                    sql = getProject().replaceProperties(sql);
+                }
+                this.tSqlCommand += sql;
+            }
         }
 
         /**

@@ -277,8 +277,14 @@ public class FileResource extends Resource implements Touchable {
      * @return this FileResource formatted as a String.
      */
     public String toString() {
-        return isReference() ? getCheckedRef().toString()
-            : FILE_UTILS.normalize(file.getAbsolutePath()).getAbsolutePath();
+        if(isReference()) {
+            return  getCheckedRef().toString();
+        }
+        if(file==null) {
+            return "(unbound file resource)";
+        }
+        String absolutePath = file.getAbsolutePath();
+        return FILE_UTILS.normalize(absolutePath).getAbsolutePath();
     }
 
     /**
