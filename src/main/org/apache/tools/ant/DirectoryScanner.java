@@ -1056,8 +1056,8 @@ public class DirectoryScanner
              * (2) an IO error occurred (why doesn't it throw an exception
              *     then???)
              */
-            throw new BuildException("IO error scanning directory "
-                                     + dir.getAbsolutePath());
+            throw new BuildException("IO error scanning directory '"
+                                     + dir.getAbsolutePath() + "'");
         }
         if (!followSymlinks) {
             Vector noLinks = new Vector();
