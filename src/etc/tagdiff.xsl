@@ -35,11 +35,9 @@
   </xsl:template>
 
   <xsl:template match="tagdiff">
-    <HTML>
-      <HEAD>
-        <TITLE><xsl:value-of select="$title"/></TITLE>
-      </HEAD>
-      <BODY link="#000000" alink="#000000" vlink="#000000" text="#000000">
+    <html>
+      <head>
+        <title><xsl:value-of select="$title"/></title>
         <style type="text/css">
           body, p {
           font-family: verdana,arial,helvetica;
@@ -58,7 +56,9 @@
           font-size: 80%;
           background:#eeeee0;
           }	  
-	  </style>        
+	  </style> 
+      </head>
+      <body link="#000000" alink="#000000" vlink="#000000" text="#000000">       
           <h1>
             <a name="top"><xsl:value-of select="$title"/></a>
           </h1>
@@ -76,7 +76,7 @@
 			</td>
 		</tr>
 	</table>
-        <TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="1">
+        <table border="0" width="100%" cellpadding="3" cellspacing="1">
 		<xsl:call-template name="show-entries">
 			<xsl:with-param name="title">New Files</xsl:with-param>
 			<xsl:with-param name="anchor">New</xsl:with-param>
@@ -89,40 +89,41 @@
 			<xsl:with-param name="entries" select=".//entry[file/revision][file/prevrevision]"/>
 		</xsl:call-template>
 
+		<!-- change to entries select to address bug #36827 -->
 		<xsl:call-template name="show-entries">
 			<xsl:with-param name="title">Removed Files</xsl:with-param>
 			<xsl:with-param name="anchor">Removed</xsl:with-param>
-			<xsl:with-param name="entries" select=".//entry[not(file/revision)][not(file/prevrevision)]"/>
+			<xsl:with-param name="entries" select=".//entry[not(file/revision)][file/prevrevision]"/>
 		</xsl:call-template>
-        </TABLE>
+        </table>
         
-      </BODY>
-    </HTML>
+      </body>
+    </html>
   </xsl:template>
 
   <xsl:template name="show-entries">
 	<xsl:param name="title"/>
 	<xsl:param name="anchor"/>
 	<xsl:param name="entries"/>
-	<TR>
-		<TD colspan="2" class="dateAndAuthor">
+	<tr>
+		<td colspan="2" class="dateAndAuthor">
 			<a>
 				<xsl:attribute name="name"><xsl:value-of select="$anchor"/></xsl:attribute>
 				<xsl:value-of select="$title"/> - <xsl:value-of select="count($entries)"/> entries
 			</a>
 			<a href="#TOP">(back to top)</a>
-		</TD>
-	</TR>
-	<TR>
-		<TD width="20">
+		</td>
+	</tr>
+	<tr>
+		<td width="20">
 			<xsl:text>    </xsl:text>
-		</TD>
-		<TD>
+		</td>
+		<td>
 		        <ul>
 				<xsl:apply-templates select="$entries"/>
 			</ul>
-		</TD>
-	</TR>
+		</td>
+	</tr>
   </xsl:template>  
 
   <xsl:template match="entry">
