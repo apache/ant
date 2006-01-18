@@ -165,6 +165,7 @@
   <selector id="needs.jdk1.5+">
     <or>
       <filename name="${taskdefs.package}/AptTest*"/>
+      <filename name="${util.package}/java15/*"/>
     </or>
   </selector>
 

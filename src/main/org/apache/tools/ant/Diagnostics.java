@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.ProxySetup;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.launch.Launcher;
 import org.xml.sax.XMLReader;
 
@@ -285,6 +287,10 @@ public final class Diagnostics {
 
         header(out, "Locale information");
         doReportLocale(out);
+        
+        header(out, "Proxy information");
+        doReportProxy(out);
+        
         out.println();
     }
 
@@ -413,7 +419,8 @@ public final class Diagnostics {
                         Class.forName(classname);
                         props.remove(key);
                     } catch (ClassNotFoundException e) {
-                        out.println(key + " : Not Available");
+                        out.println(key + " : Not Available " 
+                                + "(the implementation class is not present)");
                     } catch (NoClassDefFoundError e) {
                         String pkg = e.getMessage().replace('/', '.');
                         out.println(key + " : Missing dependency " + pkg);
@@ -423,6 +430,9 @@ public final class Diagnostics {
                 }
                 if (props.size() == 0) {
                     out.println("All defined tasks are available");
+                } else {
+                    out.println("A task being missing/unavailable should only " 
+                            +"matter if you are trying to use it");
                 }
             } catch (IOException e) {
                 out.println(e.getMessage());
@@ -494,7 +504,7 @@ public final class Diagnostics {
             tempFile.delete();
             out.println("Temp dir is writeable");
             long drift = filetime - now;
-            out.println("temp dir alignment with system clock is " + drift + " ms");
+            out.println("Temp dir alignment with system clock is " + drift + " ms");
             if (Math.abs(drift) > BIG_DRIFT_LIMIT) {
                 out.println("Warning: big clock drift -maybe a network filesystem");
             }
@@ -513,7 +523,7 @@ public final class Diagnostics {
 
     /**
      * Report locale information
-     * @param out
+     * @param out stream to print to 
      */
     private static void doReportLocale(PrintStream out) {
         //calendar stuff.
@@ -530,4 +540,67 @@ public final class Diagnostics {
                          + cal.get(Calendar.SECOND)) * SECONDS_PER_MILLISECOND
                          + cal.get(Calendar.MILLISECOND)));
     }
+
+    /**
+     * print a property name="value" pair, or name=[undefined] if there is none
+     * @param out
+     * @param name
+     */
+    private static void printProperty(PrintStream out,String name) {
+        out.print(name);
+        out.print(" = ");
+        String value=System.getProperty(name);
+        if(value!=null) {
+            out.print('"');
+            out.print(value);
+            out.println('"');
+        } else {
+            out.println("[undefined]");
+        }
+        
+    }
+
+    /**
+     * Report proxy information
+     *
+     * @param out stream to print to
+     */
+    private static void doReportProxy(PrintStream out) {
+        if(JavaEnvUtils.getJavaVersionNumber()>=15) {
+            printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
+        }
+        printProperty(out,ProxySetup.HTTP_PROXY_HOST);
+        printProperty(out, ProxySetup.HTTP_PROXY_PORT);
+        printProperty(out, ProxySetup.HTTP_PROXY_USERNAME);
+        printProperty(out, ProxySetup.HTTP_PROXY_PASSWORD);
+        printProperty(out, ProxySetup.HTTP_NON_PROXY_HOSTS);
+        printProperty(out, ProxySetup.HTTPS_PROXY_HOST);
+        printProperty(out, ProxySetup.HTTPS_PROXY_PORT);
+        printProperty(out, ProxySetup.HTTPS_NON_PROXY_HOSTS);
+        printProperty(out, ProxySetup.FTP_PROXY_HOST);
+        printProperty(out, ProxySetup.FTP_PROXY_PORT);
+        printProperty(out, ProxySetup.FTP_NON_PROXY_HOSTS);
+        printProperty(out, ProxySetup.SOCKS_PROXY_HOST);
+        printProperty(out, ProxySetup.SOCKS_PROXY_PORT);
+        printProperty(out, ProxySetup.SOCKS_PROXY_USERNAME);
+        printProperty(out, ProxySetup.SOCKS_PROXY_PASSWORD);
+        
+        final String proxyDiagClassname="org.apache.tools.ant.util.java15.ProxyDiagnostics";
+        try {
+            Class proxyDiagClass = Class.forName(proxyDiagClassname);
+            Object instance =proxyDiagClass.newInstance();
+            out.println("Java1.5+ proxy settings");
+            out.println(instance.toString());
+        } catch (ClassNotFoundException e) {
+            //not included, do nothing
+        } catch (IllegalAccessException e) {
+            //not included, do nothing
+
+        } catch (InstantiationException e) {
+            //not included, do nothing
+
+        }
+
+    }
+
 }

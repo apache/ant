@@ -1,5 +1,5 @@
 /*
- * Copyright  2005 The Apache Software Foundation
+ * Copyright  2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,21 @@ public class ProxySetup {
      * @value
      */
     public static final String USE_SYSTEM_PROXIES="java.net.useSystemProxies";
+    public static final String HTTP_PROXY_HOST = "http.proxyHost";
+    public static final String HTTP_PROXY_PORT = "http.proxyPort";
+    public static final String HTTPS_PROXY_HOST = "https.proxyHost";
+    public static final String HTTPS_PROXY_PORT = "https.proxyPort";
+    public static final String FTP_PROXY_HOST = "ftp.proxyHost";
+    public static final String FTP_PROXY_PORT = "ftp.proxyPort";
+    public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+    public static final String HTTPS_NON_PROXY_HOSTS = "https.nonProxyHosts";
+    public static final String FTP_NON_PROXY_HOSTS = "ftp.nonProxyHosts";
+    public static final String HTTP_PROXY_USERNAME = "http.proxyUser";
+    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final String SOCKS_PROXY_HOST = "socksProxyHost";
+    public static final String SOCKS_PROXY_PORT = "socksProxyPort";
+    public static final String SOCKS_PROXY_USERNAME = "java.net.socks.username";
+    public static final String SOCKS_PROXY_PASSWORD = "java.net.socks.password";
 
 
     /**
