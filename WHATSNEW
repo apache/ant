@@ -178,6 +178,9 @@ Fixed bugs:
 * Copy task would fail on locked (or otherwise uncopyable) files even if
   failonerror set to false. Bugzilla report 38175.
 
+* <junit> task did not print all the Test names when using forkmode='once'.
+  Bugzilla report 37426.
+
 Other changes:
 --------------
 * Minor performance improvements Bugzilla report 37777

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,9 +50,20 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
     public SummaryJUnitResultFormatter() {
     }
     /**
-     * Empty
+     * The testsuite started.
      */
     public void startTestSuite(JUnitTest suite) {
+        String newLine = System.getProperty("line.separator");
+        StringBuffer sb = new StringBuffer("Running ");
+        sb.append(suite.getName());
+        sb.append(newLine);
+
+        try {
+            out.write(sb.toString().getBytes());
+            out.flush();
+        } catch (IOException ioex) {
+            throw new BuildException("Unable to write summary output", ioex);
+        }
     }
     /**
      * Empty

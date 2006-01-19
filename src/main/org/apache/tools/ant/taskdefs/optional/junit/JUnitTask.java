@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -766,8 +766,8 @@ public class JUnitTask extends Task {
      * @param  watchdog   the watchdog in charge of cancelling the test if it
      * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
      * the test could probably hang forever.
-     * @param ForkedVMState will hold information about the forked
-     * VM's sanity.
+     * @param casesFile list of test cases to execute. Can be <tt>null</tt>,
+     * in this case only one test is executed.
      * @throws BuildException in case of error creating a temporary property file,
      * or if the junit process can not be forked
      */
@@ -789,9 +789,6 @@ public class JUnitTask extends Task {
         }
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
-            if (summary) {
-                log("Running " + test.getName(), Project.MSG_INFO);
-            }
             cmd.createArgument().setValue(test.getName());
         } else {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
@@ -927,7 +924,7 @@ public class JUnitTask extends Task {
      * The file will be in the project basedir unless tmpDir declares
      * something else.
      * @param prefix
-     * @return
+     * @return created file
      */
     private File createTempPropertiesFile(String prefix) {
         File propsFile =
@@ -1073,7 +1070,6 @@ public class JUnitTask extends Task {
                                          test.getHaltonfailure(), false,
                                          true, classLoader);
             if (summary) {
-                log("Running " + test.getName(), Project.MSG_INFO);
 
                 SummaryJUnitResultFormatter f =
                     new SummaryJUnitResultFormatter();
@@ -1438,7 +1434,7 @@ public class JUnitTask extends Task {
         /**
          * hashcode is based only on the boolean members, and returns a value
          * in the range 0-7.
-         * @return
+         * @return hash code value
          */
         public int hashCode() {
             return (filterTrace ? 1 : 0)
