@@ -19,6 +19,21 @@
 
   <target name="test3" depends="setup">
     <antlr target="antlr.g" outputdirectory="${tmp.dir}"/>
+    <fail>
+      <condition>
+        <!-- to prove each of these files exists;
+             ANTLR >= 2.7.6 leaves behind new (.smap) files as well. -->
+        <resourcecount when="ne" count="5">
+          <fileset dir="${tmp.dir}">
+            <include name="CalcParserTokenTypes.txt" />
+            <include name="CalcParserTokenTypes.java" />
+            <include name="CalcLexer.java" />
+            <include name="CalcParser.java" />
+            <include name="CalcTreeWalker.java" />
+          </fileset>
+        </resourcecount>
+      </condition>
+    </fail>
   </target>
 
   <target name="test4" depends="setup">
