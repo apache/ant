@@ -1714,6 +1714,8 @@
             unless="xerces1.present"/>
           <exclude name="${ant.package}/IncludeTest.java"
             unless="xerces1.present"/>
+          <exclude name="${type.package}/selectors/ModifiedSelectorTest.java"
+            unless="xerces1.present"/>
 
           <!-- needs resolver.jar to work -->
           <exclude name="${optional.package}/XmlValidateCatalogTest.java"
