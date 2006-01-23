@@ -1662,6 +1662,7 @@
           <exclude name="${ant.package}/types/selectors/ContainsRegexpTest.java"
             unless="some.regexp.support"/>
           <exclude name="${ant.package}/types/mappers/RegexpPatternMapperTest.java"
+          <!-- needs BSF to work -->
             unless="some.regexp.support"/>
           <exclude name="${optional.package}/Rhino*.java"
             unless="bsf.present"/>
@@ -1703,12 +1704,14 @@
           <exclude name="${taskdefs.package}/StyleTest.java"
             unless="trax.impl.present"/>
 
-          <!-- needs BSF to work -->
+          <!-- needs xerces to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"
             unless="bsf.present"/>
           <exclude name="${optional.package}/XalanLiaisonTest.java"
             unless="xerces1.present"/>
           <exclude name="${optional.package}/XslpLiaisonTest.java"
+            unless="xerces1.present"/>
+          <exclude name="${ant.package}/IncludeTest.java"
             unless="xerces1.present"/>
 
           <!-- needs resolver.jar to work -->
