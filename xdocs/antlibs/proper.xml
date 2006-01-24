@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2005 The Apache Software Foundation
+   Copyright 2005-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,7 +25,128 @@
 
     <section name="Ant Libraries">
 
-      <p>No Ant Library has left the sandbox yet.</p>
+      <a name="antunit"/>
+      <subsection name="AntUnit - Unit Test Framework for Ant Tasks">
+
+        <p>AntUnit borrows ideas from JUnit 3.x and the &lt;junit&gt;
+        task.  It provides a task that runs build files as unit tests
+        as well as a number of assertion tasks to support the
+        idea.</p>
+
+        <table>
+          <tr>
+            <th>Homepage:</th>
+            <td><a href="./antunit/index.html">http://ant.apache.org/antlibs/antunit/</a></td>
+          </tr>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/antunit/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/antunit/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2005-04-15</td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2005-11-22</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <a name="dotnet"/>
+      <subsection name="DotNet - Improved Support for .NET projects">
+
+        <p>Provides a simple infrastructure to execute .NET
+        applications from within Ant for different VMs so that the
+        user doesn't have to change the build file when she wants to
+        run Mono on Linux and Microsoft's VM on Windows.</p>
+
+        <p>Also contains &lt;nant&gt;, &lt;nunit&gt; and
+        &lt;msbuild&gt; tasks and an untested &lt;wix&gt; tasks.</p>
+
+        <table>
+          <tr>
+            <th>Homepage:</th>
+            <td><a href="./dotnet/index.html">http://ant.apache.org/antlibs/dotnet/</a></td>
+          </tr>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/dotnet/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/dotnet/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x<br/>A branch that works with Ant 1.6.2 and
+              above exists in <a href="https://svn.apache.org/repos/asf/ant/antlibs/dotnet/branches/Ant_1.6.2_compatible/">https://svn.apache.org/repos/asf/ant/antlibs/dotnet/branches/Ant_1.6.2_compatible/</a></td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2005-04-15</td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2005-11-22</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <a name="svn"/>
+      <subsection name="SVN - Subversion Support">
+
+        <p>Contains tasks that correspond to Ant's &lt;cvs&gt;,
+        &lt;cvschangelog&gt; and &lt;cvstagdiff&gt; tasks.  Requires
+        Subversion's command line client.</p>
+
+        <table>
+          <tr>
+            <th>Homepage:</th>
+            <td><a href="./svn/index.html">http://ant.apache.org/antlibs/svn/</a></td>
+          </tr>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/svn/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/svn/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/svn/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/svn/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2005-04-15</td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2005-11-22</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
 
     </section>
 
