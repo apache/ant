@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation
+ * Copyright 2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,19 +19,17 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Vector;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.GreedyInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.InputRequest;
-import org.apache.tools.ant.input.GreedyInputHandler;
-import org.apache.tools.ant.input.DefaultInputHandler;
-import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.input.MultipleChoiceInputRequest;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Reads an input line from the console.
