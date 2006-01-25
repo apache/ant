@@ -19,12 +19,12 @@ package org.apache.tools.ant.taskdefs.condition;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 
 /**
  * Checks whether a jarfile is signed: if the name of the
@@ -39,7 +39,7 @@ public class IsSigned extends DataType implements Condition {
 
     private String name;
     private File file;
-
+    
    /**
      * The jarfile that is to be tested for the presence
      * of a signature.
@@ -72,7 +72,7 @@ public class IsSigned extends DataType implements Condition {
         try {
             jarFile = new ZipFile(zipFile);
             if (null == name) {
-                Enumeration entries = jarFile.entries();
+                Enumeration entries = jarFile.getEntries();
                 while (entries.hasMoreElements()) {
                     String eName = ((ZipEntry) entries.nextElement()).getName();
                     if (eName.startsWith(SIG_START)
@@ -95,13 +95,7 @@ public class IsSigned extends DataType implements Condition {
             
             return shortSig || longSig;
         } finally {
-            if (jarFile != null) {
-                try {
-                    jarFile.close();
-                } catch (IOException e) {
-                    // Ignored
-                }
-            }
+            ZipFile.closeQuietly(jarFile);
         }
     }
 
