@@ -270,9 +270,9 @@ public class ANTLRTest extends BuildFileTest {
 
   &lt;!-- the actual test case --&gt;
   &lt;target name=&quot;testTouchCreatesFile&quot;&gt;
-    &lt;au:assertFileDoesntExist name=&quot;${foo}&quot;/&gt;
+    &lt;au:assertFileDoesntExist file=&quot;${foo}&quot;/&gt;
     &lt;touch file=&quot;${foo}&quot;/&gt;
-    &lt;au:assertFileExists name=&quot;${foo}&quot;/&gt;
+    &lt;au:assertFileExists file=&quot;${foo}&quot;/&gt;
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
@@ -285,6 +285,12 @@ public class ANTLRTest extends BuildFileTest {
 </pre>
                                 <p>from a buildfile of its own you'll get a result that looks like</p>
                                 <pre class="code">
+[au:antunit] Build File: /tmp/touch.xml
+[au:antunit] Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.249 sec
+[au:antunit] Target: testTouchCreatesFile took 0.183 sec
+
+BUILD SUCCESSFUL
+Total time: 1 second
 </pre>
                 
     </div>
