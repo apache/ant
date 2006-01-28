@@ -166,6 +166,7 @@
 
   <target name="cleanup">
     <delete file="${tmp.jar}" />
+    <delete file="${tmp.jar}2" />
     <delete dir="${tmp.dir}"/>
     <delete file="${tmp.zip}" />
     <delete dir="${tmp1.dir}"/>
@@ -222,4 +223,18 @@
     <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
 
   </target>
+
+  <!-- bug 37237 -->
+  <target name="testIndexJarsPlusJarMarker">
+    <mkdir dir="${tmp.dir}/a/b/c"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
+    <delete dir="${tmp.dir}/a" quiet="true"/>
+    <mkdir dir="${tmp.dir}/d/e/f"/>
+    <jar destfile="${tmp.jar}2" basedir="${tmp.dir}" index="true">
+      <indexjars>
+        <fileset file="${tmp.jar}"/>
+      </indexjars>
+    </jar>
+  </target>
+
 </project>
