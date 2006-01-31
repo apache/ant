@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -233,6 +233,7 @@ public class Available extends Task implements Condition {
      * @exception BuildException if the condition is not configured correctly
      */
     public boolean eval() throws BuildException {
+        try {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|"
                                      + "resource) is required", getLocation());
@@ -273,12 +274,14 @@ public class Available extends Task implements Condition {
                 Project.MSG_VERBOSE);
             return false;
         }
+        } finally {
         if (loader != null) {
             loader.cleanup();
             loader = null;
         }
         if (!isTask) {
             setTaskName(null);
+        }
         }
         return true;
     }

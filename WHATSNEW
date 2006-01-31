@@ -181,6 +181,8 @@ Fixed bugs:
 * <junit> task did not print all the Test names when using forkmode='once'.
   Bugzilla report 37426.
 
+* <available> could leak resources, Bugzilla Report 38260.
+
 Other changes:
 --------------
 * Minor performance improvements Bugzilla report 37777
