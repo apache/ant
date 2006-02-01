@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -2102,11 +2102,17 @@ public class Javadoc extends Task {
 
             String[] pathElements = sourcePath.list();
             for (int i = 0; i < pathElements.length; i++) {
-                DirSet ds = new DirSet();
-                ds.setDefaultexcludes(useDefaultExcludes);
-                ds.setDir(new File(pathElements[i]));
-                ds.createPatternSet().addConfiguredPatternset(ps);
-                dirSets.addElement(ds);
+                File dir = new File(pathElements[i]);
+                if (dir.isDirectory()) {
+                    DirSet ds = new DirSet();
+                    ds.setDefaultexcludes(useDefaultExcludes);
+                    ds.setDir(dir);
+                    ds.createPatternSet().addConfiguredPatternset(ps);
+                    dirSets.addElement(ds);
+                } else {
+                    log("Skipping " + pathElements[i]
+                        + " since it is no directory.", Project.MSG_WARN);
+                }
             }
         }
 
