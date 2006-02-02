@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 import org.apache.tools.ant.Project;
@@ -89,9 +88,6 @@ public class Delete extends MatchingTask {
             this.basedir = basedir;
             this.dirs = dirs;
             Arrays.sort(this.dirs, REVERSE);
-            //ArrayList al = new ArrayList(Arrays.asList(dirs));
-            //Collections.reverse(al);
-            //this.dirs = (String[]) (al.toArray(new String[dirs.length]));
         }
         public Iterator iterator() {
             return new FileResourceIterator(basedir, dirs);
