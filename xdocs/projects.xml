@@ -145,10 +145,10 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="Antigen">
 
-        <p>Antigen (Ant Installer Generator) is a tool to take an Ant build script, combine it with a GUI and wrap it up as an executable jar file. Its main 
+        <p>Antigen (Ant Installer Generator) is a tool to take an Ant build script, combine it with a GUI and wrap it up as an executable jar file. Its main
             use is for creating graphical, ant-based installers.</p>
 
         <table class="externals">
@@ -170,7 +170,7 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="AntInstaller">
         <p>Builds MSI style installers (with command line option)
         using Ant as Back end. UI developed by writing an XML install
@@ -203,11 +203,11 @@
         <p>The Antlion Project adds value to Ant build scripts by providing
         tasks which centralizes the library dependencies, and enables
         projects to define dependencies upon other projects.</p>
-        
+
         <p>External dependencies may be loaded from a custom local
         repository or Maven-like remote repositories. Antlion handles
         the generation of properties, filesets, and paths.</p>
-        
+
         <p>Inter-project dependencies allow for building the other
         project's files if they aren't already built.</p>
 
@@ -559,7 +559,7 @@
         <p>yEd is a freeware multi-purpose graph and diagram editor
         that runs on the Java 2 platform. It provides an import filter
         for Ant build scripts that makes it possible to conveniently
-        display and browse the dependenies between the different targets
+        display and browse the dependencies between the different targets
         of the build file. This is especially useful for debugging and
         understanding large build files.</p>
 

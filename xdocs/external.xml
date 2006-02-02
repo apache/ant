@@ -1293,7 +1293,7 @@
           ideal for creating device optimized applications with its powerful
           preprocessing capabilities and the integrated device database.
           With J2ME Polish no hardcoded values are needed and the portability of an
-          application is not sacrificed, even though highly opimized applications are
+          application is not sacrificed, even though highly optimized applications are
           created from a single source.
           <br/>
           It contains a logging framework and an optional MIDP-compatible GUI
@@ -1512,7 +1512,7 @@
       <subsection name="Java2Html">
 
         <p>There are two different tools both named Java2HTML that
-        process Java source code and generate syntax higlighted
+        process Java source code and generate syntax highlighted
         documentation from it.  Both include Ant tasks to run
         them.</p>
 
@@ -2689,7 +2689,7 @@
          from a build script.</p>
          <table class="externals">
            <tr>
-             <th>Compatibilty:</th>
+             <th>Compatibility:</th>
              <td>Tested with Ant 1.6</td>
            </tr>
            <tr>
@@ -2930,7 +2930,7 @@
       <subsection name="VPP">
 
         <p>VPP provides general file preprocessing support based on
-        the Velocity Template Engine.  The core funtionality is
+        the Velocity Template Engine.  The core functionality is
         provided as a filter for use with tasks that supports filter
         chains.  Also included are replacement tasks for &lt;copy&gt; and
         &lt;javac&gt; that integrate support for preprocessing.</p>
@@ -3075,7 +3075,7 @@
       <subsection name="XInclude">
         <p><a href="http://www.jeckle.de/freeStuff/xia/index.html">XInclude</a> is
           a W3C standardized vocabulary for including arbitrary text or XML
-          documents in other XML documents. This task perfomes the inclusion
+          documents in other XML documents. This task performes the inclusion
           using an existing XInclude implementation</p>
 
         <table class="externals">
