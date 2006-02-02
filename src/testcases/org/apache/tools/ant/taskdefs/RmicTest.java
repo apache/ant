@@ -43,19 +43,6 @@ public class RmicTest extends TestCase {
     }
 
     /**
-     * test for a compiler class existing
-     * @param compilerClass
-     * @return
-     */
-    private boolean hasCompiler(String compilerClass) {
-        try {
-            Class.forName(compilerClass);
-            return true;
-        } catch (ClassNotFoundException cnfe) {
-            return false;
-        }
-    }
-    /**
      * Test nested compiler args.
      */
     public void testCompilerArg() {

@@ -24,7 +24,6 @@ import java.text.RuleBasedCollator;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
@@ -1016,17 +1015,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         }
         public void fireTaskFinished() {
             super.fireTaskFinished(task, null);
-        }
-        private void fireMessageLoggedEvent(BuildEvent event, String message, int priority) {
-        }
-        private void fireMessageLoggedProject(String message) {
-            super.fireMessageLogged(this, message, Project.MSG_INFO);
-        }
-        private void fireMessageLoggedTarget(String message) {
-            super.fireMessageLogged(target, message, Project.MSG_INFO);
-        }
-        private void fireMessageLoggedTask(String message) {
-            super.fireMessageLogged(task, message, Project.MSG_INFO);
         }
     }//class-MockProject
 

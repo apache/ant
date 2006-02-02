@@ -49,17 +49,6 @@ public class DynamicFilterTest extends BuildFileTest {
     //   Helper methods
     // -----------------------------------------------------
 
-
-    private void assertStringContains(String string, String contains) {
-        assertTrue("[" + string + "] does not contain [" + contains +"]",
-                   string.indexOf(contains) > -1);
-    }
-
-    private void assertStringNotContains(String string, String contains) {
-        assertTrue("[" + string + "] does contain [" + contains +"]",
-                   string.indexOf(contains) == -1);
-    }
-
     private String getFileString(String filename)
         throws IOException
     {
@@ -72,13 +61,6 @@ public class DynamicFilterTest extends BuildFileTest {
             FileUtils.close(r);
         }
 
-    }
-
-    private String getFileString(String target, String filename)
-        throws IOException
-    {
-        executeTarget(target);
-        return getFileString(filename);
     }
 
     private void expectFileContains(String name, String contains)
