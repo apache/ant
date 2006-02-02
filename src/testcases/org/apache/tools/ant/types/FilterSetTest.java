@@ -113,6 +113,23 @@ public class FilterSetTest extends BuildFileTest {
         assertEquals(result, fs.replaceTokens(line));
     }
 
+    public void testNonInfiniteRecursiveMultipleOnSingleLine() {
+        FilterSet filters = new FilterSet();
+
+        filters.setBeginToken("<");
+        filters.setEndToken(">");
+
+        filters.addFilter("ul", "<itemizedlist>");
+        filters.addFilter("/ul", "</itemizedList>");
+        filters.addFilter("li", "<listitem>");
+        filters.addFilter("/li", "</listitem>");
+
+        String result = "<itemizedlist><listitem>Item 1</listitem> <listitem>Item 2</listitem></itemizedList>";
+        String line = "<ul><li>Item 1</li> <li>Item 2</li></ul>";
+
+        assertEquals(result, filters.replaceTokens(line));
+    }
+    
     public void testNestedFilterSets() {
         executeTarget("test-nested-filtersets");
 

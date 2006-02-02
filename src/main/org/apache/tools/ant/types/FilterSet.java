@@ -179,6 +179,8 @@ public class FilterSet extends DataType implements Cloneable {
     private OnMissing onMissingFiltersFile = OnMissing.FAIL;
     private boolean readingFiles = false;
 
+    private int recurseDepth = 0;
+
     /**
      * List of ordered filters and filter files.
      */
@@ -383,7 +385,6 @@ public class FilterSet extends DataType implements Cloneable {
      * @return      The input string after token replacement.
      */
     public synchronized String replaceTokens(String line) {
-        passedTokens = null; // reset for new line
         return iReplaceTokens(line);
     }
 
@@ -506,7 +507,7 @@ public class FilterSet extends DataType implements Cloneable {
                 String token = null;
                 String value = null;
 
-                do {
+                while (index > -1) {
                     //can't have zero-length token
                     int endIndex = line.indexOf(endToken,
                         index + beginToken.length() + 1);
@@ -532,7 +533,8 @@ public class FilterSet extends DataType implements Cloneable {
                         b.append(beginToken);
                         i = index + beginToken.length();
                     }
-                } while ((index = line.indexOf(beginToken, i)) > -1);
+                    index = line.indexOf(beginToken, i);
+                }
 
                 b.append(line.substring(i));
                 return b.toString();
@@ -555,9 +557,10 @@ public class FilterSet extends DataType implements Cloneable {
         throws BuildException {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
-        if (passedTokens == null) {
+        if (recurseDepth == 0) {
             passedTokens = new Vector();
         }
+        recurseDepth++;
         if (passedTokens.contains(parent) && !duplicateToken) {
             duplicateToken = true;
             System.out.println(
@@ -565,6 +568,7 @@ public class FilterSet extends DataType implements Cloneable {
                 + passedTokens.toString() + "\nProblem token : " + beginToken
                 + parent + endToken + " called from " + beginToken
                 + passedTokens.lastElement().toString() + endToken);
+            recurseDepth--;
             return parent;
         }
         passedTokens.addElement(parent);
@@ -582,6 +586,7 @@ public class FilterSet extends DataType implements Cloneable {
                 }
             }
         }
+        recurseDepth--;
         return value;
     }
 
