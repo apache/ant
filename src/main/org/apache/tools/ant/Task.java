@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -333,18 +333,6 @@ public abstract class Task extends ProjectComponent {
      */
     public void log(String msg) {
         log(msg, Project.MSG_INFO);
-    }
-
-    /**
-     * Logs a message with the given priority. This delegates
-     * the actual logging to the project.
-     *
-     * @param msg The message to be logged. Should not be <code>null</code>.
-     * @param msgLevel The message priority at which this message is to
-     *                 be logged.
-     */
-    public void log(String msg, int msgLevel) {
-        getProject().log(this, msg, msgLevel);
     }
 
     /**

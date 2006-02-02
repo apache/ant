@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -75,8 +75,8 @@ public abstract class ProjectComponent {
      *                 to be logged.
      */
     public void log(String msg, int msgLevel) {
-        if (project != null) {
-            project.log(msg, msgLevel);
+        if (getProject() != null) {
+            getProject().log(msg, msgLevel);
         } else {
             // 'reasonable' default, if the component is used without
             // a Project ( for example as a standalone Bean ).

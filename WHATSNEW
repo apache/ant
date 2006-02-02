@@ -4,6 +4,9 @@ Changes from current Ant 1.6.5 version to current RCS version
 Changes that could break older environments:
 --------------------------------------------
 
+* Task will now log correctly even if no project is set. 
+  Bugzilla report 38458.
+
 * Use alternative names for the command line arguments in javac. Bugzilla
   Report 37546.
 
