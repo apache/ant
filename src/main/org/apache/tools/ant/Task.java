@@ -336,6 +336,22 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
+     * Logs a message with the given priority. This delegates
+     * the actual logging to the project.
+     *
+     * @param msg The message to be logged. Should not be <code>null</code>.
+     * @param msgLevel The message priority at which this message is to
+     *                 be logged.
+     */
+    public void log(String msg, int msgLevel) {
+        if (getProject() != null) {
+            getProject().log(this, msg, msgLevel);
+        } else {
+            super.log(msg, msgLevel);
+        }
+    }
+
+    /**
      * Performs this task if it's still valid, or gets a replacement
      * version and performs that otherwise.
      *
