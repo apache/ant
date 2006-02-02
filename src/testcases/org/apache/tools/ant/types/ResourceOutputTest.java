@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation
+ * Copyright 2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,20 +19,17 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.UnknownServiceException;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Zip;
-import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.ImmutableResourceException;
+import org.apache.tools.ant.types.resources.PropertyResource;
+import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.types.resources.ZipResource;
-import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.types.resources.StringResource;
-import org.apache.tools.ant.types.resources.PropertyResource;
-import org.apache.tools.ant.types.resources.ImmutableResourceException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
 

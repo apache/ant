@@ -1,5 +1,5 @@
 /*
- * Copyright  2001,2003-2004 The Apache Software Foundation
+ * Copyright  2001,2003-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.Hashtable;
-import java.io.File;
 
 import junit.framework.TestCase;
-import org.apache.tools.ant.types.Path;
+
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Minimal testing for the classpath loader..

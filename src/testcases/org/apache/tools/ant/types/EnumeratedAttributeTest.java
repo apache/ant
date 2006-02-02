@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2001,2004 The Apache Software Foundation
+ * Copyright  2000-2001,2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-
 import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.EnumeratedAttribute.

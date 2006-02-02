@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation
+ * Copyright 2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@
 
 package org.apache.tools.zip;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Calendar;
 import java.util.Date;
+
+import junit.framework.TestCase;
 
 public class ZipOutputStreamTest extends TestCase {
     

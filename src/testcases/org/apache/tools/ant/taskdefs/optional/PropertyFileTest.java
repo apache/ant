@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
-
-import java.util.Properties;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
+
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  *  JUnit testcase that excercises the optional PropertyFile task in ant.

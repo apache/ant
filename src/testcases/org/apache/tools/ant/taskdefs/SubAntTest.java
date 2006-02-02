@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import junit.framework.AssertionFailedError;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.input.InputHandler;
-import org.apache.tools.ant.types.Path;
 
 /**
  */

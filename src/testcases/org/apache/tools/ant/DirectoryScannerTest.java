@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,12 +18,9 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
-import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;

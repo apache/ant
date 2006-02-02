@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002, 2004-2005 The Apache Software Foundation
+ * Copyright  2001-2002, 2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,12 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildFileTest;
-
-import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Hashtable;
+
+import org.apache.tools.ant.BuildFileTest;
 
 /**
  * FilterSet testing

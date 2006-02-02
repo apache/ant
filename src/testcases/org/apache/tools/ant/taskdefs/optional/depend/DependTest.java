@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,17 +17,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Hashtable;
+
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * Testcase for the Depend optional task.

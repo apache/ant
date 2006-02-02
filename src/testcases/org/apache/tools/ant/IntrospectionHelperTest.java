@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2001,2003-2004 The Apache Software Foundation
+ * Copyright  2000-2001,2003-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import junit.framework.AssertionFailedError;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;

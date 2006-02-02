@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.zip.UnixStat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import java.util.Enumeration;
+
+import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.zip.UnixStat;
 
 /**
  */

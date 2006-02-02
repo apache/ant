@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import junit.framework.TestCase;
-import org.apache.tools.ant.util.JavaEnvUtils;
+
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
 

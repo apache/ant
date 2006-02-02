@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,24 +17,19 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.JAXPUtils;
-
-import junit.framework.TestCase;
-
 import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.TransformerException;
+
+import junit.framework.TestCase;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JAXPUtils;
+import org.xml.sax.InputSource;
 
 /**
  * JUnit testcases for org.apache.tools.ant.types.XMLCatalog
