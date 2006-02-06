@@ -211,6 +211,35 @@
         </table>
       </subsection>
 
+      <subsection name="AntDoclet">
+
+        <p>AntDoclet is a tool to automatically generate documentation out of
+        your Ant Tasks' source code.</p>
+
+        <p>It is implemented as a Javadoc doclet, and generates reference
+        documentation and other deliverables from the source code of your
+        custom Ant Tasks/Types.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6+ (not tested on earlier versions)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antdoclet.neuroning.com/">http://antdoclet.neuroning.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://neuroning.com/">Fernando Dobladez</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Anteater">
 
         <p>Anteater is a set of Ant tasks for the functional testing of websites
