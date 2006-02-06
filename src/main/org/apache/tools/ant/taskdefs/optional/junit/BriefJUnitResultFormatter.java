@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,13 +17,16 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
+
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Prints plain text output of the test to a specified Writer.
@@ -109,10 +112,9 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         if (output == null) {
             return; // Quick return - no output do nothing.
         }
-        String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Testsuite: ");
         sb.append(suite.getName());
-        sb.append(newLine);
+        sb.append(StringUtils.LINE_SEP);
         output.write(sb.toString());
         output.flush();
     }
@@ -122,7 +124,6 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      * @param suite the test suite
      */
     public void endTestSuite(JUnitTest suite) {
-        String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
@@ -132,24 +133,24 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Time elapsed: ");
         sb.append(numberFormat.format(suite.getRunTime() / 1000.0));
         sb.append(" sec");
-        sb.append(newLine);
-        sb.append(newLine);
+        sb.append(StringUtils.LINE_SEP);
+        sb.append(StringUtils.LINE_SEP);
 
         // append the err and output streams to the log
         if (systemOutput != null && systemOutput.length() > 0) {
             sb.append("------------- Standard Output ---------------")
-                    .append(newLine)
+                    .append(StringUtils.LINE_SEP)
                     .append(systemOutput)
                     .append("------------- ---------------- ---------------")
-                    .append(newLine);
+                    .append(StringUtils.LINE_SEP);
         }
 
         if (systemError != null && systemError.length() > 0) {
             sb.append("------------- Standard Error -----------------")
-                    .append(newLine)
+                    .append(StringUtils.LINE_SEP)
                     .append(systemError)
                     .append("------------- ---------------- ---------------")
-                    .append(newLine);
+                    .append(StringUtils.LINE_SEP);
         }
 
         if (output != null) {
@@ -160,11 +161,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
                 output.flush();
             } finally {
                 if (out != System.out && out != System.err) {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
+                    FileUtils.close(out);
                 }
             }
         }
