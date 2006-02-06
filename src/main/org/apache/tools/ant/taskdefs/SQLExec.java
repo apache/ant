@@ -90,8 +90,6 @@ public class SQLExec extends JDBCTask {
         }
     }
 
-
-
     private int goodSql = 0;
 
     private int totalSql = 0;
@@ -147,6 +145,11 @@ public class SQLExec extends JDBCTask {
      */
     private boolean showheaders = true;
 
+    /**
+     * Print SQL stats (rows affected)
+     */
+    private boolean showtrailers = true;
+    
     /**
      * Results Output file.
      */
@@ -311,6 +314,16 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Print trailing info (rows affected) for the SQL
+     * Addresses Bug/Request #27446
+     * @param showtrailers if true prints the SQL rows affected
+     * @since Ant 1.7
+     */
+    public void setShowtrailers(boolean showtrailers) {
+        this.showtrailers = showtrailers;
+    }
+    
+    /**
      * Set the output file;
      * optional, defaults to the Ant log.
      * @param output the output file to use for logging messages.
@@ -433,22 +446,10 @@ public class SQLExec extends JDBCTask {
                     }
                 }
             } catch (IOException e) {
-                if (!isAutocommit() && conn != null && onError.equals("abort")) {
-                    try {
-                        conn.rollback();
-                    } catch (SQLException ex) {
-                        // ignore
-                    }
-                }
+                closeQuietly();
                 throw new BuildException(e, getLocation());
             } catch (SQLException e) {
-                if (!isAutocommit() && conn != null && onError.equals("abort")) {
-                    try {
-                        conn.rollback();
-                    } catch (SQLException ex) {
-                        // ignore
-                    }
-                }
+                closeQuietly();
                 throw new BuildException(e, getLocation());
             } finally {
                 try {
@@ -580,10 +581,8 @@ public class SQLExec extends JDBCTask {
             log(updateCountTotal + " rows affected",
                 Project.MSG_VERBOSE);
 
-            if (print) {
-                StringBuffer line = new StringBuffer();
-                line.append(updateCountTotal + " rows affected");
-                out.println(line);
+            if (print && showtrailers) {
+                out.println(updateCountTotal + " rows affected");
             }
 
             SQLWarning warning = conn.getWarnings();
@@ -669,6 +668,21 @@ public class SQLExec extends JDBCTask {
         out.println();
     }
 
+    /*
+     * Closes an unused connection after an error and doesn't rethrow 
+     * a possible SQLException
+     * @since Ant 1.7
+     */
+    private void closeQuietly() {
+        if (!isAutocommit() && conn != null && onError.equals("abort")) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+    }
+    
     /**
      * The action a task should perform on an error,
      * one of "continue", "stop" and "abort"
@@ -767,5 +781,4 @@ public class SQLExec extends JDBCTask {
             }
         }
     }
-
 }
