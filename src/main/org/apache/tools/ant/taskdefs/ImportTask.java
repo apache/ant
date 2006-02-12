@@ -93,6 +93,12 @@ public class ImportTask extends Task {
         ProjectHelper helper =
                 (ProjectHelper) getProject().
                     getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+        
+        if (helper == null) {
+            // this happens if the projecthelper was not registered with the project.
+            throw new BuildException("import requires support in ProjectHelper");
+        }
+        
         Vector importStack = helper.getImportStack();
 
         if (importStack.size() == 0) {
