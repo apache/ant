@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation
+ * Copyright 2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.w3c.dom.Element;
  * <li>Currently no XMLNS support</li>
  * <li>Processing Instructions get ignored</li>
  * <li>Encoding is always UTF-8</li>
+ * </ol>
  *
  * @since Ant 1.7
  */
