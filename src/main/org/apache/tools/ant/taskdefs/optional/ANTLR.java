@@ -407,11 +407,7 @@ public class ANTLR extends Task {
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
         } finally {
-            try {
-                bos.close();
-            } catch (IOException e) {
-                // ignore
-            }
+            FileUtils.close(bos);
         }
     }
 
