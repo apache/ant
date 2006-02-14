@@ -199,8 +199,7 @@ details:</p>
 
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;ant antfile=&quot;subproject/subbuild.xml&quot;
-     dir=&quot;subproject&quot; target=&quot;compile&quot;/&gt;
+&lt;ant antfile=&quot;subproject/subbuild.xml&quot; target=&quot;compile&quot;/&gt;
 
 &lt;ant dir=&quot;subproject&quot;/&gt;
 
@@ -213,6 +212,14 @@ details:</p>
   &lt;property name=&quot;output.type&quot; value=&quot;html&quot;/&gt;
 &lt;/ant&gt;
 </pre></blockquote>
+
+<p>These lines invoke the same build file:</p>
+<blockquote><pre>
+&lt;ant antfile=&quot;sub1/sub2/build.xml&quot; /&gt;
+&lt;ant antfile=&quot;sub2/build.xml&quot; dir=&quot;sub1&quot; /&gt;
+&lt;ant antfile=&quot;build.xml&quot; dir=&quot;sub1/sub2&quot; /&gt;
+</pre></blockquote>
+
 <p>The build file of the calling project defines some
 <code>&lt;path&gt;</code> elements like this:</p>
 
@@ -269,7 +276,7 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 new project using the id <code>path2</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
