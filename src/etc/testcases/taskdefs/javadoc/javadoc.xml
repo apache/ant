@@ -75,12 +75,12 @@
   </target>
 
   <path id="path.pathelement.path">
-    <pathelement path="java/" />
+    <pathelement path="${root}/src" />
   </path>
 
   <target name="pathelementPath">
     <javadoc sourcepathref="path.pathelement.path"
-      packagenames="*" destdir="javadoc" />
+      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="javadoc" />
   </target>
 
   <path id="path.pathelement.location">
