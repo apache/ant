@@ -16,7 +16,7 @@
 -->
 <project name="javadoc" basedir=".">
   <path id="path.dirset">
-    <dirset dir="java/" />
+    <dirset dir="." />
   </path>
 
   <target name="dirsetPath">
