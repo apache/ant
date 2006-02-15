@@ -2136,12 +2136,20 @@ public class Javadoc extends Task {
                     });
 
                 if (files.length > 0) {
+                    if ("".equals(dirs[i])) {
+                        log(baseDir
+                            + " contains source files in the default package,"
+                            + " you must specify them as source files"
+                            + " not packages.",
+                            Project.MSG_WARN);
+                    } else {
                     containsPackages = true;
                     String packageName =
                         dirs[i].replace(File.separatorChar, '.');
                     if (!addedPackages.contains(packageName)) {
                         addedPackages.addElement(packageName);
                         pn.addElement(packageName);
+                    }
                     }
                 }
             }
