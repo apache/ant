@@ -2143,13 +2143,13 @@ public class Javadoc extends Task {
                             + " not packages.",
                             Project.MSG_WARN);
                     } else {
-                    containsPackages = true;
-                    String packageName =
-                        dirs[i].replace(File.separatorChar, '.');
-                    if (!addedPackages.contains(packageName)) {
-                        addedPackages.addElement(packageName);
-                        pn.addElement(packageName);
-                    }
+                        containsPackages = true;
+                        String packageName =
+                            dirs[i].replace(File.separatorChar, '.');
+                        if (!addedPackages.contains(packageName)) {
+                            addedPackages.addElement(packageName);
+                            pn.addElement(packageName);
+                        }
                     }
                 }
             }
