@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 
 /**
  * Creates a given directory.
@@ -62,6 +63,8 @@ public class Mkdir extends Task {
                 throw new BuildException(msg, getLocation());
             }
             log("Created dir: " + dir.getAbsolutePath());
+        } else {
+            log("Skipping " + dir.getAbsolutePath() + " because it already exists.", Project.MSG_VERBOSE);
         }
     }
 
