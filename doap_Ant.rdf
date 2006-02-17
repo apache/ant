@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl"?>
+<rdf:RDF xml:lang="en"
+         xmlns="http://usefulinc.com/ns/doap#" 
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:asfext="http:projects.apache.org/ns/asfext#">
+  <Project rdf:about="http://httpd.apache.org/">
+    <created>2006-02-17</created>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
+    <name>Apache Ant</name>
+    <homepage rdf:resource="http://ant.apache.org" />
+    <asfext:pmc rdf:resource="http://ant.apache.org" />
+    <shortdesc>Java-based build tool</shortdesc>
+    <description>Apache Ant is a Java-based build tool. In theory, it is kind of like Make, but without Make's wrinkles.</description>
+    <bug-database rdf:resource="http://issues.apache.org/bugzilla/buglist.cgi?product=Ant" />
+    <mailing-list rdf:resource="http://ant.apache.org/mail.html" />
+    <download-page rdf:resource="http://ant.apache.org/bindownload.cgi" />
+    <programming-language>Java</programming-language>
+    <category rdf:resource="http://projects.apache.org/category/build-management" />
+    <release>
+      <Version>
+        <name>Apache Ant 1.6.5</name>
+        <created>2005-06-02</created>
+        <revision>1.6.5</revision>
+      </Version>
+    </release>
+    <repository>
+      <SVNRepository>
+        <location rdf:resource="http://svn.apache.org/repos/asf/ant"/>
+        <browse rdf:resource="http://svn.apache.org/viewcvs.cgi/ant"/>
+      </SVNRepository>
+    </repository>
+  </Project>
+</rdf:RDF>
