@@ -1,5 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl"?>
+<!--
+  =======================================================================
+
+   Copyright (c) 2006 The Apache Software Foundation.  All rights
+   reserved.
+
+  =======================================================================
+-->
 <rdf:RDF xml:lang="en"
          xmlns="http://usefulinc.com/ns/doap#" 
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
