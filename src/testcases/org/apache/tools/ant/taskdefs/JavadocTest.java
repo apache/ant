@@ -41,7 +41,7 @@ public class JavadocTest extends BuildFileTest {
     }
 
     // PR 38370
-    public void testDirsetPathWithoutPackagenames() throws Exception {
+    public void XtestDirsetPathWithoutPackagenames() throws Exception {
         try {
             executeTarget("dirsetPathWithoutPackagenames");
         } catch (BuildException e) {
