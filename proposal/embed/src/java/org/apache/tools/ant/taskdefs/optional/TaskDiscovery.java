@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002, 2006 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -124,11 +124,11 @@ public class TaskDiscovery extends Task implements ProjectComponentFactory
         disc.addClassLoader( JDKHooks.getJDKHooks().getThreadContextClassLoader() );
         disc.addClassLoader( this.getClass().getClassLoader() );
         
-        ResourceIterator enum = disc.findResources(RESOURCE_NAME);
+        ResourceIterator ri = disc.findResources(RESOURCE_NAME);
         
         Vector vector = new Vector();
-        while (enum.hasNext()) {
-            Resource resourceInfo = enum.nextResource();
+        while (ri.hasNext()) {
+            Resource resourceInfo = ri.nextResource();
             vector.add(resourceInfo);
             System.out.println("Found " + resourceInfo);
 
