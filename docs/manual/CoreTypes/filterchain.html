@@ -1350,11 +1350,13 @@ copying text files:
     <pre>
 &lt;copy todir="dist"&gt;
   &lt;fileset dir="src" includes="**/*.txt"/&gt;
-  &lt;scriptfilter language="beanshell"&gt;
-      if (self.getToken().indexOf("bad") != -1) {
-          self.setToken(null);
-      }
-  &lt;/scriptfilter&gt;
+  &lt;filterchain&gt;
+    &lt;scriptfilter language="beanshell"&gt;
+        if (self.getToken().indexOf("bad") != -1) {
+            self.setToken(null);
+        }
+    &lt;/scriptfilter&gt;
+  &lt;/filterchain&gt;
 &lt;/copy&gt;
     </pre>
   </blockquote>
