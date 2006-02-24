@@ -124,7 +124,7 @@ public class JUnitReportTest extends BuildFileTest {
     }
     public void testSpecialSignsInHtmlPath() throws Exception {
         executeTarget("testSpecialSignsInHtmlPath");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html# $%§&-!report/index.html");
+        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html# $%\u00A7&-!report/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
