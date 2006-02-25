@@ -85,6 +85,9 @@ public class AssertionsTest extends BuildFileTest {
     }
 
     public void testNofork() {
+        if (AssertionsTest.class.desiredAssertionStatus()) {
+            return; // ran Ant tests with -ea and this would fail spuriously
+        }
         expectLogContaining("test-nofork",
                 "Assertion statements are currently ignored in non-forked mode");
     }
