@@ -496,10 +496,14 @@ public class ComponentHelper  {
         if (c == null || !(Task.class.isAssignableFrom(c))) {
             return null;
         }
-        Task task = (Task) createComponent(taskType);
-        if (task == null) {
+        Object _task = createComponent(taskType);
+        if (_task == null) {
             return null;
         }
+        if (!(_task instanceof Task)) {
+            throw new BuildException("Expected a Task from '" + taskType + "' but got an instance of " + _task.getClass().getName() + " instead");
+        }
+        Task task = (Task) _task;
         task.setTaskType(taskType);
 
         // set default value, can be changed by the user
