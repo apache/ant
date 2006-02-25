@@ -203,6 +203,8 @@ public class Java extends Task {
                 log(e);
                 return 0;
             }
+        } catch (ThreadDeath t) {
+            throw t; // cf. NB #47191
         } catch (Throwable t) {
             if (failOnError) {
                 throw new BuildException(t, getLocation());
