@@ -19,12 +19,12 @@ Library Dependencies</a> for more information.
 </p>
 <p>
 <strong>Note</strong>:
-You must have <code>junit.jar</code> and the class files for the
-<code>&lt;junit&gt;</code> task in the same classpath.
+You must have <code>junit.jar</code> available.
 You can do one of:
+</p>
 <ol>
 <li>
-Put both <code>junit.jar</code> and the optional tasks jar file in
+Put both <code>junit.jar</code> and <code>ant-junit.jar</code> in
 <code>ANT_HOME/lib</code>.
 </li>
 <li>
@@ -32,14 +32,22 @@ Do not put either in <code>ANT_HOME/lib</code>, and instead
 include their locations in your <code>CLASSPATH</code> environment variable.
 </li>
 <li>
-Do neither of the above, and instead, specify their locations using
-a <code>&lt;classpath&gt;</code> element in the build file.
-
+Add both JARs to your classpath using <code>-lib</code>.
+</li>
+<li>
+Specify the locations of both JARs using
+a <code>&lt;classpath&gt;</code> element in a <code>&lt;taskdef&gt;</code> in the build file.
+</li>
+<li>
+Leave <code>ant-junit.jar</code> in its default location in <code>ANT_HOME/lib</code>
+but include <code>junit.jar</code> in the <code>&lt;classpath&gt;</code> passed
+to <code>&lt;junit&gt;</code>. <em>(since Ant 1.7)</em>
+</li>
+</ol>
+<p>
 See <a href="../../faq.html#delegating-classloader" target="_top">the
 FAQ</a> for details.
-</ol>
 </p>
-
 
 <p>Tests are defined by nested <code>test</code> or
 <code>batchtest</code> tags (see <a href="#nested">nested
@@ -216,6 +224,9 @@ that begin with the following string patterns:<pre>
 supports a nested <code>&lt;classpath&gt;</code>
 element that represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
+
+<p>As of Ant 1.7, this classpath may be used to refer to <code>junit.jar</code>
+as well as your tests and the tested code.
 
 <h4>jvmarg</h4>
 
@@ -580,7 +591,7 @@ aborted. Results are collected in files named
 <code>${reports.tests}</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

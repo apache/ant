@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,31 +62,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
  * @since Ant 1.2
  */
 
-public class JUnitTestRunner implements TestListener {
-
-    /**
-     * No problems with this test.
-     */
-    public static final int SUCCESS = 0;
-
-    /**
-     * Some tests failed.
-     */
-    public static final int FAILURES = 1;
-
-    /**
-     * An error occurred.
-     */
-    public static final int ERRORS = 2;
-
-    /**
-     * Used in formatter arguments as a placeholder for the basename
-     * of the output file (which gets replaced by a test specific
-     * output file name later).
-     *
-     * @since Ant 1.6.3
-     */
-    public static final String IGNORED_FILE_NAME = "IGNORETHIS";
+public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestRunnerMirror {
 
     /**
      * Holds the registered formatters.
@@ -441,7 +417,7 @@ public class JUnitTestRunner implements TestListener {
         perm = permissions;
     }
 
-    protected void handleOutput(String output) {
+    public void handleOutput(String output) {
         if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX))
             ; // ignore
         else if (systemOut != null) {
@@ -454,24 +430,24 @@ public class JUnitTestRunner implements TestListener {
      *
      * @since Ant 1.6
      */
-    protected int handleInput(byte[] buffer, int offset, int length)
+    public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         return -1;
     }
 
-    protected void handleErrorOutput(String output) {
+    public void handleErrorOutput(String output) {
         if (systemError != null) {
             systemError.print(output);
         }
     }
 
-    protected void handleFlush(String output) {
+    public void handleFlush(String output) {
         if (systemOut != null) {
             systemOut.print(output);
         }
     }
 
-    protected void handleErrorFlush(String output) {
+    public void handleErrorFlush(String output) {
         if (systemError != null) {
             systemError.print(output);
         }
@@ -503,6 +479,10 @@ public class JUnitTestRunner implements TestListener {
 
     public void addFormatter(JUnitResultFormatter f) {
         formatters.addElement(f);
+    }
+
+    public void addFormatter(JUnitTaskMirror.JUnitResultFormatterMirror f) {
+        formatters.addElement((JUnitResultFormatter) f);
     }
 
     /**
@@ -645,7 +625,7 @@ public class JUnitTestRunner implements TestListener {
                              test.getOutfile() + fe.getExtension());
                 fe.setOutfile(destFile);
             }
-            runner.addFormatter(fe.createFormatter());
+            runner.addFormatter((JUnitResultFormatter) fe.createFormatter());
         }
     }
 

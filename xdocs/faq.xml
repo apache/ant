@@ -1386,6 +1386,10 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <code>org.apache.tools.ant.taskdefs.XSLTLiaison</code>
         class.</p>
 
+        <p><em>As of Ant 1.7</em> <code>&lt;junit&gt;</code> no longer
+        requires you to have <code>junit.jar</code> in Ant's startup
+        classpath even if <code>ant-junit.jar</code> is present there.</p>
+
         <p>Ant&apos;s class loader implementation uses Java&apos;s
         delegation model, see <a
         href="http://java.sun.com/products/jdk/1.2/docs/api/java/lang/ClassLoader.html">http://java.sun.com/products/jdk/1.2/docs/api/java/lang/ClassLoader.html</a>

@@ -1,4 +1,4 @@
-Changes from current Ant 1.6.5 version to current RCS version
+Changes from current Ant 1.6.5 version to current SVN version
 =============================================================
 
 Changes that could break older environments:
@@ -76,6 +76,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+* <junit> can now work with junit.jar in its <classpath>. Bugzilla Report 38799.
 
 * Some potential NullPointerExceptions, Bugzilla Reports 37765 and 38056
 
