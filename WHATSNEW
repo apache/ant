@@ -77,6 +77,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* <junit> now supports JUnit 4. Bugzilla Report 38811.
+
 * <junit> can now work with junit.jar in its <classpath>. Bugzilla Report 38799.
 
 * Some potential NullPointerExceptions, Bugzilla Reports 37765 and 38056

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,8 +51,21 @@ public class JUnitVersionHelper {
      * <p>since Ant 1.5.1 this method will invoke &quot;<code>public
      * String getName()</code>&quot; on any implementation of Test if
      * it exists.</p>
+     *
+     * <p>Since Ant 1.7 also checks for JUnit4TestCaseFacade explicitly.
+     * This is used by junit.framework.JUnit4TestAdapter.</p>
      */
     public static String getTestCaseName(Test t) {
+        if (t != null && t.getClass().getName().equals("junit.framework.JUnit4TestCaseFacade")) {
+            // Self-describing as of JUnit 4 (#38811). But trim "(ClassName)".
+            String name = t.toString();
+            if (name.endsWith(")")) {
+                int paren = name.lastIndexOf('(');
+                return name.substring(0, paren);
+            } else {
+                return name;
+            }
+        }
         if (t instanceof TestCase && testCaseName != null) {
             try {
                 return (String) testCaseName.invoke(t, new Object[0]);

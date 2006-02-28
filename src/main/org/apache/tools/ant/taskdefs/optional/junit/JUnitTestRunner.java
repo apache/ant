@@ -35,6 +35,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
+import junit.framework.TestFailure;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
@@ -99,7 +100,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 "junit.textui.TestRunner",
                 "java.lang.reflect.Method.invoke(",
                 "sun.reflect.",
-                "org.apache.tools.ant."
+                "org.apache.tools.ant.",
+                // JUnit 4 support:
+                "org.junit.",
+                "junit.framework.JUnit4TestAdapter",
+                // See wrapListener for reason:
+                "Caused by: java.lang.AssertionError",
+                " more",
         };
 
 
@@ -140,6 +147,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     
     /** Do we print TestListener events? */
     private boolean logTestListenerEvents = false;
+
+    /** Turned on if we are using JUnit 4 for this test suite. see #38811 */
+    private boolean junit4;
 
     /**
      * Constructor for fork=true or when the user hasn't specified a
@@ -212,9 +222,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     
     public void run() {
         res = new TestResult();
-        res.addListener(this);
+        res.addListener(wrapListener(this));
         for (int i = 0; i < formatters.size(); i++) {
-            res.addListener((TestListener) formatters.elementAt(i));
+            res.addListener(wrapListener((TestListener) formatters.elementAt(i)));
         }
 
         ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
@@ -255,6 +265,19 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         try {
 
             try {
+                Class junit4TestAdapterClass = null;
+                // Note that checking for JDK 5 directly won't work; under JDK 4, this will already have failed.
+                try {
+                    if (loader == null) {
+                        junit4TestAdapterClass = Class.forName("junit.framework.JUnit4TestAdapter");
+                    } else {
+                        junit4TestAdapterClass = Class.forName("junit.framework.JUnit4TestAdapter", true, loader);
+                    }
+                } catch (ClassNotFoundException e) {
+                    // OK, fall back to JUnit 3.
+                }
+                junit4 = junit4TestAdapterClass != null;
+
                 Class testClass = null;
                 if (loader == null) {
                     testClass = Class.forName(junitTest.getName());
@@ -263,24 +286,33 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                               loader);
                 }
 
-                Method suiteMethod = null;
-                try {
-                    // check if there is a suite method
-                    suiteMethod = testClass.getMethod("suite", new Class[0]);
-                } catch (NoSuchMethodException e) {
-                    // no appropriate suite method found. We don't report any
-                    // error here since it might be perfectly normal.
-                }
-                if (suiteMethod != null) {
-                    // if there is a suite method available, then try
-                    // to extract the suite from it. If there is an error
-                    // here it will be caught below and reported.
-                    suite = (Test) suiteMethod.invoke(null, new Class[0]);
+                if (junit4) {
+                    // Let's use it!
+                    suite = (Test) junit4TestAdapterClass.getConstructor(new Class[] {Class.class}).
+                            newInstance(new Object[] {testClass});
                 } else {
-                    // try to extract a test suite automatically this
-                    // will generate warnings if the class is no
-                    // suitable Test
-                    suite = new TestSuite(testClass);
+                    // Use JUnit 3.
+
+                    Method suiteMethod = null;
+                    try {
+                        // check if there is a suite method
+                        suiteMethod = testClass.getMethod("suite", new Class[0]);
+                    } catch (NoSuchMethodException e) {
+                        // no appropriate suite method found. We don't report any
+                        // error here since it might be perfectly normal.
+                    }
+                    if (suiteMethod != null) {
+                        // if there is a suite method available, then try
+                        // to extract the suite from it. If there is an error
+                        // here it will be caught below and reported.
+                        suite = (Test) suiteMethod.invoke(null, new Class[0]);
+                    } else {
+                        // try to extract a test suite automatically this
+                        // will generate warnings if the class is no
+                        // suitable Test
+                        suite = new TestSuite(testClass);
+                    }
+
                 }
 
             } catch (Throwable e) {
@@ -303,8 +335,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     logTestListenerEvent("tests to run: " + suite.countTestCases());
                     suite.run(res);
                 } finally {
-                    junitTest.setCounts(res.runCount(), res.failureCount(),
-                                        res.errorCount());
+                    if (junit4) {
+                        int[] cnts = findJUnit4FailureErrorCount(res);
+                        junitTest.setCounts(res.runCount(), cnts[0], cnts[1]);
+                    } else {
+                        junitTest.setCounts(res.runCount(), res.failureCount(),
+                                res.errorCount());
+                    }
                     junitTest.setRunTime(System.currentTimeMillis() - start);
                 }
             }
@@ -692,7 +729,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     private static boolean filterLine(String line) {
         for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
-            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) > 0) {
+            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) != -1) {
                 return true;
             }
         }
@@ -733,4 +770,83 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
         }
     }
+
+    /**
+     * Modifies a TestListener when running JUnit 4:
+     * treats AssertionFailedError as a failure not an error.
+     * @since Ant 1.7
+     */
+    private TestListener wrapListener(final TestListener testListener) {
+        return new TestListener() {
+            public void addError(Test test, Throwable t) {
+                if (junit4 && t instanceof AssertionFailedError) {
+                    // JUnit 4 does not distinguish between errors and failures even in the JUnit 3 adapter.
+                    // So we need to help it a bit to retain compatibility for JUnit 3 tests.
+                    testListener.addFailure(test, (AssertionFailedError) t);
+                } else if (junit4 && t.getClass().getName().equals("java.lang.AssertionError")) {
+                    // Not strictly necessary but probably desirable.
+                    // JUnit 4-specific test GUIs will show just "failures".
+                    // But Ant's output shows "failures" vs. "errors".
+                    // We would prefer to show "failure" for things that logically are.
+                    try {
+                        String msg = t.getMessage();
+                        AssertionFailedError failure = msg != null ?
+                            new AssertionFailedError(msg) : new AssertionFailedError();
+                        // To compile on pre-JDK 4 (even though this should always succeed):
+                        Method initCause = Throwable.class.getMethod("initCause", new Class[] {Throwable.class});
+                        initCause.invoke(failure, new Object[] {t});
+                        testListener.addFailure(test, failure);
+                    } catch (Exception e) {
+                        // Rats.
+                        e.printStackTrace(); // should not happen
+                        testListener.addError(test, t);
+                    }
+                } else {
+                    testListener.addError(test, t);
+                }
+            }
+            public void addFailure(Test test, AssertionFailedError t) {
+                testListener.addFailure(test, t);
+            }
+            public void addFailure(Test test, Throwable t) { // pre-3.4
+                if (t instanceof AssertionFailedError) {
+                    testListener.addFailure(test, (AssertionFailedError) t);
+                } else {
+                    testListener.addError(test, t);
+                }
+            }
+            public void endTest(Test test) {
+                testListener.endTest(test);
+            }
+            public void startTest(Test test) {
+                testListener.startTest(test);
+            }
+        };
+    }
+
+    /**
+     * Use instead of TestResult.get{Failure,Error}Count on JUnit 4,
+     * since the adapter claims that all failures are errors.
+     * @since Ant 1.7
+     */
+    private int[] findJUnit4FailureErrorCount(TestResult res) {
+        int failures = 0;
+        int errors = 0;
+        Enumeration e = res.failures();
+        while (e.hasMoreElements()) {
+            e.nextElement();
+            failures++;
+        }
+        e = res.errors();
+        while (e.hasMoreElements()) {
+            Throwable t = ((TestFailure) e.nextElement()).thrownException();
+            if (t instanceof AssertionFailedError || t.getClass().getName().equals("java.lang.AssertionError")) {
+                failures++;
+            } else {
+                errors++;
+            }
+        }
+        return new int[] {failures, errors};
+    }
+
 } // JUnitTestRunner
