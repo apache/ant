@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <!--
-    Copyright  2000-2004 The Apache Software Foundation
+    Copyright  2000-2006 The Apache Software Foundation
    
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@
         </a>
       </td>
       <td style="text-align:right;vertical-align:bottom">
-        <a href="http://jakarta.apache.org/ant">Apache Ant</a>
+        <a href="http://ant.apache.org/">Apache Ant</a>
       </td>
     </tr>
     </table>
@@ -128,7 +128,7 @@
       <tr><td><hr noshade="yes" size="1"/></td></tr>
       <tr><td>
       <div align="center"><font color="#525D76" size="-1"><em>
-      Copyright &#169; 2000-2002, Apache Software Foundation
+      Copyright &#169; 2000-2006, Apache Software Foundation
       </em></font></div>
       </td></tr>
     </table>

@@ -65,19 +65,19 @@
 
     <!-- create the alltests-fails.html at the root -->
     <redirect:write file="{$output.dir}/alltests-fails.html">
-        <xsl:apply-templates select="." mode="all.tests">
-	    <xsl:with-param name="type" select="'fails'"/>
-	</xsl:apply-templates>
+      <xsl:apply-templates select="." mode="all.tests">
+        <xsl:with-param name="type" select="'fails'"/>
+      </xsl:apply-templates>
     </redirect:write>
 
-    <!-- create the alltests-errors.html at the root -->
+  <!-- create the alltests-errors.html at the root -->
     <redirect:write file="{$output.dir}/alltests-errors.html">
-        <xsl:apply-templates select="." mode="all.tests">
-	    <xsl:with-param name="type" select="'errors'"/>
-	</xsl:apply-templates>
+      <xsl:apply-templates select="." mode="all.tests">
+        <xsl:with-param name="type" select="'errors'"/>
+      </xsl:apply-templates>
     </redirect:write>
 
-    <!-- process all packages -->
+  <!-- process all packages -->
     <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
         <xsl:call-template name="package">
             <xsl:with-param name="name" select="@package"/>
@@ -109,35 +109,35 @@
 
     <!-- for each class, creates a @name.html -->
     <!-- @bug there will be a problem with inner classes having the same name, it will be overwritten -->
-    <xsl:for-each select="/testsuites/testsuite[@package = $name]">
-        <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
-            <xsl:apply-templates select="." mode="class.details"/>
-        </redirect:write>
-        <xsl:if test="string-length(./system-out)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-out.txt">
-                <xsl:value-of disable-output-escaping="yes" select="./system-out" />
-            </redirect:write>
-        </xsl:if>
-        <xsl:if test="string-length(./system-err)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-err.txt">
-                <xsl:value-of disable-output-escaping="yes" select="./system-err" />
-            </redirect:write>
-        </xsl:if>
-	<xsl:if test="@failures != 0">
-	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-fails.html">
-		<xsl:apply-templates select="." mode="class.details">
-		    <xsl:with-param name="type" select="'fails'"/>
-		</xsl:apply-templates>
-	    </redirect:write>
-	</xsl:if>
-	<xsl:if test="@errors != 0">
-	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
-		<xsl:apply-templates select="." mode="class.details">
-		    <xsl:with-param name="type" select="'errors'"/>
-		</xsl:apply-templates>
-	    </redirect:write>
-	</xsl:if>
-    </xsl:for-each>
+  <xsl:for-each select="/testsuites/testsuite[@package = $name]">
+    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
+      <xsl:apply-templates select="." mode="class.details"/>
+    </redirect:write>
+    <xsl:if test="string-length(./system-out)!=0">
+      <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-out.txt">
+        <xsl:value-of disable-output-escaping="yes" select="./system-out"/>
+      </redirect:write>
+    </xsl:if>
+    <xsl:if test="string-length(./system-err)!=0">
+      <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-err.txt">
+        <xsl:value-of disable-output-escaping="yes" select="./system-err"/>
+      </redirect:write>
+    </xsl:if>
+    <xsl:if test="@failures != 0">
+      <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-fails.html">
+        <xsl:apply-templates select="." mode="class.details">
+          <xsl:with-param name="type" select="'fails'"/>
+        </xsl:apply-templates>
+      </redirect:write>
+    </xsl:if>
+    <xsl:if test="@errors != 0">
+      <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
+        <xsl:apply-templates select="." mode="class.details">
+          <xsl:with-param name="type" select="'errors'"/>
+        </xsl:apply-templates>
+      </redirect:write>
+    </xsl:if>
+  </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="index.html">
@@ -248,28 +248,30 @@ h6 {
                 test can even not be started at all (failure to load the class)
 		so report the error directly
 		-->
-                <xsl:if test="./error">
-                    <tr class="Error">
-                        <td colspan="4"><xsl:apply-templates select="./error"/></td>
-                    </tr>
-                </xsl:if>
-		<xsl:choose>
-		    <xsl:when test="$type = 'fails'">
-			<xsl:apply-templates select=".//testcase[failure]" mode="print.test">
-			    <xsl:with-param name="show.class" select="'yes'"/>
-			</xsl:apply-templates>
-		    </xsl:when>
-		    <xsl:when test="$type = 'errors'">
-			<xsl:apply-templates select=".//testcase[error]" mode="print.test">
-			    <xsl:with-param name="show.class" select="'yes'"/>
-			</xsl:apply-templates>
-		    </xsl:when>
-		    <xsl:otherwise>
-			<xsl:apply-templates select=".//testcase" mode="print.test">
-			    <xsl:with-param name="show.class" select="'yes'"/>
-			</xsl:apply-templates>
-		    </xsl:otherwise>
-		</xsl:choose>
+              <xsl:if test="./error">
+                <tr class="Error">
+                  <td colspan="4">
+                    <xsl:apply-templates select="./error"/>
+                  </td>
+                </tr>
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="$type = 'fails'">
+                  <xsl:apply-templates select=".//testcase[failure]" mode="print.test">
+                    <xsl:with-param name="show.class" select="'yes'"/>
+                  </xsl:apply-templates>
+                </xsl:when>
+                <xsl:when test="$type = 'errors'">
+                  <xsl:apply-templates select=".//testcase[error]" mode="print.test">
+                    <xsl:with-param name="show.class" select="'yes'"/>
+                  </xsl:apply-templates>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select=".//testcase" mode="print.test">
+                    <xsl:with-param name="show.class" select="'yes'"/>
+                  </xsl:apply-templates>
+                </xsl:otherwise>
+              </xsl:choose>
             </table>
         </body>
     </html>
