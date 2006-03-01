@@ -90,6 +90,8 @@
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
+  <property name="build.tests.xml" location="${build.tests}/xml"/>
+  <property name="build.tests.reports" location="${build.tests}/reports"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
@@ -1589,6 +1591,8 @@
 
 
   <target name="test-init" depends="probe-offline">
+    <mkdir dir="${build.tests.xml}"/>
+    <mkdir dir="${build.tests.reports}" />
 
     <presetdef name="test-junit">
       <junit printsummary="${junit.summary}"
@@ -1596,8 +1600,8 @@
           fork="${junit.fork}"
           failureproperty="tests.failed"
           errorproperty="tests.failed"
-          filtertrace="${junit.filtertrace}">
-        <!--      <jvmarg value="-classic"/> -->
+          filtertrace="${junit.filtertrace}"
+          dir="${build.tests.xml}">
         <sysproperty key="ant.home" value="${ant.home}"/>
         <sysproperty key="build.tests" file="${build.tests}"/>
         <sysproperty key="build.tests.value" value="${build.tests.value}"/>
@@ -1618,16 +1622,16 @@
 <!--if="run.junitreport"-->
   <target name="test-report" depends="test-init,run-tests,run-single-test"
       if="trax.impl.present">
-    <junitreport todir="${build.tests}">
-      <fileset dir="${build.tests}">
+    <junitreport todir="${build.tests.reports}">
+      <fileset dir="${build.tests.xml}">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.tests}"/>
+      <report format="frames" todir="${build.tests.reports}"/>
     </junitreport>
   </target>
 
   <target name="test-halt" depends="test-report" >
-    <fail if="tests.failed">Unit tests failed</fail>
+    <fail if="tests.failed">Unit tests failed see ${build.tests.reports}</fail>
   </target>
 
 
@@ -1642,7 +1646,7 @@
     <test-junit >
       <formatter type="brief" usefile="false"/>
 
-      <batchtest>
+      <batchtest todir="${build.tests.xml}">
         <fileset dir="${tests.dir}"
                  includes="${includetests}" excludes="${excludetests}">
 
