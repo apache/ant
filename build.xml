@@ -58,7 +58,7 @@
   <property name="junit.fork" value="false"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
-  <property name="test.haltonfailure" value="yes"/>
+  <property name="test.haltonfailure" value="false"/>
   <property name="junit.forkmode" value="once"/>
   <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf,**/*.zip"/>
 
@@ -1614,6 +1614,7 @@
     </presetdef>
 
   </target>
+
 <!--if="run.junitreport"-->
   <target name="test-report" depends="test-init,run-tests,run-single-test"
       if="trax.impl.present">
