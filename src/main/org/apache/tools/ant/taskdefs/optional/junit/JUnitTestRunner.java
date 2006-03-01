@@ -266,8 +266,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
             try {
                 Class junit4TestAdapterClass = null;
-                // Note that checking for JDK 5 directly won't work; under JDK 4, this will already have failed.
+                // Check for JDK 5 first. Will *not* help on JDK 1.4 if only junit-4.0.jar in
+                // CP because in that case linkage of whole task will already have
+                // failed! But will help if CP has junit-3.8.1.jar:junit-4.0.jar.
+                // In that case first C.fN will fail with CNFE and we will avoid UnsupportedClassVersionError.
                 try {
+                    Class.forName("java.lang.annotation.Annotation");
                     if (loader == null) {
                         junit4TestAdapterClass = Class.forName("junit.framework.JUnit4TestAdapter");
                     } else {
