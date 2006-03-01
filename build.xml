@@ -1585,40 +1585,60 @@
          Run testcase
        ===================================================================
   -->
-  <target name="test" depends="run-tests,run-single-test" description="--> run JUnit tests"/>
+  <target name="test" depends="test-halt" description="--> run JUnit tests"/>
 
-  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present" unless="testcase">
 
-    <condition property="run.junitreport">
-      <or>
-        <isset property="xalan2.present"/>
-        <and>
-          <isset property="xalan.present"/>
-          <isset property="bsf.present"/>
-        </and>
-      </or>
-    </condition>
+  <target name="test-init" depends="probe-offline">
+
+    <presetdef name="test-junit">
+      <junit printsummary="${junit.summary}"
+          haltonfailure="${test.haltonfailure}"
+          fork="${junit.fork}"
+          failureproperty="tests.failed"
+          errorproperty="tests.failed"
+          filtertrace="${junit.filtertrace}">
+        <!--      <jvmarg value="-classic"/> -->
+        <sysproperty key="ant.home" value="${ant.home}"/>
+        <sysproperty key="build.tests" file="${build.tests}"/>
+        <sysproperty key="build.tests.value" value="${build.tests.value}"/>
+        <sysproperty key="offline" value="${offline}"/>
+        <sysproperty key="tests-classpath.value"
+            value="${tests-classpath.value}"/>
+        <sysproperty key="root" file="${basedir}"/>
+        <sysproperty key="build.compiler" value="${build.compiler}"/>
+        <sysproperty key="tests.and.ant.share.classloader"
+            value="${tests.and.ant.share.classloader}"/>
+        <classpath refid="tests-classpath"/>
+        <formatter type="xml"/>
+      </junit>
+    </presetdef>
+
+  </target>
+<!--if="run.junitreport"-->
+  <target name="test-report" depends="test-init,run-tests,run-single-test"
+      if="trax.impl.present">
+    <junitreport todir="${build.tests}">
+      <fileset dir="${build.tests}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${build.tests}"/>
+    </junitreport>
+  </target>
+
+  <target name="test-halt" depends="test-report" >
+    <fail if="tests.failed">Unit tests failed</fail>
+  </target>
+
+
+  <target name="run-tests" depends="dump-info,compile-tests,probe-offline,test-init"
+      if="junit.present" unless="testcase">
+
+
 
     <property name="includetests" value="**/*Test*" />
     <property name="excludetests" value="" />
 
-    <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
-      filtertrace="${junit.filtertrace}"
-      fork="${junit.fork}" forkmode="${junit.forkmode}"
-      failureproperty="tests.failed">
-      <!--      <jvmarg value="-classic"/> -->
-      <classpath refid="tests-classpath"/>
-
-      <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" file="${build.tests}"/>
-      <sysproperty key="offline" value="${offline}"/>
-      <sysproperty key="build.tests.value" value="${build.tests.value}"/>
-      <sysproperty key="tests-classpath.value"
-        value="${tests-classpath.value}"/>
-      <sysproperty key="root" file="${basedir}"/>
-      <sysproperty key="build.compiler" value="${build.compiler}"/>
-      <sysproperty key="tests.and.ant.share.classloader"
-                   value="${tests.and.ant.share.classloader}"/>
+    <test-junit >
       <formatter type="brief" usefile="false"/>
 
       <batchtest>
@@ -1773,36 +1793,19 @@
             if="tests.and.ant.share.classloader"/>
         </fileset>
       </batchtest>
-    </junit>
-    <fail if="tests.failed">At least one test has failed.</fail>
+    </test-junit>
   </target>
 
   <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
     description="--> runs the single unit test defined in the testcase property"/>
 
   <target name="run-single-test-only" if="testcase"
-    description="--> runs the single unit test defined in the testcase property">
-
-
-    <junit printsummary="${junit.summary}"
-      haltonfailure="${test.haltonfailure}"
-      fork="${junit.fork}"
-      filtertrace="${junit.filtertrace}">
-      <!--      <jvmarg value="-classic"/> -->
-      <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" file="${build.tests}"/>
-      <sysproperty key="build.tests.value" value="${build.tests.value}"/>
-      <sysproperty key="offline" value="${offline}"/>
-      <sysproperty key="tests-classpath.value"
-        value="${tests-classpath.value}"/>
-      <sysproperty key="root" file="${basedir}"/>
-      <sysproperty key="build.compiler" value="${build.compiler}"/>
-      <sysproperty key="tests.and.ant.share.classloader"
-                   value="${tests.and.ant.share.classloader}"/>
-      <classpath refid="tests-classpath"/>
+    description="--> runs the single unit test defined in the testcase property"
+     depends="test-init">
+    <test-junit >
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}"/>
-    </junit>
+    </test-junit>
   </target>
 
   <target name="interactive-tests" description="--> runs interactive tests"
