@@ -2348,7 +2348,7 @@ public class FTP
             }
 
         } catch (IOException ex) {
-            throw new BuildException("error during FTP transfer: " + ex);
+            throw new BuildException("error during FTP transfer: " + ex,ex);
         } finally {
             if (ftp != null && ftp.isConnected()) {
                 try {
