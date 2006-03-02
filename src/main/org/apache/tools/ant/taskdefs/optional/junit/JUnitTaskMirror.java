@@ -41,7 +41,7 @@ import org.apache.tools.ant.types.Permissions;
 public interface JUnitTaskMirror {
     
     void addVmExit(JUnitTest test, JUnitResultFormatterMirror formatter,
-            OutputStream out, final String message);
+            OutputStream out, String message);
     
     JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, boolean haltOnError,
             boolean filterTrace, boolean haltOnFailure, boolean showOutput,
