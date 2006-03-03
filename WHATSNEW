@@ -364,9 +364,12 @@ Other changes:
 
 * added the inline handler element to the input task.
 
-* <sql> supports property expansion if you set the expandProperties attribute. By default
-  it does not expand properties, something we dare not change for fear of breaking complex
-  SQL operations in existing files.
+* <sql> supports property expansion if you set the expandProperties
+  attribute. By default it does not expand properties, something we
+  dare not change for fear of breaking complex SQL operations in
+  existing files.
+
+* <javadoc>'s packagenames attribute is now optional and default to "*".
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================

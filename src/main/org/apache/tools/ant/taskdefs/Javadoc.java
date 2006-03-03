@@ -2077,8 +2077,9 @@ public class Javadoc extends Task {
         // taken from packagenames attribute and nested package
         // elements and excludes taken from excludepackages attribute
         // and nested excludepackage elements
-        if (sourcePath != null && packageNames.size() > 0) {
+        if (sourcePath != null) {
             PatternSet ps = new PatternSet();
+            if (packageNames.size() > 0) {
             Enumeration e = packageNames.elements();
             while (e.hasMoreElements()) {
                 PackageName p = (PackageName) e.nextElement();
@@ -2088,8 +2089,11 @@ public class Javadoc extends Task {
                 }
                 ps.createInclude().setName(pkg);
             }
+            } else {
+                ps.createInclude().setName("**");
+            }
 
-            e = excludePackageNames.elements();
+            Enumeration e = excludePackageNames.elements();
             while (e.hasMoreElements()) {
                 PackageName p = (PackageName) e.nextElement();
                 String pkg = p.getName().replace('.', '/');
