@@ -1598,10 +1598,11 @@
       <junit printsummary="${junit.summary}"
           haltonfailure="${test.haltonfailure}"
           fork="${junit.fork}"
+          forkmode="${junit.forkmode}"
           failureproperty="tests.failed"
           errorproperty="tests.failed"
           filtertrace="${junit.filtertrace}"
-          dir="${build.tests.xml}">
+          >
         <sysproperty key="ant.home" value="${ant.home}"/>
         <sysproperty key="build.tests" file="${build.tests}"/>
         <sysproperty key="build.tests.value" value="${build.tests.value}"/>
