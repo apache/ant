@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC16 = "javac1.6";
     private static final String JAVAC15 = "javac1.5";
     private static final String JAVAC14 = "javac1.4";
     private static final String JAVAC13 = "javac1.3";
@@ -126,6 +127,8 @@ public class Javac extends MatchingTask {
             return JAVAC14;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             return JAVAC15;
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
+            return JAVAC16;
         } else {
             return CLASSIC;
         }
@@ -167,10 +170,10 @@ public class Javac extends MatchingTask {
      * Value of the -source command-line switch; will be ignored
      * by all implementations except modern and jikes.
      *
-     * If you use this attribute together with jikes, you must
-     * make sure that your version of jikes supports the -source switch.
-     * Legal values are 1.3, 1.4 and 1.5 - by default, no -source argument
-     * will be used at all.
+     * If you use this attribute together with jikes, you must make
+     * sure that your version of jikes supports the -source switch.
+     * Legal values are 1.3, 1.4, 1.5, and 5 - by default, no
+     * -source argument will be used at all.
      *
      * @param v  Value to assign to source.
      */
@@ -573,7 +576,7 @@ public class Javac extends MatchingTask {
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * values depend on the compiler, for jdk 1.4 the valid values are
-     * "1.1", "1.2", "1.3", "1.4" and "1.5".
+     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "5" and "6".
      * @param target the target VM
      */
     public void setTarget(String target) {
@@ -735,7 +738,8 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(String anImplementation) {
-        if (JAVAC15.equalsIgnoreCase(anImplementation)
+        if (JAVAC16.equalsIgnoreCase(anImplementation)
+                || JAVAC15.equalsIgnoreCase(anImplementation)
                 || JAVAC14.equalsIgnoreCase(anImplementation)
                 || JAVAC13.equalsIgnoreCase(anImplementation)) {
             return MODERN;
@@ -746,7 +750,8 @@ public class Javac extends MatchingTask {
         }
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             String nextSelected = assumedJavaVersion();
-            if (JAVAC15.equalsIgnoreCase(nextSelected)
+            if (JAVAC16.equalsIgnoreCase(nextSelected)
+                    || JAVAC15.equalsIgnoreCase(nextSelected)
                     || JAVAC14.equalsIgnoreCase(nextSelected)
                     || JAVAC13.equalsIgnoreCase(nextSelected)) {
                 return nextSelected;
@@ -854,12 +859,14 @@ public class Javac extends MatchingTask {
      * Is the compiler implementation a jdk compiler
      *
      * @param compilerImpl the name of the compiler implementation
-     * @return true if compilerImpl is "modern", "classic", "javac1.1",
-     *                 "javac1.2", "javac1.3", "javac1.4" or "javac1.5".
+     * @return true if compilerImpl is "modern", "classic",
+     * "javac1.1", "javac1.2", "javac1.3", "javac1.4", "javac1.5" or
+     * "javac1.6".
      */
     protected boolean isJdkCompiler(String compilerImpl) {
         return MODERN.equals(compilerImpl)
             || CLASSIC.equals(compilerImpl)
+            || JAVAC16.equals(compilerImpl)
             || JAVAC15.equals(compilerImpl)
             || JAVAC14.equals(compilerImpl)
             || JAVAC13.equals(compilerImpl)

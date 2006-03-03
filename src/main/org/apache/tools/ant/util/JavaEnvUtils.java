@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -66,6 +66,8 @@ public final class JavaEnvUtils {
     public static final String JAVA_1_4 = "1.4";
     /** Version constant for Java 1.5 */
     public static final String JAVA_1_5 = "1.5";
+    /** Version constant for Java 1.6 */
+    public static final String JAVA_1_6 = "1.6";
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
@@ -101,6 +103,9 @@ public final class JavaEnvUtils {
             javaVersionNumber++;
             Class.forName("java.lang.Readable");
             javaVersion = JAVA_1_5;
+            javaVersionNumber++;
+            Class.forName("java.util.Service");
+            javaVersion = JAVA_1_6;
             javaVersionNumber++;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
@@ -284,6 +289,7 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector();
         switch(javaVersionNumber) {
+            case 16:
             case 15:
                 //In Java1.5, the apache stuff moved. 
                 jrePackages.addElement("com.sun.org.apache");
@@ -333,6 +339,7 @@ public final class JavaEnvUtils {
         Vector tests = new Vector();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
+            case 16:
             case 15:
                 tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
             case 14:

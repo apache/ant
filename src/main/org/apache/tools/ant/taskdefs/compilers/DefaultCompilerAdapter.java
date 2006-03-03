@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -322,7 +322,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 cmd.createArgument().setValue(source);
             }
-        } else if (assumeJava15() && attributes.getTarget() != null) {
+        } else if ((assumeJava15() || assumeJava16())
+                   && attributes.getTarget() != null) {
             String t = attributes.getTarget();
             if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
                 || t.equals("1.4")) {
@@ -334,7 +335,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 attributes.log("", Project.MSG_WARN);
                 attributes.log("          WARNING", Project.MSG_WARN);
                 attributes.log("", Project.MSG_WARN);
-                attributes.log("The -source switch defaults to 1.5 in JDK 1.5.",
+                attributes.log("The -source switch defaults to 1.5 in JDK 1.5 and 1.6.",
                                Project.MSG_WARN);
                 attributes.log("If you specify -target " + t
                                + " you now must also specify -source " + s
@@ -588,6 +589,21 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
             || ("extJavac".equals(attributes.getCompilerVersion())
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
+    }
+
+    /**
+     * Shall we assume JDK 1.6 command line switches?
+     * @return true if JDK 1.6
+     * @since Ant 1.7
+     */
+    protected boolean assumeJava16() {
+        return "javac1.6".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6));
     }
 
     /**
