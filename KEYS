@@ -572,3 +572,109 @@ BgUCOxIiVAASCRCiEVrhX2uLcgdlR1BHAAEBDTIAoJ3NtpI/E345LVOruElFKrnd
 uWWXAJ9Adm9Mz4yoxrosHSkp5BWzXBUt4A==
 =4erJ
 -----END PGP PUBLIC KEY BLOCK-----
+pub   1024D/C152431A 2005-07-18 [expires: 2010-07-17]
+uid                  Steve Loughran <stevel@apache.org>
+sig 3        C152431A 2005-07-18  Steve Loughran <stevel@apache.org>
+sig 2        FC243F3C 2005-07-20  Henk P. Penning <penning@cs.uu.nl>
+sig 3        302DA568 2005-07-21  Rodent of Unusual Size (DSA) <coar@Apache.Org>
+sig 3        2C312D2F 2005-07-21  Rodent of Unusual Size <coar@OpenSource.Org>
+sig 3        E04F9A89 2005-07-22  Roy T. Fielding <fielding@gbiv.com>
+sig          8103A37E 2005-07-20  Andre Malo <nd@apache.org>
+sig          5793498F 2005-07-21  Tim Ellison <tim@ellison.name>
+sig          E4136392 2005-07-21  Noel J. Bergman <noel@apache.org>
+sig          1CD4861F 2005-07-25  Eran Chinthaka <chinthaka@apache.org>
+sig          EA1BA38D 2005-07-25  Ajith Harshana Ranabahu (Made at Apachecon 2005) <ajith@apache.org>
+sig 3        21D0A71B 2005-07-20  Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig 3        3642CB4B 2005-07-20  Martin Kraemer <martin@apache.org>
+sig 3        2261D073 2005-07-20  Astrid Kessler (Kess) <kess@kess-net.de>
+sig 3        E2D774DF 2005-07-22  Sylvain Wallez <sylvain@apache.org>
+sig 3        015AFC8A 2005-07-22  Bertrand Delacretaz <bdelacretaz@apache.org>
+sig 3        E41EDC7E 2005-07-24  Carsten Ziegeler <cziegeler@apache.org>
+sig 3        F39B3750 2005-07-24  Colm MacCarthaigh <colm@stdlib.net>
+sig 3        9C85222B 2005-07-24  Henning Schmiedehausen <hps@intermeta.de>
+sig 3        9978AF86 2005-07-25  Christoph Probst <chris@netzpunkt.org>
+sig 3        2A623F72 2005-07-25  Christoph Probst <chris@netzpunkt.org>
+sig 3        F8EA2967 2005-07-26  Brian McCallister <brianm@apache.org>
+sig 3        A99F75DD 2005-07-21  Rodent of Unusual Size <coar@OpenSource.Org>
+sig 3        EC140B81 2005-07-20  Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig 3        EE65E321 2005-07-20  Martin Kraemer <martin@apache.org>
+sig          152924AF 2005-07-29  Sander Temme <sander@temme.net>
+sig 3        87315C31 2005-07-23  Raphaël Luta <raphael.luta@aptiwan.com>
+sub   2048g/59066D7B 2005-07-18 [expires: 2010-07-17]
+sig          C152431A 2005-07-18  Steve Loughran <stevel@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.2 (GNU/Linux)
+
+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
+0N6XOghJAJ4mSgdwgv+sIOaPKQqCm+PL2M0lPw==
+=4TlI
+-----END PGP PUBLIC KEY BLOCK-----
