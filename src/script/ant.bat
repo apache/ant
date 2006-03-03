@@ -1,6 +1,6 @@
 @echo off
 
-REM  Copyright 2001,2004-2005 The Apache Software Foundation
+REM  Copyright 2001,2004-2006 The Apache Software Foundation
 REM
 REM  Licensed under the Apache License, Version 2.0 (the "License");
 REM  you may not use this file except in compliance with the License.
@@ -13,6 +13,12 @@ REM  distributed under the License is distributed on an "AS IS" BASIS,
 REM  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 REM  See the License for the specific language governing permissions and
 REM  limitations under the License.
+
+REM This is an inordinately troublesome piece of code, particularly because it
+REM tries to work on both Win9x and WinNT-based systems. If we could abandon '9x
+REM support, things would be much easier, but sadly, it is not yet time.
+REM Be cautious about editing this, and only add WinNT specific stuff in code that
+REM only runs on WinNT.
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
@@ -149,7 +155,10 @@ set ANT_ERROR=%err100%%err10%%err1%
 for %%i in (1 10 100) do set err%%i=
 
 :end
+rem bug ID 32069: resetting an undefined env variable changes the errorlevel.
+set _JAVACMD=DUMMY_VAL
 set _JAVACMD=
+set ANT_CMD_LINE_ARGS=DUMMY_VAL
 set ANT_CMD_LINE_ARGS=
 
 rem Set the return code if we are not in NT.  We can only set
