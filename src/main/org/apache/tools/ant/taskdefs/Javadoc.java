@@ -2080,15 +2080,15 @@ public class Javadoc extends Task {
         if (sourcePath != null) {
             PatternSet ps = new PatternSet();
             if (packageNames.size() > 0) {
-            Enumeration e = packageNames.elements();
-            while (e.hasMoreElements()) {
-                PackageName p = (PackageName) e.nextElement();
-                String pkg = p.getName().replace('.', '/');
-                if (pkg.endsWith("*")) {
-                    pkg += "*";
+                Enumeration e = packageNames.elements();
+                while (e.hasMoreElements()) {
+                    PackageName p = (PackageName) e.nextElement();
+                    String pkg = p.getName().replace('.', '/');
+                    if (pkg.endsWith("*")) {
+                        pkg += "*";
+                    }
+                    ps.createInclude().setName(pkg);
                 }
-                ps.createInclude().setName(pkg);
-            }
             } else {
                 ps.createInclude().setName("**");
             }
