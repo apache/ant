@@ -958,8 +958,7 @@ public class ComponentHelper  {
                 }
             } else {
                 out.println();
-                out.println("It is not an Ant bug; there is no need to file a bug"
-                        + " report or contact the developers.");
+                out.println("This is not an bug; it is a configuration problem");
             }
         }
         out.flush();
