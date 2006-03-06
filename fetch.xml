@@ -77,6 +77,7 @@
   
   <target name="probe-m2" depends="pick-dest">
     <!-- Look for M2 ant tasks in our classpath-->
+    <property name="m2.artifact" location="${dest.dir}/${m2.jar.name}"/>
     <available property="m2.antlib.found"
       resource="org/apache/maven/artifact/ant/antlib.xml" />
     <condition property="m2.antlib.typefound">
@@ -85,18 +86,48 @@
   </target>
   
 
-  <target name="get-m2" depends="probe-m2,pick-dest" unless="m2.antlib.found">
+  <target name="download-m2" depends="probe-m2,pick-dest" unless="m2.antlib.found">
     <!-- fetch M2 ant tasks into our repository, if it is not there-->
     <get src="${m2.antlib.url}" 
-      dest="${dest.dir}/${m2.jar.name}" 
+      dest="${m2.artifact}" 
       verbose="true"
       usetimestamp="false"/>
-    <fail status="0">
-      The Maven2 JAR has been installed; rerun ant to load it. 
+  </target>
+
+  <target name="dont-validate-m2-checksum" depends="probe-m2"
+          if="m2.antlib.found">
+    <property name="checksum.equal" value="true" />
+  </target>
+
+  <target name="validate-m2-checksum" 
+          depends="download-m2,dont-validate-m2-checksum"
+          if="m2.sha1.checksum" unless="m2.antlib.found">
+    <checksum file="${m2.artifact}"
+        algorithm="SHA"
+        property="${m2.sha1.checksum}" 
+        verifyProperty="checksum.equal"/>
+  </target>
+
+  <target name="checksum-mismatch" depends="validate-m2-checksum" 
+          unless="checksum.equal" if="m2.sha1.checksum">
+    <delete file="${m2.artifact}"/>
+    <fail >
+      Failed to verify the downloaded file ${m2.antlib.url}" against the checksum
+      coded into libraries.properties. 
+      The local copy has been deleted, for security reasons
     </fail>
-  </target>  
-  
-  
+  </target>
+
+  <target name="checksum-match" depends="checksum-mismatch"
+          unless="checksum.equal">
+    <fail status="0">
+      The Maven2 JAR has been installed; rerun Ant to load it.
+    </fail>
+  </target>
+
+  <target name="get-m2" depends="checksum-match" 
+      description="Download the Maven2 Ant tasks"/> 
+
   <target name="macros" depends="get-m2"
     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
