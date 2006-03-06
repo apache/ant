@@ -958,7 +958,7 @@ public class ComponentHelper  {
                 }
             } else {
                 out.println();
-                out.println("This is not an bug; it is a configuration problem");
+                out.println("This is not a bug; it is a configuration problem");
             }
         }
         out.flush();
