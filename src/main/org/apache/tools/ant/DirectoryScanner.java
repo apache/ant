@@ -1038,7 +1038,7 @@ public class DirectoryScanner
         if (dir == null) {
             throw new BuildException("dir must not be null.");
         } else if (!dir.exists()) {
-            throw new BuildException(dir + " doesn't exists.");
+            throw new BuildException(dir + " doesn't exist.");
         } else if (!dir.isDirectory()) {
             throw new BuildException(dir + " is not a directory.");
         }
