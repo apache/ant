@@ -281,14 +281,14 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             if (sxe.getException() != null) {
                 x = sxe.getException();
             }
-            throw new BuildException(x);
+            throw new BuildException("Failed to load "+src,x);
 
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
             throw new BuildException(pce);
         } catch (IOException ioe) {
             // I/O error
-            throw new BuildException(ioe);
+            throw new BuildException("Failed to load " + src,ioe);
         }
     }
 
