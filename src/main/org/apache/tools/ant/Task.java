@@ -484,7 +484,13 @@ public abstract class Task extends ProjectComponent {
      * Bind a task to another; use this when configuring a newly created
      * task to do work on behalf of another.
      * Project, OwningTarget, TaskName, Location and Description are all copied
+     *
+     * Important: this method does not call {@link Task#init()}.
+     * If you are creating a task to delegate work to, call {@link Task#init()}
+     * to initialize it.
+     *
      * @param owner owning target
+     * @since Ant1.7
      */
     public final void bindToOwner(Task owner) {
         setProject(owner.getProject());
