@@ -73,9 +73,8 @@ class ChangeLogParser {
      */
     public CVSEntry[] getEntrySetAsArray() {
         final CVSEntry[] array = new CVSEntry[ entries.size() ];
-        Enumeration e = entries.elements();
         int i = 0;
-        while (e.hasMoreElements()) {
+        for(Enumeration e = entries.elements(); e.hasMoreElements();) {
             array[i++] = (CVSEntry) e.nextElement();
         }
         return array;
@@ -164,8 +163,8 @@ class ChangeLogParser {
             revision = line.substring(9);
             status = GET_DATE;
         } else if (line.startsWith("======")) {
-            //There was no revisions in this changelog
-            //entry so lets move unto next file
+            //There were no revisions in this changelog
+            //entry so lets move onto next file
             status = GET_FILE;
         }
     }
