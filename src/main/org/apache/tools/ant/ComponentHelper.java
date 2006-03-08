@@ -38,6 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
 import org.apache.tools.ant.launch.Launcher;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Component creation and configuration.
@@ -736,13 +737,7 @@ public class ComponentHelper  {
         } catch (IOException ex) {
             throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Exception ignore) {
-                    // Ignore
-                }
-            }
+            FileUtils.close(in);
         }
     }
 
