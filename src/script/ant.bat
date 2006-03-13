@@ -32,6 +32,9 @@ if "%ANT_HOME%"=="" set ANT_HOME=%DEFAULT_ANT_HOME%
 set DEFAULT_ANT_HOME=
 
 set _USE_CLASSPATH=yes
+rem CLASSPATH must not be used if it is equal to ""
+if "%CLASSPATH%"=="""" set _USE_CLASSPATH=no
+if "%CLASSPATH%"=="" set _USE_CLASSPATH=no
 
 rem Slurp the command line arguments. This loop allows for an unlimited number
 rem of arguments (up to the command line limit, anyway).
@@ -96,13 +99,6 @@ if not "%JIKESPATH%"=="" goto runAntWithJikes
 
 :runAnt
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
-if not "%CLASSPATH%"=="" goto runAntWithClasspath
-"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
-rem Check the error code of the Ant build
-if not "%OS%"=="Windows_NT" goto onError
-set ANT_ERROR=%ERRORLEVEL%
-goto end
-
 :runAntNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 rem Check the error code of the Ant build
@@ -119,7 +115,6 @@ goto end
 
 :runAntWithJikes
 if "%_USE_CLASSPATH%"=="no" goto runAntWithJikesNoClasspath
-if not "%CLASSPATH%"=="" goto runAntWithJikesAndClasspath
 
 :runAntWithJikesNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
