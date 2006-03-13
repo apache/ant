@@ -77,6 +77,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* ant.bat now handles classpath set to "". Bug report 38914. 
+
 * <junit> now supports JUnit 4. Bugzilla Report 38811.
 
 * <junit> can now work with junit.jar in its <classpath>. Bugzilla Report 38799.
