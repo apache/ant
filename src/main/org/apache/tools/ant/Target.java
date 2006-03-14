@@ -128,7 +128,7 @@ public class Target implements TaskContainer {
                 String token = tok.nextToken().trim();
 
                 // Make sure the dependency is not empty string
-                if (token.equals("") || token.equals(",")) {
+                if ("".equals(token) || ",".equals(token)) {
                     throw new BuildException("Syntax Error: Depend "
                         + "attribute for target \"" + getName()
                         + "\" has an empty string for dependency.");
@@ -140,7 +140,7 @@ public class Target implements TaskContainer {
                 // end in a ,
                 if (tok.hasMoreTokens()) {
                     token = tok.nextToken();
-                    if (!tok.hasMoreTokens() || !token.equals(",")) {
+                    if (!tok.hasMoreTokens() || !",".equals(token)) {
                         throw new BuildException("Syntax Error: Depend "
                             + "attribute for target \"" + getName()
                             + "\" ends with a , character");
@@ -256,7 +256,7 @@ public class Target implements TaskContainer {
      *                 no "if" test is performed.
      */
     public void setIf(String property) {
-        this.ifCondition = (property == null) ? "" : property;
+        ifCondition = (property == null) ? "" : property;
     }
 
     /**
@@ -284,7 +284,7 @@ public class Target implements TaskContainer {
      *                 no "unless" test is performed.
      */
     public void setUnless(String property) {
-        this.unlessCondition = (property == null) ? "" : property;
+        unlessCondition = (property == null) ? "" : property;
     }
 
     /**
@@ -361,11 +361,11 @@ public class Target implements TaskContainer {
             }
         } else if (!testIfCondition()) {
             project.log(this, "Skipped because property '"
-                        + project.replaceProperties(this.ifCondition)
+                        + project.replaceProperties(ifCondition)
                         + "' not set.", Project.MSG_VERBOSE);
         } else {
             project.log(this, "Skipped because property '"
-                        + project.replaceProperties(this.unlessCondition)
+                        + project.replaceProperties(unlessCondition)
                         + "' set.", Project.MSG_VERBOSE);
         }
     }
@@ -453,5 +453,29 @@ public class Target implements TaskContainer {
         }
         String test = project.replaceProperties(unlessCondition);
         return project.getProperty(test) == null;
+    }
+
+    /**
+     * Equality check is based on target name
+     * @param that other thing to check
+     * @return true iff type and name are equal
+     */
+    public boolean equals(Object that) {
+        if (this == that) return true;
+        if (that == null || getClass() != that.getClass()) return false;
+
+        final Target target = (Target) that;
+
+        if (name != null ? !name.equals(target.name) : target.name != null) return false;
+
+        return true;
+    }
+
+    /**
+     * Hash code is based on name, is 0 if the name==null
+     * @return hash code
+     */
+    public int hashCode() {
+        return (name != null ? name.hashCode() : 0);
     }
 }
