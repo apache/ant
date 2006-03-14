@@ -220,6 +220,69 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addTypeFound(TypeFound test) {
         conditions.addElement(test);
     }
+
+    /**
+     * Add an &lt;isfailure&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addIsFailure(IsFailure test) {
+        conditions.addElement(test);
+    }
+
+    /**
+     * Add an &lt;isfileselected&gt; condition.
+     * @param test the condition
+     */
+    public void addIsFileSelected(IsFileSelected test) {
+        conditions.addElement(test);
+    }
+
+    /**
+     * Add an &lt;isreachable&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addIsReachable(IsReachable test) {
+        conditions.addElement(test);
+    }
+
+    /**
+     * Add an &lt;issigned&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addIsSigned(IsSigned test) {
+        conditions.addElement(test);
+    }
+
+    /**
+     * Add an &lt;parsersupports&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addParserSupports(ParserSupports test) {
+        conditions.addElement(test);
+    }
+
+    /**
+     * Add a &lt;ResourcesMatch&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addResourcesMatch(ResourcesMatch test) {
+        conditions.addElement(test);
+    }
+
+
+    /**
+     * Add an &lt;xor&gt; condition.
+     *
+     * @param test the condition
+     */
+    public void addXor(Xor test) {
+        conditions.addElement(test);
+    }
     /**
      * Add an arbitrary condition
      * @param c a  condition

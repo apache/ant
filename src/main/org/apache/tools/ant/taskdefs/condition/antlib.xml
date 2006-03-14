@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<antlib>
+  <!--
+  /*
+ * Copyright  2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+  -->
+  <!-- ant1.6+ antlib declaration for the conditions
+  use with the declaration xmlns:cond="antlib:org.apache.tools.ant.conditions" to
+  trigger ant's autoload of this file into a namespace.
+
+  -->
+
+  <typedef name="and" classname="org.apache.tools.ant.taskdefs.condition.And"/>
+  <typedef name="contains" classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
+  <typedef name="equals" classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
+  <typedef name="filesmatch" classname="org.apache.tools.ant.taskdefs.condition.Filesmatch"/>
+  <typedef name="http" classname="org.apache.tools.ant.taskdefs.condition.Http"/>
+  <typedef name="isfailure" classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
+  <typedef name="isfalse" classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
+  <typedef name="isfileselected" classname="org.apache.tools.ant.taskdefs.condition.IsFileSelected"/>
+  <typedef name="isreachable" classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
+  <typedef name="isreference" classname="org.apache.tools.ant.taskdefs.condition.IsReference"/>
+  <typedef name="isset" classname="org.apache.tools.ant.taskdefs.condition.IsSet"/>
+  <typedef name="issigned" classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
+  <typedef name="istrue" classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
+  <typedef name="not" classname="org.apache.tools.ant.taskdefs.condition.Not"/>
+  <typedef name="or" classname="org.apache.tools.ant.taskdefs.condition.Or"/>
+  <typedef name="os" classname="org.apache.tools.ant.taskdefs.condition.Os"/>
+  <typedef name="parsersupports" classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
+  <typedef name="resourcesmatch" classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
+  <typedef name="scriptcondition" classname="org.apache.tools.ant.types.optional.ScriptCondition"/>
+  <typedef name="socket" classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
+  <typedef name="typefound" classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
+  <typedef name="xor" classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
+</antlib>
