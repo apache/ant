@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2005 The Apache Software Foundation
+   Copyright 2005-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ svn co http://svn.apache.org/repos/asf/ant/[project]/trunk/ ant-[project]</sourc
       href="http://jakarta.apache.org/site/cvsindex.html">Jakarta's
       source repositories page</a> may hold many helpful hints.</p>
 
-      <p>Nightly snapshots of the SVN tree are available at 
-        <a href="http://cvs.apache.org/snapshots/ant/">http://cvs.apache.org/snapshots/ant/</a>.</p>
+      <p>Nightly snapshots of the SVN tree are available at
+        <a href="http://svn.apache.org/snapshots/ant/">http://svn.apache.org/snapshots/ant/</a>.</p>
 
   </section>
   </body>
