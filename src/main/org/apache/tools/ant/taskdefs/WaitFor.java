@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -42,6 +43,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * The maxwaitunit and checkeveryunit are allowed to have the following values:
  * millisecond, second, minute, hour, day and week. The default is millisecond.
  *
+ * For programmatic use/subclassing, there are two methods that may be overrridden,
+ * <code>processSuccess</code> and <code>processTimeout</code>
  * @since Ant 1.5
  *
  * @ant.task category="control"
@@ -54,6 +57,10 @@ public class WaitFor extends ConditionBase {
     private long checkEveryMillis = 500L;
     private long checkEveryMultiplier = 1L;
     private String timeoutProperty;
+
+    public WaitFor() {
+        super("waitfor");
+    }
 
     /**
      * Set the maximum length of time to wait.
@@ -103,11 +110,12 @@ public class WaitFor extends ConditionBase {
     public void execute() throws BuildException {
         if (countConditions() > 1) {
             throw new BuildException("You must not nest more than one "
-                                     + "condition into <waitfor>");
+                                     + "condition into "
+                                     + getTaskName());
         }
         if (countConditions() < 1) {
             throw new BuildException("You must nest a condition into "
-                                     + "<waitfor>");
+                                     + getTaskName());
         }
         Condition c = (Condition) getConditions().nextElement();
 
@@ -121,6 +129,7 @@ public class WaitFor extends ConditionBase {
 
             while (System.currentTimeMillis() < end) {
                 if (c.eval()) {
+                    processSuccess();
                     return;
                 }
                 try {
@@ -130,12 +139,33 @@ public class WaitFor extends ConditionBase {
                 }
             }
 
-            if (timeoutProperty != null) {
-                getProject().setNewProperty(timeoutProperty, "true");
-            }
+            processTimeout();
         } finally {
             maxWaitMillis = savedMaxWaitMillis;
             checkEveryMillis = savedCheckEveryMillis;
+        }
+    }
+
+    /**
+     * Actions to be taken on a successful waitfor.
+     * This is an override point. The base implementation does nothing.
+     * @since Ant1.7
+     */
+    protected void processSuccess() {
+        log(getTaskName()+": condition was met", Project.MSG_VERBOSE);
+    }
+
+    /**
+     * Actions to be taken on an unsuccessful wait.
+     * This is an override point. It is where the timeout processing takes place.
+     * The base implementation sets the timeoutproperty if there was a timeout
+     * and the property was defined.
+     * @since Ant1.7
+     */
+    protected void processTimeout() {
+        log(getTaskName() +": timeout", Project.MSG_VERBOSE);
+        if (timeoutProperty != null) {
+            getProject().setNewProperty(timeoutProperty, "true");
         }
     }
 

@@ -32,7 +32,34 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * @since Ant 1.4
  */
 public abstract class ConditionBase extends ProjectComponent {
+
+
+    /**
+     * name of the component
+     */
+    private String taskName="condition";
+
+    /**
+     *
+     */
     private Vector conditions = new Vector();
+
+    /**
+     * simple constructor.
+     */
+    protected ConditionBase() {
+        taskName = "component";
+    }
+
+    /**
+     * constructor that takes the name of the task
+     * in the task name
+     * @param taskName
+     * @since Ant1.7
+     */
+    protected ConditionBase(String taskName) {
+        this.taskName = taskName;
+    }
 
     /**
      * Count the conditions.
@@ -52,6 +79,27 @@ public abstract class ConditionBase extends ProjectComponent {
      */
     protected final Enumeration getConditions() {
         return conditions.elements();
+    }
+
+    /**
+     * Sets the name to use in logging messages.
+     *
+     * @param name The name to use in logging messages.
+     *             Should not be <code>null</code>.
+     * @since Ant 1.7
+     */
+    public void setTaskName(String name) {
+        this.taskName = name;
+    }
+
+    /**
+     * Returns the name to use in logging messages.
+     *
+     * @return the name to use in logging messages.
+     * @since Ant 1.7
+     */
+    public String getTaskName() {
+        return taskName;
     }
 
     /**
@@ -216,6 +264,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;typefound&gt; condition.
      * @param test a TypeFound condition
+     * @since Ant 1.7
      */
     public void addTypeFound(TypeFound test) {
         conditions.addElement(test);
@@ -242,6 +291,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * Add an &lt;isreachable&gt; condition.
      *
      * @param test the condition
+     * @since Ant 1.7
      */
     public void addIsReachable(IsReachable test) {
         conditions.addElement(test);
@@ -251,6 +301,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * Add an &lt;issigned&gt; condition.
      *
      * @param test the condition
+     * @since Ant 1.7
      */
     public void addIsSigned(IsSigned test) {
         conditions.addElement(test);
@@ -260,6 +311,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * Add an &lt;parsersupports&gt; condition.
      *
      * @param test the condition
+     * @since Ant 1.7
      */
     public void addParserSupports(ParserSupports test) {
         conditions.addElement(test);
@@ -269,6 +321,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * Add a &lt;ResourcesMatch&gt; condition.
      *
      * @param test the condition
+     * @since Ant 1.7
      */
     public void addResourcesMatch(ResourcesMatch test) {
         conditions.addElement(test);
@@ -279,6 +332,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * Add an &lt;xor&gt; condition.
      *
      * @param test the condition
+     * @since Ant 1.7
      */
     public void addXor(Xor test) {
         conditions.addElement(test);

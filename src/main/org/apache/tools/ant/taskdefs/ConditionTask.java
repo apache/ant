@@ -43,6 +43,10 @@ public class ConditionTask extends ConditionBase {
     private String value = "true";
     private String alternative = null;
 
+    public ConditionTask() {
+        super("condition");
+    }
+
     /**
      * The name of the property to set. Required.
      * @param p the name of the property
@@ -81,11 +85,12 @@ public class ConditionTask extends ConditionBase {
     public void execute() throws BuildException {
         if (countConditions() > 1) {
             throw new BuildException("You must not nest more than one "
-                + "condition into <condition>");
+                + "condition into "
+                + getTaskName());
         }
         if (countConditions() < 1) {
             throw new BuildException("You must nest a condition into "
-                + "<condition>");
+                + getTaskName());
         }
         if (property == null) {
             throw new BuildException("The property attribute is required.");
