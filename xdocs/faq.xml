@@ -35,7 +35,7 @@
       <question>How can I contribute to this FAQ?</question>
       <answer>
         <p>The page you are looking it is generated from
-          <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/faq.xml">this</a>
+          <a href="http://svn.apache.org/repos/asf/ant/core/trunk/xdocs/faq.xml">this</a>
           document.  If you want to add a new question, please submit
           a patch against this document to one of Ant&apos;s mailing lists;
           hopefully, the structure is self-explanatory.</p>
