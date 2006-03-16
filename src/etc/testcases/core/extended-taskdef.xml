@@ -5,6 +5,7 @@
 
   </description>
   <property name="src" value="Foo.java"/>
+  <property name="taskdefs" value="tasks.properties"/>
 
   <target name="write" >
     <echo file="${src}">
@@ -17,6 +18,9 @@
         }
       }
     </echo>
+    <propertyfile file="${taskdefs}">
+      <entry key="foo2" value="Foo"/>
+    </propertyfile>
   </target>
 
   <target name="compile" depends="write">
@@ -32,11 +36,21 @@
     </foo>
   </target>
 
+  <target name="testRun2" depends="compile">
+    <taskdef resource="${taskdefs}" classpath="${basedir}"/>
+    <foo2 maxwait="5" maxwaitunit="second"
+        timeoutproperty="foo">
+      <or/>
+    </foo2>
+  </target>
+
+
   <target name="teardown">
     <delete>
       <fileset dir="${basedir}"
           includes="${src},*.class"/>
     </delete>
+    <delete file="${taskdefs}" />
   </target>
 
 </project>

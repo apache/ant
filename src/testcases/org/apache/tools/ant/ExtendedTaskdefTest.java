@@ -35,9 +35,30 @@ public class ExtendedTaskdefTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/extended-taskdef.xml");
     }
 
+    /**
+     * Automatically calls the target called "tearDown"
+     * from the build file tested if it exits.
+     * <p/>
+     * This allows to use Ant tasks directly in the build file
+     * to clean up after each test. Note that no "setUp" target
+     * is automatically called, since it's trivial to have a
+     * test target depend on it.
+     */
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        executeTarget("teardown");
+    }
+
     public void testRun() throws Exception {
         expectBuildExceptionContaining("testRun",
                 "exception thrown by the subclass",
                 "executing the Foo task");
     }
+
+    public void testRun2() throws Exception {
+        expectBuildExceptionContaining("testRun2",
+                "exception thrown by the subclass",
+                "executing the Foo task");
+    }
+
 }
