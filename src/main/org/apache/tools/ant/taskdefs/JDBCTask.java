@@ -23,6 +23,8 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Locale;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -252,8 +254,7 @@ public abstract class JDBCTask extends Task {
             }
 
             if (version != null) {
-                // XXX maybe better toLowerCase(Locale.US)
-                String theVersion = dmd.getDatabaseProductVersion().toLowerCase();
+                String theVersion = dmd.getDatabaseProductVersion().toLowerCase(Locale.ENGLISH);
 
                 log("Version = " + theVersion, Project.MSG_VERBOSE);
                 if (theVersion == null
