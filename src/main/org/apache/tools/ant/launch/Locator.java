@@ -396,7 +396,7 @@ public final class Locator {
             String path = location.getPath();
             for (int i = 0; i < extensions.length; ++i) {
                 if (path.toLowerCase().endsWith(extensions[i])) {
-                    urls[0] = location.toURI().toURL();
+                    urls[0] = location.toURL();
                     break;
                 }
             }
@@ -415,9 +415,8 @@ public final class Locator {
             });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            urls[i] = matches[i].toURI().toURL();
+            urls[i] = matches[i].toURL();
         }
         return urls;
     }
 }
-
