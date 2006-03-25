@@ -24,6 +24,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A base class for creating tasks for executing commands on SourceOffSite.
@@ -82,7 +83,7 @@ public abstract class SOS extends Task implements SOSCmd {
      * @param  dir  The new sosCmd value.
      */
     public final void setSosCmd(String dir) {
-        sosCmdDir = Project.translatePath(dir);
+        sosCmdDir = FileUtils.translatePath(dir);
     }
 
     /**

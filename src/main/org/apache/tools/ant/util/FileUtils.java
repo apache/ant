@@ -32,6 +32,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -601,6 +602,40 @@ public class FileUtils {
             || (onNetWare && colon > 0);
     }
 
+    /**
+     * Translate a path into its native (platform specific) format.
+     * <p>
+     * This method uses PathTokenizer to separate the input path
+     * into its components. This handles DOS style paths in a relatively
+     * sensible way. The file separators are then converted to their platform
+     * specific versions.
+     *
+     * @param toProcess The path to be translated.
+     *                  May be <code>null</code>.
+     *
+     * @return the native version of the specified path or
+     *         an empty string if the path is <code>null</code> or empty.
+     *    
+     * @since ant 1.7
+     * @see PathTokenizer
+     */
+    public static String translatePath(String toProcess) {
+        if (toProcess == null || toProcess.length() == 0) {
+            return "";
+        }
+        StringBuffer path = new StringBuffer(toProcess.length() + 50);
+        PathTokenizer tokenizer = new PathTokenizer(toProcess);
+        while (tokenizer.hasMoreTokens()) {
+            String pathComponent = tokenizer.nextToken();
+            pathComponent = pathComponent.replace('/', File.separatorChar);
+            pathComponent = pathComponent.replace('\\', File.separatorChar);
+            if (path.length() != 0) {
+                path.append(File.pathSeparatorChar);
+            }
+            path.append(pathComponent);
+        }
+        return path.toString();
+    }
     /**
      * &quot;Normalize&quot; the given absolute path.
      *

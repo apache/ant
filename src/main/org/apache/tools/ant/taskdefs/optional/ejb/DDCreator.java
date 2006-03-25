@@ -24,6 +24,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Builds a serialized deployment descriptor given a text file description of the
@@ -87,7 +88,7 @@ public class DDCreator extends MatchingTask {
         }
 
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = Project.translatePath(systemClassPath + ":" + classpath);
+        String execClassPath = FileUtils.translatePath(systemClassPath + ":" + classpath);
         Java ddCreatorTask = new Java(this);
         ddCreatorTask.setFork(true);
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
@@ -126,6 +127,6 @@ public class DDCreator extends MatchingTask {
      * @param s the classpath to use for the ddcreator tool.
      */
     public void setClasspath(String s) {
-        this.classpath = getProject().translatePath(s);
+        this.classpath = FileUtils.translatePath(s);
     }
 }

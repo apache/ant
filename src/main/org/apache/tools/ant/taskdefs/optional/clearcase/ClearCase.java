@@ -25,6 +25,7 @@ import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 
 
@@ -54,7 +55,7 @@ public abstract class ClearCase extends Task {
      * @param dir the directory containing the cleartool executable
      */
     public final void setClearToolDir(String dir) {
-        mClearToolDir = Project.translatePath(dir);
+        mClearToolDir = FileUtils.translatePath(dir);
     }
 
     /**

@@ -24,6 +24,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -65,7 +66,7 @@ public abstract class Continuus extends Task {
      * @param dir the directory containing the ccm executable
      */
     public final void setCcmDir(String dir) {
-        ccmDir = Project.translatePath(dir);
+        ccmDir = FileUtils.translatePath(dir);
     }
 
     /**

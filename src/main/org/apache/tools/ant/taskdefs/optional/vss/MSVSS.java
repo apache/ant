@@ -32,6 +32,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A base class for creating tasks for executing commands on Visual SourceSafe.
@@ -112,7 +113,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @param  dir  The directory containing ss.exe.
      */
     public final void setSsdir(String dir) {
-        this.ssDir = Project.translatePath(dir);
+        this.ssDir = FileUtils.translatePath(dir);
     }
 
     /**

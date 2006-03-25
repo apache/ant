@@ -24,6 +24,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Builds EJB support classes using WebLogic's ejbc tool from a directory containing
@@ -94,7 +95,7 @@ public class Ejbc extends MatchingTask {
 
         String systemClassPath = System.getProperty("java.class.path");
         String execClassPath
-            = Project.translatePath(systemClassPath + ":" + classpath
+            = FileUtils.translatePath(systemClassPath + ":" + classpath
                                          + ":" + generatedFilesDirectory);
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
@@ -172,7 +173,7 @@ public class Ejbc extends MatchingTask {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(String s) {
-        this.classpath = getProject().translatePath(s);
+        this.classpath = FileUtils.translatePath(s);
     }
 
     /**

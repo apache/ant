@@ -187,6 +187,10 @@ public class Project implements ResourceFactory {
      * Flag which catches Listeners which try to use System.out or System.err .
      */
     private boolean loggingMessage = false;
+
+    /**
+     * Property used to store the java version ant is running in.
+     */
     public static final String ANT_JAVA_VERSION = "ant.java.version";
 
     /**
@@ -283,6 +287,7 @@ public class Project implements ResourceFactory {
 
         setSystemProperties();
     }
+
 
     /**
      * Factory method to create a class loader for loading classes from
@@ -805,8 +810,9 @@ public class Project implements ResourceFactory {
         setPropertyInternal(ANT_JAVA_VERSION, javaVersion);
 
         // sanity check
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)) {
-            throw new BuildException("Ant cannot work on Java 1.0");
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
+                || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1))  {
+            throw new BuildException("Ant cannot work on Java 1.0 / 1.1");
         }
         log("Detected Java version: " + javaVersion + " in: "
             + System.getProperty("java.home"), MSG_VERBOSE);
@@ -1332,25 +1338,13 @@ public class Project implements ResourceFactory {
      *
      * @return the native version of the specified path or
      *         an empty string if the path is <code>null</code> or empty.
+     *         
+     * @deprecated use FileUtils.translatePath instead.
      *
      * @see PathTokenizer
      */
     public static String translatePath(String toProcess) {
-        if (toProcess == null || toProcess.length() == 0) {
-            return "";
-        }
-        StringBuffer path = new StringBuffer(toProcess.length() + 50);
-        PathTokenizer tokenizer = new PathTokenizer(toProcess);
-        while (tokenizer.hasMoreTokens()) {
-            String pathComponent = tokenizer.nextToken();
-            pathComponent = pathComponent.replace('/', File.separatorChar);
-            pathComponent = pathComponent.replace('\\', File.separatorChar);
-            if (path.length() != 0) {
-                path.append(File.pathSeparatorChar);
-            }
-            path.append(pathComponent);
-        }
-        return path.toString();
+        return FileUtils.translatePath(toProcess);
     }
 
     /**
