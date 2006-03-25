@@ -263,6 +263,9 @@ public final class Diagnostics {
             ignoreThrowable(e);
             out.println("optional tasks : not available");
         }
+        
+        header(out, "ANT PROPERTIES");
+        doReportAntProperties(out);
 
         header(out, "ANT_HOME/lib jar listing");
         doReportAntHomeLibraries(out);
@@ -328,6 +331,18 @@ public final class Diagnostics {
         }
     }
 
+    /**
+     * Report the content of ANT_HOME/lib directory
+     * @param out the stream to print the content to
+     */
+    private static void doReportAntProperties(PrintStream out) {
+        Project p = new Project();
+        p.initProperties();
+        out.println(MagicNames.ANT_VERSION + ": " + p.getProperty(MagicNames.ANT_VERSION));
+        out.println(MagicNames.ANT_JAVA_VERSION + ": " + p.getProperty(MagicNames.ANT_JAVA_VERSION));
+        out.println(MagicNames.ANT_LIB + ": " + p.getProperty(MagicNames.ANT_LIB));
+        out.println(MagicNames.ANT_HOME + ": " + p.getProperty(MagicNames.ANT_HOME));
+    }
 
     /**
      * Report the content of ANT_HOME/lib directory

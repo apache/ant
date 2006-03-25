@@ -106,13 +106,21 @@ public final class MagicNames {
 
     /**
      * Property used to store the java version ant is running in.
+     * @since Ant 1.7
      */
     public static final String ANT_JAVA_VERSION = "ant.java.version";
 
     /**
      * Property used to store the location of ant.
+     * @since Ant 1.7
      */
     public static final String ANT_HOME = "ant.home";
+
+    /**
+     * Property used to store the location of the ant library (typically the ant.jar file.)
+     * @since Ant 1.7
+     */
+    public static final String ANT_LIB = "ant.core.lib";
 
     /**
      * property for regular expression implementation.

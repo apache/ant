@@ -193,7 +193,7 @@ public class Project implements ResourceFactory {
      * @deprecated
      */
     public static final String ANT_JAVA_VERSION = MagicNames.ANT_JAVA_VERSION;
-    
+
     /**
      * Set the input handler.
      *
@@ -282,14 +282,29 @@ public class Project implements ResourceFactory {
      * @exception BuildException if the default task list cannot be loaded.
      */
     public void init() throws BuildException {
-        setJavaVersionProperty();
+        initProperties();
 
         ComponentHelper.getComponentHelper(this).initDefaultDefinitions();
-
-        setSystemProperties();
     }
 
+    /**
+     * Initializes the properties.
+     * @exception BuildException if an vital property could not be set.
+     * @since Ant 1.7
+     */
+    public void initProperties() throws BuildException {
+        setJavaVersionProperty();
+        setSystemProperties();
+        setPropertyInternal(MagicNames.ANT_VERSION, Main.getAntVersion());
+        setAntLib();
+    }
 
+    private void setAntLib() {
+        File antlib = org.apache.tools.ant.launch.Locator.getClassSource(Project.class);
+        if (antlib != null) {
+            setPropertyInternal(MagicNames.ANT_LIB, antlib.getAbsolutePath());
+        }
+    }
     /**
      * Factory method to create a class loader for loading classes from
      * a given path.
