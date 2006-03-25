@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004-2005 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -96,9 +98,9 @@ public class Exec extends Task {
                 if (myos.toLowerCase().indexOf("nt") >= 0) {
                     command = "cmd /c cd " + dir + " && " + command;
                 } else {
-                    String ant = getProject().getProperty("ant.home");
+                    String ant = getProject().getProperty(MagicNames.ANT_HOME);
                     if (ant == null) {
-                        throw new BuildException("Property 'ant.home' not "
+                        throw new BuildException("Property '" + MagicNames.ANT_HOME + "' not "
                             + "found", getLocation());
                     }
 
@@ -107,9 +109,9 @@ public class Exec extends Task {
                 }
             }
         } else {
-            String ant = getProject().getProperty("ant.home");
+            String ant = getProject().getProperty(MagicNames.ANT_HOME);
             if (ant == null) {
-              throw new BuildException("Property 'ant.home' not found",
+              throw new BuildException("Property '" + MagicNames.ANT_HOME + "' not found",
                                        getLocation());
             }
             String antRun = getProject().resolveFile(ant + "/bin/antRun").toString();

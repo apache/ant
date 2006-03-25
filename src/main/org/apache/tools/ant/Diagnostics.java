@@ -107,7 +107,7 @@ public final class Diagnostics {
      * <tt>null</tt> if an error occurs.
      */
     public static File[] listLibraries() {
-        String home = System.getProperty(Launcher.ANTHOME_PROPERTY);
+        String home = System.getProperty(MagicNames.ANT_HOME);
         if (home == null) {
             return null;
         }
@@ -334,7 +334,7 @@ public final class Diagnostics {
      * @param out the stream to print the content to
      */
     private static void doReportAntHomeLibraries(PrintStream out) {
-        out.println("ant.home: " + System.getProperty("ant.home"));
+        out.println(MagicNames.ANT_HOME + ": " + System.getProperty(MagicNames.ANT_HOME));
         File[] libs = listLibraries();
         printLibraries(libs, out);
     }

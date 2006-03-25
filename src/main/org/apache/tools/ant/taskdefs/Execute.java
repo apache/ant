@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -1002,10 +1003,10 @@ public class Execute {
                     + "No project provided");
             }
             // Locate the auxiliary script
-            String antHome = project.getProperty("ant.home");
+            String antHome = project.getProperty(MagicNames.ANT_HOME);
             if (antHome == null) {
                 throw new IOException("Cannot locate antRun script: "
-                    + "Property 'ant.home' not found");
+                    + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
             String antRun = project.resolveFile(antHome + File.separator 
                                                 + myScript).toString();
@@ -1060,10 +1061,10 @@ public class Execute {
                     + "No project provided");
             }
             // Locate the auxiliary script
-            String antHome = project.getProperty("ant.home");
+            String antHome = project.getProperty(MagicNames.ANT_HOME);
             if (antHome == null) {
                 throw new IOException("Cannot locate antRun script: "
-                    + "Property 'ant.home' not found");
+                    + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
             String antRun = project.resolveFile(antHome + File.separator 
                                                 + myScript).toString();

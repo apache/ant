@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -147,7 +148,7 @@ public final class JarLibManifestTask extends Task {
         final Attributes attributes = manifest.getMainAttributes();
 
         attributes.put(Attributes.Name.MANIFEST_VERSION, MANIFEST_VERSION);
-        final String createdBy = "Apache Ant " + getProject().getProperty("ant.version");
+        final String createdBy = "Apache Ant " + getProject().getProperty(MagicNames.ANT_VERSION);
         attributes.putValue(CREATED_BY, createdBy);
 
         appendExtraAttributes(attributes);

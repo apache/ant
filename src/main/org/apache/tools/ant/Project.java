@@ -190,9 +190,10 @@ public class Project implements ResourceFactory {
 
     /**
      * Property used to store the java version ant is running in.
+     * @deprecated
      */
-    public static final String ANT_JAVA_VERSION = "ant.java.version";
-
+    public static final String ANT_JAVA_VERSION = MagicNames.ANT_JAVA_VERSION;
+    
     /**
      * Set the input handler.
      *
@@ -739,7 +740,7 @@ public class Project implements ResourceFactory {
                 + " is not a directory");
         }
         this.baseDir = baseDir;
-        setPropertyInternal("basedir", this.baseDir.getPath());
+        setPropertyInternal(MagicNames.PROJECT_BASEDIR, this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
          log(msg, MSG_VERBOSE);
     }
@@ -807,7 +808,7 @@ public class Project implements ResourceFactory {
      */
     public void setJavaVersionProperty() throws BuildException {
         String javaVersion = JavaEnvUtils.getJavaVersion();
-        setPropertyInternal(ANT_JAVA_VERSION, javaVersion);
+        setPropertyInternal(MagicNames.ANT_JAVA_VERSION, javaVersion);
 
         // sanity check
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)

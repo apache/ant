@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.tools.ant.MagicNames;
+
 
 /**
  * This is a launcher for Ant.
@@ -36,8 +38,9 @@ public class Launcher {
     /**
      * The Ant Home (installation) Directory property.
      * {@value}
+     * @deprecated
      */
-    public static final String ANTHOME_PROPERTY = "ant.home";
+    public static final String ANTHOME_PROPERTY = MagicNames.ANT_HOME;
 
     /**
      * The Ant Library Directory property.
@@ -141,7 +144,7 @@ public class Launcher {
      */
     private void run(String[] args)
             throws LaunchException, MalformedURLException {
-        String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
+        String antHomeProperty = System.getProperty(MagicNames.ANT_HOME);
         File antHome = null;
 
         File sourceJar = Locator.getClassSource(getClass());
@@ -153,7 +156,7 @@ public class Launcher {
 
         if (antHome == null || !antHome.exists()) {
             antHome = jarDir.getParentFile();
-            System.setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
+            System.setProperty(MagicNames.ANT_HOME, antHome.getAbsolutePath());
         }
 
         if (!antHome.exists()) {
