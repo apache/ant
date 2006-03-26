@@ -101,7 +101,7 @@ public final class JavaEnvUtils {
             Class.forName("java.lang.CharSequence");
             javaVersion = JAVA_1_4;
             javaVersionNumber++;
-            Class.forName("java.lang.Readable");
+            Class.forName("java.net.Proxy");
             javaVersion = JAVA_1_5;
             javaVersionNumber++;
             Class.forName("java.util.Service");

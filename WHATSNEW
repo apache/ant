@@ -197,6 +197,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
+
+* ${ant.core.lib} may now be used to refer to the library containing the
+  Ant classes, for instance useful when compiling tasks.
+
 * Minor performance improvements Bugzilla report 37777
 
 * New task <manifestclasspath> converts a path into a property
