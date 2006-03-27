@@ -79,7 +79,7 @@ public final class JavaEnvUtils {
     static {
 
         // Determine the Java version by looking at available classes
-        // java.lang.Readable was introduced in JDK 1.5
+        // java.net.Proxy was introduced in JDK 1.5
         // java.lang.CharSequence was introduced in JDK 1.4
         // java.lang.StrictMath was introduced in JDK 1.3
         // java.lang.ThreadLocal was introduced in JDK 1.2

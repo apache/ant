@@ -397,7 +397,7 @@
   <target name="check_for_optional_packages">
     <available property="jdk1.3+" classname="java.lang.StrictMath"/>
     <available property="jdk1.4+" classname="java.lang.CharSequence"/>
-    <available property="jdk1.5+" classname="java.lang.Readable"/>
+    <available property="jdk1.5+" classname="java.net.Proxy"/>
     <available property="jdk1.6+" classname="java.util.Service"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
