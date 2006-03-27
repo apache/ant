@@ -85,12 +85,12 @@ public class ConditionTask extends ConditionBase {
     public void execute() throws BuildException {
         if (countConditions() > 1) {
             throw new BuildException("You must not nest more than one "
-                + "condition into "
-                + getTaskName());
+                + "condition into <"
+                + getTaskName() + ">");
         }
         if (countConditions() < 1) {
-            throw new BuildException("You must nest a condition into "
-                + getTaskName());
+            throw new BuildException("You must nest a condition into <"
+                + getTaskName() + ">");
         }
         if (property == null) {
             throw new BuildException("The property attribute is required.");
