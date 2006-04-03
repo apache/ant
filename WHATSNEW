@@ -87,7 +87,7 @@ Fixed bugs:
 
 * Problem when adding multiple filter files, Bugzilla Report 37341
 
-* problem refering jars specfied by Class-Path attribute in manifest
+* problem referencing jars specfied by Class-Path attribute in manifest
   of a ant task jar file, when this ant task jar file is located in
   a directory with space, Bugzilla Report 37085 
 
@@ -168,10 +168,10 @@ Fixed bugs:
 * <cvschangelog> was crashing with CVS versions >= 1.12.x due to change in
   the date format. Bugzilla report 30962.
 
-* The same IntrospectionHelper instance was contineously added as a listener
+* The same IntrospectionHelper instance was continuously added as a listener
   to project. Bugzilla report 37184.
 
-* FileUtils.toURI() was not encoding non ASCII characters to ASCII,
+* FileUtils.toURI() was not encoding non-ASCII characters to ASCII,
   causing impossibility to process XML entities referenced by XML
   documents in non ASCII paths. Bugzilla report 37348.
 
