@@ -70,8 +70,7 @@ public class IdentityStack extends Stack {
      * @see java.util.Vector#indexOf(Object, int)
      */
     public synchronized int indexOf(Object o, int pos) {
-        for (int i = pos; i < size(); i++)
-        {
+        for (int i = pos; i < size(); i++) {
             if (get(i) == o) {
                 return i;
             }
@@ -86,8 +85,7 @@ public class IdentityStack extends Stack {
      * @see java.util.Vector#indexOf(Object, int)
      */
     public synchronized int lastIndexOf(Object o, int pos) {
-        for (int i = pos; i >= 0; i--)
-        {
+        for (int i = pos; i >= 0; i--) {
             if (get(i) == o) {
                 return i;
             }
