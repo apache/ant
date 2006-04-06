@@ -2083,13 +2083,13 @@ public class Javadoc extends Task {
             }
             if (rc instanceof FileSet) {
                 FileSet fs = (FileSet) rc;
-            if (!fs.hasPatterns() && !fs.hasSelectors()) {
-                fs = (FileSet) fs.clone();
-                fs.createInclude().setName("**/*.java");
-                if (includeNoSourcePackages) {
-                    fs.createInclude().setName("**/package.html");
+                if (!fs.hasPatterns() && !fs.hasSelectors()) {
+                    fs = (FileSet) fs.clone();
+                    fs.createInclude().setName("**/*.java");
+                    if (includeNoSourcePackages) {
+                        fs.createInclude().setName("**/package.html");
+                    }
                 }
-            }
             }
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
