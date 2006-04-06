@@ -25,7 +25,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -41,6 +43,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -344,6 +348,23 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Holds a collection of ResourceCollections.
+     *
+     * <p>A separate kind of container is needed since this task
+     * contains special handling for FileSets that has to occur at
+     * task runtime.</p>
+     */
+    public class ResourceCollectionContainer {
+        private ArrayList rcs = new ArrayList();
+        public void add(ResourceCollection rc) {
+            rcs.add(rc);
+        }
+        private Iterator iterator() {
+            return rcs.iterator();
+        }
+    }
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /** The command line built to execute Javadoc. */
@@ -412,7 +433,8 @@ public class Javadoc extends Task {
     private boolean old = false;
     private String executable = null;
 
-    private Vector fileSets = new Vector();
+    private ResourceCollectionContainer nestedSourceFiles
+        = new ResourceCollectionContainer();
     private Vector packageSets = new Vector();
 
     /**
@@ -1514,7 +1536,17 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     public void addFileset(FileSet fs) {
-        fileSets.addElement(fs);
+        createSourceFiles().add(fs);
+    }
+
+    /**
+     * Adds a container for resource collections.
+     *
+     * <p>All included files will be added as sourcefiles.</p>
+     * @since 1.7
+     */
+    public ResourceCollectionContainer createSourceFiles() {
+        return nestedSourceFiles;
     }
 
     /**
@@ -1594,7 +1626,7 @@ public class Javadoc extends Task {
         }
 
         Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
-        addFileSets(sourceFilesToDoc);
+        addSourceFiles(sourceFilesToDoc);
 
         if (packageList == null && packagesToDoc.size() == 0
             && sourceFilesToDoc.size() == 0) {
@@ -2036,15 +2068,21 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Add the files matched by the nested filesets to the Vector as
-     * SourceFile instances.
+     * Add the files matched by the nested source files to the Vector
+     * as SourceFile instances.
      *
-     * @since 1.5
+     * @since 1.7
      */
-    private void addFileSets(Vector sf) {
-        Enumeration e = fileSets.elements();
-        while (e.hasMoreElements()) {
-            FileSet fs = (FileSet) e.nextElement();
+    private void addSourceFiles(Vector sf) {
+        Iterator e = nestedSourceFiles.iterator();
+        while (e.hasNext()) {
+            ResourceCollection rc = (ResourceCollection) e.next();
+            if (!rc.isFilesystemOnly()) {
+                throw new BuildException("only file system based resources are"
+                                         + " supported by javadoc");
+            }
+            if (rc instanceof FileSet) {
+                FileSet fs = (FileSet) rc;
             if (!fs.hasPatterns() && !fs.hasSelectors()) {
                 fs = (FileSet) fs.clone();
                 fs.createInclude().setName("**/*.java");
@@ -2052,11 +2090,11 @@ public class Javadoc extends Task {
                     fs.createInclude().setName("**/package.html");
                 }
             }
-            File baseDir = fs.getDir(getProject());
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] files = ds.getIncludedFiles();
-            for (int i = 0; i < files.length; i++) {
-                sf.addElement(new SourceFile(new File(baseDir, files[i])));
+            }
+            Iterator iter = rc.iterator();
+            while (iter.hasNext()) {
+                sf.addElement(new SourceFile(((FileResource) iter.next())
+                                             .getFile()));
             }
         }
     }

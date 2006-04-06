@@ -56,6 +56,28 @@
     </javadoc>
   </target>
 
+  <target name="nestedFilesetNoPatterns">
+    <javadoc packagenames="*" destdir="javadoc">
+      <fileset dir="java/"/>
+    </javadoc>
+  </target>
+
+  <target name="doublyNestedFileset">
+    <javadoc packagenames="*" destdir="javadoc">
+      <sourcefiles>
+        <fileset dir="java/" includes="**/*.java"/>
+      </sourcefiles>
+    </javadoc>
+  </target>
+
+  <target name="doublyNestedFilesetNoPatterns">
+    <javadoc packagenames="*" destdir="javadoc">
+      <sourcefiles>
+        <fileset dir="java/"/>
+      </sourcefiles>
+    </javadoc>
+  </target>
+
   <path id="path.filelist">
     <pathelement location="."/>
     <filelist dir="java/">

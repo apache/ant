@@ -484,7 +484,7 @@ the nested <code>&lt;packageset&gt;</code> elements.</p>
 <p>A <a href="../CoreTypes/fileset.html">FileSet</a>.  All matched
 files will be passed to javadoc as source files.  Ant will
 automatically add the include pattern <code>**/*.java</code> (and
-<code>**/package.html</code> if inncludenosourcepackages is true) to
+<code>**/package.html</code> if includenosourcepackages is true) to
 these filesets.</p>
 
 <p>Nested filesets can be used to document sources that are in the
@@ -496,6 +496,14 @@ increases javadocs performance.</p>
 <p>The <code>packagenames</code>, <code>excludepackagenames</code> and
 <code>defaultexcludes</code> attributes of the task have no effect on
 the nested <code>&lt;fileset&gt;</code> elements.</p>
+
+<h4>sourcefiles</h4>
+
+<p>A container for arbitrary file system based <a
+href="../CoreTypes/resources.html#collection">resource
+collections</a>.  All files contained in any of the nested collections
+(this includes nested filesets, filelists or paths) will be passed to
+javadoc as source files.</p>
 
 <h4>package</h4>
 <p>Same as one entry in the list given by <code>packagenames</code>.</p>

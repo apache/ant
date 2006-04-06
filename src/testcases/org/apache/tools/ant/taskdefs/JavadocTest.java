@@ -118,4 +118,16 @@ public class JavadocTest extends BuildFileTest {
     public void testNestedFilesetRefInPath() throws Exception {
         executeTarget("nestedFilesetRefInPath");
     }
+
+    public void testNestedFilesetNoPatterns() throws Exception {
+        executeTarget("nestedFilesetNoPatterns");
+    }
+
+    public void testDoublyNestedFileset() throws Exception {
+        executeTarget("doublyNestedFileset");
+    }
+
+    public void testDoublyNestedFilesetNoPatterns() throws Exception {
+        executeTarget("doublyNestedFilesetNoPatterns");
+    }
 }
