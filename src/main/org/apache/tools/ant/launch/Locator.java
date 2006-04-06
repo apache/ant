@@ -339,10 +339,15 @@ public final class Locator {
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
         String javaHome = System.getProperty("java.home");
+        File toolsJar = new File(javaHome + "/lib/tools.jar");
+        if (toolsJar.exists()) {
+        	// Found in java.home as given
+        	return toolsJar;
+        }
         if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
+            toolsJar = new File(javaHome + "/lib/tools.jar");
         }
-        File toolsJar = new File(javaHome + "/lib/tools.jar");
         if (!toolsJar.exists()) {
             System.out.println("Unable to locate tools.jar. "
                  + "Expected to find it in " + toolsJar.getPath());
