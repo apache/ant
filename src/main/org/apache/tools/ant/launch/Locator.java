@@ -341,8 +341,8 @@ public final class Locator {
         String javaHome = System.getProperty("java.home");
         File toolsJar = new File(javaHome + "/lib/tools.jar");
         if (toolsJar.exists()) {
-        	// Found in java.home as given
-        	return toolsJar;
+            // Found in java.home as given
+            return toolsJar;
         }
         if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
