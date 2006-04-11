@@ -770,7 +770,7 @@ public class Redirector {
                         // Ignore exception
                     }
                 }
-                Thread.sleep(1000);
+                wait(1000);
             } catch (InterruptedException eyeEx) {
                 // Ignore exception
             }

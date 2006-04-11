@@ -195,6 +195,8 @@ Fixed bugs:
 
 * <available> could leak resources, Bugzilla Report 38260.
 
+* redirector called Thread.sleep in a synchronized method. Bugzilla report 37767.
+
 Other changes:
 --------------
 * Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
