@@ -146,7 +146,7 @@ a=b=
         <file file="${from.dir}/file1.txt"/>
         <file file="${from.dir}/file2.txt"/>
         <file file="${from.dir}/file3.txt"/>
-      </resources>            
+      </resources>
     </copy>
   </target>
 
@@ -156,7 +156,7 @@ a=b=
         <file file="${from.dir}/file1.txt"/>
         <file file="${from.dir}/file2.txt"/>
         <file file="${from.dir}/file3.txt"/>
-      </resources>            
+      </resources>
       <regexpmapper from="^(.*)\.txt$$" to="\1.txt.bak"/>
     </copy>
   </target>
@@ -165,7 +165,7 @@ a=b=
     <copy todir="${to.dir}" flatten="true">
       <resources>
         <file file="${from.dir}/fileNR.txt"/>
-      </resources>            
+      </resources>
       <filterset>
         <filter token="NR" value="42"/>
       </filterset>
@@ -188,8 +188,8 @@ a=b=
     <copy todir="${to.dir}">
       <path>
         <fileset dir="${from.dir}"/>
-      </path>   
-    </copy>     
+      </path>
+    </copy>
   </target>
 
   <target name="testZipfileset" depends="testResource.prepare">
@@ -201,7 +201,7 @@ a=b=
     </copy>
   </target>
 
-  <target name="cleanup"> 
+  <target name="cleanup">
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>
     <delete file="copytest3a.tmp"/>
