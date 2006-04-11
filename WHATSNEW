@@ -195,7 +195,11 @@ Fixed bugs:
 
 * <available> could leak resources, Bugzilla Report 38260.
 
-* redirector called Thread.sleep in a synchronized method. Bugzilla report 37767.
+* Redirector called Thread.sleep in a synchronized block. Bugzilla report 37767.
+
+* CCUnlock's objselect attribute could exhibit unpredictable behavior;
+  standardized improperly included objselect and objsel property accessors to
+  delegate to the inherited objSelect property accessor. Bugzilla report 37766.
 
 Other changes:
 --------------
