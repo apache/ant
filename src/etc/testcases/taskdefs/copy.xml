@@ -5,7 +5,7 @@
   <target name="test1">
     <copy file="copy.xml" tofile="copytest1.tmp" />
   </target>
- 
+
   <target name="test2">
     <copy file="copy.xml" todir="copytest1dir" overwrite="true"/>
   </target>
@@ -47,7 +47,7 @@ a=b=
     <touch file="copytest3.tmp"/>
     <!--wait -->
     <sleep seconds="4"/>
-    <!-- copy a different file to two places --> 
+    <!-- copy a different file to two places -->
     <copy file="copy.xml" tofile="copytest3a.tmp" overwrite="true"/>
     <copy file="copy.xml" tofile="copytest3b.tmp" overwrite="true"/>
     <!--wait -->
@@ -59,7 +59,7 @@ a=b=
       overwrite="true"
       preservelastmodified="true" />
     <!-- copy a newer file onto an older one (should work) -->
-    <copy file="copytest3a.tmp" tofile="copytest3.tmp" 
+    <copy file="copytest3a.tmp" tofile="copytest3.tmp"
       preservelastmodified="true" />
     <!-- expected state :
       3a.tmp==3.tmp==copy.xml
@@ -69,13 +69,13 @@ a=b=
       3b.tmp==copy.xml
     -->
   </target>
-  
+
   <target name="test_single_file_fileset">
     <copy tofile="copytest_single_file_fileset.tmp">
       <fileset dir="." includes="copy.xml"/>
     </copy>
   </target>
-  
+
   <target name="test_single_file_path">
     <copy tofile="copytest_single_file_path.tmp">
       <path>
@@ -83,7 +83,7 @@ a=b=
       </path>
     </copy>
   </target>
-  
+
   <target name="testFilterSet">
     <copy file="copy.filterset" tofile="copy.filterset.tmp">
       <filterset>
@@ -129,14 +129,9 @@ a=b=
     </copy>
   </target>
 
-<!--    
-  <typedef name="resource" classname="org.apache.tools.ant.types.Resource"/>
-  <typedef name="resources" classname="org.apache.tools.ant.types.resources.Resources"/>
--->  
-        
   <property name="to.dir" value="copy-todir-tmp"/>
   <property name="from.dir" value="copy-fromdir-tmp"/>
-        
+
   <target name="testResource.prepare">
     <mkdir dir="${from.dir}"/>
     <concat destfile="${from.dir}/file1.txt">This is file 1</concat>
@@ -144,7 +139,7 @@ a=b=
     <concat destfile="${from.dir}/file3.txt">This is file 3</concat>
     <concat destfile="${from.dir}/fileNR.txt">This is file @NR@</concat>
   </target>
-        
+
   <target name="testFileResourcePlain" depends="testResource.prepare">
     <copy todir="${to.dir}" flatten="true">
       <resources>
@@ -176,19 +171,19 @@ a=b=
       </filterset>
     </copy>
   </target>
-                
+
   <target name="testResourcePlain">
   </target>
-        
+
   <target name="testResourcePlainWithMapper">
   </target>
-    
+
   <target name="testResourcePlainWithFilter">
   </target>
-        
+
   <target name="testOnlineResources">
   </target>
-        
+
   <target name="testPathAsResource" depends="testResource.prepare">
     <copy todir="${to.dir}">
       <path>
@@ -196,7 +191,7 @@ a=b=
       </path>   
     </copy>     
   </target>
-        
+
   <target name="testZipfileset" depends="testResource.prepare">
     <zip destfile="${from.dir}/test.zip" roundup="false">
       <fileset dir="${from.dir}" excludes="*.zip"/>
@@ -205,7 +200,7 @@ a=b=
       <zipfileset src="${from.dir}/test.zip"/>
     </copy>
   </target>
-  
+
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>
