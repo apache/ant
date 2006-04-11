@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
@@ -161,7 +162,8 @@ public class Javac extends MatchingTask {
      * @return value of source.
      */
     public String getSource() {
-        return source;
+        return source != null
+            ? source : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
     }
 
     /**
@@ -586,7 +588,9 @@ public class Javac extends MatchingTask {
      * @return the target VM
      */
     public String getTarget() {
-        return targetAttribute;
+        return targetAttribute != null
+            ? targetAttribute
+            : getProject().getProperty(MagicNames.BUILD_JAVAC_TARGET);
     }
 
     /**

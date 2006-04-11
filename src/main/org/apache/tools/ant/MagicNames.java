@@ -128,5 +128,21 @@ public final class MagicNames {
      */
     public static final String REGEXP_IMPL = "ant.regexp.regexpimpl";
 
+    /**
+     * property that provides the default value for javac's and
+     * javadoc's source attribute.
+     * @since Ant 1.7
+     * Value: {@value}
+     */
+    public static final String BUILD_JAVAC_SOURCE = "ant.build.javac.source";
+
+    /**
+     * property that provides the default value for javac's target
+     * attribute.
+     * @since Ant 1.7
+     * Value: {@value}
+     */
+    public static final String BUILD_JAVAC_TARGET = "ant.build.javac.target";
+
 }
 

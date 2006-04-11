@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -212,4 +212,33 @@ public class JavacTest extends TestCase {
         assertTrue(adapter instanceof JavacExternal);
     }
 
+    public void testSourceNoDefault() {
+        assertNull(javac.getSource());
+    }
+
+    public void testSourceWithDefault() {
+        project.setNewProperty("ant.build.javac.source", "1.4");
+        assertEquals("1.4", javac.getSource());
+    }
+
+    public void testSourceOverridesDefault() {
+        project.setNewProperty("ant.build.javac.source", "1.4");
+        javac.setSource("1.5");
+        assertEquals("1.5", javac.getSource());
+    }
+
+    public void testTargetNoDefault() {
+        assertNull(javac.getTarget());
+    }
+
+    public void testTargetWithDefault() {
+        project.setNewProperty("ant.build.javac.target", "1.4");
+        assertEquals("1.4", javac.getTarget());
+    }
+
+    public void testTargetOverridesDefault() {
+        project.setNewProperty("ant.build.javac.target", "1.4");
+        javac.setTarget("1.5");
+        assertEquals("1.5", javac.getTarget());
+    }
 }

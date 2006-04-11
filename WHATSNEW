@@ -376,7 +376,11 @@ Other changes:
   dare not change for fear of breaking complex SQL operations in
   existing files.
 
-* <javadoc>'s packagenames attribute is now optional and default to "*".
+* <javadoc>'s packagenames attribute is now optional and defaults to "*".
+
+* <javac>'s source and target attributes as well as <javadoc>'s source
+  attribute will read default values from the properties
+  ant.build.javac.source and ant.build.javac.target.
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================

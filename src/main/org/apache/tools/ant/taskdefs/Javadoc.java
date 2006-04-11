@@ -33,6 +33,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
@@ -1912,9 +1913,11 @@ public class Javadoc extends Task {
                 }
             }
 
-            if (source != null) {
+            String sourceArg = source != null ? source 
+                : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
+            if (sourceArg != null) {
                 toExecute.createArgument().setValue("-source");
-                toExecute.createArgument().setValue(source);
+                toExecute.createArgument().setValue(sourceArg);
             }
 
             if (linksource && doclet == null) {
