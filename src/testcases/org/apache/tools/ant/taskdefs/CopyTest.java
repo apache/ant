@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright 2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -205,6 +205,10 @@ public class CopyTest extends BuildFileTest {
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
+    }
+
+    public void testDirset() {
+        executeTarget("testDirset");
     }
     
     public void _testResourcePlain() {

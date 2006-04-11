@@ -201,6 +201,55 @@ a=b=
     </copy>
   </target>
 
+  <target name="prepareDirset">
+    <touch mkdirs="true">
+      <filelist dir="${from.dir}/dirset">
+        <file name="a/x/foo" />
+        <file name="a/y/foo" />
+        <file name="a/z/foo" />
+        <file name="b/x/foo" />
+        <file name="b/y/foo" />
+        <file name="b/z/foo" />
+      </filelist>
+    </touch>
+    <fail>
+      <condition>
+        <or>
+          <resourcecount when="ne" count="9">
+            <dirset id="dirset" dir="${from.dir}/dirset" />
+          </resourcecount>
+          <resourcecount when="ne" count="6">
+            <fileset dir="${from.dir}/dirset" />
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+    <delete dir="${to.dir}/dirset" />
+    <fail>
+      <condition>
+        <available file="${to.dir}/dirset" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testDirset" depends="prepareDirset">
+    <copy todir="${to.dir}/dirset">
+      <resources refid="dirset" />
+    </copy>
+    <fail>
+      <condition>
+        <or>
+          <resourcecount when="ne" count="9">
+            <dirset dir="${to.dir}/dirset" />
+          </resourcecount>
+          <resourcecount when="ne" count="0">
+            <fileset dir="${to.dir}/dirset" />
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup">
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>
