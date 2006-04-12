@@ -129,9 +129,9 @@ public class Target implements TaskContainer {
 
                 // Make sure the dependency is not empty string
                 if ("".equals(token) || ",".equals(token)) {
-                    throw new BuildException("Syntax Error: Depend "
-                        + "attribute for target \"" + getName()
-                        + "\" has an empty string for dependency.");
+                    throw new BuildException("Syntax Error: depends "
+                        + "attribute of target \"" + getName()
+                        + "\" has an empty string as dependency.");
                 }
 
                 addDependency(token);

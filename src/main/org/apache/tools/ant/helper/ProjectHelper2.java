@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -817,10 +817,6 @@ public class ProjectHelper2 extends ProjectHelper {
                     "Duplicate target '" + name + "'", target.getLocation());
             }
 
-            if (depends.length() > 0) {
-                target.setDepends(depends);
-            }
-
             Hashtable projectTargets = project.getTargets();
             boolean   usedTarget = false;
             // If the name has not already been defined define it
@@ -832,6 +828,10 @@ public class ProjectHelper2 extends ProjectHelper {
                 context.getCurrentTargets().put(name, target);
                 project.addOrReplaceTarget(name, target);
                 usedTarget = true;
+            }
+
+            if (depends.length() > 0) {
+                target.setDepends(depends);
             }
 
             if (context.isIgnoringProjectTag() && context.getCurrentProjectName() != null
