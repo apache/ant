@@ -74,7 +74,9 @@ used.</p>
 of the build file's targets. Targets that include a
 <code>description</code> attribute are listed as &quot;Main targets&quot;,
 those without a <code>description</code> are listed as
-&quot;Subtargets&quot;, then the &quot;Default&quot; target is listed.
+&quot;Other targets&quot;, then the &quot;Default&quot; target is listed
+("Other targets" are only displayed if there are no main
+targets, or if Ant is invoked in -verbose or -debug mode).
 
 <h3><a name="options">Command-line Options Summary</a></h3>
 <pre>ant [options] [target [target2 [target3] ...]]
@@ -108,7 +110,7 @@ Options:
   -nice  number          A niceness value for the main thread:
                          1 (lowest) to 10 (highest); 5 is the default
   -nouserlib             Run ant without using the jar files from ${user.home}/.ant/lib
-  -noclasspath           Run ant without using CLASSPATH                         
+  -noclasspath           Run ant without using CLASSPATH
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
