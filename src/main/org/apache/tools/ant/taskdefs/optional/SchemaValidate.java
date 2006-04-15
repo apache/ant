@@ -1,5 +1,5 @@
 /*
- * Copyright  2005 The Apache Software Foundation
+ * Copyright  2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.io.File;
 import java.net.MalformedURLException;
 
-
 /**
  * Validate XML Schema documents.
  * This task validates XML schema documents. It requires an XML parser
@@ -50,15 +49,15 @@ import java.net.MalformedURLException;
 public class SchemaValidate extends XMLValidateTask {
 
     /** map of all declared schemas; we catch and complain about redefinitions */
-    private HashMap schemaLocations= new HashMap();
+    private HashMap schemaLocations = new HashMap();
 
     /** full checking of a schema */
-    private boolean fullChecking=true;
+    private boolean fullChecking = true;
 
     /**
      * flag to disable DTD support. Best left enabled.
      */
-    private boolean disableDTD=false;
+    private boolean disableDTD = false;
 
     /**
      * default URL for nonamespace schemas
@@ -66,12 +65,15 @@ public class SchemaValidate extends XMLValidateTask {
     private SchemaLocation anonymousSchema;
 
     public static final String ERROR_SAX_1 = "SAX1 parsers are not supported";
-    public static final String ERROR_NO_XSD_SUPPORT =
-            "Parser does not support Xerces or JAXP schema features";
-    public static final String ERROR_TOO_MANY_DEFAULT_SCHEMAS =
-            "Only one of defaultSchemaFile and defaultSchemaURL allowed";
+
+    public static final String ERROR_NO_XSD_SUPPORT = "Parser does not support Xerces or JAXP schema features";
+
+    public static final String ERROR_TOO_MANY_DEFAULT_SCHEMAS = "Only one of defaultSchemaFile and defaultSchemaURL allowed";
+
     public static final String ERROR_PARSER_CREATION_FAILURE = "Could not create parser";
+
     public static final String MESSAGE_ADDING_SCHEMA = "Adding schema ";
+
     public static final String ERROR_DUPLICATE_SCHEMA = "Duplicate declaration of schema ";
 
     /**
@@ -92,12 +94,11 @@ public class SchemaValidate extends XMLValidateTask {
      */
     public boolean enableXercesSchemaValidation() {
         try {
-            setFeature(XmlConstants.FEATURE_XSD,true);
+            setFeature(XmlConstants.FEATURE_XSD, true);
             //set the schema source for the doc
-            setNoNamespaceSchemaProperty(
-                    XmlConstants.PROPERTY_NO_NAMESPACE_SCHEMA_LOCATION);
+            setNoNamespaceSchemaProperty(XmlConstants.PROPERTY_NO_NAMESPACE_SCHEMA_LOCATION);
         } catch (BuildException e) {
-            log(e.toString(),Project.MSG_VERBOSE);
+            log(e.toString(), Project.MSG_VERBOSE);
             return false;
         }
         return true;
@@ -110,8 +111,7 @@ public class SchemaValidate extends XMLValidateTask {
     private void setNoNamespaceSchemaProperty(String property) {
         String anonSchema = getNoNamespaceSchemaURL();
         if (anonSchema != null) {
-            setProperty(property,
-                    anonSchema);
+            setProperty(property, anonSchema);
         }
     }
 
@@ -124,11 +124,9 @@ public class SchemaValidate extends XMLValidateTask {
     public boolean enableJAXP12SchemaValidation() {
         try {
             //enable XSD
-            setProperty(XmlConstants.FEATURE_JAXP12_SCHEMA_LANGUAGE,
-                    XmlConstants.URI_XSD);
+            setProperty(XmlConstants.FEATURE_JAXP12_SCHEMA_LANGUAGE, XmlConstants.URI_XSD);
             //set the schema source for the doc
-            setNoNamespaceSchemaProperty(
-                    XmlConstants.FEATURE_JAXP12_SCHEMA_SOURCE);
+            setNoNamespaceSchemaProperty(XmlConstants.FEATURE_JAXP12_SCHEMA_SOURCE);
         } catch (BuildException e) {
             log(e.toString(), Project.MSG_VERBOSE);
             return false;
@@ -143,12 +141,11 @@ public class SchemaValidate extends XMLValidateTask {
      * is a declaration of this schema with a different value
      */
     public void addConfiguredSchema(SchemaLocation location) {
-        log("adding schema "+location,Project.MSG_DEBUG);
+        log("adding schema " + location, Project.MSG_DEBUG);
         location.validateNamespace();
-        SchemaLocation old=(SchemaLocation) schemaLocations.get(
-                location.getNamespace());
-        if(old!=null && !old.equals(location)) {
-            throw new BuildException(ERROR_DUPLICATE_SCHEMA+location);
+        SchemaLocation old = (SchemaLocation) schemaLocations.get(location.getNamespace());
+        if (old != null && !old.equals(location)) {
+            throw new BuildException(ERROR_DUPLICATE_SCHEMA + location);
         }
         schemaLocations.put(location.getNamespace(), location);
     }
@@ -161,17 +158,17 @@ public class SchemaValidate extends XMLValidateTask {
         this.fullChecking = fullChecking;
     }
 
-
     /**
      * create a schema location to hold the anonymous
      * schema
      */
     protected void createAnonymousSchema() {
-        if(anonymousSchema==null) {
-            anonymousSchema=new SchemaLocation();
+        if (anonymousSchema == null) {
+            anonymousSchema = new SchemaLocation();
         }
         anonymousSchema.setNamespace("(no namespace)");
     }
+
     /**
      * identify the URL of the default schema
      * @param defaultSchemaURL
@@ -207,24 +204,24 @@ public class SchemaValidate extends XMLValidateTask {
     protected void initValidator() {
         super.initValidator();
         //validate the parser type
-        if(isSax1Parser()) {
+        if (isSax1Parser()) {
             throw new BuildException(ERROR_SAX_1);
         }
 
         //enable schema
-        //setFeature(XmlConstants.FEATURE_VALIDATION,false);
-        setFeature(XmlConstants.FEATURE_NAMESPACES,true);
-        if(!enableXercesSchemaValidation() &&
-                !enableJAXP12SchemaValidation()) {
+        //setFeature(XmlConstants.FEATURE_VALIDATION, false);
+        setFeature(XmlConstants.FEATURE_NAMESPACES, true);
+        if (!enableXercesSchemaValidation() && !enableJAXP12SchemaValidation()) {
             //couldnt use the xerces or jaxp calls
             throw new BuildException(ERROR_NO_XSD_SUPPORT);
         }
 
         //enable schema checking
-        setFeature(XmlConstants.FEATURE_XSD_FULL_VALIDATION,fullChecking);
+        setFeature(XmlConstants.FEATURE_XSD_FULL_VALIDATION, fullChecking);
 
         //turn off DTDs if desired
-        setFeatureIfSupported(XmlConstants.FEATURE_DISALLOW_DTD,disableDTD);
+        setFeatureIfSupported(XmlConstants.FEATURE_DISALLOW_DTD, disableDTD);
+
         //schema declarations go in next
         addSchemaLocations();
     }
@@ -244,7 +241,7 @@ public class SchemaValidate extends XMLValidateTask {
             SAXParser saxParser = factory.newSAXParser();
             reader = saxParser.getXMLReader();
         } catch (ParserConfigurationException e) {
-            throw new BuildException(ERROR_PARSER_CREATION_FAILURE,e);
+            throw new BuildException(ERROR_PARSER_CREATION_FAILURE, e);
         } catch (SAXException e) {
             throw new BuildException(ERROR_PARSER_CREATION_FAILURE, e);
         }
@@ -266,7 +263,7 @@ public class SchemaValidate extends XMLValidateTask {
             SchemaLocation schemaLocation = (SchemaLocation) it.next();
             String tuple = schemaLocation.getURIandLocation();
             buffer.append(tuple);
-            log("Adding schema "+tuple,Project.MSG_VERBOSE);
+            log("Adding schema " + tuple, Project.MSG_VERBOSE);
             count++;
         }
         if (count > 0) {
@@ -280,7 +277,7 @@ public class SchemaValidate extends XMLValidateTask {
      * @return
      */
     protected String getNoNamespaceSchemaURL() {
-        if(anonymousSchema==null) {
+        if (anonymousSchema == null) {
             return null;
         } else {
             return anonymousSchema.getSchemaLocationURL();
@@ -293,11 +290,11 @@ public class SchemaValidate extends XMLValidateTask {
      * @param feature
      * @param value
      */
-    protected void setFeatureIfSupported(String feature,boolean value) {
+    protected void setFeatureIfSupported(String feature, boolean value) {
         try {
             getXmlReader().setFeature(feature, value);
         } catch (SAXNotRecognizedException e) {
-            log("Not recognizied: "+feature,Project.MSG_VERBOSE);
+            log("Not recognizied: " + feature, Project.MSG_VERBOSE);
         } catch (SAXNotSupportedException e) {
             log("Not supported: " + feature, Project.MSG_VERBOSE);
         }
@@ -309,7 +306,7 @@ public class SchemaValidate extends XMLValidateTask {
      * @param fileProcessed number of files processed.
      */
     protected void onSuccessfulValidation(int fileProcessed) {
-        log(fileProcessed + MESSAGE_FILES_VALIDATED,Project.MSG_VERBOSE);
+        log(fileProcessed + MESSAGE_FILES_VALIDATED, Project.MSG_VERBOSE);
     }
 
     /**
@@ -318,19 +315,23 @@ public class SchemaValidate extends XMLValidateTask {
      */
     public static class SchemaLocation {
         private String namespace;
+
         private File file;
+
         private String url;
 
         public static final String ERROR_NO_URI = "No namespace URI";
-        public static final String ERROR_TWO_LOCATIONS =
-                "Both URL and File were given for schema ";
+
+        public static final String ERROR_TWO_LOCATIONS = "Both URL and File were given for schema ";
+
         public static final String ERROR_NO_FILE = "File not found: ";
+
         public static final String ERROR_NO_URL_REPRESENTATION = "Cannot make a URL of ";
+
         public static final String ERROR_NO_LOCATION = "No file or URL supplied for the schema ";
 
         public SchemaLocation() {
         }
-
 
         public String getNamespace() {
             return namespace;
@@ -378,9 +379,8 @@ public class SchemaValidate extends XMLValidateTask {
             boolean hasFile = file != null;
             boolean hasURL = isSet(url);
             //error if both are empty, or both are set
-            if(!hasFile && !hasURL) {
-                throw new BuildException(
-                        ERROR_NO_LOCATION+namespace);
+            if (!hasFile && !hasURL) {
+                throw new BuildException(ERROR_NO_LOCATION + namespace);
             }
             if (hasFile && hasURL) {
                 throw new BuildException(ERROR_TWO_LOCATIONS + namespace);
@@ -392,11 +392,10 @@ public class SchemaValidate extends XMLValidateTask {
                 }
 
                 try {
-                    schema =
-                        FileUtils.getFileUtils().getFileURL(file).toString();
+                    schema = FileUtils.getFileUtils().getFileURL(file).toString();
                 } catch (MalformedURLException e) {
                     //this is almost implausible, but required handling
-                    throw new BuildException(ERROR_NO_URL_REPRESENTATION + file,e);
+                    throw new BuildException(ERROR_NO_URL_REPRESENTATION + file, e);
                 }
             }
             return schema;
@@ -452,19 +451,14 @@ public class SchemaValidate extends XMLValidateTask {
 
             final SchemaLocation schemaLocation = (SchemaLocation) o;
 
-            if (file != null ?
-                    !file.equals(schemaLocation.file) :
-                    schemaLocation.file != null) {
+            if (file != null ? !file.equals(schemaLocation.file) : schemaLocation.file != null) {
                 return false;
             }
-            if (namespace != null ?
-                    !namespace.equals(schemaLocation.namespace) :
-                    schemaLocation.namespace != null) {
+            if (namespace != null ? !namespace.equals(schemaLocation.namespace)
+                    : schemaLocation.namespace != null) {
                 return false;
             }
-            if (url != null ?
-                    !url.equals(schemaLocation.url) :
-                    schemaLocation.url != null) {
+            if (url != null ? !url.equals(schemaLocation.url) : schemaLocation.url != null) {
                 return false;
             }
 
@@ -489,11 +483,11 @@ public class SchemaValidate extends XMLValidateTask {
          * @return a string representation of the object.
          */
         public String toString() {
-            StringBuffer buffer=new StringBuffer();
-            buffer.append(namespace!=null?namespace:"(anonymous)");
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(namespace != null ? namespace : "(anonymous)");
             buffer.append(' ');
-            buffer.append(url!=null?(url+" "):"");
-            buffer.append(file!=null?file.getAbsolutePath():"");
+            buffer.append(url != null ? (url + " ") : "");
+            buffer.append(file != null ? file.getAbsolutePath() : "");
             return buffer.toString();
         }
     } //SchemaLocation

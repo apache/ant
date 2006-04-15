@@ -1,5 +1,5 @@
 /*
- * Copyright  2005 The Apache Software Foundation
+ * Copyright  2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  *
  */
 
-
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
@@ -26,14 +25,14 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-
 import java.io.File;
 import java.io.IOException;
 
 /**
  * Copy the contents of a path to a destination, using the mapper of choice
+ * 
  * @since Ant 1.7
- *
+ * 
  * @ant.task category="filesystem"
  */
 
@@ -44,10 +43,12 @@ public class CopyPath extends Task {
     private Path path;
 
     private File destDir;
+
     protected FileUtils fileUtils;
-    
-    //TODO not read, yet in a public setter
+
+    // TODO not read, yet in a public setter
     private long granularity = 0;
+
     protected boolean preserveLastModified = false;
 
     public CopyPath() {
@@ -56,7 +57,9 @@ public class CopyPath extends Task {
     }
 
     public static final String ERROR_NO_DESTDIR = "No destDir specified";
+
     public static final String ERROR_NO_PATH = "No path specified";
+
     public static final String ERROR_NO_MAPPER = "No mapper specified";
 
     public void setDestDir(File destDir) {
@@ -65,20 +68,21 @@ public class CopyPath extends Task {
 
     /**
      * add a mapper
+     * 
      * @param newmapper
      */
     public void add(FileNameMapper newmapper) {
-        if(mapper!=null) {
+        if (mapper != null) {
             throw new BuildException("Only one mapper allowed");
         }
-        mapper=newmapper;
+        mapper = newmapper;
     }
-
 
     /**
      * Set the path to be used when running the Java class.
-     *
-     * @param s an Ant Path object containing the path.
+     * 
+     * @param s
+     *            an Ant Path object containing the path.
      */
     public void setPath(Path s) {
         createPath().append(s);
@@ -86,8 +90,9 @@ public class CopyPath extends Task {
 
     /**
      * Set the path to use by reference.
-     *
-     * @param r a reference to an existing path.
+     * 
+     * @param r
+     *            a reference to an existing path.
      */
     public void setPathRef(Reference r) {
         createPath().setRefid(r);
@@ -95,7 +100,7 @@ public class CopyPath extends Task {
 
     /**
      * Create a path.
-     *
+     * 
      * @return a path to be configured.
      */
     public Path createPath() {
@@ -116,25 +121,27 @@ public class CopyPath extends Task {
     /**
      * Ensure we have a consistent and legal set of attributes, and set any
      * internal flags necessary based on different combinations of attributes.
-     *
-     * @throws BuildException if an error occurs.
+     * 
+     * @throws BuildException
+     *             if an error occurs.
      */
     protected void validateAttributes() throws BuildException {
-        if(destDir==null) {
+        if (destDir == null) {
             throw new BuildException(ERROR_NO_DESTDIR);
         }
-        if(mapper==null) {
+        if (mapper == null) {
             throw new BuildException(ERROR_NO_MAPPER);
         }
-        if(path==null) {
+        if (path == null) {
             throw new BuildException(ERROR_NO_PATH);
         }
     }
 
     /**
      * This is a very minimal derivative of the nomal copy logic.
-     *
-     * @throws BuildException if something goes wrong with the build.
+     * 
+     * @throws BuildException
+     *             if something goes wrong with the build.
      */
     public void execute() throws BuildException {
         validateAttributes();
@@ -147,46 +154,35 @@ public class CopyPath extends Task {
         for (int sources = 0; sources < sourceFiles.length; sources++) {
 
             String sourceFileName = sourceFiles[sources];
-            File sourceFile=new File(sourceFileName);
+            File sourceFile = new File(sourceFileName);
             String[] toFiles = (String[]) mapper.mapFileName(sourceFileName);
 
             for (int i = 0; i < toFiles.length; i++) {
                 String destFileName = toFiles[i];
-                File destFile=new File(destDir,destFileName);
+                File destFile = new File(destDir, destFileName);
 
-
-                
                 if (sourceFile.equals(destFile)) {
-                    log("Skipping self-copy of " + sourceFileName,
-                            Project.MSG_VERBOSE);
+                    log("Skipping self-copy of " + sourceFileName, Project.MSG_VERBOSE);
                     continue;
                 }
-                if(sourceFile.isDirectory()) {
+                if (sourceFile.isDirectory()) {
                     log("Skipping directory " + sourceFileName);
                     continue;
                 }
                 try {
-                    log("Copying " + sourceFile + " to " + destFile,
-                            Project.MSG_VERBOSE);
+                    log("Copying " + sourceFile + " to " + destFile, Project.MSG_VERBOSE);
 
-                    fileUtils.copyFile(sourceFile, destFile, null,
-                            null, false,
-                            preserveLastModified, null,
-                            null, getProject());
+                    fileUtils.copyFile(sourceFile, destFile, null, null, false,
+                            preserveLastModified, null, null, getProject());
                 } catch (IOException ioe) {
-                    String msg = "Failed to copy "
-                            + sourceFile 
-                            + " to "
-                            + destFile
-                            + " due to " + ioe.getMessage();
+                    String msg = "Failed to copy " + sourceFile + " to " + destFile + " due to "
+                            + ioe.getMessage();
                     if (destFile.exists() && !destFile.delete()) {
                         msg += " and I couldn't delete the corrupt " + destFile;
                     }
                     throw new BuildException(msg, ioe, getLocation());
                 }
             }
-
         }
-
     }
 }

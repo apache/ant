@@ -323,23 +323,25 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return An empty string if label is not set.
      */
     protected String getLabel() {
-    	String shortLabel="";
+        String shortLabel = "";
         if (label != null && label.length() > 0) {
                 shortLabel = FLAG_LABEL + getShortLabel();
-        } 
+        }
         return shortLabel;
     }
     /**
-     * Return at most the 30 first chars of the label, logging a warning message about the truncation
+     * Return at most the 30 first chars of the label,
+     * logging a warning message about the truncation
      * @return at most the 30 first chars of the label
      */
     private String getShortLabel() {
-    	String shortLabel;
+        String shortLabel;
         if (label !=  null && label.length() > 31) {
-        	shortLabel = this.label.substring(0, 30);
-            log("Label is longer than 31 characters, truncated to: " + shortLabel, Project.MSG_WARN);
+            shortLabel = this.label.substring(0, 30);
+            log("Label is longer than 31 characters, truncated to: " + shortLabel,
+                Project.MSG_WARN);
         } else {
-        	shortLabel = label;
+            shortLabel = label;
         }
         return shortLabel;
     }
@@ -357,17 +359,17 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return An empty string if a version, date and label are not set.
      */
     protected String getVersionDateLabel() {
-    	String versionDateLabel = "";
+        String versionDateLabel = "";
         if (version != null) {
-        	versionDateLabel = FLAG_VERSION + version;
+            versionDateLabel = FLAG_VERSION + version;
         } else if (date != null) {
-        	versionDateLabel = FLAG_VERSION_DATE + date;
+            versionDateLabel = FLAG_VERSION_DATE + date;
         } else {
             // Use getShortLabel() so labels longer then 30 char are truncated
             // and the user is warned
             String shortLabel = getShortLabel();
             if (shortLabel != null && !shortLabel.equals("")) {
-            	versionDateLabel = FLAG_VERSION_LABEL + shortLabel;
+                versionDateLabel = FLAG_VERSION_LABEL + shortLabel;
             }
         }
         return versionDateLabel;
@@ -387,9 +389,9 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return An empty string if localpath is not set.
      */
     protected String getLocalpath() {
-    	String lclPath = ""; //set to empty str if no local path return
-    	if (localPath != null) {
-    		//make sure m_LocalDir exists, create it if it doesn't
+        String lclPath = ""; //set to empty str if no local path return
+        if (localPath != null) {
+            //make sure m_LocalDir exists, create it if it doesn't
             File dir = getProject().resolveFile(localPath);
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
@@ -401,7 +403,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
                 getProject().log("Created dir: " + dir.getAbsolutePath());
             }
             lclPath = FLAG_OVERRIDE_WORKING_DIR + localPath;
-    	}
+        }
         return lclPath;
     }
 

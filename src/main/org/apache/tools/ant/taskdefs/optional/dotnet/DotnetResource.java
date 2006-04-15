@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,12 +25,10 @@ import java.util.Iterator;
 import org.apache.tools.ant.*;
 
 /**
- * class used by DotnetCompile to name resources, could be upgraded to a datatype
- * in the distant future.
- * a resource maps to /res:file,name
+ * class used by DotnetCompile to name resources, could be upgraded to a
+ * datatype in the distant future. a resource maps to /res:file,name
  */
 public class DotnetResource {
-
 
     /**
      * name of resource
@@ -55,7 +53,7 @@ public class DotnetResource {
     /**
      * A list of filesets with resources.
      */
-    private ArrayList fileSets=new ArrayList();
+    private ArrayList fileSets = new ArrayList();
 
     /**
      * a namespace to be used with <filesets>
@@ -68,6 +66,7 @@ public class DotnetResource {
 
     /**
      * embed the resource in the assembly (default, true) or just link to it.
+     * 
      * @param embed
      */
     public void setEmbed(boolean embed) {
@@ -80,6 +79,7 @@ public class DotnetResource {
 
     /**
      * name the resource
+     * 
      * @param file
      */
     public void setFile(File file) {
@@ -92,6 +92,7 @@ public class DotnetResource {
 
     /**
      * VB and J# only: is a resource public or not?
+     * 
      * @param aPublic
      */
     public void setPublic(Boolean aPublic) {
@@ -104,6 +105,7 @@ public class DotnetResource {
 
     /**
      * should the resource have a name?
+     * 
      * @param name
      */
     public void setName(String name) {
@@ -112,6 +114,7 @@ public class DotnetResource {
 
     /**
      * Filesets root namespace. The value always ends with '.' .
+     * 
      * @return String namespace name
      */
     public String getNamespace() {
@@ -120,76 +123,83 @@ public class DotnetResource {
 
     /**
      * Sets filesets root namespace.
-     * @param namespace String root namespace
+     * 
+     * @param namespace
+     *            String root namespace
      */
     public void setNamespace(String namespace) {
-        if (namespace==null) this.namespace=null;
-        else this.namespace=(namespace.length()==0 || namespace.endsWith(".") ? namespace : namespace+'.');
+        if (namespace == null) {
+            this.namespace = null;
+        } else {
+            this.namespace = (namespace.length() == 0 || namespace.endsWith(".") ? namespace
+                    : namespace + '.');
+        }
     }
 
     private void checkParameters() {
         if (hasFilesets()) {
-            if (getName()!=null) throw new BuildException(
-                "Cannot use <resource name=\"...\"> attribute with filesets");
-            if (getFile()!=null) throw new BuildException(
-                "Cannot use <resource file=\"...\"> attribute with filesets");
-        }
-        else {
-            if (getNamespace()!=null) throw new BuildException(
-                "Cannot use <resource namespace=\"...\"> attribute without filesets");
+            if (getName() != null)
+                throw new BuildException(
+                        "Cannot use <resource name=\"...\"> attribute with filesets");
+            if (getFile() != null)
+                throw new BuildException(
+                        "Cannot use <resource file=\"...\"> attribute with filesets");
+        } else {
+            if (getNamespace() != null)
+                throw new BuildException(
+                        "Cannot use <resource namespace=\"...\"> attribute without filesets");
         }
     }
+
     /**
      * build the C# style parameter (which has no public/private option)
+     * 
      * @return the built C# style parameter
      */
     public void getParameters(Project p, NetCommand command, boolean csharpStyle) {
         checkParameters();
         if (hasFilesets()) {
-            for (Iterator listIter=fileSets.iterator(); listIter.hasNext();) {
-                FileSet fs=(FileSet)listIter.next();;
-                String baseDirectory=fs.getDir(p).toString();
-                String namespace=getNamespace(); // ends with '.' or null
+            for (Iterator listIter = fileSets.iterator(); listIter.hasNext();) {
+                FileSet fs = (FileSet) listIter.next();
+                ;
+                String baseDirectory = fs.getDir(p).toString();
+                String namespace = getNamespace(); // ends with '.' or null
                 DirectoryScanner ds = fs.getDirectoryScanner(p);
                 String[] files = ds.getIncludedFiles();
-                for (int i=0; i<files.length; i++) {
-                    String file=files[i];
-                    command.addArgument(getParameter(baseDirectory+File.separatorChar+file, (namespace==null ? null : namespace+file.replace(File.separatorChar, '.')), csharpStyle));
+                for (int i = 0; i < files.length; i++) {
+                    String file = files[i];
+                    command.addArgument(getParameter(baseDirectory + File.separatorChar + file,
+                            (namespace == null ? null : namespace
+                                    + file.replace(File.separatorChar, '.')), csharpStyle));
                 }
             }
-        }
-        else {
-            command.addArgument(getParameter(getFile().toString(), getName(),
-                                             csharpStyle));
+        } else {
+            command.addArgument(getParameter(getFile().toString(), getName(), csharpStyle));
         }
     }
 
     private String getParameter(String fileName, String name, boolean csharpStyle) {
-        StringBuffer buffer=new StringBuffer();
-        buffer.append(isEmbed()?"/resource":"/linkresource");
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(isEmbed() ? "/resource" : "/linkresource");
         buffer.append(':');
         buffer.append(fileName);
-        if (name!=null) {
+        if (name != null) {
             buffer.append(',');
             buffer.append(name);
             if (csharpStyle) {
-                if (getPublic()!=null) {
-                    throw new BuildException(
-                        "This compiler does not support the "
-                        +"public/private option.");
-                }
-                else {
-                    if (getPublic()!=null) {
+                if (getPublic() != null) {
+                    throw new BuildException("This compiler does not support the "
+                            + "public/private option.");
+                } else {
+                    if (getPublic() != null) {
                         buffer.append(',');
-                        buffer.append(getPublic().booleanValue()
-                                      ?"public":"private");
+                        buffer.append(getPublic().booleanValue() ? "public" : "private");
 
                     }
                 }
-            }
-            else if (getPublic()!=null) {
+            } else if (getPublic() != null) {
                 throw new BuildException("You cannot have a public or private "
-                                         +"option without naming the resource");
+                        + "option without naming the resource");
             }
         }
         return buffer.toString();
@@ -197,7 +207,9 @@ public class DotnetResource {
 
     /**
      * Adds a resource file set.
-     * @param fileset FileSet
+     * 
+     * @param fileset
+     *            FileSet
      */
     public void addFileset(FileSet fileset) {
         fileSets.add(fileset);
@@ -205,9 +217,10 @@ public class DotnetResource {
 
     /**
      * Checks that <resource> node has embedded <filesets>
+     * 
      * @return boolean
      */
     public boolean hasFilesets() {
-        return fileSets.size()>0;
+        return fileSets.size() > 0;
     }
 }

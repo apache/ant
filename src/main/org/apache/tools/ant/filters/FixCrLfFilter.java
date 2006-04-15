@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation
+ * Copyright 2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
- * Converts text to local OS formatting conventions, as
- * well as repair text damaged by misconfigured or misguided editors or
- * file transfer programs.
+ * Converts text to local OS formatting conventions, as well as repair text
+ * damaged by misconfigured or misguided editors or file transfer programs.
  * <p>
  * This filter can take the following arguments:
  * <ul>
@@ -38,42 +37,52 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * </ul>
  * None of which are required.
  * <p>
- * This version generalises the handling of EOL characters, and allows
- * for CR-only line endings (which I suspect is the standard on Macs.)
- * Tab handling has also been generalised to accommodate any tabwidth
- * from 2 to 80, inclusive.  Importantly, it can leave untouched any
- * literal TAB characters embedded within Java string or character constants.
+ * This version generalises the handling of EOL characters, and allows for
+ * CR-only line endings (which I suspect is the standard on Macs.) Tab handling
+ * has also been generalised to accommodate any tabwidth from 2 to 80,
+ * inclusive. Importantly, it can leave untouched any literal TAB characters
+ * embedded within Java string or character constants.
  * <p>
- * <em>Caution:</em> run with care on carefully formatted files.  This may
+ * <em>Caution:</em> run with care on carefully formatted files. This may
  * sound obvious, but if you don't specify asis, presume that your files are
- * going to be modified.  If "tabs" is "add" or "remove", whitespace
- * characters may be added or removed as necessary.  Similarly, for EOL's -
- * eol="asis" actually means convert to your native O/S EOL convention while
- * eol="crlf" or cr="add" can result in CR characters being removed in one
- * special case accommodated, i.e., CRCRLF is regarded as a single EOL to
- * handle cases where other programs have converted CRLF into CRCRLF.
+ * going to be modified. If "tabs" is "add" or "remove", whitespace characters
+ * may be added or removed as necessary. Similarly, for EOL's - eol="asis"
+ * actually means convert to your native O/S EOL convention while eol="crlf" or
+ * cr="add" can result in CR characters being removed in one special case
+ * accommodated, i.e., CRCRLF is regarded as a single EOL to handle cases where
+ * other programs have converted CRLF into CRCRLF.
  *
- * <P>Example:
- * <pre>&lt;<fixcrlf tab=&quot;add&quot; eol=&quot;crlf&quot; eof=&quot;asis&quot;/&gt;</pre>
+ * <P>
+ * Example:
+ *
+ * <pre>
+ * &lt;&lt;fixcrlf tab=&quot;add&quot; eol=&quot;crlf&quot; eof=&quot;asis&quot;/&gt;
+ * </pre>
  *
  * Or:
  *
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.FixCrLfFilter&quot;&gt;
- *  &lt;param eol=&quot;crlf&quot; tab=&quot;asis&quot;/&gt;
- * &lt;/filterreader&gt;</pre>
+ * <pre>
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.FixCrLfFilter&quot;&gt;
+ *   &lt;param eol=&quot;crlf&quot; tab=&quot;asis&quot;/&gt;
+ *  &lt;/filterreader&gt;
+ * </pre>
  *
  */
-public final class FixCrLfFilter
-    extends BaseParamFilterReader
-    implements ChainableReader {
+public final class FixCrLfFilter extends BaseParamFilterReader implements ChainableReader {
     private static final char CTRLZ = '\u001A';
 
     private int tabLength = 8;
+
     private CrLf eol;
+
     private AddAsisRemove ctrlz;
+
     private AddAsisRemove tabs;
+
     private boolean javafiles = false;
+
     private boolean fixlast = true;
+
     private boolean initialized = false;
 
     /**
@@ -88,14 +97,16 @@ public final class FixCrLfFilter
     /**
      * Create a new filtered reader.
      *
-     * @param in A Reader object providing the underlying stream.
-     *           Must not be <code>null</code>.
+     * @param in
+     *            A Reader object providing the underlying stream. Must not be
+     *            <code>null</code>.
      */
     public FixCrLfFilter(final Reader in) throws IOException {
         super(in);
     }
 
-    // Instance initializer: Executes just after the super() call in this class's constructor.
+    // Instance initializer: Executes just after the super() call in this
+    // class's constructor.
     {
         tabs = AddAsisRemove.ASIS;
         if (Os.isFamily("mac")) {
@@ -111,14 +122,14 @@ public final class FixCrLfFilter
     }
 
     /**
-     * Create a new FixCrLfFilter using the passed in
-     * Reader for instantiation.
+     * Create a new FixCrLfFilter using the passed in Reader for instantiation.
      *
-     * @param rdr A Reader object providing the underlying stream.
-     *            Must not be <code>null</code>.
+     * @param rdr
+     *            A Reader object providing the underlying stream. Must not be
+     *            <code>null</code>.
      *
-     * @return a new filter based on this configuration, but filtering
-     *         the specified reader.
+     * @return a new filter based on this configuration, but filtering the
+     *         specified reader.
      */
     public final Reader chain(final Reader rdr) {
         try {
@@ -126,7 +137,7 @@ public final class FixCrLfFilter
 
             newFilter.setJavafiles(getJavafiles());
             newFilter.setEol(getEol());
-            newFilter.setTab(getTab());    
+            newFilter.setTab(getTab());
             newFilter.setTablength(getTablength());
             newFilter.setEof(getEof());
             newFilter.setFixlast(getFixlast());
@@ -142,14 +153,15 @@ public final class FixCrLfFilter
      * Get how DOS EOF (control-z) characters are being handled.
      *
      * @return values:
-     * <ul>
-     * <li>add: ensure that there is an eof at the end of the file
-     * <li>asis: leave eof characters alone
-     * <li>remove: remove any eof character found at the end
-     * </ul>
+     *         <ul>
+     *         <li>add: ensure that there is an eof at the end of the file
+     *         <li>asis: leave eof characters alone
+     *         <li>remove: remove any eof character found at the end
+     *         </ul>
      */
     public AddAsisRemove getEof() {
-        // Return copy so that the call must call setEof() to change the state of fixCRLF
+        // Return copy so that the call must call setEof() to change the state
+        // of fixCRLF
         return ctrlz.newInstance();
     }
 
@@ -157,15 +169,16 @@ public final class FixCrLfFilter
      * Get how EndOfLine characters are being handled.
      *
      * @return values:
-     * <ul>
-     * <li>asis: convert line endings to your O/S convention
-     * <li>cr: convert line endings to CR
-     * <li>lf: convert line endings to LF
-     * <li>crlf: convert line endings to CRLF
-     * </ul>
+     *         <ul>
+     *         <li>asis: convert line endings to your O/S convention
+     *         <li>cr: convert line endings to CR
+     *         <li>lf: convert line endings to LF
+     *         <li>crlf: convert line endings to CRLF
+     *         </ul>
      */
     public CrLf getEol() {
-        // Return copy so that the call must call setEol() to change the state of fixCRLF
+        // Return copy so that the call must call setEol() to change the state
+        // of fixCRLF
         return eol.newInstance();
     }
 
@@ -179,14 +192,15 @@ public final class FixCrLfFilter
     }
 
     /**
-     * Get whether the stream is to be treated as though it contains Java source.
+     * Get whether the stream is to be treated as though it contains Java
+     * source.
      * <P>
-     * This attribute is only used in assocation with the
-     * &quot;<i><b>tab</b></i>&quot; attribute.  Tabs found in Java literals
-     * are protected from changes by this filter.
+     * This attribute is only used in assocation with the &quot;<i><b>tab</b></i>&quot;
+     * attribute. Tabs found in Java literals are protected from changes by this
+     * filter.
      *
      * @return true if whitespace in Java character and string literals is
-     * ignored.
+     *         ignored.
      */
     public boolean getJavafiles() {
         return javafiles;
@@ -196,14 +210,16 @@ public final class FixCrLfFilter
      * Return how tab characters are being handled.
      *
      * @return values:
-     * <ul>
-     * <li>add: convert sequences of spaces which span a tab stop to tabs
-     * <li>asis: leave tab and space characters alone
-     * <li>remove: convert tabs to spaces
-     * </ul>
+     *         <ul>
+     *         <li>add: convert sequences of spaces which span a tab stop to
+     *         tabs
+     *         <li>asis: leave tab and space characters alone
+     *         <li>remove: convert tabs to spaces
+     *         </ul>
      */
     public AddAsisRemove getTab() {
-        // Return copy so that the caller must call setTab() to change the state of fixCRLF.
+        // Return copy so that the caller must call setTab() to change the state
+        // of fixCRLF.
         return tabs.newInstance();
     }
 
@@ -212,7 +228,7 @@ public final class FixCrLfFilter
      *
      * @return the length of tab in spaces
      */
-    public int getTablength(){
+    public int getTablength() {
         return tabLength;
     }
 
@@ -227,13 +243,13 @@ public final class FixCrLfFilter
         if (eol == CrLf.CRLF || eol == CrLf.DOS) {
             return "\r\n";
         }
-        //assume (eol == CrLf.LF || eol == CrLf.UNIX)
+        // assume (eol == CrLf.LF || eol == CrLf.UNIX)
         return "\n";
     }
 
     /**
-     * Wrap the input stream with the internal filters necessary to perform
-     * the configuration settings.
+     * Wrap the input stream with the internal filters necessary to perform the
+     * configuration settings.
      */
     private void initInternalFilters() {
 
@@ -241,7 +257,7 @@ public final class FixCrLfFilter
         // filters don't see that character.
         in = (ctrlz == AddAsisRemove.REMOVE) ? new RemoveEofFilter(in) : in;
 
-        // Change all EOL characters to match the calculated EOL string.  If
+        // Change all EOL characters to match the calculated EOL string. If
         // configured to do so, append a trailing EOL so that the file ends on
         // a EOL.
         in = new NormalizeEolFilter(in, calculateEolString(eol), getFixlast());
@@ -253,23 +269,23 @@ public final class FixCrLfFilter
                 in = new MaskJavaTabLiteralsFilter(in);
             }
             // Add/Remove tabs
-            in = (tabs == AddAsisRemove.ADD)
-                ? (Reader) new AddTabFilter(in, getTablength())
-                : (Reader) new RemoveTabFilter(in, getTablength());
+            in = (tabs == AddAsisRemove.ADD) ? (Reader) new AddTabFilter(in, getTablength())
+                    : (Reader) new RemoveTabFilter(in, getTablength());
         }
         // Add missing EOF character
         in = (ctrlz == AddAsisRemove.ADD) ? new AddEofFilter(in) : in;
         initialized = true;
-     }
+    }
 
     /**
      * Return the next character in the filtered stream.
      *
-     * @return the next character in the resulting stream, or -1
-     * if the end of the resulting stream has been reached.
+     * @return the next character in the resulting stream, or -1 if the end of
+     *         the resulting stream has been reached.
      *
-     * @exception IOException if the underlying stream throws an IOException
-     * during reading.
+     * @exception IOException
+     *                if the underlying stream throws an IOException during
+     *                reading.
      */
     public synchronized final int read() throws IOException {
         if (!initialized) {
@@ -281,12 +297,13 @@ public final class FixCrLfFilter
     /**
      * Specify how DOS EOF (control-z) characters are to be handled.
      *
-     * @param attr valid values:
-     * <ul>
-     * <li>add: ensure that there is an eof at the end of the file
-     * <li>asis: leave eof characters alone
-     * <li>remove: remove any eof character found at the end
-     * </ul>
+     * @param attr
+     *            valid values:
+     *            <ul>
+     *            <li>add: ensure that there is an eof at the end of the file
+     *            <li>asis: leave eof characters alone
+     *            <li>remove: remove any eof character found at the end
+     *            </ul>
      */
     public void setEof(AddAsisRemove attr) {
         ctrlz = attr.resolve();
@@ -295,23 +312,24 @@ public final class FixCrLfFilter
     /**
      * Specify how end of line (EOL) characters are to be handled.
      *
-     * @param attr valid values:
-     * <ul>
-     * <li>asis: convert line endings to your O/S convention
-     * <li>cr: convert line endings to CR
-     * <li>lf: convert line endings to LF
-     * <li>crlf: convert line endings to CRLF
-     * </ul>
+     * @param attr
+     *            valid values:
+     *            <ul>
+     *            <li>asis: convert line endings to your O/S convention
+     *            <li>cr: convert line endings to CR
+     *            <li>lf: convert line endings to LF
+     *            <li>crlf: convert line endings to CRLF
+     *            </ul>
      */
     public void setEol(CrLf attr) {
         eol = attr.resolve();
     }
 
     /**
-     * Specify whether a missing EOL will be added
-     * to the final line of input.
+     * Specify whether a missing EOL will be added to the final line of input.
      *
-     * @param fixlast if true a missing EOL will be appended.
+     * @param fixlast
+     *            if true a missing EOL will be appended.
      */
     public void setFixlast(boolean fixlast) {
         this.fixlast = fixlast;
@@ -319,12 +337,13 @@ public final class FixCrLfFilter
 
     /**
      * Indicate whether this stream contains Java source.
-     * 
-     * This attribute is only used in assocation with the
-     * &quot;<i><b>tab</b></i>&quot; attribute.  
      *
-     * @param javafiles set to true to prevent this filter from changing tabs
-     * found in Java literals.
+     * This attribute is only used in assocation with the &quot;<i><b>tab</b></i>&quot;
+     * attribute.
+     *
+     * @param javafiles
+     *            set to true to prevent this filter from changing tabs found in
+     *            Java literals.
      */
     public void setJavafiles(boolean javafiles) {
         this.javafiles = javafiles;
@@ -333,12 +352,14 @@ public final class FixCrLfFilter
     /**
      * Specify how tab characters are to be handled.
      *
-     * @param attr valid values:
-     * <ul>
-     * <li>add: convert sequences of spaces which span a tab stop to tabs
-     * <li>asis: leave tab and space characters alone
-     * <li>remove: convert tabs to spaces
-     * </ul>
+     * @param attr
+     *            valid values:
+     *            <ul>
+     *            <li>add: convert sequences of spaces which span a tab stop to
+     *            tabs
+     *            <li>asis: leave tab and space characters alone
+     *            <li>remove: convert tabs to spaces
+     *            </ul>
      */
     public void setTab(AddAsisRemove attr) {
         tabs = attr.resolve();
@@ -347,9 +368,9 @@ public final class FixCrLfFilter
     /**
      * Specify tab length in characters.
      *
-     * @param tabLength specify the length of tab in spaces.
-     *                  Valid values are between 2 and 80
-     *                  inclusive.  The default for this parameter is 8.
+     * @param tabLength
+     *            specify the length of tab in spaces. Valid values are between
+     *            2 and 80 inclusive. The default for this parameter is 8.
      */
     public void setTablength(int tabLength) throws IOException {
         if (tabLength < 2 || tabLength > 80) {
@@ -359,14 +380,20 @@ public final class FixCrLfFilter
     }
 
     /**
-     * This filter reader redirects all read I/O methods through its own read() method.
+     * This filter reader redirects all read I/O methods through its own read()
+     * method.
      *
-     * <P>The input stream is already buffered by the copy task so this doesn't significantly
-     * impact performance while it makes writing the individual fix filters much easier.</P>
+     * <P>
+     * The input stream is already buffered by the copy task so this doesn't
+     * significantly impact performance while it makes writing the individual
+     * fix filters much easier.
+     * </P>
      */
     private static class SimpleFilterReader extends Reader {
         private Reader in;
+
         int[] preempt = new int[16];
+
         int preemptIndex = 0;
 
         public SimpleFilterReader(Reader in) {
@@ -390,7 +417,7 @@ public final class FixCrLfFilter
 
         public void push(char[] cs, int start, int length) {
             for (int i = start + length - 1; i >= start;) {
-                push(cs [i--]);
+                push(cs[i--]);
             }
         }
 
@@ -403,11 +430,11 @@ public final class FixCrLfFilter
         }
 
         /**
-         * Does this filter want to block edits on the last character returned by read()?
+         * Does this filter want to block edits on the last character returned
+         * by read()?
          */
         public boolean editsBlocked() {
-            return in instanceof SimpleFilterReader
-                && ((SimpleFilterReader) in).editsBlocked();
+            return in instanceof SimpleFilterReader && ((SimpleFilterReader) in).editsBlocked();
         }
 
         public int read() throws java.io.IOException {
@@ -458,13 +485,19 @@ public final class FixCrLfFilter
     private static class MaskJavaTabLiteralsFilter extends SimpleFilterReader {
         boolean editsBlocked = false;
 
-        private static final int JAVA              = 1;
-        private static final int IN_CHAR_CONST     = 2;
-        private static final int IN_STR_CONST      = 3;
+        private static final int JAVA = 1;
+
+        private static final int IN_CHAR_CONST = 2;
+
+        private static final int IN_STR_CONST = 3;
+
         private static final int IN_SINGLE_COMMENT = 4;
-        private static final int IN_MULTI_COMMENT  = 5;
-        private static final int TRANS_TO_COMMENT  = 6;
-        private static final int TRANS_FROM_MULTI  = 8;
+
+        private static final int IN_MULTI_COMMENT = 5;
+
+        private static final int TRANS_TO_COMMENT = 6;
+
+        private static final int TRANS_FROM_MULTI = 8;
 
         private int state;
 
@@ -473,7 +506,7 @@ public final class FixCrLfFilter
             state = JAVA;
         }
 
-        public boolean editsBlocked () {
+        public boolean editsBlocked() {
             return editsBlocked || super.editsBlocked();
         }
 
@@ -485,20 +518,30 @@ public final class FixCrLfFilter
             switch (state) {
             case JAVA:
                 // The current character is always emitted.
-                switch(thisChar) {
-                case '\'': state = IN_CHAR_CONST; break;
-                case '"' : state = IN_STR_CONST; break;
-                case '/' : state = TRANS_TO_COMMENT; break;
+                switch (thisChar) {
+                case '\'':
+                    state = IN_CHAR_CONST;
+                    break;
+                case '"':
+                    state = IN_STR_CONST;
+                    break;
+                case '/':
+                    state = TRANS_TO_COMMENT;
+                    break;
                 }
                 break;
             case IN_CHAR_CONST:
                 switch (thisChar) {
-                case '\'': state = JAVA; break;
+                case '\'':
+                    state = JAVA;
+                    break;
                 }
                 break;
             case IN_STR_CONST:
                 switch (thisChar) {
-                case '"' : state = JAVA; break;
+                case '"':
+                    state = JAVA;
+                    break;
                 }
                 break;
             case IN_SINGLE_COMMENT:
@@ -513,23 +556,36 @@ public final class FixCrLfFilter
             case IN_MULTI_COMMENT:
                 // The current character is always emitted.
                 switch (thisChar) {
-                case '*': state = TRANS_FROM_MULTI; break;
+                case '*':
+                    state = TRANS_FROM_MULTI;
+                    break;
                 }
                 break;
             case TRANS_TO_COMMENT:
                 // The current character is always emitted.
                 switch (thisChar) {
-                case '*' : state    = IN_MULTI_COMMENT; break;
-                case '/' : state    = IN_SINGLE_COMMENT; break;
-                case '\'': state    = IN_CHAR_CONST; break;
-                case '"' : state    = IN_STR_CONST; break;
-                default  : state    = JAVA;
+                case '*':
+                    state = IN_MULTI_COMMENT;
+                    break;
+                case '/':
+                    state = IN_SINGLE_COMMENT;
+                    break;
+                case '\'':
+                    state = IN_CHAR_CONST;
+                    break;
+                case '"':
+                    state = IN_STR_CONST;
+                    break;
+                default:
+                    state = JAVA;
                 }
                 break;
             case TRANS_FROM_MULTI:
                 // The current character is always emitted.
                 switch (thisChar) {
-                case '/': state = JAVA; break;
+                case '/':
+                    state = JAVA;
+                    break;
                 }
                 break;
             }
@@ -539,8 +595,11 @@ public final class FixCrLfFilter
 
     private static class NormalizeEolFilter extends SimpleFilterReader {
         boolean previousWasEOL;
+
         boolean fixLast;
+
         int normalizedEOL = 0;
+
         char[] eol = null;
 
         public NormalizeEolFilter(Reader in, String eolString, boolean fixLast) {
@@ -586,7 +645,8 @@ public final class FixCrLfFilter
                     if (c1 == '\r' && c2 == '\n') {
                         // EOL was "\r\r\n"
                     } else if (c1 == '\r') {
-                        // EOL was "\r\r" - handle as two consecutive "\r" and "\r" 
+                        // EOL was "\r\r" - handle as two consecutive "\r" and
+                        // "\r"
                         numEOL = 2;
                         push(c2);
                     } else if (c1 == '\n') {
@@ -643,7 +703,7 @@ public final class FixCrLfFilter
 
         public RemoveEofFilter(Reader in) {
             super(in);
-            
+
             try {
                 lookAhead = in.read();
             } catch (IOException e) {
@@ -667,7 +727,8 @@ public final class FixCrLfFilter
 
     private static class AddTabFilter extends SimpleFilterReader {
         int columnNumber = 0;
-        int tabLength    = 0;
+
+        int tabLength = 0;
 
         public AddTabFilter(Reader in, int tabLength) {
             super(in);
@@ -689,8 +750,7 @@ public final class FixCrLfFilter
                     int countSpaces = 1;
                     int numTabs = 0;
 
-                    scanWhitespace:
-                    while ((c = super.read()) != -1) {
+                    scanWhitespace: while ((c = super.read()) != -1) {
                         switch (c) {
                         case ' ':
                             if (++columnNumber == colNextTab) {
@@ -722,8 +782,12 @@ public final class FixCrLfFilter
                     }
                     c = super.read();
                     switch (c) {
-                    case  ' ': columnNumber ++; break;
-                    case '\t': columnNumber += tabLength; break;
+                    case ' ':
+                        columnNumber++;
+                        break;
+                    case '\t':
+                        columnNumber += tabLength;
+                        break;
                     }
                 }
                 break;
@@ -739,11 +803,12 @@ public final class FixCrLfFilter
 
     private static class RemoveTabFilter extends SimpleFilterReader {
         int columnNumber = 0;
+
         int tabLength = 0;
 
         public RemoveTabFilter(Reader in, int tabLength) {
             super(in);
-            
+
             this.tabLength = tabLength;
         }
 
@@ -759,7 +824,7 @@ public final class FixCrLfFilter
                 int width = tabLength - columnNumber % tabLength;
 
                 if (!editsBlocked()) {
-                    for (;width > 1; width--) {
+                    for (; width > 1; width--) {
                         push(' ');
                     }
                     c = ' ';
@@ -777,17 +842,19 @@ public final class FixCrLfFilter
      * Enumerated attribute with the values "asis", "add" and "remove".
      */
     public static class AddAsisRemove extends EnumeratedAttribute {
-        private static final AddAsisRemove ASIS   = newInstance("asis");
-        private static final AddAsisRemove ADD    = newInstance("add");
+        private static final AddAsisRemove ASIS = newInstance("asis");
+
+        private static final AddAsisRemove ADD = newInstance("add");
+
         private static final AddAsisRemove REMOVE = newInstance("remove");
 
         public String[] getValues() {
-            return new String[] {"add", "asis", "remove"};
+            return new String[] { "add", "asis", "remove" };
         }
 
         public boolean equals(Object other) {
             return other instanceof AddAsisRemove
-                && getIndex() == ((AddAsisRemove) other).getIndex();
+                    && getIndex() == ((AddAsisRemove) other).getIndex();
         }
 
         AddAsisRemove resolve() throws IllegalStateException {
@@ -820,24 +887,28 @@ public final class FixCrLfFilter
      */
     public static class CrLf extends EnumeratedAttribute {
         private static final CrLf ASIS = newInstance("asis");
-        private static final CrLf CR   = newInstance("cr");
+
+        private static final CrLf CR = newInstance("cr");
+
         private static final CrLf CRLF = newInstance("crlf");
-        private static final CrLf DOS  = newInstance("dos");
-        private static final CrLf LF   = newInstance("lf");
-        private static final CrLf MAC  = newInstance("mac");
+
+        private static final CrLf DOS = newInstance("dos");
+
+        private static final CrLf LF = newInstance("lf");
+
+        private static final CrLf MAC = newInstance("mac");
+
         private static final CrLf UNIX = newInstance("unix");
 
         /**
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return new String[] {"asis", "cr", "lf", "crlf",
-                                 "mac", "unix", "dos"};
+            return new String[] {"asis", "cr", "lf", "crlf", "mac", "unix", "dos"};
         }
 
         public boolean equals(Object other) {
-            return other instanceof CrLf
-                && getIndex() == ((CrLf) other).getIndex();
+            return other instanceof CrLf && getIndex() == ((CrLf) other).getIndex();
         }
 
         CrLf resolve() {
