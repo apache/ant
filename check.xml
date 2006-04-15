@@ -85,5 +85,21 @@
         <fileset dir="${java.dir}" />
     </simian>
   </target>
+	
+  <target name="fixTS" description="fix error 'Line has trailing spaces'">
+    <fail message="Define path to java file 'path'">
+      <condition><not><isset property="path"/></not></condition>
+    </fail>
+    <replaceregexp match="\s+$" replace="" flags="g" byline="true">
+      <fileset dir="src/main" includes="${path}"/>
+    </replaceregexp>
+  </target>
 
+  <target name="fixTab" description="fix error 'Line contains TAB sign'">
+    <fail message="Define path to java file 'path'">
+      <condition><not><isset property="path"/></not></condition>
+    </fail>
+  	<fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
+  </target>	
+	
 </project>
