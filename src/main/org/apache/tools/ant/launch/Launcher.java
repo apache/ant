@@ -114,9 +114,9 @@ public class Launcher {
      */
     private void addPath(String path, boolean getJars, List libPathURLs)
             throws MalformedURLException {
-        for (StringTokenizer tzr = new StringTokenizer(path, File.pathSeparator); 
-                tzr.hasMoreElements();) {
-            String elementName = tzr.nextToken();
+        StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
+        while(tokenizer.hasMoreElements()) {
+            String elementName = tokenizer.nextToken();
             File element = new File(elementName);
             if (elementName.indexOf("%") != -1 && !element.exists()) {
                 continue;
