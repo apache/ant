@@ -84,7 +84,7 @@ public abstract class ArchiveResource extends Resource {
 
     /**
      * Sets the file or dir mode for this resource.
-     * @param integer representation of Unix permission mask.
+     * @param mode integer representation of Unix permission mask.
      */
     public void setMode(int mode) {
         checkAttributesAllowed();
