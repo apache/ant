@@ -129,6 +129,20 @@
     <expectabsent />
   </target>
 
+  <target name="test14" depends="init">
+	<delete quiet="false">
+		<fileset dir="${dir}" />
+		<fileset dir="${dir}" />
+	</delete>
+  </target>
+
+  <target name="test15" depends="init">
+	<delete quiet="true">
+		<fileset dir="${dir}" />
+		<fileset dir="${dir}" />
+	</delete>
+  </target>
+
   <target name="cleanup" depends="test4" />
 
 </project>
