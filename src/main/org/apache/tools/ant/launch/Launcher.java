@@ -19,6 +19,7 @@ package org.apache.tools.ant.launch;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
+import java.io.UnsupportedEncodingException;
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.List;
@@ -129,7 +130,11 @@ public class Launcher {
                 }
             }
 
-            libPathURLs.add(element.toURL());
+            try {
+                libPathURLs.add(new URL(Locator.encodeUri(element.toURL().toString())));
+            } catch (UnsupportedEncodingException ex) {
+                throw new MalformedURLException(ex.toString());
+            }
         }
     }
 
