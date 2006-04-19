@@ -401,7 +401,20 @@ public final class Locator {
             String path = location.getPath();
             for (int i = 0; i < extensions.length; ++i) {
                 if (path.toLowerCase().endsWith(extensions[i])) {
-                    urls[0] = location.toURL();
+                    try {
+                        /**
+                         * File.toURL() does not encode characters like #.
+                         * File.toURI() has been introduced in java 1.4, so
+                         * ANT cannot use it (except by reflection)
+                         * FileUtils.toURI() cannot be used by Locator.java
+                         * Implemented this way.
+                         * File.toURL() adds file: and changes '\' to '/' for dos OSes
+                         * encodeUri converts characters like ' ' and '#' to %DD
+                         */
+                        urls[0] = new URL(encodeUri(location.toURL().toString()));
+                    } catch (UnsupportedEncodingException ex) {
+                        throw new MalformedURLException(ex.toString());
+                    }
                     break;
                 }
             }
@@ -420,7 +433,12 @@ public final class Locator {
             });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            urls[i] = matches[i].toURL();
+            try {
+                // See comments above.
+                urls[i] = new URL(encodeUri(matches[i].toURL().toString()));
+            } catch (UnsupportedEncodingException ex) {
+                throw new MalformedURLException(ex.toString());
+            }
         }
         return urls;
     }
