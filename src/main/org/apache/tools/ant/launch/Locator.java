@@ -253,7 +253,7 @@ public final class Locator {
      * @throws UnsupportedEncodingException if UTF-8 is not available
      * @since Ant 1.7
      */
-    public static String encodeUri(String path) throws UnsupportedEncodingException {
+    public static String encodeURI(String path) throws UnsupportedEncodingException {
         int i = 0;
         int len = path.length();
         int ch = 0;
@@ -409,9 +409,9 @@ public final class Locator {
                          * FileUtils.toURI() cannot be used by Locator.java
                          * Implemented this way.
                          * File.toURL() adds file: and changes '\' to '/' for dos OSes
-                         * encodeUri converts characters like ' ' and '#' to %DD
+                         * encodeURI converts characters like ' ' and '#' to %DD
                          */
-                        urls[0] = new URL(encodeUri(location.toURL().toString()));
+                        urls[0] = new URL(encodeURI(location.toURL().toString()));
                     } catch (UnsupportedEncodingException ex) {
                         throw new MalformedURLException(ex.toString());
                     }
@@ -435,7 +435,7 @@ public final class Locator {
         for (int i = 0; i < matches.length; ++i) {
             try {
                 // See comments above.
-                urls[i] = new URL(encodeUri(matches[i].toURL().toString()));
+                urls[i] = new URL(encodeURI(matches[i].toURL().toString()));
             } catch (UnsupportedEncodingException ex) {
                 throw new MalformedURLException(ex.toString());
             }

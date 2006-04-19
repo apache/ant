@@ -131,7 +131,7 @@ public class Launcher {
             }
 
             try {
-                libPathURLs.add(new URL(Locator.encodeUri(element.toURL().toString())));
+                libPathURLs.add(new URL(Locator.encodeURI(element.toURL().toString())));
             } catch (UnsupportedEncodingException ex) {
                 throw new MalformedURLException(ex.toString());
             }

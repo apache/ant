@@ -1073,7 +1073,7 @@ public class FileUtils {
         }
         path = path.replace('\\', '/');
         try {
-            sb.append(Locator.encodeUri(path));
+            sb.append(Locator.encodeURI(path));
         } catch (UnsupportedEncodingException exc) {
             throw new BuildException(exc);
         }

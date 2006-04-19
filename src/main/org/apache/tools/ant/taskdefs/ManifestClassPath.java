@@ -129,7 +129,7 @@ public class ManifestClassPath
                 relPath = relPath + '/';
             }
             try {
-                relPath = Locator.encodeUri(relPath);
+                relPath = Locator.encodeURI(relPath);
             } catch (UnsupportedEncodingException exc) {
                 throw new BuildException(exc);
             }
