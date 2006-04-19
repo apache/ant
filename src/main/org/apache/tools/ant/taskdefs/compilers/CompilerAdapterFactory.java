@@ -63,6 +63,7 @@ public final class CompilerAdapterFactory {
     public static CompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
             boolean isClassicCompilerSupported = true;
+            System.out.println("GetCompiler: compilerType is " + compilerType);
             //as new versions of java come out, add them to this test
             if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
                 && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
@@ -93,7 +94,8 @@ public final class CompilerAdapterFactory {
             if (compilerType.equalsIgnoreCase("modern")
                 || compilerType.equalsIgnoreCase("javac1.3")
                 || compilerType.equalsIgnoreCase("javac1.4")
-                || compilerType.equalsIgnoreCase("javac1.5")) {
+                || compilerType.equalsIgnoreCase("javac1.5")
+                || compilerType.equalsIgnoreCase("javac1.6")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
