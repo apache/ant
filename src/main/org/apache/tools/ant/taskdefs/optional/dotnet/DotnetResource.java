@@ -161,7 +161,6 @@ public class DotnetResource {
         if (hasFilesets()) {
             for (Iterator listIter = fileSets.iterator(); listIter.hasNext();) {
                 FileSet fs = (FileSet) listIter.next();
-                ;
                 String baseDirectory = fs.getDir(p).toString();
                 String namespace = getNamespace(); // ends with '.' or null
                 DirectoryScanner ds = fs.getDirectoryScanner(p);
