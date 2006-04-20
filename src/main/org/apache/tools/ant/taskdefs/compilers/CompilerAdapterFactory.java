@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,7 +63,6 @@ public final class CompilerAdapterFactory {
     public static CompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
             boolean isClassicCompilerSupported = true;
-            System.out.println("GetCompiler: compilerType is " + compilerType);
             //as new versions of java come out, add them to this test
             if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
                 && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
