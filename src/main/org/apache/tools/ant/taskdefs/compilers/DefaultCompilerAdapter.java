@@ -17,6 +17,9 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+//Java5 style
+//import static org.apache.tools.ant.util.StringUtils.LINE_SEP; 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
@@ -68,7 +72,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected String memoryMaximumSize;
 
     protected File[] compileList;
-    protected static final String lSep = System.getProperty("line.separator");
+    //protected static final String lSep = System.getProperty("line.separator");
     protected Javac attributes;
 
 
@@ -399,12 +403,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
         niceSourceList.append(" to be compiled:");
 
-        niceSourceList.append(lSep);
+        niceSourceList.append(StringUtils.LINE_SEP);
 
         for (int i = 0; i < compileList.length; i++) {
             String arg = compileList[i].getAbsolutePath();
             cmd.createArgument().setValue(arg);
-            niceSourceList.append("    " + arg + lSep);
+            niceSourceList.append("    " + arg + StringUtils.LINE_SEP);
         }
 
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
