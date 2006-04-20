@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright 2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -299,23 +299,6 @@ public class ClasspathUtils {
                 e);
         }
     }
-
-    /**
-     * Creates a fresh object instance of the specified classname.
-     *
-     * <p> This uses the userDefinedLoader to load the specified class,
-     * and then makes an instance using the default no-argument constructor.
-     * </p>
-     *
-     * @param className the full qualified class name to load.
-     * @param userDefinedLoader the classloader to use.
-     * @param expectedType the Class that the result should be assignment
-     * compatible with. (No ClassCastException will be thrown in case
-     * the result of this method is casted to the expectedType) 
-     * @return The fresh object instance
-     * @throws BuildException when loading or instantiation failed.
-     */
-
     
     /**
      * Obtains a delegate that helps out with classic classpath configuration.
