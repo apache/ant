@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,10 +96,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private static final String TRAX_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
 
-    /** Name of the now-deprecated XSLP Liaison class */
-    private static final String XSLP_LIAISON_CLASS =
-                        "org.apache.tools.ant.taskdefs.optional.XslpLiaison";
-
     /** Name of the now-deprecated Xalan liaison class */
     private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
@@ -169,11 +165,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     public static final String PROCESSOR_XALAN1 = "xalan";
-    /**
-     * The xsl:p processor (deprecated option)
-     * @since Ant 1.7
-     */
-    public static final String PROCESSOR_XSLP = "xslp";
 
     /**
      * Creates a new XSLTProcess Task.
@@ -430,8 +421,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Set the name of the XSL processor to use; optional, default trax.
-     * Other values are "xalan" for Xalan1 and "xslp" for XSL:P, though the
-     * later is strongly deprecated.
+     * Other values are "xalan" for Xalan1
      *
      * @param processor the name of the XSL processor
      */
@@ -472,10 +462,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
             classname= TRAX_LIAISON_CLASS;
-        } else if (proc.equals(PROCESSOR_XSLP)) {
-            log("DEPRECATED - xslp processor is deprecated. Use trax "
-                + "instead.");
-            classname = XSLP_LIAISON_CLASS;
         } else if (proc.equals(PROCESSOR_XALAN1)) {
             log("DEPRECATED - xalan processor is deprecated. Use trax "
                 + "instead.");
@@ -724,7 +710,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     protected XSLTLiaison getLiaison() {
         // if processor wasn't specified, see if TraX is available.  If not,
-        // default it to xslp or xalan, depending on which is in the classpath
+        // default it to xalan, depending on which is in the classpath
         if (liaison == null) {
             if (processor != null) {
                 try {
@@ -739,13 +725,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     try {
                         resolveProcessor(PROCESSOR_XALAN1);
                     } catch (Throwable e2) {
-                        try {
-                            resolveProcessor(PROCESSOR_XSLP);
-                        } catch (Throwable e3) {
-                            e3.printStackTrace();
-                            e2.printStackTrace();
-                            throw new BuildException(e1);
-                        }
+                        e2.printStackTrace();
+                        throw new BuildException(e1);
                     }
                 }
             }

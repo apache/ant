@@ -356,7 +356,7 @@ for examples on how to do this for your operating system. </p>
 
 <p><b>Note</b>: The bootstrap process of Ant requires a greedy
 compiler like Sun's javac or jikes.  It does not work with gcj or
-kjc.</b>
+kjc.</p>
 
 <p>Make sure you have downloaded any auxiliary jars required to
 build tasks you are interested in. These should either be available
@@ -433,7 +433,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
     <td><b>Available At</b></td>
   </tr>
   <tr>
-    <td>An XSL transformer like Xalan or XSL:P</td>
+    <td>An XSL transformer like Xalan</td>
     <td>style task</td>
     <td>
     <b>If you use JDK 1.4+, an XSL transformer is already included, so you need not do anything special.</b><br>
@@ -564,7 +564,7 @@ you need jakarta-oro 2.0.1 or later, and <a href="#commons-net">commons-net</a><
            target="_top">http://jakarta.apache.org/log4j/docs/index.html</a></td>
   </tr>
   <tr>
-    <td><a name="commons-net">commons-net.jar</td>
+    <td><a name="commons-net">commons-net.jar</a></td>
     <td>ftp, rexec and telnet tasks<br>
     jakarta-oro 2.0.1 or later is required in any case together with commons-net.<br>
     For all users, a minimum version of commons-net of 1.4.0 is recommended.  Earlier 
@@ -649,7 +649,8 @@ code will check and print the following things. </p>
 
 <ul>
 
-<li>The version of ant.jar and ant-optional.jar -and that they match</li>
+<li>The version of ant.jar and of the ant-*.jar containing the optional tasks -
+    and whether they match</li>
 
 <li>Which JAR files are int ANT_HOME/lib
 

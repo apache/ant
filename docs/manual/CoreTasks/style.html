@@ -50,10 +50,7 @@ attribute) the implicit fileset formed by this task.</p>
 <p>This task supports the use of a nested <code>&lt;param&gt;</code> element which is used to pass values
   to an <code>&lt;xsl:param&gt;</code> declaration.</p>
 <p>This task supports the use of a nested <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a>
-element which is used to perform Entity and URI resolution</p>
-<p><i><code>&lt;style&gt;</code> and <code>&lt;xslt&gt;</code> refer to the same Ant task and can be used interchangeably.</i></p>
-<p>If you want to use Xalan-J 1 or XSL:P, you also Ant optional JARs,
-    specifically ant-xalan1.jar and ant-xslp.jar</p>
+element which is used to perform Entity and URI resolution.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -83,9 +80,12 @@ element which is used to perform Entity and URI resolution</p>
   <tr>
     <td valign="top">style</td>
     <td valign="top">name of the stylesheet to use - given either relative
-      to the project's basedir or as an absolute path
-      <em><strong>DEPRECATED</strong> - can be specified as a path relative
-          to the basedir attribute of this task as well</em>.
+      to the project's basedir or as an absolute path.<br/>
+      <br/>
+      <em>deprecated variation :</em> <br/>
+      If the stylesheet cannot be found, and if you have specified the
+      attribute basedir for the task, ant will assume that the style
+      attribute is relative to the basedir of the task.
     </td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -110,16 +110,20 @@ element which is used to perform Entity and URI resolution</p>
   <tr>
     <td valign="top">processor</td>
 
-    <td valign="top">name of the XSLT processor to use.  Permissible values are
-      &quot;trax&quot; for a TraX compliant processor (ie JAXP interface
-      implementation such as Xalan 2 or Saxon),
-      &quot;xslp&quot; for the XSL:P processor, &quot;xalan&quot; for
-      the Apache XML Xalan (version 1) processor the name of an
-      arbitrary XSLTLiaison class. Defaults to trax, followed by xalan
-      and then xslp (in that order). The first one found in your class
+    <td valign="top">name of the XSLT processor to use.
+      Permissible values are :<ul>
+      <li>&quot;trax&quot; for a TraX compliant processor (ie JAXP interface
+      implementation such as Xalan 2 or Saxon)</li>
+      <li>&quot;xalan&quot; for
+      the Apache XML Xalan (version 1) processor</li>
+      <li>the name of a custom class implementing the interface
+          <code>org.apache.tools.ant.taskdefs.XSLTLiaison.</code></li>
+      </ul>
+      Defaults to trax, followed by xalan
+      The first one found in your class
       path is the one that is used.
-
-      <em><strong>DEPRECATED</strong> - XSL:P and xalan are deprecated and no
+      <br/>
+      <em><strong>DEPRECATED</strong> - xalan (xalan1) is deprecated and no
       more supported.</em>.
       </td>
     <td align="center" valign="top">No</td>

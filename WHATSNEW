@@ -74,6 +74,9 @@ Changes that could break older environments:
 * A bug in SQLExec would prevent the execution of trailing,
   non-semicolon-delimited statements.  Bugzilla Report 37764.
 
+* support for the XSL:P XML parser has been removed.
+  Bugzilla Report 23455.
+
 Fixed bugs:
 -----------
 
