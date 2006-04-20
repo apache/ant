@@ -175,7 +175,9 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * @param is the stream containing the stylesheet data.
      * @param infile the file that will be used for the systemid.
      * @return the configured source instance matching the stylesheet.
-     * @throws Exception if there is a problem creating the source.
+     * @throws ParserConfigurationException if a parser cannot be created which
+     * satisfies the requested configuration.
+     * @throws SAXException in case of problem detected by the SAX parser.
      */
     private Source getSource(InputStream is, File infile)
         throws ParserConfigurationException, SAXException {
@@ -230,7 +232,6 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
 
     /**
      * Create a new transformer based on the liaison settings
-     * @return the newly created and configured transformer.
      * @throws Exception thrown if there is an error during creation.
      * @see #setStylesheet(java.io.File)
      * @see #addParam(java.lang.String, java.lang.String)
@@ -403,7 +404,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
             if (systemid != null) {
                 String url = systemid;
                 if (url.startsWith("file:")) {
-                    url = FileUtils.newFileUtils().fromURI(url);
+                    url = FileUtils.getFileUtils().fromURI(url);
                 }
                 msg.append(url);
             } else {
