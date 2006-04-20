@@ -35,8 +35,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @since Ant 1.7
  */
-public abstract class CompressedResource extends Resource
-    implements ResourceCollection {
+public abstract class CompressedResource extends Resource {
 
     private Resource resource;
 
