@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class CollectionUtils {
      * @param v2 the second vector.
      * @return true if the vectors are equal.
      * @since Ant 1.5
-     * @deprecated
+     * @deprecated since 1.6.x.
      */
     public static boolean equals(Vector v1, Vector v2) {
         if (v1 == v2) {
@@ -58,7 +58,7 @@ public class CollectionUtils {
      * @param d2 the second directory.
      * @return true if the directories are equal.
      * @since Ant 1.5
-     * @deprecated
+     * @deprecated since 1.6.x.
      */
     public static boolean equals(Dictionary d1, Dictionary d2) {
         if (d1 == d2) {
@@ -94,7 +94,7 @@ public class CollectionUtils {
      * @param m1 the to directory.
      * @param m2 the from directory.
      * @since Ant 1.6
-     * @deprecated
+     * @deprecated since 1.6.x.
      */
     public static void putAll(Dictionary m1, Dictionary m2) {
         for (Enumeration it = m2.keys(); it.hasMoreElements();) {

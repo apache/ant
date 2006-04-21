@@ -59,27 +59,32 @@ import org.apache.tools.tar.TarOutputStream;
 public class Tar extends MatchingTask {
 
     /**
-     * @deprecated Tar.WARN is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             Tar.WARN is deprecated and is replaced with
      *             Tar.TarLongFileMode.WARN
      */
     public static final String WARN = "warn";
     /**
-     * @deprecated Tar.FAIL is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             Tar.FAIL is deprecated and is replaced with
      *             Tar.TarLongFileMode.FAIL
      */
     public static final String FAIL = "fail";
     /**
-     * @deprecated Tar.TRUNCATE is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             Tar.TRUNCATE is deprecated and is replaced with
      *             Tar.TarLongFileMode.TRUNCATE
      */
     public static final String TRUNCATE = "truncate";
     /**
-     * @deprecated Tar.GNU is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             Tar.GNU is deprecated and is replaced with
      *             Tar.TarLongFileMode.GNU
      */
     public static final String GNU = "gnu";
     /**
-     * @deprecated Tar.OMIT is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             Tar.OMIT is deprecated and is replaced with
      *             Tar.TarLongFileMode.OMIT
      */
     public static final String OMIT = "omit";
@@ -127,7 +132,8 @@ public class Tar extends MatchingTask {
     /**
      * Set is the name/location of where to create the tar file.
      * @param tarFile the location of the tar file.
-     * @deprecated for consistency with other tasks, please use setDestFile()
+     * @deprecated since 1.5.x. 
+     *             For consistency with other tasks, please use setDestFile().
      */
     public void setTarfile(File tarFile) {
         this.tarFile = tarFile;
@@ -163,7 +169,8 @@ public class Tar extends MatchingTask {
      * <li>  omit - paths greater than the maximum are omitted from the archive
      * </ul>
      * @param mode the mode string to handle long files.
-     * @deprecated setLongFile(String) is deprecated and is replaced with
+     * @deprecated since 1.5.x.
+     *             setLongFile(String) is deprecated and is replaced with
      *             setLongFile(Tar.TarLongFileMode) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the mode in its own class.
@@ -472,7 +479,8 @@ public class Tar extends MatchingTask {
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
      * @return true if the archive is up to date.
-     * @deprecated use the two-arg version instead.
+     * @deprecated since 1.5.x. 
+     *             use the two-arg version instead.
      */
     protected boolean archiveIsUpToDate(String[] files) {
         return archiveIsUpToDate(files, baseDir);

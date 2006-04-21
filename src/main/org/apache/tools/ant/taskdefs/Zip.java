@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -133,7 +133,8 @@ public class Zip extends MatchingTask {
      * This is the name/location of where to
      * create the .zip file.
      * @param zipFile the path of the zipFile
-     * @deprecated Use setDestFile(File) instead.
+     * @deprecated since 1.5.x.
+     *             Use setDestFile(File) instead.
      * @ant.attribute ignore="true"
      */
     public void setZipfile(File zipFile) {
@@ -145,7 +146,8 @@ public class Zip extends MatchingTask {
      * create the file.
      * @param file the path of the zipFile
      * @since Ant 1.5
-     * @deprecated Use setDestFile(File) instead
+     * @deprecated since 1.5.x.
+     *             Use setDestFile(File) instead.
      * @ant.attribute ignore="true"
      */
     public void setFile(File file) {

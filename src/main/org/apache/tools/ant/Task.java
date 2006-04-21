@@ -33,21 +33,24 @@ import java.io.IOException;
 public abstract class Task extends ProjectComponent {
     /**
      * Target this task belongs to, if any.
-     * @deprecated You should not be accessing this variable directly.
-     *   Please use the {@link #getOwningTarget()} method.
+     * @deprecated since 1.6.x.
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getOwningTarget()} method.
      */
     protected Target target;
 
     /**
      * Description of this task, if any.
-     * @deprecated You should not be accessing this variable directly.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
      */
     protected String description;
 
     /**
      * Location within the build file of this task definition.
-     * @deprecated You should not be accessing this variable directly.
-     *   Please use the {@link #getLocation()} method.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getLocation()} method.
      */
     protected Location location = Location.UNKNOWN_LOCATION;
 
@@ -58,24 +61,27 @@ public abstract class Task extends ProjectComponent {
      * isn't terribly descriptive for a task used within
      * another task - the outer task code can probably
      * provide a better one.
-     * @deprecated You should not be accessing this variable directly.
-     *   Please use the {@link #getTaskName()} method.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getTaskName()} method.
      */
     protected String taskName;
 
     /**
      * Type of this task.
      *
-     * @deprecated You should not be accessing this variable directly.
-     *   Please use the {@link #getTaskType()} method.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getTaskType()} method.
      */
     protected String taskType;
 
     /**
      * Wrapper for this object, used to configure it at runtime.
      *
-     * @deprecated You should not be accessing this variable directly.
-     *   Please use the {@link #getWrapper()} method.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getWrapper()} method.
      */
     protected RuntimeConfigurable wrapper;
 

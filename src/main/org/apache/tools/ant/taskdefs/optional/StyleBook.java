@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@ import org.apache.tools.ant.taskdefs.Java;
  * and options are available. Do not set any apart from the <tt>classpath</tt>
  * as they are not guaranteed to be there in future.
  * @todo stop extending from Java.
- * @deprecated This task is considered unsupported by the Ant developers
+ * @deprecated since 1.7. 
+ *             This task is considered unsupported by the Ant developers
  */
 public class StyleBook extends Java {
     protected File m_targetDirectory;

@@ -38,7 +38,8 @@ import org.apache.tools.ant.Task;
  * dead code by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
+ * @deprecated since 1.2. 
+ *             delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
  *             instead.
  */
 public class Exec extends Task {

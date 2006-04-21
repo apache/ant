@@ -135,8 +135,9 @@ public class DirectoryScanner
      * that has only been kept around for backwards compatibility
      * reasons.</p>
      *
-     * @deprecated use the {@link #getDefaultExcludes
-     * getDefaultExcludes} method instead.
+     * @deprecated since 1.6.x.
+     *             Use the {@link #getDefaultExcludes getDefaultExcludes} 
+     *             method instead.
      */
     protected static final String[] DEFAULTEXCLUDES = {
         // Miscellaneous typical temporary files

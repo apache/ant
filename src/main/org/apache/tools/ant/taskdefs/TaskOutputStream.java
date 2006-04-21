@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2005 The Apache Software Foundation
+ * Copyright  2000,2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,8 @@ import org.apache.tools.ant.Task;
  * by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @deprecated use LogOutputStream instead.
+ * @deprecated since 1.2.x.
+ * Use LogOutputStream instead.
  */
 
 public class TaskOutputStream extends OutputStream {

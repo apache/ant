@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -332,8 +332,9 @@ public class Property extends Task {
 
     /**
      * @param userProperty ignored
-     * @deprecated This was never a supported feature and has been
-     * deprecated without replacement
+     * @deprecated since 1.5.x.
+     *             This was never a supported feature and has been 
+     *             deprecated without replacement.
      * @ant.attribute ignore="true"
      */
     public void setUserProperty(boolean userProperty) {

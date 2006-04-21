@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,7 +60,8 @@ public class SplashTask extends Task {
      * flag to enable proxy settings; optional, deprecated : consider
      * using &lt;setproxy&gt; instead
      * @param useProxy if ture, enable proxy settings
-     * @deprecated use org.apache.tools.ant.taskdefs.optional.SetProxy
+     * @deprecated since 1.5.x. 
+     *             Use org.apache.tools.ant.taskdefs.optional.SetProxy
      */
     public void setUseproxy(boolean useProxy) {
         this.useProxy = useProxy;

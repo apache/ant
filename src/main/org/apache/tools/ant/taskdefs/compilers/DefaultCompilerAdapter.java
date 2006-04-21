@@ -514,7 +514,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Add extdirs to classpath
      * @param classpath the classpath to use
-     * @deprecated use org.apache.tools.ant.types.Path#addExtdirs instead
+     * @deprecated since 1.5.x. 
+     *             Use org.apache.tools.ant.types.Path#addExtdirs instead.
      */
     protected void addExtdirsToClasspath(Path classpath) {
         classpath.addExtdirs(extdirs);

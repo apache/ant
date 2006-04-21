@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -508,7 +508,9 @@ public class CommandlineJava implements Cloneable {
      * operation, as it has to evaluate the size of many components.
      * @return the total number of arguments in the java command line.
      * @see #getCommandline()
-     * @deprecated please dont use this--it effectively creates the entire command.
+     * @deprecated since 1.7. 
+     *             Please dont use this, it effectively creates the 
+     *             entire command.
      */
     public int size() {
         int size = getActualVMCommand().size() + javaCommand.size()

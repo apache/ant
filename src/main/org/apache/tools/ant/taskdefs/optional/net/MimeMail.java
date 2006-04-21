@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
 /**
  * A task to send SMTP email; Use <tt>mail</tt> instead
  *
- * @deprecated Use {@link EmailTask} instead.
+ * @deprecated since 1.6.x. 
+ *             Use {@link EmailTask} instead.
  *
  * @since Ant1.4
  */

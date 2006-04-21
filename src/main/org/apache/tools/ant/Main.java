@@ -252,7 +252,7 @@ public class Main implements AntMain {
      * @exception BuildException if the specified build file doesn't exist
      *                           or is a directory.
      *
-     * @deprecated
+     * @deprecated since 1.6.x
      */
     protected Main(String[] args) throws BuildException {
         processArgs(args);
@@ -513,7 +513,7 @@ public class Main implements AntMain {
      * Helper to get the parent file for a given file.
      * <p>
      * Added to simulate File.getParentFile() from JDK 1.2.
-     * @deprecated
+     * @deprecated since 1.6.x
      *
      * @param file   File to find parent of. Must not be <code>null</code>.
      * @return       Parent file or null if none

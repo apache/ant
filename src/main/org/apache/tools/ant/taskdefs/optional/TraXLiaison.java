@@ -432,7 +432,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
     /**
      * @param file the filename to use for the systemid
      * @return the systemid
-     * @deprecated use org.apache.tools.ant.util.JAXPUtils#getSystemId instead
+     * @deprecated since 1.5.x. 
+     *             Use org.apache.tools.ant.util.JAXPUtils#getSystemId instead.
      */
     protected String getSystemId(File file) {
         return JAXPUtils.getSystemId(file);

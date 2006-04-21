@@ -159,7 +159,8 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * @deprecated setType(String) is deprecated and is replaced with
+     * @deprecated since 1.5.x. 
+     *             setType(String) is deprecated and is replaced with
      *             setType(Available.FileDir) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.

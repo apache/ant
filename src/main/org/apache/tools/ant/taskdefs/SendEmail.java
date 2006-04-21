@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ public class SendEmail extends EmailTask {
      * Sets the mailport parameter of this build task.
      * @param value mail port name.
      *
-     * @deprecated Use {@link #setMailport(int)} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link #setMailport(int)} instead.
      */
     public void setMailport(Integer value) {
         setMailport(value.intValue());

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ public class JDependTask extends Task {
     /**
      * Adds a path to source code to analyze.
      * @return a source path
-     * @deprecated
+     * @deprecated since 1.6.x.
      */
     public Path createSourcespath() {
         if (sourcesPath == null) {
@@ -197,8 +197,7 @@ public class JDependTask extends Task {
     /**
      * Gets the sourcepath.
      * @return the sources path
-     * @deprecated
-     *
+     * @deprecated since 1.6.x.
      */
     public Path getSourcespath() {
         return sourcesPath;

@@ -607,7 +607,8 @@ public class SQLExec extends JDBCTask {
 
     /**
      * print any results in the statement
-     * @deprecated use {@link #printResults(java.sql.ResultSet, java.io.PrintStream)
+     * @deprecated since 1.6.x.
+     *             Use {@link #printResults(java.sql.ResultSet, java.io.PrintStream)
      *             the two arg version} instead.
      * @param out the place to print results
      * @throws SQLException on SQL problems.

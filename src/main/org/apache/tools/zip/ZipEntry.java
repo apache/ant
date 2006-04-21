@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -296,7 +296,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * <p>This either stores the size for later usage or invokes
      * setCompressedSize via reflection.</p>
      * @param size the size to use
-     * @deprecated use setCompressedSize directly. 
+     * @deprecated since 1.7.
+     *             Use setCompressedSize directly. 
      * @since 1.2
      */
     public void setComprSize(long size) {

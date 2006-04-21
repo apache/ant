@@ -84,7 +84,9 @@ public class FileUtils {
      * Factory method.
      *
      * @return a new instance of FileUtils.
-     * @deprecated Use getFileUtils instead, FileUtils do not have state.
+     * @deprecated since 1.7.
+     *             Use getFileUtils instead, 
+     * FileUtils do not have state.
      */
     public static FileUtils newFileUtils() {
         return new FileUtils();
@@ -870,7 +872,8 @@ public class FileUtils {
      * @return the given file's parent, or null if the file does not have a
      *         parent.
      * @since 1.10
-     * @deprecated Just use {@link File#getParentFile} directly.
+     * @deprecated since 1.7.
+     *             Just use {@link File#getParentFile} directly.
      */
     public File getParentFile(File f) {
         return (f == null) ? null : f.getParentFile();

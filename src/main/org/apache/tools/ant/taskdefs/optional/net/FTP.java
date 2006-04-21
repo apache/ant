@@ -1203,7 +1203,8 @@ public class FTP
      * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
      * "mkdir", "chmod", "list", and "site".
      *
-     * @deprecated setAction(String) is deprecated and is replaced with
+     * @deprecated since 1.5.x. 
+     *             setAction(String) is deprecated and is replaced with
      *      setAction(FTP.Action) to make Ant's Introspection mechanism do the
      *      work and also to encapsulate operations on the type in its own
      *      class.

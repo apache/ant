@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,17 +41,19 @@ public abstract class DataType extends ProjectComponent {
     /**
      * The description the user has set.
      *
-     * @deprecated The user should not be directly referencing
-     *   variable. Please use {@link #setDescription} or
-     *   {@link #getDescription} instead.
+     * @deprecated since 1.7.
+     *             The user should not be directly referencing
+     *             variable. Please use {@link #setDescription} or
+     *             {@link #getDescription} instead.
      */
     protected String description;
 
     /**
      * Value to the refid attribute.
      *
-     * @deprecated The user should not be directly referencing
-     *   variable. Please use {@link #getRefid} instead.
+     * @deprecated since 1.7. 
+     *             The user should not be directly referencing
+     *             variable. Please use {@link #getRefid} instead.
      */
     protected Reference ref;
 
@@ -63,9 +65,10 @@ public abstract class DataType extends ProjectComponent {
      * child element has been added that is a subclass of
      * DataType).</p>
      *
-     * @deprecated The user should not be directly referencing
-     *   variable. Please use {@link #setChecked} or
-     *   {@link #isChecked} instead.
+     * @deprecated since 1.7. 
+     *             The user should not be directly referencing
+     *             variable. Please use {@link #setChecked} or 
+     *             {@link #isChecked} instead.
      */
     protected boolean checked = true;
 

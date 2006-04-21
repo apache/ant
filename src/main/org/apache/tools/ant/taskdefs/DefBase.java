@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ public abstract class DefBase extends AntlibDefinition {
     /**
      * @param reverseLoader if true a delegated loader will take precedence over
      *                      the parent
-     * @deprecated stop using this attribute
+     * @deprecated since 1.6.x. 
+     *             stop using this attribute
      * @ant.attribute ignore="true"
      */
     public void setReverseLoader(boolean reverseLoader) {

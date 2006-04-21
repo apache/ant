@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class RuntimeConfigurable implements Serializable {
     private transient IntrospectionHelper.Creator creator;
 
     /**
-     * @deprecated
      * XML attributes for the element.
+     * @deprecated since 1.6.x
      */
     private transient AttributeList attributes;
 
@@ -148,7 +148,7 @@ public class RuntimeConfigurable implements Serializable {
     /**
      * Sets the attributes for the wrapped element.
      *
-     * @deprecated
+     * @deprecated since 1.6.x.
      * @param attributes List of attributes defined in the XML for this
      *                   element. May be <code>null</code>.
      */

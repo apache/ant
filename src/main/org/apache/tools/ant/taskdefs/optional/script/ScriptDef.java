@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -295,7 +295,8 @@ public class ScriptDef extends DefBase {
      *
      * @param attributes collection of attributes
      * @param elements a list of nested element values.
-     * @deprecated use executeScript(attribute, elements, instance) instead
+     * @deprecated since 1.7. 
+     *             Use executeScript(attribute, elements, instance) instead.
      */
     public void executeScript(Map attributes, Map elements) {
         executeScript(attributes, elements,null);

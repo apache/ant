@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2005 The Apache Software Foundation
+ * Copyright  2000,2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ import org.apache.tools.ant.taskdefs.Java;
  * This is a primitive task to execute a unit test in the
  * org.apache.testlet framework.
  *
- * @deprecated testlet has been abandoned in favor of JUnit by the
- * Avalon community
+ * @deprecated since 1.5.x. 
+ *             Testlet has been abandoned in favor of JUnit by the
+ * Avalon community.
  *
  * @ant.task ignore="true"
  */

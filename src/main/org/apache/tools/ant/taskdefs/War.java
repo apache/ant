@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,7 +68,8 @@ public class War extends Jar {
      * <i>Deprecated<i> name of the file to create
      * -use <tt>destfile</tt> instead.
      * @param warFile the destination file
-     * @deprecated Use setDestFile(File) instead
+     * @deprecated since 1.5.x.
+     *             Use setDestFile(File) instead
      * @ant.attribute ignore="true"
      */
     public void setWarfile(File warFile) {

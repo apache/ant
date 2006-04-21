@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,8 @@ public abstract class Unpack extends Task {
     protected Resource srcResource;
 
     /**
-     * @deprecated setSrc(String) is deprecated and is replaced with
+     * @deprecated since 1.5.x. 
+     *             setSrc(String) is deprecated and is replaced with
      *             setSrc(File) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
@@ -52,7 +53,8 @@ public abstract class Unpack extends Task {
     }
 
     /**
-     * @deprecated setDest(String) is deprecated and is replaced with
+     * @deprecated since 1.5.x. 
+     *             setDest(String) is deprecated and is replaced with
      *             setDest(File) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.

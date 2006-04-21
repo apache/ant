@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,7 +68,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * @see #ExecuteWatchdog(long)
-     * @deprecated Use constructor with a long type instead.
+     * @deprecated since 1.5.x. 
+     *             Use constructor with a long type instead.
      * (1.4.x compatibility)
      */
     public ExecuteWatchdog(int timeout) {

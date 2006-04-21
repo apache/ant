@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import java.lang.ref.WeakReference;
 /**
  * This is a reference that really is is Weak, as it uses the
  * appropriate java.lang.ref class.
- * @deprecated Just use {@link WeakReference} directly.
+ * @deprecated since 1.7.
+ *             Just use {@link WeakReference} directly.
  */
 public class WeakishReference12 extends WeakishReference  {
 

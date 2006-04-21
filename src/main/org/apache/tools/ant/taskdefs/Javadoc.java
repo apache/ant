@@ -819,7 +819,8 @@ public class Javadoc extends Task {
      * Set the location of the extensions directories.
      *
      * @param path the string version of the path.
-     * @deprecated Use the {@link #setExtdirs(Path)} version.
+     * @deprecated since 1.5.x.
+     *             Use the {@link #setExtdirs(Path)} version.
      */
     public void setExtdirs(String path) {
         cmd.createArgument().setValue("-extdirs");

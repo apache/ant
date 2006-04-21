@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -540,7 +540,8 @@ public final class IntrospectionHelper implements BuildListener {
      *                    Must not be <code>null</code>.
      *
      * @return an instance of the specified element type
-     * @deprecated This is not a namespace aware method.
+     * @deprecated since 1.6.x.
+     *             This is not a namespace aware method.
      *
      * @exception BuildException if no method is available to create the
      *                           element instance, or if the creating method

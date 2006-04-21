@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ import org.apache.tools.ant.util.optional.WeakishReference12;
  * This is a weak reference on java1.2 and up, that is all
  * platforms Ant1.6 supports.
  * @since ant1.6
- * @deprecated Just use {@link java.lang.ref.WeakReference} directly.
+ * @deprecated since 1.7.
+ *             Just use {@link java.lang.ref.WeakReference} directly.
  */
 public abstract class WeakishReference  {
 
@@ -47,7 +48,8 @@ public abstract class WeakishReference  {
 
     /**
      * A hard reference for Java 1.1.
-     * @deprecated Hopefully nobody is using this.
+     * @deprecated since 1.7. 
+     *             Hopefully nobody is using this.
      */
     public static class HardReference extends WeakishReference {
         private Object object;

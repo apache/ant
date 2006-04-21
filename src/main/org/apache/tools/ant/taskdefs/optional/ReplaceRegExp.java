@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -209,7 +209,8 @@ public class ReplaceRegExp extends Task {
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
      * @param byline the byline attribute as a string
-     * @deprecated - use setByLine(boolean)
+     * @deprecated since 1.6.x. 
+     *             Use setByLine(boolean).
      */
     public void setByLine(String byline) {
         Boolean res = Boolean.valueOf(byline);

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004-2005 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,8 @@ import org.apache.tools.ant.types.Mapper;
  *
  * @version 1.2
  *
- * @deprecated Use &lt;move&gt; instead
+ * @deprecated since 1.5.x. 
+ *             Use &lt;move&gt; instead
  */
 public class RenameExtensions extends MatchingTask {
 

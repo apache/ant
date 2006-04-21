@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -266,7 +266,9 @@ public class ProjectHelper {
      * JDK1.1 compatible access to the context class loader.
      * Cut&paste from JAXP.
      *
-     * @deprecated Use LoaderUtils.getContextClassLoader()
+     * @deprecated since 1.6.x. 
+     *             Use LoaderUtils.getContextClassLoader()
+     *
      * @return the current context class loader, or <code>null</code>
      * if the context class loader is unavailable.
      */
@@ -290,7 +292,9 @@ public class ProjectHelper {
      * @param project The project containing the target.
      *                Must not be <code>null</code>.
      *
-     * @deprecated Use IntrospectionHelper for each property
+     * @deprecated since 1.6.x. 
+     *             Use IntrospectionHelper for each property.
+     *
      * @exception BuildException if any of the attributes can't be handled by
      *                           the target
      */
@@ -403,7 +407,8 @@ public class ProjectHelper {
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
      *
-     * @deprecated Use project.replaceProperties()
+     * @deprecated since 1.6.x.
+     *             Use project.replaceProperties().
      * @since 1.5
      */
      public static String replaceProperties(Project project, String value)
@@ -429,7 +434,8 @@ public class ProjectHelper {
      *                           <code>}</code>
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
-     * @deprecated Use PropertyHelper
+     * @deprecated since 1.6.x. 
+     *             Use PropertyHelper.
      */
      public static String replaceProperties(Project project, String value,
          Hashtable keys) throws BuildException {
@@ -450,7 +456,8 @@ public class ProjectHelper {
      * @param propertyRefs List to add property names to.
      *                     Must not be <code>null</code>.
      *
-     * @deprecated Use PropertyHelper
+     * @deprecated since 1.6.x.
+     *             Use PropertyHelper.
      * @exception BuildException if the string contains an opening
      *                           <code>${</code> without a closing
      *                           <code>}</code>

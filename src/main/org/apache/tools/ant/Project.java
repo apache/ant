@@ -85,31 +85,36 @@ public class Project implements ResourceFactory {
     /**
      * Version constant for Java 1.0 .
      *
-     * @deprecated Use {@link JavaEnvUtils#JAVA_1_0} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link JavaEnvUtils#JAVA_1_0} instead.
      */
     public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /**
      * Version constant for Java 1.1 .
      *
-     * @deprecated Use {@link JavaEnvUtils#JAVA_1_1} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link JavaEnvUtils#JAVA_1_1} instead.
      */
     public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /**
      * Version constant for Java 1.2 .
      *
-     * @deprecated Use {@link JavaEnvUtils#JAVA_1_2} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link JavaEnvUtils#JAVA_1_2} instead.
      */
     public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /**
      * Version constant for Java 1.3 .
      *
-     * @deprecated Use {@link JavaEnvUtils#JAVA_1_3} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link JavaEnvUtils#JAVA_1_3} instead.
      */
     public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /**
      * Version constant for Java 1.4 .
      *
-     * @deprecated Use {@link JavaEnvUtils#JAVA_1_4} instead.
+     * @deprecated since 1.5.x.
+     *             Use {@link JavaEnvUtils#JAVA_1_4} instead.
      */
     public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
@@ -187,12 +192,6 @@ public class Project implements ResourceFactory {
      * Flag which catches Listeners which try to use System.out or System.err .
      */
     private boolean loggingMessage = false;
-
-    /**
-     * Property used to store the java version ant is running in.
-     * @deprecated
-     */
-    public static final String ANT_JAVA_VERSION = MagicNames.ANT_JAVA_VERSION;
 
     /**
      * Set the input handler.
@@ -616,7 +615,8 @@ public class Project implements ResourceFactory {
      *                      May be <code>null</code>, indicating that there is
      *                      no default target.
      *
-     * @deprecated use setDefault
+     * @deprecated since 1.5.x.
+     *             Use setDefault.
      * @see #setDefault(String)
      */
     public void setDefaultTarget(String defaultTarget) {
@@ -694,7 +694,8 @@ public class Project implements ResourceFactory {
      *              Must not be <code>null</code>.
      * @param value The replacement value.
      *              Must not be <code>null</code>.
-     * @deprecated Use getGlobalFilterSet().addFilter(token,value)
+     * @deprecated since 1.4.x.
+     *             Use getGlobalFilterSet().addFilter(token,value)
      *
      * @see #getGlobalFilterSet()
      * @see FilterSet#addFilter(String,String)
@@ -712,7 +713,8 @@ public class Project implements ResourceFactory {
      * @return a hashtable of global filters, mapping tokens to values
      *         (String to String).
      *
-     * @deprecated Use getGlobalFilterSet().getFilterHash()
+     * @deprecated since 1.4.x 
+     *             Use getGlobalFilterSet().getFilterHash().
      *
      * @see #getGlobalFilterSet()
      * @see FilterSet#getFilterHash()
@@ -805,7 +807,8 @@ public class Project implements ResourceFactory {
      * Return the version of Java this class is running under.
      * @return the version of Java as a String, e.g. "1.1" .
      * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
-     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
+     * @deprecated since 1.5.x.
+     *             Use org.apache.tools.ant.util.JavaEnvUtils instead.
      */
     public static String getJavaVersion() {
         return JavaEnvUtils.getJavaVersion();
@@ -1319,7 +1322,7 @@ public class Project implements ResourceFactory {
      *
      * @return the resolved File.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public File resolveFile(String fileName, File rootDir) {
         return FILE_UTILS.resolveFile(rootDir, fileName);
@@ -1336,6 +1339,9 @@ public class Project implements ResourceFactory {
      *
      * @return the resolved File.
      *
+     * @deprecated since 1.7 
+     *             Use @see {FileUtils#resolveFile FileUtils.resolveFile} 
+     *             instead.
      */
     public File resolveFile(String fileName) {
         return FILE_UTILS.resolveFile(baseDir, fileName);
@@ -1355,7 +1361,8 @@ public class Project implements ResourceFactory {
      * @return the native version of the specified path or
      *         an empty string if the path is <code>null</code> or empty.
      *         
-     * @deprecated use FileUtils.translatePath instead.
+     * @deprecated since 1.7
+     *             Use FileUtils.translatePath instead.
      *
      * @see PathTokenizer
      */
@@ -1374,7 +1381,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(String sourceFile, String destFile)
           throws IOException {
@@ -1394,7 +1401,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
         throws IOException {
@@ -1418,7 +1425,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
@@ -1447,7 +1454,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
@@ -1467,7 +1474,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile);
@@ -1486,7 +1493,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the copying fails.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
@@ -1510,7 +1517,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the file cannot be copied.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
@@ -1539,7 +1546,7 @@ public class Project implements ResourceFactory {
      *
      * @exception IOException if the file cannot be copied.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
@@ -1557,7 +1564,7 @@ public class Project implements ResourceFactory {
      *
      * @param time the required modification time.
      *
-     * @deprecated
+     * @deprecated since 1.4.x
      *
      * @exception BuildException if the last modified time cannot be set
      *                           despite running on a platform with a version

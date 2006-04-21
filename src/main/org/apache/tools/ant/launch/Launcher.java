@@ -39,7 +39,7 @@ public class Launcher {
     /**
      * The Ant Home (installation) Directory property.
      * {@value}
-     * @deprecated
+     * @deprecated since 1.7
      */
     public static final String ANTHOME_PROPERTY = MagicNames.ANT_HOME;
 

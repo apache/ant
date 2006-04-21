@@ -155,7 +155,8 @@ public class Copy extends Task {
     /**
      * Give the copied files the same last modified time as the original files.
      * @param preserve a boolean string.
-     * @deprecated setPreserveLastModified(String) has been deprecated and
+     * @deprecated since 1.5.x. 
+     *             setPreserveLastModified(String) has been deprecated and
      *             replaced with setPreserveLastModified(boolean) to
      *             consistently let the Introspection mechanism work.
      */

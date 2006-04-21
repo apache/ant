@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004-2005 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ public class Reference {
 
     /**
      * Create a reference.
-     * @deprecated Please use {@link Reference#Reference(Project,String)} instead.
+     * @deprecated since 1.7. 
+     *             Please use {@link Reference#Reference(Project,String)}
+     *             instead.
      */
     public Reference() {
     }
@@ -39,7 +41,9 @@ public class Reference {
     /**
      * Create a reference to a named ID.
      * @param id the name of this reference
-     * @deprecated Please use {@link Reference#Reference(Project,String)} instead.
+     * @deprecated since 1.7. 
+     *             Please use {@link Reference#Reference(Project,String)}
+     *             instead.
      */
     public Reference(String id) {
         setRefId(id);

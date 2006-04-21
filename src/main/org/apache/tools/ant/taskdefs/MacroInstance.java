@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * Method present for BC purposes.
      * @param name not used
      * @return nothing
-     * @deprecated
+     * @deprecated since 1.6.x.
      * @throws BuildException always
      */
     public Object createDynamicElement(String name) throws BuildException {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -209,7 +209,8 @@ public class PathConvert extends Task {
      * Set targetos to a platform to one of
      * "windows", "unix", "netware", or "os/2";
      * current platform settings are used by default.
-     * @deprecated use the method taking a TargetOs argument instead.
+     * @deprecated since 1.5.x.
+     *             Use the method taking a TargetOs argument instead.
      * @see #setTargetos(PathConvert.TargetOs)
      */
     public void setTargetos(String target) {

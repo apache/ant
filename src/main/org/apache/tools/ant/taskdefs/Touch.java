@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -317,7 +317,7 @@ public class Touch extends Task {
      * backwards-compatibility only.
      * @param file file to touch
      * @throws BuildException on error
-     * @deprecated
+     * @deprecated since 1.6.x.
      */
     protected void touch(File file) {
         touch(file, getTimestamp());
