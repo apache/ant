@@ -50,6 +50,7 @@ either:</p>
     <code>&lt;includesfile&gt;</code> and <code>&lt;excludesfile&gt;</code>.
   </li>
 </ul>
+<p>
 When dealing with an external file, each line of the file
 is taken as a pattern that is added to the list of include or exclude
 patterns.</p>
@@ -128,8 +129,9 @@ For example, <code>mypackage/test/</code> is interpreted as if it were
       But not:
       <pre>
       org/apache/CVS/foo/bar/Entries (<code>foo/bar/</code>
-      part does not match)</td>
+      part does not match)
       </pre>
+    </td>
   </tr>
   <tr>
     <td valign="top"><code>org/apache/jakarta/**</code></td>
@@ -201,7 +203,6 @@ tasks that can act as an implicit fileset:</p>
   <li><a href="OptionalTasks/ejb.html#ejbjar"><code>&lt;ejbjar&gt;</code></a></li>
   <li><a href="OptionalTasks/ejb.html#ejbc"><code>&lt;ejbc&gt;</code></a></li>
   <li><a href="OptionalTasks/cab.html"><code>&lt;cab&gt;</code></a></li>
-  <li><a href="OptionalTasks/icontract.html"><code>&lt;icontract&gt;</code></a></li>
   <li><a href="OptionalTasks/native2ascii.html"><code>&lt;native2ascii&gt;</code></a></li>
   <li><a href="OptionalTasks/netrexxc.html"><code>&lt;netrexxc&gt;</code></a></li>
   <li>
@@ -212,10 +213,7 @@ tasks that can act as an implicit fileset:</p>
   <li><a href="OptionalTasks/dotnet.html"><code>&lt;csc&gt;</code></a></li>
   <li><a href="OptionalTasks/dotnet.html"><code>&lt;vbc&gt;</code></a></li>
   <li><a href="OptionalTasks/translate.html"><code>&lt;translate&gt;</code></a></li>
-  <li>
-    <a href="Integration/VAJAntTool.html#vajexport"><code>&lt;vajexport&gt;</code></a>
-  </li>
-  <li><code>&lt;image&gt;</code></li>
+  <li><a href="OptionalTasks/image.html"><code>&lt;image&gt;</code></a></li>
   <li><a href="OptionalTasks/jlink.html"><code>&lt;jlink&gt;</code></a> (deprecated)</li>
   <li><a href="OptionalTasks/jspc.html"><code>&lt;jspc&gt;</code></a></li>
   <li><a href="OptionalTasks/wljspc.html"><code>&lt;wljspc&gt;</code></a></li>
@@ -280,7 +278,7 @@ default excludes by using the <a
 href="CoreTasks/defaultexcludes.html">defaultexcludes</a> task.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All
 rights Reserved.</p>
 
 </body>

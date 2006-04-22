@@ -264,10 +264,6 @@
     </or>
   </selector>
 
-  <selector id="needs.icontract">
-    <filename name="${optional.package}/IContract*"/>
-  </selector>
-
   <selector id="needs.netrexx">
     <filename name="${optional.package}/NetRexxC*"/>
   </selector>
@@ -300,10 +296,6 @@
       <filename name="${optional.package}/scm/AntStarTeam*"/>
       <filename name="${optional.package}/starteam/*"/>
     </or>
-  </selector>
-
-  <selector id="needs.vaj">
-    <filename name="${optional.package}/ide/VAJ*"/>
   </selector>
 
   <selector id="needs.antlr">
@@ -445,9 +437,6 @@
     <available property="antlr.present"
       classname="antlr.Tool"
       classpathref="classpath"/>
-    <available property="vaj.present"
-      classname="com.ibm.ivj.util.base.Workspace"
-      classpathref="classpath"/>
     <available property="stylebook.present"
       classname="org.apache.stylebook.Engine"
       classpathref="classpath"/>
@@ -462,9 +451,6 @@
       classpathref="classpath"/>
     <available property="jai.present"
       classname="javax.media.jai.JAI"
-      classpathref="classpath"/>
-    <available property="icontract.present"
-      classname="com.reliablesystems.iContract.IContracted"
       classpathref="classpath"/>
     <available property="jdepend.present"
       classname="jdepend.framework.JDepend"
@@ -687,7 +673,6 @@
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
             <selector refid="needs.stylebook" unless="stylebook.present"/>
             <selector refid="needs.javamail" unless="javamail.complete"/>
-            <selector refid="needs.icontract" unless="icontract.present"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.weblogic.ejbc" unless="ejb.ejbc.present"/>
             <selector refid="needs.weblogic.ddcreator"
@@ -695,7 +680,6 @@
             <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.starteam" unless="starteam.present"/>
-            <selector refid="needs.vaj" unless="vaj.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
             <selector refid="needs.jmf" unless="jmf.present"/>
             <selector refid="needs.jai" unless="jai.present"/>
@@ -867,14 +851,12 @@
             <selector refid="needs.apache-bsf"/>
             <selector refid="needs.stylebook"/>
             <selector refid="needs.javamail"/>
-            <selector refid="needs.icontract"/>
             <selector refid="needs.netrexx"/>
             <selector refid="needs.weblogic.ejbc"/>
             <selector refid="needs.weblogic.ddcreator"/>
             <selector refid="needs.weblogic.server"/>
             <selector refid="needs.commons-net"/>
             <selector refid="needs.starteam"/>
-            <selector refid="needs.vaj"/>
             <selector refid="needs.antlr"/>
             <selector refid="needs.jmf"/>
             <selector refid="needs.jai"/>
@@ -914,11 +896,9 @@
     <optional-jar dep="apache-bsf"/>
     <optional-jar dep="stylebook"/>
     <optional-jar dep="javamail"/>
-    <optional-jar dep="icontract"/>
     <optional-jar dep="netrexx"/>
     <optional-jar dep="commons-net"/>
     <optional-jar dep="starteam"/>
-    <optional-jar dep="vaj"/>
     <optional-jar dep="antlr"/>
     <optional-jar dep="jmf"/>
     <optional-jar dep="jai"/>

@@ -77,6 +77,12 @@ Changes that could break older environments:
 * support for the XSL:P XML parser has been removed.
   Bugzilla Report 23455.
 
+* Visual Age for Java optional tasks removed.
+
+* Testlet (test) optional task removed.
+
+* Icontract optional task removed.  
+
 Fixed bugs:
 -----------
 
