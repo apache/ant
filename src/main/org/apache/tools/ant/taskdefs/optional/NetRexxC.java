@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Compiles NetRexx source files.
@@ -670,7 +671,7 @@ public class NetRexxC extends MatchingTask {
                 String toFile = (String) filecopyList.get(fromFile);
 
                 try {
-                    getProject().copyFile(fromFile, toFile);
+                    FileUtils.getFileUtils().copyFile(fromFile, toFile);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                          + " due to " + ioe.getMessage();

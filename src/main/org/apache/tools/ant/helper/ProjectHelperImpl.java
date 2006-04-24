@@ -423,8 +423,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         helperImpl.project.setBasedir(baseDir);
                     } else {
-                        File resolvedBaseDir = helperImpl.project.resolveFile(baseDir,
-                                helperImpl.buildFileParent);
+                        File resolvedBaseDir = FILE_UTILS.resolveFile(
+                                helperImpl.buildFileParent, baseDir);
                         helperImpl.project.setBaseDir(resolvedBaseDir);
                     }
                 }
