@@ -1,5 +1,5 @@
 /*
- * Copyright  2005 The Apache Software Foundation
+ * Copyright  2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -190,14 +190,6 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         return prefix;
     }
-
-    /**
-     * Return the prefix prepended to entries in the archive file.
-     * @deprecated
-     */
-    public String getPrefix() {
-        return prefix;
-    }
     
     /**
      * Set the full pathname of the single entry in this fileset.
@@ -224,14 +216,6 @@ public abstract class ArchiveFileSet extends FileSet {
         return fullpath;
     }
     
-    /**
-     * Return the full pathname of the single entry in this fileset.
-     * @deprecated
-     */
-    public String getFullpath() {
-        return fullpath;
-    }
-
     /**
      * Creates a scanner for this type of archive.
      */
@@ -345,14 +329,6 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         return fileMode;
     }
-    
-    /**
-     * @deprecated
-     */
-    public int getFileMode() {
-        return fileMode;
-    }
-
 
     /**
      * Whether the user has specified the mode explicitly.
@@ -398,13 +374,6 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(p)).getDirMode(p);
         }
-        return dirMode;
-    }
-    
-    /**
-     * @deprecated
-     */
-    public int getDirMode() {
         return dirMode;
     }
 
