@@ -397,6 +397,9 @@ Other changes:
   attribute will read default values from the properties
   ant.build.javac.source and ant.build.javac.target.
 
+* Handling of ' ', '#' in CLASSPATH and '#' in -lib (cannot use ' '
+  in -lib on UNIX at the moment). Bugzilla Report 39295.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

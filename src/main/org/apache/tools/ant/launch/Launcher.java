@@ -130,11 +130,7 @@ public class Launcher {
                 }
             }
 
-            try {
-                libPathURLs.add(new URL(Locator.encodeURI(element.toURL().toString())));
-            } catch (UnsupportedEncodingException ex) {
-                throw new MalformedURLException(ex.toString());
-            }
+            libPathURLs.add(Locator.fileToURL(element));
         }
     }
 
@@ -255,7 +251,7 @@ public class Launcher {
             systemJars.length);
 
         if (toolsJar != null) {
-            jars[jars.length - 1] = toolsJar.toURL();
+            jars[jars.length - 1] = Locator.fileToURL(toolsJar);
         }
 
 

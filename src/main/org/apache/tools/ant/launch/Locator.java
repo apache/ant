@@ -311,6 +311,28 @@ public final class Locator {
     }
 
     /**
+     * Convert a File to a URL.
+     * File.toURL() does not encode characters like #.
+     * File.toURI() has been introduced in java 1.4, so
+     * ANT cannot use it (except by reflection)
+     * FileUtils.toURI() cannot be used by Locator.java
+     * Implemented this way.
+     * File.toURL() adds file: and changes '\' to '/' for dos OSes
+     * encodeURI converts characters like ' ' and '#' to %DD
+     * @param file the file to convert
+     * @return URL the converted File
+     * @throws MalformedURLException on error
+     */
+    public static URL fileToURL(File file)
+        throws MalformedURLException {
+        try {
+            return new URL(encodeURI(file.toURL().toString()));
+        } catch (UnsupportedEncodingException ex) {
+            throw new MalformedURLException(ex.toString());
+        }
+    }
+
+    /**
      * Get the File necessary to load the Sun compiler tools. If the classes
      * are available to this class, then no additional URL is required and
      * null is returned. This may be because the classes are explicitly in the
@@ -401,20 +423,7 @@ public final class Locator {
             String path = location.getPath();
             for (int i = 0; i < extensions.length; ++i) {
                 if (path.toLowerCase().endsWith(extensions[i])) {
-                    try {
-                        /**
-                         * File.toURL() does not encode characters like #.
-                         * File.toURI() has been introduced in java 1.4, so
-                         * ANT cannot use it (except by reflection)
-                         * FileUtils.toURI() cannot be used by Locator.java
-                         * Implemented this way.
-                         * File.toURL() adds file: and changes '\' to '/' for dos OSes
-                         * encodeURI converts characters like ' ' and '#' to %DD
-                         */
-                        urls[0] = new URL(encodeURI(location.toURL().toString()));
-                    } catch (UnsupportedEncodingException ex) {
-                        throw new MalformedURLException(ex.toString());
-                    }
+                    urls[0] = fileToURL(location);
                     break;
                 }
             }
@@ -433,12 +442,7 @@ public final class Locator {
             });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            try {
-                // See comments above.
-                urls[i] = new URL(encodeURI(matches[i].toURL().toString()));
-            } catch (UnsupportedEncodingException ex) {
-                throw new MalformedURLException(ex.toString());
-            }
+            urls[i] = fileToURL(matches[i]);
         }
         return urls;
     }
