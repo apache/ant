@@ -36,6 +36,8 @@ import org.apache.tools.zip.UnixStat;
  */
 public abstract class ArchiveFileSet extends FileSet {
 
+    private static final int BASE_OCTAL = 8;
+
     /**
      * Default value for the dirmode attribute.
      *
@@ -158,6 +160,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     /**
      * Get the archive file from which entries will be extracted.
+     * @return the archive in case the archive is a file, null otherwise.
      */
     public File getSrc() {
         if (src instanceof FileResource) {
@@ -165,7 +168,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         return null;
     }
-    
+
     /**
      * Prepend this prefix to the path for each archive entry.
      * Prevents both prefix and fullpath from being specified
@@ -190,7 +193,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         return prefix;
     }
-    
+
     /**
      * Set the full pathname of the single entry in this fileset.
      * Prevents both prefix and fullpath from being specified
@@ -215,7 +218,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         return fullpath;
     }
-    
+
     /**
      * Creates a scanner for this type of archive.
      */
@@ -300,7 +303,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setFileMode(String octalString) {
-        integerSetFileMode(Integer.parseInt(octalString, 8));
+        integerSetFileMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 
     /**
@@ -348,7 +351,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setDirMode(String octalString) {
-        integerSetDirMode(Integer.parseInt(octalString, 8));
+        integerSetDirMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 
     /**
