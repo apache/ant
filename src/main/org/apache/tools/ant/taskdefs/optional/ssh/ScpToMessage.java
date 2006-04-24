@@ -221,7 +221,9 @@ public class ScpToMessage extends AbstractSshMessage {
         int percentTransmitted = 0;
 
         try {
-            log("Sending: " + localFile.getName() + " : " + localFile.length());
+            if (this.getVerbose()) {
+                log("Sending: " + localFile.getName() + " : " + localFile.length());
+            }
             while (true) {
                 int len = fis.read(buf, 0, buf.length);
                 if (len <= 0) {
@@ -240,8 +242,10 @@ public class ScpToMessage extends AbstractSshMessage {
             sendAck(out);
             waitForAck(in);
         } finally {
-            long endTime = System.currentTimeMillis();
-            logStats(startTime, endTime, totalLength);
+            if (this.getVerbose()) {
+                long endTime = System.currentTimeMillis();
+                logStats(startTime, endTime, totalLength);
+            }
             fis.close();
         }
     }
