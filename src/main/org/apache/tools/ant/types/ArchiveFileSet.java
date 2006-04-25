@@ -435,4 +435,35 @@ public abstract class ArchiveFileSet extends FileSet {
             return null;
         }
     }
+
+    /**
+     * Return the prefix prepended to entries in the archive file.
+     * @deprecated since 1.7.
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * Return the full pathname of the single entryZ in this fileset.
+     * @deprecated since 1.7.
+     */
+    public String getFullpath() {
+        return fullpath;
+    }
+
+    /**
+     * @deprecated since 1.7.
+     */
+    public int getFileMode() {
+        return fileMode;
+    }
+
+    /**
+     * @deprecated since 1.7.
+     */
+    public int getDirMode() {
+        return dirMode;
+    }
+
 }
