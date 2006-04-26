@@ -207,8 +207,8 @@ public class UpToDate extends Task implements Condition {
         if (upToDate) {
             Resource[] r = sourceResources.listResources();
             upToDate = upToDate &&
-                (ResourceUtils.selectOutOfDateResources(this, r, getMapper(),
-                                                      getProject(), null).length
+                (ResourceUtils.selectOutOfDateSources(this, r, getMapper(),
+                                                      getProject()).length
                  == 0);
         }
 
