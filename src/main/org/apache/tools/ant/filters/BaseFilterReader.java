@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004-2005 The Apache Software Foundation
+ * Copyright  2002,2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public abstract class BaseFilterReader extends FilterReader {
      * this placeholder instance to create a chain of real filters.
      */
     public BaseFilterReader() {
-        super(new StringReader(new String()));
+        super(new StringReader(""));
         FileUtils.close(this);
     }
 

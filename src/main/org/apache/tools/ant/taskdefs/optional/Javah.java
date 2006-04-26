@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -442,7 +442,9 @@ public class Javah extends Task {
         String[] c = getClasses();
         for (int i = 0; i < c.length; i++) {
             cmd.createArgument().setValue(c[i]);
-            niceClassList.append("    " + c[i] + lSep);
+            niceClassList.append("    ");
+            niceClassList.append(c[i]);
+            niceClassList.append(lSep);
         }
 
         StringBuffer prefix = new StringBuffer("Class");

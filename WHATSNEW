@@ -212,6 +212,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* took in bugzilla report 39320.
+
 * Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
 
 * ${ant.core.lib} may now be used to refer to the library containing the

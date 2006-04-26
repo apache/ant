@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  */
 public class Exit extends Task {
 
-    private class NestedCondition extends ConditionBase implements Condition {
+    private static class NestedCondition extends ConditionBase implements Condition {
         public boolean eval() {
             if (countConditions() != 1) {
                 throw new BuildException(

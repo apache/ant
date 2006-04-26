@@ -408,7 +408,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         for (int i = 0; i < compileList.length; i++) {
             String arg = compileList[i].getAbsolutePath();
             cmd.createArgument().setValue(arg);
-            niceSourceList.append("    " + arg + StringUtils.LINE_SEP);
+            niceSourceList.append("    ");
+            niceSourceList.append(arg);
+            niceSourceList.append(StringUtils.LINE_SEP);
         }
 
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);

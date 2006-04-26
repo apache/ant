@@ -415,7 +415,7 @@ public class Zip extends MatchingTask {
      */
     public void executeMain() throws BuildException {
 
-        if (baseDir == null & resources.size() == 0
+        if (baseDir == null && resources.size() == 0
             && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException("basedir attribute must be set, "
                                      + "or at least one "

@@ -200,7 +200,9 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                         String name = macroName.toString().toLowerCase(Locale.US);
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
-                            ret.append("@{" + name + "}");
+                            ret.append("@{");
+                            ret.append(name);
+                            ret.append("}");
                         } else {
                             ret.append(value);
                         }

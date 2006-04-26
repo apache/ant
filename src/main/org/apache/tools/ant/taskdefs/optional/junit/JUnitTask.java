@@ -1449,7 +1449,7 @@ public class JUnitTask extends Task {
      * Forked test support
      * @since Ant 1.6.2
      */
-    private final class ForkedTestConfiguration {
+    private final static class ForkedTestConfiguration {
         private boolean filterTrace;
         private boolean haltOnError;
         private boolean haltOnFailure;

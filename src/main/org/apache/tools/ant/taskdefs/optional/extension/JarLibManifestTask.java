@@ -279,7 +279,8 @@ public final class JarLibManifestTask extends Task {
                                       final int size) {
         final StringBuffer sb = new StringBuffer();
         for (int i = 0; i < size; i++) {
-            sb.append(listPrefix + i);
+            sb.append(listPrefix);
+            sb.append(i);
             sb.append(' ');
         }
 

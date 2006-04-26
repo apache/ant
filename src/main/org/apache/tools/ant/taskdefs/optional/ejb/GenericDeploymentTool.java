@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2004,2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -450,7 +450,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
         } catch (SAXException se) {
             String msg = "SAXException while parsing '"
-                + descriptorFileName.toString()
+                + descriptorFileName
                 + "'. This probably indicates badly-formed XML."
                 + "  Details: "
                 + se.getMessage();

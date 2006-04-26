@@ -857,6 +857,10 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                     && getIndex() == ((AddAsisRemove) other).getIndex();
         }
 
+        public int hashCode() {
+            return getIndex();
+        }
+
         AddAsisRemove resolve() throws IllegalStateException {
             if (this.equals(ASIS)) {
                 return ASIS;
@@ -909,6 +913,10 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
 
         public boolean equals(Object other) {
             return other instanceof CrLf && getIndex() == ((CrLf) other).getIndex();
+        }
+
+        public int hashCode() {
+            return getIndex();
         }
 
         CrLf resolve() {

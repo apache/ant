@@ -266,10 +266,9 @@ public abstract class DotnetCompile
         //iterate through the ref list & generate an entry for each
         //or just rely on the fact that the toString operator does this, but
         //noting that the separator is ';' on windows, ':' on unix
-        String refpath = references.toString();
 
         //bail on no references listed
-        if (refpath.length() == 0) {
+        if (references.length() == 0) {
             return null;
         }
 
@@ -277,7 +276,7 @@ public abstract class DotnetCompile
         if (isWindows) {
             s.append('\"');
         }
-        s.append(refpath);
+        s.append(references);
         if (isWindows) {
             s.append('\"');
         }

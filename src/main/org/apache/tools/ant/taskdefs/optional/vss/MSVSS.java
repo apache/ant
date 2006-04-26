@@ -606,9 +606,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
                     env = new String[0];
                 }
                 String[] newEnv = new String[env.length + 1];
-                for (int i = 0; i < env.length; i++) {
-                    newEnv[i] = env[i];
-                }
+                System.arraycopy(env, 0, newEnv, 0, env.length);
                 newEnv[env.length] = "SSDIR=" + serverPath;
 
                 exe.setEnvironment(newEnv);
@@ -635,9 +633,8 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @throws ParseException
      */
     private String calcDate(String startDate, int daysToAdd) throws ParseException {
-        Date currentDate = new Date();
         Calendar calendar = new GregorianCalendar();
-        currentDate = dateFormat.parse(startDate);
+        Date currentDate = dateFormat.parse(startDate);
         calendar.setTime(currentDate);
         calendar.add(Calendar.DATE, daysToAdd);
         return dateFormat.format(calendar.getTime());

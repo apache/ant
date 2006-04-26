@@ -412,17 +412,22 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
             }
             int line = locator.getLineNumber();
             if (line != -1) {
-                msg.append(":" + line);
+                msg.append(":");
+                msg.append(line);
                 int column = locator.getColumnNumber();
                 if (column != -1) {
-                    msg.append(":" + column);
+                    msg.append(":");
+                    msg.append(column);
                 }
             }
         }
-        msg.append(": " + type + "! ");
+        msg.append(": ");
+        msg.append(type);
+        msg.append("! ");
         msg.append(e.getMessage());
         if (e.getCause() != null) {
-            msg.append(" Cause: " + e.getCause());
+            msg.append(" Cause: ");
+            msg.append(e.getCause());
         }
 
         logger.log(msg.toString());

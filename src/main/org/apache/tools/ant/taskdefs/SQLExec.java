@@ -508,9 +508,11 @@ public class SQLExec extends JDBCTask {
             }
 
             if (!keepformat) {
-                sql.append(" " + line);
+                sql.append(" ");
+                sql.append(line);
             } else {
-                sql.append("\n" + line);
+                sql.append("\n");
+                sql.append(line);
             }
 
             // SQL defines "--" as a comment to EOL

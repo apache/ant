@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -608,6 +608,6 @@ public class UnknownElement extends Task {
     }
 
     private static boolean equalsString(String a, String b) {
-        return (a == null) ? (a == b) : a.equals(b);
+        return (a == null) ? (b == null) : a.equals(b);
     }
 }

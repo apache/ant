@@ -539,7 +539,7 @@ public class Copy extends Task {
 
             if (nonFileResources.size() > 0) {
                 Resource[] nonFiles =
-                    (Resource[]) nonFileResources.toArray(new Resource[0]);
+                    (Resource[]) nonFileResources.toArray(new Resource[nonFileResources.size()]);
                 // restrict to out-of-date resources
                 Map map = scan(nonFiles, destDir);
                 try {

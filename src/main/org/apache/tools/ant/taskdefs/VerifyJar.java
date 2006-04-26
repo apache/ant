@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -150,7 +150,7 @@ public class VerifyJar extends AbstractJarSignerTask {
     /**
      * we are not thread safe here. Do not use on multiple threads at the same time.
      */
-    private class BufferingOutputFilter implements ChainableReader {
+    private static class BufferingOutputFilter implements ChainableReader {
 
         private BufferingOutputFilterReader buffer;
 
@@ -173,7 +173,7 @@ public class VerifyJar extends AbstractJarSignerTask {
     /**
      * catch the output of the buffer
      */
-    private class BufferingOutputFilterReader extends Reader {
+    private static class BufferingOutputFilterReader extends Reader {
 
         private Reader next;
 

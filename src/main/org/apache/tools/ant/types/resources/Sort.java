@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation
+ * Copyright 2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
  */
 public class Sort extends BaseResourceCollectionWrapper {
 
-    private class MultiComparator implements Comparator {
+    private static class MultiComparator implements Comparator {
         private Vector v = null;
         synchronized void add(ResourceComparator c) {
             if (c == null) {
@@ -62,7 +62,7 @@ public class Sort extends BaseResourceCollectionWrapper {
     }
 
     //sorted bag impl. borrowed from commons-collections TreeBag:
-    private class SortedBag extends AbstractCollection {
+    private static class SortedBag extends AbstractCollection {
         private class MutableInt {
             int value = 0;
         }

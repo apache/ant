@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -263,7 +263,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         for (int i = 0; i < cListSize; i++) {
             String arg = (String) compileList.elementAt(i);
             cmd.createArgument().setValue(arg);
-            niceSourceList.append("    " + arg);
+            niceSourceList.append("    ");
+            niceSourceList.append(arg);
         }
 
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
