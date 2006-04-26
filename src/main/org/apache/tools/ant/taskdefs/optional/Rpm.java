@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-20056 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,11 @@ import org.apache.tools.ant.types.Path;
  *
  */
 public class Rpm extends Task {
+
+    private static final String PATH1 = "PATH=";
+    private static final String PATH2 = "Path=";
+    private static final String PATH3 = "path=";
+    private static final int PATH_LEN = PATH1.length();
 
     /**
      * the spec file
@@ -300,6 +305,8 @@ public class Rpm extends Task {
      * the absolute path to it - falls back to <code>rpm</code>
      * otherwise.
      *
+     * @return the command used to build RPM's
+     *
      * @since 1.6
      */
     protected String guessRpmBuildCommand() {
@@ -307,8 +314,8 @@ public class Rpm extends Task {
         String path = null;
         for (Enumeration e = env.elements(); e.hasMoreElements();) {
             String var = (String) e.nextElement();
-            if (var.startsWith("PATH=") || var.startsWith("Path=")) {
-                path = var.substring(6 /* "PATH=".length() + 1 */);
+            if (var.startsWith(PATH1) || var.startsWith(PATH2) || var.startsWith(PATH3)) {
+                path = var.substring(PATH_LEN);
                 break;
             }
         }
