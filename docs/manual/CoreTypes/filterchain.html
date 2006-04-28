@@ -9,10 +9,11 @@
 <body>
 
 <h2>FilterChains and FilterReaders</h2>
-Look at Unix pipes - they offer you so much flexibility -
-say you wanted to copy just those lines that contained the
-string blee from the first 10 lines of a file 'foo'
-to a file 'bar' - you would do something like<p>
+Consider the flexibility of Unix pipes.  If you wanted,
+for example, to copy just those lines that contained the
+string blee from the first 10 lines of a text file 'foo'
+(<em>you wouldn't want to filter a binary file</em>)
+to a file 'bar', you would do something like:<p>
 <code>
 cat foo|head -n10|grep blee &gt; bar
 </code><p>
