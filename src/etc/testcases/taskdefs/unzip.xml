@@ -70,6 +70,28 @@
     </unzip>
   </target>
 
+  <target name="testTwoPatternSets" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="2/**"/>
+      </patternset>
+      <patternset>
+        <include name="3/**"/>
+      </patternset>
+    </unzip>
+  </target>
+
+  <target name="testTwoPatternSetsWithExcludes" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="2/**"/>
+      </patternset>
+      <patternset>
+        <exclude name="2/**"/>
+      </patternset>
+    </unzip>
+  </target>
+
   <target name="selfExtractingArchive">
     <mkdir dir="unziptestout"/>
     <unzip dest="unziptestout" src="zip/test.exe"/>
