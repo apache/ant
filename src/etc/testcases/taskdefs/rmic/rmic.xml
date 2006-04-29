@@ -108,6 +108,12 @@
     <available property="kaffe.present" classname="jkaffe.rmi.rmic.RMIC"/>
     <available property="rmic.present" classname="sun.rmi.rmic.Main"/>
     <available property="wlrmic.present" classname="weblogic.rmic"/>
+    <condition property="rmic6.present">
+      <and>
+        <isset property="rmic.present"/>
+        <available classname="java.util.Service"/>
+      </and>
+    </condition>
   </target>
 
   <target name="testDefault" depends="init">
@@ -240,6 +246,20 @@
   <target name="testMagicPropertyIsEmptyString" depends="init">
     <property name="build.rmic" value=""/>
     <base-rmic />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnew" if="rmic6.present" depends="init">
+    <base-rmic compiler="sun">
+      <compilerarg value="-Xnew"/>
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewForked" if="rmic6.present" depends="init">
+    <base-rmic compiler="forking">
+      <compilerarg value="-Xnew"/>
+    </base-rmic>
     <assertBaseCompiled/>
   </target>
 

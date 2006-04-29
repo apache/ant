@@ -1,5 +1,5 @@
 /*
- * Copyright  2004-2005 The Apache Software Foundation
+ * Copyright  2004-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -192,6 +192,24 @@ public class RmicAdvancedTest extends BuildFileTest {
      */
     public void testVersionCompat() throws Exception {
         executeTarget("testVersionCompat");
+    }
+
+    /**
+     * test that passes -Xnew to sun's rmic.
+     *
+     * @throws Exception
+     */
+    public void testXnew() throws Exception {
+        executeTarget("testXnew");
+    }
+
+    /**
+     * test that passes -Xnew to sun's rmic running in a different VM.
+     *
+     * @throws Exception
+     */
+    public void testXnewForked() throws Exception {
+        executeTarget("testXnewForked");
     }
 
     /**
