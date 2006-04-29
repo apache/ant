@@ -87,6 +87,7 @@
         <include name="2/**"/>
       </patternset>
       <patternset>
+        <exclude name="1/**"/>
         <exclude name="2/**"/>
       </patternset>
     </unzip>

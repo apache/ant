@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -195,6 +197,8 @@ public class Expand extends Task {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
             boolean included = false;
+            Set includePatterns = new HashSet();
+            Set excludePatterns = new HashSet();
             for (int v = 0, size = patternsets.size(); v < size; v++) {
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
                 String[] incls = p.getIncludePatterns(getProject());
@@ -209,17 +213,8 @@ public class Expand extends Task {
                     if (pattern.endsWith(File.separator)) {
                         pattern += "**";
                     }
-
-                    included = SelectorUtils.matchPath(pattern, name);
-                    if (included) {
-                        break;
-                    }
+                    includePatterns.add(pattern);
                 }
-
-                if (!included) {
-                    break;
-                }
-
 
                 String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
@@ -230,13 +225,23 @@ public class Expand extends Task {
                         if (pattern.endsWith(File.separator)) {
                             pattern += "**";
                         }
-                        included = !(SelectorUtils.matchPath(pattern, name));
-                        if (!included) {
-                            break;
-                        }
+                        excludePatterns.add(pattern);
                     }
                 }
             }
+
+            for (Iterator iter = includePatterns.iterator();
+                 !included && iter.hasNext();) {
+                String pattern = (String) iter.next();
+                included = SelectorUtils.matchPath(pattern, name);
+            }
+
+            for (Iterator iter = excludePatterns.iterator();
+                 included && iter.hasNext();) {
+                String pattern = (String) iter.next();
+                included = !SelectorUtils.matchPath(pattern, name);
+            }
+
             if (!included) {
                 //Do not process this file
                 return;
