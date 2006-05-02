@@ -17,38 +17,18 @@
 
 package org.apache.tools.ant.helper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
-
-import org.xml.sax.Locator;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
-
-import org.apache.tools.ant.util.JAXPUtils;
-import org.apache.tools.ant.util.FileUtils;
-
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Target;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.RuntimeConfigurable;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Location;
-import org.apache.tools.ant.UnknownElement;
-
-import org.xml.sax.XMLReader;
 
 /**
  * Sax2 based project reader
@@ -247,6 +227,72 @@ public class ProjectHelper2 extends ProjectHelper {
             FileUtils.close(inputStream);
         }
     }
+
+    /**
+     * Returns main handler
+     * @return main handler
+     */
+    protected static AntHandler getMainHandler() {
+        return mainHandler;
+    }
+
+    /**
+     * Sets main handler
+     * @param handler  new main handler
+     */
+    protected static void setMainHandler(AntHandler handler) {
+        mainHandler=handler;
+    }
+
+    /**
+     * Returns project handler
+     * @return project handler
+     */
+    protected static AntHandler getProjectHandler() {
+        return projectHandler;
+    }
+
+    /**
+     * Sets project handler
+     * @param handler  new project handler
+     */
+    protected static void setProjectHandler(AntHandler handler) {
+        projectHandler=handler;
+    }
+
+    /**
+     * Returns target handler
+     * @return target handler
+     */
+    protected static AntHandler getTargetHandler() {
+        return targetHandler;
+    }
+
+    /**
+     * Sets target handler
+     * @param handler  new target handler
+     */
+    protected static void setTargetHandler(AntHandler handler) {
+        targetHandler=handler;
+    }
+
+    /**
+     * Returns element handler
+     * @return element handler
+     */
+    protected static AntHandler getElementHandler() {
+        return elementHandler;
+    }
+
+    /**
+     * Sets element handler
+     * @param handler  new element handler
+     */
+    protected static void setElementHandler(AntHandler handler) {
+        elementHandler=handler;
+    }
+
+
 
     /**
      * The common superclass for all SAX event handlers used to parse
