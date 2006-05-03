@@ -25,12 +25,18 @@ if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 if "%OS%"=="Windows_NT" @setlocal
 if "%OS%"=="WINNT" @setlocal
 
+if "%ANT_HOME%"=="" goto setDefaultAntHome
+
+:stripAntHome
+if not _%ANT_HOME:~-1%==_\ goto checkClasspath
+set ANT_HOME=%ANT_HOME:~0,-1%
+goto stripAntHome
+
+:setDefaultAntHome
 rem %~dp0 is expanded pathname of the current script under NT
-set DEFAULT_ANT_HOME=%~dp0..
+set ANT_HOME=%~dp0..
 
-if "%ANT_HOME%"=="" set ANT_HOME=%DEFAULT_ANT_HOME%
-set DEFAULT_ANT_HOME=
-
+:checkClasspath
 set _USE_CLASSPATH=yes
 rem CLASSPATH must not be used if it is equal to ""
 if "%CLASSPATH%"=="""" set _USE_CLASSPATH=no
@@ -58,6 +64,15 @@ rem This label provides a place for the argument list loop to break out
 rem and for NT handling to skip to.
 
 :doneStart
+
+if _USE_CLASSPATH==no goto findAntHome
+
+:stripClasspath
+if not _%CLASSPATH:~-1%==_\ goto findAntHome
+set CLASSPATH=%CLASSPATH:~0,-1%
+goto stripClasspath
+
+:findAntHome
 rem find ANT_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
 if exist "%ANT_HOME%\lib\ant.jar" goto checkJava
@@ -99,13 +114,6 @@ if not "%JIKESPATH%"=="" goto runAntWithJikes
 
 :runAnt
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
-:runAntNoClasspath
-"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
-rem Check the error code of the Ant build
-if not "%OS%"=="Windows_NT" goto onError
-set ANT_ERROR=%ERRORLEVEL%
-goto end
-
 :runAntWithClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
 rem Check the error code of the Ant build
@@ -113,18 +121,32 @@ if not "%OS%"=="Windows_NT" goto onError
 set ANT_ERROR=%ERRORLEVEL%
 goto end
 
-:runAntWithJikes
-if "%_USE_CLASSPATH%"=="no" goto runAntWithJikesNoClasspath
-
-:runAntWithJikesNoClasspath
-"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+:runAntNoClasspath
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 rem Check the error code of the Ant build
 if not "%OS%"=="Windows_NT" goto onError
 set ANT_ERROR=%ERRORLEVEL%
 goto end
 
+:runAntWithJikes
+
+if not _%JIKESPATH:~-1%==_\ goto checkJikesAndClasspath
+set JIKESPATH=%JIKESPATH:~0,-1%
+goto runAntWithJikes
+
+:checkJikesAndClasspath
+
+if "%_USE_CLASSPATH%"=="no" goto runAntWithJikesNoClasspath
+
 :runAntWithJikesAndClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS%  -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+rem Check the error code of the Ant build
+if not "%OS%"=="Windows_NT" goto onError
+set ANT_ERROR=%ERRORLEVEL%
+goto end
+
+:runAntWithJikesNoClasspath
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
 rem Check the error code of the Ant build
 if not "%OS%"=="Windows_NT" goto onError
 set ANT_ERROR=%ERRORLEVEL%
