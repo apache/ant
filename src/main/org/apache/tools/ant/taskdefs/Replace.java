@@ -351,6 +351,13 @@ public class Replace extends MatchingTask {
         void close() throws IOException {
             reader.close();
         }
+        
+        /**
+         * Closes file but doesn't throw exception
+         */
+        void closeQuietly() {
+            FileUtils.close(reader);
+        }
 
     }
 
@@ -417,6 +424,13 @@ public class Replace extends MatchingTask {
          */
         void close() throws IOException {
             writer.close();
+        }
+        
+        /**
+         * Closes file but doesn't throw exception
+         */
+        void closeQuietly() {
+            FileUtils.close(writer);
         }
     }
 
@@ -557,13 +571,7 @@ public class Replace extends MatchingTask {
                 + ") cannot be loaded.";
             throw new BuildException(message);
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(in);
         }
 
         return props;
@@ -623,20 +631,8 @@ public class Replace extends MatchingTask {
                     + ioe.getClass().getName() + ":"
                     + ioe.getMessage(), ioe, getLocation());
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            in.closeQuietly();
+            out.closeQuietly();
             if (temp != null) {
                 if (!temp.delete()) {
                     temp.deleteOnExit();
