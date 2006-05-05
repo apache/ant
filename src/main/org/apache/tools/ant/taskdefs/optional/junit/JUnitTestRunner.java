@@ -283,35 +283,47 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // no appropriate suite method found. We don't report any
                     // error here since it might be perfectly normal.
                 }
+
                 if (suiteMethod != null) {
                     // if there is a suite method available, then try
                     // to extract the suite from it. If there is an error
                     // here it will be caught below and reported.
                     suite = (Test) suiteMethod.invoke(null, new Class[0]);
-                } else {
-                Class junit4TestAdapterClass = null;
-                // Check for JDK 5 first. Will *not* help on JDK 1.4 if only junit-4.0.jar in
-                // CP because in that case linkage of whole task will already have
-                // failed! But will help if CP has junit-3.8.1.jar:junit-4.0.jar.
-                // In that case first C.fN will fail with CNFE and we will avoid UnsupportedClassVersionError.
-                try {
-                    Class.forName("java.lang.annotation.Annotation");
-                    if (loader == null) {
-                        junit4TestAdapterClass = Class.forName("junit.framework.JUnit4TestAdapter");
-                    } else {
-                        junit4TestAdapterClass = Class.forName("junit.framework.JUnit4TestAdapter", true, loader);
-                    }
-                } catch (ClassNotFoundException e) {
-                    // OK, fall back to JUnit 3.
-                }
-                junit4 = junit4TestAdapterClass != null;
 
-                if (junit4) {
-                    // Let's use it!
-                    suite = (Test) junit4TestAdapterClass.getConstructor(new Class[] {Class.class}).
-                            newInstance(new Object[] {testClass});
                 } else {
-                    // Use JUnit 3.
+                    Class junit4TestAdapterClass = null;
+
+                    // Check for JDK 5 first. Will *not* help on JDK 1.4
+                    // if only junit-4.0.jar in CP because in that case
+                    // linkage of whole task will already have failed! But
+                    // will help if CP has junit-3.8.1.jar:junit-4.0.jar.
+
+                    // In that case first C.fN will fail with CNFE and we
+                    // will avoid UnsupportedClassVersionError.
+
+                    try {
+                        Class.forName("java.lang.annotation.Annotation");
+                        if (loader == null) {
+                            junit4TestAdapterClass =
+                                Class.forName("junit.framework.JUnit4TestAdapter");
+                        } else {
+                            junit4TestAdapterClass =
+                                Class.forName("junit.framework.JUnit4TestAdapter",
+                                              true, loader);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        // OK, fall back to JUnit 3.
+                    }
+                    junit4 = junit4TestAdapterClass != null;
+
+                    if (junit4) {
+                        // Let's use it!
+                        suite =
+                            (Test) junit4TestAdapterClass
+                            .getConstructor(new Class[] {Class.class}).
+                            newInstance(new Object[] {testClass});
+                    } else {
+                        // Use JUnit 3.
 
                         // try to extract a test suite automatically this
                         // will generate warnings if the class is no
