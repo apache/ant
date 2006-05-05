@@ -265,6 +265,30 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         try {
 
             try {
+                Class testClass = null;
+                if (loader == null) {
+                    testClass = Class.forName(junitTest.getName());
+                } else {
+                    testClass = Class.forName(junitTest.getName(), true,
+                                              loader);
+                }
+
+                // check for a static suite method first, even when using
+                // JUnit 4
+                Method suiteMethod = null;
+                try {
+                    // check if there is a suite method
+                    suiteMethod = testClass.getMethod("suite", new Class[0]);
+                } catch (NoSuchMethodException e) {
+                    // no appropriate suite method found. We don't report any
+                    // error here since it might be perfectly normal.
+                }
+                if (suiteMethod != null) {
+                    // if there is a suite method available, then try
+                    // to extract the suite from it. If there is an error
+                    // here it will be caught below and reported.
+                    suite = (Test) suiteMethod.invoke(null, new Class[0]);
+                } else {
                 Class junit4TestAdapterClass = null;
                 // Check for JDK 5 first. Will *not* help on JDK 1.4 if only junit-4.0.jar in
                 // CP because in that case linkage of whole task will already have
@@ -282,14 +306,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 }
                 junit4 = junit4TestAdapterClass != null;
 
-                Class testClass = null;
-                if (loader == null) {
-                    testClass = Class.forName(junitTest.getName());
-                } else {
-                    testClass = Class.forName(junitTest.getName(), true,
-                                              loader);
-                }
-
                 if (junit4) {
                     // Let's use it!
                     suite = (Test) junit4TestAdapterClass.getConstructor(new Class[] {Class.class}).
@@ -297,20 +313,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 } else {
                     // Use JUnit 3.
 
-                    Method suiteMethod = null;
-                    try {
-                        // check if there is a suite method
-                        suiteMethod = testClass.getMethod("suite", new Class[0]);
-                    } catch (NoSuchMethodException e) {
-                        // no appropriate suite method found. We don't report any
-                        // error here since it might be perfectly normal.
-                    }
-                    if (suiteMethod != null) {
-                        // if there is a suite method available, then try
-                        // to extract the suite from it. If there is an error
-                        // here it will be caught below and reported.
-                        suite = (Test) suiteMethod.invoke(null, new Class[0]);
-                    } else {
                         // try to extract a test suite automatically this
                         // will generate warnings if the class is no
                         // suitable Test
