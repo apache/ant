@@ -631,8 +631,12 @@ public class Replace extends MatchingTask {
                     + ioe.getClass().getName() + ":"
                     + ioe.getMessage(), ioe, getLocation());
         } finally {
-            in.closeQuietly();
-            out.closeQuietly();
+            if (null != in) {
+                in.closeQuietly();
+            }
+            if (null != out) {
+                out.closeQuietly();
+            }
             if (temp != null) {
                 if (!temp.delete()) {
                     temp.deleteOnExit();
