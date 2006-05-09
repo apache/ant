@@ -195,8 +195,6 @@
     <or>
       <filename name="${optional.package}/junit/Xalan2Executor*"/>
       <filename name="${optional.package}/TraXLiaison*"/>
-      <filename name="${optional.package}/sitraka/**"/>
-      <filename name="${optional.package}/metamata/MMetrics*"/>
       <filename name="${optional.package}/XsltTest*"/>
       <filename name="${type.package}/XMLCatalogBuildFileTest*"/>
     </or>
@@ -225,7 +223,6 @@
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
       <filename name="${optional.package}/perforce/*"/>
-      <filename name="${optional.package}/metamata/MAudit*"/>
     </or>
   </selector>
 
@@ -1654,8 +1651,6 @@
                time dependencies -->
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
             unless="some.regexp.support"/>
-          <exclude name="${optional.package}/sitraka/*.java"
-            unless="some.regexp.support"/>
           <exclude name="${ant.package}/types/selectors/ContainsRegexpTest.java"
             unless="some.regexp.support"/>
           <exclude name="${ant.package}/types/mappers/RegexpPatternMapperTest.java"
@@ -1684,9 +1679,6 @@
             if="tests.are.on.system.classpath"/>
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
             if="tests.are.on.system.classpath"/>
-          <exclude name="${optional.package}/sitraka/XMLReportTest.java"
-            if="tests.are.on.system.classpath"/>
-
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java"/>
 
@@ -1742,8 +1734,6 @@
           <exclude name="${optional.package}/vss/MSVSSTest.java"
             unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/TraXLiaisonTest.java"
-            unless="tests.and.ant.share.classloader"/>
-          <exclude name="${optional.package}/metamata/MAuditParserTest.java"
             unless="tests.and.ant.share.classloader"/>
           <exclude name="${taskdefs.package}/ProcessDestroyerTest.java"
             unless="tests.and.ant.share.classloader"/>

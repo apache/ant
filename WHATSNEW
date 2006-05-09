@@ -81,7 +81,11 @@ Changes that could break older environments:
 
 * Testlet (test) optional task removed.
 
-* Icontract optional task removed.  
+* Icontract optional task removed.
+
+* Metamata (maudit, mmetrics, and mparse tasks) removed.
+
+* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed.     
 
 Fixed bugs:
 -----------
