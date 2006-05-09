@@ -52,7 +52,7 @@ public class ScpFromMessage extends AbstractSshMessage {
      * Constructor for ScpFromMessage
      * @param verbose if true do verbose logging
      * @param session the ssh session to use
-     * @since Ant 1.6.2
+     * @since Ant 1.7
      */
     public ScpFromMessage(boolean verbose, Session session) {
         super(verbose, session);
