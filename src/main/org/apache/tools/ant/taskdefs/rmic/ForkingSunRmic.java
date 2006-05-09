@@ -65,9 +65,8 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
             exe.setAntRun(project);
             exe.setWorkingDirectory(project.getBaseDir());
             exe.setCommandline(args);
-
             exe.execute();
-            return exe.getExitValue() == 0;
+            return !exe.isFailure();
         } catch (IOException exception) {
             throw new BuildException("Error running " + SunRmic.RMIC_EXECUTABLE
                     + " -maybe it is not on the path", exception);

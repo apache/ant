@@ -27,12 +27,12 @@ import java.io.*;
  */
 public class ExecuteWatchdogTest extends TestCase {
 
-    private final static int TIME_OUT = 5000;
+    private final static long TIME_OUT = 5000;
 
     private final static String TEST_CLASSPATH = getTestClassPath();
 
     private final static int CLOCK_ERROR=200;
-    private final static int TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
+    private final static long TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
 
     private ExecuteWatchdog watchdog;
 
@@ -58,7 +58,7 @@ public class ExecuteWatchdogTest extends TestCase {
         return classpath;
     }
 
-    private Process getProcess(int timetorun) throws Exception {
+    private Process getProcess(long timetorun) throws Exception {
         String[] cmdArray = {
             JavaEnvUtils.getJreExecutable("java"), "-classpath", TEST_CLASSPATH,
             TimeProcess.class.getName(), String.valueOf(timetorun)
@@ -94,7 +94,7 @@ public class ExecuteWatchdogTest extends TestCase {
         watchdog.start(process);
         int retCode = waitForEnd(process);
         assertTrue("process should not have been killed", !watchdog.killedProcess());
-        assertEquals(0, retCode);
+        assertFalse(Execute.isFailure(retCode));
     }
 
     // test that the watchdog ends the process

@@ -47,7 +47,9 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Execute {
 
-    /** Invalid exit code. **/
+    /** Invalid exit code. 
+     * set to {@link Integer#MAX_VALUE}
+     */
     public static final int INVALID = Integer.MAX_VALUE;
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -584,6 +586,16 @@ public class Execute {
         // for other platforms nonzero exit value signals failure
         return Os.isFamily("openvms")
             ? (exitValue % 2 == 0) : (exitValue != 0);
+    }
+
+    /**
+     * Did this execute return in a failure.
+     * @see #isFailure(int) 
+     * @return true if and only if the exit code is interpreted as a failure
+     * @since Ant1.7
+     */
+    public boolean isFailure() {
+        return isFailure(getExitValue());
     }
 
     /**
