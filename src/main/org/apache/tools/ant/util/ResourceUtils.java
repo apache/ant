@@ -1,5 +1,5 @@
 /*
- * Copyright 2003-2005 The Apache Software Foundation
+ * Copyright 2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -539,7 +539,7 @@ public class ResourceUtils {
      * Log which Resources (if any) have been modified in the future.
      * @param logTo the ProjectComponent to do the logging.
      * @param rc the collection of Resources to check.
-     * @param long the timestamp granularity to use.
+     * @param granularity the timestamp granularity to use.
      * @since Ant 1.7
      */
     private static void logFuture(ProjectComponent logTo,
