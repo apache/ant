@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,24 @@ public class ScpFromMessage extends AbstractSshMessage {
     private String remoteFile;
     private File localFile;
     private boolean isRecursive = false;
+
+    /**
+     * Constructor for ScpFromMessage
+     * @param session the ssh session to use
+     */
+    public ScpFromMessage(Session session) {
+        super(session);
+    }
+
+    /**
+     * Constructor for ScpFromMessage
+     * @param verbose if true do verbose logging
+     * @param session the ssh session to use
+     * @since Ant 1.6.2
+     */
+    public ScpFromMessage(boolean verbose, Session session) {
+        super(verbose, session);
+    }
 
     /**
      * Constructor for ScpFromMessage.

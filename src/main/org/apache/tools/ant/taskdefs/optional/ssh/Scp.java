@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ public class Scp extends SSHBase {
     private String toUri;
     private List fileSets = null;
     private boolean isFromRemote, isToRemote;
+    private boolean isSftp = false;
 
     /**
      * Sets the file to be transferred.  This can either be a remote
@@ -142,6 +143,15 @@ public class Scp extends SSHBase {
     }
 
     /**
+     * Setting this to true to use sftp protocol.
+     *
+     * @param yesOrNo if true sftp protocol will be used.
+     */
+    public void setSftp(boolean yesOrNo) {
+        isSftp = yesOrNo;
+    }
+
+    /**
      * Adds a FileSet tranfer to remote host.  NOTE: Either
      * addFileSet() or setFile() are required.  But, not both.
      *
@@ -213,10 +223,18 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpFromMessage message =
-                new ScpFromMessage(getVerbose(), session, file,
-                                   getProject().resolveFile(toPath),
-                                   fromSshUri.endsWith("*"));
+            ScpFromMessage message = null;
+            if (!isSftp){
+                message =
+                    new ScpFromMessage(getVerbose(), session, file,
+                                       getProject().resolveFile(toPath),
+                                       fromSshUri.endsWith("*"));
+            } else{
+                message =
+                    new ScpFromMessageBySftp(getVerbose(), session, file,
+                                             getProject().resolveFile(toPath),
+                                             fromSshUri.endsWith("*"));
+            }
             log("Receiving file: " + file);
             message.setLogListener(this);
             message.execute();
@@ -243,8 +261,14 @@ public class Scp extends SSHBase {
             }
             if (!list.isEmpty()) {
                 session = openSession();
-                ScpToMessage message = new ScpToMessage(getVerbose(), session,
-                                                        list, file);
+                ScpToMessage message = null;
+                if (!isSftp){
+                    message = new ScpToMessage(getVerbose(), session,
+                                               list, file);
+                } else{
+                    message = new ScpToMessageBySftp(getVerbose(), session,
+                                                     list, file);
+                }
                 message.setLogListener(this);
                 message.execute();
             }
@@ -262,9 +286,17 @@ public class Scp extends SSHBase {
         Session session = null;
         try {
             session = openSession();
-            ScpToMessage message =
-                new ScpToMessage(getVerbose(), session,
-                                 getProject().resolveFile(fromPath), file);
+            ScpToMessage message = null;
+            if (!isSftp){
+                message =
+                    new ScpToMessage(getVerbose(), session,
+                                     getProject().resolveFile(fromPath), file);
+            } else{
+                message =
+                    new ScpToMessageBySftp(getVerbose(), session,
+                                           getProject().resolveFile(fromPath),
+                                           file);
+            }
             message.setLogListener(this);
             message.execute();
         } finally {

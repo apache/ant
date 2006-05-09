@@ -410,6 +410,8 @@ Other changes:
 * Handling of ' ', '#' in CLASSPATH and '#' in -lib (cannot use ' '
   in -lib on UNIX at the moment). Bugzilla Report 39295.
 
+* <scp> now optionally supports the sftp protocol.  Bugzilla Report 39373.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

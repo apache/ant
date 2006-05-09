@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,6 +74,17 @@ public abstract class AbstractSshMessage {
     protected Channel openExecChannel(String command) throws JSchException {
         ChannelExec channel = (ChannelExec) session.openChannel("exec");
         channel.setCommand(command);
+
+        return channel;
+    }
+
+    /**
+     * Open an ssh sftp channel.
+     * @return the channel
+     * @throws JSchException on error
+     */
+    protected ChannelSftp openSftpChannel() throws JSchException {
+        ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
 
         return channel;
     }
@@ -213,4 +228,39 @@ public abstract class AbstractSshMessage {
         return percent;
     }
 
+    private ProgressMonitor monitor = null;
+
+    protected SftpProgressMonitor getProgressMonitor(){
+        if (monitor == null) {
+            monitor = new ProgressMonitor();
+        }
+        return monitor;
+    }
+
+    private class ProgressMonitor implements SftpProgressMonitor {
+        private long initFileSize = 0;
+        private long totalLength = 0;
+        private int percentTransmitted = 0;
+
+        public void init(int op, String src, String dest, long max) {
+            initFileSize = max;
+            totalLength = 0;
+            percentTransmitted = 0;
+        }
+
+        public boolean count(long len) {
+            totalLength += len;
+            percentTransmitted = trackProgress(initFileSize, 
+                                               totalLength, 
+                                               percentTransmitted);
+            return true;
+        }
+
+        public void end() {
+        }
+
+        public long getTotalLength() {
+            return totalLength; 
+        }
+    }
 }

@@ -40,6 +40,24 @@ public class ScpToMessage extends AbstractSshMessage {
     private List directoryList;
 
     /**
+     * Constructor for ScpToMessage
+     * @param session the ssh session to use
+     */
+    public ScpToMessage(Session session) {
+        super(session);
+    }
+
+    /**
+     * Constructor for ScpToMessage
+     * @param verbose if true do verbose logging
+     * @param session the ssh session to use
+     * @since Ant 1.7
+     */
+    public ScpToMessage(boolean verbose, Session session) {
+        super(verbose, session);
+    }
+
+    /**
      * Constructor for a local file to remote.
      * @param verbose if true do verbose logging
      * @param session the scp session to use
