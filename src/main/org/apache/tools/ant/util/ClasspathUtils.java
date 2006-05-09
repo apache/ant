@@ -20,6 +20,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -64,11 +65,11 @@ import org.apache.tools.ant.types.Reference;
  * @since Ant 1.6
  */
 public class ClasspathUtils {
-    private static final String LOADER_ID_PREFIX = "ant.loader.";
+
     /**
      * Name of the magic property that controls classloader reuse in Ant 1.4.
      */
-    public static final String REUSE_LOADER_REF = "ant.reuse.loader";
+    public static final String REUSE_LOADER_REF = MagicNames.REFID_CLASSPATH_REUSE_LOADER;
 
     /**
      * Convenience overloaded version of {@link
@@ -111,7 +112,7 @@ public class ClasspathUtils {
                     + pathId
                     + " does not reference a Path.");
         }
-        String loaderId = LOADER_ID_PREFIX + pathId;
+        String loaderId = MagicNames.REFID_CLASSPATH_LOADER_PREFIX + pathId;
         return getClassLoaderForPath(p, (Path) path, loaderId, reverseLoader);
     }
 
@@ -441,7 +442,7 @@ public class ClasspathUtils {
          * @return The class loader.
          */
         public ClassLoader getClassLoader() {
-            return ClasspathUtils.getClassLoaderForPath(
+            return getClassLoaderForPath(
                     getContextProject(),
                     this.classpath,
                     getClassLoadId(),
@@ -462,7 +463,7 @@ public class ClasspathUtils {
          */
         public String getClassLoadId() {
             return this.loaderId == null && this.classpathId != null
-                ? ClasspathUtils.LOADER_ID_PREFIX + this.classpathId
+                ? MagicNames.REFID_CLASSPATH_LOADER_PREFIX + this.classpathId
                 : this.loaderId;
         }
 

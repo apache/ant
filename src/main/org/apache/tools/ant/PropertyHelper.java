@@ -124,14 +124,14 @@ public class PropertyHelper {
     public static synchronized
         PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper
-            = (PropertyHelper) project.getReference("ant.PropertyHelper");
+            = (PropertyHelper) project.getReference(MagicNames.REFID_PROPERTY_HELPER);
         if (helper != null) {
             return helper;
         }
         helper = new PropertyHelper();
         helper.setProject(project);
 
-        project.addReference("ant.PropertyHelper", helper);
+        project.addReference(MagicNames.REFID_PROPERTY_HELPER, helper);
         return helper;
     }
 

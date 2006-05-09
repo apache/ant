@@ -144,5 +144,24 @@ public final class MagicNames {
      */
     public static final String BUILD_JAVAC_TARGET = "ant.build.javac.target";
 
+    /**
+     * Name of the magic property that controls classloader reuse 
+     * @since Ant 1.4.
+     * Value: {@value}
+     */
+    public static final String REFID_CLASSPATH_REUSE_LOADER = "ant.reuse.loader";
+
+    /**
+     * Prefix used to store classloader references.
+     * Value: {@value}
+     */
+    public static final String REFID_CLASSPATH_LOADER_PREFIX = "ant.loader.";
+
+    /**
+     * Reference used to store the property helper
+     * Value: {@value}
+     */
+    public static final String REFID_PROPERTY_HELPER = "ant.PropertyHelper";
+
 }
 
