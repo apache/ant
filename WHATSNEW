@@ -215,7 +215,7 @@ Fixed bugs:
   standardized improperly included objselect and objsel property accessors to
   delegate to the inherited objSelect property accessor. Bugzilla report 37766.
 
-* <unzip> and <untar< now correctly merge multiple nested patternsets.
+* <unzip> and <untar> now correctly merge multiple nested patternsets.
   Bugzilla Report 38973.
 
 Other changes:
