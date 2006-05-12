@@ -218,6 +218,10 @@ Fixed bugs:
 * <unzip> and <untar> now correctly merge multiple nested patternsets.
   Bugzilla Report 38973.
 
+* On case-insensitive filesystems, a <move> to change filename case
+  erroneously deleted the "destination" file before attempting to rename
+  the source file.  Bugzilla 37701.
+
 Other changes:
 --------------
 * took in bugzilla report 39320.

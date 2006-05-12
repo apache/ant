@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright 2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -373,7 +373,8 @@ public class Move extends Copy {
             if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
-            if (destFile.isFile() && !destFile.delete()) {
+            if (destFile.isFile() && !destFile.equals(sourceFile)
+                && !destFile.delete()) {
                 throw new BuildException("Unable to remove existing "
                                          + "file " + destFile);
             }
