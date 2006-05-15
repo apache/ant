@@ -150,6 +150,14 @@ for more information.  This task has been tested with jsch-0.1.2 and later.</p>
     progress of a file transfer.  <em>since Ant 1.6.2</em></td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
+  <tr>
+    <td valign="top">sftp</td>
+    <td valign="top">Determines whether SCP uses the sftp protocol.
+    The sftp protocol is the file transfer protocol of SSH2.  It is
+    recommended that this be set to true if you are copying to/from a
+    server that doesn't support scp1. <em>since Ant 1.7</em></td>
+    <td valign="top" align="center">No; defaults to false.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
@@ -236,7 +244,7 @@ preserving copy function, use <code>&lt;exec executable="scp" ... &gt;</code>
 instead.
 </p>
 
-<hr><p align="center">Copyright &copy; 2003-2005 The Apache Software Foundation.
+<hr><p align="center">Copyright &copy; 2003-2006 The Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>
