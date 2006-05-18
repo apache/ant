@@ -38,15 +38,15 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * None of which are required.
  * <p>
  * This version generalises the handling of EOL characters, and allows for
- * CR-only line endings (which I suspect is the standard on Macs.) Tab handling
- * has also been generalised to accommodate any tabwidth from 2 to 80,
+ * CR-only line endings (the standard on Mac systems prior to OS X). Tab
+ * handling has also been generalised to accommodate any tabwidth from 2 to 80,
  * inclusive. Importantly, it can leave untouched any literal TAB characters
  * embedded within Java string or character constants.
  * <p>
  * <em>Caution:</em> run with care on carefully formatted files. This may
  * sound obvious, but if you don't specify asis, presume that your files are
  * going to be modified. If "tabs" is "add" or "remove", whitespace characters
- * may be added or removed as necessary. Similarly, for EOL's - eol="asis"
+ * may be added or removed as necessary. Similarly, for EOLs, eol="asis"
  * actually means convert to your native O/S EOL convention while eol="crlf" or
  * cr="add" can result in CR characters being removed in one special case
  * accommodated, i.e., CRCRLF is regarded as a single EOL to handle cases where
@@ -109,7 +109,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     // class's constructor.
     {
         tabs = AddAsisRemove.ASIS;
-        if (Os.isFamily("mac")) {
+        if (Os.isFamily("mac") && !Os.isFamily("unix")) {
             ctrlz = AddAsisRemove.REMOVE;
             setEol(CrLf.MAC);
         } else if (Os.isFamily("dos")) {

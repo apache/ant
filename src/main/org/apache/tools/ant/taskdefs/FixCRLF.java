@@ -59,7 +59,7 @@ import org.apache.tools.ant.util.FileUtils;
  * and exclude properties.
  * <p>
  * This version generalises the handling of EOL characters, and allows
- * for CR-only line endings (which I suspect is the standard on Macs.)
+ * for CR-only line endings (the standard on Mac systems prior to OS X).
  * Tab handling has also been generalised to accommodate any tabwidth
  * from 2 to 80, inclusive.  Importantly, it will leave untouched any
  * literal TAB characters embedded within string or character constants.

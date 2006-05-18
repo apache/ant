@@ -85,7 +85,10 @@ Changes that could break older environments:
 
 * Metamata (maudit, mmetrics, and mparse tasks) removed.
 
-* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed.     
+* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed.
+
+* <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
+  is \n (Unix).  Bugzilla report 39585.
 
 Fixed bugs:
 -----------
