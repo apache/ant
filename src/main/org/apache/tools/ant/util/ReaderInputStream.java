@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.io.Reader;
 
 /**
  * Adapts a <code>Reader</code> as an <code>InputStream</code>.
- * Adapted from <CODE>StringInputStream</CODE>.
+ * Adapted from <code>StringInputStream</code>.
  *
  */
 public class ReaderInputStream extends InputStream {
@@ -37,22 +37,22 @@ public class ReaderInputStream extends InputStream {
     private int begin;
 
     /**
-     * Construct a <CODE>ReaderInputStream</CODE>
-     * for the specified <CODE>Reader</CODE>.
+     * Construct a <code>ReaderInputStream</code>
+     * for the specified <code>Reader</code>.
      *
-     * @param reader   <CODE>Reader</CODE>.  Must not be <code>null</code>.
+     * @param reader   <code>Reader</code>.  Must not be <code>null</code>.
      */
     public ReaderInputStream(Reader reader) {
         in = reader;
     }
 
     /**
-     * Construct a <CODE>ReaderInputStream</CODE>
-     * for the specified <CODE>Reader</CODE>,
+     * Construct a <code>ReaderInputStream</code>
+     * for the specified <code>Reader</code>,
      * with the specified encoding.
      *
-     * @param reader     non-null <CODE>Reader</CODE>.
-     * @param encoding   non-null <CODE>String</CODE> encoding.
+     * @param reader     non-null <code>Reader</code>.
+     * @param encoding   non-null <code>String</code> encoding.
      */
     public ReaderInputStream(Reader reader, String encoding) {
         this(reader);
@@ -64,9 +64,9 @@ public class ReaderInputStream extends InputStream {
     }
 
     /**
-     * Reads from the <CODE>Reader</CODE>, returning the same value.
+     * Reads from the <code>Reader</code>, returning the same value.
      *
-     * @return the value of the next character in the <CODE>Reader</CODE>.
+     * @return the value of the next character in the <code>Reader</code>.
      *
      * @exception IOException if the original <code>Reader</code> fails to be read
      */
