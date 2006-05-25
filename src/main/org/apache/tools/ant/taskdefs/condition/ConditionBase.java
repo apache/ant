@@ -32,25 +32,25 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * @since Ant 1.4
  */
 public abstract class ConditionBase extends ProjectComponent {
-
-
+    
+    
     /**
      * name of the component
      */
     private String taskName="condition";
-
+    
     /**
      *
      */
     private Vector conditions = new Vector();
-
+    
     /**
      * simple constructor.
      */
     protected ConditionBase() {
         taskName = "component";
     }
-
+    
     /**
      * constructor that takes the name of the task
      * in the task name
@@ -60,7 +60,7 @@ public abstract class ConditionBase extends ProjectComponent {
     protected ConditionBase(String taskName) {
         this.taskName = taskName;
     }
-
+    
     /**
      * Count the conditions.
      *
@@ -70,7 +70,7 @@ public abstract class ConditionBase extends ProjectComponent {
     protected int countConditions() {
         return conditions.size();
     }
-
+    
     /**
      * Iterate through all conditions.
      *
@@ -80,7 +80,7 @@ public abstract class ConditionBase extends ProjectComponent {
     protected final Enumeration getConditions() {
         return conditions.elements();
     }
-
+    
     /**
      * Sets the name to use in logging messages.
      *
@@ -91,7 +91,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void setTaskName(String name) {
         this.taskName = name;
     }
-
+    
     /**
      * Returns the name to use in logging messages.
      *
@@ -101,7 +101,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public String getTaskName() {
         return taskName;
     }
-
+    
     /**
      * Add an &lt;available&gt; condition.
      * @param a an available condition
@@ -110,7 +110,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addAvailable(Available a) {
         conditions.addElement(a);
     }
-
+    
     /**
      * Add an &lt;checksum&gt; condition.
      *
@@ -120,7 +120,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addChecksum(Checksum c) {
         conditions.addElement(c);
     }
-
+    
     /**
      * Add an &lt;uptodate&gt; condition.
      *
@@ -130,7 +130,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addUptodate(UpToDate u) {
         conditions.addElement(u);
     }
-
+    
     /**
      * Add an &lt;not&gt; condition "container".
      *
@@ -140,7 +140,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addNot(Not n) {
         conditions.addElement(n);
     }
-
+    
     /**
      * Add an &lt;and&gt; condition "container".
      *
@@ -150,7 +150,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addAnd(And a) {
         conditions.addElement(a);
     }
-
+    
     /**
      * Add an &lt;or&gt; condition "container".
      *
@@ -160,7 +160,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addOr(Or o) {
         conditions.addElement(o);
     }
-
+    
     /**
      * Add an &lt;equals&gt; condition.
      *
@@ -170,7 +170,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addEquals(Equals e) {
         conditions.addElement(e);
     }
-
+    
     /**
      * Add an &lt;os&gt; condition.
      *
@@ -180,7 +180,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addOs(Os o) {
         conditions.addElement(o);
     }
-
+    
     /**
      * Add an &lt;isset&gt; condition.
      *
@@ -190,7 +190,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsSet(IsSet i) {
         conditions.addElement(i);
     }
-
+    
     /**
      * Add an &lt;http&gt; condition.
      *
@@ -200,7 +200,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addHttp(Http h) {
         conditions.addElement(h);
     }
-
+    
     /**
      * Add a &lt;socket&gt; condition.
      *
@@ -210,7 +210,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addSocket(Socket s) {
         conditions.addElement(s);
     }
-
+    
     /**
      * Add a &lt;filesmatch&gt; condition.
      *
@@ -220,7 +220,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addFilesMatch(FilesMatch test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add a &lt;contains&gt; condition.
      *
@@ -230,7 +230,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addContains(Contains test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add a &lt;istrue&gt; condition.
      *
@@ -240,7 +240,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsTrue(IsTrue test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add a &lt;isfalse&gt; condition.
      *
@@ -250,7 +250,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsFalse(IsFalse test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;isreference&gt; condition.
      *
@@ -260,7 +260,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsReference(IsReference i) {
         conditions.addElement(i);
     }
-
+    
     /**
      * Add an &lt;typefound&gt; condition.
      * @param test a TypeFound condition
@@ -269,7 +269,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addTypeFound(TypeFound test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;isfailure&gt; condition.
      *
@@ -278,7 +278,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsFailure(IsFailure test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;isfileselected&gt; condition.
      * @param test the condition
@@ -286,7 +286,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsFileSelected(IsFileSelected test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;isreachable&gt; condition.
      *
@@ -296,7 +296,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsReachable(IsReachable test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;issigned&gt; condition.
      *
@@ -306,7 +306,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addIsSigned(IsSigned test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add an &lt;parsersupports&gt; condition.
      *
@@ -316,7 +316,7 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addParserSupports(ParserSupports test) {
         conditions.addElement(test);
     }
-
+    
     /**
      * Add a &lt;ResourcesMatch&gt; condition.
      *
@@ -326,8 +326,8 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addResourcesMatch(ResourcesMatch test) {
         conditions.addElement(test);
     }
-
-
+    
+    
     /**
      * Add an &lt;xor&gt; condition.
      *
@@ -337,6 +337,17 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addXor(Xor test) {
         conditions.addElement(test);
     }
+    
+    /**
+     * Add an &lt;antversion&gt; condition.
+     *
+     * @param test the condition
+     * @since Ant 1.7
+     */
+    public void addAntVersion(AntVersion test) {
+        conditions.addElement(test);
+    }
+    
     /**
      * Add an arbitrary condition
      * @param c a  condition

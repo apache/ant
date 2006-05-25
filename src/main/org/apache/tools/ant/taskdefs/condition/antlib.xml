@@ -47,4 +47,5 @@
   <typedef name="socket" classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
   <typedef name="typefound" classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
   <typedef name="xor" classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
+  <typedef name="antversion" classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
 </antlib>
