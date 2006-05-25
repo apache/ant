@@ -31,17 +31,16 @@ public class AntVersion implements Condition {
     
     public boolean eval() throws BuildException {
         validate();
-        String actual = getVersion();
+        float actual = getVersion();
         if (null != atLeast) {
-            
-            if (Float.valueOf(actual).compareTo(Float.valueOf(atLeast)) >= 0) {
+            if (actual >= Versions.getVersion(atLeast)) {
                 return true;
             } else {
                 return false;
             }
         }
         if (null != exactly) {
-            if (Float.valueOf(actual).compareTo(Float.valueOf(exactly)) == 0) {
+            if (actual == Versions.getVersion(exactly)) {
                 return true;
             } else {
                 return false;
@@ -60,14 +59,46 @@ public class AntVersion implements Condition {
         }
     }
     
-    private String getVersion() {
+    private float getVersion() {
         Project p = new Project();
         p.init();
         String versionString = p.getProperty("ant.version");
-        String version = versionString.substring(versionString.indexOf("Ant version")+12, 
+        String v = versionString.substring(versionString.indexOf("Ant version")+12, 
                 versionString.indexOf("compiled on")-1);
-        version = version.replaceAll("alpha","");
-        return version;
+        return Versions.getVersion(v);
+    }
+    
+    private static class Versions {
+        static float getVersion(String vs) {
+            if (vs.equals("1.1"))       return 11f;
+            if (vs.equals("1.2"))       return 12f;
+            if (vs.equals("1.3"))       return 13f;
+            if (vs.equals("1.4"))       return 14f;
+            if (vs.equals("1.4.1"))     return 14.1f;
+            if (vs.equals("1.5"))       return 15f;
+            if (vs.equals("1.5.1"))     return 15.1f;
+            if (vs.equals("1.5.2"))     return 15.2f;
+            if (vs.equals("1.5.3"))     return 15.3f;
+            if (vs.equals("1.5.4"))     return 15.4f;
+            if (vs.equals("1.5alpha"))  return 15.880f;
+            if (vs.equals("1.6beta1"))  return 15.991f;
+            if (vs.equals("1.6beta2"))  return 15.992f;
+            if (vs.equals("1.6beta3"))  return 15.993f;
+            if (vs.equals("1.6"))       return 16f;
+            if (vs.equals("1.6.0"))     return 16f;
+            if (vs.equals("1.6.1"))     return 16.1f;
+            if (vs.equals("1.6.2"))     return 16.2f;
+            if (vs.equals("1.6.3"))     return 16.3f;
+            if (vs.equals("1.6.4"))     return 16.4f;
+            if (vs.equals("1.6.5"))     return 16.5f;
+            if (vs.equals("1.7alpha"))  return 16.880f;
+            if (vs.equals("1.7beta"))   return 16.990f;
+            if (vs.equals("1.7"))       return 17f;
+            if (vs.equals("1.7.0"))     return 17f;
+            if (vs.equals("1.7.1"))     return 17.1f;
+            if (vs.equals("1.7.2"))     return 17.2f;
+            return 0f;
+        }
     }
     
     public String getAtLeast() {
