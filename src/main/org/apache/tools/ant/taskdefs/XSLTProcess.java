@@ -54,8 +54,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** where to find the source XML file, default is the project's basedir */
     private File baseDir = null;
 
-    /** XSL stylesheet */
+    /** XSL stylesheet as a filename */
     private String xslFile = null;
+
+    /** XSL stylesheet as a {@link org.apache.tools.ant.types.Resource} */
+    private Resource xslResource = null;
 
     /** extension of the files produced by XSL processing */
     private String targetExtension = ".html";
@@ -217,7 +220,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
-	resources.add(rc);
+        resources.add(rc);
+    }
+
+    /**
+     * Adds the XSLT stylesheet as a resource
+     * @param xslResource the stylesheet as a
+     *        {@link org.apache.tools.ant.types.Resource}
+     * @since Ant 1.7
+     */
+    public void addConfigured(Resource xslResource) {
+       this.xslResource = xslResource;
     }
 
     /**
@@ -231,7 +244,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
        mapper.add(fileNameMapper);
        addMapper(mapper);
     }
-    
+
     /**
      * Executes the task.
      *
@@ -240,7 +253,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void execute() throws BuildException {
         if ("style".equals(getTaskType())) {
-            log("Warning: the task name <style> is deprecated. Use <xslt> instead.", Project.MSG_WARN);
+            log("Warning: the task name <style> is deprecated. Use <xslt> instead.",
+                    Project.MSG_WARN);
         }
 
         File savedBaseDir = baseDir;
@@ -249,8 +263,17 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         String[]         list;
         String[]         dirs;
 
-        if (xslFile == null) {
-            throw new BuildException("no stylesheet specified", getLocation());
+        if (xslResource == null && xslFile == null) {
+            throw new BuildException("specify the "
+                + "stylesheet either as a filename in style "
+                + "attribute or as a nested resource", getLocation());
+
+        }
+        if (xslResource != null && xslFile != null) {
+            throw new BuildException("specify the "
+                + "stylesheet either as a filename in style "
+                + "attribute or as a nested resource but not "
+                + "as both", getLocation());
         }
 
         if (inFile != null && !inFile.exists()) {
@@ -272,23 +295,31 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
             log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
 
-            File stylesheet = getProject().resolveFile(xslFile);
-            if (!stylesheet.exists()) {
-                stylesheet = FILE_UTILS.resolveFile(baseDir, xslFile);
-                /*
-                 * shouldn't throw out deprecation warnings before we know,
-                 * the wrong version has been used.
-                 */
-                if (stylesheet.exists()) {
-                    log("DEPRECATED - the 'style' attribute should be relative "
-                        + "to the project's");
-                    log("             basedir, not the tasks's basedir.");
+            if (xslFile != null) {
+                // If we enter here, it means that the stylesheet is supplied
+                // via style attribute
+                File stylesheet = FILE_UTILS.resolveFile(getProject().getBaseDir(), xslFile);
+                if (!stylesheet.exists()) {
+                    stylesheet = FILE_UTILS.resolveFile(baseDir, xslFile);
+                    /*
+                     * shouldn't throw out deprecation warnings before we know,
+                     * the wrong version has been used.
+                     */
+                    if (stylesheet.exists()) {
+                        log("DEPRECATED - the 'style' attribute should be relative "
+                                + "to the project's");
+                        log("             basedir, not the tasks's basedir.");
+                    }
                 }
+                FileResource fr = new FileResource();
+                fr.setProject(getProject());
+                fr.setFile(stylesheet);
+                xslResource = fr;
             }
 
             // if we have an in file and out then process them
             if (inFile != null && outFile != null) {
-                process(inFile, outFile, stylesheet);
+                process(inFile, outFile, xslResource);
                 return;
             }
 
@@ -298,34 +329,34 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              */
 
             //-- make sure destination directory exists...
-	    checkDest();
+            checkDest();
 
-	    if (useImplicitFileset) {
-            scanner = getDirectoryScanner(baseDir);
-            log("Transforming into " + destDir, Project.MSG_INFO);
+            if (useImplicitFileset) {
+                scanner = getDirectoryScanner(baseDir);
+                log("Transforming into " + destDir, Project.MSG_INFO);
 
-            // Process all the files marked for styling
-            list = scanner.getIncludedFiles();
-            for (int i = 0; i < list.length; ++i) {
-                process(baseDir, list[i], destDir, stylesheet);
-            }
-            if (performDirectoryScan) {
-                // Process all the directories marked for styling
-                dirs = scanner.getIncludedDirectories();
-                for (int j = 0; j < dirs.length; ++j) {
-                    list = new File(baseDir, dirs[j]).list();
-                    for (int i = 0; i < list.length; ++i) {
-                        process(baseDir, dirs[j] + File.separator + list[i],
-                                destDir, stylesheet);
+                // Process all the files marked for styling
+                list = scanner.getIncludedFiles();
+                for (int i = 0; i < list.length; ++i) {
+                    process(baseDir, list[i], destDir, xslResource);
+                }
+                if (performDirectoryScan) {
+                    // Process all the directories marked for styling
+                    dirs = scanner.getIncludedDirectories();
+                    for (int j = 0; j < dirs.length; ++j) {
+                        list = new File(baseDir, dirs[j]).list();
+                        for (int i = 0; i < list.length; ++i) {
+                            process(baseDir, dirs[j] + File.separator + list[i],
+                                    destDir, xslResource);
+                        }
                     }
                 }
+            } else { // only resource collections, there better be some
+                if (resources.size() == 0) {
+                    throw new BuildException("no resources specified");
+                }
             }
-	    } else { // only resource collections, there better be some
-            if (resources.size() == 0) {
-                throw new BuildException("no resources specified");
-            }
-	    }
-	    processResources(stylesheet);
+            processResources(xslResource);
         } finally {
             if (loader != null) {
                 loader.resetThreadContextLoader();
@@ -337,7 +368,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             baseDir = savedBaseDir;
         }
     }
-    
+
     /**
      * Set whether to check dependencies, or always generate;
      * optional, default is false.
@@ -434,11 +465,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * <p>Set this to false if you want explicit control with nested
      * resource collections.</p>
-     *
+     * @param useimplicitfileset set to true if you want to use implicit fileset
      * @since Ant 1.7
      */
-    public void setUseImplicitFileset(boolean b) {
-	useImplicitFileset = b;
+    public void setUseImplicitFileset(boolean useimplicitfileset) {
+        useImplicitFileset = useimplicitfileset;
     }
 
     /**
@@ -461,7 +492,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private void resolveProcessor(String proc) throws Exception {
         String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
-            classname= TRAX_LIAISON_CLASS;
+            classname = TRAX_LIAISON_CLASS;
         } else if (proc.equals(PROCESSOR_XALAN1)) {
             log("DEPRECATED - xalan processor is deprecated. Use trax "
                 + "instead.");
@@ -531,24 +562,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * @since Ant 1.7
      */
-    private void processResources(File stylesheet) {
-	Iterator iter = resources.iterator();
-	while (iter.hasNext()) {
-	    Resource r = (Resource) iter.next();
-	    if (!r.isExists()) {
-		continue;
-	    }
-	    File base = baseDir;
-	    String name = r.getName();
-	    if (r instanceof FileResource) {
-		FileResource f = (FileResource) r;
-		base = f.getBaseDir();
-		if (base == null) {
-		    name = f.getFile().getAbsolutePath();
-		}
-	    }
-	    process(base, name, destDir, stylesheet);
-	}
+    private void processResources(Resource stylesheet) {
+        Iterator iter = resources.iterator();
+        while (iter.hasNext()) {
+            Resource r = (Resource) iter.next();
+            if (!r.isExists()) {
+                continue;
+            }
+            File base = baseDir;
+            String name = r.getName();
+            if (r instanceof FileResource) {
+                FileResource f = (FileResource) r;
+                base = f.getBaseDir();
+                if (base == null) {
+                    name = f.getFile().getAbsolutePath();
+                }
+            }
+            process(base, name, destDir, stylesheet);
+        }
     }
 
     /**
@@ -562,14 +593,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception BuildException if the processing fails.
      */
     private void process(File baseDir, String xmlFile, File destDir,
-                         File stylesheet)
+                         Resource stylesheet)
         throws BuildException {
 
         File   outF = null;
         File   inF = null;
 
         try {
-            long styleSheetLastModified = stylesheet.lastModified();
+            long styleSheetLastModified = stylesheet.getLastModified();
             inF = new File(baseDir, xmlFile);
 
             if (inF.isDirectory()) {
@@ -628,10 +659,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @param stylesheet the stylesheet to use.
      * @exception BuildException if the processing fails.
      */
-    private void process(File inFile, File outFile, File stylesheet)
+    private void process(File inFile, File outFile, Resource stylesheet)
          throws BuildException {
         try {
-            long styleSheetLastModified = stylesheet.lastModified();
+            long styleSheetLastModified = stylesheet.getLastModified();
             log("In file " + inFile + " time: " + inFile.lastModified(),
                 Project.MSG_DEBUG);
             log("Out file " + outFile + " time: " + outFile.lastModified(),
@@ -917,10 +948,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Loads the stylesheet and set xsl:param parameters.
      *
-     * @param stylesheet the file form which to load the stylesheet.
+     * @param stylesheet the file from which to load the stylesheet.
      * @exception BuildException if the stylesheet cannot be loaded.
+     * @deprecated since Ant 1.7
      */
     protected void configureLiaison(File stylesheet) throws BuildException {
+        FileResource fr = new FileResource();
+        fr.setProject(getProject());
+        fr.setFile(stylesheet);
+        configureLiaison(fr);
+    }
+    /**
+     * Loads the stylesheet and set xsl:param parameters.
+     *
+     * @param stylesheet the resource from which to load the stylesheet.
+     * @exception BuildException if the stylesheet cannot be loaded.
+     * @since Ant 1.7
+     */
+    protected void configureLiaison(Resource stylesheet) throws BuildException {
         if (stylesheetLoaded && reuseLoadedStylesheet) {
             return;
         }
@@ -928,15 +973,34 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         try {
             log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
-            liaison.setStylesheet(stylesheet);
+            // We call liason.configure() and then liaison.setStylesheet()
+            // so that the internal variables of liaison can be set up
+            if (liaison instanceof XSLTLiaison2) {
+                ((XSLTLiaison2) liaison).configure(this);
+            }
+
+            if (liaison instanceof XSLTLiaison3) {
+                // If we are here we can set the stylesheet as a
+                // resource
+                ((XSLTLiaison3) liaison).setStylesheet(stylesheet);
+            } else {
+                // If we are here we cannot set the stylesheet as
+                // a resource, but we can set it as a file. So,
+                // we make an attempt to get it as a file
+                if (stylesheet instanceof FileResource) {
+                    liaison.setStylesheet(
+                            ((FileResource) stylesheet).getFile());
+                } else {
+                    throw new BuildException(liaison.getClass().toString()
+                            + " accepts the stylesheet only as a file",
+                            getLocation());
+                }
+            }
             for (Enumeration e = params.elements(); e.hasMoreElements();) {
                 Param p = (Param) e.nextElement();
                 if (p.shouldUse()) {
                     liaison.addParam(p.getName(), p.getExpression());
                 }
-            }
-            if (liaison instanceof XSLTLiaison2) {
-                ((XSLTLiaison2) liaison).configure(this);
             }
         } catch (Exception ex) {
             log("Failed to transform using stylesheet " + stylesheet,

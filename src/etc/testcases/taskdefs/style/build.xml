@@ -107,4 +107,26 @@
       </copy>
   </target>
 
+  <target name="testWithStyleAttrAndResource">
+      <property name="value" value="myvalue"/>
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+          <file file="printParams.xsl"/>
+      </xslt>
+  </target>
+
+  <target name="testWithFileResource">
+      <xslt in="data.xml" out="${out.dir}/out.xml">
+          <file file="printParams.xsl"/>
+          <param name="set" expression="value"/>
+      </xslt>
+  </target>
+
+  <target name="testWithUrlResource">
+      <makeurl file="printParams.xsl" property="printParams.xsl.url"/>
+      <xslt in="data.xml" out="${out.dir}/out.xml">
+          <url url="${printParams.xsl.url}"/>
+          <param name="set" expression="value"/>
+      </xslt>
+  </target>
+  
 </project>

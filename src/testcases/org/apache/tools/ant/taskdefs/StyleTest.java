@@ -33,6 +33,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class StyleTest extends BuildFileTest {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     public StyleTest(String s) {
         super(s);
     }
@@ -48,7 +50,10 @@ public class StyleTest extends BuildFileTest {
     }
 
     public void testStyleIsSet() throws Exception {
-        expectBuildException("testStyleIsSet", "no stylesheet specified");
+        expectSpecificBuildException("testStyleIsSet",
+                "no stylesheet specified", "specify the " +
+                "stylesheet either as a filename in style " +
+                "attribute or as a nested resource");
     }
 
     public void testTransferParameterSet() throws Exception {
@@ -91,21 +96,24 @@ public class StyleTest extends BuildFileTest {
     }
 
     public void testDefaultMapper(String target) throws Exception {
-        assertTrue(!getProject().resolveFile("out/data.html").exists());
+        assertTrue(!(FileUtils.getFileUtils().resolveFile(
+                getProject().getBaseDir(),"out/data.html")).exists());
         expectFileContains(target,
                            "out/data.html",
                            "set='myvalue'");
     }
 
     public void testCustomMapper() throws Exception {
-        assertTrue(!getProject().resolveFile("out/out.xml").exists());
+        assertTrue(!FILE_UTILS.resolveFile(
+                getProject().getBaseDir(), "out/out.xml").exists());
         expectFileContains("testCustomMapper",
                            "out/out.xml",
                            "set='myvalue'");
     }
 
     public void testTypedMapper() throws Exception {
-        assertTrue(!getProject().resolveFile("out/out.xml").exists());
+        assertTrue(!FILE_UTILS.resolveFile(
+                getProject().getBaseDir(), "out/out.xml").exists());
         expectFileContains("testTypedMapper",
                            "out/out.xml",
                            "set='myvalue'");
@@ -113,14 +121,32 @@ public class StyleTest extends BuildFileTest {
 
     public void testDirectoryHierarchyWithDirMatching() throws Exception {
         executeTarget("testDirectoryHierarchyWithDirMatching");
-        assertTrue(getProject().resolveFile("out/dest/level1/data.html")
+        assertTrue(FILE_UTILS.resolveFile(
+                getProject().getBaseDir(), "out/dest/level1/data.html")
                    .exists());
     }
 
     public void testDirsWithSpaces() throws Exception {
         executeTarget("testDirsWithSpaces");
-        assertTrue(getProject().resolveFile("out/d est/data.html")
+        assertTrue(FILE_UTILS.resolveFile(
+                getProject().getBaseDir(), "out/d est/data.html")
                    .exists());
+    }
+
+    public void testWithStyleAttrAndResource() throws Exception {
+        expectSpecificBuildException("testWithStyleAttrAndResource",
+                "Must throws a BuildException", "specify the " +
+                "stylesheet either as a filename in style " +
+                "attribute or as a nested resource but not " +
+                "as both");
+    }
+
+    public void testWithFileResource() throws Exception {
+        expectFileContains("testWithFileResource", "out/out.xml", "set='value'");
+    }
+
+    public void testWithUrlResource() throws Exception {
+        expectFileContains("testWithUrlResource", "out/out.xml", "set='value'");
     }
 
     // *************  copied from ConcatTest  *************

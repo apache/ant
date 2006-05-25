@@ -82,12 +82,15 @@ element which is used to perform Entity and URI resolution.</p>
     <td valign="top">name of the stylesheet to use - given either relative
       to the project's basedir or as an absolute path.<br/>
       <br/>
+      Alternatively, a nested element which ant can interpret as a resource
+      can be used to indicate where to find the stylesheet<br/>
       <em>deprecated variation :</em> <br/>
       If the stylesheet cannot be found, and if you have specified the
       attribute basedir for the task, ant will assume that the style
       attribute is relative to the basedir of the task.
     </td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No, if you specify the location of
+        the stylesheet as a nested resource element</td>
   </tr>
   <tr>
     <td valign="top">classpath</td>
@@ -348,6 +351,13 @@ used by <code>&lt;xslt&gt;</code> removes the file extension from the
 source file and adds the extension specified via the extension
 attribute.</p>
 
+<h4>nested element of type resource to indicate the stylesheet</h4>
+
+<p><em>Since Ant 1.7</em></p>
+
+<p>You can use nested elements which extend resource to indicate the stylesheet.
+See <a href="../CoreTypes/resources.html">resources</a> to see the concrete syntax you can use</p>
+
 <h3>Examples</h3>
 <blockquote>
   <pre>
@@ -407,6 +417,14 @@ attribute.</p>
       style=&quot;style/apache.xsl&quot;&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.xml.en&quot; to=&quot;*.html.en&quot;/&gt;
 &lt;/xslt&gt;</pre>
+
+  <h4>Using a nested resource to define the stylesheet</h4>
+    <pre>
+&lt;xslt in="data.xml" out="${out.dir}/out.xml"&gt;
+    &lt;url url="${printParams.xsl.url}"/&gt;
+    &lt;param name="set" expression="value"/&gt;
+&lt;/xslt&gt;</pre>
+
 </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights

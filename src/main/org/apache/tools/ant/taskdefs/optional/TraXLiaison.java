@@ -42,11 +42,14 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.TransformerConfigurationException;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.XSLTLiaison2;
-import org.apache.tools.ant.taskdefs.XSLTProcess;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.XSLTLiaison3;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
@@ -59,7 +62,12 @@ import org.xml.sax.XMLReader;
  *
  * @since Ant 1.3
  */
-public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware {
+public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware {
+
+    /**
+     * The current <code>Project</code>
+     */
+    private Project project;
 
     /**
      * the name of the factory implementation class to use
@@ -71,7 +79,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
     private TransformerFactory tfactory = null;
 
     /** stylesheet to use for transformation */
-    private File stylesheet;
+    private Resource stylesheet;
 
     private XSLTLogger logger;
 
@@ -115,13 +123,24 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * @throws Exception on error
      */
     public void setStylesheet(File stylesheet) throws Exception {
+        FileResource fr = new FileResource();
+        fr.setProject(project);
+        fr.setFile(stylesheet);
+    }
+
+    /**
+     * Set the stylesheet file.
+     * @param stylesheet a {@link org.apache.tools.ant.types.Resource} value
+     * @throws Exception on error
+     */
+    public void setStylesheet(Resource stylesheet) throws Exception {
         if (this.stylesheet != null) {
             // resetting the stylesheet - reset transformer
             transformer = null;
 
             // do we need to reset templates as well
             if (!this.stylesheet.equals(stylesheet)
-                || (stylesheet.lastModified() != templatesModTime)) {
+                || (stylesheet.getLastModified() != templatesModTime)) {
                 templates = null;
             }
         }
@@ -205,6 +224,35 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
         return src;
     }
 
+    private Source getSource(InputStream is, Resource resource)
+        throws ParserConfigurationException, SAXException {
+        // todo: is this comment still relevant ??
+        // FIXME: need to use a SAXSource as the source for the transform
+        // so we can plug in our own entity resolver
+        Source src = null;
+        if (entityResolver != null) {
+            if (getFactory().getFeature(SAXSource.FEATURE)) {
+                SAXParserFactory spFactory = SAXParserFactory.newInstance();
+                spFactory.setNamespaceAware(true);
+                XMLReader reader = spFactory.newSAXParser().getXMLReader();
+                reader.setEntityResolver(entityResolver);
+                src = new SAXSource(reader, new InputSource(is));
+            } else {
+                throw new IllegalStateException("xcatalog specified, but "
+                    + "parser doesn't support SAX");
+            }
+        } else {
+            // WARN: Don't use the StreamSource(File) ctor. It won't work with
+            // xalan prior to 2.2 because of systemid bugs.
+            src = new StreamSource(is);
+        }
+        // The line below is a hack: the system id must an URI, but it is not
+        // cleat to get the URI of an resource, so just set the name of the
+        // resource as a system id
+        src.setSystemId(resource.getName());
+        return src;
+    }
+
     /**
      * Read in templates from the stylesheet
      */
@@ -219,8 +267,8 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
         InputStream xslStream = null;
         try {
             xslStream
-                = new BufferedInputStream(new FileInputStream(stylesheet));
-            templatesModTime = stylesheet.lastModified();
+                = new BufferedInputStream(stylesheet.getInputStream());
+            templatesModTime = stylesheet.getLastModified();
             Source src = getSource(xslStream, stylesheet);
             templates = getFactory().newTemplates(src);
         } finally {
@@ -437,7 +485,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
     /**
      * @param file the filename to use for the systemid
      * @return the systemid
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.util.JAXPUtils#getSystemId instead.
      */
     protected String getSystemId(File file) {
@@ -451,6 +499,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      *        is to be configured.
      */
     public void configure(XSLTProcess xsltTask) {
+        project = xsltTask.getProject();
         XSLTProcess.Factory factory = xsltTask.getFactory();
         if (factory != null) {
             setFactory(factory.getName());
