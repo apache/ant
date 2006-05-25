@@ -5,10 +5,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion atleast="1.7" />
+					<antversion atleast="1.7alpha" />
 				</not>
 			</condition>
-      		Should be at least 1.7
+      		Should be at least 1.7alpha
     	</fail>
 	</target>
 
@@ -16,10 +16,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion exactly="1.7" />
+					<antversion exactly="1.7alpha" />
 				</not>
 			</condition>
-			Should be exactly 1.7
+			Should be exactly 1.7alpha
   		</fail>
 	</target>
 
