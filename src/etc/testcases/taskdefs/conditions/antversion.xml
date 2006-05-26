@@ -5,10 +5,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion atleast="1.7alpha" />
+					<antversion atleast="1.7" />
 				</not>
 			</condition>
-      		Should be at least 1.7alpha
+      		Should be at least 1.7
     	</fail>
 	</target>
 
@@ -16,34 +16,34 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion exactly="1.7alpha" />
+					<antversion exactly="1.7" />
 				</not>
 			</condition>
-			Should be exactly 1.7alpha
+			Should be exactly 1.7
   		</fail>
 	</target>
 
 	<target name="testatleastfail">
-		<property name="version" value="1.8" />
+		<property name="version" value="1.8.9" />
 		<fail>
 			<condition>
 				<not>
-					<antversion atleast="1.9" />
+					<antversion atleast="1.9.0" />
 				</not>
 			</condition>
-  	  	Should be at least 1.9
+  	  	Should be at least 1.9.0
   		</fail>
 	</target>
 
 	<target name="testexactlyfail">
-		<property name="version" value="1.8" />
+		<property name="version" value="1.8.0" />
 		<fail>
 			<condition>
 				<not>
-					<antversion exactly="1.9" />
+					<antversion exactly="1.9.0" />
 				</not>
 			</condition>
-	  	  Should be exactly 1.9
+	  	  Should be exactly 1.9.0
 	  	</fail>
 	</target>
 </project>
