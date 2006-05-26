@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.optional.extension.DeweyDecimal;
 
 /**
  * An antversion condition
@@ -31,16 +32,16 @@ public class AntVersion implements Condition {
     
     public boolean eval() throws BuildException {
         validate();
-        float actual = getVersion();
+        DeweyDecimal actual = getVersion();
         if (null != atLeast) {
-            if (actual >= Versions.getVersion(atLeast)) {
+            if (actual.isGreaterThanOrEqual(new DeweyDecimal(atLeast))) {
                 return true;
             } else {
                 return false;
             }
         }
         if (null != exactly) {
-            if (actual == Versions.getVersion(exactly)) {
+            if (actual.isEqual(new DeweyDecimal(exactly))) {
                 return true;
             } else {
                 return false;
@@ -59,46 +60,22 @@ public class AntVersion implements Condition {
         }
     }
     
-    private float getVersion() {
+    private DeweyDecimal getVersion() {
         Project p = new Project();
         p.init();
         String versionString = p.getProperty("ant.version");
         String v = versionString.substring(versionString.indexOf("Ant version")+12, 
                 versionString.indexOf("compiled on")-1);
-        return Versions.getVersion(v);
-    }
-    
-    private static class Versions {
-        static float getVersion(String vs) {
-            if (vs.equals("1.1"))       return 11f;
-            if (vs.equals("1.2"))       return 12f;
-            if (vs.equals("1.3"))       return 13f;
-            if (vs.equals("1.4"))       return 14f;
-            if (vs.equals("1.4.1"))     return 14.1f;
-            if (vs.equals("1.5"))       return 15f;
-            if (vs.equals("1.5.1"))     return 15.1f;
-            if (vs.equals("1.5.2"))     return 15.2f;
-            if (vs.equals("1.5.3"))     return 15.3f;
-            if (vs.equals("1.5.4"))     return 15.4f;
-            if (vs.equals("1.5alpha"))  return 15.880f;
-            if (vs.equals("1.6beta1"))  return 15.991f;
-            if (vs.equals("1.6beta2"))  return 15.992f;
-            if (vs.equals("1.6beta3"))  return 15.993f;
-            if (vs.equals("1.6"))       return 16f;
-            if (vs.equals("1.6.0"))     return 16f;
-            if (vs.equals("1.6.1"))     return 16.1f;
-            if (vs.equals("1.6.2"))     return 16.2f;
-            if (vs.equals("1.6.3"))     return 16.3f;
-            if (vs.equals("1.6.4"))     return 16.4f;
-            if (vs.equals("1.6.5"))     return 16.5f;
-            if (vs.equals("1.7alpha"))  return 16.880f;
-            if (vs.equals("1.7beta"))   return 16.990f;
-            if (vs.equals("1.7"))       return 17f;
-            if (vs.equals("1.7.0"))     return 17f;
-            if (vs.equals("1.7.1"))     return 17.1f;
-            if (vs.equals("1.7.2"))     return 17.2f;
-            return 0f;
+        char[] cs = v.toCharArray();
+        int end = cs.length;
+        for (int i = cs.length; i > 0; i--) {
+            if (!Character.isLetter(cs[i-1])) {
+                end = i;
+                break;
+            }
         }
+        v = v.substring(0, end);
+        return new DeweyDecimal(v);
     }
     
     public String getAtLeast() {
