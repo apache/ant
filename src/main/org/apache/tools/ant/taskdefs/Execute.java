@@ -38,6 +38,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Runs an external program.
@@ -169,7 +170,7 @@ public class Execute {
                 return procEnvironment;
             }
             String var = null;
-            String line, lineSep = System.getProperty("line.separator");
+            String line, lineSep = StringUtils.LINE_SEP;
             while ((line = in.readLine()) != null) {
                 if (line.indexOf('=') == -1) {
                     // Chunk part of previous env var (UNIX env vars can
@@ -1020,8 +1021,9 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
-            String antRun = project.resolveFile(antHome + File.separator 
-                                                + myScript).toString();
+            String antRun = 
+                FILE_UTILS.resolveFile(project.getBaseDir(), 
+                        antHome + File.separator + myScript).toString();
 
             // Build the command
             File commandDir = workingDir;
@@ -1078,8 +1080,9 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
-            String antRun = project.resolveFile(antHome + File.separator 
-                                                + myScript).toString();
+            String antRun = 
+                FILE_UTILS.resolveFile(project.getBaseDir(), 
+                        antHome + File.separator + myScript).toString();
 
             // Build the command
             File commandDir = workingDir;
