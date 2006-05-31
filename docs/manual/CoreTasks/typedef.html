@@ -169,6 +169,8 @@
     &lt;typedef name="urlset" classname="com.mydomain.URLSet"/&gt; </pre>
   The data type is now available to Ant. The
   class <code>com.mydomain.URLSet</code> implements this type.</p>
+
+
   <p>
     Assuming a class <i>org.acme.ant.RunnableAdapter</i> that
     extends Task and implements <i>org.apache.tools.ant.TypeAdapter</i>,
@@ -181,6 +183,8 @@
              classname="com.acme.ant.RunClock"
              adapter="org.acme.ant.RunnableAdapter"/&gt;
   </pre>
+
+
   <p>
     The following fragment shows the use of the classpathref and
     loaderref to load up two definitions.
@@ -200,8 +204,22 @@
              loaderref="lib.path.loader"
              /&gt;
   </pre>
+  
+  
+  <p>
+    If you want to load an antlib into a special xml-namespace, the <tt>uri</tt> attribute
+    is important:
+  </p>
+  <pre>
+  &lt;project xmlns:antcontrib="antlib:net.sf.antcontrib"&gt;
+     &lt;taskdef uri="antlib:net.sf.antcontrib"
+              resource="net/sf/antcontrib/antlib.xml"
+              classpath="path/to/ant-contrib.jar"/&gt;
+  </pre>
+            
+  
 <hr>
-<p align="center">Copyright &copy; 2001-2005 Apache Software
+<p align="center">Copyright &copy; 2001-2006 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

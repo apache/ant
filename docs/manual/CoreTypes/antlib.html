@@ -8,6 +8,8 @@
 
   <body>
     <h2><a name="antlib">Antlib</a></h2>
+
+
     <h3>Description</h3>
     <p>
       An antlib file is an xml file with a root element of "antlib".
@@ -44,6 +46,14 @@
    &lt;typedef name="scriptpathmapper"
             classname="org.acme.ant.ScriptPathMapper"
             onerror="ignore"/&gt;
+   &lt;macrodef name="print"&gt;
+      &lt;attribute name="file"/&gt;
+      &lt;sequential&gt;
+         &lt;concat taskname="print"&gt;
+            &lt;fileset dir="." includes="@{file}"/&gt;
+         &lt;/concat&gt;
+      &lt;/sequential&gt;
+   &lt;/macrodef&gt;
 &lt;/antlib&gt;
       </pre>
     </blockquote>
@@ -81,6 +91,8 @@
 &lt;/sample:if&gt;
       </pre>
     </blockquote>
+
+
     <h3><a name="antlibnamespace">Antlib namespace</a></h3>
     <p>
       The name space URIs with the pattern <b>antlib:<i>java package</i></b>
@@ -127,6 +139,36 @@
       The requirement that the resource is in the default classpath
       may be removed in future versions of Ant.</p>
     </p>
+
+
+	<h3><a name="loadFromInside">Load antlib from inside of the buildfile</a></h3>
+	<p>
+	  If you want to seperate the antlib from your local Ant installation, e.g. because you 
+	  want to hold that jar in your projects SCM system, you have to specify a classpath, so 
+	  that Ant could find that jar. The best solution is loading the antlib with <tt>&lt;taskdef&gt;</tt>.
+	</p>
+    <blockquote>
+      <pre>
+&lt;project xmlns:<font color="green">antcontrib</font>="<font color="red">antlib:net.sf.antcontrib</font>"&gt;
+   &lt;taskdef uri="<font color="red">antlib:net.sf.antcontrib</font>"
+            resource="net/sf/antcontrib/antlib.xml"
+            classpath="path/to/ant-contrib.jar"/&gt;
+   
+   &lt;target name="iterate"&gt;
+      &lt;<font color="green">antcontrib</font>:for param="file"&gt;
+         &lt;fileset dir="."/&gt;
+         &lt;sequential&gt;
+            &lt;echo message="- @{file}"/&gt;
+         &lt;/sequential&gt;
+      &lt;/antcontrib:for&gt;
+   &lt;/target&gt;
+&lt;/project&gt;
+      </pre>
+    </blockquote>
+
+	
+	
+
     <h3><a name="currentnamespace">Current namespace</a></h3>
     <p>
       Definitions defined in antlibs may be used in antlibs. However
@@ -158,6 +200,8 @@
 &lt;/antlib&gt;
       </pre>
     </blockquote>
+
+
     <h3>Other examples and comments</h3>
     <p>
       Antlibs may make use of other antlibs.
@@ -201,7 +245,7 @@
     </blockquote>
     
 <hr>
-<p align="center">Copyright &copy; 2003-2005 Apache Software
+<p align="center">Copyright &copy; 2003-2006 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>
