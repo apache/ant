@@ -28,7 +28,6 @@ to let you see, how to do the easiest steps in Ant.</p>
 </ul></p>
 
 
-
 <a name="prepare"></a>
 <h2>Preparing the project</h2>
 <p>We want to separate the source from the generated files, so our java source files will
@@ -42,8 +41,8 @@ directory. (Because I am working on Windows, here is the win-syntax - translate 
 md src
 </pre>
 
-<p>This is not a Java tutorial, so just write this code into <tt>src/oata/HelloWorld.java</tt> -
-you should guess it's meaning ;-)</p>
+<p>The following simple Java class just prints a fixed message out to STDOUT,
+so just write this code into <tt>src\oata\HelloWorld.java</tt>.</p>
 
 <pre class="code">
 package oata;
@@ -55,18 +54,40 @@ public class HelloWorld {
 }
 </pre>
 
+<p>Now just try to compile and run that:
+<pre class="code">
+md build\classes
+javac -sourcepath src -d build\classes src\oata\HelloWorld.java
+java -cp build\classes oata.HelloWorld
+</pre>
+which will result in
+<pre class="output">
+Hello World
+</pre>
+</p>
+
+<p>Creating a jar-file is not very difficult. But creating a <i>startable</i> jar-file needs more steps: create a 
+manifest-file containing the start class, creating the target directory and archiving the files.</p>
+<pre class="code">
+echo Main-Class: oata.HelloWorld&gt;mf
+md build\jar
+jar cfm build\jar\HelloWorld.jar mf -C build\classes .
+java -jar build\jar\HelloWorld.jar
+</pre>
+
+
 
 
 <a name="four-steps"></a>
 <h2>Four steps to a running application</h2>
-<p>Oki-doki - now we have to think about our build process. We <i>have</i> to compile our code, otherwise we couldn't
+<p>After finishing the java-only step we have to think about our build process. We <i>have</i> to compile our code, otherwise we couldn't
 start the program. Oh - "start" - yes, we could provide a target for that. We <i>should</i> package our application.
 Now it's only one class - but if you want to provide a download, no one would download several hundreds files ...
-(think about a complex Swing GUI :) - so let us create a jar file. A startable jar file would be nice ... And it's a
+(think about a complex Swing GUI - so let us create a jar file. A startable jar file would be nice ... And it's a
 good practise to have a "clean" target, which deletes all the generated stuff. Many failures could be solved just
-by a "clean build" :-)</p>
+by a "clean build".</p>
 
-<p>The buildfile describing that would be:</p>
+<p>By default Ant uses <tt>build.xml</tt> as the name for a buildfile, so our <tt>build.xml</tt> would be:</p>
 <pre class="code">
 &lt;project&gt;
 
@@ -106,12 +127,59 @@ ant run
 ant compile jar run
 </pre>
 
+<p>While having a look at the buildfile, we will see some similar steps between Ant and the java-only commands:
+<table>
+<tr>
+  <th>java-only</th>
+  <th>Ant</th>
+</tr>
+<tr>
+  <td valign="top"><pre class="code">
+md build\classes
+javac 
+    -sourcepath src 
+    -d build\classes 
+    src\oata\HelloWorld.java
+echo Main-Class: oata.HelloWorld>mf
+md build\jar
+jar cfm 
+    build\jar\HelloWorld.jar 
+    mf 
+    -C build\classes 
+    .
 
+
+
+java -jar build\jar\HelloWorld.jar
+  </pre></td>
+  <td valign="top"><pre class="code">
+&lt;mkdir dir="build/classes"/&gt;
+&lt;javac 
+    srcdir="src" 
+    destdir="build/classes"/&gt;
+<i>&lt;!-- automatically detected --&gt;</i>
+<i>&lt;!-- obsolete; runtime via manifest tag --&gt;</i>
+&lt;mkdir dir="build/jar"/&gt;
+&lt;jar 
+    destfile="build/jar/HelloWorld.jar" 
+    
+    basedir="build/classes"&gt;
+    &lt;manifest&gt;
+        &lt;attribute name="Main-Class" value="oata.HelloWorld"/&gt;
+    &lt;/manifest&gt;
+&lt;/jar&gt;
+&lt;java jar="build/jar/HelloWorld.jar" fork="true"/&gt;
+  </pre></td>
+</tr></table>  
+</p>
+
+  
 
 <a name="enhance"></a>
 <h2>Enhance the build file</h2>
-</p>Ok, the build works - but it is not as nice as it should: many time you are referencing the same directories,
-main-class and jar-name are hard coded, and while invocation you have to remember the right order of build steps.</p>
+<p>Now we have a working buildfile we could do some enhancements: many time you are referencing the 
+same directories, main-class and jar-name are hard coded, and while invocation you have to remember 
+the right order of build steps.</p>
 <p>The first and second point would be addressed with <i>properties</i>, the third with a special property - an attribute
 of the &lt;project&gt;-tag and the fourth problem can be solved using dependencies.</p>
 
@@ -157,7 +225,7 @@ of the &lt;project&gt;-tag and the fourth problem can be solved using dependenci
 &lt;/project&gt;
 </pre>
 
-<p>Now it's easier, just do a <tt>ant</tt> and you will get</p>
+<p>Now it's easier, just do a <tt class="code">ant</tt> and you will get</p>
 <pre class="output">
 Buildfile: build.xml
 
@@ -183,11 +251,11 @@ BUILD SUCCESSFUL
 <a name="ext-libs"></a>
 <h2>Using external libraries</h2>
 <p>Somehow told us not to use syso-statements. For log-Statements we should use a Logging-API - customizable on a high
-degree (including switching off during usual life (= not development) execution). We use Log4J, because <ul>
+degree (including switching off during usual life (= not development) execution). We use Log4J for that, because <ul>
 <li>it is not part of the JDK (1.4+) and we want to show how to use external libs</li>
 <li>it can run under JDK 1.2 (as Ant)</li>
 <li>it's highly configurable</li>
-<li>it's from Apache :-)</li>
+<li>it's from Apache ;-)</li>
 </ul></p>
 <p>We store our external libraries in a new directory <tt>lib</tt>. Log4J can be
 <a href="http://www.apache.org/dist/logging/log4j/1.2.9/logging-log4j-1.2.9.zip">downloaded [1]</a> from Logging's Homepage.
