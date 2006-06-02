@@ -422,6 +422,8 @@ Other changes:
 * resources can now be used to indicate the location of the stylesheet to use
   in <xslt>. Bugzilla Report 39407.
 
+* new <antversion> condition. Bugzilla report 32804.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 
