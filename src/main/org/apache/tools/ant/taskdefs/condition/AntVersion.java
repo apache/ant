@@ -1,5 +1,5 @@
 /*
- * Copyright  2006 The Apache Software Foundation
+ * Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.DeweyDecimal;
 
 /**
- * An antversion condition
- * @since ant 1.7
+ * An Ant version condition.
+ * @since Ant 1.7
  */
 public class AntVersion implements Condition {
     
