@@ -131,6 +131,7 @@ public class Echo extends Task {
      * Declare the encoding to use when outputting to a file;
      * Use "" for the platform's default encoding.
      * @param encoding
+     * @since 1.7
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
