@@ -38,7 +38,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
         this.task = task;
     }
     
-    public void addVmExit(JUnitTest test, JUnitResultFormatterMirror _formatter,
+    public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror _formatter,
             OutputStream out, final String message) {
         JUnitResultFormatter formatter = (JUnitResultFormatter) _formatter;
         formatter.setOutput(out);
