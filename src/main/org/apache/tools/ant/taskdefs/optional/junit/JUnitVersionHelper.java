@@ -93,4 +93,22 @@ public class JUnitVersionHelper {
         return "unknown";
     }
 
+    /**
+     * Tries to find the name of the class which a test represents
+     * across JUnit 3 and 4.
+     */
+    static String getTestCaseClassName(Test test) {
+        String className = test.getClass().getName();
+        if (className.equals("junit.framework.JUnit4TestCaseFacade")) {
+            // JUnit 4 wraps solo tests this way. We can extract
+            // the original test name with a little hack.
+            String name = test.toString();
+            int paren = name.lastIndexOf('(');
+            if (paren != -1 && name.endsWith(")")) {
+                className = name.substring(paren + 1, name.length() - 1);
+            }
+        }
+        return className;
+    }
+
 }

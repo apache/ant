@@ -200,7 +200,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
             // a TestSuite can contain Tests from multiple classes,
             // even tests with the same name - disambiguate them.
             currentTest.setAttribute(ATTR_CLASSNAME,
-                                     test.getClass().getName());
+                    JUnitVersionHelper.getTestCaseClassName(test));
             rootElement.appendChild(currentTest);
             testElements.put(test, currentTest);
         } else {
