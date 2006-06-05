@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.apache.tools.ant.BuildException;
  * starteamurl="server:port/project/view"/&gt;
  * </pre>
  *
- * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+  * @see <a href="http://www.borland.com/us/products/starteam/index.html">borland StarTeam Web Site</a>
  *
  * @ant.task name="stlabel" category="scm"
  */

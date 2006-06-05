@@ -46,7 +46,7 @@ import org.apache.tools.ant.Project;
  *
  * Created: Sat Dec 15 16:55:19 2001
  *
- * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ * @see <a href="http://www.borland.com/us/products/starteam/index.html">borland StarTeam Web Site</a>
  */
 
 public abstract class TreeBasedTask extends StarTeamTask {
@@ -57,7 +57,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     ///////////////////////////////////////////////////////////////
     /**
      * This constant sets the filter to include all files. This default has
-     * the same result as <CODE>setIncludes("*")</CODE>.
+     * the same result as <code>setIncludes("*")</code>.
      *
      * @see #getIncludes()
      * @see #setIncludes(String includes)
@@ -67,7 +67,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * This disables the exclude filter by default. In other words, no files
      * are excluded. This setting is equivalent to
-     * <CODE>setExcludes(null)</CODE>.
+     * <code>setExcludes(null)</code>.
      *
      * @see #getExcludes()
      * @see #setExcludes(String excludes)
@@ -218,7 +218,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * if excludes have been specified, emit the list to the log
      */
     protected void logIncludes() {
-        if (this.DEFAULT_INCLUDESETTING != this.includes) {
+        if (DEFAULT_INCLUDESETTING != this.includes) {
             log("  Includes specified: " + this.includes);
         }
     }
@@ -226,29 +226,29 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * Declare files to exclude using standard <tt>excludes</tt> patterns; optional.
      * When filtering files, AntStarTeamCheckOut
-     * uses an unmodified version of <CODE>DirectoryScanner</CODE>'s
-     * <CODE>match</CODE> method, so here are the patterns straight from the
+     * uses an unmodified version of <code>DirectoryScanner</code>'s
+     * <code>match</code> method, so here are the patterns straight from the
      * Ant source code:
-     * <BR><BR>
+     * <br/>
      * Matches a string against a pattern. The pattern contains two special
      * characters:
-     * <BR>'*' which means zero or more characters,
-     * <BR>'?' which means one and only one character.
-     * <BR><BR>
+     * <br/>'*' which means zero or more characters,
+     * <br/>'?' which means one and only one character.
+     * <br/>
      *  For example, if you want to check out all files except .XML and
      * .HTML files, you would put the following line in your program:
-     * <CODE>setExcludes("*.XML,*.HTML");</CODE>
-     * Finally, note that filters have no effect on the <B>directories</B>
+     * <code>setExcludes("*.XML,*.HTML");</code>
+     * Finally, note that filters have no effect on the <b>directories</b>
      * that are scanned; you could not skip over all files in directories
      * whose names begin with "project," for instance.
-     * <BR><BR>
+     * <br/>
      * Treatment of overlapping inlcudes and excludes: To give a simplistic
      * example suppose that you set your include filter to "*.htm *.html"
      * and your exclude filter to "index.*". What happens to index.html?
      * AntStarTeamCheckOut will not check out index.html, as it matches an
      * exclude filter ("index.*"), even though it matches the include
      * filter, as well.
-     * <BR><BR>
+     * <br/>
      * Please also read the following sections before using filters:
      *
      * @param excludes A string of filter patterns to exclude. Separate the
@@ -279,7 +279,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * if excludes have been specified, emit the list to the log
      */
     protected void logExcludes() {
-        if (this.DEFAULT_EXCLUDESETTING != this.excludes) {
+        if (DEFAULT_EXCLUDESETTING != this.excludes) {
             log("  Excludes specified: " + this.excludes);
         }
     }
@@ -340,8 +340,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
         return this.asOfDate;
     }
 
-
-
     /**
      * If an asofDate parameter has been supplied by the user return a
      * StarTeam view based on the configuration of the StarTeam view
@@ -389,8 +387,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
         return new View(raw, ViewConfiguration.createFromTime(
             new OLEDate(asOfDate)));
     }
-
-
 
     /**
      * return the label passed to the task by the user as a string
@@ -465,6 +461,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     protected boolean isUsingViewLabel() {
         return null != this.labelInUse && this.labelInUse.isViewLabel();
     }
+    
     /**
      *  returns true if a label has been specified and it is a revision label.
      *
@@ -503,10 +500,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
             log("  Using view as of date " + getAsOfDate());
         }
     }
-
-
-
-
 
     ///////////////////////////////////////////////////////////////
     // INCLUDE-EXCLUDE processing
@@ -750,9 +743,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
                                   java.io.File rootLocalFolder)
             throws BuildException;
 
-
-
-
     /**
      * Derived classes must override this method to define tests for
      * any preconditons required by the task.  This method is called at
@@ -764,7 +754,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * @see <code>execute()</code>
      */
     protected abstract void testPreconditions() throws BuildException;
-
 
     /**
      * Return the full repository path name of a file.  Surprisingly there's
@@ -871,6 +860,3 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
 }
-
-
-
