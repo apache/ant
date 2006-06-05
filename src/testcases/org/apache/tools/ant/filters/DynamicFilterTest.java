@@ -28,6 +28,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class DynamicFilterTest extends BuildFileTest {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     public DynamicFilterTest(String name) {
         super(name);
     }
@@ -54,7 +56,7 @@ public class DynamicFilterTest extends BuildFileTest {
     {
         Reader r = null;
         try {
-            r = new FileReader(getProject().resolveFile(filename));
+            r = new FileReader(FILE_UTILS.resolveFile(getProject().getBaseDir(), filename));
             return  FileUtils.readFully(r);
         }
         finally {

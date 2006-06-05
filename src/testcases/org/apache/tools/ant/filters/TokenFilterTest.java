@@ -28,6 +28,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class TokenFilterTest extends BuildFileTest {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     public TokenFilterTest(String name) {
         super(name);
     }
@@ -246,7 +248,7 @@ public class TokenFilterTest extends BuildFileTest {
     {
         Reader r = null;
         try {
-            r = new FileReader(getProject().resolveFile(filename));
+            r = new FileReader(FILE_UTILS.resolveFile(getProject().getBaseDir(),filename));
             return  FileUtils.readFully(r);
         }
         finally {

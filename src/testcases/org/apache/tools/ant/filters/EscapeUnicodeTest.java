@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ public class EscapeUnicodeTest extends BuildFileTest {
 
     public void testEscapeUnicode() throws IOException {
         executeTarget("testEscapeUnicode");
-        File expected = getProject().resolveFile("expected/escapeunicode.test");
-        File result = getProject().resolveFile("result/escapeunicode.test");
+        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(), "expected/escapeunicode.test");
+        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(), "result/escapeunicode.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

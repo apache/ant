@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2005 The Apache Software Foundation
+ * Copyright  2003-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ public class StripJavaCommentsTest extends BuildFileTest {
 
     public void testStripJavaComments() throws IOException {
         executeTarget("testStripJavaComments");
-        File expected = getProject().resolveFile("expected/stripjavacomments.test");
-        File result = getProject().resolveFile("result/stripjavacomments.test");
+        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/stripjavacomments.test");
+        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(),"result/stripjavacomments.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

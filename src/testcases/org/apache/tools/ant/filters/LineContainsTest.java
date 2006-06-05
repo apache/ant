@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ public class LineContainsTest extends BuildFileTest {
 
     public void testLineContains() throws IOException {
         executeTarget("testLineContains");
-        File expected = getProject().resolveFile("expected/linecontains.test");
-        File result = getProject().resolveFile("result/linecontains.test");
+        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/linecontains.test");
+        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(),"result/linecontains.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 
