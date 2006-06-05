@@ -1679,6 +1679,7 @@
             if="tests.are.on.system.classpath"/>
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
             if="tests.are.on.system.classpath"/>
+
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java"/>
 
@@ -1789,5 +1790,37 @@
   <target name="main"
     description="--> creates a minimum distribution in ./dist"
     depends="dist-lite"/>
+
+
+  <!--
+       ===================================================================
+         MSI target - creates an MSI installer file with the help of
+                      the WiX toolset and the dotnet Antlib.
+       ===================================================================
+  -->
+  <target name="msi"
+    description="--> creates an MSI file for Ant, requires WiX and the dotnet Antlib"
+    depends="internal_dist"
+    xmlns:dn="antlib:org.apache.ant.dotnet">
+
+    <property name="msi.dir" value="${build.dir}"/>
+    <property name="msi.name" value="${name}-${version}.msi"/>
+    <property name="msi.file" value="${msi.dir}/${msi.name}"/>
+    <property name="wix.home" value="${user.home}/wix"/>
+    <property name="wixobj.dir" value="${build.dir}/wix"/>
+
+    <property name="dist.dir.resolved" location="${dist.dir}"/>
+
+    <mkdir dir="${wixobj.dir}"/>
+
+    <dn:wix target="${msi.file}"
+      mode="both" wixHome="${wix.home}" wixobjDestDir="${wixobj.dir}">
+      <sources dir="src/etc" includes="*.wxs"/>
+      <moresources dir="${dist.dir}"/>
+
+      <candleParameter name="dist.dir" value="${dist.dir.resolved}"/>
+      <candleParameter name="version" value="${manifest-version}"/>
+    </dn:wix>
+  </target>
 
 </project>
