@@ -426,6 +426,8 @@ Other changes:
 
 * ReplaceTokens should allow properties files. Bugzilla report 39688.
 
+* FTP Account could not be specified in ant FTP task. Bugzilla report 39720.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

@@ -103,6 +103,7 @@ public class FTP
     private String server;
     private String userid;
     private String password;
+    private String account;
     private File listing;
     private boolean binary = true;
     private boolean passive = false;
@@ -1055,6 +1056,16 @@ public class FTP
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    /**
+     * Sets the login account to use on the specified server.
+     * 
+     * @param pAccount the account name on remote system
+     * @since Ant 1.7
+     */
+    public void setAccount(String pAccount) {
+    	this.account = pAccount;
     }
 
 
@@ -2254,7 +2265,8 @@ public class FTP
             log("connected", Project.MSG_VERBOSE);
             log("logging in to FTP server", Project.MSG_VERBOSE);
 
-            if (!ftp.login(userid, password)) {
+            if ((this.account != null && !ftp.login(userid, password, account))
+                    || (this.account == null && !ftp.login(userid, password))) {
                 throw new BuildException("Could not login to FTP server");
             }
 
