@@ -424,6 +424,8 @@ Other changes:
 
 * new <antversion> condition. Bugzilla report 32804.
 
+* ReplaceTokens should allow properties files. Bugzilla report 39688.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
  */
 package org.apache.tools.ant.filters;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.BuildException;
 
@@ -219,6 +222,21 @@ public final class ReplaceTokens
     }
 
     /**
+     * Returns properties from a specified properties file.
+     *
+     * @param fileName The file to load properties from.
+     */
+    private Properties getPropertiesFromFile (String fileName) {
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(fileName));
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return props;
+    }
+
+    /**
      * Sets the map of tokens to replace.
      *
      * @param hash A map (String->String) of token keys to replacement
@@ -286,6 +304,13 @@ public final class ReplaceTokens
                         final String name = params[i].getName();
                         final String value = params[i].getValue();
                         hash.put(name, value);
+                    } else if ("propertiesfile".equals(type)) {
+                        Properties props = getPropertiesFromFile(params[i].getValue());
+                        for (Enumeration e = props.keys(); e.hasMoreElements();) {
+                            String key = (String) e.nextElement();
+                            String value = props.getProperty(key);
+                            hash.put(key, value);
+                        }
                     }
                 }
             }

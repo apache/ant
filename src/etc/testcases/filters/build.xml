@@ -79,6 +79,17 @@
     </copy>
   </target>
 
+  <target name="testReplaceTokensPropertyFile" depends="init">
+    <copy tofile="result/replacetokensPropertyFile.test">
+      <fileset dir="input" includes="replacetokens.test" />
+      <filterchain>
+	<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+          <param type="propertiesfile" value="${basedir}/input/sample.properties"/>
+    	</filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
   <target name="testNoAddNewLine" depends="init">
     <concat destfile="result/nonl">This has no new lines</concat>
     <copy file="result/nonl" tofile="result/nonl-copyfilter">
