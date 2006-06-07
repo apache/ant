@@ -79,4 +79,10 @@
            style="xml/apache.xsl">
     </xslt>
   </target>
+  <target name="testStyleSheetWithInclude" depends="init">
+    <xslt in="xml/books.xml"
+           out="xml/out/test-out.xml"
+           style="xml/stylesheet_with_include.xsl">
+    </xslt>
+  </target>
 </project>

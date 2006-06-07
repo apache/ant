@@ -88,5 +88,16 @@ public class XsltTest extends BuildFileTest {
     public void testXMLWithEntitiesInNonAsciiPath() throws Exception {
         executeTarget("testXMLWithEntitiesInNonAsciiPath");
     }
+
+    /**
+     * check that the system id gets set properly on stylesheets.
+     * @throws Exception if something goes wrong.
+     */
+    public void testStyleSheetWithInclude() throws Exception {
+        executeTarget("testStyleSheetWithInclude");
+        if (getLog().indexOf("java.io.FileNotFoundException") != -1) {
+            fail("xsl:include was not found");
+        }
+    }
 }
 

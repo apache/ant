@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.net.URL;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.ErrorListener;
@@ -50,6 +51,7 @@ import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
@@ -63,6 +65,13 @@ import org.xml.sax.XMLReader;
  * @since Ant 1.3
  */
 public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware {
+
+    /**
+     * Helper for transforming filenames to URIs.
+     *
+     * @since Ant 1.7
+     */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The current <code>Project</code>
@@ -126,6 +135,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         FileResource fr = new FileResource();
         fr.setProject(project);
         fr.setFile(stylesheet);
+        setStylesheet(fr);
     }
 
     /**
@@ -249,8 +259,21 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         // The line below is a hack: the system id must an URI, but it is not
         // cleat to get the URI of an resource, so just set the name of the
         // resource as a system id
-        src.setSystemId(resource.getName());
+        src.setSystemId(resourceToURI(resource));
         return src;
+    }
+
+    private String resourceToURI(Resource resource) {
+        if (resource instanceof FileResource) {
+            File f = ((FileResource) resource).getFile();
+            return FILE_UTILS.toURI(f.getAbsolutePath());
+        }
+        if (resource instanceof URLResource) {
+            URL u = ((URLResource) resource).getURL();
+            return String.valueOf(u);
+        } else {
+            return resource.getName();
+        }
     }
 
     /**
