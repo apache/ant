@@ -17,7 +17,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
@@ -187,7 +188,7 @@ public class WaitFor extends ConditionBase {
             MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
         };
 
-        private Hashtable timeTable = new Hashtable();
+        private Map timeTable = new HashMap();
 
         /** Constructor the Unit enumerated type. */
         public Unit() {

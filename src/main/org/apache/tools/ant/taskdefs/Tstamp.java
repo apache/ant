@@ -21,8 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -302,7 +303,7 @@ public class Tstamp extends Task {
                                                 YEAR
                                               };
 
-        private Hashtable calendarFields = new Hashtable();
+        private Map calendarFields = new HashMap();
 
         /** Constructor for Unit enumerated type. */
         public Unit() {

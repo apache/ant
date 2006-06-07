@@ -30,7 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -597,7 +598,7 @@ public class PropertyFile extends Task {
             = {MILLISECOND, SECOND, MINUTE, HOUR,
                DAY, WEEK, MONTH, YEAR };
 
-        private Hashtable calendarFields = new Hashtable();
+        private Map calendarFields = new HashMap();
 
         public Unit() {
             calendarFields.put(MILLISECOND,
