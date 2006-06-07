@@ -89,6 +89,8 @@ Changes that could break older environments:
 
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
   is \n (Unix).  Bugzilla report 39585.
+  
+* <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.  Bugzilla Report 39373.
 
 Fixed bugs:
 -----------
@@ -427,6 +429,8 @@ Other changes:
 * ReplaceTokens should allow properties files. Bugzilla report 39688.
 
 * FTP Account could not be specified in ant FTP task. Bugzilla report 39720.
+
+* Minor performance updates. Bugzilla report 39565.
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
