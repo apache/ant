@@ -98,6 +98,20 @@ public class PropertyResource extends Resource {
     }
 
     /**
+     * Get the string.
+     *
+     * @return the string contents of the resource.
+     * @since Ant 1.7
+     */
+    public String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        return getName()!=null?("${"+getName()+"}")
+                :"null";
+    }
+    
+    /**
      * Get an InputStream for the Resource.
      * @return an InputStream containing this Resource's content.
      * @throws IOException if unable to provide the content of this
