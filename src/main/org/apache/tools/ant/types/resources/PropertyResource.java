@@ -107,8 +107,7 @@ public class PropertyResource extends Resource {
         if (isReference()) {
             return getCheckedRef().toString();
         }
-        return getName()!=null?("${"+getName()+"}")
-                :"null";
+        return String.valueOf(getValue());
     }
     
     /**
