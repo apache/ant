@@ -124,9 +124,8 @@
       other platform.  Of course you can override these
       assumptions.</p>
                                 <p>Based on this a few tasks to run well known .NET utilities
-      from within Ant are provided, namely tasks to run <a href="http://www.nunit.org/">NUnit</a>, <a href="http://nant.sf.net/">NAnt</a> and <a href="http://forums.microsoft.com/MSDN/ShowForum.aspx?ForumID=27&amp;SiteID=1">MSBuild</a>.</p>
-                                <p>There also is some experimental <a href="http://wix.sf.net/">Wix</a> task, but it probably doesn't
-      do anything useful at all.</p>
+      from within Ant are provided, namely tasks to run <a href="http://www.nunit.org/">NUnit</a>, <a href="http://nant.sf.net/">NAnt</a>, <a href="http://forums.microsoft.com/MSDN/ShowForum.aspx?ForumID=27&amp;SiteID=1">MSBuild</a>
+      and the <a href="http://wix.sf.net/">Wix</a> toolkit.</p>
                         <h3 class="section">
       <a name="Tasks"></a>
       Tasks
@@ -153,6 +152,12 @@
       </h4>
                         <p>Invokes MSBuild, either on an external file or a build file
         snippet contained inside your Ant build file.</p>
+                                                          <h4 class="subsection">
+        <a name="wix"></a>
+        wix
+      </h4>
+                        <p>Invokes the candle and light executables of the WiX toolkit
+          in order to create MSI installers from within Ant.</p>
                                             <h3 class="section">
       <a name="Examples"></a>
       Examples
