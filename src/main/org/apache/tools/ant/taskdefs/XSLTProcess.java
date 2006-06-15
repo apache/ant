@@ -283,7 +283,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         try {
             if (baseDir == null) {
-                baseDir = getProject().resolveFile(".");
+                baseDir = FILE_UTILS.resolveFile(getProject().getBaseDir(),".");
             }
 
             liaison = getLiaison();

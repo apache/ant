@@ -115,7 +115,7 @@ public class TempFile extends Task {
             throw new BuildException("no property specified");
         }
         if (destDir == null) {
-            destDir = getProject().resolveFile(".");
+            destDir = FILE_UTILS.resolveFile(getProject().getBaseDir(),".");
         }
         File tfile = FILE_UTILS.createTempFile(prefix, suffix, destDir);
         getProject().setNewProperty(property, tfile.toString());

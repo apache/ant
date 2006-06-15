@@ -412,7 +412,7 @@ public class ExecTask extends Task {
             return exec;
         }
         // try to find the executable
-        File executableFile = getProject().resolveFile(exec);
+        File executableFile = FILE_UTILS.resolveFile(getProject().getBaseDir(), exec);
         if (executableFile.exists()) {
             return executableFile.getAbsolutePath();
         }

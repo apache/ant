@@ -17,17 +17,18 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.RedirectorElement;
-import org.apache.tools.ant.types.Environment;
-
-import java.io.File;
-import java.util.Vector;
-import java.util.Enumeration;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * This is factored out from {@link SignJar}; a base class that can be used
@@ -98,6 +99,8 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     private Path path = null;
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     /**
      * Set the maximum memory to be used by the jarsigner process
      *
@@ -287,7 +290,7 @@ public abstract class AbstractJarSignerTask extends Task {
             // is the keystore a file
             addValue(cmd,"-keystore");
             String loc;
-            File keystoreFile = getProject().resolveFile(keystore);
+            File keystoreFile = FILE_UTILS.resolveFile(getProject().getBaseDir(), keystore);
             if (keystoreFile.exists()) {
                 loc = keystoreFile.getPath();
             } else {
