@@ -739,7 +739,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      */
     private File resolveFile(String fileName) {
         if (rootDirectory == null) {
-            return getProject().resolveFile(fileName);
+            return FILE_UTILS.resolveFile(getProject().getBaseDir(),fileName);
         }
         return FILE_UTILS.resolveFile(rootDirectory, fileName);
     }
