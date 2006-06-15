@@ -231,3 +231,10 @@ Note: This document was updated in the context of releasing Ant 1.6.
      or less, the release having been done at midnight on Dec 18th, the
      mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
      contain a note advising users to be patient immediately after the release.
+
+Related Information
+
+http://www.apache.org/dev/release-publishing.html
+http://jakarta.apache.org/commons/releases/
+http://wiki.apache.org/jakarta-commons/SigningReleases
+
