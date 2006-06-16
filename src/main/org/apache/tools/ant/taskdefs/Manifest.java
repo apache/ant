@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Holds the data of a jar manifest.
@@ -698,28 +699,34 @@ public class Manifest {
      *            default manifest
      */
     public static Manifest getDefaultManifest() throws BuildException {
+        InputStream in = null;
+        InputStreamReader insr = null;
         try {
             String defManifest = "/org/apache/tools/ant/defaultManifest.mf";
-            InputStream in = Manifest.class.getResourceAsStream(defManifest);
+            in = Manifest.class.getResourceAsStream(defManifest);
             if (in == null) {
                 throw new BuildException("Could not find default manifest: "
                     + defManifest);
             }
             try {
-                Manifest defaultManifest
-                    = new Manifest(new InputStreamReader(in, "UTF-8"));
+                insr = new InputStreamReader(in, "UTF-8");
+                Manifest defaultManifest = new Manifest(insr);
                 Attribute createdBy = new Attribute("Created-By",
                     System.getProperty("java.vm.version") + " ("
                     + System.getProperty("java.vm.vendor") + ")");
                 defaultManifest.getMainSection().storeAttribute(createdBy);
                 return defaultManifest;
             } catch (UnsupportedEncodingException e) {
-                return new Manifest(new InputStreamReader(in));
+                insr = new InputStreamReader(in);
+                return new Manifest(insr);
             }
         } catch (ManifestException e) {
             throw new BuildException("Default manifest is invalid !!", e);
         } catch (IOException e) {
             throw new BuildException("Unable to read default manifest", e);
+        } finally {
+            FileUtils.close(insr);
+            FileUtils.close(in);
         }
     }
 

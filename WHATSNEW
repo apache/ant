@@ -94,6 +94,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* <manifest> now closes the inputstream explicitly. Bug report 39628
+
 * <rpm> now also correctly searches the first element of the path. Bug report 39345.
 
 * ant.bat now handles classpath set to "". Bug report 38914. 
