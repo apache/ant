@@ -228,6 +228,29 @@
     <f2 project="bsf" />
   </target>
 
+  <target name="jruby"
+          description="load jruby"
+          depends="bsf">
+    <f2 project="org.jruby" archive="jruby"/>
+  </target>  
+  
+  <target name="beanshell"
+          description="load beanshell support"
+          depends="bsf">
+    <f2 project="org.beanshell" archive="bsh"/>
+    <f2 project="org.beanshell" archive="bsh-core"/>
+  </target>
+
+  <target name="jython"
+          description="load jython"
+          depends="bsf">
+    <f2 project="jython" archive="jython"/>
+  </target>
+
+  <target name="script"
+          description="load script languages"
+          depends="bsf,jruby,jython,beanshell"/>
+
   <target name="debugging" 
     description="internal ant debugging"
     depends="init">
