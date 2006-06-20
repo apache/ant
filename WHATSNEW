@@ -434,6 +434,8 @@ Other changes:
 
 * Minor performance updates. Bugzilla report 39565.
 
+* New deleteonexit attribute for the <tempfile> task. Bugzilla report 39842.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

@@ -62,6 +62,8 @@ public class TempFile extends Task {
      */
     private String suffix = "";
 
+    /** deleteOnExit flag */
+    private boolean deleteOnExit;
 
     /**
      * Sets the property you wish to assign the temporary file to.
@@ -104,6 +106,22 @@ public class TempFile extends Task {
         this.suffix = suffix;
     }
 
+    /**
+     * Set whether the tempfile created by this task should be set
+     * for deletion on normal VM exit.
+     * @param deleteOnExit boolean flag.
+     */
+    public void setDeleteOnExit(boolean deleteOnExit) {
+        this.deleteOnExit = deleteOnExit;
+    }
+
+    /**
+     * Learn whether deleteOnExit is set for this tempfile task.
+     * @return boolean deleteOnExit flag.
+     */
+    public boolean isDeleteOnExit() {
+        return deleteOnExit;
+    }
 
     /**
      * Creates the temporary file.
@@ -117,7 +135,9 @@ public class TempFile extends Task {
         if (destDir == null) {
             destDir = FILE_UTILS.resolveFile(getProject().getBaseDir(),".");
         }
-        File tfile = FILE_UTILS.createTempFile(prefix, suffix, destDir);
+        File tfile = FILE_UTILS.createTempFile(
+                prefix, suffix, destDir, deleteOnExit);
+
         getProject().setNewProperty(property, tfile.toString());
     }
 }
