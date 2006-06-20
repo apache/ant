@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * JUnit Testcases for ConcatReader
@@ -30,8 +30,7 @@ import org.apache.tools.ant.util.FileUtils;
 public class ConcatFilterTest extends BuildFileTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String lSep = 
-        Os.isFamily("mac") ? "\r" : System.getProperty("line.separator");
+    private static final String lSep = StringUtils.LINE_SEP;
 
     private static final String FILE_PREPEND_WITH =
           "this-should-be-the-first-line" + lSep
