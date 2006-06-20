@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2005 The Apache Software Foundation
+   Copyright 2005-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -143,7 +143,9 @@
             If you have a patch to submit and are sending it to the
             <code>dev</code> mailing list,
             prefix &quot;[PATCH]&quot;
-            to your message subject. Please include any relevant bug numbers.
+            to your message subject (this is also a good idea for
+            a subject line in the bug database).
+            Please include any relevant bug numbers.
             Patch files should be created with the <code>-u</code>
             option of the
             <code>diff</code> or <code>svn diff</code> command. For
