@@ -436,6 +436,9 @@ Other changes:
 
 * New deleteonexit attribute for the <tempfile> task. Bugzilla report 39842.
 
+* <scriptdef>-created scripts have support for nested text. All text
+  passed to a scripted task can be accessed via self.text.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

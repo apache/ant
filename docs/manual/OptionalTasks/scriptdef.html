@@ -27,6 +27,8 @@ Ant distribution. See
 <a href="../install.html#librarydependencies">Library Dependencies</a>
 for more information.</p>
 
+
+
 <p>The attributes and nested elements supported by the task may be defined
 using <code>&lt;attribute&gt;</code> and <code>&lt;element&gt;</code> nested elements. These are
 available to the script that implements the task as two collection style
@@ -42,8 +44,20 @@ lowercase names, so even if you use name="SomeAttribute", you'll have
 to use "someattribute" to retrieve the attribute's value from the
 <code>attributes</code> collection.</p>
 
-  <p>The name "self" (<i>since Ant 1.6.3</i>) is a pre-defined reference to the script def task instance.
-  It can be used for logging purposes</p>
+<p>The name "self" (<i>since Ant 1.6.3</i>) is a pre-defined reference to the
+    script def task instance.
+    It can be used for logging, or for integration with the rest of
+    ant. the <code>self.text attribute</code> contains
+    any nested text passed to the script</p>
+
+<p>If an attribute or element is not passed in, 
+then <code>attributes.get()</code> or <code>elements.get()</code> will 
+return null. It is up to the script to perform any checks and validation. 
+<code>self.fail(String message)</code>can be used to raise a 
+<code>BuildException</code>.
+</p>
+
+
 <p>The name "project" is a pre-defined reference to the Ant Project. For
 more information on writing scripts, please refer to the
 <a href="script.html"><code>&lt;script&gt;</code></a> task
@@ -196,10 +210,40 @@ statement (scriptdef <code>&lt;scripttest2&gt;</code>; line 10)</code></p>
 <p>
 Script errors are only detected when a script task is actually executed.
 </p>
+<p>
+    The next example does uses nested text in Jython. It also declares 
+    the script in a new xml namespace, which must be used to refer to 
+    the task. Declaring scripts in a new namespace guarantees that Ant will 
+    not create a task of the same (namespace,localname) name pair. 
+</p>
+
+<pre>
+    &lt;target name="echo-task-jython"&gt;
+  &lt;scriptdef language="jython"
+      name="echo"
+      uri="http://example.org/script"&gt;
+      &lt;![CDATA[
+self.log("text: " +self.text)
+    ]]&gt;
+    &lt;/scriptdef&gt;
+&lt;/target&gt;
+
+&lt;target name="testEcho" depends="echo-task-jython"
+    xmlns:s="http://example.org/script"&gt;
+  &lt;s:echo&gt;nested text&lt;/s:echo&gt;
+&lt;/target&gt;
+</pre>
+
+<h3>Testing Scripts</h3>
+
+<p>
+The easiest way to test scripts is to use the 
+<a href="http://ant.apache.org/antlibs/antunit/">AntUnit</a> ant library.
+This will run all targets in a script that begin with "test" (and their dependencies). </p>
 
 
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

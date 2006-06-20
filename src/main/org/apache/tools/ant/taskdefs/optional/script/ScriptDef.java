@@ -309,7 +309,7 @@ public class ScriptDef extends DefBase {
      *
      * @param attributes collection of attributes
      * @param elements   a list of nested element values.
-     * @param instance   the script instance
+     * @param instance   the script instance; can be null
      */
     public void executeScript(Map attributes, Map elements, ScriptDefBase instance) {
         runner.addBean("attributes", attributes);
