@@ -1442,7 +1442,8 @@
       version="true"
       locale="en"
       windowtitle="${Name} API"
-      doctitle="${Name}">
+      doctitle="${Name}"
+      verbose="${javadoc.verbose}">
 
       <packageset dir="${java.dir}"/>
 
