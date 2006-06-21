@@ -46,7 +46,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * control to it
      */
     public void execute() {
-        getScript().executeScript(attributes, nestedElementMap,this);
+        getScript().executeScript(attributes, nestedElementMap, this);
     }
 
     private ScriptDef getScript() {
@@ -104,7 +104,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * @since ant1.7
      */
     public void addText(String text) {
-        this.text=text;
+        this.text=getProject().replaceProperties(text);
     }
 
     /**
