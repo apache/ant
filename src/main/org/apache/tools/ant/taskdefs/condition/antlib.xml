@@ -23,9 +23,12 @@
   use with the declaration xmlns:cond="antlib:org.apache.tools.ant.conditions" to
   trigger ant's autoload of this file into a namespace.
 
+  Please keep this list in alphabetical order -it is easier to verify that way
   -->
 
   <typedef name="and" classname="org.apache.tools.ant.taskdefs.condition.And"/>
+  <typedef name="antversion"
+           classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
   <typedef name="contains" classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
   <typedef name="equals" classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
   <typedef name="filesmatch" classname="org.apache.tools.ant.taskdefs.condition.Filesmatch"/>
@@ -47,5 +50,4 @@
   <typedef name="socket" classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
   <typedef name="typefound" classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
   <typedef name="xor" classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
-  <typedef name="antversion" classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
 </antlib>
