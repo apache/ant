@@ -176,7 +176,8 @@ public class Main implements AntMain {
         } catch (Throwable exc) {
             handleLogfile();
             printMessage(exc);
-            System.exit(1);
+            exit(1);
+            return;
         }
 
         if (additionalUserProperties != null) {
@@ -210,6 +211,16 @@ public class Main implements AntMain {
         } finally {
             handleLogfile();
         }
+        exit(exitCode);
+    }
+
+    /**
+     * This operation is expected to call {@link System#exit(int)}, which 
+     * is what the base version does. however, the option to do something
+     * different is there. 
+     * @param exitCode code to exit with
+     */
+    protected void exit(int exitCode) {
         System.exit(exitCode);
     }
 
