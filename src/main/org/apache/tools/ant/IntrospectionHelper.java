@@ -40,7 +40,7 @@ import org.apache.tools.ant.taskdefs.PreSetDef;
 public final class IntrospectionHelper implements BuildListener {
 
     /**
-     * EMPTY_MAP was added in java 1.3 (EMTPY_SET and EMPTY_LIST
+     * EMPTY_MAP was added in java 1.3 (EMPTY_SET and EMPTY_LIST
      * is in java 1.2!)
      */
     private static final Map EMPTY_MAP
