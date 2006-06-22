@@ -693,6 +693,7 @@
       <fileset dir="${java.dir}">
         <include name="**/*.properties"/>
         <include name="**/*.dtd"/>
+        <include name="**/*.xml"/>
       </fileset>
       <fileset dir="${resource.dir}" />
     </copy>

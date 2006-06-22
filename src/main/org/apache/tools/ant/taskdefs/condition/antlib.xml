@@ -20,7 +20,7 @@
 
   -->
   <!-- ant1.6+ antlib declaration for the conditions
-  use with the declaration xmlns:cond="antlib:org.apache.tools.ant.conditions" to
+  use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition" to
   trigger ant's autoload of this file into a namespace.
 
   Please keep this list in alphabetical order -it is easier to verify that way
