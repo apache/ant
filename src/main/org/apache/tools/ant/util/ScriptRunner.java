@@ -173,13 +173,14 @@ public class ScriptRunner {
 
         int count = (int) file.length();
         byte[] data = new byte[count];
-
+        FileInputStream inStream = null;
         try {
-            FileInputStream inStream = new FileInputStream(file);
+            inStream = new FileInputStream(file);
             inStream.read(data);
-            inStream.close();
         } catch (IOException e) {
             throw new BuildException(e);
+        } finally {
+            FileUtils.close(inStream);
         }
 
         script += new String(data);
