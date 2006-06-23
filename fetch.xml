@@ -66,13 +66,9 @@
       value="${userlib.dir}">
       <equals arg1="${dest}" arg2="user" />
     </condition>
-    <fail>
-      Unknown destination : ${dest}
-      <condition>
-        <not><isset property="dest.dir" /></not>
-      </condition>
-    </fail>
+    <fail unless="dest.dir">Unknown destination : ${dest}</fail>
     <echo>Downloading to ${dest.dir}</echo>
+    <property name="m2.dest.dir" value="${dest.dir}" />
   </target>
 
 

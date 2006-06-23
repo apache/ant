@@ -13,7 +13,7 @@
 
 <description>
   This build file downloads the Maven2 Ant tasks,
-  and installs them in the location specified by the dest.dir property.
+  and installs them in the location specified by the m2.dest.dir property.
 
   You may need to set proxy settings. On Java1.5, Ant tries to get
   this from the OS, unless you use the -noproxy option.
@@ -49,11 +49,11 @@
   </macrodef>
 
   <target name="probe-m2">
-    <require property="dest.dir" />
+    <require property="m2.dest.dir" />
     <require property="m2.jar.name" />
 
     <!-- Look for M2 ant tasks in our classpath-->
-    <property name="m2.artifact" location="${dest.dir}/${m2.jar.name}" />
+    <property name="m2.artifact" location="${m2.dest.dir}/${m2.jar.name}" />
     <available property="m2.antlib.found" resource="${m2.antlib.resource}" />
     <condition property="m2.antlib.typefound">
       <typefound name="${m2.antlib.uri}:artifact" />
@@ -62,9 +62,9 @@
 
   <target name="download-m2" depends="probe-m2" unless="m2.antlib.found">
     <require property="m2.antlib.url" />
-    <echo>Downloading to ${dest.dir}</echo>
+    <echo>Downloading to ${m2.dest.dir}</echo>
 
-    <mkdir dir="${dest.dir}" />
+    <mkdir dir="${m2.dest.dir}" />
     <!-- fetch M2 ant tasks into our repository, if it is not there-->
     <get src="${m2.antlib.url}"
       dest="${m2.artifact}"
