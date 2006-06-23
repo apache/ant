@@ -58,9 +58,10 @@
     <condition property="m2.antlib.typefound">
       <typefound name="${m2.antlib.uri}:artifact" />
     </condition>
+    <available property="m2.artifact.found" file="${m2.artifact}" type="file" />
   </target>
 
-  <target name="download-m2" depends="probe-m2" unless="m2.antlib.found">
+  <target name="download-m2" depends="probe-m2" unless="m2.artifact.found">
     <require property="m2.antlib.url" />
     <echo>Downloading to ${m2.dest.dir}</echo>
 
@@ -73,13 +74,13 @@
   </target>
 
   <target name="dont-validate-m2-checksum" depends="probe-m2"
-          if="m2.antlib.found">
+          if="m2.artifact.found">
     <property name="checksum.equal" value="true" />
   </target>
 
   <target name="validate-m2-checksum"
           depends="download-m2,dont-validate-m2-checksum"
-          if="m2.sha1.checksum" unless="m2.antlib.found">
+          if="m2.sha1.checksum" unless="m2.artifact.found">
     <checksum file="${m2.artifact}"
         algorithm="SHA"
         property="${m2.sha1.checksum}"
