@@ -14,15 +14,15 @@
 <description>
   This build file downloads JAR files that optional Ant tasks use,
   and installs them in a location that is accessible the next time Ant runs.
-  
+
   You can choose three locations, by going -Ddest=LOCATION on the command line
-  -Ddest=user     user lib dir  ${user.home}/.ant/lib  
+  -Ddest=user     user lib dir  ${user.home}/.ant/lib
   -Ddest=system   ant lib dir   ${ant.home}/lib --Default--
   -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
-  
+
   You may also need to set proxy settings. On Java1.5, Ant tries to get
-  this from the OS, unless you use the -noproxy option. 
-  
+  this from the OS, unless you use the -noproxy option.
+
   Proxies can be configured manually setting the JVM proxy values in the
   ANT_OPTS environment variable.
 
@@ -44,24 +44,24 @@
   <property name="lib.dir" location="lib" />
   <property name="optional.dir" location="${lib.dir}/optional" />
   <property name="userlib.dir" location="${user.home}/.ant/lib" />
-  
+
   <!-- load in our properties table -->
   <property file="${lib.dir}/libraries.properties"/>
-  
- 
+
+
   <target name="pick-dest">
-    <condition property="dest.dir" 
+    <condition property="dest.dir"
       value="${lib.dir}">
       <or>
         <equals arg1="${dest}" arg2="system" />
         <not><isset property="dest"/></not>
       </or>
     </condition>
-    <condition property="dest.dir" 
+    <condition property="dest.dir"
       value="${optional.dir}">
       <equals arg1="${dest}" arg2="optional" />
     </condition>
-    <condition property="dest.dir" 
+    <condition property="dest.dir"
       value="${userlib.dir}">
       <equals arg1="${dest}" arg2="user" />
     </condition>
@@ -74,7 +74,7 @@
     <echo>Downloading to ${dest.dir}</echo>
   </target>
 
-  
+
   <target name="probe-m2" depends="pick-dest">
     <!-- Look for M2 ant tasks in our classpath-->
     <property name="m2.artifact" location="${dest.dir}/${m2.jar.name}"/>
@@ -84,12 +84,12 @@
       <typefound name="antlib:org.apache.maven.artifact.ant:artifact" />
     </condition>
   </target>
-  
+
 
   <target name="download-m2" depends="probe-m2,pick-dest" unless="m2.antlib.found">
     <!-- fetch M2 ant tasks into our repository, if it is not there-->
-    <get src="${m2.antlib.url}" 
-      dest="${m2.artifact}" 
+    <get src="${m2.antlib.url}"
+      dest="${m2.artifact}"
       verbose="true"
       usetimestamp="false"/>
   </target>
@@ -99,21 +99,21 @@
     <property name="checksum.equal" value="true" />
   </target>
 
-  <target name="validate-m2-checksum" 
+  <target name="validate-m2-checksum"
           depends="download-m2,dont-validate-m2-checksum"
           if="m2.sha1.checksum" unless="m2.antlib.found">
     <checksum file="${m2.artifact}"
         algorithm="SHA"
-        property="${m2.sha1.checksum}" 
+        property="${m2.sha1.checksum}"
         verifyProperty="checksum.equal"/>
   </target>
 
-  <target name="checksum-mismatch" depends="validate-m2-checksum" 
+  <target name="checksum-mismatch" depends="validate-m2-checksum"
           unless="checksum.equal" if="m2.sha1.checksum">
     <delete file="${m2.artifact}"/>
     <fail >
       Failed to verify the downloaded file ${m2.antlib.url}" against the checksum
-      coded into libraries.properties. 
+      coded into libraries.properties.
       The local copy has been deleted, for security reasons
     </fail>
   </target>
@@ -125,8 +125,8 @@
     </fail>
   </target>
 
-  <target name="get-m2" depends="checksum-match" 
-      description="Download the Maven2 Ant tasks"/> 
+  <target name="get-m2" depends="checksum-match"
+      description="Download the Maven2 Ant tasks"/>
 
   <target name="macros" depends="get-m2"
     xmlns:artifact="antlib:org.apache.maven.artifact.ant">
@@ -146,83 +146,83 @@
         <artifact:dependencies pathID="@{archive}.path">
           <dependency groupID="@{project}"
             artifactID="@{archive}"
-            version="${@{archive}.version}"/>        
+            version="${@{archive}.version}"/>
         </artifact:dependencies>
-        <!-- now we are left with the problem of getting the files 
+        <!-- now we are left with the problem of getting the files
              into our directory -->
         <copypath destdir="${dest.dir}" pathref="@{archive}.path">
           <flattenmapper/>
         </copypath>
       </sequential>
-    </macrodef> 
+    </macrodef>
   </target>
-  
 
-  
+
+
   <!-- any init stuff -->
   <target name="init" depends="pick-dest,macros" >
 
   </target>
-  
 
-  
+
+
   <target name="diag" depends="init">
     <echoproperties />
   </target>
-  
-  <target name="logging" 
+
+  <target name="logging"
     description="load logging libraries"
     depends="init">
     <f2 project="log4j" />
     <f2 project="commons-logging" archive="commons-logging-api" />
   </target>
-    
-  <target name="junit" 
+
+  <target name="junit"
     description="load junit libraries"
     depends="init">
     <f2 project="junit" />
   </target>
-  
-  <target name="xml" 
+
+  <target name="xml"
     description="load full XML libraries (xalan, resolver)"
     depends="init">
     <f2 project="xalan" />
     <f2 project="xml-resolver" />
   </target>
 
-  <target name="networking" 
+  <target name="networking"
     description="load networking libraries (commons-net; jsch)"
     depends="init">
     <f2 project="commons-net" />
     <f2 project="jsch" />
-  </target>  
+  </target>
 
-  <target name="regexp" 
+  <target name="regexp"
     description="load regexp libraries"
     depends="init">
     <f2 project="regexp" />
     <f2 project="oro" />
-  </target>  
- 
-  <target name="antlr" 
+  </target>
+
+  <target name="antlr"
     description="load antlr libraries"
     depends="init">
     <f2 project="antlr" />
-  </target>  
+  </target>
 
-  <target name="bcel" 
+  <target name="bcel"
     description="load bcel libraries"
     depends="init">
     <f2 project="bcel" />
-  </target>  
+  </target>
 
-  <target name="jdepend" 
+  <target name="jdepend"
     description="load jdepend libraries"
     depends="init">
     <f2 project="jdepend" />
-  </target>  
+  </target>
 
-  <target name="bsf" 
+  <target name="bsf"
     description="load bsf libraries"
     depends="init">
     <f2 project="bsf" />
@@ -232,8 +232,8 @@
           description="load jruby"
           depends="bsf">
     <f2 project="org.jruby" archive="jruby"/>
-  </target>  
-  
+  </target>
+
   <target name="beanshell"
           description="load beanshell support"
           depends="bsf">
@@ -251,14 +251,14 @@
           description="load script languages"
           depends="bsf,jruby,jython,beanshell"/>
 
-  <target name="debugging" 
+  <target name="debugging"
     description="internal ant debugging"
     depends="init">
     <f2 project="which" />
   </target>
-  
+
   <target name="all"
     description="load all the libraries"
     depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging" />
-  
+
 </project>
