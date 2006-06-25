@@ -200,13 +200,6 @@
     </or>
   </selector>
 
-  <selector id="needs.xalan1">
-    <or>
-      <filename name="${optional.package}/XalanLiaison*"/>
-      <filename name="${optional.package}/junit/Xalan1Executor*"/>
-    </or>
-  </selector>
-
   <selector id="needs.apache-resolver">
     <filename name="${apache.resolver.type.package}/**"/>
   </selector>
@@ -406,9 +399,6 @@
     </condition>
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
-      classpathref="classpath"/>
-    <available property="xalan.present"
-      classname="org.apache.xalan.xslt.XSLTProcessorFactory"
       classpathref="classpath"/>
     <available property="xalan2.present"
       classname="org.apache.xalan.transformer.TransformerImpl"
@@ -657,7 +647,6 @@
             <selector refid="needs.sun.b64" unless="base64.present"/>
 
             <selector refid="needs.trax" unless="trax.present"/>
-            <selector refid="needs.xalan1" unless="xalan.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
             <selector refid="needs.apache-regexp"
@@ -838,7 +827,6 @@
         <not>
           <or>
             <selector refid="needs.trax"/>
-            <selector refid="needs.xalan1"/>
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
             <selector refid="needs.apache-regexp"/>
@@ -883,7 +871,6 @@
     </macrodef>
 
     <optional-jar dep="trax"/>
-    <optional-jar dep="xalan1"/>
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
     <optional-jar dep="apache-regexp"/>
@@ -1698,10 +1685,6 @@
             unless="trax.impl.present"/>
 
           <!-- needs xerces to work -->
-          <exclude name="${optional.package}/XalanLiaisonTest.java"
-            unless="bsf.present"/>
-          <exclude name="${optional.package}/XalanLiaisonTest.java"
-            unless="xerces1.present"/>
           <exclude name="${ant.package}/IncludeTest.java"
             unless="xerces1.present"/>
           <exclude name="${type.package}/selectors/ModifiedSelectorTest.java"

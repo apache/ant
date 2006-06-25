@@ -114,20 +114,12 @@ element which is used to perform Entity and URI resolution.</p>
     <td valign="top">processor</td>
 
     <td valign="top">name of the XSLT processor to use.
-      Permissible values are :<ul>
+      Permissible value is :<ul>
       <li>&quot;trax&quot; for a TraX compliant processor (ie JAXP interface
-      implementation such as Xalan 2 or Saxon)</li>
-      <li>&quot;xalan&quot; for
-      the Apache XML Xalan (version 1) processor</li>
-      <li>the name of a custom class implementing the interface
-          <code>org.apache.tools.ant.taskdefs.XSLTLiaison.</code></li>
-      </ul>
-      Defaults to trax, followed by xalan
-      The first one found in your class
-      path is the one that is used.
+      implementation such as Xalan 2 or Saxon)</li></ul>
+      Defaults to trax.
       <br/>
-      <em><strong>DEPRECATED</strong> - xalan (xalan1) is deprecated and no
-      more supported.</em>.
+      Support for xalan1 has been removed in ant 1.7.
       </td>
     <td align="center" valign="top">No</td>
   </tr>

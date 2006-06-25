@@ -2,7 +2,10 @@ Changes from current Ant 1.6.5 version to current SVN version
 =============================================================
 
 Changes that could break older environments:
---------------------------------------------
+-------------------------------------------
+
+* Removed support for xalan1 completely. Users of Xalan1 for ant builds will
+  have to stay at ant 1.6.5 or upgrade to xalan2.
 
 * Improved recursion detection for lines with multiple matches of same token on one single line.
   Bugzilla report 38456.

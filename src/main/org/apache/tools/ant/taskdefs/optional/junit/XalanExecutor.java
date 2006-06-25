@@ -60,9 +60,8 @@ abstract class XalanExecutor {
     abstract void execute() throws Exception;
 
     /**
-     * Create a valid Xalan executor. It checks first if Xalan2 is
-     * present, if not it checks for xalan1. If none is available, it
-     * fails.
+     * Create a valid Xalan executor. It checks if Xalan2 is
+     * present. If none is available, it fails.
      * @param caller object containing the transformation information.
      * @throws BuildException thrown if it could not find a valid xalan
      * executor.
@@ -75,15 +74,9 @@ abstract class XalanExecutor {
             executor = (XalanExecutor) clazz.newInstance();
         } catch (Exception xsltcApacheMissing) {
             caller.task.log(xsltcApacheMissing.toString());
-            try {
-                Class clazz = Class.forName(PACKAGE + "Xalan1Executor");
-                executor = (XalanExecutor) clazz.newInstance();
-            } catch (Exception xalan1Missing) {
-                caller.task.log(xalan1Missing.toString());
-                throw new BuildException("Could not find xstlc nor xalan2 nor "
-                                         + "xalan1 in the classpath. Check "
+                throw new BuildException("Could not find xstlc nor xalan2 "
+                                         + "in the classpath. Check "
                                          + "http://xml.apache.org/xalan-j");
-            }
         }
         String classNameImpl = executor.getImplementation();
         String version = executor.getProcVersion(classNameImpl);

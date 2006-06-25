@@ -99,10 +99,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private static final String TRAX_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
 
-    /** Name of the now-deprecated Xalan liaison class */
-    private static final String XALAN_LIAISON_CLASS =
-                        "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
-
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -163,11 +159,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     public static final String PROCESSOR_TRAX = "trax";
-    /**
-     * The xalan1 processor (deprecated option)
-     * @since Ant 1.7
-     */
-    public static final String PROCESSOR_XALAN1 = "xalan";
 
     /**
      * Creates a new XSLTProcess Task.
@@ -493,10 +484,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
             classname = TRAX_LIAISON_CLASS;
-        } else if (proc.equals(PROCESSOR_XALAN1)) {
-            log("DEPRECATED - xalan processor is deprecated. Use trax "
-                + "instead.");
-            classname = XALAN_LIAISON_CLASS;
         } else {
             //anything else is a classname
             classname = proc;
@@ -753,12 +740,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 try {
                     resolveProcessor(PROCESSOR_TRAX);
                 } catch (Throwable e1) {
-                    try {
-                        resolveProcessor(PROCESSOR_XALAN1);
-                    } catch (Throwable e2) {
-                        e2.printStackTrace();
-                        throw new BuildException(e1);
-                    }
+                    e1.printStackTrace();
+                    throw new BuildException(e1);
                 }
             }
         }
