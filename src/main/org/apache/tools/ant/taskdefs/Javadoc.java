@@ -543,7 +543,7 @@ public class Javadoc extends Task {
         while (tok.hasMoreTokens()) {
             String f = tok.nextToken();
             SourceFile sf = new SourceFile();
-            sf.setFile(FILE_UTILS.resolveFile(getProject().getBaseDir(),f.trim()));
+            sf.setFile(getProject().resolveFile(f.trim()));
             addSource(sf);
         }
     }
@@ -1016,7 +1016,7 @@ public class Javadoc extends Task {
         if (!tok.hasMoreTokens()) {
             throw new BuildException(linkOfflineError);
         }
-        le.setPackagelistLoc(FILE_UTILS.resolveFile(getProject().getBaseDir(),tok.nextToken()));
+        le.setPackagelistLoc(getProject().resolveFile(tok.nextToken()));
     }
 
     /**
@@ -1745,7 +1745,7 @@ public class Javadoc extends Task {
                 String link = null;
                 if (la.shouldResolveLink()) {
                     File hrefAsFile = 
-                        FILE_UTILS.resolveFile(getProject().getBaseDir(), la.getHref());
+                        getProject().resolveFile(la.getHref());
                     if (hrefAsFile.exists()) {
                         try {
                             link = FILE_UTILS.getFileURL(hrefAsFile)

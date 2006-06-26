@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.RedirectorElement;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -98,8 +97,6 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.7
      */
     private Path path = null;
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     
     /**
      * Set the maximum memory to be used by the jarsigner process
@@ -290,7 +287,7 @@ public abstract class AbstractJarSignerTask extends Task {
             // is the keystore a file
             addValue(cmd,"-keystore");
             String loc;
-            File keystoreFile = FILE_UTILS.resolveFile(getProject().getBaseDir(), keystore);
+            File keystoreFile = getProject().resolveFile(keystore);
             if (keystoreFile.exists()) {
                 loc = keystoreFile.getPath();
             } else {

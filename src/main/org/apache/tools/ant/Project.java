@@ -1339,9 +1339,6 @@ public class Project implements ResourceFactory {
      *
      * @return the resolved File.
      *
-     * @deprecated since 1.7 
-     *             Use @see {FileUtils#resolveFile FileUtils.resolveFile} 
-     *             instead.
      */
     public File resolveFile(String fileName) {
         return FILE_UTILS.resolveFile(baseDir, fileName);

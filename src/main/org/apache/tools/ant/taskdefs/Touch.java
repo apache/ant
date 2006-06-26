@@ -341,7 +341,7 @@ public class Touch extends Task {
                 long modTime = (r.isExists()) ? r.getLastModified()
                     : defaultTimestamp;
                 for (int i = 0; i < mapped.length; i++) {
-                    touch(FILE_UTILS.resolveFile(getProject().getBaseDir(),mapped[i]), modTime);
+                    touch(getProject().resolveFile(mapped[i]), modTime);
                 }
             }
         }

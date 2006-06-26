@@ -111,8 +111,6 @@ public class Javac extends MatchingTask {
     private String source;
     private String debugLevel;
     private File tmpDir;
-    
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Javac task for compilation of Java files.
@@ -804,7 +802,7 @@ public class Javac extends MatchingTask {
         // compile lists
         String[] list = src.list();
         for (int i = 0; i < list.length; i++) {
-            File srcDir = FILE_UTILS.resolveFile(getProject().getBaseDir(), list[i]);
+            File srcDir = getProject().resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()

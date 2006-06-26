@@ -133,7 +133,7 @@ public class TempFile extends Task {
             throw new BuildException("no property specified");
         }
         if (destDir == null) {
-            destDir = FILE_UTILS.resolveFile(getProject().getBaseDir(),".");
+            destDir = getProject().resolveFile(".");
         }
         File tfile = FILE_UTILS.createTempFile(
                 prefix, suffix, destDir, deleteOnExit);

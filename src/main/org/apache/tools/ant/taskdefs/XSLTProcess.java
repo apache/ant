@@ -274,7 +274,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         try {
             if (baseDir == null) {
-                baseDir = FILE_UTILS.resolveFile(getProject().getBaseDir(),".");
+                baseDir = getProject().resolveFile(".");
             }
 
             liaison = getLiaison();
@@ -289,7 +289,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (xslFile != null) {
                 // If we enter here, it means that the stylesheet is supplied
                 // via style attribute
-                File stylesheet = FILE_UTILS.resolveFile(getProject().getBaseDir(), xslFile);
+                File stylesheet = getProject().resolveFile(xslFile);
                 if (!stylesheet.exists()) {
                     stylesheet = FILE_UTILS.resolveFile(baseDir, xslFile);
                     /*
