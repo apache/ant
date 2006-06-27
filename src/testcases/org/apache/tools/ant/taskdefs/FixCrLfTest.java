@@ -91,6 +91,10 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testEncoding");
     }
 
+    public void testOutputEncoding() throws IOException {
+        executeTarget("testOutputEncoding");
+    }
+
     public void testLongLines() throws IOException {
         executeTarget("testLongLines");
     }

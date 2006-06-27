@@ -117,6 +117,15 @@
                  file2="expected/input.lf.utf16" />
   </target>
 
+  <target name="testOutputEncoding" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="input.crlf.utf16"
+             javafiles="false" eol="lf" encoding="UnicodeBig"
+             outputencoding="ascii" />
+    <assertequal file1="result/input.crlf.utf16"
+                 file2="expected/input.lf.ascii" />
+  </target>
+
   <target name="testLongLines" depends="init">
     <fixcrlf srcdir="input" destdir="result"
              includes="longlines.crlf"

@@ -122,6 +122,13 @@
     <td bgcolor="#CCCCCC">&nbsp;</td>
   </tr>
   <tr>
+    <td valign="top">outputencoding</td>
+    <td valign="top">The encoding to use when writing the files.
+                     <b>Since Ant 1.7</b></td>
+    <td align="center">No; defaults to the value of the encoding attribute.</td>
+    <td bgcolor="#CCCCCC">&nbsp;</td>
+  </tr>
+  <tr>
     <td valign="top">preservelastmodified</td>
     <td valign="top">Whether to preserve the last modified
                      date of source files. <b>Since Ant 1.6.3</b></td>
@@ -143,10 +150,11 @@
         <li>unix: convert all EOLs to a single LF</li>
         <li>dos: convert all EOLs to the pair CRLF</li>
       </ul>
-      Default is based on the platform on which you are running
-      this task.  For Unix platforms, the default is &quot;lf&quot;.
-      For DOS based systems (including Windows), the default is
-      &quot;crlf&quot;.  For Mac OS, the default is &quot;cr&quot;.
+      Default is based on the platform on which you are running this task.
+      For Unix platforms (including Mac OS X), the default is &quot;lf&quot;.
+      For DOS-based systems (including Windows), the default is
+      &quot;crlf&quot;.
+      For Mac environments other than OS X, the default is &quot;cr&quot;.
       <p>
         This is the preferred method for specifying EOL.  The
         &quot;<i><b>cr</b></i>&quot; attribute (see below) is
@@ -298,7 +306,7 @@
   DOS systems, and are removed if run on Unix systems.
   You never know what editor a user will use to browse READMEs.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

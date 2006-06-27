@@ -442,6 +442,8 @@ Other changes:
 * <scriptdef>-created scripts have support for nested text. All text
   passed to a scripted task can be accessed via self.text.
 
+* <fixcrlf> now supports an outputencoding attribute.  Bugzilla report 39697.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

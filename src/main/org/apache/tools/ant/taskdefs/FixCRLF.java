@@ -52,6 +52,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <li>tab
  * <li>eof
  * <li>encoding
+ * <li>targetencoding
  * </ul>
  * Of these arguments, only <b>sourcedir</b> is required.
  * <p>
@@ -97,6 +98,11 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * Encoding to assume for the files
      */
     private String encoding = null;
+
+    /**
+     * Encoding to use for output files
+     */
+    private String outputEncoding = null;
 
     /**
      * Chain this task as a reader.
@@ -238,6 +244,15 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     }
 
     /**
+     * Specifies the encoding that the files are
+     * to be written in--same as input encoding by default.
+     * @param outputEncoding String outputEncoding name.
+     */
+    public void setOutputEncoding(String outputEncoding) {
+        this.outputEncoding = outputEncoding;
+    }
+
+    /**
      * Specify whether a missing EOL will be added
      * to the final line of a file.
      * @param fixlast whether to fix the last line.
@@ -288,12 +303,15 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             }
         }
         // log options used
+        String enc = encoding == null ? "default" : encoding;
         log("options:"
             + " eol=" + filter.getEol().getValue()
             + " tab=" + filter.getTab().getValue()
             + " eof=" + filter.getEof().getValue()
             + " tablength=" + filter.getTablength()
-            + " encoding=" + (encoding == null ? "default" : encoding),
+            + " encoding=" + enc
+            + " outputencoding="
+            + (outputEncoding == null ? enc : outputEncoding),
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -318,8 +336,9 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         File tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null);
         tmpFile.deleteOnExit();
         try {
-            FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, false,
-                                false, encoding, getProject());
+            FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, false, false,
+                encoding, outputEncoding == null ? encoding : outputEncoding,
+                getProject());
 
             File destFile = new File(destD, file);
 
