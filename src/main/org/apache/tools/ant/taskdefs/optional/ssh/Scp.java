@@ -307,7 +307,7 @@ public class Scp extends SSHBase {
     }
 
     private String parseUri(String uri) {
-        int indexOfAt = uri.indexOf('@');
+        int indexOfAt = uri.lastIndexOf('@');
         int indexOfColon = uri.indexOf(':');
         if (indexOfColon > -1 && indexOfColon < indexOfAt) {
             // user:password@host:/path notation

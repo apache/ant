@@ -232,6 +232,9 @@ Fixed bugs:
   erroneously deleted the "destination" file before attempting to rename
   the source file.  Bugzilla 37701.
 
+* <scp> can now handle uris with @s other than the final one denoting the
+  domain.  Bugzilla 38082.
+
 Other changes:
 --------------
 * took in bugzilla report 39320.
