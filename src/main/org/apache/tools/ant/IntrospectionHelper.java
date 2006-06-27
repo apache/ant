@@ -47,6 +47,32 @@ public final class IntrospectionHelper implements BuildListener {
         = Collections.unmodifiableMap(new HashMap(0));
 
     /**
+     * Helper instances we've already created (Class to IntrospectionHelper).
+     */
+    private static final Hashtable HELPERS = new Hashtable();
+
+    /**
+     * Map from primitive types to wrapper classes for use in
+     * createAttributeSetter (Class to Class). Note that char
+     * and boolean are in here even though they get special treatment
+     * - this way we only need to test for the wrapper class.
+     */
+    private static final Map PRIMITIVE_TYPE_MAP = new HashMap(8);
+
+    // Set up PRIMITIVE_TYPE_MAP
+    static {
+        Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE,
+                              Short.TYPE, Integer.TYPE, Long.TYPE,
+                              Float.TYPE, Double.TYPE};
+        Class[] wrappers = {Boolean.class, Byte.class, Character.class,
+                            Short.class, Integer.class, Long.class,
+                            Float.class, Double.class};
+        for (int i = 0; i < primitives.length; i++) {
+            PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
+        }
+    }
+
+    /**
      * Map from attribute names to attribute types
      * (String to Class).
      */
@@ -84,32 +110,6 @@ public final class IntrospectionHelper implements BuildListener {
      * The class introspected by this instance.
      */
     private Class bean;
-
-    /**
-     * Helper instances we've already created (Class to IntrospectionHelper).
-     */
-    private static Hashtable helpers = new Hashtable();
-
-    /**
-     * Map from primitive types to wrapper classes for use in
-     * createAttributeSetter (Class to Class). Note that char
-     * and boolean are in here even though they get special treatment
-     * - this way we only need to test for the wrapper class.
-     */
-    private static final Map PRIMITIVE_TYPE_MAP = new HashMap(8);
-
-    // Set up PRIMITIVE_TYPE_MAP
-    static {
-        Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE,
-                              Short.TYPE, Integer.TYPE, Long.TYPE,
-                              Float.TYPE, Double.TYPE};
-        Class[] wrappers = {Boolean.class, Byte.class, Character.class,
-                            Short.class, Integer.class, Long.class,
-                            Float.class, Double.class};
-        for (int i = 0; i < primitives.length; i++) {
-            PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
-        }
-    }
 
     // XXX: (Jon Skeet) The documentation below doesn't draw a clear
     // distinction between addConfigured and add. It's obvious what the
@@ -327,13 +327,13 @@ public final class IntrospectionHelper implements BuildListener {
      * @return a helper for the specified class
      */
     public static IntrospectionHelper getHelper(Project p, Class c) {
-        IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
+        IntrospectionHelper ih = (IntrospectionHelper) HELPERS.get(c);
         if (ih == null) {
             ih = new IntrospectionHelper(c);
             if (p != null) {
                 // #30162: do *not* cache this if there is no project, as we
                 // cannot guarantee that the cache will be cleared.
-                helpers.put(c, ih);
+                HELPERS.put(c, ih);
             }
         }
         if (p != null) {
@@ -1328,7 +1328,7 @@ public final class IntrospectionHelper implements BuildListener {
         nestedTypes.clear();
         nestedCreators.clear();
         addText = null;
-        helpers.clear();
+        HELPERS.clear();
     }
 
     /**
