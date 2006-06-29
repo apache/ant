@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2006 The Apache Software Foundation
+ * Copyright 2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,17 +120,23 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 sysProperties.setSystem();
             }
             Class target = null;
-            if (classpath == null) {
-                target = Class.forName(classname);
-            } else {
-                loader = project.createClassLoader(classpath);
-                loader.setParent(project.getCoreLoader());
-                loader.setParentFirst(false);
-                loader.addJavaLibraries();
-                loader.setIsolated(true);
-                loader.setThreadContextLoader();
-                loader.forceLoadClass(classname);
-                target = Class.forName(classname, true, loader);
+            try {
+                if (classpath == null) {
+                    target = Class.forName(classname);
+                } else {
+                    loader = project.createClassLoader(classpath);
+                    loader.setParent(project.getCoreLoader());
+                    loader.setParentFirst(false);
+                    loader.addJavaLibraries();
+                    loader.setIsolated(true);
+                    loader.setThreadContextLoader();
+                    loader.forceLoadClass(classname);
+                    target = Class.forName(classname, true, loader);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new BuildException("Could not find " + classname + "."
+                                         + " Make sure you have it in your"
+                                         + " classpath");
             }
             main = target.getMethod("main", new Class[] {String[].class});
             if (main == null) {
@@ -176,10 +182,6 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (caught != null) {
                 throw caught;
             }
-        } catch (ClassNotFoundException e) {
-            throw new BuildException("Could not find " + classname + "."
-                                     + " Make sure you have it in your"
-                                     + " classpath");
         } catch (BuildException e) {
             throw e;
         } catch (SecurityException e) {

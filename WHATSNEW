@@ -235,6 +235,9 @@ Fixed bugs:
 * <scp> can now handle uris with @s other than the final one denoting the
   domain.  Bugzilla 38082.
 
+* If the class invoked by the <java> task threw a ClassNotFoundException,
+  this was misinterpreted as the specified class itself not being found.
+
 Other changes:
 --------------
 * took in bugzilla report 39320.
