@@ -95,6 +95,40 @@ element.</p>
     <td align="center" valign="top">No. Default to current directory</td>
   </tr>
 </table>
+<h3>Nested Element of the report tag</h3>
+<h4>param</h4>
+<em>Since Ant 1.7</em>the report tag supports nested param tags.
+These tags can pass XSL parameters to the stylesheet.
+<h3>Parameters</h3>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">Name of the XSL parameter</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">expression</td>
+    <td valign="top">Text value to be placed into the param.<br>
+    Was originally intended to be an XSL expression.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td>
+    <td valign="top">The param will only passed if this property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td>
+    <td valign="top">The param will only passed unless this property is set.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+
+</table>
 <h3>Example of report</h3>
 <blockquote>
   <pre>&lt;junitreport todir=&quot;./reports&quot;&gt;
@@ -107,9 +141,26 @@ element.</p>
 </blockquote>
 <p>would generate a <tt>TESTS-TestSuites.xml</tt> file in the directory <tt>reports</tt> and
 generate the default framed report in the directory <tt>report/html</tt>.</p>
-
+<h3>Example of report with xsl params</h3>
+<blockquote>
+  <pre>
+&lt;junitreport todir="${outputdir}"&gt;
+    &lt;fileset dir="${jrdir}"&gt;
+        &lt;include name="TEST-*.xml"/&gt;
+    &lt;/fileset&gt;
+    &lt;report todir="${outputdir}/html"
+        styledir="junitreport"
+        format="frames"&gt;
+        &lt;param name="key1" expression="value1"/&gt;
+        &lt;param name="key2" expression="value2"/&gt;
+    &lt;/report&gt;
+&lt;/junitreport&gt;
+  </pre>
+  </blockquote>
+<p>This example requires a file called <tt>junitreport/junit-frames.xsl</tt>.
+    The XSL parameters key1 and key2 will be passed to the XSL transformation.</p>
 <hr>
-<p align="center">Copyright &copy; 2001-2002,2004-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002,2004-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 

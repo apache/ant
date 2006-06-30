@@ -450,6 +450,8 @@ Other changes:
 
 * <fixcrlf> now supports an outputencoding attribute.  Bugzilla report 39697.
 
+* <junitreport> now supports nested XSL parameters. Bugzilla report 39708.
+
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
 

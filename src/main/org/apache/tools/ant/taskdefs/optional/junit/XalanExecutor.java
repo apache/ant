@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * Command class that encapsulate specific behavior for each
- * Xalan version. The right executor will be instantiated at
- * runtime via class lookup. For instance, it will check first
- * for Xalan2/XSLTC, then for Xalan1.
+ * This class is not used by the framework any more.
+ * We plan to remove it in Ant 1.8
+ * @deprecated since Ant 1.7
+ *
  */
 abstract class XalanExecutor {
     private static final String PACKAGE =

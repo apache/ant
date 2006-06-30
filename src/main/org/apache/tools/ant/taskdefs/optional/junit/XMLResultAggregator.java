@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2005 The Apache Software Foundation
+ * Copyright  2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * the <tt>todir</tt> and <tt>tofile</tt> attributes.
      * @return the destination file where should be written the result file.
      */
-    protected File getDestinationFile() {
+    public File getDestinationFile() {
         if (toFile == null) {
             toFile = DEFAULT_FILENAME;
         }

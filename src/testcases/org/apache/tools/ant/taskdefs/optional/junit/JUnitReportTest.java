@@ -122,9 +122,50 @@ public class JUnitReportTest extends BuildFileTest {
         InputStream reportStream = reportUrl.openStream();
         assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
     }
+
     public void testSpecialSignsInHtmlPath() throws Exception {
         executeTarget("testSpecialSignsInHtmlPath");
         File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html# $%\u00A7&-!report/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+    }
+
+    //Bugzilla Report 39708
+    public void testWithStyleFromDir() throws Exception {
+        executeTarget("testWithStyleFromDir");
+        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+    }
+
+    public void testWithStyleFromClasspath() throws Exception {
+        executeTarget("testWithStyleFromClasspath");
+        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+    }
+
+    public void testWithParams() throws Exception {
+        expectLogContaining("testWithParams", "key1=value1,key2=value2");
+        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );

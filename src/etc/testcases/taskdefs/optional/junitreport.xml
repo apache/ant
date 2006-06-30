@@ -105,4 +105,45 @@
         </junitreport>
     </target>
 
+    <target name="testWithStyleFromClasspath">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testWithStyleFromDir">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"
+                styledir="junitreport"
+                format="frames"/>
+        </junitreport>
+    </target>
+
+    <target name="testWithParams">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"
+                styledir="junitreport"
+                format="frames">
+                <param name="key1" expression="value1"/>
+                <param name="key2" expression="value2"/>
+            </report>
+        </junitreport>
+        <concat>
+            <fileset file="${outputdir}/html/index.html"/>
+        </concat>        
+    </target>
+
 </project>
+        
