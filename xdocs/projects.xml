@@ -528,6 +528,33 @@
         </table>
       </subsection>
 
+      <subsection name="WebTest">
+
+        <p>WebTest is a free open source tool for automated testing of web applications. 
+		It is a set of powerful Ant tasks allowing to call web pages, mimic user actions 
+               (clicking links, filling forms, ...) and verify the results. 
+		The generated reports give comprehensive information on success and failure of the test steps.</p> 
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://webtest.canoo.com/">http://webtest.canoo.com/</a></td> 
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://lists.canoo.com/mailman/listinfo/webtest/">project mailing list</a></td> 
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache like license</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XML Publication">
 
         <p>XML Publication is a set of tools to generate Web pages
