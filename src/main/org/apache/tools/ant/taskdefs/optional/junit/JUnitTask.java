@@ -57,7 +57,7 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 /**
  * Runs JUnit tests.
  *
- * <p> JUnit is a framework to create unit test. It has been initially
+ * <p> JUnit is a framework to create unit tests. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
  * href="http://www.junit.org">http://www.junit.org</a>.
  *
