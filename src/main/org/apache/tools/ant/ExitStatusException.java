@@ -46,6 +46,17 @@ public class ExitStatusException extends BuildException {
     }
 
     /**
+     * Construct an exit status exception with location information too
+     * @param message error message
+     * @param status exit status
+     * @param location exit location
+     */
+    public ExitStatusException(String message, int status, Location location) {
+        super(message, location);
+        this.status = status;
+    }
+
+    /**
      * Get the status code.
      * @return <code>int</code>
      */
