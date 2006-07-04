@@ -163,7 +163,7 @@ public class Get extends Task {
             if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_NOT_MODIFIED
                 || (lastModified != 0 && hasTimestamp
-                && timestamp > lastModified)) {
+                && timestamp >= lastModified)) {
                 //not modified so no file download. just return
                 //instead and trace out something so the user
                 //doesn't think that the download happened when it
