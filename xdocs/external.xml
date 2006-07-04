@@ -179,6 +179,41 @@
         </table>
       </subsection>
 
+      <subsection name="Antcount">
+        <p>Antcount is a set of filters that can be used to gather statistics
+           from files or resources. It is mainly used for log files analysis.
+           It allows to:<ul>
+             <li>count inputs (lines, strings)</li>
+             <li>count occurrences of each input</li>
+             <li>calculate average, max and min values of floats in input</li>
+           </ul>
+           Antcount also includes some useful filters to:<ul>
+             <li>stop filtering: read everything but write nothing</li>
+             <li>echo input to the console or to a file. This allows users to create
+                 several files at once</li>
+             <li>split the stream in two for parallel processing</li>
+           </ul>
+        </p>
+        <table class="externals">
+        <tr>
+          <th>Compatibility:</th> 
+          <td>Ant 1.6.2 and higher</td>
+        </tr>
+        <tr>
+          <th>URL:</th>
+          <td><a href="http://antcount.sourceforge.net/">http://antcount.sourceforge.net/</a></td>
+        </tr>
+        <tr>
+          <th>Contact:</th>
+          <td><a href="http://antcount.sourceforge.net/contacts.html">Patrick Martin</a></td>
+        </tr>
+        <tr>
+          <th>License:</th>
+          <td>LGPL</td>
+        </tr>
+      </table>
+    </subsection>
+
       <subsection name="AntDoc">
 
         <p>AntDoc is a tool that generates HTML documentation from Ant
@@ -322,11 +357,11 @@
       <subsection name="AntPrettyBuild">
  		<p>
   		Ant Pretty Build is a tool to easily show and run Ant buildfiles directly from
-		within a browser window. It consists of a single XSL file that will generate, 
-		on the fly, in the browser, from the .xml buildfile, a pretty interface showing 
+		within a browser window. It consists of a single XSL file that will generate,
+		on the fly, in the browser, from the .xml buildfile, a pretty interface showing
 		project name, description, properties and targets, etc. sorted or unsorted,
   		allowing to load/modify/add properties, run the whole project, or run selected
-		set of targets in a specific order, with the ability to modify logger/logfile, 
+		set of targets in a specific order, with the ability to modify logger/logfile,
 		mode and add more libs or command line arguments.
 		</p>
  		<table class="externals">
