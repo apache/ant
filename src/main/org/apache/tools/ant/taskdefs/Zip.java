@@ -263,12 +263,11 @@ public class Zip extends MatchingTask {
 
     /**
      * Sets behavior for when a duplicate file is about to be added -
-     * one of <code>keep</code>, <code>skip</code> or <code>overwrite</code>.
-     * Possible values are: <code>keep</code> (keep both
-     * of the files); <code>skip</code> (keep the first version
-     * of the file found); <code>overwrite</code> overwrite the file
-     * with the new file
-     * Default for zip tasks is <code>keep</code>
+     * one of <code>add</code>, <code>preserve</code> or <code>fail</code>.
+     * Possible values are: <code>add</code> (keep both
+     * of the files); <code>preserve</code> (keep the first version
+     * of the file found); <code>fail</code> halt a problem
+     * Default for zip tasks is <code>add</code>
      * @param df a <code>Duplicate</code> enumerated value
      */
     public void setDuplicate(Duplicate df) {
