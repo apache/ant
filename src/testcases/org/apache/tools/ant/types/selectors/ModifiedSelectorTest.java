@@ -921,10 +921,10 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             executeTarget(target);
         }
         
-        protected void assertLogContaining(String substring) {
+        public void assertLogContaining(String substring) {
             super.assertLogContaining(substring);
         }
-        protected void assertOutputContaining(String substring) {
+        public void assertOutputContaining(String substring) {
             super.assertOutputContaining(substring);
         }
 
