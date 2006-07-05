@@ -238,9 +238,12 @@ Fixed bugs:
 * If the class invoked by the <java> task threw a ClassNotFoundException,
   this was misinterpreted as the specified class itself not being found.
 
+* <echoproperties> setPrefix javadoc claimed null or empty prefix would be
+  ignored; instead an error was thrown.  Bugzilla report 39954.
+
 Other changes:
 --------------
-* took in bugzilla report 39320.
+* Took in bugzilla report 39320.
 
 * Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
 

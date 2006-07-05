@@ -12,6 +12,10 @@
     <echoproperties />
   </target>
 
+  <target name="testEchoWithEmptyPrefixToLog" depends="setup">
+    <echoproperties prefix=""/>
+  </target>
+
   <target name="testEchoToLogXml" depends="setup">
     <echoproperties format="xml" />
   </target>
