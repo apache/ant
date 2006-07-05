@@ -275,7 +275,29 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
+        validate();
+        
+        // log options used
+        String enc = encoding == null ? "default" : encoding;
+        log("options:"
+            + " eol=" + filter.getEol().getValue()
+            + " tab=" + filter.getTab().getValue()
+            + " eof=" + filter.getEof().getValue()
+            + " tablength=" + filter.getTablength()
+            + " encoding=" + enc
+            + " outputencoding="
+            + (outputEncoding == null ? enc : outputEncoding),
+            Project.MSG_VERBOSE);
 
+        DirectoryScanner ds = super.getDirectoryScanner(srcDir);
+        String[] files = ds.getIncludedFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            processFile(files[i]);
+        }
+    }
+
+    private void validate() throws BuildException {
         if (file != null) {
             if (srcDir != null) {
                 throw new BuildException(ERROR_FILE_AND_SRCDIR);
@@ -302,26 +324,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                 throw new BuildException("destdir is not a directory!");
             }
         }
-        // log options used
-        String enc = encoding == null ? "default" : encoding;
-        log("options:"
-            + " eol=" + filter.getEol().getValue()
-            + " tab=" + filter.getTab().getValue()
-            + " eof=" + filter.getEof().getValue()
-            + " tablength=" + filter.getTablength()
-            + " encoding=" + enc
-            + " outputencoding="
-            + (outputEncoding == null ? enc : outputEncoding),
-            Project.MSG_VERBOSE);
-
-        DirectoryScanner ds = super.getDirectoryScanner(srcDir);
-        String[] files = ds.getIncludedFiles();
-
-        for (int i = 0; i < files.length; i++) {
-            processFile(files[i]);
-        }
     }
-
+    
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
         long lastModified = srcFile.lastModified();
