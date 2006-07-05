@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright  2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ public class JavaCC extends Task {
     private static final String FORCE_LA_CHECK         = "FORCE_LA_CHECK";
     private static final String CACHE_TOKENS           = "CACHE_TOKENS";
     private static final String KEEP_LINE_COLUMN       = "KEEP_LINE_COLUMN";
+    private static final String JDK_VERSION            = "JDK_VERSION";
 
     private final Hashtable optionalAttrs = new Hashtable();
 
@@ -247,6 +248,14 @@ public class JavaCC extends Task {
      */
     public void setKeeplinecolumn(boolean keepLineColumn) {
         optionalAttrs.put(KEEP_LINE_COLUMN, new Boolean(keepLineColumn));
+    }
+
+    /**
+     * Sets the JDK_VERSION option.
+     * @since Ant1.7
+     */
+    public void setJDKversion(String jdkVersion) {
+        optionalAttrs.put(JDK_VERSION, jdkVersion);
     }
 
     /**

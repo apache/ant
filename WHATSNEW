@@ -444,6 +444,8 @@ Other changes:
 * Minor performance updates. Bugzilla report 39565.
 
 * New deleteonexit attribute for the <tempfile> task. Bugzilla report 39842.
+  Remember that the exit of the JVM can be a long time coming, especially under an
+  IDE. Don't rely on this being called.
 
 * <scriptdef>-created scripts have support for nested text. All text
   passed to a scripted task can be accessed via self.text.
@@ -451,6 +453,9 @@ Other changes:
 * <fixcrlf> now supports an outputencoding attribute.  Bugzilla report 39697.
 
 * <junitreport> now supports nested XSL parameters. Bugzilla report 39708.
+
+* <javacc> has a jdkversion attribute to pass the desired JDK version down to javacc.
+  Bugzilla report 38715.
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
