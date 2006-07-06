@@ -241,9 +241,9 @@ been revoked) the System.exit() call will be intercepted
 and treated like indicated in <i>failonerror</i>.</p>
 <p>Note:<br>
 If you do not specify permissions,
-a set of default permissions will be added to your Java invocation to make 
+a set of default permissions will be added to your Java invocation to make
 sure that the ant run will continue or terminated as indicated by
-<i>failonerror</i>. All permissions not granted per default will be 
+<i>failonerror</i>. All permissions not granted per default will be
 checked by whatever security manager was already in place. exitVM will be
 disallowed.
 </p>
@@ -256,7 +256,7 @@ disallowed.
 <p>You can control enablement of Java 1.4 assertions with an
 <a href="../CoreTypes/assertions.html"><tt>&lt;assertions&gt;</tt></a>
 subelement.</p>
- 
+
 <p>Assertion statements are currently ignored in non-forked mode.</p>
 
 <p><em>since Ant 1.6.</em></p>
@@ -340,13 +340,13 @@ and with a maximum memory of 128MB. Any non zero return code breaks the build.
          &lt;/classpath&gt;
        &lt;/java&gt;
 </pre>
-
 Run the JAR dist/test.jar relative to the directory
 <tt>${exec.dir}</tt>, this being the same directory into which the JVM
-is to start up. 
-
+is to start up.
 
 <pre>  &lt;java classname=&quot;test.Main&quot;/&gt;</pre>
+Runs a given class with the current classpath.
+
 <pre>
   &lt;java classname=&quot;test.Main&quot;
         fork=&quot;yes&quot; &gt;
@@ -355,11 +355,23 @@ is to start up.
     &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;/&gt;
   &lt;/java&gt;
 </pre>
-<strong>Note</strong>: you can not specify the (highly deprecated) MSJVM, "jview.exe" as the
+Add system properties and JVM-properties to the JVM as in 
+<code>java ="-Xrunhprof:cpu=samples,file=log.txt,depth=3 -DDEBUG=true test.Main</code>
+
+<pre>  &lt;java classname=&quot;ShowJavaVersion&quot; classpath=&quot;.&quot;
+        jvm=&quot;path-to-java14-home/bin/java&quot; fork=&quot;true&quot;
+        taskname=&quot;java1.4&quot; &gt;
+</pre>
+Use a given Java implementation (another the one Ant is currently using) to run the class. 
+For documentation in the log <code>taskname</code> is used to change the <code>[java]</code>
+log-prefix to <code>[java1.4]</code>.
+
+
+<p><strong>Note</strong>: you can not specify the (highly deprecated) MSJVM, "jview.exe" as the
 JVM, as it takes different parameters for other JVMs,
-That JVM can be started from <code>&lt;exec&gt;</code> if required.
+That JVM can be started from <code>&lt;exec&gt;</code> if required.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

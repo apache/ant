@@ -34,7 +34,7 @@ attributes. With the <code>includes</code> or
 have included.
 The <code>exclude</code> or <code>excludesfile</code> attribute is used
 to specify
-the files you want to have excluded. In both cases, the list of files 
+the files you want to have excluded. In both cases, the list of files
 can be specified by either the filename, relative to the directory(s) specified
 in the <code>srcdir</code> attribute or nested <code>&lt;src&gt;</code>
 element(s), or by using wildcard patterns. See the section on
@@ -369,7 +369,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcdir</code>) as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
-<h4><code>src</code>, <code>classpath</code>, <code>sourcepath</code>, 
+<h4><code>src</code>, <code>classpath</code>, <code>sourcepath</code>,
 <code>bootclasspath</code> and <code>extdirs</code></h4>
 <p><code>&lt;javac&gt;</code>'s <code>srcdir</code>, <code>classpath</code>,
 <code>sourcepath</code>, <code>bootclasspath</code>, and
@@ -540,6 +540,18 @@ directory but skip the examples. The compiler will even produce errors if some o
 the non-example files refers to them.
 </p>
 
+<p>
+If you wish to compile with a special JDK (another than the one Ant is currently using),
+set the <code>executable</code> and <code>fork</code> attribute. Using <code>taskname</code>
+could show in the log, that these settings are fix.
+<pre>  &lt;javac srcdir=&quot.&quot 
+         destdir=&quot.&quot 
+         executable=&quotpath-to-java14-home/bin/javac&quot 
+         fork=&quottrue&quot
+         taskname=&quotjavac1.4&quot /&gt;</pre>
+</p>
+
+
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are
 using.  This problem may occur with all JDKs &lt; 1.2.</p>
@@ -628,4 +640,3 @@ All rights Reserved.</p>
 
 </body>
 </html>
-
