@@ -590,12 +590,12 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         }
     }
 
-    
+
     public void _testCustomComparator() {
         // same logic as on algorithm, no testcases created
     }
 
-    
+
     public void testResourceSelectorSimple() {
         BFT bft = new BFT("modifiedselector");
         bft.doTarget("modifiedselectortest-ResourceSimple");
@@ -611,13 +611,13 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     public void testResourceSelectorSelresFalse() {
         BFT bft = new BFT("modifiedselector");
         bft.doTarget("modifiedselectortest-ResourceSelresFalse");
-        bft.deleteCachefile();  
+        bft.deleteCachefile();
     }
     public void testResourceSelectorScenarioSimple() {
         BFT bft = new BFT("modifiedselector");
         bft.doTarget("modifiedselectortest-scenario-resourceSimple");
         bft.doTarget("modifiedselectortest-scenario-clean");
-        bft.deleteCachefile();  
+        bft.deleteCachefile();
     }
     /**
      * Test the interface semantic of Comparators.
@@ -904,7 +904,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         BFT(String name) {
             super(name);
         }
-        
+
         String propfile = "ModifiedSelectorTest.properties";
 
         boolean isConfigured = false;
@@ -919,13 +919,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         public void doTarget(String target) {
             if (!isConfigured) setUp();
             executeTarget(target);
-        }
-        
-        public void assertLogContaining(String substring) {
-            super.assertLogContaining(substring);
-        }
-        public void assertOutputContaining(String substring) {
-            super.assertOutputContaining(substring);
         }
 
         public String getProperty(String property) {
@@ -958,10 +951,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             File cacheFile = new File(basedir, "cache.properties");
             cacheFile.delete();
         }
-
-        public org.apache.tools.ant.Project getProject() {
-            return super.getProject();
-        }
+      
         public String getBuildfile() {
             return buildfile;
         }
@@ -991,15 +981,9 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             target.addTask(task);
             task.setOwningTarget(target);
         }
-
-        public void fireBuildStarted() {
-            super.fireBuildStarted();
-        }
+     
         public void fireBuildFinished() {
             super.fireBuildFinished(null);
-        }
-        public void fireSubBuildStarted() {
-            super.fireSubBuildStarted();
         }
         public void fireSubBuildFinished() {
             super.fireSubBuildFinished(null);
