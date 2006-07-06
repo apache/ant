@@ -86,17 +86,6 @@ public class JDependTest extends BuildFileTest {
     }
 
     /**
-     * Assert that the given substring is in the output messages
-     */
-
-    protected void assertOutputContaining(String substring) {
-        String realOutput = getOutput();
-        assertTrue("expecting output to contain \"" + substring + "\" output was \""
-                   + realOutput + "\"",
-                   realOutput.indexOf(substring) >= 0);
-    }
-
-    /**
      * Assert that the given message has been outputted
      */
     protected void expectOutputContaining(String target, String substring) {

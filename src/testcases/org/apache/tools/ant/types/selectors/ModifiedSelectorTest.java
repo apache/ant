@@ -914,8 +914,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             isConfigured = true;
         }
 
-        public void tearDown() { }
-
         public void doTarget(String target) {
             if (!isConfigured) setUp();
             executeTarget(target);
