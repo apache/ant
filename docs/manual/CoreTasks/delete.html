@@ -22,11 +22,11 @@ collection types that <i>do</i> include directories, but that no attempt
 will be made to delete non-empty directories in any case.</p>
 <p>
 If you use this task to delete temporary files created by editors
-and it doesn't seem to work, read up on the 
+and it doesn't seem to work, read up on the
 <a href="../dirtasks.html#defaultexcludes">default exclusion set</a>
 in <strong>Directory-based Tasks</strong>, and see the
 <code>defaultexcludes</code> attribute below.
- 
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -69,7 +69,7 @@ in <strong>Directory-based Tasks</strong>, and see the
      <code>-debug</code> switches) or modify the exit status to
      reflect an error.
      When set to &quot;true&quot;, if a file or directory cannot be deleted,
-     no error is reported. This setting emulates the 
+     no error is reported. This setting emulates the
      <code>-f</code> option to the Unix <em>rm</em> command.
      Setting this to &quot;true&quot; implies setting
      <code>failonerror</code> to &quot;false&quot;.
@@ -137,33 +137,45 @@ in <strong>Directory-based Tasks</strong>, and see the
     <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
 </table>
+
 <h3>Examples</h3>
 <pre>  &lt;delete file=&quot;/lib/ant.jar&quot;/&gt;</pre>
 <p>deletes the file <code>/lib/ant.jar</code>.</p>
 <pre>  &lt;delete dir=&quot;lib&quot;/&gt;</pre>
-<p>deletes the <code>lib</code> directory, including all files 
+<p>deletes the <code>lib</code> directory, including all files
 and subdirectories of <code>lib</code>.</p>
+
 <pre>  &lt;delete&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;**/*.bak&quot;/&gt;
   &lt;/delete&gt;
 </pre>
-<p>deletes all files with the extension <code>.bak</code> from the current directory 
+<p>deletes all files with the extension <code>.bak</code> from the current directory
 and any subdirectories.</p>
+
 <pre>  &lt;delete includeEmptyDirs=&quot;true&quot;&gt;
     &lt;fileset dir=&quot;build&quot;/&gt;
   &lt;/delete&gt;
 </pre>
 <p>deletes all files and subdirectories of <code>build</code>, including
 <code>build</code> itself.</p>
+
 <pre>  &lt;delete includeemptydirs=&quot;true&quot;&gt;
     &lt;fileset dir=&quot;build&quot; includes=&quot;**/*&quot;/&gt;
   &lt;/delete&gt;
 </pre>
 <p>deletes all files and subdirectories of <code>build</code>, without
 <code>build</code> itself.</p>
-<hr><p align="center">Copyright &copy; 2000-2002, 2004-2005 The Apache Software Foundation.
+
+<pre>  &lt;delete defaultexcludes=&quot;false&quot;&gt;
+    &lt;fileset dir=&quot;src&quot; includes=&quot;**/.svn&quot;/&gt;
+  &lt;/delete&gt;
+</pre>
+<p>deletes the subversion metadata directories under <code>src</code>. Because <code>.svn</code>
+is on of the <a href="../dirtasks.html#defaultexcludes">default excludes</a> you have to use the 
+<code>defaultexcludes</code> flag, otherwise Ant wont delete these directories and the files in it.</p>
+
+<hr><p align="center">Copyright &copy; 2000-2002, 2004-2006 The Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>
 </html>
-
