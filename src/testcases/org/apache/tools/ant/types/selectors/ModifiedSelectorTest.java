@@ -44,7 +44,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Unit tests for ModifiedSelector.
  *
- * @version 2005-07-19
  * @since  Ant 1.6
  */
 public class ModifiedSelectorTest extends BaseSelectorTest {
@@ -920,6 +919,11 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
          * tearDown method, and in the superclass it is protected.
          */
         public void tearDown() {
+            try {
+                super.tearDown();
+            } catch (Exception e) {
+                // ignore
+            }
         }
 
         public void doTarget(String target) {
