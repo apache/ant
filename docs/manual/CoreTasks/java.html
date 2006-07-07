@@ -288,12 +288,15 @@ exit, as the class was run by the build JVM.</p>
 
 <h3>JAR file execution</h3>
 
-The parameter of the <tt>jar</tt> attribute is of type <tt>File</tt>;
+<p>The parameter of the <tt>jar</tt> attribute is of type <tt>File</tt>;
 that is, the parameter is resolved to an absolute file relative to the
 base directory of the project, <i>not</i> the directory in which the Java
 task is run. If you need to locate a JAR file relative to the directory
 the task will be run in, you need to explicitly create the full path
-to the JAR file.
+to the JAR file.</p>
+<p>When using the <tt>jar</tt> attribute, all classpath settings are 
+ignored according to <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/java.html#-jar">Sun's
+specification</a>. 
 
 
 <h3>Examples</h3>
@@ -355,14 +358,14 @@ Runs a given class with the current classpath.
     &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;/&gt;
   &lt;/java&gt;
 </pre>
-Add system properties and JVM-properties to the JVM as in 
+Add system properties and JVM-properties to the JVM as in
 <code>java ="-Xrunhprof:cpu=samples,file=log.txt,depth=3 -DDEBUG=true test.Main</code>
 
 <pre>  &lt;java classname=&quot;ShowJavaVersion&quot; classpath=&quot;.&quot;
         jvm=&quot;path-to-java14-home/bin/java&quot; fork=&quot;true&quot;
         taskname=&quot;java1.4&quot; &gt;
 </pre>
-Use a given Java implementation (another the one Ant is currently using) to run the class. 
+Use a given Java implementation (another the one Ant is currently using) to run the class.
 For documentation in the log <code>taskname</code> is used to change the <code>[java]</code>
 log-prefix to <code>[java1.4]</code>.
 

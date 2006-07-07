@@ -116,7 +116,7 @@ public class Java extends Task {
      * Do the execution and return a return code.
      *
      * @return the return code from the execute java class if it was
-     * executed in a separate VM (fork = "yes") or a security manager was 
+     * executed in a separate VM (fork = "yes") or a security manager was
      * installed that prohibits ExitVM (default).
      *
      * @throws BuildException if required parameters are missing.
@@ -133,6 +133,10 @@ public class Java extends Task {
         if (spawn && !fork) {
             throw new BuildException("Cannot spawn a java process in non-forked mode."
                                      + " Please set fork='true'. ");
+        }
+        if (cmdl.getClasspath()!=null && cmdl.getJar()!=null) {
+            log("When using 'jar' attribute classpath-settings are ignored. "
+                + "See the manual for more information.", Project.MSG_VERBOSE);
         }
         if (spawn && incompatibleWithSpawn) {
             getProject().log("spawn does not allow attributes related to input, "
