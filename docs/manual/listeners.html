@@ -302,6 +302,38 @@ corresponding Log4j level.</p>
 
 </blockquote>
 
+<p>To use Log4j you will need the Log4j jar file and a 'log4j.properties'
+configuration file.  Both should be placed somewhere in your Ant
+classpath. If the log4j.properties is in your project root folder you can
+add this with <i>-lib</i> option:</p>
+
+<blockquote>
+<pre><code>ant -listener org.apache.tools.ant.listener.Log4jListener -lib .</code></pre>
+</blockquote>
+
+<p>If, for example, you wanted to capture the same information output to the
+console by the DefaultLogger and send it to a file named 'build.log', you
+could use the following configuration:</p>
+
+<blockquote>
+
+<pre><code>log4j.rootLogger=ERROR, LogFile
+log4j.logger.org.apache.tools.ant.Project=INFO
+log4j.logger.org.apache.tools.ant.Target=INFO
+log4j.logger.org.apache.tools.ant.taskdefs=INFO
+log4j.logger.org.apache.tools.ant.taskdefs.Echo=WARN
+
+log4j.appender.LogFile=org.apache.log4j.FileAppender
+log4j.appender.LogFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.LogFile.layout.ConversionPattern=[%6r] %8c{1} : %m%n
+log4j.appender.LogFile.file=build.log
+</code></pre>
+
+</blockquote>
+
+<p>For more information about configuring Log4J see <a href="http://logging.apache.org/log4j/docs/documentation.html">its
+documentation page</a>.</p>
+
 <h3><a name="XmlLogger">XmlLogger</a></h3>
 
 <p>Writes all build information out to an XML file named log.xml, or the value

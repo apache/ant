@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE contributors 
+<!DOCTYPE contributors
 [
 <!ELEMENT name (first?, middle?, last)>
 <!ELEMENT contributors (introduction, name+)>
@@ -266,6 +266,10 @@
   <name>
     <first>Emmanuel</first>
     <last>Bourg</last>
+  </name>
+  <name>
+    <first>Eric</first>
+    <last>Olsen</last>
   </name>
   <name>
     <first>Eric</first>
