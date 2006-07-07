@@ -914,6 +914,14 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             isConfigured = true;
         }
 
+
+        /**
+         * This stub teardown is here because the outer class needs to call the
+         * tearDown method, and in the superclass it is protected.
+         */
+        public void tearDown() {
+        }
+
         public void doTarget(String target) {
             if (!isConfigured) setUp();
             executeTarget(target);
@@ -949,7 +957,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             File cacheFile = new File(basedir, "cache.properties");
             cacheFile.delete();
         }
-      
+
         public String getBuildfile() {
             return buildfile;
         }
@@ -979,7 +987,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             target.addTask(task);
             task.setOwningTarget(target);
         }
-     
+
         public void fireBuildFinished() {
             super.fireBuildFinished(null);
         }
