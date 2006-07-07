@@ -706,8 +706,66 @@ must match. <b>Since Ant 1.7</b>
   </tr>
 </table>
 
+<h4>hasmethod</h4>
+
+<p> Tests for a class having a method or field. If the class is not found 
+    or fails to load, the build fails. 
+    
+    <b>Since Ant 1.7</b>
+</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+        <td width="12%" valign="top"><b>Attribute</b></td>
+        <td width="78%" valign="top"><b>Description</b></td>
+        <td width="10%" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">classname</td>
+        <td valign="top">name of the class to load</td>
+        <td align="center">yes</td>
+    </tr>
+    <tr>
+        <td valign="top">field</td>
+        <td valign="top">name of a field to look for</td>
+        <td align="center">one of field or method</td>
+    </tr>
+    <tr>
+        <td valign="top">method</td>
+        <td valign="top">name of a method to look for</td>
+        <td align="center">one of field or method</td>
+    </tr>
+    
+    <tr>
+        <td valign="top">ignoreSystemClasses</td>
+        <td valign="top">should system classes be ignored?</td>
+        <td align="center">No -default is false</td>
+    </tr>
+    <tr>
+        <td valign="top">classpath</td>
+        <td valign="top">a class path</td>
+        <td align="center">No</td>
+    </tr>
+    <tr>
+        <td valign="top">classpathref</td>
+        <td valign="top">reference to a class path</td>
+        <td align="center">No</td>
+    </tr>
+</table>
+
+<p>
+    There is also a nested &lt;classpath&gt; element, which can be used to specify 
+    a classpath.
+</p>
+<pre>
+    &lt;hasmethod classname="java.util.ArrayList" method="trimToSize"  /&gt;
+</pre>
+
+<p>Looks for the method trimToSize in the ArrayList class.</p>
+
+
 <hr>
-<p align="center">Copyright &copy; 2001-2005 Apache Software
+<p align="center">Copyright &copy; 2001-2006 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>
