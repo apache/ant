@@ -39,14 +39,14 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
     }
 
     public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror aFormatter,
-            OutputStream out, final String message) {
+            OutputStream out, String message, String testCase) {
         JUnitResultFormatter formatter = (JUnitResultFormatter) aFormatter;
         formatter.setOutput(out);
         formatter.startTestSuite(test);
         //the trick to integrating test output to the formatter, is to
         //create a special test class that asserts an error
         //and tell the formatter that it raised.
-        TestCase t = new VmExitErrorTest(message, test);
+        TestCase t = new VmExitErrorTest(message, test, testCase);
         formatter.startTest(t);
         formatter.addError(t, new AssertionFailedError(message));
         formatter.endTestSuite(test);
@@ -67,10 +67,12 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
 
         private String message;
         private JUnitTest test;
+        private String testCase;
 
-        VmExitErrorTest(String aMessage, JUnitTest anOriginalTest) {
+        VmExitErrorTest(String aMessage, JUnitTest anOriginalTest, String aTestCase) {
             message = aMessage;
             test = anOriginalTest;
+            testCase = aTestCase;
         }
 
         public int countTestCases() {
@@ -81,12 +83,16 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
             throw new AssertionFailedError(message);
         }
 
+        public String getName() {
+            return testCase;
+        }
+
         String getClassName() {
             return test.getName();
         }
 
         public String toString() {
-            return test.getName();
+            return test.getName()+":"+testCase;
         }
     }
 }

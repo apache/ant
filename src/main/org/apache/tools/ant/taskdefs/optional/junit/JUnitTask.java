@@ -17,9 +17,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -42,6 +45,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -52,7 +56,6 @@ import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
-import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 
 /**
  * Runs JUnit tests.
@@ -938,7 +941,7 @@ public class JUnitTask extends Task {
         }
 
         File vmWatcher = createTempPropertiesFile("junitvmwatcher");
-        formatterArg.append("nocrashfile=");
+        formatterArg.append("crashfile=");
         formatterArg.append(vmWatcher);
         cmd.createArgument().setValue(formatterArg.toString());
 
@@ -988,12 +991,20 @@ public class JUnitTask extends Task {
         } catch (IOException e) {
             throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
+            String vmCrashString = "unknown";
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(vmWatcher));
+                vmCrashString = br.readLine();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // ignored.
+            }
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
-                logTimeout(feArray, test);
-            } else if (vmWatcher.length() == 0) {
+                logTimeout(feArray, test, vmCrashString);
+            } else if (!"terminated successfully".equals(vmCrashString)) {
                 result.crashed = true;
-                logVmCrash(feArray, test);
+                logVmCrash(feArray, test, vmCrashString);
             }
             vmWatcher.delete();
 
@@ -1335,8 +1346,8 @@ public class JUnitTask extends Task {
      * @since Ant 1.5.2
      */
 
-    private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "Timeout occurred. Please note the time in the report does not reflect the time until the timeout.");
+    private void logTimeout(FormatterElement[] feArray, JUnitTest test, String testCase) {
+        logVmExit(feArray, test, "Timeout occurred. Please note the time in the report does not reflect the time until the timeout.", testCase);
     }
 
     /**
@@ -1346,8 +1357,8 @@ public class JUnitTask extends Task {
      *
      * @since Ant 1.7
      */
-    private void logVmCrash(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit.");
+    private void logVmCrash(FormatterElement[] feArray, JUnitTest test, String testCase) {
+        logVmExit(feArray, test, "Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit.", testCase);
     }
 
     /**
@@ -1357,7 +1368,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.7
      */
     private void logVmExit(FormatterElement[] feArray, JUnitTest test,
-                           String message) {
+                           String message, String testCase) {
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
@@ -1380,7 +1391,7 @@ public class JUnitTask extends Task {
                 if (outFile != null && formatter != null) {
                     try {
                         OutputStream out = new FileOutputStream(outFile);
-                        delegate.addVmExit(test, formatter, out, message);
+                        delegate.addVmExit(test, formatter, out, message, testCase);
                     } catch (IOException e) {
                         // ignore
                     }
@@ -1390,7 +1401,7 @@ public class JUnitTask extends Task {
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
                 f.setWithOutAndErr("withoutanderr".equalsIgnoreCase(summaryValue));
-                delegate.addVmExit(test, f, getDefaultOutput(), message);
+                delegate.addVmExit(test, f, getDefaultOutput(), message, testCase);
             }
         } finally {
             if (classLoader != null) {

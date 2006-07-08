@@ -22,7 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -151,6 +153,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /** Turned on if we are using JUnit 4 for this test suite. see #38811 */
     private boolean junit4;
 
+    /**
+     * The file used to indicate that the build crashed.
+     * File will be empty in case the build did not crash.
+     */
+    private static String crashFile = null;
+    
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
@@ -574,7 +582,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         Properties props = new Properties();
         boolean showOut = false;
         boolean logTestListenerEvents = false;
-        String noCrashFile = null;
+
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -593,8 +601,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 haltFail = Project.toBoolean(args[i].substring(14));
             } else if (args[i].startsWith("filtertrace=")) {
                 stackfilter = Project.toBoolean(args[i].substring(12));
-            } else if (args[i].startsWith("nocrashfile=")) {
-                noCrashFile = args[i].substring(12);
+            } else if (args[i].startsWith("crashfile=")) {
+                crashFile = args[i].substring(12);
+                registerTestCase("BeforeFirstTest");
             } else if (args[i].startsWith("formatter=")) {
                 try {
                     createAndStoreFormatter(args[i].substring(10));
@@ -644,7 +653,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     if (errorOccurred || failureOccurred) {
                         if ((errorOccurred && haltError)
                             || (failureOccurred && haltFail)) {
-                            registerNonCrash(noCrashFile);
+                            registerNonCrash();
                             System.exit(code);
                         } else {
                             if (code > returnCode) {
@@ -664,7 +673,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                 logTestListenerEvents, props);
         }
 
-        registerNonCrash(noCrashFile);
+        registerNonCrash();
         System.exit(returnCode);
     }
 
@@ -672,6 +681,37 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     private static void transferFormatters(JUnitTestRunner runner,
                                            JUnitTest test) {
+        runner.addFormatter(new JUnitResultFormatter() {
+
+            public void startTestSuite(JUnitTest suite) throws BuildException {
+            }
+
+            public void endTestSuite(JUnitTest suite) throws BuildException {
+            }
+
+            public void setOutput(OutputStream out) {
+            }
+
+            public void setSystemOutput(String out) {
+            }
+
+            public void setSystemError(String err) {
+            }
+
+            public void addError(Test arg0, Throwable arg1) {
+            }
+
+            public void addFailure(Test arg0, AssertionFailedError arg1) {
+            }
+
+            public void endTest(Test arg0) {
+            }
+
+            public void startTest(Test arg0) {
+                System.out.println(this.getClass().getName() + ":" + arg0);
+                registerTestCase(JUnitVersionHelper.getTestCaseName(arg0));
+            }
+        });
         for (int i = 0; i < fromCmdLine.size(); i++) {
             FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
             if (multipleTests && fe.getUseFile()) {
@@ -775,23 +815,45 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * @since Ant 1.7
      */
-    private static void registerNonCrash(String noCrashFile)
-        throws IOException {
-        if (noCrashFile != null) {
-            FileOutputStream out = null;
+    private static void registerNonCrash()
+            throws IOException {
+        if (crashFile != null) {
+            FileWriter out = null;
             try {
-                out = new FileOutputStream(noCrashFile);
-                out.write(0);
+                out = new FileWriter(crashFile);
+                out.write("terminated successfully\n");
                 out.flush();
             } finally {
-                out.close();
+                if (out != null) {
+                    out.close();
+                }
+            }
+        }
+    }
+
+    private static void registerTestCase(String testCase) {
+        if (crashFile != null) {
+            try {
+                FileWriter out = null;
+                try {
+                    out = new FileWriter(crashFile);
+                    out.write(testCase + "\n");
+                    out.flush();
+                } finally {
+                    if (out != null) {
+                        out.close();
+                    }
+                }
+            } catch (IOException e) {
+                // ignored.
             }
         }
     }
 
     /**
-     * Modifies a TestListener when running JUnit 4:
-     * treats AssertionFailedError as a failure not an error.
+     * Modifies a TestListener when running JUnit 4: treats AssertionFailedError
+     * as a failure not an error.
+     * 
      * @since Ant 1.7
      */
     private TestListener wrapListener(final TestListener testListener) {
