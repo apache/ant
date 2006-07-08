@@ -1336,7 +1336,7 @@ public class JUnitTask extends Task {
      */
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "Timeout occurred");
+        logVmExit(feArray, test, "Timeout occurred.");
     }
 
     /**
@@ -1347,7 +1347,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.7
      */
     private void logVmCrash(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "forked Java VM exited abnormally");
+        logVmExit(feArray, test, "Forked Java VM exited abnormally.");
     }
 
     /**
