@@ -1336,7 +1336,7 @@ public class JUnitTask extends Task {
      */
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "Timeout occurred.");
+        logVmExit(feArray, test, "Timeout occurred. Please note the time in the report does not reflect the time until the timeout.");
     }
 
     /**
@@ -1347,7 +1347,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.7
      */
     private void logVmCrash(FormatterElement[] feArray, JUnitTest test) {
-        logVmExit(feArray, test, "Forked Java VM exited abnormally.");
+        logVmExit(feArray, test, "Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit.");
     }
 
     /**
@@ -1375,38 +1375,28 @@ public class JUnitTask extends Task {
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
                 File outFile = getOutput(fe, test);
-                JUnitTaskMirror.JUnitResultFormatterMirror formatter = 
+                JUnitTaskMirror.JUnitResultFormatterMirror formatter =
                     fe.createFormatter(classLoader);
                 if (outFile != null && formatter != null) {
                     try {
                         OutputStream out = new FileOutputStream(outFile);
-                        addVmExit(test, formatter, out, message);
+                        delegate.addVmExit(test, formatter, out, message);
                     } catch (IOException e) {
                         // ignore
                     }
                 }
             }
             if (summary) {
-                JUnitTaskMirror.SummaryJUnitResultFormatterMirror f = 
+                JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
                 f.setWithOutAndErr("withoutanderr".equalsIgnoreCase(summaryValue));
-                addVmExit(test, f, getDefaultOutput(), message);
+                delegate.addVmExit(test, f, getDefaultOutput(), message);
             }
         } finally {
             if (classLoader != null) {
                 classLoader.resetThreadContextLoader();
             }
         }
-    }
-
-    /**
-     * Adds the actual error message to the formatter.
-     * Only used from the logVmExit method.
-     * @since Ant 1.7
-     */
-    private void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror formatter,
-                           OutputStream out, final String message) {
-        delegate.addVmExit(test, formatter, out, message);
     }
 
     /**

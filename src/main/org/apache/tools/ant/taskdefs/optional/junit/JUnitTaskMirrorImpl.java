@@ -38,9 +38,9 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
         this.task = task;
     }
 
-    public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror _formatter,
+    public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror aFormatter,
             OutputStream out, final String message) {
-        JUnitResultFormatter formatter = (JUnitResultFormatter) _formatter;
+        JUnitResultFormatter formatter = (JUnitResultFormatter) aFormatter;
         formatter.setOutput(out);
         formatter.startTestSuite(test);
         //the trick to integrating test output to the formatter, is to
@@ -81,7 +81,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
             throw new AssertionFailedError(message);
         }
 
-        public String getName() {
+        String getClassName() {
             return test.getName();
         }
 

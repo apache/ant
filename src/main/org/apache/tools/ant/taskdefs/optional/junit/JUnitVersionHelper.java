@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 /**
  * Work around for some changes to the public JUnit API between
  * different JUnit releases.
- *
  */
 public class JUnitVersionHelper {
 
@@ -99,6 +98,9 @@ public class JUnitVersionHelper {
      */
     static String getTestCaseClassName(Test test) {
         String className = test.getClass().getName();
+        if (test instanceof JUnitTaskMirrorImpl.VmExitErrorTest) {
+            className = ((JUnitTaskMirrorImpl.VmExitErrorTest) test).getClassName();
+        } else
         if (className.equals("junit.framework.JUnit4TestCaseFacade")) {
             // JUnit 4 wraps solo tests this way. We can extract
             // the original test name with a little hack.
