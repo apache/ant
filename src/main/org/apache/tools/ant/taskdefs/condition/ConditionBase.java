@@ -339,6 +339,17 @@ public abstract class ConditionBase extends ProjectComponent {
     }
     
     /**
+     * Add a  &lt;hasMethod&gt; condition.
+     *
+     * @param test the condition
+     * @since Ant 1.7
+     */
+    public void addHasMethod(HasMethod test) {
+        add(test);
+    }
+    
+    
+    /**
      * Add an &lt;antversion&gt; condition.
      *
      * @param test the condition
