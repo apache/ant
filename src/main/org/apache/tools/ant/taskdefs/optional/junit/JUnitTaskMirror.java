@@ -34,7 +34,6 @@ import org.apache.tools.ant.types.Permissions;
  * Cf. {@link JUnitTask.SplitLoader#isSplit}
  * Public only to permit access from classes in this package; do not use directly.
  * 
- * @author refactoring tricks by Jesse Glick, real code by others
  * @since 1.7
  * @see "bug #38799"
  */
