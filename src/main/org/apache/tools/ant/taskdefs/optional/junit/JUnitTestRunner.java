@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -146,7 +145,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /** ClassLoader passed in in non-forked mode. */
     private ClassLoader loader;
-    
+
     /** Do we print TestListener events? */
     private boolean logTestListenerEvents = false;
 
@@ -158,7 +157,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * File will be empty in case the build did not crash.
      */
     private static String crashFile = null;
-    
+
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
@@ -227,7 +226,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private PrintStream savedOut = null;
-    
+
     public void run() {
         res = new TestResult();
         res.addListener(wrapListener(this));
@@ -426,7 +425,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         String testName = JUnitVersionHelper.getTestCaseName(test);
         logTestListenerEvent("endTest(" + testName + ")");
     }
-    
+
     private void logTestListenerEvent(String msg) {
         PrintStream out = forked ? savedOut : System.out;
         if (logTestListenerEvents) {
@@ -481,9 +480,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     public void handleOutput(String output) {
-        if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX))
-            ; // ignore
-        else if (systemOut != null) {
+        if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX)) {
+            // ignore
+        } else if (systemOut != null) {
             systemOut.print(output);
         }
     }
@@ -589,37 +588,37 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             System.exit(ERRORS);
         }
 
-        if (args[0].startsWith("testsfile=")) {
+        if (args[0].startsWith(Constants.TESTSFILE)) {
             multipleTests = true;
-            args[0] = args[0].substring(10 /* "testsfile=".length() */);
+            args[0] = args[0].substring(Constants.TESTSFILE.length());
         }
 
         for (int i = 1; i < args.length; i++) {
-            if (args[i].startsWith("haltOnError=")) {
-                haltError = Project.toBoolean(args[i].substring(12));
-            } else if (args[i].startsWith("haltOnFailure=")) {
-                haltFail = Project.toBoolean(args[i].substring(14));
-            } else if (args[i].startsWith("filtertrace=")) {
-                stackfilter = Project.toBoolean(args[i].substring(12));
-            } else if (args[i].startsWith("crashfile=")) {
-                crashFile = args[i].substring(12);
-                registerTestCase("BeforeFirstTest");
-            } else if (args[i].startsWith("formatter=")) {
+            if (args[i].startsWith(Constants.HALT_ON_ERROR)) {
+                haltError = Project.toBoolean(args[i].substring(Constants.HALT_ON_ERROR.length()));
+            } else if (args[i].startsWith(Constants.HALT_ON_FAILURE)) {
+                haltFail = Project.toBoolean(args[i].substring(Constants.HALT_ON_FAILURE.length()));
+            } else if (args[i].startsWith(Constants.FILTERTRACE)) {
+                stackfilter = Project.toBoolean(args[i].substring(Constants.FILTERTRACE.length()));
+            } else if (args[i].startsWith(Constants.CRASHFILE)) {
+                crashFile = args[i].substring(Constants.CRASHFILE.length());
+                registerTestCase(Constants.BEFORE_FIRST_TEST);
+            } else if (args[i].startsWith(Constants.FORMATTER)) {
                 try {
-                    createAndStoreFormatter(args[i].substring(10));
+                    createAndStoreFormatter(args[i].substring(Constants.FORMATTER.length()));
                 } catch (BuildException be) {
                     System.err.println(be.getMessage());
                     System.exit(ERRORS);
                 }
-            } else if (args[i].startsWith("propsfile=")) {
+            } else if (args[i].startsWith(Constants.PROPSFILE)) {
                 FileInputStream in = new FileInputStream(args[i]
-                                                         .substring(10));
+                                                         .substring(Constants.PROPSFILE.length()));
                 props.load(in);
                 in.close();
-            } else if (args[i].startsWith("showoutput=")) {
-                showOut = Project.toBoolean(args[i].substring(11));
-            } else if (args[i].startsWith("logtestlistenerevents=")) {
-                logTestListenerEvents = Project.toBoolean(args[i].substring(22));
+            } else if (args[i].startsWith(Constants.SHOWOUTPUT)) {
+                showOut = Project.toBoolean(args[i].substring(Constants.SHOWOUTPUT.length()));
+            } else if (args[i].startsWith(Constants.LOGTESTLISTENEREVENTS)) {
+                logTestListenerEvents = Project.toBoolean(args[i].substring(Constants.LOGTESTLISTENEREVENTS.length()));
             }
         }
 
@@ -669,7 +668,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
         } else {
             returnCode = launch(new JUnitTest(args[0]), haltError,
-                                stackfilter, haltFail, showOut, 
+                                stackfilter, haltFail, showOut,
                                 logTestListenerEvents, props);
         }
 
@@ -708,7 +707,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
 
             public void startTest(Test arg0) {
-                System.out.println(this.getClass().getName() + ":" + arg0);
                 registerTestCase(JUnitVersionHelper.getTestCaseName(arg0));
             }
         });
@@ -779,7 +777,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     pw.println(line);
                 }
             }
-        } catch (Exception IOException) {
+        } catch (Exception e) {
             return stack; // return the stack unfiltered
         }
         return sw.toString();
@@ -821,7 +819,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             FileWriter out = null;
             try {
                 out = new FileWriter(crashFile);
-                out.write("terminated successfully\n");
+                out.write(Constants.TERMINATED_SUCCESSFULLY + "\n");
                 out.flush();
             } finally {
                 if (out != null) {
@@ -853,7 +851,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Modifies a TestListener when running JUnit 4: treats AssertionFailedError
      * as a failure not an error.
-     * 
+     *
      * @since Ant 1.7
      */
     private TestListener wrapListener(final TestListener testListener) {
@@ -870,8 +868,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // We would prefer to show "failure" for things that logically are.
                     try {
                         String msg = t.getMessage();
-                        AssertionFailedError failure = msg != null ?
-                            new AssertionFailedError(msg) : new AssertionFailedError();
+                        AssertionFailedError failure = msg != null 
+                            ? new AssertionFailedError(msg) : new AssertionFailedError();
                         // To compile on pre-JDK 4 (even though this should always succeed):
                         Method initCause = Throwable.class.getMethod("initCause", new Class[] {Throwable.class});
                         initCause.invoke(failure, new Object[] {t});

@@ -125,6 +125,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class JUnitTask extends Task {
 
+    private static final String CLASSPATH = "CLASSPATH=";
     private CommandlineJava commandline;
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
@@ -883,22 +884,22 @@ public class JUnitTask extends Task {
             cmd.createArgument().setValue(test.getName());
         } else {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
-            cmd.createArgument().setValue("testsfile=" + casesFile);
+            cmd.createArgument().setValue(Constants.TESTSFILE + casesFile);
         }
 
-        cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
-        cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
-        cmd.createArgument().setValue("haltOnFailure="
+        cmd.createArgument().setValue(Constants.FILTERTRACE + test.getFiltertrace());
+        cmd.createArgument().setValue(Constants.HALT_ON_ERROR + test.getHaltonerror());
+        cmd.createArgument().setValue(Constants.HALT_ON_FAILURE
                                       + test.getHaltonfailure());
         if (includeAntRuntime) {
             Vector v = Execute.getProcEnvironment();
             Enumeration e = v.elements();
             while (e.hasMoreElements()) {
                 String s = (String) e.nextElement();
-                if (s.startsWith("CLASSPATH=")) {
+                if (s.startsWith(CLASSPATH)) {
                     cmd.createClasspath(getProject()).createPath()
                         .append(new Path(getProject(),
-                                         s.substring(10 // "CLASSPATH=".length()
+                                         s.substring(CLASSPATH.length()
                                                      )));
                 }
             }
@@ -914,21 +915,21 @@ public class JUnitTask extends Task {
                 prefix = "OutErr";
             }
             cmd.createArgument()
-                .setValue("formatter"
-                          + "=org.apache.tools.ant.taskdefs.optional.junit."
+                .setValue(Constants.FORMATTER
+                          + "org.apache.tools.ant.taskdefs.optional.junit."
                           + prefix + "SummaryJUnitResultFormatter");
         }
 
-        cmd.createArgument().setValue("showoutput="
+        cmd.createArgument().setValue(Constants.SHOWOUTPUT
                                       + String.valueOf(showOutput));
-        cmd.createArgument().setValue("logtestlistenerevents=true"); // #31885
+        cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS+"true"); // #31885
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
             if (fe.shouldUse(this)) {
-                formatterArg.append("formatter=");
+                formatterArg.append(Constants.FORMATTER);
                 formatterArg.append(fe.getClassname());
                 File outFile = getOutput(fe, test);
                 if (outFile != null) {
@@ -941,10 +942,10 @@ public class JUnitTask extends Task {
         }
 
         File vmWatcher = createTempPropertiesFile("junitvmwatcher");
-        cmd.createArgument().setValue("crashfile="
+        cmd.createArgument().setValue(Constants.CRASHFILE
                                       + vmWatcher.getAbsolutePath());
         File propsFile = createTempPropertiesFile("junit");
-        cmd.createArgument().setValue("propsfile="
+        cmd.createArgument().setValue(Constants.PROPSFILE
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();
         Properties props = new Properties();
@@ -1000,7 +1001,7 @@ public class JUnitTask extends Task {
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
                 logTimeout(feArray, test, vmCrashString);
-            } else if (!"terminated successfully".equals(vmCrashString)) {
+            } else if (!Constants.TERMINATED_SUCCESSFULLY.equals(vmCrashString)) {
                 result.crashed = true;
                 logVmCrash(feArray, test, vmCrashString);
             }
