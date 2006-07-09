@@ -941,10 +941,8 @@ public class JUnitTask extends Task {
         }
 
         File vmWatcher = createTempPropertiesFile("junitvmwatcher");
-        formatterArg.append("crashfile=");
-        formatterArg.append(vmWatcher);
-        cmd.createArgument().setValue(formatterArg.toString());
-
+        cmd.createArgument().setValue("crashfile="
+                                      + vmWatcher.getAbsolutePath());
         File propsFile = createTempPropertiesFile("junit");
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
@@ -1028,8 +1026,7 @@ public class JUnitTask extends Task {
     private File createTempPropertiesFile(String prefix) {
         File propsFile =
             FILE_UTILS.createTempFile(prefix, ".properties",
-                tmpDir != null ? tmpDir : getProject().getBaseDir());
-        propsFile.deleteOnExit();
+                tmpDir != null ? tmpDir : getProject().getBaseDir(), true);
         return propsFile;
     }
 
