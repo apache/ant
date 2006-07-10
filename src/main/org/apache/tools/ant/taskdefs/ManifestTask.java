@@ -199,7 +199,7 @@ public class ManifestTask extends Task {
         PrintWriter w = null;
         try {
             FileOutputStream fos = new FileOutputStream(manifestFile);
-            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(fos, Manifest.JAR_ENCODING);
             w = new PrintWriter(osw);
             toWrite.write(w);
         } catch (IOException e) {

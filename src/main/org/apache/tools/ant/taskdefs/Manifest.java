@@ -83,11 +83,32 @@ public class Manifest {
     public static final String ERROR_FROM_FORBIDDEN = "Manifest attributes should not start "
                         + "with \"" + ATTRIBUTE_FROM + "\" in \"";
 
+    /** Encoding to be used for JAR files. */
+    public static final String JAR_ENCODING = "UTF-8";
+    
     /**
      * An attribute for the manifest.
      * Those attributes that are not nested into a section will be added to the "Main" section.
      */
     public static class Attribute {
+
+        /**
+         * Maximum length of the name to have the value starting on the same
+         * line as the name. This to stay under 72 bytes total line length
+         * (including CRLF).
+         */
+        private static final int MAX_NAME_VALUE_LENGTH = 68;
+
+        /**
+         * Maximum length of the name according to the jar specification.
+         * In this case the first line will have 74 bytes total line length
+         * (including CRLF). This conflicts with the 72 bytes total line length
+         * max, but is the only possible conclusion from the manifest specification, if
+         * names with 70 bytes length are allowed, have to be on the first line, and 
+         * have to be followed by ": ".
+         */
+        private static final int MAX_NAME_LENGTH = 70;
+
         /** The attribute's name */
         private String name = null;
 
@@ -302,12 +323,31 @@ public class Manifest {
          */
         private void writeValue(PrintWriter writer, String value)
              throws IOException {
-            String line = name + ": " + value;
-            while (line.getBytes().length > MAX_LINE_LENGTH) {
+            String line = null;
+            int nameLength = name.getBytes(JAR_ENCODING).length;
+            if (nameLength > MAX_NAME_VALUE_LENGTH)
+            {
+                if (nameLength > MAX_NAME_LENGTH)
+                {
+                    throw new IOException("Unable to write manifest line "
+                            + name + ": " + value);
+                }
+                writer.print(name + ": " + EOL);
+                line = " " + value;
+            }
+            else
+            {
+                line = name + ": " + value;
+            }
+            while (line.getBytes(JAR_ENCODING).length > MAX_SECTION_LENGTH) {
                 // try to find a MAX_LINE_LENGTH byte section
                 int breakIndex = MAX_SECTION_LENGTH;
+                if (breakIndex >= line.length())
+                {
+                    breakIndex = line.length() - 1;
+                }
                 String section = line.substring(0, breakIndex);
-                while (section.getBytes().length > MAX_SECTION_LENGTH
+                while (section.getBytes(JAR_ENCODING).length > MAX_SECTION_LENGTH
                      && breakIndex > 0) {
                     breakIndex--;
                     section = line.substring(0, breakIndex);

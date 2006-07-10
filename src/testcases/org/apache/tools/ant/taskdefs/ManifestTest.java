@@ -17,10 +17,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
@@ -39,6 +42,15 @@ public class ManifestTest extends BuildFileTest {
           "IsSureToLeadToHundredsOfQuestionsAboutWhyAntMungesManifests" +
           "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
           "AProblemWithThatItIsNotABugInAnt";
+
+    public static final String LONG_70_NAME 
+        = "ThisNameIsJustSeventyCharactersWhichIsAllowedAccordingToTheSpecsFiller";
+    public static final String LONG_68_NAME 
+        = "ThisNameIsJustSixtyEightCharactersWhichIsAllowedAccordingToTheSpecsX";
+    public static final String NOT_LONG_NAME 
+        = "NameIsJustUnderSeventyCharactersWhichIsAllowedAccordingTheSpec";
+
+    public static final String VALUE = "NOT_LONG";
 
     public ManifestTest(String name) {
         super(name);
@@ -192,6 +204,10 @@ public class ManifestTest extends BuildFileTest {
     public void testLongLine() throws IOException, ManifestException {
         Project p = getProject();
         p.setUserProperty("test.longline", LONG_LINE);
+        p.setUserProperty("test.long68name" , LONG_68_NAME);
+        p.setUserProperty("test.long70name" , LONG_70_NAME);
+        p.setUserProperty("test.notlongname" , NOT_LONG_NAME);
+        p.setUserProperty("test.value", VALUE);
         executeTarget("testLongLine");
 
         Manifest manifest = getManifest(EXPANDED_MANIFEST);
@@ -199,6 +215,32 @@ public class ManifestTest extends BuildFileTest {
         String classpath = mainSection.getAttributeValue("class-path");
         assertEquals("Class-Path attribute was not set correctly - ",
             LONG_LINE, classpath);
+        
+        String value = mainSection.getAttributeValue(LONG_68_NAME);
+        assertEquals("LONG_68_NAME_VALUE_MISMATCH", VALUE, value);
+        value = mainSection.getAttributeValue(LONG_70_NAME);
+        assertEquals("LONG_70_NAME_VALUE_MISMATCH", VALUE, value);
+        value = mainSection.getAttributeValue(NOT_LONG_NAME);
+        assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
+        
+        BufferedReader in = new BufferedReader(new FileReader(EXPANDED_MANIFEST));
+        
+        Set set = new HashSet();
+        String read = in.readLine();
+        while (read != null)
+        {
+            set.add(read);
+            read = in.readLine();
+        }
+        
+        assertTrue("Manifest file should have contained string ", set
+                .remove(" NOT_LONG"));
+        assertTrue("Manifest file should have contained string ", set
+                .remove(" NG"));
+        assertTrue("Manifest file should have contained string ", set
+                .remove(LONG_70_NAME + ": "));
+        assertTrue("Manifest file should have contained string ", set
+                .remove(NOT_LONG_NAME + ": NOT_LO"));
     }
 
     /**
