@@ -97,6 +97,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Manifests have improved line length handling, taking care of encoding.
+  Bug reports 37548 / 34425
+
 * <manifest> now closes the inputstream explicitly. Bug report 39628
 
 * <rpm> now also correctly searches the first element of the path. Bug report 39345.
