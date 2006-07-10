@@ -391,10 +391,48 @@
     </table>
     <!-- End Element -->
 
+
+
+
+<!-- manually written -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>target</strong> (org.apache.tools.ant.taskdefs.Ant.TargetElement)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        You can specify multiple targets using nested <code>&lt;target&gt;</code> elements
+        instead of using the target attribute.  These will be executed as if
+        Ant had been invoked with a single target whose dependencies are the
+        targets so specified, in the order specified.
+ <!-- Ignore -->
+ <!-- Ignore -->
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Required</b></td>
+        </tr>
+        <tr>
+          <td valign="top">name</td>
+          <td valign="top">The name of the called target.</td>
+          <td valign="top" align="center">Yes</td>
+        </tr>
+      </table>
+      <p><em>since Ant 1.7</em>.</p>    
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+<!-- manually written end -->
+
       </blockquote></td></tr>
 
     </table>
     <!-- End Elements -->
+    
+    
 
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
@@ -408,14 +446,14 @@
       <tr><td><blockquote>
         <pre>
         &lt;project name="subant" default="subant1"&gt;
-        &lt;property name="build.dir" value="subant.build"/&gt;
-        &lt;target name="subant1"&gt;
-            &lt;subant target=""&gt;
-              &lt;property name="build.dir" value="subant1.build"/&gt;
-              &lt;property name="not.overloaded" value="not.overloaded"/&gt;
-              &lt;fileset dir="." includes="*/build.xml"/&gt;
-            &lt;/subant&gt;
-        &lt;/target&gt;
+            &lt;property name="build.dir" value="subant.build"/&gt;
+            &lt;target name="subant1"&gt;
+                &lt;subant target=""&gt;
+                    &lt;property name="build.dir" value="subant1.build"/&gt;
+                    &lt;property name="not.overloaded" value="not.overloaded"/&gt;
+                    &lt;fileset dir="." includes="*/build.xml"/&gt;
+                &lt;/subant&gt;
+            &lt;/target&gt;
         &lt;/project&gt;
         </pre>
 <p>
@@ -425,11 +463,11 @@
         </p>
 <pre>
           &lt;subant target=""&gt;
-             &lt;propertyset&gt;
+              &lt;propertyset&gt;
                   &lt;propertyref prefix="toplevel"/&gt;
                   &lt;mapper type="glob" from="foo*" to="bar*"/&gt;
-             &lt;/propertyset&gt;
-             &lt;fileset dir="." includes="*/build.xml"/&gt;
+              &lt;/propertyset&gt;
+              &lt;fileset dir="." includes="*/build.xml"/&gt;
           &lt;/subant&gt;
         </pre>
 <p>
@@ -439,7 +477,7 @@
         </p>
 <pre>
           &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
-             &lt;dirset dir="." includes="projects*"/&gt;
+              &lt;dirset dir="." includes="projects*"/&gt;
           &lt;/subant&gt;
         </pre>
 <p>
@@ -507,6 +545,16 @@
         the root buildfile is capable to run the whole build over all
         modules.
         </p>
+        
+        <pre>
+        &lt;subant failonerror="false"&gt;
+            &lt;fileset dir="." includes="**/build.xml" excludes="build.xml"/&gt;
+            &lt;target name="clean"/&gt;
+            &lt;target name="build"/&gt;
+        &lt;/subant&gt;
+        </pre>
+        
+        <p>Does a "clean build" for each subproject.</p>
 
         <!-- manually written -->
 

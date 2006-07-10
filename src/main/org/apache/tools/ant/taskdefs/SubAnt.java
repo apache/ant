@@ -34,6 +34,8 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 
+import org.apache.tools.ant.taskdefs.Ant.TargetElement;
+
 
 /**
  * Calls a given target for all defined sub-builds. This is an extension
@@ -75,6 +77,11 @@ public class SubAnt
     private Vector properties = new Vector();
     private Vector references = new Vector();
     private Vector propertySets = new Vector();
+
+    /** the targets to call on the new project */
+    private Vector/*<TargetElement>*/ targets = new Vector();
+    
+    
 
     /**
      * Pass output sent to System.out to the new project.
@@ -274,6 +281,11 @@ public class SubAnt
         ant = createAntTask(directory);
         String antfilename = file.getAbsolutePath();
         ant.setAntfile(antfilename);
+        for (int i=0; i<targets.size(); i++) {
+            TargetElement targetElement = (TargetElement)targets.get(i);
+            ant.addConfiguredTarget(targetElement);
+        }
+        
         try {
             ant.execute();
         } catch (BuildException e) {
@@ -342,6 +354,19 @@ public class SubAnt
         this.subTarget = target;
     }
 
+    /**
+     * Add a target to this Ant invocation.
+     * @param t the <code>TargetElement</code> to add.
+     * @since Ant 1.7
+     */
+    public void addConfiguredTarget(TargetElement t) {
+        String name = t.getName();
+        if ("".equals(name)) {
+            throw new BuildException("target name must not be empty");
+        }
+        targets.add(t);
+    }
+    
     /**
      * Enable/ disable verbose log messages showing when each sub-build path is entered/ exited.
      * The default value is "false".

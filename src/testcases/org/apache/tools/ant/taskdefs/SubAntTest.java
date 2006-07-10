@@ -25,8 +25,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildListener;
 
-/**
- */
+
 public class SubAntTest extends BuildFileTest {
 
     public SubAntTest(String name) {
@@ -76,6 +75,25 @@ public class SubAntTest extends BuildFileTest {
 
                      });
 
+    }
+    
+    public void testMultipleTargets() {
+        executeTarget("multipleTargets");
+        assertLogContaining("test1-one");
+        assertLogContaining("test1-two");
+        assertLogContaining("test2-one");
+        assertLogContaining("test2-two");
+    }
+    
+    public void testMultipleTargetsOneDoesntExist_FOEfalse() {
+        executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
+        assertLogContaining("Target \"three\" does not exist in the project \"subant\"");
+    }
+    
+    public void testMultipleTargetsOneDoesntExist_FOEtrue() {
+        expectBuildExceptionContaining("multipleTargetsOneDoesntExist_FOEtrue", 
+                                       "Calling not existent target", 
+                                       "Target \"three\" does not exist in the project \"subant\"");
     }
 
     protected void testBaseDirs(String target, String[] dirs) {
