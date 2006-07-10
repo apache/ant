@@ -1753,9 +1753,9 @@ public class Project implements ResourceFactory {
             visiting.pop();
             if (!visiting.empty()) {
                 String parent = (String) visiting.peek();
-                sb.append("It is used from target `");
+                sb.append("It is used from target \"");
                 sb.append(parent);
-                sb.append("'.");
+                sb.append("\".");
             }
             throw new BuildException(new String(sb));
         }
