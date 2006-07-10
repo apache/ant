@@ -36,10 +36,6 @@ public class SubAntTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/subant.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testnodirs() {
         project.executeTarget("testnodirs");
         expectLog("testnodirs", "No sub-builds to iterate on");

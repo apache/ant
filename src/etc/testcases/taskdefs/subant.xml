@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="subant-test" basedir="." default="testgenericantfile">
-    <target name="testnodirs" depends="cleanup">
+    <target name="testnodirs" depends="tearDown">
         <subant genericantfile="subant/genericsubant.xml">
             <dirset dir="." includes="subant-test*"/>
         </subant>
@@ -43,7 +43,7 @@
         </subant>
     </target>
 
-    <target name="cleanup">
+    <target name="tearDown">
         <!-- nothing to do -->
     </target>
 </project>
