@@ -95,6 +95,14 @@ element.</p>
     <td align="center" valign="top">No. Default to current directory</td>
   </tr>
 </table>
+<p> Ant assumes the following concerning the <tt>frames</tt> and <tt>noframes</tt> formats :</p>
+<p>The <tt>frames</tt> format uses
+a stylesheet which is generating output <em>only</em> by redirecting.</p>
+<p>The
+<tt>noframes</tt> format does not use redirecting and generates one
+file called <tt>junit-noframes.html</tt>.</p>
+<p>Custom versions of <tt>junit-frames.xsl</tt> or <tt>junit-noframes.xsl</tt> must adhere to the above conventions.</p>
+
 <h3>Nested Element of the report tag</h3>
 <h4>param</h4>
 <em>Since Ant 1.7</em>the report tag supports nested param tags.
