@@ -709,6 +709,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @return the XML catalog for the task.
      */
     public XMLCatalog getXMLCatalog() {
+        xmlCatalog.setProject(getProject());
         return xmlCatalog;
     }
 

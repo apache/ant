@@ -126,6 +126,19 @@
                 format="frames"/>
         </junitreport>
     </target>
+    
+    <!-- bug report 40022 -->
+    <target name="testWithStyleFromDirAndXslImport">
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"
+                styledir="junitreport-with-include"
+                format="frames"/>
+        </junitreport>
+    </target>
 
     <target name="testWithParams">
         <mkdir dir="${outputdir}/html"/>
