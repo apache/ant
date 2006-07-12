@@ -7,8 +7,8 @@ Changes that could break older environments:
 * Removed support for xalan1 completely. Users of Xalan1 for Ant builds will
   have to stay at ant 1.6.5 or upgrade to xalan2.
 
-* Improved recursion detection for lines with multiple matches of same token on a single line.
-  Bugzilla report 38456.
+* Improved recursion detection for lines with multiple matches of same token
+  on a single line.  Bugzilla report 38456.
 
 * Task will now log correctly even if no project is set. 
   Bugzilla report 38458.
