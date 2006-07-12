@@ -150,6 +150,19 @@ public class JUnitReportTest extends BuildFileTest {
         assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
     }
 
+    //Bugzilla Report 40021
+    public void testNoFrames() throws Exception {
+        executeTarget("testNoFrames");
+        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html");
+        // tests one the file object
+        assertTrue("No junit-noframes.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+    }
     //Bugzilla Report 39708
     public void testWithStyleFromDirAndXslImport() throws Exception {
         executeTarget("testWithStyleFromDirAndXslImport");

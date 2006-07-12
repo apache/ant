@@ -224,12 +224,6 @@ public class AggregateTransformer {
 
         TempFile tempFileTask = new TempFile();
         tempFileTask.bindToOwner(task);
-        String tempFileProperty = getClass().getName() + String.valueOf(counter++);
-        File tmp = FILE_UTILS.resolveFile(project.getBaseDir(),
-                project.getProperty("java.io.tmpdir"));
-        tempFileTask.setDestDir(tmp);
-        tempFileTask.setProperty(tempFileProperty);
-        tempFileTask.execute();
 
         XSLTProcess xsltTask = new XSLTProcess();
         xsltTask.bindToOwner(task);
@@ -237,8 +231,19 @@ public class AggregateTransformer {
         xsltTask.addConfigured(getStylesheet());
         // acrobatic cast.
         xsltTask.setIn(((XMLResultAggregator) task).getDestinationFile());
-        File dummyFile = new File(project.getProperty(tempFileProperty));
-        xsltTask.setOut(dummyFile);
+        File outputFile = null;
+        if (format.equals(FRAMES)) {
+            String tempFileProperty = getClass().getName() + String.valueOf(counter++);
+            File tmp = FILE_UTILS.resolveFile(project.getBaseDir(),
+                    project.getProperty("java.io.tmpdir"));
+            tempFileTask.setDestDir(tmp);
+            tempFileTask.setProperty(tempFileProperty);
+            tempFileTask.execute();
+            outputFile = new File(project.getProperty(tempFileProperty));
+        } else {
+            outputFile = new File(toDir, "junit-noframes.html");
+        }
+        xsltTask.setOut(outputFile);
         for (Iterator i = params.iterator(); i.hasNext();) {
             XSLTProcess.Param param = (XSLTProcess.Param) i.next();
             XSLTProcess.Param newParam = xsltTask.createParam();
@@ -259,10 +264,12 @@ public class AggregateTransformer {
         }
         final long dt = System.currentTimeMillis() - t0;
         task.log("Transform time: " + dt + "ms");
-        Delete delete = new Delete();
-        delete.bindToOwner(task);
-        delete.setFile(dummyFile);
-        delete.execute();
+        if (format.equals(FRAMES)) {
+            Delete delete = new Delete();
+            delete.bindToOwner(task);
+            delete.setFile(outputFile);
+            delete.execute();
+        }
     }
 
     /**
