@@ -91,7 +91,13 @@ Changes that could break older environments:
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
   is \n (Unix).  Bugzilla report 39585.
   
-* <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.  Bugzilla Report 39373.
+* <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.
+  Bugzilla Report 39373.
+  
+* Ant launcher program prints errors to stderr, and exits with a -1 exit code
+  value if, for any reason, it cannot actually start Ant proper. This will only
+  affect programs/scripts that called the launcher and which did not want to 
+  receive an error if ant itself would not start
 
 Fixed bugs:
 -----------
@@ -241,6 +247,9 @@ Fixed bugs:
 
 * <echoproperties> setPrefix javadoc claimed null or empty prefix would be
   ignored; instead an error was thrown.  Bugzilla report 39954.
+
+* <get> would fetch files that were up to date, because it used > in a 
+  remote/local timestamp comparison, not >=. Bugzilla 35607.
 
 Other changes:
 --------------
@@ -460,6 +469,16 @@ Other changes:
 
 * <javacc> has a jdkversion attribute to pass the desired JDK version down to javacc.
   Bugzilla report 38715.
+  
+* <cvs> prints passfile info at -verbose level instead of -info. Bugzilla 
+  report 35268
+     
+* When <javac> can't find the compiler class, it prints out java.home for 
+  immediate diagnostics
+
+* Ant launcher now supports a -main attribute so that you can specify an extension
+  class to the built in org.apache.tools.ant.Main class. This class must implement
+  the interface AntMain
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
