@@ -110,7 +110,10 @@ public final class CompilerAdapterFactory {
                                                  + " is not on the "
                                                  + "classpath.\n"
                                                  + "Perhaps JAVA_HOME does not"
-                                                 + " point to the JDK");
+                                                 + " point to the JDK.\n"
+                                + "It is currently set to \""
+                                + JavaEnvUtils.getJavaHome()
+                                + "\"");
                     }
                 }
             }

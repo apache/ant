@@ -414,4 +414,12 @@ public final class JavaEnvUtils {
         }
         return script;
     }
+
+    /**
+     * Return the value of ${java.home}
+     * @return the java home value.
+     */
+    public static String getJavaHome() {
+        return JAVA_HOME;
+    }
 }

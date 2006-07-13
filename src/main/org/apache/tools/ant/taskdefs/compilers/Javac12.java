@@ -23,6 +23,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
@@ -34,6 +36,7 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.3
  */
 public class Javac12 extends DefaultCompilerAdapter {
+    protected static final String CLASSIC_COMPILER_CLASSNAME = "sun.tools.javac.Main";
 
     /**
      * Run the compilation.
@@ -48,7 +51,7 @@ public class Javac12 extends DefaultCompilerAdapter {
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            Class c = Class.forName("sun.tools.javac.Main");
+            Class c = Class.forName(CLASSIC_COMPILER_CLASSNAME);
             Constructor cons =
                 c.getConstructor(new Class[] {OutputStream.class,
                                               String.class});
@@ -63,11 +66,15 @@ public class Javac12 extends DefaultCompilerAdapter {
                                         new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use classic compiler, as it is "
-                                     + "not available.  A common solution is "
-                                     + "to set the environment variable"
-                                     + " JAVA_HOME to your jdk directory.",
-                                     location);
+            throw new BuildException("Cannot use classic compiler , as it is "
+                                        + "not available. \n"
+                                        + " A common solution is "
+                                        + "to set the environment variable"
+                                        + " JAVA_HOME to your jdk directory.\n"
+                                        + "It is currently set to \""
+                                        + JavaEnvUtils.getJavaHome()
+                                        + "\"",
+                                        location);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
@@ -76,12 +83,7 @@ public class Javac12 extends DefaultCompilerAdapter {
                                          ex, location);
             }
         } finally {
-            try {
-                logstr.close();
-            } catch (IOException e) {
-                // plain impossible
-                throw new BuildException(e);
-            }
+            FileUtils.close(logstr);
         }
     }
 }
