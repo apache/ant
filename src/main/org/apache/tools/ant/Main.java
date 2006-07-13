@@ -26,6 +26,8 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.HashMap;
+
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
@@ -271,7 +273,7 @@ public class Main implements AntMain {
 
     /**
      * Process command line arguments.
-     * When ant is started from Launcher, the -lib argument does not get
+     * When ant is started from Launcher, launcher-only arguments doe not get
      * passed through to this routine.
      *
      * @param args the command line arguments.
@@ -282,6 +284,15 @@ public class Main implements AntMain {
         String searchForThis = null;
         PrintStream logTo = null;
 
+        //this is hte list of lu
+        HashMap launchCommands =new HashMap();
+        launchCommands.put("-lib","");
+        launchCommands.put("-cp", "");
+        launchCommands.put("-noclasspath", "");
+        launchCommands.put("--noclasspath", "");
+        launchCommands.put("-nouserlib", "");
+        launchCommands.put("--nouserlib", "");
+        launchCommands.put("-main", "");
         // cycle through given args
 
         for (int i = 0; i < args.length; i++) {
@@ -431,7 +442,7 @@ public class Main implements AntMain {
                     throw new BuildException(
                             "Niceness value is out of the range 1-10");
                 }
-            } else if (arg.equals("-cp") || arg.equals("-lib")) {
+            } else if (launchCommands.get(arg)!=null) {
                 //catch script/ant mismatch with a meaningful message
                 //we could ignore it, but there are likely to be other
                 //version problems, so we stamp down on the configuration now
@@ -445,7 +456,7 @@ public class Main implements AntMain {
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
-                System.out.println(msg);
+                System.err.println(msg);
                 printUsage();
                 throw new BuildException("");
             } else {
@@ -835,7 +846,9 @@ public class Main implements AntMain {
         msg.append("  -nouserlib             Run ant without using the jar files from" + lSep
                    + "                         ${user.home}/.ant/lib" + lSep);
         msg.append("  -noclasspath           Run ant without using CLASSPATH" + lSep);
-        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies");
+        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies" +
+                lSep);
+        msg.append("  -main <class>          override Ant's normal entry point");
         System.out.println(msg.toString());
     }
 

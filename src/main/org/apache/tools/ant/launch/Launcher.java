@@ -95,16 +95,24 @@ public class Launcher {
      * @param  args commandline arguments
      */
     public static void main(String[] args) {
+        int exitCode;
         try {
             Launcher launcher = new Launcher();
-            launcher.run(args);
+            exitCode=launcher.run(args);
         } catch (LaunchException e) {
+            exitCode=-1;
             System.err.println(e.getMessage());
         } catch (Throwable t) {
-            t.printStackTrace();
+            exitCode=-1;
+            t.printStackTrace(System.err);
+        }
+        if(exitCode!=0) {
+            System.exit(exitCode);
         }
     }
 
+    
+    
     /**
      * Add a CLASSPATH or -lib to lib path urls.
      *
@@ -138,17 +146,19 @@ public class Launcher {
      * Run the launcher to launch Ant.
      *
      * @param args the command line arguments
-     *
+     * @return an exit code. As the normal ant main calls exit when it ends,
+     *         this is for handling failures at bind-time
      * @exception MalformedURLException if the URLs required for the classloader
      *            cannot be created.
      */
-    private void run(String[] args)
+    private int run(String[] args)
             throws LaunchException, MalformedURLException {
         String antHomeProperty = System.getProperty(MagicNames.ANT_HOME);
         File antHome = null;
 
         File sourceJar = Locator.getClassSource(getClass());
         File jarDir = sourceJar.getParentFile();
+        String mainClassname = MAIN_CLASS;
 
         if (antHomeProperty != null) {
             antHome = new File(antHomeProperty);
@@ -192,6 +202,12 @@ public class Launcher {
                 noUserLib = true;
             } else if (args[i].equals("--noclasspath") || args[i].equals("-noclasspath")) {
                 noClassPath = true;
+            } else if (args[i].equals("-main")) {
+                if (i == args.length - 1) {
+                    throw new LaunchException("The -main argument must "
+                            + "be followed by a library location");
+                }
+                mainClassname = args[++i];
             } else {
                 argList.add(args[i]);
             }
@@ -273,19 +289,24 @@ public class Launcher {
         URLClassLoader loader = new URLClassLoader(jars);
         Thread.currentThread().setContextClassLoader(loader);
         Class mainClass = null;
+        int exitCode=0;
         try {
-            mainClass = loader.loadClass(MAIN_CLASS);
+            mainClass = loader.loadClass(mainClassname);
             AntMain main = (AntMain) mainClass.newInstance();
             main.startAnt(newArgs, null, null);
         } catch (InstantiationException ex) {
-            System.out.println(
-                "Incompatible version of org.apache.tools.ant detected");
+            System.err.println(
+                "Incompatible version of "+mainClassname+" detected");
             File mainJar = Locator.getClassSource(mainClass);
-            System.out.println(
+            System.err.println(
                 "Location of this class " + mainJar);
+            exitCode=-1;
         } catch (Throwable t) {
-            t.printStackTrace();
+            t.printStackTrace(System.err);
+            exitCode=-1;
         }
+        return exitCode;
+        
     }
 
 }
