@@ -71,6 +71,9 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      * setError() as necessary.</p>
      */
     public void verifySettings() {
+        if(isReference()) {
+            ((BaseSelector)getCheckedRef()).verifySettings();
+        }
     }
 
 
