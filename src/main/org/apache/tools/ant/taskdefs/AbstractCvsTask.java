@@ -293,7 +293,7 @@ public abstract class AbstractCvsTask extends Task {
                 var.setValue(String.valueOf(passFile));
                 env.addVariable(var);
                 log("Using cvs passfile: " + String.valueOf(passFile),
-                    Project.MSG_INFO);
+                    Project.MSG_VERBOSE);
             } else if (!passFile.canRead()) {
                 log("cvs passfile: " + String.valueOf(passFile)
                     + " ignored as it is not readable",
