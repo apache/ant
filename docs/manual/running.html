@@ -522,11 +522,36 @@ include:
 </ul>
 
 <p>
-The latter method supports the -lib option and will load jars from the
-specified ANT_HOME. You should start the latter with the most minimal
+The latter method supports the -lib, -nouserlib, -noclasspath options and will 
+    load jars from the specified ANT_HOME. You should start the latter with the most minimal
 classpath possible, generally just the ant-launcher.jar.
 </p>
 
+<a name="viaant"/>
+
+Ant can can be started in Ant via the <code>&lt;java&gt;</code> command.
+Here is an example.
+
+<pre>
+&lt;java
+        classname="org.apache.tools.ant.launch.Launcher"
+        fork="true"
+        failonerror="true"
+        dir="${sub.builddir}"
+        timeout="4000000"
+        &gt;
+    &lt;classpath&gt;
+        &lt;pathelement location="${ant.home}/lib/ant-launcher.jar"/&gt;
+    &lt;/classpath&gt;
+    &lt;arg value="-buildfile"/&gt;
+    &lt;arg file="${sub.buildfile}"/&gt;
+    &lt;arg value="-Dthis=this"/&gt;
+    &lt;arg value="-Dthat=that"/&gt;
+    &lt;arg value="-Dbasedir=${sub.builddir}"/&gt;
+    &lt;arg value="-Dthe.other=the.other"/&gt;
+    &lt;arg value="${sub.target}"/&gt;
+&lt;/java&gt;
+</pre>
 <br>
 <hr>
 <p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights

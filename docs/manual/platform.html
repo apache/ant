@@ -55,38 +55,72 @@ to set the permissions in the tar file, or <code>&lt;apply&gt;</code> the real t
 </li>
 <li> Ant is not symbolic link aware in moves, deletes and when recursing down a tree
 of directories to build up a list of files. Unexpected things can happen.
-
+</li>
 <li> Linux on IA-64: apparently you need a larger heap than the default
 one (64M) to compile big projects. If you get out of heap
 errors, either increase the heap or use a forking javac. Better yet,
 use jikes for extra compilation speed.   
-
+</li>
 
 </ul>
 
-<h2>Microsoft Windows</h2>
 
+<h2>Microsoft Windows</h2>
+<p>
+Windows 9x (win95, win98, win98SE and winME) are not supported in Ant1.7,
+</p>
+
+<p>
+The Ant team has retired support for these products because they are outdated and
+can expose customers to security risks. We recommend that customers who are
+still running Windows 98 or Windows Me upgrade to a newer, more secure 
+operating system, as soon as possible.
+</p>
+<p>
+Customers who upgrade to Linux report improved security, richer
+functionality, and increased productivity. 
+</p>
+<h2>Microsoft Windows 2K, XP and Server 2K03 </h2>
+
+<p>
 Windows 9x (win95, win98, win98SE and winME) has a batch file system which
 does not work fully with long file names, so we recommend that ant and the JDK
 are installed into directories without spaces, and with 8.3 filenames. 
 The Perl and Python launcher scripts do not suffer from this limitation.
-
+</p>
 <p>
 All versions of windows are usually case insensitive, although mounted 
 file systems (Unix drives, Clearcase views) can be case sensitive underneath,
-confusing patternsets. 
-
+confusing patternsets.
+</p>
 <p>
 Ant can often not delete a directory which is open in an Explorer window. 
 There is nothing we can do about this short of spawning a program to kill
 the shell before deleting directories.
 Nor can files that are in use be overwritten.
+</p>
+<p>
+    Finally, if any Ant task fails with an IOError=2, it means that whatever
+    native program Ant is trying to run, it is not on the path.
+</p>
+
+<h2>Microsoft Windows Vista</h2>
+<p>
+    There are reports of problems with Windows Vista security bringing up
+    dialog boxes asking if the user wants to run an untrusted executable
+    during an ant run, such as when the &lt;signjar&gt task runs the jarsigner.exe
+    program. This is beyond Ant's control, and stems from the OS trying to provide
+    some illusion of security by being reluctant to run unsigned native executables.
+    The latest Java versions appear to resolve this problem by having signed
+    binaries. 
+</p>
+
 
 <h2>Cygwin</h2>
 
 Cygwin is not an operating system; rather it is an application suite 
-running under Windows and providing some UNIX like functionality. AFAIK, Sun did 
-not create any specific Java Development Kit or Java Runtime Environment for 
+running under Windows and providing some UNIX like functionality. Sun has 
+not created any specific Java Development Kit or Java Runtime Environment for 
 cygwin. See this link : 
 <a href="http://www.inonit.com/cygwin/faq/">http://www.inonit.com/cygwin/faq/</a> . 
 Only Windows path 
@@ -152,6 +186,6 @@ techniques to hide platform details from build files need to be written and
 tested on every particular platform. Contributions in this area are welcome.
 
 <hr>
-<p align="center">Copyright &copy; 2002-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2002-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 </html>
