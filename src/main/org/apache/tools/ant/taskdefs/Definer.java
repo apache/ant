@@ -201,16 +201,23 @@ public abstract class Definer extends DefBase {
             //we are in an antlib, in which case the resource name is determined
             //automatically.
             //NB: URIs in the ant core package will be "" at this point.
-            if (getURI()!=null && getURI().startsWith(MagicNames.ANTLIB_PREFIX)) {
+            if (getURI() == null) {
+                throw new BuildException(
+                        "name, file or resource attribute of "
+                                + getTaskName() + " is undefined",
+                        getLocation());
+            }
+
+            if (getURI().startsWith(MagicNames.ANTLIB_PREFIX)) {
                 //convert the URI to a resource
                 String uri1 = getURI();
                 setResource(makeResourceFromURI(uri1));
             } else {
-                    throw new BuildException(
-                        "name, file or resource attribute of "
-                        + getTaskName() + " is undefined", getLocation());
-                }
+                throw new BuildException(
+                        "Only antlib URIs can be located from the URI alone,"
+                                + "not the URI " + getURI());
             }
+        }
 
         if (name != null) {
             if (classname == null) {
