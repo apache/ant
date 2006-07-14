@@ -196,7 +196,7 @@
         </p>
         <table class="externals">
         <tr>
-          <th>Compatibility:</th> 
+          <th>Compatibility:</th>
           <td>Ant 1.6.2 and higher</td>
         </tr>
         <tr>
@@ -487,6 +487,38 @@
           </tr>
         </table>
       </subsection>
+      
+      
+      <subsection name="Build Number">
+        <p> Build Number is a tool to track software artifacts such as files and automatically assign 
+        proper version/build numbers to them. It ensures that two different artifacts will have different 
+        version/build numbers, but identical artifacts/builds will be assigned the same number. It doesn't 
+        take version management away from you and doesn't replace your build process, but rather plugs 
+        into the process and introduces version/build number governance by defining who is in charge of 
+        which part of version number. With Build Number you are still in charge of the head of the version 
+        number. E.g. you may decide to have 4 numbers in your version (major, minor, interface, implementation) 
+        and you want to manage the two first numbers (major and minor). Build Number will take care of the 
+        tedium of managing the last two numbers (interface and implementation). </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.4 and 1.6.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.hammurapi.biz/products/buildnumber">http://www.hammurapi.biz/products/buildnumber</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.hammurapi.biz/hammurapi-biz/ef/xmenu/contact.html">Project Contact Page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>      
 
       <subsection name="Checkstyle">
 
@@ -1026,11 +1058,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.hammurapi.org">http://www.hammurapi.org</a></td>
+            <td><a href="http://www.hammurapi.biz">http://www.hammurapi.biz</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="http://www.hammurapi.org/content/menu.show@id=Hammurapi.4.html">Project's Contact Page</a></td>
+            <td><a href="http://www.hammurapi.biz/hammurapi-biz/ef/xmenu/contact.html">Project Contact Page</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -2649,65 +2681,6 @@
         </table>
       </subsection>
 
-      <subsection name="Speech4J">
-
-        <p>A text-to-speech task and build listener, which produce
-        voice output either to speakers or .wav file (the task
-        only).</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Tested with Ant 1.5.2. Works only on Windows platform
-            because the task uses Microsoft Speech API through
-            JNI.</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/Products/Speech4j/index.html">http://www.pavelvlasov.com/pv/content/Products/Speech4j/index.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>Lite edition of Speech4j which includes both the task
-            and the listener is free.</td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="SQLC">
-
-        <p>SQLC generates Java classes from SQL statements obviating JDBC API
-        in your code. Introduction to SQLC:
-        <a href="http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html">
-        http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html</a></p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Tested with Ant 1.5.2. Compilation requires Java 1.4 and database
-              driver shall implement getParameterMetadata(). "Introduction to SQLC"
-              (see above) contains compatibility list. Generated classes work on
-              Java 1.3+
-            </td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html">http://www.pavelvlasov.com/pv/content/Products/Common/doc/AntDoc/com/pavelvlasov/sql/java/ant/StatementCompilerTask.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>LGPL</td>
-          </tr>
-        </table>
-      </subsection>
 
       <subsection name="SQLUnit">
          <p>SQLUnit is a regression and unit testing harness for testing
@@ -2882,29 +2855,6 @@
         </table>
       </subsection>
 
-      <subsection name="Transformica">
-        <p>Code generator. Generates code from UML models, Java
-        metamodel or custom models.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Tested with Ant 1.5 and 1.5.2</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.transformica.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.transformica.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GPL</td>
-          </tr>
-        </table>
-      </subsection>
 
       <subsection name="Venus Application Publisher's (Vamp) Ant Task Suite">
 
