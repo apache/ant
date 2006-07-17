@@ -16,7 +16,7 @@
 or for generating code.</p>
 <p><b>Note:</b> If you are using JDK 1.4 or higher, this task does not require external libraries
 not supplied in the Ant distribution. However, often the built in XSL engine is not as up
-to date as a fresh download, so an update is still highly recommended. 
+to date as a fresh download, so an update is still highly recommended.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 <p>It is possible to refine the set of files that are being processed. This can be
 done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
@@ -189,6 +189,22 @@ element which is used to perform Entity and URI resolution.</p>
     <em>Since Ant 1.7</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">filenameparameter</td>
+    <td valign="top">Specifies a xsl parameter for accessing the name 
+    of the current processed file. If not set, the file name is not 
+    passed to the transformation.
+    <em>Since Ant 1.7</em>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">filedirparameter</td>
+    <td valign="top">Specifies a xsl parameter for accessing the directory
+    of the current processed file. If not set, the directory is not 
+    passed to the transformation.
+    <em>Since Ant 1.7</em>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
@@ -312,7 +328,7 @@ And in Saxon 7.x:
 <li>http://saxon.sf.net/feature/linenumbering (integer)</li>
 <li>...</li>
 </ul>
-<blockquote>    
+<blockquote>
 <h4>Parameters</h4>
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -416,6 +432,29 @@ See <a href="../CoreTypes/resources.html">resources</a> to see the concrete synt
     &lt;url url="${printParams.xsl.url}"/&gt;
     &lt;param name="set" expression="value"/&gt;
 &lt;/xslt&gt;</pre>
+
+  <h4>Print the current processed file name</h4>
+<pre>
+&lt;project&gt;
+  &lt;xslt style=&quot;printFilename.xsl&quot; destdir=&quot;out&quot; basedir=&quot;in&quot; extension=&quot;.txt&quot;
+        filenameparameter=&quot;filename&quot;
+        filedirparameter=&quot;filedir&quot;
+  /&gt;
+&lt;/project&gt;
+
+&lt;xsl:stylesheet
+  version=&quot;1.0&quot;
+  xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
+
+    &lt;xsl:param name=&quot;filename&quot;&gt;&lt;/xsl:param&gt;
+    &lt;xsl:param name=&quot;filedir&quot;&gt;.&lt;/xsl:param&gt;
+
+&lt;xsl:template match=&quot;/&quot;&gt;
+  Current file is &lt;xsl:value-of select=&quot;$filename&quot;/&gt; in directory &lt;xsl:value-of select=&quot;$filedir&quot;/&gt;.
+&lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;
+</pre>  
 
 </blockquote>
 <hr>

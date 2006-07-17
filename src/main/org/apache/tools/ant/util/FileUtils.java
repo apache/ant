@@ -27,6 +27,10 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -85,7 +89,7 @@ public class FileUtils {
      *
      * @return a new instance of FileUtils.
      * @deprecated since 1.7.
-     *             Use getFileUtils instead, 
+     *             Use getFileUtils instead,
      * FileUtils do not have state.
      */
     public static FileUtils newFileUtils() {
@@ -617,7 +621,7 @@ public class FileUtils {
      *
      * @return the native version of the specified path or
      *         an empty string if the path is <code>null</code> or empty.
-     *    
+     *
      * @since ant 1.7
      * @see PathTokenizer
      */
@@ -1342,5 +1346,139 @@ public class FileUtils {
             file.delete();
         }
     }
-}
 
+    /**
+     * Calculates the relative path between to files.
+     * <p>
+     * Implementation note:<br/> This function my throw an IOException if an
+     * I/O error occurs because its use of the canonical pathname may require
+     * filesystem queries.
+     * </p>
+     *
+     * @param fromFile
+     *            the <code>File</code> to calculate the path from
+     * @param toFile
+     *            the <code>File</code> to calculate the path to
+     * @return
+     * @throws Exception
+     * @see {@link File#getCanonicalPath()}
+     *
+     * @since Ant 1.7
+     */
+    public static String getRelativePath(
+        File fromFile,
+        File toFile
+    ) throws Exception {
+        String fromPath = fromFile.getCanonicalPath();
+        String toPath = toFile.getCanonicalPath();
+
+        // build the path stack info to compare
+        String[] fromPathStack = getPathStack(fromPath);
+        String[] toPathStack = getPathStack(toPath);
+
+        if (0 < toPathStack.length && 0 < fromPathStack.length) {
+            if (!fromPathStack[0].equals(toPathStack[0])) {
+                // not the same device (would be "" on Linux/Unix)
+
+                return getPath(Arrays.asList(toPathStack));
+            }
+        } else {
+            // no comparison possible
+            return getPath(Arrays.asList(toPathStack));
+        }
+
+        int minLength = Math
+                .min(fromPathStack.length, toPathStack.length);
+
+        int same = 1;
+
+        // get index of parts which are equal
+        for (; same < minLength; same++) {
+            if (!fromPathStack[same].equals(toPathStack[same])) {
+                break;
+            }
+        }
+
+        List relativePathStack = new ArrayList();
+
+        // if "from" part is longer, fill it up with ".."
+        // to reach path which is equal to both paths
+        for (int i = same; i < fromPathStack.length; i++) {
+            relativePathStack.add("..");
+        }
+
+        // fill it up path with parts which were not equal
+        for (int i = same; i < toPathStack.length; i++) {
+            relativePathStack.add(toPathStack[i]);
+        }
+
+        return getPath(relativePathStack);
+    }
+
+    /**
+     * Gets all names of the path as an array of <code>String</code>s.
+     *
+     * @param path
+     *            to get names from
+     * @return <code>String</code>s, never <code>null</code>
+     *
+     * @since Ant 1.7
+     */
+    public static String[] getPathStack(String path) {
+        String normalizedPath = path.replace(File.separatorChar, '/');
+
+        // since Java 1.4
+        //return normalizedPath.split("/");
+        // workaround for Java 1.2-1.3
+        Object[] tokens = StringUtils.split(normalizedPath, '/').toArray();
+        String[] rv = new String[tokens.length];
+        System.arraycopy(tokens, 0, rv, 0, tokens.length);
+        
+        return rv;
+    }
+
+    /**
+     * Gets path from a <code>List</code> of <code>String</code>s.
+     *
+     * @param pathStack
+     *            <code>List</code> of <code>String</code>s to be concated
+     *            as a path.
+     * @return <code>String</code>, never <code>null</code>
+     *
+     * @since Ant 1.7
+     */
+    public static String getPath(List pathStack) {
+        // can safely use '/' because Windows understands '/' as separator
+        return getPath(pathStack, '/');
+    }
+
+    /**
+     * Gets path from a <code>List</code> of <code>String</code>s.
+     *
+     * @param pathStack
+     *            <code>List</code> of <code>String</code>s to be concated
+     *            as a path.
+     * @param separatorChar
+     *            <code>char</code> to be used as separator between names in
+     *            path
+     * @return <code>String</code>, never <code>null</code>
+     *
+     * @since Ant 1.7
+     */
+    public static String getPath(final List pathStack, final char separatorChar) {
+        final StringBuffer buffer = new StringBuffer();
+
+        final Iterator iter = pathStack.iterator();
+        if (iter.hasNext()) {
+            buffer.append(iter.next());
+        }
+
+        while (iter.hasNext()) {
+            buffer.append(separatorChar);
+            buffer.append(iter.next());
+        }
+
+        return buffer.toString();
+    }
+
+}

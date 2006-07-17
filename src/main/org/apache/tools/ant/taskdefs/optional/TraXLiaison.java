@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.net.URL;
@@ -114,7 +115,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     private Vector outputProperties = new Vector();
 
     /** stylesheet parameters */
-    private Vector params = new Vector();
+    private Hashtable params = new Hashtable();
 
     /** factory attributes */
     private Vector attributes = new Vector();
@@ -177,6 +178,11 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
             // not sure what could be the need of this...
             res.setSystemId(JAXPUtils.getSystemId(outfile));
             Source src = getSource(fis, infile);
+
+            // set parameters on each transformation, maybe something has changed
+            //(e.g. value of file name parameter)
+            setTransformationParameters();
+
             transformer.transform(src, res);
         } finally {
             // make sure to close all handles, otherwise the garbage
@@ -320,13 +326,20 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         if (uriResolver != null) {
             transformer.setURIResolver(uriResolver);
         }
-        for (int i = 0; i < params.size(); i++) {
-            final String[] pair = (String[]) params.elementAt(i);
-            transformer.setParameter(pair[0], pair[1]);
-        }
         for (int i = 0; i < outputProperties.size(); i++) {
             final String[] pair = (String[]) outputProperties.elementAt(i);
             transformer.setOutputProperty(pair[0], pair[1]);
+        }
+    }
+
+    /**
+     * Sets the paramters for the transformer.
+     */
+    private void setTransformationParameters() {
+        for (final Enumeration enumeration = params.keys(); enumeration.hasMoreElements(); ) {
+            final String name = (String) enumeration.nextElement();
+            final String value = (String) params.get(name);
+            transformer.setParameter(name, value);
         }
     }
 
@@ -426,8 +439,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
      * @param value the value of the parameter
      */
     public void addParam(String name, String value) {
-        final String[] pair = new String[]{name, value};
-        params.addElement(pair);
+        params.put(name, value);
     }
 
     /**

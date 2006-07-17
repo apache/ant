@@ -63,6 +63,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** extension of the files produced by XSL processing */
     private String targetExtension = ".html";
 
+    /** name for XSL parameter containing the filename */
+    private String fileNameParameter = null;
+
+    /** name for XSL parameter containing the file directory */
+    public String fileDirParameter = null;
+
     /** additional parameters to be passed to the stylesheets */
     private Vector params = new Vector();
 
@@ -473,6 +479,28 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
+     * Pass the filename of the current processed file as a xsl parameter
+     * to the transformation. This value sets the name of that xsl parameter.
+     *
+     * @param fileNameParameter name of the xsl parameter retrieving the
+     *                          current file name
+     */
+    public void setFileNameParameter(String fileNameParameter) {
+        this.fileNameParameter = fileNameParameter;
+    }
+
+    /**
+     * Pass the directory name of the current processed file as a xsl parameter
+     * to the transformation. This value sets the name of that xsl parameter.
+     *
+     * @param fileDirParameter name of the xsl parameter retrieving the
+     *                         current file directory
+     */
+    public void setFileDirParameter(String fileDirParameter) {
+        this.fileDirParameter = fileDirParameter;
+    }
+
+    /**
      * Load processor here instead of in setProcessor - this will be
      * called from within execute, so we have access to the latest
      * classpath.
@@ -623,6 +651,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 log("Processing " + inF + " to " + outF);
 
                 configureLiaison(stylesheet);
+                setLiaisonDynamicFileParameters(liaison, inF);
                 liaison.transform(inF, outF);
             }
         } catch (Exception ex) {
@@ -662,6 +691,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 log("Processing " + inFile + " to " + outFile,
                     Project.MSG_INFO);
                 configureLiaison(stylesheet);
+                setLiaisonDynamicFileParameters(liaison, inFile);
                 liaison.transform(inFile, outFile);
             } else {
                 log("Skipping input file " + inFile
@@ -720,7 +750,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public Enumeration getOutputProperties() {
         return outputProperties.elements();
     }
-
 
     /**
      * Get the Liason implementation to use in processing.
@@ -990,6 +1019,31 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             log("Failed to transform using stylesheet " + stylesheet,
                  Project.MSG_INFO);
             throw new BuildException(ex);
+        }
+    }
+
+    /**
+     * Sets file parameter(s) for directory and filename if the attribute
+     * 'filenameparameter' or 'filedirparameter' are set in the task.
+     *
+     * @param  liaison    to change parameters for
+     * @param  inFile     to get the additional file information from
+     * @throws Exception  if an exception occurs on filename lookup
+     *
+     * @since Ant 1.7
+     */
+    private void setLiaisonDynamicFileParameters(
+        XSLTLiaison liaison,
+        File inFile
+    ) throws Exception {
+        String fileName = FileUtils.getRelativePath(baseDir, inFile);
+        File file = new File(fileName);
+
+        if (fileNameParameter != null) {
+            liaison.addParam(fileNameParameter, inFile.getName());
+        }
+        if (fileDirParameter != null) {
+            liaison.addParam(fileDirParameter, (file.getParent()!=null) ? file.getParent() : "" );
         }
     }
 

@@ -86,7 +86,6 @@ public class StyleTest extends BuildFileTest {
                            "new-value");
     }
 
-
     public void testDefaultMapper() throws Exception {
         testDefaultMapper("testDefaultMapper");
     }
@@ -149,6 +148,32 @@ public class StyleTest extends BuildFileTest {
         expectFileContains("testWithUrlResource", "out/out.xml", "set='value'");
     }
 
+    public void testFilenameAsParam() throws Exception {
+        executeTarget("testFilenameAsParam");
+        assertFileContains("out/out/one.txt",      "filename='one.xml'");
+        assertFileContains("out/out/two.txt",      "filename='two.xml'");
+        assertFileContains("out/out/three.txt",    "filename='three.xml'");
+        assertFileContains("out/out/dir/four.txt", "filename='four.xml'");
+        assertFileContains("out/out/dir/four.txt", "filedir ='-not-set-'");
+    }
+
+    public void testFilenameAsParamNoSetting() throws Exception {
+        executeTarget("testFilenameAsParamNoSetting");
+        assertFileContains("out/out/one.txt",      "filename='-not-set-'");
+        assertFileContains("out/out/two.txt",      "filename='-not-set-'");
+        assertFileContains("out/out/three.txt",    "filename='-not-set-'");
+        assertFileContains("out/out/dir/four.txt", "filename='-not-set-'");
+    }
+
+    public void testFilenameAndFiledirAsParam() throws Exception {
+        executeTarget("testFilenameAndFiledirAsParam");
+        assertFileContains("out/out/one.txt",      "filename='one.xml'");
+        assertFileContains("out/out/one.txt",      "filedir =''");
+        assertFileContains("out/out/dir/four.txt", "filename='four.xml'");
+        assertFileContains("out/out/dir/four.txt", "filedir ='dir'");
+    }
+
+
     // *************  copied from ConcatTest  *************
 
     // ------------------------------------------------------
@@ -166,25 +191,23 @@ public class StyleTest extends BuildFileTest {
         finally {
             FileUtils.close(r);
         }
-
-    }
-
-    private String getFileString(String target, String filename)
-        throws IOException
-    {
-        executeTarget(target);
-        return getFileString(filename);
     }
 
     private void expectFileContains(
         String target, String filename, String contains)
         throws IOException
     {
-        String content = getFileString(target, filename);
+        executeTarget(target);
+        assertFileContains(filename, contains);
+    }
+
+    private void assertFileContains(String filename, String contains) throws IOException {
+        String content = getFileString(filename);
         assertTrue(
-            "expecting file " + filename + " to contain " +
-            contains +
-            " but got " + content, content.indexOf(contains) > -1);
+              "expecting file " + filename
+            + " to contain " + contains
+            + " but got " + content,
+            content.indexOf(contains) > -1);
     }
 
 }

@@ -11,6 +11,7 @@
   <target name="teardown">
       <delete dir="${out.dir}" failonerror="false" />
   </target>
+  
 
   <target name="testStyleIsSet">
       <xslt in="data.xml" out="${out.dir}/out.xml"/>
@@ -128,5 +129,55 @@
           <param name="set" expression="value"/>
       </xslt>
   </target>
-  
+
+  <target name="testFilenameAndFiledirAsParam">
+      <mkdir dir="${out.dir}/xml/dir"/>
+      <mkdir dir="${out.dir}/out"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <xslt style="printFilename.xsl"
+            destdir="${out.dir}/out"
+            basedir="${out.dir}/xml"
+            includes="**/*.xml"
+            extension=".txt"
+
+            filenameparameter="filename"
+            filedirparameter="filedir"
+      />
+  </target>
+
+  <target name="testFilenameAsParam">
+      <mkdir dir="${out.dir}/xml/dir"/>
+      <mkdir dir="${out.dir}/out"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <xslt style="printFilename.xsl"
+            destdir="${out.dir}/out"
+            basedir="${out.dir}/xml"
+            includes="**/*.xml"
+            extension=".txt"
+
+            filenameparameter="filename"
+      />
+  </target>
+
+  <target name="testFilenameAsParamNoSetting">
+      <mkdir dir="${out.dir}/xml/dir"/>
+      <mkdir dir="${out.dir}/out"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <xslt style="printFilename.xsl"
+            destdir="${out.dir}/out"
+            basedir="${out.dir}/xml"
+            includes="**/*.xml"
+            extension=".txt"
+      /> <!-- without 'filenameparameter' to check, that the xsl:param is NOT set -->
+  </target>
+
 </project>
