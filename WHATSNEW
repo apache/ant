@@ -10,7 +10,7 @@ Changes that could break older environments:
 * Improved recursion detection for lines with multiple matches of same token
   on a single line.  Bugzilla report 38456.
 
-* Task will now log correctly even if no project is set. 
+* Task will now log correctly even if no project is set.
   Bugzilla report 38458.
 
 * Use alternative names for the command line arguments in javac. Bugzilla
@@ -39,9 +39,9 @@ Changes that could break older environments:
   volumes can still be specified without an intervening separator.
   UNC pathnames on Windows must include a server and share name, i.e.
   "\\a\b" to be considered valid absolute paths.
-  
+
 * The <java fork="false"> now as per default installs a security manager
-  using the default permissions. This is now independent of the 
+  using the default permissions. This is now independent of the
   failonerror attribute.  Bugzilla report 33361.
 
 * <signjar> now notices when the jar and signedjar are equal, and switches
@@ -54,16 +54,16 @@ Changes that could break older environments:
 * <signjar> used to ignore a nested fileset when a jar was also provided as an
   attribute, printing a warning message; now it signs files in the fileset.
 
-* An improved method of handling timestamp granularity differences between 
+* An improved method of handling timestamp granularity differences between
   client and server was added to the <ftp> task.  FTP servers typically
   have HH:mm timestamps whereas local filesystems have HH:mm:ss timestamps.
-  Previously, this required tweaking with the timediffmillis attribute 
-  which also was used to handle timezone differences.  Now, there is a new 
+  Previously, this required tweaking with the timediffmillis attribute
+  which also was used to handle timezone differences.  Now, there is a new
   timestampgranularity attribute.  The default value for get operations is 0
-  since the user has the more powerful preservelastmodified attribute to work 
-  with.  Since this is not available on put operations the default value 
+  since the user has the more powerful preservelastmodified attribute to work
+  with.  Since this is not available on put operations the default value
   adds a minute to the server timestamp in order to account for this,
-  Scripts which previously used timediffmillis to do this compensation may 
+  Scripts which previously used timediffmillis to do this compensation may
   need to be rewritten.  timediffmillis has now been deprecated.
 
 * On Java1.5+, Ant automatically sets the system property
@@ -90,13 +90,13 @@ Changes that could break older environments:
 
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
   is \n (Unix).  Bugzilla report 39585.
-  
+
 * <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.
   Bugzilla Report 39373.
-  
+
 * Ant launcher program prints errors to stderr, and exits with a -1 exit code
   value if, for any reason, it cannot actually start Ant proper. This will only
-  affect programs/scripts that called the launcher and which did not want to 
+  affect programs/scripts that called the launcher and which did not want to
   receive an error if ant itself would not start
 
 Fixed bugs:
@@ -108,7 +108,7 @@ Fixed bugs:
 
 * <rpm> now also correctly searches the first element of the path.  Bug report 39345.
 
-* ant.bat now handles classpath set to "". Bug report 38914. 
+* ant.bat now handles classpath set to "". Bug report 38914.
 
 * <junit> now supports JUnit 4. Bugzilla Report 38811.
 
@@ -138,11 +138,11 @@ Fixed bugs:
 
 * Incorrect task name with invalid "javac" task after a "presetdef".
   Bugzilla reports 31389 and 29499.
-  
+
 * <manifest> was not printing warnings about invalid manifest elements.
   Bugzilla report 32190.
 
-* <replace> got out of memory on large files (part of report 32566). 
+* <replace> got out of memory on large files (part of report 32566).
   <replace> can now handle files as long as there is enough disk space
   available.
 
@@ -154,12 +154,12 @@ Fixed bugs:
 
 * FileUtils.resolveFile() promised to return absolute files but
   did not always do so.
-  
+
 * <ftp> failed to retrieve a file when the path towards the file contained
   an element starting with . Bugzilla report 33770.
-  
+
 * "<rmic> always compiles on Java1.5" bugzilla report=33862. Fixed default
-  stub version to always be "compat", even on Java1.5+. 
+  stub version to always be "compat", even on Java1.5+.
 
 * The .NET compilation tasks failed if filenames given as references
   contained spaces.  Bugzilla Report 27170.
@@ -179,8 +179,8 @@ Fixed bugs:
 
 * <xmlvalidate> and <schemavalidate> create a new parser for every file in a
   fileset, and so validate multiple files properly. Bugzilla Report 32791.
-  
-* <tar> / <untar> now accepts files upto 8GB, <tar> gives an error if larger 
+
+* <tar> / <untar> now accepts files upto 8GB, <tar> gives an error if larger
   files are to be included. This is the POSIX size limit.
 
 * <junitreport> removed line-breaks from stack-traces.  Bugzilla
@@ -248,8 +248,11 @@ Fixed bugs:
 * <echoproperties> setPrefix javadoc claimed null or empty prefix would be
   ignored; instead an error was thrown.  Bugzilla report 39954.
 
-* <get> would fetch files that were up to date, because it used > in a 
+* <get> would fetch files that were up to date, because it used > in a
   remote/local timestamp comparison, not >=. Bugzilla 35607.
+  
+* <xslt> passes the current file (name + directory) to the stylesheet/transformation.
+  xsl-parameter name is configurable.  Bugzilla report 21042.
 
 Other changes:
 --------------
@@ -275,7 +278,7 @@ Other changes:
 * <echoproperties> now (alphanumerically) sorts the property list
   before echoing. Bugzilla report 18976.
 
-* A new base class DispatchTask has been added to facilitate elegant 
+* A new base class DispatchTask has been added to facilitate elegant
   creation of tasks with multiple actions.
 
 * Major revision of <wsdltodotnet>. Supports mono wsdl and the microsoft
@@ -311,7 +314,7 @@ Other changes:
 * Added <scriptselector> selector for scripted file selection
 
 * ant -diagnostics lists contents of ${user.home}/.ant/lib , and
-  checks that the java.io.tmpdir directory exists and is writeable. 
+  checks that the java.io.tmpdir directory exists and is writeable.
 
 * mail task accepts nested header element.  Bugzilla report 24713.
 
@@ -336,7 +339,7 @@ Other changes:
 * <sync> has a new nested element <preserveInTarget> that can be used
   to protect extra-content in the target directory.  Bugzilla Report
   21832.
-  
+
 * <signjar> now supports:
   -nested filesets at the same time as the jar attribute
   -a destDir attribute with the appropriate dependency logic, which
@@ -350,7 +353,7 @@ Other changes:
   Bugzilla Report 34374.
 
 * <os> condition adds "winnt" as a family which can be tested. This is
-  all windows platforms other than the Win9x line or Windows CE.  
+  all windows platforms other than the Win9x line or Windows CE.
 
 * <exec> (and hence, <apply> and any other derived classes) have an OsFamily
   attribute, which can restrict execution to a single OS family.
@@ -367,10 +370,10 @@ Other changes:
 * project name is now used for *all* targets so one can write consistent import
   build files. Bugzilla report 28444.
 
-* New condition <typefound> that can be used to probe for the declaration 
-  and implementation of a task, type, preset, macro, scriptdef, whatever. 
+* New condition <typefound> that can be used to probe for the declaration
+  and implementation of a task, type, preset, macro, scriptdef, whatever.
   As it tests for the implementation, it can be used to check for optional
-  tasks being available. 
+  tasks being available.
 
 * check for 1.5.* Ant main class. (weblogic.jar in classpath reports)
 
@@ -402,7 +405,7 @@ Other changes:
 * New logger, TimestampedLogger, that prints the wall time that a build
   finished/failed. Use with
   -logger org.apache.tools.ant.listener.TimestampedLogger
-  
+
 * <junitreport> now generates pages alltests-errors.html and
   alltests-fails.html, that list only the errors and failures, respectively.
   Bugzilla Report: 36226
@@ -469,11 +472,11 @@ Other changes:
 
 * <javacc> has a jdkversion attribute to pass the desired JDK version down to javacc.
   Bugzilla report 38715.
-  
-* <cvs> prints passfile info at -verbose level instead of -info. Bugzilla 
+
+* <cvs> prints passfile info at -verbose level instead of -info. Bugzilla
   report 35268
-     
-* When <javac> can't find the compiler class, it prints out java.home for 
+
+* When <javac> can't find the compiler class, it prints out java.home for
   immediate diagnostics
 
 * Ant launcher now supports a -main attribute so that you can specify an extension
@@ -503,12 +506,12 @@ Changes from Ant 1.6.3 to Ant 1.6.4
 
 Changes that could break older environments:
 --------------------------------------------
-* <ftp> task has had a number of changes.  Uptodate calculation previously 
-  did not call a file uptodate if the source timestamp and the destination 
+* <ftp> task has had a number of changes.  Uptodate calculation previously
+  did not call a file uptodate if the source timestamp and the destination
   timestamp were equal. Bugzilla report 34941.  Any script that attempted
   to compensate for this by using the timediffmillis attribute might need
-  to be tweaked.  
-  
+  to be tweaked.
+
 
 Fixed bugs:
 -----------
@@ -535,7 +538,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-* AntXMLContext.setCurrentTargets() is now public. Bugzilla report 34680. 
+* AntXMLContext.setCurrentTargets() is now public. Bugzilla report 34680.
 
 Changes from Ant 1.6.2 to Ant 1.6.3
 ===================================
@@ -680,7 +683,7 @@ Other changes:
 
 * Ant generated jar files should now be detected as jar files by
   Solaris.  Bugzilla Report 32649.
-  
+
 * <rexec> with a single command should now work with unusal login
   dialogs without special read/write pairs.  Bugzilla Report 26632.
 
@@ -702,8 +705,8 @@ Other changes:
   - beginner: introduction into Ant
   - task developers: using path, fileset etc
 
-* a number of new attributes that allow the user to handle non-standard 
-  server listing formats and time zone differences have been added in 
+* a number of new attributes that allow the user to handle non-standard
+  server listing formats and time zone differences have been added in
   the <ftp> task.
 
 
@@ -727,7 +730,7 @@ Fixed bugs:
   when Ant core loader != Java application loader and
   Path.systemClassPath taken from ${java.class.path} Bugzilla 30161.
 
-* MacroInstance did not clean up nested elements correctly in the execute 
+* MacroInstance did not clean up nested elements correctly in the execute
   method, causing multiple use of the same macro instance with nested
   elements to fail.
 
@@ -906,7 +909,7 @@ Fixed bugs:
   Bugzilla Report 25982.
 
 * Throw build exception if target repeated in build file, but allow targets
-  to be repeated in imported files. 
+  to be repeated in imported files.
 
 * <apply> didn't compare timestamps of source and targetfiles when
   using a nested <filelist>.  Bugzilla Report 26985.
@@ -1116,7 +1119,7 @@ Fixed bugs:
 * Remove a recursive template call in the junit xsls that could trigger a stack
   overflow. It now uses Xalan extensions to call a Java class directly.
   Bugzilla Report 19301
-  
+
 * Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
   Bugzilla Report 23154.
 
@@ -1172,7 +1175,7 @@ Other changes:
   Bugzilla Report 26253.
 
 * added nested text support to <macrodef>
-  
+
 * added initial support for Java 1.5.  Java 1.5 is now correctly
   detected by Ant and treated just like Java 1.4.  You can now specify
   source="1.5" in the <javac> task.
