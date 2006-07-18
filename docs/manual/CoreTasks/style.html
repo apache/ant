@@ -191,8 +191,8 @@ element which is used to perform Entity and URI resolution.</p>
   </tr>
   <tr>
     <td valign="top">filenameparameter</td>
-    <td valign="top">Specifies a xsl parameter for accessing the name 
-    of the current processed file. If not set, the file name is not 
+    <td valign="top">Specifies a xsl parameter for accessing the name
+    of the current processed file. If not set, the file name is not
     passed to the transformation.
     <em>Since Ant 1.7</em>.</td>
     <td valign="top" align="center">No</td>
@@ -200,8 +200,9 @@ element which is used to perform Entity and URI resolution.</p>
   <tr>
     <td valign="top">filedirparameter</td>
     <td valign="top">Specifies a xsl parameter for accessing the directory
-    of the current processed file. If not set, the directory is not 
-    passed to the transformation.
+    of the current processed file. For files in the current directory a
+    value of '.' will be passed to the transformation.
+    If not set, the directory is not passed to the transformation. 
     <em>Since Ant 1.7</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -454,7 +455,7 @@ See <a href="../CoreTypes/resources.html">resources</a> to see the concrete synt
 &lt;/xsl:template&gt;
 
 &lt;/xsl:stylesheet&gt;
-</pre>  
+</pre>
 
 </blockquote>
 <hr>

@@ -168,7 +168,7 @@ public class StyleTest extends BuildFileTest {
     public void testFilenameAndFiledirAsParam() throws Exception {
         executeTarget("testFilenameAndFiledirAsParam");
         assertFileContains("out/out/one.txt",      "filename='one.xml'");
-        assertFileContains("out/out/one.txt",      "filedir =''");
+        assertFileContains("out/out/one.txt",      "filedir ='.'");
         assertFileContains("out/out/dir/four.txt", "filename='four.xml'");
         assertFileContains("out/out/dir/four.txt", "filedir ='dir'");
     }

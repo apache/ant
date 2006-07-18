@@ -1037,13 +1037,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         File inFile
     ) throws Exception {
         String fileName = FileUtils.getRelativePath(baseDir, inFile);
-        File file = new File(fileName);
-
+        
+        String name;
+        String dir;
+        int lastDirSep = fileName.lastIndexOf("/");
+        if (lastDirSep > -1) {
+            name = fileName.substring(lastDirSep + 1);
+            dir  = fileName.substring(0, lastDirSep);
+        } else {
+            name = fileName;
+            dir  = ".";      // so a dir+"/"+name would not result in an absolute path
+        }
+        
         if (fileNameParameter != null) {
-            liaison.addParam(fileNameParameter, inFile.getName());
+            liaison.addParam(fileNameParameter, name);
         }
         if (fileDirParameter != null) {
-            liaison.addParam(fileDirParameter, (file.getParent()!=null) ? file.getParent() : "" );
+            liaison.addParam(fileDirParameter, dir);
         }
     }
 
