@@ -293,8 +293,6 @@ Other changes:
 * Added a new "failall" value for the onerror attribute of <typedef>.
   Bugzilla report 31685.
 
-* New task <libraries> can retrieve library files from a maven repository.
-
 * unzip/unwar/unjar/untar now supports a nested mapper, which lets you unzip
   in useful ways.
 
@@ -1840,7 +1838,6 @@ Other changes:
 
 * Ant libraries that can make use of namespaces to avoid name
   clashes of custom tasks
-
 
 * <java> and <junit> now support <assertions>, which let you enable
   and disable Java1.4 assertions on a package or class basis. These
