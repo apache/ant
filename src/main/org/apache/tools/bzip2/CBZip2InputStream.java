@@ -127,7 +127,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private CBZip2InputStream.Data data;
 
     /**
-     * Constructs a new CBZip2InputStream which decompresses bytes readed from
+     * Constructs a new CBZip2InputStream which decompresses bytes read from
      * the specified stream.
      *
      * <p>Although BZip2 headers are marked with the magic
