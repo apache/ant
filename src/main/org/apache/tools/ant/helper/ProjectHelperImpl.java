@@ -296,6 +296,11 @@ public class ProjectHelperImpl extends ProjectHelper {
                 File file = new File(path);
                 if (!file.isAbsolute()) {
                     file = FILE_UTILS.resolveFile(helperImpl.buildFileParent, path);
+                    helperImpl.project.log(
+                            "Warning: '" + systemId + "' in " + helperImpl.buildFile +
+                            " should be expressed simply as '" + path.replace('\\', '/') +
+                            "' for compliance with other XML tools",
+                            Project.MSG_WARN);
                 }
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));

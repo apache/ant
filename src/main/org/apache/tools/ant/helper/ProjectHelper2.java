@@ -477,6 +477,11 @@ public class ProjectHelper2 extends ProjectHelper {
                 File file = new File(path);
                 if (!file.isAbsolute()) {
                     file = FILE_UTILS.resolveFile(context.getBuildFileParent(), path);
+                    context.getProject().log(
+                            "Warning: '" + systemId + "' in " + context.getBuildFile() +
+                            " should be expressed simply as '" + path.replace('\\', '/') +
+                            "' for compliance with other XML tools",
+                            Project.MSG_WARN);
                 }
                 context.getProject().log("file=" + file, Project.MSG_DEBUG);
                 try {
