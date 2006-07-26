@@ -17,6 +17,8 @@
 
 package org.apache.tools.ant.types;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -39,7 +41,7 @@ public class DirSetTest extends AbstractFileSetTest {
         FileSet fs = new FileSet();
         fs.setProject(getProject());
         getProject().addReference("dummy", fs);
-        ds.setRefid(new Reference("dummy"));
+        ds.setRefid(new Reference(getProject(), "dummy"));
         try {
             ds.getDir(getProject());
             fail("DirSet created from FileSet reference");
@@ -50,13 +52,31 @@ public class DirSetTest extends AbstractFileSetTest {
         ds = (DirSet) getInstance();
         ds.setProject(getProject());
         getProject().addReference("dummy2", ds);
-        fs.setRefid(new Reference("dummy2"));
+        fs.setRefid(new Reference(getProject(), "dummy2"));
         try {
             fs.getDir(getProject());
             fail("FileSet created from DirSet reference");
         } catch (BuildException e) {
             assertEquals("dummy2 doesn\'t denote a FileSet", e.getMessage());
         }
+    }
+
+    public void testToString() throws Exception {
+        File tmp = File.createTempFile("DirSetTest", "");
+        tmp.delete();
+        File a = new File(tmp, "a");
+        a.mkdirs();
+        File b = new File(tmp, "b");
+        File bc = new File(b, "c");
+        bc.mkdirs();
+        new FileOutputStream(new File(a, "x")).close();
+        new FileOutputStream(new File(b, "x")).close();
+        new FileOutputStream(new File(bc, "x")).close();
+        DirSet ds = new DirSet();
+        ds.setProject(getProject());
+        ds.setDir(tmp);
+        ds.setIncludes("b/");
+        assertEquals("b;b" + File.separator + "c", ds.toString());
     }
 
 }
