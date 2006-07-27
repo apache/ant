@@ -221,6 +221,7 @@ public class Input extends Task {
         } else {
             request = new InputRequest(message);
         }
+        request.setDefaultValue(defaultvalue);
 
         InputHandler h = handler == null
             ? getProject().getInputHandler()

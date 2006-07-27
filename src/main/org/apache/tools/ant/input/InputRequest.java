@@ -25,6 +25,7 @@ package org.apache.tools.ant.input;
 public class InputRequest {
     private String prompt;
     private String input;
+    private String defaultValue;
 
     /**
      * Construct an InputRequest.
@@ -68,6 +69,22 @@ public class InputRequest {
      */
     public String getInput() {
         return input;
+    }
+
+    /**
+     * Gets a configured default value.
+     * @since Ant 1.7.0
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Configures a default value.
+     * @since Ant 1.7.0
+     */
+    public void setDefaultValue(String d) {
+        defaultValue = d;
     }
 
 }
