@@ -129,6 +129,9 @@
       <manifest>
         <attribute name="Class-path" 
                    value="${test.longline}"/>
+        <attribute name="${test.long68name}" value="${test.value}" />
+        <attribute name="${test.long70name}" value="${test.value}" />
+        <attribute name="${test.notlongname}" value="${test.value}" />
       </manifest>
     </jar>
     <unjar src="mftestLongLine.jar" dest="manifests">
