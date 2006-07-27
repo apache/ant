@@ -82,23 +82,34 @@ public class DefaultInputHandler implements InputHandler {
      */
     protected String getPrompt(InputRequest request) {
         String prompt = request.getPrompt();
+        String def = request.getDefaultValue();
         if (request instanceof MultipleChoiceInputRequest) {
             StringBuffer sb = new StringBuffer(prompt);
-            sb.append("(");
+            sb.append(" (");
             Enumeration e =
                 ((MultipleChoiceInputRequest) request).getChoices().elements();
             boolean first = true;
             while (e.hasMoreElements()) {
                 if (!first) {
-                    sb.append(",");
+                    sb.append(", ");
                 }
-                sb.append(e.nextElement());
+                String next = (String) e.nextElement();
+                if (next.equals(def)) {
+                    sb.append('[');
+                }
+                sb.append(next);
+                if (next.equals(def)) {
+                    sb.append(']');
+                }
                 first = false;
             }
             sb.append(")");
-            prompt = sb.toString();
+            return sb.toString();
+        } else if (def != null) {
+            return prompt + " [" + def + "]";
+        } else {
+            return prompt;
         }
-        return prompt;
     }
 
     /**
