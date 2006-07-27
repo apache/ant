@@ -17,12 +17,12 @@
 
 package org.apache.tools.ant.input;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.KeepAliveInputStream;
 
 /**
  * Prompts on System.err, reads input from System.in
@@ -45,15 +45,14 @@ public class DefaultInputHandler implements InputHandler {
      */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
-        DataInputStream in = null;
+        BufferedReader r = null;
         try {
-            in =
-                new DataInputStream(new KeepAliveInputStream(getInputStream()));
+            r = new BufferedReader(new InputStreamReader(getInputStream()));
             do {
                 System.err.println(prompt);
                 System.err.flush();
                 try {
-                    String input = in.readLine();
+                    String input = r.readLine();
                     request.setInput(input);
                 } catch (IOException e) {
                     throw new BuildException("Failed to read input from"
@@ -61,9 +60,9 @@ public class DefaultInputHandler implements InputHandler {
                 }
             } while (!request.isInputValid());
         } finally {
-            if (in != null) {
+            if (r != null) {
                 try {
-                    in.close();
+                    r.close();
                 } catch (IOException e) {
                     throw new BuildException("Failed to close input.", e);
                 }
