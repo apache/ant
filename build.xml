@@ -739,7 +739,7 @@
           value="org.apache.tools.ant"/>
         <attribute name="Implementation-Version"
           value="${manifest-version}"/>
-        <attribute name="Implemenatation-Vendor"
+        <attribute name="Implementation-Vendor"
           value="Apache Software Foundation"/>
       </section>
     </manifest>
