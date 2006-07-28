@@ -258,7 +258,7 @@ Other changes:
 --------------
 
 * InputHandler implementations may now call InputRequest.getDefaultValue()
-  if they wish.
+  if they wish. The default handler uses this also. Bugzilla report 28621.
 
 * Took in bugzilla report 39320.
 
