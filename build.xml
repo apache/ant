@@ -739,7 +739,7 @@
           value="org.apache.tools.ant"/>
         <attribute name="Implementation-Version"
           value="${manifest-version}"/>
-        <attribute name="Implementation-Vendor"
+        <attribute name="Implemenatation-Vendor"
           value="Apache Software Foundation"/>
       </section>
     </manifest>
@@ -1024,6 +1024,7 @@
         <include name="KEYS"/>
         <include name="welcome.html"/>
         <include name="fetch.xml"/>
+	<include name="get-m2.xml"/>
       </fileset>
     </copy>
 
@@ -1125,6 +1126,7 @@
         <include name="build.xml"/>
         <include name="fetch.xml"/>
         <include name="welcome.html"/>
+	<include name="get-m2.xml"/>
       </fileset>
     </copy>
 
