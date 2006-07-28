@@ -14,7 +14,7 @@
 treatment for files that should end up in the
 <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
 <code>WEB-INF</code> directories of the Web Application Archive.</p>
-<p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
+<p>(The War task is a shortcut for specifying the particular layout of a WAR file.
 The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
 attributes of zipfilesets in a Zip or Jar task.)</p>
 <p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
@@ -41,7 +41,7 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top">warfile</td>
     <td valign="top"><i>Deprecated<i> name of the file to create
     -use <tt>destfile</tt> instead.</td>
-  </tr>      
+  </tr>
   <tr>
     <td valign="top">webxml</td>
     <td valign="top">The deployment descriptor to use (WEB-INF/web.xml).</td>
@@ -192,7 +192,7 @@ then the war file <code>myapp.war</code> created with
     &lt;exclude name=&quot;jdbc1.jar&quot;/&gt;
   &lt;/lib&gt;
   &lt;classes dir=&quot;build/main&quot;/&gt;
-  &lt;zipfileset dir=&quot;src/graphics/images/gifs&quot; 
+  &lt;zipfileset dir=&quot;src/graphics/images/gifs&quot;
               prefix=&quot;images&quot;/&gt;
 &lt;/war&gt;
 </pre>
@@ -211,17 +211,19 @@ using Ant's default manifest file. The content of
 <code>WEB-INF/web.xml</code> is identical to
 <code>src/metadata/myapp.xml</code>.
 
-We regulary receive bug reports that this task is creating the WEB-INF
+<p>We regulary receive bug reports that this task is creating the WEB-INF
 directory, and thus it is our fault your webapp doesn't work. The cause
 of these complaints lies in WinZip, which turns an all upper-case
 directory into an all lower case one in a fit of helpfulness. Please check that
 jar xvf yourwebapp.war shows the same behaviour before filing another
-report. 
+report.<br/>
+Winzip has an option allowing all uppercase names (which is off by default!).  It can be enabled by:
+Menu "Options" -> "Configuration",  "View" property/tab page, then "General" group box has an option called "Allow all uppercase file names".
+</p>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-
