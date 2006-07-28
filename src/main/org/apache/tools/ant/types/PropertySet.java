@@ -320,6 +320,9 @@ public class PropertySet extends DataType implements ResourceCollection {
         for (Iterator iter = names.iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             String value = (String) props.get(name);
+            if (value != null) {
+                // may be null if a system property has been added
+                // after the project instance has been initialized
             if (m != null) {
                 //map the names
                 String[] newname = m.mapFileName(name);
@@ -328,6 +331,7 @@ public class PropertySet extends DataType implements ResourceCollection {
                 }
             }
             properties.setProperty(name, value);
+            }
         }
         return properties;
     }
