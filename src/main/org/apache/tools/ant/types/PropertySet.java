@@ -323,14 +323,14 @@ public class PropertySet extends DataType implements ResourceCollection {
             if (value != null) {
                 // may be null if a system property has been added
                 // after the project instance has been initialized
-            if (m != null) {
-                //map the names
-                String[] newname = m.mapFileName(name);
-                if (newname != null) {
-                    name = newname[0];
+                if (m != null) {
+                    //map the names
+                    String[] newname = m.mapFileName(name);
+                    if (newname != null) {
+                        name = newname[0];
+                    }
                 }
-            }
-            properties.setProperty(name, value);
+                properties.setProperty(name, value);
             }
         }
         return properties;
