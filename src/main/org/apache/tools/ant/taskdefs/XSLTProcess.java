@@ -1036,24 +1036,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         XSLTLiaison liaison,
         File inFile
     ) throws Exception {
-        String fileName = FileUtils.getRelativePath(baseDir, inFile);
-        
-        String name;
-        String dir;
-        int lastDirSep = fileName.lastIndexOf("/");
-        if (lastDirSep > -1) {
-            name = fileName.substring(lastDirSep + 1);
-            dir  = fileName.substring(0, lastDirSep);
-        } else {
-            name = fileName;
-            dir  = ".";      // so a dir+"/"+name would not result in an absolute path
-        }
-        
         if (fileNameParameter != null) {
-            liaison.addParam(fileNameParameter, name);
+            liaison.addParam(fileNameParameter, inFile.getName());
         }
         if (fileDirParameter != null) {
-            liaison.addParam(fileDirParameter, dir);
+            String fileName = FileUtils.getRelativePath(baseDir, inFile);
+            File file = new File(fileName);
+            // Give always a slash as file separator, so the stylesheet could be sure about that
+            // Use '.' so a dir+"/"+name would not result in an absolute path
+            liaison.addParam(fileDirParameter, (file.getParent()!=null) ? file.getParent().replace('\\','/') : "." );
         }
     }
 
