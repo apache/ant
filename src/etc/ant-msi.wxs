@@ -16,6 +16,8 @@
 
 <!--
    WiX File describing the MSI for Ant
+   
+   XSD lives at http://wix.cvs.sourceforge.net/*checkout*/wix/wix2.0/src/wix/Xsd/wix.xsd
 -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
 
