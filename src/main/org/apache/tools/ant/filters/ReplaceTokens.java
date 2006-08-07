@@ -22,8 +22,9 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Replaces tokens in the original input with user-supplied values.
@@ -227,12 +228,17 @@ public final class ReplaceTokens
      * @param fileName The file to load properties from.
      */
     private Properties getPropertiesFromFile (String fileName) {
+        FileInputStream in = null;
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream(fileName));
+            in = new FileInputStream(fileName);
+            props.load(in);
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        } finally {
+            FileUtils.close(in);
         }
+        
         return props;
     }
 
