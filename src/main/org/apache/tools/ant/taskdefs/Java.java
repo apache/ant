@@ -122,11 +122,11 @@ public class Java extends Task {
      * @throws BuildException if required parameters are missing.
      */
     public int executeJava() throws BuildException {
-        String classname = cmdl.getClassname();
-        if (classname == null && cmdl.getJar() == null) {
+        String classname = getCommandLine().getClassname();
+        if (classname == null && getCommandLine().getJar() == null) {
             throw new BuildException("Classname must not be null.");
         }
-        if (!fork && cmdl.getJar() != null) {
+        if (!fork && getCommandLine().getJar() != null) {
             throw new BuildException("Cannot execute a jar in non-forked mode."
                                      + " Please set fork='true'. ");
         }
@@ -134,7 +134,7 @@ public class Java extends Task {
             throw new BuildException("Cannot spawn a java process in non-forked mode."
                                      + " Please set fork='true'. ");
         }
-        if (cmdl.getClasspath()!=null && cmdl.getJar()!=null) {
+        if (getCommandLine().getClasspath()!=null && getCommandLine().getJar()!=null) {
             log("When using 'jar' attribute classpath-settings are ignored. "
                 + "See the manual for more information.", Project.MSG_VERBOSE);
         }
@@ -147,16 +147,16 @@ public class Java extends Task {
             throw new BuildException("You have used an attribute "
                 + "or nested element which is not compatible with spawn");
         }
-        if (cmdl.getAssertions() != null && !fork) {
+        if (getCommandLine().getAssertions() != null && !fork) {
             log("Assertion statements are currently ignored in non-forked mode");
         }
         if (fork) {
             if (perm != null) {
                 log("Permissions can not be set this way in forked mode.", Project.MSG_WARN);
             }
-            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
+            log(getCommandLine().describeCommand(), Project.MSG_VERBOSE);
         } else {
-            if (cmdl.getVmCommand().size() > 1) {
+            if (getCommandLine().getVmCommand().size() > 1) {
                 log("JVM args ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
@@ -168,30 +168,30 @@ public class Java extends Task {
                 log("Changes to environment variables are ignored when same "
                     + "JVM is used.", Project.MSG_WARN);
             }
-            if (cmdl.getBootclasspath() != null) {
+            if (getCommandLine().getBootclasspath() != null) {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
             if (perm == null) {
                 perm = new Permissions(true);
-                log("running " + this.cmdl.getClassname()
+                log("running " + this.getCommandLine().getClassname()
                     + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
             }
-            log("Running in same VM " + cmdl.describeJavaCommand(),
+            log("Running in same VM " + getCommandLine().describeJavaCommand(),
                 Project.MSG_VERBOSE);
         }
         setupRedirector();
         try {
             if (fork) {
                 if (!spawn) {
-                    return fork(cmdl.getCommandline());
+                    return fork(getCommandLine().getCommandline());
                 } else {
-                    spawn(cmdl.getCommandline());
+                    spawn(getCommandLine().getCommandline());
                     return 0;
                 }
             } else {
                 try {
-                    run(cmdl);
+                    run(getCommandLine());
                     return 0;
                 } catch (ExitException ex) {
                     return ex.getStatus();
@@ -244,7 +244,7 @@ public class Java extends Task {
      * @return created classpath.
      */
     public Path createClasspath() {
-        return cmdl.createClasspath(getProject()).createPath();
+        return getCommandLine().createClasspath(getProject()).createPath();
     }
 
     /**
@@ -254,7 +254,7 @@ public class Java extends Task {
      * @return created bootclasspath.
      */
     public Path createBootclasspath() {
-        return cmdl.createBootclasspath(getProject()).createPath();
+        return getCommandLine().createBootclasspath(getProject()).createPath();
     }
 
     /**
@@ -284,11 +284,11 @@ public class Java extends Task {
      * @throws BuildException if there is also a main class specified.
      */
     public void setJar(File jarfile) throws BuildException {
-        if (cmdl.getClassname() != null) {
+        if (getCommandLine().getClassname() != null) {
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command.");
         }
-        cmdl.setJar(jarfile.getAbsolutePath());
+        getCommandLine().setJar(jarfile.getAbsolutePath());
     }
 
     /**
@@ -299,11 +299,11 @@ public class Java extends Task {
      * @throws BuildException if the jar attribute has been set.
      */
     public void setClassname(String s) throws BuildException {
-        if (cmdl.getJar() != null) {
+        if (getCommandLine().getJar() != null) {
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command");
         }
-        cmdl.setClassname(s);
+        getCommandLine().setClassname(s);
     }
 
     /**
@@ -317,7 +317,7 @@ public class Java extends Task {
     public void setArgs(String s) {
         log("The args attribute is deprecated. "
             + "Please use nested arg elements.", Project.MSG_WARN);
-        cmdl.createArgument().setLine(s);
+        getCommandLine().createArgument().setLine(s);
     }
 
     /**
@@ -330,7 +330,7 @@ public class Java extends Task {
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
-        cmdl.setCloneVm(cloneVm);
+        getCommandLine().setCloneVm(cloneVm);
     }
 
     /**
@@ -339,7 +339,7 @@ public class Java extends Task {
      * @return created argument.
      */
     public Commandline.Argument createArg() {
-        return cmdl.createArgument();
+        return getCommandLine().createArgument();
     }
 
     /**
@@ -385,7 +385,7 @@ public class Java extends Task {
     public void setJvmargs(String s) {
         log("The jvmargs attribute is deprecated. "
             + "Please use nested jvmarg elements.", Project.MSG_WARN);
-        cmdl.createVmArgument().setLine(s);
+        getCommandLine().createVmArgument().setLine(s);
     }
 
     /**
@@ -394,7 +394,7 @@ public class Java extends Task {
      * @return JVM argument created.
      */
     public Commandline.Argument createJvmarg() {
-        return cmdl.createVmArgument();
+        return getCommandLine().createVmArgument();
     }
 
     /**
@@ -403,7 +403,7 @@ public class Java extends Task {
      * @param s command to start the VM.
      */
     public void setJvm(String s) {
-        cmdl.setVm(s);
+        getCommandLine().setVm(s);
     }
 
     /**
@@ -412,7 +412,7 @@ public class Java extends Task {
      * @param sysp system property.
      */
     public void addSysproperty(Environment.Variable sysp) {
-        cmdl.addSysproperty(sysp);
+        getCommandLine().addSysproperty(sysp);
     }
 
     /**
@@ -423,7 +423,7 @@ public class Java extends Task {
      * @since Ant 1.6
      */
     public void addSyspropertyset(PropertySet sysp) {
-        cmdl.addSyspropertyset(sysp);
+        getCommandLine().addSyspropertyset(sysp);
     }
 
     /**
@@ -542,7 +542,7 @@ public class Java extends Task {
      * @param max max memory parameter.
      */
     public void setMaxmemory(String max) {
-        cmdl.setMaxmemory(max);
+        getCommandLine().setMaxmemory(max);
     }
 
     /**
@@ -550,7 +550,7 @@ public class Java extends Task {
      * @param value JVM version.
      */
     public void setJVMVersion(String value) {
-        cmdl.setVmversion(value);
+        getCommandLine().setVmversion(value);
     }
 
     /**
@@ -609,10 +609,10 @@ public class Java extends Task {
      * @since Ant 1.6
      */
     public void addAssertions(Assertions asserts) {
-        if (cmdl.getAssertions() != null) {
+        if (getCommandLine().getAssertions() != null) {
             throw new BuildException("Only one assertion declaration is allowed");
         }
-        cmdl.setAssertions(asserts);
+        getCommandLine().setAssertions(asserts);
     }
 
     /**
@@ -878,7 +878,7 @@ public class Java extends Task {
      * Clear out the arguments to this java task.
      */
     public void clearArgs() {
-        cmdl.clearJavaArgs();
+        getCommandLine().clearJavaArgs();
     }
 
     /**
@@ -927,6 +927,6 @@ public class Java extends Task {
      * @since 1.6.3
      */
     public CommandlineJava.SysProperties getSysProperties() {
-        return cmdl.getSystemProperties();
+        return getCommandLine().getSystemProperties();
     }
 }
