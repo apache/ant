@@ -48,13 +48,6 @@
       <p>To subscribe to a mailinglist use the links below. In your first email you will get some
       information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.</p>
 
-      <subsection name="How to unsubscribe your old email address">
-        <p> To stop subscription for the address john@host.domain , send an email to <pre>dev-unsubscribe-john=host.domain@ant.apache.org</pre>
-          or to  <pre>user-unsubscribe-john=host.domain@ant.apache.org</pre>.
-        </p>  
-      </subsection>
-
-
       <subsection name="User List">
         <p>
           <b>High Traffic</b>
@@ -86,6 +79,31 @@
         build tool meet and discuss issues, code changes/additions,
         etc. Subscribers to this list get notices of each and every
         code change, build results, testing notices, etc.</p>
+      </subsection>
+
+      <subsection name="How to unsubscribe your old email address">
+        <p>
+        First, find out the particular email adress to which ezmlm is sending.
+        The email headers are visible in Microsoft Outlook via the messages menu
+        "View | Options".
+        <pre>
+        Microsoft Mail Internet Headers Version 2.0
+        ...
+        List-Unsubscribe: &lt;mailto:user-unsubscribe@ant.apache.org&gt;
+        List-Help: &lt;mailto:user-help@ant.apache.org&gt;
+        List-Post: &lt;mailto:user@ant.apache.org&gt;
+        List-Id: "Ant Users List" &lt;user.ant.apache.org&gt;
+        Reply-To: "Ant Users List" &lt;user@ant.apache.org&gt;
+        Delivered-To: mailing list user@ant.apache.org
+        ...
+        Return-Path: user-return-12345-<i>john=host.domain</i>@ant.apache.org
+        ...
+        </pre>
+        The <i>Return-Path</i> header contains the email address which is subscribed. 
+        </p>      
+        <p> To stop subscription for the address john@host.domain , send an email to <pre>dev-unsubscribe-john=host.domain@ant.apache.org</pre>
+          or to  <pre>user-unsubscribe-john=host.domain@ant.apache.org</pre>.
+        </p>  
       </subsection>
     </section>
 
