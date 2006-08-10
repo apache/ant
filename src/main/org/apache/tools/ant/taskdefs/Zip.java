@@ -1345,6 +1345,11 @@ public class Zip extends MatchingTask {
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
                           int mode, ZipExtraField[] extra)
         throws IOException {
+        if (doFilesonly) {
+            log("skipping directory " + vPath + " for file-only archive",
+                    Project.MSG_VERBOSE);
+            return;
+        }
         if (addedDirs.get(vPath) != null) {
             // don't add directories we've already added.
             // no warning if we try, it is harmless in and of itself

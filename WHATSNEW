@@ -254,6 +254,10 @@ Fixed bugs:
 * <xslt> passes the current file (name + directory) to the stylesheet/transformation.
   xsl-parameter name is configurable.  Bugzilla report 21042.
 
+* The <zip> API allowed creation of directories in file-only archives; a
+  habitual offender was the subclassed <jar>, which included META-INF/ in
+  the destination file regardless of whether filesonly was set to true.
+
 Other changes:
 --------------
 
