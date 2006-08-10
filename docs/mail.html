@@ -186,32 +186,15 @@
           <li><a href="http://marc.theaimsgroup.com/">Mailing list Archives</a></li>
         </ul>
                                 <p>To subscribe to a mailinglist use the links below. In your first email you will get some
-      information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.
-      But <a href="http://marc.theaimsgroup.com/?l=ant-user&amp;m=115020655600019&amp;w=2">several times</a>
-      there were problems with unsubscribing from a mailinglist. The problem is that you use another
-      email adress for unsubscribing than for subscribing and ezmlm could not find that adress for
-      deleting from the list. So you have to find out, to which concrete email adress ezmlm is sending
-      the mail. This is visible in the email headers (in Microsoft Outlook via the messages menu
-      "View | Options").
-      <pre>
-      Microsoft Mail Internet Headers Version 2.0
-      ...
-      List-Unsubscribe: &lt;mailto:user-unsubscribe@ant.apache.org&gt;
-      List-Help: &lt;mailto:user-help@ant.apache.org&gt;
-      List-Post: &lt;mailto:user@ant.apache.org&gt;
-      List-Id: "Ant Users List" &lt;user.ant.apache.org&gt;
-      Reply-To: "Ant Users List" &lt;user@ant.apache.org&gt;
-      Delivered-To: mailing list user@ant.apache.org
-      ...
-      Return-Path: user-return-<i>12345-Jan.Materne=me.acme.com</i>@ant.apache.org
-      ...
-      </pre>
-      As you can see, you'll get the help information with each mail, too.
-      But more important is the <i>Return-Path</i>. If you change "return" into "unsubscribe" and you send 
-      an  email to that adress (<tt>user-unsubscribe-12345-Jan.Materne=me.acme.com@ant.apache.org</tt>) 
-      this  will unsubscribe you. 
-      </p>
+      information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.</p>
                                       <h4 class="subsection">
+        <a name="How to unsubscribe your old email address"></a>
+        How to unsubscribe your old email address
+      </h4>
+                        <p> To stop subscription for the address john@host.domain , send an email to <pre>dev-unsubscribe-john=host.domain@ant.apache.org</pre>
+          or to  <pre>user-unsubscribe-john=host.domain@ant.apache.org</pre>.
+        </p>
+                                                          <h4 class="subsection">
         <a name="User List"></a>
         User List
       </h4>
