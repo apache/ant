@@ -303,7 +303,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // Check for JDK 5 first. Will *not* help on JDK 1.4
                     // if only junit-4.0.jar in CP because in that case
                     // linkage of whole task will already have failed! But
-                    // will help if CP has junit-3.8.1.jar:junit-4.0.jar.
+                    // will help if CP has junit-3.8.2.jar:junit-4.0.jar.
 
                     // In that case first C.fN will fail with CNFE and we
                     // will avoid UnsupportedClassVersionError.
