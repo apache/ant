@@ -3492,7 +3492,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.6.2 as of NetBeans 4.1; 1.6.5 for NetBeans 5.0</td>
+            <td>bundles 1.6.5 for NetBeans 5.0 and 5.5</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -3504,7 +3504,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Sun Public License</td>
+            <td>Common Development and Distribution License</td>
           </tr>
         </table>
       </subsection>
