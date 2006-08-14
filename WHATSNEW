@@ -101,6 +101,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+* Converting a <dirset> to a string was broken. Bugzilla Report 39683.
+
 * Manifests have improved line length handling, taking care of encoding.
   Bug reports 37548 / 34425.
 
