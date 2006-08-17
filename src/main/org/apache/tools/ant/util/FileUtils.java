@@ -674,7 +674,8 @@ public class FileUtils {
                 continue;
             } else if ("..".equals(thisToken)) {
                 if (s.size() < 2) {
-                    throw new BuildException("Cannot resolve path " + path);
+                    // Cannot resolve it, so skip it.
+                    return new File(path);
                 }
                 s.pop();
             } else { // plain component

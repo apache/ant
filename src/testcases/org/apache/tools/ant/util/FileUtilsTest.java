@@ -193,12 +193,9 @@ public class FileUtilsTest extends TestCase {
         assertEquals(localize("/1/2/3/4"),
                      FILE_UTILS.resolveFile(new File(localize("/1/2/3")), "..\\../5/..\\./2/./3/6\\../4").getPath());
 
-        try {
-            FILE_UTILS.resolveFile(new File(localize("/1")), "../../b");
-            fail("successfully crawled beyond the filesystem root");
-        } catch (BuildException e) {
-            // Expected Exception caught
-        }
+        assertEquals("meaningless result but no exception",
+                new File(localize("/1/../../b")),
+                FILE_UTILS.resolveFile(new File(localize("/1")), "../../b"));
 
     }
 
@@ -315,12 +312,9 @@ public class FileUtilsTest extends TestCase {
             // Expected exception caught
         }
 
-        try {
-            FILE_UTILS.normalize(localize("/1/../../b"));
-            fail("successfully crawled beyond the filesystem root");
-        } catch (BuildException e) {
-            // Expected exception caught
-        }
+        assertEquals("will not go outside FS root (but will not throw an exception either)",
+                new File(localize("/1/../../b")),
+                FILE_UTILS.normalize(localize("/1/../../b")));
     }
 
     /**

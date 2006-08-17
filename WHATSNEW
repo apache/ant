@@ -102,6 +102,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* The build could be halted if a file path contained more ".." components than
+  the actual depth of the preceding path. Now such paths are left alone (meaning
+  they will likely be treated as nonexistent files). Bugzilla Report 40281.
+
 * Converting a <dirset> to a string was broken. Bugzilla Report 39683.
 
 * Manifests have improved line length handling, taking care of encoding.
