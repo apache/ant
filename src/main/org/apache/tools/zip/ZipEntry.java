@@ -33,7 +33,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     private int internalAttributes = 0;
     private int platform = PLATFORM_FAT;
     private long externalAttributes = 0;
-    private Vector extraFields = new Vector();
+    private Vector/*<ZipExtraField>*/ extraFields = null;
     private String name = null;
 
     /**
@@ -90,7 +90,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     public Object clone() {
         ZipEntry e = (ZipEntry) super.clone();
 
-        e.extraFields = (Vector) extraFields.clone();
+        e.extraFields = extraFields != null ? (Vector) extraFields.clone() : null;
         e.setInternalAttributes(getInternalAttributes());
         e.setExternalAttributes(getExternalAttributes());
         e.setExtraFields(getExtraFields());
@@ -186,7 +186,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void setExtraFields(ZipExtraField[] fields) {
-        extraFields.removeAllElements();
+        extraFields = new Vector();
         for (int i = 0; i < fields.length; i++) {
             extraFields.addElement(fields[i]);
         }
@@ -199,6 +199,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public ZipExtraField[] getExtraFields() {
+        if (extraFields == null) {
+            return new ZipExtraField[0];
+        }
         ZipExtraField[] result = new ZipExtraField[extraFields.size()];
         extraFields.copyInto(result);
         return result;
@@ -211,6 +214,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void addExtraField(ZipExtraField ze) {
+        if (extraFields == null) {
+            extraFields = new Vector();
+        }
         ZipShort type = ze.getHeaderId();
         boolean done = false;
         for (int i = 0, fieldsSize = extraFields.size(); !done && i < fieldsSize; i++) {
@@ -231,6 +237,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void removeExtraField(ZipShort type) {
+        if (extraFields == null) {
+            extraFields = new Vector();
+        }
         boolean done = false;
         for (int i = 0, fieldsSize = extraFields.size(); !done && i < fieldsSize; i++) {
             if (((ZipExtraField) extraFields.elementAt(i)).getHeaderId().equals(type)) {
