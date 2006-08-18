@@ -1757,7 +1757,7 @@
      depends="test-init">
     <test-junit >
       <formatter type="plain" usefile="false"/>
-      <test name="${testcase}"/>
+      <test name="${testcase}" todir="${build.tests.xml}"/>
     </test-junit>
   </target>
 
