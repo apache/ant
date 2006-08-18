@@ -69,12 +69,26 @@ backup files and then restore normal behavior</p>
   &lt;defaultexcludes default=&quot;true&quot;/&gt;
 </pre>
 
+<h3>Notes</h3>
+By default the pattern <tt>**/.svn</tt> ane <tt>**/.svn/**</tt> are set as default 
+excludes. With version 1.3 Subversion supports the 
+<a target="_blank" href="http://subversion.tigris.org/svn_1.3_releasenotes.html">&quot;_svn hack&quot;</a>.
+That means, that die svn-libraries evaluate environment variables and use <i>.svn</i> 
+or <i>_svn</i> directory regarding to that value. We had chosen not to evaluate environment variables to
+get a more reliable build. Instead you have to change the settings by yourself by changing
+the exclude patterns:
+<pre>
+  &lt;defaultexcludes remove=&quot;**/.svn&quot;/&gt;
+  &lt;defaultexcludes remove=&quot;**/.svn/**&quot;/&gt;
+  &lt;defaultexcludes add=&quot;**/_svn&quot;/&gt;
+  &lt;defaultexcludes add=&quot;**/_svn/**&quot;/&gt;
+</pre>
+
 
 <hr>
 
-<p align="center">Copyright &copy; 2003-2005 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2003-2006 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-
