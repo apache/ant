@@ -21,6 +21,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Simple Factory Class that produces an implementation of
@@ -69,29 +70,40 @@ public class RegexpMatcherFactory {
             //         load a different implementation?
         }
 
+        Throwable cause = null;
+
         try {
             testAvailability("java.util.regex.Matcher");
             return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
         } catch (BuildException be) {
-            // ignore
+            cause = orCause(cause, be, JavaEnvUtils.getJavaVersionNumber() < 14);
         }
 
         try {
             testAvailability("org.apache.oro.text.regex.Pattern");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
         } catch (BuildException be) {
-            // ignore
+            cause = orCause(cause, be, true);
         }
 
         try {
             testAvailability("org.apache.regexp.RE");
             return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
         } catch (BuildException be) {
-            // ignore
+            cause = orCause(cause, be, true);
         }
 
-        throw new BuildException("No supported regular expression matcher found");
+        throw new BuildException("No supported regular expression matcher found" +
+                (cause != null ? ": " + cause : ""), cause);
    }
+
+    static Throwable orCause(Throwable deflt, BuildException be, boolean ignoreCnfe) {
+        if (deflt != null) {
+            return deflt;
+        }
+        Throwable t = be.getException();
+        return ignoreCnfe && t instanceof ClassNotFoundException ? null : t;
+    }
 
     /**
      * Create an instance of a matcher from a classname.
