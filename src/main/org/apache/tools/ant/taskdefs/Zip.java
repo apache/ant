@@ -1164,7 +1164,7 @@ public class Zip extends MatchingTask {
      * third arg if they already know that the archive is
      * out-of-date.</p>
      *
-     * @param filesets The filesets to grab resources from
+     * @param rcs The filesets to grab resources from
      * @param zipFile intended archive file (may or may not exist)
      * @param needsUpdate whether we already know that the archive is
      * out-of-date.  Subclasses overriding this method are supposed to

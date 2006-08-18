@@ -339,7 +339,7 @@ public class Tar extends MatchingTask {
 
     /**
      * tar a resource
-     * @param file the resource to tar
+     * @param r the resource to tar
      * @param tOut the output stream
      * @param vPath the path name of the file to tar
      * @param tarFileSet the fileset that the file came from, may be null.
@@ -502,7 +502,7 @@ public class Tar extends MatchingTask {
 
     /**
      * Is the archive up to date in relationship to a list of files.
-     * @param files the files to check
+     * @param r the files to check
      * @return true if the archive is up to date.
      * @since Ant 1.7
      */

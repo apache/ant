@@ -193,7 +193,7 @@ public abstract class AbstractJarSignerTask extends Task {
     /**
      * Adds a path of files to sign.
      *
-     * @param a path of files to sign.
+     * @return a path of files to sign.
      * @since Ant 1.7
      */
     public Path createPath() {

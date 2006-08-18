@@ -153,7 +153,7 @@ public class Expand extends Task {
     /**
      * This method is to be overridden by extending unarchival tasks.
      *
-     * @param r         the source resource
+     * @param srcR      the source resource
      * @param dir       the destination directory
      */
     protected void expandResource(Resource srcR, File dir) {

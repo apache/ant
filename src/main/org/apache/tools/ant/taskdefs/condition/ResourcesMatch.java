@@ -41,7 +41,7 @@ public class ResourcesMatch implements Condition {
     /**
      * Set whether to treat resources as if they were text files,
      * ignoring line endings.
-     * @param astext whether to ignore line endings.
+     * @param asText whether to ignore line endings.
      */
     public void setAsText(boolean asText) {
         this.asText = asText;

@@ -113,12 +113,6 @@ public class JSharp extends DotnetCompile {
         }
     }
 
-    /**
-     * from a resource, get the resource param
-     * @param resource
-     * @return a string containing the resource param, or a null string
-     * to conditionally exclude a resource.
-     */
     protected void createResourceParameter(NetCommand command, DotnetResource resource) {
         resource.getParameters(getProject(), command, true);
     }

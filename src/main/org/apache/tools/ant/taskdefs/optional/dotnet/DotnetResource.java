@@ -25,8 +25,9 @@ import java.util.Iterator;
 import org.apache.tools.ant.*;
 
 /**
- * class used by DotnetCompile to name resources, could be upgraded to a
- * datatype in the distant future. a resource maps to /res:file,name
+ * Used by {@link DotnetCompile} to name resources.
+ * Could be upgraded to a datatype in the distant future.
+ * A resource maps to /res:file,name
  */
 public class DotnetResource {
 
@@ -153,8 +154,6 @@ public class DotnetResource {
 
     /**
      * build the C# style parameter (which has no public/private option)
-     * 
-     * @return the built C# style parameter
      */
     public void getParameters(Project p, NetCommand command, boolean csharpStyle) {
         checkParameters();

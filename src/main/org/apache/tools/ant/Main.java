@@ -218,8 +218,8 @@ public class Main implements AntMain {
 
     /**
      * This operation is expected to call {@link System#exit(int)}, which 
-     * is what the base version does. however, the option to do something
-     * different is there. 
+     * is what the base version does.
+     * However, it is possible to do something else.
      * @param exitCode code to exit with
      */
     protected void exit(int exitCode) {

@@ -33,8 +33,8 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
 
     /**
      * Get our script runner
-     * @return
-     */ 
+     * @return the runner
+     */
     public ScriptRunner getRunner() {
         return runner;
     }

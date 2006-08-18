@@ -874,7 +874,7 @@ public abstract class DotnetCompile
         }
     }
 
-    /**
+    /* XXX Javadoc makes little sense, rewrite
      * from a resource, get the
      * @param resource
      * @return a string containing the resource param, or a null string

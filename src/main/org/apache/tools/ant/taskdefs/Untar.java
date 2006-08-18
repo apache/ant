@@ -106,7 +106,7 @@ public class Untar extends Expand {
     /**
      * This method is to be overridden by extending unarchival tasks.
      *
-     * @param r         the source resource
+     * @param srcR      the source resource
      * @param dir       the destination directory
      * @since Ant 1.7
      */
@@ -190,7 +190,7 @@ public class Untar extends Expand {
          *  This method wraps the input stream with the
          *     corresponding decompression method
          *
-         *  @param file provides location information for BuildException
+         *  @param name provides location information for BuildException
          *  @param istream input stream
          *  @return input stream with on-the-fly decompression
          *  @exception IOException thrown by GZIPInputStream constructor

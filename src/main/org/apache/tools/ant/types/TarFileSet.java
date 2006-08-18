@@ -214,12 +214,6 @@ public class TarFileSet extends ArchiveFileSet {
         }
     }
 
-    /**
-     * A ArchiveFileset accepts another ArchiveFileSet or a FileSet as reference
-     * FileSets are often used by the war task for the lib attribute
-     * @param p the project to use
-     * @return the abstract fileset instance
-     */
     protected void configureFileSet(ArchiveFileSet zfs) {
         super.configureFileSet(zfs);
         if (zfs instanceof TarFileSet) {

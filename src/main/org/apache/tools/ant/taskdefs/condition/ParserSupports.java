@@ -73,11 +73,6 @@ public class ParserSupports extends ProjectComponent implements Condition {
         this.value = value;
     }
 
-    /**
-     * Validate the args, then try to set the feature or property
-     * @return
-     * @throws BuildException
-     */
     public boolean eval() throws BuildException {
         if (feature != null && property != null) {
             throw new BuildException(ERROR_BOTH_ATTRIBUTES);

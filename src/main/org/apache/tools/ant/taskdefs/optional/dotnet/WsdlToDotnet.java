@@ -391,8 +391,8 @@ public class WsdlToDotnet extends Task  {
         }
 
         /**
-         * validate our settings then return either the url or the full file path.
-         * @return
+         * Validate our settings.
+         * @return either the URL or the full file path
          */
         public String evaluate() {
             validate();
@@ -448,8 +448,8 @@ public class WsdlToDotnet extends Task  {
         }
 
         /**
-         * return the timestamp of a file, or -1 for a url (meaning we do not know its age)
-         * @return
+         * Gets the file timestamp.
+         * @return the timestamp of a file, or -1 for a URL (meaning we do not know its age)
          */
         public long getTimestamp() {
             if (file != null) {
@@ -513,8 +513,8 @@ public class WsdlToDotnet extends Task  {
         }
 
         /**
-         * create the default compiler for this platform
-         * @return
+         * Create the default compiler for this platform.
+         * @return the default compiler
          */
         public static Compiler createDefaultCompiler() {
             Compiler c = new Compiler();
@@ -526,7 +526,7 @@ public class WsdlToDotnet extends Task  {
 
         /**
          * return the command to run
-         * @return
+         * @return the command
          */
         public String getCommand() {
             return compilerExecutables[getIndex()];
@@ -534,7 +534,7 @@ public class WsdlToDotnet extends Task  {
 
         /**
          * return any extra arguments for the compiler
-         * @return
+         * @return extra compiler arguments
          */
         public String[] getExtraArgs() {
             return extraCompilerArgs[getIndex()];

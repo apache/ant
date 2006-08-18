@@ -133,7 +133,7 @@ public final class Locator {
      * <p>Prior to Java 1.4,
      * swallows '%' that are not followed by two characters.</p>
      *
-     * @see <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
      * which makes some mention of how
      * characters not supported by URI Reference syntax should be escaped.
      *

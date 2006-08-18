@@ -126,10 +126,8 @@ public class AntStructure extends Task {
     /**
      * Writes the actual structure information.
      *
-     * <p>{@link StructurePrinter#printHead printHead}, {@link
-     * StructurePrinter#printTargetDecl printTargetDecl} and {@link
-     * StructurePrinter#printTail printTail} are called exactly once,
-     * {@link StructurePrinter#printElement printElement} once for
+     * <p>{@link #printHead}, {@link #printTargetDecl} and {@link #printTail}
+     * are called exactly once, {@link #printElementDecl} once for
      * each declared task and type.</p>
      */
     public static interface StructurePrinter {
@@ -157,7 +155,7 @@ public class AntStructure extends Task {
          * @param out PrintWriter to write to.
          * @param p Project instance for the current task
          * @param name element name.
-         * @param name class of the defined element.
+         * @param element class of the defined element.
          */
         void printElementDecl(PrintWriter out, Project p, String name,
                               Class element);

@@ -87,14 +87,14 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
-     * @see BuildListener#buildStarted(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#buildStarted(BuildEvent)
      */
     public void buildStarted(BuildEvent event) {
         log("> BUILD STARTED", Project.MSG_DEBUG);
     }
 
     /**
-     * @see BuildListener#buildFinished(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#buildFinished(BuildEvent)
      */
     public void buildFinished(BuildEvent event) {
         log("< BUILD FINISHED", Project.MSG_DEBUG);
@@ -139,7 +139,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
-     * @see BuildListener#targetStarted(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#targetStarted(BuildEvent)
      */
     public void targetStarted(BuildEvent event) {
         log(">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG);
@@ -149,7 +149,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
-     * @see BuildListener#targetFinished(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#targetFinished(BuildEvent)
      */
     public void targetFinished(BuildEvent event) {
         log("<< TARGET FINISHED -- " + event.getTarget(), Project.MSG_DEBUG);
@@ -161,14 +161,14 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
-     * @see BuildListener#taskStarted(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#taskStarted(BuildEvent)
      */
     public void taskStarted(BuildEvent event) {
         log(">>> TASK STARTED -- " + event.getTask(), Project.MSG_DEBUG);
     }
 
     /**
-     * @see BuildListener#taskFinished(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#taskFinished(BuildEvent)
      */
     public void taskFinished(BuildEvent event) {
         log("<<< TASK FINISHED -- " + event.getTask(), Project.MSG_DEBUG);
@@ -176,7 +176,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
-     * @see BuildListener#messageLogged(BuildEvent)
+     * @see org.apache.tools.ant.BuildListener#messageLogged(BuildEvent)
      */
     public void messageLogged(BuildEvent event) {
         log("--- MESSAGE LOGGED", Project.MSG_DEBUG);

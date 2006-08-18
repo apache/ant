@@ -89,8 +89,8 @@ public class SchemaValidate extends XMLValidateTask {
     }
 
     /**
-     * turn on XSD support in Xerces
-     * @return
+     * Turn on XSD support in Xerces.
+     * @return true on success, false on failure
      */
     public boolean enableXercesSchemaValidation() {
         try {
@@ -116,10 +116,10 @@ public class SchemaValidate extends XMLValidateTask {
     }
 
     /**
-     * set schema attributes in a JAXP12 engine
+     * Set schema attributes in a JAXP 1.2 engine.
      * @see <A href="http://java.sun.com/xml/jaxp/change-requests-11.html">
      * JAXP 1.2 Approved CHANGES</A>
-     * @return
+     * @return true on success, false on failure
      */
     public boolean enableJAXP12SchemaValidation() {
         try {
@@ -230,7 +230,7 @@ public class SchemaValidate extends XMLValidateTask {
      * Create a reader if the use of the class did not specify another one.
      * The reason to not use {@link JAXPUtils#getXMLReader()} was to
      * create our own factory with our own options.
-     * @return
+     * @return a default XML parser
      */
     protected XMLReader createDefaultReader() {
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -274,7 +274,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * get the URL of the no namespace schema
-     * @return
+     * @return the schema URL
      */
     protected String getNoNamespaceSchemaURL() {
         if (anonymousSchema == null) {
@@ -465,10 +465,6 @@ public class SchemaValidate extends XMLValidateTask {
             return true;
         }
 
-        /**
-         * hashcode function
-         * @return
-         */
         public int hashCode() {
             int result;
             result = (namespace != null ? namespace.hashCode() : 0);

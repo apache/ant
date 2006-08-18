@@ -654,7 +654,7 @@ public class FileUtils {
      *   <li>DOS style paths that start with a drive letter will have
      *     \ as the separator.</li>
      * </ul>
-     * Unlike <code>File#getCanonicalPath()</code> this method
+     * Unlike {@link File#getCanonicalPath()} this method
      * specifically does not resolve symbolic links.
      *
      * @param path the path to be normalized.
@@ -1072,7 +1072,7 @@ public class FileUtils {
      *
      * <p>The coding of the output is the same as what File.toURI().toASCIIString() produces</p>
      *
-     * @see <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
      * which makes some mention of how
      * characters not supported by URI Reference syntax should be escaped.
      *
@@ -1349,7 +1349,7 @@ public class FileUtils {
     }
 
     /**
-     * Calculates the relative path between to files.
+     * Calculates the relative path between two files.
      * <p>
      * Implementation note:<br/> This function my throw an IOException if an
      * I/O error occurs because its use of the canonical pathname may require
@@ -1360,9 +1360,9 @@ public class FileUtils {
      *            the <code>File</code> to calculate the path from
      * @param toFile
      *            the <code>File</code> to calculate the path to
-     * @return
-     * @throws Exception
-     * @see {@link File#getCanonicalPath()}
+     * @return the relative path between the files
+     * @throws Exception for undocumented reasons
+     * @see File#getCanonicalPath()
      *
      * @since Ant 1.7
      */
