@@ -157,11 +157,19 @@ public class DOMElementWriter {
      */
     public void write(Element root, OutputStream out) throws IOException {
         Writer wri = new OutputStreamWriter(out, "UTF8");
-        if(xmlDeclaration) {
-            wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        }
+        writeXMLDeclaration(wri);
         write(root, wri, 0, "  ");
         wri.flush();
+    }
+
+    /**
+     * Writes the XML declaration.
+     * @since Ant 1.7.0
+     */
+    public void writeXMLDeclaration(Writer wri) throws IOException {
+        if (xmlDeclaration) {
+            wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        }
     }
 
     /**
