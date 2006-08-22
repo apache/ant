@@ -19,7 +19,6 @@ package org.apache.tools.ant.launch;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
-import java.io.UnsupportedEncodingException;
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.List;
@@ -90,6 +89,11 @@ public class Launcher {
     private static final String JAVA_CLASS_PATH = "java.class.path";
 
     /**
+     * Exit code on trouble
+     */
+    protected static final int EXIT_CODE_ERROR = 2;
+
+    /**
      * Entry point for starting command line Ant.
      *
      * @param  args commandline arguments
@@ -98,21 +102,20 @@ public class Launcher {
         int exitCode;
         try {
             Launcher launcher = new Launcher();
-            exitCode=launcher.run(args);
+            exitCode = launcher.run(args);
         } catch (LaunchException e) {
-            exitCode=-1;
+            exitCode = EXIT_CODE_ERROR;
             System.err.println(e.getMessage());
         } catch (Throwable t) {
-            exitCode=-1;
+            exitCode = EXIT_CODE_ERROR;
             t.printStackTrace(System.err);
         }
-        if(exitCode!=0) {
+        if (exitCode != 0) {
             System.exit(exitCode);
         }
     }
 
-    
-    
+
     /**
      * Add a CLASSPATH or -lib to lib path urls.
      *
@@ -300,10 +303,10 @@ public class Launcher {
             File mainJar = Locator.getClassSource(mainClass);
             System.err.println(
                 "Location of this class " + mainJar);
-            exitCode=-1;
+            exitCode = EXIT_CODE_ERROR;
         } catch (Throwable t) {
             t.printStackTrace(System.err);
-            exitCode=-1;
+            exitCode = EXIT_CODE_ERROR;
         }
         return exitCode;
         

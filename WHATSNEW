@@ -94,7 +94,7 @@ Changes that could break older environments:
 * <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.
   Bugzilla Report 39373.
 
-* Ant launcher program prints errors to stderr, and exits with a -1 exit code
+* Ant launcher program prints errors to stderr, and exits with a 2 exit code
   value if, for any reason, it cannot actually start Ant proper. This will only
   affect programs/scripts that called the launcher and which did not want to
   receive an error if ant itself would not start
