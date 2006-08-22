@@ -263,4 +263,15 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testIDL" depends="init">
+    <base-rmic compiler="default" idl="true"/>
+    <assertFileCreated file="RemoteTimestamp.idl"/>
+  </target>
+
+  <target name="testIIOP" depends="init">
+    <base-rmic compiler="default" iiop="true"/>
+    <assertFileCreated file="_RemoteTimestamp_Stub.class"/>
+    <assertFileCreated file="_RemoteTimestampImpl_Tie.class"/>
+  </target>
+
 </project>

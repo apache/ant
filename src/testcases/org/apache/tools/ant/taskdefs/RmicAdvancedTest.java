@@ -213,6 +213,24 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test that verifies that IDL compiles.
+     *
+     * @throws Exception
+     */
+    public void testIDL() throws Exception {
+        executeTarget("testIDL");
+    }
+
+    /**
+     * test that verifies that IIOP compiles.
+     *
+     * @throws Exception
+     */
+    public void testIIOP() throws Exception {
+        executeTarget("testIIOP");
+    }
+
+    /**
      * this little bunny verifies that we can load stuff, and that
      * a failure to execute is turned into a fault
      */

@@ -192,7 +192,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         //handle the many different stub options.
         String stubVersion = attributes.getStubVersion();
         //default is compatibility
-        String stubOption=STUB_COMPAT;
+        String stubOption = null;
         if (null != stubVersion) {
             if ("1.1".equals(stubVersion)) {
                 stubOption = STUB_1_1;
@@ -202,12 +202,21 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 stubOption = STUB_COMPAT;
             } else {
                 //anything else
-                attributes.log("Unknown stub option "+stubVersion);
+                attributes.log("Unknown stub option " + stubVersion);
                 //do nothing with the value? or go -v+stubVersion??
             }
         }
-        cmd.createArgument().setValue(stubOption);
-
+        //for java1.5+, we generate compatible stubs, that is, unless
+        //the caller asked for IDL or IIOP support.
+        if (stubOption == null && 
+                !attributes.getIiop() &&
+                !attributes.getIdl()) {
+            stubOption = STUB_COMPAT;
+        }
+        if(stubOption!=null) {
+            //set the non-null stubOption
+            cmd.createArgument().setValue(stubOption);
+        }
         if (null != attributes.getSourceBase()) {
             cmd.createArgument().setValue("-keepgenerated");
         }
