@@ -127,6 +127,7 @@ Here is a list of preferred attribute names:
     destination directory for output
 </td>
 </tr>
+<tr>    
 <td>
     destfile
 </td>
@@ -167,7 +168,8 @@ to their Ant system configuration.
 
 Keep member variables private. If read access by subclasses is required,
 add accessor methods rather than change the accessiblity of the member.
-This enables subclasses to access the contents, yet still be decoupled from the actual implementation.
+This enables subclasses to access the contents, yet still be decoupled 
+from the actual implementation.
 <p>
 
 The other common re-use mechanism in Ant is for one task to create and
@@ -223,14 +225,16 @@ Ant tasks cannot use this keyword. They also need to move away from
 using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
 instead.
 <p>
-Java 1.5 adds the <tt>enum</tt>; again, this must not be used.
+Java 1.5 adds the <tt>enum</tt> type; again, this must not be used.
 
 <h2>Explicitly Expand properties in nested text</h2>
 
 For historical reasons, <tt>addText(String text)</tt> is called to
 set the task's nested text, without any property expansion taking place.
 Call <tt>Project.replaceProperties()</tt> to do this manually.
- 
+If you forget, you create a problem that is impossible to fix
+without breaking users' build files.
+
 <h2>Refactor</h2>
 
 If the changes made to a task are making it too unwieldy, split it up
@@ -396,7 +400,7 @@ that constitute part of the patch.
 <li><h3>Approach 2 - The Manual Way</h3>
 <p>
 Patches to existing files should be generated with
-<code>cvs diff -u filename</code>
+<code>svn diff -u filename</code>
  and save the output to a file. If you want to get
 the changes made to multiple files in a directory , just use <code>cvs
 diff -u</code>.  Then, Tar and GZip the patch file as well as any new files
@@ -454,7 +458,7 @@ cases, while documentation helps sell the reason for a task.
 <li>New test cases written and succeed.
 <li>Documentation page extended as appropriate.
 <li>Example task declarations in the documentation tested.
-<li>Diff files generated using cvs diff -u
+<li>Diff files generated using svn diff -u
 <li>Message to dev contains [PATCH], task name and patch reason in
 subject.
 <li>Message body contains a rationale for the patch.
@@ -473,7 +477,7 @@ subject.
 <li>New test cases written and succeed
 <li>Documentation page written
 <li>Example task declarations in the documentation tested.
-<li>Patch files generated using cvs diff -u
+<li>Patch files generated using svn diff -u
 <li>patch files include a patch to defaults.properties to register the
 tasks
 <li>patch files include a patch to coretasklist.html or
@@ -484,7 +488,7 @@ optionaltasklist.html to link to the new task page
 test and patches zipped up to escape the HTML filter.
 </ul>
 <hr>
-<p align="center">Copyright &copy; 2001-2003, 2005 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003, 2005-2006 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body></html>
