@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.ExitStatusException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
@@ -100,7 +101,9 @@ public class Java extends Task {
             err = executeJava();
             if (err != 0) {
                 if (failOnError) {
-                    throw new BuildException("Java returned: " + err, getLocation());
+                    throw new ExitStatusException("Java returned: " + err,
+                            err,
+                            getLocation());
                 } else {
                     log("Java Result: " + err, Project.MSG_ERR);
                 }
