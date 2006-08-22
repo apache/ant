@@ -837,6 +837,36 @@ public class ComponentHelper  {
         boolean antTask;
         String home = System.getProperty(Launcher.USER_HOMEDIR);
         File libDir = new File(home, Launcher.USER_LIBDIR);
+        String antHomeLib;
+        boolean probablyIDE=false;
+        String anthome = System.getProperty(MagicNames.ANT_HOME);
+        if(anthome!=null) {
+            File antHomeLibDir = new File(anthome,"lib");
+            antHomeLib=antHomeLibDir.getAbsolutePath();
+        } else {
+            //running under an IDE that doesn't set ANT_HOME
+            probablyIDE=true;
+            antHomeLib = "ANT_HOME" +File.separatorChar +"lib";
+        }
+        StringBuffer dirListingText = new StringBuffer();
+        final String tab = "        -";
+        dirListingText.append(tab);
+        dirListingText.append(antHomeLib);
+        dirListingText.append('\n');
+        if(probablyIDE) {
+            dirListingText.append(tab);
+            dirListingText.append("the IDE Ant configuration dialogs");
+        } else {
+            dirListingText.append(tab);
+            dirListingText.append(libDir);
+            dirListingText.append('\n');
+            dirListingText.append(tab);
+            dirListingText.append(
+                    "a directory added on the command line with the -lib argument");
+        }
+
+        String dirListing=dirListingText.toString();
+        
         //look up the name
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
@@ -849,9 +879,8 @@ public class ComponentHelper  {
             if (isAntlib) {
                 out.println();
                 out.println("This appears to be an antlib declaration. ");
-                out.println("Action: Check that the implementing library exists "
-                        + "in ANT_HOME/lib or in ");
-                out.println("        " + libDir);
+                out.println("Action: Check that the implementing library exists in one of:");
+                out.println(dirListing);
             }
             definitions = true;
         } else {
@@ -870,13 +899,12 @@ public class ComponentHelper  {
                 jars = true;
                 if (optional) {
                     out.println("        This looks like one of Ant's optional components.");
-                    out.println("Action: Check that the appropriate optional JAR exists "
-                            + "in ANT_HOME/lib or in ");
-                    out.println("        " + libDir);
+                    out.println("Action: Check that the appropriate optional JAR exists in");
+                    out.println(dirListing);
                 } else {
                     out.println("Action: Check that the component has been correctly declared");
-                    out.println("        and that the implementing JAR is in ANT_HOME/lib or in");
-                    out.println("        " + libDir);
+                    out.println("        and that the implementing JAR is in one of:");
+                    out.println(dirListing);
                     definitions = true;
                 }
             } catch (NoClassDefFoundError ncdfe) {
@@ -884,15 +912,14 @@ public class ComponentHelper  {
                 out.println("Cause: Could not load a dependent class "
                         +  ncdfe.getMessage());
                 if (optional) {
-                    out.println("       It is not enough to have Ant's optional JAR, you need the JAR");
-                    out.println("       files that it depends upon.");
-                    out.println("Ant's optional task dependencies are listed in the manual.");
+                    out.println("       It is not enough to have Ant's optional JARs");
+                    out.println("       you need the JAR files that the optional tasks depend upon.");
+                    out.println("       Ant's optional task dependencies are listed in the manual.");
                 } else {
                     out.println("       This class may be in a separate JAR that is not installed.");
                 }
-                out.println("Action: Determine what extra JAR files are needed, and place them");
-                out.println("        in ANT_HOME/lib or");
-                out.println("        in " + libDir);
+                out.println("Action: Determine what extra JAR files are needed, and place them in one of:");
+                out.println(dirListing);
             }
             //here we successfully loaded the class or failed.
             if (clazz != null) {
@@ -925,9 +952,8 @@ public class ComponentHelper  {
                     out.println("Cause:  A class needed by class "
                             + classname + " cannot be found: ");
                     out.println("       " + ncdfe.getMessage());
-                    out.println("Action: Determine what extra JAR files are needed, and place them");
-                    out.println("        in ANT_HOME/lib or");
-                    out.println("        in " + libDir);
+                    out.println("Action: Determine what extra JAR files are needed, and place them in:");
+                    out.println(dirListing);
                 }
             }
             out.println();
