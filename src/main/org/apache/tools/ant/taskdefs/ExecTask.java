@@ -157,7 +157,7 @@ public class ExecTask extends Task {
      * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
-        log("The command attribute is deprecated. "
+        log("The command attribute is deprecated.\n"
             + "Please use the executable attribute and nested arg elements.",
             Project.MSG_WARN);
         this.cmdl = cmdl;
