@@ -135,7 +135,7 @@
     description="load networking libraries (commons-net; jsch)"
     depends="init">
     <f2 project="commons-net" />
-    <f2 project="jsch" />
+    <f2 project="com.jcraft" archive="jsch" />
   </target>
 
   <target name="regexp"
