@@ -108,6 +108,12 @@
     <available property="kaffe.present" classname="jkaffe.rmi.rmic.RMIC"/>
     <available property="rmic.present" classname="sun.rmi.rmic.Main"/>
     <available property="wlrmic.present" classname="weblogic.rmic"/>
+    <condition property="rmic5.present">
+      <and>
+        <isset property="rmic.present"/>
+        <available classname="java.net.Proxy"/>
+      </and>
+    </condition>
     <condition property="rmic6.present">
       <and>
         <isset property="rmic.present"/>
@@ -173,6 +179,13 @@
       />
   </target>
 
+  <target name="testExplicitClass" if="rmic.present" depends="init">
+    <base-rmic
+        compiler="org.apache.tools.ant.taskdefs.rmic.SunRmic"
+        />
+    <assertBaseCompiled/>
+  </target>
+  
   <target name="testWrongClass" if="rmic.present" depends="init">
     <base-rmic
       compiler="org.apache.tools.ant.BuildException"
@@ -249,16 +262,22 @@
     <assertBaseCompiled/>
   </target>
 
-  <target name="testXnew" if="rmic6.present" depends="init">
+  <target name="testXnew" if="rmic5.present" depends="init">
     <base-rmic compiler="sun">
       <compilerarg value="-Xnew"/>
     </base-rmic>
     <assertBaseCompiled/>
   </target>
 
-  <target name="testXnewForked" if="rmic6.present" depends="init">
+  <target name="testXnewForked" if="rmic5.present" depends="init">
     <base-rmic compiler="forking">
       <compilerarg value="-Xnew"/>
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewCompiler" if="rmic5.present" depends="init">
+    <base-rmic compiler="xnew">
     </base-rmic>
     <assertBaseCompiled/>
   </target>

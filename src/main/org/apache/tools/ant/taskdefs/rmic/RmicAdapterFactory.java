@@ -19,7 +19,11 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
+
+import java.util.Locale;
 
 
 /**
@@ -63,24 +67,27 @@ public final class RmicAdapterFactory {
      */
     public static RmicAdapter getRmic(String rmicType, Task task)
         throws BuildException {
+        //convert to lower case in the English locale, 
+        String compiler = rmicType.toLowerCase(Locale.ENGLISH);
 
-        //handle default specially.
-        if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length() == 0) {
-            String adapter = KaffeRmic.isAvailable()
+        //handle default specially by choosing the sun or kaffe compiler
+        if (DEFAULT_COMPILER.equals(compiler) || compiler.length() == 0) {
+            compiler = KaffeRmic.isAvailable()
                 ? KaffeRmic.COMPILER_NAME
                 : SunRmic.COMPILER_NAME;
-            return getRmic(adapter, task);
         }
-
-        if (SunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        if (SunRmic.COMPILER_NAME.equals(compiler)) {
             return new SunRmic();
-        } else if (KaffeRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        } else if (KaffeRmic.COMPILER_NAME.equals(compiler)) {
             return new KaffeRmic();
-        } else if (WLRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        } else if (WLRmic.COMPILER_NAME.equals(compiler)) {
             return new WLRmic();
-        } else if (ForkingSunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        } else if (ForkingSunRmic.COMPILER_NAME.equals(compiler)) {
             return new ForkingSunRmic();
+        } else if (XNewRmic.COMPILER_NAME.equals(compiler)) {
+            return new XNewRmic();
         }
+        //no match? ask for the non-lower-cased type
         return resolveClassName(rmicType);
     }
 
@@ -93,8 +100,8 @@ public final class RmicAdapterFactory {
      * isn't an instance of RmicAdapter.
      */
     private static RmicAdapter resolveClassName(String className)
-        throws BuildException {
-    return (RmicAdapter) ClasspathUtils.newInstance(className,
-            RmicAdapterFactory.class.getClassLoader(), RmicAdapter.class);
+            throws BuildException {
+        return (RmicAdapter) ClasspathUtils.newInstance(className,
+                RmicAdapterFactory.class.getClassLoader(), RmicAdapter.class);
     }
 }

@@ -34,6 +34,7 @@ import java.io.IOException;
  * compiler you can have multiple copies compiling different bits of your project
  * at the same time. Which, on a multi-cpu system results in significant speedups.
  *
+ * Also, Java1.6 behaves oddly with -XNew, so we switch it on here if needed.
  * @since ant1.7
  */
 public class ForkingSunRmic extends DefaultRmicAdapter {
@@ -53,7 +54,7 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
         Commandline cmd = setupRmicCommand();
         Project project = owner.getProject();
         //rely on RMIC being on the path
-        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(SunRmic.RMIC_EXECUTABLE));
+        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(getExecutableName()));
 
         //set up the args
         String[] args = cmd.getCommandline();
@@ -68,8 +69,16 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
             exe.execute();
             return !exe.isFailure();
         } catch (IOException exception) {
-            throw new BuildException("Error running " + SunRmic.RMIC_EXECUTABLE
+            throw new BuildException("Error running " + getExecutableName()
                     + " -maybe it is not on the path", exception);
         }
+    }
+
+    /**
+     * Override point.
+     * @return
+     */
+    protected String getExecutableName() {
+        return SunRmic.RMIC_EXECUTABLE;
     }
 }

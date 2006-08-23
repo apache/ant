@@ -71,6 +71,8 @@ Changes that could break older environments:
   IE (Windows) or Gnome2 (Unix/Linux) proxy settings. This may break any build
   file that somehow relied on content outside the firewall being unreachable:
   use the -noproxy command-line option to disable this new feature.
+  Note that the Java1.5 proxy configuration system still does not appear to work 
+  reliably on Windows or Linux.
 
 * A bug in SQLExec would prevent the execution of trailing,
   non-semicolon-delimited statements.  Bugzilla Report 37764.
@@ -97,7 +99,7 @@ Changes that could break older environments:
 * Ant launcher program prints errors to stderr, and exits with a 2 exit code
   value if, for any reason, it cannot actually start Ant proper. This will only
   affect programs/scripts that called the launcher and which did not want to
-  receive an error if ant itself would not start
+  receive an error if Ant itself would not start
 
 Fixed bugs:
 -----------
@@ -264,6 +266,9 @@ Fixed bugs:
 * The <zip> API allowed creation of directories in file-only archives; a
   habitual offender was the subclassed <jar>, which included META-INF/ in
   the destination file regardless of whether filesonly was set to true.
+  
+* <rmic> has a new adapter, xnew, to use the -XNew back end on java1.5+.
+  By forking rmic, this works on java1.6+. Bugzilla report 38732.
 
 Other changes:
 --------------
@@ -271,7 +276,7 @@ Other changes:
 * InputHandler implementations may now call InputRequest.getDefaultValue()
   if they wish. The default handler uses this also. Bugzilla report 28621.
 
-* Took in bugzilla report 39320.
+* Took in bugzilla report 39320, "Simple code cleanups"
 
 * Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
 

@@ -38,7 +38,8 @@ public class RmicAdvancedTest extends BuildFileTest {
     /**
      * The JUnit setup method
      */
-    public void setUp() {
+    public void setUp() throws Exception {
+        super.setUp();
         configureProject(TASKDEFS_DIR + "rmic.xml");
     }
 
@@ -110,6 +111,13 @@ public class RmicAdvancedTest extends BuildFileTest {
         expectBuildExceptionContaining("testBadName",
                 "compiler not known",
                 RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+    }
+
+    /**
+     * load an adapter by name
+     */
+    public void testExplicitClass() throws Exception {
+        executeTarget("testExplicitClass");
     }
 
     /**
@@ -210,6 +218,15 @@ public class RmicAdvancedTest extends BuildFileTest {
      */
     public void testXnewForked() throws Exception {
         executeTarget("testXnewForked");
+    }
+
+    /**
+     * test that runs the new xnew compiler adapter.
+     *
+     * @throws Exception
+     */
+    public void testXnewCompiler() throws Exception {
+        executeTarget("testXnewCompiler");
     }
 
     /**
