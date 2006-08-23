@@ -270,6 +270,9 @@ Fixed bugs:
 * <rmic> has a new adapter, xnew, to use the -XNew back end on java1.5+.
   By forking rmic, this works on java1.6+. Bugzilla report 38732.
 
+* Copy of UnknownElement in macroinstance was not recursive.
+  Bugzilla report 40238.
+
 Other changes:
 --------------
 

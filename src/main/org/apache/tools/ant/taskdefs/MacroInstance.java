@@ -291,7 +291,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 }
                 for (Iterator i = unknownElements.iterator();
                      i.hasNext();) {
-                    UnknownElement child = (UnknownElement) i.next();
+                    UnknownElement child = copy((UnknownElement) i.next());
                     rc.addChild(child.getWrapper());
                     ret.addChild(child);
                 }
@@ -307,7 +307,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 }
                 for (Iterator i = list.iterator();
                      i.hasNext();) {
-                    UnknownElement child = (UnknownElement) i.next();
+                    UnknownElement child = copy((UnknownElement) i.next());
                     rc.addChild(child.getWrapper());
                     ret.addChild(child);
                 }
