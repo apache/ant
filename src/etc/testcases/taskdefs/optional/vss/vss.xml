@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vss-test" basedir="." default="sosget.1">
+<project name="vss-test" basedir="." default="vssget.1">
 
     <!--
     ===========================================================================

@@ -37,6 +37,9 @@
       <mkdir dir="${tdir}"/>
   </target>
 
+  <target name="all"
+	      depends="setup, test-single, test-delete, test-record, test-recreate, teardown"/>
+	
   <!-- test for action = single -->
   <!-- 
     Creates:
