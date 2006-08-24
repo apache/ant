@@ -77,6 +77,9 @@ Changes that could break older environments:
   affect programs/scripts that called the launcher and which did not want to
   receive an error if Ant itself would not start
 
+* All .NET tasks are now deprecated in favor of the new .NET Antlib:
+  http://ant.apache.org/antlibs/proper.html
+
 Fixed bugs:
 -----------
 

@@ -184,6 +184,9 @@ public class ImportTypelib extends Task {
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
+        if ("WsdlToDotnet".equals(getTaskType())) {
+            log("Warning: the task name <WsdlToDotnet> is deprecated. Use <wsdltodotnet> (all lowercase) instead.", Project.MSG_WARN);
+        }
         validate();
         log("Importing typelib " + srcFile
             + " to assembly " + destFile

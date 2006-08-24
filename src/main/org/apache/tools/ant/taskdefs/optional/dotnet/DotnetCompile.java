@@ -809,6 +809,10 @@ public abstract class DotnetCompile
      */
     public void execute()
              throws BuildException {
+        log("This task is deprecated and will be removed in a future version\n"
+            + "of Ant.  It is now part of the .NET Antlib:\n"
+            + "http://ant.apache.org/antlibs/proper.html", Project.MSG_ERR);
+
         validate();
         NetCommand command = createNetCommand();
         //set up response file options

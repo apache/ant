@@ -276,9 +276,9 @@ public class WsdlToDotnet extends Task  {
      */
     public void execute()
              throws BuildException {
-        if ("WsdlToDotnet".equals(getTaskType())) {
-            log("Warning: the task name <WsdlToDotnet> is deprecated. Use <wsdltodotnet> (all lowercase) instead.", Project.MSG_WARN);
-        }
+        log("This task is deprecated and will be removed in a future version\n"
+            + "of Ant.  It is now part of the .NET Antlib:\n"
+            + "http://ant.apache.org/antlibs/proper.html", Project.MSG_ERR);
 
         if (compiler == null) {
             compiler = Compiler.createDefaultCompiler();
