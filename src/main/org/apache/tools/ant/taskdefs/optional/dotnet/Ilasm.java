@@ -458,7 +458,8 @@ public class Ilasm
              throws BuildException {
         log("This task is deprecated and will be removed in a future version\n"
             + "of Ant.  It is now part of the .NET Antlib:\n"
-            + "http://ant.apache.org/antlibs/proper.html", Project.MSG_ERR);
+            + "http://ant.apache.org/antlibs/dotnet/index.html",
+            Project.MSG_WARN);
         NetCommand command = buildIlasmCommand();
 
         addFilesAndExecute(command, false);
