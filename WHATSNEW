@@ -7,15 +7,6 @@ Changes that could break older environments:
 * Removed support for xalan1 completely. Users of Xalan1 for Ant builds will
   have to stay at ant 1.6.5 or upgrade to xalan2.
 
-* Improved recursion detection for lines with multiple matches of same token
-  on a single line.  Bugzilla report 38456.
-
-* Task will now log correctly even if no project is set.
-  Bugzilla report 38458.
-
-* Use alternative names for the command line arguments in javac. Bugzilla
-  Report 37546.
-
 * Use org.apache.log4j.Logger instead of org.apache.log4j.Category.
   Category has been deprecated for ~2 years and has been removed from
   the log4j code.  Logger was introduced in log4j 1.2 so users of
@@ -27,18 +18,6 @@ Changes that could break older environments:
   than "ignore" (or leave it unset, since "ignore" is the default when
   it comes to bootclasspath handling), then the bootclasspath of the
   VM running Ant will be added to the bootclasspath you've specified.
-
-* The Reference class now has a project field that will get
-  used (if set) in preference to the passed in project, when
-  dereferencing the reference. Bugzilla Report 25777.
-
-* On DOS and Netware, filenames beginning with a drive letter
-  and followed by a colon but with no directory separator following
-  the colon are no longer (incorrectly) accepted as absolute pathnames
-  by FileUtils.normalize() and FileUtils.isAbsolutePath().  Netware
-  volumes can still be specified without an intervening separator.
-  UNC pathnames on Windows must include a server and share name, i.e.
-  "\\a\b" to be considered valid absolute paths.
 
 * The <java fork="false"> now as per default installs a security manager
   using the default permissions. This is now independent of the
@@ -71,11 +50,8 @@ Changes that could break older environments:
   IE (Windows) or Gnome2 (Unix/Linux) proxy settings. This may break any build
   file that somehow relied on content outside the firewall being unreachable:
   use the -noproxy command-line option to disable this new feature.
-  Note that the Java1.5 proxy configuration system still does not appear to work 
-  reliably on Windows or Linux.
-
-* A bug in SQLExec would prevent the execution of trailing,
-  non-semicolon-delimited statements.  Bugzilla Report 37764.
+  Note that the Java1.5 proxy configuration system still does not
+  appear to work reliably on Windows or Linux.
 
 * support for the XSL:P XML parser has been removed.
   Bugzilla Report 23455.
@@ -93,8 +69,8 @@ Changes that could break older environments:
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
   is \n (Unix).  Bugzilla report 39585.
 
-* <scp> now optionally supports the sftp protocol, you may need a newer jsch.jar.
-  Bugzilla Report 39373.
+* <scp> now optionally supports the sftp protocol, you may need a
+  newer jsch.jar.  Bugzilla Report 39373.
 
 * Ant launcher program prints errors to stderr, and exits with a 2 exit code
   value if, for any reason, it cannot actually start Ant proper. This will only
@@ -105,8 +81,9 @@ Fixed bugs:
 -----------
 
 * The build could be halted if a file path contained more ".." components than
-  the actual depth of the preceding path. Now such paths are left alone (meaning
-  they will likely be treated as nonexistent files). Bugzilla Report 40281.
+  the actual depth of the preceding path. Now such paths are left
+  alone (meaning they will likely be treated as nonexistent
+  files). Bugzilla Report 40281.
 
 * Converting a <dirset> to a string was broken. Bugzilla Report 39683.
 
@@ -115,13 +92,15 @@ Fixed bugs:
 
 * <manifest> now closes the inputstream explicitly. Bug report 39628.
 
-* <rpm> now also correctly searches the first element of the path.  Bug report 39345.
+* <rpm> now also correctly searches the first element of the path.
+  Bug report 39345.
 
 * ant.bat now handles classpath set to "". Bug report 38914.
 
 * <junit> now supports JUnit 4. Bugzilla Report 38811.
 
-* <junit> can now work with junit.jar in its <classpath>. Bugzilla Report 38799.
+* <junit> can now work with junit.jar in its <classpath>. Bugzilla
+  Report 38799.
 
 * Some potential NullPointerExceptions, Bugzilla Reports 37765 and 38056.
 
@@ -197,7 +176,8 @@ Fixed bugs:
 
 * off-by-one error in environment setup for execution under OpenVMS fixed.
 
-* Bugzilla report 36171: -noclasspath crashes ant if no system classpath is set.
+* Bugzilla report 36171: -noclasspath crashes ant if no system
+  classpath is set.
 
 * <pvcs> used wrong switch for retrieving revisions by label.
   Bugzilla Report 36359.
@@ -235,7 +215,8 @@ Fixed bugs:
 
 * <available> could leak resources, Bugzilla Report 38260.
 
-* Redirector called Thread.sleep in a synchronized block. Bugzilla report 37767.
+* Redirector called Thread.sleep in a synchronized block. Bugzilla
+  report 37767.
 
 * CCUnlock's objselect attribute could exhibit unpredictable behavior;
   standardized improperly included objselect and objsel property accessors to
@@ -260,8 +241,9 @@ Fixed bugs:
 * <get> would fetch files that were up to date, because it used > in a
   remote/local timestamp comparison, not >=. Bugzilla 35607.
 
-* <xslt> passes the current file (name + directory) to the stylesheet/transformation.
-  xsl-parameter name is configurable.  Bugzilla report 21042.
+* <xslt> passes the current file (name + directory) to the
+  stylesheet/transformation.  xsl-parameter name is configurable.
+  Bugzilla report 21042.
 
 * The <zip> API allowed creation of directories in file-only archives; a
   habitual offender was the subclassed <jar>, which included META-INF/ in
@@ -276,12 +258,37 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Improved recursion detection for lines with multiple matches of same token
+  on a single line.  Bugzilla report 38456.
+
+* Task will now log correctly even if no project is set.
+  Bugzilla report 38458.
+
+* Use alternative names for the command line arguments in javac. Bugzilla
+  Report 37546.
+
+* The Reference class now has a project field that will get
+  used (if set) in preference to the passed in project, when
+  dereferencing the reference. Bugzilla Report 25777.
+
+* On DOS and Netware, filenames beginning with a drive letter
+  and followed by a colon but with no directory separator following
+  the colon are no longer (incorrectly) accepted as absolute pathnames
+  by FileUtils.normalize() and FileUtils.isAbsolutePath().  Netware
+  volumes can still be specified without an intervening separator.
+  UNC pathnames on Windows must include a server and share name, i.e.
+  "\\a\b" to be considered valid absolute paths.
+
+* A bug in SQLExec would prevent the execution of trailing,
+  non-semicolon-delimited statements.  Bugzilla Report 37764.
+
 * InputHandler implementations may now call InputRequest.getDefaultValue()
   if they wish. The default handler uses this also. Bugzilla report 28621.
 
 * Took in bugzilla report 39320, "Simple code cleanups"
 
-* Improve compatibility with GNU Classpath and java versions prior to 1.5. Bugzilla 39027.
+* Improve compatibility with GNU Classpath and java versions prior to
+  1.5. Bugzilla 39027.
 
 * ${ant.core.lib} may now be used to refer to the library containing the
   Ant classes, for instance useful when compiling tasks.
@@ -367,7 +374,8 @@ Other changes:
    can be used with the jar attribute or nested filesets
   -a mapper to permit filename remapping on signing
   -tsaurl and tsacert attributes for timestamped JAR signing
-  -nested <sysproperty> elements, which can be used for proxy setup and the like
+  -nested <sysproperty> elements, which can be used for proxy setup
+  and the like
 
 * The linecontains and linecontainsregexp filterreaders now support a
   negate attribute to select lines -not- containing specified text.
@@ -481,8 +489,8 @@ Other changes:
 * Minor performance updates. Bugzilla report 39565.
 
 * New deleteonexit attribute for the <tempfile> task. Bugzilla report 39842.
-  Remember that the exit of the JVM can be a long time coming, especially under an
-  IDE. Don't rely on this being called.
+  Remember that the exit of the JVM can be a long time coming,
+  especially under an IDE. Don't rely on this being called.
 
 * <scriptdef>-created scripts have support for nested text. All text
   passed to a scripted task can be accessed via self.text.
@@ -491,8 +499,8 @@ Other changes:
 
 * <junitreport> now supports nested XSL parameters. Bugzilla report 39708.
 
-* <javacc> has a jdkversion attribute to pass the desired JDK version down to javacc.
-  Bugzilla report 38715.
+* <javacc> has a jdkversion attribute to pass the desired JDK version
+  down to javacc.  Bugzilla report 38715.
 
 * <cvs> prints passfile info at -verbose level instead of -info. Bugzilla
   report 35268
@@ -500,9 +508,9 @@ Other changes:
 * When <javac> can't find the compiler class, it prints out java.home for
   immediate diagnostics
 
-* Ant launcher now supports a -main attribute so that you can specify an extension
-  class to the built in org.apache.tools.ant.Main class. This class must implement
-  the interface AntMain
+* Ant launcher now supports a -main attribute so that you can specify
+  an extension class to the built in org.apache.tools.ant.Main
+  class. This class must implement the interface AntMain
 
 Changes from Ant 1.6.4 to Ant 1.6.5
 ===================================
