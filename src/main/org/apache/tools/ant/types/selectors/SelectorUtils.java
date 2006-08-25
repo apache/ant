@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2005 The Apache Software Foundation
+ * Copyright  2002-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -471,7 +471,7 @@ public final class SelectorUtils {
         }
         return true;
     }
-
+    
     /**
      * Breaks a path up into a Vector of path elements, tokenizing on
      * <code>File.separator</code>.
@@ -556,7 +556,6 @@ public final class SelectorUtils {
         }
         return l;
     }
-
 
     /**
      * Returns dependency information on these two files. If src has been
@@ -666,16 +665,16 @@ public final class SelectorUtils {
      * @return the leftmost part of the pattern without wildcards
      */
     public static String rtrimWildcardTokens(String input) {
-        Vector v = tokenizePath(input, File.separator);
+        String[] tokens = tokenizePathAsArray(input);
         StringBuffer sb = new StringBuffer();
-        for (int counter = 0; counter < v.size(); counter++) {
-            if (hasWildcards((String) v.elementAt(counter))) {
+        for (int i = 0; i < tokens.length; i++) {
+            if (hasWildcards(tokens[i])) {
                 break;
             }
-            if (counter > 0 && sb.charAt(sb.length() - 1) != File.separatorChar) {
+            if (i > 0 && sb.charAt(sb.length() - 1) != File.separatorChar) {
                 sb.append(File.separator);
             }
-            sb.append((String) v.elementAt(counter));
+            sb.append(tokens[i]);
         }
         return sb.toString();
     }
