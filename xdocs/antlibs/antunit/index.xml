@@ -170,9 +170,10 @@ public class ANTLRTest extends BuildFileTest {
         &lt;antunit&gt; task accepts arbitrary many listeners and
         relays test results to them.</p>
 
-        <p>Currently only a single implementation
-        <code>&lt;plainlistener&gt;</code> modelled after the "plain"
-        JUnit listener is bundled with the library.</p>
+        <p>Currently two implementations -
+        <code>&lt;plainlistener&gt;</code> and <code>xmllistener</code> 
+        modelled after the "plain" and "xml"
+        JUnit listeners - are bundled with the library.</p>
       </subsection>
     </section>
 
@@ -188,7 +189,7 @@ public class ANTLRTest extends BuildFileTest {
     <property name="foo" value="foo"/>
   </target>
 
-  <!-- is called after the test, if if that causes an error -->
+  <!-- is called after the test, even if that caused an error -->
   <target name="tearDown">
     <delete file="${foo}" quiet="true"/>
   </target>

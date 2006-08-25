@@ -44,6 +44,10 @@
       href="http://nant.sf.net/">NAnt</a>, <a
       href="http://forums.microsoft.com/MSDN/ShowForum.aspx?ForumID=27&amp;SiteID=1">MSBuild</a>
       and the <a href="http://wix.sf.net/">Wix</a> toolkit.</p>
+
+      <p>The initial .NET tasks of Ant (compiler tasks for C#, J# and VB.NET
+      for example) have also been moved to this Antlib and will see further
+      development here.</p>
     </section>
 
     <section name="Tasks">
