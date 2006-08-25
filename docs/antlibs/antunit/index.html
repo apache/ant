@@ -247,9 +247,10 @@ public class ANTLRTest extends BuildFileTest {
         interface that can be used to record test results.  The
         &lt;antunit&gt; task accepts arbitrary many listeners and
         relays test results to them.</p>
-                                <p>Currently only a single implementation
-        <code>&lt;plainlistener&gt;</code> modelled after the "plain"
-        JUnit listener is bundled with the library.</p>
+                                <p>Currently two implementations -
+        <code>&lt;plainlistener&gt;</code> and <code>xmllistener</code> 
+        modelled after the "plain" and "xml"
+        JUnit listeners - are bundled with the library.</p>
                                             <h3 class="section">
       <a name="Examples"></a>
       Examples
@@ -263,7 +264,7 @@ public class ANTLRTest extends BuildFileTest {
     &lt;property name=&quot;foo&quot; value=&quot;foo&quot;/&gt;
   &lt;/target&gt;
 
-  &lt;!-- is called after the test, if if that causes an error --&gt;
+  &lt;!-- is called after the test, even if that caused an error --&gt;
   &lt;target name=&quot;tearDown&quot;&gt;
     &lt;delete file=&quot;${foo}&quot; quiet=&quot;true&quot;/&gt;
   &lt;/target&gt;
