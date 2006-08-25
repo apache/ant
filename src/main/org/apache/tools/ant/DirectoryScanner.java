@@ -832,11 +832,11 @@ public class DirectoryScanner
         Hashtable newroots = new Hashtable();
         // put in the newroots vector the include patterns without
         // wildcard tokens
-        for (int icounter = 0; icounter < includes.length; icounter++) {
-            if (FileUtils.isAbsolutePath(includes[icounter])) {
+        for (int i = 0; i < includes.length; i++) {
+            if (FileUtils.isAbsolutePath(includes[i])) {
                 //skip abs. paths not under basedir, if set:
                 if (basedir != null
-                    && !SelectorUtils.matchPatternStart(includes[icounter],
+                    && !SelectorUtils.matchPatternStart(includes[i],
                     basedir.getAbsolutePath(), isCaseSensitive())) {
                     continue;
                 }
@@ -845,7 +845,7 @@ public class DirectoryScanner
                 continue;
             }
             newroots.put(SelectorUtils.rtrimWildcardTokens(
-                includes[icounter]), includes[icounter]);
+                includes[i]), includes[i]);
         }
         if (newroots.containsKey("") && basedir != null) {
             // we are going to scan everything anyway
@@ -990,18 +990,8 @@ public class DirectoryScanner
                 String[] notIncl = new String[dirsNotIncluded.size()];
                 dirsNotIncluded.copyInto(notIncl);
 
-                for (int i = 0; i < excl.length; i++) {
-                    if (!couldHoldIncluded(excl[i])) {
-                        scandir(new File(basedir, excl[i]),
-                                excl[i] + File.separator, false);
-                    }
-                }
-                for (int i = 0; i < notIncl.length; i++) {
-                    if (!couldHoldIncluded(notIncl[i])) {
-                        scandir(new File(basedir, notIncl[i]),
-                                notIncl[i] + File.separator, false);
-                    }
-                }
+                processSlowScan(excl);
+                processSlowScan(notIncl);
                 clearCaches();
                 includes = nullIncludes ? null : includes;
                 excludes = nullExcludes ? null : excludes;
@@ -1015,6 +1005,15 @@ public class DirectoryScanner
         }
     }
 
+    private void processSlowScan(String[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (!couldHoldIncluded(arr[i])) {
+                scandir(new File(basedir, arr[i]),
+                        arr[i] + File.separator, false);
+            }
+        }
+    }
+    
     /**
      * Scan the given directory for files and directories. Found files and
      * directories are placed in their respective collections, based on the
@@ -1115,21 +1114,7 @@ public class DirectoryScanner
      * @param file  included File.
      */
     private void accountForIncludedFile(String name, File file) {
-        if (filesIncluded.contains(name)
-            || filesExcluded.contains(name)
-            || filesDeselected.contains(name)) {
-            return;
-        }
-        boolean included = false;
-        if (isExcluded(name)) {
-            filesExcluded.addElement(name);
-        } else if (isSelected(name, file)) {
-            included = true;
-            filesIncluded.addElement(name);
-        } else {
-            filesDeselected.addElement(name);
-        }
-        everythingIncluded &= included;
+    	processIncluded(name, file, filesIncluded, filesExcluded, filesDeselected);
     }
 
     /**
@@ -1140,24 +1125,26 @@ public class DirectoryScanner
      * @param fast whether to perform fast scans.
      */
     private void accountForIncludedDir(String name, File file, boolean fast) {
-        if (dirsIncluded.contains(name)
-            || dirsExcluded.contains(name)
-            || dirsDeselected.contains(name)) {
-            return;
-        }
-        boolean included = false;
-        if (isExcluded(name)) {
-            dirsExcluded.addElement(name);
-        } else if (isSelected(name, file)) {
-            included = true;
-            dirsIncluded.addElement(name);
-        } else {
-            dirsDeselected.addElement(name);
-        }
-        everythingIncluded &= included;
+    	processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast);
         }
+    }
+    
+    private void processIncluded(String name, File file, Vector inc, Vector exc, Vector des) {
+        
+        if (inc.contains(name) || exc.contains(name) || des.contains(name)) { return; }
+        
+        boolean included = false;
+        if (isExcluded(name)) {
+            exc.add(name);
+        } else if(isSelected(name, file)) {
+            included = true;
+            inc.add(name);
+        } else {
+            des.add(name);
+        }
+        everythingIncluded &= included;
     }
 
     /**
