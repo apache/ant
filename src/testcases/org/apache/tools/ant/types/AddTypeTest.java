@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
@@ -86,6 +87,12 @@ public class AddTypeTest extends BuildFileTest {
             "myaddconfigured", "value is Value Setexecute: value is Value Set");
     }
 
+    public void testAddConfiguredValue() {
+        expectLogContaining(
+            "myaddconfiguredvalue",
+            "value is Value Setexecute: value is Value Set");
+    }
+
     public void testNamespace() {
         executeTarget("namespacetest");
     }
@@ -150,6 +157,25 @@ public class AddTypeTest extends BuildFileTest {
         public void addConfigured(MyValue value) {
             log("value is " + value);
             this.value = value;
+        }
+        public void add(MyValue value) {
+            throw new BuildException("Should not be called");
+        }
+        public void execute() {
+            log("execute: value is " + value);
+        }
+    }
+
+    public static class MyAddConfiguredValue
+        extends Task
+    {
+        MyValue value;
+        public void addConfiguredValue(MyValue value) {
+            log("value is " + value);
+            this.value = value;
+        }
+        public void addValue(MyValue value) {
+            throw new BuildException("Should not be called");
         }
         public void execute() {
             log("execute: value is " + value);

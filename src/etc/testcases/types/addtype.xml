@@ -68,6 +68,9 @@
              name = "myaddconfigured" 
              classname="${nested.package}AddTypeTest$MyAddConfigured"/>
     <typedef loaderref="nested.loader"
+             name = "myaddconfiguredvalue" 
+             classname="${nested.package}AddTypeTest$MyAddConfiguredValue"/>
+    <typedef loaderref="nested.loader"
              name = "myvalue" 
              classname="${nested.package}AddTypeTest$MyValue"/>
   </target>
@@ -125,6 +128,12 @@
     <myaddconfigured>
       <myvalue>Value Set</myvalue>
     </myaddconfigured>
+  </target>
+
+  <target name="myaddconfiguredvalue" depends="init">
+    <myaddconfiguredvalue>
+      <value>Value Set</value>
+    </myaddconfiguredvalue>
   </target>
 
   <target name="namespacetest" xmlns:prefix="uri">

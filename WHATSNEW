@@ -258,6 +258,9 @@ Fixed bugs:
 * Copy of UnknownElement in macroinstance was not recursive.
   Bugzilla report 40238.
 
+* mixing of add and addConfigured methods in Mapper/ChainedMapper
+  causes incorrect chaining. Bugzilla report 40228.
+
 Other changes:
 --------------
 

@@ -58,6 +58,15 @@ public class Mapper extends DataType implements Cloneable {
     }
 
     /**
+     * Cannot mix add and addconfigured in same type, so
+     * provide this to override the add method.
+     * @param fileNameMapper   the <code>FileNameMapper</code> to add.
+     */
+    public void addConfigured(FileNameMapper fileNameMapper) {
+        add(fileNameMapper);
+    }
+
+    /**
      * Add a nested <code>FileNameMapper</code>.
      * @param fileNameMapper   the <code>FileNameMapper</code> to add.
      */

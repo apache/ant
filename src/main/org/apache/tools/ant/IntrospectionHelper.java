@@ -267,7 +267,16 @@ public final class IntrospectionHelper implements BuildListener {
                         constructor =
                             args[0].getConstructor(new Class[] {Project.class});
                     }
+
                     String propName = getPropertyName(name, "add");
+                    if (nestedTypes.get(propName) != null) {
+                        /*
+                         *  Ignore this method as there is an addConfigured
+                         *  form of this method that has a higher
+                         *  priority
+                         */
+                        continue;
+                    }
                     nestedTypes.put(propName, args[0]);
                     nestedCreators.put(propName, new AddNestedCreator(m,
                         constructor, AddNestedCreator.ADD));
@@ -1439,6 +1448,8 @@ public final class IntrospectionHelper implements BuildListener {
      * the addTypeMethods array. The array is
      * ordered so that the more derived classes
      * are first.
+     * If both add and addConfigured are present, the addConfigured
+     * will take priority.
      * @param method the <code>Method</code> to insert.
      */
     private void insertAddTypeMethod(Method method) {
@@ -1446,6 +1457,10 @@ public final class IntrospectionHelper implements BuildListener {
         for (int c = 0; c < addTypeMethods.size(); ++c) {
             Method current = (Method) addTypeMethods.get(c);
             if (current.getParameterTypes()[0].equals(argClass)) {
+                if (method.getName().equals("addConfigured")) {
+                    // add configured replaces the add method
+                    addTypeMethods.set(c, method);
+                }
                 return; // Already present
             }
             if (current.getParameterTypes()[0].isAssignableFrom(
