@@ -7,6 +7,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* <zip filesonly="true"> included empty directories.  Bugzilla report 40258.
+
 Other changes:
 --------------
 
@@ -272,8 +274,6 @@ Fixed bugs:
 
 * mixing of add and addConfigured methods in Mapper/ChainedMapper
   causes incorrect chaining. Bugzilla report 40228.
-
-* <zip filesonly="true"> included empty directories.  Bugzilla report 40258.
 
 Other changes:
 --------------
