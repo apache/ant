@@ -126,17 +126,52 @@
   <target name="testEmptySkip">
     <mkdir dir="ziptest"/>
     <zip destfile="test3.zip" basedir="ziptest" whenempty="skip"/>
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="test3.zip" />
+      </condition>
+    </fail>
   </target>
 
   <!-- Bugzilla Report 30365 -->
   <target name="zipEmptyDir">
     <mkdir dir="empty/empty2"/>
-      <zip destfile="test3.zip" basedir="empty" update="true"/>
+    <zip destfile="test3.zip" basedir="empty" update="true"/>
+    <fail message="single-directory archive should be created">
+      <condition>
+        <or>
+          <not>
+            <available file="test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="test3.zip" />
+          </resourcecount>
+          <resourcecount when="ne" count="1">
+            <restrict>
+              <exists xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+              <zipentry zipfile="test3.zip" name="empty2/" />
+            </restrict>
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
   </target>
 
   <target name="zipEmptyCreate">
     <mkdir dir="empty"/>
     <zip destfile="test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>
+    <fail message="empty archive should be created">
+      <condition>
+        <or>
+          <not>
+           <available file="test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="test3.zip" />
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
   </target>
 
   <target name="testCompressionLevel" depends="test6">
