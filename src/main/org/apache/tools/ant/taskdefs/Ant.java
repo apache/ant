@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2005 The Apache Software Foundation
+ * Copyright 2000-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -287,7 +287,7 @@ public class Ant extends Task {
                 reinit();
             }
 
-            if ((dir == null) && (inheritAll)) {
+            if (dir == null && inheritAll) {
                 dir = getProject().getBaseDir();
             }
 
@@ -297,7 +297,7 @@ public class Ant extends Task {
                 newProject.setBaseDir(dir);
                 if (savedDir != null) {
                     // has been set explicitly
-                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR ,
+                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
                                                     dir.getAbsolutePath());
                 }
             } else {
