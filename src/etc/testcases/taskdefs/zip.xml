@@ -157,6 +157,17 @@
     </fail>
   </target>
 
+  <!-- Bugzilla Report 40258 -->
+  <target name="zipEmptyDirFilesOnly">
+    <mkdir dir="empty/empty2" />
+    <zip destfile="test3.zip" basedir="empty" update="true" filesonly="true" />
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="test3.zip" />
+      </condition>
+    </fail>
+  </target>
+
   <target name="zipEmptyCreate">
     <mkdir dir="empty"/>
     <zip destfile="test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>

@@ -137,6 +137,10 @@ public class ZipTest extends BuildFileTest {
     public void testZipEmptyDir() {
         executeTarget("zipEmptyDir");
     }
+    // Bugzilla Report 40258
+    public void testZipEmptyDirFilesOnly() {
+        executeTarget("zipEmptyDirFilesOnly");
+    }
     public void testZipEmptyCreate() {
         expectLogContaining("zipEmptyCreate", "Note: creating empty");
     }

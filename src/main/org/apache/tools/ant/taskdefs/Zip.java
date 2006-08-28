@@ -1269,10 +1269,12 @@ public class Zip extends MatchingTask {
                 ((ZipScanner) rs).setEncoding(encoding);
             }
             Vector resources = new Vector();
-            String[] directories = rs.getIncludedDirectories();
-            for (int j = 0; j < directories.length; j++) {
-                if (!"".equals(directories[j]) || !skipEmptyNames) {
-                    resources.addElement(rs.getResource(directories[j]));
+            if (!doFilesonly) {
+                String[] directories = rs.getIncludedDirectories();
+                for (int j = 0; j < directories.length; j++) {
+                    if (!"".equals(directories[j]) || !skipEmptyNames) {
+                        resources.addElement(rs.getResource(directories[j]));
+                    }
                 }
             }
             String[] files = rs.getIncludedFiles();
