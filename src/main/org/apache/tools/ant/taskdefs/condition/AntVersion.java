@@ -65,7 +65,7 @@ public class AntVersion implements Condition {
         p.init();
         String versionString = p.getProperty("ant.version");
         String v = versionString.substring(versionString.indexOf("Ant version")+12, 
-                versionString.indexOf("compiled on")-1);
+                versionString.indexOf("Ant version")+17);
         char[] cs = v.toCharArray();
         int end = cs.length;
         for (int i = cs.length; i > 0; i--) {
