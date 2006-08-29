@@ -1,5 +1,5 @@
 /*
- * Copyright  2005-2006 The Apache Software Foundation
+ * Copyright 2005-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,8 +32,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @ant.task category="property"
  */
-public class ManifestClassPath
-             extends Task {
+public class ManifestClassPath extends Task {
 
     /** The property name to hold the classpath value. */
     private String _name;
@@ -48,7 +47,7 @@ public class ManifestClassPath
     private Path _path;
 
     /**
-     * Sets a property, which must not already exists, with a space
+     * Sets a property, which must not already exist, with a space
      * separated list of files and directories relative to the jar
      * file's parent directory.
      */
@@ -87,6 +86,9 @@ public class ManifestClassPath
         StringBuffer buffer = new StringBuffer();
         StringBuffer element = new StringBuffer();
         for (int i = 0; i < elements.length; ++i) {
+            if (i > 0) {
+                buffer.append(' ');
+            }
             // Normalize the current file
             File pathEntry = new File(elements[i]);
             pathEntry = fileUtils.normalize(pathEntry.getAbsolutePath());
@@ -134,12 +136,6 @@ public class ManifestClassPath
                 throw new BuildException(exc);
             }
             buffer.append(relPath);
-            buffer.append(' ');
-        }
-        
-        // Get rid of trailing space, if any
-        if (buffer.length() > 0) {
-            buffer.setLength(buffer.length() - 1);
         }
 
         // Finally assign the property with the manifest classpath
@@ -157,7 +153,7 @@ public class ManifestClassPath
 
     /**
      * The JAR file to contain the classpath attribute in its manifest.
-     * 
+     *
      * @param  jarfile the JAR file. Need not exist yet, but its parent
      *         directory must exist on the other hand.
      */
