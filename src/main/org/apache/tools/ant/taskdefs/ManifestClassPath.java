@@ -86,9 +86,6 @@ public class ManifestClassPath extends Task {
         StringBuffer buffer = new StringBuffer();
         StringBuffer element = new StringBuffer();
         for (int i = 0; i < elements.length; ++i) {
-            if (i > 0) {
-                buffer.append(' ');
-            }
             // Normalize the current file
             File pathEntry = new File(elements[i]);
             pathEntry = fileUtils.normalize(pathEntry.getAbsolutePath());
@@ -136,10 +133,11 @@ public class ManifestClassPath extends Task {
                 throw new BuildException(exc);
             }
             buffer.append(relPath);
+            buffer.append(' ');
         }
 
         // Finally assign the property with the manifest classpath
-        getProject().setNewProperty(_name, buffer.toString());
+        getProject().setNewProperty(_name, buffer.toString().trim());
     }
 
     /**
