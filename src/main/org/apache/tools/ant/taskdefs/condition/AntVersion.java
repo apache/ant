@@ -58,24 +58,36 @@ public class AntVersion implements Condition {
         if (null == atLeast && null == exactly) {
             throw new BuildException("One of atleast or exactly must be set.");
         }
+        try {
+            if (atLeast != null) {
+                new DeweyDecimal(atLeast);
+            } else {
+                new DeweyDecimal(exactly);
+            }
+        } catch (NumberFormatException e) {
+            throw new BuildException("The argument is not a Dewey Decimal eg 1.1.0");
+        }
     }
-    
+        
     private DeweyDecimal getVersion() {
         Project p = new Project();
         p.init();
-        String versionString = p.getProperty("ant.version");
-        String v = versionString.substring(versionString.indexOf("Ant version")+12, 
-                versionString.indexOf("Ant version")+17);
-        char[] cs = v.toCharArray();
-        int end = cs.length;
-        for (int i = cs.length; i > 0; i--) {
-            if (!Character.isLetter(cs[i-1])) {
-                end = i;
+        char[] versionString = p.getProperty("ant.version").toCharArray();
+        StringBuffer sb = new StringBuffer();
+        boolean foundFirstDigit = false;
+        for (int i=0; i<versionString.length; i++) {
+            if (Character.isDigit(versionString[i])) {
+                sb.append(versionString[i]);
+                foundFirstDigit = true;
+            }
+            if  (versionString[i]=='.' && foundFirstDigit) {
+                sb.append(versionString[i]);
+            }
+            if (Character.isLetter(versionString[i]) && foundFirstDigit) {
                 break;
             }
         }
-        v = v.substring(0, end);
-        return new DeweyDecimal(v);
+        return new DeweyDecimal(sb.toString());
     }
     
     public String getAtLeast() {
