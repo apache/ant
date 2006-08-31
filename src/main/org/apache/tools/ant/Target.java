@@ -454,28 +454,4 @@ public class Target implements TaskContainer {
         String test = project.replaceProperties(unlessCondition);
         return project.getProperty(test) == null;
     }
-
-    /**
-     * Equality check is based on target name
-     * @param that other thing to check
-     * @return true iff type and name are equal
-     */
-    public boolean equals(Object that) {
-        if (this == that) return true;
-        if (that == null || getClass() != that.getClass()) return false;
-
-        final Target target = (Target) that;
-
-        if (name != null ? !name.equals(target.name) : target.name != null) return false;
-
-        return true;
-    }
-
-    /**
-     * Hash code is based on name, is 0 if the name==null
-     * @return hash code
-     */
-    public int hashCode() {
-        return (name != null ? name.hashCode() : 0);
-    }
 }
