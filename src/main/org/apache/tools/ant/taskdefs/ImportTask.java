@@ -111,17 +111,16 @@ public class ImportTask extends Task {
             throw new BuildException("Unable to get location of import task");
         }
 
-        File buildFile = new File(getLocation().getFileName());
-        buildFile = new File(buildFile.getAbsolutePath());
-
-        getProject().log("Importing file " + file + " from "
-                         + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
+        File buildFile = new File(getLocation().getFileName()).getAbsoluteFile();
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
 
         File buildFileParent = new File(buildFile.getParent());
         File importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
+
+        getProject().log("Importing file " + importedFile + " from "
+                         + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         if (!importedFile.exists()) {
             String message =
