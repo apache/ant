@@ -20,7 +20,8 @@
 
   -->
   <!-- Ant 1.6+ antlib declaration for conditions:
-  Use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition" to
+  Use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition"
+  to
   trigger Ant's autoload of this file into namespace 'cond' (or whatever name
   suits).
 
@@ -32,28 +33,50 @@
   to be added to this antlib.
   -->
 
-  <typedef name="and" classname="org.apache.tools.ant.taskdefs.condition.And"/>
-  <typedef name="antversion"
+  <typedef name="and" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.And"/>
+  <typedef name="antversion" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
-  <typedef name="contains" classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
-  <typedef name="equals" classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
-  <typedef name="filesmatch" classname="org.apache.tools.ant.taskdefs.condition.FilesMatch"/>
-  <typedef name="http" classname="org.apache.tools.ant.taskdefs.condition.Http"/>
-  <typedef name="isfailure" classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
-  <typedef name="isfalse" classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
-  <typedef name="isfileselected" classname="org.apache.tools.ant.taskdefs.condition.IsFileSelected"/>
-  <typedef name="isreachable" classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
-  <typedef name="isreference" classname="org.apache.tools.ant.taskdefs.condition.IsReference"/>
-  <typedef name="isset" classname="org.apache.tools.ant.taskdefs.condition.IsSet"/>
-  <typedef name="issigned" classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
-  <typedef name="istrue" classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
-  <typedef name="not" classname="org.apache.tools.ant.taskdefs.condition.Not"/>
-  <typedef name="or" classname="org.apache.tools.ant.taskdefs.condition.Or"/>
-  <typedef name="os" classname="org.apache.tools.ant.taskdefs.condition.Os"/>
-  <typedef name="parsersupports" classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
-  <typedef name="resourcesmatch" classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
-  <typedef name="scriptcondition" classname="org.apache.tools.ant.types.optional.ScriptCondition"/>
-  <typedef name="socket" classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
-  <typedef name="typefound" classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
-  <typedef name="xor" classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
+  <typedef name="contains" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
+  <typedef name="equals" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
+  <typedef name="filesmatch" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.FilesMatch"/>
+  <typedef name="http" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Http"/>
+  <typedef name="isfailure" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
+  <typedef name="isfalse" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
+  <typedef name="isfileselected" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsFileSelected"/>
+  <typedef name="isreachable" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
+  <typedef name="isreference" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsReference"/>
+  <typedef name="isset" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsSet"/>
+  <typedef name="issigned" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
+  <typedef name="istrue"  onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
+  <typedef name="not" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Not"/>
+  <typedef name="or" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Or"/>
+  <typedef name="os" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Os"/>
+  <typedef name="parsersupports" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
+  <typedef name="resourcesmatch" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
+  <typedef name="scriptcondition" onerror="ignore"
+           classname="org.apache.tools.ant.types.optional.ScriptCondition"/>
+  <typedef name="socket" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
+  <typedef name="typefound" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
+  <typedef name="xor" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
 </antlib>
