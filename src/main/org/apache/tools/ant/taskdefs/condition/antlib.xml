@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <antlib>
   <!--
-  /*
- * Copyright  2006 The Apache Software Foundation
+/*
+ * Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,17 @@
  */
 
   -->
-  <!-- ant1.6+ antlib declaration for the conditions
-  use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition" to
-  trigger ant's autoload of this file into a namespace.
+  <!-- Ant 1.6+ antlib declaration for conditions:
+  Use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition" to
+  trigger Ant's autoload of this file into namespace 'cond' (or whatever name
+  suits).
 
-  Please keep this list in alphabetical order -it is easier to verify that way
+  Please keep this list in alphabetical order; it is easier to verify that way.
+
+  Additionally, ConditionBase uses this antlib to discover built-in conditions.
+  Prior to Ant 1.7, a new built-in condition required an addXXX method to be
+  added to ConditionBase.  Conditions added in or after version 1.7 need only
+  to be added to this antlib.
   -->
 
   <typedef name="and" classname="org.apache.tools.ant.taskdefs.condition.And"/>
@@ -31,7 +37,7 @@
            classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
   <typedef name="contains" classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
   <typedef name="equals" classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
-  <typedef name="filesmatch" classname="org.apache.tools.ant.taskdefs.condition.Filesmatch"/>
+  <typedef name="filesmatch" classname="org.apache.tools.ant.taskdefs.condition.FilesMatch"/>
   <typedef name="http" classname="org.apache.tools.ant.taskdefs.condition.Http"/>
   <typedef name="isfailure" classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
   <typedef name="isfalse" classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>

@@ -19,6 +19,9 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.DynamicElement;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
 import org.apache.tools.ant.taskdefs.Checksum;
@@ -31,7 +34,11 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  *
  * @since Ant 1.4
  */
-public abstract class ConditionBase extends ProjectComponent {
+public abstract class ConditionBase extends ProjectComponent
+    implements DynamicElement {
+
+    private static final String CONDITION_ANTLIB
+        = "antlib:org.apache.tools.ant.taskdefs.condition:";
 
     /**
      * name of the component
@@ -44,17 +51,16 @@ public abstract class ConditionBase extends ProjectComponent {
     private Vector conditions = new Vector();
 
     /**
-     * simple constructor.
+     * Simple constructor.
      */
     protected ConditionBase() {
         taskName = "component";
     }
 
     /**
-     * constructor that takes the name of the task
-     * in the task name
+     * Constructor that takes the name of the task in the task name.
      * @param taskName
-     * @since Ant1.7
+     * @since Ant 1.7
      */
     protected ConditionBase(String taskName) {
         this.taskName = taskName;
@@ -261,24 +267,6 @@ public abstract class ConditionBase extends ProjectComponent {
     }
 
     /**
-     * Add an &lt;typefound&gt; condition.
-     * @param test a TypeFound condition
-     * @since Ant 1.7
-     */
-    public void addTypeFound(TypeFound test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add an &lt;isfailure&gt; condition.
-     *
-     * @param test the condition
-     */
-    public void addIsFailure(IsFailure test) {
-        conditions.addElement(test);
-    }
-
-    /**
      * Add an &lt;isfileselected&gt; condition.
      * @param test the condition
      */
@@ -287,81 +275,30 @@ public abstract class ConditionBase extends ProjectComponent {
     }
 
     /**
-     * Add an &lt;isreachable&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addIsReachable(IsReachable test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add an &lt;issigned&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addIsSigned(IsSigned test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add an &lt;parsersupports&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addParserSupports(ParserSupports test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add a &lt;ResourcesMatch&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addResourcesMatch(ResourcesMatch test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add an &lt;xor&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addXor(Xor test) {
-        conditions.addElement(test);
-    }
-
-    /**
-     * Add a  &lt;hasMethod&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addHasMethod(HasMethod test) {
-        add(test);
-    }
-
-    /**
-     * Add an &lt;antversion&gt; condition.
-     *
-     * @param test the condition
-     * @since Ant 1.7
-     */
-    public void addAntVersion(AntVersion test) {
-        conditions.addElement(test);
-    }
-
-    /**
      * Add an arbitrary condition
-     * @param c a  condition
+     * @param c a condition
      * @since Ant 1.6
      */
     public void add(Condition c) {
         conditions.addElement(c);
     }
+
+    /**
+     * Create a dynamically discovered condition.  Built-in conditions can
+     * be discovered from the org.apache.tools.ant.taskdefs.condition
+     * antlib.
+     * @param name the condition to create.
+     */
+    public Object createDynamicElement(String name) {
+        Object cond = ComponentHelper.getComponentHelper(getProject())
+            .createComponent(CONDITION_ANTLIB + name);
+        if (!(cond instanceof Condition)) {
+            return null;
+        }
+        log("Dynamically discovered '" + name + "' " + cond,
+            Project.MSG_DEBUG);
+        add((Condition) cond);
+        return cond;
+    }
+
 }
