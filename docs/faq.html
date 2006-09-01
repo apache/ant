@@ -1636,7 +1636,9 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;
     </p>
-                  <p>These tasks don't ignore your classpath setting, you
+                  <p>Starting with Ant 1.7.0, &lt;junit&gt; will honor your
+        nested &lt;classpath&gt;.</p>
+                        <p>These tasks don't ignore your classpath setting, you
         are facing a common problem with delegating classloaders.</p>
                         <p>This question collects a common type of problem: A task
         needs an external library and it has a nested classpath
@@ -1813,7 +1815,8 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         "offending" jar out of <code>ANT_HOME/lib</code>.  For the
         <code>&lt;junit&gt;</code> task it would be
         <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
-        it would be <code>ant-trax.jar</code> or <code>ant-xslp.jar</code> -
+        it would be <code>ant-trax.jar</code>
+        or <code>ant-xslp.jar</code> - 
         depending on the processor you use.</p>
                         <p>If you do so, you will have to <code>&lt;taskdef&gt;</code>
         all optional tasks that need the external library and use
@@ -1981,7 +1984,6 @@ mv /tmp/foo $ANT_HOME/bin/antRun
   </div>
 
         <p class="copyright">
-        Copyright &copy; 2000-2006&nbsp;The Apache Software Foundation. All rights reserved.
         <script type="text/javascript" language="JavaScript"><!--
                 document.write(" - "+"Last Published: " + document.lastModified);
               //  -->
