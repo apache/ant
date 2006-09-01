@@ -215,7 +215,6 @@ b+WtmAzu0JjZNACdFJ4KIATJDK/5ajFq5+irOpodoHc=
 =UomR
 -----END PGP PUBLIC KEY BLOCK-----
 
-stefan@www:~/ASF/ant/ant-core> gpg --list-sigs 5F6B8B72
 pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <bodewig@apache.org>
 sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 sig         51898504 2002-01-11   Conor MacNeill <conor@codefeed.com>
@@ -230,6 +229,7 @@ sig         D6298F01 2003-04-27   Paulo Henrique Gaspar Jorge <pjorge@asatnet.co
 sig         0CAA68B4 2004-11-11   Patrick Rentsch <patrick.rentsch@suissimage.ch>
 sig         2FE28BCF 2005-07-01   Harald Wilhelm (HAWI) <Harald.Wilhelm@hawi.de>
 sig         5793498F 2005-07-21   Tim Ellison <tim@ellison.name>
+sig         E4136392 2005-07-21   [User id not found]
 sig         8408F755 2005-07-21   Christian Geisert <chrisg@apache.org>
 sig 2       FC243F3C 2005-07-20   Henk P. Penning <penning@cs.uu.nl>
 sig 3       EC140B81 2005-07-20   Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
@@ -250,7 +250,46 @@ sig         EA1BA38D 2005-07-25   Ajith Harshana Ranabahu (Made at Apachecon 200
 sig         333E4E84 2005-07-26   Chathura Kamalanath Herath (Apachecon Europe 2005) <chathura@apache.org>
 sig         152924AF 2005-07-29   Sander Temme <sander@temme.net>
 sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
+sig 3       9978AF86 2005-07-25   [User id not found]
+sig 3       2A623F72 2005-07-25   [User id not found]
+sig 3       F8EA2967 2005-07-26   [User id not found]
 sig 3       C152431A 2005-07-27   Steve Loughran <stevel@apache.org>
+sig         DE885DD3 2005-11-25   Sander Striker <striker@apache.org>
+uid                            [revoked] Stefan Bodewig <bodewig@bost.de>
+sig 3       5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
+sig         51898504 2002-01-11   Conor MacNeill <conor@codefeed.com>
+sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       2261D073 2003-03-17   Astrid Kessler (Kess) <kess@kess-net.de>
+sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+sig         B3B2A12C 2003-05-20   ct magazine CERTIFICATE <pgpCA@ct.heise.de>
+sig 3       8103A37E 2003-04-04   Andre Malo <nd@apache.org>
+sig         0CAA68B4 2004-11-11   Patrick Rentsch <patrick.rentsch@suissimage.ch>
+sig         2FE28BCF 2005-07-01   Harald Wilhelm (HAWI) <Harald.Wilhelm@hawi.de>
+rev         5F6B8B72 2005-07-22   Stefan Bodewig <bodewig@apache.org>
+sig         5793498F 2005-07-21   Tim Ellison <tim@ellison.name>
+sig 3       EC140B81 2005-07-20   Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig 3       EE65E321 2005-07-20   Martin Kraemer <martin@apache.org>
+sig 3       A99F75DD 2005-07-21   Rodent of Unusual Size <coar@php.net>
+sig 3       3642CB4B 2005-07-20   Martin Kraemer <martin@apache.org>
+sig 3       302DA568 2005-07-21   Rodent of Unusual Size (DSA) <coar@Apache.Org>
+sig 3       2C312D2F 2005-07-21   Rodent of Unusual Size <coar@php.net>
+sig 3       CC78C893 2005-07-22   Rich Bowen <rbowen@rcbowen.com>
+sig 3       E2D774DF 2005-07-22   Sylvain Wallez <sylvain@apache.org>
+sig 3       E04F9A89 2005-07-22   Roy T. Fielding <fielding@gbiv.com>
+sig 3       87315C31 2005-07-23   Raphaël Luta <raphael.luta@aptiwan.com>
+sig 3       E41EDC7E 2005-07-24   Carsten Ziegeler <cziegeler@apache.org>
+sig 3       F39B3750 2005-07-24   Colm MacCarthaigh <colm@stdlib.net>
+sig         1CD4861F 2005-07-25   Eran Chinthaka <chinthaka@apache.org>
+sig         EA1BA38D 2005-07-25   Ajith Harshana Ranabahu (Made at Apachecon 2005) <ajith@apache.org>
+sig         333E4E84 2005-07-26   Chathura Kamalanath Herath (Apachecon Europe 2005) <chathura@apache.org>
+sig         152924AF 2005-07-29   Sander Temme <sander@temme.net>
+sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
+sig 3       9978AF86 2005-07-25   [User id not found]
+sig 3       2A623F72 2005-07-25   [User id not found]
+sig 3       F8EA2967 2005-07-26   [User id not found]
+sig 3       C152431A 2005-07-27   Steve Loughran <stevel@apache.org>
+sig         DE885DD3 2005-11-25   Sander Striker <striker@apache.org>
 uid                            Stefan Bodewig <stefan.bodewig@freenet.de>
 sig 3       5F6B8B72 2003-03-07   Stefan Bodewig <bodewig@apache.org>
 sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
@@ -281,7 +320,11 @@ sig         EA1BA38D 2005-07-25   Ajith Harshana Ranabahu (Made at Apachecon 200
 sig         333E4E84 2005-07-26   Chathura Kamalanath Herath (Apachecon Europe 2005) <chathura@apache.org>
 sig         152924AF 2005-07-29   Sander Temme <sander@temme.net>
 sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
+sig 3       9978AF86 2005-07-25   [User id not found]
+sig 3       2A623F72 2005-07-25   [User id not found]
+sig 3       F8EA2967 2005-07-26   [User id not found]
 sig 3       C152431A 2005-07-27   Steve Loughran <stevel@apache.org>
+sig         DE885DD3 2005-11-25   Sander Striker <striker@apache.org>
 uid                            Stefan Bodewig <stefan@samaflost.de>
 sig 3       5F6B8B72 2005-05-31   Stefan Bodewig <bodewig@apache.org>
 sig         51898504 2005-06-21   Conor MacNeill <conor@codefeed.com>
@@ -305,7 +348,22 @@ sig         EA1BA38D 2005-07-25   Ajith Harshana Ranabahu (Made at Apachecon 200
 sig         333E4E84 2005-07-26   Chathura Kamalanath Herath (Apachecon Europe 2005) <chathura@apache.org>
 sig         152924AF 2005-07-29   Sander Temme <sander@temme.net>
 sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
+sig 3       9978AF86 2005-07-25   [User id not found]
+sig 3       2A623F72 2005-07-25   [User id not found]
+sig 3       F8EA2967 2005-07-26   [User id not found]
 sig 3       C152431A 2005-07-27   Steve Loughran <stevel@apache.org>
+sig         DE885DD3 2005-11-25   Sander Striker <striker@apache.org>
+uid                            [revoked] Stefan Bodewig <stefan.bodewig@epost.de>
+rev         5F6B8B72 2005-07-01   Stefan Bodewig <bodewig@apache.org>
+sig         75A67692 2003-03-18   Erik Abele <erik@codefaktor.de>
+sig 3       F88341D9 2003-03-17   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       5F6B8B72 2002-01-11   Stefan Bodewig <bodewig@apache.org>
+sig 3       8103A37E 2003-04-04   Andre Malo <nd@apache.org>
+sig 3       2261D073 2003-03-17   Astrid Kessler (Kess) <kess@kess-net.de>
+sig         21D0A71B 2003-03-17   Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig         2FE28BCF 2005-07-01   Harald Wilhelm (HAWI) <Harald.Wilhelm@hawi.de>
+sub  1024g/24774157 2001-05-28
+sig         5F6B8B72 2001-05-28   Stefan Bodewig <bodewig@apache.org>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.2.4 (GNU/Linux)
@@ -384,65 +442,68 @@ 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
-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
+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
@@ -500,53 +561,56 @@ Vjqlx0t1vS4KiEYEExECAAYFAkLlEaUACgkQa3OhBipiP3LYawCgiuQqhVay7FE8
 e05Za69seQwF4CYAnAxBVNyvXu/1aeAuSi3iC6tywvFoiEYEExECAAYFAkLmmWIA
 CgkQaOuMdvjqKWfdbQCdHfDneYM+nWXT/oYOqohamLvk8iQAn1LLJhkLiCMOa9/b
 iF24zKt+MjaHiEYEExECAAYFAkLnYVcACgkQbpR1lMFSQxog0ACgp/m7d/NdNP0w
-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
+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
@@ -570,8 +634,9 @@ DlsAr6UDdJU46GFZMIi2WmFJHarEkIBwFN44ypSLmiEVwKRJE2/CYO0f7zQHcF6G
 USwQo2TxneahrZyHs7GdvpcRcfm0YnlC/H1CJ3pl8FpfHttzzIrIJviITgQYEQIA
 BgUCOxIiVAASCRCiEVrhX2uLcgdlR1BHAAEBDTIAoJ3NtpI/E345LVOruElFKrnd
 uWWXAJ9Adm9Mz4yoxrosHSkp5BWzXBUt4A==
-=4erJ
+=95C5
 -----END PGP PUBLIC KEY BLOCK-----
+
 pub   1024D/C152431A 2005-07-18 [expires: 2010-07-17]
 uid                  Steve Loughran <stevel@apache.org>
 sig 3        C152431A 2005-07-18  Steve Loughran <stevel@apache.org>
