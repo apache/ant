@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2006 The Apache Software Foundation
+ * Copyright 2001-2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @ant.task category="control"
  */
-
 public class WaitFor extends ConditionBase {
     /** default max wait time */
     private long maxWaitMillis = 1000L * 60L * 3L;
@@ -139,7 +138,6 @@ public class WaitFor extends ConditionBase {
                     // ignore
                 }
             }
-
             processTimeout();
         } finally {
             maxWaitMillis = savedMaxWaitMillis;
