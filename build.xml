@@ -1457,7 +1457,6 @@
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*"/>
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*"/>
 
-      <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
   </target>
 
@@ -1477,7 +1476,6 @@
         <patternset refid="useful.tests"/>
       </fileset>
 
-      <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
   </target>
 
