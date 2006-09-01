@@ -16,7 +16,7 @@
 
   <properties>
     <title>Binary Distributions</title>
-    <base/>
+    <index value="1"/>
   </properties>
 
 <body>
