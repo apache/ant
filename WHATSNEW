@@ -4,6 +4,8 @@ Changes from current Ant 1.7.0Beta1 version to current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* <script> and <scriptdef> now set the current thread context.
+
 Fixed bugs:
 -----------
 
@@ -13,6 +15,13 @@ Fixed bugs:
 
 Other changes:
 --------------
+
+* added setbeans attribute to <script> to allow <script>'s to be
+  run without referencing all references.
+  Bugzilla report 37688.
+* added classpath attribute and nested element to <script> to allow
+  the language jars to be specified in the build script.
+  Bugzilla report 29676.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================

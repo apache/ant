@@ -20,8 +20,11 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
+
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Project;
@@ -29,6 +32,7 @@ import org.apache.tools.ant.Project;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.apache.tools.ant.types.Path;
 
 /**
  * This class is used to run BSF scripts
@@ -57,6 +61,11 @@ public class ScriptRunner {
     /** Beans to be provided to the script */
     private Map beans = new HashMap();
 
+    /** Classpath to be used when running the script. */
+    private Path classpath = null;
+
+    /** Project this runner is used in */
+    private Project project = null;
 
     /**
      * Add a list of named objects to the list to be exported to the script
@@ -111,8 +120,18 @@ public class ScriptRunner {
             throw new BuildException("script language must be specified");
         }
 
+        ClassLoader origContextClassLoader =
+            Thread.currentThread().getContextClassLoader();
+        ClassLoader scriptLoader = getClass().getClassLoader();
+        if (classpath != null && project != null) {
+            AntClassLoader loader = project.createClassLoader(classpath);
+            loader.setParent(scriptLoader);
+            scriptLoader = loader;
+        }
         try {
+            Thread.currentThread().setContextClassLoader(scriptLoader);
             BSFManager manager = new BSFManager ();
+            manager.setClassLoader(scriptLoader);
 
             for (Iterator i = beans.keySet().iterator(); i.hasNext();) {
                 String key = (String) i.next();
@@ -141,6 +160,9 @@ public class ScriptRunner {
                 }
             }
             throw new BuildException(t);
+        } finally {
+             Thread.currentThread().setContextClassLoader(
+                 origContextClassLoader);
         }
     }
 
@@ -162,6 +184,13 @@ public class ScriptRunner {
         return language;
     }
 
+    /**
+     * Set the class path to be used.
+     */
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
+    }
+    
     /**
      * Load the script from an external file ; optional.
      *
@@ -203,11 +232,22 @@ public class ScriptRunner {
      * @param component to become <code>self</code>
      */
     public void bindToComponent(ProjectComponent component) {
-        Project project = component.getProject();
+        project = component.getProject();
         addBeans(project.getProperties());
         addBeans(project.getUserProperties());
         addBeans(project.getTargets());
         addBeans(project.getReferences());
+        addBean("project", project);
+        addBean("self", component);
+    }
+
+    /**
+     * Bind the runner to a project component.
+     * The project and self are the only beans set.
+     * @param component to become <code>self</code>
+     */
+    public void bindToComponentMinimum(ProjectComponent component) {
+        project = component.getProject();
         addBean("project", project);
         addBean("self", component);
     }

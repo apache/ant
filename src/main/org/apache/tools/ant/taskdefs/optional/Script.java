@@ -21,6 +21,8 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.ScriptRunner;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * Executes a script.
@@ -29,9 +31,11 @@ import org.apache.tools.ant.util.ScriptRunner;
  */
 public class Script extends Task {
 
-    private String language;
-    private File   src;
-    private String text;
+    private Path    classpath;
+    private String  language;
+    private File    src;
+    private String  text;
+    private boolean setBeans = true;
 
     /**
      * Do the work.
@@ -49,8 +53,14 @@ public class Script extends Task {
         if (text != null) {
             runner.addText(text);
         }
-
-        runner.bindToComponent(this);
+        if (classpath != null) {
+            runner.setClasspath(classpath);
+        }
+        if (setBeans) {
+            runner.bindToComponent(this);
+        } else {
+            runner.bindToComponentMinimum(this);
+        }
 
         runner.executeScript("ANT");
     }
@@ -80,5 +90,50 @@ public class Script extends Task {
      */
     public void addText(String text) {
         this.text = text;
+    }
+
+    /**
+     * Set the classpath to be used when searching for classes and resources.
+     *
+     * @param classpath an Ant Path object containing the search path.
+     */
+    public void setClasspath(Path classpath) {
+        createClasspath().append(classpath);
+    }
+
+    /**
+     * Classpath to be used when searching for classes and resources.
+     *
+     * @return an empty Path instance to be configured by Ant.
+     */
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(getProject());
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Set the classpath by reference.
+     *
+     * @param r a Reference to a Path instance to be used as the classpath
+     *          value.
+     */
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
+
+    /**
+     * Set the setbeans attribute.
+     * If this is true, &lt;script&gt; will create variables in the
+     * script instance for all
+     * properties, targets and references of the current project.
+     * It this is false, only the project and self variables will
+     * be set.
+     * The default is true.
+     * @param setBeans the value to set.
+     */
+    public void setSetBeans(boolean setBeans) {
+        this.setBeans = setBeans;
     }
 }
