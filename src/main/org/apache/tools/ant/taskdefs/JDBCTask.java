@@ -185,7 +185,7 @@ public abstract class JDBCTask extends Task {
      * @param driver The driver to set
      */
     public void setDriver(String driver) {
-        this.driver = driver;
+        this.driver = driver.trim();
     }
 
     /**
