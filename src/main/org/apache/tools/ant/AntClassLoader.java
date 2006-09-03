@@ -387,7 +387,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parent the parent class loader.
      * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
-    private void setParent(ClassLoader parent) {
+    public void setParent(ClassLoader parent) {
         if (parent == null) {
             this.parent = AntClassLoader.class.getClassLoader();
         } else {
