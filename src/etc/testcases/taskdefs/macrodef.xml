@@ -256,4 +256,18 @@
     </macrodef>
     <nobacktrace/>
   </target>
+
+  <target name="top-level-text">
+    <macrodef name="top">
+      <element name="em"/>
+      <sequential>
+        <echo><em/></echo>
+      </sequential>
+    </macrodef>
+    <top>
+      <em>
+        Hello World
+      </em>
+    </top>
+  </target>
 </project>

@@ -150,5 +150,9 @@ public class MacroDefTest extends BuildFileTest {
             "Checking if a back trace is created",
             "following error occurred");
     }
+
+    public void testTopLevelText() {
+        expectLogContaining("top-level-text", "Hello World");
+    }
 }
 

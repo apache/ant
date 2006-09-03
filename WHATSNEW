@@ -13,6 +13,7 @@ Fixed bugs:
 * <zip filesonly="true"> included empty directories.  Bugzilla report 40258.
 * Invalid hash code of Target causes XmlLogger to fail.
   Bugzilla report 40207.
+* Macro element did not include top level Text. Bugzilla report 36803.
 
 Other changes:
 --------------
