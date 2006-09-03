@@ -66,7 +66,7 @@ public class AntClassLoaderTest extends BuildFileTest {
     }
     public void testCleanup() throws BuildException {
         Path path = new Path(p, ".");
-        AntClassLoader loader = new AntClassLoader(p, path);
+        AntClassLoader loader = p.createClassLoader(path);
         try {
             // we don't expect to find this
             loader.findClass("fubar");

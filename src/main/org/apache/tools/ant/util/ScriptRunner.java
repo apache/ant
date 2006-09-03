@@ -124,9 +124,8 @@ public class ScriptRunner {
             Thread.currentThread().getContextClassLoader();
         ClassLoader scriptLoader = getClass().getClassLoader();
         if (classpath != null && project != null) {
-            AntClassLoader loader = project.createClassLoader(classpath);
-            loader.setParent(scriptLoader);
-            scriptLoader = loader;
+            scriptLoader = project.createClassLoader(
+                scriptLoader, classpath);
         }
         try {
             Thread.currentThread().setContextClassLoader(scriptLoader);

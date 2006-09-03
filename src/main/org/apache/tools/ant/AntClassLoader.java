@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -59,6 +60,19 @@ import org.apache.tools.ant.launch.Locator;
 public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    /**
+     * Work around for deprecated constructors that did
+     * not set the parent classloader.
+     */
+    private static Field parentField;
+    static {
+        try {
+            parentField = ClassLoader.class.getDeclaredField("parent");
+            parentField.setAccessible(true);
+        } catch (Throwable t) {
+            // Ignore
+        }
+    }
 
     /**
      * An enumeration of all resources of a given name found within the
@@ -217,7 +231,30 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     private boolean isContextLoaderSaved = false;
 
     /**
+     * Create an Ant ClassLoader for a given project, with
+     * a parent classloader and an initial classpath.
+     * <p>
+     * This constructor has been added in ant 1.7, it
+     * sets the parent classloader correctly. All the
+     * other constructors are deprecated.
+     * </p>
+     * @since Ant 1.7.
+     * @param parent the parent for this classloader.
+     * @param project The project to which this classloader is to
+     *                belong.
+     * @param classpath The classpath to use to load classes.
+     */
+    public AntClassLoader(
+        ClassLoader parent, Project project, Path classpath) {
+        super(parent == null ? AntClassLoader.class.getClassLoader() : parent);
+        this.parent = getParent();
+        setClassPath(classpath);
+        setProject(project);
+    }
+
+    /**
      * Create an Ant Class Loader
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader() {
         setParent(null);
@@ -233,6 +270,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                determined by the value of ${build.sysclasspath}.
      *                May be <code>null</code>, in which case no path
      *                elements are set up to start with.
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(Project project, Path classpath) {
         setParent(null);
@@ -255,6 +293,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted  before trying to
      *                    load the a class through this loader.
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(ClassLoader parent, Project project, Path classpath,
                           boolean parentFirst) {
@@ -278,6 +317,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(Project project, Path classpath,
                           boolean parentFirst) {
@@ -296,6 +336,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(ClassLoader parent, boolean parentFirst) {
         setParent(parent);
@@ -307,6 +348,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * Set the project associated with this class loader
      *
      * @param project the project instance
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public void setProject(Project project) {
         this.project = project;
@@ -343,12 +385,28 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * this class loader will delegate to load classes
      *
      * @param parent the parent class loader.
+     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
-    public void setParent(ClassLoader parent) {
+    private void setParent(ClassLoader parent) {
         if (parent == null) {
             this.parent = AntClassLoader.class.getClassLoader();
         } else {
             this.parent = parent;
+        }
+        // ClassLoader.parent is private and there is
+        // no accessor to set it, there is an accessor
+        // to get it, but it is final.
+        // This method setParent sets the parent of
+        // this classloader, and that is the way that the
+        // class behaves - so use a bit of reflection
+        // to set the field.
+        if (parentField == null) {
+            return; // Unable to get access to the parent field
+        }
+        try {
+            parentField.set(this, parent);
+        } catch (Throwable t) {
+            // Ignore - unable to set the parent
         }
     }
 

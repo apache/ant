@@ -736,10 +736,10 @@ public class ModifiedSelector extends BaseExtendSelector
     public ClassLoader getClassLoader() {
         if (myClassLoader == null) {
             myClassLoader = (classpath == null)
-                          // the usual classloader
-                          ? getClass().getClassLoader()
-                          // additional use the provided classpath
-                          : new org.apache.tools.ant.AntClassLoader(getProject(), classpath);
+                // the usual classloader
+                ? getClass().getClassLoader()
+                // additional use the provided classpath
+                : getProject().createClassLoader(classpath);
         }
         return myClassLoader;
     }

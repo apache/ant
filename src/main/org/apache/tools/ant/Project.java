@@ -300,7 +300,8 @@ public class Project implements ResourceFactory {
     }
 
     private void setAntLib() {
-        File antlib = org.apache.tools.ant.launch.Locator.getClassSource(Project.class);
+        File antlib = org.apache.tools.ant.launch.Locator.getClassSource(
+            Project.class);
         if (antlib != null) {
             setPropertyInternal(MagicNames.ANT_LIB, antlib.getAbsolutePath());
         }
@@ -314,10 +315,22 @@ public class Project implements ResourceFactory {
      * @return an appropriate classloader.
      */
     public AntClassLoader createClassLoader(Path path) {
-        AntClassLoader loader = new AntClassLoader();
-        loader.setProject(this);
-        loader.setClassPath(path);
-        return loader;
+        return new AntClassLoader(
+            getClass().getClassLoader(), this, path);
+    }
+
+    /**
+     * Factory method to create a class loader for loading classes from
+     * a given path.
+     *
+     * @param parent the parent classloader for the new loader.
+     * @param path the path from which classes are to be loaded.
+     *
+     * @return an appropriate classloader.
+     */
+    public AntClassLoader createClassLoader(
+        ClassLoader parent, Path path) {
+        return new AntClassLoader(parent, this, path);
     }
 
     /**
