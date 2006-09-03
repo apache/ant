@@ -400,6 +400,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         // this classloader, and that is the way that the
         // class behaves - so use a bit of reflection
         // to set the field.
+
         if (parentField == null) {
             return; // Unable to get access to the parent field
         }
@@ -408,6 +409,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         } catch (Throwable t) {
             // Ignore - unable to set the parent
         }
+
     }
 
     /**
@@ -972,24 +974,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception IOException if I/O errors occurs (can't happen)
      */
     protected Enumeration/*<URL>*/ findResources(String name) throws IOException {
-        Enumeration/*<URL>*/ mine = new ResourceEnumeration(name);
-        Enumeration/*<URL>*/ base;
-        if (parent != null && parent != getParent()) {
-            // Delegate to the parent:
-            base = parent.getResources(name);
-            // Note: could cause overlaps in case ClassLoader.this.parent has matches.
-        } else {
-            // ClassLoader.this.parent is already delegated to from
-            // ClassLoader.getResources, no need:
-            base = new CollectionUtils.EmptyEnumeration();
-        }
-        if (isParentFirst(name)) {
-            // Normal case.
-            return CollectionUtils.append(base, mine);
-        } else {
-            // Inverted.
-            return CollectionUtils.append(mine, base);
-        }
+        return new ResourceEnumeration(name);
     }
 
     /**
@@ -1554,4 +1539,23 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         return "AntClassLoader[" + getClasspath() + "]";
     }
 
+    /**
+     * Override ClassLoader.getResources() to handle the reverse case.
+     * @param name The resource name to seach for.
+     * @return an enumeration of URLs for the resources
+     * @exception IOException if I/O errors occurs.
+     */
+    public Enumeration getResources(String name) throws IOException {
+        Enumeration parentEnum;
+        if (parent != null) {
+            parentEnum = parent.getResources(name);
+        } else {
+            // ClassLoader.getBootstrapResources(name) is private - so fake it
+            parentEnum = new ClassLoader(){}.getResources(name);
+        }
+        Enumeration mine = findResources(name);
+        return isParentFirst(name)
+            ? CollectionUtils.append(parentEnum, mine)
+            :  CollectionUtils.append(mine, parentEnum);
+    }
 }
