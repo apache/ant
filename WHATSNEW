@@ -26,6 +26,8 @@ Other changes:
   the language jars to be specified in the build script.
   Bugzilla report 29676.
 * trim the driver attribute on the <sql> task. Bugzilla report 21228.
+* Allow (jar) files as well as directories to be given to jdepend.
+  Bugzilla report 28865.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================

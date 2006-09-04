@@ -473,18 +473,17 @@ public class JDependTask extends Task {
             if (getClassespath() != null) {
                 // This is the new, better way - use classespath instead
                 // of sourcespath.  The code is currently the same - you
-                // need class files in a directory to use this - jar files
-                // coming soon....
+                // need class files in a directory to use this or jar files.
                 String[] cP = getClassespath().list();
                 for (int i = 0; i < cP.length; i++) {
                     File f = new File(cP[i]);
                     // not necessary as JDepend would fail, but why loose
                     // some time?
-                    if (!f.exists() || !f.isDirectory()) {
+                    if (!f.exists()) {
                         String msg = "\""
                             + f.getPath()
                             + "\" does not represent a valid"
-                            + " directory. JDepend would fail.";
+                            + " file or directory. JDepend would fail.";
                         log(msg);
                         throw new BuildException(msg);
                     }
