@@ -636,10 +636,10 @@ public class JDependTask extends Task {
                 File f = new File(cP[i]);
                 // not necessary as JDepend would fail, but why loose
                 // some time?
-                if (!f.exists() || !f.isDirectory()) {
+                if (!f.exists()) {
                     throw new BuildException("\"" + f.getPath()
                                              + "\" does not represent a valid"
-                                             + " directory. JDepend would"
+                                             + " file or directory. JDepend would"
                                              + " fail.");
                 }
                 commandline.createArgument().setValue(f.getPath());
