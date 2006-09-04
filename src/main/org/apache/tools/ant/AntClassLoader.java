@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -205,7 +206,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @see #setIsolated(boolean)
      */
-    private boolean ignoreBase = false;
+    private boolean isolated = false;
 
     /**
      * The parent class loader, if one is given or can be determined.
@@ -601,7 +602,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                 isolated mode.
      */
     public synchronized void setIsolated(boolean isolated) {
-        ignoreBase = isolated;
+        this.isolated = isolated;
     }
 
     /**
@@ -883,8 +884,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         // designated to use a specific loader first
         // (this one or the parent one)
 
-        // XXX - shouldn't this always return false in isolated mode?
-
         boolean useParentFirst = parentFirst;
 
         for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
@@ -1076,7 +1075,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 log("Class " + classname + " loaded from ant loader",
                     Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
-                if (ignoreBase) {
+                if (isolated) {
                     throw cnfe;
                 }
                 theClass = findBaseClass(classname);
@@ -1540,7 +1539,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     /**
-     * Override ClassLoader.getResources() to handle the reverse case.
+     * Override ClassLoader.getResources() to handle the reverse case
+     * and the isolate case.
      * @param name The resource name to seach for.
      * @return an enumeration of URLs for the resources
      * @exception IOException if I/O errors occurs.
@@ -1554,8 +1554,23 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             parentEnum = new ClassLoader(){}.getResources(name);
         }
         Enumeration mine = findResources(name);
-        return isParentFirst(name)
-            ? CollectionUtils.append(parentEnum, mine)
-            :  CollectionUtils.append(mine, parentEnum);
+        boolean parentEnumFirst = isParentFirst(name);
+        
+        if (isolated && !parentEnumFirst) {
+            return mine;
+        } else if (parentEnumFirst) {
+            return CollectionUtils.append(parentEnum, mine);
+        } else {
+            return CollectionUtils.append(mine, parentEnum);
+        }
     }
+    
+    /**
+     * Accessor for derived classloaders to access the path components.
+     * @return the  pathcomponents.
+     */
+     protected List getPathComponents() {
+         return pathComponents;
+     }
+
 }

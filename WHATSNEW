@@ -14,6 +14,7 @@ Fixed bugs:
 * Invalid hash code of Target causes XmlLogger to fail.
   Bugzilla report 40207.
 * Macro element did not include top level Text. Bugzilla report 36803.
+* AntClassLoader did not isolate resources when isolate was set. Bugzilla report 38747.
 
 Other changes:
 --------------

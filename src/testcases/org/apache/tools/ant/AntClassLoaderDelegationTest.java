@@ -77,6 +77,22 @@ public class AntClassLoaderDelegationTest extends TestCase {
             Arrays.asList(new URL[] {urlFromPath, urlFromParent}),
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
+
+    public void testFindIsolateResources() throws Exception {
+        String buildTestcases = System.getProperty("build.tests");
+        assertNotNull("defined ${build.tests}", buildTestcases);
+        assertTrue("have a dir " + buildTestcases, new File(buildTestcases).isDirectory());
+        Path path = new Path(p, buildTestcases);
+        // A special parent loader which is not the system class loader:
+        ClassLoader parent = new ParentLoader();
+
+        URL urlFromPath = new URL(FILE_UTILS.toURI(buildTestcases) + TEST_RESOURCE);
+        AntClassLoader acl = new AntClassLoader(parent, p, path, false);
+        acl.setIsolated(true);
+        assertEquals("correct resources (reverse delegation order)",
+            Arrays.asList(new URL[] {urlFromPath}),
+            enum2List(acl.getResources(TEST_RESOURCE)));
+    }
     
     private static List enum2List(Enumeration e) {
         // JDK 1.4: return Collections.list(e);
