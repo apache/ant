@@ -5,7 +5,6 @@ Changes that could break older environments:
 -------------------------------------------
 
 * <script> and <scriptdef> now set the current thread context.
-* AntClassLoader now sets the parent classloader. Bugzilla report 35436.
 
 Fixed bugs:
 -----------

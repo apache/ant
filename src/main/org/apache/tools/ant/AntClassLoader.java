@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -57,23 +56,19 @@ import org.apache.tools.ant.launch.Locator;
  * using the forceLoadClass method. Any subsequent classes loaded by that
  * class will then use this loader rather than the system class loader.
  *
+ * <p>
+ * Note that this classloader has a feature to allow loading
+ * in reverse order and for "isolation".
+ * Due to the fact that a number of
+ * methods in java.lang.ClassLoader are final (at least
+ * in java 1.4 getResources) this means that the
+ * class has to fake the given parent.
+ * </p>
+ *
  */
 public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    /**
-     * Work around for deprecated constructors that did
-     * not set the parent classloader.
-     */
-    private static Field parentField;
-    static {
-        try {
-            parentField = ClassLoader.class.getDeclaredField("parent");
-            parentField.setAccessible(true);
-        } catch (Throwable t) {
-            // Ignore
-        }
-    }
 
     /**
      * An enumeration of all resources of a given name found within the
@@ -234,11 +229,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     /**
      * Create an Ant ClassLoader for a given project, with
      * a parent classloader and an initial classpath.
-     * <p>
-     * This constructor has been added in ant 1.7, it
-     * sets the parent classloader correctly. All the
-     * other constructors are deprecated.
-     * </p>
      * @since Ant 1.7.
      * @param parent the parent for this classloader.
      * @param project The project to which this classloader is to
@@ -247,15 +237,13 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     public AntClassLoader(
         ClassLoader parent, Project project, Path classpath) {
-        super(parent == null ? AntClassLoader.class.getClassLoader() : parent);
-        this.parent = getParent();
+        setParent(parent);
         setClassPath(classpath);
         setProject(project);
     }
 
     /**
      * Create an Ant Class Loader
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader() {
         setParent(null);
@@ -271,7 +259,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                determined by the value of ${build.sysclasspath}.
      *                May be <code>null</code>, in which case no path
      *                elements are set up to start with.
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(Project project, Path classpath) {
         setParent(null);
@@ -294,7 +281,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted  before trying to
      *                    load the a class through this loader.
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(ClassLoader parent, Project project, Path classpath,
                           boolean parentFirst) {
@@ -318,7 +304,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(Project project, Path classpath,
                           boolean parentFirst) {
@@ -337,7 +322,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public AntClassLoader(ClassLoader parent, boolean parentFirst) {
         setParent(parent);
@@ -349,7 +333,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * Set the project associated with this class loader
      *
      * @param project the project instance
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public void setProject(Project project) {
         this.project = project;
@@ -386,7 +369,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * this class loader will delegate to load classes
      *
      * @param parent the parent class loader.
-     * @deprecated by AntClassLoader(parent, project, classpath) since Ant 1.7.
      */
     public void setParent(ClassLoader parent) {
         if (parent == null) {
@@ -394,23 +376,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         } else {
             this.parent = parent;
         }
-        // ClassLoader.parent is private and there is
-        // no accessor to set it, there is an accessor
-        // to get it, but it is final.
-        // This method setParent sets the parent of
-        // this classloader, and that is the way that the
-        // class behaves - so use a bit of reflection
-        // to set the field.
-
-        if (parentField == null) {
-            return; // Unable to get access to the parent field
-        }
-        try {
-            parentField.set(this, parent);
-        } catch (Throwable t) {
-            // Ignore - unable to set the parent
-        }
-
     }
 
     /**
@@ -973,7 +938,26 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception IOException if I/O errors occurs (can't happen)
      */
     protected Enumeration/*<URL>*/ findResources(String name) throws IOException {
-        return new ResourceEnumeration(name);
+        Enumeration/*<URL>*/ mine = new ResourceEnumeration(name);
+        Enumeration/*<URL>*/ base;
+        if (parent != null && parent != getParent()) {
+            // Delegate to the parent:
+            base = parent.getResources(name);
+            // Note: could cause overlaps in case ClassLoader.this.parent has matches.
+        } else {
+            // ClassLoader.this.parent is already delegated to from
+            // ClassLoader.getResources, no need:
+            base = new CollectionUtils.EmptyEnumeration();
+        }
+        if (isParentFirst(name)) {
+            // Normal case.
+            return CollectionUtils.append(base, mine);
+        } else if (isolated) {
+            return mine;
+        } else {
+            // Inverted.
+            return CollectionUtils.append(mine, base);
+        }
     }
 
     /**
@@ -1538,33 +1522,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         return "AntClassLoader[" + getClasspath() + "]";
     }
 
-    /**
-     * Override ClassLoader.getResources() to handle the reverse case
-     * and the isolate case.
-     * @param name The resource name to seach for.
-     * @return an enumeration of URLs for the resources
-     * @exception IOException if I/O errors occurs.
-     */
-    public Enumeration getResources(String name) throws IOException {
-        Enumeration parentEnum;
-        if (parent != null) {
-            parentEnum = parent.getResources(name);
-        } else {
-            // ClassLoader.getBootstrapResources(name) is private - so fake it
-            parentEnum = new ClassLoader(){}.getResources(name);
-        }
-        Enumeration mine = findResources(name);
-        boolean parentEnumFirst = isParentFirst(name);
-        
-        if (isolated && !parentEnumFirst) {
-            return mine;
-        } else if (parentEnumFirst) {
-            return CollectionUtils.append(parentEnum, mine);
-        } else {
-            return CollectionUtils.append(mine, parentEnum);
-        }
-    }
-    
     /**
      * Accessor for derived classloaders to access the path components.
      * @return the  pathcomponents.
