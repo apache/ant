@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.Base64Converter;
 
 /**
  * Creates a splash screen. The splash screen is displayed
@@ -141,9 +142,11 @@ public class SplashTask extends Task {
 
                     conn = url.openConnection();
                     if (user != null && user.length() > 0) {
+                        // converted from sun internal classes to
+                        // new Base64Converter
+                        // utility class extracted from Get task
                         String encodedcreds =
-                            new sun.misc.BASE64Encoder().encode(
-                                (new String(user + ":" + password)).getBytes());
+                            new Base64Converter().encode(user + ":" + password);
                         conn.setRequestProperty("Proxy-Authorization",
                                                 encodedcreds);
                     }

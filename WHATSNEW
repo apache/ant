@@ -28,6 +28,8 @@ Other changes:
 * trim the driver attribute on the <sql> task. Bugzilla report 21228.
 * Allow (jar) files as well as directories to be given to jdepend.
   Bugzilla report 28865.
+* Convert SplashTask to use NOT sun internal classes.
+  Bugzilla report 35619.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================

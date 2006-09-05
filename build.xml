@@ -190,13 +190,6 @@
     <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
   </selector>
 
-  <selector id="needs.sun.b64">
-    <or>
-      <filename name="${optional.package}/splash/SplashTask*"/>
-      <filename name="${optional.package}/splash/SplashScreenTest.java"/>
-    </or>
-  </selector>
-
   <!-- depends on external libraries -->
   <selector id="needs.trax">
     <or>
@@ -503,8 +496,6 @@
       </and>
     </condition>
 
-    <available property="base64.present" classname="sun.misc.BASE64Encoder"/>
-
     <property name="build.tests.resolved" location="${build.tests}"/>
     <condition property="tests.are.on.system.classpath">
       <or>
@@ -651,7 +642,6 @@
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
-            <selector refid="needs.sun.b64" unless="base64.present"/>
 
             <selector refid="needs.trax" unless="trax.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
