@@ -258,7 +258,11 @@ public class TarInputStream extends FilterInputStream {
                 longName.append(new String(buf, 0, length));
             }
             getNextEntry();
-
+            if (this.currEntry == null) {
+                // Bugzilla: 40334
+                // Malformed tar file - long entry name not followed by entry
+                return null;
+            }
             // remove trailing null terminator
             if (longName.length() > 0
                 && longName.charAt(longName.length() - 1) == 0) {
