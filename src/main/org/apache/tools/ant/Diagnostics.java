@@ -600,8 +600,12 @@ public final class Diagnostics {
         printProperty(out, ProxySetup.SOCKS_PROXY_PORT);
         printProperty(out, ProxySetup.SOCKS_PROXY_USERNAME);
         printProperty(out, ProxySetup.SOCKS_PROXY_PASSWORD);
-        
-        final String proxyDiagClassname="org.apache.tools.ant.util.java15.ProxyDiagnostics";
+
+        if (JavaEnvUtils.getJavaVersionNumber() < 15) {
+            return;
+        }
+        final String proxyDiagClassname
+            = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
         try {
             Class proxyDiagClass = Class.forName(proxyDiagClassname);
             Object instance =proxyDiagClass.newInstance();
@@ -611,12 +615,11 @@ public final class Diagnostics {
             //not included, do nothing
         } catch (IllegalAccessException e) {
             //not included, do nothing
-
         } catch (InstantiationException e) {
             //not included, do nothing
-
+        } catch (NoClassDefFoundError e) {
+            // not included, to nothing
         }
-
     }
 
 }
