@@ -612,9 +612,12 @@ public class ComponentHelper  {
         //      but this is for logging only...
         String name = null;
         Class elementClass = element.getClass();
+        String elementClassname = elementClass.getName();
         for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
-            if (elementClass == def.getExposedClass(project)) {
+            if (elementClassname.equals(def.getClassName())
+                &&
+                (elementClass == def.getExposedClass(project))) {
                 name = def.getName();
                 return brief ? name : "The <" + name + "> type";
             }
