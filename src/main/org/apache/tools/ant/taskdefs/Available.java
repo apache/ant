@@ -53,6 +53,19 @@ public class Available extends Task implements Condition {
     private String value = "true";
     private boolean isTask = false;
     private boolean ignoreSystemclasses = false;
+    private boolean searchParents   = true;
+
+    /**
+     * Set the searchParents attribute.
+     * This controls the behaviour of the the "file" type.
+     * If true, the path, parent path and grandparent path are
+     * searched for the file. If false, only the path is seached.
+     * The default value is true.
+     * @param searchParents the value to set.
+     */
+    public void setSearchParents(boolean  searchParents) {
+        this.searchParents = searchParents;
+    }
 
     /**
      * Set the classpath to be used when searching for classes and resources.
@@ -353,14 +366,14 @@ public class Available extends Task implements Condition {
                     }
                 }
                 // **   simple name specified   == parent dir + name
-                if (parent != null && parent.exists()) {
+                if (parent != null && parent.exists() && searchParents) {
                     if (checkFile(new File(parent, filename),
                                   filename + " in " + parent)) {
                         return true;
                     }
                 }
                 // **   simple name specified   == parent of parent dir + name
-                if (parent != null) {
+                if (parent != null && searchParents) {
                     File grandParent = parent.getParentFile();
                     if (grandParent != null && grandParent.exists()) {
                         if (checkFile(new File(grandParent, filename),

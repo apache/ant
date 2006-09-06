@@ -32,6 +32,7 @@ Other changes:
   Bugzilla report 35619.
 * Made PatterSet#hasPatterns public to allow custom filesets access.
   Bugzilla report 36772.
+* added searchparents attribute to <available>. Bugzilla report 39549.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================

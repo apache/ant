@@ -2,6 +2,10 @@
 
 <project name="available-test" basedir="." default="test1">
 
+  <target name="tearDown">
+    <delete dir="greatgrandparent"/>
+  </target>
+
   <target name="test1">
     <available/>
   </target>
@@ -162,4 +166,91 @@
     </fail>
   </target>
 
+  <target name="prep.parents">
+    <delete quiet="yes" dir="greatgrandparent"/>
+    <mkdir  dir="greatgrandparent/grandparent/parent/dir"/>
+    <touch  file="greatgrandparent/a.txt"/>
+    <touch  file="greatgrandparent/grandparent/b.txt"/>
+    <touch  file="greatgrandparent/grandparent/parent/c.txt"/>
+    <touch  file="greatgrandparent/grandparent/parent/dir/d.txt"/>
+    <property name="available.test.dir"
+              value="greatgrandparent/grandparent/parent/dir"/>
+  </target>
+  <target name="search-parents" depends="prep.parents">
+    <echo>testing greatgrandparent - should not see</echo>
+
+    <fail>
+      <condition>
+        <available file="a.txt">
+          <filepath path="${available.test.dir}"/>
+        </available>
+      </condition>
+    </fail>
+
+    <echo>testing grandparent - should see</echo>
+    <fail>
+      <condition>
+        <not>
+          <available file="b.txt">
+            <filepath path="${available.test.dir}"/>
+          </available>
+        </not>
+      </condition>
+    </fail>
+
+    <echo>testing parent - should see</echo>
+    <fail>
+      <condition>
+        <not>
+          <available file="c.txt">
+            <filepath path="${available.test.dir}"/>
+          </available>
+        </not>
+      </condition>
+    </fail>
+
+    <echo>testing dir - should see</echo>
+    <fail>
+      <condition>
+        <not>
+          <available file="d.txt">
+            <filepath path="${available.test.dir}"/>
+          </available>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="search-parents-not" depends="prep.parents">
+    <echo>testing grandparent - should not see</echo>
+    <fail>
+      <condition>
+        <available file="b.txt" searchParents="no">
+          <filepath path="${available.test.dir}"/>
+        </available>
+      </condition>
+    </fail>
+
+    <echo>testing parent - should not see</echo>
+    <fail>
+      <condition>
+        <available file="c.txt" searchParents="false">
+          <filepath path="${available.test.dir}"/>
+        </available>
+      </condition>
+    </fail>
+
+    <echo>testing dir - should see</echo>
+    <fail>
+      <condition>
+        <not>
+          <available file="d.txt" searchParents="false">
+            <filepath path="${available.test.dir}"/>
+          </available>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
 </project>

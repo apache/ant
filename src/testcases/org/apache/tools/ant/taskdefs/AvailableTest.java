@@ -201,4 +201,13 @@ public class AvailableTest extends BuildFileTest {
     public void testDoubleBasedir() {
         executeTarget("testDoubleBasedir");
     }
+
+    // test for searching parents
+    public void testSearchParents() {
+        executeTarget("search-parents");
+    }
+    // test for not searching parents
+    public void testSearchParentsNot() {
+        executeTarget("search-parents-not");
+    }
 }

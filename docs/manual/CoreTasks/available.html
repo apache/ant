@@ -75,7 +75,19 @@ execution depending on system parameters.</p>
       classpath.  Only affects the "classname" attribute.  Defaults to &quot;false&quot;</td>
     <td align="center" valign="top">No</td>
   </tr>
-
+  <tr>
+    <td valign="top">searchparents</td>
+    <td valign="top">This contains the behaviour of the "file" type.
+      If true, the available task will, when
+      searching for a file, search not only the directories specified but
+      will also search the parent and grandparent directories of those
+      specified.
+      If false, only the directories specified will be searched.
+      Defaults to "true".
+      <em>Since Ant 1.7</em>
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
