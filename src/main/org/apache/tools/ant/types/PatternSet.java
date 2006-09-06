@@ -398,9 +398,12 @@ public class PatternSet extends DataType implements Cloneable {
     }
 
     /**
-     * helper for FileSet.
+     * Helper for FileSet classes.
+     * Check if there are patterns defined.
+     * @param p the current project.
+     * @return true if there are patterns.
      */
-    boolean hasPatterns(Project p) {
+    public boolean hasPatterns(Project p) {
         if (isReference()) {
             return getRef(p).hasPatterns(p);
         } else {

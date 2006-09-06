@@ -30,6 +30,8 @@ Other changes:
   Bugzilla report 28865.
 * Convert SplashTask to use NOT sun internal classes.
   Bugzilla report 35619.
+* Made PatterSet#hasPatterns public to allow custom filesets access.
+  Bugzilla report 36772.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================
