@@ -582,9 +582,6 @@ public final class Diagnostics {
      * @param out stream to print to
      */
     private static void doReportProxy(PrintStream out) {
-        if(JavaEnvUtils.getJavaVersionNumber()>=15) {
-            printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
-        }
         printProperty(out,ProxySetup.HTTP_PROXY_HOST);
         printProperty(out, ProxySetup.HTTP_PROXY_PORT);
         printProperty(out, ProxySetup.HTTP_PROXY_USERNAME);
@@ -604,6 +601,7 @@ public final class Diagnostics {
         if (JavaEnvUtils.getJavaVersionNumber() < 15) {
             return;
         }
+        printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
         final String proxyDiagClassname
             = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
         try {
