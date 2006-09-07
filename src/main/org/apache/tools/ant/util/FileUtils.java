@@ -21,6 +21,7 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -1483,4 +1484,25 @@ public class FileUtils {
         return buffer.toString();
     }
 
+    /**
+     * Get the default encoding.
+     * This is done by opening an InputStreamReader on
+     * a dummy InputStream and getting the encoding.
+     * Could use System.getProperty("file.encoding"), but cannot
+     * see where this is documented.
+     * @return the default file encoding.
+     */
+    public String getDefaultEncoding() {
+        InputStreamReader is = new InputStreamReader(
+            new InputStream() {
+                public int read() {
+                    return -1;
+                }
+            });
+        try {
+            return is.getEncoding();
+        } finally {
+            close(is);
+        }
+    }
 }

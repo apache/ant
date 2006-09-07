@@ -66,7 +66,7 @@ import org.apache.tools.ant.util.FlatFileNameMapper;
  */
 public class Copy extends Task {
     static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
-
+    static final String LINE_SEPARATOR = System.getProperty("line.separator");
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
@@ -451,10 +451,10 @@ public class Copy extends Task {
                         ds = fs.getDirectoryScanner(getProject());
                     } catch (BuildException e) {
                         if (failonerror
-                            || !e.getMessage().endsWith(" not found.")) {
+                            || !getMessage(e).endsWith(" not found.")) {
                             throw e;
                         } else {
-                            log("Warning: " + e.getMessage());
+                            log("Warning: " + getMessage(e));
                             continue;
                         }
                     }
@@ -532,7 +532,7 @@ public class Copy extends Task {
                 doFileOperations();
             } catch (BuildException e) {
                 if (!failonerror) {
-                    log("Warning: " + e.getMessage(), Project.MSG_ERR);
+                    log("Warning: " + getMessage(e), Project.MSG_ERR);
                 } else {
                     throw e;
                 }
@@ -547,7 +547,7 @@ public class Copy extends Task {
                     doResourceOperations(map);
                 } catch (BuildException e) {
                     if (!failonerror) {
-                        log("Warning: " + e.getMessage(), Project.MSG_ERR);
+                        log("Warning: " + getMessage(e), Project.MSG_ERR);
                     } else {
                         throw e;
                     }
@@ -796,7 +796,7 @@ public class Copy extends Task {
                                            outputEncoding, getProject());
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromFile + " to " + toFile
-                            + " due to " + ioe.getMessage();
+                            + " due to " + getDueTo(ioe);
                         File targetFile = new File(toFile);
                         if (targetFile.exists() && !targetFile.delete()) {
                             msg += " and I couldn't delete the corrupt " + toFile;
@@ -886,7 +886,7 @@ public class Copy extends Task {
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromResource
                             + " to " + toFile
-                            + " due to " + ioe.getMessage();
+                            + " due to " + getDueTo(ioe);
                         File targetFile = new File(toFile);
                         if (targetFile.exists() && !targetFile.delete()) {
                             msg += " and I couldn't delete the corrupt " + toFile;
@@ -968,4 +968,46 @@ public class Copy extends Task {
         return mapper;
     }
 
+    /**
+     * Handle getMessage() for exceptions.
+     * @param ex the exception to handle
+     * @return ex.getMessage() if ex.getMessage() is not null
+     *         otherwise return ex.toString()
+     */
+    private String getMessage(Exception ex) {
+        return ex.getMessage() == null ? ex.toString() : ex.getMessage();
+    }
+    
+    /**
+     * Returns a reason for failure based on
+     * the exception thrown.
+     * If the exception is not IOException output the class name,
+     * output the message
+     * if the exception is MalformedInput add a little note.
+     */
+    private String getDueTo(Exception ex) {
+        boolean baseIOException = ex.getClass() == IOException.class;
+        StringBuffer message = new StringBuffer();
+        if (!baseIOException || ex.getMessage() == null) {
+            message.append(ex.getClass().getName());
+        }
+        if (ex.getMessage() != null) {
+            if (!baseIOException) {
+                message.append(" ");
+            }
+            message.append(ex.getMessage());
+        }
+        if (ex.getClass().getName().indexOf("MalformedInput") != -1) {
+            message.append(LINE_SEPARATOR);
+            message.append(
+                "This is normally due to the input file containing invalid");
+             message.append(LINE_SEPARATOR);
+            message.append("bytes for the character encoding used : ");
+            message.append(
+                (inputEncoding == null
+                 ? fileUtils.getDefaultEncoding() : inputEncoding));
+            message.append(LINE_SEPARATOR);
+        }
+        return message.toString();
+    }
 }

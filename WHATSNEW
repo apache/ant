@@ -15,6 +15,7 @@ Fixed bugs:
 * Macro element did not include top level Text. Bugzilla report 36803.
 * AntClassLoader did not isolate resources when isolate was set. Bugzilla report 38747.
 * Diagnostics broken when using java 1.4. Bugzilla report 40395.
+* Exception reporting in <copy> was broken. Bugzilla report 40300.
 
 Other changes:
 --------------

@@ -20,13 +20,14 @@ Collection</a>s are used to select a group of files to copy.  To use a
 resource collection, the <code>todir</code> attribute must be set.</p>
 
 <p>
-<strong>Note: </strong>If you employ filters in your copy operation, you should
-limit the copy to text files. Binary files will be corrupted by the copy operation.
+<strong>Note: </strong>If you employ filters in your copy operation,
+you should limit the copy to text files. Binary files will be corrupted
+by the copy operation.
 This applies whether the filters are implicitly defined by the
 <a href="filter.html">filter</a> task or explicitly provided to the copy
-operation as <a href="../CoreTypes/filterset.html">filtersets</a>
+operation as <a href="../CoreTypes/filterset.html">filtersets</a>.
+  <em>See <a href="#encoding">encoding note</a></em>.
 </p>
-
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -278,9 +279,47 @@ the copied file takes on the case of the original. The workaround is to
 <a href="delete.html">delete</a>
 the file in the destination directory before you copy it.
 </p>
+  <p>
+    <strong><a name="encoding">Important Encoding Note:</a></strong>
+    The reason that binary files when filtered get corrupted is that
+    filtering involves reading in the file using a Reader class. This
+    has an encoding specifing how files are encoded. There are a number
+    of different types of encoding - UTF-8, UTF-16, Cp1252, ISO-8859-1,
+    US-ASCII and (lots) others. On Windows the default character encoding
+    is Cp1252, on Unix it is usually UTF-8. For both of these encoding
+    there are illegal byte sequences (more in UTF-8 than for Cp1252).
+  </p>
+  <p>
+    How the Reader class deals with these illegal sequences is up to the
+    implementation
+    of the character decoder. The current Sun Java implemenation is to
+    map them to legal characters. Previous Sun Java (1.3 and lower) threw
+    a MalformedInputException. IBM Java 1.4 also thows this exception.
+    It is the mapping of the characters that cause the corruption.
+  </p>
+  <p>
+    On Unix, where the default is normally UTF-8, this is a <em>big</em>
+    problem, as it is easy to edit a file to contain non US Ascii characters
+    from ISO-8859-1, for example the Danish oe character. When this is
+    copied (with filtering) by Ant, the character get converted to a
+    question mark (or some such thing).
+  </p>
+  <p>
+    There is not much that Ant can do. It cannot figure out which
+    files are binary - a UTF-8 version of Korean will have lots of
+    bytes with the top bit set. It is not informed about illegal
+    character sequences by current Sun Java implementions.
+  </p>
+  <p>
+    One trick for filtering containing only US-ASCII is to
+    use the ISO-8859-1 encoding. This does not seem to contain
+    illegal character sequences, and the lower 7 bits are US-ASCII.
+    Another trick is to change the LANG environment variable from
+    something like "us.utf8" to "us".
+  </p>
+    
 
-<hr><p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation.
+<hr><p align="center">Copyright &copy; 2000-2006 The Apache Software Foundation.
 All rights Reserved.</p>
 
-</body>
-</html>
+</body></html>

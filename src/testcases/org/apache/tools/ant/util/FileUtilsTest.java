@@ -540,6 +540,11 @@ public class FileUtilsTest extends TestCase {
                 !FILE_UTILS.isUpToDate(firstTime,-1L));
     }
 
+    public void testGetDefaultEncoding() {
+        // This just tests that the function does not blow up
+        FILE_UTILS.getDefaultEncoding();
+    }
+
     /**
      * adapt file separators to local conventions
      */
