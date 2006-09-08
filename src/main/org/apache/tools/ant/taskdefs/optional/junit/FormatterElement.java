@@ -21,6 +21,8 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -202,7 +204,9 @@ public class FormatterElement {
         if (classname == null) {
             throw new BuildException("you must specify type or classname");
         }
-
+        //although this code appears to duplicate that of ClasspathUtils.newInstance,
+        //we cannot use that because this formatter may run in a forked process,
+        //without that class.
         Class f = null;
         try {
             if (loader == null) {
@@ -230,12 +234,11 @@ public class FormatterElement {
                 + " is not a JUnitResultFormatter");
         }
         JUnitTaskMirror.JUnitResultFormatterMirror r = (JUnitTaskMirror.JUnitResultFormatterMirror) o;
-
         if (useFile && outFile != null) {
             try {
-                out = new FileOutputStream(outFile);
+                out = new BufferedOutputStream(new FileOutputStream(outFile));
             } catch (java.io.IOException e) {
-                throw new BuildException(e);
+                throw new BuildException("Unable to open file " + outFile, e);
             }
         }
         r.setOutput(out);
