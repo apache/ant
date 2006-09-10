@@ -85,16 +85,13 @@ public class ReaderInputStream extends InputStream {
         } else {
             byte[] buf = new byte[1];
             if (read(buf, 0, 1) <= 0) {
-                result = -1;
+                return -1;
+            } else {
+                result = buf[0];
             }
-            result = buf[0];
         }
 
-        if (result < -1) {
-            result += 256;
-        }
-
-        return result;
+        return result & 0xFF;
     }
 
     /**
@@ -112,7 +109,9 @@ public class ReaderInputStream extends InputStream {
         if (in == null) {
             throw new IOException("Stream Closed");
         }
-
+        if (len == 0) {
+            return 0;
+        }
         while (slack == null) {
             char[] buf = new char[len]; // might read too much
             int n = in.read(buf);

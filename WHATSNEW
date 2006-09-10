@@ -18,6 +18,7 @@ Fixed bugs:
 * Exception reporting in <copy> was broken. Bugzilla report 40300.
 * Handling of corrupt tar files, TarInputStream.read() never returns EOF.
   Bugzilla report 39924.
+* Some bugs in ReaderInputStream. Bugzilla report 39635.
 
 Other changes:
 --------------
