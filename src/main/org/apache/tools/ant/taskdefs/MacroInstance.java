@@ -249,7 +249,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         ret.setQName(ue.getQName());
         ret.setTaskType(ue.getTaskType());
         ret.setTaskName(ue.getTaskName());
-        ret.setLocation(ue.getLocation());
+        ret.setLocation(
+            macroDef.getBackTrace() ? ue.getLocation() : getLocation());
         if (getOwningTarget() == null) {
             Target t = new Target();
             t.setProject(getProject());

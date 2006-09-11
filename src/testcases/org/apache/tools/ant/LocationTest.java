@@ -52,7 +52,7 @@ public class LocationTest extends BuildFileTest {
         assertFalse(c.getLocation().getLineNumber() == 0);
     }
 
-    public void XtestMacrodefWrappedTask() {
+    public void testMacrodefWrappedTask() {
         executeTarget("testMacrodefWrappedTask");
         Echo e = (Echo) getProject().getReference("echo3");
         assertTrue(getLog().indexOf("Line: " 
