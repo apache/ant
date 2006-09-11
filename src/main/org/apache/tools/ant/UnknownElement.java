@@ -424,6 +424,9 @@ public class UnknownElement extends Task {
         if (o instanceof Task) {
             ((Task) o).setOwningTarget(getOwningTarget());
         }
+        if (o instanceof ProjectComponent) {
+            ((ProjectComponent) o).setLocation(getLocation());
+        }
         return o;
     }
 
@@ -545,7 +548,9 @@ public class UnknownElement extends Task {
                 childTask.setRuntimeConfigurableWrapper(childWrapper);
                 childTask.setTaskName(childName);
                 childTask.setTaskType(childName);
-                childTask.setLocation(child.getLocation());
+            }
+            if (realChild instanceof ProjectComponent) {
+                ((ProjectComponent) realChild).setLocation(child.getLocation());
             }
             child.handleChildren(realChild, childWrapper);
             return true;

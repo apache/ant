@@ -34,6 +34,14 @@ public abstract class ProjectComponent {
      */
     protected Project project;
 
+    /**
+     * Location within the build file of this task definition.
+     * @deprecated since 1.6.x. 
+     *             You should not be accessing this variable directly.
+     *             Please use the {@link #getLocation()} method.
+     */
+    protected Location location = Location.UNKNOWN_LOCATION;
+
     /** Sole constructor. */
     public ProjectComponent() {
     }
@@ -58,6 +66,32 @@ public abstract class ProjectComponent {
      */
     public Project getProject() {
         return project;
+    }
+
+    /**
+     * Returns the file/location where this task was defined.
+     *
+     * @return the file/location where this task was defined.
+     *         Should not return <code>null</code>. Location.UNKNOWN_LOCATION
+     *         is used for unknown locations.
+     *
+     * @see Location#UNKNOWN_LOCATION
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * Sets the file/location where this task was defined.
+     *
+     * @param location The file/location where this task was defined.
+     *                 Should not be <code>null</code>--use
+     *                 Location.UNKNOWN_LOCATION if the location isn't known.
+     *
+     * @see Location#UNKNOWN_LOCATION
+     */
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     /**

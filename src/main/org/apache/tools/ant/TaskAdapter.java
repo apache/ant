@@ -100,9 +100,23 @@ public class TaskAdapter extends Task implements TypeAdapter {
      * or the method could not be executed.
      */
     public void execute() throws BuildException {
-        Method setProjectM = null;
         try {
-            setProjectM = proxy.getClass().getMethod(
+            Method setLocationM = proxy.getClass().getMethod(
+                "setLocation", new Class[] {Location.class});
+            if (setLocationM != null) {
+                setLocationM.invoke(proxy, new Object[] {getLocation()});
+            }
+        } catch (NoSuchMethodException e) {
+            // ignore this if the class being used as a task does not have
+            // a set location method.
+        } catch (Exception ex) {
+            log("Error setting location in " + proxy.getClass(),
+                Project.MSG_ERR);
+            throw new BuildException(ex);
+        }
+
+        try {
+            Method setProjectM = proxy.getClass().getMethod(
                 "setProject", new Class[] {Project.class});
             if (setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {getProject()});

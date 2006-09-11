@@ -38,6 +38,10 @@ Other changes:
   Bugzilla report 36772.
 * added searchparents attribute to <available>. Bugzilla report 39549.
 
+* tasks that don't extend Ant's Task class can will now get the build file
+  location reflected into a method of the signature void setLocation(Location)
+  - if such a method exists.
+
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================
 
