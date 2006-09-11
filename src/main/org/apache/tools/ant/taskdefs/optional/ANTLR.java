@@ -385,7 +385,8 @@ public class ANTLR extends Task {
         if (generatedFileName == null) {
             throw new BuildException("Unable to determine generated class");
         }
-        return new File(outputDirectory, generatedFileName + ".java");
+        return new File(outputDirectory, generatedFileName
+                        + (html ? ".html" : ".java"));
     }
 
     /** execute in a forked VM */

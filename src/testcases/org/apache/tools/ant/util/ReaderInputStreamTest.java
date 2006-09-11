@@ -37,21 +37,41 @@ public class ReaderInputStreamTest extends TestCase {
         compareBytes("a", "utf-16");
     }
 
-    public void notAtestSimple16() throws Exception {
+    public void testSimpleAbc16() throws Exception {
         // THIS WILL FAIL.
-        compareBytes("abc", "utf-16");
+        //compareBytes("abc", "utf-16");
+        byte[] bytes = new byte[40];
+        int pos = 0;
+        ReaderInputStream r = new ReaderInputStream(
+            new StringReader("abc"), "utf-16");
+        for (int i = 0; true; ++i) {
+            int res = r.read();
+            if (res == -1) {
+                break;
+            }
+            bytes[pos++] = (byte) res;
+        }
+        bytes = "abc".getBytes("utf-16");
+        //        String n = new String(bytes, 0, pos, "utf-16");
+        String n = new String(bytes, 0, bytes.length, "utf-16");
+        System.out.println(n);
     }
 
     public void testReadZero() throws Exception {
         ReaderInputStream r = new ReaderInputStream(
             new StringReader("abc"));
-        byte[] bytes = new byte[10];
+        byte[] bytes = new byte[30];
         // First read in zero bytes
         r.read(bytes, 0, 0);
         // Now read in the string
         int readin = r.read(bytes, 0, 10);
         // Make sure that the counts are the same
         assertEquals("abc".getBytes().length, readin);
+    }
+
+    public void testPreample() throws Exception {
+        byte[] bytes = "".getBytes("utf-16");
+        System.out.println("Preample len is " + bytes.length);
     }
     
     private void compareBytes(String s, String encoding) throws Exception {

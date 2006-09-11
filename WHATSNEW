@@ -19,6 +19,8 @@ Fixed bugs:
 * Handling of corrupt tar files, TarInputStream.read() never returns EOF.
   Bugzilla report 39924.
 * Some bugs in ReaderInputStream. Bugzilla report 39635.
+* <antlr> did not recognise whether the target is up-to-date for html option.
+  Bugzilla report 38451.
 
 Other changes:
 --------------
