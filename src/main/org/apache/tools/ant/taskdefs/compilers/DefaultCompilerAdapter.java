@@ -19,7 +19,7 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 //Java5 style
-//import static org.apache.tools.ant.util.StringUtils.LINE_SEP; 
+//import static org.apache.tools.ant.util.StringUtils.LINE_SEP;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,10 +48,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    /* jdg - TODO - all these attributes are currently protected, but they
-     * should probably be private in the near future.
-     */
-
     protected Path src;
     protected File destDir;
     protected String encoding;
@@ -73,9 +69,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected String memoryMaximumSize;
 
     protected File[] compileList;
-    //protected static final String lSep = System.getProperty("line.separator");
     protected Javac attributes;
 
+    //must keep for subclass BC, though unused:
+    protected static final String lSep = StringUtils.LINE_SEP;
 
     /**
      * Set the Javac instance which contains the configured compilation
@@ -517,7 +514,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Add extdirs to classpath
      * @param classpath the classpath to use
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.types.Path#addExtdirs instead.
      */
     protected void addExtdirsToClasspath(Path classpath) {
