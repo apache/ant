@@ -124,15 +124,6 @@
 
     <xsl:apply-templates select="build"/>
 
-    <!-- FOOTER -->
-    <table width="100%">
-      <tr><td><hr noshade="yes" size="1"/></td></tr>
-      <tr><td>
-      <div align="center"><font color="#525D76" size="-1"><em>
-      Copyright &#169; 2000-2006, Apache Software Foundation
-      </em></font></div>
-      </td></tr>
-    </table>
   </body>
 </html>
 </xsl:template>

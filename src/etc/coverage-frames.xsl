@@ -408,14 +408,6 @@
 
 <!-- Page Footer -->
 <xsl:template name="pageFooter">
-    <table width="100%">
-      <tr><td><hr noshade="yes" size="1"/></td></tr>
-      <tr><td>
-      <div align="center"><font color="#525D76" size="-1"><em>
-      Copyright &#169; 1999-2001, Apache Software Foundation
-      </em></font></div>
-      </td></tr>
-    </table>
 </xsl:template>
 
 
