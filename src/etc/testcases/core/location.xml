@@ -35,4 +35,29 @@
     </condition>
   </target>
 
+  <target name="define">
+    <property name="testclasses"
+      location="../../../../build/testcases" />
+    <taskdef name="echoloc"
+      classname="org.apache.tools.ant.LocationTest$EchoLocation">
+      <classpath>
+        <pathelement location="${testclasses}" />
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+    </taskdef>
+  </target>
+
+  <target name="macrodef" depends="define">
+    <macrodef name="echoloc2" backtrace="false">
+      <sequential>
+        <echoloc/>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="testMacrodefWrappedTask" depends="macrodef">
+    <echo id="echo3">Hello</echo>
+    <echoloc2/>
+  </target>
+
 </project>

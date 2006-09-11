@@ -51,4 +51,19 @@ public class LocationTest extends BuildFileTest {
         assertFalse(c.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(c.getLocation().getLineNumber() == 0);
     }
+
+    public void XtestMacrodefWrappedTask() {
+        executeTarget("testMacrodefWrappedTask");
+        Echo e = (Echo) getProject().getReference("echo3");
+        assertTrue(getLog().indexOf("Line: " 
+                                    + (e.getLocation().getLineNumber() + 1))
+                   > -1);
+    }
+
+    public static class EchoLocation extends Task {
+        public void execute() {
+            log("Line: " + getLocation().getLineNumber(), Project.MSG_INFO);
+        }
+    }
 }
+
