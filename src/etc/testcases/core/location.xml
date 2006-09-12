@@ -60,4 +60,15 @@
     <echoloc2/>
   </target>
 
+  <target name="presetdef" depends="define">
+    <presetdef name="echoloc3">
+      <echoloc/>
+    </presetdef>
+  </target>
+
+  <target name="testPresetdefWrappedTask" depends="presetdef">
+    <echo id="echo4">Hello</echo>
+    <echoloc3/>
+  </target>
+
 </project>

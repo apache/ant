@@ -60,6 +60,14 @@ public class LocationTest extends BuildFileTest {
                    > -1);
     }
 
+    public void testPresetdefWrappedTask() {
+        executeTarget("testPresetdefWrappedTask");
+        Echo e = (Echo) getProject().getReference("echo4");
+        assertTrue(getLog().indexOf("Line: " 
+                                    + (e.getLocation().getLineNumber() + 1))
+                   > -1);
+    }
+
     public static class EchoLocation extends Task {
         public void execute() {
             log("Line: " + getLocation().getLineNumber(), Project.MSG_INFO);
