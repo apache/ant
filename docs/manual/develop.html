@@ -29,7 +29,7 @@
 <p>It is very easy to write your own task:</p>
 <ol>
   <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>
-      or <a href="base_task_classes.html">another class</a> that was desgined to be extended.</li>
+      or <a href="base_task_classes.html">another class</a> that was designed to be extended.</li>
   <li>For each attribute, write a <i>setter</i> method. The setter method must be a
     <code>public void</code> method that takes a single argument. The
     name of the method must begin with <code>set</code>, followed by the
@@ -380,7 +380,6 @@ public class MyVeryOwnTask extends Task {
   <li>Use your task in the rest of the buildfile.</li>
 </ol>
 
-
 <h3>Example</h3>
 <blockquote>
 <pre>
@@ -424,7 +423,6 @@ compiled.
 &lt;/project&gt;
 </pre>
 </blockquote>
-
 
 <p>Another way to add a task (more permanently), is to add the task name and
 implementing class name to the <code>default.properties</code> file in the
@@ -487,7 +485,6 @@ been configured.
 <hr>
 <h2><a name="integration">Source code integration</a></h2>
 
-
 The other way to extend Ant through Java is to make changes to existing tasks, which is positively encouraged.
 Both changes to the existing source and new tasks can be incorporated back into the Ant codebase, which
 benefits all users and spreads the maintenance load around.
@@ -502,8 +499,6 @@ Ant also has some
 <a href="http://ant.apache.org/ant_task_guidelines.html">task guidelines</a>
 which provides some advice to people developing and testing tasks. Even if you intend to
 keep your tasks to yourself, you should still read this as it should be informative.
-
-
 
 </body>
 </html>
