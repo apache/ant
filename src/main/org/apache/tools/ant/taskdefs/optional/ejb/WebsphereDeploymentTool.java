@@ -159,7 +159,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * and Account-DB2UDB_V81-Schema.dbxmi.
      * </p>
      *
-     * @param dbVendor database vendor type
+     * @param dbvendor database vendor type
      */
     public void setDbvendor(String dbvendor) {
         this.dbVendor = dbvendor;
