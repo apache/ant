@@ -10,17 +10,28 @@ Fixed bugs:
 -----------
 
 * <zip filesonly="true"> included empty directories.  Bugzilla report 40258.
+
 * Invalid hash code of Target causes XmlLogger to fail.
   Bugzilla report 40207.
+
 * Macro element did not include top level Text. Bugzilla report 36803.
+
 * AntClassLoader did not isolate resources when isolate was set. Bugzilla report 38747.
+
 * Diagnostics broken when using java 1.4. Bugzilla report 40395.
+
 * Exception reporting in <copy> was broken. Bugzilla report 40300.
+
 * Handling of corrupt tar files, TarInputStream.read() never returns EOF.
   Bugzilla report 39924.
+
 * Some bugs in ReaderInputStream. Bugzilla report 39635.
+
 * <antlr> did not recognise whether the target is up-to-date for html option.
   Bugzilla report 38451.
+
+* documented minimal version of jsch now 0.1.29.
+  Bugzilla report 40333.
 
 Other changes:
 --------------
@@ -28,16 +39,22 @@ Other changes:
 * added setbeans attribute to <script> to allow <script>'s to be
   run without referencing all references.
   Bugzilla report 37688.
+
 * added classpath attribute and nested element to <script> to allow
   the language jars to be specified in the build script.
   Bugzilla report 29676.
+
 * trim the driver attribute on the <sql> task. Bugzilla report 21228.
+
 * Allow (jar) files as well as directories to be given to jdepend.
   Bugzilla report 28865.
+
 * Convert SplashTask to use NOT sun internal classes.
   Bugzilla report 35619.
-* Made PatterSet#hasPatterns public to allow custom filesets access.
+
+* Made PatternSet#hasPatterns public to allow custom filesets access.
   Bugzilla report 36772.
+
 * added searchparents attribute to <available>. Bugzilla report 39549.
 
 * tasks that don't extend Ant's Task class will now get the build file
