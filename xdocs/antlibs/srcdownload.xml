@@ -47,15 +47,25 @@ directory</a> or, preferably, its <a href="[preferred]/ant/antlibs/">mirror</a>.
 
 </section>
 
-<!--section name="Downloading Ant 1.7.0Beta1">
+<section name="Downloading Betas">
 
 <p>Beta releases are not mirrored, you can find our latest beta
-release at <a
-href="http://cvs.apache.org/dist/ant/">http://cvs.apache.org/dist/ant/</a>.</p>
+releases at <a
+href="http://people.apache.org/dist/ant/antlibs/">http://people.apache.org/dist/ant/antlibs/</a>.</p>
+
+<p>Currently available:</p>
+
+<ul>
+
+  <li><a
+  href="http://people.apache.org/dist/ant/antlibs/dotnet/source/">.NET
+  Ant library 1.0Beta1</a></li>
+
+</ul>
 
 </section>
 
-<section name="Mirror">
+<!--section name="Mirror">
 
 <p>You are currently using <b>[preferred]</b>.  If you encounter a
 problem with this mirror, please select another mirror.  If all

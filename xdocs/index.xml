@@ -51,6 +51,15 @@
     did not fail.</p>
   </section>
 
+  <section name=".NET Ant Library 1.0Beta1">
+    <h3>September 13, 2006 - Apache .NET Ant Library 1.0Beta1 Available</h3>
+    <p>Apache .NET Ant Library 1.0Beta1 is now available for <a
+    href="http://ant.apache.org/antlibs/bindownload.cgi">download</a>.</p>
+
+    <p>This Ant Library contains support for tools like NUnit as well
+    as the "old .NET tasks of Ant's core.  It has been tested
+    Microsoft's frameworks as well as Mono</p>
+  </section>
 
    <section name="Ant 1.6.5">
     <h3>June 2, 2005 - Ant 1.6.5 Available</h3>
