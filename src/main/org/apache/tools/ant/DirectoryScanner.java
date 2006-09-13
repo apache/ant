@@ -20,23 +20,22 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
-import org.apache.tools.ant.types.selectors.FileSelector;
-import org.apache.tools.ant.types.selectors.SelectorUtils;
-import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.SelectorScanner;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -830,8 +829,8 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     private void checkIncludePatterns() {
-        Hashtable newroots = new Hashtable();
-        // put in the newroots vector the include patterns without
+        Map newroots = new HashMap();
+        // put in the newroots map the include patterns without
         // wildcard tokens
         for (int i = 0; i < includes.length; i++) {
             if (FileUtils.isAbsolutePath(includes[i])) {
@@ -854,7 +853,7 @@ public class DirectoryScanner
         } else {
             // only scan directories that can include matched files or
             // directories
-            Enumeration enum2 = newroots.keys();
+            Iterator it = newroots.entrySet().iterator();
 
             File canonBase = null;
             if (basedir != null) {
@@ -864,12 +863,13 @@ public class DirectoryScanner
                     throw new BuildException(ex);
                 }
             }
-            while (enum2.hasMoreElements()) {
-                String currentelement = (String) enum2.nextElement();
+            while (it.hasNext()) {
+            	Map.Entry entry = (Map.Entry)it.next();
+                String currentelement = (String) entry.getKey();
                 if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;
                 }
-                String originalpattern = (String) newroots.get(currentelement);
+                String originalpattern = (String) entry.getValue();
                 File myfile = new File(basedir, currentelement);
 
                 if (myfile.exists()) {

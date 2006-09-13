@@ -61,6 +61,9 @@ Other changes:
   location reflected into a method of the signature void setLocation(Location)
   - if such a method exists.
 
+* remove needless synchronization in DirectoryScanner.
+  Bugzilla report 40237.
+
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
 ========================================
 
