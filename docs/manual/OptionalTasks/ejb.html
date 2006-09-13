@@ -1353,14 +1353,14 @@ the classpath of the ejbdeploy tool and set the <i>websphere.home</i> property (
   </tr>
   <tr>
     <td valign="top">dbVendor</td>
-    <td valign="top">This option is passed to ejbdeploy. Valid options are for example:
-                     <ul>
-                     <li>SQL92</li> <li>SQL99</li> <li>DB2UDBWIN_V71</li>
-                     <li>DB2UDBOS390_V6</li> <li>DB2UDBAS400_V4R5</li> <li>ORACLE_V8</li>
-                     <li>INFORMIX_V92</li> <li>SYBASE_V1192</li> <li>MYSQL_V323</li>
-                     <li>MSSQLSERVER_V7</li>
-                     </ul>
-                     This is also used to determine the name of the Map.mapxmi and
+    <td valign="top">This option is passed to ejbdeploy. 
+                   <p>
+                   Valid options can be obtained by running the following command:
+                   <code>
+                   &lt;WAS_HOME&gt;/bin/EJBDeploy.[sh/bat] -help
+                   </code>
+                   </p>
+                    This is also used to determine the name of the Map.mapxmi and
                      Schema.dbxmi files, for example Account-DB2UDBWIN_V71-Map.mapxmi
                      and Account-DB2UDBWIN_V71-Schema.dbxmi.
                      </td>

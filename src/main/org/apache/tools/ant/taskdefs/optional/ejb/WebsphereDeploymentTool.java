@@ -60,20 +60,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class WebsphereDeploymentTool extends GenericDeploymentTool {
-    /**
-     * Enumerated attribute with the values for the database vendor types
-     *
-     */
-    public static class DBVendor extends EnumeratedAttribute {
-        public String[] getValues() {
-            return new String[]{
-                "SQL92", "SQL99", "DB2UDBWIN_V71", "DB2UDBOS390_V6", "DB2UDBAS400_V4R5",
-                "ORACLE_V8", "INFORMIX_V92", "SYBASE_V1192", "MSSQLSERVER_V7", "MYSQL_V323"
-                };
-        }
-    }
-
-
     public static final String PUBLICID_EJB11
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
     public static final String PUBLICID_EJB20
@@ -161,18 +147,22 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /** Sets the DB Vendor for the Entity Bean mapping ; optional.
-     * Valid options are for example:
-     * <ul>
-     * <li>SQL92</li> <li>SQL99</li> <li>DB2UDBWIN_V71</li>
-     * <li>DB2UDBOS390_V6</li> <li>DB2UDBAS400_V4R5</li> <li>ORACLE_V8</li>
-     * <li>INFORMIX_V92</li> <li>SYBASE_V1192</li> <li>MYSQL_V323</li>
-     * </ul>
+     * <p>
+     * Valid options can be obtained by running the following command:
+     * <code>
+     * &lt;WAS_HOME&gt;/bin/EJBDeploy.[sh/bat] -help
+     * </code>
+     * </p>
+     * <p>
      * This is also used to determine the name of the Map.mapxmi and
-     * Schema.dbxmi files, for example Account-DB2UDBWIN_V71-Map.mapxmi
-     * and Account-DB2UDBWIN_V71-Schema.dbxmi.
+     * Schema.dbxmi files, for example Account-DB2UDB_V81-Map.mapxmi
+     * and Account-DB2UDB_V81-Schema.dbxmi.
+     * </p>
+     *
+     * @param dbVendor database vendor type
      */
-    public void setDbvendor(DBVendor dbvendor) {
-        this.dbVendor = dbvendor.getValue();
+    public void setDbvendor(String dbvendor) {
+        this.dbVendor = dbvendor;
     }
 
 

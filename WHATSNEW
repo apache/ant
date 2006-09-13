@@ -6,6 +6,9 @@ Changes that could break older environments:
 
 * <script> and <scriptdef> now set the current thread context.
 
+* unrestrict the dbvendor names in the websphere element of the ejbjar task.
+  Bugzilla Report 40475.
+
 Fixed bugs:
 -----------
 
