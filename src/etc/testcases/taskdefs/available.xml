@@ -177,13 +177,15 @@
               value="greatgrandparent/grandparent/parent/dir"/>
   </target>
   <target name="search-parents" depends="prep.parents">
-    <echo>testing greatgrandparent - should not see</echo>
+    <echo>testing greatgrandparent - should see</echo>
 
     <fail>
       <condition>
-        <available file="a.txt">
-          <filepath path="${available.test.dir}"/>
-        </available>
+        <not>
+          <available file="a.txt" searchparents="yes">
+            <filepath path="${available.test.dir}"/>
+          </available>
+        </not>
       </condition>
     </fail>
 
@@ -191,7 +193,7 @@
     <fail>
       <condition>
         <not>
-          <available file="b.txt">
+          <available file="b.txt" searchparents="yes">
             <filepath path="${available.test.dir}"/>
           </available>
         </not>
@@ -202,7 +204,7 @@
     <fail>
       <condition>
         <not>
-          <available file="c.txt">
+          <available file="c.txt" searchparents="yes">
             <filepath path="${available.test.dir}"/>
           </available>
         </not>
@@ -213,7 +215,7 @@
     <fail>
       <condition>
         <not>
-          <available file="d.txt">
+          <available file="d.txt" searchparents="yes">
             <filepath path="${available.test.dir}"/>
           </available>
         </not>
@@ -226,7 +228,7 @@
     <echo>testing grandparent - should not see</echo>
     <fail>
       <condition>
-        <available file="b.txt" searchParents="no">
+        <available file="b.txt">
           <filepath path="${available.test.dir}"/>
         </available>
       </condition>
@@ -235,7 +237,7 @@
     <echo>testing parent - should not see</echo>
     <fail>
       <condition>
-        <available file="c.txt" searchParents="false">
+        <available file="c.txt">
           <filepath path="${available.test.dir}"/>
         </available>
       </condition>
@@ -245,7 +247,7 @@
     <fail>
       <condition>
         <not>
-          <available file="d.txt" searchParents="false">
+          <available file="d.txt">
             <filepath path="${available.test.dir}"/>
           </available>
         </not>

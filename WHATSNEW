@@ -36,6 +36,9 @@ Fixed bugs:
 * documented minimal version of jsch now 0.1.29.
   Bugzilla report 40333.
 
+* <available> searched parent directories for files.
+  Bugzilla report 37148.
+
 Other changes:
 --------------
 
