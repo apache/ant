@@ -192,7 +192,7 @@
       of which extend the interface <tt>Condition</tt>. To integrate a
       custom condition in Ant, you can now simply <code>&lt;typedef&gt;</code> the
       condition, and then use it anywhere develop.html#nestedtypwhere conditions are allowed
-      (assuming the containing element has a generic <tt>add(Condition)</tt> or <tt>addConfigured(Configured)</tt>method):
+      (assuming the containing element has a generic <tt>add(Condition)</tt> or <tt>addConfigured(Condition)</tt>method):
 </p><pre> &lt;typedef resource="org/example/conditions.properties" uri="<a href="http://example.org/conditions">http://example.org/conditions</a>"/&gt;
  &lt;condition property="prop" xmlns="<a href="http://example.org/conditions">http://example.org/conditions</a>"&gt;
    &lt;and&gt;
