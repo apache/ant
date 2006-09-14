@@ -92,8 +92,7 @@
           </tr>
           <tr>
             <th>Ant compatibility:</th>
-            <td>Ant 1.7.x<br/>A branch that works with Ant 1.6.2 and
-              above exists in <a href="https://svn.apache.org/repos/asf/ant/antlibs/dotnet/branches/Ant_1.6.2_compatible/">https://svn.apache.org/repos/asf/ant/antlibs/dotnet/branches/Ant_1.6.2_compatible/</a></td>
+            <td>Ant 1.7.x</td>
           </tr>
           <tr>
             <th>Added to sandbox:</th>
@@ -105,7 +104,7 @@
           </tr>
           <tr>
             <th>Latest Release:</th>
-            <td>1.0 Beta 1 released on September, 13 2006</td>
+            <td>1.0 Beta 1 released on September 13, 2006</td>
           </tr>
         </table>
       </subsection>
