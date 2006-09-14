@@ -22,7 +22,6 @@ import java.io.PrintWriter;
 
 /**
  * Signals an error condition during a build
- *
  */
 public class BuildException extends RuntimeException {
 
