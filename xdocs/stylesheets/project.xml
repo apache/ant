@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -74,6 +74,8 @@
                 <item name="Charter"               href="/antlibs/charter.html"/>
                 <item name="Ant Libraries"         href="/antlibs/proper.html"/>
                 <item name="Sandbox Ant Libraries" href="/antlibs/sandbox.html"/>
+                <item name="Binary Distributions" href="http://ant.apache.org/antlibs/bindownload.cgi"/>
+                <item name="Source Distributions" href="http://ant.apache.org/antlibs/srcdownload.cgi"/>
             </menu>
         </menusection>
     </body>
