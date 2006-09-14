@@ -41,15 +41,15 @@
         on the parser.
       </li>
     </ul>
-    <p>Use of colons in element names has been discouraged in the past
-      IIRC, and using any attribute starting with "xml" is actually strongly
+    <p>Use of colons in element names has been discouraged in the past,
+      and using any attribute starting with "xml" is actually strongly
       discouraged by the XML spec to reserve such names for future use.
     </p>
     <h3>Motivation</h3>
 
     <p>In build files using a lot of custom and third-party tasks, it is
       easy to get into name conflicts. When individual types are defined, the
-      build file writer can do some name-spacing manually (for example, using
+      build file writer can do some namespacing manually (for example, using
       "tomcat-deploy" instead of just "deploy"). But when defining whole
       libraries of types using the <code>&lt;typedef&gt;</code> 'resource' attribute, the
       build file writer has no chance to override or even prefix the names
@@ -58,7 +58,7 @@
 
     <p>
       Adding a 'prefix' attribute to <code>&lt;typedef&gt;</code> might have been enough,
-      but XML already has a well-known method for name-spacing. Thus, instead
+      but XML already has a well-known method for namespacing. Thus, instead
       of adding a 'prefix' attribute, the <code>&lt;typedef&gt;</code> and <code>&lt;taskdef&gt;</code>
       tasks get a 'uri' attribute, which stores the URI of the XML namespace
       with which the type should be associated:
@@ -175,7 +175,7 @@
       result in the parameters "a" and "b" being used as parameters to configure the nested "config" element.
     </p>
     <p>It also means that you can use attributes from other namespaces
-      to markup the build file with extra meta data, such as RDF and
+      to markup the build file with extra metadata, such as RDF and
       XML-Schema (whether that's a good thing or not). The same is not true
       for elements from unknown namespaces, which result in a error.
     </p>
@@ -187,7 +187,7 @@
       <a href="../develop.html#nestedtype">add type introspection rules</a>:
       Ant types and tasks are now free to accept arbritrary named types as
       nested elements, as long as the concrete type implements the interface
-      expected by the task/type. The most obvioius example for this is the
+      expected by the task/type. The most obvious example for this is the
       <code>&lt;condition&gt;</code> task, which supports various nested conditions, all
       of which extend the interface <tt>Condition</tt>. To integrate a
       custom condition in Ant, you can now simply <code>&lt;typedef&gt;</code> the
@@ -204,7 +204,7 @@
     <p>
       In Ant 1.6, this feature cannot be used as much as we'd all like to: a
       lot of code has not yet been adapted to the new introspection rules,
-      and elements like the builtin Ant conditions and selectors are not
+      and elements like Ant's built-in conditions and selectors are not
       really types in 1.6. This is expected to change in Ant 1.7.
     </p>
     <h3>Namespaces and Antlib</h3>
@@ -215,7 +215,6 @@
       1.6. Basically, you can "import" Antlibs simply by using a special
       scheme for the namespace URI: the <tt>antlib</tt> scheme, which expects the package name in which a special <tt>antlib.xml</tt> file is located.
     </p>
-
 
 </body>
 </html>
