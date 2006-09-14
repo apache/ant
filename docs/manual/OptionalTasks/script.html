@@ -220,43 +220,6 @@ main:
 
 BUILD SUCCESSFUL
 </pre></blockquote>
-<p>Another example, using <a href="../using.html#references">references by id</a>
-and two different scripting languages:</p>
-<blockquote><pre>
-&lt;project name=&quot;testscript&quot; default=&quot;main&quot;&gt;
-  &lt;target name=&quot;sub&quot;&gt;
-    &lt;echo id=&quot;theEcho&quot;/&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;sub1&quot;&gt;
-    &lt;script language=&quot;netrexx&quot;&gt;&lt;![CDATA[
-      theEcho.setMessage(&quot;In sub1&quot;)
-      sub.execute
-    ]]&gt;&lt;/script&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;sub2&quot;&gt;
-    &lt;script language=&quot;javascript&quot;&gt;&lt;![CDATA[
-      theEcho.setMessage(&quot;In sub2&quot;);
-      sub.execute();
-    ]]&gt;&lt;/script&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;main&quot; depends=&quot;sub1,sub2&quot;/&gt;
-&lt;/project&gt;
-</pre></blockquote>
-<p>generates</p>
-<blockquote><pre>
-sub1:
-In sub1
-
-sub2:
-In sub2
-
-main:
-
-BUILD SUCCESSFUL
-</pre></blockquote>
 
 <p>Now a more complex example using the Java API and the Ant API. The goal is to list the
 filesizes of all files a <code>&lt;fileset/&gt;</code> caught.</p>
@@ -330,9 +293,5 @@ Finally we use the <code>&lt;echo&gt;</code> task for producing the output. The 
 its execute() method, because the perform() method (implemented in Task itself) does the
 appropriate logging before and after invoking execute().
 </p>
-
-
-
-
 </body>
 </html>
