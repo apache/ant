@@ -32,10 +32,8 @@ import org.w3c.dom.Element;
 
 /**
  * Echo XML.
- * Notice how this is a ProjectComponent and not a task, which means that certain
- * well-known task operations (such as {@link org.apache.tools.ant.Task#getLocation()}) do not work.
  *
- * Other limitations
+ * Known limitations:
  * <ol>
  * <li>Currently no XMLNS support</li>
  * <li>Processing Instructions get ignored</li>
@@ -45,7 +43,6 @@ import org.w3c.dom.Element;
  * @since Ant 1.7
  */
 public class EchoXML extends XMLFragment {
-
 
     private File file;
     private boolean append;
