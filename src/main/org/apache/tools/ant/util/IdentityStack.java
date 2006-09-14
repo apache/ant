@@ -27,7 +27,7 @@ public class IdentityStack extends Stack {
 
     /**
      * Get an IdentityStack containing the contents of the specified Stack.
-     * @param s the Stack to copy.
+     * @param s the Stack to copy; ignored if null.
      * @return an IdentityStack instance.
      */
     public static IdentityStack getInstance(Stack s) {
@@ -35,7 +35,9 @@ public class IdentityStack extends Stack {
             return (IdentityStack) s;
         }
         IdentityStack result = new IdentityStack();
-        result.addAll(s);
+        if (s != null) {
+            result.addAll(s);
+        }
         return result;
     }
 
