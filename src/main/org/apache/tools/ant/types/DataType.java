@@ -253,10 +253,10 @@ public abstract class DataType extends ProjectComponent {
      */
     protected Object getCheckedRef(final Class requiredClass,
                                    final String dataTypeName, final Project project) {
-        dieOnCircularReference(project);
         if (project == null) {
             throw new BuildException("No Project specified");
         }
+        dieOnCircularReference(project);
         Object o = ref.getReferencedObject(project);
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
             log("Class " + o.getClass() + " is not a subclass of " + requiredClass,
