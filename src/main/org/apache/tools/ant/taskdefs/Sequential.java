@@ -17,13 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
-
-
 
 /**
  * Sequential is a container task - it can contain other Ant tasks. The nested
@@ -34,12 +32,11 @@ import org.apache.tools.ant.TaskContainer;
  * The sequential task has no attributes and does not support any nested
  * elements apart from Ant tasks. Any valid Ant task may be embedded within the
  * sequential task.</p>
-
+ *
  * @since Ant 1.4
  * @ant.task category="control"
  */
-public class Sequential extends Task
-                        implements TaskContainer {
+public class Sequential extends Task implements TaskContainer {
 
     /** Optional Vector holding the nested tasks */
     private Vector nestedTasks = new Vector();
@@ -60,8 +57,8 @@ public class Sequential extends Task
      * @throws BuildException if one of the nested tasks fails.
      */
     public void execute() throws BuildException {
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();) {
-            Task nestedTask = (Task) e.nextElement();
+        for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
+            Task nestedTask = (Task) i.next();
             nestedTask.perform();
         }
     }
