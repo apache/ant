@@ -36,7 +36,7 @@ import java.util.HashSet;
 import java.io.File;
 
 import org.apache.tools.ant.util.ClasspathUtils;
-import org.apache.tools.ant.util.ScriptRunner;
+import org.apache.tools.ant.util.optional.ScriptRunner;
 
 /**
  * Define a task using a script

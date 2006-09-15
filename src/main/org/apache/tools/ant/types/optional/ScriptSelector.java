@@ -18,7 +18,7 @@
 package org.apache.tools.ant.types.optional;
 
 import org.apache.tools.ant.types.selectors.BaseSelector;
-import org.apache.tools.ant.util.ScriptRunner;
+import org.apache.tools.ant.util.optional.ScriptRunner;
 import org.apache.tools.ant.BuildException;
 
 import java.io.File;

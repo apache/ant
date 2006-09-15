@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.util;
+package org.apache.tools.ant.util.optional;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +28,8 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Project;
+
+import org.apache.tools.ant.util.FileUtils;
 
 import java.util.Map;
 import java.util.HashMap;

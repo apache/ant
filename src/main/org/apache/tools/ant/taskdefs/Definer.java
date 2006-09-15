@@ -463,6 +463,30 @@ public abstract class Definer extends DefBase {
     }
 
     /**
+     * Antlib attribute, sets resource and uri.
+     * uri is set the antlib value and, resource is set
+     * to the antlib.xml resource in the classpath.
+     * For example antlib="antlib:org.acme.bland.cola"
+     * corresponds to uri="antlib:org.acme.bland.cola"
+     * resource="org/acme/bland/cola/antlib.xml".
+     * ASF Bugzilla Bug 31999
+     * @param antlib the value to set.
+     */
+    public void setAntlib(String antlib) {
+        if (definerSet) {
+            tooManyDefinitions();
+        }
+        if (!antlib.startsWith("antlib:")) {
+            throw new BuildException(
+                "Invalid antlib attribute - it must start with antlib:");
+        }
+        setURI(antlib);
+        this.resource = antlib.substring("antlib:".length()).replace('.','/')
+            + "/antlib.xml";
+        definerSet = true;
+    }
+
+    /**
      * Name of the definition
      * @param name the name of the definition
      */
