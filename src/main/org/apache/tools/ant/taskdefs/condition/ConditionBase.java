@@ -39,7 +39,7 @@ public abstract class ConditionBase extends ProjectComponent
     implements DynamicElement {
 
     private static final String CONDITION_ANTLIB
-        = "antlib:org.apache.tools.ant.taskdefs.condition:";
+        = "antlib:org.apache.tools.ant.types.conditions:";
 
     /**
      * name of the component
