@@ -9,6 +9,9 @@ Changes that could break older environments:
 * unrestrict the dbvendor names in the websphere element of the ejbjar task.
   Bugzilla Report 40475.
 
+* <env> nested element in <java>, <exec> and others is now case-insensitive
+  for windows OS. Bugzilla Report 28826.
+
 Fixed bugs:
 -----------
 

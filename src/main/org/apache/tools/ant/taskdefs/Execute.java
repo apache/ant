@@ -79,6 +79,9 @@ public class Execute {
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
 
+    /** Used for replacing env variables */
+    private static boolean environmentCaseInSensitive = false;
+
     /*
      * Builds a command launcher for the OS and JVM we are running under.
      */
@@ -98,7 +101,7 @@ public class Execute {
             // OS/2
             shellLauncher = new OS2CommandLauncher(new CommandLauncher());
         } else if (Os.isFamily("windows")) {
-
+            environmentCaseInSensitive = true;
             CommandLauncher baseLauncher = new CommandLauncher();
 
             if (!Os.isFamily("win9x")) {
@@ -624,9 +627,17 @@ public class Execute {
         for (int i = 0; i < env.length; i++) {
             // Get key including "="
             String key = env[i].substring(0, env[i].indexOf('=') + 1);
+            if (environmentCaseInSensitive) {
+                // Nb: using default locale as key is a env name
+                key = key.toLowerCase();
+            }
             int size = osEnv.size();
             for (int j = 0; j < size; j++) {
-                if (((String) osEnv.elementAt(j)).startsWith(key)) {
+                String osEnvItem = (String) osEnv.elementAt(j);
+                if (environmentCaseInSensitive) {
+                    osEnvItem = osEnvItem.toLowerCase();
+                }
+                if (osEnvItem.startsWith(key)) {
                     osEnv.removeElementAt(j);
                     break;
                 }
