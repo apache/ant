@@ -30,6 +30,7 @@ import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -52,6 +53,8 @@ import org.apache.tools.ant.util.StringUtils;
  *
  */
 public class Commandline implements Cloneable {
+    /** win9x uses a (shudder) bat file (antRun.bat) for executing commands */
+    private static boolean IS_WIN_9X = Os.isFamily("win9x");
 
     /**
      * The arguments of the command
@@ -347,7 +350,10 @@ public class Commandline implements Cloneable {
             } else {
                 return '\'' + argument + '\'';
             }
-        } else if (argument.indexOf("\'") > -1 || argument.indexOf(" ") > -1) {
+        } else if (argument.indexOf("\'") > -1
+                   || argument.indexOf(" ") > -1
+                   // WIN9x uses a bat file for executing commands
+                   || (IS_WIN_9X && argument.indexOf(';') != -1)) {
             return '\"' + argument + '\"';
         } else {
             return argument;
