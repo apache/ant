@@ -413,7 +413,7 @@ public class Copy extends Task {
                     String message = "Warning: Could not find file "
                         + file.getAbsolutePath() + " to copy.";
                     if (!failonerror) {
-                        log(message);
+                        log(message, Project.MSG_ERR);
                     } else {
                         throw new BuildException(message);
                     }
@@ -454,7 +454,7 @@ public class Copy extends Task {
                             || !getMessage(e).endsWith(" not found.")) {
                             throw e;
                         } else {
-                            log("Warning: " + getMessage(e));
+                            log("Warning: " + getMessage(e), Project.MSG_ERR);
                             continue;
                         }
                     }
