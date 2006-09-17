@@ -398,6 +398,10 @@ public class Checksum extends MatchingTask implements Condition {
                 }
             }
             if (file != null) {
+                if (totalproperty != null || todir != null) {
+                    relativeFilePaths.put(
+                        file, file.getName().replace(File.separatorChar, '/'));
+                }
                 addToIncludeFileMap(file);
             }
             return generateChecksums();

@@ -10,6 +10,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* <checksum> with file and todir option failed. Bugzilla report 37386.
+
 Other changes:
 --------------
 
