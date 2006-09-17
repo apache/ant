@@ -162,30 +162,50 @@ distribution.
 
 <h3><a name="classconstants">ClassConstants</a></h3>
 <p>
-This filters basic constants defined in a Java Class,
-and outputs them in lines composed of the format <i>name</i>=<i>value</i>.
-See <a href="../install.html#librarydependencies">Library Dependencies</a>.
+  This filters basic constants defined in a Java Class,
+  and outputs them in lines composed of the format <i>name</i>=<i>value</i>.
+  This filter uses the <em>bcel</em> library to understand the Java Class file.
+  See <a href="../install.html#librarydependencies">Library Dependencies</a>.
 <p>
+  <p>
+    <em><b>Important:</b></em>
+    This filter is different from most of the other filters.
+    Most of the filters operate on a sequence of characters.
+    This filter operates on the sequence of bytes that makes up
+    a class. However the bytes arrive to the filter as a sequence
+    of characters. This means that one must be careful on the
+    choice of character encoding to use. Most encoding lose information
+    on conversion from an arbitary sequence of bytes to characters
+    and back again to bytes. In particular the usual default
+    character encodings (CP152 and UTF-8) do.
+    For this reason, <em>since Ant 1.7</em>, the character
+    encoding <b>ISO-8859-1</b> is used to convert from characters back to
+    bytes, so one <b>has</b> to use this encoding for reading the java
+    class file.
 <h4>Example:</h4>
 
 This loads the basic constants defined in a Java class as Ant properties.
-<blockquote><pre>
-&lt;loadproperties srcfile=&quot;foo.class&quot;&gt;
-  &lt;filterchain&gt;
-    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;
-  &lt;/filterchain&gt;
-&lt;/loadproperties&gt;
-</pre></blockquote>
 
-Convenience method:
 <blockquote><pre>
-&lt;loadproperties srcfile=&quot;foo.class&quot;&gt;
+&lt;loadproperties srcfile="foo.class" encoding="ISO-8859-1"&gt;
   &lt;filterchain&gt;
     &lt;classconstants/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
 </pre></blockquote>
 
+This loads the constants from a Java class file as Ant properties,
+prepending the names with a prefix.
+
+    <blockquote><pre>
+&lt;loadproperties srcfile="build/classes/org/acme/bar.class"
+                encoding="ISO-8859-1"&gt;
+  &lt;filterchain&gt;
+    &lt;classconstants/&gt;
+    &lt;prefixlines prefix="ini."/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadproperties&gt;
+</pre></blockquote>
 <h3><a name="escapeunicode">EscapeUnicode</a></h3>
 <p>
 This filter converts its input by changing all non US-ASCII characters

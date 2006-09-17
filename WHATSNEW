@@ -4,6 +4,9 @@ Changes from Ant 1.7.0Beta2 to current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* <classconstants> filter reader uses ISO-8879-1 encoding to read
+  the java class file. Bugzilla report 33604.
+
 Fixed bugs:
 -----------
 

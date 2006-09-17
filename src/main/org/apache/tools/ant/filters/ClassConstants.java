@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.apache.tools.ant.BuildException;
 
 
 /**
@@ -103,7 +104,7 @@ public final class ClassConstants
             if (clazz == null) {
                 ch = -1;
             } else {
-                final byte[] bytes = clazz.getBytes();
+                final byte[] bytes = clazz.getBytes("ISO-8859-1");
                 try {
                     final Class javaClassHelper =
                         Class.forName(JAVA_CLASS_HELPER);
@@ -125,16 +126,21 @@ public final class ClassConstants
                             return read();
                         }
                     }
-                } catch (ClassNotFoundException cnfe) {
-                    throw new IOException(cnfe.getMessage());
-                } catch (NoSuchMethodException nsme) {
-                    throw new IOException(nsme.getMessage());
-                } catch (IllegalAccessException iae) {
-                    throw new IOException(iae.getMessage());
-                } catch (IllegalArgumentException iarge) {
-                    throw new IOException(iarge.getMessage());
-                } catch (InvocationTargetException ite) {
-                    throw new IOException(ite.getMessage());
+                } catch (NoClassDefFoundError ex) {
+                    throw ex;
+                } catch (RuntimeException ex) {
+                    throw ex;
+                } catch (InvocationTargetException ex) {
+                    Throwable t = ex.getTargetException();
+                    if (t instanceof NoClassDefFoundError) {
+                        throw (NoClassDefFoundError) t;
+                    }
+                    if (t instanceof RuntimeException) {
+                        throw (RuntimeException) t;
+                    }
+                    throw new BuildException(t);
+                } catch (Exception ex) {
+                    throw new BuildException(ex);
                 }
             }
         }
