@@ -128,6 +128,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     Name the generated file RELEASE-NOTES-x.y.z.html.
 
+    Change the title to something like "Release Notes of Apache Ant 1.7.0Beta2" (from the default txt2html)
+
     [[ TODO: This must perhaps be an Ant task. ]]
 
 12. Once this is uploaded, unpack things, create the release directory,
