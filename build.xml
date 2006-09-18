@@ -79,10 +79,10 @@
   <property name="script.dir" value="${src.dir}/script"/>
   <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
-  <property name="etc.dir" value="src/etc"/>
-  <property name="tests.dir" value="src/testcases"/>
-  <property name="tests.etc.dir" value="src/etc/testcases"/>
-  <property name="manifest" value="src/etc/manifest"/>
+  <property name="etc.dir" value="${src.dir}/etc"/>
+  <property name="src.junit" value="${src.dir}/testcases"/>
+  <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
+  <property name="manifest" value="${src.dir}/etc/manifest"/>
   <property name="resource.dir" value="${src.dir}/resources"/>
 
   <!--
@@ -118,7 +118,7 @@
         include the test source and test data dirs
         so that we can pick resources via getResource(AsStream)
      -->
-    <pathelement location="${tests.dir}"/>
+    <pathelement location="${src.junit}"/>
     <pathelement location="${tests.etc.dir}"/>
     <path refid="classpath"/>
   </path>
@@ -712,7 +712,7 @@
     description="--> creates the Apache Ant jars">
 
     <copy todir="${build.dir}">
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
@@ -944,7 +944,7 @@
     </copy>
 
     <copy todir="${dist.bin}">
-      <fileset dir="${script.dir}/"/>
+      <fileset dir="${script.dir}"/>
     </copy>
 
     <fixcrlf srcdir="${dist.bin}" eol="dos" includes="*.bat,*.cmd"/>
@@ -1009,7 +1009,7 @@
     </copy>
 
     <copy todir="${dist.dir}">
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="README"/>
         <include name="INSTALL"/>
         <include name="LICENSE"/>
@@ -1106,7 +1106,7 @@
     </copy>
 
     <copy todir="${src.dist.dir}">
-      <fileset dir=".">
+      <fileset dir="${basedir}">
         <include name="README"/>
         <include name="INSTALL"/>
         <include name="LICENSE"/>
@@ -1137,8 +1137,8 @@
     </fixcrlf>
     <fixcrlf srcdir="${src.dist.dir}">
       <include name="**/*.java"/>
-      <exclude name="src/etc/testcases/taskdefs/fixcrlf/expected/Junk?.java"/>
-      <exclude name="src/etc/testcases/taskdefs/fixcrlf/input/Junk?.java"/>
+      <exclude name="${tests.etc.dir}/taskdefs/fixcrlf/expected/Junk?.java"/>
+      <exclude name="${tests.etc.dir}/taskdefs/fixcrlf/input/Junk?.java"/>
     </fixcrlf>
 
     <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"
@@ -1414,7 +1414,7 @@
     </uptodate>
     <uptodate property="tests.javadoc.notrequired"
       targetfile="${build.tests.javadocs}/packages.html">
-      <srcfiles dir="${tests.dir}">
+      <srcfiles dir="${src.junit}">
         <patternset refid="useful.tests"/>
       </srcfiles>
     </uptodate>
@@ -1463,7 +1463,7 @@
       windowtitle="${Name} Test Utilities"
       doctitle="${Name}">
 
-      <fileset dir="${tests.dir}">
+      <fileset dir="${src.junit}">
         <patternset refid="useful.tests"/>
       </fileset>
 
@@ -1478,7 +1478,7 @@
   <target name="compile-tests" depends="build" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
-    <javac srcdir="${tests.dir}"
+    <javac srcdir="${src.junit}"
       destdir="${build.tests}"
       debug="${debug}"
       target="${javac.target}"
@@ -1589,15 +1589,15 @@
   <target name="run-tests" depends="dump-info,compile-tests,probe-offline,test-init"
       if="junit.present" unless="testcase">
 
-    <property name="includetests" value="**/*Test*" />
-    <property name="excludetests" value="" />
+    <property name="junit.includes" value="**/*Test*" />
+    <property name="junit.excludes" value="" />
 
     <test-junit>
       <formatter type="brief" usefile="false"/>
 
       <batchtest todir="${build.tests.xml}">
-        <fileset dir="${tests.dir}"
-                 includes="${includetests}" excludes="${excludetests}">
+        <fileset dir="${src.junit}"
+                 includes="${junit.includes}" excludes="${junit.excludes}">
 
           <!-- abstract classes, not testcases -->
           <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
@@ -1791,7 +1791,7 @@
 
     <dn:wix target="${msi.file}"
       mode="both" wixHome="${wix.home}" wixobjDestDir="${wixobj.dir}">
-      <sources dir="src/etc" includes="*.wxs"/>
+      <sources dir="${etc.dir}" includes="*.wxs"/>
       <moresources dir="${dist.dir}"/>
 
       <candleParameter name="dist.dir" value="${dist.dir.resolved}"/>
