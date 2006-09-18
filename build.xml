@@ -497,18 +497,19 @@
       </and>
     </condition>
 
-    <property name="build.tests.resolved" location="${build.tests}"/>
     <condition property="tests.are.on.system.classpath">
       <or>
-        <!-- relative paths in CLASSPATH -->
-        <contains string="${java.class.path}"
-          substring="${build.tests}"/>
-        <!-- absolute paths in CLASSPATH -->
-        <contains string="${java.class.path}"
-          substring="${build.tests.resolved}"/>
+        <resourcecount count="1">
+          <intersect>
+            <path path="${java.class.path}" />
+            <file file="${build.tests}" />
+          </intersect>
+        </resourcecount>
         <istrue value="${junit.fork}"/>
       </or>
     </condition>
+
+    <echo level="verbose">$${tests.are.on.system.classpath}=${tests.are.on.system.classpath}</echo>
 
     <condition property="jasper.present">
       <and>
@@ -591,7 +592,6 @@
           feature="http://java.sun.com/xml/jaxp/properties/schemaSource"/>
       </or>
     </condition>
-
 
   </target>
 
@@ -1557,8 +1557,7 @@
           forkmode="${junit.forkmode}"
           failureproperty="tests.failed"
           errorproperty="tests.failed"
-          filtertrace="${junit.filtertrace}"
-          >
+          filtertrace="${junit.filtertrace}">
         <sysproperty key="ant.home" value="${ant.home}"/>
         <sysproperty key="build.tests" file="${build.tests}"/>
         <sysproperty key="build.tests.value" value="${build.tests.value}"/>
