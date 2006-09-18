@@ -1542,8 +1542,9 @@
          Run testcase
        ===================================================================
   -->
-  <target name="test" depends="test-halt" description="--> run JUnit tests"/>
-
+  <target name="test" depends="test-report" description="--> run JUnit tests">
+    <fail if="tests.failed">Unit tests failed see ${build.tests.reports}</fail>
+  </target>
 
   <target name="test-init" depends="probe-offline">
     <mkdir dir="${build.tests.xml}"/>
@@ -1586,20 +1587,13 @@
     </junitreport>
   </target>
 
-  <target name="test-halt" depends="test-report" >
-    <fail if="tests.failed">Unit tests failed see ${build.tests.reports}</fail>
-  </target>
-
-
   <target name="run-tests" depends="dump-info,compile-tests,probe-offline,test-init"
       if="junit.present" unless="testcase">
-
-
 
     <property name="includetests" value="**/*Test*" />
     <property name="excludetests" value="" />
 
-    <test-junit >
+    <test-junit>
       <formatter type="brief" usefile="false"/>
 
       <batchtest todir="${build.tests.xml}">
@@ -1751,7 +1745,7 @@
   <target name="run-single-test-only" if="testcase"
     description="--> runs the single unit test defined in the testcase property"
      depends="test-init">
-    <test-junit >
+    <test-junit>
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}" todir="${build.tests.xml}"/>
     </test-junit>
