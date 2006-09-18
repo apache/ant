@@ -509,7 +509,7 @@
       </or>
     </condition>
 
-    <echo level="verbose">$${tests.are.on.system.classpath}=${tests.are.on.system.classpath}</echo>
+    <echo level="verbose"> tests.are.on.system.classpath=${tests.are.on.system.classpath}</echo>
 
     <condition property="jasper.present">
       <and>
