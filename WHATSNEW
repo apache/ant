@@ -12,6 +12,9 @@ Fixed bugs:
 
 * <checksum> with file and todir option failed. Bugzilla report 37386.
 
+* <path location="loc"> was broken (Regression from beta1).
+  Bugzilla report 40547.
+
 Other changes:
 --------------
 

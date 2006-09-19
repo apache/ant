@@ -168,7 +168,6 @@ public final class IntrospectionHelper implements BuildListener {
      */
     private IntrospectionHelper(final Class bean) {
         this.bean = bean;
-
         Method[] methods = bean.getMethods();
         for (int i = 0; i < methods.length; i++) {
             final Method m = methods[i];
@@ -199,7 +198,6 @@ public final class IntrospectionHelper implements BuildListener {
             } else if (name.startsWith("set")
                        && java.lang.Void.TYPE.equals(returnType)
                        && args.length == 1 && !args[0].isArray()) {
-
                 String propName = getPropertyName(name, "set");
                 if (attributeSetters.get(propName) != null) {
                     if (java.lang.String.class.equals(args[0])) {
@@ -211,8 +209,17 @@ public final class IntrospectionHelper implements BuildListener {
                         */
                         continue;
                     }
+                    if (org.apache.tools.ant.Location.class.equals(args[0])) {
+                        /*
+                          Ignore setLocation(Location) (normally from
+                          ProjectComponent.setLocation(Location) in honour
+                          of setLocation(Some other class)
+                        */
+                        continue;
+                    }
                     /*
-                        If the argument is not a String, and if there
+                        If the argument is not a String or Location,
+                        and if there
                         is an overloaded form of this method already defined,
                         we just override that with the new one.
                         This mechanism does not guarantee any specific order
