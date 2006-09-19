@@ -181,7 +181,7 @@ public final class IntrospectionHelper implements BuildListener {
                 insertAddTypeMethod(m);
                 continue;
             }
-            // not really user settable properties on tasks
+            // not really user settable properties on tasks/project components
             if (org.apache.tools.ant.ProjectComponent.class.isAssignableFrom(
                     bean)
                  && args.length == 1 && isHiddenSetMethod(name, args[0])) {
