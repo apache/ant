@@ -95,6 +95,9 @@ public class Cab extends MatchingTask {
      * Adds a set of files to archive.
      */
     public void addFileset(FileSet set) {
+        if (filesets.size() > 0) {
+            throw new BuildException("Only one nested fileset allowed");
+        }
         filesets.addElement(set);
     }
 
@@ -105,12 +108,16 @@ public class Cab extends MatchingTask {
      */
     protected void checkConfiguration() throws BuildException {
         if (baseDir == null && filesets.size() == 0) {
-            throw new BuildException("basedir attribute or at least one "
-                                     + "nested filest is required!",
+            throw new BuildException("basedir attribute or one "
+                                     + "nested fileset is required!",
                                      getLocation());
         }
         if (baseDir != null && !baseDir.exists()) {
             throw new BuildException("basedir does not exist!", getLocation());
+        }
+        if (baseDir != null && filesets.size() > 0) {
+            throw new BuildException(
+                "Both basedir attribute and a nested fileset is not allowed");
         }
         if (cabFile == null) {
             throw new BuildException("cabfile attribute must be set!",
@@ -179,7 +186,7 @@ public class Cab extends MatchingTask {
 
     /**
      * Get the complete list of files to be included in the cab.  Filenames
-     * are gathered from filesets if any have been added, otherwise from the
+     * are gathered from the fileset if it has been added, otherwise from the
      * traditional include parameters.
      */
     protected Vector getFileList() throws BuildException {
@@ -188,14 +195,10 @@ public class Cab extends MatchingTask {
         if (baseDir != null) {
             // get files from old methods - includes and nested include
             appendFiles(files, super.getDirectoryScanner(baseDir));
-        }
-
-        // get files from filesets
-        for (int i = 0; i < filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            if (fs != null) {
-                appendFiles(files, fs.getDirectoryScanner(getProject()));
-            }
+        } else {
+            FileSet fs = (FileSet) filesets.elementAt(0);
+            baseDir = fs.getDir();
+            appendFiles(files, fs.getDirectoryScanner(getProject()));
         }
 
         return files;
