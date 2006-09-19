@@ -307,6 +307,10 @@ public final class IntrospectionHelper implements BuildListener {
             return true;
         }
 
+        if ("setTaskName".equals(name)
+             && java.lang.String.class.equals(type)) {
+            return true;
+        }
         return false;
     }
 
