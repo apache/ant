@@ -22,7 +22,7 @@ case "`uname`" in
   CYGWIN*) cygwin=true ;;
   Darwin*) darwin=true
            if [ -z "$JAVA_HOME" ] ; then
-             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home   
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
            fi
            ;;
 esac
@@ -131,11 +131,12 @@ echo ... Compiling Ant Classes
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
     ${TOOLS}/ant/types/*.java \
+    ${TOOLS}/ant/types/resources/*.java \
     ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java \
     ${TOOLS}/ant/taskdefs/compilers/*.java \
     ${TOOLS}/ant/taskdefs/condition/*.java
 ret=$?
-if [ $ret != 0 ]; then  
+if [ $ret != 0 ]; then
   echo ... Failed compiling Ant classes !
   exit $ret
 fi
@@ -153,7 +154,7 @@ echo ... Building Ant Distribution
 
 "${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. $ANT_OPTS org.apache.tools.ant.Main -emacs "$@" bootstrap
 ret=$?
-if [ $ret != 0 ]; then  
+if [ $ret != 0 ]; then
   echo ... Failed Building Ant Distribution !
   exit $ret
 fi
