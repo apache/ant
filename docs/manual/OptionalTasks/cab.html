@@ -111,9 +111,11 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
 
-<p>The cab task supports any number of nested <a
+<p>The cab task supports one nested <a
 href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a>
-elements to specify the files to be included in the archive.</p>
+element to specify the files to be included in the archive.
+  If this is specified, the "basedir" attribute cannot be used.
+</p>
 
 <h3>Examples</h3>
 <blockquote><pre>
