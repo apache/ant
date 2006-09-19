@@ -109,15 +109,18 @@
   </target>
 
   <target name="testWithStyleAttrAndResource">
-      <property name="value" value="myvalue"/>
+      <!-- also testing style as resources, with refid -->
+      <file id="xslFile" file="printParams.xsl"/>
       <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
-          <file file="printParams.xsl"/>
+        <style refid="xslFile" />
       </xslt>
   </target>
 
   <target name="testWithFileResource">
       <xslt in="data.xml" out="${out.dir}/out.xml">
-          <file file="printParams.xsl"/>
+          <style>
+              <file file="printParams.xsl"/>
+          </style>
           <param name="set" expression="value"/>
       </xslt>
   </target>
@@ -125,7 +128,9 @@
   <target name="testWithUrlResource">
       <makeurl file="printParams.xsl" property="printParams.xsl.url"/>
       <xslt in="data.xml" out="${out.dir}/out.xml">
-          <url url="${printParams.xsl.url}"/>
+          <style>
+              <url url="${printParams.xsl.url}"/>
+          </style>
           <param name="set" expression="value"/>
       </xslt>
   </target>

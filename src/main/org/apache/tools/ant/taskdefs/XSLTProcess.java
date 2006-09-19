@@ -34,6 +34,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
@@ -222,13 +223,25 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Adds the XSLT stylesheet as a resource
-     * @param xslResource the stylesheet as a
-     *        {@link org.apache.tools.ant.types.Resource}
+     * Add a nested &lt;style&gt; element.
+     * @param rc the configured Resources object represented as &lt;style&gt;.
      * @since Ant 1.7
      */
-    public void addConfigured(Resource xslResource) {
-       this.xslResource = xslResource;
+    public void addConfiguredStyle(Resources rc) {
+        if (rc.size() != 1) {
+            throw new BuildException("The style element must be specified"
+                    + " with exactly one nested resource.");
+        }
+        setXslResource((Resource) rc.iterator().next());
+    }
+
+    /**
+     * API method to set the XSL Resource.
+     * @param xslResource Resource to set as the stylesheet.
+     * @since Ant 1.7
+     */
+    public void setXslResource(Resource xslResource) {
+        this.xslResource = xslResource;
     }
 
     /**
