@@ -182,7 +182,8 @@ public final class IntrospectionHelper implements BuildListener {
                 continue;
             }
             // not really user settable properties on tasks
-            if (org.apache.tools.ant.Task.class.isAssignableFrom(bean)
+            if (org.apache.tools.ant.ProjectComponent.class.isAssignableFrom(
+                    bean)
                  && args.length == 1 && isHiddenSetMethod(name, args[0])) {
                 continue;
             }
@@ -206,14 +207,6 @@ public final class IntrospectionHelper implements BuildListener {
                             form of this method that takes in a
                             non-string argument, which gains higher
                             priority.
-                        */
-                        continue;
-                    }
-                    if (org.apache.tools.ant.Location.class.equals(args[0])) {
-                        /*
-                          Ignore setLocation(Location) (normally from
-                          ProjectComponent.setLocation(Location) in honour
-                          of setLocation(Some other class)
                         */
                         continue;
                     }
