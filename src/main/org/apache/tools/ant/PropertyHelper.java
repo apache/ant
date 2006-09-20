@@ -249,8 +249,8 @@ public class PropertyHelper {
      */
     public String replaceProperties(String ns, String value, Hashtable keys)
             throws BuildException {
-        if (value == null) {
-            return null;
+        if (value == null || value.indexOf('$') == -1) {
+            return value;
         }
         Vector fragments = new Vector();
         Vector propertyRefs = new Vector();
