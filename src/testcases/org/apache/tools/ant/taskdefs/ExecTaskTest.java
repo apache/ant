@@ -55,10 +55,10 @@ public class ExecTaskTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        executeTarget("cleanup");
         if (logFile != null && logFile.exists()) {
-            logFile.delete();
+            getProject().setProperty("logFile", logFile.getAbsolutePath());
         }
+        executeTarget("cleanup");
     }
 
     public void testNoRedirect() {
