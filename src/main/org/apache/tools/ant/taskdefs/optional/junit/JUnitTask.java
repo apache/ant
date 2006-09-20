@@ -992,12 +992,19 @@ public class JUnitTask extends Task {
             throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
             String vmCrashString = "unknown";
+            BufferedReader br = null;
             try {
-                BufferedReader br = new BufferedReader(new FileReader(vmWatcher));
+                br = new BufferedReader(new FileReader(vmWatcher));
                 vmCrashString = br.readLine();
             } catch (Exception e) {
                 e.printStackTrace();
                 // ignored.
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException ioe) {
+                    // nothing
+                }
             }
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
