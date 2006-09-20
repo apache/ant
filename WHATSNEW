@@ -27,6 +27,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Some performance improvements, including Bugzilla report  25778.
+
+
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
 
