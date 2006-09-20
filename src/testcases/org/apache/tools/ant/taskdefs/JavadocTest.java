@@ -36,9 +36,6 @@ public class JavadocTest extends BuildFileTest {
         configureProject(BUILD_FILE);
     }
 
-    protected void tearDown() {
-        getProject().executeTarget("tearDown");
-    }
     // PR 38370
     public void testDirsetPath() throws Exception {
         executeTarget("dirsetPath");
