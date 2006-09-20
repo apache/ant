@@ -17,6 +17,9 @@ Fixed bugs:
 
 * nested fileset in <cab> did not work. Bugzilla report 39439.
 
+* the ant wrapper script should now correctly locate the java
+  executable in more recent IBM JDKs for AIX as well.
+
 Other changes:
 --------------
 
