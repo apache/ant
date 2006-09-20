@@ -175,10 +175,13 @@ public class UnknownElement extends Task {
 
             task.setRuntimeConfigurableWrapper(getWrapper());
 
-            // For Script to work. Ugly
+            // For Script example that modifies id'ed tasks in other
+            // targets to work. *very* Ugly
             // The reference is replaced by RuntimeConfigurable
-            this.getOwningTarget().replaceChild(this, (Task) realThing);
-        }
+            if (getWrapper().getId() != null) {
+                this.getOwningTarget().replaceChild(this, (Task) realThing);
+            }
+       }
 
         handleChildren(realThing, getWrapper());
 

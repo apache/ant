@@ -85,6 +85,9 @@ public class RuntimeConfigurable implements Serializable {
     /** the polymorphic type */
     private String polyType = null;
 
+    /** the "id" of this Element if it has one */
+    private String id = null;
+
     /**
      * Sole constructor creating a wrapper for the specified object.
      *
@@ -128,6 +131,14 @@ public class RuntimeConfigurable implements Serializable {
      */
     public synchronized Object getProxy() {
         return wrappedObject;
+    }
+
+    /**
+     * Returns the id for this element.
+     * @return the id.
+     */
+    public synchronized String getId() {
+        return id;
     }
 
     /**
@@ -176,6 +187,9 @@ public class RuntimeConfigurable implements Serializable {
             }
             attributeNames.add(name);
             attributeMap.put(name, value);
+            if (name.equals("id")) {
+                this.id = value;
+            }
         }
     }
 
@@ -346,11 +360,11 @@ public class RuntimeConfigurable implements Serializable {
      */
     public synchronized void maybeConfigure(Project p, boolean configureChildren)
         throws BuildException {
-        String id = null;
 
         if (proxyConfigured) {
             return;
         }
+
         // Configure the object
         Object target = (wrappedObject instanceof TypeAdapter)
             ? ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
@@ -388,7 +402,6 @@ public class RuntimeConfigurable implements Serializable {
                     }
                 }
             }
-            id = (String) attributeMap.get("id");
         }
 
         if (characters != null) {
