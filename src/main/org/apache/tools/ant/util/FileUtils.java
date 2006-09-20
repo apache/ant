@@ -87,6 +87,16 @@ public class FileUtils {
 
 
     /**
+     * A one item cache for fromUri.
+     * fromUri is called for each element when parseing ant build
+     * files. It is a costly operation. This just caches the result
+     * of the last call.
+     */
+    private Object cacheFromUriLock = new Object();
+    private String cacheFromUriRequest = null;
+    private String cacheFromUriResponse = null;
+
+    /**
      * Factory method.
      *
      * @return a new instance of FileUtils.
@@ -1137,8 +1147,17 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String fromURI(String uri) {
-        String path = Locator.fromURI(uri);
-        return isAbsolutePath(path) ? normalize(path).getAbsolutePath() : path;
+        synchronized (cacheFromUriLock) {
+            if (uri.equals(cacheFromUriRequest)) {
+                return cacheFromUriResponse;
+            }
+            String path = Locator.fromURI(uri);
+            String ret = isAbsolutePath(path)
+                ? normalize(path).getAbsolutePath() : path;
+            cacheFromUriRequest = uri;
+            cacheFromUriResponse = ret;
+            return ret;
+        }
     }
 
     /**
