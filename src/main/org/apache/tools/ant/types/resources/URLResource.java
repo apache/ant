@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
+import java.net.JarURLConnection;
+import java.util.jar.JarFile;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -202,7 +204,9 @@ public class URLResource extends Resource {
         }
         try {
             connect();
-            return conn.getContentLength();
+            long contentlength = conn.getContentLength();
+            close();
+            return contentlength;
         } catch (IOException e) {
             return UNKNOWN_SIZE;
         }
@@ -300,11 +304,29 @@ public class URLResource extends Resource {
         }
     }
 
+    private void close() {
+        if (conn != null) {
+            try {
+                if (conn instanceof JarURLConnection) {
+                    JarURLConnection juc = (JarURLConnection) conn;
+                    JarFile jf = juc.getJarFile();
+                    jf.close();
+                    jf = null;
+                }
+            } catch (IOException exc) {
+
+            } finally {
+                conn = null;
+            }
+        }
+    }
+
     /**
      * Finalize this URLResource.
      * @throws Throwable on error.
      */
     protected void finalize() throws Throwable {
+        close();
         conn = null;
         super.finalize();
     }
