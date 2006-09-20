@@ -124,6 +124,10 @@ public class ComponentHelper  {
      * contrived work here to enable this early.
      */
     private static final String ANT_PROPERTY_TASK = "property";
+    
+     // {tasks, types}
+    private static Properties[] defaultDefinitions = new Properties[2];
+
 
     /**
      * Find a project component for a specific project, creating
@@ -713,35 +717,19 @@ public class ComponentHelper  {
      * Load ant's tasks.
      */
     private void initTasks() {
-        ClassLoader classLoader = null;
-        classLoader = getClassLoader(classLoader);
-        String dataDefs = MagicNames.TASKDEF_PROPERTIES_RESOURCE;
-
-        InputStream in = null;
-        try {
-            Properties props = new Properties();
-            in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
-            }
-            props.load(in);
-
-            Enumeration e = props.propertyNames();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                String className = props.getProperty(name);
-                AntTypeDefinition def = new AntTypeDefinition();
-                def.setName(name);
-                def.setClassName(className);
-                def.setClassLoader(classLoader);
-                def.setAdaptToClass(Task.class);
-                def.setAdapterClass(TaskAdapter.class);
-                antTypeTable.put(name, def);
-            }
-        } catch (IOException ex) {
-            throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
-        } finally {
-            FileUtils.close(in);
+        ClassLoader classLoader = getClassLoader(null);
+        Properties props = getDefaultDefinitions(false);
+        Enumeration e = props.propertyNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String className = props.getProperty(name);
+            AntTypeDefinition def = new AntTypeDefinition();
+            def.setName(name);
+            def.setClassName(className);
+            def.setClassLoader(classLoader);
+            def.setAdaptToClass(Task.class);
+            def.setAdapterClass(TaskAdapter.class);
+            antTypeTable.put(name, def);
         }
     }
 
@@ -753,44 +741,60 @@ public class ComponentHelper  {
         }
         return classLoader;
     }
+    
+    /**
+     * Load default task or type definitions - just the names,
+     *  no class loading.
+     * Caches results between calls to reduce overhead.
+     * @param type true for typedefs, false for taskdefs
+     * @return a mapping from definition names to class names
+     * @throws BuildException if there was some problem loading
+     *                        or parsing the definitions list
+     */
+    private static synchronized Properties getDefaultDefinitions(boolean type)
+        throws BuildException {
+        int idx = type ? 1 : 0;
+        if (defaultDefinitions[idx] == null) {
+            String resource = type
+                ? MagicNames.TYPEDEFS_PROPERTIES_RESOURCE
+                : MagicNames.TASKDEF_PROPERTIES_RESOURCE;
+            String errorString = type
+                ? ERROR_NO_TYPE_LIST_LOAD
+                : ERROR_NO_TASK_LIST_LOAD;
+            InputStream in = null;
+            try {
+                in = ComponentHelper.class.getResourceAsStream(
+                    resource);
+                if (in == null) {
+                    throw new BuildException(errorString);
+                }
+                Properties p = new Properties();
+                p.load(in);
+                defaultDefinitions[idx] = p;
+            } catch (IOException e) {
+                throw new BuildException(errorString, e);
+            } finally {
+                FileUtils.close(in);
+            }
+        }
+        return defaultDefinitions[idx];
+    }
 
     /**
      * Load ant's datatypes.
      */
     private void initTypes() {
-        ClassLoader classLoader = null;
-        classLoader = getClassLoader(classLoader);
-        String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
-
-        InputStream in = null;
-        try {
-            Properties props = new Properties();
-            in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
-            }
-            props.load(in);
-
-            Enumeration e = props.propertyNames();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                String className = props.getProperty(name);
-                AntTypeDefinition def = new AntTypeDefinition();
-                def.setName(name);
-                def.setClassName(className);
-                def.setClassLoader(classLoader);
-                antTypeTable.put(name, def);
-            }
-        } catch (IOException ex) {
-            throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Exception ignore) {
-                    // ignore
-                }
-            }
+        ClassLoader classLoader = getClassLoader(null);
+        Properties props = getDefaultDefinitions(true);
+        Enumeration e = props.propertyNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String className = props.getProperty(name);
+            AntTypeDefinition def = new AntTypeDefinition();
+            def.setName(name);
+            def.setClassName(className);
+            def.setClassLoader(classLoader);
+            antTypeTable.put(name, def);
         }
     }
 
