@@ -1698,8 +1698,6 @@
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
-          <exclude name="${ant.package}/DirectoryScannerTest.java"
-            unless="tests.and.ant.share.classloader"/>
           <exclude name="${taskdefs.package}/SQLExecTest.java"
             unless="tests.and.ant.share.classloader"/>
           <exclude name="${taskdefs.package}/cvslib/ChangeLogWriterTest.java"

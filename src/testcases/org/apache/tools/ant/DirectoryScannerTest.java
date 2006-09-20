@@ -401,6 +401,18 @@ public class DirectoryScannerTest extends BuildFileTest {
     }
 
     public void testIsExcludedDirectoryScanned() {
+        String shareclassloader = getProject().getProperty("tests.and.ant.share.classloader");
+        // when the test is started by the build.xml of ant
+        // if the property tests.and.ant.share.classloader is not set in the build.xml
+        // a sysproperty with name tests.and.ant.share.classloader and value
+        // ${tests.and.ant.share.classloader} will be set
+        // we are trying to catch this here.
+        if (shareclassloader == null
+                || (shareclassloader != null && shareclassloader.indexOf("${") == 0)) {
+            System.out.println("cannot execute testIsExcludedDirectoryScanned when tests are forked, " +
+                    "package private method called");
+            return;
+        }
         getProject().executeTarget("children-of-excluded-dir-setup");
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
