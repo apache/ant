@@ -19,7 +19,7 @@
 <project name="apache-ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file
-       (and without typing -D each time it compiles it) -->
+       (and without typing -D on each invocation) -->
   <property file=".ant.properties"/>
   <property file="${user.home}/.ant.properties"/>
   <property environment="env"/>
@@ -80,7 +80,8 @@
   <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
   <property name="etc.dir" value="${src.dir}/etc"/>
-  <property name="src.junit" value="${src.dir}/testcases"/>
+  <property name="src.junit" value="${src.dir}/tests/junit"/>
+  <property name="src.antunit" value="${src.dir}/tests/antunit"/>
   <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
   <property name="manifest" value="${src.dir}/etc/manifest"/>
   <property name="resource.dir" value="${src.dir}/resources"/>
@@ -97,8 +98,10 @@
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
-  <property name="build.tests.xml" location="${build.tests}/xml"/>
-  <property name="build.tests.reports" location="${build.tests}/reports"/>
+  <property name="build.junit.xml" location="${build.tests}/xml"/>
+  <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
+  <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
+  <property name="build.junit.reports" location="${build.tests}/reports"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
@@ -415,6 +418,9 @@
       classpathref="classpath"/>
     <available property="junit.present"
       classname="junit.framework.TestCase"
+      classpathref="classpath"/>
+    <available property="antunit.present"
+      classname="org.apache.ant.antunit.AntUnit"
       classpathref="classpath"/>
     <available property="commons.net.present"
       classname="org.apache.commons.net.ftp.FTPClient"
@@ -1542,52 +1548,116 @@
          Run testcase
        ===================================================================
   -->
-  <target name="test" depends="test-report" description="--> run JUnit tests">
-    <fail if="tests.failed">Unit tests failed see ${build.tests.reports}</fail>
+
+  <target name="tests-failed">
+    <condition property="tests.failed">
+      <or>
+        <isset property="junit.failed" />
+        <isset property="antunit.failed" />
+      </or>
+    </condition>
   </target>
 
-  <target name="test-init" depends="probe-offline">
-    <mkdir dir="${build.tests.xml}"/>
-    <mkdir dir="${build.tests.reports}" />
-
-    <presetdef name="test-junit">
-      <junit printsummary="${junit.summary}"
-          haltonfailure="${test.haltonfailure}"
-          fork="${junit.fork}"
-          forkmode="${junit.forkmode}"
-          failureproperty="tests.failed"
-          errorproperty="tests.failed"
-          filtertrace="${junit.filtertrace}">
-        <sysproperty key="ant.home" value="${ant.home}"/>
-        <sysproperty key="build.tests" file="${build.tests}"/>
-        <sysproperty key="build.tests.value" value="${build.tests.value}"/>
-        <sysproperty key="offline" value="${offline}"/>
-        <sysproperty key="tests-classpath.value"
-            value="${tests-classpath.value}"/>
-        <sysproperty key="root" file="${basedir}"/>
-        <sysproperty key="build.compiler" value="${build.compiler}"/>
-        <sysproperty key="tests.and.ant.share.classloader"
-            value="${tests.and.ant.share.classloader}"/>
-        <classpath refid="tests-classpath"/>
-        <formatter type="xml"/>
-      </junit>
-    </presetdef>
-
+  <target name="test" depends="junit-report,antunit-report,tests-failed"
+          description="--> run unit tests">
+    <fail if="tests.failed">Unit tests failed; see ${build.junit.reports} / ${antunit.reports}</fail>
   </target>
 
-<!--if="run.junitreport"-->
-  <target name="test-report" depends="test-init,run-tests,run-single-test"
-      if="trax.impl.present">
-    <junitreport todir="${build.tests.reports}">
-      <fileset dir="${build.tests.xml}">
+  <target name="test-init" depends="probe-offline,check_for_optional_packages">
+    <macrodef name="test-junit">
+      <element name="junit-nested" implicit="true" />
+      <sequential>
+        <mkdir dir="${build.junit.xml}" />
+        <junit printsummary="${junit.summary}"
+               haltonfailure="${test.haltonfailure}"
+               fork="${junit.fork}"
+               forkmode="${junit.forkmode}"
+               failureproperty="junit.failed"
+               errorproperty="junit.failed"
+               filtertrace="${junit.filtertrace}">
+          <sysproperty key="ant.home" value="${ant.home}"/>
+          <sysproperty key="build.tests" file="${build.tests}"/>
+          <sysproperty key="build.tests.value" value="${build.tests.value}"/>
+          <sysproperty key="offline" value="${offline}"/>
+          <sysproperty key="tests-classpath.value"
+                       value="${tests-classpath.value}"/>
+          <sysproperty key="root" file="${basedir}"/>
+          <sysproperty key="build.compiler" value="${build.compiler}"/>
+          <sysproperty key="tests.and.ant.share.classloader"
+                       value="${tests.and.ant.share.classloader}"/>
+          <classpath refid="tests-classpath"/>
+          <formatter type="xml"/>
+          <junit-nested />
+        </junit>
+      </sequential>
+    </macrodef>
+
+    <condition property="antunit.testcase" value="${testcase}">
+      <available file="${src.antunit}/${testcase}" />
+    </condition>
+
+    <condition property="junit.testcase" value="${testcase}">
+      <available classname="${testcase}" classpathref="tests-classpath" />
+    </condition>
+
+    <condition property="run.junit">
+      <and>
+        <not><equals arg1="${testcase}" arg2="${antunit.testcase}" /></not>
+        <isset property="junit.present" />
+        <available file="${src.junit}" />
+      </and>
+    </condition>
+
+    <condition property="junit.single">
+      <and>
+        <isset property="junit.testcase" />
+        <isset property="run.junit" />
+      </and>
+    </condition>
+
+    <condition property="junit.batch">
+      <and>
+        <not><isset property="junit.testcase" /></not>
+        <isset property="run.junit" />
+      </and>
+    </condition>
+
+    <condition property="run.antunit">
+      <and>
+        <not><equals arg1="${testcase}" arg2="${junit.testcase}" /></not>
+        <isset property="antunit.present" />
+        <available file="${src.antunit}" />
+      </and>
+    </condition>
+
+    <condition property="run.antunit.report">
+      <and>
+        <isset property="run.antunit" />
+        <isset property="trax.impl.present" />
+      </and>
+    </condition>
+
+    <condition property="run.junit.report">
+      <and>
+        <isset property="run.junit" />
+        <isset property="trax.impl.present" />
+      </and>
+    </condition>
+  </target>
+
+  <target name="junit-report" depends="junit-tests,junit-single-test"
+      if="run.junit.report">
+    <mkdir dir="${build.junit.reports}" />
+    <junitreport todir="${build.junit.reports}">
+      <fileset dir="${build.junit.xml}">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.tests.reports}"/>
+      <report format="frames" todir="${build.junit.reports}"/>
     </junitreport>
   </target>
 
-  <target name="run-tests" depends="dump-info,compile-tests,probe-offline,test-init"
-      if="junit.present" unless="testcase">
+  <target name="junit-tests" depends="dump-info,compile-tests,test-init"
+      if="junit.batch">
 
     <property name="junit.includes" value="**/*Test*" />
     <property name="junit.excludes" value="" />
@@ -1595,7 +1665,7 @@
     <test-junit>
       <formatter type="brief" usefile="false"/>
 
-      <batchtest todir="${build.tests.xml}">
+      <batchtest todir="${build.junit.xml}">
         <fileset dir="${src.junit}"
                  includes="${junit.includes}" excludes="${junit.excludes}">
 
@@ -1736,15 +1806,15 @@
     </test-junit>
   </target>
 
-  <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
+  <target name="junit-single-test" depends="compile-tests,junit-single-test-only"
     description="--> runs the single unit test defined in the testcase property"/>
 
-  <target name="run-single-test-only" if="testcase"
+  <target name="junit-single-test-only" if="junit.single"
     description="--> runs the single unit test defined in the testcase property"
      depends="test-init">
     <test-junit>
       <formatter type="plain" usefile="false"/>
-      <test name="${testcase}" todir="${build.tests.xml}"/>
+      <test name="${junit.testcase}" todir="${build.junit.xml}"/>
     </test-junit>
   </target>
 
@@ -1754,6 +1824,41 @@
     <java classpathref="tests-classpath"
       classname="org.apache.tools.ant.taskdefs.TestProcess"
       fork="true"/>
+  </target>
+
+  <target name="antunit-tests" depends="dump-info,build,test-init"
+          if="run.antunit">
+
+    <condition property="antunit.includes" value="${antunit.testcase}"
+               else="**/*-test.xml">
+      <isset property="${antunit.testcase}" />
+    </condition>
+
+    <property name="antunit.excludes" value="" />
+
+    <mkdir dir="${antunit.xml}" />
+    <au:antunit xmlns:au="antlib:org.apache.ant.antunit"
+                failonerror="false" errorproperty="antunit.failed">
+      <fileset dir="${src.antunit}" includes="${antunit.includes}"
+               excludes="${antunit.excludes}" />
+      <au:plainlistener />
+      <au:xmllistener todir="${antunit.xml}" />
+    </au:antunit>
+  </target>
+
+  <target name="antunit-report" depends="antunit-tests" if="run.antunit.report">
+    <length>
+      <fileset dir="${antunit.xml}" includes="TEST-*.xml" />
+    </length>
+    <mkdir dir="${antunit.reports}" />
+    <junitreport todir="${antunit.reports}">
+      <fileset dir="${antunit.xml}" includes="TEST-*.xml" />
+      <report styledir="${src.antunit}" format="frames"
+              todir="${antunit.reports}"/>
+    </junitreport>
+    <length>
+      <fileset dir="${antunit.xml}" includes="TEST-*.xml" />
+    </length>
   </target>
 
   <!--
