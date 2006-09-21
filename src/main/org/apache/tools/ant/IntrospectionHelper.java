@@ -112,17 +112,6 @@ public final class IntrospectionHelper implements BuildListener {
      */
     private Class bean;
 
-    // XXX: (Jon Skeet) The documentation below doesn't draw a clear
-    // distinction between addConfigured and add. It's obvious what the
-    // code *here* does (addConfigured sets both a creator method which
-    // calls a no-arg constructor and a storer method which calls the
-    // method we're looking at, while add just sets a creator method
-    // which calls the method we're looking at) but it's not at all
-    // obvious what the difference in actual *effect* will be later
-    // on. I can't see any mention of addConfiguredXXX in "Developing
-    // with Ant" (at least in the version on the web site). Someone
-    // who understands should update this documentation
-    // (and preferably the manual too) at some stage.
     /**
      * Sole constructor, which is private to ensure that all
      * IntrospectionHelpers are created via {@link #getHelper(Class) getHelper}.
@@ -151,12 +140,14 @@ public final class IntrospectionHelper implements BuildListener {
      * <code>Bar</code> is not an array, primitive or String type.
      * <code>Bar</code> must have an accessible constructor taking no
      * arguments.
-     * <li><code>void addFoo(Bar)</code> is recognised as a
-     * method for storing an element called <code>foobar</code>
-     * and of type <code>Baz</code>, so long as
-     * <code>Baz</code> is not an array, primitive or String type.
-     * <code>Baz</code> must have an accessible constructor taking no
-     * arguments.
+     * <li><code>void addFoo(Bar)</code> is recognised as a method for storing
+     * an element called <code>foo</code> and of type <code>Bar</code>, so
+     * long as <code>Bar</code> is not an array, primitive or String type.
+     * <code>Bar</code> must have an accessible constructor taking no
+     * arguments. This is distinct from the 'addConfigured' idiom in that
+     * the nested element is added to the parent immediately after it is
+     * constructed; in practice this means that <code>addFoo(Bar)</code> should
+     * do little or nothing with its argument besides storing it for later use.
      * </ul>
      * Note that only one method is retained to create/set/addConfigured/add
      * any element or attribute.
