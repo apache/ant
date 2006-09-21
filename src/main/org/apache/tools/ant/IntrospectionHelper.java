@@ -73,6 +73,9 @@ public final class IntrospectionHelper implements BuildListener {
         }
     }
 
+    private static final int MAX_REPORT_NESTED_TEXT = 20;
+    private static final String ELLIPSIS = "...";
+
     /**
      * Map from attribute names to attribute types
      * (String to Class).
@@ -430,14 +433,16 @@ public final class IntrospectionHelper implements BuildListener {
     public void addText(Project project, Object element, String text)
         throws BuildException {
         if (addText == null) {
+            text = text.trim();
             // Element doesn't handle text content
-            if (text.trim().length() == 0) {
+            if (text.length() == 0) {
                 // Only whitespace - ignore
                 return;
             } else {
                 // Not whitespace - fail
                 String msg = project.getElementName(element)
-                    + " doesn't support nested text data.";
+                    + " doesn't support nested text data (\""
+                    + condenseText(text) + "\").";
                 throw new BuildException(msg);
             }
         }
@@ -1493,4 +1498,12 @@ public final class IntrospectionHelper implements BuildListener {
         return matchedMethod;
     }
 
+    private String condenseText(final String text) {
+        if (text.length() <= MAX_REPORT_NESTED_TEXT) {
+            return text;
+        }
+        int ends = (MAX_REPORT_NESTED_TEXT - ELLIPSIS.length()) / 2;
+        return new StringBuffer(text).replace(ends, text.length() - ends,
+            ELLIPSIS).toString();
+    }
 }
