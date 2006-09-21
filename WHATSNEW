@@ -20,7 +20,7 @@ Fixed bugs:
 * the ant wrapper script should now correctly locate the java
   executable in more recent IBM JDKs for AIX as well.
 
-* URLResource did not close jar files.
+* URLResource did not close jar files, and also did not disconnect HTTPConnection (s).
 
 * <junittask/> created junitvmwatcher*.properties files but did not close and delete them.  
 

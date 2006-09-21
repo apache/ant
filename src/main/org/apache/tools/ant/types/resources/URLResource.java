@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
@@ -148,6 +149,28 @@ public class URLResource extends Resource {
         if (isReference()) {
             return ((Resource) getCheckedRef()).isExists();
         }
+        return isExists(false);
+    }
+
+    /**
+     * Find out whether the URL exists, and close the connection
+     * opened to the URL if closeConnection is true.
+     *
+     * Note that this method does ensure that if:
+     * - the resource exists (if it returns true)
+     * - and if the current object is not a reference
+     * (isReference() returns false)
+     * - and if it was called with closeConnection to false,
+     *
+     * then the connection to the URL (stored in the conn
+     * private field) will be opened, and require to be closed
+     * by the caller.
+     *
+     * @param closeConnection true if the connection should be closed
+     * after the call, false if it should stay open.
+     * @return true if this resource exists.
+     */
+    private synchronized boolean isExists(boolean closeConnection) {
         if (getURL() == null) {
             return false;
         }
@@ -156,8 +179,13 @@ public class URLResource extends Resource {
             return true;
         } catch (IOException e) {
             return false;
+        } finally {
+            if (closeConnection) {
+                close();
+            }
         }
     }
+
 
     /**
      * Tells the modification time in milliseconds since 01.01.1970 .
@@ -169,15 +197,10 @@ public class URLResource extends Resource {
         if (isReference()) {
             return ((Resource) getCheckedRef()).getLastModified();
         }
-        if (!isExists()) {
+        if (!isExists(false)) {
             return 0L;
         }
-        try {
-            connect();
-            return conn.getLastModified();
-        } catch (IOException e) {
-            return 0L;
-        }
+        return conn.getLastModified();
     }
 
     /**
@@ -199,7 +222,7 @@ public class URLResource extends Resource {
         if (isReference()) {
             return ((Resource) getCheckedRef()).getSize();
         }
-        if (!isExists()) {
+        if (!isExists(false)) {
             return 0L;
         }
         try {
@@ -271,6 +294,7 @@ public class URLResource extends Resource {
      *         Resource as a stream.
      * @throws UnsupportedOperationException if OutputStreams are not
      *         supported for this Resource type.
+     * @throws IOException if the URL cannot be opened.
      */
     public synchronized OutputStream getOutputStream() throws IOException {
         if (isReference()) {
@@ -286,6 +310,7 @@ public class URLResource extends Resource {
 
     /**
      * Ensure that we have a connection.
+     * @throws IOException if the connection cannot be established.
      */
     protected synchronized void connect() throws IOException {
         URL u = getURL();
@@ -304,7 +329,15 @@ public class URLResource extends Resource {
         }
     }
 
-    private void close() {
+    /**
+     * Closes the URL connection if:
+     * - it is opened (i.e. the field conn is not null)
+     * - this type of URLConnection supports some sort of close mechanism
+     *
+     * This method ensures the field conn will be null after the call.
+     *
+     */
+    private synchronized void close() {
         if (conn != null) {
             try {
                 if (conn instanceof JarURLConnection) {
@@ -312,9 +345,11 @@ public class URLResource extends Resource {
                     JarFile jf = juc.getJarFile();
                     jf.close();
                     jf = null;
+                } else if (conn instanceof HttpURLConnection) {
+                    ((HttpURLConnection) conn).disconnect();
                 }
             } catch (IOException exc) {
-
+                //ignore
             } finally {
                 conn = null;
             }

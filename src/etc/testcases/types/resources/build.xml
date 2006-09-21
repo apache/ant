@@ -320,7 +320,10 @@ depends="testfileset,testdirset,testfilelist,testpath,testzipfileset,testpropert
     <length property="httpurl.length">
       <url refid="httpurl" />
     </length>
-    <fail>
+    <length property="file.length">
+      <file file="${file}"/>
+    </length>
+    <fail message="length of url ${httpurl.length} length of file ${file.length} file should be twice as big">
       <condition>
         <not>
           <length file="${file}" when="greater" length="${httpurl.length}" />
