@@ -1270,9 +1270,7 @@ public final class IntrospectionHelper implements BuildListener {
         Object create(Project project, Object parent, Object child)
                 throws InvocationTargetException,
                 IllegalAccessException, InstantiationException {
-            if (child != null) {
-                // Empty
-            } else {
+            if (child == null) {
                 child = constructor.newInstance(
                     (constructor.getParameterTypes().length == 0)
                     ? new Object[] {} : new Object[] {project});
@@ -1416,7 +1414,7 @@ public final class IntrospectionHelper implements BuildListener {
             Object create(Project project, Object parent, Object ignore)
                     throws InvocationTargetException, IllegalAccessException {
                 if (!method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[]{realObject});
+                    method.invoke(parent, new Object[] {realObject});
                 }
                 return nestedObject;
             }
@@ -1429,7 +1427,7 @@ public final class IntrospectionHelper implements BuildListener {
                     throws InvocationTargetException, IllegalAccessException,
                     InstantiationException {
                 if (method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[]{realObject});
+                    method.invoke(parent, new Object[] {realObject});
                 }
             }
         };
