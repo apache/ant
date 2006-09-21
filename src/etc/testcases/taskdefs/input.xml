@@ -58,11 +58,11 @@
     <input message="Press Return key to continue..." addproperty="test">
       <handler type="greedy" />
     </input>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}"
-                  arg2="foo${line.separator}bar${line.separator}" />
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>
@@ -72,11 +72,11 @@
     <input message="Press Return key to continue..." addproperty="test">
       <handler classname="org.apache.tools.ant.input.GreedyInputHandler" />
     </input>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}"
-                  arg2="foo${line.separator}bar${line.separator}" />
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>
@@ -90,11 +90,11 @@
     <input message="Press Return key to continue..." addproperty="test">
       <handler refid="greedy" />
     </input>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}"
-                  arg2="foo${line.separator}bar${line.separator}" />
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>
