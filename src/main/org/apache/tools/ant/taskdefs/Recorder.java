@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.SubBuildListener;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.LogLevel;
 
 /**
  * Adds a listener to the current build process that records the
@@ -130,20 +131,7 @@ public class Recorder extends Task implements SubBuildListener {
      * @see VerbosityLevelChoices
      */
     public void setLoglevel(VerbosityLevelChoices level) {
-        //I hate cascading if/elseif clauses !!!
-        String lev = level.getValue();
-
-        if (lev.equalsIgnoreCase("error")) {
-            loglevel = Project.MSG_ERR;
-        } else if (lev.equalsIgnoreCase("warn")) {
-            loglevel = Project.MSG_WARN;
-        } else if (lev.equalsIgnoreCase("info")) {
-            loglevel = Project.MSG_INFO;
-        } else if (lev.equalsIgnoreCase("verbose")) {
-            loglevel = Project.MSG_VERBOSE;
-        } else if (lev.equalsIgnoreCase("debug")) {
-            loglevel = Project.MSG_DEBUG;
-        }
+        loglevel = level.getLevel();
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -200,16 +188,7 @@ public class Recorder extends Task implements SubBuildListener {
      * A list of possible values for the <code>setLoglevel()</code> method.
      * Possible values include: error, warn, info, verbose, debug.
      */
-    public static class VerbosityLevelChoices extends EnumeratedAttribute {
-        private static final String[] VALUES = {"error", "warn", "info",
-            "verbose", "debug"};
-
-        /**
-         * @see EnumeratedAttribute#getValues()
-         */
-        public String[] getValues() {
-            return VALUES;
-        }
+    public static class VerbosityLevelChoices extends LogLevel {
     }
 
 

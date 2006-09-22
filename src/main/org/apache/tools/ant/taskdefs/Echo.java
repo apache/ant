@@ -30,7 +30,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.LogLevel;
+
 /**
  * Writes a message to the Ant logging facilities.
  *
@@ -141,37 +142,6 @@ public class Echo extends Task {
     /**
      * The enumerated values for the level attribute.
      */
-    public static class EchoLevel extends EnumeratedAttribute {
-        /**
-         * @see EnumeratedAttribute#getValues
-         * @return the strings allowed for the level attribute
-         */
-        public String[] getValues() {
-            return new String[] {
-                "error",
-                "warning",
-                "info",
-                "verbose",
-                "debug"};
-        }
-
-        /**
-         * mapping of enumerated values to log levels
-         */
-        private static int[] levels = {
-            Project.MSG_ERR,
-            Project.MSG_WARN,
-            Project.MSG_INFO,
-            Project.MSG_VERBOSE,
-            Project.MSG_DEBUG
-        };
-
-        /**
-         * get the level of the echo of the current value
-         * @return the level
-         */
-        public int getLevel() {
-            return levels[getIndex()];
-        }
+    public static class EchoLevel extends LogLevel {
     }
 }
