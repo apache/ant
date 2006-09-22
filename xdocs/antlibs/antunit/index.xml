@@ -24,6 +24,16 @@
 
   <body>
 
+    <section name="AntUnit 1.0Beta1">
+      <h3>September 22, 2006 - Apache AntUnit 1.0Beta1 Available</h3>
+
+      <p>Apache AntUnit 1.0Beta1 is now available for download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+    </section>
+
     <section name="Idea">
       <p>Initially all tests for Ant tasks were written as individual
       <a href="http://www.junit.org/">JUnit</a> test cases.  Pretty

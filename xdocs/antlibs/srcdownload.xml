@@ -58,6 +58,10 @@ href="http://people.apache.org/dist/ant/antlibs/">http://people.apache.org/dist/
 <ul>
 
   <li><a
+  href="http://people.apache.org/dist/ant/antlibs/antunit/source/">AntUnit
+  1.0Beta1</a></li>
+
+  <li><a
   href="http://people.apache.org/dist/ant/antlibs/dotnet/source/">.NET
   Ant library 1.0Beta1</a></li>
 
