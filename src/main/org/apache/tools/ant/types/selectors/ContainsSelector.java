@@ -27,14 +27,18 @@ import java.io.InputStreamReader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Selector that filters files based on whether they contain a
+ * Selector that filters files/resources based on whether they contain a
  * particular string.
  *
  * @since 1.5
  */
-public class ContainsSelector extends BaseExtendSelector {
+public class ContainsSelector extends BaseExtendSelector implements ResourceSelector {
 
     private String contains = null;
     private boolean casesensitive = true;
@@ -61,19 +65,11 @@ public class ContainsSelector extends BaseExtendSelector {
      */
     public String toString() {
         StringBuffer buf = new StringBuffer("{containsselector text: ");
-        buf.append(contains);
+        buf.append('"').append(contains).append('"');
         buf.append(" casesensitive: ");
-        if (casesensitive) {
-            buf.append("true");
-        } else {
-            buf.append("false");
-        }
+        buf.append(casesensitive ? "true" : "false");
         buf.append(" ignorewhitespace: ");
-        if (ignorewhitespace) {
-            buf.append("true");
-        } else {
-            buf.append("false");
-        }
+        buf.append(ignorewhitespace ? "true" : "false");
         buf.append("}");
         return buf.toString();
     }
@@ -153,11 +149,22 @@ public class ContainsSelector extends BaseExtendSelector {
      * @return whether the file should be selected or not
      */
     public boolean isSelected(File basedir, String filename, File file) {
+        return isSelected(new FileResource(file));
+    }
+
+    /**
+     * The heart of the matter. This is where the selector gets to decide
+     * on the inclusion of a Resource.
+     *
+     * @param r the Resource to check.
+     * @return whether the Resource is selected.
+     */
+    public boolean isSelected(Resource r) {
 
         // throw BuildException on error
         validate();
 
-        if (file.isDirectory()) {
+        if (r.isDirectory()) {
             return true;
         }
 
@@ -170,8 +177,12 @@ public class ContainsSelector extends BaseExtendSelector {
         }
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(file)));
+            in = new BufferedReader(new InputStreamReader(r.getInputStream()));
+        } catch (Exception e) {
+            throw new BuildException("Could not get InputStream from "
+                    + r.toLongString(), e);
+        }
+        try {
             String teststr = in.readLine();
             while (teststr != null) {
                 if (!casesensitive) {
@@ -187,16 +198,9 @@ public class ContainsSelector extends BaseExtendSelector {
             }
             return false;
         } catch (IOException ioe) {
-            throw new BuildException("Could not read file " + filename);
+            throw new BuildException("Could not read " + r.toLongString());
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Exception e) {
-                    throw new BuildException("Could not close file "
-                                             + filename);
-                }
-            }
+            FileUtils.close(in);
         }
     }
 

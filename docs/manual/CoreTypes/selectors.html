@@ -98,6 +98,10 @@
     the files defined by that fileset to only those which contain the
     string specified by the <code>text</code> attribute.
     .</p>
+    <p>The <code>&lt;contains&gt;</code> selector can be used as a
+      ResourceSelector (see the
+      <a href="resources.html#restrict">&lt;restrict&gt;</a>
+      ResourceCollection).</p>
 
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
@@ -676,7 +680,10 @@
     The comparison, computing of the hashvalue and the store is done by implementation
     of special interfaces. Therefore they may provide additional parameters.</p>
 
-    <p>The <code>&lt;modified&gt;</code> selector can be used as ResourceSelector.
+    <p>The <code>&lt;modified&gt;</code> selector can be used as a
+      ResourceSelector (see the
+      <a href="resources.html#restrict">&lt;restrict&gt;</a>
+      ResourceCollection).
     In that case it maps simple file resources to files and does its job. If the
     resource is from another type, the <code>&lt;modified&gt;</code> selector tries
     to (<b>attention!</b>) copy the content into a local file for computing the
