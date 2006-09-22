@@ -1592,6 +1592,18 @@
       </sequential>
     </macrodef>
 
+    <fail>"testcase" cannot be specified with "junit.testcase" or "antunit.testcase".
+      <condition>
+        <and>
+          <isset property="testcase" />
+          <or>
+            <isset property="antunit.testcase" />
+            <isset property="junit.testcase" />
+          </or>
+        </and>
+      </condition>
+    </fail>
+
     <condition property="antunit.testcase" value="${testcase}">
       <available file="${src.antunit}/${testcase}" />
     </condition>
@@ -1599,6 +1611,20 @@
     <condition property="junit.testcase" value="${testcase}">
       <available classname="${testcase}" classpathref="tests-classpath" />
     </condition>
+
+    <fail>Cannot locate test ${testcase}
+      <condition>
+        <and>
+          <isset property="testcase" />
+          <not>
+            <or>
+              <isset property="antunit.testcase" />
+              <isset property="junit.testcase" />
+            </or>
+          </not>
+        </and>
+      </condition>
+    </fail>
 
     <condition property="run.junit">
       <and>
@@ -1830,7 +1856,7 @@
           if="run.antunit">
 
     <condition property="antunit.includes" value="${antunit.testcase}"
-               else="**/*-test.xml">
+               else="**/test.xml,*-test.xml">
       <isset property="${antunit.testcase}" />
     </condition>
 
