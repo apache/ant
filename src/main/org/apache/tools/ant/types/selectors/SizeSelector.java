@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 
+import org.apache.tools.ant.types.Comparison;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 
@@ -30,16 +31,17 @@ import org.apache.tools.ant.types.Parameter;
  */
 public class SizeSelector extends BaseExtendSelector {
 
-    private long size = -1;
-    private long multiplier = 1;
-    private long sizelimit = -1;
-    private int cmp = 2;
     /** Used for parameterized custom selector */
     public static final String SIZE_KEY = "value";
     /** Used for parameterized custom selector */
     public static final String UNITS_KEY = "units";
     /** Used for parameterized custom selector */
     public static final String WHEN_KEY = "when";
+
+    private long size = -1;
+    private long multiplier = 1;
+    private long sizelimit = -1;
+    private Comparison when = Comparison.EQUAL;
 
     /**
      * Creates a new <code>SizeSelector</code> instance.
@@ -57,14 +59,7 @@ public class SizeSelector extends BaseExtendSelector {
     public String toString() {
         StringBuffer buf = new StringBuffer("{sizeselector value: ");
         buf.append(sizelimit);
-        buf.append("compare: ");
-        if (cmp == 0) {
-            buf.append("less");
-        } else if (cmp == 1) {
-            buf.append("more");
-        } else {
-            buf.append("equal");
-        }
+        buf.append("compare: ").append(when.getValue());
         buf.append("}");
         return buf.toString();
     }
@@ -78,7 +73,7 @@ public class SizeSelector extends BaseExtendSelector {
      */
     public void setValue(long size) {
         this.size = size;
-        if ((multiplier != 0) && (size > -1)) {
+        if (multiplier != 0 && size > -1) {
             sizelimit = size * multiplier;
         }
     }
@@ -112,24 +107,24 @@ public class SizeSelector extends BaseExtendSelector {
     public void setUnits(ByteUnits units) {
         int i = units.getIndex();
         multiplier = 0;
-        if ((i > -1) && (i < 4)) {
+        if (i > -1 && i < 4) {
             multiplier = 1000;
-        } else if ((i > 3) && (i < 9)) {
+        } else if (i > 3 && i < 9) {
             multiplier = 1024;
-        } else if ((i > 8) && (i < 13)) {
+        } else if (i > 8 && i < 13) {
             multiplier = 1000000;
-        } else if ((i > 12) && (i < 18)) {
+        } else if (i > 12 && i < 18) {
             multiplier = 1048576;
-        } else if ((i > 17) && (i < 22)) {
+        } else if (i > 17 && i < 22) {
             multiplier = 1000000000L;
-        } else if ((i > 21) && (i < 27)) {
+        } else if (i > 21 && i < 27) {
             multiplier = 1073741824L;
-        } else if ((i > 26) && (i < 31)) {
+        } else if (i > 26 && i < 31) {
             multiplier = 1000000000000L;
-        } else if ((i > 30) && (i < 36)) {
+        } else if (i > 30 && i < 36) {
             multiplier = 1099511627776L;
         }
-        if ((multiplier > 0) && (size > -1)) {
+        if (multiplier > 0 && size > -1) {
             sizelimit = size * multiplier;
         }
     }
@@ -139,10 +134,10 @@ public class SizeSelector extends BaseExtendSelector {
      * when the file matches a particular size, when it is smaller,
      * or whether it is larger.
      *
-     * @param scmp The comparison to perform, an EnumeratedAttribute.
+     * @param when The comparison to perform, an EnumeratedAttribute.
      */
-    public void setWhen(SizeComparisons scmp) {
-        this.cmp = scmp.getIndex();
+    public void setWhen(SizeComparisons when) {
+        this.when = when;
     }
 
     /**
@@ -217,13 +212,8 @@ public class SizeSelector extends BaseExtendSelector {
         if (file.isDirectory()) {
             return true;
         }
-        if (cmp == 0) {
-            return (file.length() < sizelimit);
-        } else if (cmp == 1) {
-            return (file.length() > sizelimit);
-        } else {
-            return (file.length() == sizelimit);
-        }
+        long diff = file.length() - sizelimit;
+        return when.evaluate(diff == 0 ? 0 : (int) (diff / Math.abs(diff)));
     }
 
 
@@ -265,13 +255,7 @@ public class SizeSelector extends BaseExtendSelector {
     /**
      * Enumerated attribute with the values for size comparison.
      */
-    public static class SizeComparisons extends EnumeratedAttribute {
-        /**
-         * @return the values as an array of strings
-         */
-        public String[] getValues() {
-            return new String[]{"less", "more", "equal"};
-        }
+    public static class SizeComparisons extends Comparison {
     }
 
 }
