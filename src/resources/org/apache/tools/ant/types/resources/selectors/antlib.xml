@@ -3,6 +3,8 @@
     classname="org.apache.tools.ant.types.resources.selectors.And" />
   <typedef name="contains"
     classname="org.apache.tools.ant.types.selectors.ContainsSelector" />
+  <typedef name="containsregexp"
+    classname="org.apache.tools.ant.types.selectors.ContainsRegexpSelector" />
   <typedef name="date"
     classname="org.apache.tools.ant.types.resources.selectors.Date" />
   <typedef name="exists"

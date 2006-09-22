@@ -342,6 +342,22 @@
     </au:assertTrue>
   </target>
 
+  <target name="testcontainsregexp">
+    <au:assertTrue>
+      <resourcecount when="equal" count="2">
+        <restrict>
+          <resources>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
+          </resources>
+          <containsregexp expression="^b..$"
+              xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
   <target name="majority"
           depends="testmajority1,testmajority2,testmajority3,testmajority4" />
 
@@ -349,14 +365,11 @@
           depends="testand,testor,testnone,testnot,majority" />
 
   <target name="all"
-    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,logical" />
-
-
+    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,testcontainsregexp,logical" />
 
   <!-- 
     The tests for oata.types.selectors.ModifiedSelectorTest as 
     ResourceSelector are in its test-buildfile src\etc\testcases\types\selectors.xml. 
   -->
-
 
 </project>
