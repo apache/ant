@@ -212,6 +212,6 @@
 
   <target name="all"
     description="load all the libraries"
-    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging" />
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script" />
 
 </project>
