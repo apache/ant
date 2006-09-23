@@ -24,6 +24,9 @@ Fixed bugs:
 
 * <junittask/> created junitvmwatcher*.properties files but did not close and delete them.  
 
+* <xmlproperty> did not create properties for empty leaf elements.
+  Bugzilla report 26286.
+
 Other changes:
 --------------
 

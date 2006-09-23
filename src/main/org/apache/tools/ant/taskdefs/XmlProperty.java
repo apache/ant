@@ -430,6 +430,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             && (node.getFirstChild().getNodeType() == Node.CDATA_SECTION_NODE)) {
 
             nodeText = node.getFirstChild().getNodeValue();
+        } else if ((node.getNodeType() == Node.ELEMENT_NODE)
+                   && (node.getChildNodes().getLength() == 0)) {
+            nodeText = "";
         }
 
         if (nodeText != null) {
@@ -439,9 +442,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 id = (String) container;
             }
 
-            if (nodeText.trim().length() != 0) {
-                addProperty(prefix, nodeText, id);
-            }
+            addProperty(prefix, nodeText, id);
         }
 
         // Return the Path we added or the ID of this node for
