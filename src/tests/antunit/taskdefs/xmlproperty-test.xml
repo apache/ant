@@ -1,0 +1,10 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <description/>
+  <target name="test-empty">
+    <xmlproperty file="xmlproperty-test.xml"/>
+    <au:assertTrue>
+      <equals arg1="" arg2="${project.description}"/>
+    </au:assertTrue>
+  </target>
+</project>
+
