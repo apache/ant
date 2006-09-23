@@ -1856,8 +1856,8 @@
           if="run.antunit">
 
     <condition property="antunit.includes" value="${antunit.testcase}"
-               else="**/test.xml,*-test.xml">
-      <isset property="${antunit.testcase}" />
+               else="**/test.xml,**/*-test.xml">
+      <isset property="antunit.testcase" />
     </condition>
 
     <property name="antunit.excludes" value="" />
