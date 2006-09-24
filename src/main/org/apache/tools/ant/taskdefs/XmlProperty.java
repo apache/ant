@@ -422,6 +422,18 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         }
 
         String nodeText = null;
+        boolean emptyNode = false;
+        boolean semanticEmptyOverride = false;
+        if (node.getNodeType() == Node.ELEMENT_NODE
+            && semanticAttributes
+            && node.hasAttributes()
+            && (node.getAttributes().getNamedItem(VALUE) != null
+                || node.getAttributes().getNamedItem(LOCATION) != null
+                || node.getAttributes().getNamedItem(REF_ID) != null
+                || node.getAttributes().getNamedItem(PATH) != null
+                || node.getAttributes().getNamedItem(PATHID) != null)) {
+            semanticEmptyOverride = true;
+        }
         if (node.getNodeType() == Node.TEXT_NODE) {
             // For the text node, add a property.
             nodeText = getAttributeValue(node);
@@ -430,9 +442,21 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             && (node.getFirstChild().getNodeType() == Node.CDATA_SECTION_NODE)) {
 
             nodeText = node.getFirstChild().getNodeValue();
+            if ("".equals(nodeText) && !semanticEmptyOverride) {
+                emptyNode = true;
+            }
         } else if ((node.getNodeType() == Node.ELEMENT_NODE)
-                   && (node.getChildNodes().getLength() == 0)) {
+                   && (node.getChildNodes().getLength() == 0)
+                   && !semanticEmptyOverride) {
             nodeText = "";
+            emptyNode = true;
+        } else if ((node.getNodeType() == Node.ELEMENT_NODE)
+                   && (node.getChildNodes().getLength() == 1)
+                   && (node.getFirstChild().getNodeType() == Node.TEXT_NODE)
+                   && ("".equals(node.getFirstChild().getNodeValue()))
+                   && !semanticEmptyOverride) {
+            nodeText = "";
+            emptyNode = true;
         }
 
         if (nodeText != null) {
@@ -441,8 +465,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 && container instanceof String) {
                 id = (String) container;
             }
-
-            addProperty(prefix, nodeText, id);
+            if (nodeText.trim().length() != 0 || emptyNode) {
+                addProperty(prefix, nodeText, id);
+            }
         }
 
         // Return the Path we added or the ID of this node for
