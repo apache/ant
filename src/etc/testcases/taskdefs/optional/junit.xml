@@ -100,7 +100,7 @@
       <formatter type="xml"/>
       <classpath refid="test"/>
       <batchtest todir="out">
-        <fileset dir="../../../../testcases">
+        <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
           <exclude name="**/JUnitTaskTest.java"/>
@@ -117,7 +117,7 @@
       <formatter type="xml" extension=".foo"/>
       <classpath refid="test"/>
       <batchtest todir="out">
-        <fileset dir="../../../../testcases">
+        <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
           <exclude name="**/JUnitTaskTest.java"/>
@@ -134,7 +134,7 @@
         classname="org.apache.tools.ant.taskdefs.optional.junit.TestFormatter"/>
       <classpath refid="test"/>
       <batchtest todir="out">
-        <fileset dir="../../../../testcases">
+        <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
           <exclude name="**/JUnitTaskTest.java"/>

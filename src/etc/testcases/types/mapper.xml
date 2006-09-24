@@ -8,7 +8,7 @@
       <fileset dir="../../../main">
         <include name="**/taskdefs/*.java" />
       </fileset>
-      <fileset dir="../../../testcases">
+      <fileset dir="../../../tests/junit">
         <include name="**/taskdefs/*.java" />
       </fileset>
       <mapper type="flatten" />
