@@ -20,26 +20,6 @@
 
   <target name="example1" depends="setup1"/>
 
-  <target name="sub">
-    <echo id="theEcho"/>
-  </target>
-
-  <target name="sub1">
-    <script language="javascript"><![CDATA[
-      theEcho.setMessage("In sub1");
-      sub.execute();
-    ]]></script>
-  </target>
-
-  <target name="sub2">
-    <script language="javascript"><![CDATA[
-      theEcho.setMessage("In sub2");
-      sub.execute();
-    ]]></script>
-  </target>
-
-  <target name="example2" depends="sub1,sub2"/>
-
   <target name="useBeanshell">
     <script language="beanshell"><![CDATA[
        self.log("I'm here", org.apache.tools.ant.Project.MSG_INFO);

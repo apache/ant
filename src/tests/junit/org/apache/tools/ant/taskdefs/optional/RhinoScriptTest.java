@@ -61,9 +61,4 @@ public class RhinoScriptTest extends BuildFileTest {
         assertTrue(index > -1);
     }
 
-    public void testExample2() {
-        executeTarget("example2");
-        assertTrue(getLog().indexOf("In sub1") > -1);
-        assertTrue(getLog().indexOf("In sub2") > -1);
-    }
 }
