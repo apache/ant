@@ -21,7 +21,7 @@
         <condition>
           <or>
             <resourcecount when="greater" count="0">
-              <fileset refid="fs" />
+              <fileset dir="${dir}" />
             </resourcecount>
             <not>
               <resourcecount count="${srcdirs}">
