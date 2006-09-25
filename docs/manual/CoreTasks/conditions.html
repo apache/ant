@@ -564,11 +564,11 @@ Check for namespace support. All SAX2 parsers should have this.
 
 Check for XML Schema support.
 
-<blockquote><pre>
+<pre>
 &lt;parsersupports
   property="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
   value="document.xsd"/&gt;
-</pre></blockquote>
+</pre>
 
 Check for Xerces-specific definition of the location of the no namespace schema.
 
@@ -795,7 +795,7 @@ must match. <b>Since Ant 1.7</b>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
-    <td valign="top">match</td>
+    <td valign="top">pattern</td>
     <td valign="top">The regular expression pattern used to test.</td>
     <td valign="top" align="center">Yes, unless there is a nested
       <code>&lt;regexp&gt;</code> element.</td>
