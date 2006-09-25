@@ -1,4 +1,4 @@
-<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+<project xmlns:au="antlib:org.apache.ant.antunit">
   <description/>
   <target name="test-empty">
     <xmlproperty file="xmlproperty-test.xml"/>
