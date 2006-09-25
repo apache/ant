@@ -51,7 +51,7 @@ public class Contains implements Condition {
 
     /**
      * Whether to search ignoring case or not.
-     * @param b if true, ignore case
+     * @param b if false, ignore case
      * @since Ant 1.5
      */
     public void setCasesensitive(boolean b) {
