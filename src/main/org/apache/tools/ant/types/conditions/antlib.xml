@@ -64,6 +64,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
   <typedef name="not" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Not"/>
+  <typedef name="matches" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Matches"/>
   <typedef name="or" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Or"/>
   <typedef name="os" onerror="ignore"
