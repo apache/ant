@@ -1,0 +1,724 @@
+<project name="apply-test" xmlns:au="antlib:org.apache.ant.antunit">
+  <property environment="env" />
+  <!-- UNIX -->
+  <available file="sh" filepath="${env.PATH}" property="sh.executable" />
+  <!-- CYGWIN -->
+  <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable" />
+  <condition property="test.can.run">
+    <or>
+      <isset property="sh.executable" />
+      <isset property="sh.exe.executable" />
+    </or>
+  </condition>
+  <!-- UNIX -->
+  <available file="sed" filepath="${env.PATH}" property="sed.executable" />
+  <!-- CYGWIN -->
+  <available file="sed.exe" filepath="${env.PATH}" property="sed.exe.executable" />
+  <condition property="sed.can.run">
+    <or>
+      <isset property="sed.executable" />
+      <isset property="sed.exe.executable" />
+    </or>
+  </condition>
+  <!-- UNIX -->
+  <available file="echo" filepath="${env.PATH}" property="echo.executable" />
+  <!-- CYGWIN -->
+  <available file="echo.exe" filepath="${env.PATH}" property="echo.exe.executable" />
+  <condition property="echo.can.run">
+    <or>
+      <isset property="echo.executable" />
+      <isset property="echo.exe.executable" />
+    </or>
+  </condition>
+
+  <!-- UNIX -->
+  <available file="ls" filepath="${env.PATH}" property="ls.executable" />
+  <!-- CYGWIN -->
+  <available file="ls.exe" filepath="${env.PATH}" property="ls.exe.executable" />
+  <!-- piggyback the name of the executable here -->
+  <condition property="ls.can.run" value="ls">
+    <isset property="ls.executable" />
+  </condition>
+  <condition property="ls.can.run" value="ls.exe">
+    <isset property="ls.exe.executable" />
+  </condition>
+
+  <property name="eol" value="${line.separator}" />
+
+  <macrodef name="rcat">
+    <attribute name="refid" />
+    <sequential>
+      <echo>@@{refid}=@{refid}</echo>
+      <concat><resources refid="@{refid}" /></concat>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="assertEmptyFile">
+    <attribute name="file" />
+    <sequential>
+      <au:assertTrue>
+        <and>
+          <available file="@{file}" type="file" />
+          <length length="0" file="@{file}" />
+        </and>
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <target name="xyz">
+    <echo file="x">s/x/blah/g${eol}</echo>
+    <echo file="y">s/y/blah/g${eol}</echo>
+    <echo file="z">s/z/blah/g${eol}</echo>
+    <fileset id="xyz" dir="${basedir}" includes="x,y,z" />
+    <filelist id="xyzlist" dir="${basedir}" files="x,y,z" />
+    <property name="x" location="x" />
+    <property name="y" location="y" />
+    <property name="z" location="z" />
+  </target>
+
+  <target name="testNoRedirect" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertLogContains text="${x} out" />
+    <au:assertLogContains text="${y} out" />
+    <au:assertLogContains text="${z} out" />
+    <au:assertLogContains text="${x} err" />
+    <au:assertLogContains text="${y} err" />
+    <au:assertLogContains text="${z} err" />
+
+    <!--
+
+    The original junit test also verified that x out happened before
+    y out, and y out happened before z out; likewise with err output.
+    I added the antunit:logcontent resource hoping that would help,
+    but I think we need a way to filter (copy) resources first.
+    THAT necessitates the string-to-resource coding we are currently
+    discussing on the dev list IMO.  MJB, 9/22/2006
+
+    -->
+
+  </target>
+
+  <target name="testRedirect1" depends="xyz" if="test.can.run">
+    <apply executable="sh" output="redirect.out" append="true">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict id="results">
+          <file file="redirect.out" />
+          <and xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+            <contains text="${x} out" />
+            <contains text="${y} out" />
+            <contains text="${z} out" />
+            <contains text="${x} err" />
+            <contains text="${y} err" />
+            <contains text="${z} err" />
+          </and>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+
+  </target>
+
+  <target name="testRedirect2" depends="xyz" if="test.can.run">
+    <apply executable="sh" output="redirect.out"
+           error="redirect.err" append="true">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirect.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} err${eol}${y} err${eol}${z} err" />
+          <file file="redirect.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirect3" depends="xyz" if="test.can.run">
+    <apply executable="sh" logerror="true" append="true"
+           output="redirect.out" outputproperty="redirect3.out">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <string value="${x} out${eol}${y} out${eol}${z} out" />
+        <file file="redirect.out" />
+        <propertyresource name="redirect3.out" />
+      </resourcesmatch>
+    </au:assertTrue>
+
+    <au:assertLogContains text="${x} err" />
+    <au:assertLogContains text="${y} err" />
+    <au:assertLogContains text="${z} err" />
+  </target>
+
+  <target name="testRedirect4" depends="xyz" if="test.can.run">
+    <apply executable="sh" append="true"
+           error="redirect.err" errorproperty="redirect4.err"
+           output="redirect.out" outputproperty="redirect4.out">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirect.out" />
+          <propertyresource name="redirect4.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} err${eol}${y} err${eol}${z} err" />
+          <file file="redirect.err" />
+          <propertyresource name="redirect4.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirect5" depends="xyz" if="sed.can.run">
+    <apply executable="sed" inputstring="x y z${eol}" append="true"
+           error="redirect.err" errorproperty="redirect5.err"
+           output="redirect.out" outputproperty="redirect5.out">
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <propertyresource name="redirect5.out" />
+          <string value="blah y z${eol}x blah z${eol}x y blah" />
+          <file file="redirect.out" />
+        </resourcesmatch>
+        <equals arg1="${redirect5.err}" arg2="" />
+      </and>
+    </au:assertTrue>
+    <assertEmptyFile file="redirect.err" />
+  </target>
+
+  <target name="testRedirect6" depends="xyz" if="sed.can.run">
+    <echo file="redirect.in">x y z${eol}</echo>
+    <apply executable="sed" input="redirect.in" append="true"
+           error="redirect.err" errorproperty="redirect6.err"
+           output="redirect.out" outputproperty="redirect6.out">
+      <arg value="-f" />
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <propertyresource name="redirect6.out" />
+          <string value="blah y z${eol}x blah z${eol}x y blah" />
+          <file file="redirect.out" />
+        </resourcesmatch>
+        <equals arg1="${redirect6.err}" arg2="" />
+        <length length="0"><file file="redirect.err" /></length>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirect7" depends="xyz" if="sed.can.run">
+    <apply executable="sed" inputstring="x y z${eol}"
+           error="redirect.err" output="redirect.out"
+           outputproperty="redirect7.out">
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <equals arg1="${redirect7.out}" arg2="blah y z" />
+        <resourcesmatch astext="true">
+          <file file="redirect.out" />
+          <string value="x y blah" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+    <assertEmptyFile file="redirect.err" />
+  </target>
+
+  <target name="testRedirector1" description="fail"
+          depends="xyz" if="test.can.run">
+    <au:expectfailure
+            expectedmessage="cannot have &gt; 1 nested &lt;redirector&gt;s">
+      <apply executable="sh">
+        <arg value="parrot.sh" />
+        <fileset refid="xyz" />
+        <redirector output="redirector.out" />
+        <redirector output="whocares" />
+      </apply>
+    </au:expectfailure>
+  </target>
+
+  <target name="testRedirector2" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+      <redirector output="redirector.out" append="true" />
+    </apply>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict id="results">
+          <file file="redirector.out" />
+          <and xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
+            <contains text="${x} out" />
+            <contains text="${y} out" />
+            <contains text="${z} out" />
+            <contains text="${x} err" />
+            <contains text="${y} err" />
+            <contains text="${z} err" />
+          </and>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirector3" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+      <redirector append="true"
+                  output="redirector.out" error="redirector.err" />
+    </apply>
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirector.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} err${eol}${y} err${eol}${z} err" />
+          <file file="redirector.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirector4" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+      <redirector output="redirector.out" logerror="true"
+                  append="true" outputproperty="redirector4.out" />
+    </apply>
+
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <string value="${x} out${eol}${y} out${eol}${z} out" />
+        <file file="redirector.out" />
+        <propertyresource name="redirector4.out" />
+      </resourcesmatch>
+    </au:assertTrue>
+
+    <au:assertLogContains text="${x} err" />
+    <au:assertLogContains text="${y} err" />
+    <au:assertLogContains text="${z} err" />
+  </target>
+
+  <target name="testRedirector5" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <redirector error="redirector.err" errorproperty="redirector5.err"
+                  output="redirector.out" outputproperty="redirector5.out"
+                  append="true" />
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirector.out" />
+          <propertyresource name="redirector5.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} err${eol}${y} err${eol}${z} err" />
+          <file file="redirector.err" />
+          <propertyresource name="redirector5.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirector6" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <redirector append="true" outputproperty="redirector6.out"
+                  errorproperty="redirector6.err">
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+      </redirector>
+      <arg value="parrot.sh" />
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirector.out" />
+          <propertyresource name="redirector6.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} err${eol}${y} err${eol}${z} err" />
+          <file file="redirector.err" />
+          <propertyresource name="redirector6.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirector7" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <redirector append="true" outputproperty="redirector7.out"
+                  errorproperty="redirector7.err">
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+        <errorfilterchain>
+          <replacestring from="err" to="ERROR!!!" />
+        </errorfilterchain>
+      </redirector>
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="${x} out${eol}${y} out${eol}${z} out" />
+          <file file="redirector.out" />
+          <propertyresource name="redirector7.out" />
+        </resourcesmatch>
+        <resourcesmatch astext="true">
+          <string value="${x} ERROR!!!${eol}${y} ERROR!!!${eol}${z} ERROR!!!" />
+          <file file="redirector.err" />
+          <propertyresource name="redirector7.err" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testRedirector8" depends="xyz" if="sed.can.run">
+    <echo file="redirector.in">x y z${eol}</echo>
+    <apply executable="sed">
+      <redirector append="true" outputproperty="redirector8.out"
+                  errorproperty="redirector8.err">
+        <inputmapper type="merge" to="redirector.in" />
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+      </redirector>
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <propertyresource name="redirector8.out" />
+          <string value="blah y z${eol}x blah z${eol}x y blah" />
+          <file file="redirector.out" />
+        </resourcesmatch>
+        <equals arg1="${redirector8.err}" arg2="" />
+      </and>
+    </au:assertTrue>
+    <assertEmptyFile file="redirector.err" />
+  </target>
+
+  <macrodef name="valRor9-12">
+    <attribute name="n" />
+    <sequential>
+      <au:assertTrue>
+        <and>
+          <equals arg1="" arg2="${redirector@{n}.err}" />
+          <resourcesmatch astext="true">
+           <string value="blah after y after z${eol}x after blah after z${eol}x after y after blah" />
+           <propertyresource name="redirector@{n}.out" />
+           <file file="redirector.out" />
+          </resourcesmatch>
+        </and>
+      </au:assertTrue>
+      <assertEmptyFile file="redirector.err" />
+    </sequential>
+  </macrodef>
+
+  <target name="testRedirector9" depends="xyz" if="sed.can.run">
+    <echo file="redirector.in">x before y before z${eol}</echo>
+    <apply executable="sed">
+      <redirector outputproperty="redirector9.out"
+                  errorproperty="redirector9.err" append="true">
+        <inputfilterchain>
+          <replacestring from="before" to="after" />
+        </inputfilterchain>
+        <inputmapper type="merge" to="redirector.in" />
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+      </redirector>
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <valRor9-12 n="9" />
+  </target>
+
+  <target name="testRedirector10" depends="xyz" if="sed.can.run">
+    <echo file="redirector.in">x before y before z${eol}</echo>
+    <apply executable="sed">
+      <redirector outputproperty="redirector10.out"
+                  errorproperty="redirector10.err" append="true">
+        <outputfilterchain>
+          <replacestring from="before" to="after" />
+        </outputfilterchain>
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+      </redirector>
+      <arg value="-f" />
+      <srcfile />
+      <arg value="redirector.in" />
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <valRor9-12 n="10" />
+  </target>
+
+  <target name="testRedirector11" depends="xyz" if="sed.can.run">
+    <apply executable="sed">
+      <redirector outputproperty="redirector11.out"
+                  errorproperty="redirector11.err"
+                  inputstring="x before y before z${eol}"
+                  append="true">
+        <inputfilterchain>
+          <replacestring from="before" to="after" />
+        </inputfilterchain>
+        <outputmapper type="merge" to="redirector.out" />
+        <errormapper type="merge" to="redirector.err" />
+      </redirector>
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <valRor9-12 n="11" />
+  </target>
+
+  <target name="testRedirector12" depends="xyz" if="sed.can.run">
+    <echo file="redirector.in">x before y before z${eol}</echo>
+    <apply executable="sed" output="redirector.out" error="redirector.err">
+      <redirector outputproperty="redirector12.out"
+                  errorproperty="redirector12.err" append="true">
+        <outputfilterchain>
+          <replacestring from="before" to="after" />
+        </outputfilterchain>
+        <outputmapper type="glob" from="nomatch" to="nomatchout" />
+        <errormapper type="glob" from="nomatch" to="nomatcherr" />
+      </redirector>
+      <arg value="-f" />
+      <srcfile />
+      <arg value="redirector.in" />
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <valRor9-12 n="12" />
+  </target>
+
+  <target name="testRedirector13" depends="xyz" if="test.can.run">
+    <apply executable="sh">
+      <redirector>
+        <outputfilterchain>
+          <replacestring from="out" to="OUTPUT???" />
+        </outputfilterchain>
+        <errorfilterchain>
+          <replacestring from="err" to="ERROR!!!" />
+        </errorfilterchain>
+      </redirector>
+      <arg value="parrot.sh" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <au:assertLogContains text="${x} OUTPUT???" />
+    <au:assertLogContains text="${y} OUTPUT???" />
+    <au:assertLogContains text="${z} OUTPUT???" />
+    <au:assertLogContains text="${x} ERROR!!!" />
+    <au:assertLogContains text="${y} ERROR!!!" />
+    <au:assertLogContains text="${z} ERROR!!!" />
+  </target>
+
+  <target name="testRedirector14" depends="xyz" if="sed.can.run">
+    <echo file="redirector.in">z before y before x${eol}</echo>
+    <apply executable="sed">
+      <redirector append="true"
+                  inputstring="x before y before z${eol}">
+        <outputfilterchain>
+          <replacestring from="before" to="after" />
+        </outputfilterchain>
+        <inputmapper type="glob" from="x" to="redirector.in" />
+        <outputmapper type="glob" from="y" to="redirector.out" />
+        <errormapper type="glob" from="z" to="redirector.err" />
+      </redirector>
+      <arg value="-f" />
+      <fileset refid="xyz" />
+    </apply>
+
+    <assertEmptyFile file="redirector.err" />
+
+    <au:assertTrue>
+      <and>
+        <resourcesmatch astext="true">
+          <string value="z after y after blahx after y after blah" />
+          <au:logcontent />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+    <au:assertTrue message="${logcontent}">
+      <and>
+        <resourcesmatch astext="true">
+          <string value="x after blah after z" />
+          <file file="redirector.out" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="pad">
+    <condition property="pad" value="">
+      <or>
+        <not>
+          <os family="dos" />
+        </not>
+        <not>
+          <or>
+            <equals arg1="${ant.java.version}" arg2="1.1" />
+            <equals arg1="${ant.java.version}" arg2="1.2" />
+          </or>
+        </not>
+      </or>
+    </condition>
+
+    <condition property="pad" value=" ">
+      <and>
+        <os family="dos" />
+        <or>
+          <equals arg1="${ant.java.version}" arg2="1.2" />
+        </or>
+      </and>
+    </condition>
+
+  </target>
+
+  <target name="testIgnoreMissing" depends="xyz,pad" if="echo.can.run">
+    <filelist id="xylist" dir="${basedir}" files="x,y" />
+    <delete file="z" />
+
+    <pathconvert property="xy" pathsep="${pad}${eol}" refid="xylist" />
+
+    <pathconvert property="xyz" pathsep="${pad}${eol}" refid="xyzlist" />
+
+    <apply executable="echo" ignoremissing="true"
+           outputproperty="ignoretrue" append="true">
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <apply executable="echo" ignoremissing="false"
+           outputproperty="ignorefalse" append="true">
+      <filelist refid="xyzlist" />
+    </apply>
+
+    <au:assertTrue>
+      <and>
+        <equals arg1="${xy}${pad}" arg2="${ignoretrue}" />
+        <equals arg1="${xyz}${pad}" arg2="${ignorefalse}" />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testForce" depends="xyz,pad" if="echo.can.run">
+    <presetdef name="ekko">
+      <apply executable="echo" append="true" dest="${basedir}">
+        <filelist refid="xyzlist" />
+        <mapper type="identity" />
+      </apply>
+    </presetdef>
+
+    <pathconvert property="xyz" pathsep="${pad}${eol}" refid="xyzlist" />
+
+    <ekko outputproperty="foo" />
+    <ekko outputproperty="bar" force="true" />
+
+    <au:assertTrue>
+      <and>
+        <equals arg1="${foo}" arg2="" />
+        <equals arg1="${bar}" arg2="${xyz}" />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testNoDest" depends="xyz" if="echo.can.run">
+    <presetdef name="ekko">
+      <apply executable="echo" addsourcefile="false" force="true">
+        <filelist dir="${basedir}" files="x" />
+        <globmapper from="*" to="${basedir}/*" />
+        <targetfile />
+      </apply>
+    </presetdef>
+    <ekko outputproperty="dest" dest="${basedir}" />
+    <ekko outputproperty="nodest" />
+
+    <au:assertFileDoesntExist file="${dest}" />
+    <au:assertFileExists file="${nodest}" />
+  </target>
+
+  <target name="testLsPath" if="ls.can.run">
+    <apply executable="ls" parallel="false" outputproperty="lsPathOut"
+           force="true" dest="${basedir}" append="true" type="both">
+      <path path="${env.PATH}" />
+      <identitymapper/>
+    </apply>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <propertyresource name="lsPathOut" />
+          <containsregexp expression="^${ls.can.run}$"
+              xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testLsPathParallel" if="ls.can.run">
+    <apply executable="ls" parallel="true" outputproperty="lsPathParallelOut"
+           force="true" dest="${basedir}" append="true" type="both">
+      <path path="${env.PATH}" />
+      <identitymapper/>
+    </apply>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <propertyresource name="lsPathParallelOut" />
+          <containsregexp expression="^${ls.can.run}$"
+              xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="tearDown">
+    <delete>
+      <fileset refid="xyz" />
+      <fileset dir="${basedir}" includes="redirect.*" />
+      <fileset dir="${basedir}" includes="redirector.*" />
+    </delete>
+  </target>
+</project>
