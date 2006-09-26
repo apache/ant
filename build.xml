@@ -1549,7 +1549,7 @@
        ===================================================================
   -->
 
-  <target name="tests-failed">
+  <target name="check-failed">
     <condition property="tests.failed">
       <or>
         <isset property="junit.failed" />
@@ -1558,10 +1558,13 @@
     </condition>
   </target>
 
-  <target name="test" depends="junit-report,antunit-report,tests-failed"
-          description="--> run unit tests">
+  <target name="test" depends="junit-report,antunit-report,check-failed"
+          description="--> run unit tests / reports">
     <fail if="tests.failed">Unit tests failed; see ${build.junit.reports} / ${antunit.reports}</fail>
   </target>
+
+  <target name="run-tests" depends="junit-tests,antunit-tests,check-failed"
+          description="--> run unit tests" />
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
     <macrodef name="test-junit">
