@@ -1549,24 +1549,22 @@
        ===================================================================
   -->
 
-  <target name="check-failed">
-    <condition property="tests.failed">
-      <or>
-        <isset property="junit.failed" />
-        <isset property="antunit.failed" />
-      </or>
-    </condition>
+  <target name="tests-failed">
+    <fail>Unit tests failed; see ${build.junit.reports} / ${antunit.reports}
+      <condition>
+        <or>
+          <isset property="junit.failed" />
+          <isset property="antunit.failed" />
+        </or>
+      </condition>
+    </fail>
   </target>
 
-  <target name="test" depends="junit-report,antunit-report,check-failed"
-          description="--> run unit tests / reports">
-    <fail if="tests.failed">Unit tests failed; see ${build.junit.reports} / ${antunit.reports}</fail>
-  </target>
+  <target name="test" depends="junit-report,antunit-report,tests-failed"
+          description="--> run unit tests and reports" />
 
-  <target name="run-tests" depends="junit-tests,antunit-tests,check-failed"
-          description="--> run unit tests">
-    <fail if="tests.failed">Unit tests failed; see ${build.junit.reports} / ${antunit.reports}</fail>
-  </target>
+  <target name="run-tests" depends="junit-tests,antunit-tests,tests-failed"
+          description="--> run unit tests without reports" />
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
     <macrodef name="test-junit">
