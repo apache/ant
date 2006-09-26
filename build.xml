@@ -1564,7 +1564,9 @@
   </target>
 
   <target name="run-tests" depends="junit-tests,antunit-tests,check-failed"
-          description="--> run unit tests" />
+          description="--> run unit tests">
+    <fail if="tests.failed">Unit tests failed; see ${build.junit.reports} / ${antunit.reports}</fail>
+  </target>
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
     <macrodef name="test-junit">
