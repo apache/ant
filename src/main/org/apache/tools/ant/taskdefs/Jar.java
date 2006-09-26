@@ -48,6 +48,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.types.spi.Service;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipOutputStream;
@@ -65,6 +66,11 @@ public class Jar extends Zip {
 
     /** The manifest file name. */
     private static final String MANIFEST_NAME = "META-INF/MANIFEST.MF";
+
+    /**
+     * List of all known SPI Services
+     */
+    private List serviceList = new ArrayList();
 
     /** merged manifests added through addConfiguredManifest */
     private Manifest configuredManifest;
@@ -368,6 +374,36 @@ public class Jar extends Zip {
     }
 
     /**
+     * A nested SPI service element.
+     * @param service the nested element.
+     * @since Ant 1.7
+     */
+    public void addConfiguredService(Service service) {
+        // Check if the service is configured correctly
+        service.check();
+        serviceList.add(service);
+    }
+
+    /**
+     * Write SPI Information to JAR
+     */
+    private void writeServices(ZipOutputStream zOut) throws IOException {
+        Iterator serviceIterator;
+        Service service;
+        
+        serviceIterator = serviceList.iterator();
+        while(serviceIterator.hasNext()){
+           service = (Service) serviceIterator.next();
+           //stolen from writeManifest
+           super.zipFile(service.getAsStream(), zOut, 
+                         "META-INF/service/" + service.getType(),
+                         System.currentTimeMillis(), null,
+                         ZipFileSet.DEFAULT_FILE_MODE);
+        }
+    }
+
+
+    /**
      * Initialize the zip output stream.
      * @param zOut the zip output stream
      * @throws IOException on I/O errors
@@ -379,6 +415,7 @@ public class Jar extends Zip {
         if (!skipWriting) {
             Manifest jarManifest = createManifest();
             writeManifest(zOut, jarManifest);
+            writeServices(zOut);
         }
     }
 

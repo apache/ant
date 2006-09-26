@@ -60,10 +60,10 @@ of two seconds.  If a file is less than two seconds newer than the
 entry in the archive, Ant will not consider it newer.</p>
 
 <p>The <code>whenmanifestonly</code> parameter controls what happens when no
-files, apart from the manifest file, match.
+files, apart from the manifest file, or nested services, match.
 If <code>skip</code>, the JAR is not created and a warning is issued.
 If <code>fail</code>, the JAR is not created and the build is halted with an error.
-If <code>create</code>, (default) an empty JAR file (only containing a manifest)
+If <code>create</code>, (default) an empty JAR file (only containing a manifest and services)
 is created.</p>
 
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
@@ -82,7 +82,7 @@ being wrapped and continued on the next line.
 fully-qualified name to exist within a single archive.  This has been
 documented as causing various problems for unsuspecting users.  If you wish
 to avoid this behavior you must set the <code>duplicate</code> attribute
-to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
+to a value other than its default, <code>"add"</code>.</b></p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -278,7 +278,52 @@ depend on your manifest:</p>
 
 <p>This task will not create any index entries for archives that are
 empty or only contain files inside the META-INF directory.</p>
+<a name="service"><h4>service</h4></a>
 
+<p><em>since ant 1.7.0</em></p>
+
+<p>
+  The nested <code>server</code> element specifies a service.
+  Services are described by 
+  <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider</a>.
+  The approach is to have providers JARs include files named by the service
+  provided, for example,
+  META-INF/services/javax.script.ScriptEngineFactory
+  which can include implementation class names, one per line (usually just one per JAR).
+  
+  The name of the
+  service is set by the "type" attribute. The classname implementing
+  the service is the the "provider" attribute, or it one wants to
+  specify a number of classes that implement the service, by
+  "provider" nested elements.
+</p>
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">The name of the service.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">provider</td>
+    <td valign="top">
+      The classname of the class implemening the service.
+    </td>
+    <td valign="top" align="center">Yes, unless there is a nested
+      <code>&lt;provider&gt;</code> element.</td>
+  </tr>
+</table>
+  <p>
+    The provider classname is specified either by the "provider" attribute, or
+    by a nested &lt;provider&gt; element, which has a single "classname" attribute.
+    If a JAR file has more that one implementation of the service, a number of
+    nested &lt;provider&gt; elements may be used.
+  </p>
 <h3>Examples</h3>
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
@@ -336,6 +381,28 @@ Name: common/MyClass.class
 Sealed: false</code></pre>
 
 
-
+<p>
+  The following shows how to create a jar file specifing a service
+  with an implementation of the JDK6 scripting interface:
+</p>
+<blockquote><pre>&lt;jar jarfile="pinky.jar"&gt;
+  &lt;fileset dir="build/classes"/&gt;
+  &lt;service type="javax.script.ScriptEngineFactory"
+           provider="org.acme.PinkyLanguage"/&gt;
+&lt;/jar&gt;
+</pre></blockquote>
+<p>
+  The following shows how to create a jar file specifing a service
+  with two implementations of the JDK6 scripting interface:
+</p>
+<blockquote><pre>
+&lt;jar jarfile="pinkyandbrain.jar"&gt;
+  &lt;fileset dir="classes"/&gt;
+  &lt;service type="javax.script.ScriptEngineFactory"&gt;
+    &lt;provider classname="org.acme.PinkyLanguage"/&gt;
+    &lt;provider classname="org.acme.BrainLanguage"/&gt;
+  &lt;/service&gt;
+&lt;/jar&gt;
+</pre></blockquote>
 </body>
 </html>
