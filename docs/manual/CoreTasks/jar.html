@@ -283,14 +283,14 @@ empty or only contain files inside the META-INF directory.</p>
 <p><em>since ant 1.7.0</em></p>
 
 <p>
-  The nested <code>server</code> element specifies a service.
-  Services are described by 
+  The nested <code>service</code> element specifies a service.
+  Services are described by
   <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider</a>.
   The approach is to have providers JARs include files named by the service
   provided, for example,
   META-INF/services/javax.script.ScriptEngineFactory
   which can include implementation class names, one per line (usually just one per JAR).
-  
+
   The name of the
   service is set by the "type" attribute. The classname implementing
   the service is the the "provider" attribute, or it one wants to
