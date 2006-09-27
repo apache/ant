@@ -252,7 +252,7 @@ public class Concat extends Task {
      * @since Ant 1.7
      */
     public void add(ResourceCollection c) {
-        rc = (rc == null) ? new Resources() : rc;
+        rc = rc == null ? new Resources() : rc;
         rc.add(c);
     }
 
