@@ -23,14 +23,15 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * EnumeratedAttribute for generic comparisons.  Accepts values
- * "equal", "greater", "less", "ne" (not equal), "ge" (greater or equal),
- * "le" (less or equal), "eq" (equal), "gt" (greater), "lt" (less).
+ * "equal", "greater", "more", "less", "ne" (not equal),
+ * "ge" (greater or equal), "le" (less or equal), "eq" (equal),
+ * "gt" (greater), "lt" (less).
  * @since Ant 1.7
  */
 public class Comparison extends EnumeratedAttribute {
     private static final String[] VALUES
         = new String[] {"equal", "greater", "less",
-                        "ne", "ge", "le", "eq", "gt", "lt"};
+                        "ne", "ge", "le", "eq", "gt", "lt", "more"};
 
     /** Equal Comparison. */
     public static final Comparison EQUAL = new Comparison("equal");
@@ -52,7 +53,7 @@ public class Comparison extends EnumeratedAttribute {
 
     private static final int[] EQUAL_INDEX = {0, 4, 5, 6};
     private static final int[] LESS_INDEX = {2, 3, 5, 8};
-    private static final int[] GREATER_INDEX = {1, 3, 4, 7};
+    private static final int[] GREATER_INDEX = {1, 3, 4, 7, 9};
 
     /**
      * Default constructor.
