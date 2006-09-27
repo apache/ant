@@ -31,6 +31,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 /**
  * Special <code>InputStream</code> that will
  * concatenate the contents of Resources from a single ResourceCollection.
+ * @since Ant 1.7
  */
 public class ConcatResourceInputStream extends InputStream {
 
@@ -45,9 +46,8 @@ public class ConcatResourceInputStream extends InputStream {
    * Construct a new ConcatResourceInputStream
    * for the specified ResourceCollection.
    * @param rc the ResourceCollection to combine.
-   * @throws IOException if I/O errors occur.
    */
-    public ConcatResourceInputStream(ResourceCollection rc) throws IOException {
+    public ConcatResourceInputStream(ResourceCollection rc) {
         iter = rc.iterator();
     }
 
@@ -104,16 +104,12 @@ public class ConcatResourceInputStream extends InputStream {
         if (managingPc != null) {
             managingPc.log(message, loglevel);
         } else {
-            if (loglevel > Project.MSG_WARN) {
-                System.out.println(message);
-            } else {
-                System.err.println(message);
-            }
+            (loglevel > Project.MSG_WARN ? System.out : System.err).println(message);
         }
     }
 
     private int readCurrent() throws IOException {
-        return (eof || currentStream == null) ? EOF : currentStream.read();
+        return eof || currentStream == null ? EOF : currentStream.read();
     }
 
     private void nextResource() throws IOException {
