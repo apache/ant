@@ -41,9 +41,9 @@
     <au:assertTrue>
       <matches string="ab" pattern="ab?"/>
     </au:assertTrue>
-    <au:assertFalse>
+    <au:assertTrue>
       <matches string="acb" pattern="ab?"/>
-    </au:assertFalse>
+    </au:assertTrue>
   </target>
 
   <target name="test-caseinsensitive">
