@@ -1678,7 +1678,9 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
   </target>
 
-  <target name="junit-report" depends="junit-tests" if="run.junit.report">
+  <target name="junit-report" depends="junit-tests,junit-report-only" />
+
+  <target name="junit-report-only" depends="test-init" if="run.junit.report">
     <mkdir dir="${build.junit.reports}" />
     <junitreport todir="${build.junit.reports}">
       <fileset dir="${build.junit.xml}">
@@ -1879,7 +1881,9 @@ see ${build.junit.reports} / ${antunit.reports}
     </au:antunit>
   </target>
 
-  <target name="antunit-report" depends="antunit-tests" if="run.antunit.report">
+  <target name="antunit-report" depends="antunit-tests,antunit-report-only" />
+
+  <target name="antunit-report-only" depends="test-init" if="run.antunit.report">
     <length>
       <fileset dir="${antunit.xml}" includes="TEST-*.xml" />
     </length>
