@@ -350,12 +350,11 @@ public class RuntimeConfigurable implements Serializable {
      * @param p The project containing the wrapped element.
      *          Must not be <code>null</code>.
      *
-     * @param configureChildren Whether to configure child elements as
-     * well.  if true, child elements will be configured after the
-     * wrapped element.
+     * @param configureChildren ignored.
+
      *
      * @exception BuildException if the configuration fails, for instance due
-     *            to invalid attributes or children, or text being added to
+     *            to invalid attributes , or text being added to
      *            an element which doesn't accept it.
      */
     public synchronized void maybeConfigure(Project p, boolean configureChildren)
@@ -406,34 +405,6 @@ public class RuntimeConfigurable implements Serializable {
 
         if (characters != null) {
             ProjectHelper.addText(p, wrappedObject, characters.substring(0));
-        }
-
-        Enumeration e = getChildren();
-        while (e.hasMoreElements()) {
-            RuntimeConfigurable child = (RuntimeConfigurable) e.nextElement();
-            synchronized (child) {
-                if (child.wrappedObject instanceof Task) {
-                    Task childTask = (Task) child.wrappedObject;
-                    childTask.setRuntimeConfigurableWrapper(child);
-                }
-                if ((child.creator != null) && configureChildren) {
-                    child.maybeConfigure(p);
-                    child.creator.store();
-                    continue;
-                }
-                /*
-                 * backwards compatibility - element names of nested
-                 * elements have been all lower-case in Ant, except for
-                 * tasks in TaskContainers.
-                 *
-                 * For TaskContainers, we simply skip configuration here.
-                 */
-                String tag = child.getElementTag().toLowerCase(Locale.US);
-                if (configureChildren && ih.supportsNestedElement(tag)) {
-                    child.maybeConfigure(p);
-                    ProjectHelper.storeChild(p, target, child.wrappedObject, tag);
-                }
-            }
         }
 
         if (id != null) {
