@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -201,7 +200,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @see #setIsolated(boolean)
      */
-    private boolean isolated = false;
+    private boolean ignoreBase = false;
 
     /**
      * The parent class loader, if one is given or can be determined.
@@ -567,7 +566,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                 isolated mode.
      */
     public synchronized void setIsolated(boolean isolated) {
-        this.isolated = isolated;
+        ignoreBase = isolated;
     }
 
     /**
@@ -849,6 +848,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         // designated to use a specific loader first
         // (this one or the parent one)
 
+        // XXX - shouldn't this always return false in isolated mode?
+
         boolean useParentFirst = parentFirst;
 
         for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
@@ -952,8 +953,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (isParentFirst(name)) {
             // Normal case.
             return CollectionUtils.append(base, mine);
-        } else if (isolated) {
-            return mine;
         } else {
             // Inverted.
             return CollectionUtils.append(mine, base);
@@ -1059,7 +1058,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 log("Class " + classname + " loaded from ant loader",
                     Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
-                if (isolated) {
+                if (ignoreBase) {
                     throw cnfe;
                 }
                 theClass = findBaseClass(classname);
@@ -1521,13 +1520,5 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     public String toString() {
         return "AntClassLoader[" + getClasspath() + "]";
     }
-
-    /**
-     * Accessor for derived classloaders to access the path components.
-     * @return the  pathcomponents.
-     */
-     protected List getPathComponents() {
-         return pathComponents;
-     }
 
 }
