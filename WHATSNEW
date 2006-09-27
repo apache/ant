@@ -39,6 +39,9 @@ Other changes:
 * Added <tokens> resource collection for convenient creation of string
   resources from other resources' content. Inspired by Bugzilla 40504.
 
+* REVERTED for the moment: AntClassLoader did not isolate
+  resources when isolate was set. Bugzilla report 38747.
+
 
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
