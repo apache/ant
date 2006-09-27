@@ -317,6 +317,8 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
   <li><a href="#sort">sort</a> - sorted resource collection</li>
   <li><a href="#first">first</a> - first <i>n</i> resources from a
     nested collection</li>
+  <li><a href="#tokens">tokens</a> - <a href="#string">string</a> tokens
+    gathered from a nested collection</li>
   <li><a href="#union">union</a> - set union of nested resource collections</li>
   <li><a href="#intersect">intersect</a> - set intersection
     of nested resource collections</li>
@@ -715,6 +717,36 @@ larger collection.</p>
       <td valign="top">count</td>
       <td valign="top">The number of resources to include</td>
       <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="tokens">tokens</a></h4>
+<p>Includes the <a href="#string">string</a> tokens gathered from a nested
+ resource collection. Uses the same tokenizers supported by the
+<a href="filterchain.html#tokenfilter">TokenFilter</a>. Hint: imaginative
+  use of this resource collection can implement equivalents for such Unix
+  functions as <code>sort</code>, <code>grep -c</code>, <code>wc</code> and
+  <code>wc -l</code>.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">encoding</td>
+      <td valign="top">The encoding of the nested resources</td>
+      <td valign="top" align="center">No, default is platform default</td>
     </tr>
     <tr>
       <td valign="top">cache</td>

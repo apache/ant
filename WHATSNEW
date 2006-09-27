@@ -36,6 +36,9 @@ Other changes:
 
 * Extending JAR-Task for SPI. Bugzilla report 31520.
 
+* Added <tokens> resource collection for convenient creation of string
+  resources from other resources' content. Inspired by Bugzilla 40504.
+
 
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
