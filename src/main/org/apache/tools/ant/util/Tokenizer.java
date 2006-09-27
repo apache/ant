@@ -33,8 +33,7 @@ public interface Tokenizer {
      *         of the stream
      * @throws IOException if an error occurs
      */
-    String getToken(Reader in)
-        throws IOException;
+    String getToken(Reader in) throws IOException;
 
     /**
      * return the string between tokens, after the
