@@ -1549,22 +1549,26 @@
        ===================================================================
   -->
 
-  <target name="tests-failed">
-    <fail>Unit tests failed; see ${build.junit.reports} / ${antunit.reports}
-      <condition>
-        <or>
-          <isset property="junit.failed" />
-          <isset property="antunit.failed" />
-        </or>
-      </condition>
+  <target name="check-failed">
+    <condition property="tests.failed">
+      <or>
+        <isset property="junit.failed" />
+        <isset property="antunit.failed" />
+      </or>
+    </condition>
+  </target>
+
+  <target name="test" description="--> run unit tests and reports"
+          depends="dump-info,junit-report,antunit-report,check-failed">
+    <fail if="tests.failed">Unit tests failed;
+see ${build.junit.reports} / ${antunit.reports}
     </fail>
   </target>
 
-  <target name="test" depends="junit-report,antunit-report,tests-failed"
-          description="--> run unit tests and reports" />
-
-  <target name="run-tests" depends="junit-tests,antunit-tests,tests-failed"
-          description="--> run unit tests without reports" />
+  <target name="run-tests" depends="dump-info,junit-tests,antunit-tests,check-failed"
+          description="--> run unit tests without reports">
+    <fail if="tests.failed" message="Unit tests failed" />
+  </target>
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
     <macrodef name="test-junit">
@@ -1674,8 +1678,7 @@
     </condition>
   </target>
 
-  <target name="junit-report" depends="junit-tests,junit-single-test"
-      if="run.junit.report">
+  <target name="junit-report" depends="junit-tests" if="run.junit.report">
     <mkdir dir="${build.junit.reports}" />
     <junitreport todir="${build.junit.reports}">
       <fileset dir="${build.junit.xml}">
@@ -1685,7 +1688,9 @@
     </junitreport>
   </target>
 
-  <target name="junit-tests" depends="dump-info,compile-tests,test-init"
+  <target name="junit-tests" depends="junit-batch,junit-single-test" />
+
+  <target name="junit-batch" depends="compile-tests,test-init"
       if="junit.batch">
 
     <property name="junit.includes" value="**/*Test*" />
@@ -1836,11 +1841,10 @@
   </target>
 
   <target name="junit-single-test" depends="compile-tests,junit-single-test-only"
-    description="--> runs the single unit test defined in the testcase property"/>
+    description="--> runs the single unit test at $${junit.testcase}" />
 
-  <target name="junit-single-test-only" if="junit.single"
-    description="--> runs the single unit test defined in the testcase property"
-     depends="test-init">
+  <target name="junit-single-test-only" depends="test-init" if="junit.single"
+    description="--> runs the single unit test at $${junit.testcase} (no compile)">
     <test-junit>
       <formatter type="plain" usefile="false"/>
       <test name="${junit.testcase}" todir="${build.junit.xml}"/>
