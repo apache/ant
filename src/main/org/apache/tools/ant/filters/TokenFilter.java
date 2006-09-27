@@ -27,7 +27,10 @@ import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.Tokenizer;
+import org.apache.tools.ant.util.FileTokenizer;
 import org.apache.tools.ant.util.LineTokenizer;
+import org.apache.tools.ant.util.StringTokenizer;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
@@ -275,32 +278,15 @@ public class TokenFilter extends BaseFilterReader
 
     // --------------------------------------------
     //
-    //      Tokenizer Classes
+    //      Tokenizer Classes (impls moved to oata.util)
     //
     // --------------------------------------------
 
     /**
      * class to read the complete input into a string
      */
-    public static class FileTokenizer extends ProjectComponent
-        implements Tokenizer {
-        /**
-         * Get the complete input as a string
-         * @param in the reader object
-         * @return the complete input
-         * @throws IOException if error reading
-         */
-        public String getToken(Reader in) throws IOException {
-            return FileUtils.readFully(in);
-        }
-
-        /**
-         * Return the intra-token string
-         * @return an empty string always
-         */
-        public String getPostToken() {
-            return "";
-        }
+    public static class FileTokenizer
+        extends org.apache.tools.ant.util.FileTokenizer {
     }
 
     /**
@@ -308,132 +294,11 @@ public class TokenFilter extends BaseFilterReader
      * by white space, or by a specified list of
      * delim characters. Behaves like java.util.StringTokenizer.
      * if the stream starts with delim characters, the first
-     * token will be an empty string (unless the treat tokens
-     * as delims flag is set).
+     * token will be an empty string (unless the treat delims
+     * as tokens flag is set).
      */
-    public static class StringTokenizer extends ProjectComponent
-        implements Tokenizer {
-        private String intraString = "";
-        private int    pushed = -2;
-        private char[] delims = null;
-        private boolean delimsAreTokens = false;
-        private boolean suppressDelims = false;
-        private boolean includeDelims = false;
-
-        /**
-         * attribute delims - the delimiter characters
-         * @param delims a string containing the delimiter characters
-         */
-        public void setDelims(String delims) {
-            this.delims = resolveBackSlash(delims).toCharArray();
-        }
-
-        /**
-         * attribute delimsaretokens - treat delimiters as
-         * separate tokens.
-         * @param delimsAreTokens true if delimiters are to be separate
-         */
-
-        public void setDelimsAreTokens(boolean delimsAreTokens) {
-            this.delimsAreTokens = delimsAreTokens;
-        }
-        /**
-         * attribute suppressdelims - suppress delimiters.
-         * default - false
-         * @param suppressDelims if true do not report delimiters
-         */
-        public void setSuppressDelims(boolean suppressDelims) {
-            this.suppressDelims = suppressDelims;
-        }
-
-        /**
-         * attribute includedelims - treat delimiters as part
-         * of the token.
-         * default - false
-         * @param includeDelims if true add delimiters to the token
-         */
-        public void setIncludeDelims(boolean includeDelims) {
-            this.includeDelims = includeDelims;
-        }
-
-        /**
-         * find and return the next token
-         *
-         * @param in the input stream
-         * @return the token
-         * @exception IOException if an error occurs reading
-         */
-        public String getToken(Reader in) throws IOException {
-            int ch = -1;
-            if (pushed != -2) {
-                ch = pushed;
-                pushed = -2;
-            } else {
-                ch = in.read();
-            }
-            if (ch == -1) {
-                return null;
-            }
-            boolean inToken = true;
-            intraString = "";
-            StringBuffer word = new StringBuffer();
-            StringBuffer padding = new StringBuffer();
-            while (ch != -1) {
-                char c = (char) ch;
-                boolean isDelim = isDelim(c);
-                if (inToken) {
-                    if (isDelim) {
-                        if (delimsAreTokens) {
-                            if (word.length() == 0) {
-                                word.append(c);
-                            } else {
-                                pushed = ch;
-                            }
-                            break;
-                        }
-                        padding.append(c);
-                        inToken = false;
-                    } else {
-                        word.append(c);
-                    }
-                } else {
-                    if (isDelim) {
-                        padding.append(c);
-                    } else {
-                        pushed = ch;
-                        break;
-                    }
-                }
-                ch = in.read();
-            }
-            intraString = padding.toString();
-            if (includeDelims) {
-                word.append(intraString);
-            }
-            return word.toString();
-        }
-
-        /**
-         * @return the intratoken string
-         */
-        public String getPostToken() {
-            if (suppressDelims || includeDelims) {
-                return "";
-            }
-            return intraString;
-        }
-
-        private boolean isDelim(char ch) {
-            if (delims == null) {
-                return Character.isWhitespace(ch);
-            }
-            for (int i = 0; i < delims.length; ++i) {
-                if (delims[i] == ch) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    public static class StringTokenizer
+        extends org.apache.tools.ant.util.StringTokenizer {
     }
 
     // --------------------------------------------
@@ -823,43 +688,7 @@ public class TokenFilter extends BaseFilterReader
      * @return converted string
      */
     public static String resolveBackSlash(String input) {
-        StringBuffer b = new StringBuffer();
-        boolean backSlashSeen = false;
-        for (int i = 0; i < input.length(); ++i) {
-            char c = input.charAt(i);
-            if (!backSlashSeen) {
-                if (c == '\\') {
-                    backSlashSeen = true;
-                } else {
-                    b.append(c);
-                }
-            } else {
-                switch (c) {
-                    case '\\':
-                        b.append((char) '\\');
-                        break;
-                    case 'n':
-                        b.append((char) '\n');
-                        break;
-                    case 'r':
-                        b.append((char) '\r');
-                        break;
-                    case 't':
-                        b.append((char) '\t');
-                        break;
-                    case 'f':
-                        b.append((char) '\f');
-                        break;
-                    case 's':
-                        b.append(" \t\n\r\f");
-                        break;
-                    default:
-                        b.append(c);
-                }
-                backSlashSeen = false;
-            }
-        }
-        return b.toString();
+        return StringUtils.resolveBackSlash(input);
     }
 
     /**

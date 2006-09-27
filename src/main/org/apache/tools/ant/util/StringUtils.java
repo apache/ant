@@ -130,4 +130,55 @@ public final class StringUtils {
         }
         return true;
     }
+
+    /**
+     * xml does not do "c" like interpretation of strings.
+     * i.e. \n\r\t etc.
+     * this method processes \n, \r, \t, \f, \\
+     * also subs \s -> " \n\r\t\f"
+     * a trailing '\' will be ignored
+     *
+     * @param input raw string with possible embedded '\'s
+     * @return converted string
+     * @since Ant 1.7
+     */
+    public static String resolveBackSlash(String input) {
+        StringBuffer b = new StringBuffer();
+        boolean backSlashSeen = false;
+        for (int i = 0; i < input.length(); ++i) {
+            char c = input.charAt(i);
+            if (!backSlashSeen) {
+                if (c == '\\') {
+                    backSlashSeen = true;
+                } else {
+                    b.append(c);
+                }
+            } else {
+                switch (c) {
+                    case '\\':
+                        b.append((char) '\\');
+                        break;
+                    case 'n':
+                        b.append((char) '\n');
+                        break;
+                    case 'r':
+                        b.append((char) '\r');
+                        break;
+                    case 't':
+                        b.append((char) '\t');
+                        break;
+                    case 'f':
+                        b.append((char) '\f');
+                        break;
+                    case 's':
+                        b.append(" \t\n\r\f");
+                        break;
+                    default:
+                        b.append(c);
+                }
+                backSlashSeen = false;
+            }
+        }
+        return b.toString();
+    }
 }
