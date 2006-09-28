@@ -43,10 +43,6 @@ public class ConditionTask extends ConditionBase {
     private String value = "true";
     private String alternative = null;
 
-    public ConditionTask() {
-        super("condition");
-    }
-
     /**
      * The name of the property to set. Required.
      * @param p the name of the property
