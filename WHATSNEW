@@ -22,6 +22,8 @@ Fixed bugs:
 
 * URLResource did not close jar files, and also did not disconnect HTTPConnection (s).
 
+* error calling junitreport. Bugzilla 40595. 
+
 * <junittask/> created junitvmwatcher*.properties files but did not close and delete them.  
 
 * <xmlproperty> did not create properties for empty leaf elements.

@@ -361,7 +361,6 @@ public class URLResource extends Resource {
      * @throws Throwable on error.
      */
     protected void finalize() throws Throwable {
-        close();
         conn = null;
         super.finalize();
     }
