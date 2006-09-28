@@ -483,12 +483,8 @@ public class Concat extends Task {
                 throw new BuildException("Unable to open "
                     + destinationFile + " for writing", t);
             }
-            try {
-                in = new ConcatResourceInputStream(c);
-                ((ConcatResourceInputStream) in).setManagingComponent(this);
-            } catch (IOException e) {
-                throw new BuildException(e);
-            }
+            in = new ConcatResourceInputStream(c);
+            ((ConcatResourceInputStream) in).setManagingComponent(this);
             Thread t = new Thread(new StreamPumper(in, out));
             t.start();
             try {
