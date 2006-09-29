@@ -356,15 +356,6 @@ public class URLResource extends Resource {
         }
     }
 
-    /**
-     * Finalize this URLResource.
-     * @throws Throwable on error.
-     */
-    protected void finalize() throws Throwable {
-        conn = null;
-        super.finalize();
-    }
-
     private static URL newURL(String u) {
         try {
             return new URL(u);
