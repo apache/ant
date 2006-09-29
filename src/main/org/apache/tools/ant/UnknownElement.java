@@ -152,10 +152,9 @@ public class UnknownElement extends Task {
      * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
-        //ProjectComponentHelper helper=ProjectComponentHelper.getProjectComponentHelper();
-        //realThing = helper.createProjectComponent( this, getProject(), null,
-        //                                           this.getTag());
-
+        if (realThing != null) {
+            return;
+        }
         configure(makeObject(this, getWrapper()));
     }
 

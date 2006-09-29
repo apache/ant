@@ -29,6 +29,9 @@ Fixed bugs:
 * <xmlproperty> did not create properties for empty leaf elements.
   Bugzilla report 26286.
 
+* UnknownElement.maybeConfigure always configured.
+  Bugzilla report 40641.
+
 Other changes:
 --------------
 
