@@ -60,6 +60,13 @@ public class WaitFor extends ConditionBase {
     private String timeoutProperty;
 
     /**
+     * Constructor, names this task "waitfor".
+     */
+    public WaitFor() {
+        super("waitfor");
+    }
+
+    /**
      * Set the maximum length of time to wait.
      * @param time a <code>long</code> value
      */

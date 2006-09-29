@@ -44,6 +44,13 @@ public class ConditionTask extends ConditionBase {
     private String alternative = null;
 
     /**
+     * Constructor, names this task "condition".
+     */
+    public ConditionTask() {
+        super("condition");
+    }
+
+    /**
      * The name of the property to set. Required.
      * @param p the name of the property
      * @since Ant 1.4

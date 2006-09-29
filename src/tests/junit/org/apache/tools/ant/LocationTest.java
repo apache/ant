@@ -46,7 +46,8 @@ public class LocationTest extends BuildFileTest {
 
     public void testConditionTask() {
         executeTarget("testConditionTask");
-        ConditionTask c = (ConditionTask) getProject().getReference("cond");
+        TaskAdapter ta = (TaskAdapter) getProject().getReference("cond");
+        ConditionTask c = (ConditionTask) ta.getProxy();
         assertFalse(c.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(c.getLocation().getLineNumber() == 0);
     }
