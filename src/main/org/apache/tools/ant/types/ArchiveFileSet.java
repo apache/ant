@@ -130,6 +130,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param srcFile The archive from which to extract entries.
      */
     public void setSrc(File srcFile) {
+        checkAttributesAllowed();
         setSrcResource(new FileResource(srcFile));
     }
 
@@ -177,6 +178,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param prefix The prefix to prepend to entries in the archive file.
      */
     public void setPrefix(String prefix) {
+        checkAttributesAllowed();
         if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
@@ -202,6 +204,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param fullpath the full pathname of the single entry in this fileset.
      */
     public void setFullpath(String fullpath) {
+        checkAttributesAllowed();
         if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
@@ -304,6 +307,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setFileMode(String octalString) {
+        checkAttributesAllowed();
         integerSetFileMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 
@@ -352,6 +356,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setDirMode(String octalString) {
+        checkAttributesAllowed();
         integerSetDirMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 

@@ -32,6 +32,9 @@ Fixed bugs:
 * UnknownElement.maybeConfigure always configured.
   Bugzilla report 40641.
 
+* no check for refid when prefix attribute is set in zipfileset.
+  Bugzilla report 30498.
+
 Other changes:
 --------------
 
