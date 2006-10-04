@@ -1,0 +1,35 @@
+<project xmlns:au="antlib:org.apache.ant.antunit" default="all">
+
+  <target name="test-refid-check-prefix">
+    <zipfileset id="test-refid"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref2"
+                  refid="test-refid"
+                  prefix="WEB-INF/lib/"/>
+    </au:expectfailure>
+    <au:expectfailure>
+      <zipfileset id="ref3"
+                  prefix="WEB-INF/lib/"
+                  ReFiD="test-refid"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-refid-check-encoding">
+    <zipfileset id="test-refid2"
+                encoding="utf-8"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref4"
+                  encoding="utf-8"
+                  refid="test-refid2"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset dir="${basedir}" includes="zipfileset-test.xml"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>
