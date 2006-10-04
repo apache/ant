@@ -21,6 +21,8 @@ if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap
 call bootstrap.bat
 if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap\bin\lcp.bat if exist bootstrap\bin\antRun.bat goto runAnt
 echo Bootstrap FAILED
+REM set the error code
+color 00
 goto cleanup
 
 :runAnt
