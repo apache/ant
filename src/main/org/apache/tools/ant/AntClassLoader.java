@@ -872,6 +872,18 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     /**
+     * Used for isolated resource seaching.
+     * @return the root classloader of AntClassLoader.
+     */
+    private ClassLoader getRootLoader() {
+        ClassLoader ret = getClass().getClassLoader();
+        while (ret != null && ret.getParent() != null) {
+            ret = ret.getParent();
+        }
+        return ret;
+    }
+
+    /**
      * Finds the resource with the given name. A resource is
      * some data (images, audio, text, etc) that can be accessed by class
      * code in a way that is independent of the location of the code.
@@ -913,9 +925,13 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
         if (url == null && !isParentFirst(name)) {
             // this loader was first but it didn't find it - try the parent
-
-            url = (parent == null) ? super.getResource(name)
-                : parent.getResource(name);
+            if (ignoreBase) {
+                url = (getRootLoader() == null) ? null
+                    : getRootLoader().getResource(name);
+            } else {
+                url = (parent == null) ? super.getResource(name)
+                    : parent.getResource(name);
+            }
             if (url != null) {
                 log("Resource " + name + " loaded from parent loader",
                     Project.MSG_DEBUG);
@@ -953,6 +969,11 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (isParentFirst(name)) {
             // Normal case.
             return CollectionUtils.append(base, mine);
+        } else if (ignoreBase) {
+            return getRootLoader() == null
+                ? mine
+                : CollectionUtils.append(
+                    mine, getRootLoader().getResources(name));
         } else {
             // Inverted.
             return CollectionUtils.append(mine, base);
