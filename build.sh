@@ -41,7 +41,7 @@ fi
 
 if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
   echo Bootstrap FAILED
-  exit
+  exit 1
 fi
 
 if [ "$REALANTHOME" != "" ] ; then
