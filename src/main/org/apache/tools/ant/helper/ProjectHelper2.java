@@ -738,7 +738,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
             }
 
-            if (context.getBuildFile() != null) {
+            if (context.getBuildFile() != null && nameAttributeSet) {
                 project.setUserProperty("ant.file."
                     + context.getCurrentProjectName(),
                     context.getBuildFile().toString());

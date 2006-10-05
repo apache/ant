@@ -40,6 +40,9 @@ Fixed bugs:
 * fix for junit4 issue introducted since beta2.
   Bugzilla report 40682.
 
+* Error in duplicate project name with <import> and <antcall>.
+  Bugzilla report 39920.
+
 Other changes:
 --------------
 
