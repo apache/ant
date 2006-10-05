@@ -37,6 +37,7 @@ import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -213,13 +214,7 @@ public class PropertyFile extends Task {
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         } finally {
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException ioex) {
-                    // ignore
-                }
-            }
+            FileUtils.close(bos);
         }
     }
 
