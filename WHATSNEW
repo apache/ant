@@ -4,6 +4,8 @@ Changes from Ant 1.7.0Beta2 to current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* Removed launcher classes from nodeps jar.
+
 * <classconstants> filter reader uses ISO-8879-1 encoding to read
   the java class file. Bugzilla report 33604.
 
