@@ -154,6 +154,14 @@ public class JUnitTask extends Task {
     private boolean splitJunit = false;
     private JUnitTaskMirror delegate;
 
+    //   Attributes for basetest
+    private boolean haltOnError = false;
+    private boolean haltOnFail  = false;
+    private boolean filterTrace = true;
+    private boolean fork        = false;
+    private String  failureProperty;
+    private String  errorProperty;
+
     private static final int STRING_BUFFER_SIZE = 128;
     /**
      * @since Ant 1.7
@@ -185,11 +193,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.5
      */
     public void setFiltertrace(boolean value) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setFiltertrace(value);
-        }
+        this.filterTrace = value;
     }
 
     /**
@@ -203,11 +207,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setHaltonerror(boolean value) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setHaltonerror(value);
-        }
+        this.haltOnError = value;
     }
 
     /**
@@ -222,11 +222,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.4
      */
     public void setErrorProperty(String propertyName) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setErrorProperty(propertyName);
-        }
+        this.errorProperty = propertyName;
     }
 
     /**
@@ -241,11 +237,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setHaltonfailure(boolean value) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setHaltonfailure(value);
-        }
+        this.haltOnFail = value;
     }
 
     /**
@@ -260,11 +252,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.4
      */
     public void setFailureProperty(String propertyName) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setFailureProperty(propertyName);
-        }
+        this.failureProperty = propertyName;
     }
 
     /**
@@ -281,11 +269,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setFork(boolean value) {
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setFork(value);
-        }
+        this.fork = value;
     }
 
     /**
@@ -722,6 +706,22 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
+        // Apply the basetest attributes
+        Enumeration e = allTests();
+        while (e.hasMoreElements()) {
+            BaseTest test = (BaseTest) e.nextElement();
+            test.setFiltertrace(filterTrace);
+            test.setHaltonerror(haltOnError);
+            if (errorProperty != null) {
+                test.setErrorProperty(errorProperty);
+            }
+            test.setHaltonfailure(haltOnFail);
+            if (failureProperty != null) {
+                test.setFailureProperty(failureProperty);
+            }
+            test.setFork(fork);
+        }
+
         ClassLoader myLoader = JUnitTask.class.getClassLoader();
         ClassLoader mirrorLoader;
         if (splitJunit) {
