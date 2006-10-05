@@ -18,24 +18,34 @@
 
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.util.optional.WeakishReference12;
+
+import java.lang.ref.WeakReference;
 
 /**
- * This is a weak reference on java1.2 and up, that is all
- * platforms Ant1.6 supports.
+ * These classes are part of some code to reduce memory leaks by only retaining weak references to things
+ * on Java1.2+, and yet still work (with leaky hard references) on Java1.1. Now that Ant is 1.2+ only,
+ * life is simpler and none of the classes are needed any more.
+ *
+ * They are only retained in case a third-party task uses them
  * @since ant1.6
- * @deprecated since 1.7.
+ * @see org.apache.tools.ant.util.optional.WeakishReference12
+ * @deprecated deprecated 1.7; will be removed in Ant1.8
  *             Just use {@link java.lang.ref.WeakReference} directly.
  */
-public abstract class WeakishReference  {
+public class WeakishReference  {
+
+
+    private WeakReference weakref;
 
     /**
-     * create the appropriate type of reference for the java version
-     * @param object the object that the reference will refer to.
-     * @return reference to the Object.
+     * create a new soft reference, which is bound to a
+     * Weak reference inside
+     *
+     * @param reference
+     * @see java.lang.ref.WeakReference
      */
-    public static WeakishReference createReference(Object object) {
-            return new WeakishReference12(object);
+    WeakishReference(Object reference) {
+        this.weakref = new WeakReference(reference);
     }
 
     /**
@@ -45,31 +55,35 @@ public abstract class WeakishReference  {
      * @return The object to which this reference refers, or
      *         <code>null</code> if this reference object has been cleared.
      */
-    public abstract Object get();
+    public Object get() {
+        return weakref.get();
+    }
 
     /**
-     * A hard reference for Java 1.1.
+     * create the appropriate type of reference for the java version
+     * @param object the object that the reference will refer to.
+     * @return reference to the Object.
+     */
+    public static WeakishReference createReference(Object object) {
+            return new WeakishReference(object);
+    }
+
+
+    /**
+     * This was a hard reference for Java 1.1. Since Ant1.7,
      * @deprecated since 1.7. 
      *             Hopefully nobody is using this.
      */
     public static class HardReference extends WeakishReference {
-        private Object object;
 
         /**
          * constructor.
          * @param object the object that the reference will refer to.
          */
         public HardReference(Object object) {
-            this.object = object;
+            super(object);
         }
 
-        /**
-         * Returns this reference object's referent.
-         * @return the object to which this reference refers.
-         */
-        public Object get() {
-            return object;
-        }
     }
 
 }

@@ -27,10 +27,13 @@ import java.lang.ref.WeakReference;
  * appropriate java.lang.ref class.
  * @deprecated since 1.7.
  *             Just use {@link WeakReference} directly.
+ * Note that in ant1.7 is parent was changed to extend HardReference.
+ * This is because the latter has access to the (package scoped)
+ * WeakishReference(Object) constructor, and both that and this are thin
+ * facades on the underlying no-longer-abstract base class. 
  */
-public class WeakishReference12 extends WeakishReference  {
+public class WeakishReference12 extends WeakishReference.HardReference  {
 
-    private WeakReference weakref;
 
     /**
      * create a new soft reference, which is bound to a
@@ -39,16 +42,6 @@ public class WeakishReference12 extends WeakishReference  {
      * @see java.lang.ref.WeakReference
      */
     public WeakishReference12(Object reference) {
-        this.weakref = new WeakReference(reference);
+        super(reference);
     }
-
-    /**
-     * Returns this reference object's referent.
-     *
-     * @return referent.
-     */
-    public Object get() {
-        return weakref.get();
-    }
-
 }
