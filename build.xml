@@ -830,6 +830,7 @@
         <selector refid="non-core"/>
         <not>
           <or>
+            <selector refid="ant.launcher"/>
             <selector refid="needs.trax"/>
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
