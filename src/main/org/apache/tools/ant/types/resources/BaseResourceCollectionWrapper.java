@@ -70,7 +70,7 @@ public abstract class BaseResourceCollectionWrapper
             return;
         }
         if (rc != null) {
-            throwOneNested();
+            throw oneNested();
         }
         rc = c;
         setChecked(false);
@@ -155,7 +155,7 @@ public abstract class BaseResourceCollectionWrapper
     protected synchronized final ResourceCollection getResourceCollection() {
         dieOnCircularReference();
         if (rc == null) {
-            throwOneNested();
+            throw oneNested();
         }
         return rc;
     }
@@ -194,8 +194,8 @@ public abstract class BaseResourceCollectionWrapper
         return coll;
     }
 
-    private void throwOneNested() throws BuildException {
-        throw new BuildException(super.toString() + ONE_NESTED_MESSAGE);
+    private BuildException oneNested() {
+        return new BuildException(super.toString() + ONE_NESTED_MESSAGE);
     }
 
 }
