@@ -9,6 +9,8 @@ Changes that could break older environments:
 * <classconstants> filter reader uses ISO-8879-1 encoding to read
   the java class file. Bugzilla report 33604.
 
+* Defer reference process. Bugzilla 36955, 34458, 37688.
+
 Fixed bugs:
 -----------
 

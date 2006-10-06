@@ -1007,8 +1007,6 @@ public class ProjectHelper2 extends ProjectHelper {
             task.setLocation(location);
             task.setOwningTarget(context.getCurrentTarget());
 
-            context.configureId(task, attrs);
-
             if (parent != null) {
                 // Nested element
                 ((UnknownElement) parent).addChild(task);
