@@ -82,7 +82,7 @@ public class AssertionsTest extends BuildFileTest {
     public void testReferenceAbuse() {
         expectBuildExceptionContaining("test-reference-abuse",
                 "reference abuse rejected",
-                "You must not specify nested elements when using refid");
+                "You must not specify");
     }
 
     public void testNofork() {
