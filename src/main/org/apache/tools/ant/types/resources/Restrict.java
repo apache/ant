@@ -63,6 +63,9 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
         if (isReference()) {
             throw noChildrenAllowed();
         }
+        if (c == null) {
+            return;
+        }
         w.add(c);
     }
 
