@@ -1444,6 +1444,8 @@ public class JUnitTask extends Task {
                     Project.MSG_VERBOSE);
                 // make sure the test will be accepted as a TestCase
                 classLoader.addSystemPackageRoot("junit");
+                // make sure the test annotation are accepted
+                classLoader.addSystemPackageRoot("org.junit");
                 // will cause trouble in JDK 1.1 if omitted
                 classLoader.addSystemPackageRoot("org.apache.tools.ant");
             }

@@ -45,6 +45,9 @@ Fixed bugs:
 * Error in duplicate project name with <import> and <antcall>.
   Bugzilla report 39920.
 
+* junit4 did not work with fork=no and junit4 in $ANT_HOME/lib.
+  Bugzilla report 40697.
+
 Other changes:
 --------------
 
