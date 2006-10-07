@@ -48,6 +48,9 @@ Fixed bugs:
 * junit4 did not work with fork=no and junit4 in $ANT_HOME/lib.
   Bugzilla report 40697.
 
+* PathConvert on Windows should process forward and back slashes equivalently.
+  Bugzilla report 32884.
+
 Other changes:
 --------------
 

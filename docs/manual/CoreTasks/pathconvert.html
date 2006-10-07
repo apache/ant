@@ -107,9 +107,13 @@ drive letters to Unix paths, and vice-versa.</p>
   </tr>
   <tr>
     <td valign="top">from</td>
-    <td valign="top">The prefix to match.  Note that this value is case-insensitive when
-    the build is running on a Windows platform and case-sensitive when running on a
-    Unix platform.</td>
+    <td valign="top">
+      The prefix to match.  Note that this value is case-insensitive when
+      the build is running on a Windows platform and case-sensitive 
+      when running on a Unix platform.
+      <em>Since Ant 1.7.0</em>, on Windows this value is also insensitive
+      to the slash style used for directories, one can use '/' or '\'.
+    </td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -197,8 +201,17 @@ it defaults to the appropriate character for the current platform.  Such a list 
 then be used in another task, like <tt>javadoc</tt>, that requires a comma separated
 list of files.
 </p>
-
-
+<h4>Example 4</h4>
+<pre>
+    &lt;pathconvert property="prop" dirsep="|"&gt;
+      &lt;map from="${basedir}/abc/" to=''/&gt;
+      &lt;path location="abc/def/ghi"/&gt;
+    &lt;/pathconvert&gt;
+</pre>
+  <p>
+    This example sets the property "prop" to "def|ghi" on
+    Windows and on Unix.
+  </p>
 </body>
 </html>
 

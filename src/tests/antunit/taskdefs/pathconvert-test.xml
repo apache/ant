@@ -3,7 +3,7 @@
   <target name="test-dir-char">
     <pathconvert property="def|ghi" dirsep="|">
       <map from="${basedir}/abc/" to=''/>
-      <path path="${basedir}/abc/def/ghi"/>
+      <path location="abc/def/ghi"/>
     </pathconvert>
     <au:assertTrue>
       <equals arg1="${def|ghi}" arg2="def|ghi"/>
