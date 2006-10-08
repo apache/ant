@@ -64,6 +64,23 @@ public class AntClassLoaderDelegationTest extends TestCase {
         Path path = new Path(p, buildTestcases);
         // A special parent loader which is not the system class loader:
         ClassLoader parent = new ParentLoader();
+        // --- SOME PRINTF's to figure out gump failure
+        System.out.println("ParentLoader(): " + enum2List(parent.getResources(TEST_RESOURCE)));
+        ClassLoader loader = AntClassLoaderDelegationTest.class.getClassLoader();
+        System.out.println("AntClassLoaderDelegationTest");
+        while (loader != null) {
+            System.out.println(" " + loader.getClass() + ">>> " + enum2List(loader.getResources(TEST_RESOURCE)));
+            loader = loader.getParent();
+        }
+
+        System.out.println("Project");
+        loader = Project.class.getClassLoader();
+        while (loader != null) {
+            System.out.println(" " + loader.getClass() + ">>> " + enum2List(loader.getResources(TEST_RESOURCE)));
+            loader = loader.getParent();
+        }
+            
+                               
         // An AntClassLoader which is supposed to delegate to the parent and then to the disk path:
         ClassLoader acl = new AntClassLoader(parent, p, path, true);
         // The intended result URLs:
