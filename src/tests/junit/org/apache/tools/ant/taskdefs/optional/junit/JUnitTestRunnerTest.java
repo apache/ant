@@ -61,15 +61,27 @@ public class JUnitTestRunnerTest extends TestCase {
     public void testNoTestCase(){
         TestRunner runner = createRunner(NoTestCase.class);
         runner.run();
-        assertEquals(runner.getFormatter().getError(), JUnitTestRunner.FAILURES, runner.getRetCode());
+        // On junit3 this is a FAILURE, on junit4 this is an ERROR
+        int ret = runner.getRetCode();
+        
+        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
+            fail("Unexpected result " + ret + " from junit runner");
+        }
+        // JUnit3 test
+        //assertEquals(runner.getFormatter().getError(), JUnitTestRunner.FAILURES, runner.getRetCode());
     }
 
     // check that an exception in the constructor is noticed
     public void testInvalidTestCase(){
         TestRunner runner = createRunner(InvalidTestCase.class);
         runner.run();
-        String error = runner.getFormatter().getError();
-        assertEquals(error, JUnitTestRunner.FAILURES, runner.getRetCode());
+        // On junit3 this is a FAILURE, on junit4 this is an ERROR
+        int ret = runner.getRetCode();
+        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
+            fail("Unexpected result " + ret + " from junit runner");
+        }
+        // JUNIT3 test
+        //assertEquals(error, JUnitTestRunner.FAILURES, runner.getRetCode());
         //@fixme as of now does not report the original stacktrace.
         //assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
