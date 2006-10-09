@@ -52,39 +52,24 @@ public class AntClassLoaderDelegationTest extends TestCase {
     }
 
     /** Sample resource present in build/testcases/ */
-    private static final String TEST_RESOURCE = "org/apache/tools/ant/IncludeTest.class";
+    private static final String TEST_RESOURCE
+        = "apache/tools/ant/IncludeTest.class";
     
     public void testFindResources() throws Exception {
-        //System.err.println("loading from: " + AntClassLoader.class.getProtectionDomain().getCodeSource().getLocation());
-        // See bug #30161.
         // This path should contain the class files for these testcases:
         String buildTestcases = System.getProperty("build.tests");
         assertNotNull("defined ${build.tests}", buildTestcases);
-        assertTrue("have a dir " + buildTestcases, new File(buildTestcases).isDirectory());
-        Path path = new Path(p, buildTestcases);
+        assertTrue("have a dir " + buildTestcases,
+                   new File(buildTestcases).isDirectory());
+        Path path = new Path(p, buildTestcases + "/org");
         // A special parent loader which is not the system class loader:
         ClassLoader parent = new ParentLoader();
-        // --- SOME PRINTF's to figure out gump failure
-        System.out.println("ParentLoader(): " + enum2List(parent.getResources(TEST_RESOURCE)));
-        ClassLoader loader = AntClassLoaderDelegationTest.class.getClassLoader();
-        System.out.println("AntClassLoaderDelegationTest");
-        while (loader != null) {
-            System.out.println(" " + loader.getClass() + ">>> " + enum2List(loader.getResources(TEST_RESOURCE)));
-            loader = loader.getParent();
-        }
-
-        System.out.println("Project");
-        loader = Project.class.getClassLoader();
-        while (loader != null) {
-            System.out.println(" " + loader.getClass() + ">>> " + enum2List(loader.getResources(TEST_RESOURCE)));
-            loader = loader.getParent();
-        }
-            
-                               
-        // An AntClassLoader which is supposed to delegate to the parent and then to the disk path:
+        // An AntClassLoader which is supposed to delegate to
+        // the parent and then to the disk path:
         ClassLoader acl = new AntClassLoader(parent, p, path, true);
         // The intended result URLs:
-        URL urlFromPath = new URL(FILE_UTILS.toURI(buildTestcases) + TEST_RESOURCE);
+        URL urlFromPath = new URL(
+            FILE_UTILS.toURI(buildTestcases) + "org/" + TEST_RESOURCE);
         URL urlFromParent = new URL("http://ant.apache.org/" + TEST_RESOURCE);
         assertEquals("correct resources (regular delegation order)",
             Arrays.asList(new URL[] {urlFromParent, urlFromPath}),
@@ -98,12 +83,14 @@ public class AntClassLoaderDelegationTest extends TestCase {
     public void testFindIsolateResources() throws Exception {
         String buildTestcases = System.getProperty("build.tests");
         assertNotNull("defined ${build.tests}", buildTestcases);
-        assertTrue("have a dir " + buildTestcases, new File(buildTestcases).isDirectory());
-        Path path = new Path(p, buildTestcases);
+        assertTrue("have a dir " + buildTestcases,
+                   new File(buildTestcases).isDirectory());
+        Path path = new Path(p, buildTestcases + "/org");
         // A special parent loader which is not the system class loader:
         ClassLoader parent = new ParentLoader();
 
-        URL urlFromPath = new URL(FILE_UTILS.toURI(buildTestcases) + TEST_RESOURCE);
+        URL urlFromPath = new URL(
+            FILE_UTILS.toURI(buildTestcases) + "org/" + TEST_RESOURCE);
         AntClassLoader acl = new AntClassLoader(parent, p, path, false);
         acl.setIsolated(true);
         assertEquals("correct resources (reverse delegation order)",
@@ -127,7 +114,9 @@ public class AntClassLoaderDelegationTest extends TestCase {
         
         protected Enumeration findResources(String name) throws IOException {
             if (name.equals(TEST_RESOURCE)) {
-                return Collections.enumeration(Collections.singleton(new URL("http://ant.apache.org/" + name)));
+                return Collections.enumeration(
+                    Collections.singleton(
+                        new URL("http://ant.apache.org/" + name)));
             } else {
                 return Collections.enumeration(Collections.EMPTY_SET);
             }
