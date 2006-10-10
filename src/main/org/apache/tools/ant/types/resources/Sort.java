@@ -32,35 +32,13 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
+import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
 
 /**
  * ResourceCollection that sorts another ResourceCollection.
  * @since Ant 1.7
  */
 public class Sort extends BaseResourceCollectionWrapper {
-
-    private static class MultiComparator implements Comparator {
-        private Vector v = null;
-        synchronized void add(ResourceComparator c) {
-            if (c == null) {
-                return;
-            }
-            v = (v == null) ? new Vector() : v;
-            v.add(c);
-        }
-        public synchronized int compare(Object o1, Object o2) {
-            int result = 0;
-            //if no nested, natural order:
-            if (v == null || v.size() == 0) {
-                result = ((Comparable) o1).compareTo((Comparable) o2);
-            } else {
-                for (Iterator i = v.iterator(); result == 0 && i.hasNext();) {
-                    result = ((Comparator) i.next()).compare(o1, o2);
-                }
-            }
-            return result;
-        }
-    }
 
     //sorted bag impl. borrowed from commons-collections TreeBag:
     private static class SortedBag extends AbstractCollection {
@@ -115,7 +93,7 @@ public class Sort extends BaseResourceCollectionWrapper {
         }
     }
 
-    private MultiComparator comp = new MultiComparator();
+    private DelegatedResourceComparator comp = new DelegatedResourceComparator();
 
     /**
      * Sort the contained elements.
@@ -162,15 +140,7 @@ public class Sort extends BaseResourceCollectionWrapper {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            if (comp.v != null && comp.v.size() > 0) {
-                for (Iterator i = comp.v.iterator(); i.hasNext();) {
-                    Object o = i.next();
-                    if (o instanceof DataType) {
-                        stk.push(o);
-                        invokeCircularReferenceCheck((DataType) o, stk, p);
-                    }
-                }
-            }
+            DataType.invokeCircularReferenceCheck(comp, stk, p);
             setChecked(true);
         }
     }
