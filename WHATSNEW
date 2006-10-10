@@ -51,6 +51,9 @@ Fixed bugs:
 * PathConvert on Windows should process forward and back slashes equivalently.
   Bugzilla report 32884.
 
+* ant.bat did not look in %HOMEDRIVE%%HOMEPATH% for pre/post batch files on
+  WinXP. Bugzilla report 39298.
+
 Other changes:
 --------------
 
