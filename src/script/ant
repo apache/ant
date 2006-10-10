@@ -44,16 +44,9 @@ if $no_config ; then
   rpm_mode=false
   usejikes=$use_jikes_default
 else
-  orig_ant_home=$ANT_HOME
-  # load system-wide ant configuration
-  if [ -f "/etc/ant.conf" ] ; then
+  # load system-wide ant configuration (ONLY if ANT_HOME has NOT been set)
+  if [ -z "$ANT_HOME" -a -f "/etc/ant.conf" ] ; then
     . /etc/ant.conf
-  fi
-
-  # Normally users do not expect that /etc/ant.conf will override ANT_HOME
-  if [ -n "$orig_ant_home" -a "$orig_ant_home" != "$ANT_HOME" ] ; then
-    echo "Warning: ANT_HOME has been overridden by /etc/ant.conf from $orig_ant_home to $ANT_HOME"
-    echo "         Use ant -noconfig if this is not desired."
   fi
 
   # load user ant configuration
@@ -166,6 +159,27 @@ if $rpm_mode && [ -f /usr/bin/build-classpath ] ; then
     if [ -n "$_OPTCLASSPATH" ] ; then 
       LOCALCLASSPATH="$LOCALCLASSPATH:$_OPTCLASSPATH"
     fi
+  fi
+
+  # If no optional jars have been specified then build the default list
+  if [ -z "$OPT_JAR_LIST" ] ; then
+    for file in /etc/ant.d/*; do
+      if [ -f "$file" ]; then
+        case "$file" in
+        *~) ;;
+        *#*) ;;
+        *.rpmsave) ;;
+        *.rpmnew) ;;
+        *)
+          for dep in `cat "$file"`; do
+            case "$OPT_JAR_LIST" in
+            *"$dep"*) ;;
+            *) OPT_JAR_LIST="$OPT_JAR_LIST${OPT_JAR_LIST:+ }$dep"
+            esac
+          done
+        esac
+      fi
+    done
   fi
 
   # Explicitly add javac path to classpath, assume JAVA_HOME set

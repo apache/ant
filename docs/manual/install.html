@@ -227,33 +227,6 @@ restrictions on the classes which may be loaded by an extension.</p>
   </td>
 </tr>
 </table>
-<table width="80%">
-<tr>
-  <td colspan="2">
-    <b>Linux Note:</b>
-  </td>
-</tr>
-<tr>
-  <td width="5%">&nbsp;</td>
-  <td>
-    A jpackage rpm version of ant may be installed on your machine,
-    say as part of install of Fedora Core 3. If another version
-    of ant is installed, the rpm version <b><u>will</u></b> take
-    priority. This is due to the fact that ant bash script file
-    dot includes the /etc/ant.conf file from the jpackage distribution.
-    The current version of this file (sept 2006) overwrites the
-    ANT_HOME environment variable. If this happens, ant will
-    issue a warning. To fix this, modify the line in /etc/ant.conf
-    <br/>
-    <code>ANT_HOME=/usr/share/ant</code>
-    <br/>
-    to be
-    <br/>
-    <code>ANT_HOME=${ANT_HOME:-/usr/share/ant}</code>.
-  </td>
-</tr>
-</table>
-
 
 <h3><a name="optionalTasks">Optional Tasks</a></h3>
 <p>Ant supports a number of optional tasks. An optional task is a task which
@@ -420,9 +393,14 @@ Having a symbolic link set up to point to the JVM/JSK version makes updates more
 The <a href="http://www.jpackage.org">JPackage project</a> distributes an RPM version of Ant.  
 With this version, it is not necessary to set <code> JAVA_HOME </code>or 
 <code> ANT_HOME </code>environment variables and the RPM installer will correctly
-place the Ant executable on your path.  The <code> ANT_HOME </code>environment variable will
-be ignored, if set, when running the JPackage version of Ant.
-</p><p>
+place the Ant executable on your path.
+</p>
+  <p>
+    <b>NOTE:</b> <em>Since Ant 1.7.0</em>, if the <code>ANT_HOME</code>
+    environment variable is set, the jpackage distribution will be
+    ignored.
+  </p>
+  <p>
 Optional jars for the JPackage version are handled in two ways.  The easiest, and
 best way is to get these external libraries from JPackage if JPackage has them 
 available.  (Note: for each such library, you will have to get both the external 
