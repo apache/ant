@@ -66,6 +66,9 @@ Other changes:
 * Added <tokens> resource collection for convenient creation of string
   resources from other resources' content. Inspired by Bugzilla 40504.
 
+* Added <compare> resource selector to select resources based on the
+  results of their comparison to other resources.
+
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
 

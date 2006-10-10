@@ -1,6 +1,8 @@
 <antlib>
   <typedef name="and"
     classname="org.apache.tools.ant.types.resources.selectors.And" />
+  <typedef name="compare"
+    classname="org.apache.tools.ant.types.resources.selectors.Compare" />
   <typedef name="contains"
     classname="org.apache.tools.ant.types.selectors.ContainsSelector" />
   <typedef name="containsregexp"

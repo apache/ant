@@ -1,5 +1,6 @@
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit"
-         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"
+         xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
 
   <target name="testname1">
     <au:assertTrue>
@@ -99,7 +100,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testinstanceoftype"
+  <target name="instanceoftype"
     depends="testinstanceoftype1,testinstanceoftype2,testinstanceoftype3" />
 
   <target name="testinstanceofclass">
@@ -115,7 +116,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="instanceof" depends="testinstanceoftype,testinstanceofclass" />
+  <target name="instanceof" depends="instanceoftype,testinstanceofclass" />
 
   <target name="testtype">
     <au:assertTrue>
@@ -358,6 +359,68 @@
     </au:assertTrue>
   </target>
 
+  <target name="testcompare">
+    <au:assertTrue>
+      <and>
+        <!-- basic test, natural ordering -->
+        <resourcecount count="3">
+          <restrict>
+            <rsel:compare when="greater" against="each">
+              <control><string value="b" /></control>
+            </rsel:compare>
+            <resources>
+              <string value="a" />
+              <string value="b" />
+              <string value="c" />
+              <string value="d" />
+              <string value="e" />
+            </resources>
+          </restrict>
+        </resourcecount>
+        <!-- one comparator, default when/against -->
+        <resourcecount count="5">
+          <restrict>
+            <rsel:compare>
+              <control><string value="." /></control>
+              <rcmp:size />
+            </rsel:compare>
+            <resources>
+              <string value="a" />
+              <string value="b" />
+              <string value="c" />
+              <string value="d" />
+              <string value="e" />
+            </resources>
+          </restrict>
+        </resourcecount>
+        <!-- multiple controls, comparators -->
+        <resourcecount count="3">
+          <restrict>
+            <rsel:compare when="greater" against="each">
+              <control>
+                <string value="a" />
+                <string value="b" />
+                <string value="bb" />
+                <string value="c" />
+                <string value="ccc" />
+              </control>
+              <rcmp:name />
+              <rcmp:size />
+            </rsel:compare>
+            <resources>
+              <string value="a" />
+              <string value="bbbb" />
+              <string value="ccc" />
+              <string value="cccc" />
+              <string value="d" />
+              <string value="e" />
+            </resources>
+          </restrict>
+        </resourcecount>
+      </and>
+    </au:assertTrue>
+  </target>
+
   <target name="majority"
           depends="testmajority1,testmajority2,testmajority3,testmajority4" />
 
@@ -365,7 +428,7 @@
           depends="testand,testor,testnone,testnot,majority" />
 
   <target name="all"
-    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,testcontainsregexp,logical" />
+    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,testcontainsregexp,logical,testcompare" />
 
   <!-- 
     The tests for oata.types.selectors.ModifiedSelectorTest as 

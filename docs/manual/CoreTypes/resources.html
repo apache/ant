@@ -463,6 +463,8 @@ platforms.
       containing a particular text string.</li>
     <li><a href="selectors.html#regexpselect">containsregexp</a> - select
       resources whose contents match a particular regular expression.</li>
+    <li><a href="#rsel.compare">compare</a> - select resources
+      based on comparison to other resources.</li>
   </ul>
 
   <h4><a name="rsel.name">name</a></h4>
@@ -621,12 +623,40 @@ platforms.
     </tr>
   </table>
 
+  <h4><a name="rsel.compare">compare</a></h4>
+  <p>Selects a resource based on its comparison to one or more "control"
+     resources using nested <a href="#rcmp">resource comparators</a>.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">when</td>
+      <td valign="top">Comparison ("equal"/"eq", "greater"/"gt", "less"/"lt",
+        "le" (less or equal), "ge" (greater or equal), "ne" (not equal).</td>
+      <td valign="top">No, default "equal"</td>
+    </tr>
+    <tr>
+      <td valign="top">against</td>
+      <td valign="top">Quantifier ("all"/"each"/"every", "any"/"some",
+        (exactly) "one", "most"/"majority", "none".</td>
+      <td valign="top">No, default "all"</td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>The resources against which comparisons will be made must be specified
+    using the nested &lt;control&gt; element, which denotes a
+    <a href="#resources">resources</a> collection.</p>
+
 </blockquote>
 
 <h4><a name="sort">sort</a></h4>
 
 <p>Sorts another nested resource collection according to the resources'
-natural order, or by one or more nested resource comparators:</p>
+   natural order, or by one or more nested <a href="#rcmp">resource
+   comparators</a>:</p>
 <blockquote>
   <table border="1" cellpadding="2" cellspacing="0">
     <tr>
@@ -650,7 +680,7 @@ natural order, or by one or more nested resource comparators:</p>
     are available in the internal <a href="antlib.html">antlib</a>
     <code>org.apache.tools.ant.types.resources.comparators</code>:
   </p>
-
+  <h4><a name="rcmp">Resource Comparators:</a></h4>
   <ul>
     <li><a href="#rcmp.name">name</a> - sort resources by name</li>
     <li><a href="#rcmp.exists">exists</a> - sort resources by existence</li>
