@@ -25,8 +25,15 @@ if "%HOME%"=="" goto homeDrivePathPre
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
 :homeDrivePathPre
-if "%HOMEDRIVE%%HOMEPATH%%"=="" goto alpha
+if "%HOMEDRIVE%%HOMEPATH%"=="" goto userProfilePre
+if "%HOMEDRIVE%%HOMEPATH%"=="%HOME%" goto userProfilePre
 if exist "%HOMEDRIVE%%HOMEPATH%\antrc_pre.bat" call "%HOMEDRIVE%%HOMEPATH%\antrc_pre.bat"
+
+:userProfilePre
+if "%USERPROFILE%"=="" goto alpha
+if "%USERPROFILE%"=="%HOME%" goto alpha
+if "%USERPROFILE%"=="%HOMEDRIVE%%HOMEPATH%" goto alpha
+if exist "%USERPROFILE%\antrc_pre.bat" call "%USERPROFILE%\antrc_pre.bat"
 
 :alpha
 
@@ -205,8 +212,15 @@ if "%HOME%"=="" goto homeDrivePathPost
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
 
 :homeDrivePathPost
-if "%HOMEDRIVE%%HOMEPATH%"=="" goto omega
+if "%HOMEDRIVE%%HOMEPATH%"=="" goto userProfilePost
+if "%HOMEDRIVE%%HOMEPATH%"=="%HOME%" goto userProfilePost
 if exist "%HOMEDRIVE%%HOMEPATH%\antrc_post.bat" call "%HOMEDRIVE%%HOMEPATH%\antrc_post.bat"
+
+:userProfilePost
+if "%USERPROFILE%"=="" goto omega
+if "%USERPROFILE%"=="%HOME%" goto omega
+if "%USERPROFILE%"=="%HOMEDRIVE%%HOMEPATH%" goto omega
+if exist "%USERPROFILE%\antrc_post.bat" call "%USERPROFILE%\antrc_post.bat"
 
 :omega
 
