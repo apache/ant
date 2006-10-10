@@ -649,7 +649,18 @@ platforms.
   <p>The resources against which comparisons will be made must be specified
     using the nested &lt;control&gt; element, which denotes a
     <a href="#resources">resources</a> collection.</p>
-
+  <h4>Examples</h4>
+  <p>The following selects files a, b, c, and d:</p>
+  <pre>
+&lt;restrict&gt;
+  &lt;fileset dir="src" includes="a,b,c,d,e,f,g" /&gt;
+  &lt;rsel:compare when="le" against="all"&gt;
+    &lt;control&gt;
+      &lt;resource name="d" /&gt;
+    &lt;/control&gt;
+    &lt;rcmp:name /&gt;
+  &lt;/rsel:compare&gt;
+&lt;/restrict&gt;</pre>
 </blockquote>
 
 <h4><a name="sort">sort</a></h4>
