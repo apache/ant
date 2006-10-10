@@ -21,7 +21,14 @@ REM support, things would be much easier, but sadly, it is not yet time.
 REM Be cautious about editing this, and only add WinNT specific stuff in code that
 REM only runs on WinNT.
 
+if "%HOME%"=="" goto homeDrivePathPre
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
+
+:homeDrivePathPre
+if "%HOMEDRIVE%%HOMEPATH%%"=="" goto alpha
+if exist "%HOMEDRIVE%%HOMEPATH%\antrc_pre.bat" call "%HOMEDRIVE%%HOMEPATH%\antrc_pre.bat"
+
+:alpha
 
 if "%OS%"=="Windows_NT" @setlocal
 if "%OS%"=="WINNT" @setlocal
@@ -174,27 +181,32 @@ for %%i in (1 10 100) do set err%%i=
 
 :end
 rem bug ID 32069: resetting an undefined env variable changes the errorlevel.
-set _JAVACMD=DUMMY_VAL
-set _JAVACMD=
-set ANT_CMD_LINE_ARGS=DUMMY_VAL
-set ANT_CMD_LINE_ARGS=
+if not "%_JAVACMD%"=="" set _JAVACMD=
+if not "%_ANT_CMD_LINE_ARGS%"=="" set ANT_CMD_LINE_ARGS=
+
+if "%ANT_ERROR%"=="0" goto mainEnd
 
 rem Set the return code if we are not in NT.  We can only set
 rem a value of 1, but it's better than nothing.
-if not "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="" set ANT_ERROR=255
-if not "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="0" goto quit
 if not "%OS%"=="Windows_NT" echo 1 > nul | choice /n /c:1
+
 rem Set the ERRORLEVEL if we are running NT.
-if "%OS%"=="Windows_NT" if "%ANT_ERROR%"=="" set ANT_ERROR=255
-if "%OS%"=="Windows_NT" if not %ANT_ERROR%==0 color 00
-goto quit
+if "%OS%"=="Windows_NT" color 00
+
+goto omega
+
+:mainEnd
 
 rem If there were no errors, we run the post script.
 if "%OS%"=="Windows_NT" @endlocal
 if "%OS%"=="WINNT" @endlocal
 
-:mainEnd
+if "%HOME%"=="" goto homeDrivePathPost
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
 
-:quit
+:homeDrivePathPost
+if "%HOMEDRIVE%%HOMEPATH%"=="" goto omega
+if exist "%HOMEDRIVE%%HOMEPATH%\antrc_post.bat" call "%HOMEDRIVE%%HOMEPATH%\antrc_post.bat"
+
+:omega
 
