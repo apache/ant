@@ -19,13 +19,14 @@ package org.apache.tools.ant.types.resources.comparators;
 
 import java.util.Comparator;
 
+import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 
 /**
  * Abstract Resource Comparator.
  * @since Ant 1.7
  */
-public abstract class ResourceComparator implements Comparator {
+public abstract class ResourceComparator extends DataType implements Comparator {
 
     /**
      * Compare two objects.
@@ -36,7 +37,10 @@ public abstract class ResourceComparator implements Comparator {
      * @throws ClassCastException if either argument is null.
      */
     public final int compare(Object foo, Object bar) {
-        return resourceCompare((Resource) foo, (Resource) bar);
+        dieOnCircularReference();
+        ResourceComparator c =
+            isReference() ? (ResourceComparator) getCheckedRef() : this;
+        return c.resourceCompare((Resource) foo, (Resource) bar);
     }
 
     /**
@@ -44,7 +48,10 @@ public abstract class ResourceComparator implements Comparator {
      * @param o the Object to compare against.
      * @return true if the specified Object equals this one.
      */
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
+        if (isReference()) {
+            return getCheckedRef().equals(o);
+        }
         if (o == null) {
             return false;
         }
