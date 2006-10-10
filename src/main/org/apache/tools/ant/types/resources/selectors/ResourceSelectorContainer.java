@@ -107,7 +107,7 @@ public class ResourceSelectorContainer extends DataType {
      * @param p   the Project to resolve against.
      * @throws BuildException on error.
      */
-    public void dieOnCircularReference(Stack stk, Project p) {
+    protected void dieOnCircularReference(Stack stk, Project p) {
         if (isChecked()) {
             return;
         }
