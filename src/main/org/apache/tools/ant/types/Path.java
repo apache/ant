@@ -19,10 +19,13 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.Vector;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Stack;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
@@ -33,7 +36,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH
- * environment variable.
+ * environment variable. A path might also be described as a collection
+ * of unique filesystem resources.
  * <p>
  * <code>
  * &lt;sometask&gt;<br>
@@ -55,15 +59,13 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * The path element takes a parameter <code>path</code> which will be parsed
  * and split into single elements. It will usually be used
  * to define a path from an environment variable.
- *
  */
 
-public class Path extends Union {
+public class Path extends DataType implements Cloneable, ResourceCollection {
 
     /** The system classpath as a Path object */
     public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
-
 
     /**
      * The system bootclasspath as a Path object.
@@ -72,6 +74,8 @@ public class Path extends Union {
      */
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
+
+    private static Iterator EMPTY_ITERATOR = Collections.EMPTY_SET.iterator();
 
     /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
@@ -119,6 +123,8 @@ public class Path extends Union {
         }
 
     }
+
+    private Union union = null;
 
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
@@ -169,7 +175,7 @@ public class Path extends Union {
      * @throws BuildException on error
      */
     public void setRefid(Reference r) throws BuildException {
-        if (!getResourceCollections().isEmpty()) {
+        if (union != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -227,6 +233,23 @@ public class Path extends Union {
     }
 
     /**
+     * Add a nested <code>ResourceCollection</code>.
+     * @param c the ResourceCollection to add.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection c) {
+        checkChildrenAllowed();
+        if (c == null) {
+            return;
+        }
+        if (union == null) {
+            union = new Union();
+            union.setProject(getProject());
+        }
+        union.add(c);
+    }
+
+    /**
      * Creates a nested <code>&lt;path&gt;</code> element.
      * @return a <code>Path</code> to be configured
      * @throws BuildException on error
@@ -258,7 +281,8 @@ public class Path extends Union {
          addExisting(source, false);
      }
 
-    /** Same as addExisting, but support classpath behavior if tryUserDir
+    /**
+     * Same as addExisting, but support classpath behavior if tryUserDir
      * is true. Classpaths are relative to user dir, not the project base.
      * That used to break jspc test
      *
@@ -288,29 +312,24 @@ public class Path extends Union {
     }
 
     /**
-     * Override <code>Union.getCollection()</code>
-     * so we can check our children first.
-     * @return a Collection.
+     * Returns all path elements defined by this and nested path objects.
+     * @return list of path elements.
      */
-    protected Collection getCollection() {
-        for (Iterator i = getResourceCollections().iterator(); i.hasNext();) {
-            ResourceCollection rc = (ResourceCollection) i.next();
-            if (!(rc.isFilesystemOnly())) {
-                throw new BuildException(getDataTypeName()
-                    + " allows only filesystem resources.");
-            }
-            if (rc instanceof PathElement
-                && ((PathElement) rc).getParts() == null) {
-                throw new BuildException(
-                    "Either location or path must be set on a pathelement.");
-            } else if (rc instanceof Path) {
-                Path p = (Path) rc;
-                if (p.getProject() == null) {
-                    p.setProject(getProject());
-                }
-            }
+    public String[] list() {
+        if (isReference()) {
+            return ((Path) getCheckedRef()).list();
         }
-        return super.getCollection();
+        return union == null ? new String[0] : union.list();
+    }
+
+    /**
+     * Returns a textual representation of the path, which can be used as
+     * CLASSPATH or PATH environment variable definition.
+     * @return a textual representation of the path.
+     */
+    public String toString() {
+        return isReference() ? getCheckedRef().toString() :
+            union == null ? "" : union.toString();
     }
 
     /**
@@ -324,7 +343,6 @@ public class Path extends Union {
         if (source == null) {
             return new String[0];
         }
-
         PathTokenizer tok = new PathTokenizer(source);
         StringBuffer element = new StringBuffer();
         while (tok.hasMoreTokens()) {
@@ -357,12 +375,10 @@ public class Path extends Union {
         if (source == null) {
           return "";
         }
-
         final StringBuffer result = new StringBuffer(source);
         for (int i = 0; i < result.length(); i++) {
             translateFileSep(result, i);
         }
-
         return result.toString();
     }
 
@@ -380,6 +396,54 @@ public class Path extends Union {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return number of elements as int.
+     */
+    public synchronized int size() {
+        if (isReference()) {
+            return ((Path) getCheckedRef()).size();
+        }
+        dieOnCircularReference();
+        return union == null ? 0 : assertFilesystemOnly(union).size();
+    }
+
+    /**
+     * Clone this Path.
+     * @return Path with shallowly cloned Resource children.
+     */
+    public Object clone() {
+        try {
+            Path result = (Path) super.clone();
+            result.union = union == null ? union : (Union) union.clone();
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Overrides the version of DataType to recurse on all DataType
+     * child elements that may have been added.
+     * @param stk the stack of data types to use (recursively).
+     * @param p   the project to use to dereference the references.
+     * @throws BuildException on error.
+     */
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (union != null) {
+                invokeCircularReferenceCheck(union, stk, p);
+            }
+            setChecked(true);
+        }
     }
 
     /**
@@ -437,7 +501,6 @@ public class Path extends Union {
                 order = o;
             }
         }
-
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
             result.addExisting(p, true);
@@ -457,14 +520,10 @@ public class Path extends Union {
                 log("invalid value for build.sysclasspath: " + order,
                     Project.MSG_WARN);
             }
-
             result.addExisting(this);
             result.addExisting(p, true);
         }
-
-
         return result;
-
     }
 
     /**
@@ -577,4 +636,45 @@ public class Path extends Union {
         }
     }
 
+    /**
+     * Fulfill the ResourceCollection contract. The Iterator returned
+     * will throw ConcurrentModificationExceptions if ResourceCollections
+     * are added to this container while the Iterator is in use.
+     * @return a "fail-fast" Iterator.
+     */
+    public synchronized final Iterator iterator() {
+        if (isReference()) {
+            return ((Path) getCheckedRef()).iterator();
+        }
+        dieOnCircularReference();
+        return union == null ? EMPTY_ITERATOR
+            : assertFilesystemOnly(union).iterator();
+    }
+
+    /**
+     * Fulfill the ResourceCollection contract.
+     * @return whether this is a filesystem-only resource collection.
+     */
+    public synchronized boolean isFilesystemOnly() {
+        if (isReference()) {
+            return ((Path) getCheckedRef()).isFilesystemOnly();
+        }
+        dieOnCircularReference();
+        assertFilesystemOnly(union);
+        return true;
+    }
+
+    /**
+     * Verify the specified ResourceCollection is filesystem-only.
+     * @param rc the ResourceCollection to check.
+     * @throws BuildException if <code>rc</code> is not filesystem-only.
+     * @return the passed in ResourceCollection.
+     */
+    protected ResourceCollection assertFilesystemOnly(ResourceCollection rc) {
+        if (rc != null && !(rc.isFilesystemOnly())) {
+            throw new BuildException(getDataTypeName()
+                + " allows only filesystem resources.");
+        }
+        return rc;
+    }
 }

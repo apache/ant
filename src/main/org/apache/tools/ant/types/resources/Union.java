@@ -56,8 +56,8 @@ public class Union extends BaseResourceCollectionContainer {
     }
 
     /**
-     * Returns all Resources in String format. Moved up from
-     * Path for convenience.
+     * Returns all Resources in String format. Provided for
+     * convenience in implementing Path.
      * @return String array of Resources.
      */
     public String[] list() {
