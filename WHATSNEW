@@ -54,6 +54,11 @@ Fixed bugs:
 * ant.bat now looks in %USERPROFILE% and %HOMEDRIVE%%HOMEPATH% in addition to
   %HOME% for pre/post batch files. Bugzilla report 39298.
 
+* The inheritance hierarchy of the legacy <path> type was changed; code built
+  against Ant 1.7 would therefore no longer execute on older versions of Ant.
+  Since <path> is historically heavily used this was undesirable, and since it
+  is also avoidable, the change to <path>'s taxonomy was reverted.
+
 Other changes:
 --------------
 
