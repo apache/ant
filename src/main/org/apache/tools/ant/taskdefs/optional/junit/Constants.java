@@ -30,6 +30,7 @@ public class Constants {
     static final String BEFORE_FIRST_TEST = "BeforeFirstTest";
     static final String PROPSFILE = "propsfile=";
     static final String SHOWOUTPUT = "showoutput=";
+    static final String OUTPUT_TO_FORMATTERS = "outputtoformatters=";
     static final String FORMATTER = "formatter=";
     static final String LOGTESTLISTENEREVENTS = "logtestlistenerevents=";
     static final String TESTSFILE = "testsfile=";

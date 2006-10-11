@@ -74,6 +74,9 @@ Other changes:
 * Added <compare> resource selector to select resources based on the
   results of their comparison to other resources.
 
+* Added outputtoformatters attribute to <junit> to allow suppression
+  of noisey tests. Bugzilla report 12817.
+
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
 

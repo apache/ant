@@ -87,6 +87,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      */
     private boolean showOutput = false;
 
+    private boolean outputToFormatters = true;
+
     /**
      * The permissions set for the test to run.
      */
@@ -244,23 +246,40 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         PrintStream savedErr = null;
 
         if (forked) {
-            savedOut = System.out;
-            savedErr = System.err;
-            if (!showOutput) {
-                System.setOut(systemOut);
-                System.setErr(systemError);
+            if (!outputToFormatters) {
+                if (!showOutput) {
+                    savedOut = System.out;
+                    savedErr = System.err;
+                    System.setOut(
+                        new PrintStream(
+                            new OutputStream() {
+                                public void write(int b) {}
+                            }));
+                    System.setErr(
+                        new PrintStream(
+                            new OutputStream() {
+                                public void write(int b) {}
+                            }));
+                }
             } else {
-                System.setOut(new PrintStream(
-                                       new TeeOutputStream(savedOut, systemOut)
-                                       )
-                              );
-                System.setErr(new PrintStream(
-                                       new TeeOutputStream(savedErr,
-                                                           systemError)
-                                       )
-                              );
+                savedOut = System.out;
+                savedErr = System.err;
+                if (!showOutput) {
+                    System.setOut(systemOut);
+                    System.setErr(systemError);
+                } else {
+                    System.setOut(new PrintStream(
+                                      new TeeOutputStream(savedOut, systemOut)
+                                      )
+                                  );
+                    System.setErr(new PrintStream(
+                                      new TeeOutputStream(savedErr,
+                                                          systemError)
+                                      )
+                                  );
+                }
+                perm = null;
             }
-            perm = null;
         } else {
             if (perm != null) {
                 perm.setSecurityManager();
@@ -428,7 +447,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private void logTestListenerEvent(String msg) {
-        PrintStream out = forked ? savedOut : System.out;
+        PrintStream out = savedOut != null ? savedOut : System.out;
         if (logTestListenerEvents) {
             out.flush();
             out.println(JUnitTask.TESTLISTENER_PREFIX + msg);
@@ -581,6 +600,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         boolean stackfilter = true;
         Properties props = new Properties();
         boolean showOut = false;
+        boolean outputToFormat = true;
         boolean logTestListenerEvents = false;
 
 
@@ -620,6 +640,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 showOut = Project.toBoolean(args[i].substring(Constants.SHOWOUTPUT.length()));
             } else if (args[i].startsWith(Constants.LOGTESTLISTENEREVENTS)) {
                 logTestListenerEvents = Project.toBoolean(args[i].substring(Constants.LOGTESTLISTENEREVENTS.length()));
+            } else if (args[i].startsWith(Constants.OUTPUT_TO_FORMATTERS)) {
+                outputToFormat = Project.toBoolean(
+                    args[i].substring(Constants.OUTPUT_TO_FORMATTERS.length()));
             }
         }
 
@@ -647,7 +670,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
                     code = launch(t, haltError, stackfilter, haltFail,
-                                  showOut, logTestListenerEvents, props);
+                                  showOut, outputToFormat,
+                                  logTestListenerEvents, props);
                     errorOccurred = (code == ERRORS);
                     failureOccurred = (code != SUCCESS);
                     if (errorOccurred || failureOccurred) {
@@ -669,7 +693,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
         } else {
             returnCode = launch(new JUnitTest(args[0]), haltError,
-                                stackfilter, haltFail, showOut,
+                                stackfilter, haltFail,
+                                showOut, outputToFormat,
                                 logTestListenerEvents, props);
         }
 
@@ -798,13 +823,15 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      */
     private static int launch(JUnitTest t, boolean haltError,
                               boolean stackfilter, boolean haltFail,
-                              boolean showOut, boolean logTestListenerEvents,
+                              boolean showOut, boolean outputToFormat,
+                              boolean logTestListenerEvents,
                               Properties props) {
         t.setProperties(props);
         JUnitTestRunner runner =
             new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut,
-                                logTestListenerEvents);
+                                logTestListenerEvents, null);
         runner.forked = true;
+        runner.outputToFormatters = outputToFormat;
         transferFormatters(runner, t);
 
         runner.run();
