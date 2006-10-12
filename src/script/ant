@@ -147,11 +147,11 @@ fi
 # Build local classpath using just the launcher in non-rpm mode or
 # use the Jpackage helper in rpm mode with basic and default jars
 # specified in the ant.conf configuration. Because the launcher is
-# used, libraries linked in ANT_HOME will also be include, but this
+# used, libraries linked in ANT_HOME/lib will also be included, but this
 # is discouraged as it is not java-version safe. A user should
 # request optional jars and their dependencies via the OPT_JAR_LIST
 # variable
-if $rpm_mode && [ -f /usr/bin/build-classpath ] ; then
+if $rpm_mode && [ -x /usr/bin/build-classpath ] ; then
   LOCALCLASSPATH="$(/usr/bin/build-classpath ant ant-launcher jaxp_parser_impl xml-commons-apis)"
 
   # If no optional jars have been specified then build the default list
