@@ -153,13 +153,6 @@ fi
 # variable
 if $rpm_mode && [ -f /usr/bin/build-classpath ] ; then
   LOCALCLASSPATH="$(/usr/bin/build-classpath ant ant-launcher jaxp_parser_impl xml-commons-apis)"
-  # If the user requested to try to add some other jars to the classpath
-  if [ -n "$OPT_JAR_LIST" ] ; then
-    _OPTCLASSPATH="$(/usr/bin/build-classpath $OPT_JAR_LIST 2> /dev/null)"
-    if [ -n "$_OPTCLASSPATH" ] ; then 
-      LOCALCLASSPATH="$LOCALCLASSPATH:$_OPTCLASSPATH"
-    fi
-  fi
 
   # If no optional jars have been specified then build the default list
   if [ -z "$OPT_JAR_LIST" ] ; then
@@ -180,6 +173,14 @@ if $rpm_mode && [ -f /usr/bin/build-classpath ] ; then
         esac
       fi
     done
+  fi
+
+  # If the user requested to try to add some other jars to the classpath
+  if [ -n "$OPT_JAR_LIST" ] ; then
+    _OPTCLASSPATH="$(/usr/bin/build-classpath $OPT_JAR_LIST 2> /dev/null)"
+    if [ -n "$_OPTCLASSPATH" ] ; then 
+      LOCALCLASSPATH="$LOCALCLASSPATH:$_OPTCLASSPATH"
+    fi
   fi
 
   # Explicitly add javac path to classpath, assume JAVA_HOME set
