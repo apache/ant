@@ -247,6 +247,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             union.setProject(getProject());
         }
         union.add(c);
+        setChecked(false);
     }
 
     /**
@@ -319,7 +320,8 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (isReference()) {
             return ((Path) getCheckedRef()).list();
         }
-        return union == null ? new String[0] : union.list();
+        return assertFilesystemOnly(union) == null
+            ? new String[0] : union.list();
     }
 
     /**
@@ -440,7 +442,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             super.dieOnCircularReference(stk, p);
         } else {
             if (union != null) {
+                stk.push(union);
                 invokeCircularReferenceCheck(union, stk, p);
+                stk.pop();
             }
             setChecked(true);
         }
