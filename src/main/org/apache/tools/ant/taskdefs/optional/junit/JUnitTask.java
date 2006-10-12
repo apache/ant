@@ -493,6 +493,27 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Preset the attributes of the test
+     * before configuration in the build
+     * script.
+     * This allows attributes in the <junit> task
+     * be be defaults for the tests, but allows
+     * individual tests to override the defaults.
+     */
+    private void preConfigure(BaseTest test) {
+        test.setFiltertrace(filterTrace);
+        test.setHaltonerror(haltOnError);
+        if (errorProperty != null) {
+            test.setErrorProperty(errorProperty);
+        }
+        test.setHaltonfailure(haltOnFail);
+        if (failureProperty != null) {
+            test.setFailureProperty(failureProperty);
+        }
+        test.setFork(fork);
+    }
+
+    /**
      * Add a new single testcase.
      * @param   test    a new single testcase
      * @see JUnitTest
@@ -501,6 +522,7 @@ public class JUnitTask extends Task {
      */
     public void addTest(JUnitTest test) {
         tests.addElement(test);
+        preConfigure(test);
     }
 
     /**
@@ -514,6 +536,7 @@ public class JUnitTask extends Task {
     public BatchTest createBatchTest() {
         BatchTest test = new BatchTest(getProject());
         batchTests.addElement(test);
+        preConfigure(test);
         return test;
     }
 
@@ -722,22 +745,6 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
-        // Apply the basetest attributes
-        Enumeration e = allTests();
-        while (e.hasMoreElements()) {
-            BaseTest test = (BaseTest) e.nextElement();
-            test.setFiltertrace(filterTrace);
-            test.setHaltonerror(haltOnError);
-            if (errorProperty != null) {
-                test.setErrorProperty(errorProperty);
-            }
-            test.setHaltonfailure(haltOnFail);
-            if (failureProperty != null) {
-                test.setFailureProperty(failureProperty);
-            }
-            test.setFork(fork);
-        }
-
         ClassLoader myLoader = JUnitTask.class.getClassLoader();
         ClassLoader mirrorLoader;
         if (splitJunit) {
