@@ -24,9 +24,7 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.EnumeratedAttribute.
- *
  */
-
 public class EnumeratedAttributeTest extends TestCase {
 
     private static String[] expected = {"a", "b", "c"};
@@ -49,7 +47,22 @@ public class EnumeratedAttributeTest extends TestCase {
                !(new TestNull()).containsValue("d"));
     }
 
-    public void testExceptions() {
+    public void testFactory() {
+		EnumeratedAttributeTest_Factory ea1 = (EnumeratedAttributeTest_Factory)EnumeratedAttribute.getInstance(
+			EnumeratedAttributeTest_Factory.class, 
+			"one");
+		assertEquals("Factory didnt set the right value.", ea1.getValue(), "one");
+		try {
+	    	EnumeratedAttributeTest_Factory ea2 = (EnumeratedAttributeTest_Factory)EnumeratedAttribute.getInstance(
+	        		EnumeratedAttributeTest_Factory.class, 
+	        		"illegal");
+	    	fail("Factory should fail when trying to set an illegal value.");
+		} catch (BuildException be) {
+			// was expected
+		}
+	}
+
+	public void testExceptions() {
         EnumeratedAttribute t1 = new TestNormal();
         for (int i=0; i<expected.length; i++) {
             try {
@@ -83,4 +96,5 @@ public class EnumeratedAttributeTest extends TestCase {
             return null;
         }
     }
+    
 }
