@@ -1829,7 +1829,7 @@ public class Project implements ResourceFactory {
             }
             if (old != null && !(old instanceof UnknownElement)) {
                 log("Overriding previous definition of reference to " + referenceName,
-                    MSG_WARN);
+                    MSG_VERBOSE);
             }
             log("Adding reference: " + referenceName, MSG_DEBUG);
             references.put(referenceName, value);
