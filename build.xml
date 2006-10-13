@@ -1697,7 +1697,7 @@ see ${build.junit.reports} / ${antunit.reports}
       if="junit.batch">
 
     <property name="junit.includes" value="**/*Test*" />
-    <property name="junit.excludes" value="**/*Test_*" />
+    <property name="junit.excludes" value="" />
 
     <test-junit>
       <formatter type="brief" usefile="false"/>

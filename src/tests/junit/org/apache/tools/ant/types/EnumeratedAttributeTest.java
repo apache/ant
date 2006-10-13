@@ -48,14 +48,10 @@ public class EnumeratedAttributeTest extends TestCase {
     }
 
     public void testFactory() {
-		EnumeratedAttributeTest_Factory ea1 = (EnumeratedAttributeTest_Factory)EnumeratedAttribute.getInstance(
-			EnumeratedAttributeTest_Factory.class, 
-			"one");
-		assertEquals("Factory didnt set the right value.", ea1.getValue(), "one");
+		Factory ea = (Factory)EnumeratedAttribute.getInstance(Factory.class, "one");
+		assertEquals("Factory did not set the right value.", ea.getValue(), "one");
 		try {
-	    	EnumeratedAttributeTest_Factory ea2 = (EnumeratedAttributeTest_Factory)EnumeratedAttribute.getInstance(
-	        		EnumeratedAttributeTest_Factory.class, 
-	        		"illegal");
+	    	EnumeratedAttribute.getInstance(Factory.class, "illegal");
 	    	fail("Factory should fail when trying to set an illegal value.");
 		} catch (BuildException be) {
 			// was expected
@@ -95,6 +91,12 @@ public class EnumeratedAttributeTest extends TestCase {
         public String[] getValues() {
             return null;
         }
+    }
+
+    public static class Factory extends EnumeratedAttribute {
+    	public String[] getValues() {
+    		return new String[] { "one", "two", "three" };
+    	}
     }
     
 }
