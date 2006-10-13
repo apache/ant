@@ -45,8 +45,10 @@ if $no_config ; then
   usejikes=$use_jikes_default
 else
   # load system-wide ant configuration (ONLY if ANT_HOME has NOT been set)
-  if [ -z "$ANT_HOME" -a -f "/etc/ant.conf" ] ; then
-    . /etc/ant.conf
+  if [ -z "$ANT_HOME" -o "$ANT_HOME" = "/usr/share/ant" ]; then
+      if [ -f "/etc/ant.conf" ] ; then
+          . /etc/ant.conf
+      fi
   fi
 
   # load user ant configuration
