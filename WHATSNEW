@@ -77,6 +77,9 @@ Other changes:
 * Added outputtoformatters attribute to <junit> to allow suppression
   of noisey tests. Bugzilla report 12817.
 
+* Log level of message 'Overriding previous definition of reference to'
+  set to Verbose. Bugzilla report 17240.
+
 Changes from Ant 1.7.0Beta1 to Ant 1.7.0Beta2
 =============================================
 
