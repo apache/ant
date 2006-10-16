@@ -74,7 +74,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-* Some performance improvements, including Bugzilla report  25778.
+* Some performance improvements, including Bugzilla report 25778.
 
 * Add <matches> condition. Bugzilla report 28883.
 
