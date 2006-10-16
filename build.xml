@@ -1517,6 +1517,7 @@
     <echo message="os.version=${os.version}"/>
     <echo message="file.encoding=${file.encoding}"/>
     <echo message="user.language=${user.language}"/>
+  	<echo message="ant.version=${ant.version}"/>
   </target>
 
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
