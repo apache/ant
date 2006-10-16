@@ -63,12 +63,10 @@
   <import file="get-m2.xml" />
 
   <target name="pick-dest">
+    <property name="dest" value="system" />
     <condition property="dest.dir"
       value="${lib.dir}">
-      <or>
-        <equals arg1="${dest}" arg2="system" />
-        <not><isset property="dest"/></not>
-      </or>
+      <equals arg1="${dest}" arg2="system" />
     </condition>
     <condition property="dest.dir"
       value="${optional.dir}">
@@ -92,7 +90,7 @@
       <attribute name="archive" default="@{project}"/>
       <sequential>
         <fail>
-        Unknown archive @{archive}
+        Unknown archive @{archive} -no property @{archive}.version defined.
           <condition>
             <not>
             <isset property="@{archive}.version"/>
@@ -141,6 +139,21 @@
     depends="init">
     <f2 project="xalan" />
     <f2 project="xml-resolver" />
+  </target>
+
+  <!--
+   This is not used as
+   1. we want the names of the libraries to be fixed, or it will break  Ant's manifest.
+   2. We like to get the more recent artifacts than are in the repo at the time of writing (2006-10-16)
+   3. Xerces has a dependency on v 1.3.03 of Xml-apis, which is wrong.
+   If/when the artifacts stabilize, we could switch to it.
+   -->
+
+  <target name="xerces"
+      description="load an updated version of Xerces"
+      depends="init">
+    <f2 project="xerces" archive="xercesImpl"/>
+    <f2 project="xerces" archive="xmlParserAPIs" />
   </target>
 
   <target name="networking"
