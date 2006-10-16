@@ -285,7 +285,7 @@ public class Main implements AntMain {
         String searchForThis = null;
         PrintStream logTo = null;
 
-        //this is hte list of lu
+        //this is the list of lu
         HashMap launchCommands =new HashMap();
         launchCommands.put("-lib","");
         launchCommands.put("-cp", "");
