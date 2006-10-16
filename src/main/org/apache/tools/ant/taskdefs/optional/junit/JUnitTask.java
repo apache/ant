@@ -1028,11 +1028,7 @@ public class JUnitTask extends Task {
                 e.printStackTrace();
                 // ignored.
             } finally {
-                try {
-                    br.close();
-                } catch (IOException ioe) {
-                    // nothing
-                }
+                FileUtils.close(br);
             }
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
