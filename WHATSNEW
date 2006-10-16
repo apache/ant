@@ -10,6 +10,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Upgraded XML API and parser to Xerces 2.8.1
+
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
 =============================================
 
