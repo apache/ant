@@ -128,7 +128,7 @@ Options:
   -nouserlib             Run ant without using the jar files from ${user.home}/.ant/lib
   -noclasspath           Run ant without using CLASSPATH
   -noproxy               Java 1.5 only: do not use the OS proxies
-  -main &lt;class&gt;          override Ant's normal entry point  
+  -main &lt;class&gt;          override Ant's normal entry point
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
@@ -566,7 +566,8 @@ Here is an example:
         failonerror="true"
         dir="${sub.builddir}"
         timeout="4000000"
-        &gt;
+        taskname="startAnt"
+&gt;
     &lt;classpath&gt;
         &lt;pathelement location="${ant.home}/lib/ant-launcher.jar"/&gt;
     &lt;/classpath&gt;
