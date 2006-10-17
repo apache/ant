@@ -12,6 +12,10 @@ Other changes:
 
 * Upgraded XML API and parser to Xerces 2.8.1
 
+* A code review of some threaded logic has tightened up the synchronization
+  of Watchdog, ExecuteWatchdog and ExecuteJava, which could reduce the occurence
+  of race conditions here, especially on Java1.5+.
+
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
 =============================================
 
@@ -24,6 +28,13 @@ Changes that could break older environments:
   the java class file. Bugzilla report 33604.
 
 * Defer reference process. Bugzilla 36955, 34458, 37688.
+  This may break build files in which a reference was set in a target which was
+  never executed. Historically, Ant would set the reference early on, during parse
+  time, so the datatype would be defined. Now it requires the reference to have
+  been in a bit of the build file which was actually executed. If you get
+  an error about an undefined reference, locate the reference and move it somewhere
+  where it is used, or fix the depends attribute of the target in question to
+  depend on the target which defines the reference/datatype.
 
 Fixed bugs:
 -----------

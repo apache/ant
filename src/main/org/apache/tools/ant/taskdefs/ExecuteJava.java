@@ -50,8 +50,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     private Permissions  perm = null;
     private Method main = null;
     private Long timeout = null;
-    private Throwable caught = null;
-    private boolean timedOut = false;
+    private volatile Throwable caught = null;
+    private volatile boolean timedOut = false;
     private Thread thread = null;
 
     /**

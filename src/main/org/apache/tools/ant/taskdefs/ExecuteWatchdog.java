@@ -45,13 +45,13 @@ public class ExecuteWatchdog implements TimeoutObserver {
     private Process process;
 
     /** say whether or not the watchdog is currently monitoring a process */
-    private boolean watch = false;
+    private volatile boolean watch = false;
 
     /** exception that might be thrown during the process execution */
     private Exception caught = null;
 
     /** say whether or not the process was killed due to running overtime */
-    private boolean     killedProcess = false;
+    private volatile boolean killedProcess = false;
 
     /** will tell us whether timeout has occurred */
     private Watchdog watchdog;
@@ -103,15 +103,15 @@ public class ExecuteWatchdog implements TimeoutObserver {
      */
     public synchronized void stop() {
         watchdog.stop();
-        watch = false;
-        process = null;
+        cleanUp();
     }
 
     /**
      * Called after watchdog has finished.
+     * This can be called in the watchdog thread
      * @param w the watchdog
      */
-    public void timeoutOccured(Watchdog w) {
+    public synchronized void timeoutOccured(Watchdog w) {
         try {
             try {
                 // We must check if the process was not stopped
@@ -135,7 +135,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /**
      * reset the monitor flag and the process.
      */
-    protected void cleanUp() {
+    protected synchronized void cleanUp() {
         watch = false;
         process = null;
     }
@@ -148,7 +148,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * @throws  BuildException  a wrapped exception over the one that was
      * silently swallowed and stored during the process run.
      */
-    public void checkException() throws BuildException {
+    public synchronized void checkException() throws BuildException {
         if (caught != null) {
             throw new BuildException("Exception in ExecuteWatchdog.run: "
                                      + caught.getMessage(), caught);

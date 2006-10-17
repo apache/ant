@@ -33,7 +33,16 @@ public class Watchdog implements Runnable {
 
     private Vector observers = new Vector(1);
     private long timeout = -1;
-    private boolean stopped = false;
+    /**
+     * marked as volatile to stop the compiler caching values or (in java1.5+,
+     * reordering access)
+     */
+    private volatile boolean stopped = false;
+    /**
+     * Error string.
+     * {@value}
+     */
+    public static final String ERROR_INVALID_TIMEOUT = "timeout less than 1.";
 
     /**
      * Constructor for Watchdog.
@@ -41,7 +50,7 @@ public class Watchdog implements Runnable {
      */
     public Watchdog(long timeout) {
         if (timeout < 1) {
-            throw new IllegalArgumentException("timeout less than 1.");
+            throw new IllegalArgumentException(ERROR_INVALID_TIMEOUT);
         }
         this.timeout = timeout;
     }
@@ -51,6 +60,7 @@ public class Watchdog implements Runnable {
      * @param to the timeout observer to add.
      */
     public void addTimeoutObserver(TimeoutObserver to) {
+        //no need to synchronize, as Vector is always synchronized
         observers.addElement(to);
     }
 
@@ -59,11 +69,13 @@ public class Watchdog implements Runnable {
      * @param to the timeout observer to remove.
      */
     public void removeTimeoutObserver(TimeoutObserver to) {
+        //no need to synchronize, as Vector is always synchronized
         observers.removeElement(to);
     }
 
     /**
      * Inform the observers that a timeout has occurred.
+     * This happens in the watchdog thread.
      */
     protected final void fireTimeoutOccured() {
         Enumeration e = observers.elements();
