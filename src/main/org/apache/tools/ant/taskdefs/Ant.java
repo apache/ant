@@ -491,6 +491,7 @@ public class Ant extends Task {
                     continue;
                 }
                 copyReference(key, key);
+                newProject.inheritIDReferences(getProject());
             }
         }
     }

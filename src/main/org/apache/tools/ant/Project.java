@@ -33,6 +33,7 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.apache.tools.ant.input.DefaultInputHandler;
@@ -61,6 +62,8 @@ import org.apache.tools.ant.util.StringUtils;
  *
  */
 public class Project implements ResourceFactory {
+    private static final String LINE_SEP = System.getProperty("line.separator");
+
     /** Message priority of &quot;error&quot;. */
     public static final int MSG_ERR = 0;
     /** Message priority of &quot;warning&quot;. */
@@ -135,6 +138,12 @@ public class Project implements ResourceFactory {
 
     /** Map of references within the project (paths etc) (String to Object). */
     private Hashtable references = new AntRefTable();
+
+    /** Map of id references - used for indicating broken build files */
+    private HashMap idReferences = new HashMap();
+
+    /** the parent project for old id resolution (if inheritreferences is set) */
+    private Project parentIdProject = null;
 
     /** Name of the project's default target. */
     private String defaultTarget;
@@ -1815,6 +1824,46 @@ public class Project implements ResourceFactory {
     }
 
     /**
+     * Inherit the id references.
+     * @param parent the parent project of this project.
+     */
+    public void inheritIDReferences(Project parent) {
+        parentIdProject = parent;
+    }
+
+    /**
+     * Attempt to resolve an Unknown Reference using the
+     * parsed id's - for BC.
+     */
+    private Object resolveIdReference(String key, Project callerProject) {
+        UnknownElement origUE = (UnknownElement) idReferences.get(key);
+        if (origUE == null) {
+            return parentIdProject == null
+                ? null
+                : parentIdProject.resolveIdReference(key, callerProject);
+        }
+        callerProject.log(
+            "Warning: Reference " + key + " has not been set at runtime,"
+            + " but was found during" + LINE_SEP
+            + "build file parsing, attempting to resolve."
+            + " Future versions of Ant may support" + LINE_SEP
+            + " referencing ids defined in non-executed targets.", MSG_WARN);
+        UnknownElement copyUE = origUE.copy(callerProject);
+        copyUE.maybeConfigure();
+        return copyUE.getRealThing();
+    }
+
+    /**
+     * Add an id reference.
+     * Used for broken build files.
+     * @param id the id to set.
+     * @param value the value to set it to (Unknown element in this case.
+     */
+    public void addIdReference(String id, Object value) {
+        idReferences.put(id, value);
+    }
+
+    /**
      * Add a reference to the project.
      *
      * @param referenceName The name of the reference. Must not be <code>null</code>.
@@ -1856,7 +1905,12 @@ public class Project implements ResourceFactory {
      *         there is no such reference in the project.
      */
     public Object getReference(String key) {
-        return references.get(key);
+        Object ret = references.get(key);
+        if (ret != null) {
+            return ret;
+        }
+        // Check for old id behaviour
+        return resolveIdReference(key, this);
     }
 
     /**

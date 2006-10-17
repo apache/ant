@@ -5,10 +5,10 @@
   
   <target name="test-notcalled">
     <!-- bug 36955 -->
-    <au:expectfailure>
-      <pathconvert property="_output2" refid="ref1"
-                   pathsep="${line.separator}" />
-    </au:expectfailure>
+    <pathconvert property="_output2" refid="ref1"
+                 pathsep="${line.separator}" />
+    <echo>${_output2}</echo>
+    <au:assertLogContains text="Future versions of Ant"/>
   </target>
 
   <target name="test-macrodef-embedded-ref">

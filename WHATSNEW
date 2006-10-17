@@ -16,6 +16,9 @@ Other changes:
   of Watchdog, ExecuteWatchdog and ExecuteJava, which could reduce the occurence
   of race conditions here, especially on Java1.5+.
 
+* Allow broken reference build files. The defer reference processing would
+  break too many files - so allow them with a warning.
+
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
 =============================================
 

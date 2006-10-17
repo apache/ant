@@ -268,7 +268,7 @@ public class AntXMLContext {
     public void configureId(Object element, Attributes attr) {
         String id = attr.getValue("id");
         if (id != null) {
-            project.addReference(id, element);
+            project.addIdReference(id, element);
         }
     }
 

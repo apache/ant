@@ -1015,6 +1015,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 context.getCurrentTarget().addTask(task);
             }
 
+            context.configureId(task, attrs);
+
             // container.addTask(task);
             // This is a nop in UE: task.init();
 

@@ -19,8 +19,10 @@
 package org.apache.tools.ant;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.io.IOException;
 import org.apache.tools.ant.taskdefs.PreSetDef;
 
@@ -620,5 +622,46 @@ public class UnknownElement extends Task {
 
     private static boolean equalsString(String a, String b) {
         return (a == null) ? (b == null) : a.equals(b);
+    }
+
+    /**
+     * Make a copy of the unknown element and set it in the new project.
+     * @param newProject the project to create the UE in.
+     * @return the copied UE.
+     */
+    public UnknownElement copy(Project newProject) {
+        UnknownElement ret = new UnknownElement(getTag());
+        ret.setNamespace(getNamespace());
+        ret.setProject(newProject);
+        ret.setQName(getQName());
+        ret.setTaskType(getTaskType());
+        ret.setTaskName(getTaskName());
+        ret.setLocation(getLocation());
+        if (getOwningTarget() == null) {
+            Target t = new Target();
+            t.setProject(getProject());
+            ret.setOwningTarget(t);
+        } else {
+            ret.setOwningTarget(getOwningTarget());
+        }
+        RuntimeConfigurable copyRC = new RuntimeConfigurable(
+            ret, getTaskName());
+        copyRC.setPolyType(getWrapper().getPolyType());
+        Map m = getWrapper().getAttributeMap();
+        for (Iterator i = m.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            copyRC.setAttribute(
+                (String) entry.getKey(), (String) entry.getValue());
+        }
+        copyRC.addText(getWrapper().getText().toString());
+
+        for (Enumeration e = getWrapper().getChildren(); e.hasMoreElements();) {
+            RuntimeConfigurable r = (RuntimeConfigurable) e.nextElement();
+            UnknownElement ueChild = (UnknownElement) r.getProxy();
+            UnknownElement copyChild = ueChild.copy(newProject);
+            copyRC.addChild(copyChild.getWrapper());
+            ret.addChild(copyChild);
+        }
+        return ret;
     }
 }
