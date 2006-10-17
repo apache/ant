@@ -48,9 +48,9 @@ public final class IntrospectionHelper implements BuildListener {
         = Collections.unmodifiableMap(new HashMap(0));
 
     /**
-     * Helper instances we've already created (Class to IntrospectionHelper).
+     * Helper instances we've already created (Class.getName() to IntrospectionHelper).
      */
-    private static final Hashtable HELPERS = new Hashtable();
+    private static final Map HELPERS = new Hashtable();
 
     /**
      * Map from primitive types to wrapper classes for use in
@@ -331,13 +331,15 @@ public final class IntrospectionHelper implements BuildListener {
      * @return a helper for the specified class
      */
     public static IntrospectionHelper getHelper(Project p, Class c) {
-        IntrospectionHelper ih = (IntrospectionHelper) HELPERS.get(c);
-        if (ih == null) {
+        IntrospectionHelper ih = (IntrospectionHelper) HELPERS.get(c.getName());
+        // If a helper cannot be found, or if the helper is for another
+        // classloader, create a new IH
+        if (ih == null || ih.bean != c) {
             ih = new IntrospectionHelper(c);
             if (p != null) {
                 // #30162: do *not* cache this if there is no project, as we
                 // cannot guarantee that the cache will be cleared.
-                HELPERS.put(c, ih);
+                HELPERS.put(c.getName(), ih);
             }
         }
         if (p != null) {

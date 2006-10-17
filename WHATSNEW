@@ -7,6 +7,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* OOM caused by IH holding on to classes and thus their classloaders.
+  Bugzilla 28283 and 33061.
+
 Other changes:
 --------------
 
