@@ -437,7 +437,7 @@
           <td valign="top" align="center">Yes</td>
         </tr>
       </table>
-      <p><em>since Ant 1.7</em>.</p>    
+      <p><em>since Ant 1.7</em>.</p>
       </blockquote></td></tr>
     </table>
     <!-- End Element -->
@@ -447,8 +447,8 @@
 
     </table>
     <!-- End Elements -->
-    
-    
+
+
 
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
@@ -459,7 +459,7 @@
           <strong>Examples</strong></a></font>
       </td></tr>
 
-      <tr><td><blockquote>
+      <tr><td><blockquote style="">
         <pre>
         &lt;project name="subant" default="subant1"&gt;
             &lt;property name="build.dir" value="subant.build"/&gt;
@@ -561,7 +561,7 @@
         the root buildfile is capable to run the whole build over all
         modules.
         </p>
-        
+
         <pre>
         &lt;subant failonerror="false"&gt;
             &lt;fileset dir="." includes="**/build.xml" excludes="build.xml"/&gt;
@@ -569,8 +569,18 @@
             &lt;target name="build"/&gt;
         &lt;/subant&gt;
         </pre>
-        
-        <p>Does a "clean build" for each subproject.</p>
+
+        <p>Does a &quot;clean build&quot; for each subproject.</p>
+        <p><b>Hint:</b> because buildfiles are plain xml, you could generate the
+        masterbuildfile from the common buildfile by using a XSLT transformation:
+        </p>
+
+        <pre>
+        &lt;xslt in=&quot;common.xml&quot;
+              out=&quot;master.xml&quot;
+              style=&quot;${ant.home}/etc/common2master.xsl&quot;
+        /&gt;
+        </pre>
 
         <!-- manually written -->
 
