@@ -611,19 +611,73 @@ replicate the same snippet of XML over and over again--using a
   &lt;/target&gt;
 &lt;/project&gt;
 </pre></blockquote>
-<p>All tasks that use nested elements for
-<a href="CoreTypes/patternset.html">PatternSet</a>s,
-<a href="CoreTypes/fileset.html">FileSet</a>s,
-<a href="CoreTypes/zipfileset.html">ZipFileSet</a>s or
-<a href="#path">path-like structures</a> accept references to these structures
-as shown in the examples. Using <code>refid</code> on a task will ordinarily
-have the same effect (referencing a task already declared), but the user
-should be aware that the interpretation of this attribute is dependent on the
-implementation of the element upon which it is specified. Some tasks (the
-<a href="CoreTasks/property.html">property</a> task is a handy example)
+<p>All tasks that use nested elements for 
+<a href="CoreTypes/patternset.html">PatternSet</a>s, 
+<a href="CoreTypes/fileset.html">FileSet</a>s, 
+<a href="CoreTypes/zipfileset.html">ZipFileSet</a>s or 
+<a href="#path">path-like structures</a> accept references to these structures 
+as shown in the examples. Using <code>refid</code> on a task will ordinarily 
+have the same effect (referencing a task already declared), but the user 
+should be aware that the interpretation of this attribute is dependent on the 
+implementation of the element upon which it is specified. Some tasks (the 
+<a href="CoreTasks/property.html">property</a> task is a handy example) 
 deliberately assign a different meaning to <code>refid</code>.</p>
 
 
+<h3><a name="external-tasks">Use of external tasks</a></h3> 
+Ant supports a plugin mechanism for using third party tasks. For using them you 
+have to do two steps: 
+<ol>
+  <li>place their implementation somewhere where Ant can find them</li>
+  <li>declare them.</li>
+</ol> 
+Don't add anything to the CLASSPATH environment variable - this is often the  
+reason for very obscure errors. Use Ant's own <a href="install.html#optionalTasks">mechanisms</a> 
+for adding libraries: 
+<ul>
+  <li>via command line argument <code>-lib</code></li>
+  <li>adding to <code>${user.home}/.ant/lib</code></li>
+  <li>adding to <code>${ant.home}/lib</code></li>
+</ul>
+For the declaration there are several ways:
+<ul>
+  <li>declare a single task per using instruction using  
+      <code>&lt;<a href="CoreTasks/taskdef.html">taskdef</a> name=&quot;taskname&quot; 
+      classname=&quot;ImplementationClass&quot;/&gt;</code>
+      <br>
+      <code>&lt;taskdef name=&quot;for&quot; classname=&quot;net.sf.antcontrib.logic.For&quot; /&gt; 
+      &lt;for ... /&gt;</code>
+  </li>
+  <li>declare a bundle of tasks using a properties-file holding these 
+      taskname-ImplementationClass-pairs and <code>&lt;taskdef&gt;</code>
+      <br>
+      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antcontrib.properties&quot; /&gt; 
+      &lt;for ... /&gt;</code>
+  </li>
+  <li>declare a bundle of tasks using a <a href="CoreTypes/antlib.html">xml-file</a> holding these  
+      taskname-ImplementationClass-pairs and <code>&lt;taskdef&gt;</code>
+      <br>
+      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antlib.xml&quot; /&gt; 
+      &lt;for ... /&gt;</code>
+  </li>
+  <li>declare a bundle of tasks using a xml-file named antlib.xml, XML-namespace and 
+      <a href="CoreTypes/antlib.html#antlibnamespace"><code>antlib:</code> protocoll handler</a> 
+      <br>
+      <code>&lt;project xmlns:ac=&quot;antlib:net.sf.antconrib&quot;/&gt; 
+      &lt;ac:for ... /&gt;</code>
+  </li>
+</ul>
+
+If you need a special function, you should
+<ol>
+  <li>have a look at this manual, because Ant provides lot of tasks</li>
+  <li>have a look at the external task page in the <a href="../external.html">manual</a>
+      (or better <a href="http://ant.apache.org/external.html">online</a>)</li>
+  <li>have a look at the external task <a href="http://wiki.apache.org/ant/AntExternalTaskdefs">wiki 
+      page</a></li>
+  <li>ask on the <a href="http://ant.apache.org/mail.html#User%20List">Ant user</a> list</li>
+  <li><a href="tutorial-writing-tasks.html">implement </a>(and share) your own</li>
+</ol>
 
 </body>
 </html>
