@@ -160,6 +160,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
     and also perform a svn update on files in people.apache.org's
     /www/ant.apache.org/
 
+    you also need to checkout parallel to ant-core https://svn.apache.org/repos/asf/ant/site
+    then go to the subdirectory generated
+    svn propedit svn:externals to change the location of the manual
+
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
 
