@@ -281,13 +281,11 @@ public class UnknownElement extends Task {
             ((Task) realThing).execute();
         }
 
-        // the task will not be reused ( a new init() will be called )
-        // Let GC do its job
+        // Finished executing the task, null it to allow
+        // GC do its job
+        // If this UE is used again, a new "realthing" will be made
         realThing = null;
-        // FIXME: the following should be done as well, but is
-        //        commented out for the moment as the unit tests fail
-        //        if it is done
-        //getWrapper().setProxy(null);
+        getWrapper().setProxy(null);
 
     }
 
