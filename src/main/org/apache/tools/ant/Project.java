@@ -1958,6 +1958,8 @@ public class Project implements ResourceFactory {
             BuildListener listener = (BuildListener) iter.next();
             listener.buildFinished(event);
         }
+        // Inform IH to clear the cache
+        IntrospectionHelper.clearCache();
     }
 
     /**
