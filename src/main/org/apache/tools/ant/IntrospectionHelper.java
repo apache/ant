@@ -1321,7 +1321,7 @@ public final class IntrospectionHelper  {
     /**
      * Clears the static cache of on build finished.
      */
-    /*package private*/ static void clearCache() {
+    public static void clearCache() {
         HELPERS.clear();
     }
 
