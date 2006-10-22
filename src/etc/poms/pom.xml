@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ant</groupId>
+  <artifactId>ant-parent</artifactId>
+  <version>1.7.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <description>master POM</description>
+  <name>Apache Ant</name>
+  <url>http://ant.apache.org/</url>
+  <inceptionYear>2000</inceptionYear>
+  <distributionManagement>
+    <!-- Null out inherited apache distribution repo by default -->
+    <repository>
+      <id>dummy</id>
+      <name>Dummy to avoid accidental deploys</name>
+      <url></url>
+    </repository>
+  </distributionManagement>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/ant/core/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jant/core/trunk</developerConnection>
+    <url>http://svn.apache.org/repos/asf/ant/core/trunk</url>
+  </scm>
+  <mailingLists>
+    <mailingList>
+      <name>Ant Developers List</name>
+      <subscribe>dev-subscribe@ant.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@ant.apache.org</unsubscribe>
+      <post>dev@ant.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/ant-dev</archive>
+    </mailingList>
+    <mailingList>
+      <name>Ant Users List</name>
+      <subscribe>user-subscribe@ant.apache.org</subscribe>
+      <unsubscribe>user-unsubscribe@ant.apache.org</unsubscribe>
+      <post>user@ant.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/ant-user</archive>
+    </mailingList>
+  </mailingLists>
+  <issueManagement>
+    <system>bugzilla</system>
+    <url>http://issues.apache.org/bugzilla/</url>
+  </issueManagement>
+  <modules>
+    <module>ant-launcher</module>
+    <module>ant</module>
+  </modules>
+  <dependencies>
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>../../../src/main</sourceDirectory>
+    <testSourceDirectory>../../../src/testcases</testSourceDirectory>
+    <outputDirectory>../../../target/classes</outputDirectory>
+    <testOutputDirectory>../../../target/testcases</testOutputDirectory>
+  </build>
+</project>
