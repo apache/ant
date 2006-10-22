@@ -1,2 +1,2 @@
-VERSION=@VERSION@
-DATE=@DATE@
+VERSION=${project.version}
+DATE=${TODAY}

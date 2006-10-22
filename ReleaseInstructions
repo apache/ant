@@ -40,7 +40,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Label such branches ANT_16_BRANCH.
 
 4.  Once the branch is setup, the version numbers in SVN are changed. On the
-    branch, the version property in build.xml becomes 1.7Beta.
+    branch, the project.version property in build.xml becomes 1.7Beta.
 
     If there were a main branch, its build.xml would have 1.8alpha.
 
@@ -51,7 +51,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     the first beta on the 1.7 branch has been called 1.7.0Beta1, ...
 
-    the version property in build.xml governs the output of ant -version and
+    the project.version property in build.xml governs the output of ant -version and
     the naming of the distribution files.
 
     Update the following files for version number:

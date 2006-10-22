@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Ant-Version: Apache Ant @VERSION@
+Ant-Version: Apache Ant ${project.version}
+
 

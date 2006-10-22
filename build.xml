@@ -32,7 +32,7 @@
   -->
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.7.0Beta3"/>
+  <property name="project.version" value="1.7.0Beta3"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
   <property name="pom.version" value="1.7.0-SNAPSHOT"/>
   <property name="manifest-version" value="1.7.0"/>
@@ -137,7 +137,7 @@
           Set up properties for the distribution area
         ===================================================================
    -->
-  <property name="dist.name" value="apache-${name}-${version}"/>
+  <property name="dist.name" value="apache-${name}-${project.version}"/>
   <property name="dist.base" value="distribution"/>
   <property name="dist.base.source" value="${dist.base}/source"/>
   <property name="dist.base.binaries" value="${dist.base}/binaries"/>
@@ -614,11 +614,7 @@
       <format property="year" pattern="yyyy"/>
     </tstamp>
     <filterchain id="ant.filters">
-      <replacetokens>
-        <token key="VERSION" value="${version}"/>
-        <token key="DATE" value="${TODAY}"/>
-        <token key="TIME" value="${TSTAMP}"/>
-      </replacetokens>
+       <expandproperties/>
     </filterchain>
   </target>
 
@@ -1009,10 +1005,21 @@
         <fileset dir="${src.dir}/etc/poms">
             <include name="*/pom.xml"/>
         </fileset>
-        <mapper type="regexp" from="^(.*)[/\\]pom.xml" to="\1-${version}.pom"/>
+        <mapper type="regexp" from="^(.*)[/\\]pom.xml" to="\1-${project.version}.pom"/>
         <filterchain>
             <tokenfilter>
-                <replaceregex pattern="${pom.version}" replace="${version}"/>
+                <replaceregex pattern="${pom.version}" replace="${project.version}"/>
+            </tokenfilter>
+        </filterchain>
+    </copy>
+    <copy todir="${dist.lib}">
+        <fileset dir="${src.dir}/etc/poms">
+            <include name="pom.xml"/>
+        </fileset>
+        <mapper type="glob" from="pom.xml" to="ant-parent-${project.version}.pom"/>
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="${pom.version}" replace="${project.version}"/>
             </tokenfilter>
         </filterchain>
     </copy>
@@ -1202,7 +1209,6 @@
     <mkdir dir="${dist.base.source}"/>
     <mkdir dir="${dist.base.binaries}"/>
     <mkdir dir="${java-repository.dir}"/>
-
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
@@ -1254,15 +1260,19 @@
         <include name="*.sha1"/>
         <include name="*.md5"/>
       </fileset>
-      <mapper type="glob" from="*.jar" to="*-${version}.jar"/>
+      <mapper>
+        <mapper type="glob" from="*.jar" to="*-${project.version}.jar"/>
+        <mapper type="glob" from="*.pom" to="*.pom"/>
+        <mapper type="glob" from="*.pom.sha1" to="*.pom.sha1"/>
+        <mapper type="glob" from="*.pom.md5" to="*.pom.md5"/>
+      </mapper>
     </copy>
     <checksum fileext=".md5">
-      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+      <fileset dir="${java-repository.dir}" includes="*${project.version}.jar"/>
     </checksum>
     <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${java-repository.dir}" includes="*${version}.jar"/>
+      <fileset dir="${java-repository.dir}" includes="*${project.version}.jar"/>
     </checksum>
-
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
       <fileset dir="${dist.base.binaries}/">
@@ -1351,7 +1361,7 @@
     <property name="ssh.dist.directory" value="${ssh.base.directory}/ant"/>
     <property name="ssh.jars.directory" value="${ssh.base.directory}/java-repository/ant/jars"/>
     <echo >
-      Uploading Ant version ${version}
+      Uploading Ant version ${project.version}
       to host ${ssh.host} as ${apache.user}
       distribution to ${ssh.dist.directory}
       JAR files to ${ssh.jars.directory}
@@ -1379,7 +1389,7 @@
       knownhosts="${ssh.knownhosts}"
       verbose="${ssh.verbose}" >
       <fileset dir="${dist.base}">
-        <include name="**/*${version}*"/>
+        <include name="**/*${project.version}*"/>
       </fileset>
      </scp>
     <scp todir="${apache.user}@${ssh.host}:${ssh.jars.directory}"
@@ -1387,7 +1397,7 @@
       knownhosts="${ssh.knownhosts}"
       verbose="${ssh.verbose}">
       <fileset dir="java-repository/ant/jars">
-        <include name="*${version}*"/>
+        <include name="*${project.version}*"/>
       </fileset>
      </scp>
   </target>
@@ -1951,7 +1961,7 @@ see ${build.junit.reports} / ${antunit.reports}
     xmlns:dn="antlib:org.apache.ant.dotnet">
 
     <property name="msi.dir" value="${build.dir}"/>
-    <property name="msi.name" value="${name}-${version}.msi"/>
+    <property name="msi.name" value="${name}-${project.version}.msi"/>
     <property name="msi.file" value="${msi.dir}/${msi.name}"/>
     <property name="wix.home" value="${user.home}/wix"/>
     <property name="wixobj.dir" value="${build.dir}/wix"/>
