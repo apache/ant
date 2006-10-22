@@ -22,6 +22,8 @@ Other changes:
 * Allow broken reference build files. The defer reference processing would
   break too many files - so allow them with a warning.
 
+* removed dependence on sun.misc.UUEncoder for UUMailer.
+
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
 =============================================
 
