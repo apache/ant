@@ -16,6 +16,7 @@
  *
  */
 package org.apache.tools.ant;
+import org.apache.tools.ant.launch.Launcher;
 
 /**
  * Magic names used within Ant.
@@ -115,7 +116,7 @@ public final class MagicNames {
      * Property used to store the location of ant.
      * @since Ant 1.7
      */
-    public static final String ANT_HOME = "ant.home";
+    public static final String ANT_HOME = Launcher.ANTHOME_PROPERTY;
 
     /**
      * Property used to store the location of the ant library (typically the ant.jar file.)

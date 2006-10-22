@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.tools.ant.MagicNames;
 
 
 /**
@@ -39,9 +38,8 @@ public class Launcher {
     /**
      * The Ant Home (installation) Directory property.
      * {@value}
-     * @deprecated since 1.7
      */
-    public static final String ANTHOME_PROPERTY = MagicNames.ANT_HOME;
+    public static final String ANTHOME_PROPERTY = "ant.home";
 
     /**
      * The Ant Library Directory property.
@@ -157,7 +155,7 @@ public class Launcher {
      */
     private int run(String[] args)
             throws LaunchException, MalformedURLException {
-        String antHomeProperty = System.getProperty(MagicNames.ANT_HOME);
+        String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
         File antHome = null;
 
         File sourceJar = Locator.getClassSource(getClass());
@@ -170,7 +168,7 @@ public class Launcher {
 
         if (antHome == null || !antHome.exists()) {
             antHome = jarDir.getParentFile();
-            System.setProperty(MagicNames.ANT_HOME, antHome.getAbsolutePath());
+            System.setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
         }
 
         if (!antHome.exists()) {
