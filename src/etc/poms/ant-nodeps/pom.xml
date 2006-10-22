@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ant</groupId>
+  <artifactId>ant-nodeps</artifactId>
+  <version>1.7.0-SNAPSHOT</version>
+  <description>contains all the optional tasks and types which do not have particular dependencies</description>
+  <dependencies>
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.7.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <!-- the implementation jar of the xerces jar will be used by ant to parse
+      XML files, particularly the build files, if the JDK does not provide a parser
+      xercesImpl.jar is provided with ant -->
+    <groupId>xerces</groupId>
+    <artifactId>xerces-impl</artifactId>
+    <version>2.8.1</version>
+    <optional>true</optional>
+    <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <!-- xml-apis contains the org.w3c.dom package 
+        since ant is using DOM APIS to parse the XML build file and do other XML related activities
+        xml-apis is a compile time dependency
+        a version of xml-apis.jar is delivered with ant -->
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>2.8.1</version>
+      <optional>true</optional>
+      <scope>compile</scope>
+    </dependency>
+    
+  </dependencies>
+</project>
