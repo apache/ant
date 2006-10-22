@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>ant</groupId>
   <artifactId>ant</artifactId>
   <version>1.7.0-SNAPSHOT</version>
-  <description>ant.jar contains the ant framework, except a few classes which are in ant-launcher
-    it also contains the implementation and API of the core tasks and types.
-  </description>
+  <description>ant.jar contains the ant framework, except a few classes which are in ant-launcher it
+    also contains the implementation and API of the core tasks and types. </description>
   <dependencies>
     <dependency>
       <!-- the implementation jar of the xerces jar will be used by ant to parse
@@ -41,8 +41,43 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     </dependency>
   </dependencies>
   <build>
+    <filters>
+      <filter>.build.timestamp.properties</filter>
+    </filters>
     <plugins>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-timestamp-file</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <tstamp/>
+                <touch file=".build.timestamp.properties" />
+                <echo file=".build.timestamp.properties" append="false" 
+                  message="TODAY=${TODAY}" />
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>delete-timestamp-file</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete file=".build.timestamp.properties" />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+         <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -63,7 +98,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
             <exclude>org/apache/tools/ant/util/regexp/Jdk14Regexp*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
             <exclude>org/apache/tools/ant/launch/**</exclude>
-          </excludes>          
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
