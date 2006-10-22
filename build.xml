@@ -766,6 +766,7 @@
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.apache-oro"/>
             <selector refid="needs.jdk1.4+"/>
+            <selector refid="needs.jdk1.5+"/>
             <selector refid="needs.javamail"/>
             <selector refid="ant.launcher"/>
           </or>
