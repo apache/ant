@@ -10,6 +10,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <name>Apache Ant</name>
   <url>http://ant.apache.org/</url>
   <inceptionYear>2000</inceptionYear>
+  <organization>
+    <name>Apache Software Foundation</name>
+  </organization>
   <distributionManagement>
     <!-- Null out inherited apache distribution repo by default -->
     <repository>
