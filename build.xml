@@ -770,6 +770,7 @@
             <selector refid="needs.commons-logging"/>
             <selector refid="needs.apache-bsf"/>
             <selector refid="needs.apache-regexp"/>
+            <selector refid="needs.apache-resolver"/>
             <selector refid="needs.apache-oro"/>
             <selector refid="needs.jdk1.4+"/>
             <selector refid="needs.javamail"/>
