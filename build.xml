@@ -33,6 +33,8 @@
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
   <property name="version" value="1.7.0Beta3"/>
+  <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
+  <property name="pom.version" value="1.7.0-SNAPSHOT"/>
   <property name="manifest-version" value="1.7.0"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
@@ -1002,6 +1004,28 @@
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
     <copy todir="${dist.lib}" file="${lib.dir}/libraries.properties"/>
 
+    <copy todir="${dist.lib}">
+        <fileset dir="${src.dir}/etc/poms">
+            <include name="*/pom.xml"/>
+        </fileset>
+        <mapper type="regexp" from="^(.*)[/\\]pom.xml" to="\1-${version}.pom"/>
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="${pom.version}" replace="${version}"/>
+            </tokenfilter>
+        </filterchain>
+    </copy>
+    <checksum algorithm="md5">
+        <fileset dir="${dist.lib}">
+            <include name="*.pom"/>
+        </fileset>
+    </checksum>
+    <checksum algorithm="sha1">
+        <fileset dir="${dist.lib}">
+            <include name="*.pom"/>
+        </fileset>
+    </checksum>
+
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
         <patternset refid="site.excludes"/>
@@ -1170,6 +1194,7 @@
   -->
   <target name="main_distribution"
     description="--> creates the zip and tar distributions">
+    <delete dir="${dist.base}"/>
     <delete dir="${dist.name}"/>
     <delete dir="${java-repository.dir}"/>
     <mkdir dir="${dist.base}"/>
@@ -1224,6 +1249,9 @@
     <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
         <include name="ant*.jar"/>
+        <include name="*.pom"/>
+        <include name="*.sha1"/>
+        <include name="*.md5"/>
       </fileset>
       <mapper type="glob" from="*.jar" to="*-${version}.jar"/>
     </copy>
