@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>ant</groupId>
+    <artifactId>ant-parent</artifactId>
+    <relativePath>../pom.xml</relativePath>
+    <version>1.7.0-SNAPSHOT</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>ant</groupId>
   <artifactId>ant-nodeps</artifactId>
@@ -17,11 +24,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <!-- the implementation jar of the xerces jar will be used by ant to parse
       XML files, particularly the build files, if the JDK does not provide a parser
       xercesImpl.jar is provided with ant -->
-    <groupId>xerces</groupId>
-    <artifactId>xerces-impl</artifactId>
-    <version>2.8.1</version>
-    <optional>true</optional>
-    <scope>runtime</scope>
+      <groupId>xerces</groupId>
+      <artifactId>xerces-impl</artifactId>
+      <version>2.8.1</version>
+      <optional>true</optional>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <!-- xml-apis contains the org.w3c.dom package 
@@ -34,6 +41,59 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <optional>true</optional>
       <scope>compile</scope>
     </dependency>
-    
+
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.2</source>
+          <target>1.2</target>
+          <includes>
+            <include>org/apache/tools/ant/taskdefs/optional/**</include>
+            <include>org/apache/tools/ant/types/optional/**</include>
+            <include>org/apache/tools/ant/util/depend/*</include>
+            <include>org/apache/tools/ant/util/optional/**</include>
+            <include>org/apache/tools/ant/util/java15/**</include>
+            <include>org/apache/tools/ant/util/regexp/Jdk14Regexp*</include>
+          </includes>
+          <excludes>
+            <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/**</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/perforce/**</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/Script*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/script/**</exclude>
+            <exclude>org/apache/tools/ant/util/optional/Script*</exclude>
+            <exclude>org/apache/tools/ant/types/optional/*Script*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/StyleBook*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/Ejbc*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/DDCreator*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/WLRun*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/WLStop*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/net/Telnet*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/net/RExec*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/scm/AntStarTeam*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/starteam/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ANTLR*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/sound/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/image/*</exclude>
+            <exclude>org/apache/tools/ant/types/optional/image/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/jdepend/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/splash/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ssh/*</exclude>
+            
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+    <sourceDirectory>../../../../src/main</sourceDirectory>
+    <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
+    <outputDirectory>../../../../target/ant-nodeps/classes</outputDirectory>
+    <testOutputDirectory>../../../../target/ant-nodeps/testcases</testOutputDirectory>
+    <directory>../../../../target/ant-nodeps</directory>
+  </build>
 </project>

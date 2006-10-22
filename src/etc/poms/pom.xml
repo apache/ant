@@ -49,6 +49,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <modules>
     <module>ant-launcher</module>
     <module>ant</module>
+    <module>ant-nodeps</module>
   </modules>
   <dependencies>
      <dependency>
