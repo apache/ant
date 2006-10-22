@@ -45,8 +45,22 @@ apparently calls <a href="http://msdn.microsoft.com/library/default.asp?url=/lib
 the exact semantics of the call. In particular, if you do not put a file extension
 on the executable, only ".EXE" files are looked for, not ".COM", ".CMD" or other file
 types listed in the environment variable PATHEXT. That is only used by the shell.
-
 </p>
+  <p>
+    Note that <em>.bat</em> files cannot in general by executed directly.
+    One normally needs to execute the command shell executable <code>cmd</code>
+    using the <code>/c</code> switch.
+  </p>
+  <blockquote>
+<pre>
+&lt;target name="help"&gt;
+  &lt;exec executable="cmd"&gt;
+    &lt;arg value="/c"/&gt;
+    &lt;arg value="ant.bat"/&gt;
+    &lt;arg value="-p"/&gt;
+  &lt;/exec&gt;
+&lt;/target&gt;
+</pre></blockquote>
 
 <h4>Cygwin Users</h4>
 <p>In general the <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh for
