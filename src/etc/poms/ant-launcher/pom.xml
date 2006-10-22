@@ -31,5 +31,6 @@
     <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
     <outputDirectory>../../../../target/ant-launcher/classes</outputDirectory>
     <testOutputDirectory>../../../../target/ant-launcher/testcases</testOutputDirectory>
+    <directory>../../../../target/ant-launcher</directory>
   </build>
 </project>
