@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import org.apache.tools.ant.BuildException;
-import sun.misc.UUEncoder;
+import org.apache.tools.ant.util.UUEncoder;
 
 /**
  * An emailer that uuencodes attachments.

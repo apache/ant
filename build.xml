@@ -191,10 +191,6 @@
     </or>
   </selector>
 
-  <selector id="needs.sun.uue">
-    <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
-  </selector>
-
   <!-- depends on external libraries -->
   <selector id="needs.trax">
     <or>
@@ -470,9 +466,6 @@
     <available property="bcel.present"
       classname="org.apache.bcel.Constants"
       classpathref="classpath"/>
-    <available property="sunuue.present"
-      classname="sun.misc.UUEncoder"
-      classpathref="classpath"/>
 
     <condition property="javamail.complete">
       <and>
@@ -646,7 +639,6 @@
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
-            <selector refid="needs.sun.uue" unless="sunuue.present"/>
 
             <selector refid="needs.trax" unless="trax.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
