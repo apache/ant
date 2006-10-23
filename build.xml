@@ -194,7 +194,6 @@
   <!-- depends on external libraries -->
   <selector id="needs.trax">
     <or>
-      <filename name="${optional.package}/junit/Xalan2Executor*"/>
       <filename name="${optional.package}/TraXLiaison*"/>
       <filename name="${optional.package}/XsltTest*"/>
       <filename name="${type.package}/XMLCatalogBuildFileTest*"/>
