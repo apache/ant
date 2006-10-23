@@ -49,7 +49,6 @@ import java.net.UnknownHostException;
  * Requires Java1.5+ to work properly. On Java1.4 and earlier, if a hostname
  * can be resolved, the destination is assumed to be reachable.
  *
- * @ant.condition name="isreachable"
  * @since Ant 1.7
  */
 public class IsReachable extends ProjectComponent implements Condition {

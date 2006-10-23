@@ -77,7 +77,7 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
 
     /**
      * Override point.
-     * @return
+     * @return the executable name.
      */
     protected String getExecutableName() {
         return SunRmic.RMIC_EXECUTABLE;

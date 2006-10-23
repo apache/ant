@@ -25,7 +25,7 @@ import org.apache.tools.ant.types.Reference;
  * Simple class that represents an Extension and conforms to Ants
  * patterns.
  *
- * @ant.data-type name="extension"
+ * @ant.datatype name="extension"
  */
 public class ExtensionAdapter extends DataType {
     /**

@@ -64,7 +64,8 @@ public class Matches extends ProjectComponent implements Condition {
      * A regular expression.
      * You can use this element to refer to a previously
      * defined regular expression datatype instance
-     * @return the regular expression object to be configured as an element
+     * @param regularExpression the regular expression object
+     *                          to be configured as an element
      */
     public void addRegexp(RegularExpression regularExpression) {
         if (this.regularExpression != null) {

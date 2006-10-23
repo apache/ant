@@ -33,7 +33,8 @@ import org.apache.tools.ant.BuildException;
 /**
  * ANT Jar-Task SPI extension
  * 
- * @see http://issues.apache.org/bugzilla/show_bug.cgi?id=31520
+ * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
+ * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
 public class Service extends ProjectComponent {
     private List providerList = new ArrayList();
