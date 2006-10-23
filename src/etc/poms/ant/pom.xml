@@ -54,8 +54,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-        </configuration>
+        <configuration> </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -70,9 +69,9 @@
               <tasks>
                 <tstamp/>
                 <mkdir dir="${project.build.directory}"/>
-                <touch file="${project.build.directory}/.build.timestamp.properties" />
-                <echo file="${project.build.directory}/.build.timestamp.properties" append="false" 
-                  message="TODAY=${TODAY}" />
+                <touch file="${project.build.directory}/.build.timestamp.properties"/>
+                <echo file="${project.build.directory}/.build.timestamp.properties" append="false"
+                  message="TODAY=${TODAY}"/>
               </tasks>
             </configuration>
           </execution>
@@ -84,13 +83,13 @@
             </goals>
             <configuration>
               <tasks>
-                <delete file="${project.build.directory}/.build.timestamp.properties" />
+                <delete file="${project.build.directory}/.build.timestamp.properties"/>
               </tasks>
             </configuration>
           </execution>
         </executions>
       </plugin>
-         <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -112,11 +111,59 @@
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
             <exclude>org/apache/tools/ant/launch/**</exclude>
           </excludes>
+          <testExcludes>
+            <exclude>org/apache/tools/ant/taskdefs/optional/**</exclude>
+            <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
+            <exclude>org/apache/tools/ant/types/optional/**</exclude>
+            <exclude>org/apache/tools/ant/types/resolver/**</exclude>
+            <exclude>org/apache/tools/ant/util/depend/**</exclude>
+            <exclude>org/apache/tools/ant/util/optional/**</exclude>
+            <exclude>org/apache/tools/ant/util/Script*</exclude>
+            <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
+            <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
+            <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
+            <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
+            <exclude>org/apache/tools/ant/util/regexp/Jdk14Regexp*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
+            <exclude>org/apache/tools/ant/launch/**</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/StyleTest*</exclude>
+          </testExcludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <omitBasedir>true</omitBasedir>
+          <systemProperties>
+            <property>
+              <name>ant.home</name>
+              <value>${env.ANT_HOME}</value>
+            </property>
+            <property>
+              <name>build.tests</name>
+              <value>../../../../target/ant/testcases</value>
+            </property>
+            <property>
+              <name>build.tests.value</name>
+              <value>../../../../target/ant/testcases</value>
+            </property>
+            <property>
+              <name>offline</name>
+              <value>true</value>
+            </property>
+            <property>
+              <name>root</name>
+              <value>../../../..</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
     </plugins>
-    <sourceDirectory>../../../../src/main</sourceDirectory>
-    <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
     <resources>
       <resource>
         <directory>../../../../src/main</directory>
@@ -145,6 +192,21 @@
         </includes>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>../../../../src/etc/testcases</directory>
+        <filtering>true</filtering>
+      </testResource>
+      <testResource>
+        <directory>../../../../src/main</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+    <sourceDirectory>../../../../src/main</sourceDirectory>
+    <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
     <outputDirectory>../../../../target/ant/classes</outputDirectory>
     <testOutputDirectory>../../../../target/ant/testcases</testOutputDirectory>
     <directory>../../../../target/ant</directory>
