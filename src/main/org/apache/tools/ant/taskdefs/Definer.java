@@ -44,7 +44,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * handling is handled by DefBase
  *
  * @since Ant 1.4
- * @noinspection ParameterHidesMemberVariable
  */
 public abstract class Definer extends DefBase {
 

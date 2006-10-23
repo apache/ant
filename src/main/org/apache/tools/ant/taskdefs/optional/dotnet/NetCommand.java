@@ -374,7 +374,7 @@ public class NetCommand {
      * @param filesToBuild
      * @param outputTimestamp timestamp to compare against
      * @return #of files out of date
-     * @todo: should FAT granularity be included here?
+     * @todo should FAT granularity be included here?
      */
     public int scanOneFileset(DirectoryScanner scanner, Hashtable filesToBuild,
                                         long outputTimestamp) {
