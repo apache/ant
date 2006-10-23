@@ -29,6 +29,30 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-timestamp-file</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="${project.build.outputDirectory}"/>
+                <copy todir="${project.build.outputDirectory}/org/apache/tools/ant/taskdefs/optional/junit/xsl">
+                  <fileset dir="${project.build.sourceDirectory}/../etc">
+                    <include name="junit-frames.xsl"/>
+                    <include name="junit-noframes.xsl"/>
+                  </fileset>
+                </copy>              
+              </tasks>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
