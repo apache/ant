@@ -161,13 +161,18 @@ is identical to
 
 <p>The same is also true for <code>&lt;untar&gt;</code> and
 <code>&lt;tarfileset&gt;</code>.  <code>&lt;copy&gt;</code> offers
-additional features like <a
-href="../CoreTypes/filterchain.html">filtering files</a> on the fly,
+additional features like <a href="../CoreTypes/filterchain.html">filtering files</a> on the fly,
 allowing a file to be mapped to multiple destinations or a
 configurable file system timestamp granularity.</p>
 
+<pre>&lt;zip destfile=&quot;new.jar&quot;&gt;
+  &lt;zipfileset src=&quot;old.jar&quot;&gt;
+    &lt;exclude name=&quot;do/not/include/this/class&quot;/&gt;
+  &lt;/zipfileset&gt;
+&lt;/zip&gt;
+</pre>
+<p>&quot;Deletes&quot; files from a zipfile.</p>
 
 
 </body>
 </html>
-
