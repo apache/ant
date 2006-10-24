@@ -154,8 +154,8 @@
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
   <property name="java-repository.dir" value="java-repository/${name}"/>
-  <property name="java-repository.jars.dir" value="${java-repository}/jars"/>
-  <property name="java-repository.poms.dir" value="${java-repository}/poms"/>
+  <property name="java-repository.jars.dir" value="${java-repository.dir}/jars"/>
+  <property name="java-repository.poms.dir" value="${java-repository.dir}/poms"/>
 
   <!--
        ===================================================================
