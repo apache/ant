@@ -21,7 +21,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.jcraft</groupId>
+      <groupId>jsch</groupId>
       <artifactId>jsch</artifactId>
       <version>0.1.29</version>
       <scope>compile</scope>
