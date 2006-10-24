@@ -11,7 +11,6 @@ com.bea          weblogicclasses  5.1       a newer version can do.
 jai              jai-core         1.1.2_01  download jai from sun
 jai              jai-codec        1.1.2.1   download jai from sun
 javax.media      jmf              2.1.1e    dowmload jmf from sun
-com.jcraft       jsch             0.1.29    download from jcraft
 com.ibm.netrexx  netrexx          2.0.5     I used the file NetRexxC.jar from the netrexx distribution
 com.starteam     starteam-sdk     5.2       the original file is called starteam-sdk.jar
 stylebook        stylebook        1.0-b2    the original file is called stylebook-1.0-b2.jar
@@ -53,6 +52,3 @@ REFERENCES :
 about skipping tests :
 http://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html
 
-upload request for jsch-0.1.29
-http://jira.codehaus.org/browse/MAVENUPLOAD-1197
-  
