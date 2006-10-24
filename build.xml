@@ -1487,6 +1487,7 @@
 
       <packageset dir="${java.dir}"/>
 
+      <!-- hide some meta information for javadoc -->
       <tag name="todo" description="To do:" scope="all"/>
       <tag name="ant.task" enabled="false" description="Task:" scope="types"/>
       <tag name="ant.datatype" enabled="false" description="Data type:" scope="types"/>
@@ -1514,6 +1515,9 @@
       locale="en"
       windowtitle="${Name} Test Utilities"
       doctitle="${Name}">
+
+      <!-- hide some meta information for javadoc -->
+      <tag name="pre" description="Precondition:" scope="all"/>
 
       <fileset dir="${src.junit}">
         <patternset refid="useful.tests"/>
