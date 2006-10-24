@@ -153,7 +153,9 @@
   <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
-  <property name="java-repository.dir" value="java-repository/ant/jars"/>
+  <property name="java-repository.dir" value="java-repository/${name}"/>
+  <property name="java-repository.jars.dir" value="${java-repository}/jars"/>
+  <property name="java-repository.poms.dir" value="${java-repository}/poms"/>
 
   <!--
        ===================================================================
@@ -1202,7 +1204,8 @@
     <mkdir dir="${dist.base}"/>
     <mkdir dir="${dist.base.source}"/>
     <mkdir dir="${dist.base.binaries}"/>
-    <mkdir dir="${java-repository.dir}"/>
+    <mkdir dir="${java-repository.jars.dir}"/>
+    <mkdir dir="${java-repository.poms.dir}"/>
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
@@ -1247,25 +1250,29 @@
       src="${dist.base.binaries}/${dist.name}-bin.tar"/>
     <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
 
-    <copy todir="${java-repository.dir}">
+    <copy todir="${java-repository.jars.dir}">
       <fileset dir="${dist.name}/lib">
         <include name="ant*.jar"/>
+      </fileset>
+      <mapper type="glob" from="*.jar" to="*-${project.version}.jar"/>
+    </copy>
+    <copy todir="${java-repository.poms.dir}">
+      <fileset dir="${dist.name}/lib">
         <include name="*.pom"/>
         <include name="*.sha1"/>
         <include name="*.md5"/>
       </fileset>
       <mapper>
-        <mapper type="glob" from="*.jar" to="*-${project.version}.jar"/>
         <mapper type="glob" from="*.pom" to="*.pom"/>
         <mapper type="glob" from="*.pom.sha1" to="*.pom.sha1"/>
         <mapper type="glob" from="*.pom.md5" to="*.pom.md5"/>
       </mapper>
     </copy>
     <checksum fileext=".md5">
-      <fileset dir="${java-repository.dir}" includes="*${project.version}.jar"/>
+      <fileset dir="${java-repository.jars.dir}" includes="*${project.version}.jar"/>
     </checksum>
     <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${java-repository.dir}" includes="*${project.version}.jar"/>
+      <fileset dir="${java-repository.jars.dir}" includes="*${project.version}.jar"/>
     </checksum>
     <delete dir="${dist.name}"/>
     <checksum fileext=".md5">
@@ -1353,12 +1360,13 @@
     <property name="ssh.verbose" value="false"/>
     <property name="ssh.base.directory" value="/www/www.apache.org/dist"/>
     <property name="ssh.dist.directory" value="${ssh.base.directory}/ant"/>
-    <property name="ssh.jars.directory" value="${ssh.base.directory}/java-repository/ant/jars"/>
+    <property name="ssh.java-repository.directory" value="${ssh.base.directory}/java-repository/ant"/>
     <echo >
       Uploading Ant version ${project.version}
       to host ${ssh.host} as ${apache.user}
       distribution to ${ssh.dist.directory}
-      JAR files to ${ssh.jars.directory}
+      JAR files to ${ssh.java-repository.directory}/jars
+      POM files to ${ssh.java-repository.directory}/poms
       Known hosts = ${ssh.knownhosts}
     </echo>
   </target>
@@ -1373,7 +1381,11 @@
     <sshexec username="${apache.user}" host="${ssh.host}"
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
-      command="mkdir -p ${ssh.jars.directory}"/>
+      command="mkdir -p ${ssh.java-repository.directory}/jars"/>
+    <sshexec username="${apache.user}" host="${ssh.host}"
+      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
+      knownhosts="${ssh.knownhosts}"
+      command="mkdir -p ${ssh.java-repository.directory}/poms"/>
   </target>
 
   <target name="upload" description="--> uploads the distribution"
@@ -1386,12 +1398,12 @@
         <include name="**/*${project.version}*"/>
       </fileset>
      </scp>
-    <scp todir="${apache.user}@${ssh.host}:${ssh.jars.directory}"
+    <scp todir="${apache.user}@${ssh.host}:${ssh.java-repository.directory}"
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
       verbose="${ssh.verbose}">
-      <fileset dir="java-repository/ant/jars">
-        <include name="*${project.version}*"/>
+      <fileset dir="java-repository/ant">
+        <include name="*/*${project.version}*"/>
       </fileset>
      </scp>
   </target>
