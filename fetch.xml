@@ -213,9 +213,15 @@
     <f2 project="jython" archive="jython"/>
   </target>
 
+  <target name="rhino"
+          description="load rhino"
+          depends="bsf">
+    <f2 project="rhino" archive="js"/>
+  </target>
+
   <target name="script"
           description="load script languages"
-          depends="bsf,jruby,jython,beanshell"/>
+          depends="bsf,jruby,jython,beanshell,rhino"/>
 
   <target name="debugging"
     description="internal ant debugging"
