@@ -6,8 +6,6 @@ The Ant jars can be built using Maven and the POMS present in this directory.
 Libs not available in the maven repository
 
 groupId          artifactId       version   comment
-xerces           xerces-impl      2.8.1     the xercesImpl.jar supplied with ant is the right one
-xml-apis         xml-apis         2.8.1     the xml-apis.jar supplied with ant is the right one
 com.bea          weblogic         8.1.3.0   download it
 com.bea          weblogicclasses  5.1       a newer version can do.
 jai              jai-core         1.1.2_01  download jai from sun
@@ -39,8 +37,6 @@ mvn install -Dmaven.test.skip=true
 
 TODO :
 
- * write MAVEN-UPLOAD request for xerces, xml-apis, and jsch.
-
  * see if the dependency to weblogicclasses.jar can be replaced by a dependency to some j2ee.jar from Sun,
 as it supplies some javax.ejb classes which are required at compile time.
 
@@ -57,4 +53,6 @@ REFERENCES :
 about skipping tests :
 http://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html
 
+upload request for jsch-0.1.29
+http://jira.codehaus.org/browse/MAVENUPLOAD-1197
   
