@@ -32,7 +32,7 @@ import org.apache.tools.ant.types.Permissions;
  * - JUnitResultFormatter or its subclasses
  * - JUnitVersionHelper
  * - JUnitTestRunner
- * Cf. {@link JUnitTask.SplitLoader#isSplit(String)}
+ * Cf.  JUnitTask.SplitLoader#isSplit(String)
  * Public only to permit access from classes in this package; do not use directly.
  * 
  * @since 1.7
