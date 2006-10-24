@@ -28,7 +28,7 @@
       <artifactId>antlr</artifactId>
       <version>2.7.2</version>
       <optional>true</optional>
-      <scope>compile</scope>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
   <build>
