@@ -33,7 +33,20 @@ treatment for files that should end up in the
 <p>(The War task is a shortcut for specifying the particular layout of a WAR file.
 The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
 attributes of zipfilesets in a Zip or Jar task.)</p>
-<p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
+<p>The extended zipfileset element from the zip task
+    (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>)
+    is available in the War task. The task is also resource-enabled
+    and will add nested resources and resource collections to the archive.</p>
+
+<p>
+    Before Servlet API 2.5/Java EE 5, a WEB-INF/web.xml file was mandatory in a
+    WAR file, so this task failed if the <code>webxml</code> attribute was missing.
+    As the web.xml file is now optional, the <code>webxml</code> attribute is now
+    downgraded to being optional. The task will warn if the file is not
+    included as an attribute or in a fileset, but still succeed. The task
+    will also complain if more than one web.xml file is added to the JAR. 
+</p>
+
 
 <p><b>Please note that the zip format allows multiple files of the same
 fully-qualified name to exist within a single archive.  This has been
@@ -55,13 +68,13 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   </tr>
   <tr>
     <td valign="top">warfile</td>
-    <td valign="top"><i>Deprecated<i> name of the file to create
+    <td valign="top"><i>Deprecated</i> name of the file to create
     -use <tt>destfile</tt> instead.</td>
   </tr>
   <tr>
     <td valign="top">webxml</td>
     <td valign="top">The deployment descriptor to use (WEB-INF/web.xml).</td>
-    <td valign="top" align="center">Yes, unless update is set to true</td>
+    <td valign="top" align="center">No (since Ant1.7)</td>
   </tr>
   <tr>
     <td valign="top">basedir</td>
@@ -231,7 +244,7 @@ using Ant's default manifest file. The content of
 directory, and thus it is our fault your webapp doesn't work. The cause
 of these complaints lies in WinZip, which turns an all upper-case
 directory into an all lower case one in a fit of helpfulness. Please check that
-jar xvf yourwebapp.war shows the same behaviour before filing another
+<code>jar xvf yourwebapp.war</code> shows the same behaviour before filing another
 report.<br/>
 Winzip has an option allowing all uppercase names (which is off by default!).  It can be enabled by:
 Menu "Options" -> "Configuration",  "View" property/tab page, then "General" group box has an option called "Allow all uppercase file names".
