@@ -58,9 +58,15 @@ files.</p>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
-  
-  
-   
+  <tr>
+    <td valign="top">regex</td>
+    <td valign="top">
+        a regular expression which is used to filter the
+        properties
+        only those properties whose names match it will be echoed.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>   
   <tr>
     <td valign="top">failonerror</td>
     <td valign="top">By default, the "failonerror" attribute is enabled.
@@ -70,7 +76,6 @@ files.</p>
     statement, and the build will continue without failure from this task.</td>
     <td valign="top" align="center">No</td>
   </tr>
-
   <tr>
     <td valign="top">format</td>
     <td valign="top">One of <code>text</code> or <code>xml</code>.
@@ -84,7 +89,11 @@ files.</p>
 <h4>propertyset</h4>
 
 <p>You can specify subsets of properties to be echoed with <a
-href="../CoreTypes/propertyset.html">propertyset</a>s.</p>
+href="../CoreTypes/propertyset.html">propertyset</a>s. Using
+<tt>propertyset</tt>s gives more control on which properties will be
+picked up. The attributes <tt>prefix</tt> and <tt>regex</tt> are just
+shorcuts that use <tt>propertyset</tt>s internally.
+</p>
 
 <p><em>since Ant 1.6</em>.</p>
 
@@ -115,7 +124,20 @@ allow the build to continue.</p>
     &lt;/propertyset&gt;
   &lt;/echoproperties&gt;
 </pre></blockquote>
-<p>List all properties beginning with "java."</p>
+<p>This again lists all properties beginning with "java." using a nested
+<tt>&lt;/propertyset&gt;</tt> which is an equivalent but longer way.</p>
+<blockquote><pre>
+  &lt;echoproperties regex=".*ant.*"/&gt;
+</pre></blockquote>
+<p>Lists all properties that contain "ant" in their names.
+The equivalent snippet with <tt>&lt;/propertyset&gt;</tt> is:</p>
+<blockquote><pre>
+  &lt;echoproperties&gt;
+    &lt;propertyset&gt;
+      &lt;propertyref regex=".*ant.*"/&gt;
+    &lt;/propertyset&gt;
+  &lt;/echoproperties&gt;
+</pre></blockquote>
 
 
 

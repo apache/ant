@@ -94,6 +94,18 @@
     </echoproperties>
   </target>
 
+  <target name="testWithPrefixAndRegex" depends="setup">
+    <echoproperties prefix="ant." regex=".*ant.*"/>
+  </target>
+
+  <target name="testWithEmptyPrefixAndRegex" depends="setup">
+    <echoproperties prefix="" regex=""/>
+  </target>
+
+  <target name="testWithRegex" depends="setup">
+    <echoproperties regex=".*ant.*"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test.properties" failonerror="no" />
     <delete file="test-prefix.properties" failonerror="no" />

@@ -24,6 +24,9 @@ Other changes:
 
 * removed dependence on sun.misc.UUEncoder for UUMailer.
 
+* added regex attribute to the echoproperties task. 
+  Bugzilla 40019.
+
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
 =============================================
 

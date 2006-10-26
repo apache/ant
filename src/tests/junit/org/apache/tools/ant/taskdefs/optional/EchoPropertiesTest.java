@@ -161,6 +161,22 @@ public class EchoPropertiesTest extends BuildFileTest {
         testEchoPrefixVarious("testEchoPrefixAsDoublyNegatedPropertyset");
     }
 
+    public void testWithPrefixAndRegex() throws Exception {
+        expectSpecificBuildException("testWithPrefixAndRegex",
+                "The target must fail with prefix and regex attributes set",
+                "Please specify either prefix or regex, but not both");
+    }
+
+    public void testWithEmptyPrefixAndRegex() throws Exception {
+        expectLogContaining("testEchoWithEmptyPrefixToLog", "test.property="+TEST_VALUE);
+    }
+
+    public void testWithRegex() throws Exception {
+        executeTarget("testWithRegex");
+        assertDebuglogContaining("ant.home=");
+        assertDebuglogContaining("user.variant=");
+    }
+
     private void testEchoPrefixVarious(String target) throws Exception {
         executeTarget(target);
         Properties props = loadPropFile(PREFIX_OUTFILE);
