@@ -24,10 +24,18 @@ Other changes:
 
 * removed dependence on sun.misc.UUEncoder for UUMailer.
 
-* added regex attribute to the echoproperties task. 
+* added regex attribute to the echoproperties task.
   Bugzilla 40019.
 
-Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3 
+* <war> task now allows you to omit the web.xml file. as this is optional
+  in the servlet 2.5 and Java EE 5 APIs. If you do want a web.xml file, it
+  can be pulled in by any nested fileset or resource reference; the webxml
+  attribute is optional.
+
+* Diagnostics catches and logs security exceptions when accessing system properties.
+
+
+Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3
 =============================================
 
 Changes that could break older environments:
