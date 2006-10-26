@@ -49,7 +49,16 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class Diagnostics {
 
+    /**
+     * value for which a difference between clock and temp file time triggers
+     * a warning.
+     * {@value}
+     */
     private static final int BIG_DRIFT_LIMIT = 10000;
+    /**
+     * How big a test file to write.
+     * {@value}
+     */
     private static final int TEST_FILE_SIZE = 32;
     private static final int KILOBYTE = 1024;
     private static final int SECONDS_PER_MILLISECOND = 1000;
@@ -57,6 +66,12 @@ public final class Diagnostics {
     private static final int MINUTES_PER_HOUR = 60;
     private static final String TEST_CLASS
         = "org.apache.tools.ant.taskdefs.optional.Test";
+
+    /**
+     * The error text when a security manager blocks access to a property.
+     * {@value}
+     */
+    protected static final String ERROR_PROPERTY_ACCESS_BLOCKED = "Access to this property blocked by a security manager";
 
     /** utility class */
     private Diagnostics() {
@@ -322,14 +337,26 @@ public final class Diagnostics {
         for (Enumeration keys = sysprops.propertyNames();
             keys.hasMoreElements();) {
             String key = (String) keys.nextElement();
-            String value;
-            try {
-                value = System.getProperty(key);
-            } catch (SecurityException e) {
-                value = "Access to this property blocked by a security manager";
-            }
+            String value = getProperty(key);
             out.println(key + " : " + value);
         }
+    }
+
+    /**
+     * Get the value of a system property. If a security manager
+     * blocks access to a property it fills the result in with an error 
+     * @param key
+     * @return the system property's value or error text
+     * @see #ERROR_PROPERTY_ACCESS_BLOCKED
+     */
+    private static String getProperty(String key) {
+        String value;
+        try {
+            value = System.getProperty(key);
+        } catch (SecurityException e) {
+            value = ERROR_PROPERTY_ACCESS_BLOCKED;
+        }
+        return value;
     }
 
     /**
@@ -558,28 +585,27 @@ public final class Diagnostics {
     }
 
     /**
-     * print a property name="value" pair, or name=[undefined] if there is none
-     * @param out
-     * @param name
+     * print a property name="value" pair if the property is set;
+     * print nothing if it is null
+     * @param out stream to print on
+     * @param key property name
      */
-    private static void printProperty(PrintStream out,String name) {
-        out.print(name);
-        out.print(" = ");
-        String value=System.getProperty(name);
+    private static void printProperty(PrintStream out,String key) {
+        String value= getProperty(key);
         if(value!=null) {
+            out.print(key);
+            out.print(" = ");
             out.print('"');
             out.print(value);
             out.println('"');
-        } else {
-            out.println("[undefined]");
         }
-        
     }
 
     /**
      * Report proxy information
-     *
+     * 
      * @param out stream to print to
+     * @since Ant1.7
      */
     private static void doReportProxy(PrintStream out) {
         printProperty(out,ProxySetup.HTTP_PROXY_HOST);
@@ -607,7 +633,7 @@ public final class Diagnostics {
         try {
             Class proxyDiagClass = Class.forName(proxyDiagClassname);
             Object instance =proxyDiagClass.newInstance();
-            out.println("Java1.5+ proxy settings");
+            out.println("Java1.5+ proxy settings:");
             out.println(instance.toString());
         } catch (ClassNotFoundException e) {
             //not included, do nothing
