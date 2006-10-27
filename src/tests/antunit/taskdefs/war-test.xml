@@ -54,6 +54,39 @@
     <au:assertFileExists file="${webxml.generated}" />
   </target>
 
+  <target name="testWebXmlMissingFromUpdate" depends="init">
+    <mkwar webxml="${web.xml}" />
+    <!-- there is no web.xml file, but that is ok, as
+      we are updating -->
+    <mkwar update="true">
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="testWebXmlInImplicitUpdate" depends="init">
+    <mkwar webxml="${web.xml}" />
+    <!-- when we are implicitly updating, the web.xml file does not get
+     pulled in, but the command still succeeds.-->
+    <mkwar webxml="${web.xml}" >
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="NotestWebXmlFilesetInImplicitUpdate" depends="init">
+    <mkwar webxml="${web.xml}" />
+    <!-- when we are implicitly updating, the web.xml file does not get
+     pulled in, but the command still succeeds.-->
+    <mkwar >
+      <webinf dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
 
   <target name="testDuplicateWebXml" depends="init">
     <mkwar webxml="${web.xml}" >
@@ -83,7 +116,7 @@
     Instead it pulls in
   -->
   <target name="testWebXmlOptional" depends="init">
-    <mkwar >
+    <mkwar needxmlfile="false">
       <classes dir="." includes="web.xml"/>
     </mkwar>
     <expandwar/>
@@ -91,11 +124,26 @@
     <au:assertFalse>
       <available file="${webxml.generated}" />
     </au:assertFalse>
-    <au:assertLogContains text="This WAR file is only valid on Java EE 5+ runtimes"/>
+  </target>
+
+  <target name="testWebXmlOptionalFailure" depends="init">
+    <au:expectfailure>
+      <mkwar >
+        <classes dir="." includes="web.xml"/>
+      </mkwar>
+    </au:expectfailure>
+  </target>
+
+  <target name="testWebXmlOptionalFailure2" depends="init">
+    <au:expectfailure>
+      <mkwar  needxmlfile="true">
+        <classes dir="." includes="web.xml"/>
+      </mkwar>
+    </au:expectfailure>
   </target>
 
   <target name="testClassesElement" depends="init">
-    <mkwar >
+    <mkwar needxmlfile="false">
       <classes dir="." includes="web.xml"/>
     </mkwar>
     <expandwar/>
@@ -103,7 +151,7 @@
   </target>
 
   <target name="testLibElement" depends="init">
-    <mkwar >
+    <mkwar needxmlfile="false">
       <lib dir="." includes="web.xml"/>
     </mkwar>
     <expandwar/>

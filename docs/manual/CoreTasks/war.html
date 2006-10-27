@@ -41,14 +41,17 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
 <p>
     Before Servlet API 2.5/Java EE 5, a WEB-INF/web.xml file was mandatory in a
     WAR file, so this task failed if the <code>webxml</code> attribute was missing.
-    As the web.xml file is now optional, the <code>webxml</code> attribute is now
-    downgraded to being optional. The task will warn if the file is not
-    included as an attribute or in a fileset, but still succeed. The task
-    will also complain if more than one web.xml file is added to the JAR. 
+    As the web.xml file is now optional, the <code>webxml</code> attribute may now
+    be made optional. However, as most real web applications do need a web.xml file,
+    it is not optional by default. The task will fail if the file is not
+    included, unless the <code>needxmlfile</code> attribute
+    is set to <code>true</code>. The task
+    will warn if more than one web.xml file is added to the JAR  
+    through the filesets.
 </p>
 
 
-<p><b>Please note that the zip format allows multiple files of the same
+<p><b>Please note that the Zip format allows multiple files of the same
 fully-qualified name to exist within a single archive.  This has been
 documented as causing various problems for unsuspecting users.  If you wish
 to avoid this behavior you must set the <code>duplicate</code> attribute
@@ -73,8 +76,18 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   </tr>
   <tr>
     <td valign="top">webxml</td>
-    <td valign="top">The deployment descriptor to use (WEB-INF/web.xml).</td>
-    <td valign="top" align="center">No (since Ant1.7)</td>
+    <td valign="top">The servlet configuration descriptor to use (WEB-INF/web.xml).</td>
+    <td valign="top" align="center">Yes, unless <tt>needxmlfile</tt> is true,
+    the file is pulled in via a nested fileset, or an existing WAR file is
+    being updated.</td>
+  </tr>
+  <tr>
+    <td valign="top">needxmlfile</td>
+    <td valign="top">Flag to indicate whether or not the web.xml file is needed.
+        I=it should be set to false when generating
+        servlet 2.5+ WAR files without a web.xml file.
+        <em>Since Ant 1.7</em></td>
+    <td valign="top" align="center">No -default "true"</td>
   </tr>
   <tr>
     <td valign="top">basedir</td>

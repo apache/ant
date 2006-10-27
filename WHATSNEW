@@ -28,9 +28,8 @@ Other changes:
   Bugzilla 40019.
 
 * <war> task now allows you to omit the web.xml file. as this is optional
-  in the servlet 2.5 and Java EE 5 APIs. If you do want a web.xml file, it
-  can be pulled in by any nested fileset or resource reference; the webxml
-  attribute is optional.
+  in the servlet 2.5 and Java EE 5 APIs. set needxmlfile="false" to
+  avoid a missing web.xml file from halting the build.  
 
 * Diagnostics catches and logs security exceptions when accessing system properties.
 

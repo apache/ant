@@ -55,11 +55,15 @@ public class War extends Jar {
     /**
      * flag set if the descriptor is added
      */
-    private boolean descriptorAdded;
+    private boolean needxmlfile=true;
     private File addedWebXmlFile;
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String XML_DESCRIPTOR_PATH = "web-inf/web.xml";
+    /** path to web.xml file */
+    private static final String XML_DESCRIPTOR_PATH = "WEB-INF/web.xml";
+    /** lower case version for comparisons */
+    private static final String XML_DESCRIPTOR_PATH_LC =
+            XML_DESCRIPTOR_PATH.toLowerCase(Locale.ENGLISH);
 
     /** Constructor for the War Task. */
     public War() {
@@ -98,6 +102,15 @@ public class War extends Jar {
         fs.setFile(deploymentDescriptor);
         fs.setFullpath(XML_DESCRIPTOR_PATH);
         super.addFileset(fs);
+    }
+
+
+    /**
+     * Set the policy on the web.xml file, that is, whether or not it is needed
+     * @param needxmlfile whether a web.xml file is needed. Default: true
+     */
+    public void setNeedxmlfile(boolean needxmlfile) {
+        this.needxmlfile = needxmlfile;
     }
 
     /**
@@ -168,7 +181,7 @@ public class War extends Jar {
         String vPathLowerCase = vPath.toLowerCase(Locale.ENGLISH);
         //by default, we add the file.
         boolean addFile = true;
-        if (XML_DESCRIPTOR_PATH.equals(vPathLowerCase)) {
+        if (XML_DESCRIPTOR_PATH_LC.equals(vPathLowerCase)) {
             //a web.xml file was found. See if it is a duplicate or not
             if (addedWebXmlFile != null) {
                 //a second web.xml file, so skip it
@@ -189,7 +202,6 @@ public class War extends Jar {
                 //there is no web.xml file, so add it
                 addFile = true;
                 //and remember that we did
-                descriptorAdded = true;
                 deploymentDescriptor = file;
             }
         }
@@ -204,10 +216,9 @@ public class War extends Jar {
      * gets executed.
      */
     protected void cleanUp() {
-        if(addedWebXmlFile==null) {
-            log("No WEB-INF/web.xml file was added.\n"
-                    +"This WAR file is only valid on Java EE 5+ runtimes\n"
-                    +"and web servers that support v2.5 Web Applications");
+        if(addedWebXmlFile==null && needxmlfile && !isInUpdateMode()) {
+            throw new BuildException("No WEB-INF/web.xml file was added.\n"
+                    +"If this is your intent, set needxml='false' ");
         }
         addedWebXmlFile = null;
         super.cleanUp();
