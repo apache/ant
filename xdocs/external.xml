@@ -356,34 +356,34 @@
       </subsection>
 
       <subsection name="AntPrettyBuild">
- 		<p>
-  		Ant Pretty Build is a tool to easily show and run Ant buildfiles directly from
-		within a browser window. It consists of a single XSL file that will generate,
-		on the fly, in the browser, from the .xml buildfile, a pretty interface showing
-		project name, description, properties and targets, etc. sorted or unsorted,
-  		allowing to load/modify/add properties, run the whole project, or run selected
-		set of targets in a specific order, with the ability to modify logger/logfile,
-		mode and add more libs or command line arguments.
-		</p>
- 		<table class="externals">
-  			<tr>
-   				<th>Compatibility:</th>
-   				<td>All Ant versions</td>
-  			</tr>
-  			<tr>
-   				<th>URL:</th>
-   				<td><a href="http://antprettybuild.sourceforge.net/">Ant Pretty Build Homepage</a></td>
-  			</tr>
-	  		<tr>
-   				<th>Contact:</th>
-   				<td><a href="http://antprettybuild.sourceforge.net">Charbel BITAR</a></td>
-  			</tr>
-  			<tr>
-   				<th>License:</th>
-   				<td>Apache License V2.0</td>
-  			</tr>
- 		</table>
-	  </subsection>
+         <p>
+          Ant Pretty Build is a tool to easily show and run Ant buildfiles directly from
+        within a browser window. It consists of a single XSL file that will generate,
+        on the fly, in the browser, from the .xml buildfile, a pretty interface showing
+        project name, description, properties and targets, etc. sorted or unsorted,
+          allowing to load/modify/add properties, run the whole project, or run selected
+        set of targets in a specific order, with the ability to modify logger/logfile,
+        mode and add more libs or command line arguments.
+        </p>
+         <table class="externals">
+              <tr>
+                   <th>Compatibility:</th>
+                   <td>All Ant versions</td>
+              </tr>
+              <tr>
+                   <th>URL:</th>
+                   <td><a href="http://antprettybuild.sourceforge.net/">Ant Pretty Build Homepage</a></td>
+              </tr>
+              <tr>
+                   <th>Contact:</th>
+                   <td><a href="http://antprettybuild.sourceforge.net">Charbel BITAR</a></td>
+              </tr>
+              <tr>
+                   <th>License:</th>
+                   <td>Apache License V2.0</td>
+              </tr>
+         </table>
+      </subsection>
 
       <subsection name="AntSpaces">
 
@@ -1070,6 +1070,24 @@
         </table>
       </subsection>
 
+      <subsection name="HelpStudioAnt">
+        <p>This task allows for HelpStudio projects to be created via Ant.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.0 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://helpstudioant.sourceforge.net">http://helpstudioant.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+      
       <subsection name="IDLDepend">
         <p>idldepend is a task that (re)generates Java sources to be
         created from CORBA/IDL files.</p>
@@ -2877,7 +2895,7 @@
 
       <subsection name="Transformica">
         <p>Transformica is a versatile and extensible code generator.
-           Supports multiple source models including database metadata, Java source files, grammar 
+           Supports multiple source models including database metadata, Java source files, grammar
            files and custom models.
         </p>
         <table class="externals">
