@@ -1360,7 +1360,7 @@
     <property name="ssh.verbose" value="false"/>
     <property name="ssh.base.directory" value="/www/www.apache.org/dist"/>
     <property name="ssh.dist.directory" value="${ssh.base.directory}/ant"/>
-    <property name="ssh.java-repository.directory" value="${ssh.base.directory}/java-repository/ant"/>
+    <property name="ssh.java-repository.directory" value="/www/people.apache.org/repo/m1-ibiblio-rsync-repository/ant"/>
     <echo >
       Uploading Ant version ${project.version}
       to host ${ssh.host} as ${apache.user}
