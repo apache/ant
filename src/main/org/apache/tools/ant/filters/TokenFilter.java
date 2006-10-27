@@ -25,11 +25,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.Tokenizer;
-import org.apache.tools.ant.util.FileTokenizer;
 import org.apache.tools.ant.util.LineTokenizer;
-import org.apache.tools.ant.util.StringTokenizer;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
 
