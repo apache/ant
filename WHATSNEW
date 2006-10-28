@@ -13,6 +13,9 @@ Fixed bugs:
 * <delete> doesnt delete when defaultexcludes="false" and no includes is set 
   fixed. Bugzilla 40313.
 
+* behavior change of DirectoryScanner/AbstractFileset when conditional include
+  patterns are used. Bugzilla 40722.
+
 Other changes:
 --------------
 
