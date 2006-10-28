@@ -544,6 +544,13 @@ public class Delete extends MatchingTask {
         resourcesToDelete.setProject(getProject());
         Resources filesetDirs = new Resources();
         filesetDirs.setProject(getProject());
+        FileSet implicit = null;
+        if (usedMatchingTask && dir != null && dir.isDirectory()) {
+            //add the files from the default fileset:
+            implicit = getImplicitFileSet();
+            implicit.setProject(getProject());
+            filesets.add(implicit);
+        }
 
         for (int i = 0, size = filesets.size(); i < size; i++) {
             FileSet fs = (FileSet) filesets.get(i);
@@ -557,15 +564,6 @@ public class Delete extends MatchingTask {
             if (includeEmpty && fs.getDir().isDirectory()) {
               filesetDirs.add(new ReverseDirs(fs.getDir(),
                   fs.getDirectoryScanner().getIncludedDirectories()));
-            }
-        }
-        if (usedMatchingTask && dir != null && dir.isDirectory()) {
-            //add the files from the default fileset:
-            FileSet implicit = getImplicitFileSet();
-            resourcesToDelete.add(implicit);
-            if (includeEmpty) {
-              filesetDirs.add(new ReverseDirs(dir,
-                  implicit.getDirectoryScanner().getIncludedDirectories()));
             }
         }
         resourcesToDelete.add(filesetDirs);
@@ -601,7 +599,11 @@ public class Delete extends MatchingTask {
             }
         } catch (Exception e) {
             handle(e);
-        }
+        } finally {
+	    if (implicit != null) {
+		filesets.remove(implicit);
+	    }
+	}
     }
 
 //************************************************************************

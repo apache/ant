@@ -10,6 +10,9 @@ Fixed bugs:
 * OOM caused by IH holding on to classes and thus their classloaders.
   Bugzilla 28283 and 33061.
 
+* <delete> doesnt delete when defaultexcludes="false" and no includes is set 
+  fixed. Bugzilla 40313.
+
 Other changes:
 --------------
 

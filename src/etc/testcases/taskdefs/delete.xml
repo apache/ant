@@ -6,10 +6,11 @@
   <property name="dir" location="${dirname}" />
 
   <macrodef name="expectabsent">
+    <attribute name="target" default="${dir}"/>
     <sequential>
       <fail>
         <condition>
-          <available file="${dir}" />
+          <available file="@{target}" />
         </condition>
     </fail>
     </sequential>
@@ -142,6 +143,30 @@
 		<fileset dir="${dir}" />
 	</delete>
   </target>
+  <!-- Bugzilla 40313 -->
+  <target name="test16.init">
+    <mkdir dir="${dir}/CVS"/>
+    <touch file="${dir}/CVS/lala"/>
+    <mkdir dir="${dir}/subdir"/>
+  </target>
+
+  <target name="test16" depends="test16.init">
+    <delete defaultexcludes="false" dir="${dir}" includeemptydirs="true"/>
+    <expectabsent/>
+  </target>
+
+  <target name="test17" depends="test16.init">
+    <delete dir="${dir}" defaultexcludes="true" includeemptydirs="true"/>
+    <fail message="file in CVS dir deleted">
+      <condition>
+        <not>
+          <available file="${dir}/CVS/lala"/>
+        </not>
+      </condition>
+    </fail>
+    <expectabsent target="${dir}/subdir"/>
+  </target>
+
 
   <target name="cleanup" depends="test4" />
 

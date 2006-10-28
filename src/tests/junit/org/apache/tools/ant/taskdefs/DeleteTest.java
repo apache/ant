@@ -80,4 +80,10 @@ public class DeleteTest extends BuildFileTest {
     public void test15() {
         executeTarget("test15");
     }
+    public void test16() {
+        executeTarget("test16");
+    }
+    public void test17() {
+        executeTarget("test17");
+    }
 }
