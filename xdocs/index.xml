@@ -51,6 +51,16 @@
     did not fail.</p>
   </section>
 
+  <section name="AntUnit 1.0Beta2">
+    <h3>October 29, 2006 - Apache AntUnit 1.0Beta2 Available</h3>
+    <p>Apache AntUnit 1.0Beta1 is now available for <a
+    href="http://ant.apache.org/antlibs/bindownload.cgi">download</a>.</p>
+
+    <p>This Ant Library contains tasks to test Ant tasks using Ant
+    instead of JUnit.  For more information see the <a
+    href="antlibs/antunit/">AntUnit home page</a>.</p>
+  </section>
+
   <section name=".NET Ant Library 1.0Beta1">
     <h3>September 13, 2006 - Apache .NET Ant Library 1.0Beta1 Available</h3>
     <p>Apache .NET Ant Library 1.0Beta1 is now available for <a
@@ -64,15 +74,6 @@
     home page</a></p>
   </section>
 
-  <section name="AntUnit 1.0Beta1">
-    <h3>September 22, 2006 - Apache AntUnit 1.0Beta1 Available</h3>
-    <p>Apache AntUnit 1.0Beta1 is now available for <a
-    href="http://ant.apache.org/antlibs/bindownload.cgi">download</a>.</p>
-
-    <p>This Ant Library contains tasks to test Ant tasks using Ant
-    instead of JUnit.  For more information see the <a
-    href="antlibs/antunit/">AntUnit home page</a>.</p>
-  </section>
    <section name="Ant 1.6.5">
     <h3>June 2, 2005 - Ant 1.6.5 Available</h3>
     <p>Apache Ant 1.6.5 is now available for <a
