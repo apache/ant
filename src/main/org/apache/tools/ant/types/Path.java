@@ -201,6 +201,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @throws BuildException on error
      */
     public void addFileset(FileSet fs) throws BuildException {
+        if (fs.getProject() == null) {
+            fs.setProject(getProject());
+        }
         add(fs);
     }
 
@@ -210,6 +213,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @throws BuildException on error
      */
     public void addFilelist(FileList fl) throws BuildException {
+        if (fl.getProject() == null) {
+            fl.setProject(getProject());
+        }
         add(fl);
     }
 
@@ -219,6 +225,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @throws BuildException on error
      */
     public void addDirset(DirSet dset) throws BuildException {
+        if (dset.getProject() == null) {
+            dset.setProject(getProject());
+        }
         add(dset);
     }
 
@@ -229,6 +238,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @since Ant 1.6
      */
     public void add(Path path) throws BuildException {
+        if (path.getProject() == null) {
+            path.setProject(getProject());
+        }
         add((ResourceCollection) path);
     }
 

@@ -16,6 +16,9 @@ Fixed bugs:
 * behavior change of DirectoryScanner/AbstractFileset when conditional include
   patterns are used. Bugzilla 40722.
 
+* <javac> fails with NPE when compiling with eclipse ecj 3.1.x.
+  Bugzilla 40839.
+  
 Other changes:
 --------------
 
