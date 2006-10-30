@@ -18,6 +18,9 @@ Fixed bugs:
 
 * <javac> fails with NPE when compiling with eclipse ecj 3.1.x.
   Bugzilla 40839.
+
+* JUnitTestRunner had a NPE when unable to create parser, the exception
+  containing the error did not get reported. Bugzilla 36733.
   
 Other changes:
 --------------

@@ -288,6 +288,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
         Test suite = null;
         Throwable exception = null;
+        boolean startTestSuiteSuccess = false;
 
         try {
 
@@ -368,6 +369,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             long start = System.currentTimeMillis();
 
             fireStartTestSuite();
+            startTestSuiteSuccess = true;        
             if (exception != null) { // had an exception constructing suite
                 for (int i = 0; i < formatters.size(); i++) {
                     ((TestListener) formatters.elementAt(i))
@@ -405,8 +407,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             systemError = null;
             systemOut.close();
             systemOut = null;
-            sendOutAndErr(new String(outStrm.toByteArray()),
-                          new String(errStrm.toByteArray()));
+            if (startTestSuiteSuccess) {
+                sendOutAndErr(new String(outStrm.toByteArray()),
+                              new String(errStrm.toByteArray()));
+            }
         }
         fireEndTestSuite();
 
