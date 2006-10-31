@@ -32,6 +32,8 @@
   -->
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
+  <!-- this is the groupId of ant in the Maven repository -->
+  <property name="groupid" value="org.apache.ant"/>
   <property name="project.version" value="1.7.0Beta3"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
   <property name="pom.version" value="1.7.0-SNAPSHOT"/>
@@ -153,7 +155,7 @@
   <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
-  <property name="java-repository.dir" value="java-repository/${name}"/>
+  <property name="java-repository.dir" value="java-repository/${groupid}"/>
   <property name="java-repository.jars.dir" value="${java-repository.dir}/jars"/>
   <property name="java-repository.poms.dir" value="${java-repository.dir}/poms"/>
 
