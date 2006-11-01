@@ -40,7 +40,7 @@ import org.apache.tools.ant.types.LogLevel;
  * @ant.task category="utility"
  */
 public class Echo extends Task {
-    protected String message = ""; // required
+    protected String message = "";
     protected File file = null;
     protected boolean append = false;
     /** encoding; set to null or empty means 'default' */
