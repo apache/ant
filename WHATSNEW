@@ -45,6 +45,9 @@ Other changes:
 
 * Diagnostics catches and logs security exceptions when accessing system properties.
 
+* <javadoc> useexternalfile now applies to all command line arguments
+  of javadoc. Bugzilla report 40852.
+
 
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3
 =============================================

@@ -1966,9 +1966,14 @@ public class Javadoc extends Task {
                     Project.MSG_WARN);
             }
         }
+        // If using an external file, write the command line options to it
+        if (useExternalFile && javadoc4) {
+            writeExternalArgs(toExecute);
+        }
 
         File tmpList = null;
         PrintWriter srcListWriter = null;
+
         try {
 
             /**
@@ -2072,6 +2077,92 @@ public class Javadoc extends Task {
         }
     }
 
+    private void writeExternalArgs(Commandline toExecute) {
+        // If using an external file, write the command line options to it
+        File optionsTmpFile = null;
+        PrintWriter optionsListWriter = null;
+        try {
+            optionsTmpFile = FILE_UTILS.createTempFile(
+                "javadocOptions", "", null);
+            optionsTmpFile.deleteOnExit();
+            String[] listOpt = toExecute.getArguments();
+            toExecute.clearArgs();
+            toExecute.createArgument().setValue(
+                "@" + optionsTmpFile.getAbsolutePath());
+            optionsListWriter = new PrintWriter(
+                new FileWriter(optionsTmpFile.getAbsolutePath(), true));
+            for (int i = 0; i < listOpt.length; i++) {
+                String string = listOpt[i];
+                if (string.startsWith("-J-")) {
+                    toExecute.createArgument().setValue(string);
+                } else  {
+                    if (string.startsWith("-")) {
+                        optionsListWriter.print(string);
+                        optionsListWriter.print(" ");
+                    } else {
+                        optionsListWriter.println(quoteString(string));
+                    }
+                }
+            }
+            optionsListWriter.close();
+        } catch (IOException ex) {
+            if (optionsTmpFile != null) {
+                optionsTmpFile.delete();
+            }
+            throw new BuildException(
+                "Error creating or writing temporary file for javadoc options",
+                ex, getLocation());
+        } finally {
+            FILE_UTILS.close(optionsListWriter);
+        }
+    }
+
+    /**
+     * Quote a string to place in a @ file.
+     * @param str the string to quote
+     * @return the quoted string, if there is no need to quote the string,
+     *         return the original string.
+     */
+    private String quoteString(String str) {
+        if (str.indexOf(' ') == -1
+            && str.indexOf('\'') == -1
+            && str.indexOf('"') == -1) {
+            return str;
+        }
+        if (str.indexOf('\'') == -1) {
+            return quoteString(str, '\'');
+        } else {
+            return quoteString(str, '"');
+        }
+    }
+
+    private String quoteString(String str, char delim) {
+        StringBuffer buf = new StringBuffer(str.length() * 2);
+        buf.append(delim);
+        if (str.indexOf('\\') != -1) {
+            str = replace(str, '\\', "\\\\");
+        }
+        if (str.indexOf(delim) != -1) {
+            str = replace(str, delim, "\\" + delim);
+        }
+        buf.append(str);
+        buf.append(delim);
+        return buf.toString();
+    }
+
+    private String replace(String str, char fromChar, String toString) {
+        StringBuffer buf = new StringBuffer(str.length() * 2);
+        for (int i = 0; i < str.length(); ++i) {
+            char ch = str.charAt(i);
+            if (ch == fromChar) {
+                buf.append(toString);
+            } else {
+                buf.append(ch);
+            }
+        }
+        return buf.toString();
+    }
+    
     /**
      * Add the files matched by the nested source files to the Vector
      * as SourceFile instances.
