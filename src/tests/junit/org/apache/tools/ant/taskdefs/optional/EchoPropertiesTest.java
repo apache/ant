@@ -174,7 +174,6 @@ public class EchoPropertiesTest extends BuildFileTest {
     public void testWithRegex() throws Exception {
         executeTarget("testWithRegex");
         assertDebuglogContaining("ant.home=");
-        assertDebuglogContaining("user.variant=");
     }
 
     private void testEchoPrefixVarious(String target) throws Exception {
