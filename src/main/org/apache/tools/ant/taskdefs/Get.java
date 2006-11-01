@@ -339,9 +339,9 @@ public class Get extends Task {
     /**
      * Provide this for Backward Compatibility.
      */
-        
     protected static class Base64Converter
-        extends org.apache.tools.ant.util.Base64Converter {}
+        extends org.apache.tools.ant.util.Base64Converter {
+    }
 
     public interface DownloadProgress {
         /**

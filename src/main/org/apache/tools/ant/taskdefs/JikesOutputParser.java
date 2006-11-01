@@ -34,7 +34,7 @@ import org.apache.tools.ant.Task;
  * by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @deprecated since 1.2. 
+ * @deprecated since 1.2.
  *             Use Jikes' exit value to detect compilation failure.
  */
 public class JikesOutputParser implements ExecuteStreamHandler {

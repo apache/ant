@@ -133,7 +133,7 @@ public class LoadResource extends Task {
         try {
             final long len = src.getSize();
             log("resource size = "
-                + (len != Resource.UNKNOWN_SIZE ? String.valueOf(len) 
+                + (len != Resource.UNKNOWN_SIZE ? String.valueOf(len)
                    : "unknown"), Project.MSG_DEBUG);
             //discard most of really big resources
             final int size = (int) len;

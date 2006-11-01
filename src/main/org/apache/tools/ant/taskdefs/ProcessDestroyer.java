@@ -144,7 +144,8 @@ class ProcessDestroyer implements Runnable {
             // Cf.: http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
             destroyProcessThread.setShouldDestroy(false);
             if (!destroyProcessThread.getThreadGroup().isDestroyed()) {
-                // start() would throw IllegalThreadStateException from ThreadGroup.add if it were destroyed
+                // start() would throw IllegalThreadStateException from
+                // ThreadGroup.add if it were destroyed
                 destroyProcessThread.start();
             }
             // this should return quickly, since it basically is a NO-OP.

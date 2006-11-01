@@ -61,12 +61,12 @@ public class Echo extends Task {
             Writer out = null;
             try {
                 String filename = file.getAbsolutePath();
-                if(encoding==null || encoding.length()==0) {
+                if(encoding == null || encoding.length() == 0) {
                     out = new FileWriter(filename, append);
                 } else {
                     out = new BufferedWriter(
                             new OutputStreamWriter(
-                                new FileOutputStream(filename, append),encoding));
+                                new FileOutputStream(filename, append), encoding));
                 }
                 out.write(message, 0, message.length());
             } catch (IOException ioe) {
@@ -132,7 +132,7 @@ public class Echo extends Task {
     /**
      * Declare the encoding to use when outputting to a file;
      * Use "" for the platform's default encoding.
-     * @param encoding
+     * @param encoding the character encoding to use.
      * @since 1.7
      */
     public void setEncoding(String encoding) {

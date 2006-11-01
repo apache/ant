@@ -58,7 +58,7 @@ public class GZip extends Pack {
      * support non-file resources needs to override this method.  We
      * need to do so for backwards compatibility reasons since we
      * can't expect subclasses to support resources.</p>
-     *
+     * @return true if this case supports non file resources.
      * @since Ant 1.7
      */
     protected boolean supportsNonFileResources() {

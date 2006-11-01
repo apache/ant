@@ -51,7 +51,7 @@ public class TimestampedLogger extends DefaultLogger {
      * @return The classic "BUILD SUCCESSFUL"
      */
     protected String getBuildSuccessfulMessage() {
-        return super.getBuildSuccessfulMessage()+SPACER +getTimestamp();
+        return super.getBuildSuccessfulMessage() + SPACER + getTimestamp();
     }
 
     protected String getTimestamp() {

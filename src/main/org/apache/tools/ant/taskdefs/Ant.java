@@ -362,9 +362,9 @@ public class Ant extends Task {
                                              + "its own parent target.");
                 }
                 boolean circular = false;
-                for (Iterator it = locals.iterator(); 
+                for (Iterator it = locals.iterator();
                      !circular && it.hasNext();) {
-                    Target other = 
+                    Target other =
                         (Target) (getProject().getTargets().get(it.next()));
                     circular |= (other != null
                                  && other.dependsOn(owningTargetName));
@@ -381,7 +381,7 @@ public class Ant extends Task {
 
             addReferences();
 
-            if (locals.size() > 0 && !(locals.size() == 1 
+            if (locals.size() > 0 && !(locals.size() == 1
                                        && "".equals(locals.get(0)))) {
                 BuildException be = null;
                 try {

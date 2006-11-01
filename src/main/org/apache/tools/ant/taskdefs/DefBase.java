@@ -38,7 +38,7 @@ public abstract class DefBase extends AntlibDefinition {
     /**
      * @param reverseLoader if true a delegated loader will take precedence over
      *                      the parent
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             stop using this attribute
      * @ant.attribute ignore="true"
      */

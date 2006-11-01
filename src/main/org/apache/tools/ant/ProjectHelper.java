@@ -267,7 +267,7 @@ public class ProjectHelper {
      * JDK1.1 compatible access to the context class loader.
      * Cut&paste from JAXP.
      *
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             Use LoaderUtils.getContextClassLoader()
      *
      * @return the current context class loader, or <code>null</code>
@@ -293,7 +293,7 @@ public class ProjectHelper {
      * @param project The project containing the target.
      *                Must not be <code>null</code>.
      *
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             Use IntrospectionHelper for each property.
      *
      * @exception BuildException if any of the attributes can't be handled by
@@ -435,7 +435,7 @@ public class ProjectHelper {
      *                           <code>}</code>
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             Use PropertyHelper.
      */
      public static String replaceProperties(Project project, String value,

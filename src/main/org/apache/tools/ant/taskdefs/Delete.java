@@ -600,10 +600,10 @@ public class Delete extends MatchingTask {
         } catch (Exception e) {
             handle(e);
         } finally {
-	    if (implicit != null) {
-		filesets.remove(implicit);
-	    }
-	}
+            if (implicit != null) {
+                filesets.remove(implicit);
+            }
+        }
     }
 
 //************************************************************************
@@ -693,7 +693,7 @@ public class Delete extends MatchingTask {
                 + d.getAbsolutePath(), quiet ? Project.MSG_VERBOSE : verbosity);
             for (int j = 0; j < files.length; j++) {
                 File f = new File(d, files[j]);
-                log("Deleting " + f.getAbsolutePath(), 
+                log("Deleting " + f.getAbsolutePath(),
                         quiet ? Project.MSG_VERBOSE : verbosity);
                 if (!delete(f)) {
                     handle("Unable to delete file " + f.getAbsolutePath());
@@ -707,7 +707,7 @@ public class Delete extends MatchingTask {
                 File currDir = new File(d, dirs[j]);
                 String[] dirFiles = currDir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
-                    log("Deleting " + currDir.getAbsolutePath(), 
+                    log("Deleting " + currDir.getAbsolutePath(),
                             quiet ? Project.MSG_VERBOSE : verbosity);
                     if (!delete(currDir)) {
                         handle("Unable to delete directory "
@@ -722,7 +722,7 @@ public class Delete extends MatchingTask {
                 log("Deleted "
                      + dirCount
                      + " director" + (dirCount == 1 ? "y" : "ies")
-                     + " form " + d.getAbsolutePath(), 
+                     + " form " + d.getAbsolutePath(),
                      quiet ? Project.MSG_VERBOSE : verbosity);
             }
         }

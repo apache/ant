@@ -31,9 +31,9 @@ import java.io.IOException;
 
 /**
  * Copy the contents of a path to a destination, using the mapper of choice
- * 
+ *
  * @since Ant 1.7
- * 
+ *
  * @ant.task category="filesystem"
  */
 
@@ -69,8 +69,8 @@ public class CopyPath extends Task {
 
     /**
      * add a mapper
-     * 
-     * @param newmapper
+     *
+     * @param newmapper the mapper to add.
      */
     public void add(FileNameMapper newmapper) {
         if (mapper != null) {
@@ -81,7 +81,7 @@ public class CopyPath extends Task {
 
     /**
      * Set the path to be used when running the Java class.
-     * 
+     *
      * @param s
      *            an Ant Path object containing the path.
      */
@@ -91,7 +91,7 @@ public class CopyPath extends Task {
 
     /**
      * Set the path to use by reference.
-     * 
+     *
      * @param r
      *            a reference to an existing path.
      */
@@ -101,7 +101,7 @@ public class CopyPath extends Task {
 
     /**
      * Create a path.
-     * 
+     *
      * @return a path to be configured.
      */
     public Path createPath() {
@@ -122,7 +122,7 @@ public class CopyPath extends Task {
     /**
      * Ensure we have a consistent and legal set of attributes, and set any
      * internal flags necessary based on different combinations of attributes.
-     * 
+     *
      * @throws BuildException
      *             if an error occurs.
      */
@@ -140,7 +140,7 @@ public class CopyPath extends Task {
 
     /**
      * This is a very minimal derivative of the nomal copy logic.
-     * 
+     *
      * @throws BuildException
      *             if something goes wrong with the build.
      */

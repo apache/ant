@@ -42,11 +42,11 @@ public final class Locator {
     // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
     // of the Xerces-J team
     // which ASCII characters need to be escaped
-    private static boolean gNeedEscaping[] = new boolean[128];
+    private static boolean[] gNeedEscaping = new boolean[128];
     // the first hex character if a character needs to be escaped
-    private static char gAfterEscaping1[] = new char[128];
+    private static char[] gAfterEscaping1 = new char[128];
     // the second hex character if a character needs to be escaped
-    private static char gAfterEscaping2[] = new char[128];
+    private static char[] gAfterEscaping2 = new char[128];
     private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
                                      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     // initialize the above 3 arrays
@@ -157,16 +157,18 @@ public final class Locator {
         // things when the path is not absolute, and fall back to the old parsing behavior.
         if (uriClazz != null && uri.startsWith("file:/")) {
             try {
-                java.lang.reflect.Method createMethod = uriClazz.getMethod("create", new Class[] {String.class});
+                java.lang.reflect.Method createMethod
+                    = uriClazz.getMethod("create", new Class[] {String.class});
                 Object uriObj = createMethod.invoke(null, new Object[] {uri});
-                java.lang.reflect.Constructor fileConst = File.class.getConstructor(new Class[] {uriClazz});
-                File f = (File)fileConst.newInstance(new Object[] {uriObj});
+                java.lang.reflect.Constructor fileConst
+                    = File.class.getConstructor(new Class[] {uriClazz});
+                File f = (File) fileConst.newInstance(new Object[] {uriObj});
                 return f.getAbsolutePath();
             } catch (java.lang.reflect.InvocationTargetException e) {
                 Throwable e2 = e.getTargetException();
                 if (e2 instanceof IllegalArgumentException) {
                     // Bad URI, pass this on.
-                    throw (IllegalArgumentException)e2;
+                    throw (IllegalArgumentException) e2;
                 } else {
                     // Unexpected target exception? Should not happen.
                     e2.printStackTrace();
@@ -262,8 +264,9 @@ public final class Locator {
         for (; i < len; i++) {
             ch = path.charAt(i);
             // if it's not an ASCII character, break here, and use UTF-8 encoding
-            if (ch >= 128)
+            if (ch >= 128) {
                 break;
+            }
             if (gNeedEscaping[ch]) {
                 if (sb == null) {
                     sb = new StringBuffer(path.substring(0, i));
@@ -272,8 +275,7 @@ public final class Locator {
                 sb.append(gAfterEscaping1[ch]);
                 sb.append(gAfterEscaping2[ch]);
                 // record the fact that it's escaped
-            }
-            else if (sb != null) {
+            } else if (sb != null) {
                 sb.append((char) ch);
             }
         }
@@ -302,8 +304,7 @@ public final class Locator {
                     sb.append('%');
                     sb.append(gAfterEscaping1[b]);
                     sb.append(gAfterEscaping2[b]);
-                }
-                else {
+                } else {
                     sb.append((char) b);
                 }
             }

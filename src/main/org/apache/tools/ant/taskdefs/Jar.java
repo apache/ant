@@ -147,7 +147,7 @@ public class Jar extends Zip {
     private ZipExtraField[] JAR_MARKER = new ZipExtraField[] {
         JarMarker.getInstance()
     };
-    
+
     protected String emptyBehavior = "create";
 
     /** constructor */
@@ -183,7 +183,6 @@ public class Jar extends Zip {
         emptyBehavior = we.getValue();
     }
 
-    
     /**
      * Set the destination file.
      * @param jarFile the destination file
@@ -390,12 +389,12 @@ public class Jar extends Zip {
     private void writeServices(ZipOutputStream zOut) throws IOException {
         Iterator serviceIterator;
         Service service;
-        
+
         serviceIterator = serviceList.iterator();
-        while(serviceIterator.hasNext()){
+        while(serviceIterator.hasNext()) {
            service = (Service) serviceIterator.next();
            //stolen from writeManifest
-           super.zipFile(service.getAsStream(), zOut, 
+           super.zipFile(service.getAsStream(), zOut,
                          "META-INF/service/" + service.getType(),
                          System.currentTimeMillis(), null,
                          ZipFileSet.DEFAULT_FILE_MODE);
@@ -708,7 +707,8 @@ public class Jar extends Zip {
                     }
                 }
             } catch (Throwable t) {
-                log("error while reading original manifest in file: " + zipFile.toString() + t.getMessage(),
+                log("error while reading original manifest in file: "
+                    + zipFile.toString() + t.getMessage(),
                     Project.MSG_WARN);
                 needsUpdate = true;
             }
@@ -744,7 +744,7 @@ public class Jar extends Zip {
                                      + ": no files were included.",
                                      getLocation());
         }
-        
+
         ZipOutputStream zOut = null;
         try {
             log("Building MANIFEST-only jar: "

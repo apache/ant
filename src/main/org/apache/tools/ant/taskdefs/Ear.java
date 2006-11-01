@@ -50,7 +50,7 @@ public class Ear extends Jar {
     /**
      * Set the destination file.
      * @param earFile the destination file
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             Use setDestFile(destfile) instead.
      */
     public void setEarfile(File earFile) {

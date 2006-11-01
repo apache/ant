@@ -606,8 +606,9 @@ public class Property extends Task {
         String propertyValue = props.getProperty(name);
         Vector fragments = new Vector();
         Vector propertyRefs = new Vector();
-        PropertyHelper.getPropertyHelper(this.getProject()).parsePropertyString(propertyValue, fragments,
-                propertyRefs);
+        PropertyHelper.getPropertyHelper(
+            this.getProject()).parsePropertyString(
+                propertyValue, fragments, propertyRefs);
 
         if (propertyRefs.size() != 0) {
             referencesSeen.push(name);

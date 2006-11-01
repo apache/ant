@@ -49,7 +49,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Execute {
 
-    /** Invalid exit code. 
+    /** Invalid exit code.
      * set to {@link Integer#MAX_VALUE}
      */
     public static final int INVALID = Integer.MAX_VALUE;
@@ -1033,8 +1033,8 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
-            String antRun = 
-                FILE_UTILS.resolveFile(project.getBaseDir(), 
+            String antRun =
+                FILE_UTILS.resolveFile(project.getBaseDir(),
                         antHome + File.separator + myScript).toString();
 
             // Build the command
@@ -1092,8 +1092,8 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "Property '" + MagicNames.ANT_HOME + "' not found");
             }
-            String antRun = 
-                FILE_UTILS.resolveFile(project.getBaseDir(), 
+            String antRun =
+                FILE_UTILS.resolveFile(project.getBaseDir(),
                         antHome + File.separator + myScript).toString();
 
             // Build the command
@@ -1210,8 +1210,7 @@ public class Execute {
                 public void run() {
                     try {
                         p.waitFor();
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         //ignore
                     }
                     FileUtils.delete(f);

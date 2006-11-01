@@ -69,7 +69,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * @see #ExecuteWatchdog(long)
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             Use constructor with a long type instead.
      * (1.4.x compatibility)
      */

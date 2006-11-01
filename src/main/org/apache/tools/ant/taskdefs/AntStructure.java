@@ -46,7 +46,8 @@ import org.apache.tools.ant.types.Reference;
  */
 public class AntStructure extends Task {
 
-    private static final String lSep = System.getProperty("line.separator");
+    private static final String LINE_SEP
+        = System.getProperty("line.separator");
 
     private File output;
     private StructurePrinter printer = new DTDPrinter();
@@ -61,6 +62,7 @@ public class AntStructure extends Task {
 
     /**
      * The StructurePrinter to use.
+     * @param p the printer to use.
      * @since Ant 1.7
      */
     public void add(StructurePrinter p) {
@@ -101,8 +103,9 @@ public class AntStructure extends Task {
             Enumeration dataTypes = getProject().getDataTypeDefinitions().keys();
             while (dataTypes.hasMoreElements()) {
                 String typeName = (String) dataTypes.nextElement();
-                printer.printElementDecl(out, getProject(), typeName,
-                                         (Class) getProject().getDataTypeDefinitions().get(typeName));
+                printer.printElementDecl(
+                    out, getProject(), typeName,
+                    (Class) getProject().getDataTypeDefinitions().get(typeName));
             }
 
             Enumeration tasks = getProject().getTaskDefinitions().keys();
@@ -282,11 +285,11 @@ public class AntStructure extends Task {
             sb.append(name).append(" ");
 
             if (org.apache.tools.ant.types.Reference.class.equals(element)) {
-                sb.append("EMPTY>").append(lSep);
+                sb.append("EMPTY>").append(LINE_SEP);
                 sb.append("<!ATTLIST ").append(name);
-                sb.append(lSep).append("          id ID #IMPLIED");
-                sb.append(lSep).append("          refid IDREF #IMPLIED");
-                sb.append(">").append(lSep);
+                sb.append(LINE_SEP).append("          id ID #IMPLIED");
+                sb.append(LINE_SEP).append("          refid IDREF #IMPLIED");
+                sb.append(">").append(LINE_SEP);
                 out.println(sb);
                 return;
             }
@@ -326,7 +329,7 @@ public class AntStructure extends Task {
 
             sb = new StringBuffer("<!ATTLIST ");
             sb.append(name);
-            sb.append(lSep).append("          id ID #IMPLIED");
+            sb.append(LINE_SEP).append("          id ID #IMPLIED");
 
             e = ih.getAttributes();
             while (e.hasMoreElements()) {
@@ -335,7 +338,8 @@ public class AntStructure extends Task {
                     continue;
                 }
 
-                sb.append(lSep).append("          ").append(attrName).append(" ");
+                sb.append(LINE_SEP).append("          ")
+                    .append(attrName).append(" ");
                 Class type = ih.getAttributeType(attrName);
                 if (type.equals(java.lang.Boolean.class)
                     || type.equals(java.lang.Boolean.TYPE)) {
@@ -371,7 +375,7 @@ public class AntStructure extends Task {
                 }
                 sb.append("#IMPLIED");
             }
-            sb.append(">").append(lSep);
+            sb.append(">").append(LINE_SEP);
             out.println(sb);
 
             final int count = v.size();

@@ -156,7 +156,7 @@ public class Copy extends Task {
     /**
      * Give the copied files the same last modified time as the original files.
      * @param preserve a boolean string.
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             setPreserveLastModified(String) has been deprecated and
      *             replaced with setPreserveLastModified(boolean) to
      *             consistently let the Introspection mechanism work.
@@ -289,7 +289,7 @@ public class Copy extends Task {
     public void addFileset(FileSet set) {
         add(set);
     }
-    
+
     /**
      * Add a collection of files to copy.
      * @param res a resource collection to copy.
@@ -298,7 +298,7 @@ public class Copy extends Task {
     public void add(ResourceCollection res) {
         rcs.add(res);
     }
-    
+
     /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.
@@ -423,7 +423,7 @@ public class Copy extends Task {
 
             /* for historical and performance reasons we have to do
                things in a rather complex way.
-            
+
                (1) Move is optimized to move directories if a fileset
                has been included completely, therefore FileSets need a
                special treatment.  This is also required to support
@@ -498,7 +498,7 @@ public class Copy extends Task {
                         // files.
                         if (r.isDirectory() || r instanceof FileResource) {
                             add(baseDir, name,
-                                r.isDirectory() ? dirsByBasedir 
+                                r.isDirectory() ? dirsByBasedir
                                                 : filesByBasedir);
                             baseDirs.add(baseDir);
                         } else { // a not-directory file resource
@@ -912,7 +912,7 @@ public class Copy extends Task {
      * support non-file resources needs to override this method.  We
      * need to do so for backwards compatibility reasons since we
      * can't expect subclasses to support resources.</p>
-     *
+     * @return true if this task supports non file resources.
      * @since Ant 1.7
      */
     protected boolean supportsNonFileResources() {
@@ -977,7 +977,7 @@ public class Copy extends Task {
     private String getMessage(Exception ex) {
         return ex.getMessage() == null ? ex.toString() : ex.getMessage();
     }
-    
+
     /**
      * Returns a reason for failure based on
      * the exception thrown.

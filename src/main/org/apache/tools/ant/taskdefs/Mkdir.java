@@ -65,7 +65,8 @@ public class Mkdir extends Task {
             }
             log("Created dir: " + dir.getAbsolutePath());
         } else {
-            log("Skipping " + dir.getAbsolutePath() + " because it already exists.", Project.MSG_VERBOSE);
+            log("Skipping " + dir.getAbsolutePath()
+                + " because it already exists.", Project.MSG_VERBOSE);
         }
     }
 

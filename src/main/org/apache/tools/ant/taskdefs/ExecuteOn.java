@@ -417,7 +417,7 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-        
+
             if (resources != null) {
                 Iterator iter = resources.iterator();
                 while (iter.hasNext()) {

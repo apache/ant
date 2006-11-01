@@ -51,7 +51,7 @@ public class Apt
     /** A warning message if used with java < 1.5. */
     public static final String ERROR_WRONG_JAVA_VERSION
         = "Apt task requires Java 1.5+";
- 
+
     /**
      * exposed for debug messages
      */
@@ -140,7 +140,7 @@ public class Apt
      */
     public void setFork(boolean fork) {
         if (!fork) {
-            log(WARNING_IGNORING_FORK,Project.MSG_WARN);
+            log(WARNING_IGNORING_FORK, Project.MSG_WARN);
         }
     }
 

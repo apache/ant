@@ -388,7 +388,7 @@ public class ExecTask extends Task {
 
     /**
      * Restrict this execution to a single OS Family
-     * @param osFamily
+     * @param osFamily the family to restrict to.
      */
     public void setOsFamily(String osFamily) {
         this.osFamily = osFamily.toLowerCase(Locale.US);
@@ -543,7 +543,7 @@ public class ExecTask extends Task {
      */
     protected boolean isValidOs() {
         //hand osfamily off to Os class, if set
-        if(osFamily!=null && !Os.isOs(osFamily,null,null,null)) {
+        if (osFamily != null && !Os.isOs(osFamily, null, null, null)) {
             return false;
         }
         //the Exec OS check is different from Os.isOs(), which

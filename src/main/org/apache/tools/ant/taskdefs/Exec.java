@@ -39,7 +39,7 @@ import org.apache.tools.ant.Task;
  * dead code by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @deprecated since 1.2. 
+ * @deprecated since 1.2.
  *             delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
  *             instead.
  */

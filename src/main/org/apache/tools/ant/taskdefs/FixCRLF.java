@@ -174,7 +174,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * <li>remove: remove all CR characters
      * </ul>
      *
-     * @deprecated since 1.4.x. 
+     * @deprecated since 1.4.x.
      *             Use {@link #setEol setEol} instead.
      */
     public void setCr(AddAsisRemove attr) {
@@ -277,7 +277,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
         validate();
-        
+
         // log options used
         String enc = encoding == null ? "default" : encoding;
         log("options:"
@@ -326,7 +326,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             }
         }
     }
-    
+
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
         long lastModified = srcFile.lastModified();

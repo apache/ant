@@ -432,8 +432,9 @@ public class Concat extends Task {
             if (!outofdate) {
                 for (Iterator i = existRc.iterator(); !outofdate && i.hasNext();) {
                     Resource r = (Resource) i.next();
-                    outofdate = (r.getLastModified() == 0L || 
-                        r.getLastModified() > destinationFile.lastModified());
+                    outofdate =
+                        (r.getLastModified() == 0L
+                         || r.getLastModified() > destinationFile.lastModified());
                 }
             }
             if (!outofdate) {
@@ -493,6 +494,7 @@ public class Concat extends Task {
                 try {
                     t.join();
                 } catch (InterruptedException ee) {
+                    // Empty
                 }
             }
         } finally {

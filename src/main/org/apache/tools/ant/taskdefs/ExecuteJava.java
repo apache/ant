@@ -92,7 +92,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * Set the stream to which all output (System.out as well as System.err)
      * will be written.
      * @param out the PrintStream where output should be sent.
-     * @deprecated since 1.4.x. 
+     * @deprecated since 1.4.x.
      *             manage output at the task level.
      */
     public void setOutput(PrintStream out) {

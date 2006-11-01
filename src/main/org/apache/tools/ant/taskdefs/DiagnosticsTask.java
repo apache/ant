@@ -1,9 +1,3 @@
-package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Diagnostics;
-
 /*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
@@ -21,6 +15,12 @@ import org.apache.tools.ant.Diagnostics;
  *  limitations under the License.
  *
  */
+package org.apache.tools.ant.taskdefs;
+
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Diagnostics;
+
 
 /**
  * This is a task that hands off work to the Diagnostics module.
@@ -28,10 +28,10 @@ import org.apache.tools.ant.Diagnostics;
  */
 public class DiagnosticsTask extends Task {
 
-    private static final String[] args=new String[0];
-    
+    private static final String[] ARGS = new String[0];
+
     public void execute() throws BuildException {
-        Diagnostics.main(args);
+        Diagnostics.main(ARGS);
     }
 
 

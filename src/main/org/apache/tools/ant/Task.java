@@ -72,7 +72,7 @@ public abstract class Task extends ProjectComponent {
     /**
      * Wrapper for this object, used to configure it at runtime.
      *
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getWrapper()} method.
      */

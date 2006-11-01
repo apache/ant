@@ -138,7 +138,8 @@ public class Java extends Task {
             throw new BuildException("Cannot spawn a java process in non-forked mode."
                                      + " Please set fork='true'. ");
         }
-        if (getCommandLine().getClasspath()!=null && getCommandLine().getJar()!=null) {
+        if (getCommandLine().getClasspath() != null
+            && getCommandLine().getJar() != null) {
             log("When using 'jar' attribute classpath-settings are ignored. "
                 + "See the manual for more information.", Project.MSG_VERBOSE);
         }

@@ -345,7 +345,7 @@ public class MacroDef extends AntlibDefinition  {
             getProject());
 
         helper.addDataTypeDefinition(def);
-        log("creating macro  " + name,Project.MSG_VERBOSE);
+        log("creating macro  " + name, Project.MSG_VERBOSE);
     }
 
     /**
@@ -426,7 +426,7 @@ public class MacroDef extends AntlibDefinition  {
          * @return a <code>boolean</code> value
          */
         protected boolean equals(Member m) {
-            return (name == null)? m.name == null: name.equals(m.name);
+            return (name == null) ? m.name == null : name.equals(m.name);
         }
 
         /**
@@ -576,7 +576,7 @@ public class MacroDef extends AntlibDefinition  {
          * This is not allowed for the define nested element.
          *
          * @param defaultValue not used
-         * @throws BuildException, always
+         * @throws BuildException always
          */
         public void setDefault(String defaultValue) {
             throw new BuildException(
@@ -585,7 +585,7 @@ public class MacroDef extends AntlibDefinition  {
 
         /**
          * Gets the default value for this attibute.
-         * 
+         *
          * @return the generated <em>unique</em> name, of the form
          *         "prefix#this classname#&lt;aCounter&gt;".
          */
