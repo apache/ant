@@ -126,7 +126,7 @@ public class Launcher {
     private void addPath(String path, boolean getJars, List libPathURLs)
             throws MalformedURLException {
         StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
-        while(tokenizer.hasMoreElements()) {
+        while (tokenizer.hasMoreElements()) {
             String elementName = tokenizer.nextToken();
             File element = new File(elementName);
             if (elementName.indexOf("%") != -1 && !element.exists()) {
@@ -291,14 +291,14 @@ public class Launcher {
         URLClassLoader loader = new URLClassLoader(jars);
         Thread.currentThread().setContextClassLoader(loader);
         Class mainClass = null;
-        int exitCode=0;
+        int exitCode = 0;
         try {
             mainClass = loader.loadClass(mainClassname);
             AntMain main = (AntMain) mainClass.newInstance();
             main.startAnt(newArgs, null, null);
         } catch (InstantiationException ex) {
             System.err.println(
-                "Incompatible version of "+mainClassname+" detected");
+                "Incompatible version of " + mainClassname + " detected");
             File mainJar = Locator.getClassSource(mainClass);
             System.err.println(
                 "Location of this class " + mainJar);
@@ -308,7 +308,5 @@ public class Launcher {
             exitCode = EXIT_CODE_ERROR;
         }
         return exitCode;
-        
     }
-
 }

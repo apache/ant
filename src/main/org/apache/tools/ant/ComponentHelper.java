@@ -124,8 +124,8 @@ public class ComponentHelper  {
      * contrived work here to enable this early.
      */
     private static final String ANT_PROPERTY_TASK = "property";
-    
-     // {tasks, types}
+
+    // {tasks, types}
     private static Properties[] defaultDefinitions = new Properties[2];
 
 
@@ -502,14 +502,17 @@ public class ComponentHelper  {
         if (c == null || !(Task.class.isAssignableFrom(c))) {
             return null;
         }
-        Object _task = createComponent(taskType);
-        if (_task == null) {
+        Object obj= createComponent(taskType);
+        if (obj == null) {
             return null;
         }
-        if (!(_task instanceof Task)) {
-            throw new BuildException("Expected a Task from '" + taskType + "' but got an instance of " + _task.getClass().getName() + " instead");
+        if (!(obj instanceof Task)) {
+            throw new BuildException(
+                "Expected a Task from '" + taskType
+                + "' but got an instance of " + obj.getClass().getName()
+                + " instead");
         }
-        Task task = (Task) _task;
+        Task task = (Task) obj;
         task.setTaskType(taskType);
 
         // set default value, can be changed by the user
@@ -741,7 +744,7 @@ public class ComponentHelper  {
         }
         return classLoader;
     }
-    
+
     /**
      * Load default task or type definitions - just the names,
      *  no class loading.
@@ -846,22 +849,22 @@ public class ComponentHelper  {
         String home = System.getProperty(Launcher.USER_HOMEDIR);
         File libDir = new File(home, Launcher.USER_LIBDIR);
         String antHomeLib;
-        boolean probablyIDE=false;
+        boolean probablyIDE = false;
         String anthome = System.getProperty(MagicNames.ANT_HOME);
-        if(anthome!=null) {
-            File antHomeLibDir = new File(anthome,"lib");
-            antHomeLib=antHomeLibDir.getAbsolutePath();
+        if (anthome != null) {
+            File antHomeLibDir = new File(anthome, "lib");
+            antHomeLib = antHomeLibDir.getAbsolutePath();
         } else {
             //running under an IDE that doesn't set ANT_HOME
-            probablyIDE=true;
-            antHomeLib = "ANT_HOME" +File.separatorChar +"lib";
+            probablyIDE = true;
+            antHomeLib = "ANT_HOME" + File.separatorChar + "lib";
         }
         StringBuffer dirListingText = new StringBuffer();
         final String tab = "        -";
         dirListingText.append(tab);
         dirListingText.append(antHomeLib);
         dirListingText.append('\n');
-        if(probablyIDE) {
+        if (probablyIDE) {
             dirListingText.append(tab);
             dirListingText.append("the IDE Ant configuration dialogs");
         } else {
@@ -873,8 +876,8 @@ public class ComponentHelper  {
                     "a directory added on the command line with the -lib argument");
         }
 
-        String dirListing=dirListingText.toString();
-        
+        String dirListing = dirListingText.toString();
+
         //look up the name
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
@@ -883,7 +886,8 @@ public class ComponentHelper  {
             out.println("Cause: The name is undefined.");
             out.println("Action: Check the spelling.");
             out.println("Action: Check that any custom tasks/types have been declared.");
-            out.println("Action: Check that any <presetdef>/<macrodef> declarations have taken place.");
+            out.println("Action: Check that any <presetdef>/<macrodef>"
+                        + " declarations have taken place.");
             if (isAntlib) {
                 out.println();
                 out.println("This appears to be an antlib declaration. ");
@@ -921,12 +925,16 @@ public class ComponentHelper  {
                         +  ncdfe.getMessage());
                 if (optional) {
                     out.println("       It is not enough to have Ant's optional JARs");
-                    out.println("       you need the JAR files that the optional tasks depend upon.");
-                    out.println("       Ant's optional task dependencies are listed in the manual.");
+                    out.println("       you need the JAR files that the"
+                                + " optional tasks depend upon.");
+                    out.println("       Ant's optional task dependencies are"
+                                + " listed in the manual.");
                 } else {
-                    out.println("       This class may be in a separate JAR that is not installed.");
+                    out.println("       This class may be in a separate JAR"
+                                + " that is not installed.");
                 }
-                out.println("Action: Determine what extra JAR files are needed, and place them in one of:");
+                out.println("Action: Determine what extra JAR files are"
+                            + " needed, and place them in one of:");
                 out.println(dirListing);
             }
             //here we successfully loaded the class or failed.
@@ -960,7 +968,8 @@ public class ComponentHelper  {
                     out.println("Cause:  A class needed by class "
                             + classname + " cannot be found: ");
                     out.println("       " + ncdfe.getMessage());
-                    out.println("Action: Determine what extra JAR files are needed, and place them in:");
+                    out.println("Action: Determine what extra JAR files are"
+                                + " needed, and place them in:");
                     out.println(dirListing);
                 }
             }

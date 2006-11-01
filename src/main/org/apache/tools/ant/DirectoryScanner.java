@@ -136,7 +136,7 @@ public class DirectoryScanner
      * reasons.</p>
      *
      * @deprecated since 1.6.x.
-     *             Use the {@link #getDefaultExcludes getDefaultExcludes} 
+     *             Use the {@link #getDefaultExcludes getDefaultExcludes}
      *             method instead.
      */
     protected static final String[] DEFAULTEXCLUDES = {
@@ -864,7 +864,7 @@ public class DirectoryScanner
                 }
             }
             while (it.hasNext()) {
-            	Map.Entry entry = (Map.Entry)it.next();
+                Map.Entry entry = (Map.Entry)it.next();
                 String currentelement = (String) entry.getKey();
                 if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;
@@ -970,6 +970,7 @@ public class DirectoryScanner
                     try {
                         slowScanLock.wait();
                     } catch (InterruptedException e) {
+                        // Empty
                     }
                 }
                 return;
@@ -1014,7 +1015,7 @@ public class DirectoryScanner
             }
         }
     }
-    
+
     /**
      * Scan the given directory for files and directories. Found files and
      * directories are placed in their respective collections, based on the
@@ -1115,7 +1116,7 @@ public class DirectoryScanner
      * @param file  included File.
      */
     private void accountForIncludedFile(String name, File file) {
-    	processIncluded(name, file, filesIncluded, filesExcluded, filesDeselected);
+        processIncluded(name, file, filesIncluded, filesExcluded, filesDeselected);
     }
 
     /**
@@ -1126,20 +1127,20 @@ public class DirectoryScanner
      * @param fast whether to perform fast scans.
      */
     private void accountForIncludedDir(String name, File file, boolean fast) {
-    	processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
+        processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast);
         }
     }
-    
+
     private void processIncluded(String name, File file, Vector inc, Vector exc, Vector des) {
-        
+
         if (inc.contains(name) || exc.contains(name) || des.contains(name)) { return; }
-        
+
         boolean included = false;
         if (isExcluded(name)) {
             exc.add(name);
-        } else if(isSelected(name, file)) {
+        } else if (isSelected(name, file)) {
             included = true;
             inc.add(name);
         } else {

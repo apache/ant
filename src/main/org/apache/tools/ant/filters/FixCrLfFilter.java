@@ -101,6 +101,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * @param in
      *            A Reader object providing the underlying stream. Must not be
      *            <code>null</code>.
+     * @throws IOException on error.
      */
     public FixCrLfFilter(final Reader in) throws IOException {
         super(in);
@@ -372,6 +373,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * @param tabLength
      *            specify the length of tab in spaces. Valid values are between
      *            2 and 80 inclusive. The default for this parameter is 8.
+     * @throws IOException on error.
      */
     public void setTablength(int tabLength) throws IOException {
         if (tabLength < 2 || tabLength > 80) {
@@ -850,7 +852,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
         private static final AddAsisRemove REMOVE = newInstance("remove");
 
         public String[] getValues() {
-            return new String[] { "add", "asis", "remove" };
+            return new String[] {"add", "asis", "remove"};
         }
 
         public boolean equals(Object other) {

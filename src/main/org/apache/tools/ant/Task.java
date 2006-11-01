@@ -42,7 +42,7 @@ public abstract class Task extends ProjectComponent {
 
     /**
      * Description of this task, if any.
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      */
     protected String description;
@@ -54,7 +54,7 @@ public abstract class Task extends ProjectComponent {
      * isn't terribly descriptive for a task used within
      * another task - the outer task code can probably
      * provide a better one.
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getTaskName()} method.
      */
@@ -63,7 +63,7 @@ public abstract class Task extends ProjectComponent {
     /**
      * Type of this task.
      *
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getTaskType()} method.
      */

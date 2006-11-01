@@ -62,6 +62,7 @@ public class GreedyInputHandler extends DefaultInputHandler {
                 try {
                     t.join();
                 } catch (InterruptedException e2) {
+                    // Ignore
                 }
             }
             request.setInput(new String(baos.toByteArray()));

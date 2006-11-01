@@ -147,7 +147,7 @@ public final class MagicNames {
     public static final String BUILD_JAVAC_TARGET = "ant.build.javac.target";
 
     /**
-     * Name of the magic property that controls classloader reuse 
+     * Name of the magic property that controls classloader reuse
      * @since Ant 1.4.
      * Value: {@value}
      */

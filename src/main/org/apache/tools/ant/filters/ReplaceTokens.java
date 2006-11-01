@@ -239,7 +239,7 @@ public final class ReplaceTokens
         } finally {
             FileUtils.close(in);
         }
-        
+
         return props;
     }
 

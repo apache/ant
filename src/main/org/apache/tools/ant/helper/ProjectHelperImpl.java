@@ -298,9 +298,9 @@ public class ProjectHelperImpl extends ProjectHelper {
                 if (!file.isAbsolute()) {
                     file = FILE_UTILS.resolveFile(helperImpl.buildFileParent, path);
                     helperImpl.project.log(
-                            "Warning: '" + systemId + "' in " + helperImpl.buildFile +
-                            " should be expressed simply as '" + path.replace('\\', '/') +
-                            "' for compliance with other XML tools",
+                            "Warning: '" + systemId + "' in " + helperImpl.buildFile
+                            + " should be expressed simply as '" + path.replace('\\', '/')
+                            + "' for compliance with other XML tools",
                             Project.MSG_WARN);
                 }
                 try {

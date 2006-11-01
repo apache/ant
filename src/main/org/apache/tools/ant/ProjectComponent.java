@@ -27,8 +27,8 @@ public abstract class ProjectComponent {
 
     /**
      * Project object of this component.
-     * @deprecated since 1.6.x. 
-     *             You should not be directly accessing this variable directly. 
+     * @deprecated since 1.6.x.
+     *             You should not be directly accessing this variable directly.
      *             You should access project object via the getProject()
      *             or setProject() accessor/mutators.
      */

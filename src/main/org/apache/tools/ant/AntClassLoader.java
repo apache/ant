@@ -1538,6 +1538,10 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         }
     }
 
+    /**
+     * Returns a <code>String</code> representing this loader.
+     * @return the path that this classloader has.
+     */
     public String toString() {
         return "AntClassLoader[" + getClasspath() + "]";
     }

@@ -181,7 +181,8 @@ public class Project implements ResourceFactory {
     private Map/*<Thread,Task>*/ threadTasks = Collections.synchronizedMap(new WeakHashMap());
 
     /** Records the latest task to be executed on a thread group. */
-    private Map/*<ThreadGroup,Task>*/ threadGroupTasks = Collections.synchronizedMap(new WeakHashMap());
+    private Map/*<ThreadGroup,Task>*/ threadGroupTasks
+        = Collections.synchronizedMap(new WeakHashMap());
 
     /**
      * Called to handle any input requests.
@@ -736,7 +737,7 @@ public class Project implements ResourceFactory {
      * @return a hashtable of global filters, mapping tokens to values
      *         (String to String).
      *
-     * @deprecated since 1.4.x 
+     * @deprecated since 1.4.x
      *             Use getGlobalFilterSet().getFilterHash().
      *
      * @see #getGlobalFilterSet()
@@ -1380,7 +1381,7 @@ public class Project implements ResourceFactory {
      *
      * @return the native version of the specified path or
      *         an empty string if the path is <code>null</code> or empty.
-     *         
+     *
      * @deprecated since 1.7
      *             Use FileUtils.translatePath instead.
      *
@@ -2280,6 +2281,7 @@ public class Project implements ResourceFactory {
     /**
      * Resolve the file relative to the project's basedir and return it as a
      * FileResource.
+     * @param name the name of the file to resolve.
      * @since Ant 1.7
      */
     public Resource getResource(String name) {

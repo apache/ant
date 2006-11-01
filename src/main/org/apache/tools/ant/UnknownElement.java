@@ -213,7 +213,6 @@ public class UnknownElement extends Task {
 
     /**
      * @see Task#handleInput(byte[], int, int)
-     *
      * @since Ant 1.6
      */
     protected int handleInput(byte[] buffer, int offset, int length)

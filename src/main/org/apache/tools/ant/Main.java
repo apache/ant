@@ -218,7 +218,7 @@ public class Main implements AntMain {
     }
 
     /**
-     * This operation is expected to call {@link System#exit(int)}, which 
+     * This operation is expected to call {@link System#exit(int)}, which
      * is what the base version does.
      * However, it is possible to do something else.
      * @param exitCode code to exit with
@@ -286,8 +286,8 @@ public class Main implements AntMain {
         PrintStream logTo = null;
 
         //this is the list of lu
-        HashMap launchCommands =new HashMap();
-        launchCommands.put("-lib","");
+        HashMap launchCommands = new HashMap();
+        launchCommands.put("-lib", "");
         launchCommands.put("-cp", "");
         launchCommands.put("-noclasspath", "");
         launchCommands.put("--noclasspath", "");
@@ -443,7 +443,7 @@ public class Main implements AntMain {
                     throw new BuildException(
                             "Niceness value is out of the range 1-10");
                 }
-            } else if (launchCommands.get(arg)!=null) {
+            } else if (launchCommands.get(arg) != null) {
                 //catch script/ant mismatch with a meaningful message
                 //we could ignore it, but there are likely to be other
                 //version problems, so we stamp down on the configuration now
@@ -847,8 +847,8 @@ public class Main implements AntMain {
         msg.append("  -nouserlib             Run ant without using the jar files from" + lSep
                    + "                         ${user.home}/.ant/lib" + lSep);
         msg.append("  -noclasspath           Run ant without using CLASSPATH" + lSep);
-        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies" +
-                lSep);
+        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies"
+                   + lSep);
         msg.append("  -main <class>          override Ant's normal entry point");
         System.out.println(msg.toString());
     }

@@ -163,8 +163,9 @@ public class AntTypeDefinition {
     /**
      * Try and load a class, with no attempt to catch any fault.
      * @return the class that implements this component
-     * @throws ClassNotFoundException
-     * @throws NoClassDefFoundError
+     * @throws ClassNotFoundException if the class cannot be found.
+     * @throws NoClassDefFoundError   if the there is an error
+     *                                finding the class.
      */
     public Class innerGetTypeClass() throws ClassNotFoundException {
         if (clazz != null) {
@@ -284,10 +285,10 @@ public class AntTypeDefinition {
      * @param newclass class to create
      * @param project
      * @return a newly constructed and bound instance.
-     * @throws NoSuchMethodException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
+     * @throws NoSuchMethodException  no good construtor.
+     * @throws InstantiationException cannot initialize the object.
+     * @throws IllegalAccessException cannot access the object.
+     * @throws InvocationTargetException error in invocation.
      */
     public Object innerCreateAndSet(Class newclass, Project project)
             throws NoSuchMethodException,

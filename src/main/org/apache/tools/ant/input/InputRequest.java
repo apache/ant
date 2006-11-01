@@ -74,6 +74,7 @@ public class InputRequest {
 
     /**
      * Gets a configured default value.
+     * @return the default value.
      * @since Ant 1.7.0
      */
     public String getDefaultValue() {
@@ -82,6 +83,7 @@ public class InputRequest {
 
     /**
      * Configures a default value.
+     * @param d the value to set.
      * @since Ant 1.7.0
      */
     public void setDefaultValue(String d) {
