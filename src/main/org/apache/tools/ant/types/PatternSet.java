@@ -497,19 +497,15 @@ public class PatternSet extends DataType implements Cloneable {
      * @return a clone of this patternset.
      */
     public Object clone() {
-        if (isReference()) {
-            return getRef(getProject()).clone();
-        } else {
-            try {
-                PatternSet ps = (PatternSet) super.clone();
-                ps.includeList = (Vector) includeList.clone();
-                ps.excludeList = (Vector) excludeList.clone();
-                ps.includesFileList = (Vector) includesFileList.clone();
-                ps.excludesFileList = (Vector) excludesFileList.clone();
-                return ps;
-            } catch (CloneNotSupportedException e) {
-                throw new BuildException(e);
-            }
+        try {
+            PatternSet ps = (PatternSet) super.clone();
+            ps.includeList = (Vector) includeList.clone();
+            ps.excludeList = (Vector) excludeList.clone();
+            ps.includesFileList = (Vector) includesFileList.clone();
+            ps.excludesFileList = (Vector) excludesFileList.clone();
+            return ps;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
         }
     }
 

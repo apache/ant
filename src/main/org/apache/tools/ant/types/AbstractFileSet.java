@@ -459,16 +459,12 @@ public abstract class AbstractFileSet extends DataType
         }
         ds.setBasedir(dir);
 
-        final int count = additionalPatterns.size();
-        for (int i = 0; i < count; i++) {
-            Object o = additionalPatterns.elementAt(i);
-            defaultPatterns.append((PatternSet) o, p);
-        }
+        PatternSet ps = mergePatterns(p);
         p.log(getDataTypeName() + ": Setup scanner in dir " + dir
-            + " with " + defaultPatterns, Project.MSG_DEBUG);
+            + " with " + ps, Project.MSG_DEBUG);
 
-        ds.setIncludes(defaultPatterns.getIncludePatterns(p));
-        ds.setExcludes(defaultPatterns.getExcludePatterns(p));
+        ds.setIncludes(ps.getIncludePatterns(p));
+        ds.setExcludes(ps.getExcludePatterns(p));
         if (ds instanceof SelectorScanner) {
             SelectorScanner ss = (SelectorScanner) ds;
             ss.setSelectors(getSelectors(p));
@@ -803,8 +799,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             return getRef(p).mergePatterns(p);
         }
-        PatternSet ps = new PatternSet();
-        ps.append(defaultPatterns, p);
+        PatternSet ps = (PatternSet) defaultPatterns.clone();
         final int count = additionalPatterns.size();
         for (int i = 0; i < count; i++) {
             Object o = additionalPatterns.elementAt(i);

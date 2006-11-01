@@ -37,7 +37,7 @@ import org.apache.tools.ant.util.IdentityStack;
  * but not &lt;path&gt;).</p>
  *
  */
-public abstract class DataType extends ProjectComponent {
+public abstract class DataType extends ProjectComponent implements Cloneable {
 
     /**
      * The description the user has set.
@@ -352,5 +352,18 @@ public abstract class DataType extends ProjectComponent {
         return d == null ? getDataTypeName() : getDataTypeName() + " " + d;
     }
 
+    /**
+     * @since Ant 1.7
+     * @return a shallow copy of this DataType.
+     */
+    public Object clone() throws CloneNotSupportedException {
+        DataType dt = (DataType) super.clone();
+        dt.setDescription(getDescription());
+        if (getRefid() != null) {
+	    dt.setRefid(getRefid());
+	}
+        dt.setChecked(isChecked());
+        return dt;
+    }
 }
 

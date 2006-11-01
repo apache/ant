@@ -18,12 +18,13 @@
 
 package org.apache.tools.ant;
 
+
 /**
  * Base class for components of a project, including tasks and data types.
  * Provides common facilities.
  *
  */
-public abstract class ProjectComponent {
+public abstract class ProjectComponent implements Cloneable {
 
     /**
      * Project object of this component.
@@ -121,5 +122,15 @@ public abstract class ProjectComponent {
                 System.err.println(msg);
             }
         }
+    }
+    /**
+     * @since Ant 1.7
+     * @return a shallow copy of this projectcomponent.
+     */
+    public Object clone() throws CloneNotSupportedException {
+        ProjectComponent pc = (ProjectComponent) super.clone();
+        pc.setLocation(getLocation());
+        pc.setProject(getProject());
+        return pc;
     }
 }
