@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
@@ -238,6 +237,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @since Ant 1.6
      */
     public void add(Path path) throws BuildException {
+        if (path == this) {
+            throw circularReference();
+        }
         if (path.getProject() == null) {
             path.setProject(getProject());
         }

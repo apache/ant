@@ -549,4 +549,15 @@ public class PathTest extends TestCase {
         assertEquals(project.resolveFile("build").getAbsolutePath(), l[0]);
     }
 
+    public void testRecursion() {
+        Path p = new Path(project);
+        try {
+            p.append(p);
+            assertEquals(0, p.list().length);
+        } catch (BuildException x) {
+            String m = x.toString();
+            assertTrue(m, m.indexOf("circular") != -1);
+        }
+    }
+
 }
