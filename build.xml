@@ -1628,6 +1628,7 @@ see ${build.junit.reports} / ${antunit.reports}
       <element name="junit-nested" implicit="true" />
       <sequential>
         <mkdir dir="${build.junit.xml}" />
+        <property name="test.junit.vmargs" value=""/>
         <junit printsummary="${junit.summary}"
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"
@@ -1647,6 +1648,7 @@ see ${build.junit.reports} / ${antunit.reports}
                        value="${tests.and.ant.share.classloader}"/>
           <classpath refid="tests-classpath"/>
           <formatter type="xml"/>
+          <jvmarg line="${test.junit.vmargs}"/>
           <junit-nested />
         </junit>
       </sequential>
