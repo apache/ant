@@ -81,8 +81,6 @@ public class SubAnt
 
     /** the targets to call on the new project */
     private Vector/*<TargetElement>*/ targets = new Vector();
-    
-    
 
     /**
      * Pass output sent to System.out to the new project.
@@ -282,11 +280,11 @@ public class SubAnt
         ant = createAntTask(directory);
         String antfilename = file.getAbsolutePath();
         ant.setAntfile(antfilename);
-        for (int i=0; i<targets.size(); i++) {
-            TargetElement targetElement = (TargetElement)targets.get(i);
+        for (int i = 0; i < targets.size(); i++) {
+            TargetElement targetElement = (TargetElement) targets.get(i);
             ant.addConfiguredTarget(targetElement);
         }
-        
+
         try {
             ant.execute();
         } catch (BuildException e) {
@@ -367,7 +365,7 @@ public class SubAnt
         }
         targets.add(t);
     }
-    
+
     /**
      * Enable/ disable verbose log messages showing when each sub-build path is entered/ exited.
      * The default value is "false".

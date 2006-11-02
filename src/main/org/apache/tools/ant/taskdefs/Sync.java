@@ -415,6 +415,7 @@ public class Sync extends Task {
 
         /**
          * Yes, we can.
+         * @return true always.
          * @since Ant 1.7
          */
         protected boolean supportsNonFileResources() {

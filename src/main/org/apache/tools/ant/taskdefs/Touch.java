@@ -209,7 +209,7 @@ public class Touch extends Task {
 
     /**
      * Add a collection of resources to touch.
-     *
+     * @param rc the collection to add.
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {

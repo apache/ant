@@ -979,7 +979,7 @@ public class Zip extends MatchingTask {
              */
             as = getNonFileSetResourcesToAdd(rc, zipFile, true);
         }
-        
+
         Resource[][] toAdd = new Resource[rcs.length][];
         int fsIndex = 0;
         int restIndex = 0;

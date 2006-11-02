@@ -144,7 +144,7 @@ public class Tstamp extends Task {
         /**
          * The date/time pattern to be used. The values are as
          * defined by the Java SimpleDateFormat class.
-         * @param pattern
+         * @param pattern the pattern to use.
          * @see java.text.SimpleDateFormat
          */
         public void setPattern(String pattern) {
@@ -157,7 +157,7 @@ public class Tstamp extends Task {
          * either variant or variant and country may be omitted.
          * For more information please refer to documentation
          * for the java.util.Locale  class.
-         * @param locale
+         * @param locale the locale to use.
          * @see java.util.Locale
          */
         public void setLocale(String locale) {

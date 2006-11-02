@@ -282,14 +282,14 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             if (sxe.getException() != null) {
                 x = sxe.getException();
             }
-            throw new BuildException("Failed to load "+src,x);
+            throw new BuildException("Failed to load " + src, x);
 
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
             throw new BuildException(pce);
         } catch (IOException ioe) {
             // I/O error
-            throw new BuildException("Failed to load " + src,ioe);
+            throw new BuildException("Failed to load " + src, ioe);
         }
     }
 
@@ -766,7 +766,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      */
     private File resolveFile(String fileName) {
         if (rootDirectory == null) {
-            return FILE_UTILS.resolveFile(getProject().getBaseDir(),fileName);
+            return FILE_UTILS.resolveFile(getProject().getBaseDir(), fileName);
         }
         return FILE_UTILS.resolveFile(rootDirectory, fileName);
     }
@@ -779,7 +779,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * support non-file resources needs to override this method.  We
      * need to do so for backwards compatibility reasons since we
      * can't expect subclasses to support resources.</p>
-     *
+     * @return true for this task.
      * @since Ant 1.7
      */
     protected boolean supportsNonFileResources() {

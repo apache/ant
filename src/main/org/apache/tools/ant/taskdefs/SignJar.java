@@ -112,7 +112,8 @@ public class SignJar extends AbstractJarSignerTask {
     /**
      * error string for unit test verification {@value}
      */
-    public static final String ERROR_SIGNEDJAR_AND_PATHS = "You cannot specify the signed JAR when using paths or filesets";
+    public static final String ERROR_SIGNEDJAR_AND_PATHS
+        = "You cannot specify the signed JAR when using paths or filesets";
     /**
      * error string for unit test verification: {@value}
      */
@@ -120,7 +121,8 @@ public class SignJar extends AbstractJarSignerTask {
     /**
      * error string for unit test verification: {@value}
      */
-    public static final String ERROR_MAPPER_WITHOUT_DEST = "The destDir attribute is required if a mapper is set";
+    public static final String ERROR_MAPPER_WITHOUT_DEST
+        = "The destDir attribute is required if a mapper is set";
     /**
      * error string for unit test verification: {@value}
      */
@@ -192,7 +194,7 @@ public class SignJar extends AbstractJarSignerTask {
      * add a mapper to determine file naming policy. Only used with toDir
      * processing.
      *
-     * @param newMapper
+     * @param newMapper the mapper to add.
      * @since Ant 1.7
      */
     public void add(FileNameMapper newMapper) {
@@ -222,7 +224,7 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      *
-     * @param tsaurl
+     * @param tsaurl the tsa url.
      * @since Ant 1.7
      */
     public void setTsaurl(String tsaurl) {
@@ -240,7 +242,7 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      * set the alias in the keystore of the TSA to use;
-     * @param tsacert
+     * @param tsacert the cert alias.
      */
     public void setTsacert(String tsacert) {
         this.tsacert = tsacert;
@@ -394,11 +396,11 @@ public class SignJar extends AbstractJarSignerTask {
         //alias is required for signing
         addValue(cmd, alias);
 
-        log("Signing JAR: " +
-                jarSource.getAbsolutePath()
-                +" to " +
-                targetFile.getAbsolutePath()
-                + " as " + alias);
+        log("Signing JAR: "
+            + jarSource.getAbsolutePath()
+            + " to "
+            + targetFile.getAbsolutePath()
+            + " as " + alias);
 
         cmd.execute();
 
@@ -412,10 +414,10 @@ public class SignJar extends AbstractJarSignerTask {
      * If the tsa parameters are set, this passes them to the command.
      * There is no validation of java version, as third party JDKs
      * may implement this on earlier/later jarsigner implementations.
-     * @param cmd
+     * @param cmd the exec task.
      */
     private void addTimestampAuthorityCommands(final ExecTask cmd) {
-        if(tsaurl!=null) {
+        if (tsaurl != null) {
             addValue(cmd, "-tsa");
             addValue(cmd, tsaurl);
         }

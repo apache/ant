@@ -352,7 +352,7 @@ public class Replace extends MatchingTask {
         void close() throws IOException {
             reader.close();
         }
-        
+
         /**
          * Closes file but doesn't throw exception
          */
@@ -426,7 +426,7 @@ public class Replace extends MatchingTask {
         void close() throws IOException {
             writer.close();
         }
-        
+
         /**
          * Closes file but doesn't throw exception
          */

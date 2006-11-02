@@ -55,7 +55,7 @@ public class War extends Jar {
     /**
      * flag set if the descriptor is added
      */
-    private boolean needxmlfile=true;
+    private boolean needxmlfile = true;
     private File addedWebXmlFile;
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -189,16 +189,16 @@ public class War extends Jar {
                 //check to see if we warn or not
                 if (!FILE_UTILS.fileNameEquals(addedWebXmlFile, file)) {
                     log("Warning: selected " + archiveType
-                            +" files include a second " +XML_DESCRIPTOR_PATH
+                            + " files include a second " + XML_DESCRIPTOR_PATH
                             + " which will be ignored.\n"
-                            + "The duplicate entry is at " +file +'\n'
+                            + "The duplicate entry is at " + file + '\n'
                             + "The file that will be used is "
                             + addedWebXmlFile,
                             Project.MSG_WARN);
                 }
             } else {
                 //no added file, yet
-                addedWebXmlFile=file;
+                addedWebXmlFile = file;
                 //there is no web.xml file, so add it
                 addFile = true;
                 //and remember that we did
@@ -216,9 +216,9 @@ public class War extends Jar {
      * gets executed.
      */
     protected void cleanUp() {
-        if(addedWebXmlFile==null && needxmlfile && !isInUpdateMode()) {
+        if (addedWebXmlFile == null && needxmlfile && !isInUpdateMode()) {
             throw new BuildException("No WEB-INF/web.xml file was added.\n"
-                    +"If this is your intent, set needxml='false' ");
+                    + "If this is your intent, set needxml='false' ");
         }
         addedWebXmlFile = null;
         super.cleanUp();

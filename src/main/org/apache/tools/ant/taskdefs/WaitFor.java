@@ -155,7 +155,7 @@ public class WaitFor extends ConditionBase {
      * @since Ant1.7
      */
     protected void processSuccess() {
-        log(getTaskName()+": condition was met", Project.MSG_VERBOSE);
+        log(getTaskName() + ": condition was met", Project.MSG_VERBOSE);
     }
 
     /**
@@ -166,7 +166,7 @@ public class WaitFor extends ConditionBase {
      * @since Ant1.7
      */
     protected void processTimeout() {
-        log(getTaskName() +": timeout", Project.MSG_VERBOSE);
+        log(getTaskName() + ": timeout", Project.MSG_VERBOSE);
         if (timeoutProperty != null) {
             getProject().setNewProperty(timeoutProperty, "true");
         }

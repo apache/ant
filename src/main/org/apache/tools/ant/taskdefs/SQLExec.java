@@ -150,7 +150,7 @@ public class SQLExec extends JDBCTask {
      * Print SQL stats (rows affected)
      */
     private boolean showtrailers = true;
-    
+
     /**
      * Results Output file.
      */
@@ -204,7 +204,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Enable property expansion inside nested text
      *
-     * @param expandProperties
+     * @param expandProperties if true expand properties.
      * @since Ant 1.7
      */
     public void setExpandProperties(boolean expandProperties) {
@@ -323,7 +323,7 @@ public class SQLExec extends JDBCTask {
     public void setShowtrailers(boolean showtrailers) {
         this.showtrailers = showtrailers;
     }
-    
+
     /**
      * Set the output file;
      * optional, defaults to the Ant log.
@@ -673,7 +673,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /*
-     * Closes an unused connection after an error and doesn't rethrow 
+     * Closes an unused connection after an error and doesn't rethrow
      * a possible SQLException
      * @since Ant 1.7
      */
@@ -686,7 +686,7 @@ public class SQLExec extends JDBCTask {
             }
         }
     }
-    
+
     /**
      * The action a task should perform on an error,
      * one of "continue", "stop" and "abort"
@@ -715,7 +715,7 @@ public class SQLExec extends JDBCTask {
         public void setSrc(File src) {
             //there are places (in this file, and perhaps elsewhere, where it is assumed
             //that null is an acceptable parameter.
-            if(src!=null) {
+            if (src!=null) {
                 setSrcResource(new FileResource(src));
             }
         }
@@ -747,6 +747,7 @@ public class SQLExec extends JDBCTask {
 
         /**
          * Set the source resource.
+         * @param a the source resource collection.
          * @since Ant 1.7
          */
         public void addConfigured(ResourceCollection a) {

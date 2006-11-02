@@ -61,7 +61,7 @@ public class Echo extends Task {
             Writer out = null;
             try {
                 String filename = file.getAbsolutePath();
-                if(encoding == null || encoding.length() == 0) {
+                if (encoding == null || encoding.length() == 0) {
                     out = new FileWriter(filename, append);
                 } else {
                     out = new BufferedWriter(

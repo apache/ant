@@ -133,7 +133,7 @@ public class Tar extends MatchingTask {
     /**
      * Set is the name/location of where to create the tar file.
      * @param tarFile the location of the tar file.
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             For consistency with other tasks, please use setDestFile().
      */
     public void setTarfile(File tarFile) {
@@ -426,8 +426,9 @@ public class Tar extends MatchingTask {
 
         if (!r.isDirectory()) {
             if (r.size() > TarConstants.MAXSIZE) {
-                throw new BuildException("Resource: " + r + " larger than " +
-                                         TarConstants.MAXSIZE + " bytes.");
+                throw new BuildException(
+                    "Resource: " + r + " larger than "
+                    + TarConstants.MAXSIZE + " bytes.");
             }
             te.setSize(r.getSize());
             // override permissions if set explicitly
@@ -480,7 +481,7 @@ public class Tar extends MatchingTask {
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
      * @return true if the archive is up to date.
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             use the two-arg version instead.
      */
     protected boolean archiveIsUpToDate(String[] files) {
@@ -521,7 +522,7 @@ public class Tar extends MatchingTask {
      * support non-file resources needs to override this method.  We
      * need to do so for backwards compatibility reasons since we
      * can't expect subclasses to support resources.</p>
-     *
+     * @return true for this task.
      * @since Ant 1.7
      */
     protected boolean supportsNonFileResources() {
@@ -619,6 +620,7 @@ public class Tar extends MatchingTask {
      *
      * @param rc the collection containing resources to add
      * @param tOut stream writing to the archive.
+     * @throws IOException on error.
      * @since Ant 1.7
      */
     protected void tar(ResourceCollection rc, TarOutputStream tOut)
@@ -666,6 +668,7 @@ public class Tar extends MatchingTask {
     /**
      * whether the given resource collection is a (subclass of)
      * FileSet that only contains file system resources.
+     * @return true if the collection is a fileset.
      * @since Ant 1.7
      */
     protected static final boolean isFileFileSet(ResourceCollection rc) {
@@ -675,7 +678,7 @@ public class Tar extends MatchingTask {
     /**
      * Grabs all included files and directors from the FileSet and
      * returns them as an array of (relative) file names.
-     *
+     * @return a list of the filenames.
      * @since Ant 1.7
      */
     protected static final String[] getFileNames(FileSet fs) {
@@ -695,6 +698,7 @@ public class Tar extends MatchingTask {
      * it already is a TarFileSet).
      *
      * @param archiveFileSet fileset to copy attributes from, may be null
+     * @return a new TarFileSet.
      * @since Ant 1.7
      */
     protected TarFileSet asTarFileSet(ArchiveFileSet archiveFileSet) {
@@ -715,9 +719,9 @@ public class Tar extends MatchingTask {
                     tfs.integerSetDirMode(archiveFileSet
                                           .getDirMode(getProject()));
                 }
-                
-                if (archiveFileSet instanceof
-                    org.apache.tools.ant.types.TarFileSet) {
+
+                if (archiveFileSet
+                    instanceof org.apache.tools.ant.types.TarFileSet) {
                     org.apache.tools.ant.types.TarFileSet t =
                         (org.apache.tools.ant.types.TarFileSet) archiveFileSet;
                     if (t.hasUserNameBeenSet()) {

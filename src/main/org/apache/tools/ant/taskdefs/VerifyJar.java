@@ -53,13 +53,13 @@ public class VerifyJar extends AbstractJarSignerTask {
     /**
      * certification flag
      */
-    private boolean certificates=false;
+    private boolean certificates = false;
     private BufferingOutputFilter outputCache = new BufferingOutputFilter();
     public static final String ERROR_NO_VERIFY = "Failed to verify ";
 
     /**
      * Ask for certificate information to be printed
-     * @param certificates
+     * @param certificates if true print certificates.
      */
     public void setCertificates(boolean certificates) {
         this.certificates = certificates;
@@ -67,7 +67,7 @@ public class VerifyJar extends AbstractJarSignerTask {
 
     /**
      * verify our jar files
-     * @throws BuildException
+     * @throws BuildException on error.
      */
     public void execute() throws BuildException {
         //validation logic
@@ -101,12 +101,12 @@ public class VerifyJar extends AbstractJarSignerTask {
 
     /**
      * verify a JAR.
-     * @param jar
+     * @param jar the jar to verify.
      * @throws BuildException if the file could not be verified
      */
     private void verifyOneJar(File jar) {
-        if(!jar.exists()) {
-            throw new BuildException(ERROR_NO_FILE+jar);
+        if (!jar.exists()) {
+            throw new BuildException(ERROR_NO_FILE + jar);
         }
         final ExecTask cmd = createJarSigner();
 
@@ -116,15 +116,14 @@ public class VerifyJar extends AbstractJarSignerTask {
         //verify special operations
         addValue(cmd, "-verify");
 
-        if(certificates) {
+        if (certificates) {
             addValue(cmd, "-certs");
         }
 
         //JAR  is required
         addValue(cmd, jar.getPath());
 
-        log("Verifying JAR: " +
-                jar.getAbsolutePath());
+        log("Verifying JAR: " + jar.getAbsolutePath());
         outputCache.clear();
         BuildException ex = null;
         try {
@@ -165,7 +164,7 @@ public class VerifyJar extends AbstractJarSignerTask {
         }
 
         public void clear() {
-            if(buffer!=null) {
+            if (buffer != null) {
                 buffer.clear();
             }
         }
@@ -178,17 +177,17 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         private Reader next;
 
-        private StringBuffer buffer=new StringBuffer();
+        private StringBuffer buffer = new StringBuffer();
 
         public BufferingOutputFilterReader(Reader next) {
             this.next = next;
         }
 
-        public int read(char cbuf[], int off, int len) throws IOException {
+        public int read(char[] cbuf, int off, int len) throws IOException {
             //hand down
-            int result=next.read(cbuf,off,len);
+            int result = next.read(cbuf, off, len);
             //cache
-            buffer.append(cbuf,off,len);
+            buffer.append(cbuf, off, len);
             //return
             return result;
         }
@@ -202,7 +201,7 @@ public class VerifyJar extends AbstractJarSignerTask {
         }
 
         public void clear() {
-            buffer=new StringBuffer();
+            buffer = new StringBuffer();
         }
     }
 }

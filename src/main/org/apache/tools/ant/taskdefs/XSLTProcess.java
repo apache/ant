@@ -1058,7 +1058,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             File file = new File(fileName);
             // Give always a slash as file separator, so the stylesheet could be sure about that
             // Use '.' so a dir+"/"+name would not result in an absolute path
-            liaison.addParam(fileDirParameter, (file.getParent()!=null) ? file.getParent().replace('\\','/') : "." );
+            liaison.addParam(
+                fileDirParameter,
+                (file.getParent()!=null) ? file.getParent().replace('\\','/') : "." );
         }
     }
 

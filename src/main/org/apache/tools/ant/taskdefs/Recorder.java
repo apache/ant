@@ -127,7 +127,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Sets the level to which this recorder entry should log to.
-     *
+     * @param level the level to set.
      * @see VerbosityLevelChoices
      */
     public void setLoglevel(VerbosityLevelChoices level) {
@@ -224,7 +224,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void buildStarted(BuildEvent event) {
@@ -232,7 +232,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void subBuildStarted(BuildEvent event) {
@@ -240,7 +240,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void targetStarted(BuildEvent event) {
@@ -248,7 +248,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void targetFinished(BuildEvent event) {
@@ -256,7 +256,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void taskStarted(BuildEvent event) {
@@ -264,7 +264,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void taskFinished(BuildEvent event) {
@@ -272,7 +272,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Empty implementation required by SubBuildListener interface.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void messageLogged(BuildEvent event) {
@@ -280,7 +280,7 @@ public class Recorder extends Task implements SubBuildListener {
 
     /**
      * Cleans recorder registry.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void buildFinished(BuildEvent event) {
@@ -290,7 +290,7 @@ public class Recorder extends Task implements SubBuildListener {
     /**
      * Cleans recorder registry, if this is the subbuild the task has
      * been created in.
-     *
+     * @param event ignored.
      * @since Ant 1.7
      */
     public void subBuildFinished(BuildEvent event) {
