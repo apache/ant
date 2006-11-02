@@ -530,7 +530,7 @@ javadoc as source files.</p>
 <p>Same as one entry in the list given by <code>packagenames</code>.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -553,7 +553,7 @@ Same as for <code>package</code>.
 <p>Same as one entry in the list given by <code>sourcefiles</code>.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -590,7 +590,7 @@ syntax (or both at once), but with the nested elements you can easily
 specify multiple occurrences of the arguments.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -634,7 +634,7 @@ nested elements you can easily specify multiple occurrences of the
 arguments.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -688,7 +688,7 @@ because you want to determine the order the tags are output, you must
 not set the description attribute for those tags.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -702,8 +702,8 @@ not set the description attribute for those tags.</p>
   <tr>
     <td valign="top">description</td>
     <td valign="top">Description for tag (e.g. <code>To do:</code>)</td>
-    <td align="center" valign="top">Yes, unless the <code>dir</code>
-      attribute is specified or name is a standard tag.</td>
+    <td align="center" valign="top">No, the name will be used as a description
+      if this is not specified.</td>
   </tr>
   <tr>
     <td valign="top">enabled</td>
@@ -724,9 +724,14 @@ not set the description attribute for those tags.</p>
     <a href="../CoreTypes/fileset.html">fileset</a>. The files included by this fileset should
     contain each tag definition on a separate line, as described in the
     <a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/windows/javadoc.html#tag">Javadoc reference guide</a>:
-    <pre>ejb.bean:t:"XDoclet EJB Tag"
-todo:a:"To Do"</pre>
-    Note: If this attribute is specified, all the other attributes in this
+    <pre>ejb.bean:t:XDoclet EJB Tag
+todo:a:To Do</pre>
+      <b>Note:</b> The  Javadoc reference quide has double quotes around
+the description part of the definition. This will not work when used in
+a file, as the definition is quoted again when given to
+the javadoc program.
+    <br/>
+      <b>Note:</b> If this attribute is specified, all the other attributes in this
     element will be ignored.
     </td>
     <td align="center" valign="top">No</td>
@@ -738,7 +743,7 @@ todo:a:"To Do"</pre>
 only available with Java 1.4.</p>
 
 <h5>Parameters</h5>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
