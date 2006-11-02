@@ -48,6 +48,9 @@ Other changes:
 * <javadoc> useexternalfile now applies to all command line arguments
   of javadoc. Bugzilla report 40852.
 
+* javadoc/tag@description is now set to the name if description is
+  not specified. Bugzill report 32927.
+
 
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3
 =============================================

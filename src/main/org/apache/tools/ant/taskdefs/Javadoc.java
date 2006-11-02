@@ -1387,7 +1387,8 @@ public class Javadoc extends Task {
                 return name + ":" + (enabled ? "" : "X")
                     + scope + ":" + getDescription();
             } else {
-                return name;
+                return name + ":" + (enabled ? "" : "X")
+                    + scope + ":" + name;
             }
         }
     }
