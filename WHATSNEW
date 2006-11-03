@@ -3509,7 +3509,7 @@ Other changes:
 Fixed bugs:
 -----------
 
-* <signjar> doesn't use deprectated methods anymore.
+* <signjar> no longer uses deprecated methods.
 
 * javadoc's failonerror attribute works again
 
