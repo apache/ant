@@ -27,7 +27,7 @@
               encoding="UTF-8"/>
 
     <au:assertTrue>
-      <matches string="${simple}" pattern="^a\.b\.c\.d\n$"/>
+      <matches string="${simple}" pattern="^a\.b\.c\.d$"/>
     </au:assertTrue>
 
   </target>
