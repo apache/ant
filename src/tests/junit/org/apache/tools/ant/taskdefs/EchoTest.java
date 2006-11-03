@@ -44,7 +44,6 @@ public class EchoTest extends BuildFileTest {
     // Output an empty String
     public void test1() {
         expectLog("test1", "");
-        expectOutput("test1","");
     }
     
     public void testLogBlankEcho() {
