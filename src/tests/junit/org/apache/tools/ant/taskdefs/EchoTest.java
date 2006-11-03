@@ -18,7 +18,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
 
 /**
  */
@@ -39,8 +44,16 @@ public class EchoTest extends BuildFileTest {
     // Output an empty String
     public void test1() {
         expectLog("test1", "");
+        expectOutput("test1","");
     }
-
+    
+    public void testLogBlankEcho() {
+        EchoTestLogger logger = new EchoTestLogger();
+        getProject().addBuildListener(logger);
+        getProject().executeTarget("test1");
+        assertEquals("     [echo] ", logger.lastLoggedMessage );
+    }
+ 
     // Output 'OUTPUT OF ECHO'
     public void test2() {
         expectLog("test2", "OUTPUT OF ECHO");
@@ -73,5 +86,27 @@ public class EchoTest extends BuildFileTest {
     }
     public void testUTF8Encoding() throws Exception {
         executeTarget("testUTF8Encoding");
+    }
+    
+    private class EchoTestLogger extends DefaultLogger {
+        String lastLoggedMessage;
+    
+        
+        /**
+         * 
+         */
+        public EchoTestLogger() {
+            super();
+            this.setMessageOutputLevel(Project.MSG_DEBUG);
+            this.setOutputPrintStream(new PrintStream(new ByteArrayOutputStream(256)));
+            this.setErrorPrintStream(new PrintStream(new ByteArrayOutputStream(256)));
+        }
+        /* 
+         * @param message
+         */
+        protected void log(String message) {
+            this.lastLoggedMessage = message;
+        }
+        
     }
 }

@@ -252,14 +252,19 @@ public class DefaultLogger implements BuildLogger {
                             new StringReader(event.getMessage()));
                     String line = r.readLine();
                     boolean first = true;
-                    while (line != null) {
-                        if (!first) {
+                    do {
+                        if (first) {
+                            if (line == null) {
+                                message.append(label);
+                                break;
+                            }
+                        } else {
                             message.append(StringUtils.LINE_SEP);
                         }
                         first = false;
                         message.append(label).append(line);
                         line = r.readLine();
-                    }
+                    } while (line != null);
                 } catch (IOException e) {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
