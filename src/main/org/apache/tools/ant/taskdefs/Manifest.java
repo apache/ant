@@ -151,12 +151,13 @@ public class Manifest {
 
         /**
          * @see java.lang.Object#hashCode
+         * @return a hashcode based on the key and values.
          */
         public int hashCode() {
             int hashCode = 0;
 
             if (name != null) {
-                hashCode += name.hashCode();
+                hashCode += getKey().hashCode();
             }
 
             hashCode += values.hashCode();
@@ -164,7 +165,9 @@ public class Manifest {
         }
 
         /**
+         * @param rhs the object to check for equality.
          * @see java.lang.Object#equals
+         * @return true if the key and values are the same.
          */
         public boolean equals(Object rhs) {
             if (rhs == null || rhs.getClass() != getClass()) {
@@ -684,20 +687,16 @@ public class Manifest {
 
         /**
          * @see java.lang.Object#hashCode
+         * @return a hash value based on the attributes.
          */
         public int hashCode() {
-            int hashCode = 0;
-
-            if (name != null) {
-                hashCode += name.hashCode();
-            }
-
-            hashCode += attributes.hashCode();
-            return hashCode;
+            return attributes.hashCode();
         }
 
         /**
          * @see java.lang.Object#equals
+         * @param rhs the object to check for equality.
+         * @return true if the attributes are the same.
          */
         public boolean equals(Object rhs) {
             if (rhs == null || rhs.getClass() != getClass()) {
@@ -992,6 +991,7 @@ public class Manifest {
 
     /**
      * @see java.lang.Object#hashCode
+     * @return a hashcode based on the version, main and sections.
      */
     public int hashCode() {
         int hashCode = 0;
@@ -1007,6 +1007,8 @@ public class Manifest {
 
     /**
      * @see java.lang.Object#equals
+     * @param rhs the object to check for equality.
+     * @return true if the version, main and sections are the same.
      */
     public boolean equals(Object rhs) {
         if (rhs == null || rhs.getClass() != getClass()) {
