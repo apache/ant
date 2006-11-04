@@ -201,6 +201,7 @@ public final class AnsiColorLogger extends DefaultLogger {
     /**
      * @see DefaultLogger#printMessage
      */
+    /** {@inheritDoc}. */
     protected void printMessage(final String message,
                                       final PrintStream stream,
                                       final int priority) {

@@ -58,6 +58,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#buildStarted
      */
+    /** {@inheritDoc}. */
     public void buildStarted(BuildEvent event) {
         if (initialized) {
             Logger log = Logger.getLogger(Project.class.getName());
@@ -68,6 +69,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#buildFinished
      */
+    /** {@inheritDoc}. */
     public void buildFinished(BuildEvent event) {
         if (initialized) {
             Logger log = Logger.getLogger(Project.class.getName());
@@ -82,6 +84,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#targetStarted
      */
+    /** {@inheritDoc}. */
     public void targetStarted(BuildEvent event) {
         if (initialized) {
             Logger log = Logger.getLogger(Target.class.getName());
@@ -92,6 +95,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#targetFinished
      */
+    /** {@inheritDoc}. */
     public void targetFinished(BuildEvent event) {
         if (initialized) {
             String targetName = event.getTarget().getName();
@@ -108,6 +112,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#taskStarted
      */
+    /** {@inheritDoc}. */
     public void taskStarted(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -119,6 +124,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#taskFinished
      */
+    /** {@inheritDoc}. */
     public void taskFinished(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -135,6 +141,7 @@ public class Log4jListener implements BuildListener {
     /**
      * @see BuildListener#messageLogged
      */
+    /** {@inheritDoc}. */
     public void messageLogged(BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();

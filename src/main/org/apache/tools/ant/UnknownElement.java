@@ -212,7 +212,15 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Delegate to realThing if present and if it as task.
      * @see Task#handleInput(byte[], int, int)
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read.
+     *
+     * @return the number of bytes read.
+     *
+     * @exception IOException if the data cannot be read.
      * @since Ant 1.6
      */
     protected int handleInput(byte[] buffer, int offset, int length)

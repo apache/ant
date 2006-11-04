@@ -2282,6 +2282,7 @@ public class Project implements ResourceFactory {
      * Resolve the file relative to the project's basedir and return it as a
      * FileResource.
      * @param name the name of the file to resolve.
+     * @return the file resource.
      * @since Ant 1.7
      */
     public Resource getResource(String name) {

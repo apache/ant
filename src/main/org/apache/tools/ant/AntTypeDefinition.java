@@ -283,7 +283,7 @@ public class AntTypeDefinition {
      * Inner implementation of the {@link #createAndSet(Project, Class)} logic, with no
      * exception catching
      * @param newclass class to create
-     * @param project
+     * @param project the project to use
      * @return a newly constructed and bound instance.
      * @throws NoSuchMethodException  no good construtor.
      * @throws InstantiationException cannot initialize the object.

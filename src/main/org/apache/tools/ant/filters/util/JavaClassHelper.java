@@ -40,7 +40,7 @@ public final class JavaClassHelper {
      * @return a StringBuffer contains the name=value pairs
      * @exception IOException if an error occurs
      */
-    public static final StringBuffer getConstants(byte[] bytes)
+    public static StringBuffer getConstants(byte[] bytes)
         throws IOException {
         final StringBuffer sb = new StringBuffer();
         final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);

@@ -32,14 +32,14 @@ import org.apache.tools.ant.BuildException;
  */
 public class SingleCheckExecutor implements Executor {
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public void executeTargets(Project project, String[] targetNames)
         throws BuildException {
             project.executeSortedTargets(
                 project.topoSort(targetNames, project.getTargets(), false));
     }
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public Executor getSubProjectExecutor() {
         return this;
     }

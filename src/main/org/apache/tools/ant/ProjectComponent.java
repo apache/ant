@@ -37,7 +37,7 @@ public abstract class ProjectComponent implements Cloneable {
 
     /**
      * Location within the build file of this task definition.
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getLocation()} method.
      */
@@ -126,6 +126,8 @@ public abstract class ProjectComponent implements Cloneable {
     /**
      * @since Ant 1.7
      * @return a shallow copy of this projectcomponent.
+     * @throws CloneNotSupportedException does not happen,
+     *                                    but is declared to allow subclasses to do so.
      */
     public Object clone() throws CloneNotSupportedException {
         ProjectComponent pc = (ProjectComponent) super.clone();

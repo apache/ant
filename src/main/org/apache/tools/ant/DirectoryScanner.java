@@ -864,7 +864,7 @@ public class DirectoryScanner
                 }
             }
             while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry)it.next();
+                Map.Entry entry = (Map.Entry) it.next();
                 String currentelement = (String) entry.getKey();
                 if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;

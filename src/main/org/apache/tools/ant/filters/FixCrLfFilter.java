@@ -133,7 +133,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * @return a new filter based on this configuration, but filtering the
      *         specified reader.
      */
-    public final Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         try {
             FixCrLfFilter newFilter = new FixCrLfFilter(rdr);
 
@@ -289,7 +289,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      *                if the underlying stream throws an IOException during
      *                reading.
      */
-    public synchronized final int read() throws IOException {
+    public synchronized int read() throws IOException {
         if (!initialized) {
             initInternalFilters();
         }

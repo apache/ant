@@ -32,7 +32,7 @@ public class DefaultExecutor implements Executor {
 
     private static final SingleCheckExecutor SUB_EXECUTOR = new SingleCheckExecutor();
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public void executeTargets(Project project, String[] targetNames)
         throws BuildException {
         BuildException thrownException = null;
@@ -52,7 +52,7 @@ public class DefaultExecutor implements Executor {
         }
     }
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public Executor getSubProjectExecutor() {
         return SUB_EXECUTOR;
     }

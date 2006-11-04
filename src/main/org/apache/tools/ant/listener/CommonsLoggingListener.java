@@ -101,9 +101,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         return log;
     }
 
-    /**
-     * @see BuildListener#buildStarted
-     */
+    /** {@inheritDoc}. */
     public void buildStarted(BuildEvent event) {
         String categoryString = PROJECT_LOG;
         Log log = getLog(categoryString, null);
@@ -113,9 +111,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         }
     }
 
-    /**
-     * @see BuildListener#buildFinished
-     */
+    /** {@inheritDoc}. */
     public void buildFinished(BuildEvent event) {
         if (initialized) {
             String categoryString = PROJECT_LOG;
@@ -133,6 +129,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * @see BuildListener#targetStarted
      */
+    /** {@inheritDoc}. */
     public void targetStarted(BuildEvent event) {
         if (initialized) {
             Log log = getLog(TARGET_LOG,
@@ -147,6 +144,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * @see BuildListener#targetFinished
      */
+    /** {@inheritDoc}. */
     public void targetFinished(BuildEvent event) {
         if (initialized) {
             String targetName = event.getTarget().getName();
@@ -165,6 +163,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * @see BuildListener#taskStarted
      */
+    /** {@inheritDoc}. */
     public void taskStarted(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -186,6 +185,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * @see BuildListener#taskFinished
      */
+    /** {@inheritDoc}. */
     public void taskFinished(BuildEvent event) {
         if (initialized) {
             Task task = event.getTask();
@@ -214,6 +214,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * @see BuildListener#messageLogged
      */
+    /** {@inheritDoc}. */
     public void messageLogged(BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();

@@ -502,7 +502,7 @@ public class ComponentHelper  {
         if (c == null || !(Task.class.isAssignableFrom(c))) {
             return null;
         }
-        Object obj= createComponent(taskType);
+        Object obj = createComponent(taskType);
         if (obj == null) {
             return null;
         }
