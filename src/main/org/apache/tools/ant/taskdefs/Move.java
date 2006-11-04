@@ -63,7 +63,7 @@ public class Move extends Copy {
         setOverwrite(true);
     }
 
-    // inherit doc
+    /** {@inheritDoc}. */
     protected void validateAttributes() throws BuildException {
         if (file != null && file.isDirectory()) {
             if ((destFile != null && destDir != null)

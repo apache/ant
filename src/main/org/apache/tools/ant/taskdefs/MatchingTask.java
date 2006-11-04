@@ -58,9 +58,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     protected FileSet fileset = new FileSet();
 
-    /**
-     * @see org.apache.tools.ant.ProjectComponent#setProject
-     */
+    /** {@inheritDoc}. */
     public void setProject(Project project) {
         super.setProject(project);
         fileset.setProject(project);

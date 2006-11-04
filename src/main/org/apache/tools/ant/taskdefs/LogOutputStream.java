@@ -90,6 +90,10 @@ public class LogOutputStream extends LineOrientedOutputStream {
         pc.log(line, level);
     }
 
+    /**
+     * Get the level.
+     * @return the log level.
+     */
     public int getMessageLevel() {
         return level;
     }

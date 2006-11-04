@@ -156,7 +156,7 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
 
     /**
      * Run the compilation.
-     * @retrun true on success.
+     * @return true on success.
      * @throws BuildException if the compilation has problems.
      */
     public boolean execute() throws BuildException {

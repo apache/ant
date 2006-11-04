@@ -73,17 +73,18 @@ public class MakeUrl extends Task {
      */
     private boolean validate = true;
 
-    /**
-     * error message
-     */
+    // error message strings
+    /** Missing file */
     public static final String ERROR_MISSING_FILE = "A source file is missing :";
+    /** No property defined */
     public static final String ERROR_NO_PROPERTY = "No property defined";
+    /** No files defined */
     public static final String ERROR_NO_FILES = "No files defined";
 
     /**
      * set the name of a property to fill with the URL
      *
-     * @param property
+     * @param property the name of the property.
      */
     public void setProperty(String property) {
         this.property = property;
@@ -92,7 +93,7 @@ public class MakeUrl extends Task {
     /**
      * the name of a file to be converted into a URL
      *
-     * @param file
+     * @param file the file to be converted.
      */
     public void setFile(File file) {
         this.file = file;
@@ -102,7 +103,7 @@ public class MakeUrl extends Task {
      * a fileset of jar files to include in the URL, each
      * separated by the separator
      *
-     * @param fileset
+     * @param fileset the fileset to be added.
      */
     public void addFileSet(FileSet fileset) {
         filesets.add(fileset);
@@ -111,7 +112,7 @@ public class MakeUrl extends Task {
     /**
      * set the separator for the multi-url option.
      *
-     * @param separator
+     * @param separator the separator to use.
      */
     public void setSeparator(String separator) {
         this.separator = separator;
@@ -121,7 +122,7 @@ public class MakeUrl extends Task {
      * set this flag to trigger validation that every named file exists.
      * Optional: default=true
      *
-     * @param validate
+     * @param validate a <code>boolean</code> value.
      */
     public void setValidate(boolean validate) {
         this.validate = validate;
@@ -131,7 +132,7 @@ public class MakeUrl extends Task {
      * add a path to the URL. All elements in the path
      * will be converted to individual URL entries
      *
-     * @param path
+     * @param path a path value.
      */
     public void addPath(Path path) {
         paths.add(path);

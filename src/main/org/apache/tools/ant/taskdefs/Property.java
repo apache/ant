@@ -334,7 +334,7 @@ public class Property extends Task {
     /**
      * @param userProperty ignored
      * @deprecated since 1.5.x.
-     *             This was never a supported feature and has been 
+     *             This was never a supported feature and has been
      *             deprecated without replacement.
      * @ant.attribute ignore="true"
      */

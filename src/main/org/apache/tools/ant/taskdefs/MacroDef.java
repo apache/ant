@@ -763,9 +763,8 @@ public class MacroDef extends AntlibDefinition  {
         /** {@inheritDoc}. */
         protected boolean equals(Member m) {
             TemplateElement t = (TemplateElement) m;
-            return super.equals(m) &&
-                   optional == t.optional &&
-                   implicit == t.implicit;
+            return super.equals(m)
+                && optional == t.optional && implicit == t.implicit;
         }
 
         /**
