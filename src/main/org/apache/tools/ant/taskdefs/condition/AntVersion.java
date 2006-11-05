@@ -27,31 +27,28 @@ import org.apache.tools.ant.util.DeweyDecimal;
  * @since Ant 1.7
  */
 public class AntVersion implements Condition {
-    
+
     private String atLeast = null;
     private String exactly = null;
-    
+
+    /**
+     * Evalute the condition.
+     * @return true if the condition is true.
+     * @throws BuildException if an error occurs.
+     */
     public boolean eval() throws BuildException {
         validate();
         DeweyDecimal actual = getVersion();
         if (null != atLeast) {
-            if (actual.isGreaterThanOrEqual(new DeweyDecimal(atLeast))) {
-                return true;
-            } else {
-                return false;
-            }
+            return actual.isGreaterThanOrEqual(new DeweyDecimal(atLeast));
         }
         if (null != exactly) {
-            if (actual.isEqual(new DeweyDecimal(exactly))) {
-                return true;
-            } else {
-                return false;
-            }
+            return actual.isEqual(new DeweyDecimal(exactly));
         }
         //default
         return false;
     }
-    
+
     private void validate() throws BuildException {
         if (atLeast != null && exactly != null) {
             throw new BuildException("Only one of atleast or exactly may be set.");
@@ -69,19 +66,19 @@ public class AntVersion implements Condition {
             throw new BuildException("The argument is not a Dewey Decimal eg 1.1.0");
         }
     }
-        
+
     private DeweyDecimal getVersion() {
         Project p = new Project();
         p.init();
         char[] versionString = p.getProperty("ant.version").toCharArray();
         StringBuffer sb = new StringBuffer();
         boolean foundFirstDigit = false;
-        for (int i=0; i<versionString.length; i++) {
+        for (int i = 0; i < versionString.length; i++) {
             if (Character.isDigit(versionString[i])) {
                 sb.append(versionString[i]);
                 foundFirstDigit = true;
             }
-            if  (versionString[i]=='.' && foundFirstDigit) {
+            if (versionString[i] == '.' && foundFirstDigit) {
                 sb.append(versionString[i]);
             }
             if (Character.isLetter(versionString[i]) && foundFirstDigit) {
@@ -90,20 +87,40 @@ public class AntVersion implements Condition {
         }
         return new DeweyDecimal(sb.toString());
     }
-    
+
+    /**
+     * Get the atleast attribute.
+     * @return the atleast attribute.
+     */
     public String getAtLeast() {
         return atLeast;
     }
-    
+
+    /**
+     * Set the atleast attribute.
+     * This is of the form major.minor.point.
+     * For example 1.7.0.
+     * @param atLeast the version to check against.
+     */
     public void setAtLeast(String atLeast) {
         this.atLeast = atLeast;
     }
-    
+
+    /**
+     * Get the exactly attribute.
+     * @return the exactly attribute.
+     */
     public String getExactly() {
         return exactly;
     }
-    
+
+    /**
+     * Set the exactly attribute.
+     * This is of the form major.minor.point.
+     * For example 1.7.0.
+     * @param exactly the version to check against.
+     */
     public void setExactly(String exactly) {
         this.exactly = exactly;
-    }   
+    }
 }

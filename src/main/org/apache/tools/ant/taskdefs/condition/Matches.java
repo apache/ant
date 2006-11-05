@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;

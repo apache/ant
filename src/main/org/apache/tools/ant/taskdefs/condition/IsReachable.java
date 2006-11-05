@@ -53,6 +53,7 @@ import java.net.UnknownHostException;
  */
 public class IsReachable extends ProjectComponent implements Condition {
 
+    private static final int SECOND = 1000; // millis per second
     private String host;
     private String url;
 
@@ -64,24 +65,25 @@ public class IsReachable extends ProjectComponent implements Condition {
     /**
      * Error when no hostname is defined
      */
-    public static final String ERROR_NO_HOSTNAME = "No hostname defined";
+    private static final String ERROR_NO_HOSTNAME = "No hostname defined";
     /**
      * Error when invalid timeout value is defined
      */
-    public static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
+    private static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
     /**
      * Unknown host message is seen.
      */
-    public static final String WARN_UNKNOWN_HOST = "Unknown host: ";
+    private static final String WARN_UNKNOWN_HOST = "Unknown host: ";
     /**
      * Network error message is seen.
      */
-    public static final String ERROR_ON_NETWORK = "network error to ";
-    public static final String ERROR_BOTH_TARGETS = "Both url and host have been specified";
-    public static final String MSG_NO_REACHABLE_TEST
+    private static final String ERROR_ON_NETWORK = "network error to ";
+    private static final String ERROR_BOTH_TARGETS
+        = "Both url and host have been specified";
+    private static final String MSG_NO_REACHABLE_TEST
         = "cannot do a proper reachability test on this Java version";
-    public static final String ERROR_BAD_URL = "Bad URL ";
-    public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
+    private static final String ERROR_BAD_URL = "Bad URL ";
+    private static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
     private static final String METHOD_NAME = "isReachable";
 
     /**
@@ -172,7 +174,7 @@ public class IsReachable extends ProjectComponent implements Condition {
             reachableMethod = InetAddress.class.getMethod(METHOD_NAME,
                     parameterTypes);
             Object[] params = new Object[1];
-            params[0] = new Integer(timeout * 1000);
+            params[0] = new Integer(timeout * SECOND);
             try {
                 reachable = ((Boolean) reachableMethod.invoke(address, params))
                         .booleanValue();

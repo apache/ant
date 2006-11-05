@@ -33,6 +33,7 @@ import org.apache.tools.ant.ProjectComponent;
  * @since Ant 1.5
  */
 public class Http extends ProjectComponent implements Condition {
+    private static final int ERROR_BEGINS = 400;
     private String spec = null;
 
     /**
@@ -43,7 +44,7 @@ public class Http extends ProjectComponent implements Condition {
         spec = url;
     }
 
-    private int errorsBeginAt = 400;
+    private int errorsBeginAt = ERROR_BEGINS;
 
     /**
      * Set the errorsBeginAt attribute
@@ -74,7 +75,7 @@ public class Http extends ProjectComponent implements Condition {
                         Project.MSG_VERBOSE);
                     if (code > 0 && code < errorsBeginAt) {
                         return true;
-                    } 
+                    }
                     return false;
                 }
             } catch (java.io.IOException e) {

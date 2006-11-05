@@ -69,18 +69,34 @@ public class HasMethod extends ProjectComponent implements Condition {
         createClasspath().setRefid(r);
     }
 
+    /**
+     * Set the classname attribute.
+     * @param classname the name of the class to check.
+     */
     public void setClassname(String classname) {
         this.classname = classname;
     }
 
+    /**
+     * Set the name of the method.
+     * @param method the name of the method to check.
+     */
     public void setMethod(String method) {
         this.method = method;
     }
 
+    /**
+     * Set the name of the field.
+     * @param field the name of the field to check.
+     */
     public void setField(String field) {
         this.field = field;
     }
 
+    /**
+     * Set whether to ignore system classes when looking for the class.
+     * @param ignoreSystemClasses a <code>boolean</code> value.
+     */
     public void setIgnoreSystemClasses(boolean ignoreSystemClasses) {
         this.ignoreSystemClasses = ignoreSystemClasses;
     }
@@ -127,15 +143,16 @@ public class HasMethod extends ProjectComponent implements Condition {
     }
 
 
+    /** {@inheritDoc}. */
     public boolean eval() throws BuildException {
-        if(classname==null) {
+        if (classname == null) {
             throw new BuildException("No classname defined");
         }
-        Class clazz=loadClass(classname);
-        if (method!=null) {
+        Class clazz = loadClass(classname);
+        if (method != null) {
             return isMethodFound(clazz);
         }
-        if(field!=null) {
+        if (field != null) {
             return isFieldFound(clazz);
         }
         throw new BuildException("Neither method nor field defined");
@@ -143,9 +160,9 @@ public class HasMethod extends ProjectComponent implements Condition {
 
     private boolean isFieldFound(Class clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        for(int i=0;i<fields.length;i++) {
-            Field fieldEntry=fields[i];
-            if(fieldEntry.getName().equals(field)) {
+        for (int i = 0; i < fields.length; i++) {
+            Field fieldEntry = fields[i];
+            if (fieldEntry.getName().equals(field)) {
                 return true;
             }
         }
@@ -154,9 +171,9 @@ public class HasMethod extends ProjectComponent implements Condition {
 
     private boolean isMethodFound(Class clazz) {
         Method[] methods = clazz.getDeclaredMethods();
-        for(int i=0;i<methods.length;i++) {
-            Method methodEntry =methods[i];
-            if(methodEntry.getName().equals(method)) {
+        for (int i = 0; i < methods.length; i++) {
+            Method methodEntry = methods[i];
+            if (methodEntry.getName().equals(method)) {
                 return true;
             }
         }

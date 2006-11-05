@@ -35,23 +35,23 @@ public class ParserSupports extends ProjectComponent implements Condition {
     private String feature;
     private String property;
     private String value;
-    public static final String ERROR_BOTH_ATTRIBUTES =
+    private static final String ERROR_BOTH_ATTRIBUTES =
             "Property and feature attributes are exclusive";
-    public static final String FEATURE="feature";
-    public static final String PROPERTY = "property";
+    private static final String FEATURE = "feature";
+    private static final String PROPERTY = "property";
 
-    public static final String NOT_RECOGNIZED =
+    private static final String NOT_RECOGNIZED =
             " not recognized: ";
     private static final String NOT_SUPPORTED =
             " not supported: ";
-    public static final String ERROR_NO_ATTRIBUTES = 
+    private static final String ERROR_NO_ATTRIBUTES =
         "Neither feature or property are set";
-    public static final String ERROR_NO_VALUE = 
+    private static final String ERROR_NO_VALUE =
         "A value is needed when testing for property support";
 
     /**
      * Feature to probe for.
-     * @param feature
+     * @param feature the feature to probe for.
      */
     public void setFeature(String feature) {
         this.feature = feature;
@@ -59,7 +59,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
 
     /**
      * Property to probe for
-     * @param property
+     * @param property the property to probe for.
      */
     public void setProperty(String property) {
         this.property = property;
@@ -68,12 +68,13 @@ public class ParserSupports extends ProjectComponent implements Condition {
     /**
      * Optional value to set.
      * Converted to a boolean value when setting a property
-     * @param value
+     * @param value the value to set.
      */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /** {@inheritDoc}. */
     public boolean eval() throws BuildException {
         if (feature != null && property != null) {
             throw new BuildException(ERROR_BOTH_ATTRIBUTES);
@@ -109,14 +110,14 @@ public class ParserSupports extends ProjectComponent implements Condition {
         if (value == null) {
             value = "true";
         }
-        boolean v= Project.toBoolean(value);
+        boolean v = Project.toBoolean(value);
         try {
             reader.setFeature(feature, v);
         } catch (SAXNotRecognizedException e) {
-            log(FEATURE+NOT_RECOGNIZED+feature,Project.MSG_VERBOSE);
+            log(FEATURE + NOT_RECOGNIZED + feature, Project.MSG_VERBOSE);
             return false;
         } catch (SAXNotSupportedException e) {
-            log(FEATURE+NOT_SUPPORTED + feature, Project.MSG_VERBOSE);
+            log(FEATURE + NOT_SUPPORTED + feature, Project.MSG_VERBOSE);
             return false;
         }
         return true;

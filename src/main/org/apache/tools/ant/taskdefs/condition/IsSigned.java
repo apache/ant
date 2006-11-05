@@ -37,11 +37,12 @@ public class IsSigned extends DataType implements Condition {
 
     private static final String SIG_START = "META-INF/";
     private static final String SIG_END = ".SF";
+    private static final int    SHORT_SIG_LIMIT = 8;
 
     private String name;
     private File file;
-    
-   /**
+
+    /**
      * The jarfile that is to be tested for the presence
      * of a signature.
      * @param file jarfile to be tested.
@@ -82,18 +83,18 @@ public class IsSigned extends DataType implements Condition {
                     }
                 }
                 return false;
-            } 
+            }
             boolean shortSig = jarFile.getEntry(SIG_START
                         + name.toUpperCase()
                         + SIG_END) != null;
             boolean longSig = false;
-            if (name.length() > 8) {
-                longSig =
-                        jarFile.getEntry(SIG_START
-                                        + name.substring(0, 8).toUpperCase()
-                                        + SIG_END) != null;
+            if (name.length() > SHORT_SIG_LIMIT) {
+                longSig = jarFile.getEntry(
+                    SIG_START
+                    + name.substring(0, SHORT_SIG_LIMIT).toUpperCase()
+                    + SIG_END) != null;
             }
-            
+
             return shortSig || longSig;
         } finally {
             ZipFile.closeQuietly(jarFile);

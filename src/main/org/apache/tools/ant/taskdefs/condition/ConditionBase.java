@@ -44,7 +44,7 @@ public abstract class ConditionBase extends ProjectComponent
     /**
      * name of the component
      */
-    private String taskName="condition";
+    private String taskName = "condition";
 
     /**
      *
@@ -60,7 +60,7 @@ public abstract class ConditionBase extends ProjectComponent
 
     /**
      * Constructor that takes the name of the task in the task name.
-     * @param taskName
+     * @param taskName the name of the task.
      * @since Ant 1.7
      */
     protected ConditionBase(String taskName) {
@@ -289,6 +289,7 @@ public abstract class ConditionBase extends ProjectComponent
      * be discovered from the org.apache.tools.ant.taskdefs.condition
      * antlib.
      * @param name the condition to create.
+     * @return the dynamic condition if found, null otherwise.
      */
     public Object createDynamicElement(String name) {
         Object cond = ComponentHelper.getComponentHelper(getProject())

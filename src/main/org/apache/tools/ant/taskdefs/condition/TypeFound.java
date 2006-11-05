@@ -68,8 +68,8 @@ public class TypeFound extends ProjectComponent implements Condition {
         }
         //now verify that the class has an implementation
         boolean found = def.getExposedClass(getProject()) != null;
-        if(!found) {
-            String text= helper.diagnoseCreationFailure(componentName,"type");
+        if (!found) {
+            String text = helper.diagnoseCreationFailure(componentName, "type");
             log(text, Project.MSG_VERBOSE);
         }
         return found;

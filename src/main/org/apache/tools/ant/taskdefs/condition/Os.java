@@ -168,6 +168,8 @@ public class Os implements Condition {
     /**
      * Determines if the OS on which Ant is executing matches the type of
      * that set in setFamily.
+     * @return true if the os matches.
+     * @throws BuildException if there is an error.
      * @see Os#setFamily(String)
      */
     public boolean eval() throws BuildException {
