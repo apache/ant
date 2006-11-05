@@ -47,7 +47,7 @@ public class DOMElementWriter {
     private static final String NS = "ns";
 
     /** xml declaration is on by default */
-    private boolean xmlDeclaration=true;
+    private boolean xmlDeclaration = true;
 
     /**
      * XML Namespaces are ignored by default.
@@ -115,7 +115,7 @@ public class DOMElementWriter {
     }
 
     /**
-     * Create an element writer 
+     * Create an element writer
      * XML namespaces will be ignored.
      * @param xmlDeclaration flag to indicate whether the ?xml? declaration
      * should be included.
@@ -126,7 +126,7 @@ public class DOMElementWriter {
     }
 
     /**
-     * Create an element writer 
+     * Create an element writer
      * XML namespaces will be ignored.
      * @param xmlDeclaration flag to indicate whether the ?xml? declaration
      * should be included.
@@ -196,9 +196,9 @@ public class DOMElementWriter {
         if (hasChildren) {
             for (int i = 0; i < children.getLength(); i++) {
                 Node child = children.item(i);
-    
+
                 switch (child.getNodeType()) {
-    
+
                 case Node.ELEMENT_NODE:
                     hasChildElements = true;
                     if (i == 0) {
@@ -206,29 +206,29 @@ public class DOMElementWriter {
                     }
                     write((Element) child, out, indent + 1, indentWith);
                     break;
-    
+
                 case Node.TEXT_NODE:
                     out.write(encode(child.getNodeValue()));
                     break;
-    
+
                 case Node.COMMENT_NODE:
                     out.write("<!--");
                     out.write(encode(child.getNodeValue()));
                     out.write("-->");
                     break;
-    
+
                 case Node.CDATA_SECTION_NODE:
                     out.write("<![CDATA[");
                     out.write(encodedata(((Text) child).getData()));
                     out.write("]]>");
                     break;
-    
+
                 case Node.ENTITY_REFERENCE_NODE:
                     out.write('&');
                     out.write(child.getNodeName());
                     out.write(';');
                     break;
-    
+
                 case Node.PROCESSING_INSTRUCTION_NODE:
                     out.write("<?");
                     out.write(child.getNodeName());

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- */ 
+ */
 
 package org.apache.tools.ant.util.java15;
 
@@ -55,14 +55,14 @@ public class ProxyDiagnostics {
     public ProxyDiagnostics(String destination) {
         this.destination = destination;
         try {
-            this.destURI=new URI(destination);
+            this.destURI = new URI(destination);
         } catch (URISyntaxException e) {
             throw new BuildException(e);
         }
     }
 
     /**
-     * create a proxy diagnostics tool bound to 
+     * create a proxy diagnostics tool bound to
      * {@link #DEFAULT_DESTINATION}
      */
     public ProxyDiagnostics() {
@@ -70,24 +70,24 @@ public class ProxyDiagnostics {
     }
 
     public String toString() {
-        ProxySelector selector=ProxySelector.getDefault();
+        ProxySelector selector = ProxySelector.getDefault();
         List list = selector.select(destURI);
-        StringBuffer result=new StringBuffer();
-        Iterator proxies=list.listIterator();
+        StringBuffer result = new StringBuffer();
+        Iterator proxies = list.listIterator();
         while (proxies.hasNext()) {
             Proxy proxy = (Proxy) proxies.next();
             SocketAddress address = proxy.address();
-            if(address==null) {
+            if (address == null) {
                 result.append("Direct connection\n");
             } else {
                 result.append(proxy.toString());
-                if(address instanceof InetSocketAddress) {
-                    InetSocketAddress ina=(InetSocketAddress) address;
+                if (address instanceof InetSocketAddress) {
+                    InetSocketAddress ina = (InetSocketAddress) address;
                     result.append(' ');
                     result.append(ina.getHostName());
                     result.append(':');
                     result.append(ina.getPort());
-                    if(ina.isUnresolved()) {
+                    if (ina.isUnresolved()) {
                         result.append(" [unresolved]");
                     } else {
                         InetAddress addr = ina.getAddress();
@@ -98,7 +98,6 @@ public class ProxyDiagnostics {
                 }
                 result.append('\n');
             }
-            
         }
         return result.toString();
     }

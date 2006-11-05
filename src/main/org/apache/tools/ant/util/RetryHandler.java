@@ -23,8 +23,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
- * A simple utility class to take a piece of code (that implements 
- * <code>Retryable</code> interface) and executes that with possibility to 
+ * A simple utility class to take a piece of code (that implements
+ * <code>Retryable</code> interface) and executes that with possibility to
  * retry the execution in case of IOException.
  */
 public class RetryHandler {
@@ -34,7 +34,7 @@ public class RetryHandler {
 
     /**
      * Create a new RetryingHandler.
-     * 
+     *
      * @param retriesAllowed how many times to retry
      * @param task the Ant task that is is executed from, used for logging only
      */
@@ -45,7 +45,7 @@ public class RetryHandler {
 
     /**
      * Execute the <code>Retryable</code> code with specified number of retries.
-     * 
+     *
      * @param exe the code to execute
      * @param desc some descriptive text for this piece of code, used for logging
      * @throws IOException if the number of retries has exceeded the allowed limit
@@ -59,8 +59,8 @@ public class RetryHandler {
             } catch (IOException e) {
                 retries++;
                 if (retries > this.retriesAllowed && this.retriesAllowed > -1) {
-                    task.log("try #" + retries + ": IO error (" 
-                            + desc + "), number of maximum retries reached (" 
+                    task.log("try #" + retries + ": IO error ("
+                            + desc + "), number of maximum retries reached ("
                             + this.retriesAllowed + "), giving up", Project.MSG_WARN);
                     throw e;
                 } else {

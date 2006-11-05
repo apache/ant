@@ -32,7 +32,7 @@ public class DeweyDecimal {
 
     /** Array of components that make up DeweyDecimal */
     private int[] components;
-    
+
     /**
      * Construct a DeweyDecimal from an array of integer components.
      *

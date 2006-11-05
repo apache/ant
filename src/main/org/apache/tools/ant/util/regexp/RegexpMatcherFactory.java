@@ -114,8 +114,7 @@ public class RegexpMatcherFactory {
      * @exception BuildException if an error occurs
      */
     protected RegexpMatcher createInstance(String className)
-        throws BuildException 
-    {
+        throws BuildException {
         return (RegexpMatcher) ClasspathUtils.newInstance(className,
                 RegexpMatcherFactory.class.getClassLoader(), RegexpMatcher.class);
     }

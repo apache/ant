@@ -21,9 +21,9 @@ import java.io.IOException;
 
 
 /**
- * Simple interface for executing a piece of code. Used for writing anonymous inner 
+ * Simple interface for executing a piece of code. Used for writing anonymous inner
  * classes in FTP task for retry-on-IOException behaviour.
- * 
+ *
  * @see RetryHandler
  */
 public interface Retryable {

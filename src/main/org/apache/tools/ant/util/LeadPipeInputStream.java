@@ -106,7 +106,7 @@ public class LeadPipeInputStream extends PipedInputStream {
                     int outlen = buffer.length - out;
                     System.arraycopy(buffer, out, newBuffer, 0, outlen);
                     System.arraycopy(buffer, 0, newBuffer, outlen, in);
-                    in+= outlen;
+                    in += outlen;
                     out = 0;
                 }
             }

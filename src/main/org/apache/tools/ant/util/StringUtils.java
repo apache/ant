@@ -115,14 +115,17 @@ public final class StringUtils {
         if (suffix.length() > buffer.length()) {
             return false;
         }
-        // this loop is done on purpose to avoid memory allocation performance problems on various JDKs
-        // StringBuffer.lastIndexOf() was introduced in jdk 1.4 and implementation is ok though does allocation/copying
-        // StringBuffer.toString().endsWith() does massive memory allocation/copying on JDK 1.5
+        // this loop is done on purpose to avoid memory allocation performance
+        // problems on various JDKs
+        // StringBuffer.lastIndexOf() was introduced in jdk 1.4 and
+        // implementation is ok though does allocation/copying
+        // StringBuffer.toString().endsWith() does massive memory
+        // allocation/copying on JDK 1.5
         // See http://issues.apache.org/bugzilla/show_bug.cgi?id=37169
         int endIndex = suffix.length() - 1;
         int bufferIndex = buffer.length() - 1;
-        while ( endIndex >= 0 ) {
-            if ( buffer.charAt(bufferIndex) != suffix.charAt(endIndex) ) {
+        while (endIndex >= 0) {
+            if (buffer.charAt(bufferIndex) != suffix.charAt(endIndex)) {
                 return false;
             }
             bufferIndex--;

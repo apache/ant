@@ -37,7 +37,7 @@ public class ProxySetup {
      * Java1.5 property that enables use of system proxies.
      * @value
      */
-    public static final String USE_SYSTEM_PROXIES="java.net.useSystemProxies";
+    public static final String USE_SYSTEM_PROXIES = "java.net.useSystemProxies";
     public static final String HTTP_PROXY_HOST = "http.proxyHost";
     public static final String HTTP_PROXY_PORT = "http.proxyPort";
     public static final String HTTPS_PROXY_HOST = "https.proxyHost";
@@ -83,19 +83,19 @@ public class ProxySetup {
      * is set, use that instead. Else set to "true".
      */
     public void enableProxies() {
-        if(!(getSystemProxySetting() != null)) {
-            String proxies =owner.getProperty(USE_SYSTEM_PROXIES);
-            if(proxies ==null || Project.toBoolean(proxies)) {
-                proxies ="true";
+        if (!(getSystemProxySetting() != null)) {
+            String proxies = owner.getProperty(USE_SYSTEM_PROXIES);
+            if (proxies == null || Project.toBoolean(proxies)) {
+                proxies = "true";
             }
             String message = "setting " + USE_SYSTEM_PROXIES + " to " + proxies;
             try {
-                owner.log(message,Project.MSG_DEBUG);
-                System.setProperty(USE_SYSTEM_PROXIES,proxies);
+                owner.log(message, Project.MSG_DEBUG);
+                System.setProperty(USE_SYSTEM_PROXIES, proxies);
             } catch (SecurityException e) {
                 //log security exceptions and continue; it aint that
                 //important and may be quite common running Ant embedded.
-                owner.log("Security Exception when "+message);
+                owner.log("Security Exception when " + message);
             }
         }
     }

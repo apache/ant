@@ -1455,7 +1455,7 @@ public class FileUtils {
         Object[] tokens = StringUtils.split(normalizedPath, '/').toArray();
         String[] rv = new String[tokens.length];
         System.arraycopy(tokens, 0, rv, 0, tokens.length);
-        
+
         return rv;
     }
 

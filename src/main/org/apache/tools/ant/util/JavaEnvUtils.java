@@ -132,7 +132,7 @@ public final class JavaEnvUtils {
 
     /**
      * Returns the version of Java this class is running under.
-     * This number can be used for comparisions; it will always be 
+     * This number can be used for comparisions; it will always be
      * @return the version of Java as a number 10x the major/minor,
      * e.g Java1.5 has a value of 15
      */
@@ -292,11 +292,11 @@ public final class JavaEnvUtils {
         switch(javaVersionNumber) {
             case 16:
             case 15:
-                //In Java1.5, the apache stuff moved. 
+                //In Java1.5, the apache stuff moved.
                 jrePackages.addElement("com.sun.org.apache");
-                //fall through. 
+                //fall through.
             case 14:
-                if(javaVersionNumber == 14) {
+                if (javaVersionNumber == 14) {
                     jrePackages.addElement("org.apache.crimson");
                     jrePackages.addElement("org.apache.xalan");
                     jrePackages.addElement("org.apache.xml");
@@ -345,7 +345,7 @@ public final class JavaEnvUtils {
                 tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
             case 14:
                 tests.addElement("sun.audio.AudioPlayer");
-                if(javaVersionNumber == 14) {
+                if (javaVersionNumber == 14) {
                     tests.addElement("org.apache.crimson.parser.ContentModel");
                     tests.addElement("org.apache.xalan.processor.ProcessorImport");
                     tests.addElement("org.apache.xml.utils.URI");

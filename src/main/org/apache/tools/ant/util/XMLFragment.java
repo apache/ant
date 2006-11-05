@@ -87,7 +87,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
     }
 
     /**
-     * Add text to a node. 
+     * Add text to a node.
      * @param n node
      * @param s value
      */

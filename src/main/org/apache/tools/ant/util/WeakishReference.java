@@ -71,7 +71,7 @@ public class WeakishReference  {
 
     /**
      * This was a hard reference for Java 1.1. Since Ant1.7,
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             Hopefully nobody is using this.
      */
     public static class HardReference extends WeakishReference {

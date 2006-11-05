@@ -30,7 +30,7 @@ import java.lang.ref.WeakReference;
  * Note that in ant1.7 is parent was changed to extend HardReference.
  * This is because the latter has access to the (package scoped)
  * WeakishReference(Object) constructor, and both that and this are thin
- * facades on the underlying no-longer-abstract base class. 
+ * facades on the underlying no-longer-abstract base class.
  */
 public class WeakishReference12 extends WeakishReference.HardReference  {
 

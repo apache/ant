@@ -41,7 +41,7 @@ public class XmlConstants {
             "http://java.sun.com/xml/jaxp/properties/schemaSource";
     public static final String URI_XSD =
             "http://www.w3.org/2001/XMLSchema";
-    public static final String FEATURE_EXTERNAL_ENTITIES = 
+    public static final String FEATURE_EXTERNAL_ENTITIES =
             "http://xml.org/sax/features/external-general-entities";
     public static final String FEATURE_DISALLOW_DTD =
             "http://apache.org/xml/features/disallow-doctype-decl";
