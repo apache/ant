@@ -1,5 +1,17 @@
-Changes from Ant 1.7.0Beta3 to current SVN version
+Changes from Ant 1.7.0RC1 to current SVN version
 ==================================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+Fixed bugs:
+-----------
+  
+Other changes:
+--------------
+
+Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
+===========================================
 
 Changes that could break older environments:
 -------------------------------------------
