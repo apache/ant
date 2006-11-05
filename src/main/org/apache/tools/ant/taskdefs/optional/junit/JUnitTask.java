@@ -948,8 +948,9 @@ public class JUnitTask extends Task {
                                       + String.valueOf(showOutput));
         cmd.createArgument().setValue(Constants.OUTPUT_TO_FORMATTERS
                                       + String.valueOf(outputToFormatters));
-        
-        cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS+"true"); // #31885
+
+        cmd.createArgument().setValue(
+            Constants.LOGTESTLISTENEREVENTS + "true"); // #31885
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);

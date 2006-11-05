@@ -251,8 +251,8 @@ public abstract class AbstractSshMessage {
 
         public boolean count(long len) {
             totalLength += len;
-            percentTransmitted = trackProgress(initFileSize, 
-                                               totalLength, 
+            percentTransmitted = trackProgress(initFileSize,
+                                               totalLength,
                                                percentTransmitted);
             return true;
         }
@@ -261,7 +261,7 @@ public abstract class AbstractSshMessage {
         }
 
         public long getTotalLength() {
-            return totalLength; 
+            return totalLength;
         }
     }
 }

@@ -353,7 +353,7 @@ public class Javah extends Task {
             facade.setImplementation(JavahAdapterFactory.getDefault());
         } else {
             facade.setImplementation(impl);
-        }        
+        }
     }
 
     /**
@@ -414,7 +414,7 @@ public class Javah extends Task {
             classpath = classpath.concatSystemClasspath("ignore");
         }
 
-        JavahAdapter ad = 
+        JavahAdapter ad =
             JavahAdapterFactory.getAdapter(facade.getImplementation(),
                                            this);
         if (!ad.compile(this)) {

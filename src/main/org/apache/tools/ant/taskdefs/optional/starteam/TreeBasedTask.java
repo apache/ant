@@ -462,7 +462,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     protected boolean isUsingViewLabel() {
         return null != this.labelInUse && this.labelInUse.isViewLabel();
     }
-    
+
     /**
      *  returns true if a label has been specified and it is a revision label.
      *

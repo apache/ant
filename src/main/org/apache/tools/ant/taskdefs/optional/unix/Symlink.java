@@ -263,7 +263,7 @@ public class Symlink extends DispatchTask {
                 File dir = (File) dirs.next();
                 Vector linksInDir = (Vector) byDir.get(dir);
                 Properties linksToStore = new Properties();
-    
+
                 // fill up a Properties object with link and resource names:
                 for (Iterator dlnk = linksInDir.iterator(); dlnk.hasNext();) {
                     File lnk = (File) dlnk.next();

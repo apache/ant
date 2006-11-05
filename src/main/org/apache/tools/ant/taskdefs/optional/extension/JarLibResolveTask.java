@@ -156,7 +156,7 @@ public class JarLibResolveTask extends Task {
             final String message = "Property Already set to: " + candidate;
             if (failOnError) {
                 throw new BuildException(message);
-            } 
+            }
             getProject().log(message, Project.MSG_ERR);
             return;
         }

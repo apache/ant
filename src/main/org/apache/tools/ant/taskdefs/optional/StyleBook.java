@@ -30,7 +30,7 @@ import org.apache.tools.ant.taskdefs.Java;
  * and options are available. Do not set any apart from the <tt>classpath</tt>
  * as they are not guaranteed to be there in future.
  * @todo stop extending from Java.
- * @deprecated since 1.7. 
+ * @deprecated since 1.7.
  *             This task is considered unsupported by the Ant developers
  */
 public class StyleBook extends Java {
@@ -63,7 +63,7 @@ public class StyleBook extends Java {
     /**
      * Set the directory that contains the stylebook skin;
      * required.
-     * @param skinDirectory the location of the stylebook skin 
+     * @param skinDirectory the location of the stylebook skin
      */
     public void setSkinDirectory(final File skinDirectory) {
         m_skinDirectory = skinDirectory;

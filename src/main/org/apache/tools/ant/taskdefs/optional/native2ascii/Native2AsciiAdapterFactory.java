@@ -79,10 +79,9 @@ public class Native2AsciiAdapterFactory {
      * isn't an instance of Native2AsciiAdapter.
      */
     private static Native2AsciiAdapter resolveClassName(String className)
-        throws BuildException 
-    {
+        throws BuildException {
         return (Native2AsciiAdapter) ClasspathUtils.newInstance(className,
-            Native2AsciiAdapterFactory.class.getClassLoader(), 
+            Native2AsciiAdapterFactory.class.getClassLoader(),
             Native2AsciiAdapter.class);
     }
 }

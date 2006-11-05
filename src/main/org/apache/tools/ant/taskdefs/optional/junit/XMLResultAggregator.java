@@ -245,9 +245,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             File file = files[i];
             try {
                 log("Parsing file: '" + file + "'", Project.MSG_VERBOSE);
-                if(file.length()>0) {
+                if (file.length() > 0) {
                     Document testsuiteDoc
-                            = builder.parse(FileUtils.getFileUtils().toURI(files[i].getAbsolutePath()));
+                            = builder.parse(
+                                FileUtils.getFileUtils().toURI(files[i].getAbsolutePath()));
                     Element elem = testsuiteDoc.getDocumentElement();
                     // make sure that this is REALLY a testsuite.
                     if (TESTSUITE.equals(elem.getNodeName())) {

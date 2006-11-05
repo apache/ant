@@ -210,7 +210,7 @@ public class ReplaceRegExp extends Task {
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
      * @param byline the byline attribute as a string
-     * @deprecated since 1.6.x. 
+     * @deprecated since 1.6.x.
      *             Use setByLine(boolean).
      */
     public void setByLine(String byline) {

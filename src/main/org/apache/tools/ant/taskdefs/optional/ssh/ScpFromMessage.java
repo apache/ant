@@ -216,7 +216,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         try {
             while (true) {
                 length = in.read(buf, 0,
-                                 (BUFFER_SIZE < filesize) ? BUFFER_SIZE 
+                                 (BUFFER_SIZE < filesize) ? BUFFER_SIZE
                                                           : (int) filesize);
                 if (length < 0) {
                     throw new EOFException("Unexpected end of stream.");

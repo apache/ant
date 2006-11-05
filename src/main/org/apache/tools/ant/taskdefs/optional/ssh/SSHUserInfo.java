@@ -189,7 +189,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
     public void showMessage(String message) {
         //log(message, Project.MSG_DEBUG);
     }
-    
+
     public String[] promptKeyboardInteractive(String destination,
                                               String name,
                                               String instruction,
@@ -198,8 +198,8 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         if (prompt.length != 1 || echo[0] != false || this.password == null) {
             return null;
         }
-        String[] response=new String[1];
-        response[0]=this.password;
+        String[] response = new String[1];
+        response[0] = this.password;
         return response;
     }
 

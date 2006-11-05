@@ -39,9 +39,9 @@ import org.apache.tools.ant.util.StringUtils;
  *
  */
 public final class Specification {
-    
+
     private static final String MISSING = "Missing ";
-    
+
     /**
      * Manifest Attribute Name object for SPECIFICATION_TITLE.
      */
@@ -325,7 +325,7 @@ public final class Specification {
     public String[] getSections() {
         if (null == sections) {
             return null;
-        } 
+        }
         final String[] newSections = new String[ sections.length ];
         System.arraycopy(sections, 0, newSections, 0, sections.length);
         return newSections;
@@ -526,10 +526,10 @@ public final class Specification {
             return specification;
         }
         sectionsToAdd.addAll(Arrays.asList(specification.getSections()));
-        
+
         final String[] sections =
             (String[]) sectionsToAdd.toArray(new String[sectionsToAdd.size()]);
-        
+
         return new Specification(specification.getSpecificationTitle(),
                 specification.getSpecificationVersion().toString(),
                 specification.getSpecificationVendor(),

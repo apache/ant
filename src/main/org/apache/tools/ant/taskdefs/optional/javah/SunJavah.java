@@ -54,8 +54,8 @@ public class SunJavah implements JavahAdapter {
                 c = Class.forName("com.sun.tools.javah.Main");
             }
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Can't load javah", ex, 
-                                     javah.getLocation());
+            throw new BuildException(
+                "Can't load javah", ex, javah.getLocation());
         }
         cmd.setExecutable(c.getName());
         ej.setJavaCommand(cmd);
@@ -94,8 +94,8 @@ public class SunJavah implements JavahAdapter {
             cmd.createArgument().setValue("-force");
         }
         if (javah.getStubs() && !javah.getOld()) {
-            throw new BuildException("stubs only available in old mode.", 
-                                     javah.getLocation());
+            throw new BuildException(
+                "stubs only available in old mode.", javah.getLocation());
         }
 
         if (javah.getStubs()) {

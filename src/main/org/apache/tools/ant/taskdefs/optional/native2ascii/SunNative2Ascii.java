@@ -54,7 +54,7 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
                                          + "sun.tools.native2ascii.Main");
             }
             Object o = n2aMain.newInstance();
-            return ((Boolean) convert.invoke(o, 
+            return ((Boolean) convert.invoke(o,
                                              new Object[] {cmd.getArguments()})
                     ).booleanValue();
         } catch (BuildException ex) {

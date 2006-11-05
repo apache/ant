@@ -183,7 +183,7 @@ public class Rpm extends Task {
             log("Building the RPM based on the " + specFile + " file");
             int returncode = exe.execute();
             if (Execute.isFailure(returncode)) {
-                String msg = "'" + toExecute.getExecutable() 
+                String msg = "'" + toExecute.getExecutable()
                     + "' failed with exit code " + returncode;
                 if (failOnError) {
                     throw new BuildException(msg);
@@ -279,8 +279,8 @@ public class Rpm extends Task {
     }
 
     /**
-     * If <code>true</code>, stop the build process when the rpmbuild command 
-     * exits with an error status. 
+     * If <code>true</code>, stop the build process when the rpmbuild command
+     * exits with an error status.
      * @param value <code>true</code> if it should halt, otherwise
      * <code>false</code>. The default is <code>false</code>.
      *
@@ -291,7 +291,7 @@ public class Rpm extends Task {
     }
 
     /**
-     * If true, output from the RPM build command will only be logged to DEBUG. 
+     * If true, output from the RPM build command will only be logged to DEBUG.
      * @param value <code>false</code> if output should be logged, otherwise
      * <code>true</code>. The default is <code>false</code>.
      *

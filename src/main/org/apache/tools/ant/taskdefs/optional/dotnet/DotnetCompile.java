@@ -914,8 +914,12 @@ public abstract class DotnetCompile
         while (files.hasMoreElements()) {
             File file = (File) files.nextElement();
             if (isFileManagedBinary(file)) {
-                if (isWindows) command.addArgument('"'+REFERENCE_OPTION+file.toString()+'"');
-                else command.addArgument(REFERENCE_OPTION+file.toString());
+                if (isWindows) {
+                    command.addArgument(
+                    '"' + REFERENCE_OPTION + file.toString() + '"');
+                } else {
+                    command.addArgument(REFERENCE_OPTION + file.toString());
+                }
             } else {
                 log("ignoring " + file + " as it is not a managed executable",
                         Project.MSG_VERBOSE);

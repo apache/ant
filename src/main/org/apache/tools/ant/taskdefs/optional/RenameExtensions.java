@@ -39,7 +39,7 @@ import org.apache.tools.ant.types.Mapper;
  *
  * @version 1.2
  *
- * @deprecated since 1.5.x. 
+ * @deprecated since 1.5.x.
  *             Use &lt;move&gt; instead
  */
 public class RenameExtensions extends MatchingTask {

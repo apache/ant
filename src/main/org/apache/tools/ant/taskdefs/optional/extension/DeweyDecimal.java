@@ -25,11 +25,11 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  * "1.2.3.4.5.6.7".  This allows an extensible number to be used to
  * represent major, minor, micro, etc versions.  The version number
  * must begin with a number.
- * 
+ *
  * Original Implementation moved to org.apache.tools.ant.util.DeweyDecimal
  */
 public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
-    
+
     /**
      * Construct a DeweyDecimal from an array of integer components.
      *

@@ -93,7 +93,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
         }
 
         public String toString() {
-            return test.getName()+":"+testCase;
+            return test.getName() + ":" + testCase;
         }
     }
 }

@@ -62,7 +62,7 @@ public class SplashTask extends Task {
      * flag to enable proxy settings; optional, deprecated : consider
      * using &lt;setproxy&gt; instead
      * @param useProxy if ture, enable proxy settings
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.SetProxy
      */
     public void setUseproxy(boolean useProxy) {

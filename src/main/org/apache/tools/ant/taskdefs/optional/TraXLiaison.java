@@ -337,7 +337,8 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
      * Sets the paramters for the transformer.
      */
     private void setTransformationParameters() {
-        for (final Enumeration enumeration = params.keys(); enumeration.hasMoreElements(); ) {
+        for (final Enumeration enumeration = params.keys();
+             enumeration.hasMoreElements();) {
             final String name = (String) enumeration.nextElement();
             final String value = (String) params.get(name);
             transformer.setParameter(name, value);

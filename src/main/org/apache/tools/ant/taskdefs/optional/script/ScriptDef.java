@@ -296,11 +296,11 @@ public class ScriptDef extends DefBase {
      *
      * @param attributes collection of attributes
      * @param elements a list of nested element values.
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             Use executeScript(attribute, elements, instance) instead.
      */
     public void executeScript(Map attributes, Map elements) {
-        executeScript(attributes, elements,null);
+        executeScript(attributes, elements, null);
     }
 
     /**
@@ -316,7 +316,7 @@ public class ScriptDef extends DefBase {
         runner.addBean("attributes", attributes);
         runner.addBean("elements", elements);
         runner.addBean("project", getProject());
-        if(instance!=null) {
+        if (instance != null) {
             runner.addBean("self", instance);
         }
         runner.executeScript("scriptdef_" + name);

@@ -39,7 +39,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
 
     /** Attributes */
     private Map attributes = new HashMap();
-    
+
     private String text;
 
     /**
@@ -105,7 +105,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * @since ant1.7
      */
     public void addText(String text) {
-        this.text=getProject().replaceProperties(text);
+        this.text = getProject().replaceProperties(text);
     }
 
     /**

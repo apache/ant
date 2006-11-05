@@ -47,7 +47,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
         addFiles(cmd, args, srcFile, destFile);
         return run(cmd, args);
     }
-    
+
     /**
      * Sets up the initial command line.
      *

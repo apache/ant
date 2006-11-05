@@ -188,7 +188,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents) {
-        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, 
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput,
              logTestListenerEvents, null);
     }
 
@@ -207,7 +207,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, ClassLoader loader) {
-        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, 
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput,
              false, loader);
     }
 
@@ -253,12 +253,14 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     System.setOut(
                         new PrintStream(
                             new OutputStream() {
-                                public void write(int b) {}
+                                public void write(int b) {
+                                }
                             }));
                     System.setErr(
                         new PrintStream(
                             new OutputStream() {
-                                public void write(int b) {}
+                                public void write(int b) {
+                                }
                             }));
                 }
             } else {
@@ -369,7 +371,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             long start = System.currentTimeMillis();
 
             fireStartTestSuite();
-            startTestSuiteSuccess = true;        
+            startTestSuiteSuccess = true;
             if (exception != null) { // had an exception constructing suite
                 for (int i = 0; i < formatters.size(); i++) {
                     ((TestListener) formatters.elementAt(i))
@@ -900,7 +902,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // We would prefer to show "failure" for things that logically are.
                     try {
                         String msg = t.getMessage();
-                        AssertionFailedError failure = msg != null 
+                        AssertionFailedError failure = msg != null
                             ? new AssertionFailedError(msg) : new AssertionFailedError();
                         // To compile on pre-JDK 4 (even though this should always succeed):
                         Method initCause = Throwable.class.getMethod("initCause", new Class[] {Throwable.class});

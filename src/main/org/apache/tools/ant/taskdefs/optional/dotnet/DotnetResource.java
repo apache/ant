@@ -68,7 +68,7 @@ public class DotnetResource {
 
     /**
      * embed the resource in the assembly (default, true) or just link to it.
-     * 
+     *
      * @param embed
      */
     public void setEmbed(boolean embed) {
@@ -81,7 +81,7 @@ public class DotnetResource {
 
     /**
      * name the resource
-     * 
+     *
      * @param file
      */
     public void setFile(File file) {
@@ -94,7 +94,7 @@ public class DotnetResource {
 
     /**
      * VB and J# only: is a resource public or not?
-     * 
+     *
      * @param aPublic
      */
     public void setPublic(Boolean aPublic) {
@@ -107,7 +107,7 @@ public class DotnetResource {
 
     /**
      * should the resource have a name?
-     * 
+     *
      * @param name
      */
     public void setName(String name) {
@@ -116,7 +116,7 @@ public class DotnetResource {
 
     /**
      * Filesets root namespace. The value always ends with '.' .
-     * 
+     *
      * @return String namespace name
      */
     public String getNamespace() {
@@ -125,7 +125,7 @@ public class DotnetResource {
 
     /**
      * Sets filesets root namespace.
-     * 
+     *
      * @param namespace
      *            String root namespace
      */
@@ -206,7 +206,7 @@ public class DotnetResource {
 
     /**
      * Adds a resource file set.
-     * 
+     *
      * @param fileset
      *            FileSet
      */
@@ -216,7 +216,7 @@ public class DotnetResource {
 
     /**
      * Checks that <resource> node has embedded <filesets>
-     * 
+     *
      * @return boolean
      */
     public boolean hasFilesets() {

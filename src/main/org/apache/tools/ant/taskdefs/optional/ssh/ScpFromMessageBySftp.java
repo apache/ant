@@ -127,8 +127,8 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                 if (name.equals(".") || name.equals("..")) {
                     continue;
                 }
-                getDir(channel, 
-                       channel.pwd() + "/" + name + "/", 
+                getDir(channel,
+                       channel.pwd() + "/" + name + "/",
                        new File(localFile, le.getFilename()));
             } else{
                 getFile(channel, le, localFile);
@@ -137,7 +137,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         channel.cd("..");
     }
 
-    private void getFile(ChannelSftp channel, 
+    private void getFile(ChannelSftp channel,
                          ChannelSftp.LsEntry le,
                          File localFile) throws IOException, SftpException {
         String remoteFile = le.getFilename();

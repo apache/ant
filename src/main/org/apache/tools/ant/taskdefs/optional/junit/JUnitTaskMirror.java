@@ -34,16 +34,15 @@ import org.apache.tools.ant.types.Permissions;
  * - JUnitTestRunner
  * Cf.  JUnitTask.SplitLoader#isSplit(String)
  * Public only to permit access from classes in this package; do not use directly.
- * 
+ *
  * @since 1.7
  * @see "bug #38799"
  */
 public interface JUnitTaskMirror {
-    
+
     void addVmExit(JUnitTest test, JUnitResultFormatterMirror formatter,
             OutputStream out, String message, String testCase);
-    
-    
+
     JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, boolean haltOnError,
             boolean filterTrace, boolean haltOnFailure, boolean showOutput,
             boolean logTestListenerEvents, AntClassLoader classLoader);
@@ -77,7 +76,7 @@ public interface JUnitTaskMirror {
          * No problems with this test.
          */
         int SUCCESS = 0;
-    
+
         /**
          * Some tests failed.
          */
@@ -89,23 +88,22 @@ public interface JUnitTaskMirror {
         int ERRORS = 2;
 
         void setPermissions(Permissions perm);
-    
+
         void run();
 
         void addFormatter(JUnitResultFormatterMirror formatter);
-    
+
         int getRetCode();
-    
+
         void handleErrorFlush(String output);
-    
+
         void handleErrorOutput(String output);
-    
+
         void handleOutput(String output);
-    
+
         int handleInput(byte[] buffer, int offset, int length) throws IOException;
-    
+
         void handleFlush(String output);
 
     }
-    
 }

@@ -185,7 +185,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         try{
             channel.stat(dir);
         }
-        catch(SftpException e){ 
+        catch (SftpException e) {
             // dir does not exist.
             if (e.id==ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 channel.mkdir(dir);

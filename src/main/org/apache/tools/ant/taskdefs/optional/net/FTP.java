@@ -901,7 +901,7 @@ public class FTP
             }
 
             public String toString() {
-                return "AntFtpFile: "+curpwd+"%"+ftpFile;
+                return "AntFtpFile: " + curpwd + "%" + ftpFile;
             }
         }
         /**
@@ -1058,10 +1058,10 @@ public class FTP
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * Sets the login account to use on the specified server.
-     * 
+     *
      * @param pAccount the account name on remote system
      * @since Ant 1.7
      */
@@ -1215,7 +1215,7 @@ public class FTP
      * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
      * "mkdir", "chmod", "list", and "site".
      *
-     * @deprecated since 1.5.x. 
+     * @deprecated since 1.5.x.
      *             setAction(String) is deprecated and is replaced with
      *      setAction(FTP.Action) to make Ant's Introspection mechanism do the
      *      work and also to encapsulate operations on the type in its own
@@ -2307,7 +2307,7 @@ public class FTP
                     public void execute() throws IOException {
                         doSiteCommand(lftp, FTP.this.initialSiteCommand);
                     }
-                }, "initial site command: "+ this.initialSiteCommand);
+                }, "initial site command: " + this.initialSiteCommand);
             }
 
 
@@ -2362,7 +2362,7 @@ public class FTP
             }
 
         } catch (IOException ex) {
-            throw new BuildException("error during FTP transfer: " + ex,ex);
+            throw new BuildException("error during FTP transfer: " + ex, ex);
         } finally {
             if (ftp != null && ftp.isConnected()) {
                 try {

@@ -23,7 +23,7 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
 /**
  * A task to send SMTP email; Use <tt>mail</tt> instead
  *
- * @deprecated since 1.6.x. 
+ * @deprecated since 1.6.x.
  *             Use {@link EmailTask} instead.
  *
  * @since Ant1.4
