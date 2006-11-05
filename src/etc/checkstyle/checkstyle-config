@@ -104,6 +104,13 @@
     </module>
     <module name="TodoComment"/>
     <module name="UpperEll"/>
+    <!-- allow comment suppression of checks -->
+    <module name="FileContentsHolder"/>
   </module>
   <!-- <module name="au.com.redhillconsulting.simian.SimianCheck"/> -->
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="CheckStyle\:([\w\|]+) *OFF"/>
+    <property name="onCommentFormat" value="CheckStyle\:([\w\|]+) *ON"/>
+    <property name="checkFormat" value="$1"/>
+  </module>
 </module>
