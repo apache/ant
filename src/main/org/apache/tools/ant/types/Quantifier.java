@@ -55,7 +55,7 @@ public class Quantifier extends EnumeratedAttribute {
     };
 
     private static final Predicate ANY_PRED = new Predicate() {
-        boolean eval(int t, int f) { return t > 0 ; }
+        boolean eval(int t, int f) { return t > 0; }
     };
 
     private static final Predicate ONE_PRED = new Predicate() {

@@ -69,7 +69,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
 
     /**
      * Initialize the script runner. Calls this before running the system
-     */ 
+     */
     protected void initScriptRunner() {
         getRunner().bindToComponent(this);
     }

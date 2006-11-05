@@ -201,7 +201,7 @@ public class CommandlineJava implements Cloneable {
         public void addSysproperties(SysProperties ps) {
             variables.addAll(ps.variables);
             propertySets.addAll(ps.propertySets);
-        }        
+        }
 
         /**
          * Merge all property sets into a single Properties object.
@@ -509,8 +509,8 @@ public class CommandlineJava implements Cloneable {
      * operation, as it has to evaluate the size of many components.
      * @return the total number of arguments in the java command line.
      * @see #getCommandline()
-     * @deprecated since 1.7. 
-     *             Please dont use this, it effectively creates the 
+     * @deprecated since 1.7.
+     *             Please dont use this, it effectively creates the
      *             entire command.
      */
     public int size() {

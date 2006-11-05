@@ -110,7 +110,7 @@ public class PropertyResource extends Resource {
         }
         return String.valueOf(getValue());
     }
-    
+
     /**
      * Get an InputStream for the Resource.
      * @return an InputStream containing this Resource's content.

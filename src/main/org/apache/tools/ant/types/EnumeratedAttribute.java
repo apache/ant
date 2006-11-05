@@ -54,7 +54,7 @@ public abstract class EnumeratedAttribute {
     }
 
     /**
-     * Factory method for instantiating EAs via API in a more 
+     * Factory method for instantiating EAs via API in a more
      * developer friendly way.
      * @param clazz             Class, extending EA, which to instantiate
      * @param value             The value to set on that EA
@@ -65,14 +65,14 @@ public abstract class EnumeratedAttribute {
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=14831</a>
      */
     public static EnumeratedAttribute getInstance(
-    		Class/*<? extends EnumeratedAttribute>*/ clazz, 
+    		Class/*<? extends EnumeratedAttribute>*/ clazz,
     		String value) throws BuildException {
 		if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
 	    	throw new BuildException("You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
 	    }
 		EnumeratedAttribute ea = null;
 	    try {
-	        ea = (EnumeratedAttribute)clazz.newInstance();
+	        ea = (EnumeratedAttribute) clazz.newInstance();
 	    } catch (Exception e) {
 	        throw new BuildException(e);
 	    }

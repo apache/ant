@@ -255,8 +255,8 @@ public class Resource extends DataType
             return super.clone();
         } catch (CloneNotSupportedException e) {
             throw new UnsupportedOperationException(
-                    "CloneNotSupportedException for a Resource caught. "+
-                    "Derived classes must support cloning.");
+                    "CloneNotSupportedException for a Resource caught. "
+                    + "Derived classes must support cloning.");
         }
     }
 

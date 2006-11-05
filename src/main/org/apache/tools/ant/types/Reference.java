@@ -32,7 +32,7 @@ public class Reference {
 
     /**
      * Create a reference.
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             Please use {@link Reference#Reference(Project,String)}
      *             instead.
      */
@@ -42,7 +42,7 @@ public class Reference {
     /**
      * Create a reference to a named ID.
      * @param id the name of this reference
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             Please use {@link Reference#Reference(Project,String)}
      *             instead.
      */

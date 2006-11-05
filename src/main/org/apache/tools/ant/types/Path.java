@@ -112,7 +112,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         public Iterator iterator() {
             return new FileResourceIterator(null, parts);
         }
-    
+
         public boolean isFilesystemOnly() {
             return true;
         }

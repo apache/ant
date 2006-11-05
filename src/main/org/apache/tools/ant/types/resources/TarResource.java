@@ -86,7 +86,7 @@ public class TarResource extends ArchiveResource {
                 return i;
             }
         }
-        
+
         FileUtils.close(i);
         throw new BuildException("no entry " + getName() + " in "
                                  + getArchive());

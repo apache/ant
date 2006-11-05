@@ -32,7 +32,7 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * ANT Jar-Task SPI extension
- * 
+ *
  * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
  * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
@@ -62,7 +62,7 @@ public class Service extends ProjectComponent {
     /**
      * @return the service type.
      */
-    public String getType(){
+    public String getType() {
         return type;
     }
 
@@ -72,7 +72,7 @@ public class Service extends ProjectComponent {
      *             an interface or a class (normally
      *             abstract).
      */
-    public void setType(String type){
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -87,11 +87,11 @@ public class Service extends ProjectComponent {
         Writer writer;
         Iterator providerIterator;
         Provider provider;
-        
+
         arrayOut = new ByteArrayOutputStream();
         writer = new OutputStreamWriter(arrayOut, "UTF-8");
         providerIterator = providerList.iterator();
-        while (providerIterator.hasNext()){
+        while (providerIterator.hasNext()) {
             provider = (Provider) providerIterator.next();
             writer.write(provider.getClassName());
             writer.write("\n");

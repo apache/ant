@@ -156,9 +156,8 @@ public class StringResource extends Resource {
         //I can't get my head around this; is encoding treatment needed here?
         return
             //new oata.util.ReaderInputStream(new InputStreamReader(
-            new ByteArrayInputStream(getContent().getBytes())
-            //, encoding), encoding)
-            ;
+            new ByteArrayInputStream(getContent().getBytes());
+            //, encoding), encoding);
     }
 
     /**

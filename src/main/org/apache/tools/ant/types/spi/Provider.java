@@ -34,7 +34,7 @@ public class Provider extends ProjectComponent {
     /**
      * @return the class name for
      */
-    public String getClassName(){
+    public String getClassName() {
         return type;
     }
 
@@ -42,7 +42,7 @@ public class Provider extends ProjectComponent {
      * Set the provider classname.
      * @param type the value to set.
      */
-    public void setClassName(String type){
+    public void setClassName(String type) {
         this.type = type;
     }
 

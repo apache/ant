@@ -472,7 +472,7 @@ public final class SelectorUtils {
         }
         return true;
     }
-    
+
     /**
      * Breaks a path up into a Vector of path elements, tokenizing on
      * <code>File.separator</code>.

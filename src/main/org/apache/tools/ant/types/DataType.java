@@ -52,7 +52,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     /**
      * Value to the refid attribute.
      *
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             The user should not be directly referencing
      *             variable. Please use {@link #getRefid} instead.
      */
@@ -66,9 +66,9 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * child element has been added that is a subclass of
      * DataType).</p>
      *
-     * @deprecated since 1.7. 
+     * @deprecated since 1.7.
      *             The user should not be directly referencing
-     *             variable. Please use {@link #setChecked} or 
+     *             variable. Please use {@link #setChecked} or
      *             {@link #isChecked} instead.
      */
     protected boolean checked = true;

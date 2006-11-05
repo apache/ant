@@ -39,7 +39,7 @@ public class FileResource extends Resource implements Touchable {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NULL_FILE
         = Resource.getMagicNumber("null file".getBytes());
-                               
+
     private File file;
     private File baseDir;
 

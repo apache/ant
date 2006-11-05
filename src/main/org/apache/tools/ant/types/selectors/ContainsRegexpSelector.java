@@ -37,7 +37,7 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *
  * @since Ant 1.6
  */
-public class ContainsRegexpSelector extends BaseExtendSelector 
+public class ContainsRegexpSelector extends BaseExtendSelector
         implements ResourceSelector {
 
     private String userProvidedExpression = null;
