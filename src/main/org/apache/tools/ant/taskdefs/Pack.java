@@ -36,8 +36,10 @@ import org.apache.tools.ant.types.resources.FileResource;
 
 public abstract class Pack extends Task {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected File zipFile;
     protected File source;
+    // CheckStyle:VisibilityModifier ON
     private Resource src;
 
     /**

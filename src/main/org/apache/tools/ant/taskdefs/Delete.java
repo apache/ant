@@ -97,6 +97,7 @@ public class Delete extends MatchingTask {
         public int size() { return dirs.length; }
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected File file = null;
     protected File dir = null;
     protected Vector filesets = new Vector();
@@ -109,6 +110,7 @@ public class Delete extends MatchingTask {
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
     private Resources rcs = null;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Set the name of a single file to be removed.

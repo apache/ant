@@ -1060,7 +1060,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             // Use '.' so a dir+"/"+name would not result in an absolute path
             liaison.addParam(
                 fileDirParameter,
-                (file.getParent()!=null) ? file.getParent().replace('\\','/') : "." );
+                (file.getParent() != null)
+                ? file.getParent().replace('\\', '/') : ".");
         }
     }
 

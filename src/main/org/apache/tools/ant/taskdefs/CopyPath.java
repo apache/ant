@@ -39,30 +39,35 @@ import java.io.IOException;
 
 public class CopyPath extends Task {
 
+    // Error messages
+    /** No destdir attribute */
+    public static final String ERROR_NO_DESTDIR = "No destDir specified";
+
+    /** No path  */
+    public static final String ERROR_NO_PATH = "No path specified";
+
+    /** No mapper  */
+    public static final String ERROR_NO_MAPPER = "No mapper specified";
+
+    // fileutils
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    // --- Fields --
     private FileNameMapper mapper;
 
     private Path path;
 
     private File destDir;
 
-    protected FileUtils fileUtils;
-
     // TODO not read, yet in a public setter
-    private long granularity = 0;
+    private long granularity = FILE_UTILS.getFileTimestampGranularity();
 
-    protected boolean preserveLastModified = false;
+    private boolean preserveLastModified = false;
 
-    public CopyPath() {
-        fileUtils = FileUtils.getFileUtils();
-        granularity = fileUtils.getFileTimestampGranularity();
-    }
-
-    public static final String ERROR_NO_DESTDIR = "No destDir specified";
-
-    public static final String ERROR_NO_PATH = "No path specified";
-
-    public static final String ERROR_NO_MAPPER = "No mapper specified";
-
+    /**
+     * The dest dir attribute.
+     * @param destDir the value of the destdir attribute.
+     */
     public void setDestDir(File destDir) {
         this.destDir = destDir;
     }
@@ -173,7 +178,7 @@ public class CopyPath extends Task {
                 try {
                     log("Copying " + sourceFile + " to " + destFile, Project.MSG_VERBOSE);
 
-                    fileUtils.copyFile(sourceFile, destFile, null, null, false,
+                    FILE_UTILS.copyFile(sourceFile, destFile, null, null, false,
                             preserveLastModified, null, null, getProject());
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + sourceFile + " to " + destFile + " due to "

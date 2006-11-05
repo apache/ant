@@ -209,12 +209,12 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
         //for java1.5+, we generate compatible stubs, that is, unless
         //the caller asked for IDL or IIOP support.
-        if (stubOption == null && 
+        if (stubOption == null &&
                 !attributes.getIiop() &&
                 !attributes.getIdl()) {
             stubOption = STUB_COMPAT;
         }
-        if(stubOption!=null) {
+        if (stubOption != null) {
             //set the non-null stubOption
             cmd.createArgument().setValue(stubOption);
         }

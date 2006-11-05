@@ -186,6 +186,8 @@ public class DirectoryScanner
         resetDefaultExcludes();
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /** The base directory to be scanned. */
     protected File basedir;
 
@@ -258,6 +260,8 @@ public class DirectoryScanner
 
     /** Whether or not everything tested so far has been included. */
     protected boolean everythingIncluded = true;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Temporary table to speed up the various scanning methods.

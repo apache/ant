@@ -48,7 +48,9 @@ public class Exec extends Task {
     private String out;
     private File dir;
     private String command;
+    // CheckStyle:VisibilityModifier OFF - bc
     protected PrintWriter fos = null;
+    // CheckStyle:VisibilityModifier ON
     private boolean failOnError = false;
 
     /**

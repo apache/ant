@@ -46,7 +46,7 @@ public class EchoXML extends XMLFragment {
 
     private File file;
     private boolean append;
-    public static final String ERROR_NO_XML = "No nested XML specified";
+    private static final String ERROR_NO_XML = "No nested XML specified";
 
     /**
      * Set the output file.

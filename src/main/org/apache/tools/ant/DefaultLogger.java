@@ -39,6 +39,7 @@ public class DefaultLogger implements BuildLogger {
      */
     public static final int LEFT_COLUMN_SIZE = 12;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** PrintStream to write non-error messages to */
     protected PrintStream out;
 
@@ -51,11 +52,15 @@ public class DefaultLogger implements BuildLogger {
     /** Time of the start of the build */
     private long startTime = System.currentTimeMillis();
 
+    // CheckStyle:ConstantNameCheck OFF - bc
     /** Line separator */
     protected static final String lSep = StringUtils.LINE_SEP;
+    // CheckStyle:ConstantNameCheck ON
 
     /** Whether or not to use emacs-style output */
     protected boolean emacsMode = false;
+    // CheckStyle:VisibilityModifier ON
+
 
     /**
      * Sole constructor.

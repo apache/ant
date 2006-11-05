@@ -104,9 +104,11 @@ public class Javac extends MatchingTask {
     private String memoryMaximumSize;
     private FacadeTaskHelper facade = null;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean failOnError = true;
     protected boolean listFiles = false;
     protected File[] compileList = new File[0];
+    // CheckStyle:VisibilityModifier ON
 
     private String source;
     private String debugLevel;
@@ -905,7 +907,7 @@ public class Javac extends MatchingTask {
      * attribute looks like.</p>
      *
      * @see #getCompilerVersion
-     *
+     * @return the compiler.
      * @since Ant 1.5
      */
     public String getCompiler() {
@@ -931,6 +933,7 @@ public class Javac extends MatchingTask {
      * account.</p>
      *
      * @see #getCompiler
+     * @return the compiler.
      *
      * @since Ant 1.5
      */

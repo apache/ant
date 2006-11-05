@@ -43,6 +43,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ExecTask extends Task {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String os;
@@ -70,6 +71,7 @@ public class ExecTask extends Task {
 
     protected Redirector redirector = new Redirector(this);
     protected RedirectorElement redirectorElement;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Controls whether the VM (1.3 and above) is used to execute the

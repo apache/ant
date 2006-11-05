@@ -40,9 +40,11 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Jikes {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected JikesOutputParser jop;
     protected String command;
     protected Project project;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructs a new Jikes object.

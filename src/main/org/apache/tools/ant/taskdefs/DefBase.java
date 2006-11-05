@@ -142,6 +142,7 @@ public abstract class DefBase extends AntlibDefinition {
 
     /**
      * @see org.apache.tools.ant.Task#init()
+     * @throws BuildException on error.
      * @since Ant 1.6
      */
     public void init() throws BuildException {

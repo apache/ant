@@ -43,6 +43,7 @@ public final class ChainReaderHelper {
 
     // default buffer size
     private static final int DEFAULT_BUFFER_SIZE = 8192;
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The primary reader to which the reader chain is to be attached.
      */
@@ -60,6 +61,8 @@ public final class ChainReaderHelper {
 
     /** The Ant project */
     private Project project = null;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Sets the primary reader

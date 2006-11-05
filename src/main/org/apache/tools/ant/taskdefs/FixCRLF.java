@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class FixCRLF extends MatchingTask implements ChainableReader {
 
-    public static final String ERROR_FILE_AND_SRCDIR
+    private static final String ERROR_FILE_AND_SRCDIR
         = "srcdir and file are mutually exclusive";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -211,7 +211,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     /**
      * Specify tab length in characters.
      *
-     * @param tlength specify the length of tab in spaces,
+     * @param tlength specify the length of tab in spaces.
+     * @throws BuildException on error.
      */
     public void setTablength(int tlength) throws BuildException {
         try {
@@ -273,6 +274,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
 
     /**
      * Executes the task.
+     * @throws BuildException on error.
      */
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
@@ -614,6 +616,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * Enumerated attribute with the values "asis", "add" and "remove".
      */
     public static class AddAsisRemove extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"add", "asis", "remove"};
         }
@@ -626,6 +629,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         /**
          * @see EnumeratedAttribute#getValues
          */
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"asis", "cr", "lf", "crlf",
                                  "mac", "unix", "dos"};

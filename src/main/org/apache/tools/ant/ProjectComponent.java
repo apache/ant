@@ -26,6 +26,7 @@ package org.apache.tools.ant;
  */
 public abstract class ProjectComponent implements Cloneable {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Project object of this component.
      * @deprecated since 1.6.x.
@@ -42,6 +43,7 @@ public abstract class ProjectComponent implements Cloneable {
      *             Please use the {@link #getLocation()} method.
      */
     protected Location location = Location.UNKNOWN_LOCATION;
+    // CheckStyle:VisibilityModifier ON
 
     /** Sole constructor. */
     public ProjectComponent() {

@@ -178,6 +178,7 @@ public class Recorder extends Task implements SubBuildListener {
         /**
          * @see EnumeratedAttribute#getValues()
          */
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return VALUES;
         }

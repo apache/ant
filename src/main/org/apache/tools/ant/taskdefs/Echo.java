@@ -40,6 +40,7 @@ import org.apache.tools.ant.types.LogLevel;
  * @ant.task category="utility"
  */
 public class Echo extends Task {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String message = "";
     protected File file = null;
     protected boolean append = false;
@@ -48,6 +49,7 @@ public class Echo extends Task {
 
     // by default, messages are always displayed
     protected int logLevel = Project.MSG_WARN;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Does the work.

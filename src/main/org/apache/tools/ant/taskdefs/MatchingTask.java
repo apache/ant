@@ -56,7 +56,9 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 public abstract class MatchingTask extends Task implements SelectorContainer {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected FileSet fileset = new FileSet();
+    // CheckStyle:VisibilityModifier ON
 
     /** {@inheritDoc}. */
     public void setProject(Project project) {

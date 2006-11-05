@@ -715,7 +715,7 @@ public class SQLExec extends JDBCTask {
         public void setSrc(File src) {
             //there are places (in this file, and perhaps elsewhere, where it is assumed
             //that null is an acceptable parameter.
-            if (src!=null) {
+            if (src != null) {
                 setSrcResource(new FileResource(src));
             }
         }

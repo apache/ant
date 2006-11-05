@@ -15,7 +15,7 @@ public class XNewRmic extends ForkingSunRmic {
      * the name of this adapter for users to select
      */
     public static final String COMPILER_NAME = "xnew";
-    
+
     public XNewRmic() {
     }
 
@@ -24,7 +24,7 @@ public class XNewRmic extends ForkingSunRmic {
      * @return a command line that hands off to thw
      */
     protected Commandline setupRmicCommand() {
-        String options[]=new String[] {
+        String options[] = new String[] {
                 "-Xnew"
         };
         Commandline commandline = super.setupRmicCommand(options);

@@ -595,7 +595,7 @@ public class Execute {
 
     /**
      * Did this execute return in a failure.
-     * @see #isFailure(int) 
+     * @see #isFailure(int)
      * @return true if and only if the exit code is interpreted as a failure
      * @since Ant1.7
      */
@@ -1215,7 +1215,8 @@ public class Execute {
                     }
                     FileUtils.delete(f);
                 }
-            }.start();
+            }
+            .start();
         }
     }
 }

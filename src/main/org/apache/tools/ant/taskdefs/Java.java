@@ -65,8 +65,10 @@ public class Java extends Task {
     private File output;
     private File error;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected Redirector redirector = new Redirector(this);
     protected RedirectorElement redirectorElement;
+    // CheckStyle:VisibilityModifier ON
 
     private String resultProperty;
     private Permissions perm = null;

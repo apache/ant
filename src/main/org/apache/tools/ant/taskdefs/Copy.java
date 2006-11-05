@@ -67,6 +67,7 @@ import org.apache.tools.ant.util.FlatFileNameMapper;
 public class Copy extends Task {
     static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    // CheckStyle:VisibilityModifier OFF - bc
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
@@ -92,6 +93,7 @@ public class Copy extends Task {
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Copy task constructor.

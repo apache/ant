@@ -70,6 +70,7 @@ import org.apache.tools.ant.types.Reference;
  */
 public class Property extends Task {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String name;
     protected String value;
     protected File file;
@@ -82,6 +83,7 @@ public class Property extends Task {
     private Project fallback;
 
     protected boolean userProperty; // set read-only properties
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructor for Property.

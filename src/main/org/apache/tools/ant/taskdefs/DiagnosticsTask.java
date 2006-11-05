@@ -30,6 +30,11 @@ public class DiagnosticsTask extends Task {
 
     private static final String[] ARGS = new String[0];
 
+    /**
+     * Execute the task.
+     * This delgates to the Diagnositics class.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
         Diagnostics.main(ARGS);
     }

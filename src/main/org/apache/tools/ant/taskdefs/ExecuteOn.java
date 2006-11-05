@@ -49,6 +49,8 @@ import org.apache.tools.ant.util.SourceFileScanner;
  */
 public class ExecuteOn extends ExecTask {
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     // filesets has been protected so we need to keep that even after
     // switching to resource collections.  In fact, they will still
     // get a different treatment form the other resource collections
@@ -80,6 +82,7 @@ public class ExecuteOn extends ExecTask {
      */
     protected boolean srcIsFirst = true;
 
+    // CheckStyle:VisibilityModifier ON
     /**
      * Add a set of files upon which to operate.
      * @param set the FileSet to add.
@@ -724,12 +727,15 @@ public class ExecuteOn extends ExecTask {
      * for the type attribute.
      */
     public static class FileDirBoth extends EnumeratedAttribute {
+        /** File value */
         public static final String FILE = "file";
+        /** Dir value */
         public static final String DIR = "dir";
         /**
          * @see EnumeratedAttribute#getValues
          */
-        public String[] getValues() {
+        /** {@inheritDoc}. */
+       public String[] getValues() {
             return new String[] {FILE, DIR, "both"};
         }
     }

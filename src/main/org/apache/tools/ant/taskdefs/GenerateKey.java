@@ -157,6 +157,8 @@ public class GenerateKey extends Task {
         }
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /**
      * The alias of signer.
      */
@@ -177,6 +179,7 @@ public class GenerateKey extends Task {
     protected int keysize;
     protected int validity;
     protected boolean verbose;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Distinguished name list.

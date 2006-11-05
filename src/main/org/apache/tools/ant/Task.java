@@ -32,6 +32,7 @@ import java.io.IOException;
  * @see Project#createTask
  */
 public abstract class Task extends ProjectComponent {
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Target this task belongs to, if any.
      * @deprecated since 1.6.x.
@@ -77,6 +78,8 @@ public abstract class Task extends ProjectComponent {
      *             Please use the {@link #getWrapper()} method.
      */
     protected RuntimeConfigurable wrapper;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Whether or not this task is invalid. A task becomes invalid

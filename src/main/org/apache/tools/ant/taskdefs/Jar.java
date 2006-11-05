@@ -391,7 +391,7 @@ public class Jar extends Zip {
         Service service;
 
         serviceIterator = serviceList.iterator();
-        while(serviceIterator.hasNext()) {
+        while (serviceIterator.hasNext()) {
            service = (Service) serviceIterator.next();
            //stolen from writeManifest
            super.zipFile(service.getAsStream(), zOut,

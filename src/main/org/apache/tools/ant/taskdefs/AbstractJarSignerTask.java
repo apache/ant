@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
@@ -35,6 +36,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 
 public abstract class AbstractJarSignerTask extends Task {
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The name of the jar file.
      */
@@ -75,6 +77,9 @@ public abstract class AbstractJarSignerTask extends Task {
      * name of JDK program we are looking for
      */
     protected static final String JARSIGNER_COMMAND = "jarsigner";
+
+    // CheckStyle:VisibilityModifier ON
+
     /**
      * redirector used to talk to the jarsigner program
      */
@@ -274,7 +279,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @throws BuildException if the property is not correctly defined.
      */
     protected void declareSysProperty(
-        ExecTask cmd, Environment.Variable property) {
+        ExecTask cmd, Environment.Variable property) throws BuildException {
         addValue(cmd, "-J-D" + property.getContent());
     }
 

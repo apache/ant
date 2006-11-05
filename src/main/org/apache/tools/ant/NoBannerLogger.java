@@ -26,6 +26,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class NoBannerLogger extends DefaultLogger {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Name of the current target, if it should
      * be displayed on the next message. This is
@@ -34,6 +35,7 @@ public class NoBannerLogger extends DefaultLogger {
      * the target is logged.
      */
     protected String targetName;
+    // CheckStyle:VisibilityModifier ON
 
     /** Sole constructor. */
     public NoBannerLogger() {
