@@ -53,7 +53,7 @@ public class TarOutputStream extends FilterOutputStream {
     protected byte[]    assemBuf;
     protected TarBuffer buffer;
     protected int       longFileMode = LONGFILE_ERROR;
-    
+
     private boolean closed = false;
 
     /**
