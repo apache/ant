@@ -732,7 +732,9 @@ public class Javadoc extends Task {
      * @return a new DocletInfo instance to be configured.
      */
     public DocletInfo createDoclet() {
-        doclet = new DocletInfo();
+        if (doclet == null) {
+            doclet = new DocletInfo();
+        }
         return doclet;
     }
 
