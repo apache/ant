@@ -164,6 +164,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure) {
@@ -173,6 +177,11 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param showOutput    whether to send output to System.out/.err as well as formatters.
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
@@ -183,6 +192,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param showOutput    whether to send output to System.out/.err as well as formatters.
+     * @param logTestListenerEvents whether to print TestListener events.
      * @since Ant 1.7
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
@@ -194,6 +209,11 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Constructor to use when the user has specified a classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param loader the classloader to use running the test.
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
@@ -203,6 +223,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Constructor to use when the user has specified a classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param showOutput    whether to send output to System.out/.err as well as formatters.
+     * @param loader the classloader to use running the test.
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
@@ -213,6 +239,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Constructor to use when the user has specified a classpath.
+     * @param test the test to run.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param showOutput    whether to send output to System.out/.err as well as formatters.
+     * @param logTestListenerEvents whether to print TestListener events.
+     * @param loader the classloader to use running the test.
      * @since Ant 1.7
      */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
@@ -230,6 +263,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     private PrintStream savedOut = null;
 
+    /**
+     * Run the test.
+     */
     public void run() {
         res = new TestResult();
         res.addListener(wrapListener(this));
@@ -436,6 +472,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Interface TestListener.
      *
      * <p>A new Test is started.
+     * @param t the test.
      */
     public void startTest(Test t) {
         String testName = JUnitVersionHelper.getTestCaseName(t);
@@ -446,6 +483,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Interface TestListener.
      *
      * <p>A Test is finished.
+     * @param test the test.
      */
     public void endTest(Test test) {
         String testName = JUnitVersionHelper.getTestCaseName(test);
@@ -465,6 +503,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t    the exception thrown by the test.
      */
     public void addFailure(Test test, Throwable t) {
         String testName = JUnitVersionHelper.getTestCaseName(test);
@@ -478,6 +518,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Interface TestListener for JUnit &gt; 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t    the assertion thrown by the test.
      */
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
@@ -487,6 +529,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Interface TestListener.
      *
      * <p>An error occurred while running the test.
+     * @param test the test.
+     * @param t    the error thrown by the test.
      */
     public void addError(Test test, Throwable t) {
         String testName = JUnitVersionHelper.getTestCaseName(test);
