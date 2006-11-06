@@ -61,23 +61,26 @@ public class JJDoc extends Task {
 
     /**
      * Sets the TEXT BNF documentation option.
+     * @param plainText a <code>boolean</code> value.
      */
     public void setText(boolean plainText) {
-        optionalAttrs.put(TEXT, new Boolean(plainText));
+        optionalAttrs.put(TEXT, plainText ? Boolean.TRUE : Boolean.FALSE);
         this.plainText = plainText;
     }
 
     /**
      * Sets the ONE_TABLE documentation option.
+     * @param oneTable a <code>boolean</code> value.
      */
     public void setOnetable(boolean oneTable) {
-        optionalAttrs.put(ONE_TABLE, new Boolean(oneTable));
+        optionalAttrs.put(ONE_TABLE, oneTable ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * The outputfile to write the generated BNF documentation file to.
      * If not set, the file is written with the same name as
      * the JavaCC grammar file with a suffix .html or .txt.
+     * @param outputFile the name of the output file.
      */
     public void setOutputfile(String outputFile) {
         this.outputFile = outputFile;
@@ -85,6 +88,7 @@ public class JJDoc extends Task {
 
     /**
      * The javacc grammar file to process.
+     * @param target the grammar file.
      */
     public void setTarget(File target) {
         this.targetFile = target;
@@ -92,6 +96,7 @@ public class JJDoc extends Task {
 
     /**
      * The directory containing the JavaCC distribution.
+     * @param javaccHome the home directory.
      */
     public void setJavacchome(File javaccHome) {
         this.javaccHome = javaccHome;
@@ -104,6 +109,10 @@ public class JJDoc extends Task {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
     }
 
+    /**
+     * Do the task.
+     * @throws BuildException if there is an error.
+     */
     public void execute() throws BuildException {
 
         // load command line with optional attributes

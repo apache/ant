@@ -70,85 +70,97 @@ public class JJTree extends Task {
 
     /**
      * Sets the BUILD_NODE_FILES grammar option.
+     * @param buildNodeFiles a <code>boolean</code> value.
      */
     public void setBuildnodefiles(boolean buildNodeFiles) {
-        optionalAttrs.put(BUILD_NODE_FILES, new Boolean(buildNodeFiles));
+        optionalAttrs.put(BUILD_NODE_FILES, buildNodeFiles ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the MULTI grammar option.
+     * @param multi a <code>boolean</code> value.
      */
     public void setMulti(boolean multi) {
-        optionalAttrs.put(MULTI, new Boolean(multi));
+        optionalAttrs.put(MULTI, multi ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the NODE_DEFAULT_VOID grammar option.
+     * @param nodeDefaultVoid a <code>boolean</code> value.
      */
     public void setNodedefaultvoid(boolean nodeDefaultVoid) {
-        optionalAttrs.put(NODE_DEFAULT_VOID, new Boolean(nodeDefaultVoid));
+        optionalAttrs.put(NODE_DEFAULT_VOID, nodeDefaultVoid ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the NODE_FACTORY grammar option.
+     * @param nodeFactory a <code>boolean</code> value.
      */
     public void setNodefactory(boolean nodeFactory) {
-        optionalAttrs.put(NODE_FACTORY, new Boolean(nodeFactory));
+        optionalAttrs.put(NODE_FACTORY, nodeFactory ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the NODE_SCOPE_HOOK grammar option.
+     * @param nodeScopeHook a <code>boolean</code> value.
      */
     public void setNodescopehook(boolean nodeScopeHook) {
-        optionalAttrs.put(NODE_SCOPE_HOOK, new Boolean(nodeScopeHook));
+        optionalAttrs.put(NODE_SCOPE_HOOK, nodeScopeHook ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the NODE_USES_PARSER grammar option.
+     * @param nodeUsesParser a <code>boolean</code> value.
      */
     public void setNodeusesparser(boolean nodeUsesParser) {
-        optionalAttrs.put(NODE_USES_PARSER, new Boolean(nodeUsesParser));
+        optionalAttrs.put(NODE_USES_PARSER, nodeUsesParser ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the STATIC grammar option.
+     * @param staticParser a <code>boolean</code> value.
      */
     public void setStatic(boolean staticParser) {
-        optionalAttrs.put(STATIC, new Boolean(staticParser));
+        optionalAttrs.put(STATIC, staticParser ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the VISITOR grammar option.
+     * @param visitor a <code>boolean</code> value.
      */
     public void setVisitor(boolean visitor) {
-        optionalAttrs.put(VISITOR, new Boolean(visitor));
+        optionalAttrs.put(VISITOR, visitor ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
      * Sets the NODE_PACKAGE grammar option.
+     * @param nodePackage the option to use.
      */
     public void setNodepackage(String nodePackage) {
-        optionalAttrs.put(NODE_PACKAGE, new String(nodePackage));
+        optionalAttrs.put(NODE_PACKAGE, nodePackage);
     }
 
     /**
      * Sets the VISITOR_EXCEPTION grammar option.
+     * @param visitorException the option to use.
      */
     public void setVisitorException(String visitorException) {
-        optionalAttrs.put(VISITOR_EXCEPTION, new String(visitorException));
+        optionalAttrs.put(VISITOR_EXCEPTION, visitorException);
     }
 
     /**
      * Sets the NODE_PREFIX grammar option.
+     * @param nodePrefix the option to use.
      */
     public void setNodeprefix(String nodePrefix) {
-        optionalAttrs.put(NODE_PREFIX, new String(nodePrefix));
+        optionalAttrs.put(NODE_PREFIX, nodePrefix);
     }
 
     /**
      * The directory to write the generated JavaCC grammar and node files to.
      * If not set, the files are written to the directory
      * containing the grammar file.
+     * @param outputDirectory the output directory.
      */
     public void setOutputdirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
@@ -158,6 +170,7 @@ public class JJTree extends Task {
      * The outputfile to write the generated JavaCC grammar file to.
      * If not set, the file is written with the same name as
      * the JJTree grammar file with a suffix .jj.
+     * @param outputFile the output file name.
      */
     public void setOutputfile(String outputFile) {
         this.outputFile = outputFile;
@@ -165,6 +178,7 @@ public class JJTree extends Task {
 
     /**
      * The jjtree grammar file to process.
+     * @param targetFile the grammar file.
      */
     public void setTarget(File targetFile) {
         this.targetFile = targetFile;
@@ -172,6 +186,7 @@ public class JJTree extends Task {
 
     /**
      * The directory containing the JavaCC distribution.
+     * @param javaccHome the directory containing JavaCC.
      */
     public void setJavacchome(File javaccHome) {
         this.javaccHome = javaccHome;
@@ -184,6 +199,10 @@ public class JJTree extends Task {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
     }
 
+    /**
+     * Run the task.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
 
         // load command line with optional attributes
