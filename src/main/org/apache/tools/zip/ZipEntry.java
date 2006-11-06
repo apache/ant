@@ -100,7 +100,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the internal file attributes.
-     * 
+     *
      * @return the internal file attributes
      * @since 1.1
      */
@@ -307,7 +307,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * setCompressedSize via reflection.</p>
      * @param size the size to use
      * @deprecated since 1.7.
-     *             Use setCompressedSize directly. 
+     *             Use setCompressedSize directly.
      * @since 1.2
      */
     public void setComprSize(long size) {
