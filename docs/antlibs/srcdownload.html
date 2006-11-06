@@ -146,9 +146,66 @@ releases at <a href="http://people.apache.org/dist/ant/antlibs/">http://people.a
   <li><a href="http://people.apache.org/dist/ant/antlibs/antunit/source/">AntUnit
   1.0Beta2</a></li>
 
-  <li><a href="http://people.apache.org/dist/ant/antlibs/dotnet/source/">.NET
-  Ant library 1.0Beta1</a></li>
+</ul>
+                        <h3 class="section">
+      <a name="Mirror"></a>
+      Mirror
+    </h3>
+                        <p>You are currently using <b>[preferred]</b>.  If you encounter a
+problem with this mirror, please select another mirror.  If all
+mirrors are failing, there are <i>backup</i> mirrors (at the end of
+the mirrors list) that should be available.</p>
+                                <form action="[location]" method="get" id="SelectMirror">
+Other mirrors: <select name="Preferred">
+[if-any http]
+  [for http]<option value="[http]">[http]</option>[end]
+[end]
+[if-any ftp]
+  [for ftp]<option value="[ftp]">[ftp]</option>[end]
+[end]
+[if-any backup]
+  [for backup]<option value="[backup]">[backup] (backup)</option>[end]
+[end]
+</select>
+<input type="submit" value="Change" />
+</form>
+                        <h3 class="section">
+      <a name="Current Antlib Releases"></a>
+      Current Antlib Releases
+    </h3>
+                        <div class="warning">
+<div class="label">Note</div>
+<div class="content">Very recent releases may not be available on all
+mirrors for a few days.</div>
+</div>
+                                <br />
+                                <div class="warning">
+<div class="label">Tar files may require gnu tar to extract</div>
+<div class="content">Tar files in the distribution contain long file names, and may
+ require gnu tar to do the extraction.</div>
+</div>
+                                <ul>
+<li>Apache .NET Ant Library 1.0
+<ul>
+<li><code>.zip</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip">apache-ant-dotnet-1.0-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.md5">MD5</a>]</li>
 
+<li><code>.tar.gz</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz">apache-ant-dotnet-1.0-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.md5">MD5</a>]</li>
+
+<li><code>.tar.bz2</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2">apache-ant-dotnet-1.0-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.md5">MD5</a>]</li>
+</ul>
+</li>
 </ul>
                         <h3 class="section">
       <a name="Verify Releases"></a>
@@ -165,17 +222,17 @@ directory</a>, rather than from a mirror. Then verify the signatures
 using</p>
                                 <p><code>
 % pgpk -a KEYS<br />
-% pgpv apache-ant-1.6.5-src.tar.gz.asc<br />
+% pgpv apache-ant-dotnet-1.0-bin.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % pgp -ka KEYS<br />
-% pgp apache-ant-1.6.5-src.tar.gz.asc<br />
+% pgp apache-ant-dotnet-1.0-bin.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % gpg --import KEYS<br />
-% gpg --verify apache-ant-1.6.5-src.tar.gz.asc
+% gpg --verify apache-ant-dotnet-1.0-bin.tar.gz.asc
 </code></p>
                                 <p>Alternatively, you can verify the checksums on the files.  Unix
 programs called <code>md5</code>/<code>sha1</code> or
