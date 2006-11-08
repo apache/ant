@@ -81,6 +81,9 @@ public class Javah extends Task {
     private static String lSep = System.getProperty("line.separator");
     private FacadeTaskHelper facade = null;
 
+    /**
+     * No arg constructor.
+     */
     public Javah() {
         facade = new FacadeTaskHelper(JavahAdapterFactory.getDefault());
     }
@@ -133,7 +136,7 @@ public class Javah extends Task {
 
     /**
      * Names of the classes to process.
-     *
+     * @return the array of classes.
      * @since Ant 1.6.3
      */
     public String[] getClasses() {
@@ -164,7 +167,7 @@ public class Javah extends Task {
 
     /**
      * The destination directory, if any.
-     *
+     * @return the destination directory.
      * @since Ant 1.6.3
      */
     public File getDestdir() {
@@ -205,7 +208,7 @@ public class Javah extends Task {
 
     /**
      * The classpath to use.
-     *
+     * @return the classpath.
      * @since Ant 1.6.3
      */
     public Path getClasspath() {

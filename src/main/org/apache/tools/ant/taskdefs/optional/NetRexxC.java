@@ -142,14 +142,18 @@ public class NetRexxC extends MatchingTask {
     private Hashtable filecopyList = new Hashtable();
 
     /**
-     * Set whether literals are treated as binary, rather than NetRexx types
+     * Set whether literals are treated as binary, rather than NetRexx types.
+     * @param binary a <code>boolean</code> value.
      */
     public void setBinary(boolean binary) {
         this.binary = binary;
     }
 
 
-    /** Set the classpath used for NetRexx compilation  */
+    /**
+     * Set the classpath used for NetRexx compilation.
+     * @param classpath the classpath to use.
+     */
     public void setClasspath(String classpath) {
         this.classpath = classpath;
     }
@@ -159,6 +163,7 @@ public class NetRexxC extends MatchingTask {
      * Set whether comments are passed through to the generated java source.
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is false
+     * @param comments a <code>boolean</code> value.
      */
     public void setComments(boolean comments) {
         this.comments = comments;
@@ -169,6 +174,7 @@ public class NetRexxC extends MatchingTask {
      * Set whether error messages come out in compact or verbose format. Valid
      * true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false
+     * @param compact a <code>boolean</code> value.
      */
     public void setCompact(boolean compact) {
         this.compact = compact;
@@ -180,6 +186,7 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is true. Setting this flag to false, will
      * automatically set the keep flag to true.
+     * @param compile a <code>boolean</code> value.
      */
     public void setCompile(boolean compile) {
         this.compile = compile;
@@ -193,13 +200,17 @@ public class NetRexxC extends MatchingTask {
      * Set whether or not messages should be displayed on the 'console' Valid
      * true values are "on" or "true". Anything else sets the flag to false.
      * The default value is true.
+     * @param console a <code>boolean</code> value.
      */
     public void setConsole(boolean console) {
         this.console = console;
     }
 
 
-    /** Whether variable cross references are generated  */
+    /**
+     * Whether variable cross references are generated.
+     * @param crossref a <code>boolean</code> value.
+     */
     public void setCrossref(boolean crossref) {
         this.crossref = crossref;
     }
@@ -210,6 +221,7 @@ public class NetRexxC extends MatchingTask {
      * Binary arithmetic is used when this flag is turned off. Valid true
      * values are "on" or "true". Anything else sets the flag to false. The
      * default value is true.
+     * @param decimal a <code>boolean</code> value.
      */
     public void setDecimal(boolean decimal) {
         this.decimal = decimal;
@@ -219,6 +231,7 @@ public class NetRexxC extends MatchingTask {
     /**
      * Set the destination directory into which the NetRexx source files
      * should be copied and then compiled.
+     * @param destDirName the destination directory.
      */
     public void setDestDir(File destDirName) {
         destDir = destDirName;
@@ -227,6 +240,7 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether diagnostic information about the compile is generated
+     * @param diag a <code>boolean</code> value.
      */
     public void setDiag(boolean diag) {
         this.diag = diag;
@@ -237,6 +251,7 @@ public class NetRexxC extends MatchingTask {
      * Sets whether variables must be declared explicitly before use. Valid
      * true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
+     * @param explicit a <code>boolean</code> value.
      */
     public void setExplicit(boolean explicit) {
         this.explicit = explicit;
@@ -245,7 +260,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether the generated java code is formatted nicely or left to match
-     * NetRexx line numbers for call stack debugging
+     * NetRexx line numbers for call stack debugging.
+     * @param format a <code>boolean</code> value.
      */
     public void setFormat(boolean format) {
         this.format = format;
@@ -256,6 +272,7 @@ public class NetRexxC extends MatchingTask {
      * Whether the generated java code is produced Valid true values are "on"
      * or "true". Anything else sets the flag to false. The default value is
      * false.
+     * @param java a <code>boolean</code> value.
      */
     public void setJava(boolean java) {
         log("The attribute java is currently unused.", Project.MSG_WARN);
@@ -267,13 +284,17 @@ public class NetRexxC extends MatchingTask {
      * compilation. The generated files will have an extension of .java.keep,
      * <b>not</b> .java Valid true values are "on" or "true". Anything else
      * sets the flag to false. The default value is false.
+     * @param keep a <code>boolean</code> value.
      */
     public void setKeep(boolean keep) {
         this.keep = keep;
     }
 
 
-    /** Whether the compiler text logo is displayed when compiling  */
+    /**
+     * Whether the compiler text logo is displayed when compiling.
+     * @param logo a <code>boolean</code> value.
+     */
     public void setLogo(boolean logo) {
         this.logo = logo;
     }
@@ -283,6 +304,7 @@ public class NetRexxC extends MatchingTask {
      * Whether the generated .java file should be replaced when compiling
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is false.
+     * @param replace a <code>boolean</code> value.
      */
     public void setReplace(boolean replace) {
         this.replace = replace;
@@ -293,6 +315,7 @@ public class NetRexxC extends MatchingTask {
      * Sets whether the compiler messages will be written to NetRexxC.log as
      * well as to the console Valid true values are "on" or "true". Anything
      * else sets the flag to false. The default value is false.
+     * @param savelog a <code>boolean</code> value.
      */
     public void setSavelog(boolean savelog) {
         this.savelog = savelog;
@@ -304,13 +327,17 @@ public class NetRexxC extends MatchingTask {
      * directory as the source files. The alternative is the working directory
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is true.
+     * @param sourcedir a <code>boolean</code> value.
      */
     public void setSourcedir(boolean sourcedir) {
         this.sourcedir = sourcedir;
     }
 
 
-    /** Set the source dir to find the source Java files.  */
+    /**
+     * Set the source dir to find the source Java files.
+     * @param srcDirName the source directory.
+     */
     public void setSrcDir(File srcDirName) {
         srcDir = srcDirName;
     }
@@ -322,6 +349,7 @@ public class NetRexxC extends MatchingTask {
      * vs. <code>aStringVar.getBytes()</code> Valid true values are "on" or
      * "true". Anything else sets the flag to false. The default value is
      * false.
+     * @param strictargs a <code>boolean</code> value.
      */
     public void setStrictargs(boolean strictargs) {
         this.strictargs = strictargs;
@@ -329,7 +357,8 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Tells the NetRexx compile that assignments must match exactly on type
+     * Tells the NetRexx compile that assignments must match exactly on type.
+     * @param strictassign a <code>boolean</code> value.
      */
     public void setStrictassign(boolean strictassign) {
         this.strictassign = strictassign;
@@ -337,7 +366,8 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Specifies whether the NetRexx compiler should be case sensitive or not
+     * Specifies whether the NetRexx compiler should be case sensitive or not.
+     * @param strictcase a <code>boolean</code> value.
      */
     public void setStrictcase(boolean strictcase) {
         this.strictcase = strictcase;
@@ -349,6 +379,7 @@ public class NetRexxC extends MatchingTask {
      * statement. By default the NetRexx compiler will import certain packages
      * automatically Valid true values are "on" or "true". Anything else sets
      * the flag to false. The default value is false.
+     * @param strictimport a <code>boolean</code> value.
      */
     public void setStrictimport(boolean strictimport) {
         this.strictimport = strictimport;
@@ -359,6 +390,7 @@ public class NetRexxC extends MatchingTask {
      * Sets whether local properties need to be qualified explicitly using
      * <code>this</code> Valid true values are "on" or "true". Anything else
      * sets the flag to false. The default value is false.
+     * @param strictprops a <code>boolean</code> value.
      */
     public void setStrictprops(boolean strictprops) {
         this.strictprops = strictprops;
@@ -367,7 +399,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether the compiler should force catching of exceptions by explicitly
-     * named types
+     * named types.
+     * @param strictsignal a <code>boolean</code> value.
      */
     public void setStrictsignal(boolean strictsignal) {
         this.strictsignal = strictsignal;
@@ -378,6 +411,7 @@ public class NetRexxC extends MatchingTask {
      * Sets whether debug symbols should be generated into the class file
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is false.
+     * @param symbols a <code>boolean</code> value.
      */
     public void setSymbols(boolean symbols) {
         this.symbols = symbols;
@@ -388,21 +422,27 @@ public class NetRexxC extends MatchingTask {
      * Asks the NetRexx compiler to print compilation times to the console
      * Valid true values are "on" or "true". Anything else sets the flag to
      * false. The default value is false.
+     * @param time a <code>boolean</code> value.
      */
     public void setTime(boolean time) {
         this.time = time;
     }
 
-
+    /**
+     * Turns on or off tracing and directs the resultant trace output Valid
+     * values are: "trace", "trace1", "trace2" and "notrace". "trace" and
+     * "trace2".
+     * @param trace the value to set.
+     */
     public void setTrace(TraceAttr trace) {
         this.trace = trace.getValue();
     }
 
-
     /**
      * Turns on or off tracing and directs the resultant trace output Valid
      * values are: "trace", "trace1", "trace2" and "notrace". "trace" and
-     * "trace2"
+     * "trace2".
+     * @param trace the value to set.
      */
     public void setTrace(String trace) {
         TraceAttr t = new TraceAttr();
@@ -416,6 +456,7 @@ public class NetRexxC extends MatchingTask {
      * Tells the NetRexx compiler that the source is in UTF8 Valid true values
      * are "on" or "true". Anything else sets the flag to false. The default
      * value is false.
+     * @param utf8 a <code>boolean</code> value.
      */
     public void setUtf8(boolean utf8) {
         this.utf8 = utf8;
@@ -424,6 +465,7 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether lots of warnings and error messages should be generated
+     * @param verbose the value to set - verbose&lt;level&gt; or noverbose.
      */
     public void setVerbose(VerboseAttr verbose) {
         this.verbose = verbose.getValue();
@@ -432,6 +474,7 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether lots of warnings and error messages should be generated
+     * @param verbose the value to set - verbose&lt;level&gt; or noverbose.
      */
     public void setVerbose(String verbose) {
         VerboseAttr v = new VerboseAttr();
@@ -440,11 +483,11 @@ public class NetRexxC extends MatchingTask {
         setVerbose(v);
     }
 
-
     /**
      * Whether the task should suppress the "Method argument is not used" in
      * strictargs-Mode, which can not be suppressed by the compiler itself.
      * The warning is logged as verbose message, though.
+     * @param suppressMethodArgumentNotUsed a <code>boolean</code> value.
      */
     public void setSuppressMethodArgumentNotUsed(boolean suppressMethodArgumentNotUsed) {
         this.suppressMethodArgumentNotUsed = suppressMethodArgumentNotUsed;
@@ -455,6 +498,7 @@ public class NetRexxC extends MatchingTask {
      * Whether the task should suppress the "Private property is defined but
      * not used" in strictargs-Mode, which can be quite annoying while
      * developing. The warning is logged as verbose message, though.
+     * @param suppressPrivatePropertyNotUsed a <code>boolean</code> value.
      */
     public void setSuppressPrivatePropertyNotUsed(boolean suppressPrivatePropertyNotUsed) {
         this.suppressPrivatePropertyNotUsed = suppressPrivatePropertyNotUsed;
@@ -465,6 +509,7 @@ public class NetRexxC extends MatchingTask {
      * Whether the task should suppress the "Variable is set but not used" in
      * strictargs-Mode. Be careful with this one! The warning is logged as
      * verbose message, though.
+     * @param suppressVariableNotUsed a <code>boolean</code> value.
      */
     public void setSuppressVariableNotUsed(boolean suppressVariableNotUsed) {
         this.suppressVariableNotUsed = suppressVariableNotUsed;
@@ -475,6 +520,7 @@ public class NetRexxC extends MatchingTask {
      * Whether the task should suppress the "FooException is in SIGNALS list
      * but is not signalled within the method", which is sometimes rather
      * useless. The warning is logged as verbose message, though.
+     * @param suppressExceptionNotSignalled a <code>boolean</code> value.
      */
     public void setSuppressExceptionNotSignalled(boolean suppressExceptionNotSignalled) {
         this.suppressExceptionNotSignalled = suppressExceptionNotSignalled;
@@ -484,6 +530,7 @@ public class NetRexxC extends MatchingTask {
     /**
      * Tells whether we should filter out any deprecation-messages
      * of the compiler out.
+     * @param suppressDeprecation a <code>boolean</code> value.
      */
     public void setSuppressDeprecation(boolean suppressDeprecation) {
         this.suppressDeprecation = suppressDeprecation;
@@ -597,7 +644,10 @@ public class NetRexxC extends MatchingTask {
     }
 
 
-    /** Executes the task - performs the actual compiler call.  */
+    /**
+     * Executes the task - performs the actual compiler call.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
 
         // first off, make sure that we've got a srcdir and destdir
@@ -887,14 +937,21 @@ public class NetRexxC extends MatchingTask {
     }
 
 
+    /**
+     * Enumerated class corresponding to the trace attribute.
+     */
     public static class TraceAttr extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[]{"trace", "trace1", "trace2", "notrace"};
         }
     }
 
-
+    /**
+     * Enumerated class corresponding to the verbose attribute.
+     */
     public static class VerboseAttr extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[]{"verbose", "verbose0", "verbose1",
                 "verbose2", "verbose3", "verbose4",

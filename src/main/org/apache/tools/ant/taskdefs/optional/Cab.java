@@ -52,12 +52,15 @@ public class Cab extends MatchingTask {
     private boolean doVerbose = false;
     private String cmdOptions;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String archiveType = "cab";
+    // CheckStyle:VisibilityModifier ON
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The name/location of where to create the .cab file.
+     * @param cabFile the location of the cab file.
      */
     public void setCabfile(File cabFile) {
         this.cabFile = cabFile;
@@ -65,6 +68,7 @@ public class Cab extends MatchingTask {
 
     /**
      * Base directory to look in for files to CAB.
+     * @param baseDir base directory for files to cab.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
@@ -72,6 +76,7 @@ public class Cab extends MatchingTask {
 
     /**
      * If true, compress the files otherwise only store them.
+     * @param compress a <code>boolean</code> value.
      */
     public void setCompress(boolean compress) {
         doCompress = compress;
@@ -79,6 +84,7 @@ public class Cab extends MatchingTask {
 
     /**
      * If true, display cabarc output.
+     * @param verbose a <code>boolean</code> value.
      */
     public void setVerbose(boolean verbose) {
         doVerbose = verbose;
@@ -86,6 +92,7 @@ public class Cab extends MatchingTask {
 
     /**
      * Sets additional cabarc options that are not supported directly.
+     * @param options cabarc command line options.
      */
     public void setOptions(String options) {
         cmdOptions = options;
@@ -93,6 +100,7 @@ public class Cab extends MatchingTask {
 
     /**
      * Adds a set of files to archive.
+     * @param set a set of files to archive.
      */
     public void addFileset(FileSet set) {
         if (filesets.size() > 0) {
@@ -105,6 +113,10 @@ public class Cab extends MatchingTask {
      * I'm not fond of this pattern: "sub-method expected to throw
      * task-cancelling exceptions".  It feels too much like programming
      * for side-effects to me...
+     */
+    /**
+     * Check if the attributes and nested elements are correct.
+     * @throws BuildException on error.
      */
     protected void checkConfiguration() throws BuildException {
         if (baseDir == null && filesets.size() == 0) {
@@ -128,6 +140,7 @@ public class Cab extends MatchingTask {
     /**
      * Create a new exec delegate.  The delegate task is populated so that
      * it appears in the logs to be the same task as this one.
+     * @throws BuildException on error.
      */
     protected ExecTask createExec() throws BuildException {
         ExecTask exec = new ExecTask(this);
@@ -136,6 +149,7 @@ public class Cab extends MatchingTask {
 
     /**
      * Check to see if the target is up to date with respect to input files.
+     * @param files the list of files to check.
      * @return true if the cab file is newer than its dependents.
      */
     protected boolean isUpToDate(Vector files) {
@@ -156,6 +170,9 @@ public class Cab extends MatchingTask {
      *
      * <p>This method expects to only be called on Windows and thus
      * quotes the file names.</p>
+     * @param files the list of files to use.
+     * @param the list file created.
+     * @throws IOException if there is an error.
      */
     protected File createListFile(Vector files)
         throws IOException {
@@ -175,6 +192,8 @@ public class Cab extends MatchingTask {
 
     /**
      * Append all files found by a directory scanner to a vector.
+     * @param files the vector to append the files to.
+     * @param ds the scanner to get the files from.
      */
     protected void appendFiles(Vector files, DirectoryScanner ds) {
         String[] dsfiles = ds.getIncludedFiles();
@@ -188,6 +207,7 @@ public class Cab extends MatchingTask {
      * Get the complete list of files to be included in the cab.  Filenames
      * are gathered from the fileset if it has been added, otherwise from the
      * traditional include parameters.
+     * @return the list of files.
      */
     protected Vector getFileList() throws BuildException {
         Vector files = new Vector();
@@ -204,6 +224,10 @@ public class Cab extends MatchingTask {
         return files;
     }
 
+    /**
+     * execute this task.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
 
         checkConfiguration();
