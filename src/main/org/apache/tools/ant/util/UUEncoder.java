@@ -40,7 +40,7 @@ public class UUEncoder {
      * Constructor specifing a name for the encoded buffer, begin
      * line will be:
      * <pre>
-     *	begin 644 [NAME]
+     *   begin 644 [NAME]
      * </pre>
      * @param name the name of the encoded buffer.
      */

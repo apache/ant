@@ -65,22 +65,22 @@ public abstract class EnumeratedAttribute {
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=14831</a>
      */
     public static EnumeratedAttribute getInstance(
-    		Class/*<? extends EnumeratedAttribute>*/ clazz,
-    		String value) throws BuildException {
-		if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
-	    	throw new BuildException("You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
-	    }
-		EnumeratedAttribute ea = null;
-	    try {
-	        ea = (EnumeratedAttribute) clazz.newInstance();
-	    } catch (Exception e) {
-	        throw new BuildException(e);
-	    }
-	    ea.setValue(value);
-	    return ea;
-	}
+        Class/*<? extends EnumeratedAttribute>*/ clazz,
+        String value) throws BuildException {
+        if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
+            throw new BuildException("You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
+        }
+        EnumeratedAttribute ea = null;
+        try {
+            ea = (EnumeratedAttribute) clazz.newInstance();
+        } catch (Exception e) {
+            throw new BuildException(e);
+        }
+        ea.setValue(value);
+        return ea;
+    }
 
-	/**
+    /**
      * Invoked by {@link org.apache.tools.ant.IntrospectionHelper IntrospectionHelper}.
      * @param value the <code>String</code> value of the attribute
      * @throws BuildException if the value is not valid for the attribute

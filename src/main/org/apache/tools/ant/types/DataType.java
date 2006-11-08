@@ -360,8 +360,8 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
         DataType dt = (DataType) super.clone();
         dt.setDescription(getDescription());
         if (getRefid() != null) {
-	    dt.setRefid(getRefid());
-	}
+            dt.setRefid(getRefid());
+        }
         dt.setChecked(isChecked());
         return dt;
     }
