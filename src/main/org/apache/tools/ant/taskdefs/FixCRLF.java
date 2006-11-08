@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class FixCRLF extends MatchingTask implements ChainableReader {
 
-    private static final String ERROR_FILE_AND_SRCDIR
+    public static final String ERROR_FILE_AND_SRCDIR
         = "srcdir and file are mutually exclusive";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

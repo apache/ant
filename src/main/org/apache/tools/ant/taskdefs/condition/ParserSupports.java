@@ -35,18 +35,26 @@ public class ParserSupports extends ProjectComponent implements Condition {
     private String feature;
     private String property;
     private String value;
-    private static final String ERROR_BOTH_ATTRIBUTES =
+    // Error messages
+    /** error - combined attributes not allowed */
+    public static final String ERROR_BOTH_ATTRIBUTES =
             "Property and feature attributes are exclusive";
-    private static final String FEATURE = "feature";
-    private static final String PROPERTY = "property";
+    /** feature */
+    public static final String FEATURE = "feature";
+    /** property */
+    public static final String PROPERTY = "property";
 
-    private static final String NOT_RECOGNIZED =
+    /** error - not recognized */
+    public static final String NOT_RECOGNIZED =
             " not recognized: ";
-    private static final String NOT_SUPPORTED =
+    /** error - not supported */
+    public static final String NOT_SUPPORTED =
             " not supported: ";
-    private static final String ERROR_NO_ATTRIBUTES =
+    /** error - missing attribute */
+    public static final String ERROR_NO_ATTRIBUTES =
         "Neither feature or property are set";
-    private static final String ERROR_NO_VALUE =
+    /** error - no value */
+    public static final String ERROR_NO_VALUE =
         "A value is needed when testing for property support";
 
     /**

@@ -65,11 +65,11 @@ public class IsReachable extends ProjectComponent implements Condition {
     /**
      * Error when no hostname is defined
      */
-    private static final String ERROR_NO_HOSTNAME = "No hostname defined";
+    public static final String ERROR_NO_HOSTNAME = "No hostname defined";
     /**
      * Error when invalid timeout value is defined
      */
-    private static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
+    public static final String ERROR_BAD_TIMEOUT = "Invalid timeout value";
     /**
      * Unknown host message is seen.
      */
@@ -77,14 +77,19 @@ public class IsReachable extends ProjectComponent implements Condition {
     /**
      * Network error message is seen.
      */
-    private static final String ERROR_ON_NETWORK = "network error to ";
-    private static final String ERROR_BOTH_TARGETS
+    public static final String ERROR_ON_NETWORK = "network error to ";
+    /** Error message when url and host are specified. */
+    public static final String ERROR_BOTH_TARGETS
         = "Both url and host have been specified";
-    private static final String MSG_NO_REACHABLE_TEST
+    /** Error message when no reachably test avail. */
+    public static final String MSG_NO_REACHABLE_TEST
         = "cannot do a proper reachability test on this Java version";
-    private static final String ERROR_BAD_URL = "Bad URL ";
-    private static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
-    private static final String METHOD_NAME = "isReachable";
+    /** Error message when an invalid url is used. */
+    public static final String ERROR_BAD_URL = "Bad URL ";
+    /** Error message when no hostname in url. */
+    public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
+    /** The method name to look for in InetAddress */
+    public static final String METHOD_NAME = "isReachable";
 
     /**
      * Set the host to ping.
