@@ -79,6 +79,7 @@ public class AggregateTransformer {
         }
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** Task */
     protected Task task;
 
@@ -123,6 +124,7 @@ public class AggregateTransformer {
        privateDBFactory = DocumentBuilderFactory.newInstance();
        dbfactory = privateDBFactory;
     }
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * constructor creating the transformer from the junitreport task.

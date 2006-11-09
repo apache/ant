@@ -40,27 +40,61 @@ import org.apache.tools.ant.types.Permissions;
  */
 public interface JUnitTaskMirror {
 
+    /**
+     * Add the formatter to be called when the jvm exits before
+     * the test suite finishs.
+     * @param test the test.
+     * @param formatter the fomatter to use.
+     * @param out the output stream to use.
+     * @param message the message to write out.
+     * @param testCase the name of the test.
+     */
     void addVmExit(JUnitTest test, JUnitResultFormatterMirror formatter,
             OutputStream out, String message, String testCase);
 
+    /**
+     * Create a new test runner for a test.
+     * @param test the test to run.
+     * @param haltOnError if true halt the tests if an error occurs.
+     * @param filterTrace if true filter the stack traces.
+     * @param haltOnFailure if true halt the test if a failure occurs.
+     * @param showOutput    if true show output.
+     * @param logTestListenerEvents if true log test listener events.
+     * @param classLoader      the classloader to use to create the runner.
+     * @return the test runner.
+     */
     JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, boolean haltOnError,
             boolean filterTrace, boolean haltOnFailure, boolean showOutput,
             boolean logTestListenerEvents, AntClassLoader classLoader);
 
+    /**
+     * Create a summary result formatter.
+     * @return the created formatter.
+     */
     SummaryJUnitResultFormatterMirror newSummaryJUnitResultFormatter();
 
+
+    /** The interface that JUnitResultFormatter extends. */
     public interface JUnitResultFormatterMirror {
-
+        /**
+         * Set the output stream.
+         * @param outputStream the stream to use.
+         */
         void setOutput(OutputStream outputStream);
-
     }
 
-    public interface SummaryJUnitResultFormatterMirror extends JUnitResultFormatterMirror {
+    /** The interface that SummaryJUnitResultFormatter extends. */
+    public interface SummaryJUnitResultFormatterMirror
+        extends JUnitResultFormatterMirror {
 
+        /**
+         * Set where standard out and standard error should be included.
+         * @param value if true include the outputs in the summary.
+         */
         void setWithOutAndErr(boolean value);
-
     }
 
+    /** Interface that test runners implement. */
     public interface JUnitTestRunnerMirror {
 
         /**
@@ -87,12 +121,26 @@ public interface JUnitTaskMirror {
          */
         int ERRORS = 2;
 
+        /**
+         * Permissions for the test run.
+         * @param perm the permissions to use.
+         */
         void setPermissions(Permissions perm);
 
+        /** Run the test. */
         void run();
 
+        /**
+         * Add a formatter to the test.
+         * @param formatter the formatter to use.
+         */
         void addFormatter(JUnitResultFormatterMirror formatter);
 
+        /**
+         * Returns what System.exit() would return in the standalone version.
+         *
+         * @return 2 if errors occurred, 1 if tests failed else 0.
+         */
         int getRetCode();
 
         void handleErrorFlush(String output);

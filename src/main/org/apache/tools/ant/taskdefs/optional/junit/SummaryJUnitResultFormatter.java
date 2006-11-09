@@ -30,7 +30,9 @@ import org.apache.tools.ant.BuildException;
  *
  */
 
-public class SummaryJUnitResultFormatter implements JUnitResultFormatter, JUnitTaskMirror.SummaryJUnitResultFormatterMirror {
+public class SummaryJUnitResultFormatter
+    implements JUnitResultFormatter
+    ,JUnitTaskMirror.SummaryJUnitResultFormatterMirror {
 
     /**
      * Formatter for timings.

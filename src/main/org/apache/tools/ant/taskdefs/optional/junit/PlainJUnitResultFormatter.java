@@ -68,19 +68,23 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     private String systemOutput = null;
     private String systemError = null;
 
+    /** No arg constructor */
     public PlainJUnitResultFormatter() {
         inner = new StringWriter();
         wri = new PrintWriter(inner);
     }
 
+    /** {@inheritDoc}. */
     public void setOutput(OutputStream out) {
         this.out = out;
     }
 
+    /** {@inheritDoc}. */
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
+    /** {@inheritDoc}. */
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -161,6 +165,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener.
      *
      * <p>A new Test is started.
+     * @param t the test.
      */
     public void startTest(Test t) {
         testStarts.put(t, new Long(System.currentTimeMillis()));
@@ -171,6 +176,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener.
      *
      * <p>A Test is finished.
+     * @param t the test.
      */
     public void endTest(Test test) {
         if (Boolean.TRUE.equals(failed.get(test))) {
@@ -195,6 +201,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t the exception.
      */
     public void addFailure(Test test, Throwable t) {
         formatError("\tFAILED", test, t);
@@ -204,6 +212,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener for JUnit &gt; 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t  the assertion that failed.
      */
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
@@ -213,6 +223,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener.
      *
      * <p>An error occurred while running the test.
+     * @param test the test.
+     * @param t    the exception.
      */
     public void addError(Test test, Throwable t) {
         formatError("\tCaused an ERROR", test, t);

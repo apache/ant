@@ -60,6 +60,7 @@ public final class DOMUtil {
      * @param   filter  the filter that children should match.
      * @param   recurse <tt>true</tt> if you want the list to be made recursively
      *                  otherwise <tt>false</tt>.
+     * @return the node list that matches the filter.
      */
     public static NodeList listChildNodes(Node parent, NodeFilter filter, boolean recurse) {
         NodeListImpl matches = new NodeListImpl();
@@ -85,9 +86,18 @@ public final class DOMUtil {
 
     /** custom implementation of a nodelist */
     public static class NodeListImpl extends Vector implements NodeList {
+        /**
+         * Get the number of nodes in the list.
+         * @return the length of the list.
+         */
         public int getLength() {
             return size();
         }
+        /**
+         * Get a particular node.
+         * @param i the index of the node to get.
+         * @return the node if the index is in bounds, null otherwise.
+         */
         public Node item(int i) {
             try {
                 return (Node) elementAt(i);
@@ -205,6 +215,7 @@ public final class DOMUtil {
                 }
             }
         } catch (DOMException ignored) {
+            // Ignore
         }
 
         // bingo append it. (this should normally not be done here)

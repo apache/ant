@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLResultAggregator extends Task implements XMLConstants {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** the list of all filesets, that should contains the xml to aggregate */
     protected Vector filesets = new Vector();
 
@@ -80,15 +81,19 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /**
      * text checked for in tests, {@value}
      */
-    static final String WARNING_IS_POSSIBLY_CORRUPTED = " is not a valid XML document. It is possibly corrupted.";
+    static final String WARNING_IS_POSSIBLY_CORRUPTED
+        = " is not a valid XML document. It is possibly corrupted.";
     /**
      * text checked for in tests, {@value}
      */
-    static final String WARNING_INVALID_ROOT_ELEMENT = " is not a valid testsuite XML document";
+    static final String WARNING_INVALID_ROOT_ELEMENT
+        = " is not a valid testsuite XML document";
     /**
      * text checked for in tests, {@value}
      */
-    static final String WARNING_EMPTY_FILE = " is empty.\nThis can be caused by the test JVM exiting unexpectedly";
+    static final String WARNING_EMPTY_FILE
+        = " is empty.\nThis can be caused by the test JVM exiting unexpectedly";
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Generate a report based on the document created by the merge.

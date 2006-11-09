@@ -59,10 +59,13 @@ public class FormatterElement {
     private String ifProperty;
     private String unlessProperty;
 
+    /** xml formatter class */
     public static final String XML_FORMATTER_CLASS_NAME =
         "org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter";
+    /** brief formatter class */
     public static final String BRIEF_FORMATTER_CLASS_NAME =
         "org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter";
+    /** plain formatter class */
     public static final String PLAIN_FORMATTER_CLASS_NAME =
         "org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter";
 
@@ -78,6 +81,7 @@ public class FormatterElement {
      *
      * <p> Sets <code>classname</code> attribute - so you can't use that
      * attribute if you use this one.
+     * @param type the enumerated value to use.
      */
     public void setType(TypeAttribute type) {
         if ("xml".equals(type.getValue())) {
@@ -95,6 +99,7 @@ public class FormatterElement {
      * <p> Set name of class to be used as the formatter.
      *
      * <p> This class must implement <code>JUnitResultFormatter</code>
+     * @param classname the name of the formatter class.
      */
     public void setClassname(String classname) {
         this.classname = classname;
@@ -109,15 +114,24 @@ public class FormatterElement {
 
     /**
      * Get name of class to be used as the formatter.
+     * @return the name of the class.
      */
     public String getClassname() {
         return classname;
     }
 
+    /**
+     * Set the extension to use for the report file.
+     * @param ext the extension to use.
+     */
     public void setExtension(String ext) {
         this.extension = ext;
     }
 
+    /**
+     * Get the extension used for the report file.
+     * @return the extension.
+     */
     public String getExtension() {
         return extension;
     }
@@ -135,6 +149,7 @@ public class FormatterElement {
      * <p> Set output stream for formatter to use.
      *
      * <p> Defaults to standard out.
+     * @param out the output stream to use.
      */
     public void setOutput(OutputStream out) {
         this.out = out;
@@ -142,6 +157,8 @@ public class FormatterElement {
 
     /**
      * Set whether the formatter should log to file.
+     * @param useFile if true use a file, if false send
+     *                to standard out.
      */
     public void setUseFile(boolean useFile) {
         this.useFile = useFile;
@@ -176,6 +193,8 @@ public class FormatterElement {
     /**
      * Ensures that the selector passes the conditions placed
      * on it with <code>if</code> and <code>unless</code> properties.
+     * @param t the task the this formatter is used in.
+     * @return true if the formatter should be used.
      */
     public boolean shouldUse(Task t) {
         if (ifProperty != null && t.getProject().getProperty(ifProperty) == null) {
@@ -215,9 +234,13 @@ public class FormatterElement {
                 f = Class.forName(classname, true, loader);
             }
         } catch (ClassNotFoundException e) {
-            throw new BuildException("Using loader " + loader + " on class " + classname + ": " + e, e);
+            throw new BuildException(
+                "Using loader " + loader + " on class " + classname
+                + ": " + e, e);
         } catch (NoClassDefFoundError e) {
-            throw new BuildException("Using loader " + loader + " on class " + classname + ": " + e, e);
+            throw new BuildException(
+                "Using loader " + loader + " on class " + classname
+                + ": " + e, e);
         }
 
         Object o = null;
@@ -233,7 +256,8 @@ public class FormatterElement {
             throw new BuildException(classname
                 + " is not a JUnitResultFormatter");
         }
-        JUnitTaskMirror.JUnitResultFormatterMirror r = (JUnitTaskMirror.JUnitResultFormatterMirror) o;
+        JUnitTaskMirror.JUnitResultFormatterMirror r =
+            (JUnitTaskMirror.JUnitResultFormatterMirror) o;
         if (useFile && outFile != null) {
             try {
                 out = new BufferedOutputStream(new FileOutputStream(outFile));
@@ -251,6 +275,7 @@ public class FormatterElement {
      * <p> Use to enumerate options for <code>type</code> attribute.
      */
     public static class TypeAttribute extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"plain", "xml", "brief"};
         }

@@ -54,6 +54,8 @@ public class JUnitVersionHelper {
      *
      * <p>Since Ant 1.7 also checks for JUnit4TestCaseFacade explicitly.
      * This is used by junit.framework.JUnit4TestAdapter.</p>
+     * @param t the test.
+     * @return the name of the test.
      */
     public static String getTestCaseName(Test t) {
         if (t != null && t.getClass().getName().equals("junit.framework.JUnit4TestCaseFacade")) {

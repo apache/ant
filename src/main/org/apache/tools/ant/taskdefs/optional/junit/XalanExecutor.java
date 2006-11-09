@@ -37,8 +37,10 @@ abstract class XalanExecutor {
     private static final String PACKAGE =
         "org.apache.tools.ant.taskdefs.optional.junit.";
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** the transformer caller */
     protected AggregateTransformer caller;
+    // CheckStyle:VisibilityModifier ON
 
     /** set the caller for this object. */
     private void setCaller(AggregateTransformer caller) {

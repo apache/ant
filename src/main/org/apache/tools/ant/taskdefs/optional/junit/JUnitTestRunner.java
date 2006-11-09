@@ -543,7 +543,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Permissions for the test run.
      * @since Ant 1.6
-     * @param permissions
+     * @param permissions the permissions to use.
      */
     public void setPermissions(Permissions permissions) {
         perm = permissions;
@@ -689,7 +689,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             } else if (args[i].startsWith(Constants.SHOWOUTPUT)) {
                 showOut = Project.toBoolean(args[i].substring(Constants.SHOWOUTPUT.length()));
             } else if (args[i].startsWith(Constants.LOGTESTLISTENEREVENTS)) {
-                logTestListenerEvents = Project.toBoolean(args[i].substring(Constants.LOGTESTLISTENEREVENTS.length()));
+                logTestListenerEvents = Project.toBoolean(
+                    args[i].substring(Constants.LOGTESTLISTENEREVENTS.length()));
             } else if (args[i].startsWith(Constants.OUTPUT_TO_FORMATTERS)) {
                 outputToFormat = Project.toBoolean(
                     args[i].substring(Constants.OUTPUT_TO_FORMATTERS.length()));
@@ -828,6 +829,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Returns a filtered stack trace.
      * This is ripped out of junit.runner.BaseTestRunner.
+     * @param t the exception to filter.
+     * @return the filtered stack trace.
      */
     public static String getFilteredTrace(Throwable t) {
         String trace = StringUtils.getStackTrace(t);
@@ -836,6 +839,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Filters stack frames from internal JUnit and Ant classes
+     * @param stack the stack trace to filter.
      */
     public static String filterStack(String stack) {
         if (!filtertrace) {
@@ -936,7 +940,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         return new TestListener() {
             public void addError(Test test, Throwable t) {
                 if (junit4 && t instanceof AssertionFailedError) {
-                    // JUnit 4 does not distinguish between errors and failures even in the JUnit 3 adapter.
+                    // JUnit 4 does not distinguish between errors and failures
+                    // even in the JUnit 3 adapter.
                     // So we need to help it a bit to retain compatibility for JUnit 3 tests.
                     testListener.addFailure(test, (AssertionFailedError) t);
                 } else if (junit4 && t.getClass().getName().equals("java.lang.AssertionError")) {
@@ -949,7 +954,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                         AssertionFailedError failure = msg != null
                             ? new AssertionFailedError(msg) : new AssertionFailedError();
                         // To compile on pre-JDK 4 (even though this should always succeed):
-                        Method initCause = Throwable.class.getMethod("initCause", new Class[] {Throwable.class});
+                        Method initCause = Throwable.class.getMethod(
+                            "initCause", new Class[] {Throwable.class});
                         initCause.invoke(failure, new Object[] {t});
                         testListener.addFailure(test, failure);
                     } catch (Exception e) {
@@ -996,7 +1002,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         e = res.errors();
         while (e.hasMoreElements()) {
             Throwable t = ((TestFailure) e.nextElement()).thrownException();
-            if (t instanceof AssertionFailedError || t.getClass().getName().equals("java.lang.AssertionError")) {
+            if (t instanceof AssertionFailedError
+                || t.getClass().getName().equals("java.lang.AssertionError")) {
                 failures++;
             } else {
                 errors++;

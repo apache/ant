@@ -38,33 +38,35 @@ import org.apache.tools.ant.BuildException;
  */
 public class Xalan2Executor extends XalanExecutor {
 
-    private static final String aPack = "org.apache.xalan.";
-    private static final String sPack = "com.sun.org.apache.xalan.";
+    private static final String APAC = "org.apache.xalan.";
+    private static final String SPAC = "com.sun.org.apache.xalan.";
 
     private TransformerFactory tfactory = TransformerFactory.newInstance();
 
+    /** {@inheritDoc}. */
     protected String getImplementation() throws BuildException {
         return tfactory.getClass().getName();
     }
 
+    /** {@inheritDoc}. */
     protected String getProcVersion(String classNameImpl)
         throws BuildException {
         try {
             // xalan 2
-            if (classNameImpl.equals(aPack + "processor.TransformerFactoryImpl")
+            if (classNameImpl.equals(APAC + "processor.TransformerFactoryImpl")
                 ||
-                classNameImpl.equals(aPack + "xslt.XSLTProcessorFactory")) {
-                return getXalanVersion(aPack + "processor.XSLProcessorVersion");
+                classNameImpl.equals(APAC + "xslt.XSLTProcessorFactory")) {
+                return getXalanVersion(APAC + "processor.XSLProcessorVersion");
             }
             // xalan xsltc
-            if (classNameImpl.equals(aPack
+            if (classNameImpl.equals(APAC
                                      + "xsltc.trax.TransformerFactoryImpl")) {
-                return getXSLTCVersion(aPack + "xsltc.ProcessorVersion");
+                return getXSLTCVersion(APAC + "xsltc.ProcessorVersion");
             }
             // jdk 1.5 xsltc
             if (classNameImpl
-                .equals(sPack + "internal.xsltc.trax.TransformerFactoryImpl")) {
-                return getXSLTCVersion(sPack
+                .equals(SPAC + "internal.xsltc.trax.TransformerFactoryImpl")) {
+                return getXSLTCVersion(SPAC
                                        + "internal.xsltc.ProcessorVersion");
             }
             throw new BuildException("Could not find a valid processor version"
@@ -76,16 +78,17 @@ public class Xalan2Executor extends XalanExecutor {
         }
     }
 
+    /** {@inheritDoc}. */
     void execute() throws Exception {
-        String system_id = caller.getStylesheetSystemId();
-        Source xsl_src = new StreamSource(system_id);
-        Transformer tformer = tfactory.newTransformer(xsl_src);
-        Source xml_src = new DOMSource(caller.document);
+        String systemId = caller.getStylesheetSystemId();
+        Source xslSrc = new StreamSource(systemId);
+        Transformer tformer = tfactory.newTransformer(xslSrc);
+        Source xmlSrc = new DOMSource(caller.document);
         OutputStream os = getOutputStream();
         try {
             tformer.setParameter("output.dir", caller.toDir.getAbsolutePath());
             Result result = new StreamResult(os);
-            tformer.transform(xml_src, result);
+            tformer.transform(xmlSrc, result);
         } finally {
             os.close();
         }

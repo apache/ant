@@ -97,7 +97,7 @@ public final class BatchTest extends BaseTest {
      * @return  an enumeration of all elements of this batchtest that are
      * a <tt>JUnitTest</tt> instance.
      */
-    public final Enumeration elements() {
+    public Enumeration elements() {
         JUnitTest[] tests = createAllJUnitTest();
         return Enumerations.fromArray(tests);
     }
@@ -108,7 +108,7 @@ public final class BatchTest extends BaseTest {
      * @param v the vector to which should be added all individual tests of this
      * batch test.
      */
-    final void addTestsTo(Vector v) {
+    void addTestsTo(Vector v) {
         JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity(v.size() + tests.length);
         for (int i = 0; i < tests.length; i++) {
@@ -168,7 +168,7 @@ public final class BatchTest extends BaseTest {
      * @param filename the filename to "convert" to a classname.
      * @return the classname matching the filename.
      */
-    public static final String javaToClass(String filename) {
+    public static String javaToClass(String filename) {
         return filename.replace(File.separatorChar, '.').replace('/', '.')
             .replace('\\', '.');
     }

@@ -27,29 +27,37 @@ import org.apache.tools.ant.BuildException;
  * testrun.
  *
  */
-public interface JUnitResultFormatter extends TestListener, JUnitTaskMirror.JUnitResultFormatterMirror {
+public interface JUnitResultFormatter
+    extends TestListener, JUnitTaskMirror.JUnitResultFormatterMirror {
     /**
      * The whole testsuite started.
+     * @param suite the suite.
+     * @throws BuildException on error.
      */
     void startTestSuite(JUnitTest suite) throws BuildException;
 
     /**
      * The whole testsuite ended.
+     * @param suite the suite.
+     * @throws BuildException on error.
      */
     void endTestSuite(JUnitTest suite) throws BuildException;
 
     /**
      * Sets the stream the formatter is supposed to write its results to.
+     * @param out the output stream to use.
      */
     void setOutput(OutputStream out);
 
     /**
      * This is what the test has written to System.out
+     * @param out the string to write.
      */
     void setSystemOutput(String out);
 
     /**
      * This is what the test has written to System.err
+     * @param err the string to write.
      */
     void setSystemError(String err);
 }

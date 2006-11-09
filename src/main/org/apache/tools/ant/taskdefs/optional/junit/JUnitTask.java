@@ -293,7 +293,7 @@ public class JUnitTask extends Task {
      * haltonfailure, errorproperty, failureproperty and filtertrace
      * can share a forked Java VM, so even if you set the value to
      * "once", Ant may need to fork mutliple VMs.</p>
-     *
+     * @param mode the mode to use.
      * @since Ant 1.6.2
      */
     public void setForkMode(ForkMode mode) {
@@ -618,7 +618,7 @@ public class JUnitTask extends Task {
      * a bootclaspath.
      *
      * <p>Doesn't have any effect unless fork is true.</p>
-     *
+     * @param cloneVm a <code>boolean</code> value.
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
@@ -822,6 +822,8 @@ public class JUnitTask extends Task {
 
     /**
      * Execute a list of tests in a single forked Java VM.
+     * @param tests the list of tests to execute.
+     * @throws BuildException on error.
      */
     protected void execute(List tests) throws BuildException {
         JUnitTest test = null;
@@ -1088,7 +1090,16 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Handle an input request by this task.
      * @see Task#handleInput(byte[], int, int)
+     * This implementation delegates to a runner if it
+     * present.
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read.
+     *
+     * @return the number of bytes read.
+     * @exception IOException if the data cannot be read.
      *
      * @since Ant 1.6
      */
@@ -1380,7 +1391,11 @@ public class JUnitTask extends Task {
      */
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test, String testCase) {
-        logVmExit(feArray, test, "Timeout occurred. Please note the time in the report does not reflect the time until the timeout.", testCase);
+        logVmExit(
+            feArray, test,
+            "Timeout occurred. Please note the time in the report does"
+            + " not reflect the time until the timeout.",
+            testCase);
     }
 
     /**
@@ -1391,7 +1406,11 @@ public class JUnitTask extends Task {
      * @since Ant 1.7
      */
     private void logVmCrash(FormatterElement[] feArray, JUnitTest test, String testCase) {
-        logVmExit(feArray, test, "Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit.", testCase);
+        logVmExit(
+            feArray, test,
+            "Forked Java VM exited abnormally. Please note the time in the report"
+            + " does not reflect the time until the VM exit.",
+            testCase);
     }
 
     /**
@@ -1491,6 +1510,8 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Get the command line used to run the tests.
+     * @return the command line.
      * @since Ant 1.6.2
      */
     protected CommandlineJava getCommandline() {
@@ -1596,15 +1617,21 @@ public class JUnitTask extends Task {
          */
         public static final String PER_BATCH = "perBatch";
 
+        /** No arg constructor. */
         public ForkMode() {
             super();
         }
 
+        /**
+         * Constructor using a value.
+         * @param value the value to use - once, perTest or perBatch.
+         */
         public ForkMode(String value) {
             super();
             setValue(value);
         }
 
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {ONCE, PER_TEST, PER_BATCH};
         }
@@ -1615,7 +1642,9 @@ public class JUnitTask extends Task {
      * if the runIndividual argument is true.  Returns a collection of
      * lists of tests that share the same VM configuration and haven't
      * been executed yet.
-     *
+     * @param testList the list of tests to be executed or queued.
+     * @param runIndividual if true execute each test individually.
+     * @return a list of tasks to be executed.
      * @since 1.6.2
      */
     protected Collection executeOrQueue(Enumeration testList,
@@ -1645,7 +1674,10 @@ public class JUnitTask extends Task {
      * Logs information about failed tests, potentially stops
      * processing (by throwing a BuildException) if a failure/error
      * occurred or sets a property.
-     *
+     * @param exitValue the exitValue of the test.
+     * @param wasKilled if true, the test had been killed.
+     * @param test      the test in question.
+     * @param name      the name of the test.
      * @since Ant 1.6.2
      */
     protected void actOnTestResult(int exitValue, boolean wasKilled,
@@ -1660,7 +1692,9 @@ public class JUnitTask extends Task {
      * Logs information about failed tests, potentially stops
      * processing (by throwing a BuildException) if a failure/error
      * occurred or sets a property.
-     *
+     * @param result    the result of the test.
+     * @param test      the test in question.
+     * @param name      the name of the test.
      * @since Ant 1.7
      */
     protected void actOnTestResult(TestResultHolder result, JUnitTest test,
@@ -1692,23 +1726,44 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * A value class that contains thee result of a test.
+     */
     protected class TestResultHolder {
+        // CheckStyle:VisibilityModifier OFF - bc
+        /** the exit code of the test. */
         public int exitCode = JUnitTaskMirror.JUnitTestRunnerMirror.ERRORS;
+        /** true if the test timed out */
         public boolean timedOut = false;
+        /** true if the test crashed */
         public boolean crashed = false;
+        // CheckStyle:VisibilityModifier ON
     }
 
     /**
+     * A stream handler for handling the junit task.
      * @since Ant 1.7
      */
     protected static class JUnitLogOutputStream extends LogOutputStream {
         private Task task; // local copy since LogOutputStream.task is private
 
+        /**
+         * Constructor.
+         * @param task the task being logged.
+         * @param level the log level used to log data written to this stream.
+         */
         public JUnitLogOutputStream(Task task, int level) {
             super(task, level);
             this.task = task;
         }
 
+        /**
+         * Logs a line.
+         * If the line starts with junit.framework.TestListener: set the level
+         * to MSG_VERBOSE.
+         * @param line the line to log.
+         * @param level the logging level to use.
+         */
         protected void processLine(String line, int level) {
             if (line.startsWith(TESTLISTENER_PREFIX)) {
                 task.log(line, Project.MSG_VERBOSE);
@@ -1719,9 +1774,16 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * A log stream handler for junit.
      * @since Ant 1.7
      */
     protected static class JUnitLogStreamHandler extends PumpStreamHandler {
+        /**
+         * Constructor.
+         * @param task the task to log.
+         * @param outlevel the level to use for standard output.
+         * @param errlevel the level to use for error output.
+         */
         public JUnitLogStreamHandler(Task task, int outlevel, int errlevel) {
             super(new JUnitLogOutputStream(task, outlevel),
                   new LogOutputStream(task, errlevel));
