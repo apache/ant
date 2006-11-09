@@ -395,9 +395,9 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     private static class SimpleFilterReader extends Reader {
         private Reader in;
 
-        int[] preempt = new int[16];
+        private int[] preempt = new int[16];
 
-        int preemptIndex = 0;
+        private int preemptIndex = 0;
 
         public SimpleFilterReader(Reader in) {
             this.in = in;
@@ -486,7 +486,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     }
 
     private static class MaskJavaTabLiteralsFilter extends SimpleFilterReader {
-        boolean editsBlocked = false;
+        private boolean editsBlocked = false;
 
         private static final int JAVA = 1;
 
@@ -531,6 +531,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '/':
                     state = TRANS_TO_COMMENT;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
             case IN_CHAR_CONST:
@@ -538,6 +540,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '\'':
                     state = JAVA;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
             case IN_STR_CONST:
@@ -545,6 +549,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '"':
                     state = JAVA;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
             case IN_SINGLE_COMMENT:
@@ -554,6 +560,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '\r': // EOL
                     state = JAVA;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
             case IN_MULTI_COMMENT:
@@ -562,6 +570,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '*':
                     state = TRANS_FROM_MULTI;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
             case TRANS_TO_COMMENT:
@@ -589,21 +599,25 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 case '/':
                     state = JAVA;
                     break;
+                default:
+                    // Fall tru
                 }
                 break;
+            default:
+                // Fall tru
             }
             return thisChar;
         }
     }
 
     private static class NormalizeEolFilter extends SimpleFilterReader {
-        boolean previousWasEOL;
+        private boolean previousWasEOL;
 
-        boolean fixLast;
+        private boolean fixLast;
 
-        int normalizedEOL = 0;
+        private int normalizedEOL = 0;
 
-        char[] eol = null;
+        private char[] eol = null;
 
         public NormalizeEolFilter(Reader in, String eolString, boolean fixLast) {
             super(in);
@@ -660,6 +674,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                         push(c2);
                         push(c1);
                     }
+                default:
+                    // Fall tru
                 }
                 if (numEOL > 0) {
                     while (numEOL-- > 0) {
@@ -679,7 +695,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     }
 
     private static class AddEofFilter extends SimpleFilterReader {
-        int lastChar = -1;
+        private int lastChar = -1;
 
         public AddEofFilter(Reader in) {
             super(in);
@@ -702,7 +718,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     }
 
     private static class RemoveEofFilter extends SimpleFilterReader {
-        int lookAhead = -1;
+        private int lookAhead = -1;
 
         public RemoveEofFilter(Reader in) {
             super(in);
@@ -729,9 +745,9 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     }
 
     private static class AddTabFilter extends SimpleFilterReader {
-        int columnNumber = 0;
+        private int columnNumber = 0;
 
-        int tabLength = 0;
+        private int tabLength = 0;
 
         public AddTabFilter(Reader in, int tabLength) {
             super(in);
@@ -791,6 +807,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                     case '\t':
                         columnNumber += tabLength;
                         break;
+                    default:
+                        // Fall tru
                     }
                 }
                 break;
@@ -805,9 +823,9 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
     }
 
     private static class RemoveTabFilter extends SimpleFilterReader {
-        int columnNumber = 0;
+        private int columnNumber = 0;
 
-        int tabLength = 0;
+        private int tabLength = 0;
 
         public RemoveTabFilter(Reader in, int tabLength) {
             super(in);
@@ -851,15 +869,25 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
 
         private static final AddAsisRemove REMOVE = newInstance("remove");
 
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"add", "asis", "remove"};
         }
 
+        /**
+         * Equality depending in the index.
+         * @param other the object to test equality against.
+         * @return true if the object has the same index as this.
+         */
         public boolean equals(Object other) {
             return other instanceof AddAsisRemove
                     && getIndex() == ((AddAsisRemove) other).getIndex();
         }
 
+        /**
+         * Hashcode depending on the index.
+         * @return the index as the hashcode.
+         */
         public int hashCode() {
             return getIndex();
         }
@@ -882,6 +910,11 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             return newInstance(getValue());
         }
 
+        /**
+         * Create an instance of this enumerated value based on the string value.
+         * @param value the value to use.
+         * @return an enumerated instance.
+         */
         public static AddAsisRemove newInstance(String value) {
             AddAsisRemove a = new AddAsisRemove();
             a.setValue(value);
@@ -910,14 +943,24 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
         /**
          * @see EnumeratedAttribute#getValues
          */
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"asis", "cr", "lf", "crlf", "mac", "unix", "dos"};
         }
 
+        /**
+         * Equality depending in the index.
+         * @param other the object to test equality against.
+         * @return true if the object has the same index as this.
+         */
         public boolean equals(Object other) {
             return other instanceof CrLf && getIndex() == ((CrLf) other).getIndex();
         }
 
+        /**
+         * Hashcode depending on the index.
+         * @return the index as the hashcode.
+         */
         public int hashCode() {
             return getIndex();
         }
@@ -943,6 +986,11 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             return newInstance(getValue());
         }
 
+        /**
+         * Create an instance of this enumerated value based on the string value.
+         * @param value the value to use.
+         * @return an enumerated instance.
+         */
         public static CrLf newInstance(String value) {
             CrLf c = new CrLf();
             c.setValue(value);
