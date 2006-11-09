@@ -1,0 +1,8 @@
+<matches>
+  <foo>
+    <abc>
+      <foo/>
+      <foo/>
+    </abc>
+  </foo>
+</matches>

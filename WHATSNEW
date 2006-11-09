@@ -10,6 +10,9 @@ Fixed bugs:
 * docletpath attribute of javadoc ignored.
   Bugzilla 40900.
 
+* Incorrect recursion in DOMUtil.listChildNodes()
+  Bugzilla 40918.
+
 Other changes:
 --------------
 
