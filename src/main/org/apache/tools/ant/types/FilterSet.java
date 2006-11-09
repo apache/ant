@@ -41,11 +41,13 @@ public class FilterSet extends DataType implements Cloneable {
      *
      */
     public static class Filter {
+        // CheckStyle:VisibilityModifier OFF - bc
         /** Token which will be replaced in the filter operation. */
         String token;
 
         /** The value which will replace the token in the filtering operation. */
         String value;
+        // CheckStyle:VisibilityModifier ON
 
         /**
          * Constructor for the Filter object.
@@ -132,8 +134,11 @@ public class FilterSet extends DataType implements Cloneable {
         private static final String[] VALUES
             = new String[] {"fail", "warn", "ignore"};
 
+        /** Fail value */
         public static final OnMissing FAIL = new OnMissing("fail");
+        /** Warn value */
         public static final OnMissing WARN = new OnMissing("warn");
+        /** Ignore value */
         public static final OnMissing IGNORE = new OnMissing("ignore");
 
         private static final int FAIL_INDEX = 0;
@@ -155,6 +160,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
 
         //inherit doc
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return VALUES;
         }
@@ -254,6 +260,7 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @param filtersFile sets the filter file from which to read filters
      *        for this filter set.
+     * @throws BuildException if there is an error.
      */
     public void setFiltersfile(File filtersFile) throws BuildException {
         if (isReference()) {
@@ -599,6 +606,9 @@ public class FilterSet extends DataType implements Cloneable {
             throw new BuildException(message);
         case OnMissing.WARN_INDEX:
             log(message, Project.MSG_WARN);
+            return;
+        default:
+            throw new BuildException("Invalid value for onMissingFiltersFile");
         }
     }
 
