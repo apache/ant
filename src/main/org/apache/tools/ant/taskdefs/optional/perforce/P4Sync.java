@@ -50,8 +50,10 @@ import org.apache.tools.ant.Project;
  */
 public class P4Sync extends P4Base {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     String label;
     private String syncCmd = "";
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Label to sync client to; optional.

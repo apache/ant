@@ -30,9 +30,10 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
  * command line client
  */
 public abstract class P4HandlerAdapter  implements P4Handler {
-
+    // CheckStyle:VisibilityModifier OFF - bc
     String p4input = "";
     private PumpStreamHandler myHandler = null;
+    // CheckStyle:VisibilityModifier ON
     /**
      *  set any data to be written to P4's stdin
      *  @param p4Input the text to write to P4's stdin
@@ -50,7 +51,7 @@ public abstract class P4HandlerAdapter  implements P4Handler {
     /**
      * this routine gets called by the execute routine of the Execute class
      * it connects the PumpStreamHandler to the input/output/error streams of the process.
-     * @throws BuildException
+     * @throws BuildException if there is a error.
      * @see org.apache.tools.ant.taskdefs.Execute#execute
      */
     public void start() throws BuildException {
@@ -75,9 +76,11 @@ public abstract class P4HandlerAdapter  implements P4Handler {
         myHandler.stop();
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
     OutputStream os;    //Input
     InputStream is;     //Output
     InputStream es;     //Error
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * connects the handler to the input stream into Perforce

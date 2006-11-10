@@ -40,11 +40,13 @@ import java.util.Vector;
  */
 public class P4Submit extends P4Base {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     //ToDo: If dealing with default cl need to parse out <enter description here>
     /**
      * change list number
      */
     public String change;
+    // CheckStyle:VisibilityModifier ON
     /**
      * change property
      */
@@ -96,6 +98,10 @@ public class P4Submit extends P4Base {
      * internal class used to process the output of p4 submit
      */
     public class P4SubmitAdapter extends SimpleP4OutputHandler {
+        /**
+         * Constructor.
+         * @param parent a P4Base instance.
+         */
         public P4SubmitAdapter(P4Base parent) {
             super(parent);
         }
@@ -114,7 +120,7 @@ public class P4Submit extends P4Base {
                     util.split(myarray, line);
                     boolean found = false;
                     for (int counter = 0; counter < myarray.size(); counter++) {
-                        if (found == true) {
+                        if (found) {
                             String chnum = (String) myarray.elementAt(counter + 1);
                             int changenumber = Integer.parseInt(chnum);
                             log("Perforce change renamed " + changenumber, Project.MSG_INFO);

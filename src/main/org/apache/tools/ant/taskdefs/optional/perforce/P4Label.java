@@ -44,9 +44,11 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class P4Label extends P4Base {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String name;
     protected String desc;
     protected String lock;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * The name of the label; optional, default "AntLabel"

@@ -49,6 +49,7 @@ import org.apache.tools.ant.Project;
  */
 
 public class P4Counter extends P4Base {
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * name of the counter
      */
@@ -69,6 +70,8 @@ public class P4Counter extends P4Base {
      * new value for the counter
      */
     public int value = 0;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * The name of the counter; required

@@ -39,9 +39,11 @@ import org.apache.tools.ant.Project;
  * @ant.task category="scm"
  */
 public class P4Change extends P4Base {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     protected String emptyChangeList = null;
     protected String description = "AutoSubmit By Ant";
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * creates a new Perforce change list

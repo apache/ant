@@ -33,7 +33,9 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class SimpleP4OutputHandler extends P4HandlerAdapter {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     P4Base parent;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * simple constructor

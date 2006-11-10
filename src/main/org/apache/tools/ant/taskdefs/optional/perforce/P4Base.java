@@ -42,7 +42,8 @@ import org.apache.tools.ant.types.Commandline;
  * @see org.apache.tools.ant.taskdefs.Execute
  */
 public abstract class P4Base extends org.apache.tools.ant.Task {
-
+    // CheckStyle:VisibilityModifier OFF - bc
+    // CheckStyle:MemberNameCheck OFF - bc
     /**Perl5 regexp in Java - cool eh? */
     protected Perl5Util util = null;
     /** The OS shell to use (cmd.exe or /bin/sh) */
@@ -76,6 +77,10 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
     /** If inError is set, then errorMessage needs to contain the reason why. */
     private String errorMessage = "";
+
+    // CheckStyle:MemberNameCheck ON
+    // CheckStyle:VisibilityModifier ON
+
     /**
      * gets whether or not the task has encountered an error
      * @return error flag
@@ -115,39 +120,39 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
      * The p4d server and port to connect to;
      * optional, default "perforce:1666"
      *
-     * @param P4Port the port one wants to set such as localhost:1666
+     * @param p4Port the port one wants to set such as localhost:1666
      */
-    public void setPort(String P4Port) {
-        this.P4Port = "-p" + P4Port;
+    public void setPort(String p4Port) {
+        this.P4Port = "-p" + p4Port;
     }
 
     /**
      * The p4 client spec to use;
      * optional, defaults to the current user
      *
-     * @param P4Client the name of the Perforce client spec
+     * @param p4Client the name of the Perforce client spec
      */
-    public void setClient(String P4Client) {
-        this.P4Client = "-c" + P4Client;
+    public void setClient(String p4Client) {
+        this.P4Client = "-c" + p4Client;
     }
 
     /**
      * The p4 username;
      * optional, defaults to the current user
      *
-     * @param P4User the user name
+     * @param p4User the user name
      */
-    public void setUser(String P4User) {
-        this.P4User = "-u" + P4User;
+    public void setUser(String p4User) {
+        this.P4User = "-u" + p4User;
     }
     /**
      * Set global P4 options; Used on all
      * of the Perforce tasks.
      *
-     * @param P4Opts global options, to use a specific P4Config file for instance
+     * @param p4Opts global options, to use a specific P4Config file for instance
      */
-    public void setGlobalopts(String P4Opts) {
-        this.P4Opts = P4Opts;
+    public void setGlobalopts(String p4Opts) {
+        this.P4Opts = p4Opts;
     }
     /**
      * The client, branch or label view to operate upon;
@@ -161,21 +166,21 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
      * <li>p4resolve</li>
      * </ul>
      *
-     * @param P4View the view one wants to use
+     * @param p4View the view one wants to use
      */
-    public void setView(String P4View) {
-        this.P4View = P4View;
+    public void setView(String p4View) {
+        this.P4View = p4View;
     }
 
     /**
      * Set extra command options; only used on some
      * of the Perforce tasks.
      *
-     * @param P4CmdOpts  command line options going after the particular
+     * @param p4CmdOpts  command line options going after the particular
      * Perforce command
      */
-    public void setCmdopts(String P4CmdOpts) {
-        this.P4CmdOpts = P4CmdOpts;
+    public void setCmdopts(String p4CmdOpts) {
+        this.P4CmdOpts = p4CmdOpts;
     }
 
     /**

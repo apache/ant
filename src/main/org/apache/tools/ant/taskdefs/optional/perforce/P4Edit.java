@@ -40,10 +40,13 @@ import org.apache.tools.ant.BuildException;
 
 public class P4Edit extends P4Base {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * number of the change list to work on
      */
     public String change = null;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * An existing changelist number to assign files to; optional

@@ -42,10 +42,12 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class P4Labelsync extends P4Base {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String name;
     private boolean add; /* -a */
     private boolean delete; /* -n */
     private boolean simulationmode;  /* -n */
+    // CheckStyle:VisibilityModifier ON
     /**
      * -a flag of p4 labelsync - preserve files which exist in the label,
      * but not in the current view
