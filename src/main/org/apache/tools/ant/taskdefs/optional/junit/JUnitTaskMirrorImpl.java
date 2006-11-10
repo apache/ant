@@ -35,10 +35,15 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
 
     private final JUnitTask task;
 
+    /**
+     * Constructor.
+     * @param task the junittask that uses this mirror.
+     */
     public JUnitTaskMirrorImpl(JUnitTask task) {
         this.task = task;
     }
 
+    /** {@inheritDoc}. */
     public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror aFormatter,
             OutputStream out, String message, String testCase) {
         JUnitResultFormatter formatter = (JUnitResultFormatter) aFormatter;
@@ -53,6 +58,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
         formatter.endTestSuite(test);
     }
 
+    /** {@inheritDoc}. */
     public JUnitTaskMirror.JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test,
             boolean haltOnError, boolean filterTrace, boolean haltOnFailure,
             boolean showOutput, boolean logTestListenerEvents, AntClassLoader classLoader) {
@@ -60,6 +66,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
                 showOutput, logTestListenerEvents, classLoader);
     }
 
+    /** {@inheritDoc}. */
     public JUnitTaskMirror.SummaryJUnitResultFormatterMirror newSummaryJUnitResultFormatter() {
         return new SummaryJUnitResultFormatter();
     }

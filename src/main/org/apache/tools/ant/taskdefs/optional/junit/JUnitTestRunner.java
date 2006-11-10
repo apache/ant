@@ -549,6 +549,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         perm = permissions;
     }
 
+    /**
+     * Handle a string destined for standard output.
+     * @param output the string to output
+     */
     public void handleOutput(String output) {
         if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX)) {
             // ignore
@@ -558,6 +562,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     /**
+     * Handle input.
+     * @param buffer not used.
+     * @param offset not used.
+     * @param length not used.
+     * @return -1 always.
+     * @throws IOException never.
      * @see org.apache.tools.ant.Task#handleInput(byte[], int, int)
      *
      * @since Ant 1.6
@@ -567,18 +577,21 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         return -1;
     }
 
+    /** {@inheritDoc}. */
     public void handleErrorOutput(String output) {
         if (systemError != null) {
             systemError.print(output);
         }
     }
 
+    /** {@inheritDoc}. */
     public void handleFlush(String output) {
         if (systemOut != null) {
             systemOut.print(output);
         }
     }
 
+    /** {@inheritDoc}. */
     public void handleErrorFlush(String output) {
         if (systemError != null) {
             systemError.print(output);
@@ -609,10 +622,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
     }
 
+    /** {@inheritDoc}. */
     public void addFormatter(JUnitResultFormatter f) {
         formatters.addElement(f);
     }
 
+    /** {@inheritDoc}. */
     public void addFormatter(JUnitTaskMirror.JUnitResultFormatterMirror f) {
         formatters.addElement((JUnitResultFormatter) f);
     }
@@ -643,6 +658,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * System.out.</td><td>false</td></tr>
      *
      * </table>
+     * @param args the command line arguments.
+     * @throws IOException on error.
      */
     public static void main(String[] args) throws IOException {
         boolean haltError = false;
@@ -840,6 +857,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Filters stack frames from internal JUnit and Ant classes
      * @param stack the stack trace to filter.
+     * @return the filtered stack.
      */
     public static String filterStack(String stack) {
         if (!filtertrace) {

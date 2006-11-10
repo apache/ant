@@ -143,15 +143,46 @@ public interface JUnitTaskMirror {
          */
         int getRetCode();
 
+        /**
+         * Handle output sent to System.err.
+         *
+         * @param output coming from System.err
+         */
         void handleErrorFlush(String output);
 
+        /**
+         * Handle output sent to System.err.
+         *
+         * @param output output for System.err
+         */
         void handleErrorOutput(String output);
 
+        /**
+         * Handle output sent to System.out.
+         *
+         * @param output output for System.out.
+         */
         void handleOutput(String output);
 
+        /**
+         * Handle an input request.
+         *
+         * @param buffer the buffer into which data is to be read.
+         * @param offset the offset into the buffer at which data is stored.
+         * @param length the amount of data to read.
+         *
+         * @return the number of bytes read.
+         *
+         * @exception IOException if the data cannot be read.
+         */
         int handleInput(byte[] buffer, int offset, int length) throws IOException;
 
-        void handleFlush(String output);
+        /**
+         * Handle output sent to System.out.
+         *
+         * @param output output for System.out.
+         */
+       void handleFlush(String output);
 
     }
 }

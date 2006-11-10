@@ -31,8 +31,7 @@ import org.apache.tools.ant.BuildException;
  */
 
 public class SummaryJUnitResultFormatter
-    implements JUnitResultFormatter
-    ,JUnitTaskMirror.SummaryJUnitResultFormatterMirror {
+    implements JUnitResultFormatter, JUnitTaskMirror.SummaryJUnitResultFormatterMirror {
 
     /**
      * Formatter for timings.
@@ -54,6 +53,7 @@ public class SummaryJUnitResultFormatter
     }
     /**
      * The testsuite started.
+     * @param suite the testsuite.
      */
     public void startTestSuite(JUnitTest suite) {
         String newLine = System.getProperty("line.separator");
@@ -70,16 +70,20 @@ public class SummaryJUnitResultFormatter
     }
     /**
      * Empty
+     * @param t not used.
      */
     public void startTest(Test t) {
     }
     /**
      * Empty
+     * @param test not used.
      */
     public void endTest(Test test) {
     }
     /**
      * Empty
+     * @param test not used.
+     * @param t not used.
      */
     public void addFailure(Test test, Throwable t) {
     }
@@ -87,24 +91,31 @@ public class SummaryJUnitResultFormatter
      * Interface TestListener for JUnit &gt; 3.4.
      *
      * <p>A Test failed.
+     * @param test not used.
+     * @param t not used.
      */
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
     /**
      * Empty
+     * @param test not used.
+     * @param t not used.
      */
     public void addError(Test test, Throwable t) {
     }
 
+    /** {@inheritDoc}. */
     public void setOutput(OutputStream out) {
         this.out = out;
     }
 
+    /** {@inheritDoc}. */
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
+    /** {@inheritDoc}. */
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -112,6 +123,7 @@ public class SummaryJUnitResultFormatter
     /**
      * Should the output to System.out and System.err be written to
      * the summary.
+     * @param value if true write System.out and System.err to the summary.
      */
     public void setWithOutAndErr(boolean value) {
         withOutAndErr = value;
@@ -119,6 +131,8 @@ public class SummaryJUnitResultFormatter
 
     /**
      * The whole testsuite ended.
+     * @param suite the testsuite.
+     * @throws BuildException if there is an error.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
         String newLine = System.getProperty("line.separator");

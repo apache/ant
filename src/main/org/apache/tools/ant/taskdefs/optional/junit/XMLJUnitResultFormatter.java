@@ -86,23 +86,28 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     private OutputStream out;
 
+    /** No arg constructor. */
     public XMLJUnitResultFormatter() {
     }
 
+    /** {@inheritDoc}. */
     public void setOutput(OutputStream out) {
         this.out = out;
     }
 
+    /** {@inheritDoc}. */
     public void setSystemOutput(String out) {
         formatOutput(SYSTEM_OUT, out);
     }
 
+    /** {@inheritDoc}. */
     public void setSystemError(String out) {
         formatOutput(SYSTEM_ERR, out);
     }
 
     /**
      * The whole testsuite started.
+     * @param suite the testsuite.
      */
     public void startTestSuite(JUnitTest suite) {
         doc = getDocumentBuilder().newDocument();
@@ -147,6 +152,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     /**
      * The whole testsuite ended.
+     * @param suite the testsuite.
+     * @throws BuildException on error.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
         rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
@@ -174,6 +181,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * Interface TestListener.
      *
      * <p>A new Test is started.
+     * @param t the test.
      */
     public void startTest(Test t) {
         testStarts.put(t, new Long(System.currentTimeMillis()));
@@ -183,6 +191,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * Interface TestListener.
      *
      * <p>A Test is finished.
+     * @param test the test.
      */
     public void endTest(Test test) {
         // Fix for bug #5637 - if a junit.extensions.TestSetup is
@@ -217,6 +226,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * Interface TestListener for JUnit &lt;= 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t the exception.
      */
     public void addFailure(Test test, Throwable t) {
         formatError(FAILURE, test, t);
@@ -226,6 +237,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * Interface TestListener for JUnit &gt; 3.4.
      *
      * <p>A Test failed.
+     * @param test the test.
+     * @param t the assertion.
      */
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
@@ -235,6 +248,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * Interface TestListener.
      *
      * <p>An error occurred while running the test.
+     * @param test the test.
+     * @param t the error.
      */
     public void addError(Test test, Throwable t) {
         formatError(ERROR, test, t);

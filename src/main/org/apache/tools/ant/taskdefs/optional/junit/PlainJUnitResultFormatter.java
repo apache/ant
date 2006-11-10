@@ -176,7 +176,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * Interface TestListener.
      *
      * <p>A Test is finished.
-     * @param t the test.
+     * @param test the test.
      */
     public void endTest(Test test) {
         if (Boolean.TRUE.equals(failed.get(test))) {
