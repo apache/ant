@@ -1911,7 +1911,18 @@ public class Project implements ResourceFactory {
             return ret;
         }
         // Check for old id behaviour
-        return resolveIdReference(key, this);
+        ret = resolveIdReference(key, this);
+        if (ret == null && !key.equals(MagicNames.REFID_PROPERTY_HELPER)) {
+            Vector p = new Vector();
+            PropertyHelper.getPropertyHelper(this).parsePropertyString(
+                key, new Vector(), p);
+            if (p.size() == 1) {
+                log("Unresolvable reference " + key
+                    + " might be a misuse of property expansion syntax.",
+                    MSG_WARN);
+            }
+        }
+        return ret;
     }
 
     /**
