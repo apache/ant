@@ -67,32 +67,60 @@ public interface MSVSSConstants {
     /**  The text for failing on writable files  */
     String WRITABLE_FAIL = "fail";
 
+    /** -Y flag */
     String FLAG_LOGIN = "-Y";
+    /** -GL flag */
     String FLAG_OVERRIDE_WORKING_DIR = "-GL";
+    /** -I- flag */
     String FLAG_AUTORESPONSE_DEF = "-I-";
+    /** -I-Y flag */
     String FLAG_AUTORESPONSE_YES = "-I-Y";
+    /** -I-N flag */
     String FLAG_AUTORESPONSE_NO = "-I-N";
+    /** -R flag */
     String FLAG_RECURSION = "-R";
+    /** -V flag */
     String FLAG_VERSION = "-V";
+    /** -Vd flag */
     String FLAG_VERSION_DATE = "-Vd";
+    /** -VL flag */
     String FLAG_VERSION_LABEL = "-VL";
+    /** -W flag */
     String FLAG_WRITABLE = "-W";
+    /** -N flag */
     String VALUE_NO = "-N";
+    /** -Y flag */
     String VALUE_YES = "-Y";
+    /** -O- flag */
     String FLAG_QUIET = "-O-";
+    /** -C flag */
     String FLAG_COMMENT = "-C";
+    /** -L flag */
     String FLAG_LABEL = "-L";
+    /** ~d flag */
     String VALUE_FROMDATE = "~d";
+    /** ~L flag */
     String VALUE_FROMLABEL = "~L";
+    /** -O flag */
     String FLAG_OUTPUT = "-O";
+    /** -U flag */
     String FLAG_USER = "-U";
+    /** -F- flag */
     String FLAG_NO_FILE = "-F-";
+    /** -B flag */
     String FLAG_BRIEF = "-B";
+    /** -D flag */
     String FLAG_CODEDIFF = "-D";
+    /** -GTC flag */
     String FLAG_FILETIME_DEF = "-GTC";
+    /** -GTM flag */
     String FLAG_FILETIME_MODIFIED = "-GTM";
+    /** -GTU flag */
     String FLAG_FILETIME_UPDATED = "-GTU";
+    /** -GWR flag */
     String FLAG_REPLACE_WRITABLE = "-GWR";
+    /** -GWS flag */
     String FLAG_SKIP_WRITABLE = "-GWS";
+    /** -G- flag */
     String FLAG_NO_GET = "-G-";
 }

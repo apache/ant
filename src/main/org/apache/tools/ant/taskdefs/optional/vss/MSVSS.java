@@ -186,90 +186,178 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     // Special setters for the sub-classes
 
+    /**
+     * Set the internal comment attribute.
+     * @param comment the value to use.
+     */
     protected void setInternalComment(final String comment) {
         this.comment = comment;
     }
 
+    /**
+     * Set the auto response attribute.
+     * @param autoResponse the value to use.
+     */
     protected void setInternalAutoResponse(final String autoResponse) {
         this.autoResponse = autoResponse;
     }
 
+    /**
+     * Set the date attribute.
+     * @param date the value to use.
+     */
     protected void setInternalDate(final String date) {
         this.date = date;
     }
 
+    /**
+     * Set the date format attribute.
+     * @param dateFormat the value to use.
+     */
     protected void setInternalDateFormat(final DateFormat dateFormat) {
         this.dateFormat = dateFormat;
     }
 
+    /**
+     * Set the failOnError attribute.
+     * @param failOnError the value to use.
+     */
     protected void setInternalFailOnError(final boolean failOnError) {
         this.failOnError = failOnError;
     }
 
+    /**
+     * Set the from date attribute.
+     * @param fromDate the value to use.
+     */
     protected void setInternalFromDate(final String fromDate) {
         this.fromDate = fromDate;
     }
 
+    /**
+     * Set the from label attribute.
+     * @param fromLabel the value to use.
+     */
     protected void setInternalFromLabel(final String fromLabel) {
         this.fromLabel = fromLabel;
     }
 
+    /**
+     * Set the label attribute.
+     * @param label the value to use.
+     */
     protected void setInternalLabel(final String label) {
         this.label = label;
     }
 
+    /**
+     * Set the local path comment attribute.
+     * @param localPath the value to use.
+     */
     protected void setInternalLocalPath(final String localPath) {
         this.localPath = localPath;
     }
 
+    /**
+     * Set the num days attribute.
+     * @param numDays the value to use.
+     */
     protected void setInternalNumDays(final int numDays) {
         this.numDays = numDays;
     }
 
+    /**
+     * Set the outputFileName comment attribute.
+     * @param outputFileName the value to use.
+     */
     protected void setInternalOutputFilename(final String outputFileName) {
         this.outputFileName = outputFileName;
     }
 
+    /**
+     * Set the quiet attribute.
+     * @param quiet the value to use.
+     */
     protected void setInternalQuiet(final boolean quiet) {
         this.quiet = quiet;
     }
 
+    /**
+     * Set the recursive attribute.
+     * @param recursive the value to use.
+     */
     protected void setInternalRecursive(final boolean recursive) {
         this.recursive = recursive;
     }
 
+    /**
+     * Set the style attribute.
+     * @param style the value to use.
+     */
     protected void setInternalStyle(final String style) {
         this.style = style;
     }
 
+    /**
+     * Set the to date attribute.
+     * @param toDate the value to use.
+     */
     protected void setInternalToDate(final String toDate) {
         this.toDate = toDate;
     }
 
+    /**
+     * Set the to label attribute.
+     * @param toLabel the value to use.
+     */
     protected void setInternalToLabel(final String toLabel) {
         this.toLabel = toLabel;
     }
 
+    /**
+     * Set the user attribute.
+     * @param user the value to use.
+     */
     protected void setInternalUser(final String user) {
         this.user = user;
     }
 
+    /**
+     * Set the version attribute.
+     * @param version the value to use.
+     */
     protected void setInternalVersion(final String version) {
         this.version = version;
     }
 
+    /**
+     * Set the writable attribute.
+     * @param writable the value to use.
+     */
     protected void setInternalWritable(final boolean writable) {
         this.writable = writable;
     }
 
+    /**
+     * Set the timestamp attribute.
+     * @param timestamp the value to use.
+     */
     protected void setInternalFileTimeStamp(final CurrentModUpdated timestamp) {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Set the writableFiles attribute.
+     * @param writableFiles the value to use.
+     */
     protected void setInternalWritableFiles(final WritableFiles writableFiles) {
         this.writableFiles = writableFiles;
     }
 
+    /**
+     * Set the getLocalCopy attribute.
+     * @param getLocalCopy the value to use.
+     */
     protected void setInternalGetLocalCopy(final boolean getLocalCopy) {
         this.getLocalCopy = getLocalCopy;
     }
@@ -498,7 +586,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     /**
      * Gets the Version date string.
      * @return An empty string if neither Todate or from date are set.
-     * @throws BuildException
+     * @throws BuildException if there is an error.
      */
     protected String getVersionDate() throws BuildException {
         if (fromDate == null && toDate == null
