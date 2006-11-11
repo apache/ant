@@ -271,7 +271,8 @@ public class Replace extends MatchingTask {
          */
         void flush() {
             replace();
-            outputBuffer.append(inputBuffer);
+            // Avoid runtime problem on pre 1.4 when compiling post 1.4
+            outputBuffer.append(inputBuffer.toString());
             inputBuffer.delete(0, inputBuffer.length());
         }
 
