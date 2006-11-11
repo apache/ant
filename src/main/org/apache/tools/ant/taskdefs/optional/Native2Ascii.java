@@ -48,6 +48,7 @@ public class Native2Ascii extends MatchingTask {
     private Mapper mapper;
     private FacadeTaskHelper facade = null;
 
+    /** No args constructor */
     public Native2Ascii() {
         facade = new FacadeTaskHelper(Native2AsciiAdapterFactory.getDefault());
     }
@@ -65,7 +66,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * The value of the reverse attribute.
-     *
+     * @return the reverse attribute.
      * @since Ant 1.6.3
      */
     public boolean getReverse() {
@@ -84,8 +85,8 @@ public class Native2Ascii extends MatchingTask {
     }
 
     /**
-     * The value of the reverse attribute.
-     *
+     * The value of the encoding attribute.
+     * @return the encoding attribute.
      * @since Ant 1.6.3
      */
     public String getEncoding() {
@@ -272,7 +273,7 @@ public class Native2Ascii extends MatchingTask {
     /**
      * Returns the (implementation specific) settings given as nested
      * arg elements.
-     *
+     * @return the arguments.
      * @since Ant 1.6.3
      */
     public String[] getCurrentArgs() {

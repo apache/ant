@@ -131,6 +131,10 @@ public class PropertyFile extends Task {
     * Methods
     */
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error.
+     */
     public void execute() throws BuildException {
         checkParameters();
         readFile();
@@ -138,6 +142,10 @@ public class PropertyFile extends Task {
         writeFile();
     }
 
+    /**
+     * The entry nested element.
+     * @return an entry nested element to be configured.
+     */
     public Entry createEntry() {
         Entry e = new Entry();
         entries.addElement(e);
@@ -194,6 +202,7 @@ public class PropertyFile extends Task {
 
     /**
      * Location of the property file to be edited; required.
+     * @param file the property file.
      */
     public void setFile(File file) {
         propertyfile = file;
@@ -201,6 +210,7 @@ public class PropertyFile extends Task {
 
     /**
      * optional header comment for the file
+     * @param hdr the string to use for the comment.
      */
     public void setComment(String hdr) {
         comment = hdr;
@@ -242,6 +252,7 @@ public class PropertyFile extends Task {
 
         /**
          * Name of the property name/value pair
+         * @param value the key.
          */
         public void setKey(String value) {
             this.key = value;
@@ -249,6 +260,7 @@ public class PropertyFile extends Task {
 
         /**
          * Value to set (=), to add (+) or subtract (-)
+         * @param value the value.
          */
         public void setValue(String value) {
             this.value = value;
@@ -258,6 +270,7 @@ public class PropertyFile extends Task {
          * operation to apply.
          * &quot;+&quot; or &quot;=&quot;
          *(default) for all datatypes; &quot;-&quot; for date and int only)\.
+         * @param value the operation enumerated value.
          */
         public void setOperation(Operation value) {
             this.operation = Operation.toOperation(value.getValue());
@@ -265,6 +278,7 @@ public class PropertyFile extends Task {
 
         /**
          * Regard the value as : int, date or string (default)
+         * @param value the type enumerated value.
          */
         public void setType(Type value) {
             this.type = Type.toType(value.getValue());
@@ -274,8 +288,8 @@ public class PropertyFile extends Task {
          * Initial value to set for a property if it is not
          * already defined in the property file.
          * For type date, an additional keyword is allowed: &quot;now&quot;
+         * @param value the default value.
          */
-
         public void setDefault(String value) {
             this.defaultValue = value;
         }
@@ -283,6 +297,7 @@ public class PropertyFile extends Task {
         /**
          * For int and date type only. If present, Values will
          * be parsed and formatted accordingly.
+         * @param value the pattern to use.
          */
         public void setPattern(String value) {
             this.pattern = value;
@@ -302,6 +317,7 @@ public class PropertyFile extends Task {
          *               <li>year</li>
          *            </ul>
          *            This only applies to date types using a +/- operation.
+         * @param unit the unit enumerated value.
          * @since Ant 1.5
          */
         public void setUnit(PropertyFile.Unit unit) {

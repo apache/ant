@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.XmlConstants;
-import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.XMLReader;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -65,17 +64,28 @@ public class SchemaValidate extends XMLValidateTask {
      */
     private SchemaLocation anonymousSchema;
 
+    // Error strings
+    /** SAX1 not supported */
     public static final String ERROR_SAX_1 = "SAX1 parsers are not supported";
 
-    public static final String ERROR_NO_XSD_SUPPORT = "Parser does not support Xerces or JAXP schema features";
+    /** schema features not supported */
+    public static final String ERROR_NO_XSD_SUPPORT
+        = "Parser does not support Xerces or JAXP schema features";
 
-    public static final String ERROR_TOO_MANY_DEFAULT_SCHEMAS = "Only one of defaultSchemaFile and defaultSchemaURL allowed";
+    /** too many default schemas */
+    public static final String ERROR_TOO_MANY_DEFAULT_SCHEMAS
+        = "Only one of defaultSchemaFile and defaultSchemaURL allowed";
 
-    public static final String ERROR_PARSER_CREATION_FAILURE = "Could not create parser";
+    /** unable to create parser */
+    public static final String ERROR_PARSER_CREATION_FAILURE
+        = "Could not create parser";
 
+    /** adding schema */
     public static final String MESSAGE_ADDING_SCHEMA = "Adding schema ";
 
-    public static final String ERROR_DUPLICATE_SCHEMA = "Duplicate declaration of schema ";
+    /** Duplicate declaration of schema  */
+    public static final String ERROR_DUPLICATE_SCHEMA
+        = "Duplicate declaration of schema ";
 
     /**
      * Called by the project to let the task initialize properly. The default
@@ -137,7 +147,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * add the schema
-     * @param location
+     * @param location the schema location.
      * @throws BuildException if there is no namespace, or if there already
      * is a declaration of this schema with a different value
      */
@@ -153,7 +163,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * enable full schema checking. Slower but better.
-     * @param fullChecking
+     * @param fullChecking a <code>boolean</code> value.
      */
     public void setFullChecking(boolean fullChecking) {
         this.fullChecking = fullChecking;
@@ -172,7 +182,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * identify the URL of the default schema
-     * @param defaultSchemaURL
+     * @param defaultSchemaURL the URL of the default schema.
      */
     public void setNoNamespaceURL(String defaultSchemaURL) {
         createAnonymousSchema();
@@ -181,7 +191,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * identify a file containing the default schema
-     * @param defaultSchemaFile
+     * @param defaultSchemaFile the location of the default schema.
      */
     public void setNoNamespaceFile(File defaultSchemaFile) {
         createAnonymousSchema();
@@ -190,7 +200,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * flag to disable DTD support.
-     * @param disableDTD
+     * @param disableDTD a <code>boolean</code> value.
      */
     public void setDisableDTD(boolean disableDTD) {
         this.disableDTD = disableDTD;
@@ -288,8 +298,8 @@ public class SchemaValidate extends XMLValidateTask {
     /**
      * set a feature if it is supported, log at verbose level if
      * not
-     * @param feature
-     * @param value
+     * @param feature the feature.
+     * @param value a <code>boolean</code> value.
      */
     protected void setFeatureIfSupported(String feature, boolean value) {
         try {
@@ -321,31 +331,48 @@ public class SchemaValidate extends XMLValidateTask {
 
         private String url;
 
+        /** No namespace URI */
         public static final String ERROR_NO_URI = "No namespace URI";
 
-        public static final String ERROR_TWO_LOCATIONS = "Both URL and File were given for schema ";
+        /** Both URL and File were given for schema */
+        public static final String ERROR_TWO_LOCATIONS
+            = "Both URL and File were given for schema ";
 
+        /** File not found */
         public static final String ERROR_NO_FILE = "File not found: ";
 
-        public static final String ERROR_NO_URL_REPRESENTATION = "Cannot make a URL of ";
+        /** Cannot make URL */
+        public static final String ERROR_NO_URL_REPRESENTATION
+            = "Cannot make a URL of ";
 
-        public static final String ERROR_NO_LOCATION = "No file or URL supplied for the schema ";
+        /** No location provided */
+        public static final String ERROR_NO_LOCATION
+            = "No file or URL supplied for the schema ";
 
+        /** No arg constructor */
         public SchemaLocation() {
         }
 
+        /**
+         * Get the namespace.
+         * @return the namespace.
+         */
         public String getNamespace() {
             return namespace;
         }
 
         /**
          * set the namespace of this schema. Any URI
-         * @param namespace
+         * @param namespace the namespace to use.
          */
         public void setNamespace(String namespace) {
             this.namespace = namespace;
         }
 
+        /**
+         * Get the file.
+         * @return the file containing the schema.
+         */
         public File getFile() {
             return file;
         }
@@ -353,19 +380,23 @@ public class SchemaValidate extends XMLValidateTask {
         /**
          * identify a file that contains this namespace's schema.
          * The file must exist.
-         * @param file
+         * @param file the file contains the schema.
          */
         public void setFile(File file) {
             this.file = file;
         }
 
+        /**
+         * The URL containing the schema.
+         * @return the URL string.
+         */
         public String getUrl() {
             return url;
         }
 
         /**
          * identify a URL that hosts the schema.
-         * @param url
+         * @param url the URL string.
          */
         public void setUrl(String url) {
             this.url = url;
@@ -406,7 +437,7 @@ public class SchemaValidate extends XMLValidateTask {
          * validate the fields then create a "uri location" string
          *
          * @return string of uri and location
-         * @throws BuildException
+         * @throws BuildException if there is an error.
          */
         public String getURIandLocation() throws BuildException {
             validateNamespace();
@@ -466,6 +497,10 @@ public class SchemaValidate extends XMLValidateTask {
             return true;
         }
 
+        /**
+         * Generate a hashcode depending on the namespace, url and file name.
+         * @return the hashcode.
+         */
         public int hashCode() {
             int result;
             result = (namespace != null ? namespace.hashCode() : 0);
