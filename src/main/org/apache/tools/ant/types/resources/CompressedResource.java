@@ -159,7 +159,14 @@ public abstract class CompressedResource extends Resource {
      *         is less than, equal to, or greater than the specified Resource.
      */
     public int compareTo(Object other) {
+        if (other == this) {
+            return 0;
+        }
+        if (other instanceof CompressedResource) {
+            return getResource().compareTo(((CompressedResource)other).getResource());
+        }
         return getResource().compareTo(other);
+        
     }
 
     /**
@@ -169,7 +176,7 @@ public abstract class CompressedResource extends Resource {
     public int hashCode() {
         return getResource().hashCode();
     }
-
+    
     /**
      * Get an InputStream for the Resource.
      * @return an InputStream containing this Resource's content.
