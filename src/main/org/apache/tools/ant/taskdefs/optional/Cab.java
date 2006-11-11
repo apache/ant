@@ -140,6 +140,7 @@ public class Cab extends MatchingTask {
     /**
      * Create a new exec delegate.  The delegate task is populated so that
      * it appears in the logs to be the same task as this one.
+     * @return the delegate.
      * @throws BuildException on error.
      */
     protected ExecTask createExec() throws BuildException {
@@ -171,7 +172,7 @@ public class Cab extends MatchingTask {
      * <p>This method expects to only be called on Windows and thus
      * quotes the file names.</p>
      * @param files the list of files to use.
-     * @param the list file created.
+     * @return the list file created.
      * @throws IOException if there is an error.
      */
     protected File createListFile(Vector files)
@@ -208,6 +209,7 @@ public class Cab extends MatchingTask {
      * are gathered from the fileset if it has been added, otherwise from the
      * traditional include parameters.
      * @return the list of files.
+     * @throws BuildException if there is an error.
      */
     protected Vector getFileList() throws BuildException {
         Vector files = new Vector();

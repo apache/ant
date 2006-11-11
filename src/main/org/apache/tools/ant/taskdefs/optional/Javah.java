@@ -249,7 +249,7 @@ public class Javah extends Task {
 
     /**
      * The bootclasspath to use.
-     *
+     * @return the bootclass path.
      * @since Ant 1.6.3
      */
     public Path getBootclasspath() {
@@ -267,7 +267,7 @@ public class Javah extends Task {
 
     /**
      * The destination file, if any.
-     *
+     * @return the destination file.
      * @since Ant 1.6.3
      */
     public File getOutputfile() {
@@ -284,7 +284,7 @@ public class Javah extends Task {
 
     /**
      * Whether output files should always be written.
-     *
+     * @return the force attribute.
      * @since Ant 1.6.3
      */
     public boolean getForce() {
@@ -304,7 +304,7 @@ public class Javah extends Task {
 
     /**
      * Whether old JDK1.0-style header files should be generated.
-     *
+     * @return the old attribute.
      * @since Ant 1.6.3
      */
     public boolean getOld() {
@@ -321,7 +321,7 @@ public class Javah extends Task {
 
     /**
      * Whether C declarations from the Java object file should be generated.
-     *
+     * @return the stubs attribute.
      * @since Ant 1.6.3
      */
     public boolean getStubs() {
@@ -339,7 +339,7 @@ public class Javah extends Task {
 
     /**
      * Whether verbose output should get generated.
-     *
+     * @return the verbose attribute.
      * @since Ant 1.6.3
      */
     public boolean getVerbose() {
@@ -375,7 +375,7 @@ public class Javah extends Task {
     /**
      * Returns the (implementation specific) settings given as nested
      * arg elements.
-     *
+     * @return the arguments.
      * @since Ant 1.6.3
      */
     public String[] getCurrentArgs() {
@@ -428,6 +428,7 @@ public class Javah extends Task {
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
+     * @param cmd the command line.
      */
     public void logAndAddFiles(Commandline cmd) {
         logAndAddFilesToCompile(cmd);
