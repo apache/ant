@@ -589,7 +589,8 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void setNineteen(double d) {
-        assertEquals(19, d, 1e-6);
+        double diff = d - 19;
+        assertTrue("Expected 19, received " + d, diff > -1e-6 && diff < 1e-6);
     }
 
     public void testGetExtensionPoints() {

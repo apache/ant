@@ -37,7 +37,7 @@ public class TarRoundTripTest extends TestCase {
      */
     public void testLongRoundTripping() throws IOException {
         TarEntry original = new TarEntry(LONG_NAME);
-        assertEquals("over 100 chars", true, LONG_NAME.length() > 100);
+        assertTrue("over 100 chars", LONG_NAME.length() > 100);
         assertEquals("original name", LONG_NAME, original.getName());
 
 

@@ -51,7 +51,7 @@ public class PropertyTest extends BuildFileTest {
             executeTarget("test3");
         }
         catch (BuildException e) {
-            assertEquals("Circular definition not detected - ", true,
+            assertTrue("Circular definition not detected - ",
                      e.getMessage().indexOf("was circularly defined") != -1);
             return;
         }
@@ -85,7 +85,7 @@ public class PropertyTest extends BuildFileTest {
             executeTarget("prefix.fail");
         }
         catch (BuildException e) {
-            assertEquals("Prefix allowed on non-resource/file load - ", true,
+            assertTrue("Prefix allowed on non-resource/file load - ", 
                      e.getMessage().indexOf("Prefix is only valid") != -1);
             return;
         }
@@ -96,7 +96,7 @@ public class PropertyTest extends BuildFileTest {
         try {
             executeTarget("testCircularReference");
         } catch (BuildException e) {
-            assertEquals("Circular definition not detected - ", true,
+            assertTrue("Circular definition not detected - ",
                          e.getMessage().indexOf("was circularly defined")
                          != -1);
             return;

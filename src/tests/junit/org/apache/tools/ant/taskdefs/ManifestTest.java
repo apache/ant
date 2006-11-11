@@ -108,7 +108,7 @@ public class ManifestTest extends BuildFileTest {
         executeTarget("test5");
         String output = getLog();
         boolean hasWarning = output.indexOf("Manifest warning: \"Name\" attributes should not occur in the main section") != -1;
-        assertEquals("Expected warning about Name in main section", true, hasWarning);
+        assertTrue("Expected warning about Name in main section", hasWarning);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ManifestTest extends BuildFileTest {
                                        "Invalid Manifest");
         String output = getLog();
         boolean hasWarning = output.indexOf("Manifest sections should start with a \"Name\" attribute") != -1;
-        assertEquals("Expected warning about section not starting with Name: attribute", true, hasWarning);
+        assertTrue("Expected warning about section not starting with Name: attribute", hasWarning);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ManifestTest extends BuildFileTest {
         executeTarget("test7");
 
         boolean hasWarning = getLog().indexOf(Manifest.ERROR_FROM_FORBIDDEN) != -1;
-        assertEquals("Expected warning about From: attribute", true, hasWarning);
+        assertTrue("Expected warning about From: attribute", hasWarning);
     }
 
     /**
