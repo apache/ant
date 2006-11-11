@@ -356,6 +356,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
     }
 
+    /**
+     * Get a descriptionHandler.
+     * @param srcDir the source directory.
+     */
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler h = new DescriptorHandler(getTask(), srcDir);
 
@@ -643,6 +647,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
+     * @param ejbFiles a hashtable entryname -> file.
+     * @param ddPrefix a prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
         // nothing to add for generic tool.

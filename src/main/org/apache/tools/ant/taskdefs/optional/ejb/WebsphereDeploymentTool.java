@@ -30,7 +30,6 @@ import java.util.jar.JarOutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -60,10 +59,13 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class WebsphereDeploymentTool extends GenericDeploymentTool {
+    /** ID for ejb 1.1 */
     public static final String PUBLICID_EJB11
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
+    /** ID for ejb 2.0 */
     public static final String PUBLICID_EJB20
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
+    /** Schema directory */
     protected static final String SCHEMA_DIR = "Schema/";
 
     protected static final String WAS_EXT = "ibm-ejb-jar-ext.xmi";
@@ -132,7 +134,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /** the home directory for websphere */
     private File websphereHome;
 
-    /** Get the classpath to the websphere classpaths */
+    /**
+     * Get the classpath to the websphere classpaths.
+     * @return the websphere classpath.
+     */
     public Path createWASClasspath() {
         if (wasClasspath == null) {
             wasClasspath = new Path(getTask().getProject());
@@ -141,6 +146,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
+    /**
+     * Set the websphere classpath.
+     * @param wasClasspath the websphere classpath.
+     */
     public void setWASClasspath(Path wasClasspath) {
         this.wasClasspath = wasClasspath;
     }
@@ -240,7 +249,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to enable internal tracing when set, optional, default false.
      *
-     * @param trace
+     * @param trace a <code>boolean</code> vaule.
      */
     public void setTrace(boolean trace) {
         this.trace = trace;
@@ -249,7 +258,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Set the rmic options.
      *
-     * @param options
+     * @param options the options to use.
      */
     public void setRmicoptions(String options) {
         this.rmicOptions = options;
@@ -258,7 +267,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to use the WebSphere 3.5 compatible mapping rules ; optional, default false.
      *
-     * @param attr
+     * @param attr a <code>boolean</code> value.
      */
     public void setUse35(boolean attr) {
         use35MappingRules = attr;
@@ -268,6 +277,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Set the rebuild flag to false to only update changes in the jar rather
      * than rerunning ejbdeploy; optional, default true.
+     * @param rebuild a <code>boolean</code> value.
      */
     public void setRebuild(boolean rebuild) {
         this.alwaysRebuild = rebuild;
@@ -320,6 +330,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Set the value of the oldCMP scheme. This is an antonym for newCMP
      * @ant.attribute ignore="true"
+     * @param oldCMP a <code>boolean</code> value.
      */
     public void setOldCMP(boolean oldCMP) {
         this.newCMP = !oldCMP;
@@ -333,6 +344,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * prefix. Under this scheme the name of the CMP descriptor does not match
      * the name actually used in the main websphere EJB descriptor. Also,
      * descriptors which contain multiple CMP references could not be used.
+     * @param newCMP a <code>boolean</code> value.
      */
     public void setNewCMP(boolean newCMP) {
         this.newCMP = newCMP;
@@ -342,13 +354,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * The directory, where ejbdeploy will write temporary files;
      * optional, defaults to '_ejbdeploy_temp'.
+     * @param tempdir the directory name to use.
      */
-
     public void setTempdir(String tempdir) {
         this.tempdir = tempdir;
     }
 
 
+    /* {@inheritDoc}. */
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
         // register all the DTDs, both the ones that are known and
@@ -365,6 +378,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
+    /**
+     * Get a description handler.
+     * @param srcDir the source directory.
+     */
     protected DescriptorHandler getWebsphereDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
             new DescriptorHandler(getTask(), srcDir) {
@@ -383,6 +400,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Add any vendor specific files which should be included in the EJB Jar.
+     * @param ejbFiles a hashtable entryname -> file.
+     * @param baseName a prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
 

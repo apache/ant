@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.Path;
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool
                                    implements ExecuteStreamHandler {
+    /** Borland 1.1 ejb id */
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
@@ -126,10 +127,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     private boolean verify     = true;
     private String  verifyArgs = "";
 
-    private Hashtable _genfiles = new Hashtable();
+    private Hashtable genfiles = new Hashtable();
 
     /**
      * set the debug mode for java2iiop (default false)
+     * @param debug the setting to use.
      **/
     public void setDebug(boolean debug) {
         this.java2iiopdebug = debug;
@@ -137,6 +139,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     /**
      * set the verify  mode for the produced jar (default true)
+     * @param verify the setting to use.
      **/
     public void setVerify(boolean verify) {
         this.verify = verify;
@@ -173,6 +176,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /**
      * setter used to store whether the task will include the generate client task.
      * (see : BorlandGenerateClient task)
+     * @param b if true generate the client task.
      */
     public void setGenerateclient(boolean b) {
         this.generateclient = b;
@@ -226,6 +230,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
+     * @param ejbFiles the map to add the files to.
+     * @param ddPrefix the prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
@@ -457,7 +463,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         buildBorlandStubs(homes.iterator());
 
         //add the gen files to the collection
-        files.putAll(_genfiles);
+        files.putAll(genfiles);
 
         super.writeJar(baseName, jarFile, files, publicId);
 
@@ -511,7 +517,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
                 if (javafile.endsWith(".java")) {
                     String classfile = toClassFile(javafile);
                     String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length() + 1);
-                    _genfiles.put(key, new File(classfile));
+                    genfiles.put(key, new File(classfile));
                 }
             }
             reader.close();
