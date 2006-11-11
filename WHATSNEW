@@ -12,6 +12,10 @@ Fixed bugs:
 
 * Incorrect recursion in DOMUtil.listChildNodes()
   Bugzilla 40918.
+  
+* compareTo method in CompressedResource does not 
+  take comparison with another CompressedResouce into account.
+  Bugzilla 40949.
 
 Other changes:
 --------------
