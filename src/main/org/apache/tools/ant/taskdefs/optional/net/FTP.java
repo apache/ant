@@ -180,8 +180,12 @@ public class FTP
      * followSymlinks defaults to false
      */
     protected class FTPDirectoryScanner extends DirectoryScanner {
+        // CheckStyle:VisibilityModifier OFF - bc
         protected FTPClient ftp = null;
+        // CheckStyle:VisibilityModifier ON
+
         private String rootPath = null;
+
         /**
          * since ant 1.6
          * this flag should be set to true on UNIX and can save scanning time
@@ -542,8 +546,7 @@ public class FTP
             return result;
         }
 
-        private void forceRemoteSensitivityCheck()
-        {
+        private void forceRemoteSensitivityCheck() {
             if (!remoteSensitivityChecked) {
                 try {
                     checkRemoteSensitivity(ftp.listFiles(), ftp.printWorkingDirectory());
@@ -813,7 +816,9 @@ public class FTP
                         // hit a hidden file assume not a symlink
                         relPath = relPath + currentElement;
                         currentPath = currentPath + remoteFileSep + currentElement;
-                        log("Hidden file " + relPath + " assumed to not be a symlink.", Project.MSG_VERBOSE);
+                        log("Hidden file " + relPath
+                            + " assumed to not be a symlink.",
+                            Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
                         relPath = relPath + theFile.getName();
@@ -900,6 +905,10 @@ public class FTP
                 return traversesSymlinks;
             }
 
+            /**
+             * Get a string rep of this object.
+             * @return a string containing the pwd and the file.
+             */
             public String toString() {
                 return "AntFtpFile: " + curpwd + "%" + ftpFile;
             }
@@ -1297,8 +1306,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(FTPSystemType systemKey) {
-        if (systemKey != null && !systemKey.getValue().equals(""))
-        {
+        if (systemKey != null && !systemKey.getValue().equals("")) {
             this.systemTypeKey = systemKey;
             configurationHasBeenSet();
         }
@@ -1311,8 +1319,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setDefaultDateFormatConfig(String defaultDateFormat) {
-        if (defaultDateFormat != null && !defaultDateFormat.equals(""))
-        {
+        if (defaultDateFormat != null && !defaultDateFormat.equals("")) {
             this.defaultDateFormatConfig = defaultDateFormat;
             configurationHasBeenSet();
         }
@@ -1325,8 +1332,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        if (recentDateFormat != null && !recentDateFormat.equals(""))
-        {
+        if (recentDateFormat != null && !recentDateFormat.equals("")) {
             this.recentDateFormatConfig = recentDateFormat;
             configurationHasBeenSet();
         }
@@ -1339,8 +1345,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(LanguageCode serverLanguageCode) {
-        if (serverLanguageCode != null && !serverLanguageCode.equals(""))
-        {
+        if (serverLanguageCode != null && !serverLanguageCode.equals("")) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }
@@ -1353,8 +1358,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        if (serverTimeZoneId != null && !serverTimeZoneId.equals(""))
-        {
+        if (serverTimeZoneId != null && !serverTimeZoneId.equals("")) {
             this.serverTimeZoneConfig = serverTimeZoneId;
             configurationHasBeenSet();
         }
@@ -1368,8 +1372,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setShortMonthNamesConfig(String shortMonthNames) {
-        if (shortMonthNames != null && !shortMonthNames.equals(""))
-        {
+        if (shortMonthNames != null && !shortMonthNames.equals("")) {
             this.shortMonthNamesConfig = shortMonthNames;
             configurationHasBeenSet();
         }
@@ -1518,14 +1521,14 @@ public class FTP
                 Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
             } catch (ClassNotFoundException e) {
                 throw new BuildException(
-                 "commons-net.jar >= 1.4.0 is required for at least one of the attributes specified.");
+                 "commons-net.jar >= 1.4.0 is required for at least one"
+                 + " of the attributes specified.");
             }
         }
     }
 
     protected void executeRetryable(RetryHandler h, Retryable r, String descr)
-    throws IOException
-    {
+        throws IOException {
         h.execute(r, descr);
     }
 
@@ -1626,7 +1629,8 @@ public class FTP
                                     listFile(ftp, fbw, dsfile);
                                     break;
                                 case CHMOD:
-                                    doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfile));
+                                    doSiteCommand(ftp, "chmod " + chmod
+                                                  + " " + resolveFile(dsfile));
                                     transferred++;
                                     break;
                                 default:
@@ -2448,7 +2452,9 @@ public class FTP
         private static final String[] VALID_GRANULARITIES = {
                 "", "MINUTE", "NONE"
         };
-         /*
+
+        /**
+         * Get the valid values.
          * @return the list of valid Granularity values
          */
         public String[] getValues() {
@@ -2494,7 +2500,8 @@ public class FTP
            };
 
 
-            /*
+            /**
+             * Get the valid values.
              * @return the list of valid system types.
              */
             public String[] getValues() {
@@ -2507,6 +2514,9 @@ public class FTP
                 return ftpst;
             }
     }
+    /**
+     * Enumerated class for languages.
+     */
     public static class LanguageCode extends EnumeratedAttribute {
 
 
@@ -2525,8 +2535,9 @@ public class FTP
         }
 
 
-             /*
-              * @return the list of valid system types.
+             /**
+              * Return the value values.
+              * @return the list of valid language types.
               */
              public String[] getValues() {
                  return VALID_LANGUAGE_CODES;

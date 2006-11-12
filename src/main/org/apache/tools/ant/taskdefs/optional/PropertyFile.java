@@ -547,14 +547,23 @@ public class PropertyFile extends Task {
         public static class Operation extends EnumeratedAttribute {
 
             // Property type operations
+            /** + */
             public static final int INCREMENT_OPER =   0;
+            /** - */
             public static final int DECREMENT_OPER =   1;
+            /** = */
             public static final int EQUALS_OPER =      2;
 
+            /** {@inheritDoc}. */
             public String[] getValues() {
                 return new String[] {"+", "-", "="};
             }
 
+            /**
+             * Convert string to index.
+             * @param oper the string to convert.
+             * @return the index.
+             */
             public static int toOperation(String oper) {
                 if ("+".equals(oper)) {
                     return INCREMENT_OPER;
@@ -571,14 +580,23 @@ public class PropertyFile extends Task {
         public static class Type extends EnumeratedAttribute {
 
             // Property types
+            /** int */
             public static final int INTEGER_TYPE =     0;
+            /** date */
             public static final int DATE_TYPE =        1;
+            /** string */
             public static final int STRING_TYPE =      2;
 
+            /** {@inheritDoc} */
             public String[] getValues() {
                 return new String[] {"int", "date", "string"};
             }
 
+            /**
+             * Convert string to index.
+             * @param type the string to convert.
+             * @return the index.
+             */
             public static int toType(String type) {
                 if ("int".equals(type)) {
                     return INTEGER_TYPE;
@@ -612,6 +630,7 @@ public class PropertyFile extends Task {
 
         private Map calendarFields = new HashMap();
 
+        /** no arg constructor */
         public Unit() {
             calendarFields.put(MILLISECOND,
                                     new Integer(Calendar.MILLISECOND));
@@ -624,12 +643,17 @@ public class PropertyFile extends Task {
             calendarFields.put(YEAR, new Integer(Calendar.YEAR));
         }
 
+        /**
+         * Convert the value to a Calendar field index.
+         * @return the calander value.
+         */
         public int getCalendarField() {
             String key = getValue().toLowerCase();
             Integer i = (Integer) calendarFields.get(key);
             return i.intValue();
         }
 
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return UNITS;
         }
