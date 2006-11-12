@@ -50,13 +50,17 @@ public class DotnetDefine {
         this.unlessCond = condition;
     }
 
+    /**
+     * Get the name of the definition.
+     * @return the name.
+     */
     public String getName() {
         return name;
     }
 
     /**
      * the name of the definition. Required.
-     * @param name
+     * @param name the name value.
      */
     public void setName(String name) {
         this.name = name;
@@ -67,7 +71,7 @@ public class DotnetDefine {
      * was declared and not met
      * @param owner owning task
      * @return The value of the definition.
-     * @throws BuildException
+     * @throws BuildException if there is an error.
      */
     public String getValue(Task owner) throws BuildException {
         if (name == null) {
@@ -83,7 +87,7 @@ public class DotnetDefine {
 
     /**
      * logic taken from patternset
-     * @param owner
+     * @param owner the owning task.
      * @return true if the condition is valid
      */
     public boolean isSet(Task owner) {

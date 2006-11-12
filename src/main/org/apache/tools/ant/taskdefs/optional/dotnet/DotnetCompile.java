@@ -107,6 +107,7 @@ public abstract class DotnetCompile
      */
     private boolean optimize;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * a list of definitions to support;
      */
@@ -173,6 +174,8 @@ public abstract class DotnetCompile
      */
     private boolean useResponseFile = false;
     private static final int AUTOMATIC_RESPONSE_FILE_THRESHOLD = 64;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      *  constructor inits everything and set up the search pattern
@@ -246,7 +249,7 @@ public abstract class DotnetCompile
 
     /**
      * add a new reference fileset to the compilation
-     * @param reference
+     * @param reference the files to use.
      */
     public void addReference(FileSet reference) {
         referenceFilesets.add(reference);
@@ -503,7 +506,7 @@ public abstract class DotnetCompile
 
     /**
      * set the target type to one of exe|library|module|winexe
-     * @param targetType
+     * @param targetType the enumerated value.
      */
     public void setTargetType(TargetTypes targetType) {
         this.targetType = targetType.getValue();
@@ -631,7 +634,7 @@ public abstract class DotnetCompile
 
     /**
      * add a define to the list of definitions
-     * @param define
+     * @param define the define value.
      */
     public void addDefine(DotnetDefine define) {
         definitionList.addElement(define);
@@ -641,6 +644,7 @@ public abstract class DotnetCompile
     /**
      * get a list of definitions or null
      * @return a string beginning /D: or null for no definitions
+     * @throws BuildException if there is an error.
      */
     protected String getDefinitionsParameter() throws BuildException {
         StringBuffer defines = new StringBuffer();
@@ -725,7 +729,7 @@ public abstract class DotnetCompile
 
     /**
      * link or embed a resource
-     * @param resource
+     * @param resource the resource to use.
      */
     public void addResource(DotnetResource resource) {
         resources.add(resource);
@@ -745,7 +749,7 @@ public abstract class DotnetCompile
      * to an alternate implementation of the command, such as the Mono or Rotor
      * versions -provided they use the same command line arguments as the
      * .NET framework edition
-     * @param executable
+     * @param executable the name of the program.
      */
     public void setExecutable(String executable) {
         this.executable = executable;
@@ -797,7 +801,7 @@ public abstract class DotnetCompile
      * this is passed in with @file. The task automatically switches
      * to this mode with big commands; this option is here for
      * testing and emergencies
-     * @param useResponseFile
+     * @param useResponseFile a <code>boolean</code> value.
      */
     public void setUseResponseFile(boolean useResponseFile) {
         this.useResponseFile = useResponseFile;
@@ -848,7 +852,7 @@ public abstract class DotnetCompile
 
     /**
      * fill in the common information
-     * @param command
+     * @param command the net command.
      */
     protected void fillInSharedParameters(NetCommand command) {
         command.setFailOnError(getFailOnError());
@@ -871,6 +875,7 @@ public abstract class DotnetCompile
     /**
      * for every resource declared, we get the (language specific)
      * resource setting
+     * @param command the net command.
      */
     protected void addResources(NetCommand command) {
         Enumeration e = resources.elements();
@@ -882,6 +887,7 @@ public abstract class DotnetCompile
 
     /* XXX Javadoc makes little sense, rewrite
      * from a resource, get the
+     * @param command
      * @param resource
      * @return a string containing the resource param, or a null string
      * to conditionally exclude a resource.
@@ -891,6 +897,7 @@ public abstract class DotnetCompile
 
     /**
      * run through the list of reference files and add them to the command
+     * @param command the command to use.
      * @param outputTimestamp timestamp to compare against
      * @return number of files out of date
      */
@@ -941,7 +948,7 @@ public abstract class DotnetCompile
 
     /**
      * add any compiler specifics
-     * @param command
+     * @param command the command to use.
      */
     protected abstract void addCompilerSpecificOptions(NetCommand command);
 
@@ -956,6 +963,7 @@ public abstract class DotnetCompile
 
     /**
      * test for a file being managed or not
+     * @param file the file to test.
      * @return true if we think this is a managed executable, and thus OK
      * for linking
      * @todo look at the PE header of the exe and see if it is managed or not.
@@ -971,6 +979,7 @@ public abstract class DotnetCompile
      * valid build types are exe|library|module|winexe
      */
     public static class TargetTypes extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {
                 "exe",

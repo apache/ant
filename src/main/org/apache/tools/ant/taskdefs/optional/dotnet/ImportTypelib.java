@@ -81,7 +81,7 @@ public class ImportTypelib extends Task {
      * This method names the output file.
      *
      * This is an operation which is required to have been performed.
-     * @param destFile
+     * @param destFile the output file.
      */
     public void setDestFile(File destFile) {
         this.destFile = destFile;
@@ -90,7 +90,7 @@ public class ImportTypelib extends Task {
     /**
      * This method sets what namespace the typelib is to be in.
      * This is an operation which is required to have been performed.
-     * @param namespace
+     * @param namespace the namespace to use.
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -99,7 +99,7 @@ public class ImportTypelib extends Task {
     /**
      * This method sets which is the source .tlb file.
      * This is an operation which is required to have been performed.
-     * @param srcFile
+     * @param srcFile the source file.
      */
     public void setSrcFile(File srcFile) {
         this.srcFile = srcFile;
@@ -107,7 +107,7 @@ public class ImportTypelib extends Task {
 
     /**
      * do you want unsafe code.
-     * @param unsafe
+     * @param unsafe a <code>boolean</code> value.
      */
     public void setUnsafe(boolean unsafe) {
         this.unsafe = unsafe;
@@ -115,7 +115,7 @@ public class ImportTypelib extends Task {
 
     /**
      * set this to map a COM SafeArray to the System.Array class
-     * @param useSysArray
+     * @param useSysArray a <code>boolean</code> value.
      */
     public void setUseSysArray(boolean useSysArray) {
         this.useSysArray = useSysArray;
@@ -123,7 +123,7 @@ public class ImportTypelib extends Task {
 
     /**
      * set any extra options that are not yet supported by this task.
-     * @param extraOptions
+     * @param extraOptions the options to use.
      */
     public void setExtraOptions(String extraOptions) {
         this.extraOptions = extraOptions;

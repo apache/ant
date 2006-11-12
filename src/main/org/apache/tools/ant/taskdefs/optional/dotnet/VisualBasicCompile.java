@@ -317,7 +317,7 @@ public class VisualBasicCompile extends DotnetCompile {
 
     /**
      * implement VBC commands
-     * @param command
+     * @param command the command to set arguements on.
      */
     protected void addCompilerSpecificOptions(NetCommand command) {
         command.addArgument(getRemoveIntChecksParameter());

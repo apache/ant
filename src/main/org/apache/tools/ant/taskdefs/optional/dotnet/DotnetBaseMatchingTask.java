@@ -34,6 +34,7 @@ import java.util.Enumeration;
  * can use shared code.
  */
 public class DotnetBaseMatchingTask extends MatchingTask {
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      *  output file. If not supplied this is derived from the source file
      */
@@ -53,10 +54,15 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      *
      * @since Ant 1.6.3
      */
+    // CheckStyle:ConstantNameCheck OFF - bc
     protected static final boolean isWindows = Os.isFamily("windows");
+
+    // CheckStyle:ConstantNameCheck ON
+    // CheckStyle:VisibilityModifier ON
 
     /**
     * Overridden because we need to be able to set the srcDir.
+    * @return the source directory.
     */
     public File getSrcDir() {
         return this.srcDir;
@@ -82,7 +88,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
 
     /**
      * add a new source directory to the compile
-     * @param src
+     * @param src a fileset.
      */
     public void addSrc(FileSet src) {
         filesets.add(src);
@@ -98,6 +104,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
 
     /**
      * create the list of files
+     * @param command the command to create the files for.
      * @param filesToBuild vector to add files to
      * @param outputTimestamp timestamp to compare against
      * @return number of files out of date
@@ -164,7 +171,8 @@ public class DotnetBaseMatchingTask extends MatchingTask {
 
     /**
      * finish off the command by adding all dependent files, execute
-     * @param command
+     * @param command the command to update.
+     * @param ignoreTimestamps not used.
      */
     protected void addFilesAndExecute(NetCommand command, boolean ignoreTimestamps) {
         long outputTimestamp = getOutputFileTimestamp();

@@ -57,6 +57,7 @@ import org.apache.tools.ant.types.Commandline;
 public class NetCommand {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      *  owner project
@@ -92,6 +93,8 @@ public class NetCommand {
      *  flag to control action on execution trouble
      */
     protected boolean failOnError;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * the directory to execute the command in. When null, the current
@@ -164,7 +167,7 @@ public class NetCommand {
 
     /**
      * set the directory to run from, if the default is inadequate
-     * @param directory
+     * @param directory the directory to use.
      */
     public void setDirectory(File directory) {
         this.directory = directory;
@@ -239,7 +242,7 @@ public class NetCommand {
 
     /**
      * set this to true to always use the response file
-     * @param useResponseFile
+     * @param useResponseFile a <code>boolean</code> value.
      */
     public void setUseResponseFile(boolean useResponseFile) {
         this.useResponseFile = useResponseFile;
@@ -255,7 +258,7 @@ public class NetCommand {
 
     /**
      * set threshold for automatically using response files -use 0 for off
-     * @param automaticResponseFileThreshold
+     * @param automaticResponseFileThreshold the threshold value to use.
      */
     public void setAutomaticResponseFileThreshold(int automaticResponseFileThreshold) {
         this.automaticResponseFileThreshold = automaticResponseFileThreshold;
@@ -359,7 +362,7 @@ public class NetCommand {
                 throw new BuildException("saving command stream to " + temporaryCommandFile, ex);
             }
 
-            String newCommandLine[] = new String[2];
+            String[] newCommandLine = new String[2];
             newCommandLine[0] = commands[0];
             newCommandLine[1] = "@" + temporaryCommandFile.getAbsolutePath();
             logVerbose(Commandline.describeCommand(newCommandLine));

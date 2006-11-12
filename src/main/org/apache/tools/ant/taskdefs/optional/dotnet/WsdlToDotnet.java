@@ -83,10 +83,13 @@ public class WsdlToDotnet extends Task  {
      */
     private boolean failOnError = true;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      *  any extra command options?
      */
     protected String extraOptions = null;
+
+    // CheckStyle:VisibilityModifier ON
 
 
     /**
@@ -208,7 +211,7 @@ public class WsdlToDotnet extends Task  {
      * Optional, default=true
      *
      * @since Ant 1.7
-     * @param ideErrors
+     * @param ideErrors a <code>boolean</code> value.
      */
     public void setIdeErrors(boolean ideErrors) {
         this.ideErrors = ideErrors;
@@ -220,7 +223,7 @@ public class WsdlToDotnet extends Task  {
      * offer different options.
      * @since Ant 1.7
      *
-     * @param protocol
+     * @param protocol the protocol to use.
      */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
@@ -230,7 +233,7 @@ public class WsdlToDotnet extends Task  {
      * add a new source schema to the compilation
      * @since Ant 1.7
      *
-     * @param source
+     * @param source a nested schema element.
      */
     public void addSchema(Schema source) {
         schemas.add(source);
@@ -239,7 +242,7 @@ public class WsdlToDotnet extends Task  {
     /**
      * flag to trigger turning a filename into a file:url
      * ignored for the mono compiler.
-     * @param b
+     * @param b a <code>boolean</code> value.
      */
     public void setMakeURL(boolean b) {
         wsdl.setMakeURL(b);
@@ -248,7 +251,7 @@ public class WsdlToDotnet extends Task  {
     /**
      * identify the compiler
      * @since Ant 1.7
-     * @param compiler
+     * @param compiler the enumerated value.
      */
     public void setCompiler(Compiler compiler) {
         this.compiler = compiler;
@@ -365,10 +368,16 @@ public class WsdlToDotnet extends Task  {
         private String url;
         private boolean makeURL = false;
 
+        // Errors
+        /** One of file or url must be set */
         public static final String ERROR_NONE_DECLARED = "One of file and url must be set";
+        /** Only one of file or url */
         public static final String ERROR_BOTH_DECLARED = "Only one of file or url can be set";
+        /** Not found */
         public static final String ERROR_FILE_NOT_FOUND = "Not found: ";
+        /** File is a directory */
         public static final String ERROR_FILE_IS_DIR = "File is a directory: ";
+        /** Could not URL convert */
         public static final String ERROR_NO_URL_CONVERT = "Could not URL convert ";
 
         /**
@@ -411,18 +420,26 @@ public class WsdlToDotnet extends Task  {
             return file.toString();
         }
 
+        /**
+         * Get the file.
+         * @return the file used.
+         */
         public File getFile() {
             return file;
         }
 
         /**
          * name of a file to use as a source of WSDL or XSD data
-         * @param file
+         * @param file the file to use.
          */
         public void setFile(File file) {
             this.file = file;
         }
 
+        /**
+         * Get the url.
+         * @return the URL of the resource.
+         */
         public String getUrl() {
             return url;
         }
@@ -430,12 +447,16 @@ public class WsdlToDotnet extends Task  {
         /**
          * url of a resource.
          * URLs have no timestamp checking, and are not validated
-         * @param url
+         * @param url the URL string to use.
          */
         public void setUrl(String url) {
             this.url = url;
         }
 
+        /**
+         * Get the makeURL attribute.
+         * @return the attribute.
+         */
         public boolean isMakeURL() {
             return makeURL;
         }
@@ -443,7 +464,7 @@ public class WsdlToDotnet extends Task  {
         /**
          * flag to request that a file is turned into an absolute file: URL
          * before being passed to the WSDL compiler
-         * @param makeURL
+         * @param makeURL a <code>boolean</code> value.
          */
         public void setMakeURL(boolean makeURL) {
             this.makeURL = makeURL;
@@ -467,16 +488,23 @@ public class WsdlToDotnet extends Task  {
      */
     public static class Compiler extends EnumeratedAttribute {
 
+        /** microsoft */
         public static final String COMPILER_MS = "microsoft";
+        /** mono */
         public static final String COMPILER_MONO = "mono";
+        /** microsoft-on-mono */
         public static final String COMPILER_MS_ON_MONO = "microsoft-on-mono";
+        // CheckStyle:VisibilityModifier OFF - bc
+        /** the index to string mappings */
         String[] compilers = {
             COMPILER_MS,
             COMPILER_MONO,
             COMPILER_MS_ON_MONO
         };
 
+        /** WSDL */
         public static final String EXE_WSDL = "wsdl";
+        /** MONO */
         public static final String EXE_MONO = "mono";
         /**
          * programs to run
@@ -503,6 +531,7 @@ public class WsdlToDotnet extends Task  {
             true
         };
 
+        // CheckStyle:VisibilityModifier ON
         /**
          * This is the only method a subclass needs to implement.
          *
@@ -542,13 +571,17 @@ public class WsdlToDotnet extends Task  {
             return extraCompilerArgs[getIndex()];
         }
 
+        /**
+         * Get where the current value supports absolute files.
+         * @return true if the compiler does supports absolute files.
+         */
         public boolean supportsAbsoluteFiles() {
             return absoluteFiles[getIndex()];
         }
 
         /**
          * apply any extra arguments of this class
-         * @param command
+         * @param command the command to apply the arguments to.
          */
         public void applyExtraArgs(NetCommand command) {
             String[] args = getExtraArgs();

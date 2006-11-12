@@ -101,6 +101,7 @@ import java.io.File;
 
 public class CSharp extends DotnetCompile {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      *  defines list: RELEASE;WIN32;NO_SANITY_CHECKS;;SOMETHING_ELSE'
      */
@@ -137,6 +138,7 @@ public class CSharp extends DotnetCompile {
      * settings files 'csc.rsp' in its bin directory and then the local directory
      */
     private boolean noconfig = false;
+    // CheckStyle:VisibilityModifier ON
 
 
     /**
@@ -191,6 +193,7 @@ public class CSharp extends DotnetCompile {
      * Set the file alignment.
      * Valid values are 0,512, 1024, 2048, 4096, 8192,
      * and 16384, 0 means 'leave to the compiler'
+     * @param fileAlign the value to use.
      */
     public void setFileAlign(int fileAlign) {
         this.fileAlign = fileAlign;
@@ -367,6 +370,7 @@ public class CSharp extends DotnetCompile {
 
     /**
      * Returns the delimiter which C# uses to separate references, i.e., a semi colon.
+     * @return the delimiter.
      */
     public String getReferenceDelimiter() {
         return ";";

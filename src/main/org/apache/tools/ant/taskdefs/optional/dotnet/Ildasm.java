@@ -153,6 +153,7 @@ public class Ildasm extends Task {
      * Set the name of the directory for resources to be created. We cannot control
      * their names, but we can say where they get created. If not set, the
      * directory of the dest file is used
+     * @param resourceDir the directory in which to create resources.
      */
     public void setResourceDir(File resourceDir) {
         this.resourceDir = resourceDir;
@@ -165,7 +166,7 @@ public class Ildasm extends Task {
      * force us to change to this directory before running the application.
      * i.e use &lt;property location&gt to create an absolute path from a
      * relative one before setting this value.
-     * @param executable
+     * @param executable the name of the executable to use.
      */
     public void setExecutable(String executable) {
         this.executable = executable;
@@ -173,7 +174,7 @@ public class Ildasm extends Task {
 
     /**
      * Select the output encoding: ascii, utf8 or unicode
-     * @param encoding
+     * @param encoding the enumerated value.
      */
     public void setEncoding(EncodingTypes encoding) {
         this.encoding = encoding.getValue();
@@ -181,7 +182,7 @@ public class Ildasm extends Task {
 
     /**
      * enable (default) or disable assembly language in the output
-     * @param assembler
+     * @param assembler a <code>boolean</code> value.
      */
     public void setAssembler(boolean assembler) {
         this.assembler = assembler;
@@ -189,7 +190,7 @@ public class Ildasm extends Task {
 
     /**
      * enable or disable (default) the original bytes as comments
-     * @param bytes
+     * @param bytes a <code>boolean</code> value.
      */
     public void setBytes(boolean bytes) {
         this.bytes = bytes;
@@ -197,7 +198,7 @@ public class Ildasm extends Task {
 
     /**
      * the output file (required)
-     * @param destFile
+     * @param destFile the destination file.
      */
     public void setDestFile(File destFile) {
         this.destFile = destFile;
@@ -205,7 +206,7 @@ public class Ildasm extends Task {
 
     /**
      * include header information; default false.
-     * @param header
+     * @param header a <code>boolean</code> value.
      */
     public void setHeader(boolean header) {
         this.header = header;
@@ -214,7 +215,7 @@ public class Ildasm extends Task {
     /**
      * name a single item to decode; a class or a method
      * e.g item="Myclass::method" or item="namespace1::namespace2::Myclass:method(void(int32))
-     * @param item
+     * @param item the item to decode.
      */
     public void setItem(String item) {
         this.item = item;
@@ -222,7 +223,7 @@ public class Ildasm extends Task {
 
     /**
      * include line number information; default=false
-     * @param linenumbers
+     * @param linenumbers a <code>boolean</code> value.
      */
     public void setLinenumbers(boolean linenumbers) {
         this.linenumbers = linenumbers;
@@ -230,7 +231,7 @@ public class Ildasm extends Task {
 
     /**
      * include metadata information
-     * @param metadata
+     * @param metadata a <code>boolean</code> value.
      */
     public void setMetadata(boolean metadata) {
         this.metadata = metadata;
@@ -238,7 +239,7 @@ public class Ildasm extends Task {
 
     /**
      * show a graphical progress bar in a window during the process; off by default
-     * @param progressBar
+     * @param progressBar a <code>boolean</code> value.
      */
     public void setProgressBar(boolean progressBar) {
         this.progressBar = progressBar;
@@ -246,7 +247,7 @@ public class Ildasm extends Task {
 
     /**
      * quote all names.
-     * @param quoteallnames
+     * @param quoteallnames a <code>boolean</code> value.
      */
     public void setQuoteallnames(boolean quoteallnames) {
         this.quoteallnames = quoteallnames;
@@ -254,7 +255,7 @@ public class Ildasm extends Task {
 
     /**
      * enable raw exception handling (default = false)
-     * @param rawExceptionHandling
+     * @param rawExceptionHandling a <code>boolean</code> value.
      */
     public void setRawExceptionHandling(boolean rawExceptionHandling) {
         this.rawExceptionHandling = rawExceptionHandling;
@@ -262,6 +263,7 @@ public class Ildasm extends Task {
 
     /**
      * include the source as comments (default=false)
+     * @param showSource a <code>boolean</code> value.
      */
     public void setShowSource(boolean showSource) {
         this.showSource = showSource;
@@ -269,7 +271,7 @@ public class Ildasm extends Task {
 
     /**
      * the file to disassemble -required
-     * @param sourceFile
+     * @param sourceFile the file to disassemble.
      */
     public void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
@@ -277,14 +279,14 @@ public class Ildasm extends Task {
 
     /**
      * alternate name for sourceFile
-     * @param sourceFile
+     * @param sourceFile the source file.
      */
     public void setSrcFile(File sourceFile) {
         setSourceFile(sourceFile);
     }
     /**
-     * This method sets the visibility options. It chooses one or more of the following, with + signs to
-     * concatenate them:
+     * This method sets the visibility options. It chooses one
+     * or more of the following, with + signs to concatenate them:
      * <pre>
      * pub : Public
      * pri : Private
@@ -296,7 +298,7 @@ public class Ildasm extends Task {
      *</pre>
      * e.g. visibility="pub+pri".
      * Family means <code>protected</code> in C#;
-     * @param visibility
+     * @param visibility the options to use.
      */
     public void setVisibility(String visibility) {
         this.visibility = visibility;
@@ -343,7 +345,7 @@ public class Ildasm extends Task {
     }
     /**
      * do the work
-     * @throws BuildException
+     * @throws BuildException if there is an error.
      */
     public void execute() throws BuildException {
         log("This task is deprecated and will be removed in a future version\n"
@@ -420,9 +422,13 @@ public class Ildasm extends Task {
      * encoding options; the default is ascii
      */
     public static class EncodingTypes extends EnumeratedAttribute {
-        public final static String UNICODE = "unicode";
-        public final static String UTF8 = "utf8";
-        public final static String ASCII = "ascii";
+        /** Unicode */
+        public static final String UNICODE = "unicode";
+        /** UTF8 */
+        public static final String UTF8 = "utf8";
+        /** ASCII */
+        public static final String ASCII = "ascii";
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[]{
                 ASCII,
@@ -433,7 +439,7 @@ public class Ildasm extends Task {
 
         /**
          * This method maps from an encoding enum to an encoding option.
-         * @param enumValue
+         * @param enumValue the value to use.
          * @return The encoding option indicated by the enum value.
          */
         public static String getEncodingOption(String enumValue) {
@@ -451,6 +457,7 @@ public class Ildasm extends Task {
      * visibility options for decoding
      */
     public static class VisibilityOptions extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[]{
                 "pub", //Public
