@@ -48,6 +48,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * separator is detected.
      *
      * @param cc data to log (byte).
+     * @throws IOException if there is an error.
      */
     public final void write(int cc) throws IOException {
         final byte c = (byte) cc;
@@ -63,6 +64,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
 
     /**
      * Flush this log stream
+     * @throws IOException if there is an error.
      */
     public final void flush() throws IOException {
         if (buffer.size() > 0) {
@@ -73,6 +75,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
     /**
      * Converts the buffer to a string and sends it to
      * <code>processLine</code>
+     * @throws IOException if there is an error.
      */
     protected void processBuffer() throws IOException {
         try {
@@ -86,11 +89,13 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * Processes a line.
      *
      * @param line the line to log.
+     * @throws IOException if there is an error.
      */
     protected abstract void processLine(String line) throws IOException;
 
     /**
      * Writes all remaining
+     * @throws IOException if there is an error.
      */
     public final void close() throws IOException {
         if (buffer.size() > 0) {

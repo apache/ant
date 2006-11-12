@@ -36,7 +36,9 @@ import org.apache.tools.ant.types.resources.FileResource;
  */
 public class SourceFileScanner implements ResourceFactory {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected Task task;
+    // CheckStyle:VisibilityModifier ON
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private File destDir;     // base directory of the fileset

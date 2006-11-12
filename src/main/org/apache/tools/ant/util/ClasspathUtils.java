@@ -263,8 +263,7 @@ public class ClasspathUtils {
         try {
             Class clazz = Class.forName(className, true, userDefinedLoader);
             Object o = clazz.newInstance();
-            if (!expectedType.isInstance(o))
-            {
+            if (!expectedType.isInstance(o)) {
                 throw new BuildException(
                     "Class of unexpected Type: "
                         + className

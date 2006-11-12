@@ -86,14 +86,16 @@ public class RegexpFactory extends RegexpMatcherFactory {
             cause = orCause(cause, be, true);
         }
 
-        throw new BuildException("No supported regular expression matcher found" +
-                (cause != null ? ": " + cause : ""), cause);
+        throw new BuildException(
+            "No supported regular expression matcher found"
+            + (cause != null ? ": " + cause : ""), cause);
     }
 
     /**
      * Wrapper over RegexpMatcherFactory.createInstance that ensures that
      * we are dealing with a Regexp implementation.
-     *
+     * @return the instance.
+     * @throws BuildException if there is a problem.
      * @since 1.3
      *
      * @see RegexpMatcherFactory#createInstance(String)

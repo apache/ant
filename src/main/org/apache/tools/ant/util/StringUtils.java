@@ -100,8 +100,10 @@ public final class StringUtils {
     }
 
     /**
-     * Checks that a string buffer ends up with a given string. It may sound trivial with the existing
-     * JDK API but the various implementation among JDKs can make those methods extremely resource intensive
+     * Checks that a string buffer ends up with a given string. It may sound
+     * trivial with the existing
+     * JDK API but the various implementation among JDKs can make those
+     * methods extremely resource intensive
      * and perform poorly due to massive memory allocation and copying. See
      * @param buffer the buffer to perform the check on
      * @param suffix the suffix

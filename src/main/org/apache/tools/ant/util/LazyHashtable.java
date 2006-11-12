@@ -29,8 +29,11 @@ import java.util.Enumeration;
  * @since Ant 1.6
  */
 public class LazyHashtable extends Hashtable {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean initAllDone = false;
+    // CheckStyle:VisibilityModifier OFF - bc
 
+    /** No arg constructor. */
     public LazyHashtable() {
         super();
     }

@@ -22,8 +22,10 @@ package org.apache.tools.ant.util;
 import java.lang.ref.WeakReference;
 
 /**
- * These classes are part of some code to reduce memory leaks by only retaining weak references to things
- * on Java1.2+, and yet still work (with leaky hard references) on Java1.1. Now that Ant is 1.2+ only,
+ * These classes are part of some code to reduce memory leaks by only
+ * retaining weak references to things
+ * on Java1.2+, and yet still work (with leaky hard references) on Java1.1.
+ * Now that Ant is 1.2+ only,
  * life is simpler and none of the classes are needed any more.
  *
  * They are only retained in case a third-party task uses them

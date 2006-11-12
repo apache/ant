@@ -25,18 +25,26 @@ package org.apache.tools.ant.util;
  */
 
 public class XmlConstants {
+    /** property for location of xml schema */
     public static final String PROPERTY_SCHEMA_LOCATION =
             "http://apache.org/xml/properties/schema/external-schemaLocation";
+    /** property for location of no-name schema */
     public static final String PROPERTY_NO_NAMESPACE_SCHEMA_LOCATION =
             "http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation";
+    /** property for full validation */
     public static final String FEATURE_XSD_FULL_VALIDATION =
             "http://apache.org/xml/features/validation/schema-full-checking";
+    /** property for xsd */
     public static final String FEATURE_XSD = "http://apache.org/xml/features/validation/schema";
 
+    /** property for validation */
     public static final String FEATURE_VALIDATION = "http://xml.org/sax/features/validation";
+    /** property for namespace support */
     public static final String FEATURE_NAMESPACES = "http://xml.org/sax/features/namespaces";
+    /** property for schema language */
     public static final String FEATURE_JAXP12_SCHEMA_LANGUAGE =
             "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+    /** property for schema source */
     public static final String FEATURE_JAXP12_SCHEMA_SOURCE =
             "http://java.sun.com/xml/jaxp/properties/schemaSource";
     public static final String URI_XSD =

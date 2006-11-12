@@ -1105,7 +1105,8 @@ public class FileUtils {
                 File f = new File(path).getAbsoluteFile();
                 java.lang.reflect.Method toURIMethod = File.class.getMethod("toURI", new Class[0]);
                 Object uriObj = toURIMethod.invoke(f, new Object[] {});
-                java.lang.reflect.Method toASCIIStringMethod = uriClazz.getMethod("toASCIIString", new Class[0]);
+                java.lang.reflect.Method toASCIIStringMethod
+                    = uriClazz.getMethod("toASCIIString", new Class[0]);
                 return (String) toASCIIStringMethod.invoke(uriObj, new Object[] {});
             } catch (Exception e) {
                 // Reflection problems? Should not happen, debug.

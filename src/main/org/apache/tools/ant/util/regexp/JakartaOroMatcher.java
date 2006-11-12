@@ -32,8 +32,10 @@ import org.apache.tools.ant.BuildException;
 public class JakartaOroMatcher implements RegexpMatcher {
 
     private String pattern;
+    // CheckStyle:VisibilityModifier OFF - bc
     protected final Perl5Compiler compiler = new Perl5Compiler();
     protected final Perl5Matcher matcher = new Perl5Matcher();
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructor for JakartaOroMatcher.

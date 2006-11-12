@@ -27,7 +27,7 @@ import java.util.Iterator;
  */
 public class CompositeMapper extends ContainerMapper {
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public String[] mapFileName(String sourceFileName) {
         HashSet results = new HashSet();
 

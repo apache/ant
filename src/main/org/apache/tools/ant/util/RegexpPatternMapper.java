@@ -29,9 +29,11 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  *
  */
 public class RegexpPatternMapper implements FileNameMapper {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected RegexpMatcher reg = null;
     protected char[] to = null;
     protected StringBuffer result = new StringBuffer();
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructor for RegexpPatternMapper.

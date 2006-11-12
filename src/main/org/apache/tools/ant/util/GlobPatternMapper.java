@@ -33,6 +33,7 @@ package org.apache.tools.ant.util;
  */
 public class GlobPatternMapper implements FileNameMapper {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Part of &quot;from&quot; pattern before the *.
      */
@@ -62,6 +63,8 @@ public class GlobPatternMapper implements FileNameMapper {
      * Part of &quot;to&quot; pattern after the *.
      */
     protected String toPostfix = null;
+
+    // CheckStyle:VisibilityModifier ON
 
     private boolean handleDirSep = false;
     private boolean caseSensitive = true;

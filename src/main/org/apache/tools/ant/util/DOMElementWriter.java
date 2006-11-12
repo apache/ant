@@ -130,6 +130,7 @@ public class DOMElementWriter {
      * XML namespaces will be ignored.
      * @param xmlDeclaration flag to indicate whether the ?xml? declaration
      * should be included.
+     * @param namespacePolicy the policy to use.
      * @since Ant1.7
      */
     public DOMElementWriter(boolean xmlDeclaration,
@@ -140,11 +141,13 @@ public class DOMElementWriter {
 
     private static String lSep = System.getProperty("line.separator");
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Don't try to be too smart but at least recognize the predefined
      * entities.
      */
     protected String[] knownEntities = {"gt", "amp", "lt", "apos", "quot"};
+    // CheckStyle:VisibilityModifier ON
 
 
     /**
@@ -164,7 +167,9 @@ public class DOMElementWriter {
     }
 
     /**
-     * Writes the XML declaration.
+     * Writes the XML declaration if xmlDeclaration is true.
+     * @param wri the writer to write to.
+     * @throws IOException if there is an error.
      * @since Ant 1.7.0
      */
     public void writeXMLDeclaration(Writer wri) throws IOException {
@@ -365,6 +370,7 @@ public class DOMElementWriter {
      * @param indent number of
      * @param indentWith string that should be used to indent the
      * corresponding tag.
+     * @param hasChildren if true indent.
      * @throws IOException if an error happens while writing to the stream.
      */
     public void closeElement(Element element, Writer out, int indent,

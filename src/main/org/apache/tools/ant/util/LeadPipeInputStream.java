@@ -67,6 +67,7 @@ public class LeadPipeInputStream extends PipedInputStream {
      * circular buffer of the specified size.
      * @param src    the <code>PipedOutputStream</code> source.
      * @param size   the size of the circular buffer.
+     * @throws IOException if there is an error.
      */
     public LeadPipeInputStream(PipedOutputStream src, int size) throws IOException {
         super(src);

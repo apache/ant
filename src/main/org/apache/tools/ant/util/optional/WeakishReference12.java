@@ -20,8 +20,6 @@ package org.apache.tools.ant.util.optional;
 
 import org.apache.tools.ant.util.WeakishReference;
 
-import java.lang.ref.WeakReference;
-
 /**
  * This is a reference that really is is Weak, as it uses the
  * appropriate java.lang.ref class.

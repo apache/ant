@@ -54,6 +54,7 @@ public class UUEncoder {
      * input stream.
      * @param is the input stream.
      * @param out the output stream.
+     * @throws IOException if there is an error.
      */
     public void encode(InputStream is, OutputStream out)
         throws IOException {

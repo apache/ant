@@ -20,8 +20,6 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.io.Reader;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.Tokenizer;
 
 /**
  * Class to read the complete input into a string.

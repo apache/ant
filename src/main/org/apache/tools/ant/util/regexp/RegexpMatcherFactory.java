@@ -94,8 +94,9 @@ public class RegexpMatcherFactory {
             cause = orCause(cause, be, true);
         }
 
-        throw new BuildException("No supported regular expression matcher found" +
-                (cause != null ? ": " + cause : ""), cause);
+        throw new BuildException(
+            "No supported regular expression matcher found"
+            + (cause != null ? ": " + cause : ""), cause);
    }
 
     static Throwable orCause(Throwable deflt, BuildException be, boolean ignoreCnfe) {

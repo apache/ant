@@ -64,7 +64,8 @@ public class RetryHandler {
                             + this.retriesAllowed + "), giving up", Project.MSG_WARN);
                     throw e;
                 } else {
-                    task.log("try #" + retries + ": IO error (" + desc + "), retrying", Project.MSG_WARN);
+                    task.log("try #" + retries + ": IO error (" + desc
+                             + "), retrying", Project.MSG_WARN);
                 }
             }
         }

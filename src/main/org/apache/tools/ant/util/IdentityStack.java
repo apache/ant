@@ -60,6 +60,7 @@ public class IdentityStack extends Stack {
     /**
      * Override methods that use <code>.equals()</code> comparisons on elements.
      * @param o the Object to search for.
+     * @return true if the stack contains the object.
      * @see java.util.Vector#contains(Object)
      */
     public synchronized boolean contains(Object o) {
@@ -70,6 +71,7 @@ public class IdentityStack extends Stack {
      * Override methods that use <code>.equals()</code> comparisons on elements.
      * @param o   the Object to search for.
      * @param pos the position from which to search.
+     * @return the position of the object, -1 if not found.
      * @see java.util.Vector#indexOf(Object, int)
      */
     public synchronized int indexOf(Object o, int pos) {
@@ -85,6 +87,7 @@ public class IdentityStack extends Stack {
      * Override methods that use <code>.equals()</code> comparisons on elements.
      * @param o   the Object to search for.
      * @param pos the position from which to search (backward).
+     * @return the position of the object, -1 if not found.
      * @see java.util.Vector#indexOf(Object, int)
      */
     public synchronized int lastIndexOf(Object o, int pos) {

@@ -40,9 +40,9 @@ import java.util.Iterator;
  */
 public class ProxyDiagnostics {
 
-    String destination;
+    private String destination;
 
-    URI destURI;
+    private URI destURI;
 
     /** {@value} */
     public static final String DEFAULT_DESTINATION = "http://ant.apache.org/";
@@ -69,6 +69,10 @@ public class ProxyDiagnostics {
         this(DEFAULT_DESTINATION);
     }
 
+    /**
+     * Get the diagnostics for proxy information.
+     * @return the information.
+     */
     public String toString() {
         ProxySelector selector = ProxySelector.getDefault();
         List list = selector.select(destURI);

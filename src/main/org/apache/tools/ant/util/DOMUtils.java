@@ -35,7 +35,7 @@ public class DOMUtils {
 
     /**
      * Get a new Document instance,
-     *
+     * @return the document.
      * @since Ant 1.6.3
      */
     public static Document newDocument() {

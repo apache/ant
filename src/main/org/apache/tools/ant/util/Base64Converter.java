@@ -25,7 +25,7 @@ package org.apache.tools.ant.util;
  **/
 public class Base64Converter {
 
-    private final static char[] ALPHABET = {
+    private static final char[] ALPHABET = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',  //  0 to  7
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',  //  8 to 15
         'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',  // 16 to 23
@@ -35,8 +35,10 @@ public class Base64Converter {
         'w', 'x', 'y', 'z', '0', '1', '2', '3',  // 48 to 55
         '4', '5', '6', '7', '8', '9', '+', '/'}; // 56 to 63
 
+    // CheckStyle:ConstantNameCheck OFF - bc
     /** Provided for BC purposes */
     public static final char[] alphabet = ALPHABET;
+    // CheckStyle:ConstantNameCheck ON
 
 
     /**

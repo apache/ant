@@ -67,13 +67,20 @@ public class ConcatResourceInputStream extends InputStream {
         return ignoreErrors;
     }
 
-    // inherit doc
-    public void close() throws IOException {
+    /**
+     * Close the stream.
+     * @throws IOException if there is an error.
+     */
+     public void close() throws IOException {
         closeCurrent();
         eof = true;
     }
 
-    // inherit doc
+    /**
+     * Read a byte.
+     * @return the byte (0 - 255) or -1 if this is the end of the stream.
+     * @throws IOException if there is an error.
+     */
     public int read() throws IOException {
         if (eof) {
             return EOF;

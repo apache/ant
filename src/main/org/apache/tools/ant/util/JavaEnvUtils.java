@@ -342,7 +342,9 @@ public final class JavaEnvUtils {
         switch(javaVersionNumber) {
             case 16:
             case 15:
-                tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
+                tests.addElement(
+                    "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
+                // Fall tru
             case 14:
                 tests.addElement("sun.audio.AudioPlayer");
                 if (javaVersionNumber == 14) {

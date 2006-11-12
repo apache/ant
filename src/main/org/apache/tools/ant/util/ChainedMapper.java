@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class ChainedMapper extends ContainerMapper {
 
-    //inherit doc
+    /** {@inheritDoc}. */
     public String[] mapFileName(String sourceFileName) {
         List inputs = new ArrayList();
         List results = new ArrayList();

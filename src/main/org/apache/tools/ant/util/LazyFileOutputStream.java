@@ -41,6 +41,7 @@ public class LazyFileOutputStream extends OutputStream {
     /**
      * Creates a stream that will eventually write to the file with
      * the given name and replace it.
+     * @param name the filename.
      */
     public LazyFileOutputStream(String name) {
         this(name, false);
@@ -50,6 +51,8 @@ public class LazyFileOutputStream extends OutputStream {
      * Creates a stream that will eventually write to the file with
      * the given name and optionally append to instead of replacing
      * it.
+     * @param name the filename.
+     * @param append if true append rather than replace.
      */
     public LazyFileOutputStream(String name, boolean append) {
         this(new File(name), append);
@@ -58,6 +61,7 @@ public class LazyFileOutputStream extends OutputStream {
     /**
      * Creates a stream that will eventually write to the file with
      * the given name and replace it.
+     * @param f the file to create.
      */
     public LazyFileOutputStream(File f) {
         this(f, false);
@@ -67,6 +71,8 @@ public class LazyFileOutputStream extends OutputStream {
      * Creates a stream that will eventually write to the file with
      * the given name and optionally append to instead of replacing
      * it.
+     * @param file the file to create.
+     * @param append if true append rather than replace.
      */
     public LazyFileOutputStream(File file, boolean append) {
         this(file, append, false);
@@ -76,6 +82,9 @@ public class LazyFileOutputStream extends OutputStream {
      * Creates a stream that will eventually write to the file with
      * the given name, optionally append to instead of replacing
      * it, and optionally always create a file (even if zero length).
+     * @param file the file to create.
+     * @param append if true append rather than replace.
+     * @param alwaysCreate if true create the file even if nothing to write.
      */
     public LazyFileOutputStream(File file, boolean append,
                                 boolean alwaysCreate) {
@@ -88,6 +97,7 @@ public class LazyFileOutputStream extends OutputStream {
      * Explicitly open the file for writing.
      *
      * <p>Returns silently if the file has already been opened.</p>
+     * @throws IOException if there is an error.
      */
     public void open() throws IOException {
         ensureOpened();

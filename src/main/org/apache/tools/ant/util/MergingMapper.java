@@ -27,7 +27,9 @@ package org.apache.tools.ant.util;
  *
  */
 public class MergingMapper implements FileNameMapper {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String[] mergedFile = null;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Ignored.

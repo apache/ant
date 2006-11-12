@@ -24,7 +24,6 @@ import java.io.IOException;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Project;
@@ -187,6 +186,7 @@ public class ScriptRunner {
 
     /**
      * Set the class path to be used.
+     * @param classpath the path to use.
      */
     public void setClasspath(Path classpath) {
         this.classpath = classpath;
