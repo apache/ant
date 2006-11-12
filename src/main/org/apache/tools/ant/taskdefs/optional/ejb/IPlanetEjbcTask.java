@@ -142,6 +142,7 @@ public class IPlanetEjbcTask extends Task {
 
     /**
      * Adds to the classpath used when compiling the EJB stubs and skeletons.
+     * @return the class path.
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -183,6 +184,7 @@ public class IPlanetEjbcTask extends Task {
 
     /**
      * Does the work.
+     * @throws BuildException if there is a problem.
      */
     public void execute() throws BuildException {
         checkConfiguration();

@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
@@ -152,6 +151,7 @@ public class Ejbc extends MatchingTask {
      * If true, ejbc will keep the
      * intermediate Java files used to build the class files.
      * This can be useful when debugging.
+     * @param newKeepgenerated a boolean as a string.
      */
     public void setKeepgenerated(String newKeepgenerated) {
         keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
@@ -172,6 +172,7 @@ public class Ejbc extends MatchingTask {
 
     /**
      * Set the classpath to be used for this compilation.
+     * @param s the classpath (as a string) to use.
      */
     public void setClasspath(String s) {
         this.classpath = FileUtils.translatePath(s);

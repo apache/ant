@@ -125,6 +125,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     private DependencyAnalyzer dependencyAnalyzer;
 
+    /** No arg constructor */
     public GenericDeploymentTool() {
     }
 
@@ -314,6 +315,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * @param logicalFilename A String representing the name, including
      *        all relevant path information, that should be stored for the entry
      *        being added.
+     * @throws BuildException if there is a problem.
      */
     protected void addFileToJar(JarOutputStream jStream,
                                 File inputFile,
@@ -359,6 +361,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Get a descriptionHandler.
      * @param srcDir the source directory.
+     * @return a handler.
      */
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler h = new DescriptorHandler(getTask(), srcDir);
@@ -378,6 +381,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *
      * vendor-specific subclasses should override this method to define
      * the vendor-specific locations of the EJB DTDs
+     * @param handler no used in this class.
      */
     protected void registerKnownDTDs(DescriptorHandler handler) {
         // none to register for generic
@@ -896,7 +900,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * Returns a Classloader object which parses the passed in generic EjbJar classpath.
      * The loader is used to dynamically load classes from javax.ejb.* and the classes
      * being added to the jar.
-     *
+     * @return a classloader.
      */
     protected ClassLoader getClassLoaderForBuild() {
         if (classpathLoader != null) {

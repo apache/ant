@@ -505,9 +505,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     public void setProcessInputStream(OutputStream param1) throws IOException   { }
 
     /**
-     *
-     * @param is
-     * @exception java.io.IOException
+     * Set the output stream of the process.
+     * @param is the input stream.
+     * @throws IOException if there is an error.
      */
     public void setProcessOutputStream(InputStream is) throws IOException {
         try {
@@ -516,7 +516,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             while ((javafile = reader.readLine()) != null) {
                 if (javafile.endsWith(".java")) {
                     String classfile = toClassFile(javafile);
-                    String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length() + 1);
+                    String key = classfile.substring(
+                        getConfig().srcDir.getAbsolutePath().length() + 1);
                     genfiles.put(key, new File(classfile));
                 }
             }
@@ -527,6 +528,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         }
     }
 
+    /**
+     * Set the error stream of the process.
+     * @param is the input stream.
+     * @throws IOException if there is an error.
+     */
     public void setProcessErrorStream(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String s = reader.readLine();

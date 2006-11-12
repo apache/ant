@@ -75,6 +75,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      */
     private int parseState = STATE_LOOKING_EJBJAR;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Instance variable used to store the name of the current element being
      * processed by the SAX parser.  Accessed by the SAX parser call-back methods
@@ -106,6 +107,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     private boolean inEJBRef = false;
 
     private Hashtable urlDTDs = new Hashtable();
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * The directory containing the bean classes and interfaces. This is

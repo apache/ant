@@ -625,14 +625,18 @@ public class IPlanetEjbc {
          * descriptor DTD.
          */
         public EjbcHandler() {
+            /** EJB 1.1 ID */
             final String PUBLICID_EJB11 =
                 "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
+            /** IPlanet ID */
             final String PUBLICID_IPLANET_EJB_60 =
                 "-//Sun Microsystems, Inc.//DTD iAS Enterprise JavaBeans 1.0//EN";
 
 
+            /** EJB 1.1 location */
             final String DEFAULT_IAS60_EJB11_DTD_LOCATION =
                 "ejb-jar_1_1.dtd";
+            /** IAS60 location */
             final String DEFAULT_IAS60_DTD_LOCATION =
                 "IASEjb_jar_1_0.dtd";
 

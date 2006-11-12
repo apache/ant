@@ -57,15 +57,19 @@ public class EjbcHelper {
      */
     private File sourceDirectory;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The names of the serialised deployment descriptors
      */
     String[] descriptors;
+    // CheckStyle:VisibilityModifier ON
 
     private boolean keepGenerated;
 
     /**
      * Command line interface for the ejbc helper task.
+     * @param args command line arguments.
+     * @throws Exception if there is a problem.
      */
     public static void main(String[] args) throws Exception {
         EjbcHelper helper = new EjbcHelper(args);
@@ -143,7 +147,7 @@ public class EjbcHelper {
                 primaryKeyClassPath
                     = ((EntityDescriptor) dd).getPrimaryKeyClassName();
                 primaryKeyClassPath
-                    = primaryKeyClassPath.replace('.', '/') + ".java";;
+                    = primaryKeyClassPath.replace('.', '/') + ".java";
             }
 
             File homeInterfaceSource = new File(sourceDirectory, homeInterfacePath);

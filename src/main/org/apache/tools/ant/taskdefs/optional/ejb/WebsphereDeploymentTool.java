@@ -309,7 +309,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * Decide, wether ejbdeploy should be called or not;
      * optional, default true.
      *
-     * @param ejbdeploy
+     * @param ejbdeploy a <code>boolean</code> value.
      */
     public void setEjbdeploy(boolean ejbdeploy) {
         this.ejbdeploy = ejbdeploy;
@@ -361,7 +361,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    /* {@inheritDoc}. */
+    /** {@inheritDoc}. */
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
         // register all the DTDs, both the ones that are known and
@@ -381,6 +381,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Get a description handler.
      * @param srcDir the source directory.
+     * @return the handler.
      */
     protected DescriptorHandler getWebsphereDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
@@ -639,6 +640,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Called to validate that the tool parameters have been configured.
+     * @throws BuildException if there is an error.
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
@@ -676,6 +678,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * @param genericJarFile java.io.File The generic jar file.
      * @param websphereJarFile java.io.File The websphere jar file to check to
      *      see if it needs to be rebuilt.
+     * @return true if a rebuild is required.
      */
     protected boolean isRebuildRequired(File genericJarFile, File websphereJarFile) {
         boolean rebuild = false;
@@ -835,6 +838,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 try {
                     genericJar.close();
                 } catch (IOException closeException) {
+                    // Ignore
                 }
             }
 
@@ -842,6 +846,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 try {
                     wasJar.close();
                 } catch (IOException closeException) {
+                    // Ignore
                 }
             }
 
@@ -849,6 +854,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 try {
                     newJarStream.close();
                 } catch (IOException closeException) {
+                    // Ignore
                 }
 
                 try {
@@ -869,6 +875,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * Jar File passed to it.
      *
      * @param classjar java.io.File representing jar file to get classes from.
+     * @return a classloader for the jar file.
+     * @throws IOException if there is an error.
      */
     protected ClassLoader getClassLoaderFromJar(File classjar) throws IOException {
         Path lookupPath = new Path(getTask().getProject());

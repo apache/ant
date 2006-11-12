@@ -90,7 +90,7 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
     /**
      * Called to validate that the tool parameters have been configured.
-     *
+     * @throws BuildException if there is an error.
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();

@@ -41,6 +41,7 @@ public class BorlandGenerateClient extends Task {
     static final String JAVA_MODE = "java";
     static final String FORK_MODE = "fork";
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** debug the generateclient task */
     boolean debug = false;
 
@@ -58,13 +59,19 @@ public class BorlandGenerateClient extends Task {
 
     /** hold the version */
     int version = BorlandDeploymentTool.BAS;
+    // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Set the version attribute.
+     * @param version the value to use.
+     */
     public void setVersion(int version) {
         this.version = version;
     }
 
     /**
      * Command launching mode: java or fork.
+     * @param s the mode to use.
      */
     public void setMode(String s) {
         mode = s;
@@ -72,6 +79,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * If true, turn on the debug mode for each of the Borland tools launched.
+     * @param debug a <code>boolean</code> value.
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
@@ -79,6 +87,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * EJB JAR file.
+     * @param ejbfile the file to use.
      */
     public void setEjbjar(File ejbfile) {
         ejbjarfile = ejbfile;
@@ -86,6 +95,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * Client JAR file name.
+     * @param clientjar the file to use.
      */
     public void setClientjar(File clientjar) {
         clientjarfile = clientjar;
@@ -93,6 +103,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * Path to use for classpath.
+     * @param classpath the path to use.
      */
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
@@ -104,6 +115,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * Adds path to the classpath.
+     * @return a path to be configured as a nested element.
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -114,6 +126,7 @@ public class BorlandGenerateClient extends Task {
 
     /**
      * Reference to existing path, to use as a classpath.
+     * @param r the reference to use.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -161,7 +174,10 @@ public class BorlandGenerateClient extends Task {
         } // end of else
     }
 
-    /** launch the generate client using java api */
+    /**
+     * launch the generate client using java api.
+     * @throws BuildException if there is an error.
+     */
     protected void executeJava() throws BuildException {
         try {
             if (version == BorlandDeploymentTool.BES)  {
@@ -206,7 +222,10 @@ public class BorlandGenerateClient extends Task {
         }
     }
 
-    /** launch the generate client using system api */
+    /**
+     * launch the generate client using system api.
+     * @throws BuildException if there is an error.
+     */
     protected  void executeFork() throws BuildException {
         if (version == BorlandDeploymentTool.BAS) {
             executeForkV4();
@@ -216,7 +235,10 @@ public class BorlandGenerateClient extends Task {
         }
     }
 
-    /** launch the generate client using system api */
+    /**
+     * launch the generate client using system api.
+     * @throws BuildException if there is an error.
+     */
     protected  void executeForkV4() throws BuildException {
         try {
 
@@ -250,7 +272,11 @@ public class BorlandGenerateClient extends Task {
         }
 
     }
-    /** launch the generate client using system api */
+
+    /**
+     * launch the generate client using system api.
+     * @throws BuildException if there is an error.
+     */
     protected  void executeForkV5() throws BuildException {
         try {
             log("mode : fork " + BorlandDeploymentTool.BES, Project.MSG_DEBUG);

@@ -68,6 +68,7 @@ public class EjbJar extends MatchingTask {
      * This state is passed to the deployment tools for configuration
      */
     static class Config {
+        // CheckStyle:VisibilityModifier OFF - bc
         /**
          * Stores a handle to the directory under which to search for class
          * files
@@ -122,6 +123,7 @@ public class EjbJar extends MatchingTask {
          * The dependency analyzer to use to add additional classes to the jar
          */
         public String analyzer;
+        // CheckStyle:VisibilityModifier ON
     }
 
     /**
@@ -169,8 +171,11 @@ public class EjbJar extends MatchingTask {
      * @since ant 1.6
      */
     public static class CMPVersion extends EnumeratedAttribute {
+        /** 1.0 value */
         public static final String CMP1_0 = "1.0";
+        /** 2.0 value */
         public static final String CMP2_0 = "2.0";
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[]{
                 CMP1_0,

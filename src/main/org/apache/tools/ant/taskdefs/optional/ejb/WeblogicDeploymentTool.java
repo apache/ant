@@ -233,12 +233,17 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Sets the weblogic.StdoutSeverityLevel to use when running the JVM that
      * executes ejbc; optional. Set to 16 to avoid the warnings about EJB Home and
      * Remotes being in the classpath
+     * @param jvmDebugLevel the value to use.
      */
     public void setJvmDebugLevel(Integer jvmDebugLevel) {
         this.jvmDebugLevel = jvmDebugLevel;
     }
 
 
+    /**
+     * Get the debug level.
+     * @return the jvm debug level (may be null).
+     */
     public Integer getJvmDebugLevel() {
         return jvmDebugLevel;
     }
@@ -303,13 +308,17 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * featured in weblogic 6 has, however, been deprecated in version 7. When
      * using with version 7 this attribute should be set to
      * &quot;weblogic.ejbc&quot; to avoid the deprecation warning.
+     * @param ejbcClass the name of the class to use.
      */
     public void setEjbcClass(String ejbcClass) {
         this.ejbcClass = ejbcClass;
     }
 
 
-    /** Get the ejbc compiler class  */
+    /**
+     * Get the ejbc compiler class.
+     * @return the name of the ejbc compiler class.
+     */
     public String getEjbcClass() {
         return ejbcClass;
     }
@@ -354,6 +363,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /**
      * Set the value of the oldCMP scheme. This is an antonym for newCMP
      * @ant.attribute ignore="true'
+     * @param oldCMP a <code>boolean</code> value.
      */
     public void setOldCMP(boolean oldCMP) {
         this.newCMP = !oldCMP;
@@ -370,6 +380,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * prefix. Under this scheme the name of the CMP descriptor does not match
      * the name actually used in the main weblogic EJB descriptor. Also,
      * descriptors which contain multiple CMP references could not be used.
+     * @param newCMP a <code>boolean</code> value.
      */
     public void setNewCMP(boolean newCMP) {
         this.newCMP = newCMP;
@@ -379,6 +390,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /**
      * Do not EJBC the jar after it has been put together;
      * optional, default false
+     * @param noEJBC a <code>boolean</code> value.
      */
     public void setNoEJBC(boolean noEJBC) {
         this.noEJBC = noEJBC;
@@ -646,6 +658,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Called to validate that the tool parameters have been configured.
+     * @throws BuildException if there is an error.
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
@@ -836,6 +849,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 try {
                     genericJar.close();
                 } catch (IOException closeException) {
+                    // empty
                 }
             }
 
@@ -843,6 +857,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 try {
                     wlJar.close();
                 } catch (IOException closeException) {
+                    // empty
                 }
             }
 
@@ -850,6 +865,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 try {
                     newJarStream.close();
                 } catch (IOException closeException) {
+                    // empty
                 }
 
                 try {
@@ -875,6 +891,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Jar File passed to it.
      *
      * @param classjar java.io.File representing jar file to get classes from.
+     * @return the classloader for the jarfile.
+     * @throws IOException if there is a problem.
      */
     protected ClassLoader getClassLoaderFromJar(File classjar) throws IOException {
         Path lookupPath = new Path(getTask().getProject());
@@ -890,4 +908,3 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         return getTask().getProject().createClassLoader(lookupPath);
     }
 }
-

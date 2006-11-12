@@ -40,10 +40,12 @@ public final class DDCreatorHelper {
      */
     private File generatedFilesDirectory;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The descriptor text files for which a serialised descriptor is to be created.
      */
     String[] descriptors;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * The main method.
