@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
@@ -440,7 +439,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         static final String ALL = "all";
         static final String SYSTEM = "system";
         static final String COMMANDLINE = "commandline";
-        /** @see EnumeratedAttribute#getValues() */
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {ALL, SYSTEM, COMMANDLINE};
         }

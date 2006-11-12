@@ -18,14 +18,7 @@
 package org.apache.tools.ant.types.resources.selectors;
 
 import java.util.Stack;
-import java.util.Vector;
-import java.util.TreeMap;
 import java.util.Iterator;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.AbstractCollection;
-import java.util.NoSuchElementException;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;

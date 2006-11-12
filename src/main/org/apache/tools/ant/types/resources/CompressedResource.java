@@ -40,9 +40,14 @@ public abstract class CompressedResource extends Resource {
 
     private Resource resource;
 
+    /** no arg constructor */
     public CompressedResource() {
     }
 
+    /**
+     * Constructor with another resource to wrap.
+     * @param other the resource to wrap.
+     */
     public CompressedResource(ResourceCollection other) {
         addConfigured(other);
     }
@@ -64,12 +69,21 @@ public abstract class CompressedResource extends Resource {
         resource = (Resource) a.iterator().next();
     }
 
+    /**
+     * Get the name of the resource.
+     * @return the name of the wrapped resource.
+     */
     public String getName() {
         return getResource().getName();
     }
 
 
-    public void setName(String name) {
+    /**
+     * Overridden, not allowed to set the name of the resource.
+     * @param name not used.
+     * @throws BuildException always.
+     */
+    public void setName(String name) throws BuildException {
         throw new BuildException("you can't change the name of a compressed"
                                  + " resource");
     }
@@ -101,7 +115,12 @@ public abstract class CompressedResource extends Resource {
         return getResource().getLastModified();
     }
 
-    public void setLastModified(long lastmodified) {
+    /**
+     * Override setLastModified.
+     * @param lastmodified not used.
+     * @throws BuildException always.
+     */
+    public void setLastModified(long lastmodified) throws BuildException {
         throw new BuildException("you can't change the timestamp of a "
                                  + " compressed resource");
     }
@@ -114,7 +133,12 @@ public abstract class CompressedResource extends Resource {
         return getResource().isDirectory();
     }
 
-    public void setDirectory(boolean directory) {
+    /**
+     * Override setDirectory.
+     * @param directory not used.
+     * @throws BuildException always.
+     */
+    public void setDirectory(boolean directory) throws BuildException {
         throw new BuildException("you can't change the directory state of a "
                                  + " compressed resource");
     }
@@ -147,7 +171,12 @@ public abstract class CompressedResource extends Resource {
         }
     }
 
-    public void setSize(long size) {
+    /**
+     * Override setSize.
+     * @param size not used.
+     * @throws BuildException always.
+     */
+    public void setSize(long size) throws BuildException {
         throw new BuildException("you can't change the size of a "
                                  + " compressed resource");
     }
@@ -163,10 +192,10 @@ public abstract class CompressedResource extends Resource {
             return 0;
         }
         if (other instanceof CompressedResource) {
-            return getResource().compareTo(((CompressedResource)other).getResource());
+            return getResource().compareTo(
+                ((CompressedResource) other).getResource());
         }
         return getResource().compareTo(other);
-        
     }
 
     /**
@@ -176,7 +205,7 @@ public abstract class CompressedResource extends Resource {
     public int hashCode() {
         return getResource().hashCode();
     }
-    
+
     /**
      * Get an InputStream for the Resource.
      * @return an InputStream containing this Resource's content.
@@ -242,6 +271,8 @@ public abstract class CompressedResource extends Resource {
      * Is supposed to wrap the stream to allow decompression on the fly.
      *
      * @param in InputStream to wrap, will never be null.
+     * @return a compressed inputstream.
+     * @throws IOException if there is a problem.
      */
     protected abstract InputStream wrapStream(InputStream in)
         throws IOException;
@@ -250,6 +281,8 @@ public abstract class CompressedResource extends Resource {
      * Is supposed to wrap the stream to allow compression on the fly.
      *
      * @param out OutputStream to wrap, will never be null.
+     * @return a compressed outputstream.
+     * @throws IOException if there is a problem.
      */
     protected abstract OutputStream wrapStream(OutputStream out)
         throws IOException;

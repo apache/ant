@@ -18,7 +18,6 @@
 package org.apache.tools.ant.types.resources;
 
 import java.util.Stack;
-import java.util.Vector;
 import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.Collection;
