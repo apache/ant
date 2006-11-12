@@ -28,11 +28,14 @@ import org.apache.tools.ant.util.DateUtils;
  * @since Ant 1.5
  */
 public abstract class Mailer {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String host = null;
     protected int port = -1;
     protected String user = null;
     protected String password = null;
+    // CheckStyle:MemberNameCheck OFF - bc
     protected boolean SSL = false;
+    // CheckStyle:MemberNameCheck ON
     protected Message message;
     protected EmailAddress from;
     protected Vector replyToList = null;
@@ -44,6 +47,7 @@ public abstract class Mailer {
     protected Task task;
     protected boolean includeFileNames = false;
     protected Vector headers = null;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Set the mail server.
@@ -86,11 +90,11 @@ public abstract class Mailer {
     /**
      * Set whether to send the mail through SSL.
      *
-     * @param SSL if true use SSL transport.
+     * @param ssl if true use SSL transport.
      * @since Ant 1.6
      */
-    public void setSSL(boolean SSL) {
-        this.SSL = SSL;
+    public void setSSL(boolean ssl) {
+        this.SSL = ssl;
     }
 
     /**

@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.util.ClasspathUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.util.Locale;
 

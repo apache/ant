@@ -45,6 +45,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @since Ant 1.3
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -72,7 +73,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Javac attributes;
 
     //must keep for subclass BC, though unused:
+    // CheckStyle:ConstantNameCheck OFF - bc
     protected static final String lSep = StringUtils.LINE_SEP;
+
+    // CheckStyle:ConstantNameCheck ON
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Set the Javac instance which contains the configured compilation
