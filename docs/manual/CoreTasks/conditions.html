@@ -835,7 +835,7 @@ must match. <b>Since Ant 1.7</b>
     An example:
   </p>
 <blockquote><pre>
-&lt;condition propery="legal-password"&gt;
+&lt;condition property="legal-password"&gt;
   &lt;matches pattern="[1-9]" string="${user-input}"/&gt;
 &lt;/condition&gt;
 &lt;fail message="Your password should at least contain one number"
@@ -880,6 +880,38 @@ must match. <b>Since Ant 1.7</b>
            casesensitive="false"
            singleline="false"/&gt;
 &lt;/au:assertFalse&gt;
+</pre></blockquote>
+<h4>antversion</h4>
+
+<p>
+  Test the ant version.
+  <b>Since Ant 1.7.0</b></p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">atleast</td>
+    <td valign="top">The version that this at least.
+      The format is major.minor.point.</td>
+    <td valign="top" rowspan="2" align="center">One of these.</td>
+  </tr>
+  <tr>
+    <td valign="top">exactly</td>
+    <td valign="top">The version that this ant is exactly.
+      The format is major.minor.point.</td>
+  </tr>
+</table>
+  <p>
+    An example:
+  </p>
+<blockquote><pre>
+&lt;condition property="ant-is-exact-7"&gt;
+  &lt;antversion exactly="1.7.0"/&gt;
+&lt;/condition&gt;
 </pre></blockquote>
 </body>
 </html>
