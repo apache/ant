@@ -24,7 +24,7 @@ import org.apache.tools.ant.util.WeakishReference;
  * This is a reference that really is is Weak, as it uses the
  * appropriate java.lang.ref class.
  * @deprecated since 1.7.
- *             Just use {@link WeakReference} directly.
+ *             Just use WeakReference directly.
  * Note that in ant1.7 is parent was changed to extend HardReference.
  * This is because the latter has access to the (package scoped)
  * WeakishReference(Object) constructor, and both that and this are thin
