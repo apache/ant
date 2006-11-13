@@ -622,7 +622,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
     }
 
-    /** {@inheritDoc}. */
+    /**
+     * Add a formatter.
+     * @param f the formatter to add.
+     */
     public void addFormatter(JUnitResultFormatter f) {
         formatters.addElement(f);
     }
