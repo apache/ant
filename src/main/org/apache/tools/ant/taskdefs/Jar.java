@@ -526,7 +526,7 @@ public class Jar extends Zip {
             Manifest.Attribute classpath =
                 mf.getMainSection().getAttribute(Manifest.ATTRIBUTE_CLASSPATH);
             String[] cpEntries = null;
-            if (classpath != null) {
+            if (classpath != null && classpath.getValue() != null) {
                 StringTokenizer tok = new StringTokenizer(classpath.getValue(),
                                                           " ");
                 cpEntries = new String[tok.countTokens()];

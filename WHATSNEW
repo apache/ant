@@ -17,6 +17,9 @@ Fixed bugs:
   take comparison with another CompressedResouce into account.
   Bugzilla 40949.
 
+* possible NPE in Jar.java.
+  Bugzilla 40847
+
 Other changes:
 --------------
 
