@@ -26,6 +26,9 @@ Other changes:
 * Warn user when a reference in the form "${refid}" cannot be resolved as this
   is a sign they probably meant "refid" (misuse of property expansion syntax).
 
+* add dtd to javadoc for junit.
+  Bugzilla 40754.
+
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
 
