@@ -58,6 +58,15 @@ element resource collections.
     <td valign="top">Whether to halt the build on failure</td>
     <td align="center" valign="top">No, default "true"</td>
   </tr>
+  <tr>
+    <td valign="top">quiet</td>
+    <td valign="top">Do not display a diagnostic message (unless Ant has been 
+    invoked with the <code>-verbose</code> or <code>-debug</code>
+    switches) or modify the exit status to reflect an error. Setting this to 
+    "true" implies setting failonerror to "false".
+    </td>
+    <td align="center" valign="top">No, default "false"</td>
+  </tr>
 </table>
 <p>
 The LoadResource task supports nested <a href="../CoreTypes/filterchain.html">

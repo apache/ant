@@ -51,6 +51,12 @@ public class LoadResource extends Task {
     private boolean failOnError = true;
 
     /**
+     * suppress error message if it goes pear-shaped, sets failOnError=false 
+     */
+    private boolean quiet = false;
+    
+
+    /**
      * Encoding to use for filenames, defaults to the platform's default
      * encoding.
      */
@@ -100,7 +106,18 @@ public class LoadResource extends Task {
     public final void setFailonerror(final boolean fail) {
         failOnError = fail;
     }
-
+    
+    /**
+     * If true, suppress the load error report and set the
+     * the failonerror value to true.
+     * @param quiet The new Quiet value
+     */
+    public void setQuiet(final boolean quiet) {
+        this.quiet = quiet;
+        if (quiet) {
+            this.failOnError = false;
+        }
+    }
 
     /**
      * read in a source file to a property
@@ -116,12 +133,16 @@ public class LoadResource extends Task {
         if (property == null) {
             throw new BuildException("output property not defined");
         }
+        if (quiet && failOnError) {
+            throw new BuildException("quiet and failonerror cannot both be "
+                                     + "set to true");
+        }
         if (!src.isExists()) {
             String message = src + " doesn't exist";
             if (failOnError) {
                 throw new BuildException(message);
             } else {
-                log(message, Project.MSG_ERR);
+                log(message, quiet ? Project.MSG_WARN : Project.MSG_ERR);
                 return;
             }
         }
@@ -175,13 +196,14 @@ public class LoadResource extends Task {
             if (failOnError) {
                 throw new BuildException(message, ioe, getLocation());
             } else {
-                log(message, Project.MSG_ERR);
+                log(message, quiet ? Project.MSG_VERBOSE : Project.MSG_ERR);
             }
         } catch (final BuildException be) {
             if (failOnError) {
                 throw be;
             } else {
-                log(be.getMessage(), Project.MSG_ERR);
+                log(be.getMessage(),
+                    quiet ? Project.MSG_VERBOSE : Project.MSG_ERR);
             }
         } finally {
             FileUtils.close(is);
