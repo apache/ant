@@ -394,12 +394,6 @@ public class EchoProperties extends Task {
                 Set result = super.entrySet();
                 if (JavaEnvUtils.isKaffe()) {
                     TreeSet t = new TreeSet(new Comparator() {
-                        public boolean equals(Object o) {
-                            return false;
-                        }
-                        public int hashCode() {
-                            return 0;
-                        }
                         public int compare(Object o1, Object o2) {
                             String key1 = (String) ((Map.Entry) o1).getKey();
                             String key2 = (String) ((Map.Entry) o2).getKey();
