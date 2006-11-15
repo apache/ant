@@ -51,17 +51,24 @@ import java.util.Vector;
  * @see org.apache.tools.ant.types.DataType
  */
 public class Image extends MatchingTask {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected Vector instructions = new Vector();
     protected boolean overwrite = false;
     protected Vector filesets = new Vector();
     protected File srcDir = null;
     protected File destDir = null;
 
+    // CheckStyle:MemberNameCheck OFF - bc
+
     //cannot remove underscores due to protected visibility >:(
     protected String str_encoding = "JPEG";
     protected boolean garbage_collect = false;
 
     private boolean failonerror = true;
+
+    // CheckStyle:MemberNameCheck ON
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Add a set of files to be deleted.
@@ -198,12 +205,12 @@ public class Image extends MatchingTask {
             if (destDir == null) {
                 destDir = srcDir;
             }
-            File new_file = new File(destDir, file.getName());
+            File newFile = new File(destDir, file.getName());
 
-            if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
-                new_file.delete();
+            if ((overwrite && newFile.exists()) && (!newFile.equals(file))) {
+                newFile.delete();
             }
-            FileOutputStream stream = new FileOutputStream(new_file);
+            FileOutputStream stream = new FileOutputStream(newFile);
 
             JAI.create("encode", image, stream, str_encoding.toUpperCase(),
                        null);
@@ -261,8 +268,8 @@ public class Image extends MatchingTask {
                 ArrayList filesToRemove = new ArrayList();
                 for (Iterator i = filesList.iterator(); i.hasNext();) {
                     File f = (File) i.next();
-                    File new_file = new File(destDir, f.getName());
-                    if (new_file.exists()) {
+                    File newFile = new File(destDir, f.getName());
+                    if (newFile.exists()) {
                         filesToRemove.add(f);
                     }
                 }
