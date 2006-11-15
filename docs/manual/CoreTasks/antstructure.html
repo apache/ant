@@ -69,7 +69,7 @@ element of this task - see the example below.</code>
 </table>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;antstructure output=&quot;project.dtd&quot;/&gt;
+&lt;antstructure output=&quot;project.dtd&quot; /&gt;
 </pre></blockquote>
 
 <p><b>Emitting your own structure instead of a DTD</b></p>
@@ -87,17 +87,14 @@ public class MyPrinter implements AntStructure.StructurePrinter {
 <p>and then use it via typedef</p>
 
 <pre>
-  &lt;typedef name="myprinter" classname="org.example.MyPrinter"/&gt;
+  &lt;typedef name="myprinter" classname="org.example.MyPrinter" /&gt;
   &lt;antstructure output="project.my"&gt;
-    &lt;myprinter/&gt;
-  &lt;antstructure&gt;
+    &lt;myprinter /&gt;
+  &lt;/antstructure&gt;
 </pre>
 
 <p>Your own StructurePrinter can accept attributes and nested elements
 just like any other Ant type or task.</p>
 
-
-
 </body>
 </html>
-
