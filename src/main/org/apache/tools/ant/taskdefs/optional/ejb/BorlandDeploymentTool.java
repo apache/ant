@@ -200,6 +200,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     }
 
 
+    /**
+     * Get the borland descriptor handler.
+     * @param srcDir the source directory.
+     * @return the descriptor.
+     */
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
             new DescriptorHandler(getTask(), srcDir) {
@@ -444,6 +449,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * Method used to encapsulate the writing of the JAR file. Iterates over the
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
+     * @param baseName the base name.
+     * @param jarFile  the jar file to write to.
+     * @param files    the files to write to the jar.
+     * @param publicId the id to use.
+     * @throws BuildException if there is an error.
      */
     protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId)
         throws BuildException {
@@ -500,8 +510,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface
 
+    /** {@inheritDoc}. */
     public void start() throws IOException  { }
+    /** {@inheritDoc}. */
     public void stop()  {  }
+    /** {@inheritDoc}. */
     public void setProcessInputStream(OutputStream param1) throws IOException   { }
 
     /**

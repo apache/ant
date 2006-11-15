@@ -170,6 +170,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
             Project.MSG_WARN);
     }
 
+    /** {@inheritDoc}. */
     public void processDescriptor(String descriptorName, SAXParser saxParser) {
         this.descriptorName = descriptorName;
         this.iasDescriptorName = null;

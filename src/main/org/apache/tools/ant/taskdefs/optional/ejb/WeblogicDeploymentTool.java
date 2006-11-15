@@ -397,6 +397,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
 
+    /**
+     * Register the DTDs.
+     * @param handler the handler to use.
+     */
     protected void registerKnownDTDs(DescriptorHandler handler) {
         // register all the known DTDs
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL51_EJB11_DTD_LOCATION);
@@ -406,6 +410,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
 
+    /**
+     * Get the weblogic descriptor handler.
+     * @param srcDir the source directory.
+     * @return the descriptor.
+     */
     protected DescriptorHandler getWeblogicDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
             new DescriptorHandler(getTask(), srcDir) {
@@ -442,6 +451,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Add any vendor specific files which should be included in the EJB Jar.
+     * @param ejbFiles the hash table to be populated.
+     * @param ddPrefix the prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
         File weblogicDD = new File(getConfig().descriptorDir, ddPrefix + WL_DD);
@@ -637,6 +648,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Method used to encapsulate the writing of the JAR file. Iterates over
      * the filenames/java.io.Files in the Hashtable stored on the instance
      * variable ejbFiles.
+     * @param baseName the base name.
+     * @param jarFile the jar file to populate.
+     * @param files   the hash table of files to write.
+     * @param publicId the id to use.
+     * @throws BuildException if there is a problem.
      */
     protected void writeJar(String baseName, File jarFile, Hashtable files,
                             String publicId) throws BuildException {
@@ -688,6 +704,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * @param genericJarFile java.io.File The generic jar file.
      * @param weblogicJarFile java.io.File The weblogic jar file to check to
      *      see if it needs to be rebuilt.
+     * @return true if the jar needs to be rebuilt.
      */
     protected boolean isRebuildRequired(File genericJarFile, File weblogicJarFile) {
         boolean rebuild = false;
@@ -793,7 +810,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
                     //Copy files from old weblogic jar
                     for (Enumeration e = wlEntries.elements(); e.hasMoreElements();) {
-                        byte[] buffer = new byte[1024];
+                        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                         int bytesRead;
                         InputStream is;
                         JarEntry je = (JarEntry) e.nextElement();
@@ -802,7 +819,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);
                         } else {
-                            newJarStream.setLevel(9);
+                            newJarStream.setLevel(JAR_COMPRESS_LEVEL);
                         }
 
                         // Update with changed Bean class

@@ -35,7 +35,7 @@ import javax.ejb.deployment.EntityDescriptor;
  * interface class files referenced in the deployment descriptors being processed.
  *
  */
-public class EjbcHelper {
+public final class EjbcHelper {
     /**
      * The root directory of the tree containing the serialised deployment desciptors.
      */

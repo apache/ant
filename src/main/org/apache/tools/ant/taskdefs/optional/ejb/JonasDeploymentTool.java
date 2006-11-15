@@ -326,6 +326,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     /* other methods */
     /* ------------- */
 
+    /** {@inheritDoc}. */
     public void processDescriptor(String aDescriptorName, SAXParser saxParser) {
 
         descriptorName = aDescriptorName;
@@ -342,6 +343,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         }
     }
 
+    /** {@inheritDoc}. */
     protected void writeJar(String baseName, File jarfile, Hashtable ejbFiles, String publicId)
     throws BuildException {
 
@@ -361,6 +363,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         }
     }
 
+    /** {@inheritDoc}. */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
     // JOnAS-specific descriptor deployment
@@ -375,6 +378,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         }
     }
 
+    /** {@inheritDoc}. */
     protected File getVendorOutputJarFile(String baseName) {
         return new File(getDestDir(), baseName + suffix);
     }
@@ -451,6 +455,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         return jonasDN;
     }
 
+    /** {@inheritDoc}. */
     protected String getJarBaseName(String descriptorFileName) {
 
         String baseName = null;
@@ -491,6 +496,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         return baseName;
     }
 
+    /** {@inheritDoc}. */
     protected void registerKnownDTDs(DescriptorHandler handler) {
         handler.registerDTD(EJB_JAR_1_1_PUBLIC_ID,
                     jonasroot + File.separator + "xml" + File.separator + EJB_JAR_1_1_DTD);
@@ -509,14 +515,11 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param genericJarFile jar file.
      * @param ejbFiles the hashtable.
      */
-    private void addGenICGeneratedFiles(File genericJarFile, Hashtable ejbFiles) {
-        // GenIC task
-        Java genicTask = null;
-
-        // GenIC class (3 GenIC classes for various versions of JOnAS
-        // are supported)
-        String genicClass = null;
-
+    private void addGenICGeneratedFiles(
+        File genericJarFile, Hashtable ejbFiles) {
+        Java genicTask = null;    // GenIC task
+        String genicClass = null; // GenIC class (3 are supported for various
+                                  // versions
         if (nogenic) {
             return;
         }
@@ -573,7 +576,6 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
                 + File.separator + orb + "_jonas.jar";
             classpath.append(new Path(classpath.getProject(), orbJar));
         }
-
         log("Using classpath: " + classpath.toString(), Project.MSG_VERBOSE);
         genicTask.setClasspath(classpath);
 
@@ -628,7 +630,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         // verbose
         if (verbose) {
             genicTask.createArg().setValue("-verbose");
-                }
+        }
 
         // additionalargs
         if (additionalargs != null) {
@@ -653,8 +655,9 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             deleteAllFiles(outputdir);
 
             if (!keepgeneric) {
-            log("Deleting generic JAR " + genericJarFile.toString(), Project.MSG_VERBOSE);
-            genericJarFile.delete();
+                log("Deleting generic JAR " + genericJarFile.toString(),
+                    Project.MSG_VERBOSE);
+                genericJarFile.delete();
             }
 
             throw new BuildException("GenIC reported an error.");
@@ -716,6 +719,12 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         return null;
     }
 
+    /**
+     * Verify the configuration.
+     * @param descriptorFileName the name of the descriptor file.
+     * @param saxParser          not used.
+     * @throws BuildException if there is an error.
+     */
     protected void checkConfiguration(String descriptorFileName,
                       SAXParser saxParser) throws BuildException {
 

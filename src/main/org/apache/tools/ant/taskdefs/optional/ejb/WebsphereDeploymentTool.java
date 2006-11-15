@@ -59,6 +59,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class WebsphereDeploymentTool extends GenericDeploymentTool {
+
     /** ID for ejb 1.1 */
     public static final String PUBLICID_EJB11
          = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
@@ -608,12 +609,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         }
     }
 
-
-    /**
-     * Method used to encapsulate the writing of the JAR file. Iterates over
-     * the filenames/java.io.Files in the Hashtable stored on the instance
-     * variable ejbFiles.
-     */
+    /** {@inheritDoc}. */
     protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId)
          throws BuildException {
         if (ejbdeploy) {
@@ -782,7 +778,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
                     //Copy files from old websphere jar
                     for (Enumeration e = wasEntries.elements(); e.hasMoreElements();) {
-                        byte[] buffer = new byte[1024];
+                        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                         int bytesRead;
                         InputStream is;
                         JarEntry je = (JarEntry) e.nextElement();
@@ -791,7 +787,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                             || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);
                         } else {
-                            newJarStream.setLevel(9);
+                            newJarStream.setLevel(JAR_COMPRESS_LEVEL);
                         }
 
                         // Update with changed Bean class

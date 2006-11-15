@@ -62,7 +62,10 @@ public class Ejbc extends MatchingTask {
      */
     private File sourceDirectory;
 
+    // CheckStyle:VisibilityModifier OFF - bc
+    /** Whether to keep the generated files */
     public boolean keepgenerated;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Do the work.
@@ -124,6 +127,10 @@ public class Ejbc extends MatchingTask {
         }
     }
 
+    /**
+     * get the keep generated attribute.
+     * @return the attribute.
+     */
     public boolean getKeepgenerated() {
         return keepgenerated;
     }

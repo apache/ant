@@ -23,6 +23,9 @@ import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
+/**
+ * Deployment tool for Weblogic TOPLink.
+ */
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
     private static final String TL_DTD_LOC
@@ -53,6 +56,11 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
         this.toplinkDTD = inString;
     }
 
+    /**
+     * Get the descriptor handler.
+     * @param srcDir the source file.
+     * @return the descriptor handler.
+     */
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = super.getDescriptorHandler(srcDir);
         if (toplinkDTD != null) {
@@ -68,6 +76,8 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
+     * @param ejbFiles the hashtable to add files to.
+     * @param ddPrefix the prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
         super.addVendorFiles(ejbFiles, ddPrefix);

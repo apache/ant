@@ -25,6 +25,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 
+/**
+ * The interface to implement for deployment tools.
+ */
 public interface EJBDeploymentTool {
     /**
      * Process a deployment descriptor, generating the necessary vendor specific

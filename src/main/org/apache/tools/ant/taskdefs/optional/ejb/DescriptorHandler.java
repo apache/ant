@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
  * list can then be accessed through the getFiles() method.
  */
 public class DescriptorHandler extends org.xml.sax.HandlerBase {
+    private static final int DEFAULT_HASH_TABLE_SIZE = 10;
     private static final int STATE_LOOKING_EJBJAR = 1;
     private static final int STATE_IN_EJBJAR = 2;
     private static final int STATE_IN_BEANS = 3;
@@ -171,7 +172,16 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
     }
 
-    /** @see org.xml.sax.EntityResolver#resolveEntity(String, String) */
+    /**
+     * Resolve the entity.
+     * @see org.xml.sax.EntityResolver#resolveEntity(String, String).
+     * @param publicId The public identifier, or <code>null</code>
+     *                 if none is available.
+     * @param systemId The system identifier provided in the XML
+     *                 document. Will not be <code>null</code>.
+     * @return an inputsource for this identifier
+     * @throws SAXException if there is a problem.
+     */
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException {
         this.publicId = publicId;
@@ -245,7 +255,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * @throws SAXException on error
      */
     public void startDocument() throws SAXException {
-        this.ejbFiles = new Hashtable(10, 1);
+        this.ejbFiles = new Hashtable(DEFAULT_HASH_TABLE_SIZE, 1);
         this.currentElement = null;
         inEJBRef = false;
     }
