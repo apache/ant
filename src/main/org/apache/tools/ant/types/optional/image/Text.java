@@ -30,31 +30,50 @@ import java.awt.image.BufferedImage;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Text extends ImageOperation implements DrawOperation {
+    private static final int DEFAULT_POINT = 10;
+
     private String strText = "";
     private String font = "Arial";
-    private int point = 10;
+    private int point = DEFAULT_POINT;
     private boolean bold = false;
     private boolean italic = false;
     private String color = "black";
 
+    /**
+     * Set the string to be used as text.
+     * @param str the string to be used.
+     */
     public void setString(String str) {
         strText = str;
     }
 
+    /**
+     * Set the font to be used to draw the text.
+     * @param f the font to be used.
+     */
     public void setFont(String f) {
         font = f;
     }
 
+    /**
+     * Set the number of points to be used.
+     * @param p an integer value as a string.
+     */
     public void setPoint(String p) {
         point = Integer.parseInt(p);
     }
 
+    /**
+     * Set the color of the text.
+     * @param c the color name.
+     */
     public void setColor(String c) {
         color = c;
     }
 
     /**
      * @todo is this used?
+     * @param state not used at the moment.
      */
     public void setBold(boolean state) {
         bold = state;
@@ -62,11 +81,16 @@ public class Text extends ImageOperation implements DrawOperation {
 
     /**
      * @todo is this used?
+     * @param state not used at the moment.
      */
     public void setItalic(boolean state) {
         italic = state;
     }
 
+    /**
+     * Draw the text.
+     * @return the resultant image.
+     */
     public PlanarImage executeDrawOperation() {
         log("\tCreating Text \"" + strText + "\"");
 

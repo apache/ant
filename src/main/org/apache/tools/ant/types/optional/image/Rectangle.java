@@ -27,27 +27,46 @@ import java.awt.image.BufferedImage;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Rectangle extends BasicShape implements DrawOperation {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected int width = 0;
     protected int height = 0;
     protected int arcwidth = 0;
     protected int archeight = 0;
+    // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Set the width.
+     * @param w the value to use.
+     */
     public void setWidth(int w) {
         width = w;
     }
 
+    /**
+     * Set the height.
+     * @param h the value to use.
+     */
     public void setHeight(int h) {
         height = h;
     }
 
+    /**
+     * Set the arc width.
+     * @param w the value to use.
+     */
     public void setArcwidth(int w) {
         arcwidth = w;
     }
 
+    /**
+     * Set the arc height.
+     * @param h the value to use.
+     */
     public void setArcheight(int h) {
         archeight = h;
     }
 
+    /** {@inheritDoc}. */
     public PlanarImage executeDrawOperation() {
         log("\tCreating Rectangle w=" + width + " h=" + height + " arcw="
             + arcwidth + " arch=" + archeight);

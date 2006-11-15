@@ -24,6 +24,10 @@ import java.awt.Color;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public final class ColorMapper {
+    /** private constructor for Utility class */
+    private ColorMapper() {
+    }
+
     /** black string */
     public static final String COLOR_BLACK = "black";
     /** blue string */
@@ -59,6 +63,9 @@ public final class ColorMapper {
     public static final String COLOR_YELLOW = "yellow";
 
     /**
+     * Convert a color name to a color value.
+     * @param colorName a string repr of the color.
+     * @return the color value.
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
     public static Color getColorByName(String colorName) {

@@ -30,7 +30,11 @@ import java.awt.Graphics2D;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Rotate extends TransformOperation implements DrawOperation {
+    private static final float HALF_CIRCLE = 180.0F;
+
+    // CheckStyle:VisibilityModifier OFF - bc
     protected float angle = 0.0F;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Sets the angle of rotation in degrees.
@@ -41,8 +45,9 @@ public class Rotate extends TransformOperation implements DrawOperation {
     }
 
 
+    /** {@inheritDoc}. */
     public PlanarImage performRotate(PlanarImage image) {
-        float tAngle = (float) (angle * (Math.PI / 180.0F));
+        float tAngle = (float) (angle * (Math.PI / HALF_CIRCLE));
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);
         pb.add(0.0F);
@@ -54,8 +59,9 @@ public class Rotate extends TransformOperation implements DrawOperation {
 
 
     /**
-     *  Performs the image rotation when being handled as a TransformOperation.
+     * Performs the image rotation when being handled as a TransformOperation.
      * @param image The image to perform the transformation on.
+     * @return the transformed image.
      */
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = null;
@@ -89,6 +95,7 @@ public class Rotate extends TransformOperation implements DrawOperation {
      *  It absolutely requires that there be a DrawOperation nested beneath it,
      *  but only the FIRST DrawOperation will be handled since it can only return
      *  ONE image.
+     * @return the image.
      */
     public PlanarImage executeDrawOperation() {
         for (int i = 0; i < instructions.size(); i++) {

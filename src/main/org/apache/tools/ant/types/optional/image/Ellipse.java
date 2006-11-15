@@ -24,21 +24,32 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 /**
- *
+ * Draw an ellipse.
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Ellipse extends BasicShape implements DrawOperation {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected int width = 0;
     protected int height = 0;
+    // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Set the width.
+     * @param width the width of the elipse.
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Set the height.
+     * @param height the height of the elipse.
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /** {@inheritDoc}. */
     public PlanarImage executeDrawOperation() {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 

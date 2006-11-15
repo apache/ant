@@ -23,30 +23,53 @@ import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * Draw an arc.
+ */
 public class Arc extends BasicShape implements DrawOperation {
+    // CheckStyle:VisibilityModifier OFF - bc
     protected int width = 0;
     protected int height = 0;
     protected int start = 0;
     protected int stop = 0;
     protected int type = Arc2D.OPEN;
+    // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Set the width.
+     * @param width the width of the arc.
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Set the height.
+     * @param height the height of the arc.
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * Set the start of the arc.
+     * @param start the start of the arc.
+     */
     public void setStart(int start) {
         this.start = start;
     }
 
+    /**
+     * Set the stop of the arc.
+     * @param stop the stop of the arc.
+     */
     public void setStop(int stop) {
         this.stop = stop;
     }
 
     /**
+     * Set the type of arc.
+     * @param strType the type to use - open, pie or chord.
      * @todo refactor using an EnumeratedAttribute
      */
     public void setType(String strType) {
@@ -59,6 +82,7 @@ public class Arc extends BasicShape implements DrawOperation {
         }
     }
 
+    /** {@inheritDoc}. */
     public PlanarImage executeDrawOperation() {
         BufferedImage bi = new BufferedImage(width + (stroke_width * 2),
             height + (stroke_width * 2), BufferedImage.TYPE_4BYTE_ABGR_PRE);

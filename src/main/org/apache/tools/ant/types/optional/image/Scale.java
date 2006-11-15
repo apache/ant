@@ -29,6 +29,7 @@ import java.awt.image.renderable.ParameterBlock;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Scale extends TransformOperation implements DrawOperation {
+    private static final int HUNDRED = 100;
 
     private String widthStr = "100%";
     private String heightStr = "100%";
@@ -36,7 +37,9 @@ public class Scale extends TransformOperation implements DrawOperation {
     private boolean yPercent = true;
     private String proportions = "ignore";
 
+    /** Enumerated class for proportions attribute. */
     public static class ProportionsAttribute extends EnumeratedAttribute {
+        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"ignore", "width", "height", "cover", "fit"};
         }
@@ -44,13 +47,16 @@ public class Scale extends TransformOperation implements DrawOperation {
 
     /**
      *  Sets the behaviour regarding the image proportions.
+     * @param pa the enumerated value.
      */
     public void setProportions(ProportionsAttribute pa) {
         proportions = pa.getValue();
     }
 
     /**
-     *  Sets the width of the image, either as an integer or a %.  Defaults to 100%.
+     * Sets the width of the image, either as an integer or a %.
+     * Defaults to 100%.
+     * @param width the value to use.
      */
     public void setWidth(String width) {
         widthStr = width;
@@ -58,36 +64,46 @@ public class Scale extends TransformOperation implements DrawOperation {
 
     /**
      *  Sets the height of the image, either as an integer or a %.  Defaults to 100%.
+     * @param height the value to use.
      */
     public void setHeight(String height) {
         heightStr = height;
     }
 
+    /**
+     * Get the width.
+     * @return the value converted from the width string.
+     */
     public float getWidth() {
         float width = 0.0F;
         int percIndex = widthStr.indexOf('%');
         if (percIndex > 0) {
             width = Float.parseFloat(widthStr.substring(0, percIndex));
             xPercent = true;
-            return width / 100;
+            return width / HUNDRED;
         } else {
             xPercent = false;
             return Float.parseFloat(widthStr);
         }
     }
 
+    /**
+     * Get the height.
+     * @return the value converted from the height string.
+     */
     public float getHeight() {
         int percIndex = heightStr.indexOf('%');
         if (percIndex > 0) {
             float height = Float.parseFloat(heightStr.substring(0, percIndex));
             yPercent = true;
-            return height / 100;
+            return height / HUNDRED;
         } else {
             yPercent = false;
             return Float.parseFloat(heightStr);
         }
     }
 
+    /** {@inheritDoc}. */
     public PlanarImage performScale(PlanarImage image) {
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);
@@ -116,12 +132,14 @@ public class Scale extends TransformOperation implements DrawOperation {
         pb.add(new Float(xFl));
         pb.add(new Float(yFl));
 
-        log("\tScaling to " + (xFl * 100) + "% x " + (yFl * 100) + "%");
+        log("\tScaling to " + (xFl * HUNDRED) + "% x "
+            + (yFl * HUNDRED) + "%");
 
         return JAI.create("scale", pb);
     }
 
 
+    /** {@inheritDoc}. */
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = null;
         for (int i = 0; i < instructions.size(); i++) {
@@ -139,6 +157,7 @@ public class Scale extends TransformOperation implements DrawOperation {
     }
 
 
+    /** {@inheritDoc}. */
     public PlanarImage executeDrawOperation() {
         for (int i = 0; i < instructions.size(); i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
