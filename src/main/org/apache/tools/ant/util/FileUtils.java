@@ -726,7 +726,7 @@ public class FileUtils {
         if (colon > 0 && (onDos || onNetWare)) {
 
             int next = colon + 1;
-            root = path.substring(0, next).toUpperCase();
+            root = path.substring(0, next);
             char[] ca = path.toCharArray();
             root += sep;
             //remove the initial separator; the root has it.

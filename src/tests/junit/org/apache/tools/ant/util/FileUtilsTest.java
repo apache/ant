@@ -124,9 +124,9 @@ public class FileUtilsTest extends TestCase {
             assertEquals(driveSpec + "\\",
                          FILE_UTILS.resolveFile(null, driveSpec + "\\").getPath());
             String driveSpecLower = "c:";
-            assertEquals(driveSpec + "\\",
+            assertEquals(driveSpecLower + "\\",
                          FILE_UTILS.resolveFile(null, driveSpecLower + "/").getPath());
-            assertEquals(driveSpec + "\\",
+            assertEquals(driveSpecLower + "\\",
                          FILE_UTILS.resolveFile(null, driveSpecLower + "\\").getPath());
             /*
              * promised to eliminate consecutive slashes after drive letter.
@@ -237,9 +237,9 @@ public class FileUtilsTest extends TestCase {
             assertEquals(driveSpec + "\\",
                          FILE_UTILS.normalize(driveSpec + "\\").getPath());
             String driveSpecLower = "c:";
-            assertEquals(driveSpec + "\\",
+            assertEquals(driveSpecLower + "\\",
                          FILE_UTILS.normalize(driveSpecLower + "/").getPath());
-            assertEquals(driveSpec + "\\",
+            assertEquals(driveSpecLower + "\\",
                          FILE_UTILS.normalize(driveSpecLower + "\\").getPath());
             /*
              * promised to eliminate consecutive slashes after drive letter.
@@ -490,6 +490,13 @@ public class FileUtilsTest extends TestCase {
             return "file:/" + uri.substring(prefix.length());
         } else {
             return uri;
+        }
+    }
+
+    public void testIsContextRelativePath() {
+        if (Os.isFamily("dos")) {
+            assertTrue(FileUtils.isContextRelativePath("/\u00E4nt"));
+            assertTrue(FileUtils.isContextRelativePath("\\foo"));
         }
     }
     /**

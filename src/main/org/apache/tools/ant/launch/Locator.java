@@ -207,6 +207,11 @@ public final class Locator {
         String path = null;
         try {
             path = decodeUri(uri);
+            String cwd = System.getProperty("user.dir");
+            int posi = cwd.indexOf(":");
+            if ((posi > 0) && path.startsWith(File.separator)) {
+               path = cwd.substring(0, posi + 1) + path; 
+            }
         } catch (UnsupportedEncodingException exc) {
             // not sure whether this is clean, but this method is
             // declared not to throw exceptions.
