@@ -37,15 +37,6 @@
       mailing list software - you shouldn&apos;t be sending HTML mails
       anyway.</p>
 
-      <p>These lists are archived at</p>
-
-        <ul>
-          <li><a href="http://mail-archives.apache.org/eyebrowse/ViewLists">List Index on mail-archives.apache.org</a></li>
-          <li><a href="http://ant.apache.org/mail/">Full mbox archives of all lists</a></li>
-          <li><a href="http://marc.theaimsgroup.com/">Mailing list Archives</a></li>
-        </ul>
-
-
       <p>To subscribe to a mailinglist use the links below. In your first email you will get some
       information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.</p>
 
@@ -107,6 +98,21 @@
         </p>  
       </subsection>
     </section>
+    <section name="Archives">
 
+      <p>These lists are archived at</p>
+
+        <ul>
+          <li><a href="http://mail-archives.apache.org/eyebrowse/ViewLists">List Index on mail-archives.apache.org</a></li>
+          <li><a href="http://ant.apache.org/mail/">Full mbox archives of all lists</a></li>
+          <li><a href="http://marc.theaimsgroup.com/">Mailing list Archives</a></li>
+          <li><a href="http://news.gmane.org/gmane.comp.jakarta.ant.devel/">Ant Developer List on gmane</a></li>
+          <li><a href="http://news.gmane.org/gmane.comp.jakarta.ant.user/">Ant User List on gmane</a></li>
+          <li><a href="http://www.nabble.com/Ant---Dev-f108.html">Ant Developer List on nabble</a></li>
+          <li><a href="http://www.nabble.com/Ant---Users-f107.html">Ant User List on nabble</a></li>
+        </ul>
+
+
+    </section>
   </body>
 </document>
