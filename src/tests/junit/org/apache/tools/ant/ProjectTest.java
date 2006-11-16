@@ -73,21 +73,22 @@ public class ProjectTest extends TestCase {
              * throw in drive letters
              */
             String driveSpec = "C:";
-            assertEquals(driveSpec + "\\",
-                         p.resolveFile(driveSpec + "/", null).getPath());
-            assertEquals(driveSpec + "\\",
-                         p.resolveFile(driveSpec + "\\", null).getPath());
             String driveSpecLower = "c:";
-            assertEquals(driveSpec + "\\",
+            
+            assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
+                         p.resolveFile(driveSpec + "/", null).getPath());
+            assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
+                         p.resolveFile(driveSpec + "\\", null).getPath());
+            assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
                          p.resolveFile(driveSpecLower + "/", null).getPath());
-            assertEquals(driveSpec + "\\",
+            assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
                          p.resolveFile(driveSpecLower + "\\", null).getPath());
             /*
              * promised to eliminate consecutive slashes after drive letter.
              */
-            assertEquals(driveSpec + "\\",
+            assertEqualsIgnoreDriveCase(driveSpec + "\\",
                          p.resolveFile(driveSpec + "/////", null).getPath());
-            assertEquals(driveSpec + "\\",
+            assertEqualsIgnoreDriveCase(driveSpec + "\\",
                          p.resolveFile(driveSpec + "\\\\\\\\\\\\", null).getPath());
         } else {
             /*
