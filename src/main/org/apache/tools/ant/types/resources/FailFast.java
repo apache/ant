@@ -60,7 +60,7 @@ import java.util.ConcurrentModificationException;
     }
 
     private static synchronized void failFast(FailFast f) {
-        Set s = (Set) (map.get(f.parent));
+        Set s = (Set) (MAP.get(f.parent));
         if (!s.contains(f)) {
             throw new ConcurrentModificationException();
         }
