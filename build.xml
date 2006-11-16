@@ -1915,7 +1915,7 @@ see ${build.junit.reports} / ${antunit.reports}
   </target>
 
   <target name="antunit-tests" depends="dump-info,build,test-init"
-          if="run.antunit">
+          if="run.antunit" description="--> run the antunit tests">
 
     <condition property="antunit.includes" value="${antunit.testcase}"
                else="**/test.xml,**/*-test.xml">
