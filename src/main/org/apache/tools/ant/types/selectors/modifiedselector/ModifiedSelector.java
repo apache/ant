@@ -52,53 +52,53 @@ import org.apache.tools.ant.util.ResourceUtils;
  *
  * <p>The ModifiedSelector is implemented as a <b>CoreSelector</b> and uses default
  * values for all its attributes therefore the simpliest example is <pre>
- *   <copy todir="dest">
- *       <filelist dir="src">
- *           <modified/>
- *       </filelist>
- *   </copy>
+ *   &lt;copy todir="dest"&gt;
+ *       &lt;filelist dir="src"&gt;
+ *           &lt;modified/&gt;
+ *       &lt;/filelist&gt;
+ *   &lt;/copy&gt;
  * </pre></p>
  *
  * <p>The same example rewritten as CoreSelector with setting the all values
  * (same as defaults are) would be <pre>
- *   <copy todir="dest">
- *       <filelist dir="src">
- *           <modified update="true"
+ *   &lt;copy todir="dest"&gt;
+ *       &lt;filelist dir="src"&gt;
+ *           &lt;modified update="true"
  *                     cache="propertyfile"
  *                     algorithm="digest"
- *                     comparator="equal">
- *               <param name="cache.cachefile"     value="cache.properties"/>
- *               <param name="algorithm.algorithm" value="MD5"/>
- *           </modified>
- *       </filelist>
- *   </copy>
+ *                     comparator="equal"&gt;
+ *               &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
+ *               &lt;param name="algorithm.algorithm" value="MD5"/&gt;
+ *           &lt;/modified&gt;
+ *       &lt;/filelist&gt;
+ *   &lt;/copy&gt;
  * </pre></p>
  *
  * <p>And the same rewritten as CustomSelector would be<pre>
- *   <copy todir="dest">
- *       <filelist dir="src">
- *           <custom class="org.apache.tools.ant.type.selectors.ModifiedSelector">
- *               <param name="update"     value="true"/>
- *               <param name="cache"      value="propertyfile"/>
- *               <param name="algorithm"  value="digest"/>
- *               <param name="comparator" value="equal"/>
- *               <param name="cache.cachefile"     value="cache.properties"/>
- *               <param name="algorithm.algorithm" value="MD5"/>
- *           </custom>
- *       </filelist>
- *   </copy>
+ *   &lt;copy todir="dest"&gt;
+ *       &lt;filelist dir="src"&gt;
+ *           &lt;custom class="org.apache.tools.ant.type.selectors.ModifiedSelector"&gt;
+ *               &lt;param name="update"     value="true"/&gt;
+ *               &lt;param name="cache"      value="propertyfile"/&gt;
+ *               &lt;param name="algorithm"  value="digest"/&gt;
+ *               &lt;param name="comparator" value="equal"/&gt;
+ *               &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
+ *               &lt;param name="algorithm.algorithm" value="MD5"/&gt;
+ *           &lt;/custom&gt;
+ *       &lt;/filelist&gt;
+ *   &lt;/copy&gt;
  * </pre></p>
  *
  * <p>If you want to provide your own interface implementation you can do
  * that via the *classname attributes. If the classes are not on Ant's core
  * classpath, you will have to provide the path via nested &lt;classpath&gt;
  * element, so that the selector can find the classes. <pre>
- *   <modified cacheclassname="com.mycompany.MyCache">
- *       <classpath>
- *           <pathelement location="lib/mycompony-antutil.jar"/>
- *       </classpath>
- *   </modified>
- * </p>
+ *   &lt;modified cacheclassname="com.mycompany.MyCache"&gt;
+ *       &lt;classpath&gt;
+ *           &lt;pathelement location="lib/mycompony-antutil.jar"/&gt;
+ *       &lt;/classpath&gt;
+ *   &lt;/modified&gt;
+ * </pre></p>
  *
  * <p>All these three examples copy the files from <i>src</i> to <i>dest</i>
  * using the ModifiedSelector. The ModifiedSelector uses the <i>PropertyfileCache
@@ -116,114 +116,20 @@ import org.apache.tools.ant.util.ResourceUtils;
  * <p>A useful scenario for this selector is inside a build environment
  * for homepage generation (e.g. with <a href="http://forrest.apache.org/">
  * Apache Forrest</a>). <pre>
- * <target name="generate-and-upload-site">
- *     <echo> generate the site using forrest </echo>
- *     <antcall target="site"/>
+ * &lt;target name="generate-and-upload-site"&gt;
+ *     &lt;echo&gt; generate the site using forrest &lt;/echo&gt;
+ *     &lt;antcall target="site"/&gt;
  *
- *     <echo> upload the changed files </echo>
- *     <ftp server="${ftp.server}" userid="${ftp.user}" password="${ftp.pwd}">
- *         <fileset dir="htdocs/manual">
- *             <modified/>
- *         </fileset>
- *     </ftp>
- * </target>
+ *     &lt;echo&gt; upload the changed files &lt;/echo&gt;
+ *     &lt;ftp server="${ftp.server}" userid="${ftp.user}" password="${ftp.pwd}"&gt;
+ *         &lt;fileset dir="htdocs/manual"&gt;
+ *             &lt;modified/&gt;
+ *         &lt;/fileset&gt;
+ *     &lt;/ftp&gt;
+ * &lt;/target&gt;
  * </pre> Here all <b>changed</b> files are uploaded to the server. The
  * ModifiedSelector saves therefore much upload time.</p>
  *
- * <p>This selector supports the following attributes:
- * <table>
- * <tr><th>name</th><th>values</th><th>description</th><th>required</th></tr>
- * <tr>
- *     <td> cache </td>
- *     <td> propertyfile </td>
- *     <td> which cache implementation should be used <ul>
- *          <li><b>propertyfile</b> - using java.util.Properties </li>
- *     </td>
- *     <td> no, defaults to 'propertyfile' </td>
- * </tr>
- * <tr>
- *     <td> algorithm </td>
- *     <td> hashvalue | digest | checksum </td>
- *     <td> which algorithm implementation should be used
- *          <li><b>hashvalue</b> - loads the file content into a String and
- *                                 uses its hashValue() method </li>
- *          <li><b>digest</b> - uses java.security.MessageDigest class </i>
- *          <li><b>checksum</b> - uses java.util.zip.Checksum interface </i>
- *     </td>
- *     <td> no, defaults to digest </td>
- * </tr>
- * <tr>
- *     <td> comparator </td>
- *     <td> equal | rule </td>
- *     <td> which comparator implementation should be used
- *          <li><b>equal</b> - simple comparison using String.equals() </li>
- *          <li><b>rule</b> - uses java.text.RuleBasedCollator class </i>
- *     </td>
- *     <td> no, defaults to equal </td>
- * </tr>
- * <tr>
- *     <td> update </td>
- *     <td> true | false </td>
- *     <td> If set to <i>true</i>, the cache will be stored, otherwise the values
- *          will be lost. </td>
- *     <td> no, defaults to true </td>
- * </tr>
- * <tr>
- *     <td> seldirs </td>
- *     <td> true | false </td>
- *     <td> If set to <i>true</i>, directories will be selected otherwise not </td>
- *     <td> no, defaults to true </td>
- * </tr>
- * <tr>
- *     <td> delayupdate </td>
- *     <td> true | false </td>
- *     <td> If set to <i>true</i>, the storage of the cache will be delayed until the
- *          next finished BuildEvent; task finished, target finished or build finished,
- *          whichever comes first.  This is provided for increased performance.  If set
- *          to <i>false</i>, the storage of the cache will happen with each change.  This
- *          attribute depends upon the <i>update</i> attribute.</td>
- *     <td> no, defaults to true </td>
- * </tr>
- * <tr>
- *     <td> cacheclass </td>
- *     <td> <i>classname</i> </td>
- *     <td> which custom cache implementation should be used </td>
- *     <td> no </td>
- * </tr>
- * <tr>
- *     <td> algorithmclass </td>
- *     <td> <i>classname</i> </td>
- *     <td> which custom algorithm implementation should be used </td>
- *     <td> no </td>
- * </tr>
- * <tr>
- *     <td> comparatorclass </td>
- *     <td> <i>classname</i> </td>
- *     <td> which custom comparator implementation should be used </td>
- *     <td> no </td>
- * </tr>
- * <tr>
- *     <td> cache.* </td>
- *     <td> depends on used cache </td>
- *     <td> value is stored and given to the Cache-Object for initialisation </td>
- *     <td> depends on used cache </td>
- * </tr>
- * <tr>
- *     <td> algorithm.* </td>
- *     <td> depends on used algorithm </td>
- *     <td> value is stored and given to the Algorithm-Object for initialisation </td>
- *     <td> depends on used algorithm </td>
- * </tr>
- * <tr>
- *     <td> comparator.* </td>
- *     <td> depends on used comparator </td>
- *     <td> value is stored and given to the Comparator-Object for initialisation </td>
- *     <td> depends on used comparator </td>
- * </tr>
- * </table>
- * If another name is used a BuildException "Invalid parameter" is thrown. </p>
- *
- * <p>Additionally this selector supports a nested &lt;classpath&gt;. </p>
  *
  * <p>This selector uses reflection for setting the values of its three interfaces
  * (using org.apache.tools.ant.IntrospectionHelper) therefore no special
@@ -231,10 +137,9 @@ import org.apache.tools.ant.util.ResourceUtils;
  * comparators. All present <i>set</i>XX methods can be used. E.g. the DigestAlgorithm
  * can use a specified provider for computing its value. For selecting this
  * there is a <i>setProvider(String providername)</i> method. So you can use
- * a nested <i><param name="algorithm.provider" value="MyProvider"/></i>.
+ * a nested <i>&lt;param name="algorithm.provider" value="MyProvider"/&gt;</i>.
  *
  *
- * @version 2005-07-19
  * @since  Ant 1.6
  */
 public class ModifiedSelector extends BaseExtendSelector
@@ -524,7 +429,7 @@ public class ModifiedSelector extends BaseExtendSelector
      *
      * @param resource The resource to check
      * @return whether the resource is selected
-     * @see org.apache.tools.ant.types.resources.selectors.ResourceSelector#isSelected(org.apache.tools.ant.types.Resource)
+     * @see ResourceSelector#isSelected(Resource)
      */
     public boolean isSelected(Resource resource) {
         if (resource.isFilesystemOnly()) {
@@ -785,6 +690,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * Overwrite implementation in superclass because only special
      * parameters are valid.
      * @see #addParam(String,Object).
+     * @param parameters the parameters to set.
      */
     public void setParameters(Parameter[] parameters) {
         if (parameters != null) {
@@ -991,6 +897,7 @@ public class ModifiedSelector extends BaseExtendSelector
      */
     public static class CacheName extends EnumeratedAttribute {
         /** @see EnumeratedAttribute#getValues() */
+        /** {@inheritDoc} */
         public String[] getValues() {
             return new String[] {"propertyfile" };
         }
@@ -1016,6 +923,7 @@ public class ModifiedSelector extends BaseExtendSelector
      */
     public static class AlgorithmName extends EnumeratedAttribute {
         /** @see EnumeratedAttribute#getValues() */
+        /** {@inheritDoc} */
         public String[] getValues() {
             return new String[] {"hashvalue", "digest", "checksum" };
         }
@@ -1041,6 +949,7 @@ public class ModifiedSelector extends BaseExtendSelector
      */
     public static class ComparatorName extends EnumeratedAttribute {
         /** @see EnumeratedAttribute#getValues() */
+        /** {@inheritDoc} */
         public String[] getValues() {
             return new String[] {"equal", "rule" };
         }

@@ -32,10 +32,15 @@ import org.apache.tools.ant.types.Parameter;
  */
 public class DepthSelector extends BaseExtendSelector {
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /** min attribute */
     public int min = -1;
     /** max attribute */
     public int max = -1;
+
+    // CheckStyle:VisibilityModifier ON
+
     /** Used for parameterized custom selector */
     public static final String MIN_KEY = "min";
     /** Used for parameterized custom selector */

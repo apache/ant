@@ -34,8 +34,12 @@ public abstract class BaseExtendSelector
         extends BaseSelector
         implements ExtendFileSelector {
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /** The passed in parameter array. */
     protected Parameter[] parameters = null;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Default constructor.

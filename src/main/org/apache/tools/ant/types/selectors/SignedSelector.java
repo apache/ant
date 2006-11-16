@@ -27,7 +27,7 @@ import org.apache.tools.ant.taskdefs.condition.IsSigned;
  * @since 1.7
  */
 public class SignedSelector extends DataType implements FileSelector {
-    IsSigned isSigned = new IsSigned();
+    private IsSigned isSigned = new IsSigned();
 
     /**
      * The signature name to check jarfile for.

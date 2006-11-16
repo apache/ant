@@ -35,10 +35,14 @@ public abstract class MappingSelector extends BaseSelector {
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     protected File targetdir = null;
     protected Mapper mapperElement = null;
     protected FileNameMapper map = null;
     protected int granularity = 0;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Creates a new <code>MappingSelector</code> instance.
