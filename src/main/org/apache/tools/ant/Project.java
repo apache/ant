@@ -437,7 +437,7 @@ public class Project implements ResourceFactory {
     public void log(String message, Throwable throwable, int msgLevel) {
         fireMessageLogged(this, message, throwable, msgLevel);
     }
-    
+
     /**
      * Write a task level message to the log with the given log level.
      * @param task The task to use in the log. Must not be <code>null</code>.
@@ -458,7 +458,7 @@ public class Project implements ResourceFactory {
     public void log(Task task, String message, Throwable throwable, int msgLevel) {
         fireMessageLogged(task, message, throwable, msgLevel);
     }
-    
+
     /**
      * Write a target level message to the log with the given log level.
      * @param target The target to use in the log.
@@ -482,7 +482,7 @@ public class Project implements ResourceFactory {
             int msgLevel) {
         fireMessageLogged(target, message, throwable, msgLevel);
     }
-    
+
     /**
      * Return the set of global filters.
      *
@@ -2186,7 +2186,7 @@ public class Project implements ResourceFactory {
                                      int priority) {
         fireMessageLogged(project, message, priority);
     }
-    
+
     /**
      * Send a &quot;message logged&quot; project level event
      * to the build listeners for this project.
@@ -2197,13 +2197,13 @@ public class Project implements ResourceFactory {
      * @param throwable The exception that caused this message. May be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Project project, String message, 
+    protected void fireMessageLogged(Project project, String message,
             Throwable throwable, int priority) {
         BuildEvent event = new BuildEvent(project);
         event.setException(throwable);
         fireMessageLoggedEvent(event, message, priority);
     }
-    
+
     /**
      * Send a &quot;message logged&quot; target level event
      * to the build listeners for this project.
@@ -2234,7 +2234,7 @@ public class Project implements ResourceFactory {
         event.setException(throwable);
         fireMessageLoggedEvent(event, message, priority);
     }
-    
+
     /**
      * Send a &quot;message logged&quot; task level event
      * to the build listeners for this project.
@@ -2258,13 +2258,13 @@ public class Project implements ResourceFactory {
      * @param throwable The exception that caused this message. May be <code>null</code>.
      * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Task task, String message, 
+    protected void fireMessageLogged(Task task, String message,
             Throwable throwable, int priority) {
         BuildEvent event = new BuildEvent(task);
         event.setException(throwable);
         fireMessageLoggedEvent(event, message, priority);
     }
-    
+
     /**
      * Register a task as the current task for a thread.
      * If the task is null, the thread's entry is removed.
