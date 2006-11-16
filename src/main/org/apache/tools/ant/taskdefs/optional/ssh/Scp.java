@@ -378,14 +378,14 @@ public class Scp extends SSHBase {
     }
 
     private void setFromUri(String fromUri) {
-        if (fromUri != null) {
+        if (this.fromUri != null) {
             throw exactlyOne(FROM_ATTRS);
         }
         this.fromUri = fromUri;
     }
 
     private void setToUri(String toUri) {
-        if (toUri != null) {
+        if (this.toUri != null) {
             throw exactlyOne(TO_ATTRS);
         }
         this.toUri = toUri;
