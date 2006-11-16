@@ -30,6 +30,6 @@ public interface ResourceSelector {
      * @param r the Resource to check.
      * @return whether the Resource was selected.
      */
-    public boolean isSelected(Resource r);
+    boolean isSelected(Resource r);
 
 }

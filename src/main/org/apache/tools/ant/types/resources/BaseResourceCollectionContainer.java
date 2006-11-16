@@ -112,7 +112,7 @@ public abstract class BaseResourceCollectionContainer
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
-    public synchronized final Iterator iterator() {
+    public final synchronized Iterator iterator() {
         if (isReference()) {
             return ((BaseResourceCollectionContainer) getCheckedRef()).iterator();
         }
@@ -190,7 +190,7 @@ public abstract class BaseResourceCollectionContainer
      * Get the nested ResourceCollections.
      * @return List.
      */
-    protected synchronized final List getResourceCollections() {
+    protected final synchronized List getResourceCollections() {
         dieOnCircularReference();
         return Collections.unmodifiableList(rc);
     }

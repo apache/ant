@@ -81,6 +81,7 @@ public class Files extends AbstractSelectorContainer
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
      * @param r the <code>Reference</code> to use.
+     * @throws BuildException if there is a problem.
      */
     public void setRefid(Reference r) throws BuildException {
         if (hasPatterns(defaultPatterns)) {
@@ -221,6 +222,7 @@ public class Files extends AbstractSelectorContainer
      * Set the <code>File</code> containing the includes patterns.
      *
      * @param incl <code>File</code> instance.
+     * @throws BuildException if there is a problem.
      */
     public synchronized void setIncludesfile(File incl) throws BuildException {
         checkAttributesAllowed();
@@ -232,6 +234,7 @@ public class Files extends AbstractSelectorContainer
      * Set the <code>File</code> containing the excludes patterns.
      *
      * @param excl <code>File</code> instance.
+     * @throws BuildException if there is a problem.
      */
     public synchronized void setExcludesfile(File excl) throws BuildException {
         checkAttributesAllowed();
@@ -252,6 +255,7 @@ public class Files extends AbstractSelectorContainer
 
     /**
      * Get whether default exclusions should be used or not.
+     * @return the defaultexclusions value.
      */
     public synchronized boolean getDefaultexcludes() {
         return (isReference())

@@ -35,13 +35,24 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
 public class BZip2Resource extends CompressedResource {
     private static final char[] MAGIC = new char[] {'B', 'Z'};
 
+    /** A no-arg constructor */
     public BZip2Resource() {
     }
 
+    /**
+     * Constructor with another resource to wrap.
+     * @param other the resource to wrap.
+     */
     public BZip2Resource(org.apache.tools.ant.types.ResourceCollection other) {
         super(other);
     }
 
+    /**
+     * Decompress on the fly using {@link CBZip2InputStream}.
+     * @param in the stream to wrap.
+     * @return the wrapped stream.
+     * @throws IOException if there is a problem.
+     */
     protected InputStream wrapStream(InputStream in) throws IOException {
         for (int i = 0; i < MAGIC.length; i++) {
             if (in.read() != MAGIC[i]) {
@@ -50,12 +61,24 @@ public class BZip2Resource extends CompressedResource {
         }
         return new CBZip2InputStream(in);
     }
+
+    /**
+     * Compress on the fly using {@link CBZip2OuputStream}.
+     * @param out the stream to wrap.
+     * @return the wrapped stream.
+     * @throws IOException if there is a problem.
+     */
     protected OutputStream wrapStream(OutputStream out) throws IOException {
         for (int i = 0; i < MAGIC.length; i++) {
             out.write(MAGIC[i]);
         }
         return new CBZip2OutputStream(out);
     }
+
+    /**
+     * Get the name of the compression method.
+     * @return the string "Bzip2".
+     */
     protected String getCompressionName() {
         return "Bzip2";
     }

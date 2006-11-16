@@ -80,7 +80,7 @@ public abstract class BaseResourceCollectionWrapper
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public synchronized final Iterator iterator() {
+    public final synchronized Iterator iterator() {
         if (isReference()) {
             return ((BaseResourceCollectionWrapper) getCheckedRef()).iterator();
         }
@@ -152,7 +152,7 @@ public abstract class BaseResourceCollectionWrapper
      * @return a ResourceCollection.
      * @throws BuildException if no nested ResourceCollection has been provided.
      */
-    protected synchronized final ResourceCollection getResourceCollection() {
+    protected final synchronized ResourceCollection getResourceCollection() {
         dieOnCircularReference();
         if (rc == null) {
             throw oneNested();

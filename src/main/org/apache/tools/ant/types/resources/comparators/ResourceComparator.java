@@ -59,6 +59,17 @@ public abstract class ResourceComparator extends DataType implements Comparator 
     }
 
     /**
+     * Hashcode based on the rules for equality.
+     * @return a hashcode.
+     */
+    public synchronized int hashCode() {
+        if (isReference()) {
+            return getCheckedRef().hashCode();
+        }
+        return getClass().hashCode();
+    }
+
+    /**
      * Compare two Resources.
      * @param foo the first Resource.
      * @param bar the second Resource.

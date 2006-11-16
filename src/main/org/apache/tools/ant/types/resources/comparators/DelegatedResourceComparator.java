@@ -21,11 +21,10 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 
 /**
  * Delegates to other ResourceComparators or, if none specified,
@@ -51,7 +50,12 @@ public class DelegatedResourceComparator extends ResourceComparator {
         v.add(c);
     }
 
-    //inherit doc
+    /**
+     * Equality method based on the vector of resources,
+     * or if a reference, the referredto object.
+     * @param o the object to check against.
+     * @return true if there is equality.
+     */
     public synchronized boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -66,7 +70,18 @@ public class DelegatedResourceComparator extends ResourceComparator {
         return v == null ? ov == null : v.equals(ov);
     }
 
-    //inherit doc
+    /**
+     * Hashcode based on the rules for equality.
+     * @return a hashcode.
+     */
+    public synchronized int hashCode() {
+        if (isReference()) {
+            return getCheckedRef().hashCode();
+        }
+        return v == null ? 0 : v.hashCode();
+    }
+
+    /** {@inheritDoc} */
     protected synchronized int resourceCompare(Resource foo, Resource bar) {
         //if no nested, natural order:
         if (v == null || v.isEmpty()) {
@@ -86,7 +101,8 @@ s.
      * @param p   the Project to resolve against.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p) {
+    protected void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
         if (isChecked()) {
             return;
         }

@@ -29,7 +29,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.util.ConcatResourceInputStream;
 import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.util.Tokenizer;

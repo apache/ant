@@ -99,6 +99,7 @@ public class Compare extends DataType implements ResourceSelector {
     }
 
     //implement ResourceSelector; inherit doc
+    /** {@inheritDoc} */
     public synchronized boolean isSelected(Resource r) {
         if (isReference()) {
             return ((ResourceSelector) getCheckedRef()).isSelected(r);

@@ -42,7 +42,7 @@ public class Sort extends BaseResourceCollectionWrapper {
     //sorted bag impl. borrowed from commons-collections TreeBag:
     private static class SortedBag extends AbstractCollection {
         private class MutableInt {
-            int value = 0;
+            private int value = 0;
         }
         private class MyIterator implements Iterator {
             private Iterator keyIter = t.keySet().iterator();

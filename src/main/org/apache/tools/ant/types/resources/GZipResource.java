@@ -33,19 +33,42 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GZipResource extends CompressedResource {
 
+    /** A no-arg constructor */
     public GZipResource() {
     }
 
+    /**
+     * Constructor with another resource to wrap.
+     * @param other the resource to wrap.
+     */
     public GZipResource(org.apache.tools.ant.types.ResourceCollection other) {
         super(other);
     }
 
+    /**
+     * Decompress on the fly using java.util.zip.GZIPInputStream.
+     * @param in the stream to wrap.
+     * @return the wrapped stream.
+     * @throws IOException if there is a problem.
+     */
     protected InputStream wrapStream(InputStream in) throws IOException {
         return new GZIPInputStream(in);
     }
-    protected OutputStream wrapStream(OutputStream out) throws IOException {
+
+    /**
+     * Compress on the fly using java.util.zip.GZIPOutStream.
+     * @param out the stream to wrap.
+     * @return the wrapped stream.
+     * @throws IOException if there is a problem.
+     */
+     protected OutputStream wrapStream(OutputStream out) throws IOException {
         return new GZIPOutputStream(out);
     }
+
+    /**
+     * Get the name of the compression method.
+     * @return the string "GZip".
+     */
     protected String getCompressionName() {
         return "GZip";
     }

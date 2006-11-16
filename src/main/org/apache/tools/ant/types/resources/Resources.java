@@ -61,7 +61,7 @@ public class Resources extends DataType implements ResourceCollection {
     };
 
     private class MyCollection extends AbstractCollection {
-        int size;
+        private int size;
 
         MyCollection() {
             size = 0;
@@ -76,8 +76,8 @@ public class Resources extends DataType implements ResourceCollection {
             return new MyIterator();
         }
         private class MyIterator implements Iterator {
-            Iterator rci = rc.iterator();
-            Iterator ri = null;
+            private Iterator rci = rc.iterator();
+            private Iterator ri = null;
 
             public boolean hasNext() {
                 boolean result = ri != null && ri.hasNext();
