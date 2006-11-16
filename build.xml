@@ -1057,7 +1057,6 @@
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
-        <include name="welcome.html"/>
         <include name="fetch.xml"/>
 	<include name="get-m2.xml"/>
       </fileset>

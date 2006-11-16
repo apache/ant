@@ -67,9 +67,6 @@
                 Vital="yes" src="$(var.dist.dir)/README"/>
               <File DiskId="1" Id="WHATSNEW" Name="WHATSNEW"
                 Vital="yes" src="$(var.dist.dir)/WHATSNEW"/>
-              <File DiskId="1" Id="welcome.htm" Name="welcome.htm"
-                LongName="welcome.html"
-                Vital="yes" src="$(var.dist.dir)/welcome.html"/>
             </Component>
           </Directory>
         </Directory>
