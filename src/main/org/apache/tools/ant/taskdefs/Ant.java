@@ -215,6 +215,10 @@ public class Ant extends Task {
     }
 
     /**
+     * Handles output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param outputToHandle The string output to output.
      * @see Task#handleOutput(String)
      * @since Ant 1.5
      */
@@ -227,6 +231,16 @@ public class Ant extends Task {
     }
 
     /**
+     * Handles input.
+     * Deleate to the created project, if present, otherwise
+     * call the super class.
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read.
+     *
+     * @return the number of bytes read.
+     *
+     * @exception IOException if the data cannot be read.
      * @see Task#handleInput(byte[], int, int)
      * @since Ant 1.6
      */
@@ -239,6 +253,10 @@ public class Ant extends Task {
     }
 
     /**
+     * Handles output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param toFlush The string to output.
      * @see Task#handleFlush(String)
      * @since Ant 1.5.2
      */
@@ -251,6 +269,11 @@ public class Ant extends Task {
     }
 
     /**
+     * Handle error output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param errorOutputToHandle The string to output.
+     *
      * @see Task#handleErrorOutput(String)
      * @since Ant 1.5
      */
@@ -263,6 +286,10 @@ public class Ant extends Task {
     }
 
     /**
+     * Handle error output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param errorOutputToFlush The string to output.
      * @see Task#handleErrorFlush(String)
      * @since Ant 1.5.2
      */

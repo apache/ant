@@ -83,6 +83,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class FixCRLF extends MatchingTask implements ChainableReader {
 
+    /** error string for using srcdir and file */
     public static final String ERROR_FILE_AND_SRCDIR
         = "srcdir and file are mutually exclusive";
 
@@ -371,6 +372,10 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         }
     }
 
+    /**
+     * Deprecated, the functionality has been moved to filters.FixCrLfFilter.
+     * @deprecated since 1.7.0.
+     */
     protected class OneLiner implements Enumeration {
         private static final int UNDEF = -1;
         private static final int NOTJAVA = 0;
@@ -389,6 +394,11 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         private boolean reachedEof = false;
         private File srcFile;
 
+        /**
+         * Constructor.
+         * @param srcFile the file to read.
+         * @throws BuildException if there is an error.
+         */
         public OneLiner(File srcFile)
             throws BuildException {
             this.srcFile = srcFile;
@@ -405,6 +415,10 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             }
         }
 
+        /**
+         * Move to the next line.
+         * @throws BuildException if there is an error.
+         */
         protected void nextLine()
             throws BuildException {
             int ch = -1;
@@ -433,9 +447,11 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                     ++eolcount;
                     eolStr.append('\r');
                     reader.mark(2);
-                    switch ((ch = reader.read())) {
+                    ch = reader.read();
+                    switch (ch) {
                     case '\r':
-                        if ((char) (ch = reader.read()) == '\n') {
+                        ch = reader.read();
+                        if ((char) (ch) == '\n') {
                             eolcount += 2;
                             eolStr.append("\r\n");
                         } else {
@@ -460,7 +476,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                     ++eolcount;
                     eolStr.append('\n');
                     break;
-
+                default:
+                    // Fall tru
                 } // end of switch ((char) ch)
 
                 // if at eolcount == 0 and trailing characters of string
@@ -490,22 +507,42 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             }
         }
 
+        /**
+         * get the eof string.
+         * @return the eof string.
+         */
         public String getEofStr() {
             return eofStr.substring(0);
         }
 
+        /**
+         * get the state.
+         * @return the state.
+         */
         public int getState() {
             return state;
         }
 
+        /**
+         * Set the state.
+         * @param state the value to use.
+         */
         public void setState(int state) {
             this.state = state;
         }
 
+        /**
+         * @return true if there is more elements.
+         */
         public boolean hasMoreElements() {
             return !reachedEof;
         }
 
+        /**
+         * get the next element.
+         * @return the next element.
+         * @throws NoSuchElementException if there is no more.
+         */
         public Object nextElement()
             throws NoSuchElementException {
             if (!hasMoreElements()) {
@@ -517,6 +554,10 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             return tmpLine;
         }
 
+        /**
+         * Close the reader.
+         * @throws IOException if there is an error.
+         */
         public void close() throws IOException {
             if (reader != null) {
                 reader.close();

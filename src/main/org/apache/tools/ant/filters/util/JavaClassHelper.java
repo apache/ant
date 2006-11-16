@@ -24,12 +24,12 @@ import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 /**
  * Helper class that filters constants from a Java Class
  *
  */
 public final class JavaClassHelper {
-
     /** System specific line separator. */
     private static final String LS = System.getProperty("line.separator");
 
