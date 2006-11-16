@@ -41,6 +41,12 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class Scp extends SSHBase {
 
+    private static final String[] FROM_ATTRS =
+        { "file", "localfile", "remotefile" };
+
+    private static final String[] TO_ATTRS =
+        { "todir", "localtodir", "remotetodir", "localtofile", "remotetofile" };
+
     private String fromUri;
     private String toUri;
     private List fileSets = null;
@@ -57,7 +63,7 @@ public class Scp extends SSHBase {
      * @param aFromUri a string representing the file to transfer.
      */
     public void setFile(String aFromUri) {
-        this.fromUri = aFromUri;
+        setFromUri(aFromUri);
         this.isFromRemote = isRemoteUri(this.fromUri);
     }
 
@@ -71,7 +77,7 @@ public class Scp extends SSHBase {
      * @param aToUri a string representing the target of the copy.
      */
     public void setTodir(String aToUri) {
-        this.toUri = aToUri;
+        setToUri(aToUri);
         this.isToRemote = isRemoteUri(this.toUri);
     }
 
@@ -83,7 +89,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setLocalFile(String aFromUri) {
-        this.fromUri = aFromUri;
+        setFromUri(aFromUri);
         this.isFromRemote = false;
     }
 
@@ -94,7 +100,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteFile(String aFromUri) {
-        this.fromUri = aFromUri;
+        setFromUri(aFromUri);
         this.isFromRemote = true;
      }
 
@@ -106,7 +112,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setLocalTodir(String aToUri) {
-        this.toUri = aToUri;
+        setToUri(aToUri);
         this.isToRemote = false;
     }
 
@@ -117,7 +123,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteTodir(String aToUri) {
-        this.toUri = aToUri;
+        setToUri(aToUri);
         this.isToRemote = true;
     }
 
@@ -128,7 +134,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setLocalTofile(String aToUri) {
-        this.toUri = aToUri;
+        setToUri(aToUri);
         this.isToRemote = false;
     }
 
@@ -139,7 +145,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteTofile(String aToUri) {
-        this.toUri = aToUri;
+        setToUri(aToUri);
         this.isToRemote = true;
     }
 
@@ -182,15 +188,11 @@ public class Scp extends SSHBase {
      */
     public void execute() throws BuildException {
         if (toUri == null) {
-            throw new BuildException("Either 'todir' or 'tofile' attribute "
-                                     + "is required.");
+            throw exactlyOne(TO_ATTRS);
         }
-
         if (fromUri == null && fileSets == null) {
-            throw new BuildException("Either the 'file' attribute or one "
-                + "FileSet is required.");
+            throw exactlyOne(FROM_ATTRS, "one or more nested filesets");
         }
-
         try {
             if (isFromRemote && !isToRemote) {
                 download(fromUri, toUri);
@@ -373,5 +375,36 @@ public class Scp extends SSHBase {
             root = null;
         }
         return root;
+    }
+
+    private void setFromUri(String fromUri) {
+        if (fromUri != null) {
+            throw exactlyOne(FROM_ATTRS);
+        }
+        this.fromUri = fromUri;
+    }
+
+    private void setToUri(String toUri) {
+        if (toUri != null) {
+            throw exactlyOne(TO_ATTRS);
+        }
+        this.toUri = toUri;
+    }
+
+    private BuildException exactlyOne(String[] attrs) {
+        return exactlyOne(attrs, null);
+    }
+
+    private BuildException exactlyOne(String[] attrs, String alt) {
+        StringBuffer buf = new StringBuffer("Exactly one of ").append(
+                '[').append(attrs[0]);
+        for (int i = 1; i < attrs.length; i++) {
+            buf.append('|').append(attrs[i]);
+        }
+        buf.append(']');
+        if (alt != null) {
+            buf.append(" or ").append(alt);
+        }
+        return new BuildException(buf.append(" is required.").toString());
     }
 }
