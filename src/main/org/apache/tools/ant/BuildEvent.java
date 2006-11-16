@@ -46,7 +46,7 @@ public class BuildEvent extends EventObject {
     private int priority = Project.MSG_VERBOSE;
     /**
      * The exception associated with this event, if any.
-     * This is only used for "taskFinished", "targetFinished",
+     * This is only used for "messageLogged", "taskFinished", "targetFinished",
      * and "buildFinished" events.
      */
     private Throwable exception;
@@ -112,12 +112,13 @@ public class BuildEvent extends EventObject {
 
     /**
      * Sets the exception associated with this event. This is used
-     * for "taskFinished", "targetFinished", and "buildFinished"
+     * for "messageLogged", "taskFinished", "targetFinished", and "buildFinished"
      * events.
      *
      * @param exception The exception to be associated with this event.
      *                  May be <code>null</code>.
      *
+     * @see BuildListener#messageLogged(BuildEvent)
      * @see BuildListener#taskFinished(BuildEvent)
      * @see BuildListener#targetFinished(BuildEvent)
      * @see BuildListener#buildFinished(BuildEvent)
@@ -183,12 +184,13 @@ public class BuildEvent extends EventObject {
 
     /**
      * Returns the exception that was thrown, if any. This field will only
-     * be set for "taskFinished", "targetFinished", and "buildFinished"
+     * be set for "messageLogged", "taskFinished", "targetFinished", and "buildFinished"
      * events.
      *
      * @return the exception associated with this exception, or
      *         <code>null</code> if no exception has been set.
-     *
+     *         
+     * @see BuildListener#messageLogged(BuildEvent)
      * @see BuildListener#taskFinished(BuildEvent)
      * @see BuildListener#targetFinished(BuildEvent)
      * @see BuildListener#buildFinished(BuildEvent)

@@ -621,7 +621,7 @@ public class Delete extends MatchingTask {
             throw (e instanceof BuildException)
                 ? (BuildException) e : new BuildException(e);
         }
-        log(e.getMessage(), quiet ? Project.MSG_VERBOSE : verbosity);
+        log(e, quiet ? Project.MSG_VERBOSE : verbosity);
     }
 
     /**

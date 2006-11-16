@@ -277,6 +277,10 @@ public class DefaultLogger implements BuildLogger {
             } else {
                 message.append(event.getMessage());
             }
+            Throwable ex = event.getException();
+            if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
+                    message.append(StringUtils.getStackTrace(ex));
+            }
 
             String msg = message.toString();
             if (priority != Project.MSG_ERR) {

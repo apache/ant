@@ -99,6 +99,7 @@ public interface BuildListener extends EventListener {
      *              Must not be <code>null</code>.
      *
      * @see BuildEvent#getMessage()
+     * @see BuildEvent#getException()
      * @see BuildEvent#getPriority()
      */
     void messageLogged(BuildEvent event);

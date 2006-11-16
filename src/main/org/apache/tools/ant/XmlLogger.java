@@ -398,6 +398,13 @@ public class XmlLogger implements BuildLogger {
         }
         messageElement.setAttribute(PRIORITY_ATTR, name);
 
+        Throwable ex = event.getException();
+        if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
+            Text errText = doc.createCDATASection(StringUtils.getStackTrace(ex));
+            Element stacktrace = doc.createElement(STACKTRACE_TAG);
+            stacktrace.appendChild(errText);
+            buildElement.element.appendChild(stacktrace);
+        }
         Text messageText = doc.createCDATASection(event.getMessage());
         messageElement.appendChild(messageText);
 
