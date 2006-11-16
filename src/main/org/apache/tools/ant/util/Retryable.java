@@ -28,7 +28,7 @@ import java.io.IOException;
  */
 public interface Retryable {
     /** The value to use to never give up. */
-    public static final int RETRY_FOREVER = -1;
+    int RETRY_FOREVER = -1;
     /**
      * Called to execute the code.
      * @throws IOException if there is a problem.

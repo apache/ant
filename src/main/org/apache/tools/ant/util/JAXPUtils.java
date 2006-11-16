@@ -29,6 +29,8 @@ import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * Collection of helper methods that retrieve a ParserFactory or
  * Parsers and Readers.

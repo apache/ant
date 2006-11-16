@@ -250,6 +250,7 @@ public class FileUtils {
                  overwrite, preserveLastModified, encoding);
     }
 
+    // CheckStyle:ParameterNumberCheck OFF - bc
     /**
      * Convenience method to copy a file from a source to a
      * destination specifying if token filtering must be used, if
@@ -509,6 +510,8 @@ public class FileUtils {
             filters, filterChains, overwrite, preserveLastModified,
             inputEncoding, outputEncoding, project);
     }
+
+    // CheckStyle:ParameterNumberCheck ON
 
     /**
      * Calls File.setLastModified(long time). Originally written to

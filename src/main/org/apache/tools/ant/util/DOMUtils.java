@@ -23,6 +23,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * Some utility methods for common tasks when building DOM trees in memory.
  *

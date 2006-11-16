@@ -23,6 +23,8 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * A set of helper methods related to collection manipulation.
  *

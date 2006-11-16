@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.util.regexp;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /***
  * Regular expression utilities class which handles flag operations.
  *

@@ -94,6 +94,7 @@ public class RegexpFactory extends RegexpMatcherFactory {
     /**
      * Wrapper over RegexpMatcherFactory.createInstance that ensures that
      * we are dealing with a Regexp implementation.
+     * @param classname the name of the class to use.
      * @return the instance.
      * @throws BuildException if there is a problem.
      * @since 1.3

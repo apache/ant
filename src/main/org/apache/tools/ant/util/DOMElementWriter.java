@@ -453,7 +453,8 @@ public class DOMElementWriter {
      * <code>&amp;#x5d;&amp;#x5d;&amp;gt;</code>.</p>
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
      * 2.7 <a
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
      * @param value the value to be encoded.

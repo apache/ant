@@ -21,6 +21,8 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.launch.Locator;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * ClassLoader utility methods
  *

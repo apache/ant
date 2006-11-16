@@ -75,6 +75,11 @@ public class LeadPipeInputStream extends PipedInputStream {
     }
 
     //inherit doc
+    /**
+     * Read a byte from the stream.
+     * @return the byte (0 to 255) or -1 if there are no more.
+     * @throws IOException if there is an error.
+     */
     public synchronized int read() throws IOException {
         int result = -1;
         try {

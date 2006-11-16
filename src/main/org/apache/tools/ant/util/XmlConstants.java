@@ -21,7 +21,9 @@ package org.apache.tools.ant.util;
  * XML Parser constants, all kept in one place for ease of reuse
  * @see <a href="http://xml.apache.org/xerces-j/features.html">Xerces features</a>
  * @see <a href="http://xml.apache.org/xerces-j/properties.html">Xerces properties</a>
- * @see <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">SAX.</a>
+ * @see <a href=
+ * "http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
+ * >SAX.</a>
  */
 
 public class XmlConstants {
@@ -47,10 +49,13 @@ public class XmlConstants {
     /** property for schema source */
     public static final String FEATURE_JAXP12_SCHEMA_SOURCE =
             "http://java.sun.com/xml/jaxp/properties/schemaSource";
+    /** the namespace for XML schema */
     public static final String URI_XSD =
             "http://www.w3.org/2001/XMLSchema";
+    /** the sax external entities feature */
     public static final String FEATURE_EXTERNAL_ENTITIES =
             "http://xml.org/sax/features/external-general-entities";
+    /** the apache.org/xml disalllow doctype decl feature */
     public static final String FEATURE_DISALLOW_DTD =
             "http://apache.org/xml/features/disallow-doctype-decl";
 }

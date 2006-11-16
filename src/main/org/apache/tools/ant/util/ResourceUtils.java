@@ -52,6 +52,8 @@ import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * This class provides utility methods to process Resources.
  *
@@ -59,7 +61,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
  */
 public class ResourceUtils {
 
-    private static class Outdated implements ResourceSelector {
+    private static final class Outdated implements ResourceSelector {
         private Resource control;
         private long granularity;
         private Outdated(Resource control, long granularity) {
@@ -226,6 +228,7 @@ public class ResourceUtils {
                      false, null, null, project);
     }
 
+    // CheckStyle:ParameterNumberCheck OFF - bc
     /**
      * Convenience method to copy content from one Resource to another
      * specifying whether token filtering must be used, whether filter chains
@@ -383,6 +386,7 @@ public class ResourceUtils {
             setLastModified((Touchable) dest, source.getLastModified());
         }
     }
+    // CheckStyle:ParameterNumberCheck ON
 
     /**
      * Set the last modified time of an object implementing

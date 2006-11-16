@@ -50,26 +50,48 @@ public class LazyHashtable extends Hashtable {
     }
 
 
+    /**
+     * Get a enumeration over the elements.
+     * @return an enumeration.
+     */
     public Enumeration elements() {
         initAll();
         return super.elements();
     }
 
+    /**
+     * Check if the table is empty.
+     * @return true if it is.
+     */
     public boolean isEmpty() {
         initAll();
         return super.isEmpty();
     }
 
+    /**
+     * Get the size of the table.
+     * @return the size.
+     */
     public int size() {
         initAll();
         return super.size();
     }
 
+    /**
+     * Check if the table contains a particular value.
+     * @param value the value to look for.
+     * @return true if the table contains the value.
+     */
     public boolean contains(Object value) {
         initAll();
         return super.contains(value);
     }
 
+    /**
+     * Check if the table contains a particular key.
+     * @param value the key to look for.
+     * @return true if the table contains key.
+     */
     public boolean containsKey(Object value) {
         initAll();
         return super.containsKey(value);
@@ -77,11 +99,17 @@ public class LazyHashtable extends Hashtable {
 
     /**
      * Delegates to {@link #contains contains}.
+     * @param value the value to look for.
+     * @return true if the table contains the value.
      */
     public boolean containsValue(Object value) {
         return contains(value);
     }
 
+    /**
+     * Get an enumeration over the keys.
+     * @return an enumeration.
+     */
     public Enumeration keys() {
         initAll();
         return super.keys();

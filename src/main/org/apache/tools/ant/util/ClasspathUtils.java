@@ -25,6 +25,8 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
+// CheckStyle:HideUtilityClassConstructorCheck OFF - bc
+
 /**
  * Offers some helper methods on the Path structure in ant.
  *
