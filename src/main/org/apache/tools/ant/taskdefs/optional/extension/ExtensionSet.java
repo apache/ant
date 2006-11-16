@@ -117,6 +117,7 @@ public class ExtensionSet
 
     /**
      * @see java.lang.Object#toString()
+     * @return the extensions in a string.
      */
     public String toString() {
         return "ExtensionSet" + Arrays.asList(toExtensions(getProject()));

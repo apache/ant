@@ -123,12 +123,17 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *
+     * get the java attribute.
+     * @return the java attribute.
      */
     public Java getJava() {
         return java;
     }
 
+    /**
+     * Get the classname attribute.
+     * @return the classname value.
+     */
     public String getClassName() {
         return className;
     }

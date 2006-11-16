@@ -347,6 +347,7 @@ public class VisualBasicCompile extends DotnetCompile {
         return "vb";
     }
 
+    /** {@inheritDoc} */
     protected void createResourceParameter(NetCommand command, DotnetResource resource) {
         resource.getParameters(getProject(), command, false);
     }

@@ -62,7 +62,7 @@ public class Jasper41Mangler implements JspMangler {
     /**
      * Mangle the specified character to create a legal Java class name.
      */
-    private static final String mangleChar(char ch) {
+    private static String mangleChar(char ch) {
 
         String s = Integer.toHexString(ch);
         int nzeros = 5 - s.length();
@@ -81,6 +81,7 @@ public class Jasper41Mangler implements JspMangler {
     /**
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
+     * @return null as this is not implemented.
      * @todo
      */
     public String mapPath(String path) {

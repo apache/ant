@@ -373,8 +373,8 @@ public class NetCommand {
 
     /**
      * scan through one fileset for files to include
-     * @param scanner
-     * @param filesToBuild
+     * @param scanner the directory scanner to use.
+     * @param filesToBuild the map to place the files.
      * @param outputTimestamp timestamp to compare against
      * @return #of files out of date
      * @todo should FAT granularity be included here?

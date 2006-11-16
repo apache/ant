@@ -29,7 +29,7 @@ import java.io.InputStream;
  * strings from a class file.
  */
 class ConstantPool {
-
+    // CheckStyle:VisibilityModifier OFF - bc
     static final
         byte UTF8 = 1, UNUSED = 2, INTEGER = 3, FLOAT = 4, LONG = 5, DOUBLE = 6,
         CLASS = 7, STRING = 8, FIELDREF = 9, METHODREF = 10,
@@ -38,7 +38,13 @@ class ConstantPool {
     byte[] types;
 
     Object[] values;
+    // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Create a constant pool.
+     * @param data the data input containing the class.
+     * @throws IOException if there is an error.
+     */
     ConstantPool(DataInput data) throws IOException {
         super();
 

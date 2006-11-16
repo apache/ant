@@ -34,11 +34,14 @@ import org.apache.tools.ant.types.Path;
  */
 public class SunJavah implements JavahAdapter {
 
+    /** the name of the javah adapter - sun */
     public static final String IMPLEMENTATION_NAME = "sun";
 
     /**
      * Performs the actual compilation.
-     *
+     * @param javah the calling javah task.
+     * @return true if the compilation was successful.
+     * @throws BuildException if there is an error.
      * @since Ant 1.6.3
      */
     public boolean compile(Javah javah) throws BuildException {

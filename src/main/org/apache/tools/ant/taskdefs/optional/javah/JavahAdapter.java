@@ -13,6 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.javah;
@@ -28,7 +29,9 @@ import org.apache.tools.ant.taskdefs.optional.Javah;
 public interface JavahAdapter {
     /**
      * Performs the actual compilation.
-     *
+     * @param javah the calling javah task.
+     * @return true if the compilation was successful.
+     * @throws BuildException if there is an error.
      * @since Ant 1.6.3
      */
     boolean compile(Javah javah) throws BuildException;

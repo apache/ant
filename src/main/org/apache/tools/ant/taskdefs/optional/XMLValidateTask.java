@@ -215,7 +215,9 @@ public class XMLValidateTask extends Task {
      * Add an attribute nested element. This is used for setting arbitrary
      * features of the SAX parser.
      * Valid attributes
-     * <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
+     * <a href=
+     * "http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
+     * >include</a>
      * @return attribute created
      * @since ant1.6
      */
@@ -653,7 +655,9 @@ public class XMLValidateTask extends Task {
     public static class Attribute {
         /** The name of the attribute to set.
          *
-         * Valid attributes <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
+         * Valid attributes <a href=
+         * "http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
+         * >include.</a>
          */
         private String attributeName = null;
 

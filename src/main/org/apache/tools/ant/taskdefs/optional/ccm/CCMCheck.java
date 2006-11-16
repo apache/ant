@@ -39,7 +39,11 @@ public class CCMCheck extends Continuus {
     private String comment = null;
     private String task = null;
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     protected Vector filesets = new Vector();
+
+    // CheckStyle:VisibilityModifier ON
 
     /** Constructor for CCMCheck. */
     public CCMCheck() {

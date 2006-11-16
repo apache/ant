@@ -629,6 +629,7 @@ public class JspC extends MatchingTask {
      * @param srcFile the source file.
      * @param srcDir  the source directory.
      * @param dest    the destination directory.
+     * @return the filename.
      * @todo support packages and subdirs
      */
     protected File mapToJavaFile(JspMangler mangler, File srcFile, File srcDir, File dest) {

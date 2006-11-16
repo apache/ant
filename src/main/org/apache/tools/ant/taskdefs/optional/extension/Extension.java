@@ -619,7 +619,7 @@ public final class Extension {
      * @param onToken the token
      * @return the resultant array
      */
-    private static final String[] split(final String string,
+    private static String[] split(final String string,
                                         final String onToken) {
         final StringTokenizer tokenizer = new StringTokenizer(string, onToken);
         final String[] result = new String[ tokenizer.countTokens() ];

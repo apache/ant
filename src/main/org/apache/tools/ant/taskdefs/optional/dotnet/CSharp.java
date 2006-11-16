@@ -385,7 +385,13 @@ public class CSharp extends DotnetCompile {
         return "cs";
     }
 
-    protected void createResourceParameter(NetCommand command, DotnetResource resource) {
+    /**
+     * Build a C# style parameter.
+     * @param command the command.
+     * @param resource the resource.
+     */
+    protected void createResourceParameter(
+        NetCommand command, DotnetResource resource) {
         resource.getParameters(getProject(), command, true);
     }
 

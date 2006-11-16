@@ -885,12 +885,10 @@ public abstract class DotnetCompile
         }
     }
 
-    /* XXX Javadoc makes little sense, rewrite
-     * from a resource, get the
-     * @param command
-     * @param resource
-     * @return a string containing the resource param, or a null string
-     * to conditionally exclude a resource.
+    /**
+     * Build a C# style parameter.
+     * @param command the command.
+     * @param resource the resource.
      */
     protected abstract void createResourceParameter(NetCommand command, DotnetResource resource);
 

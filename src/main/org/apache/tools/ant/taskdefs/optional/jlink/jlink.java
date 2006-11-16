@@ -37,6 +37,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+// CheckStyle:TypeNameCheck OFF - bc
 /**
  * jlink links together multiple .jar files.
  */
@@ -51,7 +52,11 @@ public class jlink {
 
     private boolean compression = false;
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     byte[] buffer = new byte[8192];
+
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /** The file that will be created by this instance of jlink.
      * @param outfile the file to create.

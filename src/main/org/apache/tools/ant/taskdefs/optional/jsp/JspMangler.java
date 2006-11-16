@@ -39,6 +39,8 @@ public interface JspMangler {
     /**
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
+     * @param path the path to map.
+     * @return the mapped path.
      */
     String mapPath(String path);
 

@@ -398,12 +398,17 @@ public class Depend extends MatchingTask {
                                     int classMarker = jarFilePath.indexOf('!');
                                     jarFilePath = jarFilePath.substring(0, classMarker);
                                     if (jarFilePath.startsWith("file:")) {
-                                        classpathFileObject = new File(FileUtils.getFileUtils().fromURI(jarFilePath));
+                                        classpathFileObject = new File(
+                                            FileUtils.getFileUtils().fromURI(jarFilePath));
                                     } else {
-                                        throw new IOException("Bizarre nested path in jar: protocol: " + jarFilePath);
+                                        throw new IOException(
+                                            "Bizarre nested path in jar: protocol: "
+                                            + jarFilePath);
                                     }
                                 } else if (classURL.getProtocol().equals("file")) {
-                                    classpathFileObject = new File(FileUtils.getFileUtils().fromURI(classURL.toExternalForm()));
+                                    classpathFileObject = new File(
+                                        FileUtils.getFileUtils()
+                                        .fromURI(classURL.toExternalForm()));
                                 }
                                 log("Class " + className
                                     + " depends on " + classpathFileObject

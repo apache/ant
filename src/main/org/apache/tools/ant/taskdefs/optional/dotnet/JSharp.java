@@ -34,8 +34,9 @@ import org.apache.tools.ant.BuildException;
  * nested <code>&lt;src&gt;</code> elements instead of the basedir
  * attribute if you need more control.</p>
  *
- * @see <A=ref="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp">
- * Visual J++ online documentation</a>
+ * @see <a ref=
+ * "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp"
+ * >Visual J++ online documentation</a>
  *
  * @since ant1.6
  * @ant.task category="dotnet" name="jsharpc"
@@ -121,6 +122,7 @@ public class JSharp extends DotnetCompile {
         }
     }
 
+    /** {@inheritDoc} */
     protected void createResourceParameter(NetCommand command, DotnetResource resource) {
         resource.getParameters(getProject(), command, true);
     }

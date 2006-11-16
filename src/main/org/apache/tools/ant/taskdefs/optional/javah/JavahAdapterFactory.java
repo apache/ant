@@ -52,6 +52,7 @@ public class JavahAdapterFactory {
      * @param log a ProjectComponent instance used to access Ant's
      * logging system.
      * @return The adapter to use.
+     * @throws BuildException if there is an error.
      */
     public static JavahAdapter getAdapter(String choice,
                                           ProjectComponent log)

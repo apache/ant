@@ -70,6 +70,12 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class Pvcs extends org.apache.tools.ant.Task {
+    // CheckStyle - magic numbers
+    // checking for "X:\ 0=dquote,1=letter,2=:,3=\
+    private static final int POS_1 = 1;
+    private static final int POS_2 = 2;
+    private static final int POS_3 = 3;
+
     private String pvcsbin;
     private String repository;
     private String pvcsProject;
@@ -101,6 +107,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private static final String GET_EXE = "get";
 
 
+    /**
+     * Run the command.
+     * @param cmd the command line to use.
+     * @param out the output stream handler to use.
+     * @return the exit code of the command.
+     */
     protected int runCmd(Commandline cmd, ExecuteStreamHandler out) {
         try {
             Project aProj = getProject();
@@ -290,12 +302,13 @@ public class Pvcs extends org.apache.tools.ant.Task {
             String line = in.readLine();
             while (line != null) {
                 log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
-                if (line.startsWith("\"\\")
-                    || line.startsWith("\"/")
-                    || (line.length() > 3 && line.startsWith("\"")
-                        && Character.isLetter(line.charAt(1))
-                        && String.valueOf(line.charAt(2)).equals(":")
-                        && String.valueOf(line.charAt(3)).equals("\\"))) {
+                if (line.startsWith("\"\\")    // Checking for "\
+                    || line.startsWith("\"/")  // or           "/
+                                               // or           "X:\...
+                   || (line.length() > POS_3 && line.startsWith("\"")
+                        && Character.isLetter(line.charAt(POS_1))
+                        && String.valueOf(line.charAt(POS_2)).equals(":")
+                        && String.valueOf(line.charAt(POS_3)).equals("\\"))) {
                     Object[] objs = mf.parse(line);
                     String f = (String) objs[1];
                     // Extract the name of the directory from the filename
@@ -337,9 +350,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * Simple hack to handle the PVCS command-line tools botch when
      * handling UNC notation.
+     * @throws IOException if there is an error.
      */
     private void massagePCLI(File in, File out)
-        throws FileNotFoundException, IOException {
+        throws IOException {
         BufferedReader inReader = null;
         BufferedWriter outWriter = null;
         try {
@@ -374,6 +388,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      *  to parse the output of the pcli command.  It defaults to
      *  <code>{0}-arc({1})</code>.  Repositories where the archive
      *   extension is not  -arc should set this.
+     * @return the filename format attribute.
      */
     public String getFilenameFormat() {
         return filenameFormat;
@@ -385,6 +400,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * <code>java.text.MessageFormat</code>.
      *  Index 1 of the format will be used as the file name.
      *  Defaults to <code>{0}-arc({1})</code>
+     * @param f the format to use.
      */
     public void setFilenameFormat(String f) {
         filenameFormat = f;
@@ -397,6 +413,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * knows about / and \\, this property is useful in cases where the
      * repository is accessed on a Windows platform via a drive letter
      * mapping.
+     * @return the lineStart attribute.
      */
     public String getLineStart() {
         return lineStart;
@@ -409,8 +426,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * drive letter <code>P</code> is incorrect for your setup, you may
      * need to change this value, UNC names will always be
      * accepted.
+     * @param l the value to use.
      */
-
     public void setLineStart(String l) {
         lineStart = l;
     }
@@ -575,6 +592,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * If set to true the return value from executing the pvcs
      * commands are ignored; optional, default false.
+     * @param b a <code>boolean</code> value.
      */
     public void setIgnoreReturnCode(boolean b) {
         ignorerc = b;
@@ -582,12 +600,16 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specify a project within the PVCS repository to extract files from.
-     * @param p
+     * @param p the pvcs project to use.
      */
     public void addPvcsproject(PvcsProject p) {
         pvcsProjects.addElement(p);
     }
 
+    /**
+     * get the updateOnly attribute.
+     * @return the updateOnly attribute.
+     */
     public boolean getUpdateOnly() {
         return updateOnly;
     }
@@ -595,6 +617,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * If set to <i>true</i> files are fetched only if
      * newer than existing local files; optional, default false.
+     * @param l a <code>boolean</code> value.
      */
     public void setUpdateOnly(boolean l) {
         updateOnly = l;
@@ -618,14 +641,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
 
+    /**
+     * Get the userid.
+     * @return the userid.
+     */
     public String getUserId() {
         return userId;
     }
 
     /**
      * User ID
+     * @param u the value to use.
      */
-
     public void setUserId(String u) {
         userId = u;
     }

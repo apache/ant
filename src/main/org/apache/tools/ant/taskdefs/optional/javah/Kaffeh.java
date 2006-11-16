@@ -31,11 +31,14 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 public class Kaffeh implements JavahAdapter {
 
+    /** the name of the javah adapter - kaffeh */
     public static final String IMPLEMENTATION_NAME = "kaffeh";
 
     /**
      * Performs the actual compilation.
-     *
+     * @param javah the calling javah task.
+     * @return true if the compilation was successful.
+     * @throws BuildException if there is an error.
      * @since Ant 1.6.3
      */
     public boolean compile(Javah javah) throws BuildException {

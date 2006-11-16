@@ -217,6 +217,8 @@ public class ExtensionAdapter extends DataType {
     }
 
     /**
+     * a debug toString method.
+     * @return the extension in a string.
      * @see java.lang.Object#toString()
      */
     public String toString() {

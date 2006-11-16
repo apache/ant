@@ -114,6 +114,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      *  Builds the arguments to pass to weblogic.deploy according to the
      *  supplied action.
      *  @return A String containing the arguments for the weblogic.deploy tool.
+     * @throws BuildException if there is an error.
      */
     public String getArguments() throws BuildException {
         String action = getTask().getAction();
@@ -121,11 +122,9 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
 
         if (action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) {
             args = buildDeployArgs();
-        }
-        else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
+        } else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
             args = buildUndeployArgs();
-        }
-        else if (action.equals(ACTION_LIST)) {
+        } else if (action.equals(ACTION_LIST)) {
             args = buildListArgs();
         }
 
