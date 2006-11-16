@@ -29,11 +29,13 @@ import org.apache.tools.ant.BuildException;
  *
  */
 public abstract class EnumeratedAttribute {
-
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The selected value in this enumeration.
      */
     protected String value;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * the index of the selected value in the array.
@@ -68,7 +70,8 @@ public abstract class EnumeratedAttribute {
         Class/*<? extends EnumeratedAttribute>*/ clazz,
         String value) throws BuildException {
         if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
-            throw new BuildException("You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
+            throw new BuildException(
+                "You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
         }
         EnumeratedAttribute ea = null;
         try {

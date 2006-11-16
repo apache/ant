@@ -332,6 +332,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Whether default exclusions should be used or not.
+     * @return the default exclusions value.
      * @since Ant 1.6.3
      */
     public synchronized boolean getDefaultexcludes() {
@@ -768,6 +769,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Get the merged include patterns for this AbstractFileSet.
+     * @param p the project to use.
      * @return the include patterns of the default pattern set and all
      * nested patternsets.
      *
@@ -779,6 +781,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Get the merged exclude patterns for this AbstractFileSet.
+     * @param p the project to use.
      * @return the exclude patterns of the default pattern set and all
      * nested patternsets.
      *
@@ -790,6 +793,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Get the merged patterns for this AbstractFileSet.
+     * @param p the project to use.
      * @return the default patternset merged with the additional sets
      * in a new PatternSet instance.
      *

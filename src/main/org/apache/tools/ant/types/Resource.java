@@ -241,8 +241,8 @@ public class Resource extends DataType
         if (isReference()) {
             return ((Resource) getCheckedRef()).getSize();
         }
-        return isExists() ?
-            (size != null ? size.longValue() : UNKNOWN_SIZE)
+        return isExists()
+            ? (size != null ? size.longValue() : UNKNOWN_SIZE)
             : 0L;
     }
 
@@ -280,6 +280,7 @@ public class Resource extends DataType
 
     /**
      * Implement basic Resource equality.
+     * @param other the object to check against.
      * @return true if the specified Object is equal to this Resource.
      * @since Ant 1.7
      */
@@ -343,7 +344,7 @@ public class Resource extends DataType
     public Iterator iterator() {
         return isReference() ? ((Resource) getCheckedRef()).iterator()
             : new Iterator() {
-            boolean done = false;
+            private boolean done = false;
             public boolean hasNext() {
                 return !done;
             }

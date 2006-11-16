@@ -225,6 +225,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     /**
      * Creates a scanner for this type of archive.
+     * @return the scanner.
      */
     protected abstract ArchiveScanner newArchiveScanner();
 
@@ -444,6 +445,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     /**
      * Return the prefix prepended to entries in the archive file.
+     * @return the prefix.
      * @deprecated since 1.7.
      */
     public String getPrefix() {
@@ -452,6 +454,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     /**
      * Return the full pathname of the single entryZ in this fileset.
+     * @return the full pathname.
      * @deprecated since 1.7.
      */
     public String getFullpath() {
@@ -459,6 +462,7 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
+     * @return the file mode.
      * @deprecated since 1.7.
      */
     public int getFileMode() {
@@ -466,6 +470,7 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
+     * @return the dir mode.
      * @deprecated since 1.7.
      */
     public int getDirMode() {

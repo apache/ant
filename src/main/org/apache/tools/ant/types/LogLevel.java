@@ -18,18 +18,7 @@
 
 package org.apache.tools.ant.types;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * The enumerated values for Ant's log level.

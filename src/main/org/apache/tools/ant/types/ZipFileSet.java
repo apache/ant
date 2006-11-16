@@ -84,6 +84,10 @@ public class ZipFileSet extends ArchiveFileSet {
         return encoding;
     }
 
+    /**
+     * Return a new archive scanner based on this one.
+     * @return a new ZipScanner with the same encoding as this one.
+     */
     protected ArchiveScanner newArchiveScanner() {
         ZipScanner zs = new ZipScanner();
         zs.setEncoding(encoding);

@@ -40,10 +40,15 @@ public class Quantifier extends EnumeratedAttribute {
         = new String[] {"all", "each", "every", "any", "some", "one",
                         "majority", "most", "none"};
 
+    /** ALL instance */
     public static final Quantifier ALL = new Quantifier("all");
+    /** ANY instance */
     public static final Quantifier ANY = new Quantifier("any");
+    /** ONE instance */
     public static final Quantifier ONE = new Quantifier("one");
+    /** MAJORITY instance */
     public static final Quantifier MAJORITY = new Quantifier("majority");
+    /** NONE instance */
     public static final Quantifier NONE = new Quantifier("none");
 
     private static abstract class Predicate {

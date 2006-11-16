@@ -30,12 +30,15 @@ import org.apache.tools.ant.util.ContainerMapper;
  *
  */
 public class Mapper extends DataType implements Cloneable {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     protected MapperType type = null;
     protected String classname = null;
     protected Path classpath = null;
     protected String from = null;
     protected String to = null;
+
+    // CheckStyle:VisibilityModifier ON
 
     private ContainerMapper container = null;
 

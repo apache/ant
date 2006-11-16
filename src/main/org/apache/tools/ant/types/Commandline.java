@@ -54,7 +54,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  */
 public class Commandline implements Cloneable {
     /** win9x uses a (shudder) bat file (antRun.bat) for executing commands */
-    private static boolean IS_WIN_9X = Os.isFamily("win9x");
+    private static final boolean IS_WIN_9X = Os.isFamily("win9x");
 
     /**
      * The arguments of the command

@@ -174,6 +174,10 @@ public class TarFileSet extends ArchiveFileSet {
         return groupIdSet;
     }
 
+    /**
+     * Create a new scanner.
+     * @return the created scanner.
+     */
     protected ArchiveScanner newArchiveScanner() {
         TarScanner zs = new TarScanner();
         return zs;
@@ -215,6 +219,12 @@ public class TarFileSet extends ArchiveFileSet {
         }
     }
 
+    /**
+     * Configure a fileset based on this fileset.
+     * If the fileset is a TarFileSet copy in the tarfileset
+     * specific attributes.
+     * @param zfs the archive fileset to configure.
+     */
     protected void configureFileSet(ArchiveFileSet zfs) {
         super.configureFileSet(zfs);
         if (zfs instanceof TarFileSet) {

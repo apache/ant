@@ -75,7 +75,10 @@ public class CommandlineJava implements Cloneable {
      * Specialized Environment class for System properties.
      */
     public static class SysProperties extends Environment implements Cloneable {
+        // CheckStyle:VisibilityModifier OFF - bc
+        /** the system properties. */
         Properties sys = null;
+        // CheckStyle:VisibilityModifier ON
         private Vector propertySets = new Vector();
 
         /**

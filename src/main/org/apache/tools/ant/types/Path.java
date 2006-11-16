@@ -42,7 +42,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * &lt;sometask&gt;<br>
  * &nbsp;&nbsp;&lt;somepath&gt;<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement
+ *  path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
  * <br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;<br>
@@ -61,10 +62,12 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 
 public class Path extends DataType implements Cloneable, ResourceCollection {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /** The system classpath as a Path object */
     public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
+
 
     /**
      * The system bootclasspath as a Path object.
@@ -74,7 +77,10 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
-    private static Iterator EMPTY_ITERATOR = Collections.EMPTY_SET.iterator();
+    private static final Iterator EMPTY_ITERATOR
+        = Collections.EMPTY_SET.iterator();
+
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
@@ -109,14 +115,26 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             return parts;
         }
 
+        /**
+         * Create an iterator.
+         * @return an iterator.
+         */
         public Iterator iterator() {
             return new FileResourceIterator(null, parts);
         }
 
+        /**
+         * Check if this resource is only for filesystems.
+         * @return true.
+         */
         public boolean isFilesystemOnly() {
             return true;
         }
 
+        /**
+         * Get the number of resources.
+         * @return the number of parts.
+         */
         public int size() {
             return parts == null ? 0 : parts.length;
         }
@@ -344,8 +362,8 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @return a textual representation of the path.
      */
     public String toString() {
-        return isReference() ? getCheckedRef().toString() :
-            union == null ? "" : union.toString();
+        return isReference() ? getCheckedRef().toString()
+            : union == null ? "" : union.toString();
     }
 
     /**
@@ -660,7 +678,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
-    public synchronized final Iterator iterator() {
+    public final synchronized Iterator iterator() {
         if (isReference()) {
             return ((Path) getCheckedRef()).iterator();
         }

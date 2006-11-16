@@ -30,13 +30,13 @@ public interface ResourceCollection {
      * are <code>org.apache.tools.ant.types.Resource</code> instances.
      * @return an Iterator of Resources.
      */
-    public Iterator iterator();
+    Iterator iterator();
 
     /**
      * Learn the number of contained Resources.
      * @return number of elements as int.
      */
-    public int size();
+    int size();
 
     /**
      * Indicate whether this ResourceCollection is composed entirely of
@@ -45,6 +45,6 @@ public interface ResourceCollection {
      * instances of FileResource.
      * @return whether this is a filesystem-only resource collection.
      */
-    public boolean isFilesystemOnly();
+    boolean isFilesystemOnly();
 
 }

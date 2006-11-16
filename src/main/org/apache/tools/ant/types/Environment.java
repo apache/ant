@@ -26,12 +26,15 @@ import org.apache.tools.ant.BuildException;
  *
  */
 public class Environment {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * a vector of type Enviromment.Variable
      * @see Variable
      */
     protected Vector variables;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * representation of a single env value

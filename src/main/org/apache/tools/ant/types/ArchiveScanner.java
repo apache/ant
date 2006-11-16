@@ -38,11 +38,14 @@ import org.apache.tools.ant.types.resources.FileResourceIterator;
  * @since Ant 1.7
  */
 public abstract class ArchiveScanner extends DirectoryScanner {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * The archive file which should be scanned.
      */
     protected File srcFile;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * The archive resource which should be scanned.
@@ -320,6 +323,11 @@ public abstract class ArchiveScanner extends DirectoryScanner {
         lastScannedResource = thisresource;
     }
 
+    /**
+     * Remove trailing slash if present.
+     * @param s the file name to trim.
+     * @return the trimed file name.
+     */
     protected static final String trimSeparator(String s) {
         return s.endsWith("/") ? s.substring(0, s.length() - 1) : s;
     }

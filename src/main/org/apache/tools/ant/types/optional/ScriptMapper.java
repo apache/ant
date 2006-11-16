@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class ScriptMapper extends AbstractScriptComponent implements FileNameMapper {
 
 
-    ArrayList files;
+    private ArrayList files;
     static final String[] EMPTY_STRING_ARRAY = new String[0];
 
 
@@ -59,7 +59,7 @@ public class ScriptMapper extends AbstractScriptComponent implements FileNameMap
 
     /**
      * Add a mapped name
-     * @param mapping
+     * @param mapping the value to use.
      */
     public void addMappedName(String mapping) {
         files.add(mapping);

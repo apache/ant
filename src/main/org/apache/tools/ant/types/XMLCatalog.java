@@ -368,7 +368,11 @@ public class XMLCatalog extends DataType
 
     /**
      * Implements the EntityResolver.resolveEntity() interface method.
-     *
+     * @param publicId the public id to resolve.
+     * @param systemId the system id to resolve.
+     * @throws SAXException if there is a parsing problem.
+     * @throws IOException if there is an IO problem.
+     * @return the resolved entity.
      * @see org.xml.sax.EntityResolver#resolveEntity
      */
     public InputSource resolveEntity(String publicId, String systemId)
@@ -396,7 +400,10 @@ public class XMLCatalog extends DataType
 
     /**
      * Implements the URIResolver.resolve() interface method.
-     *
+     * @param href an href attribute.
+     * @param base the base URI.
+     * @return a Source object, or null if href cannot be resolved.
+     * @throws TransformerException if an error occurs.
      * @see javax.xml.transform.URIResolver#resolve
      */
     public Source resolve(String href, String base)

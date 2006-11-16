@@ -38,6 +38,7 @@ import org.apache.tools.ant.util.IdentityStack;
  *
  */
 public abstract class DataType extends ProjectComponent implements Cloneable {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * The description the user has set.
@@ -72,6 +73,8 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *             {@link #isChecked} instead.
      */
     protected boolean checked = true;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Sets a description of the current data type. It will be useful
@@ -355,6 +358,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     /**
      * @since Ant 1.7
      * @return a shallow copy of this DataType.
+     * @throws CloneNotSupportedException if there is a problem.
      */
     public Object clone() throws CloneNotSupportedException {
         DataType dt = (DataType) super.clone();

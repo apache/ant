@@ -81,6 +81,7 @@ public class Service extends ProjectComponent {
      * services as an inputstream.
      * @return an inputstream of the classname names
      *         encoded as UTF-8.
+     * @throws IOException if there is an error.
      */
     public InputStream getAsStream() throws IOException {
         ByteArrayOutputStream arrayOut;
