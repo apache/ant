@@ -1159,7 +1159,6 @@
         <include name="bootstrap.sh"/>
         <include name="build.xml"/>
         <include name="fetch.xml"/>
-        <include name="welcome.html"/>
 	<include name="get-m2.xml"/>
       </fileset>
     </copy>
