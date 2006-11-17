@@ -194,7 +194,7 @@ Changes that could break older environments:
   Bugzilla Report 40475.
 
 * <env> nested element in <java>, <exec> and others is now case-insensitive
-  for windows OS. Bugzilla Report 28826.
+  for windows OS. Bugzilla Report 28874.
 
 Fixed bugs:
 -----------
