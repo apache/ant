@@ -155,6 +155,21 @@ public final class JavaEnvUtils {
     }
 
     /**
+     * Compares the current Java version to the passed in String -
+     * assumes the argument is one of the constants defined in this
+     * class.
+     * Note that Ant now requires JDK 1.2+ so {@link #JAVA_1_0} and
+     * {@link #JAVA_1_1} need no longer be tested for.
+     * @param version the version to check against the current version.
+     * @return true if the version of Java is the same or higher than the 
+     * given version.
+     * @since Ant 1.7
+     */
+    public static boolean isAtLeastJavaVersion(String version) {
+        return javaVersion.compareTo(version) >= 0;
+    }
+
+    /**
      * Checks whether the current Java VM is Kaffe.
      * @return true if the current Java VM is Kaffe.
      * @since Ant 1.6.3

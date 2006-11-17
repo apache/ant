@@ -127,4 +127,14 @@ public class JavaEnvUtilsTest extends TestCase {
 
     }
 
+    public void testIsAtLeastJavaVersion()
+    {
+        assertTrue(
+                "Current java version is not at least the current java version...",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.getJavaVersion()));
+        assertFalse(
+                "In case the current java version is higher than 9.0 definitely a new algorithem will be needed",
+                JavaEnvUtils.isAtLeastJavaVersion("9.0"));
+    }
+
 }

@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -133,7 +134,7 @@ public class ManifestClassPathTest
                                               "../../resources/dsp-void/");
     }
     public void testInternationalGerman() {
-        if (System.getProperty("java.vm.version").compareTo("1.4") < 0)
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_4))
         {
             System.out.println("Test with international characters skipped under pre 1.4 jvm.");
             return;
@@ -143,8 +144,7 @@ public class ManifestClassPathTest
             
     }
     public void testInternationalHebrew() {
-        if (System.getProperty("java.vm.version").compareTo("1.4") < 0)
-        {
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_4))        {
             System.out.println("Test with international characters skipped under pre 1.4 jvm.");
             return;
         }
