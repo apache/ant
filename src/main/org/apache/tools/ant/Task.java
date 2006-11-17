@@ -334,6 +334,7 @@ public abstract class Task extends ProjectComponent {
      * @param t The exception to be logged. Should not be <code>null</code>.
      * @param msgLevel The message priority at which this message is to
      *                 be logged.
+     * @since 1.7
      */
     public void log(Throwable t, int msgLevel) {
         if(t != null)
@@ -350,6 +351,7 @@ public abstract class Task extends ProjectComponent {
      * @param t The exception to be logged. May be <code>null</code>.
      * @param msgLevel The message priority at which this message is to
      *                 be logged.
+     * @since 1.7
      */
     public void log(String msg, Throwable t, int msgLevel) {
         if (getProject() != null) {
