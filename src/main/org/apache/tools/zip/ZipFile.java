@@ -72,8 +72,8 @@ public class ZipFile {
     private Hashtable nameMap = new Hashtable(509);
 
     private static final class OffsetEntry {
-        long headerOffset = -1;
-        long dataOffset = -1;
+        private long headerOffset = -1;
+        private long dataOffset = -1;
     }
 
     /**

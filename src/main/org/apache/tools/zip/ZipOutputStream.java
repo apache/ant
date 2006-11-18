@@ -193,6 +193,8 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     private String encoding = null;
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /**
      * This Deflater object is used for output.
      *
@@ -216,6 +218,8 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     protected byte[] buf = new byte[512];
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Optional random access output.
@@ -881,7 +885,8 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * Assumes a negative integer really is a positive integer that
      * has wrapped around and re-creates the original value.
-     *
+     * @param i the value to treat as unsigned int.
+     * @return the unsigned int as a long.
      * @since 1.34
      */
     protected static long adjustToLong(int i) {

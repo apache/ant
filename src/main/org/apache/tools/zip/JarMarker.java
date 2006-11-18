@@ -28,17 +28,19 @@ import java.util.zip.ZipException;
  */
 public final class JarMarker implements ZipExtraField {
 
-    private static ZipShort ID = new ZipShort(0xCAFE);
-    private static ZipShort NULL = new ZipShort(0);
-    private static byte[] NO_BYTES = new byte[0];
-    private static JarMarker DEFAULT = new JarMarker();
+    private static final ZipShort ID = new ZipShort(0xCAFE);
+    private static final ZipShort NULL = new ZipShort(0);
+    private static final byte[] NO_BYTES = new byte[0];
+    private static final JarMarker DEFAULT = new JarMarker();
 
+    /** No-arg constructor */
     public JarMarker() {
         // empty
     }
 
     /**
      * Since JarMarker is stateless we can always use the same instance.
+     * @return the DEFAULT jarmaker.
      */
     public static JarMarker getInstance() {
         return DEFAULT;
