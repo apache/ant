@@ -99,6 +99,10 @@ public class WLJspc extends MatchingTask {
     private String pathToPackage = "";
     private Vector filesToDo = new Vector();
 
+    /**
+     * Run the task.
+     * @throws BuildException if there is an error.
+     */
     public void execute() throws BuildException {
         if (!destinationDirectory.isDirectory()) {
             throw new BuildException("destination directory "
@@ -196,7 +200,7 @@ public class WLJspc extends MatchingTask {
 
     /**
      * Set the classpath to be used for this compilation.
-     *
+     * @param classpath the classpath to use.
      */
     public void setClasspath(Path classpath) {
         if (compileClasspath == null) {
@@ -208,6 +212,7 @@ public class WLJspc extends MatchingTask {
 
     /**
      * Maybe creates a nested classpath element.
+     * @return a path to be configured.
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
@@ -248,9 +253,12 @@ public class WLJspc extends MatchingTask {
         destinationPackage = packageName;
     }
 
-
-
-    protected void scanDir(String files[]) {
+    /**
+     * Scan the array of files and add the jsp
+     * files that need to be compiled to the filesToDo field.
+     * @param files the files to scan.
+     */
+    protected void scanDir(String[] files) {
 
         long now = (new Date()).getTime();
         File jspFile = null;
@@ -297,6 +305,13 @@ public class WLJspc extends MatchingTask {
     }
 
 
+    /**
+     * Replace occurances of a string with a replacement string.
+     * @param inpString the string to convert.
+     * @param escapeChars the string to replace.
+     * @param replaceChars the string to place.
+     * @return the converted string.
+     */
     protected String replaceString(String inpString, String escapeChars,
                                    String replaceChars) {
         String localString = "";

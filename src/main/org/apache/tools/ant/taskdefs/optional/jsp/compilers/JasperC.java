@@ -36,11 +36,14 @@ import org.apache.tools.ant.types.Path;
  */
 public class JasperC extends DefaultJspCompilerAdapter {
 
+    // CheckStyle:VisibilityModifier OFF - bc
 
     /**
      * what produces java classes from .jsp files
      */
     JspMangler mangler;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructor for JasperC.

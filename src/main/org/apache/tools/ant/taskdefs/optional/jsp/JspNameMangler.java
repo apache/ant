@@ -26,6 +26,8 @@ import java.io.File;
  */
 public class JspNameMangler implements JspMangler {
 
+    // CheckStyle:ConstantNameCheck OFF - bc
+
     /**
      * this is the list of keywords which can not be used as classnames
      */
@@ -46,6 +48,7 @@ public class JspNameMangler implements JspMangler {
             "try", "void", "volatile", "while"
             };
 
+    // CheckStyle:ConstantNameCheck ON
 
     /**
      * map from a jsp file to a java filename; does not do packages
@@ -123,7 +126,7 @@ public class JspNameMangler implements JspMangler {
      * @param ch char to mangle
      * @return mangled string; 5 digit hex value
      */
-    private static final String mangleChar(char ch) {
+    private static String mangleChar(char ch) {
 
         if (ch == File.separatorChar) {
             ch = '/';
@@ -146,6 +149,8 @@ public class JspNameMangler implements JspMangler {
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
      * not supported, as jasper in tomcat4.0 doesnt either
+     * @param path not used
+     * @return null always.
      */
     public String mapPath(String path) {
         return null;

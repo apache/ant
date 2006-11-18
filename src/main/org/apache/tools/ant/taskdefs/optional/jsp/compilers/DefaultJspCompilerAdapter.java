@@ -69,10 +69,14 @@ public abstract class DefaultJspCompilerAdapter
         jspc.log(niceSourceList.toString(), Project.MSG_VERBOSE);
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
+
     /**
      * our owner
      */
     protected JspC owner;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * set the owner
