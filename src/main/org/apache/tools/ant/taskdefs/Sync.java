@@ -62,6 +62,8 @@ public class Sync extends Task {
 
     // Override Task#init
     /**
+     * Initialize the sync task.
+     * @throws BuildException if there is a problem.
      * @see Task#init()
      */
     public void init()
@@ -85,6 +87,8 @@ public class Sync extends Task {
 
     // Override Task#execute
     /**
+     * Execute the sync task.
+     * @throws BuildException if there is an error.
      * @see Task#execute()
      */
     public void execute()
@@ -368,6 +372,7 @@ public class Sync extends Task {
         /**
          * @see Copy#scan(File, File, String[], String[])
          */
+        /** {@inheritDoc} */
         protected void scan(File fromDir, File toDir, String[] files,
                             String[] dirs) {
             assertTrue("No mapper", mapperElement == null);
@@ -385,6 +390,7 @@ public class Sync extends Task {
         /**
          * @see Copy#scan(Resource[], File)
          */
+        /** {@inheritDoc} */
         protected Map scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
 

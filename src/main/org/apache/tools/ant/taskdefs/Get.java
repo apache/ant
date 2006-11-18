@@ -343,22 +343,26 @@ public class Get extends Task {
         extends org.apache.tools.ant.util.Base64Converter {
     }
 
+    /**
+     * Interface implemented for reporting
+     * progess of downloading.
+     */
     public interface DownloadProgress {
         /**
          * begin a download
          */
-        public void beginDownload();
+        void beginDownload();
 
         /**
          * tick handler
          *
          */
-        public void onTick();
+        void onTick();
 
         /**
          * end a download
          */
-        public void endDownload();
+        void endDownload();
     }
 
     /**
@@ -393,8 +397,14 @@ public class Get extends Task {
      */
     public static class VerboseProgress implements DownloadProgress  {
         private int dots = 0;
+        // CheckStyle:VisibilityModifier OFF - bc
         PrintStream out;
+        // CheckStyle:VisibilityModifier ON
 
+        /**
+         * Construct a verbose progress reporter.
+         * @param out the output stream.
+         */
         public VerboseProgress(PrintStream out) {
             this.out = out;
         }

@@ -1658,6 +1658,7 @@ public class Zip extends MatchingTask {
         /**
          * @see EnumeratedAttribute#getValues()
          */
+        /** {@inheritDoc} */
         public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
         }

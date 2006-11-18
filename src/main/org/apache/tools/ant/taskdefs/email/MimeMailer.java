@@ -58,6 +58,8 @@ import org.apache.tools.ant.BuildException;
  * @since Ant 1.5
  */
 public class MimeMailer extends Mailer {
+    private final static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
     /** Default character set */
     private static final String DEFAULT_CHARSET
         = System.getProperty("file.encoding");
@@ -145,7 +147,6 @@ public class MimeMailer extends Mailer {
                         + "security provider, check that you have JSSE in "
                         + "your classpath");
                 }
-                final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
                 // SMTP provider
                 props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
                 props.put("mail.smtp.socketFactory.fallback", "false");

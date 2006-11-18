@@ -83,8 +83,8 @@ public class Delete extends MatchingTask {
                 return ((Comparable) foo).compareTo(bar) * -1;
             }
         };
-        File basedir;
-        String[] dirs;
+        private File basedir;
+        private String[] dirs;
         ReverseDirs(File basedir, String[] dirs) {
             this.basedir = basedir;
             this.dirs = dirs;

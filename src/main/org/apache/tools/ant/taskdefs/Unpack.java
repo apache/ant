@@ -33,10 +33,11 @@ import org.apache.tools.ant.types.resources.FileResource;
  */
 
 public abstract class Unpack extends Task {
-
+    // CheckStyle:VisibilityModifier OFF - bc
     protected File source;
     protected File dest;
     protected Resource srcResource;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * @deprecated since 1.5.x.

@@ -58,8 +58,8 @@ public class Redirector {
         = System.getProperty("file.encoding");
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
-        String property;
-        boolean closed = false;
+        private String property;
+        private boolean closed = false;
 
         PropertyOutputStream(String property) {
             super();

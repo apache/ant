@@ -95,17 +95,26 @@ public class Classloader extends Task {
         this.reset = b;
     }
 
+    /**
+     * Set reverse attribute.
+     * @param b if true reverse the normal classloader lookup.
+     */
     public void setReverse(boolean b) {
         this.parentFirst = !b;
     }
 
+    /**
+     * Set reverse attribute.
+     * @param b if true reverse the normal classloader lookup.
+     */
     public void setParentFirst(boolean b) {
         this.parentFirst = b;
     }
 
-    // TODO: add exceptions for delegation or reverse
-
-    // TODO
+    /**
+     * Set the name of the parent.
+     * @param name the parent name.
+     */
     public void setParentName(String name) {
         this.parentName = name;
     }
@@ -114,6 +123,8 @@ public class Classloader extends Task {
     /** Specify which path will be used. If the loader already exists
      *  and is an AntClassLoader (or any other loader we can extend),
      *  the path will be added to the loader.
+     * @param pathRef a reference to a path.
+     * @throws BuildException if there is a problem.
      */
     public void setClasspathRef(Reference pathRef) throws BuildException {
         classpath = (Path) pathRef.getReferencedObject(getProject());
@@ -132,6 +143,10 @@ public class Classloader extends Task {
         }
     }
 
+    /**
+     * Create a classpath.
+     * @return a path for configuration.
+     */
     public Path createClasspath() {
         if (this.classpath == null) {
             this.classpath = new Path(null);
@@ -140,6 +155,9 @@ public class Classloader extends Task {
     }
 
 
+    /**
+     * do the classloader manipulation.
+     */
     public void execute() {
         try {
             // Gump friendly - don't mess with the core loader if only classpath

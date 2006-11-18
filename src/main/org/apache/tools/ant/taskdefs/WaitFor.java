@@ -179,11 +179,17 @@ public class WaitFor extends ConditionBase {
      */
     public static class Unit extends EnumeratedAttribute {
 
+        /** millisecond string */
         public static final String MILLISECOND = "millisecond";
+        /** second string */
         public static final String SECOND = "second";
+        /** minute string */
         public static final String MINUTE = "minute";
+        /** hour string */
         public static final String HOUR = "hour";
+        /** day string */
         public static final String DAY = "day";
+        /** week string */
         public static final String WEEK = "week";
 
         private static final String[] UNITS = {
@@ -215,6 +221,7 @@ public class WaitFor extends ConditionBase {
         /**
          * @see EnumeratedAttribute#getValues()
          */
+        /** {@inheritDoc} */
         public String[] getValues() {
             return UNITS;
         }

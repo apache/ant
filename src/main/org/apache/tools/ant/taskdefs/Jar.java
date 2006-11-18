@@ -144,11 +144,13 @@ public class Jar extends Zip {
      *
      * @since Ant 1.6.3
      */
-    private ZipExtraField[] JAR_MARKER = new ZipExtraField[] {
+    private static final ZipExtraField[] JAR_MARKER = new ZipExtraField[] {
         JarMarker.getInstance()
     };
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected String emptyBehavior = "create";
+    // CheckStyle:VisibilityModifier ON
 
     /** constructor */
     public Jar() {

@@ -116,10 +116,22 @@ public class CopyPath extends Task {
         return path;
     }
 
+    /**
+     * Set the number of milliseconds leeway to give before deciding a
+     * target is out of date.
+     * TODO: This is not yet used.
+     * @param granularity the granularity used to decide if a target is out of
+     *                    date.
+     */
     public void setGranularity(long granularity) {
         this.granularity = granularity;
     }
 
+    /**
+     * Give the copied files the same last modified time as the original files.
+     * @param preserveLastModified if true preserve the modified time;
+     *                             default is false.
+     */
     public void setPreserveLastModified(boolean preserveLastModified) {
         this.preserveLastModified = preserveLastModified;
     }

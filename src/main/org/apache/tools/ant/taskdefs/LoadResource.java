@@ -51,10 +51,9 @@ public class LoadResource extends Task {
     private boolean failOnError = true;
 
     /**
-     * suppress error message if it goes pear-shaped, sets failOnError=false 
+     * suppress error message if it goes pear-shaped, sets failOnError=false
      */
     private boolean quiet = false;
-    
 
     /**
      * Encoding to use for filenames, defaults to the platform's default
@@ -106,7 +105,7 @@ public class LoadResource extends Task {
     public final void setFailonerror(final boolean fail) {
         failOnError = fail;
     }
-    
+
     /**
      * If true, suppress the load error report and set the
      * the failonerror value to false.

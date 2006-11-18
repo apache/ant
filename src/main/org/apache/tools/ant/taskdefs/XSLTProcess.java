@@ -69,7 +69,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private String fileNameParameter = null;
 
     /** name for XSL parameter containing the file directory */
-    public String fileDirParameter = null;
+    private String fileDirParameter = null;
 
     /** additional parameters to be passed to the stylesheets */
     private Vector params = new Vector();

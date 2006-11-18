@@ -46,6 +46,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * @since Ant 1.1
  */
 public class SignJar extends AbstractJarSignerTask {
+    // CheckStyle:VisibilityModifier OFF - bc
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -131,6 +132,7 @@ public class SignJar extends AbstractJarSignerTask {
      * error string for unit test verification: {@value}
      */
     public static final String ERROR_NO_STOREPASS = "storepass attribute must be set";
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * name of .SF/.DSA file; optional

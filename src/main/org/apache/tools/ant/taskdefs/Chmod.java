@@ -52,6 +52,9 @@ public class Chmod extends ExecuteOn {
     }
 
     /**
+     * Set the project of this task.
+     * Calls the super class and sets the project on dhe default FileSet.
+     * @param project the project for this task.
      * @see org.apache.tools.ant.ProjectComponent#setProject
      */
     public void setProject(Project project) {

@@ -59,7 +59,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Checksum extends MatchingTask implements Condition {
     private static class FileUnion extends Restrict {
-        Union u;
+        private Union u;
         FileUnion() {
             u = new Union();
             super.add(u);

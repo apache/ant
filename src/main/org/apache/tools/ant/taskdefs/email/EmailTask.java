@@ -98,7 +98,7 @@ public class EmailTask extends Task {
     /** Password for SMTP auth */
     private String password = null;
     /** indicate if the user wishes SSL-TLS */
-    private boolean SSL = false;
+    private boolean ssl = false;
 
     /**
      * Set the user for SMTP auth; this requires JavaMail.
@@ -120,11 +120,11 @@ public class EmailTask extends Task {
 
     /**
      * Set whether to send data over SSL.
-     * @param SSL boolean; if true SSL will be used.
+     * @param ssl boolean; if true SSL will be used.
      * @since Ant 1.6
      */
-    public void setSSL(boolean SSL) {
-        this.SSL = SSL;
+    public void setSSL(boolean ssl) {
+        this.ssl = ssl;
     }
 
     /**
@@ -360,7 +360,7 @@ public class EmailTask extends Task {
     /**
      * Creates a Path as container for attachments.  Supports any
      * filesystem resource-collections that way.
-     *
+     * @return the path to be configured.
      * @since Ant 1.7
      */
     public Path createAttachments() {
@@ -432,7 +432,7 @@ public class EmailTask extends Task {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
             // SSL only allowed with MIME mail
-            if (autoFound == false && (SSL)
+            if (!autoFound  && (ssl)
                 && (encoding.equals(UU) || encoding.equals(PLAIN))) {
                 throw new BuildException("SSL only possible with MIME mail");
             }
@@ -518,7 +518,7 @@ public class EmailTask extends Task {
             mailer.setPort(port);
             mailer.setUser(user);
             mailer.setPassword(password);
-            mailer.setSSL(SSL);
+            mailer.setSSL(ssl);
             mailer.setMessage(message);
             mailer.setFrom(from);
             mailer.setReplyToList(replyToList);
@@ -559,6 +559,7 @@ public class EmailTask extends Task {
      * Sets the character set of mail message.
      * Will be ignored if mimeType contains ....; Charset=... substring or
      * encoding is not a <code>mime</code>.
+     * @param charset the character encoding to use.
      * @since Ant 1.6
      */
     public void setCharset(String charset) {

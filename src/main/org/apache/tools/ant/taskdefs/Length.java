@@ -261,9 +261,13 @@ public class Length extends Task implements Condition {
     }
 
     private abstract class Handler {
-        PrintStream ps;
+        private PrintStream ps;
         Handler(PrintStream ps) {
             this.ps = ps;
+        }
+
+        protected PrintStream getPs() {
+            return ps;
         }
 
         protected abstract void handle(Resource r);
@@ -278,14 +282,14 @@ public class Length extends Task implements Condition {
             super(ps);
         }
         protected void handle(Resource r) {
-            ps.print(r.toString());
-            ps.print(" : ");
+            getPs().print(r.toString());
+            getPs().print(" : ");
             //when writing to the log, we'll see what's happening:
             long size = r.getSize();
             if (size == Resource.UNKNOWN_SIZE) {
-                ps.println("unknown");
+                getPs().println("unknown");
             } else {
-                ps.println(size);
+                getPs().println(size);
             }
        }
     }
@@ -294,6 +298,9 @@ public class Length extends Task implements Condition {
         long accum = 0L;
         AllHandler(PrintStream ps) {
             super(ps);
+        }
+        protected long getAccum() {
+            return accum;
         }
         protected synchronized void handle(Resource r) {
             long size = r.getSize();
@@ -304,7 +311,7 @@ public class Length extends Task implements Condition {
             }
         }
         void complete() {
-            ps.print(accum);
+            getPs().print(accum);
             super.complete();
         }
     }
@@ -316,7 +323,7 @@ public class Length extends Task implements Condition {
         void complete() {
         }
         long getLength() {
-            return accum;
+            return getAccum();
         }
     }
 }

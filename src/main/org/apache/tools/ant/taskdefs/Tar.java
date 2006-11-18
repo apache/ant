@@ -90,6 +90,7 @@ public class Tar extends MatchingTask {
      */
     public static final String OMIT = "omit";
 
+    // CheckStyle:VisibilityModifier OFF - bc
     File tarFile;
     File baseDir;
 
@@ -102,6 +103,8 @@ public class Tar extends MatchingTask {
     private Vector resourceCollections = new Vector();
 
     Vector fileSetFiles = new Vector();
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Indicates whether the user has been warned about long files already.
@@ -668,6 +671,7 @@ public class Tar extends MatchingTask {
     /**
      * whether the given resource collection is a (subclass of)
      * FileSet that only contains file system resources.
+     * @param rc the resource collection to check.
      * @return true if the collection is a fileset.
      * @since Ant 1.7
      */
@@ -678,6 +682,7 @@ public class Tar extends MatchingTask {
     /**
      * Grabs all included files and directors from the FileSet and
      * returns them as an array of (relative) file names.
+     * @param fs the fileset to operate on.
      * @return a list of the filenames.
      * @since Ant 1.7
      */

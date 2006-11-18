@@ -36,6 +36,9 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  */
 
 public class BZip2 extends Pack {
+    /**
+     * Compress the zipFile.
+     */
     protected void pack() {
         CBZip2OutputStream zOut = null;
         try {

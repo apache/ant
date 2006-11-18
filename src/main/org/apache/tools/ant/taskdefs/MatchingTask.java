@@ -116,6 +116,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
         fileset.setIncludes(includes);
     }
 
+    // CheckStyle:MethodNameCheck OFF - bc
     /**
      * Set this to be the items in the base directory that you want to be
      * included. You can also specify "*" for the items (ie: items="*")
@@ -167,6 +168,8 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
             }
         }
     }
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Sets whether default exclusions should be used or not.

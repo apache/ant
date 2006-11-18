@@ -91,6 +91,7 @@ public class Untar extends Expand {
     /**
      * @see Expand#expandFile(FileUtils, File, File)
      */
+    /** {@inheritDoc} */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         FileInputStream fis = null;
         try {

@@ -53,7 +53,9 @@ public class UpToDate extends Task implements Condition {
     private Vector sourceFileSets = new Vector();
     private Union sourceResources = new Union();
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected Mapper mapperElement = null;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * The property to set if the target file is more up-to-date than

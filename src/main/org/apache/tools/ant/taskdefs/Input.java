@@ -127,7 +127,7 @@ public class Input extends Task {
                new PropertyFileInputHandler(),
                new GreedyInputHandler()};
 
-        //inherit doc
+        /** {@inheritDoc} */
         public String[] getValues() {
             return VALUES;
         }

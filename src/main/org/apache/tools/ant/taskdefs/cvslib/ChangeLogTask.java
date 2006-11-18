@@ -42,23 +42,35 @@ import org.apache.tools.ant.util.FileUtils;
  * It produces an XML output representing the list of changes.
  * <pre>
  * <font color=#0000ff>&lt;!-- Root element --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> changelog <font color=#ff00ff>(entry</font><font color=#ff00ff>+</font><font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> changelog <font color=#ff00ff>
+ * (entry</font><font color=#ff00ff>+</font><font color=#ff00ff>)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- CVS Entry --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> entry <font color=#ff00ff>(date,author,file</font><font color=#ff00ff>+</font><font color=#ff00ff>,msg)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> entry <font color=#ff00ff>
+ * (date,author,file</font><font color=#ff00ff>+</font><font color=#ff00ff>,msg)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Date of cvs entry --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> date <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> date <font color=#ff00ff>(#PCDATA)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Author of change --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> author <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> author <font color=#ff00ff>(#PCDATA)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- List of files affected --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> msg <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> msg <font color=#ff00ff>(#PCDATA)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- File changed --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> file <font color=#ff00ff>(name,revision,prevrevision</font><font color=#ff00ff>?</font><font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> file <font color=#ff00ff>
+ * (name,revision,prevrevision</font><font color=#ff00ff>?</font>
+ * <font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Name of the file --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> name <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> name <font color=#ff00ff>(#PCDATA)
+ * </font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Revision number --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> revision <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> revision <font color=#ff00ff>
+ * (#PCDATA)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Previous revision number --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> prevrevision <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> prevrevision <font color=#ff00ff>
+ * (#PCDATA)</font><font color=#6a5acd>&gt;</font>
  * </pre>
  *
  * @since Ant 1.5

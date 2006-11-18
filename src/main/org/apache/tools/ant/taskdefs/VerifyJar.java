@@ -55,6 +55,7 @@ public class VerifyJar extends AbstractJarSignerTask {
      */
     private boolean certificates = false;
     private BufferingOutputFilter outputCache = new BufferingOutputFilter();
+    /** Error output if there is a failure to verify the jar. */
     public static final String ERROR_NO_VERIFY = "Failed to verify ";
 
     /**

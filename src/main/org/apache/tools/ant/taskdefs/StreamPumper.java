@@ -125,6 +125,7 @@ public class StreamPumper implements Runnable {
 
     /**
      * This method blocks until the stream pumper finishes.
+     * @throws InterruptedException if interrupted.
      * @see #isFinished()
      */
     public synchronized void waitFor()
