@@ -180,6 +180,7 @@ public class ProjectHelperImpl extends ProjectHelper {
      * control back to the parent in the endElement method.
      */
     static class AbstractHandler extends HandlerBase {
+        // CheckStyle:VisibilityModifier OFF - bc
 
         /**
          * Previous handler for the document.
@@ -194,6 +195,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             explicitly it'll work with more compilers.
         */
         ProjectHelperImpl helperImpl;
+        // CheckStyle:VisibilityModifier ON
 
         /**
          * Creates a handler and sets the parser to use it
@@ -271,7 +273,9 @@ public class ProjectHelperImpl extends ProjectHelper {
      * Handler for the root element. Its only child must be the "project" element.
      */
     static class RootHandler extends HandlerBase {
+        // CheckStyle:VisibilityModifier OFF - bc
         ProjectHelperImpl helperImpl;
+        // CheckStyle:VisibilityModifier ON
 
         public RootHandler(ProjectHelperImpl helperImpl) {
             this.helperImpl = helperImpl;

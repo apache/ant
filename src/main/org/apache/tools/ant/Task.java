@@ -337,12 +337,11 @@ public abstract class Task extends ProjectComponent {
      * @since 1.7
      */
     public void log(Throwable t, int msgLevel) {
-        if(t != null)
-        {
+        if (t != null) {
             log(t.getMessage(), t, msgLevel);
         }
     }
-    
+
     /**
      * Logs a message with the given priority. This delegates
      * the actual logging to the project.
@@ -360,7 +359,7 @@ public abstract class Task extends ProjectComponent {
             super.log(msg, msgLevel);
         }
     }
-    
+
     /**
      * Performs this task if it's still valid, or gets a replacement
      * version and performs that otherwise.

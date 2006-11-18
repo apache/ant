@@ -290,8 +290,10 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         System.setErr(tmpErr);
     }
 
+    // CheckStyle:VisibilityModifier OFF - bc
     PrintStream out = System.out;
     PrintStream err = System.err;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Set the the output level.

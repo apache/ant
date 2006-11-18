@@ -51,7 +51,7 @@ public class Quantifier extends EnumeratedAttribute {
     /** NONE instance */
     public static final Quantifier NONE = new Quantifier("none");
 
-    private static abstract class Predicate {
+    private abstract static class Predicate {
         abstract boolean eval(int t, int f);
     }
 

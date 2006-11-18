@@ -189,7 +189,7 @@ public class BuildEvent extends EventObject {
      *
      * @return the exception associated with this exception, or
      *         <code>null</code> if no exception has been set.
-     *         
+     *
      * @see BuildListener#messageLogged(BuildEvent)
      * @see BuildListener#taskFinished(BuildEvent)
      * @see BuildListener#targetFinished(BuildEvent)

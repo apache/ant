@@ -63,7 +63,7 @@ public class BZip2Resource extends CompressedResource {
     }
 
     /**
-     * Compress on the fly using {@link CBZip2OuputStream}.
+     * Compress on the fly using {@link CBZip2OutputStream}.
      * @param out the stream to wrap.
      * @return the wrapped stream.
      * @throws IOException if there is a problem.

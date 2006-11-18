@@ -161,7 +161,7 @@ public final class JavaEnvUtils {
      * Note that Ant now requires JDK 1.2+ so {@link #JAVA_1_0} and
      * {@link #JAVA_1_1} need no longer be tested for.
      * @param version the version to check against the current version.
-     * @return true if the version of Java is the same or higher than the 
+     * @return true if the version of Java is the same or higher than the
      * given version.
      * @since Ant 1.7
      */

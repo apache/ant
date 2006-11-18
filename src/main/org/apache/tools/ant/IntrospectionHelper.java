@@ -1217,10 +1217,13 @@ public final class IntrospectionHelper  {
      * in detail for reasons of source code readability.
      */
     private abstract static class NestedCreator {
-        Method method; // the method called to add/create the nested element
+        private Method method; // the method called to add/create the nested element
 
         NestedCreator(Method m) {
             this.method = m;
+        }
+        Method getMethod() {
+            return method;
         }
         boolean isPolyMorphic() {
             return false;
@@ -1247,7 +1250,7 @@ public final class IntrospectionHelper  {
 
         Object create(Project project, Object parent, Object ignore)
             throws InvocationTargetException, IllegalAccessException {
-            return method.invoke(parent, new Object[] {});
+            return getMethod().invoke(parent, new Object[] {});
         }
     }
 
@@ -1257,8 +1260,8 @@ public final class IntrospectionHelper  {
         static final int ADD = 1;
         static final int ADD_CONFIGURED = 2;
 
-        protected Constructor constructor;
-        protected int behavior;
+        private Constructor constructor;
+        private int behavior; // ADD or ADD_CONFIGURED
 
         AddNestedCreator(Method m, Constructor c, int behavior) {
             super(m);
@@ -1299,7 +1302,7 @@ public final class IntrospectionHelper  {
         private void istore(Object parent, Object child)
                 throws InvocationTargetException,
                 IllegalAccessException, InstantiationException {
-            method.invoke(parent, new Object[] {child});
+            getMethod().invoke(parent, new Object[] {child});
         }
     }
 
@@ -1308,7 +1311,7 @@ public final class IntrospectionHelper  {
      * in detail for reasons of source code readability.
      */
     private abstract static class AttributeSetter {
-        Method method; // the method called to set the attribute
+        private Method method; // the method called to set the attribute
         AttributeSetter(Method m) {
             this.method = m;
         }
@@ -1361,8 +1364,8 @@ public final class IntrospectionHelper  {
         return new NestedCreator(addMethod) {
             Object create(Project project, Object parent, Object ignore)
                     throws InvocationTargetException, IllegalAccessException {
-                if (!method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[] {realObject});
+                if (!getMethod().getName().endsWith("Configured")) {
+                    getMethod().invoke(parent, new Object[] {realObject});
                 }
                 return nestedObject;
             }
@@ -1374,8 +1377,8 @@ public final class IntrospectionHelper  {
             void store(Object parent, Object child)
                     throws InvocationTargetException, IllegalAccessException,
                     InstantiationException {
-                if (method.getName().endsWith("Configured")) {
-                    method.invoke(parent, new Object[] {realObject});
+                if (getMethod().getName().endsWith("Configured")) {
+                    getMethod().invoke(parent, new Object[] {realObject});
                 }
             }
         };

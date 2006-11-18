@@ -103,7 +103,11 @@ public class Scale extends TransformOperation implements DrawOperation {
         }
     }
 
-    /** {@inheritDoc}. */
+    /**
+     * Scale an image.
+     * @param image the image to scale.
+     * @return the scaled image.
+     */
     public PlanarImage performScale(PlanarImage image) {
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);

@@ -38,7 +38,7 @@ public final class Locator {
     /**
      * encoding used to represent URIs
      */
-    public static String URI_ENCODING = "UTF-8";
+    public static final String URI_ENCODING = "UTF-8";
     // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
     // of the Xerces-J team
     // which ASCII characters need to be escaped
@@ -210,7 +210,7 @@ public final class Locator {
             String cwd = System.getProperty("user.dir");
             int posi = cwd.indexOf(":");
             if ((posi > 0) && path.startsWith(File.separator)) {
-               path = cwd.substring(0, posi + 1) + path; 
+               path = cwd.substring(0, posi + 1) + path;
             }
         } catch (UnsupportedEncodingException exc) {
             // not sure whether this is clean, but this method is

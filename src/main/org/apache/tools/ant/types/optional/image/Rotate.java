@@ -45,7 +45,11 @@ public class Rotate extends TransformOperation implements DrawOperation {
     }
 
 
-    /** {@inheritDoc}. */
+    /**
+     * Rotate an image.
+     * @param image the image to rotate.
+     * @return the rotated image.
+     */
     public PlanarImage performRotate(PlanarImage image) {
         float tAngle = (float) (angle * (Math.PI / HALF_CIRCLE));
         ParameterBlock pb = new ParameterBlock();

@@ -464,8 +464,6 @@ public class PropertyHelper {
     // deprecated, it is possible to use a better (more efficient)
     // mechanism to preserve the context.
 
-    // TODO: do we need to delegate ?
-
     /**
      * Returns a copy of the properties table.
      * @return a hashtable containing all properties
