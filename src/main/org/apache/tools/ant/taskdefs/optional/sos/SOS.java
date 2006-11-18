@@ -54,8 +54,10 @@ public abstract class SOS extends Task implements SOSCmd {
     private boolean recursive = false;
     private boolean verbose = false;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /** Commandline to be executed. */
     protected Commandline commandLine;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Flag to disable the cache when set.

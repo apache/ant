@@ -43,7 +43,8 @@ import org.apache.tools.ant.Project;
  * </pre>
  *
  * @version 1.1
- * @see <a href="http://www.borland.com/us/products/starteam/index.html">borland StarTeam Web Site</a>
+ * @see <a href="http://www.borland.com/us/products/starteam/index.html"
+ * >borland StarTeam Web Site</a>
  *
  * @ant.task name="stcheckout" category="scm"
  */

@@ -274,8 +274,7 @@ public class ScriptDef extends DefBase {
             */
             ClassLoader loader = createLoader();
 
-            try
-            {
+            try {
                 instance = ClasspathUtils.newInstance(classname, loader);
             } catch (BuildException e) {
                 instance = ClasspathUtils.newInstance(classname, ScriptDef.class.getClassLoader());

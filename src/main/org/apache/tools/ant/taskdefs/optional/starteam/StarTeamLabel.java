@@ -38,7 +38,8 @@ import org.apache.tools.ant.BuildException;
  * starteamurl="server:port/project/view"/&gt;
  * </pre>
  *
-  * @see <a href="http://www.borland.com/us/products/starteam/index.html">borland StarTeam Web Site</a>
+  * @see <a href="http://www.borland.com/us/products/starteam/index.html"
+  * >borland StarTeam Web Site</a>
  *
  * @ant.task name="stlabel" category="scm"
  */

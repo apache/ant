@@ -403,7 +403,8 @@ public class Symlink extends DispatchTask {
      *                                   <code>File.getCanonicalPath</code>
      *                                   fail.
      */
-    public static void deleteSymlink(File linkfil) throws IOException {
+    public static void deleteSymlink(File linkfil)
+        throws IOException, FileNotFoundException {
         if (!linkfil.exists()) {
             throw new FileNotFoundException("No such symlink: " + linkfil);
         }

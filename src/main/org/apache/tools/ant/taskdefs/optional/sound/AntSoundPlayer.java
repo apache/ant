@@ -183,7 +183,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     /**
      *  Fired after the last target has finished. This event
      *  will still be thrown if an error occurred during the build.
-     *
+     * @param event the build finished event.
      *  @see BuildEvent#getException()
      */
     public void buildFinished(BuildEvent event) {
@@ -197,7 +197,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
     /**
      *  Fired when a target is started.
-     *
+     * @param event ignored.
      *  @see BuildEvent#getTarget()
      */
     public void targetStarted(BuildEvent event) {
@@ -206,7 +206,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     /**
      *  Fired when a target has finished. This event will
      *  still be thrown if an error occurred during the build.
-     *
+     * @param event ignored.
      *  @see BuildEvent#getException()
      */
     public void targetFinished(BuildEvent event) {
@@ -214,7 +214,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
     /**
      *  Fired when a task is started.
-     *
+     * @param event ignored.
      *  @see BuildEvent#getTask()
      */
     public void taskStarted(BuildEvent event) {
@@ -223,7 +223,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     /**
      *  Fired when a task has finished. This event will still
      *  be throw if an error occurred during the build.
-     *
+     * @param event ignored.
      *  @see BuildEvent#getException()
      */
     public void taskFinished(BuildEvent event) {

@@ -187,7 +187,10 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
         }
     }
 
-
+    /**
+     * Check if the attributes/elements are correct.
+     * @throws BuildException if there was a problem.
+     */
     protected void checkParameters() throws BuildException {
         // Check all of the properties that are required.
         assertTrue(getServerName() != null, "ServerName must be set.");
@@ -220,7 +223,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
     /**
      * Do the execution.
      *
-     * @exception BuildException
+     * @throws BuildException if there was a problem.
      */
     public void execute() throws BuildException {
         log("DEPRECATED - The starteam task is deprecated.  Use stcheckout instead.",
@@ -658,7 +661,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * Formats a property value for display to the user.
      *
      * @param p An item property to format.
-     * @param value
+     * @param value the object to format.
      * @return A string containing the property, which is truncated to 35
      *      characters for display.
      */

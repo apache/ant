@@ -47,7 +47,8 @@ import org.apache.tools.ant.Project;
  *
  * Created: Sat Dec 15 16:55:19 2001
  *
- * @see <a href="http://www.borland.com/us/products/starteam/index.html">borland StarTeam Web Site</a>
+ * @see <a href="http://www.borland.com/us/products/starteam/index.html"
+ * >borland StarTeam Web Site</a>
  */
 
 public abstract class TreeBasedTask extends StarTeamTask {
@@ -285,6 +286,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
         }
     }
 
+    // CheckStyle:MethodNameCheck OFF - bc
 
     /**
      * protected function to allow subclasses to set the label (or not).
@@ -328,6 +330,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
             this.asOfDateFormat = asOfDateFormat;
         }
     }
+
+    // CheckStyle:VisibilityModifier ON
 
 
     /**

@@ -324,6 +324,11 @@ public class PropertyFile extends Task {
             field = unit.getCalendarField();
         }
 
+        /**
+         * Apply the nested element to the properties.
+         * @param props the properties to apply the entry on.
+         * @throws BuildException if there is an error.
+         */
         protected void executeOn(Properties props) throws BuildException {
             checkParameters();
 
