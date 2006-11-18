@@ -37,6 +37,7 @@ import java.io.OutputStream;
  */
 public class TarInputStream extends FilterInputStream {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean debug;
     protected boolean hasHitEOF;
     protected long entrySize;
@@ -51,6 +52,8 @@ public class TarInputStream extends FilterInputStream {
      * to the no-arg read method.
      */
     protected byte[] oneBuf;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Constructor for TarInputStream.

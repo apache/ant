@@ -43,6 +43,7 @@ public class TarOutputStream extends FilterOutputStream {
     /** GNU tar extensions are used to store long file names in the archive. */
     public static final int LONGFILE_GNU = 2;
 
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean   debug;
     protected long      currSize;
     protected String    currName;
@@ -53,6 +54,7 @@ public class TarOutputStream extends FilterOutputStream {
     protected byte[]    assemBuf;
     protected TarBuffer buffer;
     protected int       longFileMode = LONGFILE_ERROR;
+    // CheckStyle:VisibilityModifier ON
 
     private boolean closed = false;
 
