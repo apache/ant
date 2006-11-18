@@ -195,7 +195,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
                                               String instruction,
                                               String[] prompt,
                                               boolean[] echo) {
-        if (prompt.length != 1 || echo[0] != false || this.password == null) {
+        if (prompt.length != 1 || echo[0] || this.password == null) {
             return null;
         }
         String[] response = new String[1];

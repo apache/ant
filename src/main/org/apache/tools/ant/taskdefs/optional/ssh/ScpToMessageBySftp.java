@@ -34,6 +34,9 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Iterator;
 
+/**
+ * Utility class to carry out an upload by sftp.
+ */
 public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
 
     private File localFile;

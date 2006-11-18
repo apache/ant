@@ -41,11 +41,11 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class Scp extends SSHBase {
 
-    private static final String[] FROM_ATTRS =
-        { "file", "localfile", "remotefile" };
+    private static final String[] FROM_ATTRS = {
+        "file", "localfile", "remotefile" };
 
-    private static final String[] TO_ATTRS =
-        { "todir", "localtodir", "remotetodir", "localtofile", "remotetofile" };
+    private static final String[] TO_ATTRS = {
+        "todir", "localtodir", "remotetodir", "localtofile", "remotetofile" };
 
     private String fromUri;
     private String toUri;
@@ -227,12 +227,12 @@ public class Scp extends SSHBase {
         try {
             session = openSession();
             ScpFromMessage message = null;
-            if (!isSftp){
+            if (!isSftp) {
                 message =
                     new ScpFromMessage(getVerbose(), session, file,
                                        getProject().resolveFile(toPath),
                                        fromSshUri.endsWith("*"));
-            } else{
+            } else {
                 message =
                     new ScpFromMessageBySftp(getVerbose(), session, file,
                                              getProject().resolveFile(toPath),
@@ -265,10 +265,10 @@ public class Scp extends SSHBase {
             if (!list.isEmpty()) {
                 session = openSession();
                 ScpToMessage message = null;
-                if (!isSftp){
+                if (!isSftp) {
                     message = new ScpToMessage(getVerbose(), session,
                                                list, file);
-                } else{
+                } else {
                     message = new ScpToMessageBySftp(getVerbose(), session,
                                                      list, file);
                 }
@@ -290,11 +290,11 @@ public class Scp extends SSHBase {
         try {
             session = openSession();
             ScpToMessage message = null;
-            if (!isSftp){
+            if (!isSftp) {
                 message =
                     new ScpToMessage(getVerbose(), session,
                                      getProject().resolveFile(fromPath), file);
-            } else{
+            } else {
                 message =
                     new ScpToMessageBySftp(getVerbose(), session,
                                            getProject().resolveFile(fromPath),
