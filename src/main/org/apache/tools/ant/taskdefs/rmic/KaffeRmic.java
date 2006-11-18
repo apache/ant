@@ -43,7 +43,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
      */
     public static final String COMPILER_NAME = "kaffe";
 
-
+    /** {@inheritDoc} */
     public boolean execute() throws BuildException {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
@@ -96,6 +96,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
             try {
                 return Class.forName(RMIC_CLASSNAMES[i]);
             } catch (ClassNotFoundException cnfe) {
+                // Ignore
             }
         }
         return null;

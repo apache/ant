@@ -45,9 +45,9 @@ public interface RmicAdapter {
     void setRmic(Rmic attributes);
 
     /**
-     * Executes the task.
+     * Call the rmic compiler.
      *
-     * @return has the compilation been successful
+     * @return true if has the compilation been successful
      * @throws BuildException on error
      */
     boolean execute() throws BuildException;

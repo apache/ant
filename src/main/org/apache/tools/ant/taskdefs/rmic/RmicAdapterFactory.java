@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 import java.util.Locale;

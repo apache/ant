@@ -45,8 +45,11 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     public static final String RMI_SKEL_SUFFIX = "_Skel";
     /** suffix denoting a tie file */
     public static final String RMI_TIE_SUFFIX = "_Tie";
+    /** arg for compat */
     public static final String STUB_COMPAT = "-vcompat";
+    /** arg for 1.1 */
     public static final String STUB_1_1 = "-v1.1";
+    /** arg for 1.2 */
     public static final String STUB_1_2 = "-v1.2";
 
     /**
@@ -209,9 +212,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
         //for java1.5+, we generate compatible stubs, that is, unless
         //the caller asked for IDL or IIOP support.
-        if (stubOption == null &&
-                !attributes.getIiop() &&
-                !attributes.getIdl()) {
+        if (stubOption == null
+            && !attributes.getIiop()
+            && !attributes.getIdl()) {
             stubOption = STUB_COMPAT;
         }
         if (stubOption != null) {
