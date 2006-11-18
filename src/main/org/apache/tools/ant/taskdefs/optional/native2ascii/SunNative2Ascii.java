@@ -35,6 +35,7 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
      */
     public static final String IMPLEMENTATION_NAME = "sun";
 
+    /** {@inheritDoc} */
     protected void setup(Commandline cmd, Native2Ascii args)
         throws BuildException {
         if (args.getReverse()) {
@@ -43,6 +44,7 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
         super.setup(cmd, args);
     }
 
+    /** {@inheritDoc} */
     protected boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException {
         try {

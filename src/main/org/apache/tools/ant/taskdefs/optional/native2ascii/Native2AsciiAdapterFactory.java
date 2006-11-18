@@ -52,6 +52,7 @@ public class Native2AsciiAdapterFactory {
      * @param log a ProjectComponent instance used to access Ant's
      * logging system.
      * @return The adapter to use.
+     * @throws BuildException if there was a problem.
      */
     public static Native2AsciiAdapter getAdapter(String choice,
                                                  ProjectComponent log)

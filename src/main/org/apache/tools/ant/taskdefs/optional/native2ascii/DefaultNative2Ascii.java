@@ -31,11 +31,17 @@ import org.apache.tools.ant.types.Commandline;
  */
 public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
 
+    /** No-arg constructor. */
     public DefaultNative2Ascii() {
     }
 
     /**
      * Splits the task into setting up the command line switches
+     * @param args the native 2 ascii arguments.
+     * @param srcFile the source file.
+     * @param destFile the destination file.
+     * @return run if the conversion was successful.
+     * @throws BuildException if there is a problem.
      * (delegated to {@link #setup setup}), adding the file names
      * (delegated to {@link #addFiles addFiles}) and running the tool
      * (delegated to {@link #run run}).
@@ -57,6 +63,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param cmd Command line to add to
      * @param args provides the user-setting and access to Ant's
      * logging system.
+     * @throws BuildException if there was a problem.
      */
     protected void setup(Commandline cmd, Native2Ascii args)
         throws BuildException {
@@ -77,6 +84,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param log provides access to Ant's logging system.
      * @param src the source file
      * @param dest the destination file
+     * @throws BuildException if there was a problem.
      */
     protected void addFiles(Commandline cmd, ProjectComponent log, File src,
                             File dest) throws BuildException {
@@ -90,6 +98,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param cmd Command line to execute
      * @param log provides access to Ant's logging system.
      * @return whether execution was successful
+     * @throws BuildException if there was a problem.
      */
     protected abstract boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException;
