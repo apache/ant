@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

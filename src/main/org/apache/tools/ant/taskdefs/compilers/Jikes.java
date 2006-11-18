@@ -166,7 +166,8 @@ public class Jikes extends DefaultCompilerAdapter {
             if (!Project.toBoolean(warningsProperty)) {
                 cmd.createArgument().setValue("-nowarn");
             }
-        } if (attributes.getNowarn()) {
+        }
+        if (attributes.getNowarn()) {
             cmd.createArgument().setValue("-nowarn");
         }
 

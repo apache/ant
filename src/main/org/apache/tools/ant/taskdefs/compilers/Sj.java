@@ -51,7 +51,7 @@ public class Sj extends DefaultCompilerAdapter {
     /**
      * Returns null since sj either has -g for debug=true or no
      * argument at all.
-     *
+     * @return null.
      * @since Ant 1.6.3
      */
     protected String getNoDebugArgument() {

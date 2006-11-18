@@ -43,6 +43,8 @@ public class AptExternalCompilerAdapter extends DefaultCompilerAdapter {
 
     /**
      * Performs a compile using the Javac externally.
+     * @return true  the compilation was successful.
+     * @throws BuildException if there is a problem.
      */
     public boolean execute() throws BuildException {
         attributes.log("Using external apt compiler", Project.MSG_VERBOSE);
