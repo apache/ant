@@ -57,6 +57,7 @@ import org.apache.tools.ant.util.ProxySetup;
  */
 public class SetProxy extends Task {
 
+    // CheckStyle:VisibilityModifier OFF - bc
     /**
      * proxy details
      */
@@ -66,6 +67,8 @@ public class SetProxy extends Task {
      * name of proxy port
      */
     protected int proxyPort = 80;
+
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * socks host.

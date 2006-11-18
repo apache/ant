@@ -1527,6 +1527,14 @@ public class FTP
         }
     }
 
+    /**
+     * Executable a retryable object.
+     * @param h the retry hander.
+     * @param r the object that should be retried until it succeeds
+     *          or the number of retrys is reached.
+     * @param descr a description of the command that is being run.
+     * @throws IOException if there is a problem.
+     */
     protected void executeRetryable(RetryHandler h, Retryable r, String descr)
         throws IOException {
         h.execute(r, descr);

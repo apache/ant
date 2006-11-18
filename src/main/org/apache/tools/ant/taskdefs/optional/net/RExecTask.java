@@ -83,7 +83,9 @@ public class RExecTask extends Task {
      *  It handles the common attributes for both.
      */
     public class RExecSubTask {
+        // CheckStyle:VisibilityModifier OFF - bc
         protected String taskString = "";
+        // CheckStyle:VisibilityModifier ON
 
         /**
          * Execute the subtask.
