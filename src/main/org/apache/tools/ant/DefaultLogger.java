@@ -73,13 +73,13 @@ public class DefaultLogger implements BuildLogger {
      *
      * Only messages with a message level lower than or equal to the
      * given level should be written to the log.
-     * <P>
+     * <p>
      * Constants for the message levels are in the
      * {@link Project Project} class. The order of the levels, from least
      * to most verbose, is <code>MSG_ERR</code>, <code>MSG_WARN</code>,
      * <code>MSG_INFO</code>, <code>MSG_VERBOSE</code>,
      * <code>MSG_DEBUG</code>.
-     * <P>
+     * <p>
      * The default message level for DefaultLogger is Project.MSG_ERR.
      *
      * @param level the logging level for the logger.
