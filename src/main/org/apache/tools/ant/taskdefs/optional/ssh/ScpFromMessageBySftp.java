@@ -20,15 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.EOFException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.ByteArrayOutputStream;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpATTRS;
@@ -91,12 +85,13 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             try {
                 SftpATTRS attrs = channel.stat(remoteFile);
                 if (attrs.isDir() && !remoteFile.endsWith("/")) {
-                    remoteFile=remoteFile+"/";
+                    remoteFile = remoteFile + "/";
                 }
-            } catch(SftpException ee) {
+            } catch (SftpException ee) {
+                // Ignored
             }
             getDir(channel, remoteFile, localFile);
-        } catch(SftpException e) {
+        } catch (SftpException e) {
             throw new JSchException(e.toString());
         } finally {
             if (channel != null) {
@@ -109,10 +104,10 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
     private void getDir(ChannelSftp channel,
                         String remoteFile,
                         File localFile) throws IOException, SftpException {
-        String pwd=remoteFile;
-        if (remoteFile.lastIndexOf('/')!=-1) {
-            if (remoteFile.length()>1) {
-                pwd=remoteFile.substring(0, remoteFile.lastIndexOf('/'));
+        String pwd = remoteFile;
+        if (remoteFile.lastIndexOf('/') != -1) {
+            if (remoteFile.length() > 1) {
+                pwd = remoteFile.substring(0, remoteFile.lastIndexOf('/'));
             }
         }
         channel.cd(pwd);
@@ -120,7 +115,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             localFile.mkdirs();
         }
         java.util.Vector files = channel.ls(remoteFile);
-        for(int i = 0; i < files.size(); i++){
+        for (int i = 0; i < files.size(); i++) {
             ChannelSftp.LsEntry le = (ChannelSftp.LsEntry) files.elementAt(i);
             String name = le.getFilename();
             if (le.getAttrs().isDir()) {
@@ -130,7 +125,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                 getDir(channel,
                        channel.pwd() + "/" + name + "/",
                        new File(localFile, le.getFilename()));
-            } else{
+            } else {
                 getFile(channel, le, localFile);
             }
         }
@@ -145,14 +140,14 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             String path = localFile.getAbsolutePath();
             int i = 0;
             if ((i = path.lastIndexOf(File.pathSeparator)) != -1) {
-                if (path.length()>File.pathSeparator.length()) {
+                if (path.length() > File.pathSeparator.length()) {
                     new File(path.substring(0, i)).mkdirs();
                 }
             }
         }
 
         if (localFile.isDirectory()) {
-            localFile=new File(localFile, remoteFile);
+            localFile = new File(localFile, remoteFile);
         }
 
         long startTime = System.currentTimeMillis();
@@ -160,15 +155,15 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
 
         SftpProgressMonitor monitor = null;
         boolean trackProgress = getVerbose() && totalLength > 102400;
-        if (trackProgress){
+        if (trackProgress) {
             monitor = getProgressMonitor();
         }
-        try{
+        try {
             log("Receiving: " + remoteFile + " : " + le.getAttrs().getSize());
             channel.get(remoteFile, localFile.getAbsolutePath(), monitor);
-        } finally{
+        } finally {
             long endTime = System.currentTimeMillis();
-            logStats(startTime, endTime, (int)totalLength);
+            logStats(startTime, endTime, (int) totalLength);
         }
     }
 }

@@ -23,8 +23,6 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.IOException;
@@ -231,7 +229,11 @@ public abstract class AbstractSshMessage {
 
     private ProgressMonitor monitor = null;
 
-    protected SftpProgressMonitor getProgressMonitor(){
+    /**
+     * Get the progress monitor.
+     * @return the progress monitor.
+     */
+    protected SftpProgressMonitor getProgressMonitor() {
         if (monitor == null) {
             monitor = new ProgressMonitor();
         }

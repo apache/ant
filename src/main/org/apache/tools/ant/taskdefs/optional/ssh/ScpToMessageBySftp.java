@@ -18,19 +18,14 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
-import com.jcraft.jsch.SftpATTRS;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Iterator;
 
@@ -134,10 +129,9 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         ChannelSftp channel = openSftpChannel();
         try {
             channel.connect();
-            try{
+            try {
                 sendFileToRemote(channel, localFile, remotePath);
-            }
-            catch(SftpException e){
+            } catch (SftpException e) {
                 throw new JSchException(e.toString());
             }
         } finally {
@@ -152,14 +146,13 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         try {
             channel.connect();
 
-            try{
+            try {
                 channel.cd(remotePath);
                 for (Iterator i = directoryList.iterator(); i.hasNext();) {
                     Directory current = (Directory) i.next();
                     sendDirectory(channel, current);
                 }
-            }
-            catch(SftpException e){
+            } catch (SftpException e) {
                 throw new JSchException(e.toString());
             }
         } finally {
@@ -184,13 +177,12 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     private void sendDirectoryToRemote(ChannelSftp channel,
                                        Directory directory)
         throws IOException, SftpException {
-        String dir=directory.getDirectory().getName();
-        try{
+        String dir = directory.getDirectory().getName();
+        try {
             channel.stat(dir);
-        }
-        catch (SftpException e) {
+        } catch (SftpException e) {
             // dir does not exist.
-            if (e.id==ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+            if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 channel.mkdir(dir);
             }
         }
@@ -205,8 +197,8 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         throws IOException, SftpException {
         long filesize = localFile.length();
 
-        if (remotePath==null) {
-            remotePath=localFile.getName();
+        if (remotePath == null) {
+            remotePath = localFile.getName();
         }
 
         long startTime = System.currentTimeMillis();
@@ -216,17 +208,16 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         boolean trackProgress = getVerbose() && filesize > 102400;
 
         SftpProgressMonitor monitor = null;
-        if (trackProgress){
+        if (trackProgress) {
             monitor = getProgressMonitor();
         }
 
-        try{
+        try {
             if (this.getVerbose()) {
                 log("Sending: " + localFile.getName() + " : " + filesize);
             }
             channel.put(localFile.getAbsolutePath(), remotePath, monitor);
-        }
-        finally {
+        } finally {
             if (this.getVerbose()) {
                 long endTime = System.currentTimeMillis();
                 logStats(startTime, endTime, (int) totalLength);
@@ -234,10 +225,18 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         }
     }
 
+    /**
+     * Get the local file.
+     * @return the local file.
+     */
     public File getLocalFile() {
         return localFile;
     }
 
+    /**
+     * Get the remote path.
+     * @return the remote path.
+     */
     public String getRemotePath() {
         return remotePath;
     }

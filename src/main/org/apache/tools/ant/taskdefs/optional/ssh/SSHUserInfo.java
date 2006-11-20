@@ -190,6 +190,16 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         //log(message, Project.MSG_DEBUG);
     }
 
+    /**
+     * Implementation of UIKeyboardInteractive#promptKeyboardInteractive.
+     * @param destination not used.
+     * @param name        not used.
+     * @param instruction not used.
+     * @param prompt      the method checks if this is one in length.
+     * @param echo        the method checks if the first element is false.
+     * @return the password in an size one array if there is a password
+     *         and if the prompt and echo checks pass.
+     */
     public String[] promptKeyboardInteractive(String destination,
                                               String name,
                                               String instruction,
