@@ -295,7 +295,7 @@ public class Length extends Task implements Condition {
     }
 
     private class AllHandler extends Handler {
-        long accum = 0L;
+        private long accum = 0L;
         AllHandler(PrintStream ps) {
             super(ps);
         }

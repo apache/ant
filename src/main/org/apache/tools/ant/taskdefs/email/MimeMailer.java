@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
  * @since Ant 1.5
  */
 public class MimeMailer extends Mailer {
-    private final static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
     /** Default character set */
     private static final String DEFAULT_CHARSET

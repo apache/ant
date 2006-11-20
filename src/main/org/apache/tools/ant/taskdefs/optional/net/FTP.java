@@ -2531,7 +2531,7 @@ public class FTP
         private static final String[] VALID_LANGUAGE_CODES =
             getValidLanguageCodes();
 
-        private static final String[] getValidLanguageCodes() {
+        private static String[] getValidLanguageCodes() {
             Collection c = FTPClientConfig.getSupportedLanguageCodes();
             String[] ret = new String[c.size() + 1];
             int i = 0;

@@ -427,7 +427,7 @@ public class EmailTask extends Task {
                 }
             }
             // SMTP auth only allowed with MIME mail
-            if (autoFound == false && ((user != null) || (password != null))
+            if (!autoFound && ((user != null) || (password != null))
                 && (encoding.equals(UU) || encoding.equals(PLAIN))) {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
