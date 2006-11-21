@@ -18,6 +18,15 @@
 
 package org.apache.tools.ant;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.InvocationTargetException;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.File;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.HashSet;
@@ -25,16 +34,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
-
 import java.util.Vector;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
 
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -136,6 +136,9 @@ public class ComponentHelper  {
      * @return the project component for a specific project.
      */
     public static ComponentHelper getComponentHelper(Project project) {
+        if (project == null) {
+            return null;
+        }
         // Singleton for now, it may change ( per/classloader )
         ComponentHelper ph = (ComponentHelper) project.getReference(
                 COMPONENT_HELPER_REFERENCE);
@@ -606,32 +609,69 @@ public class ComponentHelper  {
      * <p>
      * This is useful for logging purposes.
      *
-     * @param element The element to describe.
-     *                Must not be <code>null</code>.
-     * @param brief   whether to use a brief description.
+     * @param o     The element to describe.
+     *              Must not be <code>null</code>.
+     * @param brief whether to use a brief description.
      * @return a description of the element type.
      *
      * @since Ant 1.7
      */
-    public String getElementName(Object element, boolean brief) {
+    public String getElementName(Object o, boolean brief) {
         //  PR: I do not know what to do if the object class
         //      has multiple defines
         //      but this is for logging only...
-        String name = null;
-        Class elementClass = element.getClass();
+        Class elementClass = o.getClass();
         String elementClassname = elementClass.getName();
         for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
             if (elementClassname.equals(def.getClassName())
-                &&
-                (elementClass == def.getExposedClass(project))) {
-                name = def.getName();
+                    && (elementClass == def.getExposedClass(project))) {
+                String name = def.getName();
                 return brief ? name : "The <" + name + "> type";
             }
         }
-        name = elementClass.getName();
-        return brief
-            ? name.substring(name.lastIndexOf('.') + 1) : "Class " + name;
+        return getUnmappedElementName(o.getClass(), brief);
+    }
+
+    /**
+     * Convenient way to get some element name even when you may not have a
+     * Project context.
+     * @param p       The optional Project instance.
+     * @param o       The element to describe.
+     *                Must not be <code>null</code>.
+     * @param brief   whether to use a brief description.
+     * @return a description of the element type.
+     * @since Ant 1.7
+     */
+    public static String getElementName(Project p, Object o, boolean brief) {
+        if (p == null) {
+            p = getProject(o);
+        }
+        return p == null ? getUnmappedElementName(o.getClass(), brief)
+                : getComponentHelper(p).getElementName(o, brief);
+    }
+
+    private static String getUnmappedElementName(Class c, boolean brief) {
+        if (brief) {
+            String name = c.getName();
+            return name.substring(name.lastIndexOf('.') + 1);
+        }
+        return c.toString();
+    }
+
+    private static Project getProject(Object o) {
+        if (o instanceof ProjectComponent) {
+            return ((ProjectComponent) o).getProject();
+        }
+        try {
+            Method m = o.getClass().getMethod("getProject", null);
+            if (Project.class == m.getReturnType()) {
+                return (Project) m.invoke(o, null);
+            }
+        } catch (Exception e) {
+            //too bad
+        }
+        return null;
     }
 
     /**

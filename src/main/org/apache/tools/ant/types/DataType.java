@@ -120,13 +120,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @return <code>String</code> name.
      */
     protected String getDataTypeName() {
-        Project p = getProject();
-        if (p != null) {
-            return ComponentHelper.getComponentHelper(p)
-                .getElementName(this, true);
-        }
-        String classname = getClass().getName();
-        return classname.substring(classname.lastIndexOf('.') + 1);
+        return ComponentHelper.getElementName(getProject(), this, true);
     }
 
     /**
