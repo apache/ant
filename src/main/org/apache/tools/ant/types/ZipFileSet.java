@@ -63,7 +63,7 @@ public class ZipFileSet extends ArchiveFileSet {
      * @since Ant 1.7
      */
     public void setEncoding(String enc) {
-        checkAttributesAllowed();
+        checkZipFileSetAttributesAllowed();
         this.encoding = enc;
     }
 
@@ -127,4 +127,21 @@ public class ZipFileSet extends ArchiveFileSet {
             return super.clone();
         }
     }
+
+    /**
+     * A check attributes for zipFileSet.
+     * If there is a reference, and
+     * it is a ZipFileSet, the zip fileset attributes
+     * cannot be used.
+     */
+    private void checkZipFileSetAttributesAllowed() {
+        if (getProject() == null
+            || (isReference()
+                && (getRefid().getReferencedObject(
+                        getProject())
+                    instanceof ZipFileSet))) {
+            checkAttributesAllowed();
+        }
+    }
+
 }

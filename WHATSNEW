@@ -20,6 +20,9 @@ Fixed bugs:
 * possible NPE in Jar.java.
   Bugzilla 40847
 
+* regression in attribute prefix (+ others) for refid in zipfileset and tarfileset.
+  Bugzilla 41004, 30498
+
 Other changes:
 --------------
 

@@ -130,7 +130,6 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param srcFile The archive from which to extract entries.
      */
     public void setSrc(File srcFile) {
-        checkAttributesAllowed();
         setSrcResource(new FileResource(srcFile));
     }
 
@@ -141,7 +140,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param src The archive from which to extract entries.
      */
     public void setSrcResource(Resource src) {
-        checkAttributesAllowed();
+        checkArchiveAttributesAllowed();
         if (hasDir) {
             throw new BuildException("Cannot set both dir and src attributes");
         }
@@ -178,7 +177,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param prefix The prefix to prepend to entries in the archive file.
      */
     public void setPrefix(String prefix) {
-        checkAttributesAllowed();
+        checkArchiveAttributesAllowed();
         if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
@@ -204,7 +203,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param fullpath the full pathname of the single entry in this fileset.
      */
     public void setFullpath(String fullpath) {
-        checkAttributesAllowed();
+        checkArchiveAttributesAllowed();
         if (!prefix.equals("") && !fullpath.equals("")) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
@@ -308,7 +307,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setFileMode(String octalString) {
-        checkAttributesAllowed();
+        checkArchiveAttributesAllowed();
         integerSetFileMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 
@@ -357,7 +356,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param octalString a <code>String</code> value
      */
     public void setDirMode(String octalString) {
-        checkAttributesAllowed();
+        checkArchiveAttributesAllowed();
         integerSetDirMode(Integer.parseInt(octalString, BASE_OCTAL));
     }
 
@@ -477,4 +476,21 @@ public abstract class ArchiveFileSet extends FileSet {
         return dirMode;
     }
 
+    /**
+     * A check attributes for archiveFileSet.
+     * If there is a reference, and
+     * it is a ArchiveFileSet, the archive fileset attributes
+     * cannot be used.
+     * (Note, we can only see if the reference is an archive
+     * fileset if the project has been set).
+     */
+    private void checkArchiveAttributesAllowed() {
+        if (getProject() == null
+            || (isReference()
+                && (getRefid().getReferencedObject(
+                        getProject())
+                    instanceof ArchiveFileSet))) {
+            checkAttributesAllowed();
+        }
+    }
 }

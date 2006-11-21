@@ -68,7 +68,7 @@ public class TarFileSet extends ArchiveFileSet {
      * @param userName the user name for the tar entry.
      */
     public void setUserName(String userName) {
-        checkAttributesAllowed();
+        checkTarFileSetAttributesAllowed();
         userNameSet = true;
         this.userName = userName;
     }
@@ -96,7 +96,7 @@ public class TarFileSet extends ArchiveFileSet {
      * @param uid the id of the user for the tar entry.
      */
     public void setUid(int uid) {
-        checkAttributesAllowed();
+        checkTarFileSetAttributesAllowed();
         userIdSet = true;
         this.uid = uid;
     }
@@ -124,7 +124,7 @@ public class TarFileSet extends ArchiveFileSet {
      * @param groupName the group name string.
      */
     public void setGroup(String groupName) {
-        checkAttributesAllowed();
+        checkTarFileSetAttributesAllowed();
         groupNameSet = true;
         this.groupName = groupName;
     }
@@ -152,7 +152,7 @@ public class TarFileSet extends ArchiveFileSet {
      * @param gid the group id.
      */
     public void setGid(int gid) {
-        checkAttributesAllowed();
+        checkTarFileSetAttributesAllowed();
         groupIdSet = true;
         this.gid = gid;
     }
@@ -248,4 +248,21 @@ public class TarFileSet extends ArchiveFileSet {
             return super.clone();
         }
     }
+
+    /**
+     * A check attributes for TarFileSet.
+     * If there is a reference, and
+     * it is a TarFileSet, the tar fileset attributes
+     * cannot be used.
+     */
+    private void checkTarFileSetAttributesAllowed() {
+        if (getProject() == null
+            || (isReference()
+                && (getRefid().getReferencedObject(
+                        getProject())
+                    instanceof TarFileSet))) {
+            checkAttributesAllowed();
+        }
+    }
+
 }
