@@ -1,0 +1,358 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit"
+         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+  <property name="dirname" value="work" />
+  <property name="dir" location="${dirname}" />
+  <property name="zip" location="${dirname}.zip" />
+  <property name="jar" location="${dirname}.jar" />
+  <property name="file" location="${dirname}/file.txt" />
+
+  <target name="setUp">
+
+    <touch mkdirs="true">
+      <filelist dir="${dir}/foo/a" files="x,y,z" />
+    </touch>
+
+    <copy todir="${dir}/foo" enablemultiplemappings="true">
+      <fileset dir="${dir}/foo" />
+      <mapper>
+        <globmapper handledirsep="true" from="a/*" to="b/*" />
+        <globmapper handledirsep="true" from="a/*" to="c/*" />
+      </mapper>
+    </copy>
+
+    <copy todir="${dir}/bar">
+      <fileset dir="${dir}/foo" />
+    </copy>
+
+    <property name="foo" location="${dir}/foo" />
+    <property name="foo.a" location="${dir}/foo/a" />
+    <property name="foo.b" location="${dir}/foo/b" />
+    <property name="foo.c" location="${dir}/foo/c" />
+
+    <property name="bar" location="${dir}/bar" />
+    <property name="bar.a" location="${dir}/bar/a" />
+    <property name="bar.b" location="${dir}/bar/b" />
+    <property name="bar.c" location="${dir}/bar/c" />
+  </target>
+
+  <target name="tearDown">
+    <delete dir="${dir}" />
+    <delete file="${zip}" />
+    <delete file="${jar}" deleteonexit="true" />
+    <delete file="${file}" />
+  </target>
+
+  <target name="testfiles1" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="26">
+        <files>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
+        </files>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfiles2" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="8">
+        <files>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
+          <type type="dir" />
+        </files>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfiles3" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="18">
+        <files>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
+          <type type="file" />
+        </files>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testnestedresources" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="27"><!-- include duplicates! -->
+        <resources>
+          <files>
+            <include name="${dir}/foo/" />
+            <include name="${dir}/bar/" />
+            <type type="file" />
+          </files>
+          <files>
+            <include name="${dir}/foo/" />
+            <type type="file" />
+          </files>
+        </resources>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testresourcesref" depends="setUp">
+    <files id="files">
+      <include name="${dir}/foo/" />
+      <include name="${dir}/bar/" />
+      <type type="file" />
+    </files>
+    <au:assertTrue>
+      <resourcecount count="18">
+        <resources refid="files" />
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfileset" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="9">
+        <fileset dir="${dir}/foo" />
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testdirset" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="4">
+        <dirset dir="${dir}/foo" />
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfilelist">
+    <au:assertTrue>
+      <resourcecount count="5">
+        <filelist dir="${dir}/foo" files="1,2,3,4,5" />
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testpath" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="24">
+        <path>
+          <path id="p">
+            <fileset id="fs" dir="${foo.a}" /> <!-- 3 -->
+            <dirset id="ds" dir="${foo}" /> <!-- 4 -->
+          </path>
+          <pathelement id="pe" location="${dir}" /> <!-- 1 -->
+          <filelist id="fl" dir="${bar}" files="1,2,3,a,b,c" /> <!-- 6 -->
+          <files id="f" includes="${bar}/" /> <!-- 13; 3 overlap fl -->
+        </path>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="createzip" depends="setUp">
+    <zip destfile="${zip}" basedir="${dir}" />
+  </target>
+
+  <target name="testzipfileset" depends="createzip">
+    <au:assertTrue>
+      <resourcecount count="9">
+        <zipfileset src="${zip}" includes="foo/" />
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testpropertyset">
+    <property name="testpropertyset.a" value="a" />
+    <property name="testpropertyset.aa" value="aa" />
+    <property name="testpropertyset.aaa" value="aaa" />
+    <propertyset id="testpropertyset">
+      <propertyref prefix="testpropertyset." />
+    </propertyset>
+    <au:assertTrue>
+      <and>
+        <resourcecount refid="testpropertyset" count="3" />
+        <length length="12">
+          <resources>
+            <resources refid="testpropertyset" />
+            <propertyset refid="testpropertyset" />
+          </resources>
+        </length>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testunion" depends="setUp">
+    <au:assertTrue>
+      <resourcecount count="4">
+        <union>
+          <files includes="${foo.a}/w,${foo.a}/x" /> <!-- 1 -->
+          <fileset dir="${foo.a}" includes="x,y" /> <!-- 2; net 1 -->
+          <filelist dir="${foo.a}" files="v" /> <!-- 1 -->
+          <files includes="${foo.a}/y,${foo.a}/z" /> <!-- 2; net 1 -->
+        </union>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testintersect">
+    <au:assertTrue>
+      <resourcecount count="3">
+        <intersect>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+          <filelist dir="${dir}" files="2,3,4,5,6" />
+          <filelist dir="${dir}" files="3,4,5,6,7" />
+        </intersect>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testdifference">
+    <au:assertTrue>
+      <resourcecount count="2">
+        <difference id="diff">
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+          <filelist dir="${dir}" files="2,3,4,5,6" />
+          <filelist dir="${dir}" files="3,4,5,6,7" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfileurl">
+    <au:assertTrue>
+      <length when="greater" length="0">
+        <url file="${ant.file}" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfileurlref">
+    <url id="fileurl" file="${ant.file}" />
+    <au:assertTrue>
+      <length when="greater" length="0">
+        <url refid="fileurl" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testhttpurl1" unless="offline">
+    <au:assertTrue>
+      <length when="greater" length="0">
+        <url url="http://ant.apache.org/index.html" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testhttpurl2" unless="offline">
+    <concat destfile="${file}" force="true" append="false">
+      <url id="httpurl" url="http://ant.apache.org/index.html" />
+      <url refid="httpurl" />
+    </concat>
+    <length property="httpurl.length">
+      <url refid="httpurl" />
+    </length>
+    <length property="file.length">
+      <file file="${file}"/>
+    </length>
+    <au:assertTrue message="length of url ${httpurl.length} length of file ${file.length} file should be twice as big">
+      <length file="${file}" when="greater" length="${httpurl.length}" />
+    </au:assertTrue>
+  </target>
+
+  <target name="createjar" depends="setUp">
+    <jar destfile="${jar}" basedir="${dir}" />
+  </target>
+
+  <target name="testjarurl" depends="createjar">
+    <pathconvert property="jarurl">
+      <url file="${jar}" />
+    </pathconvert>
+    <au:assertTrue>
+      <length when="greater" length="0">
+        <url url="jar:${jarurl}!/META-INF/MANIFEST.MF" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfile" depends="setUp">
+    <echo file="${file}">This is a test.</echo>
+    <au:assertTrue>
+      <length length="15">
+        <file file="${file}" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testzipentry" depends="createjar">
+    <au:assertTrue>
+      <length when="greater" length="0">
+        <zipentry zipfile="${jar}" name="META-INF/MANIFEST.MF" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="teststring1">
+    <au:assertTrue>
+      <length length="15">
+        <string value="This is a test." />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="teststring2">
+    <property name="test" value="foo" />
+    <au:assertTrue>
+      <length length="14">
+        <string value="This is a ${test}." />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testresource">
+    <au:assertTrue>
+      <length length="4096">
+        <resource size="4096" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testproperty">
+    <property name="testproperty" value="abcdefghij" />
+    <au:assertTrue>
+      <length length="10">
+        <propertyresource name="testproperty" />
+      </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst0">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <first count="0">
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+        </first>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst1">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <first>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+        </first>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst2">
+    <au:assertTrue>
+      <resourcecount count="2">
+        <first count="2">
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+        </first>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+</project>
