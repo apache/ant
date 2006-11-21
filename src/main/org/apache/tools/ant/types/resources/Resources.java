@@ -52,7 +52,8 @@ public class Resources extends DataType implements ResourceCollection {
         }
     };
 
-    private static final Iterator EMPTY_ITERATOR = new Iterator() {
+    /** static empty Iterator */
+    public static final Iterator EMPTY_ITERATOR = new Iterator() {
         public Object next() {
             throw new NoSuchElementException();
         }
