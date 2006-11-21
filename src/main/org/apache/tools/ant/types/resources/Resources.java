@@ -19,10 +19,12 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.AbstractCollection;
 import java.util.NoSuchElementException;
 
@@ -65,7 +67,7 @@ public class Resources extends DataType implements ResourceCollection {
 
         MyCollection() {
             size = 0;
-            for (Iterator rci = rc.iterator(); rci.hasNext();) {
+            for (Iterator rci = getNested().iterator(); rci.hasNext();) {
                 size += ((ResourceCollection) rci.next()).size();
             }
         }
@@ -76,7 +78,7 @@ public class Resources extends DataType implements ResourceCollection {
             return new MyIterator();
         }
         private class MyIterator implements Iterator {
-            private Iterator rci = rc.iterator();
+            private Iterator rci = getNested().iterator();
             private Iterator ri = null;
 
             public boolean hasNext() {
@@ -99,8 +101,8 @@ public class Resources extends DataType implements ResourceCollection {
         }
     }
 
-    private Vector rc = new Vector();
-    private Collection coll = null;
+    private Vector rc;
+    private Collection coll;
 
     /**
      * Add a ResourceCollection.
@@ -112,6 +114,9 @@ public class Resources extends DataType implements ResourceCollection {
         }
         if (c == null) {
             return;
+        }
+        if (rc == null) {
+            rc = new Vector();
         }
         rc.add(c);
         FailFast.invalidate(this);
@@ -153,51 +158,12 @@ public class Resources extends DataType implements ResourceCollection {
         }
         validate();
 
-        for (Iterator i = rc.iterator(); i.hasNext();) {
+        for (Iterator i = getNested().iterator(); i.hasNext();) {
             if ((!((ResourceCollection) i.next()).isFilesystemOnly())) {
                 return false;
             }
         }
         return true;
-    }
-
-    /**
-     * Overrides the version of DataType to recurse on all DataType
-     * child elements that may have been added.
-     * @param stk the stack of data types to use (recursively).
-     * @param p   the project to use to dereference the references.
-     * @throws BuildException on error.
-     */
-    protected void dieOnCircularReference(Stack stk, Project p)
-        throws BuildException {
-        if (isChecked()) {
-            return;
-        }
-        if (isReference()) {
-            super.dieOnCircularReference(stk, p);
-        } else {
-            for (Iterator i = rc.iterator(); i.hasNext();) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    invokeCircularReferenceCheck((DataType) o, stk, p);
-                }
-            }
-            setChecked(true);
-        }
-    }
-
-    /**
-     * Resolves references, allowing any ResourceCollection.
-     * @return the referenced ResourceCollection.
-     */
-    private ResourceCollection getRef() {
-        return (ResourceCollection) getCheckedRef(
-            ResourceCollection.class, "ResourceCollection");
-    }
-
-    private synchronized void validate() {
-        dieOnCircularReference();
-        coll = (coll == null) ? new MyCollection() : coll;
     }
 
     /**
@@ -221,4 +187,46 @@ public class Resources extends DataType implements ResourceCollection {
         return sb.toString();
     }
 
+    /**
+     * Overrides the version of DataType to recurse on all DataType
+     * child elements that may have been added.
+     * @param stk the stack of data types to use (recursively).
+     * @param p   the project to use to dereference the references.
+     * @throws BuildException on error.
+     */
+    protected void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = getNested().iterator(); i.hasNext();) {
+                Object o = i.next();
+                if (o instanceof DataType) {
+                    invokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
+            setChecked(true);
+        }
+    }
+
+    /**
+     * Resolves references, allowing any ResourceCollection.
+     * @return the referenced ResourceCollection.
+     */
+    private ResourceCollection getRef() {
+        return (ResourceCollection) getCheckedRef(
+            ResourceCollection.class, "ResourceCollection");
+    }
+
+    private synchronized void validate() {
+        dieOnCircularReference();
+        coll = (coll == null) ? new MyCollection() : coll;
+    }
+
+    private synchronized List getNested() {
+        return rc == null ? Collections.EMPTY_LIST : rc;
+    }
 }
