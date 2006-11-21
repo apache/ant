@@ -45,20 +45,22 @@ public class Resources extends DataType implements ResourceCollection {
             return true;
         }
         public Iterator iterator() {
-            return new Iterator() {
-                public Object next() {
-                    throw new NoSuchElementException();
-                }
-                public boolean hasNext() {
-                    return false;
-                }
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
+            return EMPTY_ITERATOR;
         }
         public int size() {
             return 0;
+        }
+    };
+
+    private static final Iterator EMPTY_ITERATOR = new Iterator() {
+        public Object next() {
+            throw new NoSuchElementException();
+        }
+        public boolean hasNext() {
+            return false;
+        }
+        public void remove() {
+            throw new UnsupportedOperationException();
         }
     };
 
