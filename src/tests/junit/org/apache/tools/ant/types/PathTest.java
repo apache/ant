@@ -60,7 +60,7 @@ public class PathTest extends TestCase {
             assertEquals("\\a", l[0]);
             assertEquals("\\b", l[1]);
         } else {
-            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            String base = new File(File.separator).getAbsolutePath();
             assertEquals(base + "a", l[0]);
             assertEquals(base + "b", l[1]);
         }
@@ -100,7 +100,7 @@ public class PathTest extends TestCase {
             assertEquals("\\a", l[0]);
             assertEquals("\\b", l[1]);
         } else {
-            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            String base = new File(File.separator).getAbsolutePath();
             assertEquals(base + "a", l[0]);
             assertEquals(base + "b", l[1]);
         }
@@ -309,7 +309,7 @@ public class PathTest extends TestCase {
             assertEquals("\\b", l[1]);
             assertEquals("\\c", l[2]);
         } else {
-            String base = new File(File.separator).getAbsolutePath().toUpperCase();
+            String base = new File(File.separator).getAbsolutePath();
             assertEquals(base + "a", l[0]);
             assertEquals(base + "b", l[1]);
             assertEquals(base + "c", l[2]);
@@ -369,7 +369,7 @@ public class PathTest extends TestCase {
         Path p = new Path(project, "/a:/a");
         String[] l = p.list();
         assertEquals("1 after construction", 1, l.length);
-        String base = new File(File.separator).getAbsolutePath().toUpperCase();
+        String base = new File(File.separator).getAbsolutePath();
         p.setLocation(new File(base, "a"));
         l = p.list();
         assertEquals("1 after setLocation", 1, l.length);

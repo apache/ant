@@ -505,11 +505,8 @@ public class FileUtilsTest extends TestCase {
     public void testFromURI() {
         String dosRoot = null;
         if (Os.isFamily("dos") || Os.isFamily("netware")) {
-            dosRoot = Character.toUpperCase(
-                System.getProperty("user.dir").charAt(0)) + ":";
-        }
-        else
-        {
+            dosRoot = System.getProperty("user.dir").substring(0, 2);
+        } else {
             dosRoot = "";
         }
         if (Os.isFamily("netware")) {
