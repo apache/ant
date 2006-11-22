@@ -14,14 +14,17 @@ Fixed bugs:
   Bugzilla 40918.
   
 * compareTo method in CompressedResource does not 
-  take comparison with another CompressedResouce into account.
+  take comparison with another CompressedResource into account.
   Bugzilla 40949.
 
 * possible NPE in Jar.java.
-  Bugzilla 40847
+  Bugzilla 40847.
 
 * regression in attribute prefix (+ others) for refid in zipfileset and tarfileset.
-  Bugzilla 41004, 30498
+  Bugzilla 41004, 30498.
+
+* dependset failed if the basedir of a target fileset did not exist.
+  Bugzilla 40916.
 
 Other changes:
 --------------
@@ -39,8 +42,6 @@ Other changes:
   with JDK 1.3 or 1.2
 
 * do not uppercase the drive letters systematically in FileUtils#normalize
-  
-  
 
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
@@ -94,7 +95,6 @@ Other changes:
 
 * javadoc/tag@description is now set to the name if description is
   not specified. Bugzill report 32927.
-
 
 Changes from Ant 1.7.0Beta2 to Ant 1.7.0Beta3
 =============================================
