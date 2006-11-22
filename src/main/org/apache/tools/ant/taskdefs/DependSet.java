@@ -18,7 +18,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
 import java.util.Iterator;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
@@ -30,6 +32,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Sort;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.Exists;
@@ -108,6 +111,27 @@ public class DependSet extends MatchingTask {
             super(rc, DATE_DESC);
         }
     }
+    private static class HideMissingBasedir implements ResourceCollection {
+        private FileSet fs;
+
+        private HideMissingBasedir(FileSet fs) {
+            this.fs = fs;
+        }
+        public Iterator iterator() {
+            return basedirExists() ? fs.iterator() : Resources.EMPTY_ITERATOR;
+        }
+        public int size() {
+            return basedirExists() ? fs.size() : 0;
+        }
+        public boolean isFilesystemOnly() {
+            return true;
+        }
+        private boolean basedirExists() {
+            File basedir = fs.getDir();
+            //trick to evoke "basedir not set" if null:
+            return basedir == null || basedir.exists();
+        }
+    }
 
     private Union sources = null;
     private Path targets = null;
@@ -151,7 +175,7 @@ public class DependSet extends MatchingTask {
      * @param fs the FileSet to add.
      */
     public void addTargetfileset(FileSet fs) {
-        createTargets().add(fs);
+        createTargets().add(new HideMissingBasedir(fs));
     }
 
     /**

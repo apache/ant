@@ -93,8 +93,20 @@
     </au:assertTrue>
   </target>
 
+  <target name="test9">
+    <au:assertFalse>
+      <available file="test9dir" type="dir" />
+    </au:assertFalse>
+    <touch file="test9.tmp" />
+    <dependset>
+      <srcfileset dir="." includes="test9.tmp" />
+      <targetfileset dir="test9dir" />
+    </dependset>
+  </target>
+
   <target name="tearDown"> 
     <delete file="test4.tmp" />
+    <delete file="test9.tmp" />
     <delete file="older.tmp" />
     <delete file="newer.tmp" />
   </target>
