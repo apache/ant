@@ -664,9 +664,9 @@ public class ComponentHelper  {
             return ((ProjectComponent) o).getProject();
         }
         try {
-            Method m = o.getClass().getMethod("getProject", null);
+            Method m = o.getClass().getMethod("getProject", (Class[]) null);
             if (Project.class == m.getReturnType()) {
-                return (Project) m.invoke(o, null);
+                return (Project) m.invoke(o, (Object[]) null);
             }
         } catch (Exception e) {
             //too bad
