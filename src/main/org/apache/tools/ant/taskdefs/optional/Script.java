@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.optional.ScriptRunner;
+import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -43,7 +44,7 @@ public class Script extends Task {
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
-        ScriptRunner runner = new ScriptRunner();
+        ScriptRunnerBase runner = new ScriptRunner();
         if (language != null) {
             runner.setLanguage(language);
         }
@@ -54,7 +55,9 @@ public class Script extends Task {
             runner.addText(text);
         }
         if (classpath != null) {
-            runner.setClasspath(classpath);
+            runner.setScriptClassLoader(
+                getProject().createClassLoader(
+                    getClass().getClassLoader(), classpath));
         }
         if (setBeans) {
             runner.bindToComponent(this);
