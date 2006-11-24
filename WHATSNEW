@@ -6,6 +6,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Directory Deletion Dont Work Properly
+  Bugzilla 40972
 
 * docletpath attribute of javadoc ignored.
   Bugzilla 40900.
