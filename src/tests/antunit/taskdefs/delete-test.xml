@@ -48,12 +48,7 @@
 
 
   	<au:assertFileDoesntExist file="${existing.dir}" />
-  	<!--
-    <available file="dir_exists" type="dir" property="delete.dir.failed"/>
-    <fail message="Failed to delete directory (2)" if="delete.dir.failed"/>
--->
-  	
-  	
+
     <mkdir dir="${existing.dir}"/>
 
     <delete quiet="true" includeEmptyDirs="true">
