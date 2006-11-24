@@ -2187,7 +2187,7 @@ public class Project implements ResourceFactory {
      */
     protected void fireMessageLogged(Project project, String message,
                                      int priority) {
-        fireMessageLogged(project, message, priority);
+        fireMessageLogged(project, message, null, priority);
     }
 
     /**
