@@ -90,6 +90,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <module>ant-starteam</module>
     <module>ant-stylebook</module>
     <module>ant-swing</module>
+    <module>ant-testutil</module>
     <module>ant-trax</module>
     <module>ant-weblogic</module>
   </modules>
