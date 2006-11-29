@@ -927,7 +927,7 @@
        ===================================================================
   -->
   <target name="dist-lite"
-    depends="jars"
+    depends="jars,test-jar"
     description="--> creates a minimum distribution to run Apache Ant">
 
     <mkdir dir="${dist.dir}"/>
