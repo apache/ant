@@ -6,20 +6,20 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
-* Directory Deletion Dont Work Properly
-  Bugzilla 40972
+* Directory deletion did not work properly.
+  Bugzilla 40972.
 
-* docletpath attribute of javadoc ignored.
+* docletpath attribute of javadoc was ignored.
   Bugzilla 40900.
 
-* Incorrect recursion in DOMUtil.listChildNodes()
+* Fixed incorrect recursion in DOMUtil.listChildNodes().
   Bugzilla 40918.
   
-* compareTo method in CompressedResource does not 
+* CompressedResource.compareTo() did not 
   take comparison with another CompressedResource into account.
   Bugzilla 40949.
 
-* possible NPE in Jar.java.
+* Avoid possible NPE in Jar.java.
   Bugzilla 40847.
 
 * regression in attribute prefix (+ others) for refid in zipfileset and tarfileset.
@@ -34,16 +34,16 @@ Other changes:
 * Warn user when a reference in the form "${refid}" cannot be resolved as this
   is a sign they probably meant "refid" (misuse of property expansion syntax).
 
-* add dtd to javadoc for junit.
+* Add dtd to javadoc for junit.
   Bugzilla 40754.
 
-* add quiet attribute to loadfile/resource.
+* Add quiet attribute to loadfile/resource.
   Bugzilla 38249.
 
-* make Locator#fromURI also append the drive letter when running under Windows 
-  with JDK 1.3 or 1.2
+* Make Locator#fromURI also append the drive letter when running under Windows 
+  with JDK 1.3 or 1.2.
 
-* do not uppercase the drive letters systematically in FileUtils#normalize
+* Do not uppercase the drive letters systematically in FileUtils#normalize.
 
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
@@ -60,7 +60,7 @@ Fixed bugs:
 * <delete> doesnt delete when defaultexcludes="false" and no includes is set 
   fixed. Bugzilla 40313.
 
-* behavior change of DirectoryScanner/AbstractFileset when conditional include
+* Behavior change of DirectoryScanner/AbstractFileset when conditional include
   patterns are used. Bugzilla 40722.
 
 * <javac> fails with NPE when compiling with eclipse ecj 3.1.x.
@@ -81,9 +81,9 @@ Other changes:
 * Allow broken reference build files. The defer reference processing would
   break too many files - so allow them with a warning.
 
-* removed dependence on sun.misc.UUEncoder for UUMailer.
+* Removed dependency on sun.misc.UUEncoder for UUMailer.
 
-* added regex attribute to the echoproperties task.
+* Added regex attribute to the echoproperties task.
   Bugzilla 40019.
 
 * <war> task now allows you to omit the web.xml file. as this is optional
@@ -126,14 +126,14 @@ Fixed bugs:
 * <path location="loc"> was broken (Regression from beta1).
   Bugzilla report 40547.
 
-* nested fileset in <cab> did not work. Bugzilla report 39439.
+* Nested fileset in <cab> did not work. Bugzilla report 39439.
 
-* the ant wrapper script should now correctly locate the java
+* The ant wrapper script should now correctly locate the java
   executable in more recent IBM JDKs for AIX as well.
 
 * URLResource did not close jar files, and also did not disconnect HTTPConnection (s).
 
-* error calling junitreport. Bugzilla 40595. 
+* Error calling junitreport. Bugzilla 40595. 
 
 * <junittask/> created junitvmwatcher*.properties files but did not close and delete them.  
 
@@ -143,10 +143,10 @@ Fixed bugs:
 * UnknownElement.maybeConfigure always configured.
   Bugzilla report 40641.
 
-* no check for refid when prefix attribute is set in zipfileset.
+* No check for refid when prefix attribute is set in zipfileset.
   Bugzilla report 30498.
 
-* fix for junit4 issue introducted since beta2.
+* Fix for junit4 issue introduced since beta2.
   Bugzilla report 40682.
 
 * Error in duplicate project name with <import> and <antcall>.
@@ -195,7 +195,7 @@ Changes that could break older environments:
 
 * <script> and <scriptdef> now set the current thread context.
 
-* unrestrict the dbvendor names in the websphere element of the ejbjar task.
+* Unrestrict the dbvendor names in the websphere element of the ejbjar task.
   Bugzilla Report 40475.
 
 * <env> nested element in <java>, <exec> and others is now case-insensitive
@@ -225,7 +225,7 @@ Fixed bugs:
 * <antlr> did not recognise whether the target is up-to-date for html option.
   Bugzilla report 38451.
 
-* documented minimal version of jsch now 0.1.29.
+* Documented minimal version of jsch now 0.1.29.
   Bugzilla report 40333.
 
 * <available> searched parent directories for files.
@@ -234,15 +234,15 @@ Fixed bugs:
 Other changes:
 --------------
 
-* added setbeans attribute to <script> to allow <script>'s to be
+* Added setbeans attribute to <script> to allow <script>'s to be
   run without referencing all references.
   Bugzilla report 37688.
 
-* added classpath attribute and nested element to <script> to allow
+* Added classpath attribute and nested element to <script> to allow
   the language jars to be specified in the build script.
   Bugzilla report 29676.
 
-* trim the driver attribute on the <sql> task. Bugzilla report 21228.
+* Trim the driver attribute on the <sql> task. Bugzilla report 21228.
 
 * Allow (jar) files as well as directories to be given to jdepend.
   Bugzilla report 28865.
@@ -253,13 +253,13 @@ Other changes:
 * Made PatternSet#hasPatterns public to allow custom filesets access.
   Bugzilla report 36772.
 
-* added searchparents attribute to <available>. Bugzilla report 39549.
+* Added searchparents attribute to <available>. Bugzilla report 39549.
 
-* tasks that don't extend Ant's Task class will now get the build file
+* Tasks that don't extend Ant's Task class will now get the build file
   location reflected into a method of the signature void setLocation(Location)
   - if such a method exists.
 
-* remove needless synchronization in DirectoryScanner.
+* Remove needless synchronization in DirectoryScanner.
   Bugzilla report 40237.
 
 Changes from Ant 1.6.5 to Ant 1.7.0Beta1
@@ -317,7 +317,7 @@ Changes that could break older environments:
   Note that the Java1.5 proxy configuration system still does not
   appear to work reliably on Windows or Linux.
 
-* support for the XSL:P XML parser has been removed.
+* Support for the XSL:P XML parser has been removed.
   Bugzilla Report 23455.
 
 * Visual Age for Java optional tasks removed.
@@ -373,7 +373,7 @@ Fixed bugs:
 
 * Problem when adding multiple filter files, Bugzilla Report 37341.
 
-* problem referencing jars specified by Class-Path attribute in manifest
+* Problem referencing jars specified by Class-Path attribute in manifest
   of a ant task jar file, when this ant task jar file is located in
   a directory with space, Bugzilla Report 37085.
 
@@ -441,7 +441,7 @@ Fixed bugs:
 * <junitreport> removed line-breaks from stack-traces.  Bugzilla
   Report 34963.
 
-* off-by-one error in environment setup for execution under OpenVMS fixed.
+* Off-by-one error in environment setup for execution under OpenVMS fixed.
 
 * Bugzilla report 36171: -noclasspath crashes ant if no system
   classpath is set.
@@ -522,7 +522,7 @@ Fixed bugs:
 * Copy of UnknownElement in macroinstance was not recursive.
   Bugzilla report 40238.
 
-* mixing of add and addConfigured methods in Mapper/ChainedMapper
+* Mixing of add and addConfigured methods in Mapper/ChainedMapper
   causes incorrect chaining. Bugzilla report 40228.
 
 Other changes:
@@ -657,7 +657,7 @@ Other changes:
 * <exec> (and hence, <apply> and any other derived classes) have an OsFamily
   attribute, which can restrict execution to a single OS family.
 
-* added "backtrace" attribute to macrodef. Bugzilla report 27219.
+* Added "backtrace" attribute to macrodef. Bugzilla report 27219.
 
 * Ant main provides some diagnostics if it ever sees a -cp or -lib option,
   as this is indicative of a script mismatch. Bugzilla report 34860
@@ -666,7 +666,7 @@ Other changes:
   can be caused by the test JVM exiting during a test, either via a
   System.exit() call or a JVM crash.
 
-* project name is now used for *all* targets so one can write consistent import
+* Project name is now used for *all* targets so one can write consistent import
   build files. Bugzilla report 28444.
 
 * New condition <typefound> that can be used to probe for the declaration
@@ -674,7 +674,7 @@ Other changes:
   As it tests for the implementation, it can be used to check for optional
   tasks being available.
 
-* check for 1.5.* Ant main class. (weblogic.jar in classpath reports)
+* Check for 1.5.* Ant main class. (weblogic.jar in classpath reports)
 
 * New condition <isfailure> that tests the return-code of an executable. This
   contains platform-specific logic and is better than comparing the result with
@@ -720,16 +720,16 @@ Other changes:
 
 * <echo> now supports an encoding when saving to a file.
 
-* new GreedyInputHandler added.
+* New GreedyInputHandler added.
 
-* add textfile attribute to the <filesmatch> condition. When true, the text
+* Add textfile attribute to the <filesmatch> condition. When true, the text
   contents of the two files are compared, ignoring line ending differences.
 
-* new <resourcesmatch> condition.
+* New <resourcesmatch> condition.
 
-* added the onmissingfiltersfile attribute to filterset. Bugzilla report 19845.
+* Added the onmissingfiltersfile attribute to filterset. Bugzilla report 19845.
 
-* added the inline handler element to the input task.
+* Added the inline handler element to the input task.
 
 * <sql> supports property expansion if you set the expandProperties
   attribute. By default it does not expand properties, something we
@@ -747,10 +747,10 @@ Other changes:
 
 * <scp> now optionally supports the sftp protocol.  Bugzilla Report 39373.
 
-* resources can now be used to indicate the location of the stylesheet to use
+* Resources can now be used to indicate the location of the stylesheet to use
   in <xslt>. Bugzilla Report 39407.
 
-* new <antversion> condition. Bugzilla report 32804.
+* New <antversion> condition. Bugzilla report 32804.
 
 * ReplaceTokens should allow properties files. Bugzilla report 39688.
 
