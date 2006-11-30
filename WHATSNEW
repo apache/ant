@@ -28,6 +28,9 @@ Fixed bugs:
 * dependset failed if the basedir of a target fileset did not exist.
   Bugzilla 40916.
 
+* Recursive filtering encountered NullPointerExceptions under certain
+  circumstances.  Bugzilla 41086.
+
 Other changes:
 --------------
 

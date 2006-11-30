@@ -1,0 +1,28 @@
+<project xmlns:au="antlib:org.apache.ant.antunit">
+
+  <property name="br" value="${line.separator}" />
+
+  <target name="testRecursionRegression">
+    <copy todir="${basedir}">
+      <string value="@a@${br}@b@${br}@c@${br}" />
+      <mergemapper to="filterset-output.txt" />
+      <filterset>
+        <filter token="a" value="aaa" />
+        <filter token="b" value="bbb" />
+        <filter token="c" value="@a@:@b@" />
+      </filterset>
+    </copy>
+
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="filterset-output.txt" />
+        <string value="aaa${br}bbb${br}aaa:bbb${br}" />
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="tearDown">
+    <delete file="filterset-output.txt" />
+  </target>
+
+</project>
