@@ -31,6 +31,9 @@ Fixed bugs:
 * Recursive filtering encountered NullPointerExceptions under certain
   circumstances.  Bugzilla 41086.
 
+* XmlProperty overrides previously set property value when handling duplicate 
+  elements. Bugzilla 41080.
+
 Other changes:
 --------------
 

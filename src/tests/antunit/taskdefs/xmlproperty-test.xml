@@ -6,5 +6,12 @@
       <equals arg1="" arg2="${project.description}"/>
     </au:assertTrue>
   </target>
+  <target name="test-multi">
+    <property name="root.element.value" value="original"/>
+    <xmlproperty file="xmlproperty.multi.xml" collapseAttributes="yes"/>
+    <au:assertTrue>
+      <equals arg1="original" arg2="${root.element.value}"/>
+    </au:assertTrue>
+  </target>
 </project>
 

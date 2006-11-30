@@ -499,10 +499,13 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             // to allow other properties to reference them.
             value = (String) addedAttributes.get(name) + "," + value;
             getProject().setProperty(name, value);
-        } else {
+            addedAttributes.put(name, value);
+        } else if (getProject().getProperty(name) == null) {
             getProject().setNewProperty(name, value);
+            addedAttributes.put(name, value);
+        } else {
+            log("Override ignored for property " + name, Project.MSG_VERBOSE);
         }
-        addedAttributes.put(name, value);
         if (id != null) {
             getProject().addReference(id, value);
         }
