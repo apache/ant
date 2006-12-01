@@ -80,7 +80,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software Foundation license</td>
+            <td>Apache Software Foundation License</td>
           </tr>
         </table>
       </subsection>
@@ -149,7 +149,7 @@
 
       <subsection name="Antigen">
 
-        <p>Antigen (Ant Installer Generator) is a tool to take an Ant build script, combine it with a GUI 
+        <p>Antigen (Ant Installer Generator) is a tool to take an Ant build script, combine it with a GUI
         and wrap it up as an executable jar file. Its main use is for creating graphical, ant-based installers.</p>
 
         <table class="externals">
@@ -193,8 +193,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>LGPL but in the process of of moving to Apache2.0 on
-            request</td>
+            <td>LGPL but in the process of of moving to Apache2.0 on request</td>
           </tr>
         </table>
       </subsection>
@@ -386,6 +385,33 @@
         <p>The Centipede admin told us, that that project
            "is no more" and that "Antworks has taken it place."
         </p>
+      </subsection>
+
+      <subsection name="Leafcutter">
+        <p>Leafcutter is an API which allows you to execute Ant tasks from Java code. <br/>
+           Leafcutter is useful as: <ul>
+           <li>A way of integrating Ant tasks into existing Java programs. </li>
+           <li>A wholesale alternative to standard Ant for process automation. </li>
+           </ul>
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td><i>unknown</i></td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="https://leafcutter.dev.java.net/">https://leafcutter.dev.java.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="https://leafcutter.dev.java.net/servlets/ProjectForumView">Discussion Forum</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
       </subsection>
 
       <subsection name="luntbuild">
