@@ -370,6 +370,24 @@ public class AntStructure extends Task {
                     } catch (IllegalAccessException ie) {
                         sb.append("CDATA ");
                     }
+                } else if (type.getSuperclass() != null && type.getSuperclass().getName().equals("java.lang.Enum")) {
+                    try {
+                        Object[] values = (Object[]) type.getMethod("values", null).invoke(null, null);
+                        if (values.length == 0) {
+                            sb.append("CDATA ");
+                        } else {
+                            sb.append('(');
+                            for (int i = 0; i < values.length; i++) {
+                                if (i != 0) {
+                                    sb.append(" | ");
+                                }
+                                sb.append(type.getMethod("name", null).invoke(values[i], null));
+                            }
+                            sb.append(") ");
+                        }
+                    } catch (Exception x) {
+                        sb.append("CDATA ");
+                    }
                 } else {
                     sb.append("CDATA ");
                 }

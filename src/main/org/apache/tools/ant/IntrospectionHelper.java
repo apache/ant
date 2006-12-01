@@ -1008,6 +1008,25 @@ public final class IntrospectionHelper  {
                     }
                 }
             };
+        } else if (reflectedArg.getSuperclass() != null && reflectedArg.getSuperclass().getName().equals("java.lang.Enum")) {
+            return new AttributeSetter(m) {
+                public void set(Project p, Object parent, String value)
+                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                    try {
+                        m.invoke(parent, new Object[] {
+                            reflectedArg.getMethod("valueOf", new Class[] {String.class}).
+                                    invoke(null, new Object[] {value})});
+                    } catch (InvocationTargetException x) {
+                        if (x.getTargetException() instanceof IllegalArgumentException) {
+                            throw new BuildException("'" + value + "' is not a permitted value for " + reflectedArg.getName());
+                        } else {
+                            throw new BuildException(x.getTargetException());
+                        }
+                    } catch (Exception x) {
+                        throw new BuildException(x);
+                    }
+                }
+            };
         // worst case. look for a public String constructor and use it
         // also supports new Whatever(Project, String) as for Path or Reference
         // This is used (deliberately) for all primitives/wrappers other than

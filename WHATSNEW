@@ -51,6 +51,9 @@ Other changes:
 
 * Do not uppercase the drive letters systematically in FileUtils#normalize.
 
+* Java 5 enumerations may now be used as values in XML attributes in place of
+  EnumeratedAttribute. Bugzilla 41058.
+
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
 
