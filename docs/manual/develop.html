@@ -171,6 +171,15 @@ is more!  If the argument of you setter method is</p>
   inner <code>AddAsisRemove</code> class used in <code>setCr</code>
   for an example.</li>
 
+  <li>A (Java 5) enumeration. Ant will call the setter with the enum constant
+  matching the value given in the build file. This is easier than using
+  <code>EnumeratedAttribute</code> and can result in cleaner code, but of course
+  your task will not run on JDK 1.4 or earlier. Note that any override of
+  <code>toString()</code> in the enumeration is ignored; the build file must use
+  the declared name (see <code>Enum.getName()</code>). You may wish to use lowercase
+  enum constant names, in contrast to usual Java style, to look better in build files.
+  <em>As of Ant 1.7.0.</em></li>
+
 </ul>
 
 <p>What happens if more than one setter method is present for a given
