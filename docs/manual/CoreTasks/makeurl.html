@@ -34,7 +34,6 @@
           <td valign="bottom">
             <font size="+3" face="arial,helvetica,sanserif"><strong>Makeurl
  Task</strong></font>
-            <br><font face="arial,helvetica,sanserif">This task takes one or more filenames and turns them into URLs, which it then assigns to a property.</font>
           </td>
           <td>
             <!-- PROJECT LOGO -->
@@ -62,7 +61,19 @@
       </td></tr>
 
       <tr><td><blockquote>
-        This task takes one or more filenames and turns them into URLs, which it then assigns to a property. Useful when setting up RMI codebases. Nested filesets are supported; if present, these are turned into the url with the given separator between them (default = " "). <p/> <p>Example</p> <pre> &lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url" /&gt; </pre> Sets the property <code>m2.repository.url</code> to the file: URL of the local Maven2 repository. <pre> &lt;makeurl property="codebase"&gt; &lt;fileset dir="lib includes="*.jar"/&gt; &lt;/makeurl> </pre> Set the property <code>codebase</code> to the three URLs of the files provided as nested elements.
+This task takes one or more filenames and turns them into URLs, which it then assigns to a property.
+Useful when setting up RMI or JNLP codebases, for example.
+Nested filesets are supported; if present, these are turned into the URLs with the supplied separator between them (default: space).
+<p/>
+<p>Examples:</p>
+<pre>
+&lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url"/&gt;
+</pre>
+Sets the property <code>m2.repository.url</code> to the file: URL of the local Maven2 repository.
+<pre>
+&lt;makeurl property="codebase"&gt;&lt;fileset dir="lib includes="*.jar"/&gt;&lt;/makeurl&gt;
+</pre>
+Set the property <code>codebase</code> to the three URLs of the files provided as nested elements.
       </blockquote></td></tr>
 
     </table>
@@ -105,13 +116,13 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">file</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">the name of a file to be converted into a URL</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">name of a file to be converted into a URL</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
         </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="4">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">optional, if a nested fileset or path is supplied</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -120,10 +131,13 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">property</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the name of a property to fill with the URL</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">name of a property to set to the URL</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">required</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -132,10 +146,13 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">separator</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the separator for the multi-url option.</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">separator for the multi-URL option</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">optional</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -144,10 +161,13 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">validate</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set this flag to trigger validation that every named file exists. Optional: default=true</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">validate that every named file exists</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">optional; default: true</font>
         </td>
     </tr>
 
@@ -177,7 +197,7 @@
           <strong>fileset</strong> (org.apache.tools.ant.types.FileSet)</font>
       </td></tr>
       <tr><td><blockquote>
-        a fileset of jar files to include in the URL, each separated by the separator
+        A fileset of JAR files to include in the URL list, each separated by the separator.
  <!-- Ignore -->
  <!-- Ignore -->
 
@@ -192,7 +212,7 @@
           <strong>path</strong> (org.apache.tools.ant.types.Path)</font>
       </td></tr>
       <tr><td><blockquote>
-        add a path to the URL. All elements in the path will be converted to individual URL entries
+        Add a path to the URL. All elements in the path will be converted to individual URL entries.
  <!-- Ignore -->
  <!-- Ignore -->
 
