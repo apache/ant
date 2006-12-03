@@ -17,8 +17,13 @@
  */
 package org.apache.tools.ant.types.optional;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.optional.ScriptRunner;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.ScriptRunnerBase;
+import org.apache.tools.ant.util.ScriptRunnerHelper;
+
 
 import java.io.File;
 
@@ -28,15 +33,30 @@ import java.io.File;
  */
 public abstract class AbstractScriptComponent extends ProjectComponent {
     /**
-     * script runner
+     * script runner helper
      */
-    private ScriptRunner runner = new ScriptRunner();
+    private ScriptRunnerHelper helper = new ScriptRunnerHelper();
+
+    /**
+     * script runner.
+     */
+    private ScriptRunnerBase   runner = null;
+
+    /**
+     * Set the project.
+     * @param project the owner of this component.
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        helper.setProjectComponent(this);
+    }
 
     /**
      * Get our script runner
      * @return the runner
      */
-    public ScriptRunner getRunner() {
+    public ScriptRunnerBase getRunner() {
+        initScriptRunner();
         return runner;
     }
 
@@ -46,7 +66,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
-        runner.setSrc(file);
+        helper.setSrc(file);
     }
 
     /**
@@ -55,7 +75,16 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        runner.addText(text);
+        helper.addText(text);
+    }
+
+    /**
+     * Defines the manager.
+     *
+     * @param manager the scripting manager.
+     */
+    public void setManager(String manager) {
+        helper.setManager(manager);
     }
 
     /**
@@ -64,14 +93,45 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        runner.setLanguage(language);
+        helper.setLanguage(language);
     }
 
     /**
      * Initialize the script runner. Calls this before running the system
      */
     protected void initScriptRunner() {
-        getRunner().bindToComponent(this);
+        if (runner != null) {
+            return;
+        }
+        helper.setProjectComponent(this);
+        runner = helper.getScriptRunner();
+    }
+    /**
+     * Set the classpath to be used when searching for classes and resources.
+     *
+     * @param classpath an Ant Path object containing the search path.
+     */
+    public void setClasspath(Path classpath) {
+        helper.setClasspath(classpath);
+    }
+
+    /**
+     * Classpath to be used when searching for classes and resources.
+     *
+     * @return an empty Path instance to be configured by Ant.
+     */
+    public Path createClasspath() {
+        return helper.createClasspath();
+    }
+
+    /**
+     * Set the classpath by reference.
+     *
+     * @param r a Reference to a Path instance to be used as the classpath
+     *          value.
+     */
+    public void setClasspathRef(Reference r) {
+        helper.setClasspathRef(r);
     }
 
     /**
