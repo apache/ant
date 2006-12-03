@@ -1008,7 +1008,8 @@ public final class IntrospectionHelper  {
                     }
                 }
             };
-        } else if (reflectedArg.getSuperclass() != null && reflectedArg.getSuperclass().getName().equals("java.lang.Enum")) {
+        } else if (reflectedArg.getSuperclass() != null
+                   && reflectedArg.getSuperclass().getName().equals("java.lang.Enum")) {
             return new AttributeSetter(m) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
@@ -1018,7 +1019,9 @@ public final class IntrospectionHelper  {
                                     invoke(null, new Object[] {value})});
                     } catch (InvocationTargetException x) {
                         if (x.getTargetException() instanceof IllegalArgumentException) {
-                            throw new BuildException("'" + value + "' is not a permitted value for " + reflectedArg.getName());
+                            throw new BuildException(
+                                "'" + value + "' is not a permitted value for "
+                                + reflectedArg.getName());
                         } else {
                             throw new BuildException(x.getTargetException());
                         }

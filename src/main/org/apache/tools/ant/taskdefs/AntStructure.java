@@ -370,9 +370,11 @@ public class AntStructure extends Task {
                     } catch (IllegalAccessException ie) {
                         sb.append("CDATA ");
                     }
-                } else if (type.getSuperclass() != null && type.getSuperclass().getName().equals("java.lang.Enum")) {
+                } else if (type.getSuperclass() != null
+                           && type.getSuperclass().getName().equals("java.lang.Enum")) {
                     try {
-                        Object[] values = (Object[]) type.getMethod("values", null).invoke(null, null);
+                        Object[] values = (Object[]) type.getMethod("values", (Class[])  null)
+                            .invoke(null, (Object[]) null);
                         if (values.length == 0) {
                             sb.append("CDATA ");
                         } else {
@@ -381,7 +383,8 @@ public class AntStructure extends Task {
                                 if (i != 0) {
                                     sb.append(" | ");
                                 }
-                                sb.append(type.getMethod("name", null).invoke(values[i], null));
+                                sb.append(type.getMethod("name", (Class[]) null)
+                                          .invoke(values[i], (Object[]) null));
                             }
                             sb.append(") ");
                         }
