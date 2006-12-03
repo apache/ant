@@ -3621,6 +3621,38 @@
         </table>
       </subsection>
 
+      <subsection name="Virtual Ant">
+        <p>
+          Instead of manually creating build scripts in XML, Virtual Ant provides a fully virtual file system
+          where you can run your tasks in real time and see the results. Everything that you do is recorded and
+          turned into an Ant build script.
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>
+              Ant 1.6.5 onwards
+            </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.placidsystems.com/virtualant/">http://www.placidsystems.com/virtualant/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:support@placidsystems.com">support@placidsystems.com</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial; OpenSource licenses available too.</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="WebSphere Studio Application Developer">
 
         <p>WSAD features Ant integrate by virtue of being built on the Eclipse tools platform.</p>
