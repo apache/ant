@@ -114,5 +114,26 @@ public class LoaderUtils {
         }
         return normalizeSource(Locator.getResourceSource(c, resource));
     }
+
+    /**
+     * Return the resource name of a class name.
+     * @param className the name of the class to convert.
+     * @return the corresponding resource name.
+     * @since Ant 1.7.0.
+     */
+    public static String classNameToResource(String className) {
+        return className.replace('.', '/') + ".class";
+    }
+
+    /**
+     * Check if a classloader has a classname resource.
+     * @param loader the classloader to look it.
+     * @param className the name of the class to look for.
+     * @return true if the classexists, false otherwise
+     * @since Ant 1.7.0.
+     */
+    public static boolean classExists(ClassLoader loader, String className) {
+        return loader.getResource(classNameToResource(className)) != null;
+    }
 }
 
