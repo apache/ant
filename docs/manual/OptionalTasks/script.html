@@ -26,18 +26,29 @@
 
 <h2><a name="script">Script</a></h2>
 <h3>Description</h3>
-<p>Execute a script in a
-  <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a> supported language.</p>
-<p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
-See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
-<p>All items (tasks, targets, etc) of the running project are
-accessible from the script, using either their <code>name</code> or
-<code>id</code> attributes (as long as their names are considered
-valid Java identifiers, that is).
-This is controlled by the "setbeans" attribute of the task.
-The name "project" is a pre-defined reference to the Project, which can be
-used instead of the project name. The name "self" is a pre-defined reference to the actual
-<code>&lt;script&gt;</code>-Task instance.<br>From these objects you have access to the Ant Java API, see the
+  <p>Execute a script in a
+    <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+    or
+    <a href="https//scripting.dev.java.net">JSR 233</a>  supported language.
+  </p>
+  <p><b>Note:</b>
+    This task depends on external libraries not included in the Ant distribution.
+    See <a href="../install.html#librarydependencies">Library Dependencies</a>
+    for more information.
+  </p>
+  <p>
+    The task may use the BSF scripting manager or the JSR 233 manager that
+    is included in JDK6 and higher. This is controlled by the <code>manager</code>
+    attribute. The JSR 233 scripting manager is indicated by "javax".
+  </p>
+  <p>All items (tasks, targets, etc) of the running project are
+    accessible from the script, using either their <code>name</code> or
+    <code>id</code> attributes (as long as their names are considered
+    valid Java identifiers, that is).
+    This is controlled by the "setbeans" attribute of the task.
+    The name "project" is a pre-defined reference to the Project, which can be
+    used instead of the project name. The name "self" is a pre-defined reference to the actual
+    <code>&lt;script&gt;</code>-Task instance.<br>From these objects you have access to the Ant Java API, see the
 <a href="../api/index.html">JavaDoc</a> (especially for
 <a href="../api/org/apache/tools/ant/Project.html">Project</a> and
 <a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more information.</p>
@@ -63,8 +74,26 @@ Groups@Google: "Rhino, enum.js, JavaAdapter?"</a> by Norris Boyd in the newsgrou
   <tr>
     <td valign="top">language</td>
     <td valign="top">The programming language the script is written in.
-      Must be a supported Apache BSF language</td>
+      Must be a supported Apache BSF or JSR 223 language</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">manager</td>
+    <td valign="top">
+      <em>Since: Ant 1.7. </em>
+      The script engine manager to use. This can have
+      one of three values ("auto", "bsf" or "javax").
+      The default value is "auto".
+      <dl>
+        <li>"bsf" use the BSF scripting manager to run
+          the language.</li>
+        <li>"javax" use the <em>javax.scripting</em> manager
+          to run the language. (This will only work for JDK6 and higher).</li>
+        <li>"auto" use the BSF engine if it exists,
+          otherwise use the <em>javax.scripting</em> manager.</li>
+      </dl>
+    </td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">src</td>
