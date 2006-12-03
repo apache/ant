@@ -36,7 +36,8 @@ import java.util.HashSet;
 import java.io.File;
 
 import org.apache.tools.ant.util.ClasspathUtils;
-import org.apache.tools.ant.util.optional.ScriptRunner;
+import org.apache.tools.ant.util.ScriptRunnerBase;
+import org.apache.tools.ant.util.ScriptRunnerHelper;
 
 /**
  * Define a task using a script
@@ -44,8 +45,15 @@ import org.apache.tools.ant.util.optional.ScriptRunner;
  * @since Ant 1.6
  */
 public class ScriptDef extends DefBase {
+    /**
+     * script runner helper
+     */
+    private ScriptRunnerHelper helper = new ScriptRunnerHelper();
+    /**
+     * script runner.
+     */
     /** Used to run the script */
-    private ScriptRunner runner = new ScriptRunner();
+    private ScriptRunnerBase   runner = null;
 
     /** the name by which this script will be activated */
     private String name;
@@ -61,6 +69,16 @@ public class ScriptDef extends DefBase {
 
     /** The nested element definitions indexed by their names */
     private Map nestedElementMap;
+
+    /**
+     * Set the project.
+     * @param project the project that this def belows to.
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        helper.setProjectComponent(this);
+        helper.setSetBeans(false);
+    }
 
     /**
      * set the name under which this script will be activated in a build
@@ -174,10 +192,18 @@ public class ScriptDef extends DefBase {
                 + "name the script");
         }
 
-        if (runner.getLanguage() == null) {
+        if (helper.getLanguage() == null) {
             throw new BuildException("<scriptdef> requires a language attribute "
                 + "to specify the script language");
         }
+
+        // Check if need to set the loader
+        if (getAntlibClassLoader() != null || hasCpDelegate()) {
+            helper.setClassLoader(createLoader());
+        }
+
+        // Now create the scriptRunner
+        runner = helper.getScriptRunner();
 
         attributeSet = new HashSet();
         for (Iterator i = attributes.iterator(); i.hasNext();) {
@@ -321,6 +347,14 @@ public class ScriptDef extends DefBase {
         runner.executeScript("scriptdef_" + name);
     }
 
+    /**
+     * Defines the manager.
+     *
+     * @param manager the scripting manager.
+     */
+    public void setManager(String manager) {
+        helper.setManager(manager);
+    }
 
     /**
      * Defines the language (required).
@@ -328,7 +362,7 @@ public class ScriptDef extends DefBase {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        runner.setLanguage(language);
+        helper.setLanguage(language);
     }
 
     /**
@@ -337,7 +371,7 @@ public class ScriptDef extends DefBase {
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
-        runner.setSrc(file);
+        helper.setSrc(file);
     }
 
     /**
@@ -346,7 +380,7 @@ public class ScriptDef extends DefBase {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        runner.addText(text);
+        helper.addText(text);
     }
 }
 
