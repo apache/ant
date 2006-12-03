@@ -126,6 +126,13 @@ public abstract class ScriptRunnerBase {
     public abstract boolean supportsLanguage();
 
     /**
+     * Get the name of the manager prefix used for this
+     * scriptrunner.
+     * @return the prefix string.
+     */
+    public abstract String getManagerName();
+
+    /**
      * Defines the language (required).
      * @param language the scripting language name for the script.
      */
@@ -214,6 +221,22 @@ public abstract class ScriptRunnerBase {
      */
     public void clearScript() {
         this.script = "";
+    }
+
+    /**
+     * Set the project for this runner.
+     * @param project the project.
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Get the project for this runner.
+     * @return the project.
+     */
+    public Project getProject() {
+        return project;
     }
 
     /**

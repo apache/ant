@@ -21,9 +21,14 @@ import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.bsf.BSFEngine;
 
-import org.apache.tools.ant.BuildException;
 
 import java.util.Iterator;
+import java.util.Hashtable;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+
+import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 
 /**
@@ -44,26 +49,38 @@ public class ScriptRunner extends ScriptRunnerBase {
     private BSFManager manager;
 
     /**
+     * Get the name of the manager prefix.
+     * @return "bsf"
+     */
+    public String getManagerName() {
+        return "bsf";
+    }
+
+    /**
      * Check if bsf supports the language.
      * @return true if bsf can create an engine for this language.
      */
     public boolean supportsLanguage() {
-        if (manager != null) {
-            return true;
-        }
-        checkLanguage();
-        ClassLoader origLoader = replaceContextLoader();
-        try {
-            BSFManager m = createManager();
-            BSFEngine e =
-                engine != null
-                ? engine
-                : m.loadScriptingEngine(getLanguage());
-            return e != null;
-        } catch (Exception ex) {
+        Hashtable table = (Hashtable) ReflectUtil.getField(
+            new BSFManager(), "registeredEngines");
+        String engineClassName = (String) table.get(getLanguage());
+        if (engineClassName == null) {
+            getProject().log(
+                "This is no BSF engine class for language '"
+                + getLanguage() + "'",
+                Project.MSG_VERBOSE);
             return false;
-        } finally {
-            restoreContextLoader(origLoader);
+        }
+        try {
+            getScriptClassLoader().loadClass(engineClassName);
+            return true;
+        } catch (Throwable ex) {
+            getProject().log(
+                "unable to create BSF engine class for language '"
+                + getLanguage() + "'",
+                ex,
+                Project.MSG_VERBOSE);
+            return false;
         }
     }
 
