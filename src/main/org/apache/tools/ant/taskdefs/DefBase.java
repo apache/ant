@@ -36,6 +36,15 @@ public abstract class DefBase extends AntlibDefinition {
     private ClasspathUtils.Delegate cpDelegate;
 
     /**
+     * Check if classpath attributes have been set.
+     * (to be called before getCpDelegate() is used.
+     * @return true if cpDelegate has been created.
+     */
+    protected boolean hasCpDelegate() {
+        return cpDelegate != null;
+    }
+
+    /**
      * @param reverseLoader if true a delegated loader will take precedence over
      *                      the parent
      * @deprecated since 1.6.x.
