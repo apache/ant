@@ -126,7 +126,6 @@ public class ScriptRunnerCreator {
             runner = (ScriptRunnerBase) Class.forName(
                 runnerClass, true, scriptLoader).newInstance();
             runner.setProject(project);
-            return runner;
         } catch (Exception ex) {
             ReflectUtil.throwBuildException(ex);
             // NotReached
