@@ -38,6 +38,7 @@ import org.apache.tools.ant.util.IdentityStack;
  *
  */
 public abstract class DataType extends ProjectComponent implements Cloneable {
+    // CheckStyle:VisibilityModifier OFF
 
     /**
      * Value to the refid attribute.
@@ -62,6 +63,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *             {@link #isChecked} instead.
      */
     protected boolean checked = true;
+    // CheckStyle:VisibilityModifier ON
 
     /**
      * Has the refid attribute of this element been set?

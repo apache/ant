@@ -43,7 +43,6 @@ public abstract class ProjectComponent implements Cloneable {
      *             Please use the {@link #getLocation()} method.
      */
     protected Location location = Location.UNKNOWN_LOCATION;
-    // CheckStyle:VisibilityModifier ON
 
     /**
      * Description of this component, if any.
@@ -51,6 +50,7 @@ public abstract class ProjectComponent implements Cloneable {
      *             You should not be accessing this variable directly.
      */
     protected String description;
+    // CheckStyle:VisibilityModifier ON
 
     /** Sole constructor. */
     public ProjectComponent() {
