@@ -45,6 +45,13 @@ public abstract class ProjectComponent implements Cloneable {
     protected Location location = Location.UNKNOWN_LOCATION;
     // CheckStyle:VisibilityModifier ON
 
+    /**
+     * Description of this component, if any.
+     * @deprecated since 1.6.x.
+     *             You should not be accessing this variable directly.
+     */
+    protected String description;
+
     /** Sole constructor. */
     public ProjectComponent() {
     }
@@ -95,6 +102,29 @@ public abstract class ProjectComponent implements Cloneable {
      */
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    /**
+     * Sets a description of the current action. This may be used for logging
+     * purposes.
+     *
+     * @param desc Description of the current action.
+     *             May be <code>null</code>, indicating that no description is
+     *             available.
+     *
+     */
+    public void setDescription(String desc) {
+        description = desc;
+    }
+
+    /**
+     * Returns the description of the current action.
+     *
+     * @return the description of the current action, or <code>null</code> if
+     *         no description is available.
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
