@@ -4,9 +4,9 @@ Changes from Ant 1.7.0RC1 to current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
-* Initial support for JDK6 scripting <script>.
-  <*script*> will now use javax.scripting if bsf is
-  not available, or if explicilty requested by using
+* Initial support for JDK 6 (JSR 223) scripting.
+  <*script*> tasks will now use javax.scripting if BSF is
+  not available, or if explicitly requested by using
   a "manager" attribute.
 
 Fixed bugs:
