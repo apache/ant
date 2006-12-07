@@ -241,11 +241,8 @@
 
   <selector id="needs.apache-bsf">
     <or>
-      <filename name="${optional.package}/Script*"/>
-      <filename name="${optional.package}/script/**/*"/>
-      <filename name="${optional.type.package}/*Script*"/>
-      <filename name="${util.package}/Script*"/>
-      <filename name="${util.package}/optional/Script*"/>
+      <filename name="${util.package}/ScriptRunner.*"/>
+      <filename name="${util.package}/optional/ScriptRunner*"/>
     </or>
   </selector>
 

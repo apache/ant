@@ -15,13 +15,14 @@
  *  limitations under the License.
  *
  */
+
 package org.apache.tools.ant.types.optional;
 
 import org.apache.tools.ant.filters.TokenFilter;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.optional.ScriptRunner;
-
+import org.apache.tools.ant.util.ScriptRunnerBase;
+import org.apache.tools.ant.util.ScriptRunnerHelper;
 
 /**
  * Most of this is CAP (Cut And Paste) from the Script task
@@ -40,7 +41,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /** the token used by the script */
     private String token;
 
-    private ScriptRunner runner = new ScriptRunner();
+    private ScriptRunnerHelper runner = new ScriptRunnerHelper();
 
     /**
      * Defines the language (required).
@@ -61,7 +62,6 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
             return;
         }
         initialized = true;
-        runner.bindToComponent(this);
     }
 
     /**
@@ -93,7 +93,9 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     public String filter(String token) {
         init();
         setToken(token);
-        runner.executeScript("ant_filter");
+        ScriptRunnerBase srb = runner.getScriptRunner();
+        srb.bindToComponent(this);
+        srb.executeScript("ant_filter");
         return getToken();
     }
 
