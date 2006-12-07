@@ -149,7 +149,8 @@ public class Ant extends Task {
     }
 
     /**
-     * Called in execute or createProperty if newProject is null.
+     * Called in execute or createProperty (via getNewProject())
+     * if newProject is null.
      *
      * <p>This can happen if the same instance of this task is run
      * twice as newProject is set to null at the end of execute (to
@@ -311,9 +312,7 @@ public class Ant extends Task {
         String savedAntFile = antFile;
         Vector locals = new Vector(targets);
         try {
-            if (newProject == null) {
-                reinit();
-            }
+            getNewProject();
 
             if (dir == null && inheritAll) {
                 dir = getProject().getBaseDir();
@@ -653,11 +652,8 @@ public class Ant extends Task {
      * @return the created <code>Property</code> object.
      */
     public Property createProperty() {
-        if (newProject == null) {
-            reinit();
-        }
         Property p = new Property(true, getProject());
-        p.setProject(newProject);
+        p.setProject(getNewProject());
         p.setTaskName("property");
         properties.addElement(p);
         return p;
@@ -697,6 +693,18 @@ public class Ant extends Task {
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);
+    }
+
+    /*
+     * Get the (sub)-Project instance currently in use.
+     * @return Project
+     * @since Ant 1.7
+     */
+    protected Project getNewProject() {
+        if (newProject == null) {
+            reinit();
+        }
+        return newProject;
     }
 
     /**
