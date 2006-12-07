@@ -21,6 +21,9 @@ package org.apache.tools.ant.types.optional;
 import org.apache.tools.ant.filters.TokenFilter;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;
 
@@ -36,12 +39,23 @@ import org.apache.tools.ant.util.ScriptRunnerHelper;
  * @since Ant 1.6
  */
 public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
-    /** Has this object been initialized ? */
-    private boolean initialized = false;
+    /** script runner helper */
+    private ScriptRunnerHelper helper = new ScriptRunnerHelper();
+
+    /** script runner. */
+    private ScriptRunnerBase   runner = null;
+
     /** the token used by the script */
     private String token;
 
-    private ScriptRunnerHelper runner = new ScriptRunnerHelper();
+    /**
+     * Set the project.
+     * @param project the owner of this component.
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        helper.setProjectComponent(this);
+    }
 
     /**
      * Defines the language (required).
@@ -49,7 +63,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        runner.setLanguage(language);
+        helper.setLanguage(language);
     }
 
     /**
@@ -58,10 +72,10 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @exception BuildException if someting goes wrong
      */
     private void init() throws BuildException {
-        if (initialized) {
+        if (runner != null) {
             return;
         }
-        initialized = true;
+        runner = helper.getScriptRunner();
     }
 
     /**
@@ -93,9 +107,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     public String filter(String token) {
         init();
         setToken(token);
-        ScriptRunnerBase srb = runner.getScriptRunner();
-        srb.bindToComponent(this);
-        srb.executeScript("ant_filter");
+        runner.executeScript("ant_filter");
         return getToken();
     }
 
@@ -105,7 +117,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
-        runner.setSrc(file);
+        helper.setSrc(file);
     }
 
     /**
@@ -114,6 +126,43 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        runner.addText(text);
+        helper.addText(text);
     }
+
+    /**
+     * Defines the manager.
+     *
+     * @param manager the scripting manager.
+     */
+    public void setManager(String manager) {
+        helper.setManager(manager);
+    }
+    /**
+     * Set the classpath to be used when searching for classes and resources.
+     *
+     * @param classpath an Ant Path object containing the search path.
+     */
+    public void setClasspath(Path classpath) {
+        helper.setClasspath(classpath);
+    }
+
+    /**
+     * Classpath to be used when searching for classes and resources.
+     *
+     * @return an empty Path instance to be configured by Ant.
+     */
+    public Path createClasspath() {
+        return helper.createClasspath();
+    }
+
+    /**
+     * Set the classpath by reference.
+     *
+     * @param r a Reference to a Path instance to be used as the classpath
+     *          value.
+     */
+    public void setClasspathRef(Reference r) {
+        helper.setClasspathRef(r);
+    }
+
 }
