@@ -119,7 +119,7 @@ public class ScriptRunner extends ScriptRunnerBase {
      * @return the result of the evalulation
      * @exception BuildException if someting goes wrong exectuing the script.
      */
-    public Object evalulateScript(String execName)
+    public Object evaluateScript(String execName)
         throws BuildException {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();

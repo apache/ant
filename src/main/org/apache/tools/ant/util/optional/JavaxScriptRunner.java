@@ -15,6 +15,7 @@
  *  limitations under the License.
  *
  */
+
 package org.apache.tools.ant.util.optional;
 
 import org.apache.tools.ant.BuildException;
@@ -25,10 +26,9 @@ import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.ReflectWrapper;
 
-
 /**
- * This class is used to run javax.script scripts
- *
+ * This class is used to run scripts using JSR 223.
+ * @since Ant 1.7.0
  */
 public class JavaxScriptRunner extends ScriptRunnerBase {
     private ReflectWrapper engine;
@@ -66,7 +66,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
      * @exception BuildException if someting goes wrong exectuing the script.
      */
     public void executeScript(String execName) throws BuildException {
-        evalulateScript(execName);
+        evaluateScript(execName);
     }
 
     /**
@@ -77,7 +77,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
      * @return the result of the evalulation
      * @exception BuildException if someting goes wrong exectuing the script.
      */
-    public Object evalulateScript(String execName) throws BuildException {
+    public Object evaluateScript(String execName) throws BuildException {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();
         try {

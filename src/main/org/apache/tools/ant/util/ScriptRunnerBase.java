@@ -32,8 +32,9 @@ import java.util.Iterator;
 
 /**
  * This is a common abstract base case for script runners.
- * These classes need to implement executeScript, evalulateScript
+ * These classes need to implement executeScript, evaluateScript
  * and supportsLanguage.
+ * @since Ant 1.7.0
  */
 public abstract class ScriptRunnerBase {
     /** Whether to keep the engine between calls to execute/eval */
@@ -115,7 +116,7 @@ public abstract class ScriptRunnerBase {
      *        execution.
      * @return the result of evalulating the script.
      */
-    public abstract Object evalulateScript(String execName);
+    public abstract Object evaluateScript(String execName);
 
     /**
      * Check if a script engine can be created for
