@@ -155,12 +155,19 @@ public class ResourceUtils {
         Union result = new Union();
         for (Iterator iter = source.iterator(); iter.hasNext();) {
             Resource sr = (Resource) iter.next();
-            String[] targetnames = mapper.mapFileName(
-                sr.getName().replace('/', File.separatorChar));
+            String srName = sr.getName();
+            srName = srName == null
+                ? srName : srName.replace('/', File.separatorChar);
 
+            String[] targetnames = null;
+            try {
+                targetnames = mapper.mapFileName(srName);
+            } catch (Exception e) {
+		logTo.log("Caught " + e + " mapping resource " + sr,
+                    Project.MSG_VERBOSE);
+            }
             if (targetnames == null || targetnames.length == 0) {
-                logTo.log(sr.getName()
-                      + " skipped - don\'t know how to handle it",
+                logTo.log(sr + " skipped - don\'t know how to handle it",
                       Project.MSG_VERBOSE);
                 continue;
             }
