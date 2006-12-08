@@ -59,6 +59,9 @@ Other changes:
 * Java 5 enumerations may now be used as values in XML attributes in place of
   EnumeratedAttribute. Bugzilla 41058.
 
+* Create a pom file for ant-testutil and add ant-testutil.jar to the ant
+  distribution. Bugzilla 40980.  
+
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
 
