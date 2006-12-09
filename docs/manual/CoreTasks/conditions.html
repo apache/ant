@@ -489,6 +489,15 @@ an explanation of scripts and dependencies.
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
+    <td valign="top">manager</td>
+    <td valign="top">
+      The script engine manager to use.
+      See the <a href="../OptionalTasks/script.html">script</a> task
+      for using this attribute.
+    </td>
+    <td valign="top" align="center">No - default is "auto"</td>
+  </tr>
+  <tr>
     <td valign="top">value</td>
     <td valign="top">default boolean value</td>
     <td valign="top" align="center">No -default is "false"</td>
@@ -497,8 +506,34 @@ an explanation of scripts and dependencies.
     <td valign="top">src</td>
     <td valign="top">filename of script source</td>
     <td valign="top" align="center">No</td>
-  </tr>  
+  </tr>
+  <tr>
+    <td valign="top">setbeans</td>
+    <td valign="top">whether to have all properties, references and targets as
+      global variables in the script.</td>
+    <td valign="top" align="center">No, default is "true".</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">
+      The classpath to pass into the script.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">The classpath to use, given as a
+       <a href="../using.html#references">reference</a> to a path defined elsewhere.
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
+<h5>Parameters specified as nested elements</h5>
+<h6>classpath</h6>
+  <p>
+    See the <a href="../OptionalTasks/script.html">script</a> task
+    for using this nested element.
+  </p>
+<h5>Description</h5>
 <p>
 The script supports script language inline, this script has access to the
 same beans as the <code>&lt;script&gt;</code> task, and to the <code>

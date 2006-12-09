@@ -600,10 +600,21 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
     <td><a href="http://www.antlr.org/" target="_top">http://www.antlr.org/</a></td>
   </tr>
   <tr>
-    <td >bsf.jar</td>
-    <td>script task<br>
-    <strong>Note</strong>: Ant 1.6 and later require Apache BSF, not
-    the IBM version.  I.e. you need BSF 2.3.0-rc1 or later.</td>
+    <td>bsf.jar</td>
+    <td>script task
+      <p>
+        <strong>Note</strong>: Ant 1.6 and later require Apache BSF, not
+        the IBM version.  I.e. you need BSF 2.3.0-rc1 or later.
+      </p>
+      <p>
+        <strong>Note</strong>: BSF 2.4.0 is needed to use a post 1.5R3 version
+        of rhino's javascript.
+      </p>
+      <p>
+        <strong>Note</strong>: BSF 2.4.0 uses jakarata-commons-logging
+        so it needs the commons-logging.jar.
+      </p>
+      </td>
     <td><a href="http://jakarta.apache.org/bsf/" target="_top">http://jakarta.apache.org/bsf/</a></td>
   </tr>
   <tr>
@@ -636,7 +647,7 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
     <td>js.jar</td>
     <td>Javascript with script task<br>
     If you use Apache BSF 2.3.0-rc1, you must use rhino 1.5R3 (later
-    versions of BSF work with 1.5R4 as well).</td>
+    versions of BSF (e.g. version 2.4.0) work with 1.5R4 and higher).</td>
     <td><a href="http://www.mozilla.org/rhino/" target="_top">http://www.mozilla.org/rhino/</a></td>
   </tr>
   <tr>
