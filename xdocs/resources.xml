@@ -91,6 +91,59 @@
 
     <section name="Books">
       <p>The most recent books come first</p>
+      <subsection name="Ant in Action"
+          isbn="1-932394-80-X">
+        <p>Published April/May 2007, and covering Ant 1.7.</p>
+
+        <p>This is a major rewrite of the first edition; still 600 pages long.
+        </p>
+
+        <p>
+          This book moves up from Ant1.5 to Java1.5 and 1.7, with a near-complete
+          rewrite of the applied-ant section, covering new topics such as
+          antlibs, repository management with Ivy, Xml Schema validation,
+          EJB3.0/Java EE development and advanced deployment using SmartFrog.
+          The ant coding section looks at AntUnit, antlib authoring and
+          scripting languages, while the beginners chapters, the first third
+          of the book, still shows developers how to build, test, package and
+          redistribute a Java application.
+        </p>
+        <p>
+          If you are one of the 20,000+ owners of the first edition, it is now
+          obsolete. Sorry :)
+        </p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Steve Loughran and Erik Hatcher</td>
+          </tr>
+          <tr>
+            <th>Publisher URL:</th>
+            <td>
+              <a href="http://www.manning.com/loughran/">
+                http://www.manning.com/loughran/
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <th>Book URL</th>
+            <td>
+              <a href="http://antbook.org/">
+                http://antbook.org/
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <th>Source code repository</th>
+            <td>
+              <a href="http://sourceforge.net/projects/antbook">
+                http://sourceforge.net/projects/antbook
+              </a>
+            </td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="Ant: The Definitive Guide, 2nd edition" isbn="0596006098">
         <p>Published April 2005, and covers Ant release 1.6.1.</p>
