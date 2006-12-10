@@ -39,6 +39,9 @@ Fixed bugs:
 * XmlProperty overrides previously set property value when handling duplicate 
   elements. Bugzilla 41080.
 
+* Having many tasks causes OOM.
+  Bugzilla 41049.
+
 Other changes:
 --------------
 

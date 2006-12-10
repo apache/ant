@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.InvocationTargetException;
@@ -34,7 +33,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -81,13 +79,6 @@ public class ComponentHelper  {
     private Stack antLibStack = new Stack();
     /** current antlib uri */
     private String antLibCurrentUri = null;
-
-    /**
-     * Map from task names to vectors of created tasks
-     * (String to Vector of Task). This is used to invalidate tasks if
-     * the task definition changes.
-     */
-    private Hashtable createdTasks = new Hashtable();
 
     /**
      * this does not appear to be used anywhere in the Ant codebase
@@ -229,7 +220,6 @@ public class ComponentHelper  {
             task.setTaskName(ue.getTaskName());
             task.setOwningTarget(ue.getOwningTarget());
             task.init();
-            addCreatedTask(componentType, task);
         }
         return component;
     }
@@ -285,9 +275,7 @@ public class ComponentHelper  {
      * Attempting to override an existing definition with an
      * equivalent one (i.e. with the same classname) results in
      * a verbose log message. Attempting to override an existing definition
-     * with a different one results in a warning log message and
-     * invalidates any tasks which have already been created with the
-     * old definition.
+     * with a different one results in a warning log message.
      *
      * @param taskName The name of the task to add.
      *                 Must not be <code>null</code>.
@@ -456,12 +444,9 @@ public class ComponentHelper  {
     }
 
     /**
-     * Creates a new instance of a task, adding it to a list of
-     * created tasks for later invalidation. This causes all tasks
-     * to be remembered until the containing project is removed
+     * Creates a new instance of a task.
      *
      *  Called from Project.createTask(), which can be called by tasks.
-     *  The method should be deprecated, as it doesn't support ns and libs.
      *
      * @param taskType The name of the task to create an instance of.
      *                 Must not be <code>null</code>.
@@ -481,15 +466,11 @@ public class ComponentHelper  {
                               org.apache.tools.ant.taskdefs.Property.class);
             task = createNewTask(taskType);
         }
-        if (task != null) {
-            addCreatedTask(taskType, task);
-        }
         return task;
     }
 
     /**
-     * Creates a new instance of a task. This task is not
-     * cached in the createdTasks list.
+     * Creates a new instance of a task.
      * @since ant1.6
      * @param taskType The name of the task to create an instance of.
      *                 Must not be <code>null</code>.
@@ -523,53 +504,6 @@ public class ComponentHelper  {
 
         project.log("   +Task: " + taskType, Project.MSG_DEBUG);
         return task;
-    }
-
-    /**
-     * Keeps a record of all tasks that have been created so that they
-     * can be invalidated if a new task definition overrides the current one.
-     *
-     * @param type The name of the type of task which has been created.
-     *             Must not be <code>null</code>.
-     *
-     * @param task The freshly created task instance.
-     *             Must not be <code>null</code>.
-     */
-    private void addCreatedTask(String type, Task task) {
-        synchronized (createdTasks) {
-            Vector v = (Vector) createdTasks.get(type);
-            if (v == null) {
-                v = new Vector();
-                createdTasks.put(type, v);
-            }
-            v.addElement(new WeakReference(task));
-        }
-    }
-
-    /**
-     * Mark tasks as invalid which no longer are of the correct type
-     * for a given taskname.
-     *
-     * @param type The name of the type of task to invalidate.
-     *             Must not be <code>null</code>.
-     */
-    private void invalidateCreatedTasks(String type) {
-        synchronized (createdTasks) {
-            Vector v = (Vector) createdTasks.get(type);
-            if (v != null) {
-                Enumeration taskEnum = v.elements();
-                while (taskEnum.hasMoreElements()) {
-                    WeakReference ref = (WeakReference) taskEnum.nextElement();
-                    Task t = (Task) ref.get();
-                    //being a weak ref, it may be null by this point
-                    if (t != null) {
-                        t.markInvalid();
-                    }
-                }
-                v.removeAllElements();
-                createdTasks.remove(type);
-            }
-        }
     }
 
     /**
@@ -721,9 +655,6 @@ public class ComponentHelper  {
                     + (isTask ? "task " : "datatype ") + name,
                     (def.similarDefinition(old, project))
                     ? Project.MSG_VERBOSE : Project.MSG_WARN);
-                if (isTask) {
-                    invalidateCreatedTasks(name);
-                }
             }
             project.log(" +Datatype " + name + " " + def.getClassName(),
                         Project.MSG_DEBUG);
