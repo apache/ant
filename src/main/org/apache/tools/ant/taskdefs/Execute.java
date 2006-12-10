@@ -625,24 +625,32 @@ public class Execute {
         }
         Vector osEnv = (Vector) getProcEnvironment().clone();
         for (int i = 0; i < env.length; i++) {
+            String keyValue = env[i];
             // Get key including "="
-            String key = env[i].substring(0, env[i].indexOf('=') + 1);
+            String key = keyValue.substring(0, keyValue.indexOf('=') + 1);
             if (environmentCaseInSensitive) {
                 // Nb: using default locale as key is a env name
                 key = key.toLowerCase();
             }
             int size = osEnv.size();
+            // Find the key in the current enviroment copy
+            // and remove it.
             for (int j = 0; j < size; j++) {
                 String osEnvItem = (String) osEnv.elementAt(j);
-                if (environmentCaseInSensitive) {
-                    osEnvItem = osEnvItem.toLowerCase();
-                }
-                if (osEnvItem.startsWith(key)) {
+                String convertedItem = environmentCaseInSensitive
+                    ? osEnvItem.toLowerCase() : osEnvItem;
+                if (convertedItem.startsWith(key)) {
                     osEnv.removeElementAt(j);
+                    if (environmentCaseInSensitive) {
+                        // Use the original casiness of the key
+                        keyValue = osEnvItem.substring(0, key.length())
+                            + keyValue.substring(key.length());
+                    }
                     break;
                 }
             }
-            osEnv.addElement(env[i]);
+            // Add the key to the enviromnent copy
+            osEnv.addElement(keyValue);
         }
         return (String[]) (osEnv.toArray(new String[osEnv.size()]));
     }
