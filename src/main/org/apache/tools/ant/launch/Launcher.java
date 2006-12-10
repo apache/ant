@@ -224,54 +224,13 @@ public class Launcher {
             newArgs = (String[]) argList.toArray(new String[argList.size()]);
         }
 
-        List libPathURLs = new ArrayList();
+        URL[] libURLs    = getLibPathURLs(
+            noClassPath ? null : cpString, libPaths);
+        URL[] systemURLs = getSystemURLs(jarDir);
+        URL[] userURLs   = noUserLib ? new URL[0] : getUserURLs();
 
-        if (cpString != null && !noClassPath) {
-            addPath(cpString, false, libPathURLs);
-        }
-
-        for (Iterator i = libPaths.iterator(); i.hasNext();) {
-            String libPath = (String) i.next();
-            addPath(libPath, true, libPathURLs);
-        }
-
-        URL[] libJars = (URL[]) libPathURLs.toArray(new URL[libPathURLs.size()]);
-
-        // Now try and find JAVA_HOME
-        File toolsJar = Locator.getToolsJar();
-
-        // determine ant library directory for system jars: use property
-        // or default using location of ant-launcher.jar
-        File antLibDir = null;
-        String antLibDirProperty = System.getProperty(ANTLIBDIR_PROPERTY);
-        if (antLibDirProperty != null) {
-            antLibDir = new File(antLibDirProperty);
-        }
-        if ((antLibDir == null) || !antLibDir.exists()) {
-            antLibDir = jarDir;
-            System.setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
-        }
-        URL[] systemJars = Locator.getLocationURLs(antLibDir);
-
-        File userLibDir
-            = new File(System.getProperty(USER_HOMEDIR), USER_LIBDIR);
-
-        URL[] userJars = noUserLib ? new URL[0] : Locator.getLocationURLs(userLibDir);
-
-        int numJars = libJars.length + userJars.length + systemJars.length;
-        if (toolsJar != null) {
-            numJars++;
-        }
-        URL[] jars = new URL[numJars];
-        System.arraycopy(libJars, 0, jars, 0, libJars.length);
-        System.arraycopy(userJars, 0, jars, libJars.length, userJars.length);
-        System.arraycopy(systemJars, 0, jars, userJars.length + libJars.length,
-            systemJars.length);
-
-        if (toolsJar != null) {
-            jars[jars.length - 1] = Locator.fileToURL(toolsJar);
-        }
-
+        URL[] jars = getJarArray(
+            libURLs, userURLs, systemURLs, Locator.getToolsJar());
 
         // now update the class.path property
         StringBuffer baseClassPath
@@ -308,5 +267,84 @@ public class Launcher {
             exitCode = EXIT_CODE_ERROR;
         }
         return exitCode;
+    }
+
+    /**
+     * Get the list of -lib enties and -cp entry into
+     * a URL array.
+     * @param cpString the classpath string
+     * @param libPaths the list of -lib entries.
+     * @return an array of URLs.
+     */
+    private URL[] getLibPathURLs(String cpString, List libPaths)
+        throws MalformedURLException {
+        List libPathURLs = new ArrayList();
+
+        if (cpString != null) {
+            addPath(cpString, false, libPathURLs);
+        }
+
+        for (Iterator i = libPaths.iterator(); i.hasNext();) {
+            String libPath = (String) i.next();
+            addPath(libPath, true, libPathURLs);
+        }
+
+        return  (URL[]) libPathURLs.toArray(new URL[libPathURLs.size()]);
+    }
+
+    /**
+     * Get the jar files in ANT_HOME/lib.
+     * determine ant library directory for system jars: use property
+     * or default using location of ant-launcher.jar
+     */
+    private URL[] getSystemURLs(File antLauncherDir) throws MalformedURLException {
+        File antLibDir = null;
+        String antLibDirProperty = System.getProperty(ANTLIBDIR_PROPERTY);
+        if (antLibDirProperty != null) {
+            antLibDir = new File(antLibDirProperty);
+        }
+        if ((antLibDir == null) || !antLibDir.exists()) {
+            antLibDir = antLauncherDir;
+            System.setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
+        }
+        return Locator.getLocationURLs(antLibDir);
+    }
+
+    /**
+     * Get the jar files in user.home/.ant/lib
+     */
+    private URL[] getUserURLs() throws MalformedURLException {
+        File userLibDir
+            = new File(System.getProperty(USER_HOMEDIR), USER_LIBDIR);
+
+        return Locator.getLocationURLs(userLibDir);
+    }
+
+    /**
+     * Combine the various jar sources into a single array of jars.
+     * @param libJars the jars specified in -lib command line options
+     * @param userJars the jars in ~/.ant/lib
+     * @param systemJars the jars in $ANT_HOME/lib
+     * @param toolsJar   the tools.jar file
+     * @return a combined array
+     * @throws MalformedURLException if there is a problem.
+     */
+    private URL[] getJarArray (
+        URL[] libJars, URL[] userJars, URL[] systemJars, File toolsJar)
+        throws MalformedURLException {
+        int numJars = libJars.length + userJars.length + systemJars.length;
+        if (toolsJar != null) {
+            numJars++;
+        }
+        URL[] jars = new URL[numJars];
+        System.arraycopy(libJars, 0, jars, 0, libJars.length);
+        System.arraycopy(userJars, 0, jars, libJars.length, userJars.length);
+        System.arraycopy(systemJars, 0, jars, userJars.length + libJars.length,
+            systemJars.length);
+
+        if (toolsJar != null) {
+            jars[jars.length - 1] = Locator.fileToURL(toolsJar);
+        }
+        return jars;
     }
 }
