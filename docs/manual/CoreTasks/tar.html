@@ -238,7 +238,13 @@ to <code>${dist.name}/..</code>.</p>
 Unix file permissions have been stored as part of the ZIP file, they
 will be retained in the resulting tar archive.</p>
 
-
+  <p><strong>Note:</strong>
+    Please note the tar task creates a tar file, it does not append 
+    to an existing tar file. The existing tar file is replaced instead.
+    As with most tasks in Ant, the task only takes action if the output
+    file (the tar file in this case) is older than the input files, or
+    if the output file does not exist.
+  </p>
 
 </body>
 </html>
