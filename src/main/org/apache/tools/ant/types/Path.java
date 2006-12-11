@@ -277,6 +277,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (union == null) {
             union = new Union();
             union.setProject(getProject());
+            union.setCache(false);
         }
         union.add(c);
         setChecked(false);

@@ -42,8 +42,11 @@ Fixed bugs:
 * XmlProperty overrides previously set property value when handling duplicate 
   elements. Bugzilla 41080.
 
-* Having many tasks causes OOM.
-  Bugzilla 41049.
+* Having many tasks causes OOM.  Bugzilla 41049.
+
+* Regression: <path> was evaluating nested content only once, so that it could
+  not e.g. pick up files that didn't exist the first time through.
+  Bugzilla 41151.
 
 Other changes:
 --------------
