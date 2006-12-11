@@ -125,9 +125,9 @@ public class Main implements AntMain {
     private Integer threadPriority = null;
 
     /**
-     * proxy flag: default is true
+     * proxy flag: default is false
      */
-    private boolean proxy = true;
+    private boolean proxy = false;
 
     /**
      * Prints the message of the Throwable if it (the message) is not
@@ -452,7 +452,7 @@ public class Main implements AntMain {
                         + "\nThis can be caused by a version mismatch between "
                         + "the ant script/.bat file and Ant itself.";
                 throw new BuildException(msg);
-            } else if (arg.equals("-noproxy")) {
+            } else if (arg.equals("-autoproxy")) {
                 proxy = false;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
@@ -847,8 +847,8 @@ public class Main implements AntMain {
         msg.append("  -nouserlib             Run ant without using the jar files from" + lSep
                    + "                         ${user.home}/.ant/lib" + lSep);
         msg.append("  -noclasspath           Run ant without using CLASSPATH" + lSep);
-        msg.append("  -noproxy               Java 1.5 only: do not use the OS proxies"
-                   + lSep);
+        msg.append("  -autoproxy             Java1.5+: use the OS proxy settings"
+                + lSep);
         msg.append("  -main <class>          override Ant's normal entry point");
         System.out.println(msg.toString());
     }

@@ -9,6 +9,9 @@ Changes that could break older environments:
   not available, or if explicitly requested by using
   a "manager" attribute.
 
+* The -noproxy option which was in the previous 1.7 alpha and beta
+  releases has been removed. It is the default behavior and not needed.
+
 Fixed bugs:
 -----------
 * Directory deletion did not work properly.
@@ -63,7 +66,12 @@ Other changes:
   EnumeratedAttribute. Bugzilla 41058.
 
 * Create a pom file for ant-testutil and add ant-testutil.jar to the ant
-  distribution. Bugzilla 40980.  
+  distribution. Bugzilla 40980.
+
+* Roll back automatic proxy enabling on Java 1.5. It broke things like
+  Oracle JDBC drivers, and Ant itself on IBM's JVM on AIX, and didnt
+  seem to work to well the rest of the time.
+  To enable the feature, use the -autoproxy command line option. 
 
 Changes from Ant 1.7.0Beta3 to Ant 1.7.0RC1
 ===========================================
