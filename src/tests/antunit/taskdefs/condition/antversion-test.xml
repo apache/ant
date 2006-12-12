@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="antversion-test" default="all" basedir="." xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="test-atleast">
+    <au:assertTrue>
+    	<antversion atleast="1.7.0"/>
+    </au:assertTrue>	
+  </target>
+
+  <target name="test-exactly">
+    <au:assertTrue>
+    	<antversion exactly="1.7.0"/>			
+    </au:assertTrue>	
+  </target>
+
+  <target name="test-atleast-fail">
+  	<property name="version" value="1.8.9"/>
+    <au:assertFalse>
+   	  <antversion atleast="1.9.0"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+
+</project>
