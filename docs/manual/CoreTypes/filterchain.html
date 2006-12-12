@@ -1356,6 +1356,8 @@ Delete tabs from lines, trim the lines and removes empty lines.
 <p><b><em><a name="scriptfilter">ScriptFilter</a></em></b></p>
 This is an optional filter that executes a script in a
 <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+  or
+  <a href="https://scripting.dev.java.net">JSR 223</a>
 supported language.</p>
 See the <a href="../OptionalTasks/script.html">Script</a> task for
 an explanation of scripts and dependencies.
@@ -1377,8 +1379,17 @@ This filter may be used directly within a filterchain.<p>
   <tr>
     <td vAlign=top>language</td>
     <td vAlign=top> The programming language the script is written in.
-Must be a supported Apache BSF language</td>
+Must be a supported Apache BSF or JSR 223 language</td>
     <td vAlign=top align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">manager</td>
+    <td valign="top">
+      The script engine manager to use.
+      See the <a href="../OptionalTasks/script.html">script</a> task
+      for using this attribute.
+    </td>
+    <td valign="top" align="center">No - default is "auto"</td>
   </tr>
   <tr>
     <td vAlign=top>src</td>
@@ -1387,8 +1398,30 @@ Must be a supported Apache BSF language</td>
     <td vAlign=top align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">setbeans</td>
+    <td valign="top">whether to have all properties, references and targets as
+      global variables in the script.</td>
+    <td valign="top" align="center">No, default is "true".</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">
+      The classpath to pass into the script.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">The classpath to use, given as a
+       <a href="../using.html#references">reference</a> to a path defined elsewhere.
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
-
+  <p>
+    This filter can take a nested &lt;classpath&gt; element.
+    See the <a href="../OptionalTasks/script.html">script</a> task
+    on how to use this element.
+  </p>
 <h4>Examples:</h4>
 
 Convert to uppercase:

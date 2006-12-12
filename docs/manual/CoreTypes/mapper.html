@@ -707,6 +707,8 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
 <h4><a name="script-mapper">scriptmapper (since Ant 1.7)</a></h4>
 <p>
 This mapper executes a script written in <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+or
+  <a href="https://scripting.dev.java.net">JSR 223</a>
 supported language, once per file to map.</p>
 The script can be declared inline or in a specified file.
 </p>
@@ -729,16 +731,49 @@ an explanation of scripts and dependencies.
       <td align="center" valign="top">Yes</td>
     </tr>
     <tr>
+      <td valign="top">manager</td>
+      <td valign="top">
+        The script engine manager to use.
+        See the <a href="../OptionalTasks/script.html">script</a> task
+        for using this attribute.
+      </td>
+      <td valign="top" align="center">No - default is "auto"</td>
+    </tr>
+    <tr>
       <td valign="top">src</td>
       <td valign="top">
         File containing the script
       </td>
       <td align="center" valign="top">No</td>
     </tr>
+    <tr>
+      <td valign="top">setbeans</td>
+      <td valign="top">whether to have all properties, references and targets as
+        global variables in the script.</td>
+      <td valign="top" align="center">No, default is "true".</td>
+    </tr>
+    <tr>
+      <td valign="top">classpath</td>
+      <td valign="top">
+        The classpath to pass into the script.
+      </td>
+      <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+      <td valign="top">classpathref</td>
+      <td valign="top">The classpath to use, given as a
+        <a href="../using.html#references">reference</a> to a path defined elsewhere.
+        <td align="center" valign="top">No</td>
+      </tr>
     </table>
+  <p>
+    This filename mapper can take a nested &lt;classpath&gt; element.
+    See the <a href="../OptionalTasks/script.html">script</a> task
+    on how to use this element.
+  </p>
 
 <p>
-Example
+  <b>Example:</b>
 </p>
 <blockquote><pre>
 &lt;scriptmapper language="javascript"&gt;

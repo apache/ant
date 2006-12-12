@@ -28,7 +28,10 @@
 <h3>Description</h3>
 <p>Scriptdef can be used to define an Ant task using a scripting language. Ant
 scripting languages supported by
-<a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a> may be
+<a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a> 
+or
+  <a href="https://scripting.dev.java.net">JSR 223</a>
+may be
 used to define the script. Scriptdef provides a mechanism to encapsulate
 control logic from a build within an Ant task minimizing the need for
 providing control style tasks in Ant itself. Complex logic can be made
@@ -95,8 +98,17 @@ more information on writing scripts, please refer to the
   <tr>
     <td valign="top">language</td>
     <td valign="top">The programming language the script is written in.
-      Must be a supported Apache BSF language</td>
+      Must be a supported Apache BSF or JSR 223 language</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">manager</td>
+    <td valign="top">
+      The script engine manager to use.
+      See the <a href="../OptionalTasks/script.html">script</a> task
+      for using this attribute.
+    </td>
+    <td valign="top" align="center">No - default is "auto"</td>
   </tr>
   <tr>
     <td valign="top">src</td>
@@ -110,7 +122,29 @@ more information on writing scripts, please refer to the
     </td>
     <td valign="top" align="center">No</td>
   </tr>
-</table>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">
+      The classpath to pass into the script.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">The classpath to use, given as a
+      <a href="../using.html#references">reference</a> to a path defined elsewhere.
+      <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+      <td valign="top">loaderRef</td>
+      <td valign="top">the name of the loader that is
+        used to load the script, constructed from the specified 
+        classpath. This allows multiple script defintions
+        to reuse the same class loader.
+      </td>
+      <td align="center" valign="top">No</td>
+    </tr>
+  </table>
 
 <h3>Nested elements</h3>
 <h4>attribute</h4>
@@ -158,7 +192,11 @@ more information on writing scripts, please refer to the
   </tr>
 </table>
 
-
+  <h4>classpath</h4>
+  <p>
+    See the <a href="../OptionalTasks/script.html">script</a> task
+    for using this nested element.
+  </p>
 
 <h3>Examples</h3>
 
@@ -236,7 +274,7 @@ Script errors are only detected when a script task is actually executed.
 </p>
 
 <pre>
-    &lt;target name="echo-task-jython"&gt;
+&lt;target name="echo-task-jython"&gt;
   &lt;scriptdef language="jython"
       name="echo"
       uri="http://example.org/script"&gt;
@@ -252,6 +290,26 @@ self.log("text: " +self.text)
 &lt;/target&gt;
 </pre>
 
+The next example shows the use of &lt;classpath&gt; and
+"loaderref" to get access to the beanshell jar.
+<pre>
+    &lt;scriptdef name="b1" language="beanshell"
+               loaderref="beanshell-ref"&gt;
+      &lt;attribute name="a"/&gt;
+      &lt;classpath
+        path="${user.home}/scripting/beanshell/bsh-1.3b1.jar"/&gt;
+      self.log("attribute a is " + attributes.get("a"));
+    &lt;/scriptdef&gt;
+
+    &lt;scriptdef name="b2" language="beanshell"
+               loaderref="beanshell-ref"&gt;
+      &lt;attribute name="a2"/&gt;
+      self.log("attribute a2 is " + attributes.get("a2"));
+    &lt;/scriptdef&gt;
+
+    &lt;b1 a="this is an 'a'"/&gt;
+    &lt;b2 a2="this is an 'a2' for b2"/&gt;
+</pre>
 <h3>Testing Scripts</h3>
 
 <p>

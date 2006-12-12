@@ -87,7 +87,8 @@
         they are signed, and optionally if they have a signature of a certain name.
       </li>
       <li><a href="#scriptselector"><code>&lt;scriptselector&gt;</code></a> - 
-        Use a BSF scripting language to create your own selector
+        Use a BSF or JSR 223 scripting language to create
+        your own selector
       </li>
     </ul>
 
@@ -976,6 +977,8 @@
         The <code>&lt;scriptselector&gt;</code> element enables you
         to write a complex selection algorithm in any
         <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+        or
+        <a href="https://scripting.dev.java.net">JSR 223</a>
         supported language.</p>
         See the <a href="../OptionalTasks/script.html">Script</a> task for
         an explanation of scripts and dependencies.
@@ -995,11 +998,44 @@
           <td valign="top" align="center">yes</td>
         </tr>
         <tr>
+          <td valign="top">manager</td>
+          <td valign="top">
+            The script engine manager to use.
+            See the <a href="../OptionalTasks/script.html">script</a> task
+            for using this attribute.
+          </td>
+          <td valign="top" align="center">No - default is "auto"</td>
+        </tr>
+        <tr>
           <td valign="top">src</td>
           <td valign="top">filename of the script</td>
           <td valign="top" align="center">no</td>
         </tr>
+        <tr>
+          <td valign="top">setbeans</td>
+          <td valign="top">whether to have all properties, references and targets as
+            global variables in the script.</td>
+          <td valign="top" align="center">No, default is "true".</td>
+        </tr>
+        <tr>
+          <td valign="top">classpath</td>
+          <td valign="top">
+            The classpath to pass into the script.
+          </td>
+          <td align="center" valign="top">No</td>
+        </tr>
+        <tr>
+          <td valign="top">classpathref</td>
+          <td valign="top">The classpath to use, given as a
+            <a href="../using.html#references">reference</a> to a path defined elsewhere.
+            <td align="center" valign="top">No</td>
+          </tr>
       </table>
+  <p>
+    This selector can take a nested &lt;classpath&gt; element.
+    See the <a href="../OptionalTasks/script.html">script</a> task
+    on how to use this element.
+  </p>
       <p>
       If no <code>src</code> attribute is supplied, the script must be nested
       inside the selector declaration.
