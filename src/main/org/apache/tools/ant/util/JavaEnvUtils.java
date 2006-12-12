@@ -105,7 +105,7 @@ public final class JavaEnvUtils {
             Class.forName("java.net.Proxy");
             javaVersion = JAVA_1_5;
             javaVersionNumber++;
-            Class.forName("java.util.Service");
+            Class.forName("java.util.ServiceLoader");
             javaVersion = JAVA_1_6;
             javaVersionNumber++;
         } catch (Throwable t) {
