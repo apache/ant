@@ -44,6 +44,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
   <typedef name="filesmatch" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.FilesMatch"/>
+  <typedef name="hasfreespace" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.HasFreeSpace"/>
   <typedef name="http" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Http"/>
   <typedef name="isfailure" onerror="ignore"
