@@ -186,4 +186,43 @@ public final class StringUtils {
         }
         return b.toString();
     }
+    
+    /**
+     * Takes a human readable size representation eg 10K
+     * a long value. Doesn't support 1.1K or other rational values.
+     * @param humanSize
+     * @return a long value representation
+     * @throws Exception
+     * @since Ant 1.7
+     */
+    public static long parseHumanSizes(String humanSize) throws Exception {
+    	final long KILOBYTE = 1024;
+    	final long MEGABYTE = KILOBYTE * 1024;
+    	final long GIGABYTE = MEGABYTE * 1024;
+    	final long TERABYTE = GIGABYTE * 1024;
+    	final long PETABYTE = TERABYTE * 1024;
+    	String regex = "\\d+[K|M|G|T|P]";
+    	if(humanSize.matches(regex)) {
+    		char c = humanSize.charAt(humanSize.length()-1);
+    		long value = Long.valueOf(humanSize.substring(0, humanSize.length()-1)).longValue();
+    		switch (c) {
+    			case 'K':
+    				return value * KILOBYTE;
+    			case 'M':
+    				return value * MEGABYTE;
+    			case 'G':
+    				return value * GIGABYTE;
+    			case 'T':
+    				return value * TERABYTE;
+    			case 'P':
+    				return value * PETABYTE;
+    			default:
+    				return value;
+    		}
+    	} else if(humanSize.matches("\\d+")) {
+    		return Long.parseLong(humanSize);
+    	} else {
+    		throw new Exception("Couldn't parse string: "+humanSize);
+    	}
+    }
 }
