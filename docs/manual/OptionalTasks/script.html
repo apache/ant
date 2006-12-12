@@ -134,14 +134,23 @@ Groups@Google: "Rhino, enum.js, JavaAdapter?"</a> by Norris Boyd in the newsgrou
   <a href="../using.html#path">path-like structure</a> and can also be set via a nested
   <code>&lt;classpath&gt;</code> element.
   <p>
-    If a classpath is set, it will be used as the current thread context classloader, and
-    as the classloader given to the BSF manager. This means that it can be used to specify
-    the classpath containing the language implementation. This can be usefull if one wants
-    to keep ${user.home}/.ant/lib free of lots of scripting language specific jar files.
+    If a classpath is set, it will be used as the current thread
+    context classloader, and
+    as the classloader given to the BSF manager. 
+    This means that it can be used to specify
+    the classpath containing the language implementation for BSF
+    or for JSR 223 managers.
+    This can be usefull if one wants
+    to keep ${user.home}/.ant/lib free of lots of scripting language
+    specific jar files.
   </p>
   <p>
-    <b>NB:</b> This classpath cannot (currently) be used to specify the location of
-    the BSF jar file.
+    <b>NB:</b> This classpath cannot (currently) be used to
+    specify the location of
+    the BSF jar file. Also, due to classloading issues, languages
+    that have engines in the BSF jar file cannot have the
+    implementation in the classpath element. This includes the
+    javascript, jython, netrexx and jacl languages.
   </p>
 </p>
 <h3>Examples</h3>
