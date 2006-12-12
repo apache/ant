@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.ReflectWrapper;
@@ -39,9 +41,9 @@ public class HasFreeSpace implements Condition {
         try {
             if (JavaEnvUtils.isAtLeastJavaVersion("1.6")) {
                 //reflection to avoid bootstrap/build problems
-                String j6FileUtils = "org.apache.tools.ant.util.java16.Java6FileUtils";
-                ReflectWrapper w = new ReflectWrapper(getClass().getClassLoader(), j6FileUtils);
-                long free = ((Long)w.invoke("freeSpace", String.class, partition)).longValue();
+                File fs = new File(partition);
+                ReflectWrapper w = new ReflectWrapper(fs);
+                long free = ((Long)w.invoke("getFreeSpace")).longValue();
                 return free >= StringUtils.parseHumanSizes(needed);
             } else {
                 throw new BuildException("HasFreeSpace condition not supported on Java5 or less.");
