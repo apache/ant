@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="loadproperties-test" 
+         basedir="." 
+         default="testPrefixedProperties">
+
+  <target name="init">
+  </target>
+
+  <target name="testPrefixedProperties" depends="init">
+    <property name="server" value="localhost"/>
+    <echo file="properties.tmp">
+#http.@PORT@ = 90
+http.@PORT@ = 80
+http.@SERVER@ = ${server}
+    </echo>
+    <loadproperties srcFile="properties.tmp">
+      <filterchain>
+        <striplinecomments>
+          <comment value="#"/>
+        </striplinecomments>
+        <prefixlines prefix="server1."/>
+        <replacetokens>
+          <token key="PORT" value="port"/>
+          <token key="SERVER" value="server"/>
+        </replacetokens>
+        <expandproperties/>
+      </filterchain>
+    </loadproperties>
+    <property name="server1.http.url" 
+      value="http://${server1.http.server}:${server1.http.port}"/>
+  </target>
+
+  <target name="write properties.tmp" depends="init">
+    <echo file="properties.tmp">
+#tpfr.a=a
+tpfr.a=A
+tpfr.b=b\
+       e
+tpfr.c=@C@
+    </echo>
+  </target>
+
+  <target name="testPropertiesFromResource" depends="write properties.tmp">
+    <loadproperties resource="properties.tmp" classpath="${basedir}">
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+  </target>
+
+  <target name="testPropertiesFromFileSet" depends="write properties.tmp">
+    <loadproperties>
+      <fileset dir="${basedir}">
+        <include name="properties.tmp"/>
+      </fileset>
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+  </target>
+
+  <target name="loadPropertiesCheck">
+    <condition property="testPropertiesFromResource.ok">
+        <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}" />
+    </condition>
+    <fail unless="testPropertiesFromResource.ok">
+$${tpfr.a}$${tpfr.b}$${tpfr.c}=&quot;${tpfr.a}${tpfr.b}${tpfr.c}&quot;
+    </fail>
+  </target>
+
+  <target name="cleanup">
+    <delete file="properties.tmp"/>
+  </target>
+
+</project>

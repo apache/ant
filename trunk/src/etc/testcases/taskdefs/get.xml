@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir="." default="test1">
+
+  <target name="test1">
+    <get/>
+  </target>
+
+  <target name="test2">
+    <get src=""/>
+  </target>
+
+  <target name="test3">
+    <get src="" dest=""/>
+  </target>
+
+  <target name="test4">
+    <get src="" dest=""/>
+  </target>
+
+  <target name="test5">
+    <get src="http://www.apache.org/" dest=""/>
+  </target>
+
+  <target name="test6">
+    <get src="http://www.apache.org/" dest="get.tmp"/>
+
+    <fileset id="t6" file="get.tmp" />
+    <pathconvert property="t6" refid="t6" setonempty="false" />
+
+    <fail message="get failed">
+      <condition>
+        <not>
+          <isset property="t6" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testUseTimestamp" depends="-90s,-timestamp" />
+
+  <target name="-90s">
+    <property name="off" value="-90" />
+    <property name="unit" value="second" />
+  </target>
+
+  <target name="testUseTomorrow" depends="+1d,-timestamp" />
+
+  <target name="+1d">
+    <property name="off" value="1" />
+    <property name="unit" value="day" />
+  </target>
+
+  <target name="-timestamp">
+    <property name="pat" value="yyyyMMddHHmm" />
+
+    <tstamp>
+      <format property="dt" pattern="${pat}" offset="${off}" unit="${unit}" />
+    </tstamp>
+
+    <touch file="get.tmp" datetime="${dt}" pattern="${pat}" />
+
+    <get src="http://www.apache.org/" dest="get.tmp"
+         usetimestamp="true" verbose="true" />
+
+    <fileset id="ts" file="get.tmp">
+      <date when="equal" datetime="${dt}" pattern="${pat}" />
+    </fileset>
+
+    <pathconvert property="ts" refid="ts" setonempty="false" />
+
+    <fail message="get w/ timestamp should have failed.">
+      <condition>
+        <not>
+          <isset property="ts" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="cleanup">
+    <delete>
+      <fileset dir="${basedir}" includes="get.tmp" />
+    </delete>
+  </target>
+
+</project>

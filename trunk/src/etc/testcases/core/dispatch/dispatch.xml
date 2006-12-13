@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="dispatch-test" default="disp">
+
+  <path id="testclasses">
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="disp">
+    <taskdef name="disptask"
+             classname="org.apache.tools.ant.taskdefs.PickOneTask">
+      <classpath refid="testclasses" />
+    </taskdef>
+    <disptask action="list"/>
+  </target>
+
+</project>

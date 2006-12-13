@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+
+<project name="zip-test" basedir="." default="test1">
+
+  <target name="test1">
+    <zip/>
+  </target>
+
+  <target name="test2">
+    <zip destFile="zip.tmp"/>
+  </target>
+
+  <!-- Test when the zip file includes itself
+  when target file exists before the zip task is run -->
+  <target name="test3">
+    <touch file="test3.zip"/>
+    <zip destFile="test3.zip"
+         basedir="."/>
+  </target>
+
+  <!-- Test when the zip file includes itself
+  when target file does not exist before the zip task is run
+  <target name="test4">
+     <zip destFile="test4.zip"
+         basedir="."/>
+  </target>
+  -->
+
+  <target name="test5">
+    <zip zipfile="test5.zip" basedir="." >
+      <exclude name="test5.zip" />
+    </zip>
+  </target>
+
+  <target name="test6">
+    <zip destFile="test6.zip" basedir=".">
+      <include name="*.xml" />
+      <exclude name="zip.*" />
+    </zip>
+  </target>
+
+  <target name="test7">
+    <zip destFile="inner7.zip" basedir="." >
+      <exclude name="inner7.zip" />
+    </zip>
+    <zip destFile="test7.zip" basedir=".">
+      <exclude name="**/*.*" />
+      <zipfileset src="inner7.zip" />
+    </zip>
+  </target>
+
+  <target name="feather">
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif" />
+  </target>
+
+  <target name="uncompressed-feather">
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif" compress="false"/>
+  </target>
+
+  <!-- legacy attribute support -->
+  <target name="test8">
+    <zip zipfile="test8.zip" basedir="." >
+      <exclude name="test8.zip" />
+    </zip>
+  </target>
+
+  <target name="testZipgroupfileset">
+
+    <zip zipfile="zipgroupfileset.zip" basedir=".">
+      <zipgroupfileset dir="zip" 
+        includes="zipgroupfileset*.zip" 
+        excludes="zipgroupfileset3.zip" />
+      <include name="zip/zipgroupfileset3.zip" />
+    </zip>
+  </target>
+
+  <target name="testDuplicateFail">
+
+    <zip zipfile="duplicateFail.zip" basedir="." duplicate="fail">
+      <zipgroupfileset dir="duplicate" includes="duplicate*.zip" />
+    </zip>
+  </target>
+
+  <target name="testUpdateNotNecessary" depends="feather">
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif"
+         update="true" />
+  </target>
+
+  <target name="testUpdateIsNecessary" depends="feather">
+    <sleep seconds="5" />
+    <touch file="../dummyfile" />
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif,dummyfile"
+         update="true" />
+  </target>
+
+  <!-- Bugzilla Report 18403 -->
+  <target name="testPrefixAddsDir">
+    <zip destfile="test3.zip" filesonly="false">
+      <zipfileset dir="." prefix="test" includes="zip.xml"/>
+    </zip>
+  </target>
+
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreateSetup">
+    <mkdir dir="ziptest"/>
+    <touch file="ziptest/ziptest"/>
+    <zip destfile="test3.zip" basedir="."
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreate">
+    <zip destfile="test3.zip" basedir="."
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
+  <!-- Bugzilla Report 22865 -->
+  <target name="testEmptySkip">
+    <mkdir dir="ziptest"/>
+    <zip destfile="test3.zip" basedir="ziptest" whenempty="skip"/>
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="test3.zip" />
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 30365 -->
+  <target name="zipEmptyDir">
+    <mkdir dir="empty/empty2"/>
+    <zip destfile="test3.zip" basedir="empty" update="true"/>
+    <fail message="single-directory archive should be created">
+      <condition>
+        <or>
+          <not>
+            <available file="test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="test3.zip" />
+          </resourcecount>
+          <resourcecount when="ne" count="1">
+            <restrict>
+              <exists xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+              <zipentry zipfile="test3.zip" name="empty2/" />
+            </restrict>
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 40258 -->
+  <target name="zipEmptyDirFilesOnly">
+    <mkdir dir="empty/empty2" />
+    <zip destfile="test3.zip" basedir="empty" update="true" filesonly="true" />
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="test3.zip" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="zipEmptyCreate">
+    <mkdir dir="empty"/>
+    <zip destfile="test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>
+    <fail message="empty archive should be created">
+      <condition>
+        <or>
+          <not>
+           <available file="test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="test3.zip" />
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompressionLevel" depends="test6">
+    <length property="test6.length" file="test6.zip" />
+    <zip destFile="testLevel.zip" basedir="." level="9">
+      <include name="*.xml" />
+      <exclude name="zip.*" />
+    </zip>
+    <fail>
+      <condition>
+        <not>
+          <isfileselected file="testLevel.zip">
+            <size when="less" value="${test6.length}" />
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 33412 -->
+  <target name="testDefaultExcludesAndUpdate">
+    <mkdir dir="ziptest"/>
+    <touch file="ziptest/ziptest~"/>
+    <zip destfile="test3.zip" basedir="ziptest" defaultexcludes="false"/>
+    <touch file="ziptest/ziptest2"/>
+    <zip destfile="test3.zip" basedir="ziptest"
+      defaultexcludes="false"
+      update="true"/>
+  </target>
+
+  <target name="testFileResource">
+    <zip destfile="test3.zip">
+      <file file="zip.xml"/>
+    </zip>
+  </target>
+
+  <target name="testNonFileResource">
+    <zip destfile="test3.zip">
+      <javaresource name="META-INF/MANIFEST.MF"/>
+    </zip>
+  </target>
+
+  <target name="testTarFileSet">
+    <ant antfile="tar.xml" target="feather"/>
+    <zip destfile="test3.zip">
+      <tarfileset src="asf-logo.gif.tar" filemode="446"/>
+    </zip>
+  </target>
+
+  <target name="cleanup">
+    <delete file="testLevel.zip"/>
+    <delete file="test3.zip"/>
+    <delete file="test4.zip"/>
+    <delete file="test5.zip"/>
+    <delete file="test6.zip"/>
+    <delete file="inner7.zip"/>
+    <delete file="test7.zip"/>
+    <delete file="test8.zip"/>
+    <delete file="asf-logo.gif.zip"/>
+    <delete file="zipgroupfileset.zip"/>
+    <delete file="../dummyfile" />
+    <delete dir="ziptest"/>
+    <delete dir="empty"/>
+    <ant antfile="tar.xml" target="cleanup"/>
+  </target>
+</project>

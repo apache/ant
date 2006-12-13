@@ -1,0 +1,53 @@
+<project>
+  <property name="testclasses" location="../../../../../../build/testcases"/>
+  
+  <path id="all-test-classes.id">
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <path id="example-classes.id">
+    <pathelement location="${testclasses}/org/apache/tools/ant/util/facade" />
+  </path>
+
+  <path id="test-classes.id">
+    <pathelement location="${testclasses}" />
+  </path>
+
+  <target name="simple">
+    <jdepend>
+      <classespath refid="example-classes.id"/>
+    </jdepend>
+  </target>
+
+  <target name="xml">
+    <jdepend format="xml">
+      <classespath refid="example-classes.id"/>
+    </jdepend>
+  </target>
+
+  <target name="fork">
+    <jdepend fork="yes" includeruntime="yes">
+      <classespath refid="example-classes.id"/>
+    </jdepend>
+  </target>
+
+  <target name="fork-xml">
+    <jdepend fork="yes" format="xml" includeruntime="yes">
+      <classespath refid="example-classes.id"/>
+    </jdepend>
+  </target>
+
+  <target name="fork-timeout">
+    <jdepend fork="yes" timeout="10" includeruntime="yes">
+      <classespath refid="test-classes.id"/>
+    </jdepend>
+  </target>
+
+  <target name="fork-timeout-not">
+    <jdepend fork="yes" timeout="100000" includeruntime="yes">
+      <classespath refid="example-classes.id"/>
+    </jdepend>
+  </target>
+
+</project>

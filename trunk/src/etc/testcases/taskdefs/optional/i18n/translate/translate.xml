@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project name="translate-test" default="test1" basedir=".">
+    <property name="input.dir" value="input"/>
+    <property name="output.dir" value="output"/>
+    <property name="expected.dir" value="expected"/>
+    <target name="setup">
+        <mkdir dir="${output.dir}/de"/>
+    </target>
+    <target name="test1" depends="setup">
+      <translate toDir="${output.dir}/de"
+        starttoken="@"
+        endtoken="@"
+        bundle="${input.dir}/resources"
+        bundlecountry="DE"
+        bundlelanguage="ger"
+        forceoverwrite="yes"
+        srcencoding="ISO8859_1"
+        destencoding="ISO8859_1"
+        bundleencoding="Cp1252">
+        <fileset dir="${input.dir}">
+            <include name="template.txt"/>
+        </fileset>
+      </translate>
+     </target>
+     <target name="cleanup">
+         <delete dir="${output.dir}" quiet="true"/>
+     </target>
+</project>
+

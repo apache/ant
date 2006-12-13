@@ -1,0 +1,3 @@
+<project default="test">
+  <echo message="Unnamed2.xml" level="info"/>
+</project>

@@ -1,0 +1,524 @@
+#*
+ *  DVSL Stylesheet to format the Ant Task documentation.
+ *#
+
+#set( $relative-path = "../../" )
+#if (false)
+#set( $body-bg = '#ffffff' )
+#set( $body-fg = '#000000' )
+#set( $body-link = '#525D76' )
+##set( $banner-bg = '#EEEEEE')
+#set( $banner-fg = '#000000')
+#set( $sub-banner-bg = '#828DA6')
+#set( $sub-banner-fg = '#ffffff')
+##set( $table-th-bg = '#FFEEEE')
+##set( $table-td-bg = '#FFEEEE')
+##set( $source-color = '#CCFFFF')
+
+#set( $table-th-bg = '#EEEEEE')
+#set( $table-td-bg = '#EEEEEE')
+#set( $banner-bg = '#a0ddf0')
+##set( $banner-bg = '#525D76')
+##set( $table-th-bg = '#039acc')
+##set( $table-td-bg = '#a0ddf0')
+#set( $source-color = '#023264')
+#end
+
+#set( $body-bg = '#ffffff' )
+#set( $body-fg = '#000000' )
+#set( $body-link = '#525D76' )
+#set( $banner-bg = '#525D76')
+#set( $banner-fg = '#ffffff')
+#set( $sub-banner-bg = '#828DA6')
+#set( $sub-banner-fg = '#ffffff')
+#set( $table-th-bg = '#cccccc')
+#set( $table-td-bg = '#eeeeee')
+#set( $source-color = '#023264')
+#set( $source-font-size = '+0')
+
+## Double quote for convenience
+#set ($qq = '"')
+
+## Macro to output argument if test evaluates to true
+#macro(ifset $test $output)
+#if ( $test )$output#end
+#end
+
+## Macro to capitalize a word making the first letter upper case
+#macro(capitalize $word)
+$word.substring(0,1).toUpperCase()$word.substring(1)
+#end
+
+
+#match( "task" )
+  #set( $project = $node.selectSingleNode("document('xdocs/stylesheets/project.xml')/project" ) )
+  #if ($node.name().equals("task"))
+    #set( $title = "#capitalize($attrib.name) Task" )
+    #set( $summary = $node.short-description )   
+  #end
+
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <title>$title</title>
+</head>
+
+<body bgcolor="$body-bg" text="$body-fg" link="$body-link"
+      alink="$body-link" vlink="$body-link">
+
+<table border="0" width="100%" cellspacing="4">
+
+  <!-- PAGE HEADER -->
+  <tr>
+    <td>
+      <table border="0" width="100%"><tr>
+          <td valign="bottom">
+            <font size="+3" face="arial,helvetica,sanserif"><strong>$title</strong></font>
+#*          *##if( $summary )
+            <br><font face="arial,helvetica,sanserif">$summary</font>
+#*          *##end
+          </td>
+          <td>
+#*        *##if( $project.logo )
+            #set( $alt = $project.logo )
+            #set( $home = $project.attribute("href") )
+            #set( $src = $project.logo.attribute( "href" ) )
+            <!-- PROJECT LOGO -->
+            <a href="$home">
+              <img src="${relative-path}$src" align="right" alt="$alt" border="0"/>
+            </a>
+#*        *##end
+          </td>
+      </tr></table>
+    </td>
+  </tr>
+
+  <!-- START RIGHT SIDE MAIN BODY -->
+  <tr>
+    <td  valign="top" align="left">
+#*    *##if ($node.name().equals("task"))
+#*      Use description from merged XML if available, else javadoc comment *#
+#*      *##if ($node.external.description)
+          <!-- Applying task/description -->
+#*        *#$context.applyTemplates("external/description")
+#*      *##else
+          <!-- Applying task/long-description -->
+#*        *#$context.applyTemplates("long-description")
+#*      *##end
+#*     *#$context.applyTemplates("short-description")
+#*     *#$context.applyTemplates("attribute/description")
+#*     *#$context.applyTemplates("element/description")
+#*     *#$context.applyTemplates("structure/attribute-groups")
+#*     *#$context.applyTemplates("structure/elements")
+#*     *#$context.applyTemplates("external/section")
+#*    *##end
+    </td>
+  </tr>
+  <!-- END RIGHT SIDE MAIN BODY -->
+
+  <!-- FOOTER SEPARATOR -->
+  <tr>
+    <td>
+      <hr noshade="" size="1"/>
+    </td>
+  </tr>
+
+  <!-- PAGE FOOTER -->
+  <tr>
+    <td>
+      <div align="center"><font color="$body-link" size="-1"><em>
+        Copyright &#169; 2000-2005, Apache Software Foundation
+      </em></font></div>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
+#end
+
+#*
+    Macro to format a table heading cell
+*#
+#macro( th $text )
+        <td bgcolor="$table-th-bg" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>$text</b></font>
+        </td>
+#end
+
+#*
+    Macro to format a table body cell
+*#
+#macro( td $text )
+        <td bgcolor="$table-td-bg" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">$text</font>
+        </td>
+#end
+
+#*
+    Macro to format a table body cell that spans multiple rows
+*#
+#macro( tdmr $text $rows  )
+        <td bgcolor="$table-td-bg" valign="top" align="left" rowspan="$rows">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">$text</font>
+        </td>
+#end
+
+
+#*
+    Macro to format a section banner
+*#
+#macro( section $anchor $name )
+      <tr><td bgcolor="$banner-bg">
+        <font color="$banner-fg" face="arial,helvetica.sanserif">
+          <a name="$anchor">
+          <strong>$name</strong></a></font>
+      </td></tr>
+#end
+
+#*
+    Macro to format a subsection banner
+*#
+#macro( subsection $anchor $name )
+      <tr><td bgcolor="$sub-banner-bg">
+        <font color="$sub-banner-fg" face="arial,helvetica.sanserif">
+          <a name="$anchor">
+          <strong>$name</strong></a></font>
+      </td></tr>
+#end
+
+
+#*
+    Process javadoc long description section
+*#
+#match( "long-description" )
+    <!-- Start Description -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+#*      *##section("description" "Description")
+
+      <tr><td><blockquote>
+        $node.value().trim()
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Description -->
+#end
+
+#*
+    Process javadoc short description section
+*#
+#match( "short-description" )
+ <!-- Ignore -->
+#end
+
+#*
+    Process javadoc attribute/description section
+*#
+#match( "attribute/description" )
+ <!-- Ignore -->
+#end
+
+#*
+    Process javadoc element/description section
+*#
+#match( "element/description" )
+ <!-- Ignore -->
+#end
+
+
+#*
+    Process external desciption
+*#
+#match( "external/description" )
+    <!-- Start Description -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+#*      *##section("description" "Description")
+
+      <tr><td><blockquote>
+#*      *#$context.applyTemplates("*")
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Description -->
+#end
+
+#*
+    Process top level attributes
+*#
+#match( "structure/attribute-groups" )
+    <!-- Start Attributes -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+#*      *##section("attributes" "Parameters") 
+      <tr><td><blockquote>
+        <table>
+          <tr>
+#*          *##th("Attribute")
+#*          *##th("Description")
+#*          *##th("Type")
+#*          *##th("Requirement")
+          </tr>
+#*        *#$context.applyTemplates("*")
+        </table>
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Attributes -->
+#end
+
+#*
+    Process attribute group
+*#
+#match( "structure/attribute-groups/attribute-group" )
+    <!-- Attribute Group -->    
+    #set ($attributeGroup = $attrib.description)
+    #set ($numGroups = $node.selectNodes("attribute").size())
+    #set ($inGroup = true)
+#*        *#$context.applyTemplates("*")
+#end
+
+#*
+    Process a single attribute
+*#
+#match( "structure/attribute-groups/attribute-group/attribute" )    
+    <!-- Attribute -->
+    <tr>
+#*    *##td($attrib.name)
+#*    *##td($node.description)
+#*    *##td($attrib.briefType)
+#if ($inGroup)
+#*    *##tdmr($attributeGroup $numGroups)
+#set ($inGroup = false)
+#end
+    </tr>
+#end
+
+#*
+    Process all elements
+*#
+#match( "elements" )
+    <!-- Start Elements -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+#*      *##section("elements" "Parameters as nested elements")
+
+      <tr><td><blockquote>
+#*      *#$context.applyTemplates("*")
+      </blockquote></td></tr>
+
+    </table>
+    <!-- End Elements -->
+#end
+
+#*
+    Process a single element
+*#
+#match( "element" )
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="$sub-banner-bg">
+        <font color="$sub-banner-fg" face="arial,helvetica.sanserif" size="-1">
+          <strong>$attrib.name</strong> ($attrib.type)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        $node.description.toString().trim()
+#*      *#$context.applyTemplates("*")
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+#end
+
+#*
+    Process attributes within elements
+*#
+#match( "element/attributes" )
+    <!-- Start Attributes -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td>
+        <table>
+          <tr>
+#*          *##th("Attribute")
+#*          *##th("Description")
+#*          *##th("Type")
+          </tr>
+#*        *#$context.applyTemplates("*")
+        </table>
+      </td></tr>
+
+    </table>
+    <!-- End Attributes -->
+#end
+
+
+#*
+ *   Process a menu for the navigation bar
+ *#
+#match( "menu" )
+    <tr><td>
+    <p>
+      <strong>$attrib.name</strong>
+    </p>
+    </td><td>
+    <ul>
+        $context.applyTemplates("item")
+    </ul></td></tr>
+#end
+
+
+#*
+ *   Process a menu item for the navigation bar
+ *#
+#match( "item" )
+#if( $attrib.href.endsWith("$outputfilename") && !$attrib.href.startsWith("http"))
+	<strong>$attrib.name</strong>
+#else
+#if( $attrib.href.startsWith("http") )
+        <a href="$attrib.href">$attrib.name</a>
+    #else
+        <a href="${relative-path}$attrib.href">$attrib.name</a>
+    #end
+#end
+#end
+
+#*
+ *  process a documentation section
+ *#
+#match( "section" )
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="$banner-bg">
+          <font color="$banner-fg" face="arial,helvetica.sanserif">
+          #if ( $attrib.anchor )
+              #set( $anchor = $attrib.anchor )
+          #else
+              #set( $anchor = $attrib.name )
+          #end
+          <a name="$anchor">
+          <strong>$attrib.name</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        $context.applyTemplates("*")
+      </blockquote></td></tr>
+
+    </table>
+#end
+
+#match( "subsection" )
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <!-- Subsection heading -->
+      <tr><td bgcolor="$sub-banner-bg">
+          <font color="$sub-banner-fg" face="arial,helvetica.sanserif">
+          #if ( $attrib.anchor )
+              #set( $anchor = $attrib.anchor )
+          #else
+              #set( $anchor = $attrib.name )
+          #end
+          <a name="$anchor">
+          <strong>$attrib.name</strong></a></font>
+      </td></tr>
+      <!-- Subsection body -->
+      <tr><td>
+        $context.applyTemplates("*")
+      </td></tr>
+    </table>
+#end
+
+#*
+ *  process a the requirement groups
+ *#
+#match( "requirement-group" )
+    #if ($regGroup == $attrib.name)
+#*      *#$attrib.description
+    #end
+#end
+
+#match( "source" )
+    <div align="left">
+      <table cellspacing="4" cellpadding="0" border="0">
+        <tr>
+          <td bgcolor="$source-color" width="1" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+          <td bgcolor="$source-color" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+          <td bgcolor="$source-color" width="1" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="$source-color" width="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+          <td bgcolor="#ffffff" height="1">
+          <font size="$source-font-size"><pre>$toolbox.htmlescape.getText( $node.value() )</pre></font>
+          </td>
+          <td bgcolor="$source-color" width="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="$source-color" width="1" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+          <td bgcolor="$source-color" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+          <td bgcolor="$source-color" width="1" height="1">
+            <img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/>
+          </td>
+        </tr>
+      </table>
+    </div>
+#end
+
+
+#match("table")
+<table>
+$context.applyTemplates("*")
+</table>
+#end
+
+#match("tr")
+<tr>
+$context.applyTemplates("*")
+</tr>
+#end
+
+#match( "td" )
+<td bgcolor="$table-td-bg" #*
+    *##ifset($attrib.colspan "colspan=$qq$attrib.colspan$qq ")#*
+    *##ifset($attrib.rowspan "rowspan=$qq$attrib.rowspan$qq ")#*
+    *#valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+       $node.copy( $node.children() )
+    </font>
+</td>
+#end
+
+#match( "th" )
+<td bgcolor="$table-th-bg" #*
+    *##ifset($attrib.colspan "colspan=$qq$attrib.colspan$qq ")#*
+    *##ifset($attrib.rowspan "rowspan=$qq$attrib.rowspan$qq ")#*
+    *#valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+       <b>$node.copy( $node.children())</b>
+    </font>
+</td>
+#end
+
+#match("*")
+$node.copy()
+#end
+

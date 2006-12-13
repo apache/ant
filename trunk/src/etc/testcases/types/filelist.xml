@@ -1,0 +1,37 @@
+<project name="test">
+  <target name="simple">
+    <filelist id="filelist"
+              dir="${basedir}"
+              files="a"/>
+    <pathconvert targetos="unix" refid="filelist"
+                 property="property">
+      <map from="${basedir}" to="/abc"/>
+    </pathconvert>
+    <echo>${property}</echo>
+  </target>
+
+  <target name="double">
+    <filelist id="filelist"
+              dir="${basedir}"
+              files="a b"/>
+    <pathconvert targetos="unix" refid="filelist"
+                 property="property">
+      <map from="${basedir}" to="/abc"/>
+    </pathconvert>
+    <echo>${property}</echo>
+  </target>
+
+  <target name="nested">
+    <filelist id="filelist"
+              dir="${basedir}">
+      <file name="a"/>
+      <file name="b"/>
+    </filelist>
+    <pathconvert targetos="unix" refid="filelist"
+                 property="property">
+      <map from="${basedir}" to="/abc"/>
+    </pathconvert>
+    <echo>${property}</echo>
+  </target>
+
+</project>

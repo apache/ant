@@ -1,0 +1,9 @@
+<project name="imported-test" default="imported" basedir=".">
+
+  <echo message="In imported top"/>
+ 
+  <target name="imported" depends="import-init" >
+    <echo message="In imported target" />
+  </target>
+
+</project>

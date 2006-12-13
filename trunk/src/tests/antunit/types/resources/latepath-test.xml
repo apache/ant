@@ -1,0 +1,17 @@
+<project xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="testLatePath" depends="tearDown">
+    <path id="p">
+      <fileset file="testLatePath" />
+    </path>
+    <pathconvert refid="p" />
+    <touch file="testLatePath" />
+    <au:assertTrue>
+      <resourcecount when="eq" count="1" refid="p" />
+    </au:assertTrue>
+  </target>
+
+  <target name="tearDown">
+    <delete file="testLatePath" />
+  </target>
+</project>

@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<project name="antlr-test" basedir="." default="test1">
+
+  <property name="tmp.dir" location="antlr.tmp"/>
+
+
+  <target name="setup">
+    <mkdir dir="${tmp.dir}"/>
+  </target>
+
+  <target name="test1">
+    <antlr/>
+  </target>
+
+  <target name="test2">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}"/>
+  </target>
+
+  <target name="test3" depends="setup">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}"/>
+    <fail>
+      <condition>
+        <!-- to prove each of these files exists;
+             ANTLR >= 2.7.6 leaves behind new (.smap) files as well. -->
+        <resourcecount when="ne" count="5">
+          <fileset dir="${tmp.dir}">
+            <include name="CalcParserTokenTypes.txt" />
+            <include name="CalcParserTokenTypes.java" />
+            <include name="CalcLexer.java" />
+            <include name="CalcParser.java" />
+            <include name="CalcTreeWalker.java" />
+          </fileset>
+        </resourcecount>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="test4" depends="setup">
+    <antlr target="java.g" outputdirectory="${tmp.dir}"/>
+    <antlr dir="${tmp.dir}" target="java.tree.g" outputdirectory="${tmp.dir}"/>
+  </target>
+
+  <target name="test5" depends="setup">
+    <antlr target="java.tree.g" outputdirectory="${tmp.dir}" fork="yes"/>
+  </target>
+
+  <target name="test6" depends="setup">
+    <antlr target="java.g" outputdirectory="${tmp.dir}" />
+    <antlr dir="${tmp.dir}"
+           target="java.tree.g"
+           outputdirectory="${tmp.dir}"
+           fork="yes"/>
+  </target>
+
+  <target name="test7">
+    <antlr target="antlr.xml"/>
+  </target>
+
+  <target name="test8" depends="setup">
+    <antlr target="extended.calc.g" outputdirectory="${tmp.dir}" glib="non-existant-file.g"/>
+  </target>
+
+  <target name="test9" depends="setup">
+    <!-- Note that I had to copy the grammars over to the temporary directory.  -->
+    <!-- This is because ANTLR expects the super grammar and its generated java -->
+    <!-- files to be in the same directory, which won't be the case if I use    -->
+    <!-- the output directory option. -->
+    <copy file="antlr.g" todir="${tmp.dir}"/>
+    <copy file="extended.calc.g" todir="${tmp.dir}"/>
+    <antlr target="${tmp.dir}/antlr.g"/>
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <target name="test10" depends="setup">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}" html="yes"/>
+  </target>
+
+  <target name="test11" depends="setup">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}" diagnostic="yes"/>
+  </target>
+
+  <target name="test12" depends="setup">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}" trace="yes"/>
+  </target>
+
+  <target name="test13" depends="setup">
+    <antlr target="antlr.g" outputdirectory="${tmp.dir}" traceLexer="yes" traceParser="yes" traceTreeWalker="yes"/>
+  </target>
+
+  <!-- test9 will have been run before that -->
+  <target name="noRecompile">
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <!-- test9 will have been run before that -->
+  <target name="normalRecompile">
+    <sleep seconds="2"/>
+    <touch file="${tmp.dir}/extended.calc.g"/>
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <!-- test9 will have been run before that -->
+  <target name="supergrammarChangeRecompile">
+    <sleep seconds="2"/>
+    <touch file="${tmp.dir}/antlr.g"/>
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="${tmp.dir}" />
+    <delete file="../../../../../../CalcParserTokenTypes.txt"/>
+  </target>
+
+</project>

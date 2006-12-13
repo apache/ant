@@ -1,0 +1,120 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <property name="ant-build" location="../../../../../../build"/>
+  <property name="build-junit-dir" location="${ant-build}/ant-unit/junit-dir"/>
+  <property name="classes.dir" location="${build-junit-dir}/classes"/>
+  <property name="reports.dir" location="${build-junit-dir}/report"/>
+
+  <macrodef name="assert-file-not-contains" backtrace="no">
+    <sequential>
+      <au:assertFalse>
+        <isfileselected file="${reports.dir}/TEST-ExampleTest.txt">
+          <contains text="Hello From Test"/>
+        </isfileselected>
+      </au:assertFalse>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="assert-file-contains" backtrace="no">
+    <sequential>
+      <au:assertTrue>
+        <isfileselected file="${reports.dir}/TEST-ExampleTest.txt">
+          <contains text="Hello From Test"/>
+        </isfileselected>
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="assert-log-not-contains" backtrace="no">
+    <sequential>
+      <au:assertLogDoesntContain text="Hello From Test" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="assert-log-contains" backtrace="no">
+    <sequential>
+      <au:assertLogContains text="Hello From Test" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="run-junit">
+    <attribute name="fork"/>
+    <attribute name="showoutput"/>
+    <attribute name="outputtoformatters"/>
+    <sequential>
+      <junit fork="@{fork}" haltonfailure="no" showoutput="@{showoutput}"
+           outputtoformatters="@{outputtoformatters}">
+        <test name="ExampleTest" todir="${reports.dir}"/> 
+        <classpath path="${classes.dir}"/>
+        <formatter type="plain" usefile="yes"/>
+      </junit>
+    </sequential>
+  </macrodef>
+
+  <target name="init">
+    <delete quiet="yes" dir="${build-junit-dir}"/>
+    <mkdir  dir="${classes.dir}"/>
+    <mkdir  dir="${reports.dir}"/>
+  </target>
+    
+  <target name="compile" depends="init">
+    <javac srcdir="src" destdir="${classes.dir}" debug="yes"/>
+  </target>
+
+  <target name="test-show-yes-formatters-yes" depends="compile">
+    <run-junit fork="yes" showoutput="yes"
+               outputtoformatters="yes"/>
+    <assert-log-contains/>
+    <assert-file-contains/>
+  </target>
+
+  <target name="test-show-yes-formatters-no" depends="compile">
+    <run-junit fork="yes" showoutput="yes"
+               outputtoformatters="no"/>
+    <assert-log-contains/>
+    <assert-file-not-contains/>
+  </target>
+
+  <target name="test-show-yes-formatters-no-forkno" depends="compile">
+    <run-junit fork="no" showoutput="yes"
+               outputtoformatters="no"/>
+    <assert-log-contains/>
+    <assert-file-not-contains/>
+  </target>
+
+  <target name="test-show-no-formatters-no" depends="compile">
+    <run-junit fork="yes" showoutput="no"
+               outputtoformatters="no"/>
+    <assert-log-not-contains/>
+    <assert-file-not-contains/>
+  </target>
+
+  <target name="test-show-no-formatters-no-fork-no" depends="compile">
+    <run-junit fork="no" showoutput="no"
+               outputtoformatters="no"/>
+    <assert-log-not-contains/>
+    <assert-file-not-contains/>
+  </target>
+
+  <target name="test-show-no-formatters-yes" depends="compile">
+    <run-junit fork="yes" showoutput="no"
+               outputtoformatters="yes"/>
+    <assert-log-not-contains/>
+    <assert-file-contains/>
+  </target>
+
+  <target name="test-show-no-formatters-yes-fork-no" depends="compile">
+    <run-junit fork="no" showoutput="no"
+               outputtoformatters="yes"/>
+    <assert-log-not-contains/>
+    <assert-file-contains/>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+
+</project>
+

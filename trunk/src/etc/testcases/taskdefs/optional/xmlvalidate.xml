@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="validate" default="testValidate" basedir=".">
+
+  <target name="testValidate">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>  
+       <dtd publicID="-//stevo//DTD doc 1.0//EN"
+         location="xml/doc.dtd"/>
+    </xmlvalidate>
+  </target>
+  
+  <target name="testDeepValidate">
+    <ant dir="xml" 
+      antfile="validate.xml"
+      target="testValidate"/>
+  </target>
+
+  <target name="xmlcatalog">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <dtd publicID="-//stevo//DTD doc 1.0//EN"
+             location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+
+  <target name="xmlcatalogViaRefid">
+    <xmlcatalog classpath="xml" id="cat">
+      <dtd publicID="-//stevo//DTD doc 1.0//EN" location="doc.dtd"/>
+    </xmlcatalog>
+    <xmlvalidate warn="false">
+      <xmlcatalog refid="cat"/>
+      <fileset dir="xml" includes="**/about.xml"/>
+    </xmlvalidate>
+  </target>
+
+  <target name="xmlcatalognested">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <entity publicID = "bogusImage"
+                 location = "/i/dont/exist.jpg"/>
+        <xmlcatalog>
+          <dtd publicID="-//stevo//DTD doc 1.0//EN"
+               location="doc.dtd"/>
+        </xmlcatalog>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+
+  <!-- The -override tests should pass without resolver.jar -->
+  <target name="xmlcatalogfiles-override">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <fileset dir="xml" includes="catalog"/>
+        </catalogpath>
+        <dtd publicID="-//stevo//DTD doc 1.0//EN"
+             location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+ 
+  <target name="xmlcatalogpath-override">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <pathelement location="xml/catalog"/>
+        </catalogpath>
+        <dtd publicID="-//stevo//DTD doc 1.0//EN"
+          location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+ 
+  <target name="xmlcatalogfiles">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <fileset dir="xml" includes="catalog"/>
+        </catalogpath>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+ 
+  <target name="xmlcatalogpath">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <pathelement location="xml/catalog"/>
+        </catalogpath>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+
+  <target name="testSchemaGood">
+    <xmlvalidate warn="false" lenient="no" >
+      <fileset dir="xml" includes="endpiece.xml"/>
+
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="false"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="false"/>
+
+    </xmlvalidate>
+  </target>
+
+  <target name="testSchemaBad">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="endpiece2.xml"/>
+      
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="true"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+    </xmlvalidate>
+  </target>
+    
+  <target name="testIso2022Jp">
+    <xmlvalidate warn="false" file="xml/iso-2022-jp.xml"/>
+  </target>
+
+  <target name="testUtf8">
+    <xmlvalidate warn="false" file="xml/utf-8.xml"/>
+  </target>
+
+
+  <!-- Tests property element with XML file that satisfies schema -->
+  <target name="testProperty.validXML">
+
+    <!-- Converts path to URL format -->
+    <pathconvert dirsep="/" property="xsd.file">
+    <path>
+    <pathelement location="xml/doc.xsd"/>
+    </path>
+    </pathconvert>
+
+    <xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false"
+        failonerror="true" warn="true">
+
+        <attribute name="http://apache.org/xml/features/validation/schema"
+            value="true"/>
+
+        <property
+        name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+        value="${xsd.file}"/>
+    </xmlvalidate>
+  </target>
+
+
+  <!-- Tests property element with XML file that fails schema validation -->
+  <target name="testProperty.invalidXML">
+
+      <!-- Converts path to URL format -->
+      <pathconvert dirsep="/" property="xsd.file">
+          <path>
+              <pathelement location="xml/doc.xsd"/>
+          </path>
+      </pathconvert>
+
+      <xmlvalidate file="xml/endpiece-noSchema-invalid.xml" lenient="false"
+        failonerror="true" warn="true">
+
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
+      </xmlvalidate>
+  </target>
+
+  <target name="testSchemaWithXSD">
+    <xmlvalidate warn="false" lenient="false" 
+        file="xml/endpiece-noSchema.xml">
+      
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
+
+       </xmlvalidate>
+  </target>
+  
+</project>
+

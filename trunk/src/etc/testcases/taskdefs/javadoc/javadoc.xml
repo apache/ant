@@ -1,0 +1,142 @@
+<!--
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+-->
+<project name="javadoc" basedir=".">
+  <path id="path.dirset">
+    <dirset dir="." />
+  </path>
+  <property name="javadoc" location="javadoc"/>
+
+  <target name="tearDown">
+    <delete dir="${javadoc}" quiet="true"/>
+  </target>
+
+  <target name="dirsetPath">
+    <javadoc sourcepathref="path.dirset" packagenames="*" destdir="${javadoc}" />
+  </target>
+
+  <target name="dirsetPathWithoutPackagenames">
+    <javadoc sourcepathref="path.dirset" destdir="${javadoc}" />
+  </target>
+
+  <target name="nestedDirsetPath">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <sourcepath refid="path.dirset" />
+    </javadoc>
+  </target>
+
+  <path id="path.fileset">
+    <pathelement location="."/>
+    <fileset dir="java/" id="fileset.inpath">
+      <include name="**/*.java" />
+    </fileset>
+  </path>
+
+  <target name="filesetPath">
+    <javadoc sourcepathref="path.fileset" packagenames="*" destdir="${javadoc}" />
+  </target>
+
+  <target name="nestedFilesetPath">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <sourcepath refid="path.fileset" />
+    </javadoc>
+  </target>
+
+  <target name="nestedFilesetRefInPath">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <fileset refid="fileset.inpath" />
+    </javadoc>
+  </target>
+
+  <target name="nestedFilesetNoPatterns">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <fileset dir="java/"/>
+    </javadoc>
+  </target>
+
+  <target name="doublyNestedFileset">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <sourcefiles>
+        <fileset dir="java/" includes="**/*.java"/>
+      </sourcefiles>
+    </javadoc>
+  </target>
+
+  <target name="doublyNestedFilesetNoPatterns">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <sourcefiles>
+        <fileset dir="java/"/>
+      </sourcefiles>
+    </javadoc>
+  </target>
+
+  <path id="path.filelist">
+    <pathelement location="."/>
+    <filelist dir="java/">
+      <file name="ClassToJavadoc.java" />
+    </filelist>
+  </path>
+
+  <target name="filelistPath">
+    <javadoc sourcepathref="path.filelist" packagenames="*"
+      destdir="${javadoc}" />
+  </target>
+
+  <target name="nestedFilelistPath">
+    <javadoc packagenames="*" destdir="${javadoc}">
+      <sourcepath refid="path.filelist" />
+    </javadoc>
+  </target>
+
+  <!-- this property is set when the tests are run using ant's build.xml -->
+  <property name="root" location="../../../../.."/>
+
+  <path id="path.pathelement.path">
+    <pathelement path="${root}/src" />
+  </path>
+
+  <target name="pathelementPath">
+    <javadoc sourcepathref="path.pathelement.path"
+      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="${javadoc}" />
+  </target>
+
+  <path id="path.pathelement.location">
+    <pathelement location="."/>
+    <pathelement path="java/ClassToJavadoc.java" />
+  </path>
+
+  <target name="pathelementLocationPath">
+    <javadoc sourcepathref="path.pathelement.location"
+      packagenames="*" destdir="${javadoc}" />
+  </target>
+
+  <target name="nestedSource">
+    <javadoc destdir="${javadoc}">
+      <source file="java/ClassToJavadoc.java" />
+    </javadoc>
+  </target>
+
+  <fileset dir="java/" id="fileset.simple">
+    <include name="**/*.java" />
+  </fileset>
+
+  <target name="nestedFilesetRef">
+    <javadoc destdir="${javadoc}">
+      <fileset refid="fileset.simple" />
+    </javadoc>
+  </target>
+</project>

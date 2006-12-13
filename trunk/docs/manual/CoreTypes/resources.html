@@ -1,0 +1,841 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>Resources and Resource Collections</title>
+</head>
+
+<body>
+
+<h2><a name="resource">Resources</a></h2>
+<p>
+A file-like entity can be abstracted to the concept of a <i>resource</i>.
+In addition to providing access to file-like attributes, a resource
+implementation should, when possible, provide the means to read content
+from and/or write content to the underlying entity. Although the resource
+concept was introduced in <i>Ant 1.5.2</i>, resources are available for
+explicit use beginning in <b>Ant 1.7</b>.
+</p>
+
+<h3>The built-in resource types are:</h3>
+
+<ul>
+  <li><a href="#basic">resource</a> - a basic resource.</li>
+  <li><a href="#bzip2resource">bzip2resource</a> - a BZip2 compressed resource.</li>
+  <li><a href="#file">file</a> - a file.</li>
+  <li><a href="#gzipresource">gzipresource</a> - a GZip compressed resource.</li>
+  <li><a href="#javaresource">javaresource</a> - a resource loadable
+        via a Java classloader.</li>
+  <li><a href="#propertyresource">propertyresource</a> - an Ant property.</li>
+  <li><a href="#string">string</a> - a text string.</li>
+  <li><a href="#tarentry">tarentry</a> - an entry in a tar file.</li>
+  <li><a href="#url">url</a> - a URL.</li>
+  <li><a href="#zipentry">zipentry</a> - an entry in a zip file.</li>
+</ul>
+
+<h4><a name="basic">resource</a></h4>
+
+<p>A basic resource. Other resource types derive from this basic
+type; as such all its attributes are available, though in most cases
+irrelevant attributes will be ignored. This and all resource
+implementations are also usable as single-element
+<a href="#collection">Resource Collections</a>.
+</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of this resource</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">exists</td>
+    <td valign="top">Whether this resource exists</td>
+    <td align="center" valign="top">No, default <i>true</i></td>
+  </tr>
+  <tr>
+    <td valign="top">lastmodified</td>
+    <td valign="top">The last modification time of this resource</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">directory</td>
+    <td valign="top">Whether this resource is directory-like</td>
+    <td align="center" valign="top">No, default <i>false</i></td>
+  </tr>
+  <tr>
+    <td valign="top">size</td>
+    <td valign="top">The size of this resource</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h4><a name="file">file</a></h4>
+
+<p>Represents a file accessible via local filesystem conventions.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The file represented by this resource</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">The base directory of this resource.  When this
+      attribute is set, attempts to access the name of the resource
+      will yield a path relative to this location.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h4><a name="javaresource">javaresource</a></h4>
+
+<p>Represents a resource loadable via a Java classloader.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the resource.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to use when looking up a resource.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use when looking up a resource,
+      given as <a href="../using.html#references">reference</a>
+      to a <code>&lt;path&gt;</code> defined elsewhere..</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">loaderRef</td>
+    <td valign="top">the name of the loader that is
+      used to load the resource, constructed from the specified classpath.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<p>The classpath can also be specified as nested classpath element,
+where <b>&lt;classpath&gt;</b> is a <a
+href="../using.html#path">path-like</a> structure.</p>
+
+<h4><a name="zipentry">zipentry</a></h4>
+
+<p>Represents an entry in a ZIP archive.  The archive can be specified
+using the archive attribute or a nested single-element resource
+collection.  <code>zipentry</code> only supports file system resources
+as nested elements.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">zipfile or its alias name archive</td>
+    <td valign="top">The zip file containing this resource</td>
+    <td align="center" valign="top">Yes, unless a nested resource
+    collection has been specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the archived resource</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">encoding</td>
+    <td valign="top">The encoding of the zipfile</td>
+    <td align="center" valign="top">No;
+      platform default used if unspecified</td>
+  </tr>
+</table>
+
+<h4><a name="tarentry">tarentry</a></h4>
+
+<p>Represents an entry in a TAR archive.  The archive can be specified
+using the archive attribute or a nested single-element resource
+collection.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">archive</td>
+    <td valign="top">The tar archive containing this resource</td>
+    <td align="center" valign="top">Yes, unless a nested resource
+    collection has been specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the archived resource</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h4><a name="gzipresource">gzipresource</a></h4>
+
+<p>This is not a stand-alone resource, but a wrapper around another
+resource providing compression of the resource's contents on the fly.
+A single element resource collection must be specified as a nested
+element.</p>
+
+<h4><a name="bzip2resource">bzip2resource</a></h4>
+
+<p>This is not a stand-alone resource, but a wrapper around another
+resource providing compression of the resource's contents on the fly.
+A single element resource collection must be specified as a nested
+element.</p>
+
+<h4><a name="url">url</a></h4>
+
+<p>Represents a URL.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">url</td>
+    <td valign="top">The url to expose</td>
+    <td rowspan="3" align="center" valign="middle">Exactly one of these</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The file to expose as a file: url</td>
+  </tr>
+</table>
+
+<h4><a name="string">string</a></h4>
+
+<p>Represents a Java String. As such a string is readable but not writable.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The value of this resource</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h4><a name="propertyresource">propertyresource</a></h4>
+
+<p>Represents an Ant property.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The property name</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<hr>
+<h2><a name="collection">Resource Collections</a></h2>
+<p>
+A Resource Collection is an abstraction of an entity that groups
+together a number of <a href="#resource">resources</a>. Several of
+Ant's "legacy" datatypes have been modified to behave as Resource Collections:
+<ul>
+  <li><a href="fileset.html">fileset</a>,
+    <a href="dirset.html">dirset</a>,
+    <a href="filelist.html">filelist</a>, and
+    <a href="../using.html#path">path</a>
+    (and derivative types) expose <a href="#file">file</a> resources
+  </li>
+  <li><a href="zipfileset.html">tarfileset</a>
+    can expose <a href="#file">file</a> or <a href="#tarentry">tarentry</a>
+    resources depending on configuration
+  </li>
+  <li><a href="zipfileset.html">zipfileset</a>
+    can expose <a href="#file">file</a> or <a href="#zipentry">zipentry</a>
+    resources depending on configuration
+  </li>
+  <li><a href="propertyset.html">propertyset</a>
+    exposes <a href="#property">property</a> resources
+  </li>
+</ul>
+</p>
+<h3>The additional built-in resource collections are:</h3>
+<ul>
+  <li><a href="#resources">resources</a> - generic resource collection</li>
+  <li><a href="#files">files</a> - collection of files similar to
+    <a href="fileset.html">fileset</a></li>
+  <li><a href="#restrict">restrict</a> - restrict a resource collection
+    to include only resources meeting specified criteria</li>
+  <li><a href="#sort">sort</a> - sorted resource collection</li>
+  <li><a href="#first">first</a> - first <i>n</i> resources from a
+    nested collection</li>
+  <li><a href="#tokens">tokens</a> - <a href="#string">string</a> tokens
+    gathered from a nested collection</li>
+  <li><a href="#union">union</a> - set union of nested resource collections</li>
+  <li><a href="#intersect">intersect</a> - set intersection
+    of nested resource collections</li>
+  <li><a href="#difference">difference</a> - set difference
+    of nested resource collections</li>
+</ul>
+<h4><a name="resources">resources</a></h4>
+<p>A generic resource collection, designed for use with
+  <a href="../using.html#references">references</a>.
+  For example, if a third-party Ant task generates a Resource Collection
+  of an unknown type, it can still be accessed via a
+  <code>&lt;resources&gt;</code> collection. The secondary use of this
+  collection type is as a container of other resource collections,
+  preserving the order of nested collections as well as
+  duplicate resources (contrast with <a href="#union">union</a>).
+</p>
+
+<h4><a name="files">files</a></h4>
+<p>A group of files. These files are matched by <b>absolute</b> patterns
+  taken from a number of <a href="patternset.html">PatternSets</a>.
+  These can be specified as nested <code>&lt;patternset&gt;</code>
+  elements. In addition, <code>&lt;files&gt;</code> holds an implicit
+  PatternSet and supports the nested <code>&lt;include&gt;</code>,
+  <code>&lt;includesfile&gt;</code>, <code>&lt;exclude&gt;</code>
+  and <code>&lt;excludesfile&gt;</code> elements of PatternSet directly,
+  as well as PatternSet's attributes.
+</p>
+<p><a href="selectors.html">File Selectors</a> are available as nested
+  elements. A file must be selected by all selectors in order to be included;
+  <code>&lt;files&gt;</code> is thus equivalent to an
+  <code>&lt;and&gt;</code> file selector container.
+</p>
+<p><b>More simply put</b>, this type is equivalent to a
+  <a href="fileset.html">fileset</a> with no base directory.
+  <b>Please note</b> that without a base directory,
+  filesystem scanning is based entirely on include and exclude patterns.
+  A <a href="selectors.html#filenameselect">filename</a> (or any)
+  selector can <i>only</i> influence the scanning process <i>after</i>
+  the file has been included based on pattern-based selection.
+</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma- or space-separated list of patterns
+      of files that must be included</td>
+    <td rowspan="2" valign="middle" align="center">At least one of these</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an include pattern.</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma- or space-separated list of patterns
+      of files that must be excluded</td>
+    <td rowspan="2" valign="top" align="center">No, default none
+      (except default excludes when true)</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file; each line of this file is
+      taken to be an exclude pattern.</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">Whether
+      <a href="../dirtasks.html#defaultexcludes">default excludes</a>
+      should be used</td>
+    <td valign="top" align="center">No, default <i>true</i></td>
+  </tr>
+  <tr>
+    <td valign="top">casesensitive</td>
+    <td valign="top">Whether patterns are case-sensitive</td>
+    <td valign="top" align="center">No, default <i>true</i></td>
+  </tr>
+  <tr>
+    <td valign="top">followsymlinks</td>
+    <td valign="top">Whether to follow symbolic links
+      (see note <a href="#symlink">below</a>)</td>
+    <td valign="top" align="center">No, default <i>true</i></td>
+  </tr>
+</table>
+
+<p><a name="symlink"><b>Note</b></a>: All files/directories for which
+the canonical path is different from its path are considered symbolic
+links.  On Unix systems this usually means the file really is a
+symbolic link but it may lead to false results on other
+platforms.
+</p>
+
+<h4><a name="restrict">restrict</a></h4>
+<p>Restricts another nested resource collection using resource selectors:
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+  <p>Nested resource selectors are used to "narrow down" the included
+    resources. These are patterned after <a href="selectors.html">file
+    selectors</a> but are, unsurprisingly, targeted to resources.
+    Several built-in resource selectors are available in the internal
+    <a href="antlib.html">antlib</a>
+    <code>org.apache.tools.ant.types.resources.selectors</code>:
+  </p>
+
+  <ul>
+    <li><a href="#rsel.name">name</a> - select resources by name.</li>
+    <li><a href="#rsel.exists">exists</a> - select existing resources.</li>
+    <li><a href="#rsel.date">date</a> - select resources by date.</li>
+    <li><a href="#rsel.type">type</a> - select resources by type.</li>
+    <li><a href="#rsel.size">size</a> - select resources by size.</li>
+    <li><a href="#rsel.instanceof">instanceof</a>
+      - select resources by class or Ant datatype.</li>
+    <li><a href="#rsel.and">and</a> - "and" nested resource selectors.</li>
+    <li><a href="#rsel.or">or</a> - "or" nested resource selectors.</li>
+    <li><a href="#rsel.not">not</a> - "not" a nested resource selector.</li>
+    <li><a href="#rsel.none">none</a>
+      - select resources selected by no nested resource selectors.</li>
+    <li><a href="#rsel.majority">majority</a> - select resources selected
+      by a majority of nested resource selectors.</li>
+    <li><a href="selectors.html#modified">modified</a> - select resources which
+      content has changed.</li>
+    <li><a href="selectors.html#containsselect">contains</a> - select resources 
+      containing a particular text string.</li>
+    <li><a href="selectors.html#regexpselect">containsregexp</a> - select
+      resources whose contents match a particular regular expression.</li>
+    <li><a href="#rsel.compare">compare</a> - select resources
+      based on comparison to other resources.</li>
+  </ul>
+
+  <h4><a name="rsel.name">name</a></h4>
+  <p>Selects resources by name.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">name</td>
+      <td valign="top">The name pattern to test</td>
+      <td align="center" valign="top">Yes</td>
+    </tr>
+    <tr>
+      <td valign="top">casesensitive</td>
+      <td valign="top">Whether name comparisons are case-sensitive</td>
+      <td align="center" valign="top">No, default <i>true</i></td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.exists">exists</a></h4>
+  <p>Selects existing resources.</p>
+
+  <h4><a name="rsel.date">date</a></h4>
+  <p>Selects resources by date.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">millis</td>
+      <td valign="top">The comparison date/time in ms since January 1, 1970</td>
+      <td rowspan="2" align="center" valign="middle">One of these</td>
+    </tr>
+    <tr>
+      <td valign="top">datetime</td>
+      <td valign="top">The formatted comparison date/time</td>
+    </tr>
+    <tr>
+      <td valign="top">pattern</td>
+      <td valign="top">SimpleDateFormat-compatible pattern
+        for use with the <code>datetime</code> attribute</td>
+      <td align="center" valign="top">
+        No, default is "MM/DD/YYYY HH:MM AM_or_PM"</td>
+    </tr>
+    <tr>
+      <td valign="top">granularity</td>
+      <td valign="top">The number of milliseconds leeway to use when
+        comparing file modification times. This is needed because not
+        every file system supports tracking the last modified time to
+        the millisecond level.</td>
+      <td align="center" valign="top">No; default varies by platform:
+        FAT filesystems = 2 sec; Unix = 1 sec; NTFS = 1 ms.</td>
+    </tr>
+    <tr>
+      <td valign="top">when</td>
+      <td valign="top">One of "before", "after", "equal"</td>
+      <td align="center" valign="top">No, default "equal"</td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.type">type</a></h4>
+  <p>Selects resources by type (file or directory).</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">type</td>
+      <td valign="top">One of "file", "dir"</td>
+      <td align="center" valign="top">Yes</td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.size">size</a></h4>
+  <p>Selects resources by size.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">size</td>
+      <td valign="top">The size to compare</td>
+      <td align="center" valign="top">Yes</td>
+    </tr>
+    <tr>
+      <td valign="top">when</td>
+      <td valign="top">One of "equal", "eq", "greater", "gt", "less", "lt",
+        "ge" (greater or equal), "ne" (not equal), "le" (less or equal)</td>
+      <td align="center" valign="top">No, default "equal"</td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.instanceof">instanceof</a></h4>
+  <p>Selects resources by type.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">class</td>
+      <td valign="top">The class of which the resource must be an instance</td>
+      <td rowspan="2" align="center" valign="middle">One of these</td>
+    </tr>
+    <tr>
+      <td valign="top">type</td>
+      <td valign="top">The Ant type that must
+        be assignable from the resource</td>
+    </tr>
+    <tr>
+      <td valign="top">uri</td>
+      <td valign="top">The uri in which <i>type</i> must be defined</td>
+      <td valign="top">No</td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.and">and</a></h4>
+  <p>Selects a resource if it is selected by all nested resource selectors.</p>
+
+  <h4><a name="rsel.or">or</a></h4>
+  <p>Selects a resource if it is selected
+    by at least one nested resource selector.</p>
+
+  <h4><a name="rsel.not">not</a></h4>
+  <p>Negates the selection result of the single
+    nested resource selector allowed.</p>
+
+  <h4><a name="rsel.none">none</a></h4>
+  <p>Selects a resource if it is selected
+    by no nested resource selectors.</p>
+
+  <h4><a name="rsel.majority">majority</a></h4>
+  <p>Selects a resource if it is selected
+    by the majority of nested resource selectors.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">allowtie</td>
+      <td valign="top">Whether a tie (when there is an even number
+        of nested resource selectors) is considered a majority</td>
+      <td valign="top">No, default <i>true</i></td>
+    </tr>
+  </table>
+
+  <h4><a name="rsel.compare">compare</a></h4>
+  <p>Selects a resource based on its comparison to one or more "control"
+     resources using nested <a href="#rcmp">resource comparators</a>.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">when</td>
+      <td valign="top">Comparison ("equal"/"eq", "greater"/"gt", "less"/"lt",
+        "le" (less or equal), "ge" (greater or equal), "ne" (not equal).</td>
+      <td valign="top">No, default "equal"</td>
+    </tr>
+    <tr>
+      <td valign="top">against</td>
+      <td valign="top">Quantifier ("all"/"each"/"every", "any"/"some",
+        (exactly) "one", "most"/"majority", "none".</td>
+      <td valign="top">No, default "all"</td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>The resources against which comparisons will be made must be specified
+    using the nested &lt;control&gt; element, which denotes a
+    <a href="#resources">resources</a> collection.</p>
+  <h4>Examples</h4>
+  <p>The following selects files a, b, c, and d:</p>
+  <pre>
+&lt;restrict&gt;
+  &lt;fileset dir="src" includes="a,b,c,d,e,f,g" /&gt;
+  &lt;rsel:compare when="le" against="all"&gt;
+    &lt;control&gt;
+      &lt;resource name="d" /&gt;
+    &lt;/control&gt;
+    &lt;rcmp:name /&gt;
+  &lt;/rsel:compare&gt;
+&lt;/restrict&gt;</pre>
+</blockquote>
+
+<h4><a name="sort">sort</a></h4>
+
+<p>Sorts another nested resource collection according to the resources'
+   natural order, or by one or more nested <a href="#rcmp">resource
+   comparators</a>:</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+  <p>The sort can be controlled and customized by specifying one or more
+    resource comparators. Resources can be sorted according to multiple
+    criteria; the first specified is the "outermost", while the last
+    specified is the "innermost". Several built-in resource comparators
+    are available in the internal <a href="antlib.html">antlib</a>
+    <code>org.apache.tools.ant.types.resources.comparators</code>:
+  </p>
+  <h4><a name="rcmp">Resource Comparators:</a></h4>
+  <ul>
+    <li><a href="#rcmp.name">name</a> - sort resources by name</li>
+    <li><a href="#rcmp.exists">exists</a> - sort resources by existence</li>
+    <li><a href="#rcmp.date">date</a> - sort resources by date</li>
+    <li><a href="#rcmp.type">type</a> - sort resources by type</li>
+    <li><a href="#rcmp.size">size</a> - sort resources by size</li>
+    <li><a href="#rcmp.content">content</a> - sort resources by content</li>
+    <li><a href="#rcmp.reverse">reverse</a> - reverse the natural sort order,
+      or that of a single nested resource comparator</li>
+  </ul>
+
+  <h4><a name="rcmp.name">name</a></h4>
+  <p>Sort resources by name.</p>
+
+  <h4><a name="rcmp.exists">exists</a></h4>
+  <p>Sort resources by existence.
+    Not existing is considered "less than" existing.</p>
+
+  <h4><a name="rcmp.date">date</a></h4>
+  <p>Sort resources by date.</p>
+
+  <h4><a name="rcmp.type">type</a></h4>
+  <p>Sort resources by type (file or directory).
+    Because directories contain files, they are considered "greater".</p>
+
+  <h4><a name="rcmp.size">size</a></h4>
+  <p>Sort resources by size.</p>
+
+  <h4><a name="rcmp.content">content</a></h4>
+  <p>Sort resources by content.</p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">binary</td>
+      <td valign="top">Whether content should be compared in binary mode.
+        If <i>false<i>, content will be compared without regard to
+        platform-specific line-ending conventions.</td>
+      <td valign="top">No, default <i>true</i></td>
+    </tr>
+  </table>
+
+  <h4><a name="rcmp.reverse">reverse</a></h4>
+  <p>Reverse the natural sort order, or that of a single nested comparator.</p>
+
+</blockquote>
+
+<h4><a name="first">first</a></h4>
+<p>Includes the first <i>count</i> resources from a nested resource collection.
+This can be used in conjunction with the <a href="#sort">sort</a> collection,
+for example, to select the first few oldest, largest, etc. resources from a
+larger collection.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">count</td>
+      <td valign="top">The number of resources to include</td>
+      <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="tokens">tokens</a></h4>
+<p>Includes the <a href="#string">string</a> tokens gathered from a nested
+ resource collection. Uses the same tokenizers supported by the
+<a href="filterchain.html#tokenfilter">TokenFilter</a>. Hint: imaginative
+  use of this resource collection can implement equivalents for such Unix
+  functions as <code>sort</code>, <code>grep -c</code>, <code>wc</code> and
+  <code>wc -l</code>.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">encoding</td>
+      <td valign="top">The encoding of the nested resources</td>
+      <td valign="top" align="center">No, default is platform default</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="setlogic">Set operations</a></h4>
+<blockquote>
+  <p>The following resource collections implement set operations:</p>
+  <ul>
+    <li><a href="#union">union</a></li>
+    <li><a href="#intersect">intersect</a></li>
+    <li><a href="#difference">difference</a></li>
+  </ul>
+
+  <h4><a name="union">union</a></h4>
+  <p>Union of nested resource collections.</p>
+
+  <h4><a name="intersect">intersect</a></h4>
+  <p>Intersection of nested resource collections.</p>
+
+  <h4><a name="difference">difference</a></h4>
+  <p>Difference of nested resource collections.</p>
+
+  <p>The following attributes apply to all set-operation resource collections:
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+</blockquote>
+
+
+
+</body>
+</html>

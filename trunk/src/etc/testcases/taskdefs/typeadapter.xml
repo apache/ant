@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<project name="test" basedir="." default="invalid">
+  <property name="testcases.dir" location="../../../../build/testcases"/>
+  <path id="testclasses">
+    <pathelement location="${testcases.dir}" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="taskadapter">
+    <typedef name="myexec"
+             classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyExec"
+             classpathref="testclasses"
+             adapter="org.apache.tools.ant.TaskAdapter"/>
+    <myexec/>
+  </target>
+
+  <target name="runadapter">
+    <typedef
+      name="myrunnable"
+      classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyRunnable"
+      classpathref="testclasses"
+      adapter="org.apache.tools.ant.taskdefs.TypeAdapterTest$RunnableAdapter"/>
+    <myrunnable/>
+  </target>
+
+  <target name="runadaptererror">
+    <typedef
+      name="myrunnable"
+      classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyExec"
+      classpathref="testclasses"
+      adapter="org.apache.tools.ant.taskdefs.TypeAdapterTest$RunnableAdapter"/>
+    <myrunnable/>
+  </target>
+
+  <target name="delay">
+    <typedef
+      name="mytask"
+      classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyTask"
+      classpathref="testclasses"
+      onerror="ignore"/>
+    <mytask/>
+  </target>
+
+  <target name="onerror.report">
+    <typedef
+      name="mytask"
+      classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyTaskNotPresent"
+      classpathref="testclasses"
+      onerror="report"/>
+  </target>
+
+  <target name="onerror.ignore">
+    <typedef
+      name="mytask"
+      classname="org.apache.tools.ant.taskdefs.TypeAdapterTest$MyTaskNotPresent"
+      classpathref="testclasses"
+      onerror="ignore"/>
+  </target>
+
+
+</project>
+

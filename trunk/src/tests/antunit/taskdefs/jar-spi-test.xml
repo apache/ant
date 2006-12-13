@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:au="antlib:org.apache.ant.antunit">
+  <property name="jar.dir" location="jar_spi_dir"/>
+  <property name="jar.src.dir" location="jar_spi_dir/src"/>
+  <property name="jar.src.file" location="jar_spi_dir/src/a_file"/>
+
+  <target name="init">
+    <mkdir dir="${jar.src.dir}"/>
+    <delete quiet="yes" file="${jar.src.file}"/>
+    <touch file="${jar.src.file}"/>
+    <delete quiet="yes" file="${jar.dir}/file.jar"/>
+    <delete quiet="yes" dir="${jar.dir}/output"/>
+  </target>
+
+  <target name="test-simple" depends="init">
+
+    <jar jarfile="${jar.dir}/file.jar">
+      <fileset dir="${jar.src.dir}"/>
+      <service type="a.b.c" provider="a.b.c.d"/>
+    </jar>
+
+    <unjar src="${jar.dir}/file.jar"
+           dest="${jar.dir}/output"/>
+
+    <loadfile property="simple"
+              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              encoding="UTF-8"/>
+
+    <au:assertTrue>
+      <matches string="${simple}" pattern="^a\.b\.c\.d$"/>
+    </au:assertTrue>
+
+  </target>
+
+  <target name="test-providers" depends="init">
+
+    <jar jarfile="${jar.dir}/file.jar">
+      <fileset dir="${jar.src.dir}"/>
+      <service type="a.b.c">
+        <provider classname="a.X"/>
+        <provider classname="a.D"/>
+      </service>
+    </jar>
+
+    <unjar src="${jar.dir}/file.jar"
+           dest="${jar.dir}/output"/>
+
+    <loadfile property="providers"
+              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              encoding="UTF-8"/>
+    <au:assertTrue>
+      <matches string="${providers}" pattern="^a\.X\na\.D$"/>
+    </au:assertTrue>
+
+  </target>
+
+  <target name="test-multi" depends="init">
+
+    <jar jarfile="${jar.dir}/file.jar">
+      <fileset dir="${jar.src.dir}"/>
+      <service type="a.b.c">
+        <provider classname="a.X"/>
+        <provider classname="a.D"/>
+      </service>
+      <service type="javax.a.service">
+        <provider classname="a.O.T"/>
+        <provider classname="a.B"/>
+      </service>
+    </jar>
+
+    <unjar src="${jar.dir}/file.jar"
+           dest="${jar.dir}/output"/>
+
+    <loadfile property="multi-a"
+              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              encoding="UTF-8"/>
+
+    <au:assertTrue>
+      <matches string="${multi-a}" pattern="^a\.X\na\.D$"/>
+    </au:assertTrue>
+
+    <loadfile property="multi-b"
+              srcfile="${jar.dir}/output/META-INF/service/javax.a.service"
+              encoding="UTF-8"/>
+
+    <au:assertTrue>
+      <matches string="${multi-b}" pattern="^a\.O\.T\na\.B$"/>
+    </au:assertTrue>
+
+  </target>
+
+  <target name="test-reject-no-type" depends="init">
+    <au:expectfailure>
+      <jar jarfile="${jar.dir}/file.jar">
+        <fileset dir="${jar.src.dir}"/>
+        <service provider="a.X"/>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-reject-no-provider" depends="init">
+    <au:expectfailure>
+      <jar jarfile="${jar.dir}/file.jar">
+        <fileset dir="${jar.src.dir}"/>
+        <service type="a.X"/>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-reject-no-classname" depends="init">
+    <au:expectfailure>
+      <jar jarfile="${jar.dir}/file.jar">
+        <fileset dir="${jar.src.dir}"/>
+        <service type="a.X">
+          <provider/>
+        </service>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="tearDown">
+    <delete quiet="yes" dir="${jar.dir}"/>
+  </target>
+</project>

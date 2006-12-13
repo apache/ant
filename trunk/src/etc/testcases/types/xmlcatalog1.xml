@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE fragment [
+  <!ENTITY quote PUBLIC "myquote" "quote1.xml">
+]>
+
+  <!-- I belong to:
+       org.apache.tools.ant.types.XMLCatalogBuildFileTest.java 
+       -->
+
+<fragment>
+  <para>
+      &quote;
+  </para>
+</fragment>

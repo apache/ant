@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project basedir="." default="cleanup">
+
+  <target name="realTest">
+    <bzip2 src="expected/asf-logo-huge.tar" zipfile="asf-logo-huge.tar.bz2" />
+  </target>
+
+  <target name="realTestWithResource">
+    <bzip2 zipfile="asf-logo-huge.tar.bz2">
+      <file file="expected/asf-logo-huge.tar"/>
+    </bzip2>
+  </target>
+
+  <target name="testDateCheck">
+    <touch file="asf-logo.gif.bz2"/>
+    <bzip2 src="../asf-logo.gif" zipfile="asf-logo.gif.bz2" />
+  </target>
+
+  <target name="cleanup">
+    <delete file="asf-logo-huge.tar.bz2" />
+    <delete file="asf-logo.gif.bz2" />
+    <delete file="expected/asf-logo-huge.tar"/>
+  </target>
+
+  <target name="prepare">
+    <gunzip src="expected/asf-logo-huge.tar.gz"/>
+  </target>
+</project>

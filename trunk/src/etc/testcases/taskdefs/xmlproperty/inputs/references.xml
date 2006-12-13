@@ -1,0 +1,7 @@
+<references>
+  <property value="foo" id="foo.property"/>
+  <foo bar="${property}">
+    <quux refid="foo.property"/>
+    <thunk>${property}</thunk>
+  </foo>
+</references>

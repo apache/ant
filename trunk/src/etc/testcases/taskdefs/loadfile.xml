@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="loadfile-test" basedir="." default="testLoadAFile">
+
+
+  <target name="init">
+  </target>
+
+  <target name="testNoSourcefileDefined" depends="init">
+    <loadfile property="foo" />
+  </target>
+
+  <target name="testNoPropertyDefined"
+    depends="init">
+    <loadfile srcFile="somefile" />
+  </target>
+
+
+  <target name="testNoSourcefilefound"
+    depends="init">
+    <loadfile property="missing" srcFile="somefile" />
+  </target>
+
+  <target name="testFailOnError"
+    depends="init">
+    <loadfile
+      property="testFailOnError"
+      srcFile="somefile"
+      failonerror="false"/>
+  </target>
+
+  <target name="testLoadAFile"
+    depends="init">
+    <echo
+      message="What's it going to be then, eh?"
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testLoadAFile" srcFile="loadfile1.tmp" />
+    <echo>${testLoadAFile}</echo>
+  </target>
+
+  <target name="testLoadAFileEnc"
+    depends="init">
+    <loadfile property="testLoadAFileEnc"
+      srcFile="loadfile.xml"
+      encoding="ISO-8859-1"/>
+  </target>
+
+  <target name="testEvalProps"
+    depends="init">
+    <property name="weather" value="rain" />
+    <echo
+      message="All these moments will be lost in time, like teardrops in the ${weather}"
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testEvalProps"
+        srcFile="loadfile1.tmp">
+        <filterchain>
+          <expandproperties/>
+        </filterchain>
+    </loadfile>
+    <echo>${testEvalProps}</echo>
+  </target>
+
+  <target name="testFilterChain"
+    depends="init">
+      <echo file="loadfile1.tmp">#Line 1
+REM Line 2
+--Line 3
+Line 4
+Hello World!</echo>
+      <loadfile srcFile="loadfile1.tmp" 
+        property="testFilterChain">
+        <filterchain>
+          <headfilter lines="5"/>
+          <striplinecomments>
+            <comment value="--"/>
+            <comment value="REM "/>
+            <comment value="#"/>
+          </striplinecomments>
+          <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+            <param name="lines" value="1"/>
+          </filterreader>
+          <linecontains>
+            <contains value="World!"/>
+          </linecontains>
+        </filterchain>
+      </loadfile>
+  </target>
+
+  <target name="testStripJavaComments"
+    depends="init">
+      <echo file="loadfile1.tmp">
+/*
+Comment "1"
+*/
+public class test1 {
+    //Some comment
+    int x = 1/2;
+    private static final String GREETING="*/Hello/*";
+    private static final String GREETING1="/*Hello*/";
+
+    public static void main( String args[] ) {
+    }
+}</echo>
+      <echo file="nocomments.tmp">
+
+public class test1 {
+    
+    int x = 1/2;
+    private static final String GREETING="*/Hello/*";
+    private static final String GREETING1="/*Hello*/";
+
+    public static void main( String args[] ) {
+    }
+}</echo>
+      <loadfile srcFile="loadfile1.tmp" 
+        property="testStripJavaComments">
+        <filterchain>
+          <stripjavacomments/>
+        </filterchain>
+      </loadfile>
+      <loadfile srcFile="nocomments.tmp" 
+        property="expected"/>
+  </target>
+
+  <target name="testOneLine"
+    depends="init">
+    <echo
+      message="1,&#10;2,&#13;3,&#13;&#10;4"
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testOneLine"
+        srcFile="loadfile1.tmp">
+      <filterchain>
+        <striplinebreaks/>
+      </filterchain>
+    </loadfile>
+    <echo>${testOneLine}</echo>
+  </target>
+
+
+  <target name="cleanup">
+    <delete file="loadfile1.tmp"/>
+    <delete file="nocomments.tmp"/>
+  </target>
+
+  </project>

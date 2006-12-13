@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<project name="parsing-test" basedir="." default="help">
+
+  <target name="help">
+    <echo>
+This build file is intended to be used for testing Ant
+    </echo>
+  </target>
+
+  <target name="case-sensitivity">
+    <concat>
+      <fileSet dir="." includes="parse.xml"/>
+    </concat>
+  </target>
+
+  <target name="taskcase">
+    <ecHO>Should fail</ecHO>
+  </target>
+
+</project>

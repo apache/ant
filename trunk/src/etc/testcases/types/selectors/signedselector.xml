@@ -1,0 +1,44 @@
+<project>
+  <macrodef name="pass">
+    <element name="conditions" implicit="yes"/>
+    <attribute name="failmessage"/>
+    <sequential>
+      <fail message="@{failmessage}">
+        <condition>
+          <not>
+            <conditions/>
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <property name="issigned.dir" location="../../taskdefs/conditions/jars"/>
+  
+  <target name="selectsigned">
+    <pass failmessage="apassword.jar should be a signed file">
+      <isfileselected file="${issigned.dir}/apassword.jar">
+        <signedselector/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="notselected">
+    <pass failmessage="nosign.jar should not be selected as a signed jar">
+      <not>
+        <isfileselected file="${issigned.dir}/nosign.jar">
+          <signedselector/>
+        </isfileselected>
+      </not>
+    </pass>
+  </target>
+
+  <target name="name">
+    <pass failmessage="apassword.jar should be a signed file with the name apassword">
+      <isfileselected file="${issigned.dir}/apassword.jar">
+        <signedselector name="apassword"/>
+      </isfileselected>
+    </pass>
+  </target>
+
+</project>

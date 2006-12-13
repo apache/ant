@@ -1,0 +1,4 @@
+<project default="foo">
+  <echo message="Called" />
+  <target name="foo" />
+</project>

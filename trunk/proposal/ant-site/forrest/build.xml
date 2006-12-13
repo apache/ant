@@ -1,0 +1,18 @@
+<project name="anakia2forrest" default="run" basedir=".">
+
+    <!-- Initialization properties -->
+    <property name="anakia.xdocs.src"     location="../anakia/xdocs"/>
+    <property name="docs.dest"    location="docs"/>
+
+    <!-- run forrest, run ! -->
+    <target name="run">      
+      <xslt force="true" basedir="${anakia.xdocs.src}" destdir="${docs.dest}"
+        includes="**/*.xml"
+        extension=".xml"
+        style="${basedir}/anakia2forrest.xsl"/>      
+      
+      <xslt force="true" in="${anakia.xdocs.src}/stylesheets/project.xml" out="${docs.dest}/book.xml"
+        style="${basedir}/project2book.xsl"/>
+    </target>
+
+</project>

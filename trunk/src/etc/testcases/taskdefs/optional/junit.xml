@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<project name="junit-test" basedir="." default="outputTests">
+  <property name="showoutput" value="false" />
+  <path id="test">
+    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../../build/testcases" />
+  </path>
+
+  <target name="cleanup">
+    <delete file="testlog.txt"/>
+    <delete dir="out"/>
+  </target>
+
+  <target name="testForkedOutput">
+    <junit fork="yes" haltonerror="true" haltonfailure="true" 
+           showoutput="${showoutput}">
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testNonForkedOutput">
+    <junit fork="false" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testForkedThreadedOutput">
+    <junit fork="yes" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testNonForkedThreadedOutput">
+    <junit fork="false" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="outputTests" 
+          depends="testForkedOutput,testNonForkedOutput,testForkedThreadedOutput,testNonForkedThreadedOutput" />
+
+  <target name="crash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.VmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="nocrash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.NoVmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="timeout">
+    <junit fork="true" errorproperty="timeout" timeout="1000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="notimeout">
+    <junit fork="true" errorproperty="timeout" timeout="15000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="capture">
+    <property name="fork" value="false"/>
+    <junit fork="${fork}">
+      <test
+        name="org.apache.tools.ant.taskdefs.optional.junit.Printer"
+        outfile="testlog"/>
+      <formatter type="plain"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <target name="captureToSummary">
+    <property name="fork" value="true"/>
+    <junit fork="${fork}" printSummary="withOutAndErr">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Printer"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceToDir">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter type="xml"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Bugzilla Report 32973 -->
+  <target name="testBatchTestForkOnceExtension">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter type="xml" extension=".foo"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceCustomFormatter">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter extension="foo"
+        classname="org.apache.tools.ant.taskdefs.optional.junit.TestFormatter"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+</project>

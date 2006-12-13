@@ -1,0 +1,95 @@
+<!--
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+-->
+
+<project>
+  <property name="fooA" value="FooA"/>
+  <property name="barB" value="BarB"/>
+
+  <propertyset id="properties-starting-with-foo">
+    <propertyref prefix="foo"/>
+  </propertyset>
+  <propertyset id="properties-starting-with-bar">
+    <propertyref prefix="bar"/>
+  </propertyset>
+  <propertyset id="my-set">
+    <propertyset refid="properties-starting-with-foo"/>
+    <propertyset refid="properties-starting-with-bar"/>
+  </propertyset>
+  
+  <macrodef name="expect.equals">
+    <attribute name="test"/>
+    <attribute name="exp"/>
+    <attribute name="got"/>
+    <sequential>
+      <fail message=
+          "@{test} failed: expected &quot;@{exp}&quot; got &quot;@{got}&quot;">
+        <condition>
+          <not>
+            <equals arg1="@{exp}" arg2="@{got}"/>
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="reference-to-two-references">
+    <expect.equals
+      test="reference to two references"
+      exp="barB=BarB, fooA=FooA"
+      got="${toString:my-set}"/>
+  </target>
+
+  <target name="nested-mapped">
+    <propertyset id="nested-mapped">
+      <propertyset>
+        <propertyset refid="properties-starting-with-foo"/>
+        <globmapper from="foo*" to="boo*" />
+      </propertyset>
+      <propertyset>
+        <propertyset refid="properties-starting-with-bar"/>
+        <globmapper from="bar*" to="far*" />
+      </propertyset>
+    </propertyset>
+    <expect.equals
+      test="nested mapped propertysets"
+      exp="booA=FooA, farB=BarB"
+      got="${toString:nested-mapped}"/>
+  </target>
+
+  <target name="nested-mapped-mapped">
+    <propertyset id="nested-mapped-mapped">
+      <propertyset>
+        <propertyset refid="properties-starting-with-foo"/>
+        <globmapper from="foo*" to="boo*" />
+      </propertyset>
+      <propertyset>
+        <propertyset refid="properties-starting-with-bar"/>
+        <globmapper from="bar*" to="far*" />
+      </propertyset>
+      <mapper>
+        <globmapper from="boo*" to="hoo*" />
+        <globmapper from="far*" to="near*" />
+      </mapper>
+    </propertyset>
+    <expect.equals
+      test="nested mapped propertysets"
+      exp="hooA=FooA, nearB=BarB"
+      got="${toString:nested-mapped-mapped}"/>
+  </target>
+
+</project>

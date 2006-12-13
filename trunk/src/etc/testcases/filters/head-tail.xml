@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<project default="cleanup" basedir=".">
+
+  <target name="init">
+    <mkdir dir="result" />
+  </target>
+
+  <target name="cleanup">
+    <delete dir="result"/>
+  </target>
+
+  <!-- Testcases for HeadFilter -->
+
+  <target name="testHead" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.head.test">
+      <filterchain>
+        <headfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadLines" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.headLines.test">
+      <filterchain>
+        <headfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.headSkip.test">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadLinesSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.headLinesSkip.test">
+      <filterchain>
+        <headfilter lines="2" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderHeadLinesSkip" depends="init">
+    <copy file="input/head-tail.test" 
+          tofile="result/head-tail.filterReaderHeadLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.HeadFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadAllSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.headAllSkip.test">
+      <filterchain>
+        <headfilter lines="-1" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <!-- Testcases for TailFilter -->
+
+  <target name="testTail" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.tail.test">
+      <filterchain>
+        <tailfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailLines" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.tailLines.test">
+      <filterchain>
+        <tailfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.tailSkip.test">
+      <filterchain>
+        <tailfilter skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailLinesSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.tailLinesSkip.test">
+      <filterchain>
+        <tailfilter lines="2" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderTailLinesSkip" depends="init">
+    <copy file="input/head-tail.test" 
+          tofile="result/head-tail.filterReaderTailLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailAllSkip" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.tailAllSkip.test">
+      <filterchain>
+        <tailfilter lines="-1" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <!-- Testcases for combined scenarios -->
+
+  <target name="testHeadTail" depends="init">
+    <copy file="input/head-tail.test" tofile="result/head-tail.headtail.test">
+      <filterchain>
+        <headfilter lines="4"/>
+        <tailfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+</project>

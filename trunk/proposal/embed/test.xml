@@ -1,0 +1,126 @@
+<project name="embed-test" default="main" basedir=".">
+  <property name="ant.src" location="../.."/>
+  <description>Test for embed proposal</description>        
+  <import file="build.xml"/>
+
+  <!-- This is a tricky problem: import will append tasks at the
+    end of the task list. That's a bug, it should replace the
+    <import> task with the content. When fixed, this should show
+    the real value. --> 
+  <echo message="Base.path from build.xml ( in top level ): ${base.path}"/>
+  
+  <target name="init">
+     <property name="junit.jar" location="${base.path}/junit3.7/junit.jar"/>
+     <echo>Base.path from build.xml ( in init ) : ${base.path}</echo>
+
+    <path id="myJars" >
+      <pathelement path="${junit.jar}" />
+      <pathelement path="${jxpath.jar}" />
+      <pathelement path="${velocity-dep.jar}" />
+      <pathelement path="${velocity.jar}" />
+      <pathelement path="${jexl.jar}" />
+      <pathelement path="${commons-discovery.jar}" />
+      <pathelement path="${commons-logging.jar}" />
+      <pathelement path="${ant.home}/lib/ant-sax2.jar" />
+      <pathelement location="/usr/share/java/xalan-j_2_3_1/bin/xercesImpl.jar"/>
+      <pathelement location="${ant.home}/lib/xercesImpl.jar"/>
+      <pathelement location="${ant.home}/lib/xml-apis.jar"/>
+      <pathelement location="${ant.home}/lib/ant.jar"/>
+      <fileset dir="${ant.home}/lib" includes="optional-*.jar" />
+    </path>
+
+    <echo>Path: ${toString:myJars}</echo>
+
+    <classloader classpathRef="myJars"/>
+  
+  </target>
+
+  <target name="xmldom" depends="init">
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
+    <typedef classname="org.apache.tools.ant.taskdefs.XMLDOM"
+             name="xmlDom" />
+
+    <xmlDom id="module.xml" file="/ws/jakarta-gump/project/jakarta-ant.xml"/>
+    <!-- Enable Jxpath support -->
+    <jxpath/>
+    <echo>Name: ${jxpath:/references/module.xml/root/module/project[1]/@name}</echo>
+
+  </target>
+
+
+  <target name="discovery" depends="init">
+    <echo message="${commons-discovery.jar}"/>
+
+    <systemPath pathRef="myJars"/>
+
+    <taskdef classname="org.apache.tools.ant.taskdefs.ServiceDiscoveryTask"
+             name="discovery" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
+
+    <jxpath/>
+    <discovery debug="1" id="myDiscovery"
+               serviceName="META-INF/services/javax.xml.parsers.SAXParserFactory" />
+    <echo message="Found ${jxpath:/references[@name='myDiscovery']}" />
+
+  </target>
+
+  <target name="systemPathTest" depends="init">
+    <junit id="replacedJunit" />
+    <echo message="Found JUNIT: ${toString:replacedJunit}" />
+  </target>
+
+  <target name="dynamicProperties" depends="init">
+    <!-- This is Taksdef2.java - it'll use the systemPath as parent loader
+      -->
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPathSet"
+             name="jxpathSet" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.VelocityProperties"
+             name="velocityProperties" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JexlProperties"
+             name="jexlProperties" />
+
+    <!-- Init JxPath. '/' is the project -->
+    <jxpath/>
+    <velocityProperties/>
+    <jexlProperties/>
+    
+    <echo id="foo" message="Starting dynamic props tests" />
+
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
+    <jxpathSet path="/references[@name='jxpathTask']/foo" value="Test"/>
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
+
+    <echo message="${jexl:ant.references.jxpathTask.foo=bar}" />
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
+
+    <echo message="jexl /references/myJars: ${jexl:ant.references.myJars}" />
+
+    <echo message="jxPath /targets[1]: ${jxpath:/targets[1]}" />
+    <echo message="jxPath /references: ${jxpath:/references}" />
+    <echo message="jxPath /references[@name='myJars']: ${jxpath:/references[@name='myJars']}" />
+    <echo message="jxPath /references/myJars: ${jxpath:/references/myJars}" />
+
+    <!-- This is XMLDOM.java - a datatype that holds an xml DOM  -->
+    <typedef name="xmldom" classname="org.apache.tools.ant.taskdefs.XMLDOM"/>
+
+    <!-- Init XMLDOM. The DOM of file test.xml will be referenced via the id-->
+    <xmldom id="test.xml" file="test.xml"/>  
+
+    <echo message="XMLDOM: ${jxpath:/references/test.xml/root/project/@name}" />
+
+  </target>
+
+  <target name="main" depends="init,dynamicProperties,systemPathTest,test-import">
+  </target>
+
+
+  <target name="test-import" >
+    <antcall target="embed.main" />
+  </target>
+
+
+</project>

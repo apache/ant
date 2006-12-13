@@ -1,0 +1,8 @@
+<!ELEMENT doc (section) >
+<!ELEMENT section (#PCDATA)>
+<!ATTLIST section title CDATA #IMPLIED>
+
+
+
+
+

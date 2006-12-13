@@ -1,0 +1,13 @@
+<project xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="testAcceptNested">
+    <echo>foo</echo>
+  </target>
+
+  <target name="testRejectNested">
+    <typedef name="object" classname="java.lang.Object" />
+    <au:expectfailure expectedMessage="The &lt;object&gt; type doesn't support nested text data (&quot;foo&quot;).">
+      <object>foo</object>
+    </au:expectfailure>
+  </target>
+</project>

@@ -1,0 +1,505 @@
+<?xml version="1.0"?>
+
+<!-- test conditioning -->
+<project name="condition-test" basedir="." default="test1">
+
+  <target name="basic">
+    <condition property="basic">
+      <equals arg1="a" arg2="a" />
+    </condition>
+    <echo>${basic}</echo>
+  </target>
+
+  <target name="condition-incomplete">
+    <condition >
+      <equals arg1="a" arg2="a" />
+    </condition>
+  </target>
+
+  <target name="condition-empty">
+    <condition property="condition-empty"/>
+    <echo>${condition-empty}</echo>
+  </target>
+
+  <target name="shortcut">
+    <property name="shortcut" value="set"/>
+    <condition property="shortcut">
+      <equals arg1="a" arg2="a" />
+    </condition>
+    <echo>${shortcut}</echo>
+  </target>
+
+  <target name="dontset">
+    <condition property="dontset">
+      <equals arg1="a" arg2="b" />
+    </condition>
+    <echo>${dontset}</echo>
+  </target>
+
+  <target name="setvalue">
+    <condition property="setvalue" value="woowoo" >
+      <equals arg1="a" arg2="a" />
+    </condition>
+    <echo>${setvalue}</echo>
+  </target>
+
+  <target name="negation">
+    <condition property="negation">
+      <not>
+        <equals arg1="a" arg2="B" />
+      </not>
+    </condition>
+    <echo>${negation}</echo>
+  </target>
+
+  <target name="negationfalse">
+    <condition property="negationfalse">
+      <not>
+        <equals arg1="a" arg2="a" />
+      </not>
+    </condition>
+    <echo>${negationfalse}</echo>
+  </target>
+
+  <target name="negationincomplete">
+    <condition property="negationincomplete">
+      <not />
+    </condition>
+    <echo>${negationincomplete}</echo>
+  </target>
+
+  <target name="and">
+    <condition property="and">
+      <and>
+        <equals arg1="a" arg2="a" />
+        <equals arg1="B" arg2="B" />
+      </and>
+    </condition>
+    <echo>${and}</echo>
+  </target>
+
+  <target name="andfails">
+    <condition property="andfails">
+      <and>
+        <equals arg1="a" arg2="B" />
+        <equals arg1="B" arg2="a" />
+      </and>
+    </condition>
+    <echo>${andfails}</echo>
+  </target>
+
+  <target name="andincomplete">
+    <condition property="andincomplete">
+      <and>
+        <equals arg1="a" arg2="B" />
+      </and>
+    </condition>
+    <echo>${andincomplete}</echo>
+  </target>
+
+  <target name="andempty">
+    <condition property="andempty">
+      <and/>
+    </condition>
+    <echo>${andempty}</echo>
+  </target>
+
+  <target name="or">
+    <condition property="or">
+      <or>
+        <equals arg1="a" arg2="B" />
+        <equals arg1="B" arg2="B" />
+      </or>
+    </condition>
+    <echo>${or}</echo>
+  </target>
+
+  <target name="orincomplete">
+    <condition property="orincomplete">
+      <or>
+        <equals arg1="a" arg2="a" />
+      </or>
+    </condition>
+    <echo>${orincomplete}</echo>
+  </target>
+
+  <target name="orempty">
+    <condition property="orempty">
+      <or/>
+    </condition>
+    <echo>${orempty}</echo>
+  </target>
+
+  <target name="orfails">
+    <condition property="orfails">
+      <or>
+        <equals arg1="a" arg2="B" />
+        <equals arg1="B" arg2="a" />
+      </or>
+    </condition>
+    <echo>${orfails}</echo>
+  </target>
+
+  <target name="orboth">
+    <condition property="orboth">
+      <or>
+        <equals arg1="a" arg2="a" />
+        <equals arg1="B" arg2="B" />
+      </or>
+    </condition>
+    <echo>${orboth}</echo>
+  </target>
+
+  <target name="filesmatch-identical" >
+    <condition property="filesmatch-identical">
+        <filesmatch
+          file1="condition.xml"
+          file2="condition.xml" />
+    </condition>
+    <echo>${filesmatch-identical}</echo>
+  </target>
+
+  <target name="filesmatch-incomplete" >
+    <condition property="filesmatch-incomplete">
+        <filesmatch
+          file1="condition.xml"/>
+    </condition>
+    <echo>${filesmatch-incomplete}</echo>
+  </target>
+
+  <target name="filesmatch-oddsizes" >
+    <condition property="filesmatch-oddsizes">
+        <filesmatch
+          file1="condition.xml"
+          file2="property.xml" />
+    </condition>
+    <echo>${filesmatch-oddsizes}</echo>
+  </target>
+
+  <target name="filesmatch-existence" >
+    <condition property="filesmatch-existence">
+      <filesmatch
+        file1="condition.xml"
+        file2="this-file-doesnt-exist.xml" />
+    </condition>
+    <echo>${filesmatch-existence}</echo>
+  </target>
+
+  <target name="filesmatch-neitherexist">
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="idonotexist" file2="andneitherdoi" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="filesmatch-different">
+    <echo file="match1.txt" message="012345676890" />
+    <echo file="match2.txt" message="012345676889" />
+    <condition property="filesmatch-different">
+      <filesmatch
+        file1="match1.txt"
+        file2="match2.txt" />
+    </condition>
+    <echo>${filesmatch-different}</echo>
+  </target>
+
+  <target name="filesmatch-match" >
+    <echo file="match3.txt" message="012345676890" />
+    <echo file="match4.txt" message="012345676890" />
+    <condition property="filesmatch-match">
+      <filesmatch
+        file1="match3.txt"
+        file2="match4.txt" />
+    </condition>
+    <echo>${filesmatch-match}</echo>
+  </target>
+
+  <target name="filesmatch-different-eol" >
+    <echo file="match7.txt" message="012345676890" />
+    <echo file="match8.txt" message="012345676890" />
+    <fixcrlf file="match7.txt" eol="cr" fixlast="true" />
+    <fixcrlf file="match8.txt" eol="lf" fixlast="true" />
+    <fail>
+      <condition>
+        <filesmatch file1="match7.txt" file2="match8.txt" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="filesmatch-same-eol" >
+    <echo file="match9.txt" message="012345676890" />
+    <echo file="match10.txt" message="012345676890" />
+    <fixcrlf file="match9.txt" eol="crlf" fixlast="true" />
+    <fixcrlf file="match10.txt" eol="lf" fixlast="true" />
+    <fail>
+      <condition>
+        <not>
+          <filesmatch file1="match9.txt" file2="match10.txt" textfile="true" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="filesmatch-different-sizes">
+    <echo file="match5.txt" message="012345676890" />
+    <echo file="match6.txt" message="0123456768" />
+    <condition property="filesmatch-different-sizes">
+      <filesmatch
+        file1="match5.txt"
+        file2="match6.txt" />
+    </condition>
+    <echo>${filesmatch-different-sizes}</echo>
+  </target>
+
+  <target name="filesmatch-different-onemissing">
+    <condition property="filesmatch-different-sizes">
+      <filesmatch
+        file1="condition.xml"
+        file2="missing-file.txt" />
+    </condition>
+    <echo>${filesmatch-different-onemissing}</echo>
+  </target>
+
+  <target name="contains" >
+    <condition property="contains">
+      <contains
+        string="abcd"
+        substring="cd" />
+    </condition>
+    <echo>${contains}</echo>
+  </target>
+
+  <target name="contains-doesnt" >
+    <condition property="contains-doesnt">
+      <contains
+        string="abcd"
+        substring="CD" />
+    </condition>
+    <echo>${contains-doesnt}</echo>
+  </target>
+
+  <target name="contains-anycase" >
+    <condition property="contains-anycase">
+      <contains casesensitive="false"
+        string="abcd"
+        substring="CD" />
+    </condition>
+    <echo>${contains-anycase}</echo>
+  </target>
+
+  <target name="contains-incomplete1" >
+    <condition property="contains-incomplete1">
+      <contains
+        string="abcd" />
+    </condition>
+    <echo>${contains-incomplete1}</echo>
+  </target>
+
+  <target name="contains-incomplete2" >
+    <condition property="contains-incomplete2">
+      <contains
+        substring="CD" />
+    </condition>
+    <echo>${contains-incomplete2}</echo>
+  </target>
+
+  <target name="istrue" >
+    <property name="t" value="true" />
+    <property name="o" value="o" />
+    <property name="n" value="n" />
+    <condition property="istrue">
+      <and>
+        <istrue value="${t}" />
+        <istrue value="TRUE" />
+        <istrue value="yes" />
+        <istrue value="YeS" />
+        <istrue value="on" />
+        <istrue value="${o}${n}" />
+      </and>
+    </condition>
+    <echo>${istrue}</echo>
+  </target>
+
+  <target name="istrue-not" >
+    <condition property="istrue-not">
+      <istrue
+        value="this sentence is true" />
+    </condition>
+    <echo>${istrue-not}</echo>
+  </target>
+
+  <target name="istrue-false" >
+    <condition property="istrue-false">
+      <or>
+        <istrue value="false" />
+        <istrue value="" />
+      </or>
+    </condition>
+    <echo>${istrue-false}</echo>
+  </target>
+
+  <target name="istrue-incomplete" >
+    <condition property="istrue-incomplete">
+      <istrue />
+    </condition>
+    <echo>${istrue-incomplete}</echo>
+  </target>
+
+  <target name="isfalse-true" >
+    <property name="t" value="true" />
+    <condition property="isfalse-true">
+      <isfalse
+        value="${t}" />
+    </condition>
+    <echo>${isfalse-true}</echo>
+  </target>
+
+  <target name="isfalse-not" >
+    <condition property="isfalse-not">
+      <isfalse
+        value="this sentence is true" />
+    </condition>
+    <echo>${isfalse-not}</echo>
+  </target>
+
+  <target name="isfalse-false" >
+    <condition property="isfalse-false">
+      <isfalse
+        value="false" />
+    </condition>
+    <echo>${isfalse-false}</echo>
+  </target>
+
+  <target name="isfalse-incomplete" >
+    <condition property="isfalse-incomplete">
+      <isfalse />
+    </condition>
+    <echo>${isfalse-incomplete}</echo>
+  </target>
+
+  <target name="testElse">
+    <condition property="unset" value="foo">
+      <or />
+    </condition>
+    <condition property="value" value="foo" else="bar">
+      <and />
+    </condition>
+    <condition property="else" value="foo" else="bar">
+      <or />
+    </condition>
+    <fail>
+      <condition>
+        <or>
+          <isset property="unset" />
+          <not>
+            <and>
+              <equals arg1="${value}" arg2="foo" />
+              <equals arg1="${else}" arg2="bar" />
+            </and>
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-error">
+    <condition property="errorexpected">
+      <resourcesmatch />
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-empty">
+    <condition property="errorexpected">
+      <resourcesmatch>
+        <resources />
+      </resourcesmatch>
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-one">
+    <condition property="errorexpected">
+      <resourcesmatch>
+        <string value="foo" />
+      </resourcesmatch>
+    </condition>
+  </target>
+
+  <target name="resourcesmatch-match-binary">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <string value="foo" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-match-multiple-binary">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <string value="foo" />
+            <string value="foo" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-differ">
+    <echo file="match11.txt" message="foo" />
+    <fixcrlf file="match11.txt" eol="crlf" fixlast="true" />
+    <fail>
+      <condition>
+        <resourcesmatch>
+          <file file="match11.txt" />
+          <string value="foo" />
+        </resourcesmatch>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-match-text">
+    <echo file="match11.txt" message="foo" />
+    <fixcrlf file="match11.txt" eol="crlf" />
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch astext="true">
+            <file file="match11.txt" />
+            <string value="foo" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="resourcesmatch-noneexist">
+    <fail>
+      <condition>
+        <not>
+          <resourcesmatch>
+            <resource name="foo" exists="false" />
+            <resource name="bar" exists="false" />
+            <resource name="baz" exists="false" />
+          </resourcesmatch>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="cleanup" >
+    <delete>
+      <fileset dir="." includes="match?.txt,match??.txt" />
+    </delete>
+  </target>
+
+</project>

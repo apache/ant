@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="vss-test" basedir="." default="vssget.1">
+
+    <!--
+    ===========================================================================
+     Test required attributes
+    ===========================================================================
+    -->
+    <target name="vssget.1">
+        <vssget/>
+    </target>
+
+    <target name="vsslabel.1">
+        <vsslabel/>
+    </target>
+
+   <target name="vsslabel.2">
+        <vsslabel vsspath="$/SourceRoot/Project"/>
+    </target>
+
+    <target name="vsshistory.1">
+        <vsshistory/>
+    </target>
+
+    <target name="vsscheckin.1">
+        <vsscheckin/>
+    </target>
+
+    <target name="vsscheckout.1">
+        <vsscheckout/>
+    </target>
+
+    <target name="vsscheckout.2">
+        <vsscheckout
+            vsspath="$/SourceRoot/Project"
+            filetimestamp="blah"/>
+    </target>
+
+    <target name="vssadd.1">
+        <vssadd/>
+    </target>
+
+    <target name="vsscp.1">
+        <vsscp/>
+    </target>
+
+     <target name="vsscreate.1">
+        <vsscreate/>
+    </target>
+
+</project>

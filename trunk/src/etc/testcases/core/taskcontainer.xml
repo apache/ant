@@ -1,0 +1,48 @@
+<project default="dont-run-this">
+
+  <property name="build.dir" value="build"/>
+  
+  <target name="dont-run-this">
+    <fail>This build file is supposed to be run by a Unit test</fail>
+  </target>
+ 
+
+  <target name="testPropertyExpansion">
+    <sequential>
+      <property name="foo" value="it worked"/>
+      <echo message="As attribute: ${foo}"/>
+      <echo>As nested text: ${foo}</echo>
+    </sequential>
+  </target>
+
+  <target name="testTaskdef">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="containersrc" destdir="${build.dir}" debug="on"/>
+
+    <sequential>    
+      <taskdef name="sseq" classpath="${build.dir}" classname="test.SpecialSeq"/>
+      <sseq>
+        <fileset dir="."/>
+        <property name="foo" value="it worked"/>
+        <echo message="As attribute: ${foo}"/>
+        <echo>As nested text: ${foo}</echo>
+        <nested message="As nested task: ${foo}"/>
+      </sseq>
+    </sequential>
+  </target>
+
+  <target name="testCaseInsensitive">
+    <taskdef name="Prattle" classname="org.apache.tools.ant.taskdefs.Echo"/>  
+    <taskdef name="Seq"  
+             classname="org.apache.tools.ant.taskdefs.Sequential"/>  
+    <Prattle>hello</Prattle>  
+    <Seq>  
+      <Prattle> world</Prattle>  
+    </Seq>  
+  </target>  
+
+  <target name="cleanup">
+    <delete dir="${build.dir}"/>
+  </target>
+  
+</project>

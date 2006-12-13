@@ -1,0 +1,15 @@
+<project>
+  <import file="define.mapperresult.xml"/>
+
+  <target name="ignore.case">
+    <mapperresult input="AbcDef.javA" output="bcDef.java.bak">
+      <regexpmapper from="a(.*).JaVa" to="\1.java.bak" casesensitive="no"/>
+    </mapperresult>
+  </target>
+
+  <target name="handle.dirsep">
+    <mapperresult input="d\e/f\j.java" output="f/j.java">
+      <regexpmapper from="d/e/(.*)" to="\1" handledirsep="yes"/>
+    </mapperresult>
+  </target>
+</project>

@@ -1,0 +1,32 @@
+<project xmlns:au="antlib:org.apache.ant.antunit" default="all">
+
+  <target name="test-fileset-with-if">
+    <fileset id="this.xml" dir=".">
+      <include if="trigger.include" name="fileset-test.xml"/>
+    </fileset>
+    <pathconvert refid="this.xml" property="this.xml.prop" pathsep="${line.separator}" setonempty="false"/>
+    <au:assertTrue message="fileset this.xml should not contain anything but contains ${this.xml.prop}">
+        <not>
+          <isset property="this.xml.prop"/>
+        </not>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-fileset-with-if-property-set">
+    <property name="trigger.include" value="true"/>
+    <fileset id="this.xml" dir=".">
+      <include if="trigger.include" name="fileset-test.xml"/>
+    </fileset>
+    <pathconvert refid="this.xml" property="this.xml.prop" pathsep="${line.separator}" setonempty="false"/>
+    <au:assertPropertySet name="this.xml.prop" message="fileset should contain one file"/>
+    <echo>${this.xml.prop}</echo>
+    <au:assertLogContains text="fileset-test.xml"/>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset dir="${basedir}" includes="fileset-test.xml"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>

@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<!--
+     Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <index value="1"/>
+    <title>Ant Libraries - Charter</title>
+  </properties>
+
+  <body>
+    <section name="Charter">
+    
+      <p>Below is the text of the proposal that has been accepted by
+      the Ant PMC.  Further amendments are expected.</p>
+
+      <source>
+Proposal to Create a Ant-Libraries Sub-Project in Apache Ant
+============================================================
+
+(0) rationale
+
+Ant itself has accumulated lots and lots of tasks over time. So many,
+that Ant developers have become reluctant to adding new
+task. Furthermore any new task in Ant would be tied to Ant's release
+schedule which is too slow for a thriving, fresh piece of code.
+
+The proposal allows Ant tasks and types to be developed under the Ant
+umbrella by Ant developers but have much shorter release cycles than
+Ant itself. In addition it would new committers who would have commit
+access to a single Ant library instead of the whole of Ant.
+
+(1) scope of the subproject
+
+The subproject shall create and maintain libraries of Ant tasks and
+types. Each library will be managed in the same manner as the Ant
+project itself, the PMC is ultimately responsible for it.
+
+Common Java libraries that only happen to provide Ant tasks as well
+are out of scope of the subproject. Providing the tasks or types has
+to be the primary goal of the library.
+
+To further this goal, the subproject shall also host a workplace for
+Ant committers.
+
+(1.5) interaction with other subprojects
+
+(1.5.1) the sandbox
+
+The subproject will host a SVN repository available to all Ant
+committers as a workplace for new Ant libraries.
+
+Before a library can have a public release it has to get promoted to
+the "proper" Ant libraries subproject. This also means it has to match
+the requirements of an Ant library as defined in section (4) under
+Guidelines below.
+
+The status of any library developed in the sandbox shall be reviewed
+after six months and the library gets either promoted or removed - or
+it has to be re-evaluated after another six months.
+
+(2) identify the initial source from which the subproject is to be populated
+
+Some Ant committers have developed tasks or libraries inside of the
+Ant CVS module under the proposal/sandbox directory. Committers are
+free to move them over to the new sandbox subproject or remove them
+completely.
+
+Libraries expected to move to the sandbox subproject initially are
+
+* the .NET tasks under proposal/sandbox/dotnet
+
+* the Subversion support tasks under proposal/sandbox/svn
+
+(3) identify the initial Apache resources to be created
+
+(3.1) mailing list(s)
+
+None. At least at the beginning we don't expect too much traffic and
+the existing mailing lists of the Ant projects will be used.
+
+(3.2) SVN repositories
+
+Create &lt;http://svn.apache.org/repos/asf/ant/>
+
+Expected are sub-directories
+
+antlibs/
+   |
+   -----> proper/
+   |        |
+   |        -----> library1
+   |        |        |
+   |        |        -----------> trunk
+   |        |        -----------> tags
+   |        |        -----------> branches
+   |        -----> library2
+   |                 |
+   |                 -----------> trunk
+   |                 -----------> tags
+   |                 -----------> branches
+   |
+   -----> sandbox/
+            |
+            -----> library1
+            |        |
+            |        -----------> trunk
+            |        -----------> tags
+            |        -----------> branches
+            -----> library2
+                     |
+                     -----------> trunk
+                     -----------> tags
+                     -----------> branches
+
+And potentially collections of all-trunks using svn:external as shown
+by the current Jakarta Commons structure.
+
+(3.3) Bugzilla
+
+New components under product "Ant" for each new library.
+
+(4) identify the initial set of committers
+
+All current Ant PMC members plus the active Ant committers who are not
+PMC members yet.
+
+Guidelines
+----------
+
+Note:
+
+* is, has, will, shall, must - required.
+
+* may, should, are encouraged - optional but recommended.
+
+(1) The primary unit of reuse and release is the Ant library.
+
+(2) The library is not a framework or a general library but a
+    collection of Ant tasks and types.
+
+(3) Each library must have a clearly defined purpose, scope, and API.
+
+(4) Each library is treated as a product in its own right.
+
+(4.1) Each library has its own status file, release schedule, version
+      number, QA tests, documentation, bug category, and individual
+      JAR.
+
+(4.2) Each library must clearly specify any external dependencies,
+      including any other libraries, and the earliest JDK version
+      required.
+
+(4.3) Each library must maintain a list of its active committers in
+      its status file.
+
+(4.4) The libraries should use a standard scheme for versioning, QA
+      tests, and directory layouts, and a common format for
+      documentation and Ant build files.
+
+(4.4) Each library will be hosted on its own page on the subproject
+      Web site, and will also be indexed in a master directory.
+
+(4.5) Volunteers become committers to this subproject in the same way
+      they are entered to any Apache subproject.
+
+      Once the required infrastructure is in place, volunteers may
+      become committers for a single Ant library only.
+
+(4.6) New libraries may be proposed to the Ant dev mailing list. To be
+      accepted, a library proposal must receive majority approval of
+      the Ant PMC. Proposals are to identify the rationale for the
+      library, its scope, the initial source from which the library is
+      to be created, and the initial set of committers.
+
+(4.7) As stated in the Ant guidelines, an action requiring majority
+      approval must receive at least 3 binding +1 votes and more +1
+      votes than -1 votes.
+
+(4.8) Each Ant library needs at least three committers, at least one
+      of them has to be an Ant PMC member.
+      </source>
+
+    </section>
+  </body>
+</document>

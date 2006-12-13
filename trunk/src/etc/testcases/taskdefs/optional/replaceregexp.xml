@@ -1,0 +1,54 @@
+<project name="test" default="def" basedir=".">
+  <property name="tmpregexp" value="tmpregexp"/>
+  <target name="def">
+    <fail>This build file should only be run from within the testcase</fail>
+  </target>
+
+  <target name="setup">
+    <copy file="replaceregexp.properties" tofile="test.properties" />
+  </target>
+
+  <target name="setup-nl">
+    <copy file="replaceregexp2.properties" tofile="test.properties" />
+  </target>
+
+  <target name="testReplace" depends="setup">
+    <replaceregexp file="test.properties" byline="true">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+  <!-- use in conjunction with testDirectoryDateDoesNotChange to make sure something will happen -->
+  <target name="touchDirectory">
+    <mkdir dir="${tmpregexp}"/>
+    <copy file="replaceregexp.properties" tofile="${tmpregexp}/test.properties" />
+    <sleep seconds="2"/>
+  </target>
+  <target name="testDirectoryDateDoesNotChange">
+    <replaceregexp file="${tmpregexp}/test.properties" byline="true">
+      <regexp pattern="foo" />
+        <substitution expression="bar"/>
+      </replaceregexp>
+  </target>
+
+  <target name="testDontAddNewline1" depends="setup-nl">
+    <replaceregexp file="test.properties" byline="false">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+
+  <target name="testDontAddNewline2" depends="setup-nl">
+    <replaceregexp file="test.properties" byline="true">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+
+  <target name="cleanup">
+    <delete file="test.properties" />
+    <delete dir="${tmpregexp}" quiet="true"/>
+  </target>
+
+</project>
+

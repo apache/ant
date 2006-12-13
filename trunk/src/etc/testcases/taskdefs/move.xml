@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+
+<project name="move-test" basedir="." default="testFilterSet">
+
+  <target name="testFilterSet">
+    <copy file="copy.filterset" tofile="move.filterset"/>
+    <move file="move.filterset" tofile="move.filterset.tmp">
+      <filterset>
+        <filter token="TITLE" value="Apache Ant Project"/>
+      </filterset>
+    </move>
+  </target>
+
+  <target name="testFilterChain">
+    <copy file="copy.filterset" tofile="move.filterchain"/>
+    <move file="move.filterchain" tofile="move.filterchain.tmp">
+      <filterchain>
+        <replacetokens>
+          <token key="TITLE" value="Apache Ant Project"/>
+        </replacetokens>
+      </filterchain>
+    </move>
+  </target>
+
+  <!-- Bugzilla Report 11732 -->
+  <target name="testDirectoryRemoval">
+    <mkdir dir="A/B"/>
+    <mkdir dir="A/C"/>
+    <mkdir dir="A/D"/>
+    <touch file="A/B/1"/>
+    <touch file="A/C/2"/>
+    <touch file="A/D/3"/>
+    <mkdir dir="E"/>
+    <move todir="E" includeemptydirs="true">
+      <fileset dir="A">
+        <include name="C"/>
+        <include name="D"/>
+        <include name="C/**"/>
+        <include name="D/**"/>
+      </fileset>
+    </move>
+  </target>
+
+  <!-- Bugzilla Report 18886 -->
+  <target name="testDirectoryRetaining">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <move todir="E" includeemptydirs="true">
+      <fileset dir="A" includes="1"/>
+    </move>
+  </target>
+
+  <target name="testCompleteDirectoryMove">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move todir="E">
+      <fileset dir="A"/>
+    </move>
+  </target>
+
+  <target name="testCompleteDirectoryMove2">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move todir="E">
+      <path>
+        <fileset dir="A"/>
+      </path>
+    </move>
+  </target>
+
+  <target name="testPathElementMove">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move todir="E" flatten="true">
+      <path>
+        <pathelement location="A/1"/>
+      </path>
+    </move>
+  </target>
+
+  <target name="testMoveFileAndFileset">
+    <mkdir dir="A" />
+    <touch>
+      <filelist dir="A" files="1,2,3" />
+    </touch>
+    <move todir="E" file="A/1">
+      <fileset dir="A" includes="2,3" />
+    </move>
+    <fail message="A unavailable">
+      <condition>
+        <not>
+          <available file="A" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="A/1 not moved">
+      <condition>
+        <or>
+          <available file="A/1" type="file" />
+          <not>
+            <available file="E/1" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+    <fail message="A/2 not moved">
+      <condition>
+        <or>
+          <available file="A/2" type="file" />
+          <not>
+            <available file="E/2" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+    <fail message="A/3 not moved">
+      <condition>
+        <or>
+          <available file="A/3" type="file" />
+          <not>
+            <available file="E/3" type="file" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <macrodef name="verifymove">
+    <attribute name="newfile" />
+    <attribute name="olddir" />
+    <sequential>
+        <fail message="@{newfile} not available">
+          <condition>
+            <not>
+              <available file="@{newfile}" type="file" />
+            </not>
+          </condition>
+        </fail>
+        <fail message="@{olddir} remains">
+          <condition>
+            <available file="@{olddir}" type="dir" />
+          </condition>
+        </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="testCompleteDirectoryMoveToExistingDir">
+    <mkdir dir="A" />
+    <touch file="A/1" />
+    <mkdir dir="E" />
+    <touch file="E/2" />
+    <move todir="E">
+      <fileset dir="A" />
+    </move>
+    <verifymove newfile="E/1" olddir="A" />
+    <fail message="E/2 unavailable">
+      <condition>
+        <not>
+          <available file="E/2" type="file" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move file="A" tofile="E" />
+    <verifymove newfile="E/1" olddir="A" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <move file="A" todir="E" />
+    <verifymove newfile="E/A/1" olddir="A" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileAndFileset">
+    <mkdir dir="A/1" />
+    <touch file="A/2" />
+    <move file="A/1" todir="E">
+      <fileset dir="A" includes="2" />
+    </move>
+    <fail message="A unavailable">
+      <condition>
+        <not>
+          <available file="A" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="E/1 unavailable">
+      <condition>
+        <not>
+          <available file="E/1" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="E/2 unavailable">
+      <condition>
+        <not>
+          <available file="E/2" type="file" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToExistingFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <touch file="E"/>
+    <move file="A" tofile="E" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToExistingDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <move file="A" tofile="E" />
+    <verifymove newfile="E/1" olddir="A" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDirWithExistingFile">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <touch file="E/A"/>
+    <move file="A" todir="E" />
+  </target>
+
+  <target name="testCompleteDirectoryMoveFileToDirWithExistingDir">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
+    <mkdir dir="E"/>
+    <mkdir dir="E/A"/>
+    <move file="A" todir="E" />
+    <verifymove newfile="E/A/1" olddir="A" />
+  </target>
+
+  <target name="cleanup"> 
+    <delete file="move.filterset.tmp"/>
+    <delete file="move.filterchain.tmp"/>
+    <delete dir="A" />
+    <delete file="B" />
+    <delete dir="E" />
+  </target>
+
+</project>

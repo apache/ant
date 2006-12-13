@@ -1,0 +1,326 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>.NET Tasks</title>
+</head>
+
+<h1>.NET tasks</h1>
+<h2>Introduction</h2>
+
+
+<p><strong>These tasks are deprecated and will be removed in a future
+release of Ant.  They are now part of the <a
+href="http://ant.apache.org/antlibs/dotnet/index.html">.NET
+Antlib</a>.</strong></p>
+
+Ant support for .NET goes back to before .NET was released, and
+continues to be expanded based on user demand. Users writing nothing but
+a .NET application, may want to look at the .NET-based
+<A href="http://nant.sourceforge.net/">NAnt</A> project, that supports
+both the Microsoft and the Ximian managed <A
+href="http://go-mono.com/">Mono</A> project's implementation of the
+.NET framework.
+<p>
+
+Over time, the .NET tasks in Ant have tended to evolve to meet a few
+limited needs. Firstly, developers working with complex deployment problems may
+want to use ant to use the fairly advanced deployment tasks Ant ships
+with. Secondly, anyone who has a cross-platform project can use these
+tasks to cover the .NET side of the problem. Here, cross-platform can
+mean more than just Java and .NET: the C++ tasks in the ant-contrib
+project on sourceforge can be used with Ant to do native C++ and .NET
+cross development if that is your need. Finally, Ant support for .NET
+lets one automate .NET development under an automated build process,
+such as AntHill or Cruise Control.
+
+<p>
+
+What this means is that the Ant tasks for .NET support do not get as
+much rigorous use as the Java tools, and are evolving more slowly -that
+includes the time for support calls to change. But as a consequence,
+developers working on .NET support have more freedom to play around with
+the code. It also means that the fairly unusual set of tasks supported
+by ant enable a few interesting operations that can not be performed any
+other way:
+<ol>
+
+<li>Integrating with a Java based SOAP Service -generating C# code from
+the server's WSDL and running it against the server.
+</li>
+<li>Building and deploying a C#-based Web Service, then using the Apache
+Axis tasks to create JUnit tests to call the endpoints.
+
+<li>Patching .NET type libraries to work with more complex IDL than the
+basic <code>&lt;importtypelib&gt;</code> wrapper around tlbimport supports. Hence the
+disassembler and the reassembler.
+</li>
+
+</ol>
+Needless to say, possible does not mean easy.
+<A href="http://www.manning.com/hatcher/chap15.pdf">Chapter 15</A> of
+Java Development with Ant covers the first of these, using the Ant1.5
+version of the tasks. Going the other way -generating Java client
+code and JUnit testcases is covered in
+<A href="http://www.iseran.com/Steve/papers/interop/">The Wondrous curse
+of Interop</A>. The final trick, IDL and Typelib abuse, is not
+documented as we do not want to encourage such an ugly practise. It,
+can, however, be done if absolutely necessary. 
+
+<h3>Task List</h3>
+
+<table border="0" >
+<tr>
+  <td><b>Task</b></td>
+  <td><b>Description</b></td>
+</tr>
+<tr>
+  <td><a href="csc.html">csc</a></td>
+  <td>Compiles C# code</td>
+</tr>
+
+<tr>
+  <td><a href="vbc.html">vbc</a></td>
+  <td>Compiles VB.NET code</td>
+</tr>
+
+<tr>
+  <td><a href="jsharpc.html">jsharpc</a></td>
+  <td>Compiles J# files</td>
+</tr>
+
+<tr>
+  <td><a href="ildasm.html">ildasm</a></td>
+  <td>Disassembles .NET executables and libraries</td>
+</tr>
+
+<tr>
+  <td><a href="ilasm.html">ilasm</a></td>
+  <td>Assembles .il files</td>
+</tr>
+
+<tr>
+  <td><a href="wsdltodotnet.html">wsdltodotnet</a></td>
+  <td>Generates .NET code (C# or VB) from a WSDL file</td>
+</tr>
+
+<tr>
+  <td><a href="importtypelib.html">importtypelib</a></td>
+  <td>Imports a COM type library into .NET</td>
+</tr>
+
+</table>
+
+<hr>
+<h3>Common .NET Datatypes </h3>
+
+There are some datatypes that are common to the core compiler classes:
+csc, vbc and  jsharpc
+
+<h4>Resource</h4>
+
+This is a resource that is included in the build. Ant uses this for
+dependency checking -if resources included this way have changed, the
+executable or library will be rebuilt.
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">File</td> 
+    <td valign="top">the resource to include</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td> 
+    <td valign="top">the name of the resource. 
+    Optional unless the resource is
+    marked as public or private</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">embed</td> 
+    <td valign="top">flag to control whether the resource
+    is embedded in the assembly, or just linked to it</td>
+    <td align="center" valign="top">No -default is true</td>
+  </tr>
+  <tr>
+    <td valign="top">public</td> 
+    <td valign="top">VB only: flag to control if a resource should be 
+    public or private. Set to true for public, false for private
+    and leave undefined for for neither. </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h5>Examples</h5>
+
+<pre>
+&lt;resource file="app.ico" name="icon"/&gt;
+&lt;resource file="splash.jpg"/&gt;
+&lt;resource name="splash" file="splash.jpg" public="false"/&gt;
+</pre>
+
+<h4>Define</h4>
+
+This is a definition; in .NET these can either be defined or undefined,
+unlike C++ #defines, which can be either undefined or arbitrary text.
+The Ant compilation tasks can unconditionally add definitions, or
+conditionally set a compile-time definition if an ant property is
+defined or not.
+<p>
+
+Dependency Logic: the tasks are not (yet) clever enough to remember what
+the last definitions were and trigger a rebuild when they change. Clean
+build the code when the defines are likely to be different.
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td> 
+    <td valign="top">the name of the definition</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td> 
+    <td valign="top">name of a ant property to test for;
+    the definition is only set if this property is defined.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td> 
+    <td valign="top">name of a ant property to test for;
+    the definition is only set if this property is undefined.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h5>Examples</h5>
+
+<pre>
+&lt;define name="unsafe"/&gt;
+&lt;define name="debug" if="build.debug"/&gt;
+&lt;define name="dotnet" unless="build.mono"/&gt;
+</pre>
+
+<hr>
+<h3> Change Log </h3>
+
+<h4>Ant1.6</h4>
+This revision goes along with NET 1.1, though there is no reason why
+it should not work on other versions.
+<p>
+
+<ol>
+<li>vbc task</li>
+<li>jsharpc task</li>
+<li>mono support</li>
+<li>ilasm</li>
+<li>tlbimport</li>
+<li>Reference filesets in the compiler tasks</li>
+<li>definitions in the compiler tasks</li>
+<li>multiple source filesets in the compiler tasks. If these are used, the
+implicit fileset is disabled</li>
+</ol>
+
+The compile tasks: vbc, jsharpc, and csc, all contain lots of common code
+in a shared base class: if you can use one you should be able to use
+another.
+
+<h4>Ant 1.5</h4>
+This revision goes along with NET 1.0 (SP1)
+<ol>
+<li>CSC: added filealign</li>
+<li>CSC: added reference to office.dll</li>
+<li>CSC: dependency checking! only if destFile is set!
+<li>WsdlToDotnet written
+</ol>
+
+<h4>Version 0.5</h4>
+This revision goes along with NET 1.0 (SP1)
+<ol>
+<li>CSC: added filealign</li>
+<li>CSC: added reference to office.dll</li>
+<li>CSC: dependency checking! only if destFile is set!
+<li>WsdlToDotnet written
+</ol>
+
+<h4>Version 0.4</h4>
+This is the beta-2 revision of the tasks.
+<ol>
+<li>ILASM: pulled the owner attribute, added keyfile for giving binaries a strong name
+(MD5 hash of the checksum)</li>
+<li>CSC: added win32res , noConfig, utf8output, fullpaths</li>
+<li>CSC: </li>
+</ol>
+
+<h4>Version 0.3</h4>
+
+The changes here reflect Beta-1 of the dotnet SDK and experience of use in
+more complex projects. This build does not work with the older SDK,
+primarily because the automatic reference feature references libraries
+only found in the new SDK version.
+<p>
+External changes</p>
+<ul>
+<li>Recursive inclusion of .cs and .il files</li>
+
+<li>Documentation enhanced, includes examples and details of all parameters</li>
+
+<li>The csc task automatically includes the common dotnet assemblies, so
+there is no need to remember to refer to 'System.dll', 'System.Web.Services',
+ etc. This feature can be disabled by setting the 'includeDefaultReferences'
+ flag to false. </li>
+
+ <li> References can also be referred to using the ReferenceFiles parameter, which
+is an ant path specification. The old 'references' string is still retained.</li>
+<li> An 'extraoptions' attribute enables the build file to include any CSC options
+which are not explicitly supported in the CSC task. </li>
+</ul>
+
+Internal changes
+<ul>
+<li>Some minor refactoring (move common code a method)</li>
+<li>Application of Jedits JavaStyle task resulted in a major reshaping of
+the codebase and the insertion of a blank line every second line. Significant
+effort was required to revert some (but not all) changes.</li>
+<li>Removed throws clause from methods which can't throw exception
+</ul>
+
+The test harness has been expanded to include unicode source file
+(the build works but the rest of the system has 'issues' with high unicode
+package and method names)
+
+<h4>Version 0.2</h4>
+First public edition, added to the ant cvs tree. Tested on the PDC build of
+the dotnet SDK only, and still immature. The command execution code was
+refactored out into a 'NetCommand' class for re-use. The Ilasm task was added
+at this time.
+
+<h4>Version 0.1</h4>
+Initial proof of concept; very rudimentary support for CSC only.
+
+</body>
+</html>

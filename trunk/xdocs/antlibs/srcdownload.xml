@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!--
+     Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <title>Source Distributions</title>
+    <index value="1"/>
+  </properties>
+
+<body>
+
+<section name="Downloading Antlibs">
+
+<p>Use the links below to download a source distribution of Antlibs from
+one of our mirrors.  It is good practice to
+<a href="[location]#Verify Releases">verify the integrity</a>
+of the distribution files, especially if you are using one of our
+mirror sites.  In order to do this you must use the signatures from
+our <a href="http://www.apache.org/dist/ant/antlibs/">main distribution
+directory</a>.</p>
+
+<p>Antlibs are distributed as <code>zip</code>, <code>tar.gz</code> and
+<code>tar.bz2</code> archives - the contents are the same.  Please
+note that the <code>tar.*</code> archives contain file names longer
+than 100 characters and have been created using GNU tar extensions.
+Thus they must be untarred with a GNU compatible version of
+<code>tar</code>.</p>
+
+<p>If you do not see the file you need in the links below, please see
+the <a href="http://www.apache.org/dist/ant/antlibs/">master distribution
+directory</a> or, preferably, its <a href="[preferred]/ant/antlibs/">mirror</a>.</p>
+
+</section>
+
+<section name="Downloading Betas">
+
+<p>Beta releases are not mirrored, you can find our latest beta
+releases at <a
+href="http://people.apache.org/dist/ant/antlibs/">http://people.apache.org/dist/ant/antlibs/</a>.</p>
+
+<p>Currently available:</p>
+
+<ul>
+
+  <li><a
+  href="http://people.apache.org/dist/ant/antlibs/antunit/source/">AntUnit
+  1.0Beta2</a></li>
+
+</ul>
+
+</section>
+
+<section name="Mirror">
+
+<p>You are currently using <b>[preferred]</b>.  If you encounter a
+problem with this mirror, please select another mirror.  If all
+mirrors are failing, there are <i>backup</i> mirrors (at the end of
+the mirrors list) that should be available.</p>
+
+<form action="[location]" method="get" id="SelectMirror">
+Other mirrors: <select name="Preferred">
+[if-any http]
+  [for http]<option value="[http]">[http]</option>[end]
+[end]
+[if-any ftp]
+  [for ftp]<option value="[ftp]">[ftp]</option>[end]
+[end]
+[if-any backup]
+  [for backup]<option value="[backup]">[backup] (backup)</option>[end]
+[end]
+</select>
+<input type="submit" value="Change" />
+</form>
+</section>
+
+<section name="Current Antlib Releases">
+
+<div class="warning">
+<div class="label">Note</div>
+<div class="content">Very recent releases may not be available on all
+mirrors for a few days.</div>
+</div>
+<br></br>
+<div class="warning">
+<div class="label">Tar files may require gnu tar to extract</div>
+<div class="content">Tar files in the distribution contain long file names, and may
+ require gnu tar to do the extraction.</div>
+</div>
+
+<ul>
+<li>Apache .NET Ant Library 1.0
+<ul>
+<li><code>.zip</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip">apache-ant-dotnet-1.0-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.zip.md5">MD5</a>]</li>
+
+<li><code>.tar.gz</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz">apache-ant-dotnet-1.0-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.gz.md5">MD5</a>]</li>
+
+<li><code>.tar.bz2</code> archive:
+<a href="[preferred]/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2">apache-ant-dotnet-1.0-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/dotnet/source/apache-ant-dotnet-1.0-src.tar.bz2.md5">MD5</a>]</li>
+</ul>
+</li>
+</ul>
+</section>
+
+<!--section name="Old Ant Releases">
+
+<p>Older releases of Ant can be found <a
+href="http://archive.apache.org/dist/ant/source/">here</a>.  Those
+releases are only provided as <code>zip</code> archives that can be
+extracted by <code>jar xf </code><em>archive.zip</em> - we highly
+recommend to not use those releases but upgrade to Ant's <a
+href="[location]#Current Release of Ant">latest</a> release.</p>
+
+</section-->
+
+<section name="Verify Releases">
+
+<p>It is essential that you verify the integrity of the downloaded
+files using the PGP signature or the SHA1 or MD5 checksums.  The
+checksums are not as strong indicators as the PGP signature.</p>
+
+<p>The PGP signatures can be verified using PGP or GPG.  First
+download the <a href="http://www.apache.org/dist/ant/KEYS">KEYS</a>
+as well as the <code>asc</code> signature file for the particular
+distribution.  Make sure you get these files from the <a
+href="http://www.apache.org/dist/ant/antlibs/">main distribution
+directory</a>, rather than from a mirror. Then verify the signatures
+using</p>
+
+<p><code>
+% pgpk -a KEYS<br />
+% pgpv apache-ant-dotnet-1.0-bin.tar.gz.asc<br />
+</code>
+<em>or</em><br />
+<code>
+% pgp -ka KEYS<br />
+% pgp apache-ant-dotnet-1.0-bin.tar.gz.asc<br />
+</code>
+<em>or</em><br />
+<code>
+% gpg --import KEYS<br />
+% gpg --verify apache-ant-dotnet-1.0-bin.tar.gz.asc
+</code></p>
+
+<p>Alternatively, you can verify the checksums on the files.  Unix
+programs called <code>md5</code>/<code>sha1</code> or
+<code>md5sum</code>/<code>sha1sum</code> are included in many unix
+distributions.  <code>*sum</code> is also available as part of <a
+href="http://www.gnu.org/software/textutils/textutils.html">GNU
+Textutils</a>.  Windows users can get binary md5 programs from <a
+href="http://www.fourmilab.ch/md5/">here</a>, <a
+href="http://www.pc-tools.net/win32/freeware/console/">here</a>.  <a
+href="http://www.slavasoft.com/fsum/">fsum</a> supports MD5 and
+SHA1.</p>
+
+<p>We highly recommend to verify the PGP signature, though.</p>
+
+</section>
+
+</body>
+</document>

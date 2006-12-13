@@ -1,0 +1,94 @@
+<project name="parsersupports" >
+<!--
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+-->
+
+  <target name="testEmpty">
+    <condition property="empty">
+      <parsersupports />
+    </condition>
+    <fail>Expected failure before here</fail>
+  </target>
+
+  <target name="testBoth">
+    <condition property="both">
+      <parsersupports property="http://bar" feature="http://foo"/>
+    </condition>
+    <fail>Expected failure before here</fail>
+  </target>
+
+  <target name="testNamespaces">
+    <fail>
+    <condition >
+      <not>
+        <parsersupports feature="http://xml.org/sax/features/namespaces"/>
+      </not>
+    </condition>
+      Expected namespace support
+    </fail>
+  </target>
+
+  <target name="testPropertyInvalid">
+    <fail>
+      <condition>
+        <not>
+          <parsersupports
+            property="http://xml.org/sax/properties/declaration-handler"
+            value="undefined"/>
+        </not>
+      </condition>
+      Expected DTD declaration property settable.
+    </fail>
+  </target>
+
+  <target name="testPropertyNoValue">
+    <fail>
+      <condition>
+        <not>
+          <parsersupports
+            property="http://xml.org/sax/properties/declaration-handler"
+              />
+        </not>
+      </condition>
+      Expected no property
+    </fail>
+  </target>
+  
+  <target name="testUnknownProperty">
+    <fail>
+      <condition>
+          <parsersupports property="http://org.apache.ant/something"
+              value="undefined"/>
+      </condition>
+      Expected unsupported property.
+    </fail>
+  </target>
+  
+  <target name="testXercesProperty">
+    <fail>
+      <condition>
+        <not>
+          <parsersupports
+          property="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="parsersupports.xml"/>
+        </not>
+      </condition>
+      Expected XSD support on Xerces.
+    </fail>
+  </target>
+  
+</project>

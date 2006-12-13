@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="recorder-test" default="all" basedir=".">
+
+    <property name="recin" location="recorder"/>
+    <property name="recdir" location="recorder-out"/>
+
+    <target name="all" depends="noappend,append,restart,deleterestart"/>
+
+    <target name="prepare">
+      <mkdir dir="${recdir}"/>
+    </target>
+
+    <target name="noappend">
+        <copy file="${recin}/rectest2.result" tofile="${recdir}/rectest1.log"/>
+        <record name="${recdir}/rectest1.log" action="start" />
+        <echo message="some message1"/>
+        <record name="${recdir}/rectest1.log" action="stop" />
+    </target>
+
+    <target name="append">
+        <copy file="${recin}/rectest1.result" tofile="${recdir}/rectest2.log"/>
+        <record name="${recdir}/rectest2.log" append="true" action="start"/>
+        <echo message="some message2"/>
+        <record name="${recdir}/rectest2.log" action="stop"/>
+    </target>
+
+    <target name="restart">
+        <record name="${recdir}/rectest3.log" action="start"/>
+        <echo message="some message1"/>
+        <record name="${recdir}/rectest3.log" action="stop"/>
+        <echo message="some message2"/>
+        <record name="${recdir}/rectest3.log" action="start"/>
+        <echo message="some message3"/>
+        <record name="${recdir}/rectest3.log" action="stop"/>
+    </target>
+
+    <target name="deleterestart">
+        <record name="${recdir}/rectest4.log" action="start"/>
+        <echo message="some message1"/>
+        <record name="${recdir}/rectest4.log" action="stop"/>
+        <delete file="${recdir}/rectest4.log"/>
+        <echo message="some message2"/>
+        <record name="${recdir}/rectest4.log" action="start"/>
+        <echo message="some message3"/>
+        <record name="${recdir}/rectest4.log" action="stop"/>
+    </target>
+
+
+    <target name="cleanup">
+       <delete dir="${recdir}"/>
+    </target>
+
+</project>
