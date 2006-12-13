@@ -1,3 +1,15 @@
+Changes from Ant 1.7.0 TO current SVN version
+=============================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
