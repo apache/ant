@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE test [
-  <!ELEMENT test (#PCDATA)>
-]>
-<test>
-Liberté, égalité, fraternité!
-</test>

@@ -1,5 +1,0 @@
-<project name="genericsubant" basedir=".." default="mysubant">
-    <target name="mysubant">
-        <echo message="${basedir}"/>
-    </target>
-</project>

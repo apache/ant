@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<antlib>
-  <typedef 
-    name="mytask" onerror="ignore"
-    classname="org.apache.tools.ant.taskdefs.AntlibTest$MyTask"/>
-</antlib>

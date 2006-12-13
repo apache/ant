@@ -186,13 +186,6 @@
       <filename name="${util.package}/java15/*"/>
     </or>
   </selector>
-	
-  <selector id="needs.jdk1.6+">
-  	<or>
-      <filename name="${condition.package}/HasFreeSpace*"/>
-  	  <filename name="${util.package}/java16/*"/>
-  	</or>
-  </selector>
 
   <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,
        but not all of them -->
@@ -645,7 +638,6 @@
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
-          	<selector refid="needs.jdk1.6+" unless="jdk1.6+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
 
             <selector refid="needs.trax" unless="trax.present"/>

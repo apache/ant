@@ -1,7 +1,0 @@
-<project>
-  <target name="loadManifest">
-    <loadresource property="manifest">
-      <javaresource name="META-INF/MANIFEST.MF"/>
-    </loadresource>
-  </target>
-</project>

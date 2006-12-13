@@ -1,7 +1,0 @@
-<!DOCTYPE root-tag SYSTEM "xmlproperty_data.dtd">
-
- <root-tag myattr="true">
-   <inner-tag someattr="val">Text</inner-tag>
-   <a2><a3><a4>false</a4></a3></a2>
-   <cdatatag><![CDATA[<test>]]></cdatatag>
- </root-tag>

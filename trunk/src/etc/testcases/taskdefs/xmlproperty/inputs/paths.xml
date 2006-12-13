@@ -1,5 +1,0 @@
-<paths>
-  <classpath pathid="foo">
-    <path value="bar"/>
-  </classpath>
-</paths>

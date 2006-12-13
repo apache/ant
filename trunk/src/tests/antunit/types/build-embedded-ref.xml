@@ -1,3 +1,0 @@
-<project default="all">
-  <target name="all"/>
-</project>

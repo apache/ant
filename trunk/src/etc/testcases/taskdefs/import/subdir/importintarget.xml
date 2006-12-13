@@ -1,7 +1,0 @@
-<project>
-  <target name="do-import">
-    <import file="importintarget-inner.xml"/>
-  </target>
-
-  <target name="no-import"/>
-</project>

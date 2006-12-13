@@ -1,8 +1,0 @@
-<project>
-  <target name="within-imported">
-    <property name="foo" value="bar"/>
-    <path id="baz">
-      <pathelement location="."/>
-    </path>
-  </target>
-</project>

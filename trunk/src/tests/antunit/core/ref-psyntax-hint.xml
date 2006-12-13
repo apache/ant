@@ -1,9 +1,0 @@
-<project xmlns:au="antlib:org.apache.ant.antunit">
-  <target name="testIt">
-    <au:expectfailure>
-      <pathconvert refid="${foo}" />
-    </au:expectfailure>
-    <au:assertLogContains level="warning"
-      text="Unresolvable reference $${foo} might be a misuse of property expansion syntax." />
-  </target>
-</project>

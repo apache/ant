@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<project name="ant-test" basedir="." default="bar">
-  <ant antfile="toplevelant.xml" target="foo"/>
-
-  <target name="foo"/>
-  <target name="bar"/>
-</project>

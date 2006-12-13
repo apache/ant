@@ -1,4 +1,0 @@
-<target name="included-target">
-  <copy file="nonexistent-file" todir="/non/existent/dir"/>
-  <echo>included-target ran.</echo>
-</target>

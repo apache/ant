@@ -1,8 +1,0 @@
-<root>
-  <a>this is the first line</a>
-  <b><c>not indented</c></b>
-  <b>
-    <c>indented</c>
-  </b>
-</root>
-  

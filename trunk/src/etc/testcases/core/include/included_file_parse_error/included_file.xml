@@ -1,4 +1,0 @@
-<target name="included-target">
-  extraneous_text
-  <echo>included-target ran.</echo>
-</target>

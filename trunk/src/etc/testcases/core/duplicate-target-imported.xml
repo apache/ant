@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<project>
-    <target name="once">
-        <echo>once from imported</echo>
-    </target>
-</project>

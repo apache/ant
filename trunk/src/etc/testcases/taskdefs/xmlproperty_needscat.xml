@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE skinconfig PUBLIC "-//FOO//DTD Skin Configuration V0.1//EN" "http://example-no-dtd.com/dtd/skinconfig.dtd">
-<skinconfig>
-  <foo>true</foo>
-  <bar>false</bar>
-</skinconfig>

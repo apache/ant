@@ -1,3 +1,0 @@
-<target name="included-target">
-  <echo>included-target ran.</echo>
-</target>
