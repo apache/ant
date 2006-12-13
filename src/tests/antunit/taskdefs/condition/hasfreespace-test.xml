@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <project name="hasfreespace-test" default="all" basedir="." xmlns:au="antlib:org.apache.ant.antunit">
 
+  <available property="jdk6.available" classname="java.util.ServiceLoader"/>
+		
   <target name="test-not-enough-space-human">
     <au:assertFalse>
       <hasfreespace partition="c:" needed="1P"/>			
@@ -26,7 +28,7 @@
     </au:assertTrue>	
   </target>
 
-  <target name="all">
+  <target name="all" if="jdk6.available">
     <au:antunit>
       <fileset file="${ant.file}"/>
       <au:plainlistener/>
