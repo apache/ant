@@ -53,6 +53,7 @@
             <menu name="Contributing">
                 <item name="Mailing Lists"         href="/mail.html"/>
                 <item name="Subversion Repositories"      href="/svn.html"/>
+                <item name="Nightly Builds"      href="/nightlies.html"/>
                 <item name="Bug Database"          href="/bugs.html"/>
                 <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>

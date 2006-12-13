@@ -26,11 +26,10 @@
   </properties>
 
 <body>
-  <section name="Ant 1.7.0RC1">
-    <h3>November 12, 2006 - Ant 1.7.0RC1 Available</h3>
-    <p>Apache Ant 1.7.0RC1 is now available for <a
+  <section name="Ant 1.7.0">
+    <h3>December 19, 2006 - Ant 1.7.0 Available</h3>
+    <p>Apache Ant 1.7.0 is now available for <a
     href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
-    <p>This the first release candidate of the new major release 1.7 .</p>
 
     <p> Ant 1.7 introduces a resource framework. Some of the core ant 
     tasks such as &lt;copy/&gt; are now able to process not only file 
@@ -48,8 +47,7 @@
 
     <p>Ant 1.7 fixes also a large number of bugs.</p>
 
-    <p>Ant 1.7 has no support for Java6 features, but first tests on Java6 
-    did not fail.</p>
+    <p>Ant 1.7 has some initial support for Java6 features.</p>
   </section>
 
   <section name=".NET Ant Library 1.0Beta1">

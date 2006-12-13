@@ -133,6 +133,9 @@
                                     <a href="./svn.html">Subversion Repositories</a>
                                 </li>
                             <li>
+                                    <a href="./nightlies.html">Nightly Builds</a>
+                                </li>
+                            <li>
                                     <a href="./bugs.html">Bug Database</a>
                                 </li>
                             <li>
@@ -186,12 +189,6 @@ Thus they must be untarred with a GNU compatible version of
 the <a href="http://www.apache.org/dist/ant/">master distribution
 directory</a> or, preferably, its <a href="[preferred]/ant/">mirror</a>.</p>
                         <h3 class="section">
-      <a name="Downloading Ant 1.7.0RC1"></a>
-      Downloading Ant 1.7.0RC1
-    </h3>
-                        <p>Betas and release candidates are not mirrored, you can find our latest 
-release at <a href="http://cvs.apache.org/dist/ant/">http://cvs.apache.org/dist/ant/</a>.</p>
-                        <h3 class="section">
       <a name="Mirror"></a>
       Mirror
     </h3>
@@ -217,11 +214,11 @@ Other mirrors: <select name="Preferred">
       <a name="Current Release of Ant"></a>
       Current Release of Ant
     </h3>
-                        <p>Currently, Apache Ant 1.6.5 is the best available version, see the
+                        <p>Currently, Apache Ant 1.7.0 is the best available version, see the
 <a href="[preferred]/ant/README.html">release notes</a>.</p>
                                 <div class="warning">
 <div class="label">Note</div>
-<div class="content">Ant 1.6.5 has been released on 02-Jun-2005 and
+<div class="content">Ant 1.7.0 has been released on 19-Dec-2006 and
 may not be available on all mirrors for a few days.</div>
 </div>
                                 <br />
@@ -232,29 +229,23 @@ may not be available on all mirrors for a few days.</div>
 </div>
                                 <ul>
 <li><code>.zip</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.6.5-src.zip">apache-ant-1.6.5-src.zip</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.zip.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.7.0-src.zip">apache-ant-1.7.0-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.6.5-src.tar.gz">apache-ant-1.6.5-src.tar.gz</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.gz.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.7.0-src.tar.gz">apache-ant-1.7.0-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.6.5-src.tar.bz2">apache-ant-1.6.5-src.tar.bz2</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.6.5-src.tar.bz2.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.7.0-src.tar.bz2">apache-ant-1.7.0-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.7.0-src.tar.bz2.md5">MD5</a>]</li>
 </ul>
-                        <h3 class="section">
-      <a name="Nightly Builds"></a>
-      Nightly Builds
-    </h3>
-                        <p>Are currently not available, we hope to restore that service soon.</p>
-                                <p>If you want to build Ant from sources, you can use a <a href="http://svn.apache.org/snapshots/ant/">SVN snapshot</a>.</p>
                         <h3 class="section">
       <a name="Old Ant Releases"></a>
       Old Ant Releases
@@ -278,17 +269,17 @@ directory</a>, rather than from a mirror. Then verify the signatures
 using</p>
                                 <p><code>
 % pgpk -a KEYS<br />
-% pgpv apache-ant-1.6.5-src.tar.gz.asc<br />
+% pgpv apache-ant-1.7.0-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % pgp -ka KEYS<br />
-% pgp apache-ant-1.6.5-src.tar.gz.asc<br />
+% pgp apache-ant-1.7.0-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % gpg --import KEYS<br />
-% gpg --verify apache-ant-1.6.5-src.tar.gz.asc
+% gpg --verify apache-ant-1.7.0-src.tar.gz.asc
 </code></p>
                                 <p>Alternatively, you can verify the checksums on the files.  Unix
 programs called <code>md5</code>/<code>sha1</code> or
