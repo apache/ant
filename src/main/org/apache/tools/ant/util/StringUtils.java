@@ -201,8 +201,8 @@ public final class StringUtils {
     	final long GIGABYTE = MEGABYTE * 1024;
     	final long TERABYTE = GIGABYTE * 1024;
     	final long PETABYTE = TERABYTE * 1024;
-    	String regex = "\\d+[K|M|G|T|P]";
-    	if(humanSize.matches(regex)) {
+        //last character isn't a digit
+    	if(!Character.isDigit(humanSize.charAt(humanSize.length()-1))) {
     		char c = humanSize.charAt(humanSize.length()-1);
     		long value = Long.valueOf(humanSize.substring(0, humanSize.length()-1)).longValue();
     		switch (c) {
@@ -219,10 +219,8 @@ public final class StringUtils {
     			default:
     				return value;
     		}
-    	} else if(humanSize.matches("\\d+")) {
-    		return Long.parseLong(humanSize);
     	} else {
-    		throw new Exception("Couldn't parse string: "+humanSize);
+    	    return Long.parseLong(humanSize);
     	}
     }
 }
