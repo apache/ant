@@ -163,7 +163,7 @@ public class ResourceUtils {
             try {
                 targetnames = mapper.mapFileName(srName);
             } catch (Exception e) {
-		logTo.log("Caught " + e + " mapping resource " + sr,
+                logTo.log("Caught " + e + " mapping resource " + sr,
                     Project.MSG_VERBOSE);
             }
             if (targetnames == null || targetnames.length == 0) {
