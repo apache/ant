@@ -26,6 +26,11 @@ import java.util.Vector;
  *
  */
 public final class StringUtils {
+    private static final long KILOBYTE = 1024;
+    private static final long MEGABYTE = KILOBYTE * 1024;
+    private static final long GIGABYTE = MEGABYTE * 1024;
+    private static final long TERABYTE = GIGABYTE * 1024;
+    private static final long PETABYTE = TERABYTE * 1024;
 
     /**
      * constructor to stop anyone instantiating the class
@@ -186,41 +191,38 @@ public final class StringUtils {
         }
         return b.toString();
     }
-    
+
     /**
      * Takes a human readable size representation eg 10K
      * a long value. Doesn't support 1.1K or other rational values.
-     * @param humanSize
+     * @param humanSize the amount as a human readable string.
      * @return a long value representation
-     * @throws Exception
+     * @throws Exception if there is a problem.
      * @since Ant 1.7
      */
     public static long parseHumanSizes(String humanSize) throws Exception {
-    	final long KILOBYTE = 1024;
-    	final long MEGABYTE = KILOBYTE * 1024;
-    	final long GIGABYTE = MEGABYTE * 1024;
-    	final long TERABYTE = GIGABYTE * 1024;
-    	final long PETABYTE = TERABYTE * 1024;
         //last character isn't a digit
-    	if(!Character.isDigit(humanSize.charAt(humanSize.length()-1))) {
-    		char c = humanSize.charAt(humanSize.length()-1);
-    		long value = Long.valueOf(humanSize.substring(0, humanSize.length()-1)).longValue();
-    		switch (c) {
-    			case 'K':
-    				return value * KILOBYTE;
-    			case 'M':
-    				return value * MEGABYTE;
-    			case 'G':
-    				return value * GIGABYTE;
-    			case 'T':
-    				return value * TERABYTE;
-    			case 'P':
-    				return value * PETABYTE;
-    			default:
-    				return value;
-    		}
-    	} else {
-    	    return Long.parseLong(humanSize);
-    	}
+        if (!Character.isDigit(humanSize.charAt(humanSize.length() - 1))) {
+            char c = humanSize.charAt(humanSize.length() - 1);
+            long value = Long.valueOf(
+                humanSize.substring(
+                    0, humanSize.length() - 1)).longValue();
+            switch (c) {
+                case 'K':
+                    return value * KILOBYTE;
+                case 'M':
+                    return value * MEGABYTE;
+                case 'G':
+                    return value * GIGABYTE;
+                case 'T':
+                    return value * TERABYTE;
+                case 'P':
+                    return value * PETABYTE;
+                default:
+                    return value;
+            }
+        } else {
+            return Long.parseLong(humanSize);
+        }
     }
 }
