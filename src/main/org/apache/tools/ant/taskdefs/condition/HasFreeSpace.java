@@ -27,7 +27,7 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  * &lt;hasfreespace&gt;
- * <p>Condition returns true if selected partition 
+ * <p>Condition returns true if selected partition
  * has the requested space, false otherwise.</p>
  * @since Ant 1.7
  */
@@ -36,6 +36,11 @@ public class HasFreeSpace implements Condition {
     private String partition;
     private String needed;
 
+    /**
+     * Evaluate the condition.
+     * @return true if there enough free space.
+     * @throws BuildException if there is a problem.
+     */
     public boolean eval() throws BuildException {
         validate();
         try {
@@ -43,7 +48,7 @@ public class HasFreeSpace implements Condition {
                 //reflection to avoid bootstrap/build problems
                 File fs = new File(partition);
                 ReflectWrapper w = new ReflectWrapper(fs);
-                long free = ((Long)w.invoke("getFreeSpace")).longValue();
+                long free = ((Long) w.invoke("getFreeSpace")).longValue();
                 return free >= StringUtils.parseHumanSizes(needed);
             } else {
                 throw new BuildException("HasFreeSpace condition not supported on Java5 or less.");
@@ -54,22 +59,26 @@ public class HasFreeSpace implements Condition {
     }
 
     private void validate() throws BuildException {
-        if(null == partition) {
+        if (null == partition) {
             throw new BuildException("Please set the partition attribute.");
         }
-        if(null == needed) {
+        if (null == needed) {
             throw new BuildException("Please set the needed attribute.");
         }
     }
-    
+
     /**
      * The partition/device to check
-     * @return
+     * @return the partition.
      */
     public String getPartition() {
         return partition;
     }
 
+    /**
+     * Set the partition name.
+     * @param partition the name to use.
+     */
     public void setPartition(String partition) {
         this.partition = partition;
     }
@@ -82,6 +91,10 @@ public class HasFreeSpace implements Condition {
         return needed;
     }
 
+    /**
+     * Set the amount of space required.
+     * @param needed the amount required.
+     */
     public void setNeeded(String needed) {
         this.needed = needed;
     }
