@@ -397,7 +397,7 @@ public class Jar extends Zip {
            service = (Service) serviceIterator.next();
            //stolen from writeManifest
            super.zipFile(service.getAsStream(), zOut,
-                         "META-INF/service/" + service.getType(),
+                         "META-INF/services/" + service.getType(),
                          System.currentTimeMillis(), null,
                          ZipFileSet.DEFAULT_FILE_MODE);
         }

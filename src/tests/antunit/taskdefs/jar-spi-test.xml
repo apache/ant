@@ -23,7 +23,7 @@
            dest="${jar.dir}/output"/>
 
     <loadfile property="simple"
-              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              srcfile="${jar.dir}/output/META-INF/services/a.b.c"
               encoding="UTF-8"/>
 
     <au:assertTrue>
@@ -46,7 +46,7 @@
            dest="${jar.dir}/output"/>
 
     <loadfile property="providers"
-              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              srcfile="${jar.dir}/output/META-INF/services/a.b.c"
               encoding="UTF-8"/>
     <au:assertTrue>
       <matches string="${providers}" pattern="^a\.X\na\.D$"/>
@@ -72,7 +72,7 @@
            dest="${jar.dir}/output"/>
 
     <loadfile property="multi-a"
-              srcfile="${jar.dir}/output/META-INF/service/a.b.c"
+              srcfile="${jar.dir}/output/META-INF/services/a.b.c"
               encoding="UTF-8"/>
 
     <au:assertTrue>
@@ -80,7 +80,7 @@
     </au:assertTrue>
 
     <loadfile property="multi-b"
-              srcfile="${jar.dir}/output/META-INF/service/javax.a.service"
+              srcfile="${jar.dir}/output/META-INF/services/javax.a.service"
               encoding="UTF-8"/>
 
     <au:assertTrue>

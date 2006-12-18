@@ -6,6 +6,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* SPI support in jar was broken.
+  Bugzilla report 41201.
 
 Other changes:
 --------------
