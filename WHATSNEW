@@ -23,9 +23,6 @@ Changes that could break older environments:
   not available, or if explicitly requested by using
   a "manager" attribute.
 
-* The -noproxy option which was in the previous 1.7 alpha and beta
-  releases has been removed. It is the default behavior and not needed.
-
 * Removed launcher classes from nodeps jar.
 
 * <classconstants> filter reader uses ISO-8859-1 encoding to read
@@ -89,14 +86,6 @@ Changes that could break older environments:
   Scripts which previously used timediffmillis to do this compensation may
   need to be rewritten.  timediffmillis has now been deprecated.
 
-* On Java1.5+, Ant automatically sets the system property
-  java.net.useSystemProxies to true, which gives it automatic use of the local
-  IE (Windows) or Gnome2 (Unix/Linux) proxy settings. This may break any build
-  file that somehow relied on content outside the firewall being unreachable:
-  use the -noproxy command-line option to disable this new feature.
-  Note that the Java1.5 proxy configuration system still does not
-  appear to work reliably on Windows or Linux.
-
 * Support for the XSL:P XML parser has been removed.
   Bugzilla Report 23455.
 
@@ -134,8 +123,8 @@ Fixed bugs:
 
 * Fixed incorrect recursion in DOMUtil.listChildNodes().
   Bugzilla 40918.
-  
-* CompressedResource.compareTo() did not 
+
+* CompressedResource.compareTo() did not
   take comparison with another CompressedResource into account.
   Bugzilla 40949.
 
@@ -151,7 +140,7 @@ Fixed bugs:
 * Recursive filtering encountered NullPointerExceptions under certain
   circumstances.  Bugzilla 41086.
 
-* XmlProperty overrides previously set property value when handling duplicate 
+* XmlProperty overrides previously set property value when handling duplicate
   elements. Bugzilla 41080.
 
 * Having many tasks causes OOM.  Bugzilla 41049.
@@ -163,7 +152,7 @@ Fixed bugs:
 * OOM caused by IH holding on to classes and thus their classloaders.
   Bugzilla 28283 and 33061.
 
-* <delete> doesnt delete when defaultexcludes="false" and no includes is set 
+* <delete> doesnt delete when defaultexcludes="false" and no includes is set
   fixed. Bugzilla 40313.
 
 * Behavior change of DirectoryScanner/AbstractFileset when conditional include
@@ -187,9 +176,9 @@ Fixed bugs:
 
 * URLResource did not close jar files, and also did not disconnect HTTPConnection (s).
 
-* Error calling junitreport. Bugzilla 40595. 
+* Error calling junitreport. Bugzilla 40595.
 
-* <junittask/> created junitvmwatcher*.properties files but did not close and delete them.  
+* <junittask/> created junitvmwatcher*.properties files but did not close and delete them.
 
 * <xmlproperty> did not create properties for empty leaf elements.
   Bugzilla report 26286.
@@ -415,7 +404,7 @@ Fixed bugs:
 * The <zip> API allowed creation of directories in file-only archives; a
   habitual offender was the subclassed <jar>, which included META-INF/ in
   the destination file regardless of whether filesonly was set to true.
-  
+
 * <rmic> has a new adapter, xnew, to use the -XNew back end on java1.5+.
   By forking rmic, this works on java1.6+. Bugzilla report 38732.
 
@@ -437,7 +426,7 @@ Other changes:
 * Add quiet attribute to loadfile/resource.
   Bugzilla 38249.
 
-* Make Locator#fromURI also append the drive letter when running under Windows 
+* Make Locator#fromURI also append the drive letter when running under Windows
   with JDK 1.3 or 1.2.
 
 * Do not uppercase the drive letters systematically in FileUtils#normalize.
@@ -451,7 +440,7 @@ Other changes:
 * Roll back automatic proxy enabling on Java 1.5. It broke things like
   Oracle JDBC drivers, and Ant itself on IBM's JVM on AIX, and didnt
   seem to work to well the rest of the time.
-  To enable the feature, use the -autoproxy command line option. 
+  To enable the feature, use the -autoproxy command line option.
 
 * Upgraded XML API and parser to Xerces 2.8.1
 
@@ -469,7 +458,7 @@ Other changes:
 
 * <war> task now allows you to omit the web.xml file. as this is optional
   in the servlet 2.5 and Java EE 5 APIs. set needxmlfile="false" to
-  avoid a missing web.xml file from halting the build.  
+  avoid a missing web.xml file from halting the build.
 
 * Diagnostics catches and logs security exceptions when accessing system properties.
 
