@@ -89,15 +89,20 @@ Changes that could break older environments:
 * Support for the XSL:P XML parser has been removed.
   Bugzilla Report 23455.
 
-* Visual Age for Java optional tasks removed.
+* Visual Age for Java optional tasks removed as the required library is no
+  longer available.
 
-* Testlet (test) optional task removed.
+* Testlet (test) optional task removed as the required library is no
+  longer available.
 
-* Icontract optional task removed.
+* IContract optional task removed as the required library is no
+  longer available.
 
-* Metamata (maudit, mmetrics, and mparse tasks) removed.
+* Metamata (maudit, mmetrics, and mparse tasks) removed as the required 
+  library is no longer available.
 
-* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed.
+* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed as the 
+  required library is no longer available.
 
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
   is \n (Unix).  Bugzilla report 39585.
