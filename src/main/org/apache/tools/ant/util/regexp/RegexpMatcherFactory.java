@@ -133,4 +133,20 @@ public class RegexpMatcherFactory {
             throw new BuildException(t);
         }
     }
+
+    /**
+     * Checks if a RegExp-Matcher is available.
+     * @param project  The project to check for (may be <code>null</code>)
+     * @return <code>true</code> if available otherwise <code>false</code>
+     */
+    public static boolean regexpMatcherPresent(Project project) {
+        try {
+            // The factory throws a BuildException if no usable matcher 
+            // cant be instantiated. We dont need the matcher itself here.
+            (new RegexpMatcherFactory()).newRegexpMatcher(project);
+            return true;
+        } catch (Throwable ex) {
+            return false;
+        }
+    }
 }
