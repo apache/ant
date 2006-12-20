@@ -6,6 +6,15 @@
   <property name="zip" location="${dirname}.zip" />
   <property name="jar" location="${dirname}.jar" />
   <property name="file" location="${dirname}/file.txt" />
+    
+  <condition property="offline">
+    <not>
+      <or>
+        <http url="http://www.apache.org"/>
+        <http url="http://www.google.com"/>
+      </or>
+    </not>
+  </condition>
 
   <target name="setUp">
 
