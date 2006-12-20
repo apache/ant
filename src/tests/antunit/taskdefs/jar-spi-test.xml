@@ -3,6 +3,15 @@
   <property name="jar.dir" location="jar_spi_dir"/>
   <property name="jar.src.dir" location="jar_spi_dir/src"/>
   <property name="jar.src.file" location="jar_spi_dir/src/a_file"/>
+    
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
+  <condition property="some.regexp.support">
+    <or>
+      <isset property="jdk1.4+"/>
+      <isset property="apache.regexp.present"/>
+      <isset property="apache.oro.present"/>
+    </or>
+  </condition>
 
   <target name="init">
     <mkdir dir="${jar.src.dir}"/>
@@ -12,7 +21,7 @@
     <delete quiet="yes" dir="${jar.dir}/output"/>
   </target>
 
-  <target name="test-simple" depends="init">
+  <target name="test-simple" depends="init" if="some.regexp.support">
 
     <jar jarfile="${jar.dir}/file.jar">
       <fileset dir="${jar.src.dir}"/>
@@ -32,7 +41,7 @@
 
   </target>
 
-  <target name="test-providers" depends="init">
+  <target name="test-providers" depends="init" if="some.regexp.support">
 
     <jar jarfile="${jar.dir}/file.jar">
       <fileset dir="${jar.src.dir}"/>
@@ -54,7 +63,7 @@
 
   </target>
 
-  <target name="test-multi" depends="init">
+  <target name="test-multi" depends="init" if="some.regexp.support">
 
     <jar jarfile="${jar.dir}/file.jar">
       <fileset dir="${jar.src.dir}"/>

@@ -2,6 +2,15 @@
          xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
 
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
+  <condition property="some.regexp.support">
+    <or>
+      <isset property="jdk1.4+"/>
+      <isset property="apache.regexp.present"/>
+      <isset property="apache.oro.present"/>
+    </or>
+  </condition>    
+    
   <target name="testname1">
     <au:assertTrue>
       <resourcecount when="equal" count="2">
@@ -343,7 +352,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testcontainsregexp">
+  <target name="testcontainsregexp" if="some.regexp.support">
     <au:assertTrue>
       <resourcecount when="equal" count="2">
         <restrict>

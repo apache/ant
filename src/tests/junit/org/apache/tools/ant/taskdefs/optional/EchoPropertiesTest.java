@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
 import java.io.IOException;
 import java.io.File;
@@ -172,6 +173,10 @@ public class EchoPropertiesTest extends BuildFileTest {
     }
 
     public void testWithRegex() throws Exception {
+        if (!RegexpMatcherFactory.regexpMatcherPresent(project)) {
+            System.out.println("Test 'testWithRegex' skipped because no regexp matcher is present.");
+            return;
+        }
         executeTarget("testWithRegex");
         assertDebuglogContaining("ant.home=");
     }
