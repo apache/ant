@@ -196,8 +196,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
       
       and 
 
-      from java-repository/ant/jars
-      to   /www/www.apache.org/dist/java-repository/ant/jars
+      from java-repository/org.apache.ant
+      to   /www/people.apache.org/repo/m1-ibiblio-rsync-repository/org.apache.ant
 
       this can be done using the target upload of the build.xml
 
