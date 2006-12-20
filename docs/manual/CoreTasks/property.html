@@ -122,12 +122,11 @@ SYSTEM).
     &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still
     allow access of environment variables through &quot;myenv.PATH&quot; and
     &quot;myenv.TERM&quot;. This functionality is currently only implemented
-    on select platforms. Feel free to send patches to increase the number of platforms
-    this functionality is supported on ;).<br>
+    on <a href="#notes-env">select platforms</a>. Feel free to send patches to increase the
+    number of platforms this functionality is supported on ;).<br>
     Note also that properties are case sensitive, even if the
     environment variables on your operating system are not, e.g. it
     will be ${env.Path} not ${env.PATH} on Windows 2000.</td>
-
   </tr>
   <tr>
     <td valign="top">classpath</td>
@@ -210,7 +209,57 @@ deploy.url=http://${deploy.server}:${deploy.port}/
 </pre>
 
 
+<a name="notes-env"></a>
+<h3>Notes about environment variables</h3>
+<p>
+  Ant runs on Java 1.2 therefore it cant use Java5 features for accessing environment
+  variables. So it starts a command in a new process which prints the environment variables,
+  analyzes the output and creates the properties. <br>
+  There are commands for the following operating systems implemented in
+  <a href="http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/taskdefs/Execute.java?view=markup">
+  Execute.java</a> (method <tt>getProcEnvCommand()</tt>):
+  <table>
+    <tr>
+      <th>OS</th>
+      <th>command</th>
+    </tr>
+    <tr>
+      <td> os/2 </td>
+      <td> cmd /c set </td>
+    </tr>
+    <tr>
+      <td colspan="2"> windows </td>
+    </tr>
+    <tr>
+      <td> * win9x </td>
+      <td> command.com /c set </td>
+    </tr>
+    <tr>
+      <td> * other </td>
+      <td> cmd /c set </td>
+    </tr>
+    <tr>
+      <td> z/os </td>
+      <td> /bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i> </td>
+    </tr>
+    <tr>
+      <td> unix </td>
+      <td> /bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i> </td>
+    </tr>
+    <tr>
+      <td> netware </td>
+      <td> env </td>
+    </tr>
+    <tr>
+      <td> os/400 </td>
+      <td> env </td>
+    </tr>
+    <tr>
+      <td> openvms </td>
+      <td> show logical </td>
+    </tr>
+  </table>
+</p>
 
 </body>
 </html>
-
