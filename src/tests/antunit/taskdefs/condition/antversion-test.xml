@@ -3,6 +3,7 @@
 
   <target name="test-atleast">
     <au:assertTrue>
+        <!-- AntVersion was introduced like AntUnit in 1.7 - so this must be true -->
     	<antversion atleast="1.7.0"/>
     </au:assertTrue>	
   </target>
@@ -19,6 +20,11 @@
    	  <antversion atleast="1.9.0"/>
     </au:assertFalse>
   </target>
+    
+  <target name="test-task">
+    <antversion property="antversion"/>
+    <au:assertPropertyEquals name="antversion" value="1.7.1"/>
+  </target>    
 
   <target name="all">
     <au:antunit>
