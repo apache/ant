@@ -49,9 +49,6 @@ public class AntVersion extends Task implements Condition {
     public boolean eval() throws BuildException {
         validate();
         DeweyDecimal actual = getVersion();
-        
-        System.out.println("AntVersion::actual = " + actual);
-        
         if (null != atLeast) {
             return actual.isGreaterThanOrEqual(new DeweyDecimal(atLeast));
         }
