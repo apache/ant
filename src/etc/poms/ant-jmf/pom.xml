@@ -26,19 +26,19 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-parent</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-jmf</artifactId>
-  <version>1.7.0-SNAPSHOT</version>
+  <version>1.7.1-SNAPSHOT</version>
   <description>contains the sound task and a soundplayer listener
     download the dependency from http://java.sun.com/products/java-media/jmf/</description>
   <dependencies>
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.7.0-SNAPSHOT</version>
+      <version>1.7.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
