@@ -12,6 +12,10 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Upgraded XML API to XML commons version 1.3.04.
+
+* Upgraded to Xerces 2.9.0
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
