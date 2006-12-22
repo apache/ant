@@ -3554,7 +3554,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles 1.6.5 for NetBeans 5.0 and 5.5</td>
+            <td>bundles 1.6.5 for NetBeans 5.0 and 5.5; 1.7.0 for NetBeans 6.0</td>
           </tr>
           <tr>
             <th>URL:</th>
