@@ -1029,7 +1029,10 @@ public class JUnitTask extends Task {
                     br = new BufferedReader(new FileReader(vmWatcher));
                     vmCrashString = br.readLine();
                 } else {
-                    vmCrashString = "Monitor file ("+vmWatcher.getAbsolutePath()+") missing, location writable? Alternatively testcase not started!";
+                    vmCrashString = "Monitor file ("
+                            + vmWatcher.getAbsolutePath()
+                            + ") missing, location not writable,"
+                            + " testcase not started or mixing ant versions?";
                 }
             } catch (Exception e) {
                 e.printStackTrace();
