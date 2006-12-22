@@ -8,6 +8,9 @@ Fixed bugs:
 -----------
 * SPI support in jar was broken.
   Bugzilla report 41201.
+  
+* jsch-0.1.30 causes SCP task to hang
+  Bugzilla report 41090.
 
 Other changes:
 --------------

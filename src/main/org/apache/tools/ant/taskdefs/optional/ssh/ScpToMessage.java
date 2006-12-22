@@ -209,6 +209,7 @@ public class ScpToMessage extends AbstractSshMessage {
         waitForAck(in);
         sendDirectory(directory, in, out);
         out.write("E\n".getBytes());
+        out.flush();
         waitForAck(in);
     }
 
