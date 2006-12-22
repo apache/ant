@@ -1025,13 +1025,20 @@ public class JUnitTask extends Task {
             String vmCrashString = "unknown";
             BufferedReader br = null;
             try {
-                br = new BufferedReader(new FileReader(vmWatcher));
-                vmCrashString = br.readLine();
+                if (vmWatcher.exists()) {
+                    br = new BufferedReader(new FileReader(vmWatcher));
+                    vmCrashString = br.readLine();
+                } else {
+                    vmCrashString = "Monitor file ("+vmWatcher.getAbsolutePath()+") missing, location writable? Alternatively testcase not started!";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 // ignored.
             } finally {
                 FileUtils.close(br);
+                if (vmWatcher.exists()) {
+                    vmWatcher.delete();
+                }
             }
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
@@ -1040,7 +1047,6 @@ public class JUnitTask extends Task {
                 result.crashed = true;
                 logVmCrash(feArray, test, vmCrashString);
             }
-            vmWatcher.delete();
 
             if (!propsFile.delete()) {
                 throw new BuildException("Could not delete temporary "
