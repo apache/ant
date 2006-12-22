@@ -12,6 +12,10 @@ Fixed bugs:
 * jsch-0.1.30 causes SCP task to hang
   Bugzilla report 41090.
 
+* Target from imported file listed twice in projecthelp.
+  Bugzilla report 41226.
+
+
 Other changes:
 --------------
 
