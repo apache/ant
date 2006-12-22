@@ -25,9 +25,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.HashMap;
 
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
@@ -916,6 +918,40 @@ public class Main implements AntMain {
     }
 
     /**
+     * Targets in imported files with a project name
+     * and not overloaded by the main build file will
+     * be in the target map twice. This method
+     * removes the duplicate target.
+     * @param targets the targets to filter.
+     * @return the filtered targets.
+     */
+    private static Map removeDuplicateTargets(Map targets) {
+        Map locationMap = new HashMap();
+        for (Iterator i = targets.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String name = (String) entry.getKey();
+            Target target = (Target) entry.getValue();
+            Target otherTarget =
+                (Target) locationMap.get(target.getLocation());
+            // Place this entry in the location map if
+            //  a) location is not in the map
+            //  b) location is in map, but it's name is longer
+            //     (an imported target will have a name. prefix)
+            if (otherTarget == null
+                || otherTarget.getName().length() > name.length()) {
+                locationMap.put(
+                    target.getLocation(), target); // Smallest name wins
+            }
+        }
+        Map ret = new HashMap();
+        for (Iterator i = locationMap.values().iterator(); i.hasNext();) {
+            Target target = (Target) i.next();
+            ret.put(target.getName(), target);
+        }
+        return ret;
+    }
+
+    /**
      * Prints a list of all targets in the specified project to
      * <code>System.out</code>, optionally including subtargets.
      *
@@ -927,7 +963,7 @@ public class Main implements AntMain {
     private static void printTargets(Project project, boolean printSubTargets) {
         // find the target with the longest name
         int maxLength = 0;
-        Enumeration ptargets = project.getTargets().elements();
+        Map ptargets = removeDuplicateTargets(project.getTargets());
         String targetName;
         String targetDescription;
         Target currentTarget;
@@ -937,8 +973,8 @@ public class Main implements AntMain {
         Vector topDescriptions = new Vector();
         Vector subNames = new Vector();
 
-        while (ptargets.hasMoreElements()) {
-            currentTarget = (Target) ptargets.nextElement();
+        for (Iterator i = ptargets.values().iterator(); i.hasNext();) {
+            currentTarget = (Target) i.next();
             targetName = currentTarget.getName();
             if (targetName.equals("")) {
                 continue;
