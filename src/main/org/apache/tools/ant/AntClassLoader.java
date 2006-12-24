@@ -461,6 +461,20 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     /**
+     * Add a path component.
+     * This simply adds the file, unlike addPathElement
+     * it does not open jar files and load files from
+     * their CLASSPATH entry in the manifest file.
+     * @param file the jar file or directory to add.
+     */
+    public void addPathComponent(File file) {
+        if (pathComponents.contains(file)) {
+            return;
+        }
+        pathComponents.addElement(file);
+    }
+
+    /**
      * Add a file to the path.
      * Reads the manifest, if available, and adds any additional class path jars
      * specified in the manifest.
