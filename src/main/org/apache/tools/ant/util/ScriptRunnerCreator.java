@@ -122,6 +122,9 @@ public class ScriptRunnerCreator {
                 LoaderUtils.classNameToResource(managerClass)) == null) {
             return null;
         }
+        if (managerClass.equals(BSF_MANAGER)) {
+            new ScriptFixBSFPath().fixClassLoader(scriptLoader, language);
+        }
         try {
             runner = (ScriptRunnerBase) Class.forName(
                 runnerClass, true, scriptLoader).newInstance();

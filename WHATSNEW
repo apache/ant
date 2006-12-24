@@ -23,6 +23,8 @@ Other changes:
 
 * Upgraded to Xerces 2.9.0
 
+* <script> can now work with bsf.jar and js.jar in its <classpath>.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
