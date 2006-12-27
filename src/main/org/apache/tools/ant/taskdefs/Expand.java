@@ -176,6 +176,7 @@ public class Expand extends Task {
         return mapper;
     }
 
+    // CheckStyle:ParameterNumberCheck OFF - bc
     /**
      * extract a file to a directory
      * @param fileUtils             a fileUtils object
@@ -296,6 +297,7 @@ public class Expand extends Task {
         }
 
     }
+    // CheckStyle:ParameterNumberCheck ON
 
     /**
      * Set the destination directory. File will be unzipped into the
