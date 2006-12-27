@@ -97,23 +97,8 @@ public class Get extends Task {
      */
     public boolean doGet(int logLevel, DownloadProgress progress)
             throws IOException {
-        if (source == null) {
-            throw new BuildException("src attribute is required", getLocation());
-        }
+        checkAttributes();
 
-        if (dest == null) {
-            throw new BuildException("dest attribute is required", getLocation());
-        }
-
-        if (dest.exists() && dest.isDirectory()) {
-            throw new BuildException("The specified destination is a directory",
-                    getLocation());
-        }
-
-        if (dest.exists() && !dest.canWrite()) {
-            throw new BuildException("Can't write to " + dest.getAbsolutePath(),
-                    getLocation());
-        }
         //dont do any progress, unless asked
         if (progress == null) {
             progress = new NullProgress();
@@ -258,6 +243,28 @@ public class Get extends Task {
         return true;
     }
 
+    /**
+     * Check the attributes.
+     */
+    private void checkAttributes() {
+        if (source == null) {
+            throw new BuildException("src attribute is required", getLocation());
+        }
+
+        if (dest == null) {
+            throw new BuildException("dest attribute is required", getLocation());
+        }
+
+        if (dest.exists() && dest.isDirectory()) {
+            throw new BuildException("The specified destination is a directory",
+                    getLocation());
+        }
+
+        if (dest.exists() && !dest.canWrite()) {
+            throw new BuildException("Can't write to " + dest.getAbsolutePath(),
+                    getLocation());
+        }
+    }
 
     /**
      * Set the URL to get.
