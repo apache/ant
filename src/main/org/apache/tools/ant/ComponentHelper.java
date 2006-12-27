@@ -853,18 +853,7 @@ public class ComponentHelper  {
         AntTypeDefinition def = getDefinition(componentName);
         if (def == null) {
             //not a known type
-            boolean isAntlib = componentName.indexOf(MagicNames.ANTLIB_PREFIX) == 0;
-            out.println("Cause: The name is undefined.");
-            out.println("Action: Check the spelling.");
-            out.println("Action: Check that any custom tasks/types have been declared.");
-            out.println("Action: Check that any <presetdef>/<macrodef>"
-                        + " declarations have taken place.");
-            if (isAntlib) {
-                out.println();
-                out.println("This appears to be an antlib declaration. ");
-                out.println("Action: Check that the implementing library exists in one of:");
-                out.println(dirListing);
-            }
+            printUnknownDefinition(out, componentName, dirListing);
             definitions = true;
         } else {
             //we are defined, so it is an instantiation problem
@@ -878,35 +867,14 @@ public class ComponentHelper  {
             try {
                 clazz = def.innerGetTypeClass();
             } catch (ClassNotFoundException e) {
-                out.println("Cause: the class " + classname + " was not found.");
                 jars = true;
-                if (optional) {
-                    out.println("        This looks like one of Ant's optional components.");
-                    out.println("Action: Check that the appropriate optional JAR exists in");
-                    out.println(dirListing);
-                } else {
-                    out.println("Action: Check that the component has been correctly declared");
-                    out.println("        and that the implementing JAR is in one of:");
-                    out.println(dirListing);
+                if (!optional) {
                     definitions = true;
                 }
+                printClassNotFound(out, classname, optional, dirListing);
             } catch (NoClassDefFoundError ncdfe) {
                 jars = true;
-                out.println("Cause: Could not load a dependent class "
-                        +  ncdfe.getMessage());
-                if (optional) {
-                    out.println("       It is not enough to have Ant's optional JARs");
-                    out.println("       you need the JAR files that the"
-                                + " optional tasks depend upon.");
-                    out.println("       Ant's optional task dependencies are"
-                                + " listed in the manual.");
-                } else {
-                    out.println("       This class may be in a separate JAR"
-                                + " that is not installed.");
-                }
-                out.println("Action: Determine what extra JAR files are"
-                            + " needed, and place them in one of:");
-                out.println(dirListing);
+                printNotLoadDependentClass(out, optional, ncdfe, dirListing);
             }
             //here we successfully loaded the class or failed.
             if (clazz != null) {
@@ -973,6 +941,66 @@ public class ComponentHelper  {
         out.flush();
         out.close();
         return errorText.toString();
+    }
+
+    /**
+     * Print unknown definition.
+     */
+    private void printUnknownDefinition(
+        PrintWriter out, String componentName, String dirListing) {
+        boolean isAntlib = componentName.indexOf(MagicNames.ANTLIB_PREFIX) == 0;
+        out.println("Cause: The name is undefined.");
+        out.println("Action: Check the spelling.");
+        out.println("Action: Check that any custom tasks/types have been declared.");
+        out.println("Action: Check that any <presetdef>/<macrodef>"
+                    + " declarations have taken place.");
+        if (isAntlib) {
+            out.println();
+            out.println("This appears to be an antlib declaration. ");
+            out.println("Action: Check that the implementing library exists in one of:");
+            out.println(dirListing);
+        }
+    }
+
+    /**
+     * Print class not found.
+     */
+    private void printClassNotFound(
+        PrintWriter out, String classname, boolean optional,
+        String dirListing) {
+        out.println("Cause: the class " + classname + " was not found.");
+        if (optional) {
+            out.println("        This looks like one of Ant's optional components.");
+            out.println("Action: Check that the appropriate optional JAR exists in");
+            out.println(dirListing);
+        } else {
+            out.println("Action: Check that the component has been correctly declared");
+            out.println("        and that the implementing JAR is in one of:");
+            out.println(dirListing);
+        }
+    }
+
+    /**
+     * Print could not load dependent class.
+     */
+    private void printNotLoadDependentClass(
+        PrintWriter out, boolean optional, NoClassDefFoundError ncdfe,
+        String dirListing) {
+        out.println("Cause: Could not load a dependent class "
+                    +  ncdfe.getMessage());
+        if (optional) {
+            out.println("       It is not enough to have Ant's optional JARs");
+            out.println("       you need the JAR files that the"
+                        + " optional tasks depend upon.");
+            out.println("       Ant's optional task dependencies are"
+                        + " listed in the manual.");
+        } else {
+            out.println("       This class may be in a separate JAR"
+                        + " that is not installed.");
+        }
+        out.println("Action: Determine what extra JAR files are"
+                    + " needed, and place them in one of:");
+        out.println(dirListing);
     }
 
     /**
