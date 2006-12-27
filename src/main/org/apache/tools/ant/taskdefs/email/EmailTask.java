@@ -420,9 +420,7 @@ public class EmailTask extends Task {
                     autoFound = true;
                     log("Using MIME mail", Project.MSG_VERBOSE);
                 } catch (BuildException e) {
-                    Throwable t = e.getCause() == null ? e : e.getCause();
-                    log("Failed to initialise MIME mail: " + t.getMessage(),
-                            Project.MSG_WARN);
+                    logBuildException("Failed to initialise MIME mail: ", e);
                     return;
                 }
             }
@@ -446,9 +444,7 @@ public class EmailTask extends Task {
                     autoFound = true;
                     log("Using UU mail", Project.MSG_VERBOSE);
                 } catch (BuildException e) {
-                    Throwable t = e.getCause() == null ? e : e.getCause();
-                    log("Failed to initialise UU mail: " + t.getMessage(),
-                            Project.MSG_WARN);
+                    logBuildException("Failed to initialise UU mail: ", e);
                     return;
                 }
             }
@@ -540,8 +536,7 @@ public class EmailTask extends Task {
             log("Sent email with " + count + " attachment"
                  + (count == 1 ? "" : "s"), Project.MSG_INFO);
         } catch (BuildException e) {
-            Throwable t = e.getCause() == null ? e : e.getCause();
-            log("Failed to send email: " + t.getMessage(), Project.MSG_WARN);
+            logBuildException("Failed to send email: ", e);
             if (failOnError) {
                 throw e;
             }
@@ -553,6 +548,11 @@ public class EmailTask extends Task {
         } finally {
             message = savedMessage;
         }
+    }
+
+    private void logBuildException(String reason, BuildException e) {
+        Throwable t = e.getCause() == null ? e : e.getCause();
+        log(reason + t.getMessage(), Project.MSG_WARN);
     }
 
     /**
