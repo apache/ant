@@ -564,17 +564,29 @@ the non-example files refers to them.
 If you wish to compile with a special JDK (another than the one Ant is currently using),
 set the <code>executable</code> and <code>fork</code> attribute. Using <code>taskname</code>
 could show in the log, that these settings are fix.
-<pre>  &lt;javac srcdir=&quot.&quot 
-         destdir=&quot.&quot 
-         executable=&quotpath-to-java14-home/bin/javac&quot 
-         fork=&quottrue&quot
-         taskname=&quotjavac1.4&quot /&gt;</pre>
+<pre>  &lt;javac srcdir=&quot;&quot; 
+         destdir=&quot;&quot;
+         executable=&quot;path-to-java14-home/bin/javac&quot; 
+         fork=&quot;true&quot;
+         taskname=&quot;javac1.4&quot; /&gt;</pre>
 </p>
 
 
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are
 using.  This problem may occur with all JDKs &lt; 1.2.</p>
+
+
+<p>
+If you want to activate other compiler options like <i>lint</i> you could use
+the <tt>&lt;compilerarg&gt;</tt> element:
+<pre>  &lt;javac srcdir="${src.dir}"
+         destdir="${classes.dir}"
+         classpathref="libraries"&gt;
+    &lt;compilerarg value="-Xlint"/&gt;
+  &lt;/javac&gt; </pre>
+</p>  
+
 
 <h3>Jikes Notes</h3>
 
