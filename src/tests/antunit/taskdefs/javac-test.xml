@@ -1,0 +1,42 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <property name="ant-build" location="../../../../build"/>
+  <property name="build-dir" location="${ant-build}/ant-unit/javac-dir/build"/>
+  
+  <target name="test-updated-property">
+    <delete quiet="yes" dir="${build-dir}"/>
+    <mkdir dir="${build-dir}"/>
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}"
+           updatedProperty="classes-updated"/>
+    <au:assertTrue>
+      <equals arg1="${classes-updated}" arg2="true"/>
+    </au:assertTrue>
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}"
+           updatedProperty="classes-updated-2"/>
+    <au:assertTrue>
+      <equals arg1="${classes-updated-2}" arg2="${classes-updated-2}"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-error-property">
+    <delete quiet="yes" dir="${build-dir}"/>
+    <mkdir dir="${build-dir}"/>
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}"
+           failOnError="false"
+           errorProperty="compile-failed"/>
+    <au:assertTrue>
+      <equals arg1="${compile-failed}" arg2="${compile-failed}"/>
+    </au:assertTrue>
+    <javac srcdir="javac-dir/bad-src" destdir="${build-dir}"
+           failOnError="false"
+           errorProperty="compile-failed"/>
+    <au:assertTrue>
+      <equals arg1="${compile-failed}" arg2="true"/>
+    </au:assertTrue>
+  </target>
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>
