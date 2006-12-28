@@ -695,7 +695,7 @@ public class Ant extends Task {
         propertySets.addElement(ps);
     }
 
-    /*
+    /**
      * Get the (sub)-Project instance currently in use.
      * @return Project
      * @since Ant 1.7
