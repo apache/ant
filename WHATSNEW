@@ -25,6 +25,9 @@ Other changes:
 
 * <script> can now work with bsf.jar and js.jar in its <classpath>.
 
+* add errorProperty and updatedProperty to <javac>
+  Bugzilla 35637 and 28941.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 

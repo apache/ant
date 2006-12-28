@@ -113,6 +113,9 @@ public class Javac extends MatchingTask {
     private String source;
     private String debugLevel;
     private File tmpDir;
+    private String updatedProperty;
+    private String errorProperty;
+    private boolean taskSuccess = true; // assume the best
 
     /**
      * Javac task for compilation of Java files.
@@ -793,6 +796,37 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * The property to set on compliation success.
+     * This property will not be set if the compilation
+     * fails, or if there are no files to compile.
+     * @param updatedProperty the property name to use.
+     * @since Ant 1.7.1.
+     */
+    public void setUpdatedProperty(String updatedProperty) {
+        this.updatedProperty = updatedProperty;
+    }
+
+    /**
+     * The property to set on compliation failure.
+     * This property will be set if the compilation
+     * fails.
+     * @param errorProperty the property name to use.
+     * @since Ant 1.7.1.
+     */
+    public void setErrorProperty(String errorProperty) {
+        this.errorProperty = errorProperty;
+    }
+
+    /**
+     * Get the result of the javac task (success or failure).
+     * @return true if compilation succeeded, or
+     *         was not neccessary, false if the compilation failed.
+     */
+    public boolean getTaskSuccess() {
+        return taskSuccess;
+    }
+
+    /**
      * Executes the task.
      * @exception BuildException if an error occurs
      */
@@ -818,6 +852,11 @@ public class Javac extends MatchingTask {
         }
 
         compile();
+        if (updatedProperty != null
+            && taskSuccess
+            && compileList.length != 0) {
+            getProject().setNewProperty(updatedProperty, "true");
+        }
     }
 
     /**
@@ -995,6 +1034,11 @@ public class Javac extends MatchingTask {
 
             // finally, lets execute the compiler!!
             if (!adapter.execute()) {
+                this.taskSuccess = false;
+                if (errorProperty != null) {
+                    getProject().setNewProperty(
+                        errorProperty, "true");
+                }
                 if (failOnError) {
                     throw new BuildException(FAIL_MSG, getLocation());
                 } else {
