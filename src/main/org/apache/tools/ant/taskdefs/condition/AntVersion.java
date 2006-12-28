@@ -32,11 +32,9 @@ public class AntVersion extends Task implements Condition {
     private String atLeast = null;
     private String exactly = null;
     private String propertyname = null;
-    
 
     /**
-     * Evalute the condition.
-     * @return true if the condition is true.
+     * Run as a task.
      * @throws BuildException if an error occurs.
      */
     public void execute() throws BuildException {
@@ -45,7 +43,12 @@ public class AntVersion extends Task implements Condition {
         }
         getProject().setNewProperty(propertyname, getVersion().toString());
     }
-    
+
+    /**
+     * Evalute the condition.
+     * @return true if the condition is true.
+     * @throws BuildException if an error occurs.
+     */
     public boolean eval() throws BuildException {
         validate();
         DeweyDecimal actual = getVersion();
@@ -134,10 +137,18 @@ public class AntVersion extends Task implements Condition {
         this.exactly = exactly;
     }
 
+    /**
+     * Get the name of the property to hold the ant version.
+     * @return the name of the property.
+     */
     public String getProperty() {
         return propertyname;
     }
 
+    /**
+     * Set the name of the property to hold the ant version.
+     * @param propertyname the name of the property.
+     */
     public void setProperty(String propertyname) {
         this.propertyname = propertyname;
     }
