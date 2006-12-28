@@ -26,9 +26,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.input.DefaultInputHandler;
@@ -51,6 +53,20 @@ import org.apache.tools.ant.util.ProxySetup;
  *
  */
 public class Main implements AntMain {
+
+    /**
+     * A Set of args are are handled by the launcher and should
+     * not be seen by Main.
+     */
+    private static final Set LAUNCH_COMMANDS = new HashSet();
+    static {
+        LAUNCH_COMMANDS.add("-lib");
+        LAUNCH_COMMANDS.add("-cp");
+        LAUNCH_COMMANDS.add("-noclasspath");
+        LAUNCH_COMMANDS.add("--noclasspath");
+        LAUNCH_COMMANDS.add("-nouserlib");
+        LAUNCH_COMMANDS.add("-main");
+    }
 
     /** The default build file name. {@value} */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";
@@ -287,15 +303,6 @@ public class Main implements AntMain {
         String searchForThis = null;
         PrintStream logTo = null;
 
-        //this is the list of lu
-        HashMap launchCommands = new HashMap();
-        launchCommands.put("-lib", "");
-        launchCommands.put("-cp", "");
-        launchCommands.put("-noclasspath", "");
-        launchCommands.put("--noclasspath", "");
-        launchCommands.put("-nouserlib", "");
-        launchCommands.put("--nouserlib", "");
-        launchCommands.put("-main", "");
         // cycle through given args
 
         for (int i = 0; i < args.length; i++) {
@@ -445,7 +452,7 @@ public class Main implements AntMain {
                     throw new BuildException(
                             "Niceness value is out of the range 1-10");
                 }
-            } else if (launchCommands.get(arg) != null) {
+            } else if (LAUNCH_COMMANDS.contains(arg)) {
                 //catch script/ant mismatch with a meaningful message
                 //we could ignore it, but there are likely to be other
                 //version problems, so we stamp down on the configuration now
