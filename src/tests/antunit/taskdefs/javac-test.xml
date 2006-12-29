@@ -12,9 +12,9 @@
     </au:assertTrue>
     <javac srcdir="javac-dir/good-src" destdir="${build-dir}"
            updatedProperty="classes-updated-2"/>
-    <au:assertTrue>
-      <equals arg1="${classes-updated-2}" arg2="${classes-updated-2}"/>
-    </au:assertTrue>
+    <au:assertFalse>
+      <isset property="classes-updated-2"/>
+    </au:assertFalse>
   </target>
 
   <target name="test-error-property">
