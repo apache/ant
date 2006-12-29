@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -126,6 +127,8 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class JUnitTask extends Task {
 
+    private static final String LINE_SEP
+        = System.getProperty("line.separator");
     private static final String CLASSPATH = "CLASSPATH=";
     private CommandlineJava commandline;
     private Vector tests = new Vector();
@@ -158,6 +161,9 @@ public class JUnitTask extends Task {
 
     private boolean splitJunit = false;
     private JUnitTaskMirror delegate;
+
+    /** A boolean on whether to get the forked path for ant classes */
+    private boolean   forkedPathChecked = false;
 
     //   Attributes for basetest
     private boolean haltOnError = false;
@@ -1016,6 +1022,9 @@ public class JUnitTask extends Task {
         execute.setEnvironment(environment);
 
         log(cmd.describeCommand(), Project.MSG_VERBOSE);
+
+        checkForkedPath(cmd);
+
         TestResultHolder result = new TestResultHolder();
         try {
             result.exitCode = execute.execute();
@@ -1058,6 +1067,42 @@ public class JUnitTask extends Task {
         }
 
         return result;
+    }
+
+    /**
+     * Check the path for multiple different versions of
+     * ant.
+     */
+    private void checkForkedPath(CommandlineJava cmd) {
+        if (forkedPathChecked) {
+            return;
+        }
+        forkedPathChecked = true;
+        if (!cmd.haveClasspath()) {
+            return;
+        }
+        AntClassLoader loader = new AntClassLoader(
+            getProject(), cmd.createClasspath(getProject()));
+        String projectResourceName = LoaderUtils.classNameToResource(
+            Project.class.getName());
+        URL previous = null;
+        try {
+            for (Enumeration e = loader.getResources(projectResourceName);
+                 e.hasMoreElements();) {
+                URL current = (URL) e.nextElement();
+                if (previous != null && !current.equals(previous)) {
+                    log("WARNING: multiple versions of ant detected "
+                        + "in path for junit "
+                        + LINE_SEP + "         " + previous
+                        + LINE_SEP + "     and " + current,
+                        Project.MSG_WARN);
+                    return;
+                }
+                previous = current;
+            }
+        } catch (Exception ex) {
+            // Ignore exception
+        }
     }
 
     /**
