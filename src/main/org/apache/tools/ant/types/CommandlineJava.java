@@ -640,7 +640,7 @@ public class CommandlineJava implements Cloneable {
      * @return true if the classpath is to be used.
      * @since Ant 1.6
      */
-    protected boolean haveClasspath() {
+    public boolean haveClasspath() {
         Path fullClasspath = classpath != null
             ? classpath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
