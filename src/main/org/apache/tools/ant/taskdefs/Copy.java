@@ -397,30 +397,8 @@ public class Copy extends Task {
 
         try {
             // deal with the single file
-            if (file != null) {
-                if (file.exists()) {
-                    if (destFile == null) {
-                        destFile = new File(destDir, file.getName());
-                    }
-                    if (forceOverwrite || !destFile.exists()
-                        || (file.lastModified() - granularity
-                                > destFile.lastModified())) {
-                        fileCopyMap.put(file.getAbsolutePath(),
-                                        new String[] {destFile.getAbsolutePath()});
-                    } else {
-                        log(file + " omitted as " + destFile
-                            + " is up to date.", Project.MSG_VERBOSE);
-                    }
-                } else {
-                    String message = "Warning: Could not find file "
-                        + file.getAbsolutePath() + " to copy.";
-                    if (!failonerror) {
-                        log(message, Project.MSG_ERR);
-                    } else {
-                        throw new BuildException(message);
-                    }
-                }
-            }
+            copySingleFile();
+
             // deal with the ResourceCollections
 
             /* for historical and performance reasons we have to do
@@ -511,23 +489,7 @@ public class Copy extends Task {
                 }
             }
 
-            Iterator iter = baseDirs.iterator();
-            while (iter.hasNext()) {
-                File f = (File) iter.next();
-                List files = (List) filesByBasedir.get(f);
-                List dirs = (List) dirsByBasedir.get(f);
-
-                String[] srcFiles = new String[0];
-                if (files != null) {
-                    srcFiles = (String[]) files.toArray(srcFiles);
-                }
-                String[] srcDirs = new String[0];
-                if (dirs != null) {
-                    srcDirs = (String[]) dirs.toArray(srcDirs);
-                }
-                scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir, srcFiles,
-                     srcDirs);
-            }
+            iterateOverBaseDirs(baseDirs, dirsByBasedir, filesByBasedir);
 
             // do all the copy operations now...
             try {
@@ -573,6 +535,54 @@ public class Copy extends Task {
     /************************************************************************
      **  protected and private methods
      ************************************************************************/
+
+    private void copySingleFile() {
+        // deal with the single file
+        if (file != null) {
+            if (file.exists()) {
+                if (destFile == null) {
+                    destFile = new File(destDir, file.getName());
+                }
+                if (forceOverwrite || !destFile.exists()
+                    || (file.lastModified() - granularity
+                        > destFile.lastModified())) {
+                    fileCopyMap.put(file.getAbsolutePath(),
+                                    new String[] {destFile.getAbsolutePath()});
+                } else {
+                    log(file + " omitted as " + destFile
+                        + " is up to date.", Project.MSG_VERBOSE);
+                }
+            } else {
+                String message = "Warning: Could not find file "
+                    + file.getAbsolutePath() + " to copy.";
+                if (!failonerror) {
+                    log(message, Project.MSG_ERR);
+                } else {
+                    throw new BuildException(message);
+                }
+            }
+        }
+    }
+    private void iterateOverBaseDirs(
+        HashSet baseDirs, HashMap dirsByBasedir, HashMap filesByBasedir) {
+        Iterator iter = baseDirs.iterator();
+        while (iter.hasNext()) {
+            File f = (File) iter.next();
+            List files = (List) filesByBasedir.get(f);
+            List dirs = (List) dirsByBasedir.get(f);
+
+            String[] srcFiles = new String[0];
+            if (files != null) {
+                srcFiles = (String[]) files.toArray(srcFiles);
+            }
+            String[] srcDirs = new String[0];
+            if (dirs != null) {
+                srcDirs = (String[]) dirs.toArray(srcDirs);
+            }
+            scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir, srcFiles,
+                 srcDirs);
+        }
+    }
 
     /**
      * Ensure we have a consistent and legal set of attributes, and set
