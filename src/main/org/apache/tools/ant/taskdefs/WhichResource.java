@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -82,6 +83,15 @@ public class WhichResource extends Task {
         return classpath.createPath();
     }
 
+    /**
+     * Set the classpath to use by reference.
+     *
+     * @param r a reference to an existing classpath.
+     * @since Ant 1.7.1
+     */
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
 
     /**
      * validate

@@ -28,6 +28,9 @@ Other changes:
 * add errorProperty and updatedProperty to <javac>
   Bugzilla 35637 and 28941.
 
+* add classpathref attribute to <whichresource>
+  Bugzilla 41158.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 

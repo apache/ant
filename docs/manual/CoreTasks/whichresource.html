@@ -16,194 +16,105 @@
 -->
     
 <html>
-<head>
-  <meta http-equiv="Content-Language" content="en-us">
-  <title>Whichresource
- Task</title>
-</head>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us">
+      <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+        <title>Whichresource Task</title>
+      </link>
+    </meta>
+  </head>
 
-<body bgcolor="#ffffff" text="#000000" link="#525D76"
-      alink="#525D76" vlink="#525D76">
 
-<table border="0" width="100%" cellspacing="4">
-
-  <!-- PAGE HEADER -->
-  <tr>
-    <td>
-      <table border="0" width="100%"><tr>
-          <td valign="bottom">
-            <font size="+3" face="arial,helvetica,sanserif"><strong>Whichresource
- Task</strong></font>
-            <br><font face="arial,helvetica,sanserif">Find a class or resource on the supplied classpath, or the system classpath if none is supplied.</font>
-          </td>
-          <td>
-            <!-- PROJECT LOGO -->
-            <a href="http://ant.apache.org/">
-              <img src="../../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0">
-            </a>
-          </td>
-      </tr></table>
-    </td>
-  </tr>
-
-  <!-- START RIGHT SIDE MAIN BODY -->
-  <tr>
-    <td  valign="top" align="left">
-
-          <!-- Applying task/long-description -->
-    <!-- Start Description -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="description">
-          <strong>Description</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-        Find a class or resource on the supplied classpath, or the system classpath if none is supplied. The named property is set if the item can be found. For example <pre> &lt;whichresource resource="/log4j.properties" property="log4j.url" &gt; </pre>
-      </blockquote></td></tr>
-
+  <body>
+    <h2><a name="whichresource">Whichresource</a></h2>
+    <h3>Description</h3>
+    <p>
+      Find a class or resource on the supplied classpath, or the
+      system classpath if none is supplied.
+      The named property is set if the item can be found.
+      For example:
+    </p>
+<blockquote><pre>
+  &lt;whichresource resource="/log4j.properties" property="log4j.url" &gt;
+</pre></blockquote>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">property</td>
+        <td valign="top">
+          The property to fill with the URL of the resource of class.
+        </td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">class</td>
+        <td valign="top">
+          The name of the class to look for.
+        </td>
+        <td valign="top" align="center" rowspan="2">Exactly one of these.</td>
+      </tr>
+      <tr>
+        <td valign="top">resource</td>
+        <td valign="top">
+          The name of the resource to look for.
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">classpath</td>
+        <td valign="top">
+          The classpath to use when looking up <code>class</code>
+          or <code>resource</code>.
+        </td>
+        <td align="center" valign="top">No</td>
+      </tr>
+      <tr>
+        <td valign="top">classpathref</td>
+        <td valign="top">
+          The classpath to use, given as a
+          <a href="../using.html#references">reference</a>
+          to a path defined elsewhere.
+          <em>Since Ant 1.7.1.</em>
+        </td>
+        <td align="center" valign="top">No</td>
+      </tr>
     </table>
-    <!-- End Description -->
-
- <!-- Ignore -->
-
-
-
-    <!-- Start Attributes -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="attributes">
-          <strong>Parameters</strong></a></font>
-      </td></tr>
-      <tr><td><blockquote>
-        <table>
-          <tr>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
-        </td>
-          </tr>
-    <!-- Attribute Group -->    
-        <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">property</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">the property to fill with the URL of the resource or class</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="1">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Required</font>
-        </td>
-    </tr>
-
-    <!-- Attribute Group -->    
-        <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">class</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">name the class to look for</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="2">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Exactly one of these two</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">resource</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">name the resource to look for</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-
-    <!-- Attribute Group -->    
-        <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">classpath</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the classpath to be used for this compilation.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Path</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="1">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
-        </td>
-    </tr>
-
-
-        </table>
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Attributes -->
-
-    <!-- Start Elements -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="elements">
-          <strong>Parameters as nested elements</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>classpath</strong> (org.apache.tools.ant.types.Path)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Adds a path to the classpath.
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Elements -->
-
-
-    </td>
-  </tr>
-  <!-- END RIGHT SIDE MAIN BODY -->
-
-</table>
-
-</body>
+    <h3>Parameters specified as nested elements</h3>
+    <h4>classpath</h4>
+    <p>
+      <code>Whichresource</code>'s <code>classpath</code> attribute is a
+      <a href="../using.html#path">path-like structure</a> and can also be
+      set via a nested <code>&lt;classpath&gt;</code> element.
+    </p>
+    <h3>Examples</h3>
+    <p>
+      The following shows using a classpath reference.
+    </p>
+<blockquote><pre>
+  &lt;path id="bsf.classpath"&gt;
+    &lt;fileset dir="${user.home}/lang/bsf" includes="*.jar"/&gt;
+  &lt;/path&gt;
+  &lt;whichresource property="bsf.class.location"
+                 class="org.apache.bsf.BSFManager"
+                 classpathref="bsf.classpath"/&gt;
+  &lt;echo&gt;${bsf.class.location}&lt;/echo&gt;
+</pre></blockquote>
+    <p>
+      The following shows using a nested classpath.
+    </p>
+<blockquote><pre>
+  &lt;whichresource
+    property="ant-contrib.antlib.location"
+    resource="net/sf/antcontrib/antlib.xml"&gt;
+    &lt;classpath&gt;
+      &lt;path path="f:/testing/ant-contrib/target/ant-contrib.jar"/&gt;
+    &lt;/classpath&gt;
+  &lt;/whichresource&gt;
+  &lt;echo&gt;${ant-contrib.antlib.location}&lt;/echo&gt;
+</pre></blockquote>
+  </body>
 </html>
