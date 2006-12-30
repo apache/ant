@@ -2199,11 +2199,12 @@ public class Javadoc extends Task {
             if (rc instanceof FileSet) {
                 FileSet fs = (FileSet) rc;
                 if (!fs.hasPatterns() && !fs.hasSelectors()) {
-                    fs = (FileSet) fs.clone();
-                    fs.createInclude().setName("**/*.java");
+                    FileSet fs2 = (FileSet) fs.clone();
+                    fs2.createInclude().setName("**/*.java");
                     if (includeNoSourcePackages) {
-                        fs.createInclude().setName("**/package.html");
+                        fs2.createInclude().setName("**/package.html");
                     }
+                    rc = fs2;
                 }
             }
             Iterator iter = rc.iterator();

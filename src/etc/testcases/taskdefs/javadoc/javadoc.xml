@@ -139,4 +139,16 @@
       <fileset refid="fileset.simple" />
     </javadoc>
   </target>
+
+  <target name="nonJavaIncludes">
+    <delete dir="${javadoc}"/>
+    <mkdir dir="${javadoc}"/>
+    <echo file="${javadoc}/stuff1.java">public class stuff1 {}</echo>
+    <echo file="${javadoc}/stuff2.java">public class stuff2 {}</echo>
+    <echo file="${javadoc}/stuff.properties">x=4</echo>
+    <javadoc destdir="${javadoc}" failonerror="true">
+      <fileset dir="${javadoc}"/>
+    </javadoc>
+  </target>
+
 </project>

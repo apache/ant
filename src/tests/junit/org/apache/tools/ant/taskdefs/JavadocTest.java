@@ -131,4 +131,9 @@ public class JavadocTest extends BuildFileTest {
     public void testDoublyNestedFilesetNoPatterns() throws Exception {
         executeTarget("doublyNestedFilesetNoPatterns");
     }
+
+    public void testNonJavaIncludes() throws Exception { // #41264
+        executeTarget("nonJavaIncludes");
+    }
+
 }
