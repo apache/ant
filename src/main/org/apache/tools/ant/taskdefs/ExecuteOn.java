@@ -383,15 +383,7 @@ public class ExecuteOn extends ExecTask {
                     }
                 }
                 if (fileNames.size() == 0 && skipEmpty) {
-                    int includedCount
-                        = ((!FileDirBoth.DIR.equals(currentType))
-                        ? ds.getIncludedFilesCount() : 0)
-                        + ((!FileDirBoth.FILE.equals(currentType))
-                        ? ds.getIncludedDirsCount() : 0);
-
-                    log("Skipping fileset for directory " + base + ". It is "
-                        + ((includedCount > 0) ? "up to date." : "empty."),
-                        Project.MSG_INFO);
+                    logSkippingFileset(currentType, ds, base);
                     continue;
                 }
                 if (!parallel) {
@@ -500,6 +492,25 @@ public class ExecuteOn extends ExecTask {
             redirector.setAppendProperties(false);
             redirector.setProperties();
         }
+    }
+
+    /**
+     * log a message for skipping a fileset.
+     * @param currentType the current type.
+     * @param ds the directory scanner.
+     * @param base the dir base
+     */
+    private void logSkippingFileset(
+        String currentType, DirectoryScanner ds, File base) {
+        int includedCount
+            = ((!FileDirBoth.DIR.equals(currentType))
+               ? ds.getIncludedFilesCount() : 0)
+            + ((!FileDirBoth.FILE.equals(currentType))
+               ? ds.getIncludedDirsCount() : 0);
+
+        log("Skipping fileset for directory " + base + ". It is "
+            + ((includedCount > 0) ? "up to date." : "empty."),
+            Project.MSG_INFO);
     }
 
     /**
