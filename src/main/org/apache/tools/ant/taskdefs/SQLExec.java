@@ -190,7 +190,7 @@ public class SQLExec extends JDBCTask {
      *
      * @since Ant 1.7
      */
-    private boolean expandProperties = false;
+    private boolean expandProperties = true;
 
     /**
      * Set the name of the SQL file to be run.
@@ -491,7 +491,9 @@ public class SQLExec extends JDBCTask {
             if (!keepformat) {
                 line = line.trim();
             }
-            line = getProject().replaceProperties(line);
+            if (expandProperties) {
+                line = getProject().replaceProperties(line);
+            }
             if (!keepformat) {
                 if (line.startsWith("//")) {
                     continue;
@@ -738,9 +740,6 @@ public class SQLExec extends JDBCTask {
          */
         public void addText(String sql) {
             if (sql != null) {
-                if (getExpandProperties()) {
-                    sql = getProject().replaceProperties(sql);
-                }
                 this.tSqlCommand += sql;
             }
         }

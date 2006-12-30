@@ -20,6 +20,9 @@ Fixed bugs:
 * Target from imported file listed twice in projecthelp.
   Bugzilla report 41226.
 
+* <sql> task double-expands properties if expandproperties is true,
+  and expands properties if expandproperties is false.
+  Bugzilla report 41204.
 
 Other changes:
 --------------
