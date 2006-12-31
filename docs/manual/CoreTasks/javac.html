@@ -335,6 +335,14 @@ invoking the compiler.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">errorProperty</td>
+    <td valign="top">
+      The property to set (to the value "true") if compilation fails.
+      <em>Since Ant 1.7.1</em>.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">source</td>
 
     <td valign="top">Value of the <code>-source</code> command-line
@@ -380,6 +388,16 @@ invoking the compiler.</p>
     <td align="center" valign="top">
       No; default is <i>java.io.tmpdir</i>.
     </td>
+  </tr>
+  <tr>
+    <td valign="top">updatedProperty</td>
+    <td valign="top">
+      The property to set (to the value "true") 
+      if compilation has taken place
+      and has been successful.
+      <em>Since Ant 1.7.1</em>.
+    </td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 
@@ -666,6 +684,32 @@ while all others are <code>false</code>.</p>
 <code>build.compiler.jvc.extensions</code> to false before invoking
 <code>&lt;javac&gt;</code>.</p>
 
+<h3>OpenJDK Notes</h3>
+<p>
+  The <a href="https://openjdk.dev.java.net/">openjdk</a>
+  project has provided the javac
+  <a href="https://openjdk.dev.java.net/compiler/">compiler</a>
+  as an opensource project. The output of this project is a
+  <code>javac.jar</code> which contains the javac compiler.
+  This compiler may be used with the <code>&lt;javac&gt;</code> task with
+  the use of a "-Xbootstrapclass/p" java argument. The argument needs
+  to be given to the runtime system of the javac executable, so it needs
+  to be prepended with a "-J". For example:
+
+<blockquote><pre>
+  &lt;property name="patched.javac.jar"
+            location="${my.patched.compiler}/dist/lib/javac.jar"/&gt;
+
+  &lt;presetdef name="patched.javac"&gt;
+    &lt;javac fork="yes"&gt;
+      &lt;compilerarg value="-J-Xbootclasspath/p:${patched.javac.jar}"/&gt;
+    &lt;/javac&gt;
+  &lt;/presetdef&gt;
+
+
+  &lt;patched.javac srcdir="src/java" destdir="build/classes"
+                 debug="yes"/&gt;
+</pre></blockquote>
 
 
 </body>
