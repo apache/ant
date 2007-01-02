@@ -667,7 +667,7 @@ public class JUnitTask extends Task {
      */
     public void init() {
         antRuntimeClasses = new Path(getProject());
-        splitJunit = !addClasspathEntry("/junit/framework/TestCase.class");
+        splitJunit = !addClasspathResource("/junit/framework/TestCase.class");
         addClasspathEntry("/org/apache/tools/ant/launch/AntMain.class");
         addClasspathEntry("/org/apache/tools/ant/Task.class");
         addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
@@ -1405,10 +1405,20 @@ public class JUnitTask extends Task {
      * getResource doesn't contain the name of the archive.</p>
      *
      * @param resource resource that one wants to lookup
-     * @return true if something was in fact added
      * @since Ant 1.4
      */
-    protected boolean addClasspathEntry(String resource) {
+    protected void addClasspathEntry(String resource) {
+        addClasspathResource(resource);
+    }
+
+    /**
+     * Implementation of addClasspathEntry.
+     *
+     * @param resource resource that one wants to lookup
+     * @return true if something was in fact added
+     * @since Ant 1.7.1
+     */
+    private boolean addClasspathResource(String resource) {
         /*
          * pre Ant 1.6 this method used to call getClass().getResource
          * while Ant 1.6 will call ClassLoader.getResource().
