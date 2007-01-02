@@ -345,73 +345,15 @@ public class Main implements AntMain {
                 }
             } else if (arg.equals("-buildfile") || arg.equals("-file")
                        || arg.equals("-f")) {
-                try {
-                    buildFile = new File(args[i + 1].replace('/', File.separatorChar));
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a buildfile when "
-                        + "using the -buildfile argument";
-                    throw new BuildException(msg);
-                }
+                i = handleArgBuildFile(args, i);
             } else if (arg.equals("-listener")) {
-                try {
-                    listeners.addElement(args[i + 1]);
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a classname when "
-                        + "using the -listener argument";
-                    throw new BuildException(msg);
-                }
+                i = handleArgListener(args, i);
             } else if (arg.startsWith("-D")) {
-
-                /* Interestingly enough, we get to here when a user
-                 * uses -Dname=value. However, in some cases, the OS
-                 * goes ahead and parses this out to args
-                 *   {"-Dname", "value"}
-                 * so instead of parsing on "=", we just make the "-D"
-                 * characters go away and skip one argument forward.
-                 *
-                 * I don't know how to predict when the JDK is going
-                 * to help or not, so we simply look for the equals sign.
-                 */
-
-                String name = arg.substring(2, arg.length());
-                String value = null;
-                int posEq = name.indexOf("=");
-                if (posEq > 0) {
-                    value = name.substring(posEq + 1);
-                    name = name.substring(0, posEq);
-                } else if (i < args.length - 1) {
-                    value = args[++i];
-                } else {
-                    throw new BuildException("Missing value for property "
-                                             + name);
-                }
-
-                definedProps.put(name, value);
+                i = handleArgDefine(args, i);
             } else if (arg.equals("-logger")) {
-                if (loggerClassname != null) {
-                    throw new BuildException("Only one logger class may "
-                        + " be specified.");
-                }
-                try {
-                    loggerClassname = args[++i];
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    throw new BuildException("You must specify a classname when"
-                                             + " using the -logger argument");
-                }
+                i = handleArgLogger(args, i);
             } else if (arg.equals("-inputhandler")) {
-                if (inputHandlerClassname != null) {
-                    throw new BuildException("Only one input handler class may "
-                                             + "be specified.");
-                }
-                try {
-                    inputHandlerClassname = args[++i];
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    throw new BuildException("You must specify a classname when"
-                                             + " using the -inputhandler"
-                                             + " argument");
-                }
+                i = handleArgInputHandler(args, i);
             } else if (arg.equals("-emacs") || arg.equals("-e")) {
                 emacsMode = true;
             } else if (arg.equals("-projecthelp") || arg.equals("-p")) {
@@ -425,33 +367,11 @@ public class Main implements AntMain {
                     searchForThis = DEFAULT_BUILD_FILENAME;
                 }
             } else if (arg.startsWith("-propertyfile")) {
-                try {
-                    propertyFiles.addElement(args[i + 1]);
-                    i++;
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a property filename when "
-                        + "using the -propertyfile argument";
-                    throw new BuildException(msg);
-                }
+                i = handleArgPropertyFile(args, i);
             } else if (arg.equals("-k") || arg.equals("-keep-going")) {
                 keepGoingMode = true;
             } else if (arg.equals("-nice")) {
-                try {
-                    threadPriority = Integer.decode(args[i + 1]);
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    throw new BuildException(
-                            "You must supply a niceness value (1-10)"
-                            + " after the -nice option");
-                } catch (NumberFormatException e) {
-                    throw new BuildException("Unrecognized niceness value: "
-                                             + args[i + 1]);
-                }
-                i++;
-                if (threadPriority.intValue() < Thread.MIN_PRIORITY
-                    || threadPriority.intValue() > Thread.MAX_PRIORITY) {
-                    throw new BuildException(
-                            "Niceness value is out of the range 1-10");
-                }
+                i = handleArgNice(args, i);
             } else if (LAUNCH_COMMANDS.contains(arg)) {
                 //catch script/ant mismatch with a meaningful message
                 //we could ignore it, but there are likely to be other
@@ -501,6 +421,149 @@ public class Main implements AntMain {
         }
 
         // Load the property files specified by -propertyfile
+        loadPropertyFiles();
+
+        if (msgOutputLevel >= Project.MSG_INFO) {
+            System.out.println("Buildfile: " + buildFile);
+        }
+
+        if (logTo != null) {
+            out = logTo;
+            err = logTo;
+            System.setOut(out);
+            System.setErr(err);
+        }
+        readyToRun = true;
+    }
+
+    // --------------------------------------------------------
+    //    Methods for handling the command line arguments
+    // --------------------------------------------------------
+
+    /** Handle the -buildfile, -file, -f argument */
+    private int handleArgBuildFile(String[] args, int pos) {
+        try {
+            buildFile = new File(
+                args[++pos].replace('/', File.separatorChar));
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException(
+                "You must specify a buildfile when using the -buildfile argument");
+        }
+        return pos;
+    }
+
+    /** Handle -listener argument */
+    private int handleArgListener(String[] args, int pos) {
+        try {
+            listeners.addElement(args[pos + 1]);
+            pos++;
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            String msg = "You must specify a classname when "
+                + "using the -listener argument";
+            throw new BuildException(msg);
+        }
+        return pos;
+    }
+
+    /** Handler -D argument */
+    private int handleArgDefine(String[] args, int argPos) {
+        /* Interestingly enough, we get to here when a user
+         * uses -Dname=value. However, in some cases, the OS
+         * goes ahead and parses this out to args
+         *   {"-Dname", "value"}
+         * so instead of parsing on "=", we just make the "-D"
+         * characters go away and skip one argument forward.
+         *
+         * I don't know how to predict when the JDK is going
+         * to help or not, so we simply look for the equals sign.
+         */
+        String arg = args[argPos];
+        String name = arg.substring(2, arg.length());
+        String value = null;
+        int posEq = name.indexOf("=");
+        if (posEq > 0) {
+            value = name.substring(posEq + 1);
+            name = name.substring(0, posEq);
+        } else if (argPos < args.length - 1) {
+            value = args[++argPos];
+        } else {
+            throw new BuildException("Missing value for property "
+                                     + name);
+        }
+        definedProps.put(name, value);
+        return argPos;
+    }
+
+    /** Handle the -logger argument. */
+    private int handleArgLogger(String[] args, int pos) {
+        if (loggerClassname != null) {
+            throw new BuildException(
+                "Only one logger class may be specified.");
+        }
+        try {
+            loggerClassname = args[++pos];
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException(
+                "You must specify a classname when using the -logger argument");
+        }
+        return pos;
+    }
+
+    /** Handle the -inputhandler argument. */
+    private int handleArgInputHandler(String[] args, int pos) {
+        if (inputHandlerClassname != null) {
+            throw new BuildException("Only one input handler class may "
+                                     + "be specified.");
+        }
+        try {
+            inputHandlerClassname = args[++pos];
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException("You must specify a classname when"
+                                     + " using the -inputhandler"
+                                     + " argument");
+        }
+        return pos;
+    }
+
+    /** Handle the -propertyfile argument. */
+    private int handleArgPropertyFile(String[] args, int pos) {
+        try {
+            propertyFiles.addElement(args[++pos]);
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            String msg = "You must specify a property filename when "
+                + "using the -propertyfile argument";
+            throw new BuildException(msg);
+        }
+        return pos;
+    }
+
+    /** Handle the -nice argument. */
+    private int handleArgNice(String[] args, int pos) {
+        try {
+            threadPriority = Integer.decode(args[++pos]);
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException(
+                "You must supply a niceness value (1-10)"
+                + " after the -nice option");
+        } catch (NumberFormatException e) {
+            throw new BuildException("Unrecognized niceness value: "
+                                     + args[pos]);
+        }
+
+        if (threadPriority.intValue() < Thread.MIN_PRIORITY
+            || threadPriority.intValue() > Thread.MAX_PRIORITY) {
+            throw new BuildException(
+                "Niceness value is out of the range 1-10");
+        }
+        return pos;
+    }
+
+    // --------------------------------------------------------
+    //    other methods
+    // --------------------------------------------------------
+
+    /** Load the property files specified by -propertyfile */
+    private void loadPropertyFiles() {
         for (int propertyFileIndex = 0;
              propertyFileIndex < propertyFiles.size();
              propertyFileIndex++) {
@@ -513,7 +576,7 @@ public class Main implements AntMain {
                 props.load(fis);
             } catch (IOException e) {
                 System.out.println("Could not load property file "
-                   + filename + ": " + e.getMessage());
+                                   + filename + ": " + e.getMessage());
             } finally {
                 FileUtils.close(fis);
             }
@@ -527,18 +590,6 @@ public class Main implements AntMain {
                 }
             }
         }
-
-        if (msgOutputLevel >= Project.MSG_INFO) {
-            System.out.println("Buildfile: " + buildFile);
-        }
-
-        if (logTo != null) {
-            out = logTo;
-            err = logTo;
-            System.setOut(out);
-            System.setErr(err);
-        }
-        readyToRun = true;
     }
 
     /**
