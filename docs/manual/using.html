@@ -494,6 +494,24 @@ can be written as:
     &lt;path id=&quot;base.path&quot; path=&quot;${classpath}&quot;/&gt;
 </pre>
 
+  <h4><a name="pathshortcut">Path Shortcut</a></h4>
+  <p>
+    In Ant 1.6 a shortcut for converting paths to OS specific strings
+    in properties has been added. One can use the expression 
+    ${toString:<em>pathreference</em>} to convert a path element
+    reference to a string that can be used for a path argument.
+    For example:
+  </p>
+<pre>
+  &lt;path id="lib.path.ref"&gt;
+    &lt;fileset dir="lib" includes="*.jar"/&gt;
+  &lt;/path&gt;
+  &lt;javac srcdir="src" destdir="classes"&gt;
+    &lt;compilerarg arg="-Xbootstrap/p:${toString:lib.path.ref}"/&gt;
+  &lt;/javac&gt;
+</pre>
+
+
 <h3><a name="arg">Command-line Arguments</a></h3>
 <p>Several tasks take arguments that will be passed to another
 process on the command line. To make it easier to specify arguments

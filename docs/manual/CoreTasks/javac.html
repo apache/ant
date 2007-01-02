@@ -173,7 +173,11 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">bootclasspath</td>
-    <td valign="top">Location of bootstrap class files.</td>
+    <td valign="top">
+      Location of bootstrap class files. (See <a href="#bootstrap">below</a>
+      for using the -X and -J-X parameters for specifing
+      the bootstrap classpath).
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -683,6 +687,29 @@ while all others are <code>false</code>.</p>
 <p>Jvc will enable Microsoft extensions unless you set the property
 <code>build.compiler.jvc.extensions</code> to false before invoking
 <code>&lt;javac&gt;</code>.</p>
+
+<h3><a name="bootstrap">Bootstrap Options</h3>
+<p>
+  The Sun javac compiler has a <em>bootclasspath</em> command
+  line option - this corresponds to the "bootclasspath" attribute/element
+  of the &lt;javac&gt; task. The Sun compiler also allows more
+  control over the boot classpath using the -X and -J-X attributes.
+  One can set these by using the &lt;compilerarg&gt;. Since Ant 1.6.0,
+  there is a shortcut to convert path references to strings that
+  can by used in an OS independent fashion (see
+  <a href="../using.html#pathshortcut">pathshortcut</a>). For example:
+</p>
+<pre>
+  &lt;path id="lib.path.ref"&gt;
+    &lt;fileset dir="lib" includes="*.jar"/&gt;
+  &lt;/path&gt;
+  &lt;javac srcdir="src" destdir="classes"&gt;
+    &lt;compilerarg arg="-Xbootstrap/p:${toString:lib.path.ref}"/&gt;
+  &lt;/javac&gt;
+</pre>
+
+  
+</p>
 
 <h3>OpenJDK Notes</h3>
 <p>
