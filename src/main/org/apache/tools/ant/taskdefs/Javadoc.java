@@ -1399,9 +1399,10 @@ public class Javadoc extends Task {
             if (getDescription() != null) {
                 return name + ":" + (enabled ? "" : "X")
                     + scope + ":" + getDescription();
+            } else if (!enabled || !"a".equals(scope)) {
+                return name + ":" + (enabled ? "" : "X") + scope;
             } else {
-                return name + ":" + (enabled ? "" : "X")
-                    + scope + ":" + name;
+                return name;
             }
         }
     }

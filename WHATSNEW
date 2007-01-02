@@ -24,6 +24,10 @@ Fixed bugs:
   and expands properties if expandproperties is false.
   Bugzilla report 41204.
 
+* Rolling back Bugzilla 32927 (set a default description for a javadoc tag
+  if not set) as it caused a BC problem.
+  Bugzilla report 41268.
+
 Other changes:
 --------------
 
