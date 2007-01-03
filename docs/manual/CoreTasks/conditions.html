@@ -951,5 +951,43 @@ must match. <b>Since Ant 1.7</b>
   &lt;antversion exactly="1.7.0"/&gt;
 &lt;/condition&gt;
 </pre></blockquote>
+<h4>hasfreespace</h4>
+
+<p>
+  Tests a partition to see if there is enough space.
+  <b>Since Ant 1.7.0</b></p>
+  <p>Needed attribute can be specified using standard computing terms:<br/>
+    <ul>
+      <li>K : Kilobytes (1024 bytes)</li>
+      <li>M : Megabytes (1024 K)</li>
+      <li>G : Gigabytes (1024 M)</li>
+      <li>T : Terabytes (1024 G)</li>
+      <li>P : Petabytes (1024 T)</li>
+    </ul>
+  </p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">partition</td>
+    <td valign="top">The partition or filesystem to check for freespace</td>
+    <td valign="top" rowspan="2" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">needed</td>
+    <td valign="top">The amount of freespace needed.</td>
+    <td valign="top" rowspan="2" align="center">Yes</td>
+  </tr>
+</table>
+  <p>
+    An example:
+  </p>
+<blockquote><pre>
+&lt;hasfreespace partition="c:" needed="100M"/&gt;
+</pre></blockquote>
 </body>
 </html>
