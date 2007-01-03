@@ -28,6 +28,9 @@ Fixed bugs:
   if not set) as it caused a BC problem.
   Bugzilla report 41268.
 
+* <apt> forks properly and so memory settings are picked up.
+  Bug report 41280.
+
 Other changes:
 --------------
 

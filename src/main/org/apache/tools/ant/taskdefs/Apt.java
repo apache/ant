@@ -110,7 +110,7 @@ public class Apt
     public Apt() {
         super();
         super.setCompiler(AptExternalCompilerAdapter.class.getName());
-        setFork(true);
+        super.setFork(true);
     }
 
     /**
