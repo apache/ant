@@ -92,7 +92,7 @@
     <section name="Books">
       <p>The most recent books come first</p>
       <subsection name="Ant in Action"
-          isbn="1-932394-80-X">
+          isbn="193239480X">
         <p>Published April/May 2007, and covering Ant 1.7.</p>
 
         <p>This is a major rewrite of the first edition; still 600 pages long.
