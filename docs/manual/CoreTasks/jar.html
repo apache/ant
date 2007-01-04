@@ -368,22 +368,29 @@ by Java).</p>
 <pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
+      &lt;!-- Who is building this jar? --&gt;
       &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
-      &lt;attribute name=&quot;Program-Version&quot; value=&quot;1.0.0beta2&quot;/&gt;
+      &lt;!-- Information about the program itself --&gt;
+      &lt;attribute name=&quot;Implementation-Vendor&quot; value=&quot;ACME inc.&quot;/&gt;
+      &lt;attribute name=&quot;Implementation-Title&quot; value=&quot;GreatProduct&quot;/&gt;
+      &lt;attribute name=&quot;Implementation-Version&quot; value=&quot;1.0.0beta2&quot;/&gt;
+      &lt;!-- details --&gt;
       &lt;section name=&quot;common/class1.class&quot;&gt;
         &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
       &lt;/section&gt;
     &lt;/manifest&gt;
   &lt;/jar&gt;</pre>
 <p>
-This is an example of an inline manifest specification. Note that the Built-By
-attribute will take the value of the Ant property ${user.name}. The manifest
-produced by the above would look like this:
+This is an example of an inline manifest specification including the version of the build
+program (Implementation-Version). Note that the Built-By attribute will take the value of the Ant 
+property ${user.name}. The manifest produced by the above would look like this:
 </p>
 <pre><code>Manifest-Version: 1.0
 Built-By: conor
-Program-Version: 1.0.0beta2
-Created-By: Apache Ant 1.6.5
+Implementation-Vendor: ACME inc.
+Implementation-Title: GreatProduct
+Implementation-Version: 1.0.0beta2
+Created-By: Apache Ant 1.7.0
 
 Name: common/MyClass.class
 Sealed: false</code></pre>
