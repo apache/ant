@@ -324,10 +324,14 @@ empty or only contain files inside the META-INF directory.</p>
     If a JAR file has more that one implementation of the service, a number of
     nested &lt;provider&gt; elements may be used.
   </p>
+  
+  
 <h3>Examples</h3>
+
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
+
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        excludes=&quot;**/Test.class&quot;
@@ -335,6 +339,7 @@ called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
+
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        includes=&quot;mypackage/test/**&quot;
@@ -344,6 +349,7 @@ with the name <code>Test.class</code> are excluded.</p>
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
+
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
              excludes=&quot;**/Test.class&quot;
@@ -363,6 +369,7 @@ by Java).</p>
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
       &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
+      &lt;attribute name=&quot;Program-Version&quot; value=&quot;1.0.0beta2&quot;/&gt;
       &lt;section name=&quot;common/class1.class&quot;&gt;
         &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
       &lt;/section&gt;
@@ -375,6 +382,7 @@ produced by the above would look like this:
 </p>
 <pre><code>Manifest-Version: 1.0
 Built-By: conor
+Program-Version: 1.0.0beta2
 Created-By: Apache Ant 1.6.5
 
 Name: common/MyClass.class
@@ -391,6 +399,7 @@ Sealed: false</code></pre>
            provider="org.acme.PinkyLanguage"/&gt;
 &lt;/jar&gt;
 </pre></blockquote>
+
 <p>
   The following shows how to create a jar file specifing a service
   with two implementations of the JDK6 scripting interface:
@@ -404,5 +413,8 @@ Sealed: false</code></pre>
   &lt;/service&gt;
 &lt;/jar&gt;
 </pre></blockquote>
+
+
+
 </body>
 </html>
