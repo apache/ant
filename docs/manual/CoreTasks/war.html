@@ -160,6 +160,17 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">filesetmanifest</td>
+    <td valign="top">behavior when a Manifest is found in a zipfileset or zipgroupfileset file is found.  Valid values are &quot;skip&quot;, &quot;merge&quot;, and &quot;mergewithoutmain&quot;.  &quot;merge&quot; will merge all of the manifests together, and merge this into any other specified manifests.  &quot;mergewithoutmain&quot; merges everything but the Main section of the manifests.  Default value is &quot;skip&quot;.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">whenmanifestonly</td>
+    <td valign="top">behavior when no files match.  Valid values are &quot;fail&quot;, &quot;skip&quot;, and &quot;create&quot;.  Default is &quot;create&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">update</td>
     <td valign="top">indicates whether to update or overwrite
       the destination file if it already exists.  Default is &quot;false&quot;.</td>
@@ -192,28 +203,38 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
 <h3>Nested elements</h3>
+
 <h4>lib</h4>
 <p>The nested <code>lib</code> element specifies a <a
 href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
 end up in the <code>WEB-INF/lib</code> directory of the war file.</p>
+
 <h4>classes</h4>
 <p>The nested <code>classes</code> element specifies a <a
 href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
 end up in the <code>WEB-INF/classes</code> directory of the war file.</p>
+
 <h4>webinf</h4>
 <p>The nested <code>webinf</code> element specifies a <a
 href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
 end up in the <code>WEB-INF</code> directory of the war file. If this
 fileset includes a file named <code>web.xml</code>, the file is
 ignored and you will get a warning.</p>
+
 <h4>metainf</h4>
 <p>The nested <code>metainf</code> element specifies a <a
 href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
 end up in the <code>META-INF</code> directory of the war file. If this
 fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
+
+<h4>manifest, indexjars, service</h4>
+These are inherited from <a href="jar.html">&lt;jar&gt;</a>
+
 <h3>Examples</h3>
+
 <p>Assume the following structure in the project's base directory:</p>
 <pre>
 thirdparty/libs/jdbc1.jar

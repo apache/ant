@@ -127,6 +127,44 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">filesetmanifest</td>
+    <td valign="top">behavior when a Manifest is found in a zipfileset or zipgroupfileset file is found.  Valid values are &quot;skip&quot;, &quot;merge&quot;, and &quot;mergewithoutmain&quot;.  &quot;merge&quot; will merge all of the manifests together, and merge this into any other specified manifests.  &quot;mergewithoutmain&quot; merges everything but the Main section of the manifests.  Default value is &quot;skip&quot;.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">whenmanifestonly</td>
+    <td valign="top">behavior when no files match.  Valid values are &quot;fail&quot;, &quot;skip&quot;, and &quot;create&quot;.  Default is &quot;create&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">manifestencoding</td>
+    <td valign="top">The encoding used to read the JAR manifest, when a manifest file is specified.</td>
+    <td valign="top" align="center">No, defaults to the platform encoding.</td>
+  </tr>
+  <tr>
+    <td valign="top">index</td>
+    <td valign="top">whether to create an <A
+    HREF="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">index
+    list</A> to speed up classloading.  This is a JDK 1.3+ specific
+    feature.  Unless you specify additional jars with nested <a
+    href="#indexjars"><code>indexjars</code></a> elements, only the
+    contents of this jar will be included in the index.  Defaults to
+    false.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">index</td>
+    <td valign="top">whether to create an <A
+    HREF="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">index
+    list</A> to speed up classloading.  This is a JDK 1.3+ specific
+    feature.  Unless you specify additional jars with nested <a
+    href="#indexjars"><code>indexjars</code></a> elements, only the
+    contents of this jar will be included in the index.  Defaults to
+    false.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">update</td>
     <td valign="top">indicates whether to update or overwrite
       the destination file if it already exists.  Default is &quot;false&quot;.</td>
@@ -159,13 +197,19 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
 <h3>Nested elements</h3>
+
 <h4>metainf</h4>
 <p>The nested <code>metainf</code> element specifies a <a
 href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
 end up in the <code>META-INF</code> directory of the ear file. If this
 fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
+
+<h4>manifest, indexjars, service</h4>
+These are inherited from <a href="jar.html">&lt;jar&gt;</a>
+
 <h2>Example</h2>
 <pre>
     &lt;ear destfile=&quot;${build.dir}/myapp.ear&quot; appxml=&quot;${src.dir}/metadata/application.xml&quot;&gt;
