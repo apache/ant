@@ -46,6 +46,9 @@ Other changes:
 * add classpathref attribute to <whichresource>
   Bugzilla 41158.
 
+* reduce logging noise of <apply skipemptyfilesets="true">
+  Bugzilla  29154
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 

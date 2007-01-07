@@ -510,7 +510,7 @@ public class ExecuteOn extends ExecTask {
 
         log("Skipping fileset for directory " + base + ". It is "
             + ((includedCount > 0) ? "up to date." : "empty."),
-            Project.MSG_INFO);
+             verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
     }
 
     /**
