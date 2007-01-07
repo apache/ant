@@ -184,7 +184,20 @@ ending in <code>.old</code> or a file beginning with private_ would remain
 unaffected.</p>
 
 
-
+  <h3>Note on maxparallel attribute</h3>
+  <p>
+    Some shells have a limit of the number of characters that
+    a command line may contain. 
+    This maximum limit varies from shell to shell and from operating
+    system to operating system.
+    If one has a large number of files to change mode on, consider
+    using the <em>maxparallel</em> attribute. For example
+    when using AIX and the limit is reached, the system responds
+    with a warning: "Warning: 
+    UNIXProcess.forkAndExec native error: The parameter or environment lists
+    are too long". A value of about 300 seems to result in a
+    command line that is acceptable.
+  </p>
 </body>
 </html>
 
