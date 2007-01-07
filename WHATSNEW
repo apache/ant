@@ -47,7 +47,10 @@ Other changes:
   Bugzilla 41158.
 
 * reduce logging noise of <apply skipemptyfilesets="true">
-  Bugzilla  29154
+  Bugzilla 29154
+
+* Show Previous Revision in the tagdiff.xsl stylesheet
+  Bugzilla 29143
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
