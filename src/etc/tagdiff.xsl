@@ -163,7 +163,7 @@
           <xsl:otherwise>
             <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;r2=<xsl:value-of select="prevrevision"/>&amp;diff_format=h</xsl:attribute>
           </xsl:otherwise>
-        </xsl:choose> (<xsl:value-of select="revision"/>)
+        </xsl:choose> (<xsl:if test="count(prevrevision) &gt; 0"> <xsl:value-of select="prevrevision"/> --&gt; </xsl:if> <xsl:value-of select="revision"/>)
       </a>
       </xsl:if>
     </li>
