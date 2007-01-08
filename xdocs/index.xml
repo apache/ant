@@ -48,6 +48,16 @@
     <p>Ant 1.7 has some initial support for Java6 features.</p>
   </section>
 
+  <section name="AntUnit 1.0">
+    <h3>January 8, 2007 - Apache AntUnit 1.0 Available</h3>
+    <p>Apache AntUnit 1.0 is now available for <a
+    href="http://ant.apache.org/antlibs/bindownload.cgi">download</a>.</p>
+
+    <p>This Ant Library contains tasks to test Ant tasks using Ant
+    instead of JUnit.  For more information see the <a
+    href="antlibs/antunit/">AntUnit home page</a>.</p>
+  </section>
+
   <section name=".NET Ant Library 1.0">
     <h3>November 6, 2006 - Apache .NET Ant Library 1.0 Available</h3>
     <p>Apache .NET Ant Library 1.0 is now available for <a
@@ -59,16 +69,6 @@
 
     <p>For more information see the <a href="antlibs/dotnet/">Antlib's
     home page</a></p>
-  </section>
-
-  <section name="AntUnit 1.0Beta2">
-    <h3>October 29, 2006 - Apache AntUnit 1.0Beta2 Available</h3>
-    <p>Apache AntUnit 1.0Beta1 is now available for <a
-    href="http://ant.apache.org/antlibs/bindownload.cgi">download</a>.</p>
-
-    <p>This Ant Library contains tasks to test Ant tasks using Ant
-    instead of JUnit.  For more information see the <a
-    href="antlibs/antunit/">AntUnit home page</a>.</p>
   </section>
 
   <section name="Apache Ant">
