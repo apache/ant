@@ -55,6 +55,8 @@ Other changes:
 * Show Previous Revision in the tagdiff.xsl stylesheet
   Bugzilla 29143
 
+* Allow <mapper refid> to refer directly to a FileNameMapper instance.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 

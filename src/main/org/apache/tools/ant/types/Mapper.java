@@ -198,7 +198,18 @@ public class Mapper extends DataType implements Cloneable {
      */
     public FileNameMapper getImplementation() throws BuildException {
         if (isReference()) {
-            return getRef().getImplementation();
+            dieOnCircularReference();
+            Reference r = getRefid();
+            Object o = r.getReferencedObject(getProject());
+            if (o instanceof FileNameMapper) {
+                return (FileNameMapper) o;
+            }
+            if (o instanceof Mapper) {
+                return ((Mapper) o).getImplementation();
+            }
+            String od = o == null ? "null" : o.getClass().getName();
+            throw new BuildException(od + " at reference '"
+                + r.getRefId() + "' is not a valid mapper reference.");
         }
 
         if (type == null && classname == null && container == null) {
@@ -256,6 +267,8 @@ public class Mapper extends DataType implements Cloneable {
     /**
      * Performs the check for circular references and returns the
      * referenced Mapper.
+     * @deprecated since Ant 1.7.1 because a mapper might ref a
+     *             FileNameMapper implementation directly.
      * @return the referenced Mapper
      */
     protected Mapper getRef() {
