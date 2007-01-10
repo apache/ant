@@ -73,6 +73,12 @@ public abstract class BaseResourceCollectionWrapper
             throw oneNested();
         }
         rc = c;
+        if (Project.getProject(rc) == null) {
+            Project p = getProject();
+            if (p != null) {
+                p.setProjectReference(rc);
+            }
+        }
         setChecked(false);
     }
 

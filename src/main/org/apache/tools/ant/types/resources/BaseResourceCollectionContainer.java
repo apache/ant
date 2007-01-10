@@ -82,6 +82,12 @@ public abstract class BaseResourceCollectionContainer
         if (c == null) {
             return;
         }
+        if (Project.getProject(c) == null) {
+            Project p = getProject();
+            if (p != null) {
+                p.setProjectReference(c);
+            }
+        }
         rc.add(c);
         FailFast.invalidate(this);
         coll = null;
