@@ -788,8 +788,11 @@ an explanation of scripts and dependencies.
     <td valign="top"><b>Target file names</b></td>
   </tr>
   <tr>
-    <td valign="center"><code>foo\bar\A.java</code></td>
-    <td valign="top"><code>FOO\BAR\A.JAVA foo\bar\a.java</code></td>
+    <td valign="center" rowspan="2"><code>foo\bar\A.java</code></td>
+    <td valign="top"><code>FOO\BAR\A.JAVA</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>foo\bar\a.java</code></td>
   </tr>
 </table>
 
@@ -811,7 +814,7 @@ list of mapped names reset after every invocation.
       </td>
     </tr>
     <tr>
-      <td valign="top">self</td>
+      <td valign="top"><code>self</code></td>
       <td valign="top">
         the scriptmapper itself
       </td>
