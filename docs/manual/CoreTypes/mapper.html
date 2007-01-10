@@ -109,6 +109,11 @@ implicitly configured as a <a href="#composite-mapper">composite mapper</a>.
   the generally available <i>to</i> and <i>from</i>.<br>
   The <code>&lt;mapper type|classname=&quot;...&quot;&gt;</code> usage
   form remains valid for reasons of backward compatibility.</p>
+
+    <!--                                        -->
+    <!--             Identity Mapper            -->
+    <!--                                        -->
+
 <h4><a name="identity-mapper">identity</a></h4>
 <p>The target file name is identical to the source file name. Both
 <code>to</code> and <code>from</code> will be ignored.</p>
@@ -139,6 +144,11 @@ implicitly configured as a <a href="#composite-mapper">composite mapper</a>.
     <td valign="top"><code>Classes/dir/dir2/A.properties</code></td>
   </tr>
 </table>
+
+    <!--                                        -->
+    <!--             Flatten Mapper             -->
+    <!--                                        -->
+
 <h4><a name="flatten-mapper">flatten</a></h4>
 <p>The target file name is identical to the source file name, with all
 leading directory information stripped off. Both <code>to</code> and
@@ -170,6 +180,11 @@ leading directory information stripped off. Both <code>to</code> and
     <td valign="top"><code>A.properties</code></td>
   </tr>
 </table>
+
+    <!--                                        -->
+    <!--             Merge Mapper               -->
+    <!--                                        -->
+
 <h4><a name="merge-mapper">merge</a></h4>
 <p>The target file name will always be the same, as defined by
 <code>to</code> - <code>from</code> will be ignored.</p>
@@ -200,6 +215,11 @@ leading directory information stripped off. Both <code>to</code> and
     <td valign="top"><code>archive.tar</code></td>
   </tr>
 </table>
+
+    <!--                                        -->
+    <!--              Glob Mapper               -->
+    <!--                                        -->
+
 <h4><a name="glob-mapper">glob</a></h4>
 <p>Both <code>to</code> and <code>from</code> define patterns that may
 contain at most one <code>*</code>. For each source file that matches
@@ -323,6 +343,11 @@ that don't match the <code>from</code> pattern will be ignored.</p>
     <p>
       will output "x is f/j.java".
     </p>
+
+
+    <!--                                        -->
+    <!--             RegExp Mapper              -->
+    <!--                                        -->
 
 <h4><a name="regexp-mapper">regexp</a></h4>
 <p>Both <code>to</code> and <code>from</code> define regular
@@ -535,6 +560,11 @@ jakarta-ORO and finally try jakarta-regexp.</li>
     <p>
       will set <code>hd.prop</code> to "f\j.java".
     </p>
+
+    <!--                                        -->
+    <!--             Package Mapper             -->
+    <!--                                        -->
+
 <h4><a name="package-mapper">package</a></h4>
 <p>Sharing the same syntax as the <a href="#glob-mapper">glob mapper</a>,
 the package mapper replaces
@@ -560,6 +590,11 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <td valign="top">ignored</td>
   </tr>
 </table>
+
+    <!--                                        -->
+    <!--           Unpackage Mapper             -->
+    <!--                                        -->
+
 <h4><a name="unpackage-mapper">unpackage (since Ant 1.6.0)</a></h4>
   <p>This mapper is the inverse of the <a href="#package-mapper">package</a> mapper.
     It replaces the dots in a package name with directory separators. This
@@ -582,6 +617,11 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <td valign="top"><code>${test.src.dir}/org/acme/AcmeTest.java</code></td>
   </tr>
 </table>
+
+    <!--                                        -->
+    <!--           Composite Mapper             -->
+    <!--                                        -->
+
 <h4><a name="composite-mapper">composite (since Ant 1.6.2)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to each nested
@@ -610,6 +650,11 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
   <p>The composite mapper has no corresponding
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
+
+    <!--                                        -->
+    <!--            Chained Mapper              -->
+    <!--                                        -->
+
 <h4><a name="chained-mapper">chained (since Ant 1.6.2)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to the first
