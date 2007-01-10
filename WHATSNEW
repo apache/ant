@@ -31,6 +31,9 @@ Fixed bugs:
 * <apt> forks properly and so memory settings are picked up.
   Bug report 41280.
 
+* Regression: NPE was thrown when using <pathconvert> against a
+  (third-party instantiated) fileset with null Project reference.
+
 Other changes:
 --------------
 
