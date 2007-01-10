@@ -579,7 +579,7 @@ public class ComponentHelper  {
      */
     public static String getElementName(Project p, Object o, boolean brief) {
         if (p == null) {
-            p = getProject(o);
+            p = Project.getProject(o);
         }
         return p == null ? getUnmappedElementName(o.getClass(), brief)
                 : getComponentHelper(p).getElementName(o, brief);
@@ -591,21 +591,6 @@ public class ComponentHelper  {
             return name.substring(name.lastIndexOf('.') + 1);
         }
         return c.toString();
-    }
-
-    private static Project getProject(Object o) {
-        if (o instanceof ProjectComponent) {
-            return ((ProjectComponent) o).getProject();
-        }
-        try {
-            Method m = o.getClass().getMethod("getProject", (Class[]) null);
-            if (Project.class == m.getReturnType()) {
-                return (Project) m.invoke(o, (Object[]) null);
-            }
-        } catch (Exception e) {
-            //too bad
-        }
-        return null;
     }
 
     /**

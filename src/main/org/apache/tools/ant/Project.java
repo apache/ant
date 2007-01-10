@@ -1652,6 +1652,26 @@ public class Project implements ResourceFactory {
     }
 
     /**
+     * Get the Project instance associated with the specified object.
+     * @return Project instance, if any.
+     * @since Ant 1.7.1
+     */
+    public static Project getProject(Object o) {
+        if (o instanceof ProjectComponent) {
+            return ((ProjectComponent) o).getProject();
+        }
+        try {
+            Method m = o.getClass().getMethod("getProject", (Class[]) null);
+            if (Project.class == m.getReturnType()) {
+                return (Project) m.invoke(o, (Object[]) null);
+            }
+        } catch (Exception e) {
+            //too bad
+        }
+        return null;
+    }
+
+    /**
      * Topologically sort a set of targets.  Equivalent to calling
      * <code>topoSort(new String[] {root}, targets, true)</code>.
      *
