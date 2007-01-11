@@ -65,11 +65,20 @@ public class RmicAdvancedTest extends BuildFileTest {
         executeTarget("testEmpty");
     }
     /**
-     * A unit test for JUnit
+     * test sun's rmic compiler
      */
     public void testRmic() throws Exception {
         executeTarget("testRmic");
     }
+
+    /**
+     * test sun's rmic compiler strips
+     * out -J arguments when not forking
+     */
+    public void testRmicJArg() throws Exception {
+        executeTarget("testRmicJArg");
+    }
+
     /**
      * A unit test for JUnit
      */
@@ -78,10 +87,17 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * test weblogic
      */
     public void testWlrmic() throws Exception {
         executeTarget("testWlrmic");
+    }
+
+    /**
+     *  test weblogic's stripping of -J args
+     */
+    public void testWlrmicJArg() throws Exception {
+        executeTarget("testWlrmicJArg");
     }
 
     /**

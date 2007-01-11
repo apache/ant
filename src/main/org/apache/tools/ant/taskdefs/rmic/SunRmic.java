@@ -100,4 +100,14 @@ public class SunRmic extends DefaultRmicAdapter {
             }
         }
     }
+
+
+    /**
+     * Strip out all -J args from the command list.
+     * @param compilerArgs the original compiler arguments
+     * @return the filtered set.
+     */
+    protected String[] preprocessCompilerArgs(String[] compilerArgs) {
+        return filterJvmCompilerArgs(compilerArgs);
+    }
 }

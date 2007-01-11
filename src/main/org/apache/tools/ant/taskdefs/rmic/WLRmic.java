@@ -106,4 +106,14 @@ public class WLRmic extends DefaultRmicAdapter {
     public String getSkelClassSuffix() {
         return WL_RMI_SKEL_SUFFIX;
     }
+
+    /**
+     * Strip out all -J args from the command list.
+     *
+     * @param compilerArgs the original compiler arguments
+     * @return the filtered set.
+     */
+    protected String[] preprocessCompilerArgs(String[] compilerArgs) {
+        return filterJvmCompilerArgs(compilerArgs);
+    }    
 }

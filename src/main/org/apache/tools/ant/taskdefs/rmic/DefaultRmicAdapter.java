@@ -21,6 +21,9 @@ package org.apache.tools.ant.taskdefs.rmic;
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
@@ -249,11 +252,48 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             cmd.createArgument().setValue("-g");
         }
 
-        cmd.addArguments(attributes.getCurrentCompilerArgs());
+        String[] compilerArgs = attributes.getCurrentCompilerArgs();
+        compilerArgs = preprocessCompilerArgs(compilerArgs);
+        cmd.addArguments(compilerArgs);
 
         logAndAddFilesToCompile(cmd);
         return cmd;
      }
+
+    /**
+     * Preprocess the compiler arguments in any way you see fit.
+     * This is to allow compiler adapters to validate or filter the arguments.
+     * The base implementation returns the original compiler arguments unchanged.
+     * @param compilerArgs the original compiler arguments
+     * @return the filtered set.
+     */
+    protected String[] preprocessCompilerArgs(String[] compilerArgs) {
+        return compilerArgs;
+    }
+
+
+    /**
+     * Strip out all -J args from the command list. Invoke this from
+     * {@link #preprocessCompilerArgs(String[])} if you have a non-forking
+     * compiler. 
+     * @param compilerArgs the original compiler arguments
+     * @return the filtered set.
+     */
+    protected String[] filterJvmCompilerArgs(String[] compilerArgs) {
+        int len = compilerArgs.length;
+        List args=new ArrayList(len);
+        for(int i=0;i<len;i++) {
+            String arg=compilerArgs[i];
+            if(!arg.startsWith("-J")) {
+                args.add(arg);
+            } else {
+                attributes.log("Dropping "+arg+" from compiler arguments");
+            }
+        }
+        int count=args.size();
+        return (String[]) args.toArray(new String[count]);
+    }
+
 
     /**
      * Logs the compilation parameters, adds the files to compile and logs the

@@ -153,6 +153,14 @@
     <assertBaseCompiled/>
   </target>
 
+
+  <target name="testRmicJArg" if="rmic.present" depends="init">
+    <base-rmic compiler="sun">
+      <compilerarg value="-J-mx256m" />
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
   <target name="testKaffe" if="kaffe.present" depends="init">
     <base-rmic
       compiler="kaffe"
@@ -164,6 +172,14 @@
     <base-rmic
       compiler="weblogic"
       />
+  </target>
+
+  <target name="testWlrmicJArg" if="wlrmic.present" depends="init">
+    <base-rmic
+        compiler="weblogic"
+        >
+      <compilerarg value="-J-mx256m" />
+    </base-rmic>
   </target>
 
   <target name="testForking" if="rmic.present" depends="init">

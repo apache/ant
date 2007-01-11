@@ -34,6 +34,10 @@ Fixed bugs:
 * Regression: NPE was thrown when using <pathconvert> against a
   (third-party instantiated) fileset with null Project reference.
 
+* Strip out all -J arguments to non forking rmic adapters, specifically
+  the Sun and Weblogic compilers.
+  Bug report 41349  
+
 Other changes:
 --------------
 
