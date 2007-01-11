@@ -33,6 +33,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -760,6 +764,8 @@ public class ComponentHelper  {
     /**
      * Called for each component name, check if the
      * associated URI has been examined for antlibs.
+     * @param componentName the name of the component, which should include a URI
+     *                      prefix if it is in a namespace
      */
     private synchronized void checkNamespace(String componentName) {
         String uri = ProjectHelper.extractUriFromComponentName(componentName);
@@ -929,21 +935,36 @@ public class ComponentHelper  {
     }
 
     /**
-     * Print unknown definition.
+     * Print unknown definition.forking
      */
     private void printUnknownDefinition(
         PrintWriter out, String componentName, String dirListing) {
         boolean isAntlib = componentName.indexOf(MagicNames.ANTLIB_PREFIX) == 0;
+        String uri=ProjectHelper.extractUriFromComponentName(componentName);
         out.println("Cause: The name is undefined.");
         out.println("Action: Check the spelling.");
         out.println("Action: Check that any custom tasks/types have been declared.");
         out.println("Action: Check that any <presetdef>/<macrodef>"
                     + " declarations have taken place.");
-        if (isAntlib) {
-            out.println();
-            out.println("This appears to be an antlib declaration. ");
-            out.println("Action: Check that the implementing library exists in one of:");
-            out.println(dirListing);
+        if(uri.length()>0) {
+            List matches = antTypeTable.findMatches(uri);
+            if(matches.size()>0) {
+                out.println();
+                out.println("The definitions in the namespace "+uri+" are:");
+                for(Iterator it=matches.iterator();it.hasNext();) {
+                    AntTypeDefinition def=(AntTypeDefinition) it.next();
+                    String local = ProjectHelper.extractNameFromComponentName(def.getName());
+                    out.println("    "+local);
+                }
+            } else {
+                out.println("No types or tasks have been defined in this namespace yet");
+                if (isAntlib) {
+                    out.println();
+                    out.println("This appears to be an antlib declaration. ");
+                    out.println("Action: Check that the implementing library exists in one of:");
+                    out.println(dirListing);
+                }
+            }
         }
     }
 
@@ -1035,6 +1056,22 @@ public class ComponentHelper  {
         public boolean containsValue(Object value) {
             return contains(value);
         }
-    }
 
+        /**
+         * Create a list of all definitions that match a prefix, usually the URI
+         * of a library
+         * @param prefix prefix to match off
+         * @return the (possibly empty) list of definitions
+         */
+        public List/*<AntTypeDefinition>*/ findMatches(String prefix) {
+            ArrayList matches=new ArrayList();
+            for (Iterator i = values().iterator(); i.hasNext() ;) {
+                AntTypeDefinition def = (AntTypeDefinition) (i.next());
+                if(def.getName().startsWith(prefix)) {
+                    matches.add(def);
+                }
+            }
+            return matches;
+        }
+    }
 }
