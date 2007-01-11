@@ -470,7 +470,10 @@ public class PropertyHelper {
      *         (including user properties).
      */
     public Hashtable getProperties() {
-        return new Hashtable(properties);
+        //avoid concurrent modification:
+        synchronized (properties) {
+            return new Hashtable(properties);
+        }
         // There is a better way to save the context. This shouldn't
         // delegate to next, it's for backward compatibility only.
     }
@@ -480,7 +483,10 @@ public class PropertyHelper {
      * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
-        return new Hashtable(userProperties);
+        //avoid concurrent modification:
+        synchronized (userProperties) {
+            return new Hashtable(userProperties);
+        }
     }
 
     /**
@@ -526,14 +532,17 @@ public class PropertyHelper {
      * @since Ant 1.6
      */
     public void copyInheritedProperties(Project other) {
-        Enumeration e = inheritedProperties.keys();
-        while (e.hasMoreElements()) {
-            String arg = e.nextElement().toString();
-            if (other.getUserProperty(arg) != null) {
-                continue;
+        //avoid concurrent modification:
+        synchronized (inheritedProperties) {
+            Enumeration e = inheritedProperties.keys();
+            while (e.hasMoreElements()) {
+                String arg = e.nextElement().toString();
+                if (other.getUserProperty(arg) != null) {
+                    continue;
+                }
+                Object value = inheritedProperties.get(arg);
+                other.setInheritedProperty(arg, value.toString());
             }
-            Object value = inheritedProperties.get(arg);
-            other.setInheritedProperty(arg, value.toString());
         }
     }
 
@@ -550,14 +559,17 @@ public class PropertyHelper {
      * @since Ant 1.6
      */
     public void copyUserProperties(Project other) {
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object arg = e.nextElement();
-            if (inheritedProperties.containsKey(arg)) {
-                continue;
+        //avoid concurrent modification:
+        synchronized (userProperties) {
+            Enumeration e = userProperties.keys();
+            while (e.hasMoreElements()) {
+                Object arg = e.nextElement();
+                if (inheritedProperties.containsKey(arg)) {
+                    continue;
+                }
+                Object value = userProperties.get(arg);
+                other.setUserProperty(arg.toString(), value.toString());
             }
-            Object value = userProperties.get(arg);
-            other.setUserProperty(arg.toString(), value.toString());
         }
     }
 

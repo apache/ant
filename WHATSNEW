@@ -36,7 +36,9 @@ Fixed bugs:
 
 * Strip out all -J arguments to non forking rmic adapters, specifically
   the Sun and Weblogic compilers.
-  Bug report 41349  
+  Bug report 41349
+
+* Synchonization issues in PropertyHelper.  Bugzilla 41353.
 
 Other changes:
 --------------
