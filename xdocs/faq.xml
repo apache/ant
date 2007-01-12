@@ -681,10 +681,27 @@ shell-prompt> m4 foo.m4 > foo
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="delete-directory-children-only">
+      <question>How can I delete everything beneath a particular directory,
+    preserving the directory itself?</question>
+      <answer>
+<p>Most users who go down this path have no problem figuring out that
+  <code>&lt;delete includeemptydirs="true" /&gt;</code> will help them.  The
+  seemingly tricky part is preserving the base directory itself,
+  which Ant includes in the directory scan. Fortunately the answer is simple:
+</p>
+        <source><![CDATA[
+<delete includeemptydirs="true">
+  <fileset dir="dirtokeep" includes="**/*" />
+</delete>
+]]></source>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="It doesn&apos;t work (as expected)">
-    <faq id="genral-advice">
+    <faq id="general-advice">
       <question>General Advice</question>
       <answer>
 
