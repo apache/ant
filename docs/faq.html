@@ -255,10 +255,14 @@
   How can I do something like <code>&lt;property name="prop"
       value="${${anotherprop}}"/&gt;</code> (double expanding the property)?
       </a></li>
+                <li><a href="#delete-directory-children-only">
+  How can I delete everything beneath a particular directory,
+      preserving the directory itself?
+      </a></li>
             </ul>
                 <h4 class="toc">It doesn't work (as expected)</h4>
         <ul>
-                <li><a href="#genral-advice">
+                <li><a href="#general-advice">
   General Advice
       </a></li>
                 <li><a href="#always-recompiles">
@@ -1085,8 +1089,23 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
   &lt;/sequential&gt;
 &lt;/macrodef&gt;
 </pre>
+                    <p class="faq">
+      <a name="delete-directory-children-only" />
+  How can I delete everything beneath a particular directory,
+      preserving the directory itself?
+    </p>
+<p>Most users who go down this path have no problem figuring out that
+  <code>&lt;delete includeemptydirs="true" /&gt;</code> will help them.  The
+  seemingly tricky part is preserving the base directory itself,
+  which Ant includes in the directory scan. Fortunately the answer is simple:
+</p>
+<pre class="code">
+&lt;delete includeemptydirs="true"&gt;
+  &lt;fileset dir="dirtokeep" includes="**/*" /&gt;
+&lt;/delete&gt;
+</pre>
                                 <p class="faq">
-      <a name="genral-advice"></a>
+      <a name="general-advice"></a>
       General Advice
     </p>
                   <p>There are many reasons why Ant doesn't behave as
@@ -2029,14 +2048,3 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </p>
     </body>
   </html>
-
-
-
-
-
-
-
-
-
-
-
