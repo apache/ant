@@ -343,6 +343,10 @@
             </ul>
                 <h4 class="toc">Known Problems</h4>
         <ul>
+                <li><a href="#170-requires-junit">
+  Ant 1.7.0 doesn't build from sources without
+        JUnit
+      </a></li>
                 <li><a href="#remove-cr">
   &lt;chmod&gt; or &lt;exec&gt; doesn't work in Ant
         1.3 on Unix
@@ -1623,6 +1627,27 @@ public void buildFinished(BuildEvent e) {
         files that your project does, since it will give the correct
         results for properties that were specified on the Ant command line.</p>
                                 <p class="faq">
+      <a name="170-requires-junit"></a>
+      Ant 1.7.0 doesn't build from sources without
+        JUnit
+    </p>
+                  <p>When building Ant 1.7.0 from the source release without
+        junit.jar the build fails with the message "We cannot build
+        the test jar unless JUnit is present".</p>
+                        <p>With Ant 1.7.0 we've started to add ant-testutil.jar as
+        part of the distribution and this causes a hard dependency on
+        JUnit - at least in version 1.7.0.  Unfortunately the
+        installation docs don't say so.</p>
+                        <p>There are two workarounds:</p>
+                        <ol>
+
+          <li>Add junit.jar to your CLASSPATH when building Ant.</li>
+
+          <li>Change Ant's buildfile and remove test-jar from the
+          depends list of the dist-lite target.</li>
+
+        </ol>
+                    <p class="faq">
       <a name="remove-cr"></a>
       &lt;chmod&gt; or &lt;exec&gt; doesn't work in Ant
         1.3 on Unix
