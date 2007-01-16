@@ -24,6 +24,7 @@ import java.util.Enumeration;
 /**
  * The <tt>Xor</tt> condition type to exclusive or operations.
  * This does not shortcut stuff.
+ * @since Ant 1.7
  */
 public class Xor extends ConditionBase implements Condition {
 
