@@ -1,0 +1,16 @@
+<root-tag>
+  <!--used to check that the ordering of attribute expansion/eval is the order of
+  declaration in the build file, not alphabetical
+
+    expectations are
+      p : ${app.n}
+      n : n
+      o : n
+      m : n
+  -->
+  <app
+      p="${app.n}"
+      n="n"
+      o="${app.n}"
+      m="${app.n}"/>
+</root-tag>
