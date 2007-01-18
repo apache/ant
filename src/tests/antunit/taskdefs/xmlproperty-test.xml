@@ -15,7 +15,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testInlineExpansion">
+  <target name="load">
     <xmlproperty
         file="xmlproperty.inline-expansion.xml"
         collapseAttributes="true"
@@ -28,16 +28,23 @@
     o            n        ${app.o}
     m            n        ${app.m}
     </echo>
-    <au:assertPropertyEquals name="app.p" value="${app.n}"/>
+  </target>
+
+  <target name="testInlineExpansion" depends="load">
+    <au:assertPropertyEquals name="app.m" value="n"/>
     <au:assertPropertyEquals name="app.n" value="n"/>
     <au:assertPropertyEquals name="app.o" value="n"/>
-    <au:assertPropertyEquals name="app.m" value="n"/>
-    <au:assertEquals actual="${app.n}" expected="n"/>
-    <au:assertEquals actual="${app.o}" expected="n"/>
-    <au:assertEquals actual="${app.m}" expected="n"/>
+    <au:assertPropertyEquals name="app.p" value="$${app.n}"/>
+    <property name="sequence" value="${app.m}${app.n}${app.o}${app.p}"/>
     <fail>
-      <not> 
-      </not>
+      xml attributes are not expanding correctly
+      expected: mnop=nnn$${app.n}
+      actual    mnop=${sequence}
+      <condition>
+        <not>
+          <equals arg1="${sequence}" arg2="nnn${app.n}"/>
+        </not>
+      </condition>
     </fail>
   </target>
 </project>
