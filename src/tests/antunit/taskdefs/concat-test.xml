@@ -1,0 +1,24 @@
+<project xmlns:au="antlib:org.apache.ant.antunit">
+  <target name="tearDown">
+    <delete file="binaryAppendDest" />
+  </target>
+
+  <target name="testBinaryAppend">
+    <au:assertTrue message="prerequisite conditions unmet">
+      <length length="0">
+        <!-- allow for nonexistent OR zero-length: -->
+        <fileset file="binaryAppendDest" />
+      </length>
+    </au:assertTrue>
+    <echo file="binaryAppendDest">x</echo>
+    <au:assertTrue message="destfile setup failed">
+      <length length="1" file="binaryAppendDest" />
+    </au:assertTrue>
+    <concat append="true" destfile="binaryAppendDest" binary="true">
+      <string value="x" />
+    </concat>
+    <au:assertTrue message="expected length 2">
+      <length file="binaryAppendDest" length="2" />
+    </au:assertTrue>
+  </target>
+</project>

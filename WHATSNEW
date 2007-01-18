@@ -40,6 +40,8 @@ Fixed bugs:
 
 * Synchonization issues in PropertyHelper.  Bugzilla 41353.
 
+* <concat binary="true" append="true"> did not append.  Bugzilla 41399.
+
 Other changes:
 --------------
 

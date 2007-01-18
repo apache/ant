@@ -479,7 +479,7 @@ public class Concat extends Task {
         InputStream in = null;
         try {
             try {
-                out = new FileOutputStream(destinationFile);
+                out = new FileOutputStream(destinationFile, append);
             } catch (Exception t) {
                 throw new BuildException("Unable to open "
                     + destinationFile + " for writing", t);
