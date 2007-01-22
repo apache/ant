@@ -756,7 +756,10 @@ public class JUnitTask extends Task {
         if (splitJunit) {
             Path path = new Path(getProject());
             path.add(antRuntimeClasses);
-            path.add(getCommandline().getClasspath());
+            Path extra = getCommandline().getClasspath();
+            if (extra != null) {
+                path.add(extra);
+            }
             mirrorLoader = new SplitLoader(myLoader, path);
         } else {
             mirrorLoader = myLoader;

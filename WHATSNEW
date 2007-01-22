@@ -7,6 +7,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* <junit> in Ant 1.7.0 could throw NPE if no <classpath> was defined.
+  Bugzilla report 41422.
+
 * In Ant 1.7.0, <fileset> in <javadoc> does not by default include only
   **/*.java as the documentation claims and earlier revisions did.
   Bugzilla report 41264.
