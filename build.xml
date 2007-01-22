@@ -1439,13 +1439,15 @@
          Installs Apache Ant
        ===================================================================
   -->
-  <target name="install" if="ant.install">
+  <target name="install">
+    <fail message="You must set the property ant.install=/where/to/install" unless="ant.install"/>
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${ant.install}"/>
     </antcall>
   </target>
 
-  <target name="install-lite" if="ant.install">
+  <target name="install-lite">
+    <fail message="You must set the property ant.install=/where/to/install" unless="ant.install"/>
     <antcall inheritAll="false" target="dist-lite">
       <param name="dist.dir" value="${ant.install}"/>
     </antcall>
