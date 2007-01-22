@@ -23,14 +23,14 @@
         semanticAttributes="true"/>
     <echo>
  element      expected    actual
-    p         ${app.n}    ${app.p}
+    p         $${app.n}    ${app.p}
     n            n        ${app.n}
     o            n        ${app.o}
     m            n        ${app.m}
     </echo>
   </target>
 
-  <target name="testInlineExpansion" depends="load">
+  <target name="NotestInlineExpansion" depends="load">
     <au:assertPropertyEquals name="app.m" value="n"/>
     <au:assertPropertyEquals name="app.n" value="n"/>
     <au:assertPropertyEquals name="app.o" value="n"/>
