@@ -70,10 +70,10 @@ class ProcessDestroyer implements Runnable {
      * removing a process results in an empty list, the
      * <code>ProcessDestroyer</code> is removed as a shutdown hook.
      */
-    public ProcessDestroyer() {
+    ProcessDestroyer() {
         try {
             // check to see if the shutdown hook methods exists
-            // (support pre-JDK 1.3 VMs)
+            // (support pre-JDK 1.3 and Non-Sun VMs)
             Class[] paramTypes = {Thread.class};
             addShutdownHookMethod =
                 Runtime.class.getMethod("addShutdownHook", paramTypes);
