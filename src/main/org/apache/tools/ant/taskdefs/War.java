@@ -221,7 +221,7 @@ public class War extends Jar {
             && needxmlfile
             && !isInUpdateMode()) {
             throw new BuildException("No WEB-INF/web.xml file was added.\n"
-                    + "If this is your intent, set needxml='false' ");
+                    + "If this is your intent, set needxmlfile='false' ");
         }
         addedWebXmlFile = null;
         super.cleanUp();
