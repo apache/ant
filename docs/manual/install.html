@@ -256,6 +256,19 @@ libraries must be added to Ant's classpath, in any of the following ways
         the JAR files visible to <i>all</i> Java applications, and causes
         no end of support calls.
     </li>
+
+    <li>
+        In some <code>&lt;classpath&gt;</code> accepted by the task itself.
+        For example, as of Ant 1.7.0 you can run the <code>&lt;junit&gt;</code>
+        task without <code>junit.jar</code> in Ant's own classpath, so long as
+        it is included (along with your program and tests) in the classpath
+        passed when running the task. Where possible, this option is generally
+        to be preferred, as the Ant script itself can determine the best path
+        to load the library from: via relative path from the basedir (if you
+        keep the library under version control with your project), according
+        to Ant properties, environment variables, Ivy downloads, whatever you like.
+    </li>
+
 </ul>
 
 <p>
