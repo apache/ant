@@ -294,7 +294,11 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         } catch (Exception e) {
             String failMsg = "Problem exec'ing P4 command: " + e.getMessage();
             if (failOnError) {
-                throw new BuildException(failMsg);
+                if (e instanceof BuildException) {
+                    throw (BuildException) e;
+                } else {
+                    throw new BuildException(failMsg, e);
+                }
             } else {
                 log(failMsg, Project.MSG_ERR);
             }
