@@ -235,39 +235,45 @@ packaged together with the core Ant tasks.</p>
 
 <p>The external libraries required by each of the optional tasks is detailed
 in the <a href="#librarydependencies">Library Dependencies</a> section. These external
-libraries must be added to Ant's classpath, in any of the following ways
+libraries must be added to Ant's classpath, in any of the following ways:
 </p>
 <ul>
-    <li>In ANT_HOME/lib. This makes the JAR files available to all
-    Ant users and builds</li>
+    <li><p>
+        In <code><i>ANT_HOME</i>/lib</code>. This makes the JAR files available to all
+        Ant users and builds.
+    </p></li>
 
-    <li>
-        In ${user.home}/.ant/lib . This is a new feature since Ant1.6,
-        and allows different users to add new libraries to Ant. All JAR files
+    <li><p>
+        In <code>${user.home}/.ant/lib</code> (as of Ant 1.6). This
+        allows different users to add new libraries to Ant. All JAR files
         added to this directory are available to command-line Ant.
-    </li>
+    </p></li>
 
-    <li>
+    <li><p>
         On the command line with a <code>-lib</code> parameter. This lets
         you add new JAR files on a case-by-case basis.
-    </li>
+    </p></li>
 
-    <li>In the CLASSPATH environment variable. Avoid this; it makes
+    <li><p>
+        In the <code>CLASSPATH</code> environment variable. Avoid this; it makes
         the JAR files visible to <i>all</i> Java applications, and causes
-        no end of support calls.
+        no end of support calls. See <a href="#classpath">below</a> for details.
+        </p>
     </li>
 
-    <li>
+    <li><p>
         In some <code>&lt;classpath&gt;</code> accepted by the task itself.
         For example, as of Ant 1.7.0 you can run the <code>&lt;junit&gt;</code>
         task without <code>junit.jar</code> in Ant's own classpath, so long as
         it is included (along with your program and tests) in the classpath
-        passed when running the task. Where possible, this option is generally
+        passed when running the task.
+        </p><p>
+        Where possible, this option is generally
         to be preferred, as the Ant script itself can determine the best path
         to load the library from: via relative path from the basedir (if you
         keep the library under version control with your project), according
         to Ant properties, environment variables, Ivy downloads, whatever you like.
-    </li>
+    </p></li>
 
 </ul>
 
@@ -277,10 +283,10 @@ libraries must be added to Ant's classpath, in any of the following ways
     added to a project are automatically added to ant's classpath.
 </p>
 
-<h3><a name="classpath">The CLASSPATH environment variable</a></h3>
+<h3><a name="classpath">The <code>CLASSPATH</code> environment variable</a></h3>
 <p>
 
-The CLASSPATH environment variable is a source of many Ant support queries. As
+The <code>CLASSPATH</code> environment variable is a source of many Ant support queries. As
 the round trip time for diagnosis on the Ant user mailing list can be slow, and
 because filing bug reports complaining about 'ant.bat' not working will be
 rejected by the developers as WORKSFORME "this is a configuration problem, not a
@@ -290,21 +296,21 @@ simple steps.
 </p>
 <ol>
 
-<li>Do not ever set CLASSPATH. Ant does not need it, it only causes confusion
+<li>Do not ever set <code>CLASSPATH</code>. Ant does not need it, it only causes confusion
 and breaks things.
 
 </li>
 
 <li>If you ignore the previous rule, do not ever, ever, put quotes in the
-CLASSPATH, even if there is a space in a directory. This will break Ant, and it
+<code>CLASSPATH</code>, even if there is a space in a directory. This will break Ant, and it
 is not needed. </li>
 
 <li>If you ignore the first rule, do not ever, ever, have a trailing backslash
-in a CLASSPATH, as it breaks Ant's ability to quote the string. Again, this is
-not needed for the correct operation of the CLASSPATH environment variable, even
+in a <code>CLASSPATH</code>, as it breaks Ant's ability to quote the string. Again, this is
+not needed for the correct operation of the <code>CLASSPATH</code> environment variable, even
 if a DOS directory is to be added to the path. </li>
 
-<li>You can stop Ant using the CLASSPATH environment variable by setting the
+<li>You can stop Ant using the <code>CLASSPATH</code> environment variable by setting the
 <code>-noclasspath</code> option on the command line. This is an easy way
 to test for classpath-related problems.</li>
 
@@ -312,14 +318,29 @@ to test for classpath-related problems.</li>
 
 <p>
 
-The usual symptom of CLASSPATH problems is that ant will not run with some error
-about not being able to find <code>org.apache.tools.Ant.main</code>, or, if you have got the
+The usual symptom of <code>CLASSPATH</code> problems is that ant will not run with some error
+about not being able to find <code>org.apache.tools.ant.launch.Launcher</code>, or, if you have got the
 quotes/backslashes wrong, some very weird Java startup error. To see if this is
-the case, run <code>ant -noclasspath</code> or unset the CLASSPATH environment
+the case, run <code>ant -noclasspath</code> or unset the <code>CLASSPATH</code> environment
 variable.
 
 </p>
 
+<p>
+You can also make your Ant script reject this environment
+variable just by placing the following at the top of the script (or in an init target):
+</p>
+<pre>
+&lt;property environment="env."/&gt;
+&lt;property name="env.CLASSPATH" value=""/&gt;
+&lt;fail message="Unset $CLASSPATH / %CLASSPATH% before running Ant!"&gt;
+    &lt;condition&gt;
+        &lt;not&gt;
+            &lt;equals arg1="${env.CLASSPATH}" arg2=""/&gt;
+        &lt;/not&gt;
+    &lt;/condition&gt;
+&lt;/fail&gt;
+</pre>
 
 <h3><a name="proxy">Proxy Configuration</a></h3>
 
@@ -836,7 +857,7 @@ your location, then dependency logic may get confused.
 
 <p> If you cannot get Ant installed or working, the Ant user mailing list is the
 best place to start with any problem. Please do your homework first, make sure
-that it is not a <a href="#classpath">CLASSPATH</a> problem, and run a <a
+that it is not a <a href="#classpath"><code>CLASSPATH</code></a> problem, and run a <a
 href="#diagnostics">diagnostics check</a> to see what Ant thinks of its own
 state. Why the user list, and not the developer list?
 Because there are more users than developers, so more people who can help you. </p>
