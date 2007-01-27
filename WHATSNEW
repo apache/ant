@@ -6,6 +6,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Bug in org.apache.tools.ant.types.resources.comparators.Date
+  Bugzilla report 41411
 
 * <junit> in Ant 1.7.0 could throw NPE if no <classpath> was defined.
   Bugzilla report 41422.

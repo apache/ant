@@ -32,7 +32,14 @@ public class Date extends ResourceComparator {
      *         argument is less than, equal to, or greater than the second.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        return (int) (foo.getLastModified() - bar.getLastModified());
+        long diff = foo.getLastModified() - bar.getLastModified();
+        if (diff > 0) {
+            return +1;
+        } else if (diff < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
 }
