@@ -94,22 +94,7 @@ public class DependSet extends MatchingTask {
             super.add(NOT_EXISTS);
         }
     }
-    private static class Xest extends Sort {
-        private Xest(ResourceCollection rc, ResourceComparator c) {
-            super.add(c);
-            super.add(rc);
-        }
-    }
-    private static class Oldest extends Xest {
-        private Oldest(ResourceCollection rc) {
-            super(rc, DATE_ASC);
-        }
-    }
-    private static class Newest extends Xest {
-        private Newest(ResourceCollection rc) {
-            super(rc, DATE_DESC);
-        }
-    }
+
     private static class HideMissingBasedir implements ResourceCollection {
         private FileSet fs;
 
@@ -220,7 +205,7 @@ public class DependSet extends MatchingTask {
             log(neTargets + " nonexistent targets", Project.MSG_VERBOSE);
             return false;
         }
-        FileResource oldestTarget = (FileResource) (new Oldest(targets).iterator().next());
+        FileResource oldestTarget = (FileResource) getOldest(targets);
         log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
 
         logFuture(sources, datesel);
@@ -230,7 +215,7 @@ public class DependSet extends MatchingTask {
             log(neSources + " nonexistent sources", Project.MSG_VERBOSE);
             return false;
         }
-        Resource newestSource = (Resource) (new Newest(sources).iterator().next());
+        Resource newestSource = (Resource) getNewest(sources);
         log(newestSource.toLongString() + " is newest source", Project.MSG_VERBOSE);
         return oldestTarget.getLastModified() >= newestSource.getLastModified();
     }
@@ -243,4 +228,29 @@ public class DependSet extends MatchingTask {
             log("Warning: " + i.next() + " modified in the future.", Project.MSG_WARN);
         }
     }
+
+    private Resource getXest(ResourceCollection rc, ResourceComparator c) {
+        Iterator i = rc.iterator();
+        if (!i.hasNext()) {
+            return null;
+
+        }
+        Resource xest = (Resource) i.next();
+        while (i.hasNext()) {
+            Resource next = (Resource) i.next();
+            if (c.compare(xest, next) < 0) {
+                xest = next;
+            }
+        }
+        return xest;
+    }
+
+    private Resource getOldest(ResourceCollection rc) {
+        return getXest(rc, DATE_ASC);
+    }
+
+    private Resource getNewest(ResourceCollection rc) {
+        return getXest(rc, DATE_DESC);
+    }
+
 }

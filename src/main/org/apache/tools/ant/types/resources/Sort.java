@@ -35,6 +35,10 @@ import org.apache.tools.ant.types.resources.comparators.DelegatedResourceCompara
 
 /**
  * ResourceCollection that sorts another ResourceCollection.
+ *
+ * Note that Sort must not be used in cases where the ordering of the objects
+ * being sorted might change during the sorting process.
+ *
  * @since Ant 1.7
  */
 public class Sort extends BaseResourceCollectionWrapper {
