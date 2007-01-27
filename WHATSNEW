@@ -6,6 +6,10 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Dependset crashes ant when timestamp on files change during Dependset
+  execution.
+  Bugzilla report 41284
+
 * Bug in org.apache.tools.ant.types.resources.comparators.Date
   Bugzilla report 41411
 
