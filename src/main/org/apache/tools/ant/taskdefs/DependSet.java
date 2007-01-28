@@ -84,9 +84,9 @@ import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 public class DependSet extends MatchingTask {
 
     private static final ResourceSelector NOT_EXISTS = new Not(new Exists());
-    private static final ResourceComparator DATE_ASC
+    private static final ResourceComparator DATE
         = new org.apache.tools.ant.types.resources.comparators.Date();
-    private static final ResourceComparator DATE_DESC = new Reverse(DATE_ASC);
+    private static final ResourceComparator REVERSE_DATE = new Reverse(DATE);
 
     private static class NonExistent extends Restrict {
         private NonExistent(ResourceCollection rc) {
@@ -246,11 +246,11 @@ public class DependSet extends MatchingTask {
     }
 
     private Resource getOldest(ResourceCollection rc) {
-        return getXest(rc, DATE_ASC);
+        return getXest(rc, REVERSE_DATE);
     }
 
     private Resource getNewest(ResourceCollection rc) {
-        return getXest(rc, DATE_DESC);
+        return getXest(rc, DATE);
     }
 
 }
