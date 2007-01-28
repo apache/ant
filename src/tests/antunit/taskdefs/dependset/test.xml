@@ -46,19 +46,25 @@
   </target>
 
   <target name="test6">
-    <touch file="older.tmp" />
+    <touch file="sourceset_1.tmp" />
+  	<touch file="targetset_1.tmp" />
     <sleep seconds="3" />
-    <touch file="newer.tmp" />
+  	<touch file="sourceset_2.tmp" />
+  	<touch file="targetset_2.tmp" />
+  	<sleep seconds="2" />	
     <dependset>
       <sources>
-        <file file="newer.tmp" />
+        <filelist dir="." files="sourceset_1.tmp,sourceset_2.tmp" />
       </sources>
       <targets>
-        <filelist dir="." files="older.tmp" />
+        <filelist dir="." files="targetset_1.tmp,targetset_2.tmp" />
       </targets>
     </dependset>
     <au:assertFalse>
-      <available file="older.tmp" />
+      <available file="targetset_1.tmp" />
+    </au:assertFalse>
+    <au:assertFalse>
+      <available file="targetset_2.tmp" />
     </au:assertFalse>
   </target>
 
@@ -109,5 +115,10 @@
     <delete file="test9.tmp" />
     <delete file="older.tmp" />
     <delete file="newer.tmp" />
+  	<delete file="sourceset_1.tmp" />
+   	<delete file="sourceset_2.tmp" />
+  	<delete file="targetset_1.tmp" />
+  	<delete file="targetset_2.tmp" />
+  	
   </target>
 </project>
