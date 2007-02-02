@@ -21,15 +21,15 @@ package org.apache.tools.ant.taskdefs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +42,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -49,6 +50,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.spi.Service;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipOutputStream;
@@ -267,13 +269,7 @@ public class Jar extends Zip {
                                      + manifestFile
                                      + " (" + e.getMessage() + ")", e);
         } finally {
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException e) {
-                    // do nothing
-                }
-            }
+            FileUtils.close(isr);
         }
         return newManifest;
     }
@@ -767,13 +763,7 @@ public class Jar extends Zip {
                                      getLocation());
         } finally {
             // Close the output stream.
-            try {
-                if (zOut != null) {
-                    zOut.close();
-                }
-            } catch (IOException ex) {
-                // Ignore close exception
-            }
+            FileUtils.close(zOut);
             createEmpty = false;
         }
         return true;
