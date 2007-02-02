@@ -75,7 +75,6 @@
       <div class="bluebar"></div>
                     
   <div class="menucontainer">
-
     <div class="menu">
       <ul>
               <li class="menuheader">Apache Ant
@@ -163,6 +162,9 @@
         </li>
             </ul>
     </div>
+    <center>
+    <!--#include virtual="/ads/buttonbar.html" -->
+    </center>
     <img style="float: left" height="10" width="10" border="0" alt="" src="./images/menu-left.gif">
     <img style="float: right" height="10" width="10" border="0" alt="" src="./images/menu-right.gif">
   </div>
@@ -257,7 +259,7 @@
       </a></li>
                 <li><a href="#delete-directory-children-only">
   How can I delete everything beneath a particular directory,
-      preserving the directory itself?
+    preserving the directory itself?
       </a></li>
             </ul>
                 <h4 class="toc">It doesn't work (as expected)</h4>
@@ -1090,18 +1092,18 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
 &lt;/macrodef&gt;
 </pre>
                     <p class="faq">
-      <a name="delete-directory-children-only" />
-  How can I delete everything beneath a particular directory,
-      preserving the directory itself?
+      <a name="delete-directory-children-only"></a>
+      How can I delete everything beneath a particular directory,
+    preserving the directory itself?
     </p>
-<p>Most users who go down this path have no problem figuring out that
+                  <p>Most users who go down this path have no problem figuring out that
   <code>&lt;delete includeemptydirs="true" /&gt;</code> will help them.  The
   seemingly tricky part is preserving the base directory itself,
   which Ant includes in the directory scan. Fortunately the answer is simple:
 </p>
-<pre class="code">
-&lt;delete includeemptydirs="true"&gt;
-  &lt;fileset dir="dirtokeep" includes="**/*" /&gt;
+                        <pre class="code">
+&lt;delete includeemptydirs=&quot;true&quot;&gt;
+  &lt;fileset dir=&quot;dirtokeep&quot; includes=&quot;**/*&quot; /&gt;
 &lt;/delete&gt;
 </pre>
                                 <p class="faq">
@@ -2048,3 +2050,14 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </p>
     </body>
   </html>
+
+
+
+
+
+
+
+
+
+
+
