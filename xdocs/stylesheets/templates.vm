@@ -194,12 +194,6 @@
 #macro (makeProject $menus)
 
   <div class="menucontainer">
-#*    <div align="center">
-      <a href="http://ApacheCon.Com/"><img width="125" height="125"
-             border="0" style="background-color: white"
-             src="http://www.apache.org/images/ac2005us_blue_125x125.jpg"
-             alt="ApacheCon!" title="Come to ApacheCon!"/></a>
-    </div> *#
     <div class="menu">
       <ul>
       #foreach ( $menu in $menus )
@@ -221,6 +215,9 @@
       #end
       </ul>
     </div>
+    <center>
+    <!--$pound$ssi"$adsurl" -->
+    </center>
     <img style="float: left" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif">
     <img style="float: right" height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif">
   </div>

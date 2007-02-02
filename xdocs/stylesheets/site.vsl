@@ -29,6 +29,8 @@
     #set ($blue1 = "#CFDCED")
     #set ($sourceborder = "#023264")
     #set ($pound = "#" )
+    #set ($ssi = "include virtual=")
+    #set ($adsurl = "/ads/buttonbar.html")
 ## start the processing
 #document()
 ## end the processing
