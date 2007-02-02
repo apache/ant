@@ -899,13 +899,7 @@ public class Zip extends MatchingTask {
                                      + "(" + ioe.getMessage() + ")", ioe,
                                      getLocation());
         } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
+            FileUtils.close(os);
         }
         return true;
     }
