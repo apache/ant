@@ -6,6 +6,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Replace task summary output incorrect.
+  Bugzilla report 41544
+
 * Dependset crashes ant when timestamp on files change during Dependset
   execution.
   Bugzilla report 41284

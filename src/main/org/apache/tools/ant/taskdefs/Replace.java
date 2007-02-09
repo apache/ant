@@ -625,6 +625,7 @@ public class Replace extends MatchingTask {
 
             boolean changes = (replaceCount != repCountStart);
             if (changes) {
+                fileCount++;
                 FILE_UTILS.rename(temp, src);
                 temp = null;
             }
