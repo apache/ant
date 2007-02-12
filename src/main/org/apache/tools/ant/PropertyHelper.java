@@ -327,7 +327,9 @@ public class PropertyHelper {
             project.log("Setting project property: " + name + " -> "
                 + value, Project.MSG_DEBUG);
         }
-        properties.put(name, value);
+        if (name != null && value != null) {
+            properties.put(name, value);
+        }
         return true;
     }
 
