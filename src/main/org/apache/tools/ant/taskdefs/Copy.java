@@ -88,12 +88,12 @@ public class Copy extends Task {
 
     protected Mapper mapperElement = null;
     protected FileUtils fileUtils;
+    //CheckStyle:VisibilityModifier ON
     private Vector filterChains = new Vector();
     private Vector filterSets = new Vector();
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;
-    // CheckStyle:VisibilityModifier ON
 
     /**
      * Copy task constructor.
