@@ -18,16 +18,21 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.TeeOutputStream;
-import org.apache.tools.ant.util.KeepAliveOutputStream;
-
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
@@ -51,6 +56,8 @@ public class SSHExec extends SSHBase {
     private String outputProperty = null;   // like <exec>
     private File outputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
+    
+    private Resource commandResource = null;
 
     private static final String TIMEOUT_MESSAGE =
         "Timeout period exceeded, connection dropped.";
@@ -71,6 +78,15 @@ public class SSHExec extends SSHBase {
         this.command = command;
     }
 
+    /**
+     * Sets a commandResource from a file
+     * @param f
+     * @since Ant 1.7.1
+     */
+    public void setCommandResource(String f) {
+        this.commandResource = new FileResource(new File(f));
+    }
+    
     /**
      * The connection can be dropped after a specified number of
      * milliseconds. This is sometimes useful when a connection may be
@@ -128,24 +144,43 @@ public class SSHExec extends SSHBase {
             && getUserInfo().getPassword() == null) {
             throw new BuildException("Password or Keyfile is required.");
         }
-        if (command == null) {
-            throw new BuildException("Command is required.");
+        if (command == null && commandResource == null) {
+            throw new BuildException("Command or commandFile is required.");
         }
 
+        /* called once */
+        if (command != null) {
+            executeCommand(command);
+        } else { // read command resource and execute for each command
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(commandResource.getInputStream()));
+                String cmd;
+                while((cmd = br.readLine()) != null) {
+                    log("cmd : "+cmd, Project.MSG_INFO);
+                    executeCommand(cmd);
+                }
+                FileUtils.close(br);
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+        }
+    }
+    
+    private void executeCommand(String cmd) throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
 
         Session session = null;
         try {
-            // execute the command
+            final ChannelExec channel;
+            /* execute the command */
             session = openSession();
             session.setTimeout((int) maxwait);
-            final ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand(command);
+            channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand(cmd);
             channel.setOutputStream(tee);
             channel.setExtOutputStream(tee);
             channel.connect();
-
             // wait for it to finish
             thread =
                 new Thread() {
@@ -225,7 +260,6 @@ public class SSHExec extends SSHBase {
         }
     }
 
-
     /**
      * Writes a string to a file. If destination file exists, it may be
      * overwritten depending on the "append" value.
@@ -257,5 +291,4 @@ public class SSHExec extends SSHBase {
             }
         }
     }
-
 }
