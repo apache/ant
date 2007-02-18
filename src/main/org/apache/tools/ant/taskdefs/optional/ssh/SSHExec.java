@@ -145,7 +145,7 @@ public class SSHExec extends SSHBase {
             throw new BuildException("Password or Keyfile is required.");
         }
         if (command == null && commandResource == null) {
-            throw new BuildException("Command or commandFile is required.");
+            throw new BuildException("Command or commandResource is required.");
         }
 
         /* called once */
