@@ -60,7 +60,7 @@
 
     <touch file="get.tmp" datetime="${dt}" pattern="${pat}" />
 
-    <get src="http://www.apache.org/" dest="get.tmp"
+    <get src="http://www.w3.org/MarkUp" dest="get.tmp"
          usetimestamp="true" verbose="true" />
 
     <fileset id="ts" file="get.tmp">
