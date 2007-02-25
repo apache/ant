@@ -26,9 +26,9 @@
 
 <section name="Nightly Builds">
 
-<p>
-Nightly builds are currently unavailable due to an infrastructure problem.
-(Feb 22 2007).</p>
+<p>If you wish to use the latest Ant features, you can try downloading a
+<a href="http://people.apache.org/builds/ant/nightly/">nightly build</a>.
+</p>
 
 <p>If you want to build Ant from sources, you can use a <a
 href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
