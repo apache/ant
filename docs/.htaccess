@@ -1,0 +1,3 @@
+<Files "index.html">
+  SetOutputFilter INCLUDES
+</Files>
