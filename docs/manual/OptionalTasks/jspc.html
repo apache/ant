@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="jspc">jspc</a></h2>
+<h2><a name="jspc">jspc (deprecated)</a></h2>
 <h3>Description</h3>
 
 <p> Ant task to run the JSP compiler and turn JSP pages into Java source.
@@ -33,11 +33,17 @@
 compiler, you should seriously consider using the task shipping with
 Tomcat instead.  This task is only tested against Tomcat 4.x. There
 are known problems with Tomcat 5.x that won't get fixed in Ant, please
-use Tomcat's jspc task instead.</p>
+use Tomcat's jspc task instead.<br/>
+Instead of relying on container specific JSP-compilers we suggest deploying 
+the raw files (*.jsp) and use the container build-in functions: after deploying run
+a test suite (e.g. with <a href="http://jakarta.apache.org/cactus/">Cactus</a> or 
+<a href="http://httpunit.sourceforge.net/">HttpUnit</a>) against the deployed web 
+application. So you'll get the test result <i>and</i> the compiled JSPs.
+</p>
 
 <p>
 
-It can be used to precompile JSP pages for fast initial invocation
+This task can be used to precompile JSP pages for fast initial invocation
 of JSP pages, deployment on a server without the full JDK installed,
 or simply to syntax check the pages without deploying them.
 In most cases, a javac task is usually the next stage in the build process.
