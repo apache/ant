@@ -1,3 +1,1 @@
-<Files "index.html">
-  SetOutputFilter INCLUDES
-</Files>
+AddOutputFilter INCLUDES .html
