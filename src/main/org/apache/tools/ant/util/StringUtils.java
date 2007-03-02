@@ -201,28 +201,43 @@ public final class StringUtils {
      * @since Ant 1.7
      */
     public static long parseHumanSizes(String humanSize) throws Exception {
+        long factor = 1L;
+        char s = humanSize.charAt(0);
+        switch (s) {
+            case '+':
+                humanSize = humanSize.substring(1);
+                break;
+            case '-':
+                factor = -1L;
+                humanSize = humanSize.substring(1);
+                break;
+            default:
+                break;
+        }
         //last character isn't a digit
-        if (!Character.isDigit(humanSize.charAt(humanSize.length() - 1))) {
-            char c = humanSize.charAt(humanSize.length() - 1);
-            long value = Long.valueOf(
-                humanSize.substring(
-                    0, humanSize.length() - 1)).longValue();
+        char c = humanSize.charAt(humanSize.length() - 1);
+        if (!Character.isDigit(c)) {
             switch (c) {
                 case 'K':
-                    return value * KILOBYTE;
+                    factor *= KILOBYTE;
+                    break;
                 case 'M':
-                    return value * MEGABYTE;
+                    factor *= MEGABYTE;
+                    break;
                 case 'G':
-                    return value * GIGABYTE;
+                    factor *= GIGABYTE;
+                    break;
                 case 'T':
-                    return value * TERABYTE;
+                    factor *= TERABYTE;
+                    break;
                 case 'P':
-                    return value * PETABYTE;
+                    factor *= PETABYTE;
+                    break;
                 default:
-                    return value;
+                    break;
             }
-        } else {
-            return Long.parseLong(humanSize);
+            humanSize = humanSize.substring(0, humanSize.length() - 1);
         }
+        return factor * Long.parseLong(humanSize);
     }
 }
