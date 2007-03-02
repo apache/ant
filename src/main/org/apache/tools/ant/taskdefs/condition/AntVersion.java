@@ -41,7 +41,15 @@ public class AntVersion extends Task implements Condition {
         if (propertyname == null) {
             throw new BuildException("'property' must be set.");
         }
-        getProject().setNewProperty(propertyname, getVersion().toString());
+        if (atLeast!=null || exactly!=null) {
+            // If condition values are set, evaluate the condition
+            if (eval()) {
+                getProject().setNewProperty(propertyname, getVersion().toString());
+            }
+        } else {
+            // Raw task
+            getProject().setNewProperty(propertyname, getVersion().toString());
+        }
     }
 
     /**

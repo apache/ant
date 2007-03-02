@@ -23,8 +23,27 @@
     
   <target name="test-task">
     <antversion property="antversion"/>
-    <au:assertPropertyEquals name="antversion" value="1.7.1"/>
+    <au:assertPropertySet name="antversion" message="Property 'antversion' should be set."/>
+    <echo>AntVersion=${antversion}</echo>  
   </target>    
+    
+  <target name="test-property-conditional1">
+    <antversion property="antversion" atleast="2.0.0"/>
+    <au:assertTrue message="Property 'antversion' should not be set because this is not Ant 2.0.0+.">
+      <not>
+        <isset property="antversion"/>  
+      </not>  
+    </au:assertTrue>  
+  </target>
+    
+  <target name="test-property-conditional2">
+    <antversion property="antversion" atleast="1.7.0"/>
+    <au:assertTrue message="Property 'antversion' should be set because we should have Ant 1.7.0+ (${ant.version}).">
+      <isset property="antversion"/>  
+    </au:assertTrue>  
+  </target>
+    
+      
 
   <target name="all">
     <au:antunit>
