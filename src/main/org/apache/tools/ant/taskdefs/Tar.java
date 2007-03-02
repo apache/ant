@@ -587,7 +587,6 @@ public class Tar extends MatchingTask {
                 upToDate &= archiveIsUpToDate(r);
             }
         }
-
         return upToDate;
     }
 
