@@ -79,7 +79,9 @@ Other changes:
 
 * If you try and use a type in a namespace (or an antlib), and the type is not
   recognized but there are other definitions in that namespace, Ant lists what
-  the known definitions are. This helps you find spelling errors. 
+  the known definitions are. This helps you find spelling errors.
+
+* Add a <last> resource collection, corresponding to <first>.
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

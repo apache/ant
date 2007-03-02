@@ -153,7 +153,7 @@ implementations are also usable as single-element
 
 <p>The classpath can also be specified as nested classpath element,
 where <b>&lt;classpath&gt;</b> is a <a
-href="../using.html#path">path-like</a> structure.</p>
+href="../using.html#path">path-like structure</a>.</p>
 
 <h4><a name="zipentry">zipentry</a></h4>
 
@@ -316,6 +316,8 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
     to include only resources meeting specified criteria</li>
   <li><a href="#sort">sort</a> - sorted resource collection</li>
   <li><a href="#first">first</a> - first <i>n</i> resources from a
+    nested collection</li>
+  <li><a href="#last">last</a> - last <i>n</i> resources from a
     nested collection</li>
   <li><a href="#tokens">tokens</a> - <a href="#string">string</a> tokens
     gathered from a nested collection</li>
@@ -746,6 +748,34 @@ platforms.
 <p>Includes the first <i>count</i> resources from a nested resource collection.
 This can be used in conjunction with the <a href="#sort">sort</a> collection,
 for example, to select the first few oldest, largest, etc. resources from a
+larger collection.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">count</td>
+      <td valign="top">The number of resources to include</td>
+      <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="last">last</a></h4>
+<p>Includes the last <i>count</i> resources from a nested resource collection.
+This can be used in conjunction with the <a href="#sort">sort</a> collection,
+for example, to select the last few oldest, largest, etc. resources from a
 larger collection.</p>
 <blockquote>
   <table border="1" cellpadding="2" cellspacing="0">

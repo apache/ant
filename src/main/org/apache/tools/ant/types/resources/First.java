@@ -21,44 +21,19 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.tools.ant.BuildException;
-
 /**
  * ResourceCollection that contains the first <code>count</code> elements of
- * another ResourceCollection.
+ * another ResourceCollection, a la the UNIX head command.
  * @since Ant 1.7
  */
-public class First extends BaseResourceCollectionWrapper {
-    private static final String BAD_COUNT
-        = "count of first resources should be set to an int >= 0";
-
-    private int count = 1;
-
-    /**
-     * Set the number of resources to be included.
-     * @param i the count as <code>int</count>.
-     */
-    public synchronized void setCount(int i) {
-        count = i;
-    }
-
-    /**
-     * Get the number of resources to be included. Default is 1.
-     * @return the count as <code>int</count>.
-     */
-    public synchronized int getCount() {
-        return count;
-    }
+public class First extends SizeLimitCollection {
 
     /**
      * Take the first <code>count</code> elements.
      * @return a Collection of Resources.
      */
     protected Collection getCollection() {
-        int ct = getCount();
-        if (ct < 0) {
-            throw new BuildException(BAD_COUNT);
-        }
+        int ct = getValidCount();
         Iterator iter = getResourceCollection().iterator();
         ArrayList al = new ArrayList(ct);
         for (int i = 0; i < ct && iter.hasNext(); i++) {
