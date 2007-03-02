@@ -920,37 +920,11 @@ must match. <b>Since Ant 1.7</b>
 &lt;/au:assertFalse&gt;
 </pre></blockquote>
 <h4>antversion</h4>
+<p>This condition is identical to the <a
+href="antversion.html">Antversion</a> task, all attributes are supported, the property attribute
+is redundant and will be ignored.</p>
 
-<p>
-  Test the ant version.
-  <b>Since Ant 1.7.0</b></p>
 
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">atleast</td>
-    <td valign="top">The version that this at least.
-      The format is major.minor.point.</td>
-    <td valign="top" rowspan="2" align="center">One of these.</td>
-  </tr>
-  <tr>
-    <td valign="top">exactly</td>
-    <td valign="top">The version that this ant is exactly.
-      The format is major.minor.point.</td>
-  </tr>
-</table>
-  <p>
-    An example:
-  </p>
-<blockquote><pre>
-&lt;condition property="ant-is-exact-7"&gt;
-  &lt;antversion exactly="1.7.0"/&gt;
-&lt;/condition&gt;
-</pre></blockquote>
 <h4>hasfreespace</h4>
 
 <p>
