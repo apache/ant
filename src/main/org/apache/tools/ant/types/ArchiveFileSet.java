@@ -30,7 +30,7 @@ import org.apache.tools.zip.UnixStat;
  * context of archiving tasks.
  *
  * It includes a prefix attribute which is prepended to each entry in
- * the output archive file as well as a fullpath ttribute.  It also
+ * the output archive file as well as a fullpath attribute.  It also
  * supports Unix file permissions for files and directories.
  *
  * @since Ant 1.7
@@ -45,7 +45,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @since Ant 1.5.2
      */
     public static final int DEFAULT_DIR_MODE =
-        UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
+        UnixStat.DIR_FLAG | UnixStat.DEFAULT_DIR_PERM;
 
     /**
      * Default value for the filemode attribute.
@@ -103,10 +103,9 @@ public abstract class ArchiveFileSet extends FileSet {
         checkAttributesAllowed();
         if (src != null) {
             throw new BuildException("Cannot set both dir and src attributes");
-        } else {
-            super.setDir(dir);
-            hasDir = true;
         }
+        super.setDir(dir);
+        hasDir = true;
     }
 
     /**
@@ -178,7 +177,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public void setPrefix(String prefix) {
         checkArchiveAttributesAllowed();
-        if (!prefix.equals("") && !fullpath.equals("")) {
+        if (!"".equals(prefix) && !"".equals(fullpath)) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
         this.prefix = prefix;
@@ -204,7 +203,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public void setFullpath(String fullpath) {
         checkArchiveAttributesAllowed();
-        if (!prefix.equals("") && !fullpath.equals("")) {
+        if (!"".equals(prefix) && !"".equals(fullpath)) {
             throw new BuildException("Cannot set both fullpath and prefix attributes");
         }
         this.fullpath = fullpath;
@@ -230,7 +229,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     /**
      * Return the DirectoryScanner associated with this FileSet.
-     * If the ArchiveFileSet defines a source Archive file, then a ArchiveScanner
+     * If the ArchiveFileSet defines a source Archive file, then an ArchiveScanner
      * is returned instead.
      * @param p the project to use
      * @return a directory scanner
@@ -421,25 +420,21 @@ public abstract class ArchiveFileSet extends FileSet {
     public Object clone() {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(getProject())).clone();
-        } else {
-            return super.clone();
         }
+        return super.clone();
     }
 
     /**
-     * for file based zipfilesets, return the same as for normal filesets
-     * else just return the path of the zip
-     * @return  for file based archivefilesets, included files as a list
+     * For file-based archivefilesets, return the same as for normal filesets;
+     * else just return the path of the zip.
+     * @return for file based archivefilesets, included files as a list
      * of semicolon-separated filenames. else just the name of the zip.
      */
     public String toString() {
         if (hasDir && getProject() != null) {
             return super.toString();
-        } else if (src != null) {
-            return src.getName();
-        } else {
-            return null;
         }
+        return src == null ? null : src.getName();
     }
 
     /**
