@@ -83,6 +83,8 @@ Other changes:
 
 * Add a <last> resource collection, corresponding to <first>.
 
+* Add new <truncate> task.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
