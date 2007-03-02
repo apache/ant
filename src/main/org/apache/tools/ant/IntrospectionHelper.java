@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.taskdefs.PreSetDef;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Helper class that collects the methods a task or nested element
@@ -1030,11 +1031,24 @@ public final class IntrospectionHelper  {
                     }
                 }
             };
+        } else if (java.lang.Long.class.equals(reflectedArg)) {
+            return new AttributeSetter(m) {
+                public void set(Project p, Object parent, String value)
+                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                    long ell;
+                    try {
+                        ell = StringUtils.parseHumanSizes(value);
+                    } catch (Exception e) {
+                        throw new BuildException(e);
+                    }
+                    m.invoke(parent, new Object[] { new Long(ell) });
+                }
+            };
+        } else {
         // worst case. look for a public String constructor and use it
         // also supports new Whatever(Project, String) as for Path or Reference
         // This is used (deliberately) for all primitives/wrappers other than
-        // char and boolean
-        } else {
+        // char, boolean, and long.
             boolean includeProject;
             Constructor c;
             try {
