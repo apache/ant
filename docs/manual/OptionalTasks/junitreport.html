@@ -151,8 +151,24 @@ These tags can pass XSL parameters to the stylesheet.
     <td valign="top">The param will only passed unless this property is set.</td>
     <td align="center" valign="top">No</td>
   </tr>
-
 </table>
+
+<p>The built-in stylesheets support the following parameters:</p>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>XSL-Parameter</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">TITLE</td>
+    <td valign="top">Title used in &lt;title&gt; and &lt;h1&gt; tags</td>
+    <td align="center" valign="top">No. Defaults to <i>Unit Test Results.</i></td>
+  </tr>
+</table>
+
+
+
 <h3>Example of report</h3>
 <blockquote>
   <pre>&lt;junitreport todir=&quot;./reports&quot;&gt;

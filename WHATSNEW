@@ -53,6 +53,9 @@ Fixed bugs:
 * Synchonization issues in PropertyHelper.  Bugzilla 41353.
 
 * <concat binary="true" append="true"> did not append.  Bugzilla 41399.
+ 
+* <junitreport> xsl stylesheets allow setting the title used in <title> and <h1> tags by
+  using <report><param> element.  Bugzilla 41742.
 
 Other changes:
 --------------

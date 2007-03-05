@@ -21,6 +21,8 @@
    limitations under the License.
  -->
 
+<xsl:param name="TITLE">Unit Test Results.</xsl:param>
+
 <!--
 
  Sample stylesheet to be used with Ant JUnitReport output.
@@ -32,7 +34,7 @@
 <xsl:template match="testsuites">
     <html>
         <head>
-            <title>Unit Test Results</title>
+            <title><xsl:value-of select="$TITLE"/></title>
     <style type="text/css">
       body {
         font:normal 68% verdana,arial,helvetica;
@@ -306,7 +308,7 @@
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1>Unit Test Results</h1>
+    <h1><xsl:value-of select="$TITLE"/></h1>
     <table width="100%">
     <tr>
         <td align="left"></td>

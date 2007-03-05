@@ -31,6 +31,7 @@
 
 -->
 <xsl:param name="output.dir" select="'.'"/>
+<xsl:param name="TITLE">Unit Test Results.</xsl:param>
 
 
 <xsl:template match="testsuites">
@@ -144,7 +145,7 @@
 <xsl:template name="index.html">
 <html>
     <head>
-        <title>Unit Test Results.</title>
+        <title><xsl:value-of select="$TITLE"/></title>
     </head>
     <frameset cols="20%,80%">
         <frameset rows="30%,70%">
@@ -688,7 +689,7 @@ h6 {
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1>Unit Test Results</h1>
+    <h1><xsl:value-of select="$TITLE"/></h1>
     <table width="100%">
     <tr>
         <td align="left"></td>
