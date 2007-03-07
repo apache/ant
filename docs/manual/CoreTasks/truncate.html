@@ -49,24 +49,27 @@ a single file, this Task can also work on
   </tr>
   <tr>
     <td valign="top">length</td>
-    <td valign="top">Specifies the new file length to set. The following
-    suffixes are supported:
-    <ul>
-      <li>K : Kilobytes (1024 bytes)</li>
-      <li>M : Megabytes (1024 K)</li>
-      <li>G : Gigabytes (1024 M)</li>
-      <li>T : Terabytes (1024 G)</li>
-      <li>P : Petabytes (1024 T)</li>
-    </ul>
-</td>
-    <td valign="center" align="center" rowspan="2">One of these or neither.
-      Specifying neither is equivalent to length="0".
+    <td valign="top">Specifies the new file length (in bytes) to set.
+                     The following suffixes are supported:
+      <ul>
+        <li>K : Kilobytes (1024 bytes)</li>
+        <li>M : Megabytes (1024 K)</li>
+        <li>G : Gigabytes (1024 M)</li>
+        <li>T : Terabytes (1024 G)</li>
+        <li>P : Petabytes (1024 T)</li>
+      </ul>
+    </td>
+    <td valign="center" align="center" rowspan="2">At most one of these.
+      Omitting both implies <code>length="0"</code>.
     </td>
   </tr>
   <tr>
     <td valign="top">adjust</td>
-    <td valign="top">Specifies the amount (and positive/negative direction)
-      by which to adjust file lengths.</td>
+    <td valign="top">Specifies the number of bytes
+      (and positive/negative direction)
+      by which to adjust file lengths.  The same suffixes are supported
+      for this attribute as for the <code>length</code> attribute.
+    </td>
   </tr>
   <tr>
     <td valign="top">create</td>
