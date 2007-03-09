@@ -354,7 +354,36 @@
           </tr>
         </table>
       </subsection>
+      
 
+      <subsection name="Antomology">
+        <p>Antomology is an analysis tool suite for Ant. It includes:<ul>
+          <li><b>StatisticsListener</b> - an Ant BuildListener which can be used to gather
+              statistics while an Ant build is executed. Statistics on the targets
+              and tasks executed are written to the console after the build completes. </li>
+        </ul></p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td> <i>unknown</i> </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antomology.codehaus.org">http://antomology.codehaus.org</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://xircles.codehaus.org/projects/antomology/lists">contact page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License V2.0</td>
+          </tr>
+        </table>
+      </subsection>
+        
+      
       <subsection name="AntPrettyBuild">
          <p>
           Ant Pretty Build is a tool to easily show and run Ant buildfiles directly from
