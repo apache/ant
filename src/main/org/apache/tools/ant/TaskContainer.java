@@ -39,4 +39,3 @@ public interface TaskContainer {
      */
     void addTask(Task task);
 }
-
