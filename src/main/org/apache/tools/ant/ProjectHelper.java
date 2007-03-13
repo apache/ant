@@ -308,7 +308,7 @@ public class ProjectHelper {
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(project, target.getClass());
 
-        for (int i = 0; i < attrs.getLength(); i++) {
+        for (int i = 0, length = attrs.getLength(); i < length; i++) {
             // reflect these into the target
             String value = replaceProperties(project, attrs.getValue(i),
                                              project.getProperties());
