@@ -80,19 +80,40 @@
     <td valign="top" align="center">No; default is "equal"</td>
   </tr>
 </table>
+
 <h3>Parameters specified as nested elements</h3>
+
 <h4>Resource Collections</h4>
 <p>You can include resources via nested
   <a href="../CoreTypes/resources.html#collection">Resource Collection</a>s.</p>
+
 <h3>Examples</h3>
+
 <pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot; /&gt;
 </pre>
 <p>Stores the length of the string &quot;foo&quot; in the property named
 <i>length.foo</i>.</p>
+
 <pre>&lt;length file=&quot;bar&quot; property=&quot;length.bar&quot; /&gt;
 </pre>
 <p>Stores the length of file &quot;bar&quot; in the property named
 <i>length.bar</i>.</p>
+
+<pre>
+&lt;length property=&quot;length&quot; mode=&quot;each&quot;&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
+&lt;/length&gt;
+</pre>
+<p>Writes the file paths of <i>foo</i> and <i>bar</i> and their length into 
+the property <i>length</i>.</p>
+
+<pre>
+&lt;length property=&quot;length&quot; mode=&quot;all&quot;&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
+&lt;/length&gt;
+</pre>
+<p>Adds the length of <i>foo</i> and <i>bar</i> and stores the result in property <i>length</i>.</p>
+
 
 </body>
 </html>
