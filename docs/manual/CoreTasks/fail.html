@@ -29,6 +29,7 @@
 <p>Exits the current build (just throwing a BuildException), optionally printing additional information.</p>
 <p>The message of the Exception can be set via the message attribute
 or character data nested into the element.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -72,6 +73,7 @@ or character data nested into the element.</p>
 </p>
 
 <h3>Examples</h3>
+
 <pre>  &lt;fail/&gt;</pre>
 <p>will exit the current build with no further information given.</p>
 <pre>
@@ -122,7 +124,19 @@ BUILD FAILED
 build.xml:2: condition satisfied
 </pre>
 
-
+<pre>
+&lt;fail message=&quot;Files are missing.&quot;&gt;
+    &lt;condition&gt;
+        &lt;not&gt;
+            &lt;resourcecount count=&quot;2&quot;&gt;
+                &lt;fileset id=&quot;fs&quot; dir=&quot;.&quot; includes=&quot;one.txt,two.txt&quot;/&gt;
+            &lt;/resourcecount&gt;
+        &lt;/not&gt;
+    &lt;/condition&gt;
+&lt;/fail&gt;
+</pre>
+<p>Will check that both files <i>one.txt</i> and <i>two.txt</i> are present otherwise the build
+will fail.</p>
 
 </body>
 </html>
