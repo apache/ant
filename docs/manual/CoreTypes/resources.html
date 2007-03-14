@@ -827,7 +827,12 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
     </tr>
   </table>
   <h4>Parameters specified as nested elements</h4>
-  <p>A single resource collection is required.</p>
+  <ul>
+    <li>A single resource collection is required.</li>
+    <li>One nested tokenizer may be specified.  If omitted, a
+        <a href="filterchain.html#linetokenizer">LineTokenizer</a> will be used.
+    </li>
+  </ul>
 </blockquote>
 
 <h4><a name="setlogic">Set operations</a></h4>
