@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.resources.TarResource;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
 
@@ -79,13 +80,7 @@ public class TarScanner extends ArchiveScanner {
         } catch (IOException ex) {
             throw new BuildException("problem reading " + srcFile, ex);
         } finally {
-            if (ti != null) {
-                try {
-                    ti.close();
-                } catch (IOException ex) {
-                    // swallow
-                }
-            }
+            FileUtils.close(ti);
         }
     }
 }
