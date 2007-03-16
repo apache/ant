@@ -42,8 +42,6 @@
       <isset property="antversion"/>  
     </au:assertTrue>  
   </target>
-    
-      
 
   <target name="all">
     <au:antunit>
