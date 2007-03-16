@@ -33,7 +33,8 @@ Load a text resource into a single property. Unless an encoding is
 specified, the encoding of the current locale is used.  Resources to
 load are specified as nested <a
 href="../CoreTypes/resources.html">resource</a> elements or single
-element resource collections.
+element resource collections. If the resource content is empty (maybe after
+processing a filterchain) the property is not set.
 </p>
 
 <h3>Parameters</h3>
