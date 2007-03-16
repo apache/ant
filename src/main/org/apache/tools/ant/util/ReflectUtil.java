@@ -145,7 +145,7 @@ public class ReflectUtil {
      * @return
      * @throws BuildException
      */
-    public static boolean resondsTo(Object o, String methodName) 
+    public static boolean respondsTo(Object o, String methodName) 
         throws BuildException {
         try {
             Method[] methods = o.getClass().getMethods();
