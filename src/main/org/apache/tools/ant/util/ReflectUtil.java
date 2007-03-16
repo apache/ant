@@ -136,4 +136,28 @@ public class ReflectUtil {
             throw new BuildException(t);
         }
     }
+    
+    /**
+     * A method to test if an object responds to a given 
+     * message (method call)
+     * @param o the object
+     * @param methodName the method to check for
+     * @return
+     * @throws BuildException
+     */
+    public static boolean resondsTo(Object o, String methodName) 
+        throws BuildException {
+        try {
+            Method[] methods = o.getClass().getMethods();
+            for(int i=0; i<methods.length; i++) {
+                if(methods[i].getName() == methodName) {
+                    return true;
+                }
+            }
+            return false;
+        } catch(Exception t) {
+            throwBuildException(t);
+        }
+        return false;//not reached
+    }
 }
