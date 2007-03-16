@@ -182,8 +182,8 @@ and any subdirectories.</p>
 <p>deletes all files and subdirectories of <code>build</code>, without
 <code>build</code> itself.</p>
 
-<pre>  &lt;delete defaultexcludes=&quot;false&quot;&gt;
-    &lt;fileset dir=&quot;src&quot; includes=&quot;**/.svn&quot;/&gt;
+<pre>  &lt;delete includeemptydirs=&quot;true&quot;&gt;
+    &lt;fileset dir=&quot;src&quot; includes=&quot;**/.svn&quot; defaultexcludes=&quot;false&quot;/&gt;
   &lt;/delete&gt;
 </pre>
 <p>deletes the subversion metadata directories under <code>src</code>. Because <code>.svn</code>
