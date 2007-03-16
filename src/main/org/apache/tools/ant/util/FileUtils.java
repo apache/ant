@@ -22,10 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -37,13 +38,14 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.launch.Locator;
 
 /**
  * This class also encapsulates methods which allow Files to be
@@ -1299,35 +1301,34 @@ public class FileUtils {
         return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
     }
 
+    
+    private static void closeQuietly(Object o) {
+        try {
+            if(ReflectUtil.respondsTo(o, "close")) {
+                ReflectUtil.invoke(o, "close");
+            }
+        } catch(Exception e) {
+            //ignore
+        }    
+    }
+    
     /**
      * Close a Writer without throwing any exception if something went wrong.
      * Do not attempt to close it if the argument is null.
      * @param device output writer, can be null.
      */
     public static void close(Writer device) {
-        if (device != null) {
-            try {
-                device.close();
-            } catch (IOException ioex) {
-                //ignore
-            }
-        }
+        closeQuietly(device);
     }
 
     /**
-     * Close a stream without throwing any exception if something went wrong.
+     * Close a Reader without throwing any exception if something went wrong.
      * Do not attempt to close it if the argument is null.
      *
      * @param device Reader, can be null.
      */
     public static void close(Reader device) {
-        if (device != null) {
-            try {
-                device.close();
-            } catch (IOException ioex) {
-                //ignore
-            }
-        }
+        closeQuietly(device);
     }
 
     /**
@@ -1337,13 +1338,7 @@ public class FileUtils {
      * @param device stream, can be null.
      */
     public static void close(OutputStream device) {
-        if (device != null) {
-            try {
-                device.close();
-            } catch (IOException ioex) {
-                //ignore
-            }
-        }
+        closeQuietly(device);
     }
 
     /**
@@ -1353,13 +1348,7 @@ public class FileUtils {
      * @param device stream, can be null.
      */
     public static void close(InputStream device) {
-        if (device != null) {
-            try {
-                device.close();
-            } catch (IOException ioex) {
-                //ignore
-            }
-        }
+        closeQuietly(device);
     }
 
     /**
