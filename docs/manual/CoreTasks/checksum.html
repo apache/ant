@@ -122,10 +122,30 @@ or set the <tt>fileext</tt> attribute.
   <tr>
     <td valign="top">format</td>
     <td valign="top">Specifies the pattern to use as one of a
-    well-known format.  Supported values are &quot;CHECKSUM&quot;
-    (only the checksum itself, the default), &quot;MD5SUM&quot; the
-    format of GNU textutils md5sum and &quot;SVF&quot; the format of
-    *BSDs md5 command.</td>
+    well-known format.  Supported values are 
+      <table border="1">
+      <tr>
+        <th>name</th>
+        <th>pattern</th>
+        <th>description</th>
+      </tr>
+      <tr>
+        <td>CHECKSUM </td>
+        <td><tt>{0}</tt></td>
+        <td>only the checksum itself </td>
+      </tr>
+      <tr>
+        <td>MD5SUM </td>
+        <td><tt>{0} *{1}</tt></td>
+        <td>the format of GNU textutils md5sum</td>
+      </tr>
+      <tr>
+        <td>SVF </td>
+        <td><tt>MD5 ({1}) = {0}</tt></td>
+        <td>the format of BSDs md5 command </td>
+      </tr>
+      </table>
+    </td>
     <td valign="top" align="center">No - default is &quot;CHECKSUM&quot;.</td>
   </tr>
   <tr>
