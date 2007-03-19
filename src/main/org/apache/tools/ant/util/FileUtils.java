@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -1300,20 +1299,6 @@ public class FileUtils {
     public boolean isUpToDate(long sourceTime, long destTime) {
         return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
     }
-
-    
-    private static void closeQuietly(Object o) {
-        if (null == o) {
-            return;
-        }
-        try {
-            if(ReflectUtil.respondsTo(o, "close")) {
-                ReflectUtil.invoke(o, "close");
-            }
-        } catch(Exception e) {
-            //ignore
-        }    
-    }
     
     /**
      * Close a Writer without throwing any exception if something went wrong.
@@ -1321,7 +1306,13 @@ public class FileUtils {
      * @param device output writer, can be null.
      */
     public static void close(Writer device) {
-        closeQuietly(device);
+        if(null != device){
+            try {
+                device.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
     }
 
     /**
@@ -1331,7 +1322,13 @@ public class FileUtils {
      * @param device Reader, can be null.
      */
     public static void close(Reader device) {
-        closeQuietly(device);
+        if(null != device){
+            try {
+                device.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
     }
 
     /**
@@ -1341,7 +1338,13 @@ public class FileUtils {
      * @param device stream, can be null.
      */
     public static void close(OutputStream device) {
-        closeQuietly(device);
+        if(null != device){
+            try {
+                device.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
     }
 
     /**
@@ -1351,7 +1354,13 @@ public class FileUtils {
      * @param device stream, can be null.
      */
     public static void close(InputStream device) {
-        closeQuietly(device);
+        if(null != device){
+            try {
+                device.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
     }
 
     /**
