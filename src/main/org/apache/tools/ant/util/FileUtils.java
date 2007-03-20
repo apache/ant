@@ -939,7 +939,7 @@ public class FileUtils {
      * @throws IOException if the contents could not be read out from the
      *         reader.
      */
-    public static final String readFully(Reader rdr) throws IOException {
+    public static String readFully(Reader rdr) throws IOException {
         return readFully(rdr, BUF_SIZE);
     }
 
@@ -954,7 +954,7 @@ public class FileUtils {
      * @throws IOException if the contents could not be read out from the
      *         reader.
      */
-    public static final String readFully(Reader rdr, int bufferSize)
+    public static String readFully(Reader rdr, int bufferSize)
         throws IOException {
         if (bufferSize <= 0) {
             throw new IllegalArgumentException("Buffer size must be greater "
