@@ -382,7 +382,7 @@ public class Main implements AntMain {
                         + "the ant script/.bat file and Ant itself.";
                 throw new BuildException(msg);
             } else if (arg.equals("-autoproxy")) {
-                proxy = false;
+                proxy = true;
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
