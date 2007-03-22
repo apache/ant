@@ -760,11 +760,12 @@ platforms.
   <pre>
     &lt;sort&gt;
       &lt;fileset dir=&quot;foo&quot; /&gt;
-      &lt;reverse&gt;
+      &lt;reverse xmlns=&quot;antlib:org.apache.tools.ant.types.resources.comparators&quot;&gt;
         &lt;date /&gt;
       &lt;/reverse&gt;
     &lt;/sort&gt;</pre>
-  <p>This takes all files from <i>foo</i> and sorts it by modification date in reverse order.</p>  
+  <p>This takes all files from <i>foo</i> and sorts it by modification date in reverse order.
+  Because 'reverse' is in an internal antlib you have to set the namespace explicitly.</p>  
 
 </blockquote>
 
