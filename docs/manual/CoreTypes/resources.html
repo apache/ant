@@ -652,7 +652,10 @@ platforms.
     using the nested &lt;control&gt; element, which denotes a
     <a href="#resources">resources</a> collection.</p>
   <h4>Examples</h4>
-  <p>The following selects files a, b, c, and d:</p>
+  <p>Assuming the namespace settings
+<pre><code>  rsel="antlib:org.apache.tools.ant.types.resources.selectors"
+  rcmp="antlib:org.apache.tools.ant.types.resources.comparators"
+</code></pre> The following selects files a, b, c, and d:</p>
   <pre>
 &lt;restrict&gt;
   &lt;fileset dir="src" includes="a,b,c,d,e,f,g" /&gt;
@@ -764,8 +767,12 @@ platforms.
         &lt;date /&gt;
       &lt;/reverse&gt;
     &lt;/sort&gt;</pre>
-  <p>This takes all files from <i>foo</i> and sorts it by modification date in reverse order.
-  Because 'reverse' is in an internal antlib you have to set the namespace explicitly.</p>  
+  <p>This takes all files from <i>foo</i>
+     and sorts them by modification date in reverse order.
+     Because the resource comparators used (<code>&lt;reverse&gt;</code>
+     and <code>&lt;date&gt;</code>) are in an internal antlib
+     their namespace must be set explicitly.
+  </p>  
 
 </blockquote>
 
