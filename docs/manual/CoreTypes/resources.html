@@ -742,6 +742,30 @@ platforms.
   <h4><a name="rcmp.reverse">reverse</a></h4>
   <p>Reverse the natural sort order, or that of a single nested comparator.</p>
 
+  <h4>Examples</h4>
+  <pre>
+    &lt;property name=&quot;eol&quot; value=&quot;${line.separator}&quot; /&gt;
+    &lt;pathconvert property=&quot;sorted&quot; pathsep=&quot;${eol}&quot;&gt;
+      &lt;sort&gt;
+        &lt;tokens&gt;
+          &lt;string value=&quot;foo bar etc baz&quot; /&gt;
+          &lt;stringtokenizer /&gt;
+        &lt;/tokens&gt;
+      &lt;/sort&gt;
+    &lt;/pathconvert&gt;</pre>
+  <p>The resource of type string &quot;foo bar etc baz&quot; is split into four tokens by 
+  the stringtokenizer. These tokens are sorted and there <i>sorted</i> gets the value
+  of &quot;bar baz etc foo&quot;.</p>
+  
+  <pre>
+    &lt;sort&gt;
+      &lt;fileset dir=&quot;foo&quot; /&gt;
+      &lt;reverse&gt;
+        &lt;date /&gt;
+      &lt;/reverse&gt;
+    &lt;/sort&gt;</pre>
+  <p>This takes all files from <i>foo</i> and sorts it by modification date in reverse order.</p>  
+
 </blockquote>
 
 <h4><a name="first">first</a></h4>
