@@ -89,7 +89,9 @@ Other changes:
 
 * <junitreport> xsl stylesheets allow setting the title used in <title> and <h1> tags by
   using <report><param> element.  Bugzilla 41742.
-  
+
+* Add IgnoreDependenciesExecutor for weird cases when the user wants to run
+  only the targets explicitly specified.
   
 
 Changes from Ant 1.6.5 to Ant 1.7.0
