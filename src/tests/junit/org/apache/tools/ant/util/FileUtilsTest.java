@@ -544,6 +544,20 @@ public class FileUtilsTest extends TestCase {
                 !FILE_UTILS.isUpToDate(firstTime,-1L));
     }
 
+    public void testHasErrorInCase() {
+        File tempFolder = new File(System.getProperty("java.io.tmpdir"));
+        File wellcased = FILE_UTILS.createTempFile("alpha", "beta", tempFolder);
+        String s = wellcased.getName().toUpperCase();
+        File wrongcased = new File(tempFolder, s);
+        if (Os.isFamily("dos")) {
+            assertTrue(FILE_UTILS.hasErrorInCase(wrongcased));
+            assertFalse(FILE_UTILS.hasErrorInCase(wellcased));
+        } else {
+            assertFalse(FILE_UTILS.hasErrorInCase(wrongcased));
+            assertFalse(FILE_UTILS.hasErrorInCase(wellcased));
+        }
+        
+    }
     public void testGetDefaultEncoding() {
         // This just tests that the function does not blow up
         FILE_UTILS.getDefaultEncoding();

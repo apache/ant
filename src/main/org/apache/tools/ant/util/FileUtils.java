@@ -18,14 +18,7 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -1239,6 +1232,36 @@ public class FileUtils {
         return UNIX_FILE_TIMESTAMP_GRANULARITY;
     }
 
+    /**
+     * test whether a file or directory exists, with an error in the upper/lower case spelling of the name.
+     * Using this method is only interesting on case insensitive file systems (Windows).<br/>
+     * It will return true only if 3 conditions are met :
+     * <br/>
+     * <ul>
+     *   <li>operating system is case insensitive</li>
+     *   <li>file exists</li>
+     *   <li>actual name from directory reading is different from the supplied argument</li>
+     * </ul>
+     *  <br/>
+     * the purpose is to identify files or directories on Windows environments whose case is not what is expected.<br/>
+     * Possibly to rename them afterwards to the desired upper/lowercase combination.
+     * <br/>
+     * @param localFile file to test
+     * @return true if the file exists and the case of the actual file is not the case of the parameter
+     */
+    public boolean hasErrorInCase(File localFile) {
+        if (!localFile.exists()) {
+            return false;
+        }
+        final String localFileName = localFile.getName();
+        FilenameFilter ff = new FilenameFilter () {
+            public boolean accept(File dir, String name) {
+            return name.equalsIgnoreCase(localFileName) && (!name.equals(localFileName));
+        }
+        };
+        String[] names = localFile.getParentFile().list(ff);
+        return names!=null && names.length==1;
+    }
     /**
      * Returns true if the source is older than the dest.
      * If the dest file does not exist, then the test returns false; it is
