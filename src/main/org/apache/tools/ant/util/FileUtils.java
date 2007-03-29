@@ -1248,6 +1248,7 @@ public class FileUtils {
      * <br/>
      * @param localFile file to test
      * @return true if the file exists and the case of the actual file is not the case of the parameter
+     * @since Ant 1.7.1
      */
     public boolean hasErrorInCase(File localFile) {
         if (!localFile.exists()) {
