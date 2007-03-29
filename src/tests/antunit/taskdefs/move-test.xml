@@ -1,0 +1,30 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="checkos">
+    <condition property="onwindows">
+      <os family="windows"/>
+    </condition>
+  </target>
+
+  <target name="test-move-windows" if="onwindows" depends="checkos">
+    <!-- this test is inspired by bugzilla 41948 -->
+    <touch file="${java.io.tmpdir}/abc"/>
+    <move file="${java.io.tmpdir}/abc" tofile="${java.io.tmpdir}/aBc"/>
+    <fileset dir="${java.io.tmpdir}" id="myfs">
+      <include name="aBc"/>
+    </fileset>
+    <pathconvert refid="myfs" property="myproperty" setonempty="false"/>
+    <au:assertPropertySet name="myproperty" message="abc was not renamed aBc"/>
+  </target>
+
+  <target name="tearDown">
+    <delete file="${java.io.tmpdir}/aBc"/>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>
