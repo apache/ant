@@ -143,6 +143,19 @@ public class PatternSet extends DataType implements Cloneable {
         }
     }
 
+    private class InvertedPatternSet extends PatternSet {
+        private InvertedPatternSet(PatternSet p) {
+            setProject(p.getProject());
+            addConfiguredPatternset(p);
+        }
+        public String[] getIncludePatterns(Project p) {
+            return super.getExcludePatterns(p);
+        }
+        public String[] getExcludePatterns(Project p) {
+            return super.getIncludePatterns(p);
+        }
+    }
+
     /**
      * Creates a new <code>PatternSet</code> instance.
      */
@@ -509,4 +522,11 @@ public class PatternSet extends DataType implements Cloneable {
         }
     }
 
+    /**
+     * Add an inverted patternset.
+     *
+     */
+    public void addConfiguredInvert(PatternSet p) {
+        addConfiguredPatternset(new InvertedPatternSet(p));
+    }
 }

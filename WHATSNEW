@@ -92,7 +92,9 @@ Other changes:
 
 * Add IgnoreDependenciesExecutor for weird cases when the user wants to run
   only the targets explicitly specified.
-  
+
+* Patternset allows nested inverted patternsets using <invert>.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
