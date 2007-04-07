@@ -799,9 +799,8 @@ public class Main implements AntMain {
             BuildListener listener =
                     (BuildListener) ClasspathUtils.newInstance(className,
                             Main.class.getClassLoader(), BuildListener.class);
-            if (project != null) {
-                project.setProjectReference(listener);
-            }
+            project.setProjectReference(listener);
+
             project.addBuildListener(listener);
         }
     }
