@@ -160,14 +160,13 @@ public class ReflectUtil {
         try {
             Method[] methods = o.getClass().getMethods();
             for(int i=0; i<methods.length; i++) {
-                if(methods[i].getName() == methodName) {
+                if(methods[i].getName().equals(methodName)) {
                     return true;
                 }
             }
             return false;
         } catch(Exception t) {
-            throwBuildException(t);
+            throw toBuildException(t);
         }
-        return false;//not reached
     }
 }
