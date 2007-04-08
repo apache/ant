@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.InvocationTargetException;
 import java.io.InputStream;
@@ -35,8 +34,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -1013,6 +1010,8 @@ public class ComponentHelper  {
      * Map that contains the component definitions.
      */
     private static class AntTypeTable extends Hashtable {
+        private static final long serialVersionUID = -3060442320477772028L;
+        
         private Project project;
 
         AntTypeTable(Project project) {
