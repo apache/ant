@@ -18,6 +18,7 @@
 package org.apache.tools.ant.util;
 
 import java.util.StringTokenizer;
+import java.util.Arrays;
 
 /**
  * Utility class to contain version numbers in "Dewey Decimal"
@@ -40,10 +41,7 @@ public class DeweyDecimal {
      */
     public DeweyDecimal(final int[] components) {
         this.components = new int[components.length];
-
-        for (int i = 0; i < components.length; i++) {
-            this.components[i] = components[i];
-        }
+        System.arraycopy(components, 0, this.components, 0, components.length);
     }
 
     /**

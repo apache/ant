@@ -153,8 +153,7 @@ public class SizeSelector extends BaseExtendSelector {
                 String paramname = parameters[i].getName();
                 if (SIZE_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setValue(new Long(parameters[i].getValue()
-                        ).longValue());
+                        setValue(Long.parseLong(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid size setting "
                                 + parameters[i].getValue());

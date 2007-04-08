@@ -472,7 +472,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             throw new BuildException(msg, se);
         } catch (IOException ioe) {
             String msg = "IOException while parsing'"
-                + descriptorFileName.toString()
+                + descriptorFileName
                 + "'.  This probably indicates that the descriptor"
                 + " doesn't exist. Details: "
                 + ioe.getMessage();

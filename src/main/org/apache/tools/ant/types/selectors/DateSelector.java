@@ -173,8 +173,7 @@ public class DateSelector extends BaseExtendSelector {
                 String paramname = parameters[i].getName();
                 if (MILLIS_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setMillis(new Long(parameters[i].getValue()
-                        ).longValue());
+                        setMillis(Long.parseLong(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid millisecond setting "
                                 + parameters[i].getValue());
@@ -185,8 +184,7 @@ public class DateSelector extends BaseExtendSelector {
                     setCheckdirs(Project.toBoolean(parameters[i].getValue()));
                 } else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setGranularity(new Integer(parameters[i].getValue()
-                        ).intValue());
+                        setGranularity(Integer.parseInt(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid granularity setting "
                             + parameters[i].getValue());

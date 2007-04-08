@@ -2201,7 +2201,7 @@ public class FTP
         if (dir.indexOf("/") == 0) {
             ftp.changeWorkingDirectory("/");
         }
-        String subdir = new String();
+        String subdir = "";
         StringTokenizer st = new StringTokenizer(dir, "/");
         while (st.hasMoreTokens()) {
             subdir = st.nextToken();

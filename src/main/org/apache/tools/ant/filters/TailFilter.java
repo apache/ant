@@ -188,11 +188,11 @@ public final class TailFilter extends BaseParamFilterReader
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 if (LINES_KEY.equals(params[i].getName())) {
-                    setLines(new Long(params[i].getValue()).longValue());
+                    setLines(Long.parseLong(params[i].getValue()));
                     continue;
                 }
                 if (SKIP_KEY.equals(params[i].getName())) {
-                    skip = new Long(params[i].getValue()).longValue();
+                    skip = Long.parseLong(params[i].getValue());
                     continue;
                 }
             }
