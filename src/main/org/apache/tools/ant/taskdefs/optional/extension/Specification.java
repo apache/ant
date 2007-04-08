@@ -476,7 +476,7 @@ public final class Specification {
                 final Specification other = (Specification) iterator.next();
                 if (isEqual(specification, other)) {
                     final String[] otherSections = other.getSections();
-                    if (null != sections) {
+                    if (null != otherSections) {
                         sections.addAll(Arrays.asList(otherSections));
                     }
                     iterator.remove();
