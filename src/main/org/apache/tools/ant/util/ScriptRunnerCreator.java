@@ -130,10 +130,8 @@ public class ScriptRunnerCreator {
                 runnerClass, true, scriptLoader).newInstance();
             runner.setProject(project);
         } catch (Exception ex) {
-            ReflectUtil.throwBuildException(ex);
-            // NotReached
+            throw ReflectUtil.toBuildException(ex);
         }
-
         runner.setLanguage(language);
         runner.setScriptClassLoader(scriptLoader);
         return runner;

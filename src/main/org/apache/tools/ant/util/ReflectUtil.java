@@ -125,18 +125,28 @@ public class ReflectUtil {
      */
     public static void throwBuildException(Exception t)
         throws BuildException {
+        throw toBuildException(t);
+    }
+
+    /**
+     * A method to convert an invocationTargetException to
+     * a buildexception.
+     * @param t the invocation target exception.
+     * @since ant 1.7.1
+     */
+    public static BuildException toBuildException(Exception t) {
         if (t instanceof InvocationTargetException) {
             Throwable t2 = ((InvocationTargetException) t)
                 .getTargetException();
             if (t2 instanceof BuildException) {
-                throw (BuildException) t2;
+                return (BuildException) t2;
             }
-            throw new BuildException(t2);
+            return new BuildException(t2);
         } else {
-            throw new BuildException(t);
+            return new BuildException(t);
         }
     }
-    
+
     /**
      * A method to test if an object responds to a given 
      * message (method call)

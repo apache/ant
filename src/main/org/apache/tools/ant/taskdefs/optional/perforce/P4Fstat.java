@@ -134,9 +134,9 @@ public class P4Fstat extends P4Base {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
             String[] srcFiles = ds.getIncludedFiles();
-            fileNum = srcFiles.length;
 
             if (srcFiles != null) {
+                fileNum = srcFiles.length;
                 for (int j = 0; j < srcFiles.length; j++) {
                     File f = new File(ds.getBasedir(), srcFiles[j]);
                     filelist.append(" ").append('"').append(f.getAbsolutePath()).append('"');

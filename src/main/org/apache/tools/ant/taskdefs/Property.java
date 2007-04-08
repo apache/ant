@@ -452,8 +452,9 @@ public class Property extends Task {
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
             if (file.exists()) {
-                FileInputStream fis = new FileInputStream(file);
+                FileInputStream  fis = null;
                 try {
+                    fis = new FileInputStream(file);
                     props.load(fis);
                 } finally {
                     if (fis != null) {

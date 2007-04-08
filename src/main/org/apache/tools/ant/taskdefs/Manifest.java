@@ -182,8 +182,7 @@ public class Manifest {
             String lhsKey = getKey();
             String rhsKey = rhsAttribute.getKey();
             if ((lhsKey == null && rhsKey != null)
-                 || (lhsKey != null && rhsKey == null)
-                 || !lhsKey.equals(rhsKey)) {
+                 || (lhsKey != null && !lhsKey.equals(rhsKey))) {
                 return false;
             }
 
