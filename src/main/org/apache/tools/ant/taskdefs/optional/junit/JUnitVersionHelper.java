@@ -58,7 +58,11 @@ public class JUnitVersionHelper {
      * @return the name of the test.
      */
     public static String getTestCaseName(Test t) {
-        if (t != null && t.getClass().getName().equals("junit.framework.JUnit4TestCaseFacade")) {
+        if (t == null)
+        {
+            return "unknown";
+        }
+        if (t.getClass().getName().equals("junit.framework.JUnit4TestCaseFacade")) {
             // Self-describing as of JUnit 4 (#38811). But trim "(ClassName)".
             String name = t.toString();
             if (name.endsWith(")")) {

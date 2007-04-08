@@ -22,6 +22,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
+import org.apache.tools.ant.util.FileUtils;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -180,13 +182,7 @@ public class jlink {
                 addFile(output, f, "", compression);
             }
         }
-        if (output != null) {
-            try {
-                output.close();
-            } catch (IOException ioe) {
-                //do nothing
-            }
-        }
+        FileUtils.close(output);
     }
 
 
