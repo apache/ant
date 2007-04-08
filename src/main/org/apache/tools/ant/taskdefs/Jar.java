@@ -571,7 +571,7 @@ public class Jar extends Zip {
                            long lastModified, File fromArchive, int mode)
         throws IOException {
         if (MANIFEST_NAME.equalsIgnoreCase(vPath))  {
-            if (!doubleFilePass || (doubleFilePass && skipWriting)) {
+            if (!doubleFilePass || skipWriting) {
                 filesetManifest(fromArchive, is);
             }
         } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
@@ -779,7 +779,7 @@ public class Jar extends Zip {
         super.cleanUp();
 
         // we want to save this info if we are going to make another pass
-        if (!doubleFilePass || (doubleFilePass && !skipWriting)) {
+        if (!doubleFilePass || !skipWriting) {
             manifest = null;
             configuredManifest = savedConfiguredManifest;
             filesetManifest = null;

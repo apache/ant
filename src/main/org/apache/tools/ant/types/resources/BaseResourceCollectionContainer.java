@@ -150,7 +150,7 @@ public abstract class BaseResourceCollectionContainer
         //first the easy way, if all children are filesystem-only, return true:
         boolean goEarly = true;
         for (Iterator i = rc.iterator(); goEarly && i.hasNext();) {
-            goEarly &= ((ResourceCollection) i.next()).isFilesystemOnly();
+            goEarly = ((ResourceCollection) i.next()).isFilesystemOnly();
         }
         if (goEarly) {
             return true;

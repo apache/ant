@@ -111,7 +111,7 @@ public class IsSigned extends DataType implements Condition {
         if (file == null) {
             throw new BuildException("The file attribute must be set.");
         }
-        if (file != null && !file.exists()) {
+        if (!file.exists()) {
             log("The file \"" + file.getAbsolutePath()
                 + "\" does not exist.", Project.MSG_VERBOSE);
             return false;

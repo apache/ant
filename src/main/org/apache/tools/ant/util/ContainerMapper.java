@@ -83,7 +83,7 @@ public abstract class ContainerMapper implements FileNameMapper {
         boolean foundit = false;
         for (Iterator iter = mappers.iterator(); iter.hasNext() && !foundit;) {
             FileNameMapper next = (FileNameMapper) (iter.next());
-            foundit |= (next == fileNameMapper
+            foundit = (next == fileNameMapper
                 || (next instanceof ContainerMapper
                 && ((ContainerMapper) next).contains(fileNameMapper)));
         }

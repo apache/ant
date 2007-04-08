@@ -158,13 +158,11 @@ public class ContainsRegexpSelector extends BaseExtendSelector
         } catch (IOException ioe) {
             throw new BuildException("Could not read " + r.toLongString());
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Exception e) {
-                    throw new BuildException("Could not close "
-                                             + r.toLongString());
-                }
+            try {
+                in.close();
+            } catch (Exception e) {
+                throw new BuildException("Could not close "
+                                         + r.toLongString());
             }
         }
     }

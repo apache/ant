@@ -1046,7 +1046,7 @@ public class ComponentHelper  {
             boolean found = false;
             if (clazz instanceof Class) {
                 for (Iterator i = values().iterator(); i.hasNext() && !found;) {
-                    found |= (((AntTypeDefinition) (i.next())).getExposedClass(
+                    found = (((AntTypeDefinition) (i.next())).getExposedClass(
                         project) == clazz);
                 }
             }

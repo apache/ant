@@ -821,9 +821,7 @@ public class Main implements AntMain {
             handler = (InputHandler) ClasspathUtils.newInstance(
                     inputHandlerClassname, Main.class.getClassLoader(),
                     InputHandler.class);
-            if (project != null) {
-                project.setProjectReference(handler);
-            }
+            project.setProjectReference(handler);
         }
         project.setInputHandler(handler);
     }

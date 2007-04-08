@@ -1047,7 +1047,7 @@ public class Execute {
 
             // Build the command
             File commandDir = workingDir;
-            if (workingDir == null && project != null) {
+            if (workingDir == null) {
                 commandDir = project.getBaseDir();
             }
             String[] newcmd = new String[cmd.length + 2];
@@ -1106,7 +1106,7 @@ public class Execute {
 
             // Build the command
             File commandDir = workingDir;
-            if (workingDir == null && project != null) {
+            if (workingDir == null) {
                 commandDir = project.getBaseDir();
             }
             String[] newcmd = new String[cmd.length + 3];

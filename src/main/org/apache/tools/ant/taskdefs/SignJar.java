@@ -376,7 +376,7 @@ public class SignJar extends AbstractJarSignerTask {
 
         //DO NOT SET THE -signedjar OPTION if source==dest
         //unless you like fielding hotspot crash reports
-        if (null != targetFile && !jarSource.equals(targetFile)) {
+        if (!jarSource.equals(targetFile)) {
             addValue(cmd, "-signedjar");
             addValue(cmd, targetFile.getPath());
         }

@@ -290,7 +290,7 @@ public class ANTLR extends Task {
             if (targetIsOutOfDate) {
                 log("Compiling " + targetFile + " as it is newer than "
                     + generatedFile, Project.MSG_VERBOSE);
-            } else if (superGrammarIsOutOfDate) {
+            } else {
                 log("Compiling " + targetFile + " as " + superGrammar
                     + " is newer than " + generatedFile, Project.MSG_VERBOSE);
             }

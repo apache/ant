@@ -105,7 +105,7 @@ public final class StripJavaComments
                                 ch = in.read();
                                 if (ch == '*') {
                                     ch = in.read();
-                                    while (ch == '*' && ch != -1) {
+                                    while (ch == '*') {
                                         ch = in.read();
                                     }
 

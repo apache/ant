@@ -417,7 +417,7 @@ public class Depend extends MatchingTask {
                         }
                         classpathFileCache.put(dependency, classpathFileObject);
                     }
-                    if (classpathFileObject != null && classpathFileObject != nullFileMarker) {
+                    if (classpathFileObject != nullFileMarker) {
                         // we need to add this jar to the list for this class.
                         File jarFile = (File) classpathFileObject;
                         dependencies.put(jarFile, jarFile);

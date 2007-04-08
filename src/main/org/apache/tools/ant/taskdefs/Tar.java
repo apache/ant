@@ -584,7 +584,7 @@ public class Tar extends MatchingTask {
             Iterator iter = rc.iterator();
             while (upToDate && iter.hasNext()) {
                 Resource r = (Resource) iter.next();
-                upToDate &= archiveIsUpToDate(r);
+                upToDate = archiveIsUpToDate(r);
             }
         }
         return upToDate;

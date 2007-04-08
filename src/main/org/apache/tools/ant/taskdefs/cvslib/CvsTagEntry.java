@@ -92,15 +92,15 @@ public class CvsTagEntry {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(filename);
-        if ((revision == null)) {
+        if (revision == null) {
             buffer.append(" was removed");
             if (prevRevision != null) {
                 buffer.append("; previous revision was ").append(prevRevision);
             }
-        } else if (revision != null && prevRevision == null) {
+        } else if (prevRevision == null) {
             buffer.append(" is new; current revision is ")
                 .append(revision);
-        } else if (revision != null && prevRevision != null) {
+        } else {
             buffer.append(" has changed from ")
                 .append(prevRevision).append(" to ").append(revision);
         }
