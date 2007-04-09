@@ -82,18 +82,18 @@ public class Ejbc extends MatchingTask {
         if (descriptorDirectory == null
             || !descriptorDirectory.isDirectory()) {
             throw new BuildException("descriptors directory "
-                + descriptorDirectory == null ? null : descriptorDirectory.getPath() + " is not valid");
+                + descriptorDirectory + " is not valid");
         }
         if (generatedFilesDirectory == null
             || !generatedFilesDirectory.isDirectory()) {
             throw new BuildException("dest directory "
-                + generatedFilesDirectory == null ? null : generatedFilesDirectory.getPath() + " is not valid");
+                + generatedFilesDirectory + " is not valid");
         }
 
         if (sourceDirectory == null
             || !sourceDirectory.isDirectory()) {
             throw new BuildException("src directory "
-                + sourceDirectory == null ? null : sourceDirectory.getPath() + " is not valid");
+                + sourceDirectory + " is not valid");
         }
 
         String systemClassPath = System.getProperty("java.class.path");
