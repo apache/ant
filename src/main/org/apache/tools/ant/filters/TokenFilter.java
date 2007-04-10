@@ -659,7 +659,12 @@ public class TokenFilter extends BaseFilterReader
             };
         }
 
-        /** check if the character c is to be deleted */
+        /**
+         *  check if the character c is to be deleted
+         *
+         * @param c char to test
+         * @return true if the supplied char is in the list to be stripped.
+         */
         private boolean isDeleteCharacter(char c) {
             for (int d = 0; d < deleteChars.length(); ++d) {
                 if (deleteChars.charAt(d) ==  c) {
