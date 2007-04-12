@@ -1,0 +1,49 @@
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <macrodef name="test">
+    <sequential>
+      <au:assertTrue>
+        <resourcecount count="0">
+          <intersect>
+            <fileset dir="${basedir}">
+              <patternset refid="plus" />
+            </fileset>
+            <fileset dir="${basedir}">
+              <patternset refid="minus" />
+            </fileset>
+          </intersect>
+        </resourcecount>
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <target name="testInvertNested">
+    <basename property="basename" file="${ant.file}" />
+    <echo>$${basename}=${basename}</echo>
+    <patternset id="plus" includes="${basename}" />
+    <patternset id="minus">
+      <invert>
+        <patternset refid="plus" />
+      </invert>
+    </patternset>
+    <test />
+  </target>
+
+  <target name="testInvertRefid">
+    <basename property="basename" file="${ant.file}" />
+    <echo>$${basename}=${basename}</echo>
+    <patternset id="plus" includes="${basename}" />
+    <patternset id="minus">
+      <invert refid="plus" />
+    </patternset>
+    <test />
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener />
+    </au:antunit>
+  </target>
+
+</project>
