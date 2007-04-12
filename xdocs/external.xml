@@ -1995,8 +1995,35 @@
         </table>
       </subsection>
 
-      <subsection name="JReleaseInfo">
+      <subsection name="JPP">
+        <p>
+          <a href="http://www.javapreprocessor.com">JPP</a> is a preprocessor for Ant supporting
+          many different file types that allows you to include / exclude contents based on 
+          build-time parameters.  It is completely invisible to other tools and takes the hassle 
+          out of maintaining customised code or content.  It is free, is provided as an Ant task, 
+          and very simple to use.
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.javapreprocessor.com">http://www.javapreprocessor.com</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto://info@javapreprocessor.com">info@javapreprocessor.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
+          </tr>
+        </table>
+      </subsection>
 
+      <subsection name="JReleaseInfo">
         <p>Sometimes you are interested at runtime to have information
         from build time. This may be the build date, a build number or
         the version.  The JReleaseInfo Ant Task generates a java
