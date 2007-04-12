@@ -143,7 +143,7 @@ public class PatternSet extends DataType implements Cloneable {
         }
     }
 
-    private class InvertedPatternSet extends PatternSet {
+    private static class InvertedPatternSet extends PatternSet {
         private InvertedPatternSet(PatternSet p) {
             setProject(p.getProject());
             addConfiguredPatternset(p);
