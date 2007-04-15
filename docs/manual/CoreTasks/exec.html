@@ -63,9 +63,14 @@ types listed in the environment variable PATHEXT. That is only used by the shell
 </pre></blockquote>
 
 <h4>Cygwin Users</h4>
-<p>In general the <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh for
-the executable parameter. This is because the Java VM in which Ant is running is a
-Windows executable and is not aware of Cygwin conventions.
+<p>The <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh
+for the executable parameter.  This is because the Java VM in which Ant is
+running is a standard Windows executable and is not aware of the Cygwin
+environment (i.e., doesn't load <code>cygwin1.dll</code>).  The only
+work-around for this is to compile a JVM under Cygwin (at your own risk).
+See for instance 
+<a href="http://java.sun.com/javase/6/docs/build/README-builds.html#cygwin">
+sun jdk 6 build instructions for cygwin</a>.
 </p>
 
 <h4>OpenVMS Users</h4>
