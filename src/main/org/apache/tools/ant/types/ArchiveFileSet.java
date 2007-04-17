@@ -242,10 +242,12 @@ public abstract class ArchiveFileSet extends FileSet {
             return super.getDirectoryScanner(p);
         }
         if (!src.isExists()) {
-            throw new BuildException("the archive doesn't exist");
+            throw new BuildException(
+                "the archive " + src.getName() + " doesn't exist");
         }
         if (src.isDirectory()) {
-            throw new BuildException("the archive can't be a directory");
+            throw new BuildException("the archive " + src.getName()
+                                     + " can't be a directory");
         }
         ArchiveScanner as = newArchiveScanner();
         as.setSrc(src);
