@@ -178,8 +178,6 @@
       </patternset>
     </unjar>
   </target>
-
-  
   
   <target name="testReplace">
     <copy file="manifests/test2.mf" toFile="mftest.mf" />
@@ -205,13 +203,26 @@
     </manifest>
   </target>
 
-
   <target name="testFrom">
     <manifest file="mftestfrom.mf" >
       <section name="Test">
         <attribute name="before" value="before" />
         <attribute name="From" value="illegal"/>
         <attribute name="after" value="after" />
+      </section>
+    </manifest>
+  </target>
+  
+  <target name="testIllegalName">
+    <manifest file="mftestillegalname.mf">
+      <attribute name="has blank" value="value"/>
+    </manifest>
+  </target>
+
+  <target name="testIllegalNameInSection">
+    <manifest file="mftestillegalnameinsection.mf">
+      <section name="s1">
+        <attribute name="has blank" value="value"/>
       </section>
     </manifest>
   </target>

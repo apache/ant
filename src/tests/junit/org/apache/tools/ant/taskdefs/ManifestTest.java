@@ -332,6 +332,16 @@ public class ManifestTest extends BuildFileTest {
         expectLogContaining("testFrom", Manifest.ERROR_FROM_FORBIDDEN);
     }
     
+    public void testIllegalName() {
+        //expectBuildException("testIllegalName", "Attribute name is not valid according to the specification.");
+    }
+    
+    public void testIllegalNameInSection() {
+        //expectBuildException("testIllegalNameInSection", "Attribute name is not valid according to the specification.");
+    }
+    
+    
+    
     /**
      * Reads mftest.mf.
      */

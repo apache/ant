@@ -95,6 +95,8 @@ Other changes:
 
 * Patternset allows nested inverted patternsets using <invert>.
 
+* <manifest> checks for validity of attribute names. 
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

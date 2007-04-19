@@ -20,18 +20,19 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.taskdefs.Manifest.Attribute;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Creates a manifest file for inclusion in a JAR, Ant task wrapper
@@ -95,6 +96,11 @@ public class ManifestTask extends Task {
      */
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
+        Enumeration attributeKeys = section.getAttributeKeys();
+        while (attributeKeys.hasMoreElements()) {
+            Attribute attribute = section.getAttribute((String)attributeKeys.nextElement());
+            checkAttribute(attribute);
+        }
         nestedManifest.addConfiguredSection(section);
     }
 
@@ -107,7 +113,45 @@ public class ManifestTask extends Task {
      */
     public void addConfiguredAttribute(Manifest.Attribute attribute)
          throws ManifestException {
+        checkAttribute(attribute);
         nestedManifest.addConfiguredAttribute(attribute);
+    }
+
+    private void checkAttribute(Manifest.Attribute attribute) throws ManifestException {
+        /*
+         * Jar-Specification "Name-Value pairs and Sections":
+         *   name:       alphanum *headerchar 
+         *   alphanum:   {A-Z} | {a-z} | {0-9} 
+         *   headerchar: alphanum | - | _
+         * 
+         * So the resulting regexp would be [A-Za-z0-9][A-Za-z0-9-_]*
+         */
+        String namePattern = "[A-Za-z0-9][A-Za-z0-9-_]*";
+
+        String name = attribute.getName();
+
+        /* FIXME Does not work for me :-( 
+        RegexpMatcherFactory factory = new RegexpMatcherFactory();
+        RegexpMatcher regexpMatcher = factory.newRegexpMatcher(getProject());
+        regexpMatcher.setPattern(namePattern);
+        if (!regexpMatcher.matches(name)) {
+            throw new ManifestException(
+                  "Attribute name is not valid according to the specification. "
+                + "(which means regexp: " + namePattern + ")" 
+            );
+        }
+        */
+        
+        /* Works, but not JDK 1.2 compliant 
+        if (!name.matches(namePattern)) {
+            throw new ManifestException("Attribute name is not valid according to the specification.");
+        }
+        */
+        /* */
+        if (attribute.getName().indexOf(' ') >- 1) {
+            throw new ManifestException("Manifest attribute name must not contain spaces.");
+        }
+        /* */
     }
 
     /**
