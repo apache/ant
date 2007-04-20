@@ -341,7 +341,7 @@ public class ManifestTest extends BuildFileTest {
     }
 
     public void testIllegalNameBegin() {
-        expectBuildException("testIllegalNameInSection", "Manifest attribute names must not contain '-' at the begin.");
+        expectBuildException("testIllegalNameInSection", "Manifest attribute names must not start with '-' at the begin.");
     }
 
     public void testIllegalName2() {

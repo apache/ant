@@ -146,7 +146,7 @@ public class ManifestTask extends Task {
         char ch = name.charAt(0);
 
         if (ch == '-' || ch == '_') {
-            throw new BuildException("Manifest attribute names must not contain '" + ch + "' at the begin.");
+            throw new BuildException("Manifest attribute names must not start with '" + ch + "'.");
         }
         
         for (int i = 0; i < name.length(); i++) {
