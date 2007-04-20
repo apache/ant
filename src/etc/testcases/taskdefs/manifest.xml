@@ -227,6 +227,24 @@
     </manifest>
   </target>
 
+  <target name="testIllegalNameBegin">
+    <manifest file="mftestillegalnamebegin.mf">
+      <attribute name="-name" value="value"/>
+    </manifest>
+  </target>
+
+  <target name="testIllegalName2">
+    <manifest file="mftestillegalnamebegin.mf">
+      <attribute name="has.point" value="value"/>
+    </manifest>
+  </target>
+
+  <target name="testIllegalName3">
+    <manifest file="mftestillegalnamebegin.mf">
+      <attribute name="has*star" value="value"/>
+    </manifest>
+  </target>
+
   <target name="clean">
     <delete>
       <fileset dir="." includes="mftest*"/>

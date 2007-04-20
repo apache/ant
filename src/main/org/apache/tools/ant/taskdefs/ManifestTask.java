@@ -139,20 +139,20 @@ public class ManifestTask extends Task {
      * check each character.
      * 
      * @param attribute The attribute to check
-     * @throws ManifestException if the check fails
+     * @throws BuildException if the check fails
      */
-    private void checkAttribute(Manifest.Attribute attribute) throws ManifestException {
+    private void checkAttribute(Manifest.Attribute attribute) throws BuildException {
         String name = attribute.getName();
         char ch = name.charAt(0);
 
         if (ch == '-' || ch == '_') {
-            throw new ManifestException("Manifest attribute names must not contain '" + ch + "'");
+            throw new BuildException("Manifest attribute names must not contain '" + ch + "' at the begin.");
         }
         
         for (int i = 0; i < name.length(); i++) {
             ch = name.charAt(i);
             if (VALID_ATTRIBUTE_CHARS.indexOf(ch) < 0) {
-                throw new ManifestException("Manifest attribute names must not contain '" + ch + "'");
+                throw new BuildException("Manifest attribute names must not contain '" + ch + "'");
             }
         }
     }
