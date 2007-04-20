@@ -46,6 +46,13 @@ import org.apache.tools.ant.util.FileUtils;
 public class ManifestTask extends Task {
 
     /**
+     * Specifies the valid characters which can be used in attribute names.
+     * {@value}
+     */
+    public final String VALID_ATTRIBUTE_CHARS = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345679-_";
+
+    /**
      * Holds the real data.
      */
     private Manifest nestedManifest = new Manifest();
@@ -117,43 +124,39 @@ public class ManifestTask extends Task {
         nestedManifest.addConfiguredAttribute(attribute);
     }
 
+    /**
+     * Checks the attribute agains the Jar-specification.
+     * 
+     * Jar-Specification <i>"Name-Value pairs and Sections"</i>: <pre>
+     *   name:       alphanum *headerchar 
+     *   alphanum:   {A-Z} | {a-z} | {0-9} 
+     *   headerchar: alphanum | - | _
+     * </pre>
+     * So the resulting regexp would be <tt>[A-Za-z0-9][A-Za-z0-9-_]*</tt>.
+     * 
+     * Because of JDK 1.2 compliance and the possible absence of a
+     * regexp matcher we can not use regexps here. Instead we have to
+     * check each character.
+     * 
+     * @param attribute The attribute to check
+     * @throws ManifestException if the check fails
+     */
     private void checkAttribute(Manifest.Attribute attribute) throws ManifestException {
-        /*
-         * Jar-Specification "Name-Value pairs and Sections":
-         *   name:       alphanum *headerchar 
-         *   alphanum:   {A-Z} | {a-z} | {0-9} 
-         *   headerchar: alphanum | - | _
-         * 
-         * So the resulting regexp would be [A-Za-z0-9][A-Za-z0-9-_]*
-         */
-        String namePattern = "[A-Za-z0-9][A-Za-z0-9-_]*";
-
         String name = attribute.getName();
+        char ch = name.charAt(0);
 
-        /* FIXME Does not work for me :-( 
-        RegexpMatcherFactory factory = new RegexpMatcherFactory();
-        RegexpMatcher regexpMatcher = factory.newRegexpMatcher(getProject());
-        regexpMatcher.setPattern(namePattern);
-        if (!regexpMatcher.matches(name)) {
-            throw new ManifestException(
-                  "Attribute name is not valid according to the specification. "
-                + "(which means regexp: " + namePattern + ")" 
-            );
+        if (ch == '-' || ch == '_') {
+            throw new ManifestException("Manifest attribute names must not contain '" + ch + "'");
         }
-        */
         
-        /* Works, but not JDK 1.2 compliant 
-        if (!name.matches(namePattern)) {
-            throw new ManifestException("Attribute name is not valid according to the specification.");
+        for (int i = 0; i < name.length(); i++) {
+            ch = name.charAt(i);
+            if (VALID_ATTRIBUTE_CHARS.indexOf(ch) < 0) {
+                throw new ManifestException("Manifest attribute names must not contain '" + ch + "'");
+            }
         }
-        */
-        /* */
-        if (attribute.getName().indexOf(' ') >- 1) {
-            throw new ManifestException("Manifest attribute name must not contain spaces.");
-        }
-        /* */
     }
-
+    
     /**
      * The name of the manifest file to create/update.
      * Required if used as a task.
@@ -256,5 +259,4 @@ public class ManifestTask extends Task {
             }
         }
     }
-
 }
