@@ -37,7 +37,23 @@ import org.apache.tools.ant.util.StringUtils;
  * Helper class that collects the methods a task or nested element
  * holds to set attributes, create nested elements or hold PCDATA
  * elements.
- * The class is final as it has a private constructor.
+ *
+ * It contains hashtables containing classes that use introspection
+ * to handle all the invocation of the project-component specific methods.
+ *
+ * This class is somewhat complex, as it implements the O/X mapping between
+ * Ant XML and Java class instances. This is not the best place for someone new
+ * to Ant to start contributing to the codebase, as a change here can break the
+ * entire system in interesting ways. Always run a full test of Ant before checking
+ * in/submitting changes to this file.  
+ *
+ * The class is final and has a private constructor.
+ * To get an instance for a specific (class,project) combination, use {@link #getHelper(Project,Class)}.
+ * This may return an existing version, or a new one
+ * ...do not make any assumptions about its uniqueness, or its validity after the Project
+ * instance has finished its build.
+ *
+ *
  */
 public final class IntrospectionHelper  {
 
@@ -324,7 +340,7 @@ public final class IntrospectionHelper  {
      * The method will make sure the helper will be cleaned up at the end of
      * the project, and only one instance will be created for each class.
      *
-     * @param p the project instance.
+     * @param p the project instance. Can be null, in which case the helper is not cached.
      * @param c The class for which a helper is required.
      *          Must not be <code>null</code>.
      *
@@ -402,11 +418,7 @@ public final class IntrospectionHelper  {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
         } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            if (t instanceof BuildException) {
-                throw (BuildException) t;
-            }
-            throw new BuildException(t);
+            throw extractBuildException(ite);
         }
     }
 
@@ -450,11 +462,7 @@ public final class IntrospectionHelper  {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
         } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            if (t instanceof BuildException) {
-                throw (BuildException) t;
-            }
-            throw new BuildException(t);
+            throw extractBuildException(ite);
         }
     }
 
@@ -472,6 +480,17 @@ public final class IntrospectionHelper  {
         throw new UnsupportedElementException(msg, elementName);
     }
 
+    /**
+     * Get the specific NestedCreator for a given project/parent/element combination
+     * @param project ant project
+     * @param parentUri URI of the parent.
+     * @param parent the parent class
+     * @param elementName element to work with. This can contain
+     *  a URI,localname tuple of of the form uri:localname
+     * @param child the bit of XML to work with
+     * @return a nested creator that can handle the child elements.
+     * @throws BuildException if the parent does not support child elements of that name
+     */
     private NestedCreator getNestedCreator(
         Project project, String parentUri, Object parent,
         String elementName, UnknownElement child) throws BuildException {
@@ -486,7 +505,7 @@ public final class IntrospectionHelper  {
             parentUri = "";
         }
         NestedCreator nc = null;
-        if (uri.equals(parentUri) || uri.equals("")) {
+        if (uri.equals(parentUri) || uri.length()==0) {
             nc = (NestedCreator) nestedCreators.get(
                 name.toLowerCase(Locale.US));
         }
@@ -567,11 +586,7 @@ public final class IntrospectionHelper  {
             // impossible as getMethods should only return public methods
             throw new BuildException(ine);
         } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            if (t instanceof BuildException) {
-                throw (BuildException) t;
-            }
-            throw new BuildException(t);
+            throw extractBuildException(ite);
         }
     }
 
@@ -703,12 +718,23 @@ public final class IntrospectionHelper  {
             // impossible as getMethods should only return public methods
             throw new BuildException(ine);
         } catch (InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            if (t instanceof BuildException) {
-                throw (BuildException) t;
-            }
-            throw new BuildException(t);
+            throw extractBuildException(ite);
         }
+    }
+
+    /**
+     * Helper method to extract the inner fault from an {@link InvocationTargetException}, and turn
+     * it into a BuildException. If it is already a BuildException, it is type cast and returned; if
+     * not a new BuildException is created containing the child as nested text.
+     * @param ite
+     * @return the nested exception
+     */
+    private static BuildException extractBuildException(InvocationTargetException ite) {
+        Throwable t = ite.getTargetException();
+        if (t instanceof BuildException) {
+            return (BuildException) t;
+        }
+        return new BuildException(t);
     }
 
     /**
@@ -1018,14 +1044,19 @@ public final class IntrospectionHelper  {
                             reflectedArg.getMethod("valueOf", new Class[] {String.class}).
                                     invoke(null, new Object[] {value})});
                     } catch (InvocationTargetException x) {
+                        //there is specific logic here for the value being out of the allowed
+                        //set of enumerations.
                         if (x.getTargetException() instanceof IllegalArgumentException) {
                             throw new BuildException(
                                 "'" + value + "' is not a permitted value for "
                                 + reflectedArg.getName());
                         } else {
-                            throw new BuildException(x.getTargetException());
+                            //only if the exception is not an IllegalArgument, do we hand off
+                            //to extractBuildException() to get the buildexception from the InvocationTarget
+                            throw extractBuildException(x);
                         }
                     } catch (Exception x) {
+                        //any other failure of invoke() to work.
                         throw new BuildException(x);
                     }
                 }
@@ -1101,7 +1132,7 @@ public final class IntrospectionHelper  {
      *
      * @return a description of the element type
      */
-    protected String getElementName(Project project, Object element) {
+    private String getElementName(Project project, Object element) {
         return project.getElementName(element);
     }
 
@@ -1203,11 +1234,7 @@ public final class IntrospectionHelper  {
                 }
                 throw ex;
             } catch (InvocationTargetException ex) {
-                Throwable t = ex.getTargetException();
-                if (t instanceof BuildException) {
-                    throw (BuildException) t;
-                }
-                throw new BuildException(t);
+                throw extractBuildException(ex);
             }
         }
 
@@ -1238,11 +1265,7 @@ public final class IntrospectionHelper  {
                 }
                 throw ex;
             } catch (InvocationTargetException ex) {
-                Throwable t = ex.getTargetException();
-                if (t instanceof BuildException) {
-                    throw (BuildException) t;
-                }
-                throw new BuildException(t);
+                throw extractBuildException(ex);
             }
         }
     }
@@ -1254,8 +1277,8 @@ public final class IntrospectionHelper  {
     private abstract static class NestedCreator {
         private Method method; // the method called to add/create the nested element
 
-        NestedCreator(Method m) {
-            this.method = m;
+        protected NestedCreator(Method m) {
+            method = m;
         }
         Method getMethod() {
             return method;
@@ -1278,7 +1301,7 @@ public final class IntrospectionHelper  {
         }
     }
 
-    private class CreateNestedCreator extends NestedCreator {
+    private static class CreateNestedCreator extends NestedCreator {
         CreateNestedCreator(Method m) {
             super(m);
         }
@@ -1290,7 +1313,7 @@ public final class IntrospectionHelper  {
     }
 
     /** Version to use for addXXX and addConfiguredXXX */
-    private class AddNestedCreator extends NestedCreator {
+    private static class AddNestedCreator extends NestedCreator {
 
         static final int ADD = 1;
         static final int ADD_CONFIGURED = 2;
@@ -1347,8 +1370,9 @@ public final class IntrospectionHelper  {
      */
     private abstract static class AttributeSetter {
         private Method method; // the method called to set the attribute
-        AttributeSetter(Method m) {
-            this.method = m;
+
+        protected AttributeSetter(Method m) {
+            method = m;
         }
         abstract void set(Project p, Object parent, String value)
                       throws InvocationTargetException,
@@ -1364,11 +1388,17 @@ public final class IntrospectionHelper  {
     }
 
     /**
-     *
+     * Create a NestedCreator for the given element.
+     * @param project owning project
+     * @param parent Parent object used to create the instance.
+     * @param elementName name of the element
+     * @return a nested creator, or null if there is no component of the given name, or it
+     *        has no matching add type methods
+     * @throws BuildException
      */
     private NestedCreator createAddTypeCreator(
-        Project project, Object parent, String elementName)
-        throws BuildException {
+            Project project, Object parent, String elementName)
+            throws BuildException {
         if (addTypeMethods.size() == 0) {
             return null;
         }
