@@ -562,12 +562,16 @@ public class Delete extends MatchingTask {
                 fs = (FileSet) fs.clone();
                 fs.setProject(getProject());
             }
-            if (!fs.getDir().isDirectory()) {
-                handle("Directory does not exist:" + fs.getDir());
+            File fsDir = fs.getDir();
+            if (fsDir == null) {
+                throw new BuildException(
+                        "File or Resource without directory or file specified");
+            } else if (!fsDir.isDirectory()) {
+                handle("Directory does not exist:" + fsDir);
             } else {
                 resourcesToDelete.add(fs);
                 if (includeEmpty) {
-                    filesetDirs.add(new ReverseDirs(fs.getDir(), fs
+                    filesetDirs.add(new ReverseDirs(fsDir, fs
                             .getDirectoryScanner().getIncludedDirectories()));
                 }
             }
