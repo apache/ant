@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.types;
 
+import java.lang.reflect.Constructor;
 import java.security.UnresolvedPermission;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,6 +51,9 @@ public class Permissions {
     private SecurityManager origSm = null;
     private boolean active = false;
     private boolean delegateToOldSM;
+    
+    // Mandatory constructor for permission object.
+    private static final Class[] PARAMS = { String.class, String.class};
 
     /**
      * Create a set of Permissions.  Equivalent to calling
@@ -113,10 +117,10 @@ public class Permissions {
         for (Iterator i = grantedPermissions.listIterator(); i.hasNext();) {
             Permissions.Permission p = (Permissions.Permission) i.next();
             if (p.getClassName() == null) {
-                throw new BuildException("Granted permission " + p + " does not contain a class.");
+                throw new BuildException("Granted permission " + p
+                        + " does not contain a class.");
             } else {
-                java.security.Permission perm =
-                    new UnresolvedPermission(p.getClassName(), p.getName(), p.getActions(), null);
+                java.security.Permission perm = createPermission(p);
                 granted.add(perm);
             }
         }
@@ -142,6 +146,24 @@ public class Permissions {
         granted.add(new java.util.PropertyPermission("java.vm.version", "read"));
         granted.add(new java.util.PropertyPermission("java.vm.vendor", "read"));
         granted.add(new java.util.PropertyPermission("java.vm.name", "read"));
+    }
+
+    private java.security.Permission createPermission(
+            Permissions.Permission permission) {
+        try {
+            // First add explicitly already resolved permissions will not be
+            // resolved when added as unresolved permission.
+            Class clazz = Class.forName(permission.getClassName());
+            String name = permission.getName();
+            String actions = permission.getActions();
+            Constructor ctr = clazz.getConstructor(PARAMS);
+            return (java.security.Permission) ctr.newInstance(new Object[] {
+                    name, actions });
+        } catch (Exception e) {
+            // Let the UnresolvedPermission handle it.
+            return new UnresolvedPermission(permission.getClassName(),
+                    permission.getName(), permission.getActions(), null);
+        }
     }
 
     /**

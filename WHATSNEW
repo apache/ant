@@ -6,6 +6,10 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Error in handling of some permissions, most notably the AllPermission on
+  jdk 1.5
+  Bugzilla report 41776
+
 * Replace task summary output incorrect.
   Bugzilla report 41544
 
