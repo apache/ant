@@ -95,7 +95,11 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             }
             // execute the script
             return engine.invoke("eval", String.class, getScript());
+        } catch (BuildException be) {
+            //catch and rethrow build exceptions
+            throw be;
         } catch (Exception be) {
+            //any other exception? Get its cause
             Throwable t = be;
             Throwable te = (Throwable) ReflectUtil.invoke(be, "getCause");
             if (te != null) {
