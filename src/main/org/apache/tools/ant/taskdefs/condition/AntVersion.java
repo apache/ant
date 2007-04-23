@@ -77,14 +77,18 @@ public class AntVersion extends Task implements Condition {
         if (null == atLeast && null == exactly) {
             throw new BuildException("One of atleast or exactly must be set.");
         }
-        try {
-            if (atLeast != null) {
+        if (atLeast != null) {
+            try {
                 new DeweyDecimal(atLeast);
-            } else {
-                new DeweyDecimal(exactly);
+            } catch (NumberFormatException e) {
+                throw new BuildException("The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : " + atLeast);
             }
-        } catch (NumberFormatException e) {
-            throw new BuildException("The argument is not a Dewey Decimal eg 1.1.0");
+        } else {
+            try {
+                new DeweyDecimal(exactly);
+            } catch (NumberFormatException e) {
+                throw new BuildException("The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : " + exactly);
+            }
         }
     }
 
