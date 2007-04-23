@@ -159,7 +159,7 @@ public final class Locator {
             try {
                 java.lang.reflect.Method createMethod
                     = uriClazz.getMethod("create", new Class[] {String.class});
-                Object uriObj = createMethod.invoke(null, new Object[] {uri});
+                Object uriObj = createMethod.invoke(null, new Object[] {encodeURI(uri)});
                 java.lang.reflect.Constructor fileConst
                     = File.class.getConstructor(new Class[] {uriClazz});
                 File f = (File) fileConst.newInstance(new Object[] {uriObj});
