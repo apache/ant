@@ -2,15 +2,16 @@
 <project name="antversion-test" default="all" basedir="." xmlns:au="antlib:org.apache.ant.antunit">
 
   <target name="test-atleast">
-    <au:assertTrue>
+    <au:assertTrue message="Expected antversion of ${ant.version} to be at least 1.7.0">
         <!-- AntVersion was introduced like AntUnit in 1.7 - so this must be true -->
     	<antversion atleast="1.7.0"/>
     </au:assertTrue>	
   </target>
 
   <target name="test-exactly">
-    <au:assertTrue>
-    	<antversion exactly="1.7.1"/>			
+    <antversion property="ant.actual.version"/>
+    <au:assertTrue message="Expected antversion of ${ant.actual.version}">
+    	<antversion exactly="${ant.actual.version}"/>
     </au:assertTrue>	
   </target>
 
