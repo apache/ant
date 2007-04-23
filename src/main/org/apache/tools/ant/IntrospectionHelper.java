@@ -206,8 +206,7 @@ public final class IntrospectionHelper  {
                         continue;
                     }
                     /*
-                        If the argument is not a String or Location,
-                        and if there
+                        If the argument is not a String and if there
                         is an overloaded form of this method already defined,
                         we just override that with the new one.
                         This mechanism does not guarantee any specific order
