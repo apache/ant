@@ -25,10 +25,20 @@ import junit.framework.TestCase;
 /**
  * Work around for some changes to the public JUnit API between
  * different JUnit releases.
+ * @since Ant 1.7
  */
 public class JUnitVersionHelper {
 
     private static Method testCaseName = null;
+
+    /**
+     * Name of the JUnit4 class we look for.
+     * {@value}
+     * @since Ant 1.7.1
+     */
+    public static final String JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE = "junit.framework.JUnit4TestCaseFacade";
+    private static final String UNKNOWN_TEST_CASE_NAME = "unknown";
+
     static {
         try {
             testCaseName = TestCase.class.getMethod("getName", new Class[0]);
@@ -36,7 +46,7 @@ public class JUnitVersionHelper {
             // pre JUnit 3.7
             try {
                 testCaseName = TestCase.class.getMethod("name", new Class[0]);
-            } catch (NoSuchMethodException e2) {
+            } catch (NoSuchMethodException ignored) {
                 // ignore
             }
         }
@@ -60,9 +70,9 @@ public class JUnitVersionHelper {
     public static String getTestCaseName(Test t) {
         if (t == null)
         {
-            return "unknown";
+            return UNKNOWN_TEST_CASE_NAME;
         }
-        if (t.getClass().getName().equals("junit.framework.JUnit4TestCaseFacade")) {
+        if (t.getClass().getName().equals(JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE)) {
             // Self-describing as of JUnit 4 (#38811). But trim "(ClassName)".
             String name = t.toString();
             if (name.endsWith(")")) {
@@ -75,7 +85,7 @@ public class JUnitVersionHelper {
         if (t instanceof TestCase && testCaseName != null) {
             try {
                 return (String) testCaseName.invoke(t, new Object[0]);
-            } catch (Throwable e) {
+            } catch (Throwable ignored) {
                 // ignore
             }
         } else {
@@ -92,23 +102,27 @@ public class JUnitVersionHelper {
                     && getNameMethod.getReturnType() == String.class) {
                     return (String) getNameMethod.invoke(t, new Object[0]);
                 }
-            } catch (Throwable e) {
+            } catch (Throwable ignored) {
                 // ignore
             }
         }
-        return "unknown";
+        return UNKNOWN_TEST_CASE_NAME;
     }
 
     /**
      * Tries to find the name of the class which a test represents
-     * across JUnit 3 and 4.
+     * across JUnit 3 and 4. For Junit4 it parses the toString() value of the
+     * test, and extracts it from there.
+     * @since Ant 1.7.1 (it was private until then)
+     * @param test test case to look at
+     * @return the extracted class name.
      */
-    static String getTestCaseClassName(Test test) {
+    public static String getTestCaseClassName(Test test) {
         String className = test.getClass().getName();
         if (test instanceof JUnitTaskMirrorImpl.VmExitErrorTest) {
             className = ((JUnitTaskMirrorImpl.VmExitErrorTest) test).getClassName();
         } else
-        if (className.equals("junit.framework.JUnit4TestCaseFacade")) {
+        if (className.equals(JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE)) {
             // JUnit 4 wraps solo tests this way. We can extract
             // the original test name with a little hack.
             String name = test.toString();
