@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.Hashtable;
 
 /**
  * A BuildFileTest is a TestCase which executes targets from an Ant buildfile
@@ -67,6 +68,17 @@ public abstract class BuildFileTest extends TestCase {
      * test target depend on it.
      */
     protected void tearDown() throws Exception {
+        if (project == null) {
+            /*
+             * Maybe the BuildFileTest was subclassed and there is
+             * no initialized project. So we could avoid getting a
+             * NPE.
+             * If there is an initialized project getTargets() does
+             * not return null as it is initialized by an empty
+             * HashSet.
+             */
+            return;
+        }
         final String tearDown = "tearDown";
         if (project.getTargets().containsKey(tearDown)) {
             project.executeTarget(tearDown);
