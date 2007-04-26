@@ -911,6 +911,34 @@
         </table>
       </subsection>
 
+      <subsection name="EnvGen">
+        <p>
+          <a href="http://www.basilv.com/psd/software">EnvGen</a> is an Ant task for generating 
+          different versions of the same file parameterized for different environments (i.e. 
+          development, test, and production). File generation is done using 
+          <a href="http://freemarker.org/">FreeMarker</a>, a template engine with a full-featured 
+          templating language.
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.5 or higher (not tested on earlier versions)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.basilv.com/psd/software">http://www.basilv.com/software</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.basilv.com/psd/software/feedback">EnvGen Feedback Page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="EMMA">
         <p>EMMA is an open-source toolkit for measuring and reporting
         Java code coverage. EMMA distinguishes itself from other tools
