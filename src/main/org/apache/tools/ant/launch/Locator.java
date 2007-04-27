@@ -49,6 +49,8 @@ public final class Locator {
     private static char[] gAfterEscaping2 = new char[128];
     private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
                                      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    public static final String ERROR_NOT_FILE_URI = "Can only handle valid file: URIs, not ";
+
     // initialize the above 3 arrays
     static {
         for (int i = 0; i <= 0x1f; i++) {
@@ -113,14 +115,19 @@ public final class Locator {
         }
         if (url != null) {
             String u = url.toString();
-            if (u.startsWith("jar:file:")) {
-                int pling = u.indexOf("!");
-                String jarName = u.substring(4, pling);
-                return new File(fromURI(jarName));
-            } else if (u.startsWith("file:")) {
-                int tail = u.indexOf(resource);
-                String dirName = u.substring(0, tail);
-                return new File(fromURI(dirName));
+            try {
+                if (u.startsWith("jar:file:")) {
+                    int pling = u.indexOf("!");
+                    String jarName = u.substring(4, pling);
+                    return new File(fromURI(jarName));
+                } else if (u.startsWith("file:")) {
+                    int tail = u.indexOf(resource);
+                    String dirName = u.substring(0, tail);
+                    return new File(fromURI(dirName));
+                }
+            } catch (IllegalArgumentException e) {
+                //unable to determine the URI for reasons unknown.
+                return null;
             }
         }
         return null;
@@ -169,7 +176,7 @@ public final class Locator {
                 Throwable e2 = e.getTargetException();
                 if (e2 instanceof IllegalArgumentException) {
                     // Bad URI, pass this on.
-                    throw (IllegalArgumentException) e2;
+                    throw new IllegalArgumentException("Bad URI "+uri+ ":"+e2.getMessage(),e2);
                 } else {
                     // Unexpected target exception? Should not happen.
                     e2.printStackTrace();
@@ -179,7 +186,15 @@ public final class Locator {
                 e.printStackTrace();
             }
         }
+        return fromURIJava13(uri);
+    }
 
+    /**
+     * This is only public for testing purposes, so its use is strongly discouraged.
+     * @param uri uri to expand
+     * @return the decoded URI
+     */
+    public static String fromURIJava13(String uri) {
         // Fallback method for Java 1.3 or earlier.
 
         URL url = null;
@@ -189,7 +204,7 @@ public final class Locator {
             // Ignore malformed exception
         }
         if (url == null || !("file".equals(url.getProtocol()))) {
-            throw new IllegalArgumentException("Can only handle valid file: URIs");
+            throw new IllegalArgumentException(ERROR_NOT_FILE_URI +uri);
         }
         StringBuffer buf = new StringBuffer(url.getHost());
         if (buf.length() > 0) {
@@ -216,7 +231,7 @@ public final class Locator {
         } catch (UnsupportedEncodingException exc) {
             // not sure whether this is clean, but this method is
             // declared not to throw exceptions.
-            throw new IllegalStateException("Could not convert URI to path: "
+            throw new IllegalStateException("Could not convert URI "+uri+" to path: "
                                             + exc.getMessage());
         }
         return path;
@@ -369,15 +384,16 @@ public final class Locator {
         }
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
+        String libToolsJar= File.separator + "lib" + File.separator + "tools.jar";
         String javaHome = System.getProperty("java.home");
-        File toolsJar = new File(javaHome + "/lib/tools.jar");
+        File toolsJar = new File(javaHome + libToolsJar);
         if (toolsJar.exists()) {
             // Found in java.home as given
             return toolsJar;
         }
         if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
-            toolsJar = new File(javaHome + "/lib/tools.jar");
+            toolsJar = new File(javaHome + libToolsJar );
         }
         if (!toolsJar.exists()) {
             System.out.println("Unable to locate tools.jar. "
@@ -430,8 +446,9 @@ public final class Locator {
         if (!location.isDirectory()) {
             urls = new URL[1];
             String path = location.getPath();
+            String littlePath = path.toLowerCase(Locale.US);
             for (int i = 0; i < extensions.length; ++i) {
-                if (path.toLowerCase().endsWith(extensions[i])) {
+                if (littlePath.endsWith(extensions[i])) {
                     urls[0] = fileToURL(location);
                     break;
                 }
@@ -441,8 +458,9 @@ public final class Locator {
         File[] matches = location.listFiles(
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
+                    String littleName = name.toLowerCase(Locale.US);
                     for (int i = 0; i < extensions.length; ++i) {
-                        if (name.toLowerCase().endsWith(extensions[i])) {
+                        if (littleName.endsWith(extensions[i])) {
                             return true;
                         }
                     }
