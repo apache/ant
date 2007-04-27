@@ -90,20 +90,19 @@ public class StringResource extends Resource {
         return getName();
     }
 
-
     /**
      * The exists attribute tells whether a resource exists.
      *
      * @return true if this resource exists.
      */
     public boolean isExists() {
-        return getValue()!=null;
+        return getValue() != null;
     }
 
     /**
      * Add nested text to this resource.
      * Properties will be expanded during this process.
-     * @since Ant1.7.1
+     * @since Ant 1.7.1
      * @param text text to use as the string resource
      */
     public void addText(String text) {
@@ -223,10 +222,10 @@ public class StringResource extends Resource {
      */
     private void setValueFromOutputStream(String output) {
         String value;
-        if(getProject()!=null) {
+        if (getProject() != null) {
             value = getProject().replaceProperties(output);
         } else {
-            value=output;
+            value = output;
         }
         setValue(value);
     }
@@ -236,7 +235,7 @@ public class StringResource extends Resource {
 
         public StringResourceFilterOutputStream() {
             super(new ByteArrayOutputStream());
-            baos =(ByteArrayOutputStream) out;
+            baos = (ByteArrayOutputStream) out;
         }
 
         public void close() throws IOException {
