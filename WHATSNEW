@@ -99,7 +99,9 @@ Other changes:
 
 * Patternset allows nested inverted patternsets using <invert>.
 
-* <manifest> checks for validity of attribute names. 
+* <manifest> checks for validity of attribute names.
+
+* JUnitVersionHelper.getTestCaseClassName is now public. Bugzilla 42231
 
 
 Changes from Ant 1.6.5 to Ant 1.7.0
