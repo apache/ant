@@ -35,6 +35,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Locale;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
@@ -212,7 +213,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     private Hashtable zipFiles = new Hashtable();
 
-    /** Static map of jar file/time to manifiest class-path entries */
+    /** Static map of jar file/time to manifest class-path entries */
     private static Map/*<String,String>*/ pathMap = Collections.synchronizedMap(new HashMap());
 
     /**
@@ -515,9 +516,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
                 // ignore
             } finally {
-                if (manifestStream != null) {
-                    manifestStream.close();
-                }
+                FileUtils.close(manifestStream);
                 if (jarFile != null) {
                     jarFile.close();
                 }
@@ -829,6 +828,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 if (zipFile == null) {
                     zipFile = new ZipFile(file);
                     zipFiles.put(file, zipFile);
+                    //to eliminate a race condition, retrieve the entry
+                    //that is in the hash table under that filename
+                    zipFile = (ZipFile) zipFiles.get(file);
                 }
                 ZipEntry entry = zipFile.getEntry(resourceName);
                 if (entry != null) {
@@ -1276,7 +1278,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             }
         }
 
-        if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
+        if (sealedString != null
+                && sealedString.toLowerCase(Locale.ENGLISH).equals("true")) {
             try {
                 sealBase = new URL(FileUtils.getFileUtils().toURI(container.getAbsolutePath()));
             } catch (MalformedURLException e) {
