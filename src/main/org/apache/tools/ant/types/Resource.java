@@ -154,7 +154,7 @@ public class Resource extends DataType
     }
 
     /**
-     * The exists attribute tells whether a file exists.
+     * The exists attribute tells whether a resource exists.
      * @return true if this resource exists.
      */
     public boolean isExists() {
