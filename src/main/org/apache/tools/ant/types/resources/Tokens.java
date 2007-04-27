@@ -71,7 +71,9 @@ public class Tokens extends BaseResourceCollectionWrapper {
         ArrayList result = new ArrayList();
         try {
             for (String s = tokenizer.getToken(rdr); s != null; s = tokenizer.getToken(rdr)) {
-                result.add(new StringResource(s));
+                StringResource resource = new StringResource(s);
+                resource.setProject(getProject());
+                result.add(resource);
             }
         } catch (IOException e) {
             throw new BuildException("Error reading tokens", e);
