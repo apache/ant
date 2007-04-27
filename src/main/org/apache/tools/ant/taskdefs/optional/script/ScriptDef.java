@@ -23,6 +23,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.taskdefs.DefBase;
 
 import java.util.Map;
@@ -250,18 +252,7 @@ public class ScriptDef extends DefBase {
         }
 
         // find the script repository - it is stored in the project
-        Map scriptRepository = null;
-        Project p = getProject();
-        synchronized (p) {
-            scriptRepository =
-                (Map) p.getReference(MagicNames.SCRIPT_REPOSITORY);
-            if (scriptRepository == null) {
-                scriptRepository = new HashMap();
-                p.addReference(MagicNames.SCRIPT_REPOSITORY,
-                    scriptRepository);
-            }
-        }
-
+        Map scriptRepository = lookupScriptRepository();
         name = ProjectHelper.genComponentName(getURI(), name);
         scriptRepository.put(name, this);
         AntTypeDefinition def = new AntTypeDefinition();
@@ -269,6 +260,26 @@ public class ScriptDef extends DefBase {
         def.setClass(ScriptDefBase.class);
         ComponentHelper.getComponentHelper(
             getProject()).addDataTypeDefinition(def);
+    }
+
+    /**
+     * Find or create the script repository - it is stored in the project.
+     * This method is synchronized on the project under {@link MagicNames#SCRIPT_REPOSITORY}
+     * @return the current script repository registered as a refrence.
+     */
+    private Map lookupScriptRepository() {
+        Map scriptRepository = null;
+        Project p = getProject();
+        synchronized (p) {
+            scriptRepository =
+                    (Map) p.getReference(MagicNames.SCRIPT_REPOSITORY);
+            if (scriptRepository == null) {
+                scriptRepository = new HashMap();
+                p.addReference(MagicNames.SCRIPT_REPOSITORY,
+                        scriptRepository);
+            }
+        }
+        return scriptRepository;
     }
 
     /**
@@ -381,6 +392,15 @@ public class ScriptDef extends DefBase {
      */
     public void addText(String text) {
         helper.addText(text);
+    }
+
+    /**
+     * Add any source resource.
+     * @since Ant1.7.1
+     * @param resource source of script
+     */
+    public void add(ResourceCollection resource) {
+        helper.add(resource);
     }
 }
 

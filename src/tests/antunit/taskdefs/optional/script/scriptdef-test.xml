@@ -1,0 +1,99 @@
+<project default="test" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <description>
+    In which we test interesting aspects of scripting.
+    The targeted language is javascript; this lets us run without
+    additions on Java6+.
+  </description>
+
+  <target name="test">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+  
+  <target name="tearDown">
+  </target>
+
+  <property name="script.manager" value="auto" />
+
+  <string id="script.code">
+    self.log("Ant version =${ant.version}");
+    project.setNewProperty("property","live");
+  </string>
+
+  <presetdef name="js">
+    <scriptdef language="javascript" name="scripttest"
+        manager="${script.manager}">
+      <!-- optional property attribute-->
+      <attribute name="property" />
+    </scriptdef>
+  </presetdef>
+
+  <property name="prop"
+      value='self.log("Ant version =${ant.version}");project.setNewProperty("property","live");' />
+
+
+  <presetdef name="assertPropSet">
+    <au:assertPropertyEquals name="property" value="live" />
+  </presetdef>
+
+
+  <!--purely to test that everything works -->
+  <target name="testInline">
+    <js > self.log("Hello");</js>
+    <scripttest/>
+  </target>
+
+
+  <target name="testStringResource">
+    <js >
+      <string value='self.log("Ant version =${ant.version}");' />
+    </js>
+    <scripttest/>
+  </target>
+
+
+
+  <target name="testStringResourceRef">
+    <js >
+      <string refid="script.code" />
+    </js>
+    <scripttest/>
+    <assertPropSet />
+  </target>
+
+  <target name="testStringResourceInline">
+    <js >
+      <string >
+        self.log("Ant version =${ant.version}");
+        project.setNewProperty("property","live");
+      </string>
+    </js>
+    <scripttest/>
+    <assertPropSet />
+  </target>
+
+
+  <target name="testPropertyResource">
+    <js>
+      <propertyresource name="prop" />
+    </js>
+    <scripttest/>
+    <assertPropSet />
+  </target>
+
+  <target name="testMixedResources">
+    <js >
+      <string refid="script.code" />
+      <propertyresource name="prop" />
+      <string >
+        project.setNewProperty("property2","live");
+      </string>
+    </js>
+    <scripttest/>
+    <assertPropSet name="property2" />
+  </target>
+
+</project>

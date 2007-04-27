@@ -21,10 +21,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -186,27 +192,76 @@ public abstract class ScriptRunnerBase {
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
+        String filename = file.getPath();
         if (!file.exists()) {
-            throw new BuildException("file " + file.getPath() + " not found.");
+            throw new BuildException("file " + filename + " not found.");
         }
+        try {
+            readSource(new FileReader(file), filename);
+        } catch (FileNotFoundException e) {
+            //this can only happen if the file got deleted a short moment ago
+            throw new BuildException("file " + filename + " not found.");
+        }
+    }
+
+    /**
+     * Read some source in from the given reader
+     * @param reader the reader; this is closed afterwards.
+     * @param name the name to use in error messages
+     */
+    private void readSource(Reader reader, String name) {
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new FileReader(file));
+            in = new BufferedReader(reader);
             script += FileUtils.readFully(in);
         } catch (IOException ex) {
-            throw new BuildException(ex);
+            throw new BuildException("Failed to read "+ name,ex);
         } finally {
             FileUtils.close(in);
         }
     }
 
+
     /**
-     * Set the script text.
+     * Add a resource to the source list.
+     * @since Ant 1.7.1
+     * @param sourceResource the resource to load
+     * @throws BuildException if the resource cannot be read
+     */
+    public void loadResource(Resource sourceResource) {
+        String name = sourceResource.toLongString();
+        InputStream in = null;
+        try {
+            in = sourceResource.getInputStream();
+        } catch (IOException e) {
+            throw new BuildException("Failed to open "+name,e);
+        } catch (UnsupportedOperationException e) {
+            throw new BuildException("Failed to open " + name+ " -it is not readable",e);
+        }
+        readSource(new InputStreamReader(in), name);
+    }
+
+    /**
+     * Add all resources in a resource collection to the source list.
+     * @since Ant 1.7.1
+     * @param collection the resource to load
+     * @throws BuildException if a resource cannot be read
+     */
+    public void loadResources(ResourceCollection collection) {
+        Iterator resources = collection.iterator();
+        while (resources.hasNext()) {
+            Resource resource = (Resource) resources.next();
+            loadResource(resource);
+        }
+    }
+
+    /**
+     * Set the script text. Properties in the text are not expanded!
      *
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        this.script += text;
+        script += text;
     }
 
     /**

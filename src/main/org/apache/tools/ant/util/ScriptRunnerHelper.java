@@ -21,6 +21,9 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
 import java.io.File;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Union;
 
 
 /**
@@ -36,6 +39,7 @@ public class ScriptRunnerHelper {
     private boolean setBeans = true;
     private ProjectComponent projectComponent;
     private ClassLoader scriptLoader = null;
+    private Union resources=new Union();
 
     /**
      * Set the project component associated with this helper.
@@ -56,6 +60,9 @@ public class ScriptRunnerHelper {
         }
         if (text != null) {
             runner.addText(text);
+        }
+        if (resources !=null) {
+            runner.loadResources(resources);
         }
         if (setBeans) {
             runner.bindToComponent(projectComponent);
@@ -187,5 +194,15 @@ public class ScriptRunnerHelper {
         return new ScriptRunnerCreator(
             projectComponent.getProject()).createRunner(
                 manager, language, generateClassLoader());
+    }
+
+    /**
+     * Add any source resource.
+     *
+     * @param resource source of script
+     * @since Ant1.7.1
+     */
+    public void add(ResourceCollection resource) {
+        resources.add(resource);
     }
 }

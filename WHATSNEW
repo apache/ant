@@ -4,6 +4,11 @@ Changes from Ant 1.7.0 TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* String resources only have properties single expanded. If you relied on
+  <string> resources being expanded more than once, it no longer happens.
+  Bugzilla report 42277.
+
+
 Fixed bugs:
 -----------
 * Error in handling of some permissions, most notably the AllPermission on
@@ -102,6 +107,11 @@ Other changes:
 * <manifest> checks for validity of attribute names.
 
 * JUnitVersionHelper.getTestCaseClassName is now public. Bugzilla 42231
+
+* <string> resource supports nested text. Bugzilla bug 42276
+
+* <scriptdef> now sources scripts from nested resources/resource collections. This lets you
+  define scripts in JARs, remote URLs, or any other supported resource. Bugzilla report 41597.
 
 
 Changes from Ant 1.6.5 to Ant 1.7.0
