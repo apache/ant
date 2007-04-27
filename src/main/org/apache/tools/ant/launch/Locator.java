@@ -163,7 +163,8 @@ public final class Locator {
                 java.lang.reflect.Constructor fileConst
                     = File.class.getConstructor(new Class[] {uriClazz});
                 File f = (File) fileConst.newInstance(new Object[] {uriObj});
-                return f.getAbsolutePath();
+                //bug #42227 forgot to decode before returning
+                return decodeUri(f.getAbsolutePath());
             } catch (java.lang.reflect.InvocationTargetException e) {
                 Throwable e2 = e.getTargetException();
                 if (e2 instanceof IllegalArgumentException) {
@@ -253,6 +254,7 @@ public final class Locator {
         }
         return sb.toString(URI_ENCODING);
     }
+    
     /**
      * Encodes an Uri with % characters.
      * The URI is escaped
