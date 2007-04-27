@@ -249,7 +249,8 @@ element.</p>
 
 <h4><a name="string">string</a></h4>
 
-<p>Represents a Java String. As such a string is readable but not writable.</p>
+<p>Represents a Java String. It can be written to, but only once, after which
+it will be an error to write to again.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -260,9 +261,19 @@ element.</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">The value of this resource</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<p>The resource also supports nested text, which can only be supplied if the <code>value</code> attribute is unset:
+  </p>
+<pre>
+  &lt;string>
+        self.log("Ant version =${ant.version}");
+  &lt;/string>
+</pre>
+    
+</p>
 
 <h4><a name="propertyresource">propertyresource</a></h4>
 

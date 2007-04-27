@@ -83,11 +83,32 @@ public class StringResource extends Resource {
     }
 
     /**
-     * Get the value of this StringResource.
+     * Get the value of this StringResource, resolving to the root reference if needed.
      * @return the represented String.
      */
     public synchronized String getValue() {
         return getName();
+    }
+
+
+    /**
+     * The exists attribute tells whether a resource exists.
+     *
+     * @return true if this resource exists.
+     */
+    public boolean isExists() {
+        return getValue()!=null;
+    }
+
+    /**
+     * Add nested text to this resource.
+     * Properties will be expanded during this process.
+     * @since Ant1.7.1
+     * @param text text to use as the string resource
+     */
+    public void addText(String text) {
+        checkChildrenAllowed();
+        setValue(getProject().replaceProperties(text));
     }
 
     /**
@@ -95,6 +116,7 @@ public class StringResource extends Resource {
      * @param s the encoding name.
      */
     public synchronized void setEncoding(String s) {
+        checkAttributesAllowed();
         encoding = s;
     }
 
@@ -129,15 +151,12 @@ public class StringResource extends Resource {
     }
 
     /**
-     * Get the string.
+     * Get the string. See {@link #getContent()}
      *
      * @return the string contents of the resource.
      * @since Ant 1.7
      */
     public String toString() {
-        if (isReference()) {
-            return getCheckedRef().toString();
-        }
         return String.valueOf(getContent());
     }
 
@@ -175,14 +194,7 @@ public class StringResource extends Resource {
         if (getValue() != null) {
             throw new ImmutableResourceException();
         }
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        return new FilterOutputStream(baos) {
-            public void close() throws IOException {
-                super.close();
-                StringResource.this.setValue(encoding == null
-                    ? baos.toString() : baos.toString(encoding));
-            }
-        };
+        return new StringResourceFilterOutputStream();
     }
 
     /**
@@ -197,20 +209,42 @@ public class StringResource extends Resource {
     }
 
     /**
-     * Get the content of this StringResource.
-     * @return a String; if the Project has been set properties
-     *         replacement will be attempted.
+     * Get the content of this StringResource. See {@link #getValue()}
+     * @return a String or null if there is no value.
      */
     protected synchronized String getContent() {
-        if (isReference()) {
-            return ((StringResource) getCheckedRef()).getContent();
-        }
-        String value = getValue();
-        if (value == null) {
-            return value;
-        }
-        return getProject() == null
-            ? value : getProject().replaceProperties(value);
+        return getValue();
     }
 
+    /**
+     * This method is only for use by our private helper output stream.
+     * It contains specific logic for expanding properties.
+     * @param output the output
+     */
+    private void setValueFromOutputStream(String output) {
+        String value;
+        if(getProject()!=null) {
+            value = getProject().replaceProperties(output);
+        } else {
+            value=output;
+        }
+        setValue(value);
+    }
+
+    private class StringResourceFilterOutputStream extends FilterOutputStream {
+        private final ByteArrayOutputStream baos;
+
+        public StringResourceFilterOutputStream() {
+            super(new ByteArrayOutputStream());
+            baos =(ByteArrayOutputStream) out;
+        }
+
+        public void close() throws IOException {
+            super.close();
+            String result = encoding == null
+                    ? baos.toString() : baos.toString(encoding);
+
+            StringResource.this.setValueFromOutputStream(result);
+        }
+    }
 }
