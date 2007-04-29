@@ -254,9 +254,7 @@ public class ManifestTask extends Task {
             throw new BuildException("Failed to write " + manifestFile,
                                      e, getLocation());
         } finally {
-            if (w != null) {
-                w.close();
-            }
+            FileUtils.close(w);
         }
     }
 }
