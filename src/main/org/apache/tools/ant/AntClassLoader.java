@@ -812,22 +812,22 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     private InputStream getResourceStream(File file, String resourceName) {
         try {
-            if (!file.exists()) {
-                return null;
-            }
-
-            if (file.isDirectory()) {
+            ZipFile zipFile = (ZipFile) zipFiles.get(file);
+            if (zipFile == null && file.isDirectory()) {
                 File resource = new File(file, resourceName);
 
                 if (resource.exists()) {
                     return new FileInputStream(resource);
                 }
             } else {
-                // is the zip file in the cache
-                ZipFile zipFile = (ZipFile) zipFiles.get(file);
                 if (zipFile == null) {
-                    zipFile = new ZipFile(file);
-                    zipFiles.put(file, zipFile);
+                    if (file.exists()) {
+
+                        zipFile = new ZipFile(file);
+                        zipFiles.put(file, zipFile);
+                    } else {
+                        return null;
+                    }
                     //to eliminate a race condition, retrieve the entry
                     //that is in the hash table under that filename
                     zipFile = (ZipFile) zipFiles.get(file);
@@ -838,23 +838,24 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 }
             }
         } catch (Exception e) {
-            log("Ignoring Exception " + e.getClass().getName()
-                + ": " + e.getMessage() + " reading resource " + resourceName
-                + " from " + file, Project.MSG_VERBOSE);
+            log("Ignoring Exception " + e.getClass().getName() + ": "
+                    + e.getMessage() + " reading resource " + resourceName
+                    + " from " + file, Project.MSG_VERBOSE);
         }
 
         return null;
     }
 
     /**
-     * Tests whether or not the parent classloader should be checked for
-     * a resource before this one. If the resource matches both the
-     * "use parent classloader first" and the "use this classloader first"
-     * lists, the latter takes priority.
-     *
-     * @param resourceName The name of the resource to check.
-     *                     Must not be <code>null</code>.
-     *
+     * Tests whether or not the parent classloader should be checked for a
+     * resource before this one. If the resource matches both the "use parent
+     * classloader first" and the "use this classloader first" lists, the latter
+     * takes priority.
+     * 
+     * @param resourceName
+     *            The name of the resource to check. Must not be
+     *            <code>null</code>.
+     * 
      * @return whether or not the parent classloader should be checked for a
      *         resource before this one is.
      */
@@ -1010,11 +1011,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     protected URL getResourceURL(File file, String resourceName) {
         try {
-            if (!file.exists()) {
-                return null;
-            }
-
-            if (file.isDirectory()) {
+            ZipFile zipFile = (ZipFile) zipFiles.get(file);
+            if (zipFile == null && file.isDirectory()) {
                 File resource = new File(file, resourceName);
 
                 if (resource.exists()) {
@@ -1025,12 +1023,14 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                     }
                 }
             } else {
-                ZipFile zipFile = (ZipFile) zipFiles.get(file);
                 if (zipFile == null) {
-                    zipFile = new ZipFile(file);
-                    zipFiles.put(file, zipFile);
+                    if (file.exists()) {
+                        zipFile = new ZipFile(file);
+                        zipFiles.put(file, zipFile);
+                    } else {
+                        return null;
+                    }
                 }
-
                 ZipEntry entry = zipFile.getEntry(resourceName);
                 if (entry != null) {
                     try {
