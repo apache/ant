@@ -36,13 +36,13 @@ td {
    color:            000000;
 }
 
- /* first row */
+/* first row */
 table tr:first-child td {
    background-color: cccccc;
    color:            000000;
 }
 
- /* or th as first row */
+/* or th as first row */
 table th {
    background-color: cccccc;
    color:            000000;
@@ -51,3 +51,16 @@ table th {
 pre {
    background-color: efefef;
 }
+
+/* code snippets in examples and tutorials */
+.code { 
+   background: #EFEFEF; 
+   margin-top: 
+}
+
+/* highlight console output */
+.output { 
+   color: #FFFFFF; 
+   background: #837A67; 
+}
+
