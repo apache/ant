@@ -76,7 +76,7 @@ public abstract class P4HandlerAdapter  implements P4Handler {
         if (myHandler != null) {
             // might never have been started, forfor example ifif p4
             // is not on the PATH
-        myHandler.stop();
+            myHandler.stop();
         }
     }
 
