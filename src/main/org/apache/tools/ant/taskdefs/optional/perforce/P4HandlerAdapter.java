@@ -73,7 +73,11 @@ public abstract class P4HandlerAdapter  implements P4Handler {
      * @see P4Base#execP4Command(String, P4Handler)
      */
     public void stop() {
+        if (myHandler != null) {
+            // might never have been started, forfor example ifif p4
+            // is not on the PATH
         myHandler.stop();
+        }
     }
 
     // CheckStyle:VisibilityModifier OFF - bc

@@ -286,7 +286,8 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
                 try {
                     handler.stop();
                 } catch (Exception e) {
-                    log(e.toString(), Project.MSG_ERR);
+                    log("Error stopping execution framework: " + e.toString(),
+                        Project.MSG_ERR);
                 }
             }
 
