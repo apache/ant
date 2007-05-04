@@ -910,7 +910,9 @@ public class Project implements ResourceFactory {
         while (e.hasMoreElements()) {
             String propertyName = (String) e.nextElement();
             String value = systemP.getProperty(propertyName);
-            this.setPropertyInternal(propertyName, value);
+            if (value != null) {
+                this.setPropertyInternal(propertyName, value);
+            }
         }
     }
 
