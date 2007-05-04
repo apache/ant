@@ -68,6 +68,8 @@ Fixed bugs:
  
 * -autoproxy turns Java1.5+ automatic proxy support on. Bugzilla 41904
 
+* handle null result of system getProperty(). Bugzilla 42334.
+
 Other changes:
 --------------
 
