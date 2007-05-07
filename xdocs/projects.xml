@@ -231,6 +231,35 @@
         </table>
       </subsection>
 
+      <subsection name="AntShellExt (Ant Shell Extension)">
+
+        <p>Ant Shell Extension is a Windows Explorer enhacement that adds a contextual 
+        menu when you right click over an Ant xml file, so you can execute all the actions 
+        defined in that file without going to a command console or starting your favourite 
+        IDE to make a simple clean.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.6 and later, should work with all versions</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.elpagestion.com/os_ant_en.shtml">
+                http://www.elpagestion.com/os_ant_en.shtml</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='mailto:opensource@elpagestion.com'>Project mail</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Antworks">
 
         <p>The antworks project is a set of tools and standardized targets that
