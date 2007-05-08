@@ -90,7 +90,6 @@ public class ReaderInputStream extends InputStream {
                 result = buf[0];
             }
         }
-
         return result & 0xFF;
     }
 
@@ -138,7 +137,7 @@ public class ReaderInputStream extends InputStream {
     }
 
     /**
-     * Marks the read limit of the StringReader.
+     * Marks the read limit of the Reader.
      *
      * @param limit the maximum limit of bytes that can be read before the
      *              mark position becomes invalid
@@ -165,9 +164,8 @@ public class ReaderInputStream extends InputStream {
         }
         if (in.ready()) {
             return 1;
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -178,9 +176,9 @@ public class ReaderInputStream extends InputStream {
     }
 
     /**
-     * Resets the StringReader.
+     * Resets the Reader.
      *
-     * @exception IOException if the StringReader fails to be reset
+     * @exception IOException if the Reader fails to be reset
      */
     public synchronized void reset() throws IOException {
         if (in == null) {
@@ -191,9 +189,9 @@ public class ReaderInputStream extends InputStream {
     }
 
     /**
-     * Closes the Stringreader.
+     * Closes the Reader.
      *
-     * @exception IOException if the original StringReader fails to be closed
+     * @exception IOException if the original Reader fails to be closed
      */
     public synchronized void close() throws IOException {
         if (in != null) {
