@@ -170,7 +170,7 @@ public class Resources extends DataType implements ResourceCollection {
     }
 
     /**
-     * Format this BaseResourceCollectionContainer as a String.
+     * Format this <code>Resources</code> as a String.
      * @return a descriptive <code>String</code>.
      */
     public synchronized String toString() {
