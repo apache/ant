@@ -128,8 +128,11 @@ public class URLResource extends Resource {
      * @return the name of this resource.
      */
     public synchronized String getName() {
-        return isReference() ? ((Resource) getCheckedRef()).getName()
-            : getURL().getFile().substring(1);
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).getName();
+        }
+        String name = getURL().getFile();
+        return "".equals(name) ? name : name.substring(1);
     }
 
     /**
