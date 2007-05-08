@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Reference;
 
@@ -52,7 +53,18 @@ public class StringResource extends Resource {
      * @param value the value of this StringResource.
      */
     public StringResource(String value) {
-        setValue(value);
+        this(null, value);
+    }
+
+    /**
+     * Construct a StringResource with the supplied project and value,
+     * doing property replacement against the project if non-null.
+     * @param project the owning Project.
+     * @param value the value of this StringResource.
+     */
+    public StringResource(Project project, String value) {
+        setProject(project);
+        setValue(project == null ? value : project.replaceProperties(value));
     }
 
     /**
