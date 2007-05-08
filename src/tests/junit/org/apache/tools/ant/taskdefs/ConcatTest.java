@@ -274,7 +274,8 @@ public class ConcatTest
         executeTarget("testTranscoding");
         File f1 = getProject().resolveFile("copy/expected/utf-8");
         File f2 = getProject().resolveFile("concat.utf8");
-        assertTrue(FILE_UTILS.contentEquals(f1, f2));
+        assertTrue(f1.toString() + " differs from " + f2.toString(),
+                FILE_UTILS.contentEquals(f1, f2));
     }
 
     public void testResources() {
