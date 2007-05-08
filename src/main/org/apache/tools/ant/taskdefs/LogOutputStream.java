@@ -38,6 +38,16 @@ public class LogOutputStream extends LineOrientedOutputStream {
     private int level = Project.MSG_INFO;
 
     /**
+     * Create a new LogOutputStream for the specified ProjectComponent.
+     *
+     * @param pc the project component for whom to log
+     * @since Ant 1.7.1
+     */
+    public LogOutputStream(ProjectComponent pc) {
+        this.pc = pc;
+    }
+
+    /**
      * Creates a new instance of this class.
      *
      * @param task the task for whom to log
@@ -55,7 +65,7 @@ public class LogOutputStream extends LineOrientedOutputStream {
      * @since Ant 1.6.3
      */
     public LogOutputStream(ProjectComponent pc, int level) {
-        this.pc = pc;
+        this(pc);
         this.level = level;
     }
 
