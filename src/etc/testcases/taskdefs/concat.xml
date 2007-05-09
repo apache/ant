@@ -191,7 +191,7 @@
       <url url="http://ant.apache.org" />
       <url url="http://ant.apache.org" />
     </concat>
-    <length property="expected" includeduplicates="true">
+    <length property="expected">
       <resources>
         <url url="http://ant.apache.org" />
         <url url="http://ant.apache.org" />
