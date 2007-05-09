@@ -29,19 +29,16 @@
     <length string="${length.each}" property="length.length.each" />
     <length string="${foo}${bar}........${line.separator}"
             property="length.expected" />
-    <fail>
+
+    <au:assertTrue>
       <!-- test that both files are represented, and that the
            output is the expected length; do not assume order. -->
-      <condition>
-        <not>
-          <and>
-            <contains string="${length.each}" substring="${foo} : 3" />
-            <contains string="${length.each}" substring="${bar} : 3" />
-            <equals arg1="${length.length.each}" arg2="${length.expected}" />
-          </and>
-        </not>
-      </condition>
-    </fail>
+      <and>
+        <contains string="${length.each}" substring="${foo} : 3" />
+        <contains string="${length.each}" substring="${bar} : 3" />
+        <equals arg1="${length.length.each}" arg2="${length.expected}" />
+      </and>
+    </au:assertTrue>
   </target>
 
   <target name="testEachCondition" depends="setUp">
@@ -50,19 +47,15 @@
     </length>
     <length string="${foo}${bar}........${line.separator}"
             property="length.expected" />
-    <fail>
+    <au:assertTrue>
       <!-- test that both files are represented, and that the
            output is the expected length; do not assume order. -->
-      <condition>
-        <not>
-          <and>
-            <contains string="${length.each}" substring="${foo} : 3" />
-            <contains string="${length.each}" substring="${bar} : 3" />
-            <length string="${length.each}" length="${length.expected}" />
-          </and>
-        </not>
-      </condition>
-    </fail>
+      <and>
+        <contains string="${length.each}" substring="${foo} : 3" />
+        <contains string="${length.each}" substring="${bar} : 3" />
+        <length string="${length.each}" length="${length.expected}" />
+      </and>
+    </au:assertTrue>
   </target>
 
   <target name="testAll" depends="setUp">
@@ -70,160 +63,104 @@
       <fileset id="foo" file="${dir.a}/foo" />
       <fileset id="bar" file="${dir.b}/bar" />
     </length>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="6" arg2="${length.all}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="6" arg2="${length.all}" />
+    </au:assertTrue>
   </target>
 
   <target name="testAllCondition" depends="setUp">
-    <fail>
-      <condition>
-        <not>
-          <length length="6">
-            <fileset id="foo" file="${dir.a}/foo" />
-            <fileset id="bar" file="${dir.b}/bar" />
-          </length>
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length length="6">
+        <fileset id="foo" file="${dir.a}/foo" />
+        <fileset id="bar" file="${dir.b}/bar" />
+      </length>
+    </au:assertTrue>
   </target>
 
   <target name="testFile" depends="setUp">
     <length property="length.foo" file="${dir.a}/foo" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="3" arg2="${length.foo}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="3" arg2="${length.foo}" />
+    </au:assertTrue>
   </target>
 
   <target name="testFileCondition" depends="setUp">
-    <fail>
-      <condition>
-        <not>
-          <length length="3" file="${dir.a}/foo" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length length="3" file="${dir.a}/foo" />
+    </au:assertTrue>
   </target>
 
   <target name="testBoth" depends="setUp">
     <length property="length.foo" file="${dir.a}/foo">
       <fileset file="${dir.b}/bar" />
     </length>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="6" arg2="${length.foo}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="6" arg2="${length.foo}" />
+    </au:assertTrue>
   </target>
 
   <target name="testBothCondition" depends="setUp">
-    <fail>
-      <condition>
-        <not>
-          <length length="6" file="${dir.a}/foo">
-            <fileset file="${dir.b}/bar" />
-          </length>
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length length="6" file="${dir.a}/foo">
+        <fileset file="${dir.b}/bar" />
+      </length>
+    </au:assertTrue>
   </target>
 
   <target name="testDupes" depends="setUp">
     <length property="length.foo" file="${dir.a}/foo">
       <fileset dir="${dir}" />
     </length>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="9" arg2="${length.foo}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="9" arg2="${length.foo}" />
+    </au:assertTrue>
   </target>
 
   <target name="testDupesCondition" depends="setUp">
-    <fail>
-      <condition>
-        <not>
-          <length length="9" file="${dir.a}/foo">
-            <fileset dir="${dir}" />
-          </length>
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length length="9" file="${dir.a}/foo">
+        <fileset dir="${dir}" />
+      </length>
+    </au:assertTrue>
   </target>
 
   <target name="testString">
     <length string="foo" property="length.string" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="3" arg2="${length.string}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="3" arg2="${length.string}" />
+    </au:assertTrue>
   </target>
 
   <target name="testStringCondition">
-    <fail>
-      <condition>
-        <not>
-          <length string="foo" length="3" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length string="foo" length="3" />
+    </au:assertTrue>
   </target>
 
   <target name="testTrimString">
     <length string=" foo " trim="true" property="length.string" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="3" arg2="${length.string}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="3" arg2="${length.string}" />
+    </au:assertTrue>
   </target>
 
   <target name="testTrimStringCondition">
-    <fail>
-      <condition>
-        <not>
-          <length string=" foo " trim="true" length="3" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length string=" foo " trim="true" length="3" />
+    </au:assertTrue>
   </target>
 
   <target name="testNoTrimString">
     <length string=" foo " property="length.string" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="5" arg2="${length.string}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="5" arg2="${length.string}" />
+    </au:assertTrue>
   </target>
 
   <target name="testNoTrimStringCondition">
-    <fail>
-      <condition>
-        <not>
-          <length string=" foo " length="5" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <length string=" foo " length="5" />
+    </au:assertTrue>
   </target>
 
   <target name="testTrimFile" description="should fail">
@@ -241,13 +178,9 @@
   <target name="testImmutable">
     <length string="foo" property="length.string" />
     <length string="foobar" property="length.string" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="3" arg2="${length.string}" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="3" arg2="${length.string}" />
+    </au:assertTrue>
   </target>
 
   <target name="zip" depends="setUp">
@@ -264,33 +197,25 @@
     <length property="length.zipfile2">
       <zipfileset src="${zipfile}" includes="bar" />
     </length>
-    <fail>
-      <condition>
-        <not>
-          <and>
-            <equals arg1="6" arg2="${length.zipfile1}" />
-            <equals arg1="3" arg2="${length.zipfile2}" />
-          </and>
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <and>
+        <equals arg1="6" arg2="${length.zipfile1}" />
+        <equals arg1="3" arg2="${length.zipfile2}" />
+      </and>
+    </au:assertTrue>
   </target>
 
   <target name="testZipFileSetCondition" depends="zip">
-    <fail>
-      <condition>
-        <not>
-          <and>
-            <length length="6">
-              <zipfileset src="${zipfile}" />
-            </length>
-            <length length="3">
-              <zipfileset src="${zipfile}" includes="bar" />
-            </length>
-          </and>
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <and>
+        <length length="6">
+          <zipfileset src="${zipfile}" />
+        </length>
+        <length length="3">
+          <zipfileset src="${zipfile}" includes="bar" />
+        </length>
+      </and>
+    </au:assertTrue>
   </target>
 
 </project>
