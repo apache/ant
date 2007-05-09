@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<project name="antunit-base">
+
+  <target name="antunit">
+    <antunit xmlns="antlib:org.apache.ant.antunit">
+      <plainlistener />
+      <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant" />
+    </antunit>
+  </target>
+
+</project>
