@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<project name="test-concat" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <property name="br" value="${line.separator}" />
+  <property name="world" value="World" />
+
+  <target name="testCountEquals1">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <concat>Hello, ${world}!</concat>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testReplacement">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>Hello, ${world}!</string>
+        <concat>Hello, ${world}!</concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testResources">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foobarbaz</string>
+        <concat>
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFixLastLineResources">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foo${line.separator}bar${line.separator}baz${line.separator}</string>
+        <concat fixlastline="true">
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testEncoding">
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.in" />
+        <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+        <concat outputEncoding="utf-16" fixlastline="true">
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFiltering">
+    <au:assertTrue>
+      <resourcesmatch>
+        <concat>foo${br}bar${br}baz${br}</concat>
+        <concat>
+foo
+#comment 1
+bar
+#comment 2
+baz
+#comment 3
+          <filterchain>
+            <striplinecomments>
+              <comment value="#" />
+            </striplinecomments>
+            <ignoreblank />
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+</project>

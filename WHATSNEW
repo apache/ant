@@ -118,6 +118,8 @@ Other changes:
 * <scriptdef> now sources scripts from nested resources/resource collections. This lets you
   define scripts in JARs, remote URLs, or any other supported resource. Bugzilla report 41597.
 
+* <concat> is now usable as a single-element ResourceCollection.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

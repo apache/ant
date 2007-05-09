@@ -1,6 +1,7 @@
 <project xmlns:au="antlib:org.apache.ant.antunit">
   <target name="tearDown">
     <delete file="binaryAppendDest" />
+    <delete file="encodeStringDest" />
   </target>
 
   <target name="testBinaryAppend">
@@ -21,4 +22,17 @@
       <length file="binaryAppendDest" length="2" />
     </au:assertTrue>
   </target>
+
+  <target name="testStringEncoding">
+    <property name="br" value="${line.separator}" />
+    <concat destfile="encodeStringDest"
+            outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.expected" />
+        <file file="encodeStringDest" />
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
 </project>
