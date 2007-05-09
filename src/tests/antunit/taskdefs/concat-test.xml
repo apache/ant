@@ -1,4 +1,6 @@
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
   <target name="tearDown">
     <delete file="binaryAppendDest" />
     <delete file="encodeStringDest" />
@@ -31,6 +33,15 @@
       <resourcesmatch astext="true">
         <file file="utf-16.expected" />
         <file file="encodeStringDest" />
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testDoNotFixNestedText" description="Bugzilla 42369">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foo</string>
+        <concat fixlastline="true">foo</concat>
       </resourcesmatch>
     </au:assertTrue>
   </target>

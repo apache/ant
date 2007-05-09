@@ -265,7 +265,7 @@ public class Concat extends Task implements ResourceCollection {
                 int ch = getReader().read();
                 if (ch == -1) {
                     nextReader();
-                    if (fixLastLine && isMissingEndOfLine()) {
+                    if (isFixLastLine() && isMissingEndOfLine()) {
                         needAddSeparator = true;
                         lastPos = 0;
                     }
@@ -307,12 +307,12 @@ public class Concat extends Task implements ResourceCollection {
                 int nRead = getReader().read(cbuf, off, len);
                 if (nRead == -1 || nRead == 0) {
                     nextReader();
-                    if (fixLastLine && isMissingEndOfLine()) {
+                    if (isFixLastLine() && isMissingEndOfLine()) {
                         needAddSeparator = true;
                         lastPos = 0;
                     }
                 } else {
-                    if (fixLastLine) {
+                    if (isFixLastLine()) {
                         for (int i = nRead;
                                  i > (nRead - lastChars.length);
                                  --i) {
@@ -368,6 +368,10 @@ public class Concat extends Task implements ResourceCollection {
                 }
             }
             return false;
+        }
+
+        private boolean isFixLastLine() {
+            return fixLastLine && textBuffer == null;
         }
     }
 
@@ -887,10 +891,8 @@ public class Concat extends Task implements ResourceCollection {
      * for &quot;ignorable whitespace&quot; as well.</p>
      */
     private void sanitizeText() {
-        if (textBuffer != null) {
-            if (textBuffer.substring(0).trim().length() == 0) {
-                textBuffer = null;
-            }
+        if (textBuffer != null && "".equals(textBuffer.toString().trim())) {
+            textBuffer = null;
         }
     }
 

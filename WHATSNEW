@@ -70,6 +70,9 @@ Fixed bugs:
 
 * handle null result of system getProperty(). Bugzilla 42334.
 
+* Regression: concat fixlastline="true" should not have applied to
+  nested text, but did in Ant 1.7.0. Bugzilla 42369.
+
 Other changes:
 --------------
 
