@@ -438,8 +438,13 @@ public class ResourceUtils {
         if (r1.equals(r2)) {
             return true;
         }
-        if (!text && r1.getSize() != r2.getSize()) {
-            return false;
+        if (!text) {
+            long s1 = r1.getSize();
+            long s2 = r2.getSize();
+            if (s1 != Resource.UNKNOWN_SIZE && s2 != Resource.UNKNOWN_SIZE
+                    && s1 != s2) {
+                return false;
+            }
         }
         return compareContent(r1, r2, text) == 0;
     }
