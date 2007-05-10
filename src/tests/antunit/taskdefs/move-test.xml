@@ -1,4 +1,5 @@
-<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
 
   <target name="test-move-caseonly">
     <!-- this test is inspired by bugzilla 41948 -->
@@ -14,12 +15,5 @@
 
   <target name="tearDown">
     <delete file="${java.io.tmpdir}/aBc"/>
-  </target>
-
-  <target name="all">
-    <au:antunit>
-      <fileset file="${ant.file}"/>
-      <au:plainlistener/>
-    </au:antunit>
   </target>
 </project>
