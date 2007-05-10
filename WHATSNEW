@@ -8,6 +8,11 @@ Changes that could break older environments:
   <string> resources being expanded more than once, it no longer happens.
   Bugzilla report 42277.
 
+* A String resource's encoding attribute was only taken into account when
+  set from the resource's OutputStream; the InputStream provided the String's
+  binary content according to the platform's default encoding. Behavior has
+  been modified to encode outgoing (InputStream) content as well as encoding
+  incoming (OutputStream) content.
 
 Fixed bugs:
 -----------
