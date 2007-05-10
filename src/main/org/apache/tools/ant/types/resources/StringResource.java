@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.types.resources;
 
 import java.io.IOException;
@@ -183,11 +182,12 @@ public class StringResource extends Resource {
         if (isReference()) {
             return ((Resource) getCheckedRef()).getInputStream();
         }
-        //I can't get my head around this; is encoding treatment needed here?
-        return
-            //new oata.util.ReaderInputStream(new InputStreamReader(
-            new ByteArrayInputStream(getContent().getBytes());
-            //, encoding), encoding);
+        String content = getContent();
+        if (content == null) {
+            throw new IllegalStateException("unset string value");
+        }
+        return new ByteArrayInputStream(encoding == null
+                ? content.getBytes() : content.getBytes(encoding));
     }
 
     /**
