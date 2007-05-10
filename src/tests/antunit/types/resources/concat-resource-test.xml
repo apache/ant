@@ -87,4 +87,20 @@ baz
     </au:assertTrue>
   </target>
 
+  <target name="testReference">
+    <resources id="concat">
+      <concat>foo</concat>
+    </resources>
+    <au:assertTrue>
+      <and>
+        <resourcecount count="1" refid="concat" />
+        <resourcesmatch>
+          <string>foo</string>
+          <resources refid="concat" />
+          <!-- purposely hit it twice to see what happens -->
+          <resources refid="concat" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
 </project>
