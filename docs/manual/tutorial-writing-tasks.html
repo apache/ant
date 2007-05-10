@@ -313,14 +313,14 @@ property name as argument and returns its value (or ${propname} if not set).</p>
 <p>There are several ways for inserting the ability of handling nested elements. See
 the <a href="http://ant.apache.org/manual/develop.html#nested-elements">Manual [4]</a> for other.
 We use the first way of the three described ways. There are several steps for that:<ol>
-<li>We create a class for collecting all the infos the nested element should contain.
+<li>We create a class for collecting all the info the nested element should contain.
   This class is created by the same rules for attributes and nested elements
   as for the task (<code>set&lt;attributename&gt;</code>() methods). </li>
 <li>The task holds multiple instances of this class in a list.</li>
 <li>A factory method instantiates an object, saves the reference in the list
   and returns it to Ant Core.</li>
 <li>The execute() method iterates over the list and evaluates its values.</li>
-</li></p>
+</ol></p>
 <pre class="code">
 import java.util.Vector;
 import java.util.Iterator;
@@ -361,7 +361,8 @@ the buildfile
             &lt;message msg="Nested Element 2"/&gt;
         &lt;/helloworld&gt;
 </pre>
-
+<p>Note that if you choose to use methods 2 or 3, the class that represents the nested
+element must be declared as <pre>static</pre></p>
 
 <a name="complex"></a>
 <h2>Our task in a little more complex version</h2>
@@ -449,7 +450,7 @@ import java.util.Iterator;
 /**
  * The task of the tutorial.
  * Print a message or let the build fail.
- * @author Jan Matèrne
+ * @author Jan Matï¿½rne
  * @since 2003-08-19
  */
 public class HelloWorld extends Task {
