@@ -1,18 +1,12 @@
 <?xml version="1.0"?>
 
-<project name="delete-test" basedir="." default="all"
+<project name="delete-test" basedir="." default="antunit"
        xmlns:au="antlib:org.apache.ant.antunit">
   <property name="working.dir" value="working"/>
   <property name="existing.dir" value="working/exists"/>
   <property name="nonexistent.dir" value="working/nonexists"/>
 	
-  <target name="all">
-    <au:antunit>
-      <fileset file="${ant.file}"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
-
+  <import file="../antunit-base.xml" />
 
   <target name="init">
     <delete dir="${working.dir}"/>

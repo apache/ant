@@ -1,16 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="war-test" basedir="." default="all"
+<project name="war-test" basedir="." default="antunit"
        xmlns:au="antlib:org.apache.ant.antunit">
   <property name="working.dir" value="working"/>
 
-  <target name="all">
-    <au:antunit>
-      <fileset file="${ant.file}"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
-
+  <import file="../antunit-base.xml" />
 
   <target name="init">
     <delete dir="${working.dir}"/>

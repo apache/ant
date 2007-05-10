@@ -1,4 +1,6 @@
-<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
   <property name="ant-build" location="../../../../build"/>
   <property name="build-dir" 
             location="${ant-build}/ant-unit/whichresource/build"/>
@@ -32,11 +34,5 @@
       <isset property="whichresource.prop2"/>
     </au:assertFalse>
   </target>
-
-  <target name="all">
-    <au:antunit>
-      <fileset file="${ant.file}"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
+    
 </project>
