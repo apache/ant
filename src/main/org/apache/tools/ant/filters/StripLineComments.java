@@ -219,5 +219,15 @@ public final class StripLineComments
         public final String getValue() {
             return value;
         }
+
+        /**
+         * Alt. syntax to set the prefix for this type of line comment.
+         *
+         * @param comment The prefix for a line comment of this type.
+         * Must not be <code>null</code>.
+         */
+        public void addText(String comment) {
+            setValue(comment);
+        }
     }
 }

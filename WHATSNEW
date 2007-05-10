@@ -128,6 +128,10 @@ Other changes:
 
 * <concat> is now usable as a single-element ResourceCollection.
 
+* It is now possible to provide the value of a <striplinecomments> filter's
+  <comment> nested element as nested text instead of using the 'value'
+  attribute.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

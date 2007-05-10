@@ -1,0 +1,58 @@
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <property name="br" value="${line.separator}" />
+
+  <string id="input">foo
+#pound
+bar
+//java sl
+baz
+REMark
+</string>
+
+  <macrodef name="test">
+    <attribute name="lines" />
+    <element name="comments" implicit="true" />
+    <sequential>
+      <au:assertTrue>
+        <resourcecount count="@{lines}">
+          <tokens>
+            <concat>
+              <resource refid="input" />
+              <filterchain>
+                <striplinecomments>
+                  <comments />
+                </striplinecomments>
+                <ignoreblank />
+              </filterchain>
+            </concat>
+          </tokens>
+        </resourcecount>
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <target name="testBasic">
+    <test lines="5">
+      <comment value="#" />
+    </test>
+  </target>
+
+  <target name="testMultiple">
+    <test lines="3">
+      <comment value="#" />
+      <comment value="//" />
+      <comment value="REM" />
+    </test>
+  </target>
+
+  <target name="testNestedText">
+    <test lines="3">
+      <comment>#</comment>
+      <comment>//</comment>
+      <comment>REM</comment>
+    </test>
+  </target>
+
+</project>
