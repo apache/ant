@@ -208,6 +208,9 @@ public final class StripLineComments
          * Must not be <code>null</code>.
          */
         public final void setValue(String comment) {
+            if (value != null) {
+                throw new IllegalStateException("Comment value already set.");
+            }
             value = comment;
         }
 

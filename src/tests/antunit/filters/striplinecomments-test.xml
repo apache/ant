@@ -55,4 +55,14 @@ REMark
     </test>
   </target>
 
+  <target name="testExclusivity">
+    <au:expectfailure>
+      <filterchain>
+        <striplinecomments>
+          <comment value="#">#"</comment>
+        </striplinecomments>
+      </filterchain>
+    </au:expectfailure>
+  </target>
+
 </project>
