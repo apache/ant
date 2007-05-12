@@ -43,7 +43,7 @@ import org.w3c.dom.Text;
  */
 public class DOMElementWriter {
 
-    /** prefix for genefrated prefixes */
+    /** prefix for generated prefixes */
     private static final String NS = "ns";
 
     /** xml declaration is on by default */
