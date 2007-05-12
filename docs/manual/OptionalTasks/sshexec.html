@@ -61,7 +61,12 @@ and won't work with versions of jsch earlier than
   <tr>
     <td valign="top">command</td>
     <td valign="top">The command to run on the remote host.</td>
-    <td valian="top" align="center">Yes</td>
+    <td valian="top" align="center">Either this or commandResource must be set</td>
+  </tr>
+  <tr>
+    <td valign="top">commandResource</td>
+    <td valign="top">The resource (file) that contains the commands to run on the remote host.</td>
+    <td valian="top" align="center">Either this or command must be set</td>
   </tr>
   <tr>
     <td valign="top">port</td>
@@ -159,6 +164,15 @@ and won't work with versions of jsch earlier than
 	command=&quot;touch somefile&quot;/&gt;
 </pre>
 
+<p><b>Run a set of commands from a command resource (file) on a remote machine using key authentication with no passphrase</b></p>
+<pre>
+  &lt;sshexec host=&quot;somehost&quot;
+	username=&quot;dude&quot;
+	keyfile=&quot;${user.home}/.ssh/id_dsa&quot;
+	commandResource=&quot;to_run&quot;/&gt;
+</pre>
+
+
 <p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
 in sshexec task can be a serious security hole.  Consider using variable
 substitution and include the password on the command line.  For example:<br>
@@ -173,9 +187,5 @@ Invoke ant with the following command line:
     ant -Dusername=me -Dpassword=mypassword target1 target2
 </pre>
 </p>
-
-
-
 </body>
 </html>
-
