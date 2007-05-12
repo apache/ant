@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
- package org.apache.tools.ant.taskdefs.condition;
+package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
 import java.util.Iterator;
