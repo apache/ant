@@ -76,6 +76,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
   <typedef name="resourcesmatch" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
+  <typedef name="resourcecontains" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.ResourceContains"/>
   <typedef name="scriptcondition" onerror="ignore"
            classname="org.apache.tools.ant.types.optional.ScriptCondition"/>
   <typedef name="socket" onerror="ignore"
