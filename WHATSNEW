@@ -16,6 +16,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Regression: Locator fails with URI encoding problem when spaces in path
+  Bugzilla report 42222
+
 * Improvements in AntClassLoader Speed.
   Bugzilla report 42259
 
@@ -80,6 +83,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* <script> now has basic support for JavaFX scripts
+
+* SSH task can now take a command parameter containing the commands to execute.
+  This allows you to connect to a server and execute a number of commands
+  without constantly reconnecting for each command.
 
 * Upgraded XML API to XML commons version 1.3.04.
 
