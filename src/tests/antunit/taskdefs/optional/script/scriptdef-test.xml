@@ -1,17 +1,12 @@
-<project default="test" xmlns:au="antlib:org.apache.ant.antunit">
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
+  <import file="../../../antunit-base.xml"/>	
+	
   <description>
     In which we test interesting aspects of scripting.
     The targeted language is javascript; this lets us run without
     additions on Java6+.
   </description>
-
-  <target name="test">
-    <au:antunit>
-      <fileset file="${ant.file}"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
   
   <target name="tearDown">
   </target>
@@ -34,7 +29,6 @@
   <property name="prop"
       value='self.log("Ant version =${ant.version}");project.setNewProperty("property","live");' />
 
-
   <presetdef name="assertPropSet">
     <au:assertPropertyEquals name="property" value="live" />
   </presetdef>
@@ -42,22 +36,19 @@
 
   <!--purely to test that everything works -->
   <target name="testInline">
-    <js > self.log("Hello");</js>
+    <js>self.log("Hello");</js>
     <scripttest/>
   </target>
 
-
   <target name="testStringResource">
-    <js >
+    <js>
       <string value='self.log("Ant version =${ant.version}");' />
     </js>
     <scripttest/>
   </target>
 
-
-
   <target name="testStringResourceRef">
-    <js >
+    <js>
       <string refid="script.code" />
     </js>
     <scripttest/>
@@ -65,27 +56,26 @@
   </target>
 
   <target name="testStringResourceInline">
-    <js >
-      <string >
+    <js>
+      <string>
         self.log("Ant version =${ant.version}");
         project.setNewProperty("property","live");
       </string>
     </js>
     <scripttest/>
-    <assertPropSet />
+    <assertPropSet/>
   </target>
-
 
   <target name="testPropertyResource">
     <js>
       <propertyresource name="prop" />
     </js>
     <scripttest/>
-    <assertPropSet />
+    <assertPropSet/>
   </target>
 
   <target name="testMixedResources">
-    <js >
+    <js>
       <string refid="script.code" />
       <propertyresource name="prop" />
       <string >
@@ -95,5 +85,4 @@
     <scripttest/>
     <assertPropSet name="property2" />
   </target>
-
 </project>
