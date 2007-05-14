@@ -33,6 +33,12 @@
     </au:assertTrue>
   </target>
 
+  <target name="testContainsEmptyString">
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="" />
+    </au:assertTrue>
+  </target>
+
   <target name="testwithemptyfile">
     <truncate file="${file}"/>
     <au:assertFalse message="Should have found nothing as file is empty">
