@@ -18,6 +18,14 @@
     </au:assertTrue>
   </target>
 
+  <target name="testContainsLowerNonCS">
+    <echo file="${file}" message="LOADS OF TEXT!"/>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="text"
+                        casesensitive="false"/>
+    </au:assertTrue>
+  </target>
+
   <target name="testwithemptyfile">
     <truncate file="${file}"/>
     <au:assertFalse message="Should have found nothing as file is empty">
