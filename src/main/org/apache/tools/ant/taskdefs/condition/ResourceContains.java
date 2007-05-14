@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
@@ -34,9 +35,26 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ResourceContains implements Condition {
 
+    private Project project;
     private String substring;
     private Resource resource;
     private boolean casesensitive = true;
+
+    /**
+     * Set this condition's Project.
+     * @param project Project
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Get this condition's Project.
+     * @return Project
+     */
+    public Project getProject() {
+        return project;
+    }
 
     /**
      * Sets the resource to search
@@ -70,6 +88,13 @@ public class ResourceContains implements Condition {
         if (resource == null || substring == null) {
             throw new BuildException("both resource and substring are required "
                                      + "in <resourcecontains>");
+        }
+
+        if (substring.length() == 0) {
+            if (getProject() != null) {
+                getProject().log("ResourceContains: substring is empty; returning true", Project.MSG_VERBOSE);
+            }
+            return true;
         }
 
         if (resource.getSize() == 0) {
