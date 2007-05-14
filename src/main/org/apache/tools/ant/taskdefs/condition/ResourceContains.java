@@ -80,18 +80,14 @@ public class ResourceContains implements Condition {
         try {
             reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             String contents = FileUtils.readFully(reader);
-            if (casesensitive) {
-                if (contents.indexOf(substring) > -1) {
-                    return true;
-                }
-            } else {
-                if (contents.toLowerCase().indexOf(substring) > -1) {
-                    return true;
-                }
+            String sub = substring;
+            if (!casesensitive) {
+                contents = contents.toLowerCase();
+                sub = sub.toLowerCase();
             }
-            return false;
+            return contents.indexOf(sub) >= 0;
         } catch (IOException e) {
-            throw new BuildException("There was a problem accessing resource : "+resource);
+            throw new BuildException("There was a problem accessing resource : " + resource);
         } finally {
             FileUtils.close(reader);
         }
