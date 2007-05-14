@@ -13,7 +13,6 @@
   </target>
 
   <target name="testcontains">
-    <au:assertFileExists file="${file}"/>
     <au:assertTrue message="Should have found the text in the resource">
       <resourcecontains resource="${file}" substring="text"/>
     </au:assertTrue>
