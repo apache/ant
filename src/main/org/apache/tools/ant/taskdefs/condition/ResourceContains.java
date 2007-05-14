@@ -37,7 +37,7 @@ public class ResourceContains implements Condition {
     private String substring;
     private Resource resource;
     private boolean casesensitive = true;
-    
+
     /**
      * Sets the resource to search
      * @param r
@@ -61,7 +61,7 @@ public class ResourceContains implements Condition {
     public void setCasesensitive(boolean casesensitive) {
         this.casesensitive = casesensitive;
     }
-    
+
     /**
      * Evaluates
      * Returns true if the substring is contained in the resource
@@ -71,21 +71,21 @@ public class ResourceContains implements Condition {
             throw new BuildException("both resource and substring are required "
                                      + "in <resourcecontains>");
         }
-        
+
         if (resource.getSize() == 0) {
             return false;
         }
-        
+
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             String contents = FileUtils.readFully(reader);
-            if(casesensitive) {
-                if(contents.indexOf(substring) > -1) {
+            if (casesensitive) {
+                if (contents.indexOf(substring) > -1) {
                     return true;
                 }
             } else {
-                if(contents.toLowerCase().indexOf(substring) > -1) {
+                if (contents.toLowerCase().indexOf(substring) > -1) {
                     return true;
                 }
             }
