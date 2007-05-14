@@ -5,31 +5,30 @@
 
   <target name="setUp">
     <property name="file" location="${java.io.tmpdir}/test-resource.txt"/>
-  	<echo file="${file}" message="loads of text!"/>
+    <echo file="${file}" message="loads of text!"/>
   </target>
 
   <target name="tearDown">
     <delete file="${file}"/>
   </target>
-	
+
   <target name="testcontains">
-  	<au:assertFileExists file="${file}"/>
-	<au:assertTrue message="Should have found the text in the resource">
-  	  <resourcecontains resource="${file}" substring="text"/>
-  	</au:assertTrue>
-  </target>
-	
-  <target name="testwithemptyfile">
-  	<delete file="${file}"/>
-  	<touch file="${file}"/>
-	<au:assertFalse message="Should have found nothing as file is empty">
+    <au:assertFileExists file="${file}"/>
+    <au:assertTrue message="Should have found the text in the resource">
       <resourcecontains resource="${file}" substring="text"/>
-	</au:assertFalse>
+    </au:assertTrue>
   </target>
-	
+
+  <target name="testwithemptyfile">
+    <truncate file="${file}"/>
+    <au:assertFalse message="Should have found nothing as file is empty">
+      <resourcecontains resource="${file}" substring="text"/>
+    </au:assertFalse>
+  </target>
+
   <target name="testdoesntcontain">
-  	<au:assertFalse message="Should have found nothing as file is empty">
-  	  <resourcecontains resource="${file}" substring="futurama"/>
+    <au:assertFalse message="Should have found nothing as file is empty">
+      <resourcecontains resource="${file}" substring="futurama"/>
     </au:assertFalse>
   </target>
 </project>
