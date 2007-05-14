@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -38,6 +39,7 @@ public class ResourceContains implements Condition {
     private Project project;
     private String substring;
     private Resource resource;
+    private String refid;
     private boolean casesensitive = true;
 
     /**
@@ -65,6 +67,38 @@ public class ResourceContains implements Condition {
     }
 
     /**
+     * Sets the refid to search; should indicate a resource directly
+     * or by way of a single-element ResourceCollection.
+     * @param refid
+     */
+    public void setRefid(String refid) {
+        this.refid = refid;
+    }
+
+    private void resolveRefid() {
+        try {
+            if (getProject() == null) {
+                throw new BuildException("Cannot retrieve refid; project unset");
+            }
+            Object o = getProject().getReference(refid);
+            if (!(o instanceof Resource)) {
+                if (o instanceof ResourceCollection) {
+                    ResourceCollection rc = (ResourceCollection) o;
+                    if (rc.size() == 1) {
+                        o = rc.iterator().next();
+                    }
+                } else {
+                    throw new BuildException("Illegal value at '" + refid +"': "
+                            + String.valueOf(o));
+                }
+            }
+            this.resource = (Resource) o;
+        } finally {
+            refid = null;
+        }
+    }
+
+    /**
      * Sets the substring to look for
      * @param substring
      */
@@ -80,23 +114,32 @@ public class ResourceContains implements Condition {
         this.casesensitive = casesensitive;
     }
 
-    /**
-     * Evaluates
-     * Returns true if the substring is contained in the resource
-     */
-    public boolean eval() throws BuildException {
+    private void validate() {
+        if (resource != null && refid != null) {
+            throw new BuildException("Cannot set both resource and refid");
+        }
+        if (resource == null && refid != null) {
+            resolveRefid();
+        }
         if (resource == null || substring == null) {
             throw new BuildException("both resource and substring are required "
                                      + "in <resourcecontains>");
         }
+    }
+
+    /**
+     * Evaluates
+     * Returns true if the substring is contained in the resource
+     */
+    public synchronized boolean eval() throws BuildException {
+        validate();
 
         if (substring.length() == 0) {
             if (getProject() != null) {
-                getProject().log("ResourceContains: substring is empty; returning true", Project.MSG_VERBOSE);
+                getProject().log("Substring is empty; returning true", Project.MSG_VERBOSE);
             }
             return true;
         }
-
         if (resource.getSize() == 0) {
             return false;
         }

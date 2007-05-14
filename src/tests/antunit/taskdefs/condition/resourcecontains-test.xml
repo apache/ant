@@ -66,4 +66,61 @@
       <resourcecontains resource="${file}" substring="futurama"/>
     </au:assertFalse>
   </target>
+
+  <target name="testFileRefContains">
+    <file id="file" file="${file}" />
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="file" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testStringRefContains">
+    <string id="string">loads of text!</string>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="string" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testTextConcatRefContains">
+    <resources id="concat">
+      <concat>loads of text!</concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFileConcatRefContains">
+    <resources id="concat">
+      <concat><file file="${file}" /></concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testMultiConcatRefContains">
+    <resources id="concat">
+      <concat>
+        <header>HEADER</header>
+        <footer>FOOTER</footer>
+        <string>foo</string>
+        <file file="${file}" />
+        <string>bar</string>
+      </concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFirstRefContains">
+    <first id="first">
+      <fileset dir="${basedir}" includes="*-test.xml" />
+    </first>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="first" substring="project"/>
+    </au:assertTrue>
+  </target>
+
 </project>
