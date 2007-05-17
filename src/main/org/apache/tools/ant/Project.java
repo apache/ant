@@ -309,6 +309,12 @@ public class Project implements ResourceFactory {
         setAntLib();
     }
 
+    /**
+     * Set a property to the location of ant.jar.
+     * Use the locator to find the location of the Project.class, and
+     * if this is not null, set the property {@link MagicNames#ANT_LIB}
+     * to the result
+     */
     private void setAntLib() {
         File antlib = org.apache.tools.ant.launch.Locator.getClassSource(
             Project.class);

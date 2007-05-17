@@ -199,9 +199,9 @@ public class Ant extends Task {
         getProject().copyUserProperties(newProject);
 
         if (!inheritAll) {
-           // set Java built-in properties separately,
-           // b/c we won't inherit them.
-           newProject.setSystemProperties();
+           // set Ant's built-in properties separately,
+           // because they are not being inherited.
+           newProject.initProperties();
 
         } else {
             // set all properties from calling project
