@@ -105,7 +105,4 @@ public class ProxyDiagnostics {
         }
         return result.toString();
     }
-
-
-
 }
