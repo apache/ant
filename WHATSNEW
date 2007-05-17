@@ -19,6 +19,10 @@ Fixed bugs:
 * Regression: Locator fails with URI encoding problem when spaces in path
   Bugzilla report 42222
 
+* Regression in Locator: running Ant off a network share does not work:
+  message "URI has authority component" appears
+  Bugzilla report 42275
+
 * Improvements in AntClassLoader Speed.
   Bugzilla report 42259
 
@@ -76,13 +80,14 @@ Fixed bugs:
  
 * -autoproxy turns Java1.5+ automatic proxy support on. Bugzilla 41904
 
-* handle null result of system getProperty(). Bugzilla 42334.
+* Handle null result of system getProperty(). Bugzilla 42334.
 
 * Regression: concat fixlastline="true" should not have applied to
   nested text, but did in Ant 1.7.0. Bugzilla 42369.
 
 * Regression: ant.version was not passed down in <subant>.
-  This worked in Ant1.6.5, but not in 1.7.0. Bugzilla bug 42263 
+  This worked in Ant1.6.5, but not in 1.7.0. Bugzilla bug 42263
+
 
 Other changes:
 --------------

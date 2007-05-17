@@ -20,6 +20,9 @@ package org.apache.tools.ant.launch;
 
 import junit.framework.TestCase;
 
+import java.net.URISyntaxException;
+import java.io.File;
+
 /** Test the locator in the ant-launch JAR */
 
 public class LocatorTest extends TestCase {
@@ -40,19 +43,43 @@ public class LocatorTest extends TestCase {
     private String resolve(String uri) {
         String j14= Locator.fromURI(uri);
         String j13 = Locator.fromURIJava13(uri);
-        assertEquals(uri,j14,j13);
+        assertEquals("Different fromURI conversion.\nJava1.4="+j14+"\nJava1.3="+j13+"\n",
+                j14, j13);
         return j14;
     }
 
     private void resolveTo(String uri,String expectedResult) {
         String result = resolve(uri);
-        assertEquals(uri,expectedResult,result);
+        assertResolved(uri, expectedResult, result);
+    }
+
+    private void assertResolved(String uri, String expectedResult, String result) {
+        assertEquals("Expected "+uri+" to resolve to \n"+expectedResult+"\n but got\n"+result+"\n",
+                expectedResult,result);
+    }
+
+    /**
+     * This asserts that we can round trip the path to a URI and back again
+     * @param path
+     */
+    private void assertResolves(String path) throws Exception {
+        String asuri = new File(path).toURI().toASCIIString();
+        logURI(path +" => "+asuri);
+        resolveTo(asuri,path);
     }
 
     private void resolveTo13(String uri, String expectedResult) {
         String result = Locator.fromURIJava13(uri);
-        assertEquals(uri, expectedResult, result);
+        assertResolved(uri, expectedResult, result);
     }
+
+    private void logURI(String path) throws URISyntaxException{
+
+        String s = new File(path).toURI().toASCIIString();
+        System.out.println(path+" => "+s);
+
+    }
+
     /**
      * this isnt really a valid URI, except maybe in IE
      * @throws Exception
@@ -61,7 +88,7 @@ public class LocatorTest extends TestCase {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar","\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
-    public void testTripleForwardSlashNetworkURI_BugID_42275() throws Exception {
+    public void testTripleForwardSlashNetworkURI() throws Exception {
         resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar", "///PC03/jclasses/lib/ant-1.7.0.jar");
     }
 
@@ -93,7 +120,13 @@ public class LocatorTest extends TestCase {
     }
 
 
+    public void testInternationalURI() throws Exception {
+        assertResolves("/L\\u00f6wenbrau/aus/M\\u00fcnchen");
+    }
 
+    public void testOddLowAsciiURI() throws Exception {
+        assertResolves("/hash#/ and /percent%");
+    }
 
 
 }

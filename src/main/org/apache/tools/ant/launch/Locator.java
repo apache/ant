@@ -32,6 +32,16 @@ import java.util.Locale;
  * The Locator is a utility class which is used to find certain items
  * in the environment.
  *
+ * It is used at boot time in the launcher, and cannot make use of any of Ant's other classes.
+ *
+ * This is a surprisingly brittle piece of code, and has had lots of bugs filed against it.
+ * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>}
+ * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=8031">use File.toURI().toURL().toExternalForm()</a>}
+ * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42222">Locator implementation not encoding URI strings properly: spaces in paths</a>}
+ * It also breaks Eclipse 3.3 Betas
+ * {@link <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=183283">Exception if installation path has spaces</a>}
+ *
+ * Be very careful when making changes to this class, as a break will upset a lot of people.
  * @since Ant 1.6
  */
 public final class Locator {
@@ -151,12 +161,28 @@ public final class Locator {
      * @since Ant 1.6
      */
     public static String fromURI(String uri) {
-        // #8031: first try Java 1.4.
+        // #buzilla8031: first try Java 1.4.
+        String result = null;
+        //result = fromUriJava14(uri);
+        if (result == null) {
+            result = fromURIJava13(uri);
+        }
+        return result;
+    }
+
+
+    /**
+     * Java1.4+ code to extract the path from the URI.
+     * @param uri
+     * @return null if a conversion was not possible
+     */
+    private static String fromUriJava14(String uri) {
         Class uriClazz = null;
         try {
             uriClazz = Class.forName("java.net.URI");
         } catch (ClassNotFoundException cnfe) {
             // Fine, Java 1.3 or earlier, do it by hand.
+            return null;
         }
         // Also check for properly formed URIs. Ant formerly recommended using
         // nonsense URIs such as "file:./foo.xml" in XML includes. You shouldn't
@@ -165,18 +191,22 @@ public final class Locator {
         if (uriClazz != null && uri.startsWith("file:/")) {
             try {
                 java.lang.reflect.Method createMethod
-                    = uriClazz.getMethod("create", new Class[] {String.class});
-                Object uriObj = createMethod.invoke(null, new Object[] {encodeURI(uri)});
+                        = uriClazz.getMethod("create", new Class[]{String.class});
+                Object uriObj = createMethod.invoke(null, new Object[]{encodeURI(uri)});
                 java.lang.reflect.Constructor fileConst
-                    = File.class.getConstructor(new Class[] {uriClazz});
-                File f = (File) fileConst.newInstance(new Object[] {uriObj});
+                        = File.class.getConstructor(new Class[]{uriClazz});
+                File f = (File) fileConst.newInstance(new Object[]{uriObj});
                 //bug #42227 forgot to decode before returning
                 return decodeUri(f.getAbsolutePath());
             } catch (java.lang.reflect.InvocationTargetException e) {
                 Throwable e2 = e.getTargetException();
                 if (e2 instanceof IllegalArgumentException) {
                     // Bad URI, pass this on.
-                    throw new IllegalArgumentException("Bad URI "+uri+ ":"+e2.getMessage(),e2);
+                    // no, this is downgraded to a warning after various JRE bugs surfaced. Hand off
+                    // to our built in code on a failure
+                    //throw new IllegalArgumentException("Bad URI " + uri + ":" + e2.getMessage(), e2);
+                    e2.printStackTrace();
+
                 } else {
                     // Unexpected target exception? Should not happen.
                     e2.printStackTrace();
@@ -186,13 +216,14 @@ public final class Locator {
                 e.printStackTrace();
             }
         }
-        return fromURIJava13(uri);
+        return null;
     }
 
     /**
      * This is only public for testing purposes, so its use is strongly discouraged.
      * @param uri uri to expand
      * @return the decoded URI
+     * @since Ant1.7.1
      */
     public static String fromURIJava13(String uri) {
         // Fallback method for Java 1.3 or earlier.
