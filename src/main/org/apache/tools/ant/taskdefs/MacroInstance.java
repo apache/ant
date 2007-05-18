@@ -361,11 +361,12 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         }
         if (macroDef.getText() != null) {
             if (text == null) {
-                if (!macroDef.getText().getOptional()) {
+                String defaultText =  macroDef.getText().getDefault();
+                if (!macroDef.getText().getOptional() && defaultText == null) {
                     throw new BuildException(
                         "required text missing");
                 }
-                text = "";
+                text = defaultText == null ? "" : defaultText;
             }
             if (macroDef.getText().getTrim()) {
                 text = text.trim();

@@ -431,6 +431,7 @@ public class MacroDef extends AntlibDefinition  {
         private boolean optional;
         private boolean trim;
         private String  description;
+        private String  defaultString;
 
         /**
          * The name of the attribute.
@@ -501,6 +502,20 @@ public class MacroDef extends AntlibDefinition  {
         }
 
         /**
+         * @param defaultString default text for the string.
+         */
+        public void setDefault(String defaultString) {
+            this.defaultString = defaultString;
+        }
+
+        /**
+         * @return the default text if set, null otherwise.
+         */
+        public String getDefault() {
+            return defaultString;
+        }
+
+        /**
          * equality method
          *
          * @param obj an <code>Object</code> value
@@ -514,20 +529,10 @@ public class MacroDef extends AntlibDefinition  {
                 return false;
             }
             Text other = (Text) obj;
-            if (name == null) {
-                if (other.name != null) {
-                    return false;
-                }
-            } else if (!name.equals(other.name)) {
-                return false;
-            }
-            if (optional != other.optional) {
-                return false;
-            }
-            if (trim != other.trim) {
-                return false;
-            }
-            return true;
+            return safeCompare(name, other.name)
+                && optional == other.optional
+                && trim == other.trim
+                && safeCompare(defaultString, other.defaultString);
         }
 
         /**
@@ -536,6 +541,10 @@ public class MacroDef extends AntlibDefinition  {
         public int hashCode() {
             return objectHashCode(name);
         }
+    }
+
+    private static boolean safeCompare(Object a, Object b) {
+        return a == null ? b == null : a.equals(b);
     }
 
     /**

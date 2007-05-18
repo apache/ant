@@ -150,6 +150,8 @@ Other changes:
 
 * A new logger, BigProjectLogger, lists the project name with every target   
 
+* Default text added to macrodef. Bugzilla report 42301.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
