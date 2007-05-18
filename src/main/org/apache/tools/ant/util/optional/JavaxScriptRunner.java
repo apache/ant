@@ -90,7 +90,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             for (Iterator i = getBeans().keySet().iterator(); i.hasNext();) {
                 String key = (String) i.next();
                 Object value = getBeans().get(key);
-                if ("FX".equals(getLanguage())) {
+                if ("FX".equalsIgnoreCase(getLanguage())) {
                     engine.invoke(
                         "put", String.class, key
                         + ":" + value.getClass().getName(),
