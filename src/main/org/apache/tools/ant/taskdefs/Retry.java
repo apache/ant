@@ -17,9 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -30,22 +27,39 @@ import org.apache.tools.ant.TaskContainer;
  */
 public class Retry extends Task implements TaskContainer {
 
+    /**
+     * task to execute n times
+     */
     private Task nestedTask;
     
-    private int retryCount;
+    /**
+     * set retryCount to 1 by default
+     */
+    private int retryCount = 1;
     
+    /**
+     * set the task
+     */
     public void addTask(Task t) {
         nestedTask = t;
     }
     
+    /**
+     * set the number of times to retry the task
+     * @param n
+     */
     public void setRetryCount(int n) {
         retryCount = n;
     }
     
+    /**
+     * perform the work
+     */
     public void execute() throws BuildException {
         for(int i=0; i<=retryCount; i++) {
             try {
                 nestedTask.perform();
+                break;
             } catch (Exception e) {
                 if (i<retryCount) {
                     log("Attempt ["+i+"] error occured, retrying...", e, Project.MSG_INFO);
