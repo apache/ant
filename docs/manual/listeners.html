@@ -44,13 +44,19 @@ listeners and loggers.</p>
   <li>message logged</li>
 </ul>
 
+<p>
+  These are used internally for various recording and housekeeping operations,
+  however new listeners may registered on the command line through the <code>-listener</code>
+  argument.
+</p>
+
 <h3><a name="Loggers">Loggers</a></h3>
 
 <p>Loggers extend the capabilities of listeners and add the following features:</p>
 
 <ul>
   <li>Receives a handle to the standard output and error print streams and
-  therefore can log information to the console or the -logfile specified file.</li>
+  therefore can log information to the console or the <code>-logfile</code> specified file.</li>
   <li>Logging level (-quiet, -verbose, -debug) aware</li>
   <li>Emacs-mode aware</li>
 </ul>
@@ -104,7 +110,11 @@ listeners and loggers.</p>
     <td width="33%">Prints the time that a build finished</td>
     <td width="34%">BuildLogger</td>
   </tr>
-
+  <tr>
+    <td width="33%"><code><a href="#BigProjectLogger">org.apache.tools.ant.BigProjectLogger</a></code></td>
+    <td width="33%">Prints the project name every target</td>
+    <td width="34%">BuildLogger</td>
+  </tr>
 </table>
 <h3><a name="DefaultLogger">DefaultLogger</a></h3>
 
@@ -235,7 +245,7 @@ in the console using applications like cat, more, etc.</p>
 color codes.  It works on XTerm, ETerm, Win9x Console
 (with ANSI.SYS loaded.), etc.</p>
 <p><Strong>NOTE:</Strong>
-It doesn't work on WinNT even when a COMMAND.COM console loaded with
+It doesn't work on WinNT and successors, even when a COMMAND.COM console loaded with
 ANSI.SYS is used.</p>
 <p>If the user wishes to override the default colors
 with custom ones, a file containing zero or more of the
@@ -318,7 +328,7 @@ corresponding Log4j level.</p>
 
 </blockquote>
 
-<p>To use Log4j you will need the Log4j jar file and a 'log4j.properties'
+<p>To use Log4j you will need the Log4j JAR file and a 'log4j.properties'
 configuration file.  Both should be placed somewhere in your Ant
 classpath. If the log4j.properties is in your project root folder you can
 add this with <i>-lib</i> option:</p>
@@ -386,6 +396,7 @@ is declared at all.
 <pre>
   BUILD SUCCESSFUL - at 16/08/05 16:24
 </pre>
+<p>To use this listener, use the command:</p>
 
 <blockquote>
 
@@ -393,6 +404,63 @@ is declared at all.
 
 </blockquote>
 
+<h3><a name="BigProjectLogger">BigProjectLogger</a></h3>
+
+<p>
+  This logger is designed to make examining the logs of a big build easier,
+  especially those run under continuous integration tools. It
+</p>
+<ol>
+  <li>When entering a child project, prints its name and directory</li>
+  <li>When exiting a child project, prints its name</li>
+  <li>Includes the name of the project when printing a target</li>
+  <li>Omits logging the names of all targets that have no direct task output</li>
+  <li>Includes the build finished timestamp of the TimeStamp logger</li>
+</ol>
+<p>
+  This is useful when using &lt;subant&gt; to build a large project
+  from many smaller projects -the output shows which particular
+  project is building. Here is an example in which "clean" is being called
+  on all a number of child projects, only some of which perform work:
+</p>
+<pre>
+
+======================================================================
+Entering project "xunit"
+In /home/ant/components/xunit
+======================================================================
+
+xunit.clean:
+   [delete] Deleting directory /home/ant/components/xunit/build
+   [delete] Deleting directory /home/ant/components/xunit/dist
+
+======================================================================
+Exiting project "xunit"
+======================================================================
+
+======================================================================
+Entering project "junit"
+In /home/ant/components/junit
+======================================================================
+
+======================================================================
+Exiting project "junit"
+======================================================================
+</pre>
+
+<p>
+  The entry and exit messages are very verbose in this example, but in
+  a big project compiling or testing many child components, the messages
+  are reduced to becoming clear delimiters of where different projects
+  are in charge -or more importantly, which project is failing.
+</p>
+
+<p>To use this listener, use the command:</p>
+<blockquote>
+
+<code>ant  -logger org.apache.tools.ant.listener.BigProjectLogger</code>
+
+</blockquote>
 
 <h2><a name="dev">Writing your own</a></h2>
 
@@ -402,8 +470,25 @@ developers.</p>
 <p>Notes:</p>
 
 <ul>
-  <li>A listener or logger should not write to standard output or error; Ant
-  captures these internally and may cause an infinite loop.</li>
+  <li>
+    A listener or logger should not write to standard output or error in the <code>messageLogged() method</code>;
+    Ant captures these internally and it will trigger an infinite loop.
+  </li>
+  <li>
+    Logging is synchronous; all listeners and loggers are called one after the other, with the build blocking until
+    the output is processed. Slow logging means a slow build.
+  </li>
+  <li>When a build is started, and <code>BuildListener.buildStarted(BuildEvent event)</code> is called,
+    the project is not fully functional. The build has started, yes, and the event.getProject() method call
+    returns the Project instance, but that project is initialized with JVM and ant properties, nor has it
+    parsed the build file yet. You cannot call <code>Project.getProperty()</code> for property lookup, or
+    <code>Project.getName()</code> to get the project name (it will return null).
+  </li>
+  <li>
+    Classes that implement <code>org.apache.tools.ant.SubBuildListener</code> receive notifications when child projects
+    start and stop.
+  </li>
+
 </ul>
 
 

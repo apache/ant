@@ -148,6 +148,8 @@ Other changes:
   <comment> nested element as nested text instead of using the 'value'
   attribute.
 
+* A new logger, BigProjectLogger, lists the project name with every target   
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

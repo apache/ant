@@ -22,9 +22,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.util.Date;
+import java.text.DateFormat;
 
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Writes build events to a PrintStream. Currently, it
@@ -251,9 +254,9 @@ public class DefaultLogger implements BuildLogger {
                 tmp.append(label);
                 label = tmp.toString();
 
+                BufferedReader r = null;
                 try {
-                    BufferedReader r =
-                        new BufferedReader(
+                    r = new BufferedReader(
                             new StringReader(event.getMessage()));
                     String line = r.readLine();
                     boolean first = true;
@@ -273,8 +276,14 @@ public class DefaultLogger implements BuildLogger {
                 } catch (IOException e) {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
+                } finally {
+                    if (r != null) {
+                        FileUtils.close(r);
+                    }
                 }
+
             } else {
+                //emacs mode or there is no task
                 message.append(event.getMessage());
             }
             Throwable ex = event.getException();
@@ -328,5 +337,28 @@ public class DefaultLogger implements BuildLogger {
      * @param message Message being logged. Should not be <code>null</code>.
      */
     protected void log(String message) {
+    }
+
+    /**
+     * Get the current time.
+     * @return the current time as a formatted string.
+     * @since Ant1.7.1
+     */
+    protected String getTimestamp() {
+        Date date = new Date(System.currentTimeMillis());
+        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        String finishTime = formatter.format(date);
+        return finishTime;
+    }
+
+    /**
+     * Get the project name or null
+     * @param event the event
+     * @return the project that raised this event
+     * @since Ant1.7.1
+     */
+    protected String extractProjectName(BuildEvent event) {
+        Project project = event.getProject();
+        return project!=null?project.getName():null;
     }
 }

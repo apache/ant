@@ -31,14 +31,14 @@ public class TimestampedLogger extends DefaultLogger {
     /**
      * what appears between the old message and the new
      */
-    private static final String SPACER = " - at ";
+    public static final String SPACER = " - at ";
 
 
     /**
      * This is an override point: the message that indicates whether a build failed.
      * Subclasses can change/enhance the message.
      *
-     * @return The classic "BUILD FAILED"
+     * @return The classic "BUILD FAILED" plus a timestamp
      */
     protected String getBuildFailedMessage() {
         return super.getBuildFailedMessage() + SPACER + getTimestamp();
@@ -48,20 +48,10 @@ public class TimestampedLogger extends DefaultLogger {
      * This is an override point: the message that indicates that a build succeeded.
      * Subclasses can change/enhance the message.
      *
-     * @return The classic "BUILD SUCCESSFUL"
+     * @return The classic "BUILD SUCCESSFUL" plus a timestamp
      */
     protected String getBuildSuccessfulMessage() {
         return super.getBuildSuccessfulMessage() + SPACER + getTimestamp();
     }
 
-    /**
-     * Get the current time.
-     * @return the current time as a formatted string.
-     */
-    protected String getTimestamp() {
-        Date date = new Date(System.currentTimeMillis());
-        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        String finishTime = formatter.format(date);
-        return finishTime;
-    }
 }

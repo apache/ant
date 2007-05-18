@@ -49,7 +49,17 @@ public class NoBannerLogger extends DefaultLogger {
      *              Must not be <code>null</code>.
      */
     public void targetStarted(BuildEvent event) {
-        targetName = event.getTarget().getName();
+        targetName = extractTargetName(event);
+    }
+
+    /**
+     * Override point, extract the target name
+     * @param event the event to work on
+     * @return the target name to print
+     * @since Ant1.7.1
+     */
+    protected String extractTargetName(BuildEvent event) {
+        return event.getTarget().getName();
     }
 
     /**
