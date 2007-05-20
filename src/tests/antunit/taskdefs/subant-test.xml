@@ -1,6 +1,6 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <description >
+  <description>
     Test that subant properly sets various properties
   </description>
   <import file="../antunit-base.xml" />
@@ -9,7 +9,6 @@
     <delete file="binaryAppendDest" />
     <delete file="encodeStringDest" />
   </target>
-
 
   <target name="assertProperties">
     <au:assertPropertySet name="ant.version" />
