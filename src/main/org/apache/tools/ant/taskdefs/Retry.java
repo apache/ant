@@ -56,6 +56,7 @@ public class Retry extends Task implements TaskContainer {
      * perform the work
      */
     public void execute() throws BuildException {
+        StringBuffer errorMessages = new StringBuffer();
         for(int i=0; i<=retryCount; i++) {
             try {
                 nestedTask.perform();
@@ -63,8 +64,18 @@ public class Retry extends Task implements TaskContainer {
             } catch (Exception e) {
                 if (i<retryCount) {
                     log("Attempt ["+i+"] error occured, retrying...", e, Project.MSG_INFO);
+                    errorMessages.append(e.getMessage());
+                    errorMessages.append(getProject().getProperty("line.separator"));
                 } else {
-                    throw new BuildException("Task ["+nestedTask.getTaskName()+"] failed after ["+retryCount+"] attempts, giving up");
+                    errorMessages.append(e.getMessage());
+                    StringBuffer exceptionMessage = new StringBuffer();
+                    exceptionMessage.append("Task [").append(nestedTask.getTaskName());
+                    exceptionMessage.append("] failed after [").append(retryCount);
+                    exceptionMessage.append("] attempts, giving up.");
+                    exceptionMessage.append(getProject().getProperty("line.separator"));
+                    exceptionMessage.append("Error messages:").append(getProject().getProperty("line.separator"));
+                    exceptionMessage.append(errorMessages);
+                    throw new BuildException(exceptionMessage.toString(), getLocation());
                 }
             }
         }
