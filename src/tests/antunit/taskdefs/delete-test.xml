@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <project name="delete-test" basedir="." default="antunit"
-       xmlns:au="antlib:org.apache.ant.antunit">
+         xmlns:au="antlib:org.apache.ant.antunit">
   <property name="working.dir" value="working"/>
   <property name="existing.dir" value="working/exists"/>
   <property name="nonexistent.dir" value="working/nonexists"/>
-	
+  
   <import file="../antunit-base.xml" />
 
   <target name="init">
@@ -24,15 +24,15 @@
        <fileset dir="${nonexistent.dir}"/>
     </delete>
 
-  	<au:assertFileExists file="${existing.dir}" />
-  		
+    <au:assertFileExists file="${existing.dir}" />
+      
     <delete quiet="true" includeEmptyDirs="true">
        <fileset dir="${existing.dir}"/>
     </delete>
 
-  	<au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}" />
 
-  	
+
     <mkdir dir="${existing.dir}"/>
 
     <delete quiet="true" includeEmptyDirs="true">
@@ -41,7 +41,7 @@
     </delete>
 
 
-  	<au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}" />
 
     <mkdir dir="${existing.dir}"/>
 
@@ -51,7 +51,7 @@
     </delete>
 
 
-  	<au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}" />
 
   </target>
 

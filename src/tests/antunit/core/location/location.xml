@@ -15,7 +15,7 @@
   </target>
   
   <target name="setUp">
-  	<mkdir dir="${classes.dir}"/>
+    <mkdir dir="${classes.dir}"/>
     <javac srcdir="src" destdir="${classes.dir}" debug="yes"/>
     <taskdef name="echo-location" classname="task.EchoLocation"
              classpath="${classes.dir}"/>
@@ -46,7 +46,7 @@
   </target>
   
   <target name="tearDown">
-  	<delete dir="${working.dir}"/>
+    <delete dir="${working.dir}"/>
   </target>
   
   <target name="test-plain-task">
