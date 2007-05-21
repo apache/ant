@@ -170,6 +170,7 @@
     <or>
       <filename name="${ant.package}/taskdefs/TestProcess*"/>
       <filename name="${optional.package}/extension/**"/>
+      <filename name="${ant.package}/launch/LocatorTest*"/>
     </or>
   </selector>
 
