@@ -34,15 +34,15 @@ public class DirnameTest extends BuildFileTest {
     }
 
     public void test1() {
-        expectBuildException("test1", "required attribute missing");
+        expectBuildException("test1", "property attribute required");
     }
 
     public void test2() {
-        expectBuildException("test2", "required attribute missing");
+        expectBuildException("test2", "file attribute required");
     }
 
     public void test3() {
-        expectBuildException("test3", "required attribute missing");
+        expectBuildException("test3", "property attribute required");
     }
 
     public void test4() {
