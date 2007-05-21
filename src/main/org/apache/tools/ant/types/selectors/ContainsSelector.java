@@ -163,7 +163,7 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         // throw BuildException on error
         validate();
 
-        if (r.isDirectory()) {
+        if (r.isDirectory() || contains.length() == 0) {
             return true;
         }
 
