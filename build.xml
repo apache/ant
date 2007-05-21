@@ -170,7 +170,6 @@
     <or>
       <filename name="${ant.package}/taskdefs/TestProcess*"/>
       <filename name="${optional.package}/extension/**"/>
-      <filename name="${ant.package}/launch/LocatorTest*"/>
     </or>
   </selector>
 
@@ -178,6 +177,7 @@
     <or>
       <filename name="${regexp.package}/Jdk14Regexp*"/>
       <filename name="${ant.package}/types/AssertionsTest.java"/>
+      <filename name="${ant.package}/launch/LocatorTest*"/>
     </or>
   </selector>
 
