@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<project name="dirname-test" basedir="." default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml"/>
+
+  <target name="test1">
+  	<au:expectfailure expectedmessage="property attribute required">
+      <dirname/>
+  	</au:expectfailure>
+  </target>
+
+  <target name="test2">
+  	<au:expectfailure expectedmessage="file attribute required">
+	  <dirname property="propname"/>
+  	</au:expectfailure>
+  </target>
+
+  <target name="test3">
+  	<au:expectfailure expectedmessage="property attribute required">
+      <dirname file="filename"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="init-test4">
+  	<condition property="valid.os">
+  	  <and>
+  	  	<not><os family="dos"/></not><not><os family="netware"/></not>
+  	  </and>
+  	</condition>
+  </target>
+
+  <target name="test4" depends="init-test4" if="valid.os">
+  	<dirname property="local.dir" file="/usr/local/foo.txt"/>
+  	<au:assertPropertyEquals name="local.dir" 
+  	  value="${file.separator}usr${file.separator}local${file.separator}foo.txt"/>
+  </target>
+	
+  <target name="test5">
+    <dirname property="base.dir" file="foo.txt"/>
+  	<au:assertPropertyEquals name="base.dir" value="${basedir}"/>
+  </target>
+
+</project>
