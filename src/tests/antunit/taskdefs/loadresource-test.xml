@@ -1,0 +1,24 @@
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="test-resourceString">
+    <loadresource property="p">
+      <string value="one"/>
+    </loadresource >
+    <au:assertPropertyEquals name="p" value="one"/>
+  </target>
+
+  <target name="test-resourceSizeZero" description="Bug 42319">
+    <loadresource property="p">
+      <string value=""/>
+    </loadresource >
+    <au:assertTrue>
+      <not>
+        <isset property="p"/>
+      </not>
+    </au:assertTrue>
+    <au:assertLogContains text="Do not set property p as its length is 0."/>
+  </target>
+
+</project>

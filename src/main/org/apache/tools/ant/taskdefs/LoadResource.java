@@ -178,6 +178,8 @@ public class LoadResource extends Task {
                 instream = crh.getAssembledReader();
 
                 text = crh.readFully(instream);
+            } else {
+                log("Do not set property " + property + " as its length is 0.");
             }
 
             if (text != null) {
