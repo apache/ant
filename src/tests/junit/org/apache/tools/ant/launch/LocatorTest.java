@@ -88,7 +88,11 @@ public class LocatorTest extends TestCase {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar","\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
-    public void testTripleForwardSlashNetworkURI() throws Exception {
+    /**
+     * This is not being tested as we don't appear to generate paths like this in the launcher
+     * @throws Exception
+     */
+    public void NotestTripleForwardSlashNetworkURI() throws Exception {
         resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar", "///PC03/jclasses/lib/ant-1.7.0.jar");
     }
 
