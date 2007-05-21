@@ -1,0 +1,25 @@
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <property name="existingFile" value="${basedir}/build.xml" />
+
+  <files id="files">
+    <include name="${existingFile}" />
+  </files>
+    
+  <target name="test-directUse" description="Bug 42397 - works fine">
+    <path id="path">
+      <files>
+        <include name="${existingFile}" />
+      </files>
+    </path>
+  </target>
+
+  <target name="test-refid" description="Bug 42397">
+    <path id="path">
+      <files refid="files" />
+    </path>
+  </target>
+
+</project>

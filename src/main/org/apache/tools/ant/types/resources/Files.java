@@ -497,8 +497,10 @@ public class Files extends AbstractSelectorContainer
     }
 
     private boolean hasPatterns(PatternSet ps) {
-        return ps.getIncludePatterns(getProject()).length > 0
-            || ps.getExcludePatterns(getProject()).length > 0;
+        String[] includePatterns = ps.getIncludePatterns(getProject());
+        String[] excludePatterns = ps.getExcludePatterns(getProject());
+        return (includePatterns != null && includePatterns.length > 0)
+            || (includePatterns != null && excludePatterns.length > 0);
     }
 
 }
