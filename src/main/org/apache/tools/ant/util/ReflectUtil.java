@@ -45,7 +45,7 @@ public class ReflectUtil {
         try {
             Method method;
             method = obj.getClass().getMethod(
-                methodName, (Class[]) null);
+                        methodName, (Class[]) null);
             return method.invoke(obj, (Object[]) null);
         } catch (Exception t) {
             throwBuildException(t);
@@ -53,6 +53,26 @@ public class ReflectUtil {
         }
     }
 
+    /**
+     * Call a method on the object with no parameters.
+     * Note: Unlike the invoke method above, this 
+     * calls class or static methods, not instance methods.
+     * @param obj  the object to invoke the method on.
+     * @param methodName the name of the method to call
+     * @return the object returned by the method
+     */
+    public static Object invokeStatic(Object obj, String methodName) {
+        try {
+            Method method;
+            method = ((Class)obj).getMethod(
+                    methodName, (Class[]) null);
+            return method.invoke(obj, (Object[]) null);
+        }  catch (Exception t) {
+            throwBuildException(t);
+            return null; // NotReached
+        }
+    }
+    
     /**
      * Call a method on the object with one argument.
      * @param obj  the object to invoke the method on.
