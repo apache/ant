@@ -120,5 +120,4 @@ public class DefaultInputHandler implements InputHandler {
     protected InputStream getInputStream() {
         return System.in;
     }
-
 }
