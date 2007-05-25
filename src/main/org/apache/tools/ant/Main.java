@@ -292,7 +292,7 @@ public class Main implements AntMain {
 
     /**
      * Process command line arguments.
-     * When ant is started from Launcher, launcher-only arguments doe not get
+     * When ant is started from Launcher, launcher-only arguments do not get
      * passed through to this routine.
      *
      * @param args the command line arguments.
