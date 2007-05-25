@@ -32,7 +32,7 @@
   <target name="test4" depends="init-test4" if="valid.os">
     <dirname property="local.dir" file="/usr/local/foo.txt"/>
     <au:assertPropertyEquals name="local.dir" 
-      value="${file.separator}usr${file.separator}local${file.separator}foo.txt"/>
+      value="${file.separator}usr${file.separator}local"/>
   </target>
   
   <target name="test5">
