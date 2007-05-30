@@ -88,6 +88,8 @@ Fixed bugs:
 * Regression: ant.version was not passed down in <subant>.
   This worked in Ant1.6.5, but not in 1.7.0. Bugzilla bug 42263
 
+* Regression: bzip2 task created corrupted output files for some inputs.
+  Bugzilla bug 41596.
 
 Other changes:
 --------------
