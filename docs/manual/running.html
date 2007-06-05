@@ -474,7 +474,9 @@ Ant releases breaking your build file.
 <h3>return code</h3>
 <p>the ant start up scripts (in their Windows and Unix version) return
 the return code of the java program. So a successful build returns 0,
-failed builds return other values.
+failed builds return other values. For the most part error code of 1
+is used for failed builds, however if the cause of the error is an external process, the
+error code of that process will be propagated.
 </p>
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
