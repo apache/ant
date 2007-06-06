@@ -2111,6 +2111,33 @@
         </table>
       </subsection>
 
+      <subsection name="JSMin Ant Task">
+
+        <p>The JSMin Ant task can be used for the automated minification of javascript files
+          in your build and deploy processes.</p>
+        <p>JSMin is a filter which removes comments and unnecessary whitespace from javascript
+          files. It typically reduces filesize by half, resulting in faster downloads.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.5 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://code.google.com/p/jsmin-ant-task/">http://code.google.com/p/jsmin-ant-task/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:matt_at_matthaynes_dot_net">M. Haynes</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="JudoScript Ant Task">
 
         <p>The &lt;judoscript&gt; task is an easy way to embed JudoScript
