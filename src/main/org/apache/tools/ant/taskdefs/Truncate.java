@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Set the length of one or more files, as the intermittently available
