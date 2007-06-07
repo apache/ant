@@ -1399,13 +1399,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
             throw new ClassNotFoundException(name);
         } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                //ignore
-            }
+        	FileUtils.close(stream);
         }
     }
 
