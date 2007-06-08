@@ -331,5 +331,61 @@ Finally we use the <code>&lt;echo&gt;</code> task for producing the output. The 
 its execute() method, because the perform() method (implemented in Task itself) does the
 appropriate logging before and after invoking execute().
 </p>
+<p>
+  Here is an example of using beanshell to create an ant
+  task. This task will add filesets and paths to a referenced
+  path. If the path does not exist, it will be created.
+</p>
+<blockquote><pre>
+&lt;!--
+       Define addtopath task
+ --&gt;
+&lt;script language="beanshell"&gt;
+    import org.apache.tools.ant.Task;
+    import org.apache.tools.ant.types.Path;
+    import org.apache.tools.ant.types.FileSet;
+    public class AddToPath extends Task {
+        private Path path;
+        public void setRefId(String id) {
+            path = getProject().getReference(id);
+            if (path == null) {
+                path = new Path(getProject());
+                getProject().addReference(id, path);
+            }
+        }
+        public void add(Path c) {
+            path.add(c);
+        }
+        public void add(FileSet c) {
+            path.add(c);
+        }
+        public void execute() {
+            // Do nothing
+        }
+    }
+    project.addTaskDefinition("addtopath", AddToPath.class);
+&lt;/script&gt;
+</pre></blockquote>
+  <p>
+    An example of using this task to create a path
+    from a list of directories (using antcontrib's
+    <a href="http://ant-contrib.sourceforge.net/tasks/tasks/for.html">
+      &lt;for&gt;</a> task) follows:
+  </p>
+<blockquote><pre>
+&lt;path id="main.path"&gt;
+  &lt;fileset dir="build/classes"/&gt;
+&lt;/path&gt;
+&lt;ac:for param="ref" list="commons,fw,lps"
+        xmlns:ac="antlib:net.sf.antcontrib"&gt;
+  &lt;sequential&gt;
+    &lt;addtopath refid="main.path"&gt;
+      &lt;fileset dir="${dist.dir}/@{ref}/main"
+               includes="**/*.jar"/&gt;
+    &lt;/addtopath&gt;
+  &lt;/sequential&gt;
+&lt;/ac:for&gt;
+</pre></blockquote>
+
 </body>
 </html>
