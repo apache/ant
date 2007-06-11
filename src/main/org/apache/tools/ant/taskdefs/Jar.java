@@ -889,7 +889,7 @@ public class Jar extends Zip {
      * @return the matching entry, or null if the file is not found
      * @since Ant 1.6.2
      */
-    protected static final String findJarName(String fileName,
+    protected static String findJarName(String fileName,
                                               String[] classpath) {
         if (classpath == null) {
             return (new File(fileName)).getName();
@@ -936,7 +936,7 @@ public class Jar extends Zip {
      * @since Ant 1.7
      * @throws IOException on error
      */
-    protected static final void grabFilesAndDirs(String file, List dirs,
+    protected static void grabFilesAndDirs(String file, List dirs,
                                                  List files)
         throws IOException {
         org.apache.tools.zip.ZipFile zf = null;
