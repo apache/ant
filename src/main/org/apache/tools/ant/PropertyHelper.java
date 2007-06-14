@@ -77,16 +77,23 @@ public class PropertyHelper {
 
     //override facility for subclasses to put custom hashtables in
 
-
     // --------------------  Hook management  --------------------
 
     /**
-     * Set the project for which this helper is performing property resolution
+     * Set the project for which this helper is performing property resolution.
      *
      * @param p the project instance.
      */
     public void setProject(Project p) {
         this.project = p;
+    }
+
+    /**
+     * Get this PropertyHelper's Project.
+     * @return Project
+     */
+    public Project getProject() {
+        return project;
     }
 
     /** There are 2 ways to hook into property handling:
@@ -118,12 +125,11 @@ public class PropertyHelper {
      * reference. User tasks can also add themselves to the chain, and provide
      * dynamic properties.
      *
-     * @param project the project fro which the property helper is required.
+     * @param project the project for which the property helper is required.
      *
      * @return the project's property helper.
      */
-    public static synchronized
-        PropertyHelper getPropertyHelper(Project project) {
+    public static synchronized PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper
             = (PropertyHelper) project.getReference(MagicNames.REFID_PROPERTY_HELPER);
         if (helper != null) {
@@ -274,7 +280,6 @@ public class PropertyHelper {
                 if (replacement == null) {
                     replacement = getProperty(ns, propertyName);
                 }
-
                 if (replacement == null) {
                     project.log("Property \"" + propertyName
                             + "\" has not been set", Project.MSG_VERBOSE);
@@ -457,7 +462,7 @@ public class PropertyHelper {
         if (o != null) {
             return o;
         }
-        return  userProperties.get(name);
+        return userProperties.get(name);
     }
 
 
@@ -639,5 +644,4 @@ public class PropertyHelper {
             fragments.addElement(value.substring(prev));
         }
     }
-
 }
