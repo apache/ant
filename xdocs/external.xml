@@ -1345,19 +1345,19 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>1.5.1 or superior</td>
+            <td>1.6.2 (1.6.5 or 1.7.0 recommended)</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://ivy.jayasoft.org/">http://ivy.jayasoft.org/</a></td>
+            <td><a href="http://incubator.apache.org/ivy/">http://incubator.apache.org/ivy/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td>contact at jayasoft dot org</td>
+            <td>ivy-user (at) incubator (dot) apache (dot) org [User Mailinglist]</td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>BSD License</td>
+            <td>Apache Software License</td>
           </tr>
         </table>
       </subsection>
