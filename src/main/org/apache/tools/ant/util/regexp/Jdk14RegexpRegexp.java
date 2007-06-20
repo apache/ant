@@ -17,11 +17,9 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
-
 
 /***
  * Regular expression implementation using the JDK 1.4 regular expression package
@@ -99,7 +97,6 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
                 sb.append(input);
             }
         }
-
         return sb.toString();
     }
 }
