@@ -21,7 +21,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpFactory;
 
-/***
+/**
  * A regular expression datatype.  Keeps an instance of the
  * compiled expression for speed purposes.  This compiled
  * expression is lazily evaluated (it is compiled the first
