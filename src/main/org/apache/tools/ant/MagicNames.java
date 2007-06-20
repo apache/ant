@@ -16,6 +16,7 @@
  *
  */
 package org.apache.tools.ant;
+
 import org.apache.tools.ant.launch.Launcher;
 
 /**
@@ -66,6 +67,7 @@ public final class MagicNames {
      * Value {@value}
      */
     public static final String REPOSITORY_DIR_PROPERTY = "ant.maven.repository.dir";
+
     /**
      * Name of the property which can provide an override of the repository URL.
      * for the libraries task
@@ -79,6 +81,7 @@ public final class MagicNames {
      */
     public static final String TASKDEF_PROPERTIES_RESOURCE =
             "/org/apache/tools/ant/taskdefs/defaults.properties";
+
     /**
      * name of the resource that typedefs are stored under.
      * Value: {@value}
@@ -97,11 +100,13 @@ public final class MagicNames {
      * Value: {@value}
      */
     public static final String ANT_EXECUTOR_CLASSNAME = "ant.executor.class";
+
     /**
      * property name for basedir of the project.
      * Value: {@value}
      */
     public static final String PROJECT_BASEDIR = "basedir";
+
     /**
      * property for ant file name.
      * Value: {@value}
