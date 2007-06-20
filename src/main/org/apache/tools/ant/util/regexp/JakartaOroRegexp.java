@@ -22,8 +22,6 @@ import org.apache.oro.text.regex.Substitution;
 import org.apache.oro.text.regex.Util;
 import org.apache.tools.ant.BuildException;
 
-
-
 /***
  * Regular expression implementation using the Jakarta Oro package
  */
@@ -68,7 +66,6 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
                 subst.append(c);
             }
         }
-
 
         // Do the substitution
         Substitution s =
