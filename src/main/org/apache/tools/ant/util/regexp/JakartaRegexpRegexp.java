@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-
 import java.util.Vector;
 import org.apache.regexp.RE;
 import org.apache.tools.ant.BuildException;
