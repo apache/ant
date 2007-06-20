@@ -17,10 +17,9 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Diagnostics;
-
+import org.apache.tools.ant.Task;
 
 /**
  * This is a task that hands off work to the Diagnostics module.
@@ -32,12 +31,11 @@ public class DiagnosticsTask extends Task {
 
     /**
      * Execute the task.
-     * This delgates to the Diagnositics class.
+     * This delegates to the Diagnostics class.
      * @throws BuildException on error.
      */
     public void execute() throws BuildException {
         Diagnostics.main(ARGS);
     }
-
 
 }
