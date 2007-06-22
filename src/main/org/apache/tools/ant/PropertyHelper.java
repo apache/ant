@@ -15,13 +15,11 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant;
 
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
-
 
 /* ISSUES:
  - ns param. It could be used to provide "namespaces" for properties, which
@@ -131,7 +129,7 @@ public class PropertyHelper {
      */
     public static synchronized PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper
-            = (PropertyHelper) project.getReference(MagicNames.REFID_PROPERTY_HELPER);
+                = (PropertyHelper) project.getReference(MagicNames.REFID_PROPERTY_HELPER);
         if (helper != null) {
             return helper;
         }
@@ -170,8 +168,7 @@ public class PropertyHelper {
                                    boolean inherited, boolean user,
                                    boolean isNew) {
         if (getNext() != null) {
-            boolean subst = getNext().setPropertyHook(ns, name, value,
-                    inherited, user, isNew);
+            boolean subst = getNext().setPropertyHook(ns, name, value, inherited, user, isNew);
             // If next has handled the property
             if (subst) {
                 return true;
@@ -230,8 +227,7 @@ public class PropertyHelper {
      *                           <code>}</code>
      */
     public void parsePropertyString(String value, Vector fragments,
-                                    Vector propertyRefs)
-        throws BuildException {
+                                    Vector propertyRefs) throws BuildException {
         parsePropertyStringDefault(value, fragments, propertyRefs);
     }
 
@@ -253,8 +249,7 @@ public class PropertyHelper {
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
      */
-    public String replaceProperties(String ns, String value, Hashtable keys)
-            throws BuildException {
+    public String replaceProperties(String ns, String value, Hashtable keys) throws BuildException {
         if (value == null || value.indexOf('$') == -1) {
             return value;
         }
@@ -285,8 +280,7 @@ public class PropertyHelper {
                             + "\" has not been set", Project.MSG_VERBOSE);
                 }
                 fragment = (replacement != null)
-                        ? replacement.toString()
-                        : "${" + propertyName + "}";
+                        ? replacement.toString() : "${" + propertyName + "}";
             }
             sb.append(fragment);
         }
@@ -296,7 +290,6 @@ public class PropertyHelper {
     // -------------------- Default implementation  --------------------
     // Methods used to support the default behavior and provide backward
     // compatibility. Some will be deprecated, you should avoid calling them.
-
 
     /** Default implementation of setProperty. Will be called from Project.
      *  This is the original 1.5 implementation, with calls to the hook
@@ -313,7 +306,7 @@ public class PropertyHelper {
         if (null != userProperties.get(name)) {
             if (verbose) {
                 project.log("Override ignored for user property \"" + name
-                    + "\"", Project.MSG_VERBOSE);
+                        + "\"", Project.MSG_VERBOSE);
             }
             return false;
         }
@@ -325,12 +318,12 @@ public class PropertyHelper {
 
         if (null != properties.get(name) && verbose) {
             project.log("Overriding previous definition of property \"" + name
-                + "\"", Project.MSG_VERBOSE);
+                    + "\"", Project.MSG_VERBOSE);
         }
 
         if (verbose) {
             project.log("Setting project property: " + name + " -> "
-                + value, Project.MSG_DEBUG);
+                    + value, Project.MSG_DEBUG);
         }
         if (name != null && value != null) {
             properties.put(name, value);
@@ -354,17 +347,15 @@ public class PropertyHelper {
                                             Object value) {
         if (null != properties.get(name)) {
             project.log("Override ignored for property \"" + name
-                + "\"", Project.MSG_VERBOSE);
+                    + "\"", Project.MSG_VERBOSE);
             return;
         }
-
         boolean done = setPropertyHook(ns, name, value, false, false, true);
         if (done) {
             return;
         }
-
         project.log("Setting project property: " + name + " -> "
-            + value, Project.MSG_DEBUG);
+                + value, Project.MSG_DEBUG);
         if (name != null && value != null) {
             properties.put(name, value);
         }
@@ -382,7 +373,7 @@ public class PropertyHelper {
     public synchronized void setUserProperty(String ns, String name,
                                              Object value) {
         project.log("Setting ro project property: " + name + " -> "
-            + value, Project.MSG_DEBUG);
+                + value, Project.MSG_DEBUG);
         userProperties.put(name, value);
 
         boolean done = setPropertyHook(ns, name, value, false, true, false);
@@ -409,7 +400,7 @@ public class PropertyHelper {
         inheritedProperties.put(name, value);
 
         project.log("Setting ro project property: " + name + " -> "
-            + value, Project.MSG_DEBUG);
+                + value, Project.MSG_DEBUG);
         userProperties.put(name, value);
 
         boolean done = setPropertyHook(ns, name, value, true, false, false);
@@ -436,12 +427,10 @@ public class PropertyHelper {
         if (name == null) {
             return null;
         }
-
         Object o = getPropertyHook(ns, name, false);
         if (o != null) {
             return o;
         }
-
         return properties.get(name);
     }
     /**
@@ -465,7 +454,6 @@ public class PropertyHelper {
         return userProperties.get(name);
     }
 
-
     // -------------------- Access to property tables  --------------------
     // This is used to support ant call and similar tasks. It should be
     // deprecated, it is possible to use a better (more efficient)
@@ -473,8 +461,7 @@ public class PropertyHelper {
 
     /**
      * Returns a copy of the properties table.
-     * @return a hashtable containing all properties
-     *         (including user properties).
+     * @return a hashtable containing all properties (including user properties).
      */
     public Hashtable getProperties() {
         //avoid concurrent modification:
@@ -497,8 +484,7 @@ public class PropertyHelper {
     }
 
     /**
-     * special back door for subclasses, internal access to
-     * the hashtables
+     * special back door for subclasses, internal access to the hashtables
      * @return the live hashtable of all properties
      */
     protected Hashtable getInternalProperties() {
@@ -506,8 +492,7 @@ public class PropertyHelper {
     }
 
     /**
-     * special back door for subclasses, internal access to
-     * the hashtables
+     * special back door for subclasses, internal access to the hashtables
      *
      * @return the live hashtable of user properties
      */
@@ -516,15 +501,13 @@ public class PropertyHelper {
     }
 
     /**
-     * special back door for subclasses, internal access to
-     * the hashtables
+     * special back door for subclasses, internal access to the hashtables
      *
      * @return the live hashtable inherited properties
      */
     protected Hashtable getInternalInheritedProperties() {
         return inheritedProperties;
     }
-
 
     /**
      * Copies all user properties that have not been set on the
@@ -588,9 +571,8 @@ public class PropertyHelper {
     /** Default parsing method. It is here only to support backward compatibility
      * for the static ProjectHelper.parsePropertyString().
      */
-    static void parsePropertyStringDefault(String value, Vector fragments,
-                                    Vector propertyRefs)
-        throws BuildException {
+    static void parsePropertyStringDefault(String value, Vector fragments, Vector propertyRefs)
+            throws BuildException {
         int prev = 0;
         int pos;
         //search for the next instance of $ from the 'prev' position
@@ -624,13 +606,11 @@ public class PropertyHelper {
                     fragments.addElement(value.substring(pos, pos + 2));
                     prev = pos + 2;
                 }
-
             } else {
                 //property found, extract its name or bail on a typo
                 int endName = value.indexOf('}', pos);
                 if (endName < 0) {
-                    throw new BuildException("Syntax error in property: "
-                                                 + value);
+                    throw new BuildException("Syntax error in property: " + value);
                 }
                 String propertyName = value.substring(pos + 2, endName);
                 fragments.addElement(null);
