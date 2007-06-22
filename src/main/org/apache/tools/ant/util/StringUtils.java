@@ -217,6 +217,7 @@ public final class StringUtils {
         //last character isn't a digit
         char c = humanSize.charAt(humanSize.length() - 1);
         if (!Character.isDigit(c)) {
+            int trim = 1;
             switch (c) {
                 case 'K':
                     factor *= KILOBYTE;
@@ -234,9 +235,9 @@ public final class StringUtils {
                     factor *= PETABYTE;
                     break;
                 default:
-                    break;
+                    trim = 0;
             }
-            humanSize = humanSize.substring(0, humanSize.length() - 1);
+            humanSize = humanSize.substring(0, humanSize.length() - trim);
         }
         return factor * Long.parseLong(humanSize);
     }
