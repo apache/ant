@@ -15,12 +15,11 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Iterator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -45,7 +44,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- *
  * @since Ant 1.2
  *
  * @ant.task category="filesystem"
@@ -68,13 +66,10 @@ public class Move extends Copy {
         if (file != null && file.isDirectory()) {
             if ((destFile != null && destDir != null)
                 || (destFile == null && destDir == null)) {
-                throw new BuildException("One and only one of tofile and todir "
-                                         + "must be set.");
+                throw new BuildException("One and only one of tofile and todir must be set.");
             }
-            destFile = (destFile == null)
-                ? new File(destDir, file.getName()) : destFile;
-            destDir = (destDir == null)
-                ? destFile.getParentFile() : destDir;
+            destFile = destFile == null ? new File(destDir, file.getName()) : destFile;
+            destDir = destDir == null ? destFile.getParentFile() : destDir;
 
             completeDirMap.put(file, destFile);
             file = null;
@@ -88,26 +83,21 @@ public class Move extends Copy {
 //************************************************************************
 
     /**
-     * Override copy's doFileOperations to move the
-     * files instead of copying them.
+     * Override copy's doFileOperations to move the files instead of copying them.
      */
     protected void doFileOperations() {
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
-            Enumeration e = completeDirMap.keys();
-            while (e.hasMoreElements()) {
-                File fromDir = (File) e.nextElement();
+            for (Iterator fromDirs = completeDirMap.keySet().iterator(); fromDirs.hasNext();) {
+                File fromDir = (File) fromDirs.next();
                 File toDir = (File) completeDirMap.get(fromDir);
                 boolean renamed = false;
                 try {
-                    log("Attempting to rename dir: " + fromDir
-                        + " to " + toDir, verbosity);
-                    renamed =
-                        renameFile(fromDir, toDir, filtering, forceOverwrite);
+                    log("Attempting to rename dir: " + fromDir + " to " + toDir, verbosity);
+                    renamed = renameFile(fromDir, toDir, filtering, forceOverwrite);
                 } catch (IOException ioe) {
                     String msg = "Failed to rename dir " + fromDir
-                        + " to " + toDir
-                        + " due to " + ioe.getMessage();
+                            + " to " + toDir + " due to " + ioe.getMessage();
                     throw new BuildException(msg, ioe, getLocation());
                 }
                 if (!renamed) {
@@ -124,14 +114,11 @@ public class Move extends Copy {
         }
         int moveCount = fileCopyMap.size();
         if (moveCount > 0) {   // files to move
-            log("Moving " + moveCount + " file"
-                + ((moveCount == 1) ? "" : "s")
-                + " to " + destDir.getAbsolutePath());
+            log("Moving " + moveCount + " file" + ((moveCount == 1) ? "" : "s")
+                    + " to " + destDir.getAbsolutePath());
 
-            Enumeration e = fileCopyMap.keys();
-            while (e.hasMoreElements()) {
-                String fromFile = (String) e.nextElement();
-
+            for (Iterator fromFiles = fileCopyMap.keySet().iterator(); fromFiles.hasNext();) {
+                String fromFile = (String) fromFiles.next();
                 File f = new File(fromFile);
                 boolean selfMove = false;
                 if (f.exists()) { //Is this file still available to be moved?
@@ -161,46 +148,40 @@ public class Move extends Copy {
         }
 
         if (includeEmpty) {
-            Enumeration e = dirCopyMap.keys();
             int createCount = 0;
-            while (e.hasMoreElements()) {
-                String fromDirName = (String) e.nextElement();
+            for (Iterator fromDirNames = dirCopyMap.keySet().iterator(); fromDirNames.hasNext();) {
+                String fromDirName = (String) fromDirNames.next();
                 String[] toDirNames = (String[]) dirCopyMap.get(fromDirName);
                 boolean selfMove = false;
                 for (int i = 0; i < toDirNames.length; i++) {
-
                     if (fromDirName.equals(toDirNames[i])) {
                         log("Skipping self-move of " + fromDirName, verbosity);
                         selfMove = true;
                         continue;
                     }
-
                     File d = new File(toDirNames[i]);
                     if (!d.exists()) {
                         if (!d.mkdirs()) {
                             log("Unable to create directory "
-                                + d.getAbsolutePath(), Project.MSG_ERR);
+                                    + d.getAbsolutePath(), Project.MSG_ERR);
                         } else {
                             createCount++;
                         }
                     }
                 }
-
                 File fromDir = new File(fromDirName);
                 if (!selfMove && okToDelete(fromDir)) {
                     deleteDir(fromDir);
                 }
-
             }
-
             if (createCount > 0) {
                 log("Moved " + dirCopyMap.size()
-                    + " empty director"
-                    + (dirCopyMap.size() == 1 ? "y" : "ies")
-                    + " to " + createCount
-                    + " empty director"
-                    + (createCount == 1 ? "y" : "ies") + " under "
-                    + destDir.getAbsolutePath());
+                        + " empty director"
+                        + (dirCopyMap.size() == 1 ? "y" : "ies")
+                        + " to " + createCount
+                        + " empty director"
+                        + (createCount == 1 ? "y" : "ies") + " under "
+                        + destDir.getAbsolutePath());
             }
         }
     }
@@ -209,26 +190,22 @@ public class Move extends Copy {
      * Try to move the file via a rename, but if this fails or filtering
      * is enabled, copy the file then delete the sourceFile.
      */
-    private void moveFile(File fromFile, File toFile,
-                          boolean filtering, boolean overwrite) {
+    private void moveFile(File fromFile, File toFile, boolean filtering, boolean overwrite) {
         boolean moved = false;
         try {
-            log("Attempting to rename: " + fromFile
-                + " to " + toFile, verbosity);
+            log("Attempting to rename: " + fromFile + " to " + toFile, verbosity);
             moved = renameFile(fromFile, toFile, filtering, forceOverwrite);
         } catch (IOException ioe) {
             String msg = "Failed to rename " + fromFile
-                + " to " + toFile
-                + " due to " + ioe.getMessage();
+                + " to " + toFile + " due to " + ioe.getMessage();
             throw new BuildException(msg, ioe, getLocation());
         }
 
         if (!moved) {
             copyFile(fromFile, toFile, filtering, overwrite);
             if (!fromFile.delete()) {
-                throw new BuildException("Unable to delete "
-                                        + "file "
-                                        + fromFile.getAbsolutePath());
+                throw new BuildException("Unable to delete " + "file "
+                        + fromFile.getAbsolutePath());
             }
         }
     }
@@ -240,26 +217,17 @@ public class Move extends Copy {
      * @param filtering
      * @param overwrite
      */
-    private void copyFile(File fromFile, File toFile,
-                          boolean filtering, boolean overwrite) {
+    private void copyFile(File fromFile, File toFile, boolean filtering, boolean overwrite) {
         try {
-            log("Copying " + fromFile + " to " + toFile,
-                verbosity);
+            log("Copying " + fromFile + " to " + toFile, verbosity);
 
-            FilterSetCollection executionFilters =
-                new FilterSetCollection();
+            FilterSetCollection executionFilters = new FilterSetCollection();
             if (filtering) {
-                executionFilters
-                    .addFilterSet(getProject().getGlobalFilterSet());
+                executionFilters.addFilterSet(getProject().getGlobalFilterSet());
             }
-            for (Enumeration filterEnum =
-                    getFilterSets().elements();
-                filterEnum.hasMoreElements();) {
-                executionFilters
-                    .addFilterSet((FilterSet) filterEnum
-                                .nextElement());
+            for (Iterator filterIter = getFilterSets().iterator(); filterIter.hasNext();) {
+                executionFilters.addFilterSet((FilterSet) filterIter.next());
             }
-
             getFileUtils().copyFile(fromFile, toFile, executionFilters,
                                     getFilterChains(),
                                     forceOverwrite,
@@ -267,19 +235,15 @@ public class Move extends Copy {
                                     getEncoding(),
                                     getOutputEncoding(),
                                     getProject());
-
         } catch (IOException ioe) {
             String msg = "Failed to copy " + fromFile
-                + " to " + toFile
-                + " due to " + ioe.getMessage();
+                    + " to " + toFile + " due to " + ioe.getMessage();
             throw new BuildException(msg, ioe, getLocation());
         }
     }
 
-
     /**
-     * Its only ok to delete a directory tree if there are
-     * no files in it.
+     * Its only ok to delete a directory tree if there are no files in it.
      * @param d the directory to check
      * @return true if a deletion can go ahead
      */
@@ -300,7 +264,6 @@ public class Move extends Copy {
                 return false;   // found a file
             }
         }
-
         return true;
     }
 
@@ -329,18 +292,15 @@ public class Move extends Copy {
             if (f.isDirectory()) {
                 deleteDir(f);
             } else if (deleteFiles && !(f.delete())) {
-                throw new BuildException("Unable to delete file "
-                                         + f.getAbsolutePath());
+                throw new BuildException("Unable to delete file " + f.getAbsolutePath());
             } else {
                 throw new BuildException("UNEXPECTED ERROR - The file "
-                                         + f.getAbsolutePath()
-                                         + " should not exist!");
+                        + f.getAbsolutePath() + " should not exist!");
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-            throw new BuildException("Unable to delete directory "
-                                     + d.getAbsolutePath());
+            throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
         }
     }
 
@@ -362,22 +322,19 @@ public class Move extends Copy {
      * @exception IOException if an error occurs
      * @exception BuildException if an error occurs
      */
-    protected boolean renameFile(File sourceFile, File destFile,
-                                 boolean filtering, boolean overwrite)
-        throws IOException, BuildException {
-
+    protected boolean renameFile(File sourceFile, File destFile, boolean filtering,
+                                 boolean overwrite) throws IOException, BuildException {
         boolean renamed = false;
         if ((getFilterSets().size() + getFilterChains().size() == 0)
-            && !(filtering || destFile.isDirectory())) {
+                && !(filtering || destFile.isDirectory())) {
             // ensure that parent dir of dest file exists!
             File parent = destFile.getParentFile();
             if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
-            if (destFile.isFile() && !destFile.equals(sourceFile)
-                && !destFile.delete()) {
-                throw new BuildException("Unable to remove existing "
-                                         + "file " + destFile);
+            if (destFile.isFile() && !getFileUtils().fileNameEquals(sourceFile, destFile)
+                    && !destFile.delete()) {
+                throw new BuildException("Unable to remove existing " + "file " + destFile);
             }
             renamed = sourceFile.renameTo(destFile);
         }
