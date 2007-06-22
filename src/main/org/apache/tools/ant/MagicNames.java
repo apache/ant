@@ -149,8 +149,7 @@ public final class MagicNames {
     public static final String BUILD_JAVAC_SOURCE = "ant.build.javac.source";
 
     /**
-     * property that provides the default value for javac's target
-     * attribute.
+     * property that provides the default value for javac's target attribute.
      * @since Ant 1.7
      * Value: {@value}
      */
@@ -174,6 +173,25 @@ public final class MagicNames {
      * Value: {@value}
      */
     public static final String REFID_PROPERTY_HELPER = "ant.PropertyHelper";
+
+    /**
+     * Name of JVM system property which provides the name of the ProjectHelper class to use.
+     * Value: {@value}
+     */
+    public static final String PROJECT_HELPER_CLASS = "org.apache.tools.ant.ProjectHelper";
+
+    /**
+     * The service identifier in jars which provide ProjectHelper implementations.
+     * Value: {@value}
+     */
+    public static final String PROJECT_HELPER_SERVICE =
+        "META-INF/services/org.apache.tools.ant.ProjectHelper";
+
+    /**
+     * Name of ProjectHelper reference that we add to a project.
+     * Value: {@value}
+     */
+    public static final String REFID_PROJECT_HELPER = "ant.projectHelper";
 
 }
 
