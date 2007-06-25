@@ -91,6 +91,9 @@ Fixed bugs:
 * Regression: bzip2 task created corrupted output files for some inputs.
   Bugzilla bug 41596.
 
+* Regression: <available> with <filepath> did not work.
+  Bugzilla 42735.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
