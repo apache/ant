@@ -101,6 +101,7 @@ public class Java extends Task {
 
         int err = -1;
         try {
+            checkConfiguration();
             err = executeJava();
             if (err != 0) {
                 if (failOnError) {
@@ -128,6 +129,14 @@ public class Java extends Task {
      * @throws BuildException if required parameters are missing.
      */
     public int executeJava() throws BuildException {
+        return executeJava(getCommandLine());
+    }
+
+    /**
+     * Check configuration.
+     * @throws BuildException if required parameters are missing.
+     */
+    protected void checkConfiguration() throws BuildException {
         String classname = getCommandLine().getClassname();
         if (classname == null && getCommandLine().getJar() == null) {
             throw new BuildException("Classname must not be null.");
@@ -188,17 +197,24 @@ public class Java extends Task {
                 Project.MSG_VERBOSE);
         }
         setupRedirector();
+    }
+
+    /**
+     * Execute the specified CommandlineJava.
+     * @param commandLine CommandLineJava instance.
+     */
+    protected int executeJava(CommandlineJava commandLine) {
         try {
             if (fork) {
                 if (!spawn) {
-                    return fork(getCommandLine().getCommandline());
+                    return fork(commandLine.getCommandline());
                 } else {
-                    spawn(getCommandLine().getCommandline());
+                    spawn(commandLine.getCommandline());
                     return 0;
                 }
             } else {
                 try {
-                    run(getCommandLine());
+                    run(commandLine);
                     return 0;
                 } catch (ExitException ex) {
                     return ex.getStatus();
