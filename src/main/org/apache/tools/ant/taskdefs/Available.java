@@ -323,12 +323,14 @@ public class Available extends Task implements Condition {
         } else {
             String[] paths = filepath.list();
             for (int i = 0; i < paths.length; ++i) {
-                log("Searching " + paths[i], Project.MSG_DEBUG);
+                log("Searching " + paths[i], Project.MSG_VERBOSE);
                 File path = new File(paths[i]);
 
                 // **   full-pathname specified == path in list
                 // **   simple name specified   == path in list
-                if (path.exists() && filename.equals(paths[i])) {
+                if (path.exists() &&
+                    (filename.equals(paths[i])
+                     || filename.equals(path.getName()))) {
                     if (type == null) {
                         log("Found: " + path, Project.MSG_VERBOSE);
                         return true;
@@ -365,6 +367,7 @@ public class Available extends Task implements Condition {
                         return true;
                     }
                 }
+
                 // **   simple name specified   == parent dir + name
                 while (searchParents && parent != null && parent.exists()) {
                     if (checkFile(new File(parent, filename),
