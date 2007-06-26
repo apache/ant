@@ -94,6 +94,9 @@ Fixed bugs:
 * Regression: <available> with <filepath> did not work.
   Bugzilla 42735.
 
+* ant script, cd may output to stdout.
+  Bugzilla 42739.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
