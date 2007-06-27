@@ -17,18 +17,16 @@
  */
 package org.apache.tools.ant.util;
 
+import java.io.File;
+
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
-import java.io.File;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 
-
 /**
- * A class to help in creating, setting and getting
- * script runners.
+ * A class to help in creating, setting and getting script runners.
  */
 public class ScriptRunnerHelper {
     private ClasspathUtils.Delegate cpDelegate = null;
@@ -39,7 +37,7 @@ public class ScriptRunnerHelper {
     private boolean setBeans = true;
     private ProjectComponent projectComponent;
     private ClassLoader scriptLoader = null;
-    private Union resources=new Union();
+    private Union resources = new Union();
 
     /**
      * Set the project component associated with this helper.
@@ -110,7 +108,7 @@ public class ScriptRunnerHelper {
     }
 
     /**
-     * The script text.
+     * Add script text.
      *
      * @param text a component of the script text to be added.
      */
@@ -166,8 +164,7 @@ public class ScriptRunnerHelper {
         scriptLoader = loader;
     }
 
-
-    private ClassLoader generateClassLoader() {
+    private synchronized ClassLoader generateClassLoader() {
         if (scriptLoader != null) {
             return scriptLoader;
         }
@@ -175,7 +172,6 @@ public class ScriptRunnerHelper {
             scriptLoader = getClass().getClassLoader();
             return scriptLoader;
         }
-
         scriptLoader = cpDelegate.getClassLoader();
         return scriptLoader;
     }
@@ -191,8 +187,7 @@ public class ScriptRunnerHelper {
      * Get a script runner.
      */
     private ScriptRunnerBase getRunner() {
-        return new ScriptRunnerCreator(
-            projectComponent.getProject()).createRunner(
+        return new ScriptRunnerCreator(projectComponent.getProject()).createRunner(
                 manager, language, generateClassLoader());
     }
 
@@ -200,7 +195,7 @@ public class ScriptRunnerHelper {
      * Add any source resource.
      *
      * @param resource source of script
-     * @since Ant1.7.1
+     * @since Ant 1.7.1
      */
     public void add(ResourceCollection resource) {
         resources.add(resource);

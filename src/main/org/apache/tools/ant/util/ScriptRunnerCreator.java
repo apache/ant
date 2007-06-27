@@ -22,8 +22,7 @@ import org.apache.tools.ant.Project;
 
 /**
  * This is a helper class used by ScriptRunnerHelper to
- * create a ScriptRunner based on a classloader and
- * on a language.
+ * create a ScriptRunner based on a classloader and on a language.
  */
 public class ScriptRunnerCreator {
     private static final String AUTO = "auto";
@@ -60,7 +59,7 @@ public class ScriptRunnerCreator {
      * @return the created script runner.
      * @throws BuildException if unable to create the ScriptRunner.
      */
-    public ScriptRunnerBase createRunner(
+    public synchronized ScriptRunnerBase createRunner(
         String manager, String language, ClassLoader classLoader) {
         this.manager      = manager;
         this.language     = language;
@@ -70,8 +69,7 @@ public class ScriptRunnerCreator {
             throw new BuildException("script language must be specified");
         }
         if (!manager.equals(AUTO) && !manager.equals(JAVAX) && !manager.equals(BSF)) {
-                throw new BuildException(
-                    "Unsupported language prefix " + manager);
+            throw new BuildException("Unsupported language prefix " + manager);
         }
 
         // Check for bsf first then javax
@@ -88,17 +86,14 @@ public class ScriptRunnerCreator {
         }
         if (JAVAX.equals(manager)) {
             throw new BuildException(
-                "Unable to load the script engine manager "
-                + "(" + JAVAX_MANAGER + ")");
-        } else if (BSF.equals(manager)) {
-            throw new BuildException(
-                "Unable to load the BSF script engine manager "
-                + "(" + BSF_MANAGER + ")");
-        } else {
-            throw new BuildException(
-                "Unable to load a script engine manager "
-                + "(" + BSF_MANAGER + " or " + JAVAX_MANAGER + ")");
+                    "Unable to load the script engine manager " + "(" + JAVAX_MANAGER + ")");
         }
+        if (BSF.equals(manager)) {
+            throw new BuildException(
+                    "Unable to load the BSF script engine manager " + "(" + BSF_MANAGER + ")");
+        }
+        throw new BuildException("Unable to load a script engine manager "
+                + "(" + BSF_MANAGER + " or " + JAVAX_MANAGER + ")");
     }
 
     /**
@@ -118,8 +113,7 @@ public class ScriptRunnerCreator {
         if (!manager.equals(AUTO) && !manager.equals(checkManager)) {
             return null;
         }
-        if (scriptLoader.getResource(
-                LoaderUtils.classNameToResource(managerClass)) == null) {
+        if (scriptLoader.getResource(LoaderUtils.classNameToResource(managerClass)) == null) {
             return null;
         }
         if (managerClass.equals(BSF_MANAGER)) {
@@ -127,7 +121,7 @@ public class ScriptRunnerCreator {
         }
         try {
             runner = (ScriptRunnerBase) Class.forName(
-                runnerClass, true, scriptLoader).newInstance();
+                    runnerClass, true, scriptLoader).newInstance();
             runner.setProject(project);
         } catch (Exception ex) {
             throw ReflectUtil.toBuildException(ex);
