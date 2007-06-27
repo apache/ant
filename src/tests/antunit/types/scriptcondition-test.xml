@@ -33,7 +33,7 @@
 
  <target name="testNolanguage">
     <au:expectfailure message="Absence of language attribute not detected"
-                           expectedMessage="script language must be specified">
+                      expectedMessage="script language must be specified">
       <t message="testNolanguage">
         <scriptcondition>
           self.setValue(true);
