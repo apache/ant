@@ -160,6 +160,8 @@ Other changes:
 
 * Default text added to macrodef. Bugzilla report 42301.
 
+* "rawblobs" attribute added to SQL task.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

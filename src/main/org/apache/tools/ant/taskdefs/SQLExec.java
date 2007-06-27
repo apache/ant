@@ -49,6 +49,7 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Types;
 
 /**
  * Executes a series of SQL statements on a database using JDBC.
@@ -190,6 +191,12 @@ public class SQLExec extends JDBCTask {
      * @since Ant 1.7
      */
     private boolean expandProperties = true;
+
+    /**
+     * should we print raw BLOB data?
+     * @since Ant 1.7.1
+     */
+    private boolean rawBlobs;
 
     /**
      * Set the name of the SQL file to be run.
@@ -370,6 +377,15 @@ public class SQLExec extends JDBCTask {
      */
     public void setEscapeProcessing(boolean enable) {
         escapeProcessing = enable;
+    }
+
+    /**
+     * Set whether to print raw BLOBs rather than their string (hex) representations.
+     * @param rawBlobs whether to print raw BLOBs.
+     * @since Ant 1.7.1
+     */
+    public void setRawBlobs(boolean rawBlobs) {
+        this.rawBlobs = rawBlobs;
     }
 
     /**
@@ -634,16 +650,25 @@ public class SQLExec extends JDBCTask {
                     out.println();
                 }
                 while (rs.next()) {
-                    out.print(rs.getString(1));
+                    printValue(rs, 1, out);
                     for (int col = 2; col <= columnCount; col++) {
                         out.write(',');
-                        out.print(rs.getString(col));
+                        printValue(rs, col, out);
                     }
                     out.println();
                 }
             }
         }
         out.println();
+    }
+
+    private void printValue(ResultSet rs, int col, PrintStream out)
+            throws SQLException {
+        if (rawBlobs && rs.getMetaData().getColumnType(col) == Types.BLOB) {
+            new StreamPumper(rs.getBlob(col).getBinaryStream(), out).run();
+        } else {
+            out.print(rs.getString(col));
+        }
     }
 
     /*
