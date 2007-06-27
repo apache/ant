@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
@@ -387,15 +386,15 @@ public class SQLExec extends JDBCTask {
             if (srcFile == null && sqlCommand.length() == 0
                 && resources.size() == 0) {
                 if (transactions.size() == 0) {
-                    throw new BuildException("Source file or resource "
-                                             + "collection, "
+                    throw new BuildException("Source file or resource collection, "
                                              + "transactions or sql statement "
                                              + "must be set!", getLocation());
                 }
             }
 
-            if (srcFile != null && !srcFile.exists()) {
-                throw new BuildException("Source file does not exist!", getLocation());
+            if (srcFile != null && !srcFile.isFile()) {
+                throw new BuildException("Source file " + srcFile
+                        + " is not a file!", getLocation());
             }
 
             // deal with the resources
@@ -422,13 +421,9 @@ public class SQLExec extends JDBCTask {
                 PrintStream out = System.out;
                 try {
                     if (output != null) {
-                        log("Opening PrintStream to output file " + output,
-                            Project.MSG_VERBOSE);
-                        out = new PrintStream(
-                                  new BufferedOutputStream(
-                                      new FileOutputStream(output
-                                                           .getAbsolutePath(),
-                                                           append)));
+                        log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
+                        out = new PrintStream(new BufferedOutputStream(
+                                new FileOutputStream(output.getAbsolutePath(), append)));
                     }
 
                     // Process all transactions
@@ -442,9 +437,7 @@ public class SQLExec extends JDBCTask {
                         }
                     }
                 } finally {
-                    if (out != null && out != System.out) {
-                        out.close();
-                    }
+                    FileUtils.close(out);
                 }
             } catch (IOException e) {
                 closeQuietly();
@@ -457,6 +450,10 @@ public class SQLExec extends JDBCTask {
                     if (statement != null) {
                         statement.close();
                     }
+                } catch (SQLException ex) {
+                    // ignore
+                }
+                try {
                     if (conn != null) {
                         conn.close();
                     }
@@ -465,8 +462,7 @@ public class SQLExec extends JDBCTask {
                 }
             }
 
-            log(goodSql + " of " + totalSql
-                + " SQL statements executed successfully");
+            log(goodSql + " of " + totalSql + " SQL statements executed successfully");
         } finally {
             transactions = savedTransaction;
             sqlCommand = savedSqlCommand;
@@ -510,29 +506,17 @@ public class SQLExec extends JDBCTask {
                 }
             }
 
-            if (!keepformat) {
-                sql.append(" ");
-                sql.append(line);
-            } else {
-                sql.append("\n");
-                sql.append(line);
-            }
+            sql.append(keepformat ? "\n" : " ").append(line);
 
             // SQL defines "--" as a comment to EOL
             // and in Oracle it may contain a hint
             // so we cannot just remove it, instead we must end it
-            if (!keepformat) {
-                if (line.indexOf("--") >= 0) {
-                    sql.append("\n");
-                }
+            if (!keepformat && line.indexOf("--") >= 0) {
+                sql.append("\n");
             }
-            if ((delimiterType.equals(DelimiterType.NORMAL)
-                 && StringUtils.endsWith(sql, delimiter))
-                ||
-                (delimiterType.equals(DelimiterType.ROW)
-                 && line.equals(delimiter))) {
-                execSQL(sql.substring(0, sql.length() - delimiter.length()),
-                        out);
+            if ((delimiterType.equals(DelimiterType.NORMAL) && StringUtils.endsWith(sql, delimiter))
+                    || (delimiterType.equals(DelimiterType.ROW) && line.equals(delimiter))) {
+                execSQL(sql.substring(0, sql.length() - delimiter.length()), out);
                 sql.replace(0, sql.length(), "");
             }
         }
@@ -541,7 +525,6 @@ public class SQLExec extends JDBCTask {
             execSQL(sql.toString(), out);
         }
     }
-
 
     /**
      * Exec the sql statement.
@@ -571,10 +554,8 @@ public class SQLExec extends JDBCTask {
                     if (updateCount != -1) {
                         updateCountTotal += updateCount;
                     }
-                } else {
-                    if (print) {
-                        printResults(resultSet, out);
-                    }
+                } else if (print) {
+                    printResults(resultSet, out);
                 }
                 ret = statement.getMoreResults();
                 if (ret) {
@@ -583,13 +564,11 @@ public class SQLExec extends JDBCTask {
                 }
             } while (ret);
 
-            log(updateCountTotal + " rows affected",
-                Project.MSG_VERBOSE);
+            log(updateCountTotal + " rows affected", Project.MSG_VERBOSE);
 
             if (print && showtrailers) {
                 out.println(updateCountTotal + " rows affected");
             }
-
             SQLWarning warning = conn.getWarnings();
             while (warning != null) {
                 log(warning + " sql warning", Project.MSG_VERBOSE);
@@ -605,7 +584,11 @@ public class SQLExec extends JDBCTask {
             log(e.toString(), Project.MSG_ERR);
         } finally {
             if (resultSet != null) {
-                resultSet.close();
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    //ignore
+                }
             }
         }
     }
@@ -636,39 +619,28 @@ public class SQLExec extends JDBCTask {
      * @throws SQLException on SQL problems.
      * @since Ant 1.6.3
      */
-    protected void printResults(ResultSet rs, PrintStream out)
-        throws SQLException {
+    protected void printResults(ResultSet rs, PrintStream out) throws SQLException {
         if (rs != null) {
             log("Processing new result set.", Project.MSG_VERBOSE);
             ResultSetMetaData md = rs.getMetaData();
             int columnCount = md.getColumnCount();
-            StringBuffer line = new StringBuffer();
-            if (showheaders) {
-                for (int col = 1; col < columnCount; col++) {
-                     line.append(md.getColumnName(col));
-                     line.append(",");
-                }
-                line.append(md.getColumnName(columnCount));
-                out.println(line);
-                line = new StringBuffer();
-            }
-            while (rs.next()) {
-                boolean first = true;
-                for (int col = 1; col <= columnCount; col++) {
-                    String columnValue = rs.getString(col);
-                    if (columnValue != null) {
-                        columnValue = columnValue.trim();
+            if (columnCount > 0) {
+                if (showheaders) {
+                    out.print(md.getColumnName(1));
+                    for (int col = 2; col <= columnCount; col++) {
+                         out.write(',');
+                         out.print(md.getColumnName(col));
                     }
-
-                    if (first) {
-                        first = false;
-                    } else {
-                        line.append(",");
-                    }
-                    line.append(columnValue);
+                    out.println();
                 }
-                out.println(line);
-                line = new StringBuffer();
+                while (rs.next()) {
+                    out.print(rs.getString(1));
+                    for (int col = 2; col <= columnCount; col++) {
+                        out.write(',');
+                        out.print(rs.getString(col));
+                    }
+                    out.println();
+                }
             }
         }
         out.println();
@@ -774,8 +746,7 @@ public class SQLExec extends JDBCTask {
                 Reader reader = null;
                 try {
                     is = tSrcResource.getInputStream();
-                    reader =
-                        (encoding == null) ? new InputStreamReader(is)
+                    reader = (encoding == null) ? new InputStreamReader(is)
                         : new InputStreamReader(is, encoding);
                     runStatements(reader, out);
                 } finally {
