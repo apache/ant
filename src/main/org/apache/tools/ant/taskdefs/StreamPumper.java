@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
@@ -40,22 +39,21 @@ public class StreamPumper implements Runnable {
     private boolean started = false;
 
     /**
-     * Create a new stream pumper.
+     * Create a new StreamPumper.
      *
      * @param is input stream to read data from
      * @param os output stream to write data to.
      * @param closeWhenExhausted if true, the output stream will be closed when
      *        the input is exhausted.
      */
-    public StreamPumper(InputStream is, OutputStream os,
-                        boolean closeWhenExhausted) {
+    public StreamPumper(InputStream is, OutputStream os, boolean closeWhenExhausted) {
         this.is = is;
         this.os = os;
         this.closeWhenExhausted = closeWhenExhausted;
     }
 
     /**
-     * Create a new stream pumper.
+     * Create a new StreamPumper.
      *
      * @param is input stream to read data from
      * @param os output stream to write data to.
@@ -124,12 +122,11 @@ public class StreamPumper implements Runnable {
     }
 
     /**
-     * This method blocks until the stream pumper finishes.
+     * This method blocks until the StreamPumper finishes.
      * @throws InterruptedException if interrupted.
      * @see #isFinished()
      */
-    public synchronized void waitFor()
-        throws InterruptedException {
+    public synchronized void waitFor() throws InterruptedException {
         while (!isFinished()) {
             wait();
         }
@@ -142,8 +139,7 @@ public class StreamPumper implements Runnable {
      */
     public synchronized void setBufferSize(int bufferSize) {
         if (started) {
-            throw new IllegalStateException(
-                "Cannot set buffer size on a running StreamPumper");
+            throw new IllegalStateException("Cannot set buffer size on a running StreamPumper");
         }
         this.bufferSize = bufferSize;
     }
