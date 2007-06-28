@@ -70,4 +70,87 @@
       </scriptcondition>
     </f>
   </target>
+
+  <target name="testBeanshellReturnTrue">
+    <t message="testBeanshellReturnTrue">
+      <scriptcondition language="beanshell" value="false">
+        return true;
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testBeanshellReturnFalse">
+    <f message="testBeanshellReturnFalse">
+      <scriptcondition language="beanshell" value="true">
+        return false;
+      </scriptcondition>
+    </f>
+  </target>
+
+  <target name="testBeanshellReturnOverridesValue">
+    <f message="testBeanshellReturnOverridesValue">
+      <scriptcondition language="beanshell" value="false">
+        self.setValue(true);
+        return false;
+      </scriptcondition>
+    </f>
+  </target>
+
+  <target name="testBeanshellReturnNullIgnored">
+    <t message="testBeanshellReturnNullIgnored">
+      <scriptcondition language="beanshell" value="true">
+        return null;
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testBeanshellReturnNonBooleanIgnored">
+    <t message="testBeanshellReturnNonBooleanIgnored">
+      <scriptcondition language="beanshell" value="true">
+        return 20;
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testJsReturnTrue">
+    <t message="testJsReturnTrue">
+      <scriptcondition language="javascript" value="false">
+        java.lang.Boolean.TRUE
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testJsReturnFalse">
+    <f message="testJsReturnFalse">
+      <scriptcondition language="javascript" value="true">
+        java.lang.Boolean.FALSE
+      </scriptcondition>
+    </f>
+  </target>
+
+  <target name="testJsReturnOverridesValue">
+    <f message="testJsReturnOverridesValue">
+      <scriptcondition language="javascript" value="false">
+        self.setValue(true);
+        false
+      </scriptcondition>
+    </f>
+  </target>
+
+  <target name="testJsReturnNullIgnored">
+    <t message="testJsReturnNullIgnored">
+      <scriptcondition language="javascript" value="true">
+        null
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testJsReturnNonBooleanIgnored">
+    <t message="testJsReturnNonBooleanIgnored">
+      <scriptcondition language="javascript" value="true">
+        new java.lang.Integer(20)
+      </scriptcondition>
+    </t>
+  </target>
+
 </project>

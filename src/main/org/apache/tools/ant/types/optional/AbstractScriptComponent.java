@@ -17,15 +17,14 @@
  */
 package org.apache.tools.ant.types.optional;
 
+import java.io.File;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;
-
-
-import java.io.File;
 
 /**
  * This is a {@link ProjectComponent} that has script support built in
@@ -140,5 +139,14 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      */
     protected void executeScript(String execName) {
         getRunner().executeScript(execName);
+    }
+
+    /**
+     * Evaluate a script.
+     * @param execName name of the script.
+     * @return the result of the evaluation.
+     */
+    protected Object evaluateScript(String execName) {
+        return getRunner().evaluateScript(execName);
     }
 }

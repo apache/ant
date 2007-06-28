@@ -33,7 +33,6 @@ public class ScriptCondition extends AbstractScriptComponent implements Conditio
      */
     private boolean value = false;
 
-
     /**
      * Is this condition true?
      *
@@ -44,8 +43,8 @@ public class ScriptCondition extends AbstractScriptComponent implements Conditio
      */
     public boolean eval() throws BuildException {
         initScriptRunner();
-        executeScript("ant_condition");
-        return getValue();
+        Object result = evaluateScript("ant_condition");
+        return result instanceof Boolean ? ((Boolean) result).booleanValue() : getValue();
     }
 
     /**

@@ -14,6 +14,8 @@ Changes that could break older environments:
   been modified to encode outgoing (InputStream) content as well as encoding
   incoming (OutputStream) content.
 
+* <scriptcondition> now prefers evaluation result/return value over value property.
+
 Fixed bugs:
 -----------
 * Regression: Locator fails with URI encoding problem when spaces in path
