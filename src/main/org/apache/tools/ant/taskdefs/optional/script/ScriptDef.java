@@ -23,7 +23,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.taskdefs.DefBase;
 
