@@ -74,8 +74,8 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
      *
      * @param execName the name that will be passed to the
      *                 scripting engine for this script execution.
-     * @return the result of the evalulation
-     * @exception BuildException if someting goes wrong exectuing the script.
+     * @return the result of the evaluation
+     * @exception BuildException if something goes wrong executing the script.
      */
     public Object evaluateScript(String execName) throws BuildException {
         checkLanguage();

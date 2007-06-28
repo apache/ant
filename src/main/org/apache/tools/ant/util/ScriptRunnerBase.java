@@ -117,10 +117,10 @@ public abstract class ScriptRunnerBase {
     public abstract void executeScript(String execName);
 
     /**
-     * Evalulate the script.
-     * @param execName the name that will be passed to BSF for this script
-     *        execution.
-     * @return the result of evalulating the script.
+     * Evaluate the script.
+     * @param execName the name that will be passed to the
+     *                 scripting engine for this script execution.
+     * @return the result of evaluating the script.
      */
     public abstract Object evaluateScript(String execName);
 

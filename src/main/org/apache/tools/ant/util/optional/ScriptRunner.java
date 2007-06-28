@@ -21,7 +21,6 @@ import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.bsf.BSFEngine;
 
-
 import java.util.Iterator;
 import java.util.Hashtable;
 
@@ -87,10 +86,8 @@ public class ScriptRunner extends ScriptRunnerBase {
     /**
      * Do the work.
      *
-     * @param execName the name that will be passed to BSF for this script
-     *        execution.
-     *
-     * @exception BuildException if someting goes wrong exectuing the script.
+     * @param execName the name that will be passed to BSF for this script execution.
+     * @exception BuildException if something goes wrong executing the script.
      */
     public void executeScript(String execName) throws BuildException {
         checkLanguage();
@@ -105,22 +102,20 @@ public class ScriptRunner extends ScriptRunnerBase {
                 engine.exec(execName, 0, 0, getScript());
             }
         } catch (BSFException be) {
-            throwBuildException(be);
+            throw getBuildException(be);
         } finally {
             restoreContextLoader(origLoader);
         }
     }
 
     /**
-     * Do the work.
+     * Evaluate the script.
      *
-     * @param execName the name that will be passed to BSF for this script
-     *        execution.
-     * @return the result of the evalulation
-     * @exception BuildException if someting goes wrong exectuing the script.
+     * @param execName the name that will be passed to BSF for this script execution.
+     * @return the result of the evaluation
+     * @exception BuildException if something goes wrong executing the script.
      */
-    public Object evaluateScript(String execName)
-        throws BuildException {
+    public Object evaluateScript(String execName) throws BuildException {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();
         try {
@@ -129,34 +124,27 @@ public class ScriptRunner extends ScriptRunnerBase {
             // execute the script
             if (engine == null) {
                 return m.eval(getLanguage(), execName, 0, 0, getScript());
-            } else {
-                return engine.eval(execName, 0, 0, getScript());
             }
+            return engine.eval(execName, 0, 0, getScript());
         } catch (BSFException be) {
-            throwBuildException(be);
-            // NotReached
-            return null;
+            throw getBuildException(be);
         } finally {
             restoreContextLoader(origLoader);
         }
     }
 
     /**
-     * Throw a buildException in place of a BSFException.
+     * Get/create a BuildException from a BSFException.
      * @param be BSFException to convert.
-     * @throws BuildException the conveted exception.
+     * @return BuildException the converted exception.
      */
-    private void throwBuildException(BSFException be) {
+    private BuildException getBuildException(BSFException be) {
         Throwable t = be;
         Throwable te = be.getTargetException();
-        if (te != null) {
-            if  (te instanceof BuildException) {
-                throw (BuildException) te;
-            } else {
-                t = te;
-            }
+        if (te instanceof BuildException) {
+            return (BuildException) te;
         }
-        throw new BuildException(t);
+        return new BuildException(te == null ? t : te);
     }
 
     private void declareBeans(BSFManager m) throws BSFException {
