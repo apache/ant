@@ -18,7 +18,9 @@
 package org.apache.tools.ant.util.regexp;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /***
@@ -52,9 +54,9 @@ public class RegexpFactory extends RegexpMatcherFactory {
     public Regexp newRegexp(Project p) throws BuildException {
         String systemDefault = null;
         if (p == null) {
-            systemDefault = System.getProperty("ant.regexp.regexpimpl");
+            systemDefault = System.getProperty(MagicNames.REGEXP_IMPL);
         } else {
-            systemDefault = p.getProperty("ant.regexp.regexpimpl");
+            systemDefault = p.getProperty(MagicNames.REGEXP_IMPL);
         }
 
         if (systemDefault != null) {
@@ -85,10 +87,8 @@ public class RegexpFactory extends RegexpMatcherFactory {
         } catch (BuildException be) {
             cause = orCause(cause, be, true);
         }
-
-        throw new BuildException(
-            "No supported regular expression matcher found"
-            + (cause != null ? ": " + cause : ""), cause);
+        throw new BuildException("No supported regular expression matcher found"
+                + (cause != null ? ": " + cause : ""), cause);
     }
 
     /**
@@ -101,15 +101,9 @@ public class RegexpFactory extends RegexpMatcherFactory {
      *
      * @see RegexpMatcherFactory#createInstance(String)
      */
-    protected Regexp createRegexpInstance(String classname)
-        throws BuildException {
-
-        RegexpMatcher m = createInstance(classname);
-        if (m instanceof Regexp) {
-            return (Regexp) m;
-        } else {
-            throw new BuildException(classname + " doesn't implement the Regexp interface");
-        }
+    protected Regexp createRegexpInstance(String classname) throws BuildException {
+        return (Regexp) ClasspathUtils.newInstance(classname, RegexpFactory.class.getClassLoader(),
+                Regexp.class);
     }
 
 }
