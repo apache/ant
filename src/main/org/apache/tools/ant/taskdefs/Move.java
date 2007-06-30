@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -324,20 +325,18 @@ public class Move extends Copy {
      */
     protected boolean renameFile(File sourceFile, File destFile, boolean filtering,
                                  boolean overwrite) throws IOException, BuildException {
-        boolean renamed = false;
-        if ((getFilterSets().size() + getFilterChains().size() == 0)
-                && !(filtering || destFile.isDirectory())) {
-            // ensure that parent dir of dest file exists!
-            File parent = destFile.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-            if (destFile.isFile() && !getFileUtils().fileNameEquals(sourceFile, destFile)
-                    && !destFile.delete()) {
-                throw new BuildException("Unable to remove existing " + "file " + destFile);
-            }
-            renamed = sourceFile.renameTo(destFile);
+        if (destFile.isDirectory() || filtering || getFilterSets().size() > 0
+                || getFilterChains().size() > 0) {
+            return false;
         }
-        return renamed;
+        // ensure that parent dir of dest file exists!
+        File parent = destFile.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        } else if (destFile.isFile() && !getFileUtils().fileNameEquals(sourceFile, destFile)
+                && !destFile.delete()) {
+            throw new BuildException("Unable to remove existing file " + destFile);
+        }
+        return sourceFile.renameTo(destFile);
     }
 }
