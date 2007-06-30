@@ -150,10 +150,6 @@ public class Jar extends Zip {
         JarMarker.getInstance()
     };
 
-    // CheckStyle:VisibilityModifier OFF - bc
-    protected String emptyBehavior = "create";
-    // CheckStyle:VisibilityModifier ON
-
     /** constructor */
     public Jar() {
         super();
@@ -456,7 +452,7 @@ public class Jar extends Zip {
         throws IOException {
         for (Enumeration e = manifest.getWarnings();
              e.hasMoreElements();) {
-            log("Manifest warning: " + (String) e.nextElement(),
+            log("Manifest warning: " + e.nextElement(),
                 Project.MSG_WARN);
         }
 
@@ -467,7 +463,7 @@ public class Jar extends Zip {
         OutputStreamWriter osw = new OutputStreamWriter(baos, Manifest.JAR_ENCODING);
         PrintWriter writer = new PrintWriter(osw);
         manifest.write(writer);
-        writer.flush();
+        writer.close();
 
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
@@ -549,7 +545,7 @@ public class Jar extends Zip {
             }
         }
 
-        writer.flush();
+        writer.close();
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
         super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(), null,

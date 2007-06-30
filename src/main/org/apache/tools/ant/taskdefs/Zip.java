@@ -759,13 +759,16 @@ public class Zip extends MatchingTask {
                         if (keepCompression) {
                             doCompress = (ze.getMethod() == ZipEntry.DEFLATED);
                         }
+                        InputStream is = null;
                         try {
-                            zipFile(zf.getInputStream(ze), zOut, prefix + name,
+                            is = zf.getInputStream(ze);
+                            zipFile(is, zOut, prefix + name,
                                     ze.getTime(), zfs.getSrc(getProject()),
                                     zfs.hasFileModeBeenSet() ? fileMode
                                     : ze.getUnixMode());
                         } finally {
                             doCompress = oldCompress;
+                            FileUtils.close(is);
                         }
                     }
                     } else {
