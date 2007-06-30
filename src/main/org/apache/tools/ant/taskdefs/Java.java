@@ -228,7 +228,7 @@ public class Java extends Task {
                 throw e;
             } else {
                 log(e);
-                return 0;
+                return -1;
             }
         } catch (ThreadDeath t) {
             throw t; // cf. NB #47191
@@ -237,7 +237,7 @@ public class Java extends Task {
                 throw new BuildException(t, getLocation());
             } else {
                 log(t);
-                return 0;
+                return -1;
             }
         }
     }
