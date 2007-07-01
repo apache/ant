@@ -329,13 +329,20 @@ public class Move extends Copy {
                 || getFilterChains().size() > 0) {
             return false;
         }
-        // ensure that parent dir of dest file exists!
+        // identical logic lives in FileUtils.rename():
         File parent = destFile.getParentFile();
         if (parent != null && !parent.exists()) {
             parent.mkdirs();
-        } else if (destFile.isFile() && !getFileUtils().fileNameEquals(sourceFile, destFile)
-                && !destFile.delete()) {
-            throw new BuildException("Unable to remove existing file " + destFile);
+        } else if (destFile.isFile()) {
+            sourceFile = getFileUtils().normalize(sourceFile.getAbsolutePath()).getCanonicalFile();
+            destFile = getFileUtils().normalize(destFile.getAbsolutePath());
+            if (destFile.equals(sourceFile)) {
+                //no point in renaming a file to its own canonical version...
+                return true;
+            }
+            if (!(sourceFile.equals(destFile.getCanonicalFile()) || destFile.delete())) {
+                throw new BuildException("Unable to remove existing file " + destFile);
+            }
         }
         return sourceFile.renameTo(destFile);
     }

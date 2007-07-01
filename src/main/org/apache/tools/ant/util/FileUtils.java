@@ -65,9 +65,6 @@ public class FileUtils {
     private static final boolean onDos = Os.isFamily("dos");
     private static final boolean onWin9x = Os.isFamily("win9x");
     private static final boolean onWindows = Os.isFamily("windows");
-    private static final boolean onMac = Os.isFamily("mac");
-
-    private static boolean caseSensitiveFileSystem;
 
     static final int BUF_SIZE = 8192;
 
@@ -88,24 +85,6 @@ public class FileUtils {
      * than 1 millisecond, so we round this up to 1 millisecond.
      */
     public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
-
-    static {
-        try {
-	    File tmpdir = new File(System.getProperty("java.io.tmpdir"));
-            final String filename = "ant-casesensitivity.tst";
-            new File(tmpdir, filename).createNewFile();
-            new File(tmpdir, filename.toUpperCase()).createNewFile();
-            String[] files = tmpdir.list(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return filename.equalsIgnoreCase(name);
-                }
-            });
-            caseSensitiveFileSystem = files.length == 2;
-        } catch (IOException e) {
-            //default as well as possible:
-            caseSensitiveFileSystem = !onWin9x && !onWindows && !onDos && !onMac;
-        }
-    }
 
     /**
      * A one item cache for fromUri.
@@ -1152,9 +1131,8 @@ public class FileUtils {
      * @since Ant 1.5.3
      */
     public boolean fileNameEquals(File f1, File f2) {
-        String name1 = normalize(f1.getAbsolutePath()).getAbsolutePath();
-        String name2 = normalize(f2.getAbsolutePath()).getAbsolutePath();
-        return caseSensitiveFileSystem ? name1.equals(name2) : name1.equalsIgnoreCase(name2);
+        return normalize(f1.getAbsolutePath()).getAbsolutePath().equals(
+                normalize(f2.getAbsolutePath()).getAbsolutePath());
     }
 
     /**
@@ -1175,7 +1153,17 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public void rename(File from, File to) throws IOException {
-        if (to.exists() && !to.delete()) {
+        from = normalize(from.getAbsolutePath()).getCanonicalFile();
+        to = normalize(to.getAbsolutePath());
+        if (!from.exists()) {
+            System.err.println("Cannot rename nonexistent file " + from);
+            return;
+        }
+        if (from.equals(to)) {
+            System.err.println("Rename of " + from + " to " + to + " is a no-op.");
+            return;
+        }
+        if (to.exists() && !(from.equals(to.getCanonicalFile()) || to.delete())) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();
@@ -1231,6 +1219,7 @@ public class FileUtils {
      * @since Ant 1.7.1
      */
     public boolean hasErrorInCase(File localFile) {
+        localFile = normalize(localFile.getAbsolutePath());
         if (!localFile.exists()) {
             return false;
         }
