@@ -267,4 +267,19 @@ public class JarTest extends BuildFileTest {
     public void testIndexJarsPlusJarMarker() {
         executeTarget("testIndexJarsPlusJarMarker");
     }
+    
+    public void testNoVersionInfo() {
+        executeTarget("testNoVersionInfo");
+        assertLogContaining("No Implementation-Title set.");
+        assertLogContaining("No Implementation-Version set.");
+        assertLogContaining("No Implementation-Vendor set.");
+    }
+
+    public void testHasVersionInfo() {
+        executeTarget("testHasVersionInfo");
+        assertFalse( getLog().contains("No Implementation-Title set.") );
+        assertFalse( getLog().contains("No Implementation-Version set.") );
+        assertFalse( getLog().contains("No Implementation-Vendor set.") );
+    }
+    
 }

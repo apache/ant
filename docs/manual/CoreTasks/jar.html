@@ -73,14 +73,17 @@ attribute of a zipfileset in a Zip task. The one difference is that if the
 include an empty one for you.)</p>
 
 <p>Manifests are processed by the Jar task according to the
-<a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file specification.</a>
+<a target="_blank" href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file specification.</a>
 Note in particular that this may result in manifest lines greater than 72 bytes
-being wrapped and continued on the next line.
-</p>
+being wrapped and continued on the next line.</p>
+
+<p>The Jar task checks whether you specified package information according to the
+<a target="_blank" href="http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning">
+versioning specification</a>.</p>
 
 <p><b>Please note that the zip format allows multiple files of the same
-fully-qualified name to exist within a single archive.  This has been
-documented as causing various problems for unsuspecting users.  If you wish
+fully-qualified name to exist within a single archive. This has been
+documented as causing various problems for unsuspecting users. If you wish
 to avoid this behavior you must set the <code>duplicate</code> attribute
 to a value other than its default, <code>"add"</code>.</b></p>
 

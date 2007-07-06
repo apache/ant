@@ -1547,6 +1547,22 @@
 
     <!-- Used by AntlibTest.testAntlibResource: -->
     <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
+      <manifest>
+        <attribute name="Extension-name"
+          value="org.apache.tools.ant"/>
+        <attribute name="Specification-Title"
+          value="Apache Ant"/>
+        <attribute name="Specification-Version"
+          value="${manifest-version}"/>
+        <attribute name="Specification-Vendor"
+          value="Apache Software Foundation"/>
+        <attribute name="Implementation-Title"
+          value="org.apache.tools.ant"/>
+        <attribute name="Implementation-Version"
+          value="${manifest-version}"/>
+        <attribute name="Implementation-Vendor"
+          value="Apache Software Foundation"/>
+      </manifest>
       <zipfileset dir="${tests.etc.dir}" fullpath="taskdefs/test.antlib.xml">
         <include name="taskdefs/test2.antlib.xml"/>
       </zipfileset>

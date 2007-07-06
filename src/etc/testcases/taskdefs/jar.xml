@@ -236,5 +236,23 @@
       </indexjars>
     </jar>
   </target>
+    
+  <target name="testNoVersionInfo">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
+  </target>  
 
+  <!-- see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning -->  
+  <target name="testHasVersionInfo">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}">
+      <manifest>
+        <attribute name="Implementation-Title"   value="Packaging Version Test"/>
+        <attribute name="Implementation-Version" value="1.0"/>
+        <attribute name="Implementation-Vendor"  value="Apache Software Foundation"/>
+      </manifest>
+    </jar>
+  </target>  
+
+    
 </project>

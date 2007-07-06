@@ -45,6 +45,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -76,6 +77,7 @@ public class Jar extends Zip {
 
     /** merged manifests added through addConfiguredManifest */
     private Manifest configuredManifest;
+
     /** shadow of the above if upToDate check alters the value */
     private Manifest savedConfiguredManifest;
 
@@ -158,7 +160,7 @@ public class Jar extends Zip {
         setEncoding("UTF8");
         rootEntries = new Vector();
     }
-
+    
     /**
      * Not used for jar files.
      * @param we not used
@@ -773,6 +775,25 @@ public class Jar extends Zip {
      */
     protected void cleanUp() {
         super.cleanUp();
+        
+        // check against packaging spec
+        // http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
+        Section mainSection = (configuredManifest==null) ? null : configuredManifest.getMainSection();
+        if (mainSection==null) {
+            log("No Implementation-Title set. (" + getLocation() + ")");
+            log("No Implementation-Version set. (" + getLocation() + ")");
+            log("No Implementation-Vendor set. (" + getLocation() + ")");
+        } else {
+            if (mainSection.getAttribute("Implementation-Title") == null) {
+                log("No Implementation-Title set. (" + getLocation() + ")");
+            }
+            if (mainSection.getAttribute("Implementation-Version") == null) {
+                log("No Implementation-Version set. (" + getLocation() + ")");
+            }
+            if (mainSection.getAttribute("Implementation-Vendor") == null) {
+                log("No Implementation-Vendor set. (" + getLocation() + ")");
+            }
+        }
 
         // we want to save this info if we are going to make another pass
         if (!doubleFilePass || !skipWriting) {
