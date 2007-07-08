@@ -387,9 +387,9 @@ public class RuntimeConfigurable implements Serializable {
                 String value = (String) attributeMap.get(name);
 
                 // reflect these into the target
-                value = p.replaceProperties(value);
+                Object attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value);
                 try {
-                    ih.setAttribute(p, target, name, value);
+                    ih.setAttribute(p, target, name, attrValue);
                 } catch (UnsupportedAttributeException be) {
                     // id attribute must be set externally
                     if (name.equals("id")) {

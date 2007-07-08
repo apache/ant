@@ -352,6 +352,60 @@ public final class IntrospectionHelper  {
      *                      <code>null</code>.
      * @param value The value to set the attribute to. This may be interpreted
      *              or converted to the necessary type if the setter method
+     *              doesn't accept an object of the supplied type.
+     *
+     * @exception BuildException if the introspected class doesn't support
+     *                           the given attribute, or if the setting
+     *                           method fails.
+     */
+    public void setAttribute(Project p, Object element, String attributeName,
+            Object value) throws BuildException {
+        AttributeSetter as = (AttributeSetter) attributeSetters.get(
+                attributeName.toLowerCase(Locale.US));
+        if (as == null && value != null) {
+            if (element instanceof DynamicAttributeNS) {
+                DynamicAttributeNS dc = (DynamicAttributeNS) element;
+                String uriPlusPrefix = ProjectHelper.extractUriFromComponentName(attributeName);
+                String uri = ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
+                String localName = ProjectHelper.extractNameFromComponentName(attributeName);
+                String qName = "".equals(uri) ? localName : uri + ":" + localName;
+                dc.setDynamicAttribute(uri, localName, qName, value.toString());
+                return;
+            }
+            if (element instanceof DynamicAttribute) {
+                DynamicAttribute dc = (DynamicAttribute) element;
+                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value.toString());
+                return;
+            }
+            if (attributeName.indexOf(':') >= 0) {
+                return; // Ignore attribute from unknown uri's
+            }
+            String msg = getElementName(p, element)
+                    + " doesn't support the \"" + attributeName + "\" attribute.";
+            throw new UnsupportedAttributeException(msg, attributeName);
+        }
+        try {
+            as.setObject(p, element, value);
+        } catch (IllegalAccessException ie) {
+            // impossible as getMethods should only return public methods
+            throw new BuildException(ie);
+        } catch (InvocationTargetException ite) {
+            throw extractBuildException(ite);
+        }
+    }
+
+    /**
+     * Sets the named attribute in the given element, which is part of the
+     * given project.
+     *
+     * @param p The project containing the element. This is used when files
+     *          need to be resolved. Must not be <code>null</code>.
+     * @param element The element to set the attribute in. Must not be
+     *                <code>null</code>.
+     * @param attributeName The name of the attribute to set. Must not be
+     *                      <code>null</code>.
+     * @param value The value to set the attribute to. This may be interpreted
+     *              or converted to the necessary type if the setter method
      *              doesn't just take a string. Must not be <code>null</code>.
      *
      * @exception BuildException if the introspected class doesn't support
@@ -360,38 +414,7 @@ public final class IntrospectionHelper  {
      */
     public void setAttribute(Project p, Object element, String attributeName,
                              String value) throws BuildException {
-        AttributeSetter as = (AttributeSetter) attributeSetters.get(
-                attributeName.toLowerCase(Locale.US));
-        if (as == null) {
-            if (element instanceof DynamicAttributeNS) {
-                DynamicAttributeNS dc = (DynamicAttributeNS) element;
-                String uriPlusPrefix = ProjectHelper.extractUriFromComponentName(attributeName);
-                String uri = ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
-                String localName = ProjectHelper.extractNameFromComponentName(attributeName);
-                String qName = "".equals(uri) ? localName : uri + ":" + localName;
-                dc.setDynamicAttribute(uri, localName, qName, value);
-                return;
-            }
-            if (element instanceof DynamicAttribute) {
-                DynamicAttribute dc = (DynamicAttribute) element;
-                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value);
-                return;
-            }
-            if (attributeName.indexOf(':') != -1) {
-                return; // Ignore attribute from unknown uri's
-            }
-            String msg = getElementName(p, element)
-                    + " doesn't support the \"" + attributeName + "\" attribute.";
-            throw new UnsupportedAttributeException(msg, attributeName);
-        }
-        try {
-            as.set(p, element, value);
-        } catch (IllegalAccessException ie) {
-            // impossible as getMethods should only return public methods
-            throw new BuildException(ie);
-        } catch (InvocationTargetException ite) {
-            throw extractBuildException(ite);
-        }
+        setAttribute(p, element, attributeName, (Object) value);
     }
 
     /**
@@ -921,7 +944,7 @@ public final class IntrospectionHelper  {
 
         // simplest case - setAttribute expects String
         if (java.lang.String.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, (Object[]) new String[] { value });
@@ -930,7 +953,7 @@ public final class IntrospectionHelper  {
         }
         // char and Character get special treatment - take the first character
         if (java.lang.Character.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                     if (value.length() == 0) {
@@ -943,7 +966,7 @@ public final class IntrospectionHelper  {
         }
         // boolean and Boolean get special treatment because we have a nice method in Project
         if (java.lang.Boolean.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, (Object[]) new Boolean[] {
@@ -953,7 +976,7 @@ public final class IntrospectionHelper  {
         }
         // Class doesn't have a String constructor but a decent factory method
         if (java.lang.Class.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
@@ -966,7 +989,7 @@ public final class IntrospectionHelper  {
         }
         // resolve relative paths through Project
         if (java.io.File.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, new Object[] { p.resolveFile(value) });
@@ -975,7 +998,7 @@ public final class IntrospectionHelper  {
         }
         // EnumeratedAttributes have their own helper class
         if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
@@ -995,7 +1018,7 @@ public final class IntrospectionHelper  {
             //ignore
         }
         if (enumClass != null && enumClass.isAssignableFrom(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
@@ -1020,7 +1043,7 @@ public final class IntrospectionHelper  {
             };
         }
         if (java.lang.Long.class.equals(reflectedArg)) {
-            return new AttributeSetter(m) {
+            return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
@@ -1059,7 +1082,7 @@ public final class IntrospectionHelper  {
         final boolean finalIncludeProject = includeProject;
         final Constructor finalConstructor = c;
 
-        return new AttributeSetter(m) {
+        return new AttributeSetter(m, arg) {
             public void set(Project p, Object parent, String value)
                     throws InvocationTargetException, IllegalAccessException, BuildException {
                 try {
@@ -1307,9 +1330,28 @@ public final class IntrospectionHelper  {
      */
     private abstract static class AttributeSetter {
         private Method method; // the method called to set the attribute
-
-        protected AttributeSetter(Method m) {
+        private Class type;
+        protected AttributeSetter(Method m, Class type) {
             method = m;
+            this.type = type;
+        }
+        void setObject(Project p, Object parent, Object value)
+                throws InvocationTargetException, IllegalAccessException, BuildException {
+            if (type != null) {
+                Class useType = type;
+                if (type.isPrimitive()) {
+                    if (value == null) {
+                        throw new BuildException("Attempt to set primitive "
+                                + method.getName().substring(4) + " to null on " + parent);
+                    }
+                    useType = (Class) PRIMITIVE_TYPE_MAP.get(type);
+                }
+                if (value == null || useType.isInstance(value)) {
+                    method.invoke(parent, new Object[] { value });
+                    return;
+                }
+            }
+            set(p, parent, value.toString());
         }
         abstract void set(Project p, Object parent, String value)
                 throws InvocationTargetException, IllegalAccessException, BuildException;

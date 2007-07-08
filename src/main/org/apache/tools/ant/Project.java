@@ -526,8 +526,7 @@ public class Project implements ResourceFactory {
      * @since 1.5
      */
     public void setNewProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setNewProperty(null, name,
-                                                              value);
+        PropertyHelper.getPropertyHelper(this).setNewProperty(name, value);
     }
 
     /**
@@ -540,8 +539,7 @@ public class Project implements ResourceFactory {
      * @see #setProperty(String,String)
      */
     public void setUserProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setUserProperty(null, name,
-                                                               value);
+        PropertyHelper.getPropertyHelper(this).setUserProperty(name, value);
     }
 
     /**
@@ -557,8 +555,7 @@ public class Project implements ResourceFactory {
      * @see #setProperty(String,String)
      */
     public void setInheritedProperty(String name, String value) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        ph.setInheritedProperty(null, name, value);
+        PropertyHelper.getPropertyHelper(this).setInheritedProperty(name, value);
     }
 
     /**
@@ -570,8 +567,7 @@ public class Project implements ResourceFactory {
      * @param value The property value. Must not be <code>null</code>.
      */
     private void setPropertyInternal(String name, String value) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        ph.setProperty(null, name, value, false);
+        PropertyHelper.getPropertyHelper(this).setProperty(name, value, false);
     }
 
     /**
@@ -584,8 +580,7 @@ public class Project implements ResourceFactory {
      *         or if a <code>null</code> name is provided.
      */
     public String getProperty(String propertyName) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return (String) ph.getProperty(null, propertyName);
+        return (String) PropertyHelper.getPropertyHelper(this).getProperty(propertyName);
     }
 
     /**
@@ -602,10 +597,8 @@ public class Project implements ResourceFactory {
      * @exception BuildException if the given value has an unclosed
      *                           property name, e.g. <code>${xxx</code>.
      */
-    public String replaceProperties(String value)
-        throws BuildException {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return ph.replaceProperties(null, value, null);
+    public String replaceProperties(String value) throws BuildException {
+        return PropertyHelper.getPropertyHelper(this).replaceProperties(null, value, null);
     }
 
     /**
@@ -618,8 +611,7 @@ public class Project implements ResourceFactory {
      *         or if a <code>null</code> name is provided.
      */
      public String getUserProperty(String propertyName) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return (String) ph.getUserProperty(null, propertyName);
+        return (String) PropertyHelper.getPropertyHelper(this).getUserProperty(propertyName);
     }
 
     /**
@@ -628,8 +620,7 @@ public class Project implements ResourceFactory {
      *         (including user properties).
      */
     public Hashtable getProperties() {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return ph.getProperties();
+        return PropertyHelper.getPropertyHelper(this).getProperties();
     }
 
     /**
@@ -637,8 +628,7 @@ public class Project implements ResourceFactory {
      * @return a hashtable containing just the user properties.
      */
     public Hashtable getUserProperties() {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        return ph.getUserProperties();
+        return PropertyHelper.getPropertyHelper(this).getUserProperties();
     }
 
     /**
@@ -654,8 +644,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.5
      */
     public void copyUserProperties(Project other) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        ph.copyUserProperties(other);
+        PropertyHelper.getPropertyHelper(this).copyUserProperties(other);
     }
 
     /**
@@ -671,8 +660,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.5
      */
     public void copyInheritedProperties(Project other) {
-        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
-        ph.copyInheritedProperties(other);
+        PropertyHelper.getPropertyHelper(this).copyInheritedProperties(other);
     }
 
     /**
@@ -1978,13 +1966,13 @@ public class Project implements ResourceFactory {
         // Check for old id behaviour
         ret = resolveIdReference(key, this);
         if (ret == null && !key.equals(MagicNames.REFID_PROPERTY_HELPER)) {
-            Vector p = new Vector();
-            PropertyHelper.getPropertyHelper(this).parsePropertyString(
-                key, new Vector(), p);
-            if (p.size() == 1) {
-                log("Unresolvable reference " + key
-                    + " might be a misuse of property expansion syntax.",
-                    MSG_WARN);
+            try {
+                if (PropertyHelper.getPropertyHelper(this).containsProperties(key)) {
+                    log("Unresolvable reference " + key
+                            + " might be a misuse of property expansion syntax.", MSG_WARN);
+                }
+            } catch (Exception e) {
+                //ignore
             }
         }
         return ret;
