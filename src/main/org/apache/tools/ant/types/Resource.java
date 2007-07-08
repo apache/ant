@@ -34,8 +34,7 @@ import java.util.NoSuchElementException;
  * @since Ant 1.5.2
  * @see org.apache.tools.ant.types.resources.Touchable
  */
-public class Resource extends DataType
-    implements Cloneable, Comparable, ResourceCollection {
+public class Resource extends DataType implements Cloneable, Comparable, ResourceCollection {
 
     /** Constant unknown size */
     public static final long UNKNOWN_SIZE = -1;
@@ -102,8 +101,7 @@ public class Resource extends DataType
      * @param lastmodified the last modification time of the resource
      * @param directory    if true, this resource is a directory
      */
-    public Resource(String name, boolean exists, long lastmodified,
-                    boolean directory) {
+    public Resource(String name, boolean exists, long lastmodified, boolean directory) {
         this(name, exists, lastmodified, directory, UNKNOWN_SIZE);
     }
 
@@ -117,8 +115,7 @@ public class Resource extends DataType
      * @param directory    if true, this resource is a directory
      * @param size the size of this resource.
      */
-    public Resource(String name, boolean exists, long lastmodified,
-                    boolean directory, long size) {
+    public Resource(String name, boolean exists, long lastmodified, boolean directory, long size) {
         this.name = name;
         setName(name);
         setExists(exists);
