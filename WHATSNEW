@@ -1,4 +1,23 @@
-Changes from Ant 1.7.0 TO current SVN version
+Changes from Ant 1.7.x TO current SVN version
+=============================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+* Refactor PropertyHelper and introspection APIs to make extension more
+  granular and support setting task/type attribute values to objects
+  decoded by custom PropertyEvaluator delegates. Also add <propertyhelper>
+  task for registering delegates and/or replacing the registered PropertyHelper
+  instance.  Bugzilla report 42736.
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
+
+Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
 Changes that could break older environments:
