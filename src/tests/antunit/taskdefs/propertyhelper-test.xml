@@ -1,0 +1,25 @@
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="testScript">
+    <script language="beanshell" manager="bsf">
+      import org.apache.tools.ant.PropertyHelper;
+      public class FooEvaluator implements PropertyHelper.PropertyEvaluator {
+        public Object evaluate(String property, PropertyHelper propertyHelper) {
+          return "foo".equals(property) ? "foo.value" : null;
+        }
+      }
+      project.addReference("fooEvaluator", new FooEvaluator());
+    </script>
+    <au:assertFalse>
+      <isset property="foo" />
+    </au:assertFalse>
+    <propertyhelper>
+      <delegate refid="fooEvaluator" />
+    </propertyhelper>
+    <au:assertTrue>
+      <equals arg1="${foo}" arg2="foo.value" />
+    </au:assertTrue>
+  </target>
+
+</project>

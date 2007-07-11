@@ -35,6 +35,39 @@ import org.apache.tools.ant.Task;
  * @since Ant 1.8
  */
 public class PropertyHelperTask extends Task {
+    /**
+     * Nested delegate for refid usage.
+     */
+    public class DelegateElement {
+        private String refid;
+
+        private DelegateElement() {
+        }
+
+        /**
+         * Get the refid.
+         * @return String
+         */
+        public String getRefid() {
+            return refid;
+        }
+
+        /**
+         * Set the refid.
+         * @param refid the String to set
+         */
+        public void setRefid(String refid) {
+            this.refid = refid;
+        }
+
+        private PropertyHelper.Delegate resolve() {
+            if (refid == null) {
+                throw new BuildException("refid required for generic delegate");
+            }
+            return (PropertyHelper.Delegate) getProject().getReference(refid);
+        }
+    }
+
     private PropertyHelper propertyHelper;
     private List delegates;
 
@@ -65,10 +98,17 @@ public class PropertyHelperTask extends Task {
      * @param delegate the delegate to add.
      */
     public synchronized void addConfigured(PropertyHelper.Delegate delegate) {
-        if (delegates == null) {
-            delegates = new ArrayList();
-        }
-        delegates.add(delegate);
+        getAddDelegateList().add(delegate);
+    }
+
+    /**
+     * Add a nested &lt;delegate refid="foo" /&gt; element.
+     * @return DelegateElement
+     */
+    public DelegateElement createDelegate() {
+        DelegateElement result = new DelegateElement();
+        getAddDelegateList().add(result);
+        return result;
     }
 
     /**
@@ -89,7 +129,9 @@ public class PropertyHelperTask extends Task {
         synchronized (ph) {
             if (delegates != null) {
                 for (Iterator iter = delegates.iterator(); iter.hasNext();) {
-                    PropertyHelper.Delegate delegate = (PropertyHelper.Delegate) iter.next();
+                    Object o = iter.next();
+                    PropertyHelper.Delegate delegate = o instanceof DelegateElement
+                            ? ((DelegateElement) o).resolve() : (PropertyHelper.Delegate) o;
                     log("Adding PropertyHelper delegate " + delegate, Project.MSG_DEBUG);
                     ph.add(delegate);
                 }
@@ -97,9 +139,15 @@ public class PropertyHelperTask extends Task {
         }
         if (propertyHelper != null) {
             log("Installing PropertyHelper " + propertyHelper, Project.MSG_DEBUG);
-            //TODO copy existing properties to new PH?
+            // TODO copy existing properties to new PH?
             getProject().addReference(MagicNames.REFID_PROPERTY_HELPER, propertyHelper);
         }
     }
 
+    private synchronized List getAddDelegateList() {
+        if (delegates == null) {
+            delegates = new ArrayList();
+        }
+        return delegates;
+    }
 }
