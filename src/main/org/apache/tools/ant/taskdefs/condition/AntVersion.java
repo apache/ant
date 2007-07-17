@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
@@ -41,7 +40,7 @@ public class AntVersion extends Task implements Condition {
         if (propertyname == null) {
             throw new BuildException("'property' must be set.");
         }
-        if (atLeast!=null || exactly!=null) {
+        if (atLeast != null || exactly != null) {
             // If condition values are set, evaluate the condition
             if (eval()) {
                 getProject().setNewProperty(propertyname, getVersion().toString());

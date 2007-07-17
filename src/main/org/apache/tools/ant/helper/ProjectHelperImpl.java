@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.helper;
 
 import java.io.File;
@@ -65,18 +64,22 @@ public class ProjectHelperImpl extends ProjectHelper {
 
     /** The project to configure. */
     private Project project;
+
     /** The configuration file to parse. */
     private File buildFile;
+
     /**
      * Parent directory of the build file. Used for resolving entities
      * and setting the project's base directory.
      */
     private File buildFileParent;
+
     /**
      * Locator for the configuration file parser.
      * Used for giving locations of errors etc.
      */
     private Locator locator;
+
     /**
      * Target that all other targets will depend upon implicitly.
      *
@@ -119,14 +122,11 @@ public class ProjectHelperImpl extends ProjectHelper {
             } catch (BuildException e) {
                 parser = new XMLReaderAdapter(JAXPUtils.getXMLReader());
             }
-
-
             String uri = FILE_UTILS.toURI(bFile.getAbsolutePath());
             inputStream = new FileInputStream(bFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
-            project.log("parsing buildfile " + bFile + " with URI = "
-                + uri, Project.MSG_VERBOSE);
+            project.log("parsing buildfile " + bFile + " with URI = " + uri, Project.MSG_VERBOSE);
             HandlerBase hb = new RootHandler(this);
             parser.setDocumentHandler(hb);
             parser.setEntityResolver(hb);
@@ -134,9 +134,8 @@ public class ProjectHelperImpl extends ProjectHelper {
             parser.setDTDHandler(hb);
             parser.parse(inputSource);
         } catch (SAXParseException exc) {
-            Location location =
-                new Location(exc.getSystemId(), exc.getLineNumber(),
-                    exc.getColumnNumber());
+            Location location = new Location(exc.getSystemId(), exc.getLineNumber(), exc
+                    .getColumnNumber());
 
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
@@ -146,7 +145,6 @@ public class ProjectHelperImpl extends ProjectHelper {
                 }
                 throw be;
             }
-
             throw new BuildException(exc.getMessage(), t, location);
         } catch (SAXException exc) {
             Throwable t = exc.getException();
@@ -157,11 +155,9 @@ public class ProjectHelperImpl extends ProjectHelper {
         } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
         } catch (UnsupportedEncodingException exc) {
-            throw new BuildException("Encoding of project file is invalid.",
-                                     exc);
+            throw new BuildException("Encoding of project file is invalid.", exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file: "
-                                     + exc.getMessage(), exc);
+            throw new BuildException("Error reading project file: " + exc.getMessage(), exc);
         } finally {
             FileUtils.close(inputStream);
         }
@@ -290,8 +286,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param systemId The system identifier provided in the XML
          *                 document. Will not be <code>null</code>.
          */
-        public InputSource resolveEntity(String publicId,
-                                         String systemId) {
+        public InputSource resolveEntity(String publicId, String systemId) {
 
             helperImpl.project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
 
@@ -301,11 +296,9 @@ public class ProjectHelperImpl extends ProjectHelper {
                 File file = new File(path);
                 if (!file.isAbsolute()) {
                     file = FILE_UTILS.resolveFile(helperImpl.buildFileParent, path);
-                    helperImpl.project.log(
-                            "Warning: '" + systemId + "' in " + helperImpl.buildFile
+                    helperImpl.project.log("Warning: '" + systemId + "' in " + helperImpl.buildFile
                             + " should be expressed simply as '" + path.replace('\\', '/')
-                            + "' for compliance with other XML tools",
-                            Project.MSG_WARN);
+                            + "' for compliance with other XML tools", Project.MSG_WARN);
                 }
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));
@@ -313,7 +306,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                     return inputSource;
                 } catch (FileNotFoundException fne) {
                     helperImpl.project.log(file.getAbsolutePath() + " could not be found",
-                                Project.MSG_WARN);
+                            Project.MSG_WARN);
                 }
             }
             // use default if not file or file not found
@@ -336,8 +329,8 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (tag.equals("project")) {
                 new ProjectHandler(helperImpl, this).init(tag, attrs);
             } else {
-                throw new SAXParseException("Config file is not of expected "
-                    + "XML type", helperImpl.locator);
+                throw new SAXParseException("Config file is not of expected " + "XML type",
+                        helperImpl.locator);
             }
         }
 
@@ -403,8 +396,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                 } else if (key.equals("basedir")) {
                     baseDir = value;
                 } else {
-                    throw new SAXParseException("Unexpected attribute \"" + attrs.getName(i) + "\"",
-                                                helperImpl.locator);
+                    throw new SAXParseException(
+                            "Unexpected attribute \"" + attrs.getName(i) + "\"", helperImpl.locator);
                 }
             }
 
@@ -433,8 +426,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         helperImpl.project.setBasedir(baseDir);
                     } else {
-                        File resolvedBaseDir = FILE_UTILS.resolveFile(
-                                helperImpl.buildFileParent, baseDir);
+                        File resolvedBaseDir = FILE_UTILS.resolveFile(helperImpl.buildFileParent,
+                                baseDir);
                         helperImpl.project.setBaseDir(resolvedBaseDir);
                     }
                 }
@@ -462,8 +455,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (name.equals("target")) {
                 handleTarget(name, attrs);
             } else {
-                handleElement(helperImpl, this, helperImpl.implicitTarget,
-                              name, attrs);
+                handleElement(helperImpl, this, helperImpl.implicitTarget, name, attrs);
             }
         }
 
@@ -482,7 +474,6 @@ public class ProjectHelperImpl extends ProjectHelper {
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
             new TargetHandler(helperImpl, this).init(tag, attrs);
         }
-
     }
 
     /**
@@ -534,9 +525,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                 if (key.equals("name")) {
                     name = value;
                     if (name.equals("")) {
-                        throw new BuildException("name attribute must not"
-                                                 + " be empty",
-                                                 new Location(helperImpl.locator));
+                        throw new BuildException("name attribute must not" + " be empty",
+                                new Location(helperImpl.locator));
                     }
                 } else if (key.equals("depends")) {
                     depends = value;
@@ -549,14 +539,14 @@ public class ProjectHelperImpl extends ProjectHelper {
                 } else if (key.equals("description")) {
                     description = value;
                 } else {
-                    throw new SAXParseException("Unexpected attribute \""
-                        + key + "\"", helperImpl.locator);
+                    throw new SAXParseException("Unexpected attribute \"" + key + "\"",
+                            helperImpl.locator);
                 }
             }
 
             if (name == null) {
                 throw new SAXParseException("target element appears without a name attribute",
-                                            helperImpl.locator);
+                        helperImpl.locator);
             }
 
             target = new Target();
@@ -605,20 +595,14 @@ public class ProjectHelperImpl extends ProjectHelper {
      *
      * @since Ant 1.6
      */
-    private static void handleElement(ProjectHelperImpl helperImpl,
-                                      DocumentHandler parent,
-                                      Target target, String elementName,
-                                      AttributeList attrs)
-        throws SAXParseException {
+    private static void handleElement(ProjectHelperImpl helperImpl, DocumentHandler parent,
+            Target target, String elementName, AttributeList attrs) throws SAXParseException {
         if (elementName.equals("description")) {
             new DescriptionHandler(helperImpl, parent);
-        } else if (helperImpl.project.getDataTypeDefinitions()
-                   .get(elementName) != null) {
-            new DataTypeHandler(helperImpl, parent, target)
-                .init(elementName, attrs);
+        } else if (helperImpl.project.getDataTypeDefinitions().get(elementName) != null) {
+            new DataTypeHandler(helperImpl, parent, target).init(elementName, attrs);
         } else {
-            new TaskHandler(helperImpl, parent, target, null, target)
-                .init(elementName, attrs);
+            new TaskHandler(helperImpl, parent, target, null, target).init(elementName, attrs);
         }
     }
 
@@ -665,20 +649,24 @@ public class ProjectHelperImpl extends ProjectHelper {
     static class TaskHandler extends AbstractHandler {
         /** Containing target, if any. */
         private Target target;
+
         /**
          * Container for the task, if any. If target is
          * non-<code>null</code>, this must be too.
          */
         private TaskContainer container;
+
         /**
          * Task created by this handler.
          */
         private Task task;
+
         /**
          * Wrapper for the parent element, if any. The wrapper for this
          * element will be added to this wrapper as a child.
          */
         private RuntimeConfigurable parentWrapper;
+
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if this element is contained within a target.
@@ -735,14 +723,12 @@ public class ProjectHelperImpl extends ProjectHelper {
                 // swallow here, will be thrown again in
                 // UnknownElement.maybeConfigure if the problem persists.
             }
-
             if (task == null) {
                 task = new UnknownElement(tag);
                 task.setProject(helperImpl.project);
                 //XXX task.setTaskType(tag);
                 task.setTaskName(tag);
             }
-
             task.setLocation(new Location(helperImpl.locator));
             helperImpl.configureId(task, attrs);
 
@@ -784,11 +770,10 @@ public class ProjectHelperImpl extends ProjectHelper {
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (task instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
-                new TaskHandler(helperImpl, this, (TaskContainer) task,
-                    wrapper, target).init(name, attrs);
+                new TaskHandler(helperImpl, this, (TaskContainer) task, wrapper, target).init(name,
+                        attrs);
             } else {
-                new NestedElementHandler(helperImpl, this, task,
-                    wrapper, target).init(name, attrs);
+                new NestedElementHandler(helperImpl, this, task, wrapper, target).init(name, attrs);
             }
         }
     }
@@ -799,13 +784,16 @@ public class ProjectHelperImpl extends ProjectHelper {
     static class NestedElementHandler extends AbstractHandler {
         /** Parent object (task/data type/etc). */
         private Object parent;
+
         /** The nested element itself. */
         private Object child;
+
         /**
          * Wrapper for the parent element, if any. The wrapper for this
          * element will be added to this wrapper as a child.
          */
         private RuntimeConfigurable parentWrapper;
+
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if a parent wrapper is provided.
@@ -813,6 +801,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @see ProjectHelper#configure(Object,AttributeList,Project)
          */
         private RuntimeConfigurable childWrapper = null;
+
         /** Target this element is part of, if any. */
         private Target target;
 
@@ -866,8 +855,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          */
         public void init(String propType, AttributeList attrs) throws SAXParseException {
             Class parentClass = parent.getClass();
-            IntrospectionHelper ih =
-                IntrospectionHelper.getHelper(helperImpl.project, parentClass);
+            IntrospectionHelper ih = IntrospectionHelper.getHelper(helperImpl.project, parentClass);
 
             try {
                 String elementName = propType.toLowerCase(Locale.US);
@@ -879,7 +867,6 @@ public class ProjectHelperImpl extends ProjectHelper {
                 } else {
                     child = ih.createElement(helperImpl.project, parent, elementName);
                 }
-
                 helperImpl.configureId(child, attrs);
 
                 childWrapper = new RuntimeConfigurable(child, propType);
@@ -919,11 +906,11 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (child instanceof TaskContainer) {
                 // taskcontainer nested element can contain other tasks - no other
                 // nested elements possible
-                new TaskHandler(helperImpl, this, (TaskContainer) child,
-                    childWrapper, target).init(name, attrs);
+                new TaskHandler(helperImpl, this, (TaskContainer) child, childWrapper, target)
+                        .init(name, attrs);
             } else {
-                new NestedElementHandler(helperImpl, this, child,
-                    childWrapper, target).init(name, attrs);
+                new NestedElementHandler(helperImpl, this, child, childWrapper, target).init(name,
+                        attrs);
             }
         }
     }
@@ -934,8 +921,10 @@ public class ProjectHelperImpl extends ProjectHelper {
     static class DataTypeHandler extends AbstractHandler {
         /** Parent target, if any. */
         private Target target;
+
         /** The element being configured. */
         private Object element;
+
         /** Wrapper for this element, if it's part of a target. */
         private RuntimeConfigurable wrapper = null;
 
@@ -949,8 +938,8 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param target The parent target of this element.
          *               Must not be <code>null</code>.
          */
-        public DataTypeHandler(ProjectHelperImpl helperImpl,
-                               DocumentHandler parentHandler, Target target) {
+        public DataTypeHandler(ProjectHelperImpl helperImpl, DocumentHandler parentHandler,
+                Target target) {
             super(helperImpl, parentHandler);
             this.target = target;
         }
@@ -977,7 +966,6 @@ public class ProjectHelperImpl extends ProjectHelper {
                 if (element == null) {
                     throw new BuildException("Unknown data type " + propType);
                 }
-
                 wrapper = new RuntimeConfigurable(element, propType);
                 wrapper.setAttributes(attrs);
                 target.addDataType(wrapper);

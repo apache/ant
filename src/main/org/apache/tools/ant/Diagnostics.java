@@ -55,6 +55,7 @@ public final class Diagnostics {
      * {@value}
      */
     private static final int BIG_DRIFT_LIMIT = 10000;
+
     /**
      * How big a test file to write.
      * {@value}
@@ -64,15 +65,14 @@ public final class Diagnostics {
     private static final int SECONDS_PER_MILLISECOND = 1000;
     private static final int SECONDS_PER_MINUTE = 60;
     private static final int MINUTES_PER_HOUR = 60;
-    private static final String TEST_CLASS
-        = "org.apache.tools.ant.taskdefs.optional.Test";
+    private static final String TEST_CLASS = "org.apache.tools.ant.taskdefs.optional.Test";
 
     /**
      * The error text when a security manager blocks access to a property.
      * {@value}
      */
     protected static final String ERROR_PROPERTY_ACCESS_BLOCKED
-        = "Access to this property blocked by a security manager";
+            = "Access to this property blocked by a security manager";
 
     /** utility class */
     private Diagnostics() {
@@ -100,16 +100,14 @@ public final class Diagnostics {
      */
     public static void validateVersion() throws BuildException {
         try {
-            Class optional
-                = Class.forName(TEST_CLASS);
+            Class optional = Class.forName(TEST_CLASS);
             String coreVersion = getImplementationVersion(Main.class);
             String optionalVersion = getImplementationVersion(optional);
 
             if (coreVersion != null && !coreVersion.equals(optionalVersion)) {
                 throw new BuildException("Invalid implementation version "
-                    + "between Ant core and Ant optional tasks.\n"
-                    + " core    : " + coreVersion + "\n"
-                    + " optional: " + optionalVersion);
+                        + "between Ant core and Ant optional tasks.\n" + " core    : "
+                        + coreVersion + "\n" + " optional: " + optionalVersion);
             }
         } catch (ClassNotFoundException e) {
             // ignore
@@ -144,7 +142,6 @@ public final class Diagnostics {
                 return name.endsWith(".jar");
             }
         };
-
         File[] files  = libDir.listFiles(filter);
         return files;
     }
@@ -157,7 +154,6 @@ public final class Diagnostics {
         doReport(System.out);
     }
 
-
     /**
      * Helper method to get the implementation version.
      * @param clazz the class to get the information from.
@@ -165,8 +161,7 @@ public final class Diagnostics {
      * '?.?' for JDK 1.0 or 1.1.
      */
     private static String getImplementationVersion(Class clazz) {
-        Package pkg = clazz.getPackage();
-        return pkg.getImplementationVersion();
+        return clazz.getPackage().getImplementationVersion();
     }
 
     /**
@@ -178,7 +173,6 @@ public final class Diagnostics {
         if (saxParser == null) {
             return "Could not create an XML Parser";
         }
-
         // check to what is in the classname
         String saxParserName = saxParser.getClass().getName();
         return saxParserName;
@@ -273,8 +267,7 @@ public final class Diagnostics {
         Class optional = null;
         try {
             optional = Class.forName(TEST_CLASS);
-            out.println("optional tasks : "
-                + getImplementationVersion(optional));
+            out.println("optional tasks : " + getImplementationVersion(optional));
         } catch (ClassNotFoundException e) {
             ignoreThrowable(e);
             out.println("optional tasks : not available");
@@ -331,8 +324,7 @@ public final class Diagnostics {
             sysprops = System.getProperties();
         } catch (SecurityException  e) {
             ignoreThrowable(e);
-            out.println("Access to System.getProperties() blocked "
-                    + "by a security manager");
+            out.println("Access to System.getProperties() blocked " + "by a security manager");
         }
         for (Enumeration keys = sysprops.propertyNames();
             keys.hasMoreElements();) {
@@ -368,7 +360,7 @@ public final class Diagnostics {
         p.initProperties();
         out.println(MagicNames.ANT_VERSION + ": " + p.getProperty(MagicNames.ANT_VERSION));
         out.println(MagicNames.ANT_JAVA_VERSION + ": "
-                    + p.getProperty(MagicNames.ANT_JAVA_VERSION));
+                + p.getProperty(MagicNames.ANT_JAVA_VERSION));
         out.println(MagicNames.ANT_LIB + ": " + p.getProperty(MagicNames.ANT_LIB));
         out.println(MagicNames.ANT_HOME + ": " + p.getProperty(MagicNames.ANT_HOME));
     }
@@ -407,8 +399,7 @@ public final class Diagnostics {
             return;
         }
         for (int i = 0; i < libs.length; i++) {
-            out.println(libs[i].getName()
-                    + " (" + libs[i].length() + " bytes)");
+            out.println(libs[i].getName() + " (" + libs[i].length() + " bytes)");
         }
     }
 
@@ -421,8 +412,7 @@ public final class Diagnostics {
         Throwable error = null;
         try {
             Class which = Class.forName("org.apache.env.Which");
-            Method method
-                = which.getMethod("main", new Class[]{String[].class});
+            Method method = which.getMethod("main", new Class[] { String[].class });
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
@@ -492,15 +482,12 @@ public final class Diagnostics {
         String parserName = getXmlParserName();
         String parserLocation = getXMLParserLocation();
         printParserInfo(out, "XML Parser", parserName, parserLocation);
-        printParserInfo(out, "Namespace-aware parser",
-                getNamespaceParserName(),
+        printParserInfo(out, "Namespace-aware parser", getNamespaceParserName(),
                 getNamespaceParserLocation());
     }
 
-    private static void printParserInfo(PrintStream out,
-                                        String parserType,
-                                        String parserName,
-                                        String parserLocation) {
+    private static void printParserInfo(PrintStream out, String parserType, String parserName,
+            String parserLocation) {
         if (parserName == null) {
             parserName = "unknown";
         }
@@ -526,8 +513,7 @@ public final class Diagnostics {
         out.println("Temp dir is " + tempdir);
         File tempDirectory = new File(tempdir);
         if (!tempDirectory.exists()) {
-            out.println("Warning, java.io.tmpdir directory does not exist: "
-                    + tempdir);
+            out.println("Warning, java.io.tmpdir directory does not exist: " + tempdir);
             return;
         }
         //create the file
@@ -554,8 +540,7 @@ public final class Diagnostics {
             }
         } catch (IOException e) {
             ignoreThrowable(e);
-            out.println("Failed to create a temporary file in the temp dir "
-                + tempdir);
+            out.println("Failed to create a temporary file in the temp dir " + tempdir);
             out.println("File  " + tempFile + " could not be created/written to");
         } finally {
             FileUtils.close(fileout);
@@ -573,16 +558,15 @@ public final class Diagnostics {
         //calendar stuff.
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
-        out.println("Timezone " + tz.getDisplayName()
-                + " offset=" + tz.getOffset(cal.get(Calendar.ERA),
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH),
-                        cal.get(Calendar.DAY_OF_WEEK),
-                        ((cal.get(Calendar.HOUR_OF_DAY) * MINUTES_PER_HOUR
-                         + cal.get(Calendar.MINUTE)) * SECONDS_PER_MINUTE
-                         + cal.get(Calendar.SECOND)) * SECONDS_PER_MILLISECOND
-                         + cal.get(Calendar.MILLISECOND)));
+        out.println("Timezone "
+                + tz.getDisplayName()
+                + " offset="
+                + tz.getOffset(cal.get(Calendar.ERA), cal.get(Calendar.YEAR), cal
+                        .get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal
+                        .get(Calendar.DAY_OF_WEEK), ((cal.get(Calendar.HOUR_OF_DAY)
+                        * MINUTES_PER_HOUR + cal.get(Calendar.MINUTE))
+                        * SECONDS_PER_MINUTE + cal.get(Calendar.SECOND))
+                        * SECONDS_PER_MILLISECOND + cal.get(Calendar.MILLISECOND)));
     }
 
     /**
@@ -629,8 +613,7 @@ public final class Diagnostics {
             return;
         }
         printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
-        final String proxyDiagClassname
-            = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
+        final String proxyDiagClassname = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
         try {
             Class proxyDiagClass = Class.forName(proxyDiagClassname);
             Object instance = proxyDiagClass.newInstance();

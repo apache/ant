@@ -112,7 +112,6 @@ public class ProjectHelper2 extends ProjectHelper {
             project.addReference(REFID_CONTEXT, context);
             project.addReference(REFID_TARGETS, context.getTargets());
         }
-
         if (getImportStack().size() > 1) {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
@@ -171,9 +170,8 @@ public class ProjectHelper2 extends ProjectHelper {
 //         } else if (source instanceof InputSource ) {
         } else {
             throw new BuildException("Source " + source.getClass().getName()
-                                     + " not supported by this plugin");
+                    + " not supported by this plugin");
         }
-
         InputStream inputStream = null;
         InputSource inputSource = null;
 
@@ -196,8 +194,8 @@ public class ProjectHelper2 extends ProjectHelper {
             if (uri != null) {
                 inputSource.setSystemId(uri);
             }
-            project.log("parsing buildfile " + buildFileName
-                        + " with URI = " + uri, Project.MSG_VERBOSE);
+            project.log("parsing buildfile " + buildFileName + " with URI = " + uri,
+                    Project.MSG_VERBOSE);
 
             DefaultHandler hb = handler;
 
@@ -207,8 +205,8 @@ public class ProjectHelper2 extends ProjectHelper {
             parser.setDTDHandler(hb);
             parser.parse(inputSource);
         } catch (SAXParseException exc) {
-            Location location = new Location(exc.getSystemId(),
-                exc.getLineNumber(), exc.getColumnNumber());
+            Location location = new Location(exc.getSystemId(), exc.getLineNumber(), exc
+                    .getColumnNumber());
 
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
@@ -228,11 +226,11 @@ public class ProjectHelper2 extends ProjectHelper {
         } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
         } catch (UnsupportedEncodingException exc) {
-              throw new BuildException("Encoding of project file "
-                                       + buildFileName + " is invalid.", exc);
+              throw new BuildException("Encoding of project file " + buildFileName + " is invalid.",
+                    exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file "
-                                     + buildFileName + ": " + exc.getMessage(), exc);
+            throw new BuildException("Error reading project file " + buildFileName + ": "
+                    + exc.getMessage(), exc);
         } finally {
             FileUtils.close(inputStream);
         }
@@ -349,8 +347,8 @@ public class ProjectHelper2 extends ProjectHelper {
          */
         public AntHandler onStartChild(String uri, String tag, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
-            throw new SAXParseException("Unexpected element \"" + qname
-                    + " \"", context.getLocator());
+            throw new SAXParseException("Unexpected element \"" + qname + " \"", context
+                    .getLocator());
         }
 
         /**
@@ -362,8 +360,8 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param context the current context
          * @exception SAXParseException if an error occurs
          */
-        public void onEndChild(String uri, String tag, String qname,
-                                     AntXMLContext context) throws SAXParseException {
+        public void onEndChild(String uri, String tag, String qname, AntXMLContext context)
+                throws SAXParseException {
         }
 
         /**
@@ -390,7 +388,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *                              case of error in an overridden version
          */
         public void characters(char[] buf, int start, int count, AntXMLContext context)
-            throws SAXParseException {
+                throws SAXParseException {
             String s = new String(buf, start, count).trim();
 
             if (s.length() > 0) {
@@ -459,8 +457,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     file = FILE_UTILS.resolveFile(context.getBuildFileParent(), path);
                     context.getProject().log(
                             "Warning: '" + systemId + "' in " + context.getBuildFile()
-                            + " should be expressed simply as '" + path.replace('\\', '/')
-                            + "' for compliance with other XML tools", Project.MSG_WARN);
+                                    + " should be expressed simply as '" + path.replace('\\', '/')
+                                    + "' for compliance with other XML tools", Project.MSG_WARN);
                 }
                 context.getProject().log("file=" + file, Project.MSG_DEBUG);
                 try {
@@ -468,8 +466,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     inputSource.setSystemId(FILE_UTILS.toURI(file.getAbsolutePath()));
                     return inputSource;
                 } catch (FileNotFoundException fne) {
-                    context.getProject().log(file.getAbsolutePath()
-                            + " could not be found", Project.MSG_WARN);
+                    context.getProject().log(file.getAbsolutePath() + " could not be found",
+                            Project.MSG_WARN);
                 }
 
             }
@@ -493,7 +491,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *                              <code>"project"</code>
          */
         public void startElement(String uri, String tag, String qname, Attributes attrs)
-            throws SAXParseException {
+                throws SAXParseException {
             AntHandler next = currentHandler.onStartChild(uri, tag, qname, attrs, context);
             antHandlers.push(currentHandler);
             currentHandler = next;
@@ -680,8 +678,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     }
                 } else {
                     // XXX ignore attributes in a different NS ( maybe store them ? )
-                    throw new SAXParseException("Unexpected attribute \""
-                        + attrs.getQName(i) + "\"", context.getLocator());
+                    throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i)
+                            + "\"", context.getLocator());
                 }
             }
 
@@ -692,16 +690,15 @@ public class ProjectHelper2 extends ProjectHelper {
                 File dupFile = new File(dup);
                 if (context.isIgnoringProjectTag() && !dupFile.equals(context.getBuildFile())) {
                     project.log("Duplicated project name in import. Project "
-                            + context.getCurrentProjectName() + " defined first in "
-                            + dup + " and again in " + context.getBuildFile(), Project.MSG_WARN);
+                            + context.getCurrentProjectName() + " defined first in " + dup
+                            + " and again in " + context.getBuildFile(), Project.MSG_WARN);
                 }
             }
-
             if (context.getBuildFile() != null && nameAttributeSet) {
-                project.setUserProperty(MagicNames.ANT_FILE + "."
-                    + context.getCurrentProjectName(), context.getBuildFile().toString());
+                project.setUserProperty(
+                        MagicNames.ANT_FILE + "." + context.getCurrentProjectName(), context
+                                .getBuildFile().toString());
             }
-
             if (context.isIgnoringProjectTag()) {
                 // no further processing
                 return;
@@ -718,12 +715,11 @@ public class ProjectHelper2 extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         project.setBasedir(baseDir);
                     } else {
-                        project.setBaseDir(FILE_UTILS.resolveFile(
-                                               context.getBuildFileParent(), baseDir));
+                        project.setBaseDir(FILE_UTILS.resolveFile(context.getBuildFileParent(),
+                                baseDir));
                     }
                 }
             }
-
             project.addTarget("", context.getImplicitTarget());
             context.setCurrentTarget(context.getImplicitTarget());
         }
@@ -816,8 +812,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 } else if (key.equals("description")) {
                     target.setDescription(value);
                 } else {
-                    throw new SAXParseException("Unexpected attribute \""
-                            + key + "\"", context.getLocator());
+                    throw new SAXParseException("Unexpected attribute \"" + key + "\"", context
+                            .getLocator());
                 }
             }
 
@@ -830,26 +826,23 @@ public class ProjectHelper2 extends ProjectHelper {
             if (context.getCurrentTargets().get(name) != null) {
                 throw new BuildException("Duplicate target '" + name + "'", target.getLocation());
             }
-
             Hashtable projectTargets = project.getTargets();
             boolean   usedTarget = false;
             // If the name has not already been defined define it
             if (projectTargets.containsKey(name)) {
-                project.log("Already defined in main or a previous import, ignore "
-                        + name, Project.MSG_VERBOSE);
+                project.log("Already defined in main or a previous import, ignore " + name,
+                        Project.MSG_VERBOSE);
             } else {
                 target.setName(name);
                 context.getCurrentTargets().put(name, target);
                 project.addOrReplaceTarget(name, target);
                 usedTarget = true;
             }
-
             if (depends.length() > 0) {
                 target.setDepends(depends);
             }
-
             if (context.isIgnoringProjectTag() && context.getCurrentProjectName() != null
-                && context.getCurrentProjectName().length() != 0) {
+                    && context.getCurrentProjectName().length() != 0) {
                 // In an impored file (and not completely
                 // ignoring the project tag)
                 String newName = context.getCurrentProjectName() + "." + name;
@@ -940,8 +933,8 @@ public class ProjectHelper2 extends ProjectHelper {
             task.setTaskType(ProjectHelper.genComponentName(task.getNamespace(), tag));
             task.setTaskName(qname);
 
-            Location location = new Location(context.getLocator().getSystemId(),
-                    context.getLocator().getLineNumber(), context.getLocator().getColumnNumber());
+            Location location = new Location(context.getLocator().getSystemId(), context
+                    .getLocator().getLineNumber(), context.getLocator().getColumnNumber());
             task.setLocation(location);
             task.setOwningTarget(context.getCurrentTarget());
 
@@ -971,19 +964,19 @@ public class ProjectHelper2 extends ProjectHelper {
                 //  an ant-type is a component name which can
                 // be namespaced, need to extract the name
                 // and convert from qualified name to uri/name
-                if (ANT_TYPE.equals(name) || (ANT_CORE_URI.equals(attrUri)
-                        && ANT_TYPE.equals(attrs.getLocalName(i)))) {
+                if (ANT_TYPE.equals(name)
+                        || (ANT_CORE_URI.equals(attrUri) && ANT_TYPE.equals(attrs.getLocalName(i)))) {
                     name = ANT_TYPE;
                     int index = value.indexOf(":");
                     if (index >= 0) {
                         String prefix = value.substring(0, index);
                         String mappedUri = context.getPrefixMapping(prefix);
                         if (mappedUri == null) {
-                            throw new BuildException(
-                                    "Unable to find XML NS prefix \"" + prefix + "\"");
+                            throw new BuildException("Unable to find XML NS prefix \"" + prefix
+                                    + "\"");
                         }
-                        value = ProjectHelper.genComponentName(
-                                mappedUri, value.substring(index + 1));
+                        value = ProjectHelper.genComponentName(mappedUri, value
+                                .substring(index + 1));
                     }
                 }
                 wrapper.setAttribute(name, value);
