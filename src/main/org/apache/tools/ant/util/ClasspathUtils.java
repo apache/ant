@@ -84,9 +84,7 @@ public class ClasspathUtils {
      * @param ref the reference
      * @return The class loader
      */
-    public static ClassLoader getClassLoaderForPath(
-        Project p, Reference ref) {
-
+    public static ClassLoader getClassLoaderForPath(Project p, Reference ref) {
         return getClassLoaderForPath(p, ref, false);
     }
 
@@ -104,15 +102,11 @@ public class ClasspathUtils {
      * classloader behaviour)
      * @return The class loader
      */
-    public static ClassLoader getClassLoaderForPath(
-        Project p, Reference ref, boolean reverseLoader) {
-
+    public static ClassLoader getClassLoaderForPath(Project p, Reference ref, boolean reverseLoader) {
         String pathId = ref.getRefId();
         Object path = p.getReference(pathId);
         if (!(path instanceof Path)) {
-            throw new BuildException(
-                "The specified classpathref "
-                    + pathId
+            throw new BuildException("The specified classpathref " + pathId
                     + " does not reference a Path.");
         }
         String loaderId = MagicNames.REFID_CLASSPATH_LOADER_PREFIX + pathId;
@@ -130,9 +124,7 @@ public class ClasspathUtils {
      * @param loaderId the loader id string
      * @return The class loader
      */
-    public static ClassLoader getClassLoaderForPath(
-        Project p, Path path, String loaderId) {
-
+    public static ClassLoader getClassLoaderForPath(Project p, Path path, String loaderId) {
         return getClassLoaderForPath(p, path, loaderId, false);
     }
 
@@ -152,9 +144,8 @@ public class ClasspathUtils {
      * @return The class loader
      */
     public static ClassLoader getClassLoaderForPath(
-        Project p, Path path, String loaderId, boolean reverseLoader) {
-        return getClassLoaderForPath(p, path, loaderId, reverseLoader,
-                                     isMagicPropertySet(p));
+            Project p, Path path, String loaderId, boolean reverseLoader) {
+        return getClassLoaderForPath(p, path, loaderId, reverseLoader, isMagicPropertySet(p));
     }
 
     /**
@@ -175,18 +166,15 @@ public class ClasspathUtils {
      * @return              ClassLoader that uses the Path as its classpath.
      */
     public static ClassLoader getClassLoaderForPath(
-        Project p, Path path, String loaderId, boolean reverseLoader,
-        boolean reuseLoader) {
-
+            Project p, Path path, String loaderId, boolean reverseLoader, boolean reuseLoader) {
         ClassLoader cl = null;
 
         // magic property
         if (loaderId != null && reuseLoader) {
             Object reusedLoader = p.getReference(loaderId);
-            if (reusedLoader != null
-                && !(reusedLoader instanceof ClassLoader)) {
+            if (reusedLoader != null && !(reusedLoader instanceof ClassLoader)) {
                 throw new BuildException("The specified loader id " + loaderId
-                    + " does not reference a class loader");
+                        + " does not reference a class loader");
             }
             cl = (ClassLoader) reusedLoader;
         }
@@ -212,10 +200,8 @@ public class ClasspathUtils {
      *                      classloader behaviour)
      * @return The fresh, different, previously unused class loader.
      */
-    public static ClassLoader getUniqueClassLoaderForPath(
-        Project p,
-        Path path,
-        boolean reverseLoader) {
+    public static ClassLoader getUniqueClassLoaderForPath(Project p, Path path,
+            boolean reverseLoader) {
         AntClassLoader acl = p.createClassLoader(path);
         if (reverseLoader) {
             acl.setParentFirst(false);
@@ -236,9 +222,7 @@ public class ClasspathUtils {
      * @return The fresh object instance
      * @throws BuildException when loading or instantiation failed.
      */
-    public static Object newInstance(
-            String className,
-            ClassLoader userDefinedLoader) {
+    public static Object newInstance(String className, ClassLoader userDefinedLoader) {
         return newInstance(className, userDefinedLoader, Object.class);
     }
 
@@ -258,46 +242,27 @@ public class ClasspathUtils {
      * @throws BuildException when loading or instantiation failed.
      * @since Ant 1.7
      */
-    public static Object newInstance(
-        String className,
-        ClassLoader userDefinedLoader,
-        Class expectedType) {
+    public static Object newInstance(String className, ClassLoader userDefinedLoader,
+            Class expectedType) {
         try {
             Class clazz = Class.forName(className, true, userDefinedLoader);
             Object o = clazz.newInstance();
             if (!expectedType.isInstance(o)) {
-                throw new BuildException(
-                    "Class of unexpected Type: "
-                        + className
-                        + " expected :"
+                throw new BuildException("Class of unexpected Type: " + className + " expected :"
                         + expectedType);
             }
             return o;
         } catch (ClassNotFoundException e) {
-            throw new BuildException(
-                "Class not found: "
-                    + className,
-                e);
+            throw new BuildException("Class not found: " + className, e);
         } catch (InstantiationException e) {
-            throw new BuildException(
-                "Could not instantiate "
-                    + className
-                    + ". Specified class should have a no "
-                    + "argument constructor.",
-                e);
+            throw new BuildException("Could not instantiate " + className
+                    + ". Specified class should have a no " + "argument constructor.", e);
         } catch (IllegalAccessException e) {
-            throw new BuildException(
-                "Could not instantiate "
-                    + className
-                    + ". Specified class should have a "
-                    + "public constructor.",
-                e);
+            throw new BuildException("Could not instantiate " + className
+                    + ". Specified class should have a " + "public constructor.", e);
         } catch (LinkageError e) {
-            throw new BuildException(
-                "Class "
-                    + className
-                    + " could not be loaded because of an invalid dependency.",
-                e);
+            throw new BuildException("Class " + className
+                    + " could not be loaded because of an invalid dependency.", e);
         }
     }
 
@@ -442,19 +407,15 @@ public class ClasspathUtils {
          * @return The class loader.
          */
         public ClassLoader getClassLoader() {
-            return getClassLoaderForPath(
-                    getContextProject(),
-                    this.classpath,
-                    getClassLoadId(),
-                    this.reverseLoader,
-                    loaderId != null || isMagicPropertySet(getContextProject()));
+            return getClassLoaderForPath(getContextProject(), classpath, getClassLoadId(),
+                    reverseLoader, loaderId != null || isMagicPropertySet(getContextProject()));
         }
 
         /**
          * The project of the ProjectComponent we are working for.
          */
         private Project getContextProject() {
-            return this.component.getProject();
+            return component.getProject();
         }
 
         /**
@@ -462,9 +423,8 @@ public class ClasspathUtils {
          * @return a loader identifier.
          */
         public String getClassLoadId() {
-            return this.loaderId == null && this.classpathId != null
-                ? MagicNames.REFID_CLASSPATH_LOADER_PREFIX + this.classpathId
-                : this.loaderId;
+            return loaderId == null && classpathId != null ? MagicNames.REFID_CLASSPATH_LOADER_PREFIX
+                    + classpathId : loaderId;
         }
 
         /**
