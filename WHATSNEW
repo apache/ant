@@ -186,6 +186,8 @@ Other changes:
 
 * "rawblobs" attribute added to SQL task.
 
+* Add new retry task container.
+
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
