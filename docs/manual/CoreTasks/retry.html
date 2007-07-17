@@ -24,10 +24,9 @@
 <body>
 <h2>Retry</h2>
 <h3>Description</h3>
-<p>Retry is a container task - it can contain an Ant task. The nested 
-task is executed, if an error occurs, the task can be executed again without
-the build failing.  The amount of times that the nested task can be 'retried'
-is configurable.</p>
+<p>Retry is a container which executes a single nested task until either: there is no failure; or:
+its <em>retrycount</em> has been exceeded. If this happens a BuildException is thrown.
+<em>Since Ant 1.7.1</em></p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -48,7 +47,7 @@ is configurable.</p>
 <pre>
 &lt;retry retrycount="3"&gt;
   &lt;get src="http://www.unreliable-server.com/unreliable.tar.gz" 
-  		dest="/home/retry/unreliable.tar.gz"/&gt;
+       dest="/home/retry/unreliable.tar.gz" /&gt;
 &lt;/retry&gt;
 </pre>
 <p>This example shows how to use <code>&lt;retry&gt;</code> to wrap a task which must interact with an unreliable network resource.</p>
