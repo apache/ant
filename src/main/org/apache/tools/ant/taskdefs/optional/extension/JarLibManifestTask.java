@@ -101,11 +101,9 @@ public final class JarLibManifestTask extends Task {
      *         in the library.
      */
     public void addConfiguredExtension(final ExtensionAdapter extensionAdapter)
-        throws BuildException {
+            throws BuildException {
         if (null != extension) {
-            final String message =
-                "Can not have multiple extensions defined in one library.";
-            throw new BuildException(message);
+            throw new BuildException("Can not have multiple extensions defined in one library.");
         }
         extension = extensionAdapter.toExtension();
     }
@@ -149,8 +147,8 @@ public final class JarLibManifestTask extends Task {
         final Attributes attributes = manifest.getMainAttributes();
 
         attributes.put(Attributes.Name.MANIFEST_VERSION, MANIFEST_VERSION);
-        final String createdBy = "Apache Ant " + getProject().getProperty(MagicNames.ANT_VERSION);
-        attributes.putValue(CREATED_BY, createdBy);
+        attributes.putValue(CREATED_BY, "Apache Ant "
+                + getProject().getProperty(MagicNames.ANT_VERSION));
 
         appendExtraAttributes(attributes);
 
@@ -160,24 +158,17 @@ public final class JarLibManifestTask extends Task {
 
         //Add all the dependency data to manifest for dependencies
         final ArrayList depends = toExtensions(dependencies);
-        appendExtensionList(attributes,
-                             Extension.EXTENSION_LIST,
-                             "lib",
-                             depends.size());
+        appendExtensionList(attributes, Extension.EXTENSION_LIST, "lib", depends.size());
         appendLibraryList(attributes, "lib", depends);
 
-        //Add all the dependency data to manifest for "optional"
+        // Add all the dependency data to manifest for "optional"
         //dependencies
         final ArrayList option = toExtensions(optionals);
-        appendExtensionList(attributes,
-                             Extension.OPTIONAL_EXTENSION_LIST,
-                             "opt",
-                             option.size());
+        appendExtensionList(attributes, Extension.OPTIONAL_EXTENSION_LIST, "opt", option.size());
         appendLibraryList(attributes, "opt", option);
 
         try {
-            final String message = "Generating manifest " + destFile.getAbsoluteFile();
-            log(message, Project.MSG_INFO);
+            log("Generating manifest " + destFile.getAbsoluteFile(), Project.MSG_INFO);
             writeManifest(manifest);
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
@@ -191,12 +182,10 @@ public final class JarLibManifestTask extends Task {
      */
     private void validate() throws BuildException {
         if (null == destFile) {
-            final String message = "Destfile attribute not specified.";
-            throw new BuildException(message);
+            throw new BuildException("Destfile attribute not specified.");
         }
         if (destFile.exists() && !destFile.isFile()) {
-            final String message = destFile + " is not a file.";
-            throw new BuildException(message);
+            throw new BuildException(destFile + " is not a file.");
         }
     }
 
@@ -222,8 +211,7 @@ public final class JarLibManifestTask extends Task {
      * @param manifest the manifest
      * @throws IOException if error writing file
      */
-    private void writeManifest(final Manifest manifest)
-        throws IOException {
+    private void writeManifest(final Manifest manifest) throws IOException {
         FileOutputStream output = null;
         try {
             output = new FileOutputStream(destFile);
@@ -251,10 +239,8 @@ public final class JarLibManifestTask extends Task {
      * @param extensions the list of extensions
      * @throws BuildException if an error occurs
      */
-    private void appendLibraryList(final Attributes attributes,
-                                    final String listPrefix,
-                                    final ArrayList extensions)
-        throws BuildException {
+    private void appendLibraryList(final Attributes attributes, final String listPrefix,
+            final ArrayList extensions) throws BuildException {
         final int size = extensions.size();
         for (int i = 0; i < size; i++) {
             final Extension ext = (Extension) extensions.get(i);
@@ -275,16 +261,13 @@ public final class JarLibManifestTask extends Task {
      * @param extensionKey the key to use
      */
     private void appendExtensionList(final Attributes attributes,
-                                      final Attributes.Name extensionKey,
-                                      final String listPrefix,
-                                      final int size) {
+            final Attributes.Name extensionKey, final String listPrefix, final int size) {
         final StringBuffer sb = new StringBuffer();
         for (int i = 0; i < size; i++) {
             sb.append(listPrefix);
             sb.append(i);
             sb.append(' ');
         }
-
         //add in something like
         //"Extension-List: javahelp java3d"
         attributes.put(extensionKey, sb.toString());
@@ -296,8 +279,7 @@ public final class JarLibManifestTask extends Task {
      * @param extensionSets the list of ExtensionSets to add to list
      * @throws BuildException if an error occurs
      */
-    private ArrayList toExtensions(final ArrayList extensionSets)
-        throws BuildException {
+    private ArrayList toExtensions(final ArrayList extensionSets) throws BuildException {
         final ArrayList results = new ArrayList();
 
         final int size = extensionSets.size();
@@ -308,7 +290,6 @@ public final class JarLibManifestTask extends Task {
                 results.add(extensions[ j ]);
             }
         }
-
         return results;
     }
 }

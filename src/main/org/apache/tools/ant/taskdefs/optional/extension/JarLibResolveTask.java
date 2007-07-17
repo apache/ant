@@ -146,11 +146,9 @@ public class JarLibResolveTask extends Task {
     public void execute() throws BuildException {
         validate();
 
-        getProject().log("Resolving extension: " + requiredExtension,
-                          Project.MSG_VERBOSE);
+        getProject().log("Resolving extension: " + requiredExtension, Project.MSG_VERBOSE);
 
-        String candidate =
-            getProject().getProperty(propertyName);
+        String candidate = getProject().getProperty(propertyName);
 
         if (null != candidate) {
             final String message = "Property Already set to: " + candidate;
@@ -167,27 +165,24 @@ public class JarLibResolveTask extends Task {
                 (ExtensionResolver) resolvers.get(i);
 
             getProject().log("Searching for extension using Resolver:" + resolver,
-                              Project.MSG_VERBOSE);
+                    Project.MSG_VERBOSE);
 
             try {
-                final File file =
-                    resolver.resolve(requiredExtension, getProject());
+                final File file = resolver.resolve(requiredExtension, getProject());
                 try {
                     checkExtension(file);
                     return;
                 } catch (final BuildException be) {
                     final String message = "File " + file + " returned by "
-                        + "resolver failed to satisfy extension due to: "
-                        + be.getMessage();
+                            + "resolver failed to satisfy extension due to: " + be.getMessage();
                     getProject().log(message, Project.MSG_WARN);
                 }
             } catch (final BuildException be) {
-                final String message = "Failed to resolve extension to file "
-                    + "using resolver " + resolver + " due to: " + be;
+                final String message = "Failed to resolve extension to file " + "using resolver "
+                        + resolver + " due to: " + be;
                 getProject().log(message, Project.MSG_WARN);
             }
         }
-
         missingExtension();
     }
 
@@ -197,8 +192,7 @@ public class JarLibResolveTask extends Task {
      * a warning.
      */
     private void missingExtension() {
-        final String message =
-            "Unable to resolve extension to a file";
+        final String message = "Unable to resolve extension to a file";
         if (failOnError) {
             throw new BuildException(message);
         }
@@ -215,28 +209,20 @@ public class JarLibResolveTask extends Task {
      */
     private void checkExtension(final File file) {
         if (!file.exists()) {
-            final String message =
-                "File " + file + " does not exist";
-            throw new BuildException(message);
+            throw new BuildException("File " + file + " does not exist");
         }
         if (!file.isFile()) {
-            final String message =
-                "File " + file + " is not a file";
-            throw new BuildException(message);
+            throw new BuildException("File " + file + " is not a file");
         }
-
         if (!checkExtension) {
-            final String message = "Setting property to " + file
-                + " without verifying library satisfies extension";
-            getProject().log(message, Project.MSG_VERBOSE);
+            getProject().log("Setting property to " + file
+                    + " without verifying library satisfies extension", Project.MSG_VERBOSE);
             setLibraryProperty(file);
         } else {
-            getProject().log("Checking file " + file
-                + " to see if it satisfies extension", Project.MSG_VERBOSE);
-            final Manifest manifest =
-                ExtensionUtil.getManifest(file);
-            final Extension[] extensions =
-                Extension.getAvailable(manifest);
+            getProject().log("Checking file " + file + " to see if it satisfies extension",
+                    Project.MSG_VERBOSE);
+            final Manifest manifest = ExtensionUtil.getManifest(file);
+            final Extension[] extensions = Extension.getAvailable(manifest);
             for (int i = 0; i < extensions.length; i++) {
                 final Extension extension = extensions[ i ];
                 if (extension.isCompatibleWith(requiredExtension)) {
@@ -244,12 +230,8 @@ public class JarLibResolveTask extends Task {
                     return;
                 }
             }
-
-            getProject().log("File " + file + " skipped as it "
-                + "does not satisfy extension", Project.MSG_VERBOSE);
-
-            final String message =
-                "File " + file + " does not satisfy extension";
+            final String message = "File " + file + " skipped as it " + "does not satisfy extension";
+            getProject().log(message, Project.MSG_VERBOSE);
             throw new BuildException(message);
         }
     }
@@ -262,8 +244,7 @@ public class JarLibResolveTask extends Task {
      * @param file the library
      */
     private void setLibraryProperty(final File file) {
-        getProject().setNewProperty(propertyName,
-                                     file.getAbsolutePath());
+        getProject().setNewProperty(propertyName, file.getAbsolutePath());
     }
 
     /**
