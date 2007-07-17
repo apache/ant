@@ -57,7 +57,7 @@ import java.util.Enumeration;
  *
  * @since Ant 1.6
  */
-public class PropertyHelper {
+public class PropertyHelper implements Cloneable {
 
     /**
      * Marker interface for a PropertyHelper delegate.
@@ -198,6 +198,7 @@ public class PropertyHelper {
      *  least for non-dynamic properties)
      *
      * @param next the next property helper in the chain.
+     * @deprecated
      */
     public void setNext(PropertyHelper next) {
         this.next = next;
@@ -207,6 +208,7 @@ public class PropertyHelper {
      * Get the next property helper in the chain.
      *
      * @return the next property helper.
+     * @deprecated
      */
     public PropertyHelper getNext() {
         return next;
@@ -707,7 +709,6 @@ public class PropertyHelper {
      *             the return value is also <code>null</code>.
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
-     * @deprecated namespaces are unnecessary.
      */
     public synchronized Object getUserProperty(String name) {
         if (name == null) {
@@ -909,9 +910,10 @@ public class PropertyHelper {
                 list = new ArrayList();
                 delegates.put(key, list);
             }
-            if (!list.contains(delegate)) {
-                list.add(0, delegate);
+            if (list.contains(delegate)) {
+                list.remove(delegate);
             }
+            list.add(0, delegate);
         }
     }
 
@@ -939,6 +941,21 @@ public class PropertyHelper {
             if (Delegate.class.isAssignableFrom(c[i]) && !Delegate.class.equals(c[i])) {
                 result.add(c[i]);
             }
+        }
+        return result;
+    }
+
+    /**
+     * Make a clone of this PropertyHelper.
+     * @return the cloned PropertyHelper.
+     * @since Ant 1.8
+     */
+    public Object clone() {
+        PropertyHelper result;
+        try {
+            result = (PropertyHelper) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
         }
         return result;
     }
