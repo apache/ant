@@ -950,10 +950,14 @@ public class PropertyHelper implements Cloneable {
      * @return the cloned PropertyHelper.
      * @since Ant 1.8
      */
-    public Object clone() {
+    public synchronized Object clone() {
         PropertyHelper result;
         try {
             result = (PropertyHelper) super.clone();
+            result.delegates = (Hashtable) delegates.clone();
+            result.properties = (Hashtable) properties.clone();
+            result.userProperties = (Hashtable) userProperties.clone();
+            result.inheritedProperties = (Hashtable) inheritedProperties.clone();
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
         }
