@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant;
 
 import java.io.File;
@@ -510,8 +509,7 @@ public class Project implements ResourceFactory {
      *              Must not be <code>null</code>.
      */
     public void setProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).
-                setProperty(null, name, value, true);
+        PropertyHelper.getPropertyHelper(this).setProperty(name, value, true);
     }
 
     /**
@@ -580,7 +578,8 @@ public class Project implements ResourceFactory {
      *         or if a <code>null</code> name is provided.
      */
     public String getProperty(String propertyName) {
-        return (String) PropertyHelper.getPropertyHelper(this).getProperty(propertyName);
+        Object value = PropertyHelper.getPropertyHelper(this).getProperty(propertyName);
+        return value == null ? null : String.valueOf(value);
     }
 
     /**
