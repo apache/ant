@@ -199,11 +199,10 @@ public class FormatterElement {
     public boolean shouldUse(Task t) {
         if (ifProperty != null && t.getProject().getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null
-                    && t.getProject().getProperty(unlessProperty) != null) {
+        }
+        if (unlessProperty != null && t.getProject().getProperty(unlessProperty) != null) {
             return false;
         }
-
         return true;
     }
 
@@ -218,7 +217,7 @@ public class FormatterElement {
      * @since Ant 1.6
      */
     JUnitTaskMirror.JUnitResultFormatterMirror createFormatter(ClassLoader loader)
-        throws BuildException {
+            throws BuildException {
 
         if (classname == null) {
             throw new BuildException("you must specify type or classname");
@@ -253,8 +252,7 @@ public class FormatterElement {
         }
 
         if (!(o instanceof JUnitTaskMirror.JUnitResultFormatterMirror)) {
-            throw new BuildException(classname
-                + " is not a JUnitResultFormatter");
+            throw new BuildException(classname + " is not a JUnitResultFormatter");
         }
         JUnitTaskMirror.JUnitResultFormatterMirror r =
             (JUnitTaskMirror.JUnitResultFormatterMirror) o;

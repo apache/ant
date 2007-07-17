@@ -238,8 +238,8 @@ public class AggregateTransformer {
         File outputFile = null;
         if (format.equals(FRAMES)) {
             String tempFileProperty = getClass().getName() + String.valueOf(counter++);
-            File tmp = FILE_UTILS.resolveFile(project.getBaseDir(),
-                    project.getProperty("java.io.tmpdir"));
+            File tmp = FILE_UTILS.resolveFile(project.getBaseDir(), project
+                    .getProperty("java.io.tmpdir"));
             tempFileTask.setDestDir(tmp);
             tempFileTask.setProperty(tempFileProperty);
             tempFileTask.execute();
@@ -263,8 +263,7 @@ public class AggregateTransformer {
         try {
             xsltTask.execute();
         } catch (Exception e) {
-            throw new BuildException("Errors while applying transformations: "
-                    + e.getMessage(), e);
+            throw new BuildException("Errors while applying transformations: " + e.getMessage(), e);
         }
         final long dt = System.currentTimeMillis() - t0;
         task.log("Transform time: " + dt + "ms");
