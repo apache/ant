@@ -144,9 +144,8 @@ public class StringResource extends Resource {
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
     public synchronized long getSize() {
-        return isReference()
-            ? ((Resource) getCheckedRef()).getSize()
-            : (long) getContent().length();
+        return isReference() ? ((Resource) getCheckedRef()).getSize()
+                : getContent().length();
     }
 
     /**
