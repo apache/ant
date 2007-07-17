@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.Project;
@@ -68,7 +67,6 @@ public class ProxySetup {
     public static final String SOCKS_PROXY_USERNAME = "java.net.socks.username";
     /** the socks proxy password property */
     public static final String SOCKS_PROXY_PASSWORD = "java.net.socks.password";
-
 
     /**
      * create a proxy setup class bound to this project
