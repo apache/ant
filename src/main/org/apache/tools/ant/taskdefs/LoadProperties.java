@@ -76,8 +76,7 @@ public class LoadProperties extends Task {
      * @param resource resource on classpath
      */
     public void setResource(String resource) {
-        assertSrcIsJavaResource();
-        ((JavaResource) src).setName(resource);
+        getRequiredJavaResource().setName(resource);
     }
 
     /**
@@ -100,8 +99,7 @@ public class LoadProperties extends Task {
      * @param classpath to add to any existing classpath
      */
     public void setClasspath(Path classpath) {
-        assertSrcIsJavaResource();
-        ((JavaResource) src).setClasspath(classpath);
+        getRequiredJavaResource().setClasspath(classpath);
     }
 
     /**
@@ -109,8 +107,7 @@ public class LoadProperties extends Task {
      * @return The classpath to be configured
      */
     public Path createClasspath() {
-        assertSrcIsJavaResource();
-        return ((JavaResource) src).createClasspath();
+        return getRequiredJavaResource().createClasspath();
     }
 
     /**
@@ -119,8 +116,7 @@ public class LoadProperties extends Task {
      * @param r The reference value
      */
     public void setClasspathRef(Reference r) {
-        assertSrcIsJavaResource();
-        ((JavaResource) src).setClasspathRef(r);
+        getRequiredJavaResource().setClasspathRef(r);
     }
 
     /**
@@ -128,8 +124,7 @@ public class LoadProperties extends Task {
      * @return The classpath
      */
     public Path getClasspath() {
-        assertSrcIsJavaResource();
-        return ((JavaResource) src).getClasspath();
+        return getRequiredJavaResource().getClasspath();
     }
 
     /**
@@ -150,7 +145,6 @@ public class LoadProperties extends Task {
             }
             throw new BuildException("Source resource does not exist: " + src);
         }
-
         BufferedInputStream bis = null;
         Reader instream = null;
         ByteArrayInputStream tis = null;
@@ -162,7 +156,6 @@ public class LoadProperties extends Task {
             } else {
                 instream = new InputStreamReader(bis, encoding);
             }
-
             ChainReaderHelper crh = new ChainReaderHelper();
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
@@ -175,7 +168,6 @@ public class LoadProperties extends Task {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
-
                 if (encoding == null) {
                     tis = new ByteArrayInputStream(text.getBytes());
                 } else {
@@ -188,10 +180,8 @@ public class LoadProperties extends Task {
                 propertyTask.bindToOwner(this);
                 propertyTask.addProperties(props);
             }
-
         } catch (final IOException ioe) {
-            final String message = "Unable to load file: " + ioe.toString();
-            throw new BuildException(message, ioe, getLocation());
+            throw new BuildException("Unable to load file: " + ioe, ioe, getLocation());
         } finally {
             FileUtils.close(bis);
             FileUtils.close(tis);
@@ -211,23 +201,24 @@ public class LoadProperties extends Task {
      * @param a the resource to load as a single element Resource collection.
      * @since Ant 1.7
      */
-    public void addConfigured(ResourceCollection a) {
+    public synchronized void addConfigured(ResourceCollection a) {
         if (src != null) {
             throw new BuildException("only a single source is supported");
         }
         if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections"
-                                     + " are supported");
+            throw new BuildException(
+                    "only single-element resource collections are supported");
         }
         src = (Resource) a.iterator().next();
     }
 
-    private void assertSrcIsJavaResource() {
+    private synchronized JavaResource getRequiredJavaResource() {
         if (src == null) {
             src = new JavaResource();
             src.setProject(getProject());
         } else if (!(src instanceof JavaResource)) {
             throw new BuildException("expected a java resource as source");
         }
+        return (JavaResource) src;
     }
 }
