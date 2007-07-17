@@ -522,7 +522,7 @@ public class ModifiedSelector extends BaseExtendSelector
     * save the cache file
     */
     protected void saveCache() {
-        if (getModified() > 1) {
+        if (getModified() > 0) {
             cache.save();
             setModified(0);
         }

@@ -121,6 +121,9 @@ Fixed bugs:
 * ant script, cd may output to stdout.
   Bugzilla 42739.
 
+* Modified selector doesn't update the cache if only one file has changed.
+  Bugzilla 42802.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
