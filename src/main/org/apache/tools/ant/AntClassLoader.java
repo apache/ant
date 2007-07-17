@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant;
 
 import java.io.ByteArrayOutputStream;
@@ -139,11 +138,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
          */
         private void findNextResource() {
             URL url = null;
-            while ((pathElementsIndex < pathComponents.size())
-                   && (url == null)) {
+            while ((pathElementsIndex < pathComponents.size()) && (url == null)) {
                 try {
-                    File pathComponent
-                        = (File) pathComponents.elementAt(pathElementsIndex);
+                    File pathComponent = (File) pathComponents.elementAt(pathElementsIndex);
                     url = getResourceURL(pathComponent, this.resourceName);
                     pathElementsIndex++;
                 } catch (BuildException e) {
@@ -159,6 +156,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * The size of buffers to be used in this classloader.
      */
     private static final int BUFFER_SIZE = 8192;
+
     /**
      * Number of array elements in a test array of strings
      */
@@ -221,6 +219,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * context loader.
      */
     private ClassLoader savedContextLoader = null;
+
     /**
      * Whether or not the context loader is currently saved.
      */
@@ -235,8 +234,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                belong.
      * @param classpath The classpath to use to load classes.
      */
-    public AntClassLoader(
-        ClassLoader parent, Project project, Path classpath) {
+    public AntClassLoader(ClassLoader parent, Project project, Path classpath) {
         setParent(parent);
         setClassPath(classpath);
         setProject(project);
@@ -282,8 +280,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                    classloader should be consulted  before trying to
      *                    load the a class through this loader.
      */
-    public AntClassLoader(ClassLoader parent, Project project, Path classpath,
-                          boolean parentFirst) {
+    public AntClassLoader(ClassLoader parent, Project project, Path classpath, boolean parentFirst) {
         this(project, classpath);
         if (parent != null) {
             setParent(parent);
@@ -291,7 +288,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         setParentFirst(parentFirst);
         addJavaLibraries();
     }
-
 
     /**
      * Creates a classloader for the given project using the classpath given.
@@ -305,8 +301,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
      */
-    public AntClassLoader(Project project, Path classpath,
-                          boolean parentFirst) {
+    public AntClassLoader(Project project, Path classpath, boolean parentFirst) {
         this(null, project, classpath, parentFirst);
     }
 
@@ -371,11 +366,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param parent the parent class loader.
      */
     public void setParent(ClassLoader parent) {
-        if (parent == null) {
-            this.parent = AntClassLoader.class.getClassLoader();
-        } else {
-            this.parent = parent;
-        }
+        this.parent = parent == null ? AntClassLoader.class.getClassLoader() : parent;
     }
 
     /**
@@ -390,7 +381,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         this.parentFirst = parentFirst;
     }
 
-
     /**
      * Logs a message through the project object if one has been provided.
      *
@@ -403,9 +393,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (project != null) {
             project.log(message, priority);
         }
-        //         else {
-        //             System.out.println(message);
-        //         }
     }
 
     /**
@@ -419,8 +406,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (LoaderUtils.isContextLoaderAvailable()) {
             savedContextLoader = LoaderUtils.getContextClassLoader();
             ClassLoader loader = this;
-            if (project != null
-                && "only".equals(project.getProperty("build.sysclasspath"))) {
+            if (project != null && "only".equals(project.getProperty("build.sysclasspath"))) {
                 loader = this.getClass().getClassLoader();
             }
             LoaderUtils.setContextClassLoader(loader);
@@ -432,8 +418,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * Resets the current thread's context loader to its original value.
      */
     public void resetThreadContextLoader() {
-        if (LoaderUtils.isContextLoaderAvailable()
-            && isContextLoaderSaved) {
+        if (LoaderUtils.isContextLoaderAvailable() && isContextLoaderSaved) {
             LoaderUtils.setContextClassLoader(savedContextLoader);
             savedContextLoader = null;
             isContextLoaderSaved = false;
@@ -451,9 +436,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                           against the project.
      */
     public void addPathElement(String pathElement) throws BuildException {
-        File pathComponent
-            = project != null ? project.resolveFile(pathElement)
-            : new File(pathElement);
+        File pathComponent = project != null ? project.resolveFile(pathElement) : new File(
+                pathElement);
         try {
             addPathFile(pathComponent);
         } catch (IOException e) {
@@ -491,28 +475,23 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             return;
         }
 
-        String absPathPlusTimeAndLength =
-            pathComponent.getAbsolutePath() + pathComponent.lastModified() + "-"
-            + pathComponent.length();
+        String absPathPlusTimeAndLength = pathComponent.getAbsolutePath()
+                + pathComponent.lastModified() + "-" + pathComponent.length();
         String classpath = (String) pathMap.get(absPathPlusTimeAndLength);
         if (classpath == null) {
             ZipFile jarFile = null;
             InputStream manifestStream = null;
             try {
                 jarFile = new ZipFile(pathComponent);
-                manifestStream
-                    = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
+                manifestStream = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
 
                 if (manifestStream == null) {
                     return;
                 }
-                Reader manifestReader
-                    = new InputStreamReader(manifestStream, "UTF-8");
+                Reader manifestReader = new InputStreamReader(manifestStream, "UTF-8");
                 org.apache.tools.ant.taskdefs.Manifest manifest
-                    = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
-                classpath
-                    = manifest.getMainSection().getAttributeValue("Class-Path");
-
+                        = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
+                classpath = manifest.getMainSection().getAttributeValue("Class-Path");
             } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
                 // ignore
             } finally {
@@ -535,8 +514,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 URL libraryURL = new URL(baseURL, classpathElement);
                 if (!libraryURL.getProtocol().equals("file")) {
                     log("Skipping jar library " + classpathElement
-                        + " since only relative URLs are supported by this"
-                        + " loader", Project.MSG_VERBOSE);
+                            + " since only relative URLs are supported by this" + " loader",
+                            Project.MSG_VERBOSE);
                     continue;
                 }
                 String decodedPath = Locator.decodeUri(libraryURL.getFile());
@@ -635,8 +614,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                    Should not be <code>null</code>.
      */
     public void addSystemPackageRoot(String packageRoot) {
-        systemPackages.addElement(packageRoot
-                                  + (packageRoot.endsWith(".") ? "" : "."));
+        systemPackages.addElement(packageRoot + (packageRoot.endsWith(".") ? "" : "."));
     }
 
     /**
@@ -649,8 +627,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                    Should not be <code>null</code>.
      */
     public void addLoaderPackageRoot(String packageRoot) {
-        loaderPackages.addElement(packageRoot
-                                  + (packageRoot.endsWith(".") ? "" : "."));
+        loaderPackages.addElement(packageRoot + (packageRoot.endsWith(".") ? "" : "."));
     }
 
     /**
@@ -668,8 +645,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception ClassNotFoundException if the requested class does not exist
      *                                   on this loader's classpath.
      */
-    public Class forceLoadClass(String classname)
-        throws ClassNotFoundException {
+    public Class forceLoadClass(String classname) throws ClassNotFoundException {
         log("force loading " + classname, Project.MSG_DEBUG);
 
         Class theClass = findLoadedClass(classname);
@@ -677,7 +653,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (theClass == null) {
             theClass = findClass(classname);
         }
-
         return theClass;
     }
 
@@ -697,8 +672,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception ClassNotFoundException if the requested class does not exist
      * on this loader's classpath.
      */
-    public Class forceLoadSystemClass(String classname)
-        throws ClassNotFoundException {
+    public Class forceLoadSystemClass(String classname) throws ClassNotFoundException {
         log("force system loading " + classname, Project.MSG_DEBUG);
 
         Class theClass = findLoadedClass(classname);
@@ -706,7 +680,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (theClass == null) {
             theClass = findBaseClass(classname);
         }
-
         return theClass;
     }
 
@@ -720,41 +693,32 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *         resource cannot be found on the loader's classpath.
      */
     public InputStream getResourceAsStream(String name) {
-
         InputStream resourceStream = null;
         if (isParentFirst(name)) {
             resourceStream = loadBaseResource(name);
             if (resourceStream != null) {
-                log("ResourceStream for " + name
-                    + " loaded from parent loader", Project.MSG_DEBUG);
-
+                log("ResourceStream for " + name + " loaded from parent loader", Project.MSG_DEBUG);
             } else {
                 resourceStream = loadResource(name);
                 if (resourceStream != null) {
-                    log("ResourceStream for " + name
-                        + " loaded from ant loader", Project.MSG_DEBUG);
+                    log("ResourceStream for " + name + " loaded from ant loader", Project.MSG_DEBUG);
                 }
             }
         } else {
             resourceStream = loadResource(name);
             if (resourceStream != null) {
-                log("ResourceStream for " + name
-                    + " loaded from ant loader", Project.MSG_DEBUG);
-
+                log("ResourceStream for " + name + " loaded from ant loader", Project.MSG_DEBUG);
             } else {
                 resourceStream = loadBaseResource(name);
                 if (resourceStream != null) {
-                    log("ResourceStream for " + name
-                        + " loaded from parent loader", Project.MSG_DEBUG);
+                    log("ResourceStream for " + name + " loaded from parent loader",
+                            Project.MSG_DEBUG);
                 }
             }
         }
-
         if (resourceStream == null) {
-            log("Couldn't load ResourceStream for " + name,
-                Project.MSG_DEBUG);
+            log("Couldn't load ResourceStream for " + name, Project.MSG_DEBUG);
         }
-
         return resourceStream;
     }
 
@@ -791,11 +755,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *         the resource cannot be found.
      */
     private InputStream loadBaseResource(String name) {
-        if (parent == null) {
-            return getSystemResourceAsStream(name);
-        } else {
-            return parent.getResourceAsStream(name);
-        }
+        return parent == null ? getSystemResourceAsStream(name) : parent.getResourceAsStream(name);
     }
 
     /**
@@ -815,14 +775,12 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             ZipFile zipFile = (ZipFile) zipFiles.get(file);
             if (zipFile == null && file.isDirectory()) {
                 File resource = new File(file, resourceName);
-
                 if (resource.exists()) {
                     return new FileInputStream(resource);
                 }
             } else {
                 if (zipFile == null) {
                     if (file.exists()) {
-
                         zipFile = new ZipFile(file);
                         zipFiles.put(file, zipFile);
                     } else {
@@ -838,11 +796,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 }
             }
         } catch (Exception e) {
-            log("Ignoring Exception " + e.getClass().getName() + ": "
-                    + e.getMessage() + " reading resource " + resourceName
-                    + " from " + file, Project.MSG_VERBOSE);
+            log("Ignoring Exception " + e.getClass().getName() + ": " + e.getMessage()
+                    + " reading resource " + resourceName + " from " + file, Project.MSG_VERBOSE);
         }
-
         return null;
     }
 
@@ -876,7 +832,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 break;
             }
         }
-
         for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
             String packageName = (String) e.nextElement();
             if (resourceName.startsWith(packageName)) {
@@ -884,7 +839,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 break;
             }
         }
-
         return useParentFirst;
     }
 
@@ -917,14 +871,10 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         // we can find the class we want.
         URL url = null;
         if (isParentFirst(name)) {
-            url = (parent == null) ? super.getResource(name)
-                : parent.getResource(name);
+            url = parent == null ? super.getResource(name) : parent.getResource(name);
         }
-
         if (url != null) {
-            log("Resource " + name + " loaded from parent loader",
-                Project.MSG_DEBUG);
-
+            log("Resource " + name + " loaded from parent loader", Project.MSG_DEBUG);
         } else {
             // try and load from this loader if the parent either didn't find
             // it or wasn't consulted.
@@ -933,32 +883,24 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 File pathComponent = (File) e.nextElement();
                 url = getResourceURL(pathComponent, name);
                 if (url != null) {
-                    log("Resource " + name
-                        + " loaded from ant loader",
-                        Project.MSG_DEBUG);
+                    log("Resource " + name + " loaded from ant loader", Project.MSG_DEBUG);
                 }
             }
         }
-
         if (url == null && !isParentFirst(name)) {
             // this loader was first but it didn't find it - try the parent
             if (ignoreBase) {
-                url = (getRootLoader() == null) ? null
-                    : getRootLoader().getResource(name);
+                url = getRootLoader() == null ? null : getRootLoader().getResource(name);
             } else {
-                url = (parent == null) ? super.getResource(name)
-                    : parent.getResource(name);
+                url = parent == null ? super.getResource(name) : parent.getResource(name);
             }
             if (url != null) {
-                log("Resource " + name + " loaded from parent loader",
-                    Project.MSG_DEBUG);
+                log("Resource " + name + " loaded from parent loader", Project.MSG_DEBUG);
             }
         }
-
         if (url == null) {
             log("Couldn't load Resource " + name, Project.MSG_DEBUG);
         }
-
         return url;
     }
 
@@ -986,15 +928,13 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (isParentFirst(name)) {
             // Normal case.
             return CollectionUtils.append(base, mine);
-        } else if (ignoreBase) {
-            return getRootLoader() == null
-                ? mine
-                : CollectionUtils.append(
-                    mine, getRootLoader().getResources(name));
-        } else {
-            // Inverted.
-            return CollectionUtils.append(mine, base);
         }
+        if (ignoreBase) {
+            return getRootLoader() == null ? mine : CollectionUtils.append(mine, getRootLoader()
+                    .getResources(name));
+        }
+        // parent last:
+        return CollectionUtils.append(mine, base);
     }
 
     /**
@@ -1034,8 +974,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 ZipEntry entry = zipFile.getEntry(resourceName);
                 if (entry != null) {
                     try {
-                        return new URL("jar:" + FILE_UTILS.getFileURL(file)
-                                       + "!/" + entry);
+                        return new URL("jar:" + FILE_UTILS.getFileURL(file) + "!/" + entry);
                     } catch (MalformedURLException ex) {
                         return null;
                     }
@@ -1044,7 +983,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -1069,7 +1007,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * classpath.
      */
     protected synchronized Class loadClass(String classname, boolean resolve)
-        throws ClassNotFoundException {
+            throws ClassNotFoundException {
         // 'sync' is needed - otherwise 2 threads can load the same class
         // twice, resulting in LinkageError: duplicated class definition.
         // findLoadedClass avoids that, but without sync it won't work.
@@ -1078,36 +1016,31 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (theClass != null) {
             return theClass;
         }
-
         if (isParentFirst(classname)) {
             try {
                 theClass = findBaseClass(classname);
-                log("Class " + classname + " loaded from parent loader "
-                    + "(parentFirst)", Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from parent loader " + "(parentFirst)",
+                        Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 theClass = findClass(classname);
-                log("Class " + classname + " loaded from ant loader "
-                    + "(parentFirst)", Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from ant loader " + "(parentFirst)",
+                        Project.MSG_DEBUG);
             }
         } else {
             try {
                 theClass = findClass(classname);
-                log("Class " + classname + " loaded from ant loader",
-                    Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 if (ignoreBase) {
                     throw cnfe;
                 }
                 theClass = findBaseClass(classname);
-                log("Class " + classname + " loaded from parent loader",
-                    Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from parent loader", Project.MSG_DEBUG);
             }
         }
-
         if (resolve) {
             resolveClass(theClass);
         }
-
         return theClass;
     }
 
@@ -1137,14 +1070,14 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @throws IOException if the class data cannot be read.
      */
-    protected Class defineClassFromData(File container, byte[] classData,
-                                        String classname) throws IOException {
+    protected Class defineClassFromData(File container, byte[] classData, String classname)
+            throws IOException {
         definePackage(container, classname);
         // XXX should instead make a new ProtectionDomain with a CodeSource
         // corresponding to container.toURI().toURL() and the same
         // PermissionCollection as Project.class.protectionDomain had
-        return defineClass(classname, classData, 0, classData.length,
-                           Project.class.getProtectionDomain());
+        return defineClass(classname, classData, 0, classData.length, Project.class
+                .getProtectionDomain());
     }
 
     /**
@@ -1157,25 +1090,21 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception IOException if the package information cannot be read from the
      *            container.
      */
-    protected void definePackage(File container, String className)
-        throws IOException {
+    protected void definePackage(File container, String className) throws IOException {
         int classIndex = className.lastIndexOf('.');
         if (classIndex == -1) {
             return;
         }
-
         String packageName = className.substring(0, classIndex);
         if (getPackage(packageName) != null) {
             // already defined
             return;
         }
-
         // define the package now
         Manifest manifest = getJarManifest(container);
 
         if (manifest == null) {
-            definePackage(packageName, null, null, null, null, null,
-                          null, null);
+            definePackage(packageName, null, null, null, null, null, null, null);
         } else {
             definePackage(container, packageName, manifest);
         }
@@ -1215,8 +1144,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @param packageName the name of the package being defined.
      * @param manifest the jar's manifest
      */
-    protected void definePackage(File container, String packageName,
-                                 Manifest manifest) {
+    protected void definePackage(File container, String packageName, Manifest manifest) {
         String sectionName = packageName.replace('.', '/') + "/";
 
         String specificationTitle = null;
@@ -1230,68 +1158,48 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
         Attributes sectionAttributes = manifest.getAttributes(sectionName);
         if (sectionAttributes != null) {
-            specificationTitle
-                = sectionAttributes.getValue(Name.SPECIFICATION_TITLE);
-            specificationVendor
-                = sectionAttributes.getValue(Name.SPECIFICATION_VENDOR);
-            specificationVersion
-                = sectionAttributes.getValue(Name.SPECIFICATION_VERSION);
-            implementationTitle
-                = sectionAttributes.getValue(Name.IMPLEMENTATION_TITLE);
-            implementationVendor
-                = sectionAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
-            implementationVersion
-                = sectionAttributes.getValue(Name.IMPLEMENTATION_VERSION);
-            sealedString
-                = sectionAttributes.getValue(Name.SEALED);
+            specificationTitle = sectionAttributes.getValue(Name.SPECIFICATION_TITLE);
+            specificationVendor = sectionAttributes.getValue(Name.SPECIFICATION_VENDOR);
+            specificationVersion = sectionAttributes.getValue(Name.SPECIFICATION_VERSION);
+            implementationTitle = sectionAttributes.getValue(Name.IMPLEMENTATION_TITLE);
+            implementationVendor = sectionAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
+            implementationVersion = sectionAttributes.getValue(Name.IMPLEMENTATION_VERSION);
+            sealedString = sectionAttributes.getValue(Name.SEALED);
         }
-
         Attributes mainAttributes = manifest.getMainAttributes();
         if (mainAttributes != null) {
             if (specificationTitle == null) {
-                specificationTitle
-                    = mainAttributes.getValue(Name.SPECIFICATION_TITLE);
+                specificationTitle = mainAttributes.getValue(Name.SPECIFICATION_TITLE);
             }
             if (specificationVendor == null) {
-                specificationVendor
-                    = mainAttributes.getValue(Name.SPECIFICATION_VENDOR);
+                specificationVendor = mainAttributes.getValue(Name.SPECIFICATION_VENDOR);
             }
             if (specificationVersion == null) {
-                specificationVersion
-                    = mainAttributes.getValue(Name.SPECIFICATION_VERSION);
+                specificationVersion = mainAttributes.getValue(Name.SPECIFICATION_VERSION);
             }
             if (implementationTitle == null) {
-                implementationTitle
-                    = mainAttributes.getValue(Name.IMPLEMENTATION_TITLE);
+                implementationTitle = mainAttributes.getValue(Name.IMPLEMENTATION_TITLE);
             }
             if (implementationVendor == null) {
-                implementationVendor
-                    = mainAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
+                implementationVendor = mainAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
             }
             if (implementationVersion == null) {
-                implementationVersion
-                    = mainAttributes.getValue(Name.IMPLEMENTATION_VERSION);
+                implementationVersion = mainAttributes.getValue(Name.IMPLEMENTATION_VERSION);
             }
             if (sealedString == null) {
-                sealedString
-                    = mainAttributes.getValue(Name.SEALED);
+                sealedString = mainAttributes.getValue(Name.SEALED);
             }
         }
-
-        if (sealedString != null
-                && sealedString.toLowerCase(Locale.ENGLISH).equals("true")) {
+        if (sealedString != null && sealedString.toLowerCase(Locale.ENGLISH).equals("true")) {
             try {
                 sealBase = new URL(FileUtils.getFileUtils().toURI(container.getAbsolutePath()));
             } catch (MalformedURLException e) {
                 // ignore
             }
         }
-
-        definePackage(packageName, specificationTitle, specificationVersion,
-                      specificationVendor, implementationTitle,
-                      implementationVersion, implementationVendor, sealBase);
+        definePackage(packageName, specificationTitle, specificationVersion, specificationVendor,
+                implementationTitle, implementationVersion, implementationVendor, sealBase);
     }
-
 
     /**
      * Reads a class definition from a stream.
@@ -1309,9 +1217,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception SecurityException if there is a security problem while
      * reading the class from the stream.
      */
-    private Class getClassFromStream(InputStream stream, String classname,
-                                     File container)
-        throws IOException, SecurityException {
+    private Class getClassFromStream(InputStream stream, String classname, File container)
+            throws IOException, SecurityException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int bytesRead = -1;
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -1319,7 +1226,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         while ((bytesRead = stream.read(buffer, 0, BUFFER_SIZE)) != -1) {
             baos.write(buffer, 0, bytesRead);
         }
-
         byte[] classData = baos.toByteArray();
         return defineClassFromData(container, classData, classname);
     }
@@ -1337,7 +1243,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     public Class findClass(String name) throws ClassNotFoundException {
         log("Finding class " + name, Project.MSG_DEBUG);
-
         return findClassInComponents(name);
     }
 
@@ -1357,7 +1262,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         }
         return false;
     }
-
 
     /**
      * Finds a class on the given classpath.
@@ -1383,20 +1287,17 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
-                        log("Loaded from " + pathComponent + " "
-                            + classFilename, Project.MSG_DEBUG);
+                        log("Loaded from " + pathComponent + " " + classFilename, Project.MSG_DEBUG);
                         return getClassFromStream(stream, name, pathComponent);
                     }
                 } catch (SecurityException se) {
                     throw se;
                 } catch (IOException ioe) {
                     // ioe.printStackTrace();
-                    log("Exception reading component " + pathComponent
-                        + " (reason: " + ioe.getMessage() + ")",
-                        Project.MSG_VERBOSE);
+                    log("Exception reading component " + pathComponent + " (reason: "
+                            + ioe.getMessage() + ")", Project.MSG_VERBOSE);
                 }
             }
-
             throw new ClassNotFoundException(name);
         } finally {
         	FileUtils.close(stream);
@@ -1419,11 +1320,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * on this loader's classpath.
      */
     private Class findBaseClass(String name) throws ClassNotFoundException {
-        if (parent == null) {
-            return findSystemClass(name);
-        } else {
-            return parent.loadClass(name);
-        }
+        return parent == null ? findSystemClass(name) : parent.loadClass(name);
     }
 
     /**
