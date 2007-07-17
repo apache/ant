@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant;
 
 import java.util.ArrayList;
@@ -26,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.tools.ant.util.CollectionUtils;
-
 /**
  * Class to implement a target object with required parameters.
  *
@@ -36,14 +33,19 @@ public class Target implements TaskContainer {
 
     /** Name of this target. */
     private String name;
+
     /** The "if" condition to test on execution. */
     private String ifCondition = "";
+
     /** The "unless" condition to test on execution. */
     private String unlessCondition = "";
+
     /** List of targets this target is dependent on. */
     private List dependencies = null;
+
     /** Children of this target (tasks and data types). */
     private List children = new ArrayList();
+
     /** Since Ant 1.6.2 */
     private Location location = Location.UNKNOWN_LOCATION;
 
@@ -130,9 +132,8 @@ public class Target implements TaskContainer {
 
                 // Make sure the dependency is not empty string
                 if ("".equals(token) || ",".equals(token)) {
-                    throw new BuildException("Syntax Error: depends "
-                        + "attribute of target \"" + getName()
-                        + "\" has an empty string as dependency.");
+                    throw new BuildException("Syntax Error: depends " + "attribute of target \""
+                            + getName() + "\" has an empty string as dependency.");
                 }
 
                 addDependency(token);
@@ -143,8 +144,8 @@ public class Target implements TaskContainer {
                     token = tok.nextToken();
                     if (!tok.hasMoreTokens() || !",".equals(token)) {
                         throw new BuildException("Syntax Error: Depend "
-                            + "attribute for target \"" + getName()
-                            + "\" ends with a , character");
+                                + "attribute for target \"" + getName()
+                                + "\" ends with a , character");
                     }
                 }
             }
@@ -203,7 +204,6 @@ public class Target implements TaskContainer {
                 tasks.add(o);
             }
         }
-
         return (Task[]) tasks.toArray(new Task[tasks.size()]);
     }
 
@@ -226,8 +226,8 @@ public class Target implements TaskContainer {
      * @return an enumeration of the dependencies of this target
      */
     public Enumeration getDependencies() {
-        return (dependencies != null ? Collections.enumeration(dependencies)
-                                     : new CollectionUtils.EmptyEnumeration());
+        return Collections
+                .enumeration(dependencies == null ? Collections.EMPTY_LIST : dependencies);
     }
 
     /**
@@ -238,9 +238,8 @@ public class Target implements TaskContainer {
      */
     public boolean dependsOn(String other) {
         Project p = getProject();
-        Hashtable t = (p == null) ? null : p.getTargets();
-        return (p != null
-                && p.topoSort(getName(), t, false).contains(t.get(other)));
+        Hashtable t = p == null ? null : p.getTargets();
+        return p != null && p.topoSort(getName(), t, false).contains(t.get(other));
     }
 
     /**
@@ -257,7 +256,7 @@ public class Target implements TaskContainer {
      *                 no "if" test is performed.
      */
     public void setIf(String property) {
-        ifCondition = (property == null) ? "" : property;
+        ifCondition = property == null ? "" : property;
     }
 
     /**
@@ -268,7 +267,7 @@ public class Target implements TaskContainer {
      * @since 1.6.2
      */
     public String getIf() {
-        return ("".equals(ifCondition) ? null : ifCondition);
+        return "".equals(ifCondition) ? null : ifCondition;
     }
 
     /**
@@ -285,7 +284,7 @@ public class Target implements TaskContainer {
      *                 no "unless" test is performed.
      */
     public void setUnless(String property) {
-        unlessCondition = (property == null) ? "" : property;
+        unlessCondition = property == null ? "" : property;
     }
 
     /**
@@ -296,7 +295,7 @@ public class Target implements TaskContainer {
      * @since 1.6.2
      */
     public String getUnless() {
-        return ("".equals(unlessCondition) ? null : unlessCondition);
+        return "".equals(unlessCondition) ? null : unlessCondition;
     }
 
     /**
@@ -348,26 +347,21 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            for (int taskPosition = 0;
-                 taskPosition < children.size();
-                 ++taskPosition) {
+            for (int taskPosition = 0; taskPosition < children.size(); ++taskPosition) {
                 Object o = children.get(taskPosition);
                 if (o instanceof Task) {
                     Task task = (Task) o;
                     task.perform();
                 } else {
-                    RuntimeConfigurable r = (RuntimeConfigurable) o;
-                    r.maybeConfigure(project);
+                    ((RuntimeConfigurable) o).maybeConfigure(project);
                 }
             }
         } else if (!testIfCondition()) {
-            project.log(this, "Skipped because property '"
-                        + project.replaceProperties(ifCondition)
-                        + "' not set.", Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" + project.replaceProperties(ifCondition)
+                    + "' not set.", Project.MSG_VERBOSE);
         } else {
             project.log(this, "Skipped because property '"
-                        + project.replaceProperties(unlessCondition)
-                        + "' set.", Project.MSG_VERBOSE);
+                    + project.replaceProperties(unlessCondition) + "' set.", Project.MSG_VERBOSE);
         }
     }
 
@@ -434,7 +428,6 @@ public class Target implements TaskContainer {
         if ("".equals(ifCondition)) {
             return true;
         }
-
         String test = project.replaceProperties(ifCondition);
         return project.getProperty(test) != null;
     }
