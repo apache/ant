@@ -539,9 +539,10 @@ an explanation of scripts and dependencies.
 <h5>Description</h5>
 <p>
 The script supports script language inline, this script has access to the
-same beans as the <code>&lt;script&gt;</code> task, and to the <code>
-self</code> bean, which refers back to the condition itself. The
-<code>value</code> property of this bean sets the return value:
+same beans as the <code>&lt;script&gt;</code> task, and to the <code>self</code> bean,
+which refers back to the condition itself. If the script evaluates to a boolean result,
+this is the result of the condition's evaluation (<em>since Ant 1.7.1</em>).
+Alternatively, <code>self.value</code> can be used to set the evaluation result.
 </p>
 <p>
 Example:
