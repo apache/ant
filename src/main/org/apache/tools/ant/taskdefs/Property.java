@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
@@ -24,6 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
@@ -69,6 +71,59 @@ import org.apache.tools.ant.types.Reference;
  * @ant.task category="property"
  */
 public class Property extends Task {
+    private class PropertyResolver implements PropertyHelper.PropertyEvaluator {
+        private ThreadLocal getStack = new ThreadLocal() {
+            protected Object initialValue() {
+                return new Stack();
+            }
+        };
+        private ThreadLocal replaceStack = new ThreadLocal() {
+            protected Object initialValue() {
+                return new Stack();
+            }
+        };
+        private Map map;
+
+        /**
+         * Construct a new Property.PropertyResolver instance.
+         */
+        public PropertyResolver(Map map) {
+            this.map = map;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.tools.ant.PropertyHelper.PropertyEvaluator#evaluate(java.lang.String, org.apache.tools.ant.PropertyHelper)
+         */
+        public Object evaluate(String property, PropertyHelper propertyHelper) {
+            //our feeble properties don't matter if the PropertyHelper can resolve the property without us:
+            Stack stk = (Stack) getStack.get();
+            if (stk.contains(property)) {
+                return null;
+            }
+            stk.push(property);
+            try {
+                if (propertyHelper.getProperty(property) != null) {
+                    return null;
+                }
+            } finally {
+                stk.pop();
+            }
+            Object value = map.get(property);
+            if (!(value instanceof String)) {
+                return null;
+            }
+            stk = (Stack) replaceStack.get();
+            if (stk.contains(property)) {
+                throw new BuildException("Property " + name + " was circularly defined.");
+            }
+            stk.push(property);
+            try {
+                return propertyHelper.replaceProperties((String) value);
+            } finally {
+                stk.pop();
+            }
+        }
+    }
 
     // CheckStyle:VisibilityModifier OFF - bc
     protected String name;
@@ -81,6 +136,7 @@ public class Property extends Task {
     protected Reference ref;
     protected String prefix;
     private Project fallback;
+    private Object untypedValue;
 
     protected boolean userProperty; // set read-only properties
     // CheckStyle:VisibilityModifier ON
@@ -143,14 +199,28 @@ public class Property extends Task {
         setValue(location.getAbsolutePath());
     }
 
+    /* the following method is first in source so IH will pick it up first:
+     * Hopefully we'll never get any classes compiled by wise-guy compilers that behave otherwise...
+     */
+
     /**
-     * The value of the property.
+     * Set the value of the property.
+     * @param value
+     */
+    public void setValue(Object value) {
+        this.untypedValue = value;
+        //preserve protected string value for subclasses :(
+        this.value = value == null ? null : value.toString();
+    }
+
+    /**
+     * Set the value of the property as a String.
      * @param value value to assign
      *
      * @ant.attribute group="name"
      */
     public void setValue(String value) {
-        this.value = value;
+        setValue((Object) value);
     }
 
     /**
@@ -365,7 +435,7 @@ public class Property extends Task {
         }
 
         if (name != null) {
-            if (value == null && ref == null) {
+            if (untypedValue == null && ref == null) {
                 throw new BuildException("You must specify value, location or "
                                          + "refid with the name attribute",
                                          getLocation());
@@ -383,8 +453,8 @@ public class Property extends Task {
                                      + "a url, file or resource", getLocation());
         }
 
-        if ((name != null) && (value != null)) {
-            addProperty(name, value);
+        if (name != null && untypedValue != null) {
+            addProperty(name, untypedValue);
         }
 
         if (file != null) {
@@ -544,19 +614,17 @@ public class Property extends Task {
      * @param props the properties to iterate over
      */
     protected void addProperties(Properties props) {
-        resolveAllProperties(props);
-        Enumeration e = props.keys();
-        while (e.hasMoreElements()) {
-            String propertyName = (String) e.nextElement();
-            String propertyValue = props.getProperty(propertyName);
-
-            String v = getProject().replaceProperties(propertyValue);
-
-            if (prefix != null) {
-                propertyName = prefix + propertyName;
+        HashMap m = new HashMap(props);
+        resolveAllProperties(m);
+        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
+            Object k = it.next();
+            if (k instanceof String) {
+                String propertyName = (String) k;
+                if (prefix != null) {
+                    propertyName = prefix + propertyName;
+                }
+                addProperty(propertyName, m.get(k));
             }
-
-            addProperty(propertyName, v);
         }
     }
 
@@ -566,14 +634,25 @@ public class Property extends Task {
      * @param v value to set
      */
     protected void addProperty(String n, String v) {
+        addProperty(n, (Object) v);
+    }
+
+    /**
+     * add a name value pair to the project property set
+     * @param n name of property
+     * @param v value to set
+     * @since Ant 1.8
+     */
+    protected void addProperty(String n, Object v) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(getProject());
         if (userProperty) {
-            if (getProject().getUserProperty(n) == null) {
-                getProject().setInheritedProperty(n, v);
+            if (ph.getUserProperty(n) == null) {
+                ph.setInheritedProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
             }
         } else {
-            getProject().setNewProperty(n, v);
+            ph.setNewProperty(n, v);
         }
     }
 
@@ -581,62 +660,17 @@ public class Property extends Task {
      * resolve properties inside a properties hashtable
      * @param props properties object to resolve
      */
-    private void resolveAllProperties(Properties props) throws BuildException {
-        for (Enumeration e = props.keys(); e.hasMoreElements();) {
-            String propertyName = (String) e.nextElement();
-            Stack referencesSeen = new Stack();
-            resolve(props, propertyName, referencesSeen);
-        }
-    }
-
-    /**
-     * Recursively expand the named property using the project's
-     * reference table and the given set of properties - fail if a
-     * circular definition is detected.
-     *
-     * @param props properties object to resolve
-     * @param name of the property to resolve
-     * @param referencesSeen stack of all property names that have
-     * been tried to expand before coming here.
-     */
-    private void resolve(Properties props, String name, Stack referencesSeen)
-        throws BuildException {
-        if (referencesSeen.contains(name)) {
-            throw new BuildException("Property " + name + " was circularly "
-                                     + "defined.");
-        }
-
-        String propertyValue = props.getProperty(name);
-        Vector fragments = new Vector();
-        Vector propertyRefs = new Vector();
-        PropertyHelper.getPropertyHelper(
-            this.getProject()).parsePropertyString(
-                propertyValue, fragments, propertyRefs);
-
-        if (propertyRefs.size() != 0) {
-            referencesSeen.push(name);
-            StringBuffer sb = new StringBuffer();
-            Enumeration i = fragments.elements();
-            Enumeration j = propertyRefs.elements();
-            while (i.hasMoreElements()) {
-                String fragment = (String) i.nextElement();
-                if (fragment == null) {
-                    String propertyName = (String) j.nextElement();
-                    fragment = getProject().getProperty(propertyName);
-                    if (fragment == null) {
-                        if (props.containsKey(propertyName)) {
-                            resolve(props, propertyName, referencesSeen);
-                            fragment = props.getProperty(propertyName);
-                        } else {
-                            fragment = "${" + propertyName + "}";
-                        }
-                    }
-                }
-                sb.append(fragment);
+    private void resolveAllProperties(Map props) throws BuildException {
+        PropertyHelper propertyHelper = (PropertyHelper) PropertyHelper.getPropertyHelper(
+                getProject()).clone();
+        propertyHelper.add(new PropertyResolver(props));
+        for (Iterator it = props.keySet().iterator(); it.hasNext();) {
+            Object k = it.next();
+            if (k instanceof String) {
+                Object value = propertyHelper.getProperty((String) k);
+                props.put(k, value);
             }
-            propertyValue = sb.toString();
-            props.put(name, propertyValue);
-            referencesSeen.pop();
         }
     }
+
 }
