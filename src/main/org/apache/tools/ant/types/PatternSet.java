@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.types;
 
 import java.io.BufferedReader;
@@ -27,6 +26,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Named collection of include/exclude tags.
@@ -107,7 +107,8 @@ public class PatternSet extends DataType implements Cloneable {
         private boolean valid(Project p) {
             if (ifCond != null && p.getProperty(ifCond) == null) {
                 return false;
-            } else if (unlessCond != null && p.getProperty(unlessCond) != null) {
+            }
+            if (unlessCond != null && p.getProperty(unlessCond) != null) {
                 return false;
             }
             return true;
@@ -138,7 +139,6 @@ public class PatternSet extends DataType implements Cloneable {
                     buf.append(unlessCond);
                 }
             }
-
             return buf.toString();
         }
     }
@@ -188,7 +188,6 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-
         String[] nestedIncludes = p.getIncludePatterns(getProject());
         String[] nestedExcludes = p.getExcludePatterns(getProject());
 
@@ -197,7 +196,6 @@ public class PatternSet extends DataType implements Cloneable {
                 createInclude().setName(nestedIncludes[i]);
             }
         }
-
         if (nestedExcludes != null) {
             for (int i = 0; i < nestedExcludes.length; i++) {
                 createExclude().setName(nestedExcludes[i]);
@@ -325,13 +323,12 @@ public class PatternSet extends DataType implements Cloneable {
      *  includes or excludes list (as appropriate).
      */
     private void readPatterns(File patternfile, Vector patternlist, Project p)
-        throws BuildException {
+            throws BuildException {
 
         BufferedReader patternReader = null;
         try {
             // Get a FileReader
-            patternReader =
-                new BufferedReader(new FileReader(patternfile));
+            patternReader = new BufferedReader(new FileReader(patternfile));
 
             // Create one NameEntry in the appropriate pattern list for each
             // line in the file.
@@ -344,17 +341,10 @@ public class PatternSet extends DataType implements Cloneable {
                 line = patternReader.readLine();
             }
         } catch (IOException ioe)  {
-            String msg = "An error occurred while reading from pattern file: "
-                + patternfile;
-            throw new BuildException(msg, ioe);
+            throw new BuildException("An error occurred while reading from pattern file: "
+                    + patternfile, ioe);
         } finally {
-            if (null != patternReader) {
-                try {
-                    patternReader.close();
-                } catch (IOException ioe) {
-                    //Ignore exception
-                }
-            }
+            FileUtils.close(patternReader);
         }
     }
 
@@ -367,14 +357,12 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             throw new BuildException("Cannot append to a reference");
         }
-
         String[] incl = other.getIncludePatterns(p);
         if (incl != null) {
             for (int i = 0; i < incl.length; i++) {
                 createInclude().setName(incl[i]);
             }
         }
-
         String[] excl = other.getExcludePatterns(p);
         if (excl != null) {
             for (int i = 0; i < excl.length; i++) {
@@ -391,10 +379,9 @@ public class PatternSet extends DataType implements Cloneable {
     public String[] getIncludePatterns(Project p) {
         if (isReference()) {
             return getRef(p).getIncludePatterns(p);
-        } else {
-            readFiles(p);
-            return makeArray(includeList, p);
         }
+        readFiles(p);
+        return makeArray(includeList, p);
     }
 
     /**
@@ -405,10 +392,9 @@ public class PatternSet extends DataType implements Cloneable {
     public String[] getExcludePatterns(Project p) {
         if (isReference()) {
             return getRef(p).getExcludePatterns(p);
-        } else {
-            readFiles(p);
-            return makeArray(excludeList, p);
         }
+        readFiles(p);
+        return makeArray(excludeList, p);
     }
 
     /**
@@ -420,10 +406,9 @@ public class PatternSet extends DataType implements Cloneable {
     public boolean hasPatterns(Project p) {
         if (isReference()) {
             return getRef(p).hasPatterns(p);
-        } else {
-            return includesFileList.size() > 0 || excludesFileList.size() > 0
-                || includeList.size() > 0 || excludeList.size() > 0;
         }
+        return includesFileList.size() > 0 || excludesFileList.size() > 0
+                || includeList.size() > 0 || excludeList.size() > 0;
     }
 
     /**
@@ -441,7 +426,6 @@ public class PatternSet extends DataType implements Cloneable {
         if (list.size() == 0) {
             return null;
         }
-
         Vector tmpNames = new Vector();
         for (Enumeration e = list.elements(); e.hasMoreElements();) {
             NameEntry ne = (NameEntry) e.nextElement();
@@ -450,7 +434,6 @@ public class PatternSet extends DataType implements Cloneable {
                 tmpNames.addElement(pattern);
             }
         }
-
         String[] result = new String[tmpNames.size()];
         tmpNames.copyInto(result);
         return result;
@@ -468,16 +451,14 @@ public class PatternSet extends DataType implements Cloneable {
                 if (fileName != null) {
                     File inclFile = p.resolveFile(fileName);
                     if (!inclFile.exists()) {
-                        throw new BuildException("Includesfile "
-                                                 + inclFile.getAbsolutePath()
-                                                 + " not found.");
+                        throw new BuildException("Includesfile " + inclFile.getAbsolutePath()
+                                + " not found.");
                     }
                     readPatterns(inclFile, includeList, p);
                 }
             }
             includesFileList.removeAllElements();
         }
-
         if (excludesFileList.size() > 0) {
             Enumeration e = excludesFileList.elements();
             while (e.hasMoreElements()) {
@@ -486,9 +467,8 @@ public class PatternSet extends DataType implements Cloneable {
                 if (fileName != null) {
                     File exclFile = p.resolveFile(fileName);
                     if (!exclFile.exists()) {
-                        throw new BuildException("Excludesfile "
-                                                 + exclFile.getAbsolutePath()
-                                                 + " not found.");
+                        throw new BuildException("Excludesfile " + exclFile.getAbsolutePath()
+                                + " not found.");
                     }
                     readPatterns(exclFile, excludeList, p);
                 }
@@ -501,8 +481,7 @@ public class PatternSet extends DataType implements Cloneable {
      * @return a printable form of this object.
      */
     public String toString() {
-        return "patternSet{ includes: " + includeList
-                + " excludes: " + excludeList + " }";
+        return "patternSet{ includes: " + includeList + " excludes: " + excludeList + " }";
     }
 
     /**
