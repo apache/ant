@@ -913,7 +913,7 @@ public class ComponentHelper  {
      */
     private void printUnknownDefinition(PrintWriter out, String componentName, String dirListing) {
         boolean isAntlib = componentName.indexOf(MagicNames.ANTLIB_PREFIX) == 0;
-        String uri=ProjectHelper.extractUriFromComponentName(componentName);
+        String uri = ProjectHelper.extractUriFromComponentName(componentName);
         out.println("Cause: The name is undefined.");
         out.println("Action: Check the spelling.");
         out.println("Action: Check that any custom tasks/types have been declared.");
@@ -982,7 +982,6 @@ public class ComponentHelper  {
      */
     private static class AntTypeTable extends Hashtable {
         private static final long serialVersionUID = -3060442320477772028L;
-        
         private Project project;
 
         AntTypeTable(Project project) {
@@ -1033,8 +1032,8 @@ public class ComponentHelper  {
          * @return the (possibly empty) list of definitions
          */
         public List/*<AntTypeDefinition>*/ findMatches(String prefix) {
-            ArrayList matches=new ArrayList();
-            for (Iterator i = values().iterator(); i.hasNext() ;) {
+            ArrayList matches = new ArrayList();
+            for (Iterator i = values().iterator(); i.hasNext();) {
                 AntTypeDefinition def = (AntTypeDefinition) (i.next());
                 if (def.getName().startsWith(prefix)) {
                     matches.add(def);
