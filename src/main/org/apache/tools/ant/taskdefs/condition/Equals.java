@@ -21,15 +21,27 @@ package org.apache.tools.ant.taskdefs.condition;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Simple String comparison condition.
+ * Simple comparison condition.
  *
  * @since Ant 1.4
  */
 public class Equals implements Condition {
+    private static final int REQUIRED = 1 | 2;
 
-    private String arg1, arg2;
+    private Object arg1, arg2;
     private boolean trim = false;
     private boolean caseSensitive = true;
+    private int args;
+
+    /**
+     * Set the first argument
+     * @param arg1
+     * @since Ant 1.8
+     */
+    public void setArg1(Object arg1) {
+        this.arg1 = arg1;
+        args |= 1;
+    }
 
     /**
      * Set the first string
@@ -37,7 +49,17 @@ public class Equals implements Condition {
      * @param a1 the first string
      */
     public void setArg1(String a1) {
-        arg1 = a1;
+        setArg1((Object) a1);
+    }
+
+    /**
+     * Set the second argument
+     * @param arg2
+     * @since Ant 1.8
+     */
+    public void setArg2(Object arg2) {
+        this.arg2 = arg2;
+        args |= 2;
     }
 
     /**
@@ -46,7 +68,7 @@ public class Equals implements Condition {
      * @param a2 the second string
      */
     public void setArg2(String a2) {
-        arg2 = a2;
+        setArg2((Object) a2);
     }
 
     /**
@@ -73,16 +95,19 @@ public class Equals implements Condition {
      * @exception BuildException if the attributes are not set correctly
      */
     public boolean eval() throws BuildException {
-        if (arg1 == null || arg2 == null) {
-            throw new BuildException("both arg1 and arg2 are required in "
-                                     + "equals");
+        if ((args & REQUIRED) != REQUIRED) {
+            throw new BuildException("both arg1 and arg2 are required in equals");
         }
 
-        if (trim) {
-            arg1 = arg1.trim();
-            arg2 = arg2.trim();
+        if (arg1 instanceof String && arg2 instanceof String) {
+            String s1 = (String) arg1;
+            String s2 = (String) arg2;
+            if (trim) {
+                s1 = s1.trim();
+                s2 = s2.trim();
+            }
+            return caseSensitive ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
         }
-
-        return caseSensitive ? arg1.equals(arg2) : arg1.equalsIgnoreCase(arg2);
+        return arg1 == arg2 || arg1 != null && arg1.equals(arg2);
     }
 }
