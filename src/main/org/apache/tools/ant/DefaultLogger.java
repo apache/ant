@@ -359,6 +359,6 @@ public class DefaultLogger implements BuildLogger {
      */
     protected String extractProjectName(BuildEvent event) {
         Project project = event.getProject();
-        return project!=null?project.getName():null;
+        return (project != null) ? project.getName() : null;
     }
 }
