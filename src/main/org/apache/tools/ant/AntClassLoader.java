@@ -280,7 +280,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *                    classloader should be consulted  before trying to
      *                    load the a class through this loader.
      */
-    public AntClassLoader(ClassLoader parent, Project project, Path classpath, boolean parentFirst) {
+    public AntClassLoader(
+        ClassLoader parent, Project project, Path classpath, boolean parentFirst) {
         this(project, classpath);
         if (parent != null) {
             setParent(parent);
@@ -697,11 +698,13 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (isParentFirst(name)) {
             resourceStream = loadBaseResource(name);
             if (resourceStream != null) {
-                log("ResourceStream for " + name + " loaded from parent loader", Project.MSG_DEBUG);
+                log("ResourceStream for " + name
+                    + " loaded from parent loader", Project.MSG_DEBUG);
             } else {
                 resourceStream = loadResource(name);
                 if (resourceStream != null) {
-                    log("ResourceStream for " + name + " loaded from ant loader", Project.MSG_DEBUG);
+                    log("ResourceStream for " + name
+                        + " loaded from ant loader", Project.MSG_DEBUG);
                 }
             }
         } else {
@@ -1287,7 +1290,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
-                        log("Loaded from " + pathComponent + " " + classFilename, Project.MSG_DEBUG);
+                        log("Loaded from " + pathComponent + " "
+                            + classFilename, Project.MSG_DEBUG);
                         return getClassFromStream(stream, name, pathComponent);
                     }
                 } catch (SecurityException se) {
