@@ -143,11 +143,13 @@ public class Jar extends Zip {
      */
     private Path indexJars;
 
+    // CheckStyle:LineLength OFF - Link is too long.
     /**
      * Strict mode for checking rules of the JAR-Specification.
      * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
      */
-    private boolean strict = false;
+    private StrictMode strict;
+    // CheckStyle:LineLength ON
 
     /**
      * Extra fields needed to make Solaris recognize the archive as a jar file.
@@ -165,6 +167,7 @@ public class Jar extends Zip {
         emptyBehavior = "create";
         setEncoding("UTF8");
         rootEntries = new Vector();
+        strict = new StrictMode("ignore");
     }
 
     /**
@@ -196,8 +199,8 @@ public class Jar extends Zip {
      * will be thrown if the Jar-Packaging specification was broken.
      * @param strict New value of the strict mode.
      */
-    public void setStrict(boolean strict) {
-        this.strict = strict;
+    public void setStrict(String strict) {
+        this.strict = new StrictMode(strict);
     }
 
     /**
@@ -802,15 +805,17 @@ public class Jar extends Zip {
         rootEntries.removeAllElements();
     }
 
+    // CheckStyle:LineLength OFF - Link is too long.
     /**
      * Check against packaging spec
      * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
      */
+    // CheckStyle:LineLength ON
     private void checkJarSpec() {
         String br = System.getProperty("line.separator");
         StringBuffer message = new StringBuffer();
         Section mainSection = (configuredManifest == null)
-                            ? null 
+                            ? null
                             : configuredManifest.getMainSection();
 
         if (mainSection == null) {
@@ -833,10 +838,10 @@ public class Jar extends Zip {
             message.append(br);
             message.append("Location: ").append(getLocation());
             message.append(br);
-            if (strict) {
+            if (strict.getValue().equalsIgnoreCase("fail")) {
                 throw new BuildException(message.toString(), getLocation());
             } else {
-                log(message.toString(), Project.MSG_VERBOSE);
+                log(message.toString(), strict.getLogLevel());
             }
         }
     }
@@ -1025,4 +1030,25 @@ public class Jar extends Zip {
             }
         }
     }
+
+    // CheckStyle:JavadocType OFF - simple enum
+    public class StrictMode extends EnumeratedAttribute {
+        // CheckStyle:JavadocMethod OFF - simple enum
+        public StrictMode() {
+        }
+        public StrictMode(String value) {
+            setValue(value);
+        }
+        public String[] getValues() {
+            return new String[]{"fail", "warn", "ignore"};
+        }
+        /**
+         * @return The log level according to the strict mode.
+         */
+        public int getLogLevel() {
+            return (getValue().equals("ignore")) ? Project.MSG_VERBOSE : Project.MSG_WARN;
+        }
+        // CheckStyle:JavadocMethod ON
+    }
+    // CheckStyle:JavadocType ON
 }

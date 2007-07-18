@@ -230,11 +230,14 @@ to a value other than its default, <code>"add"</code>.</b></p>
   </tr>
   <tr>
     <td valign="top">strict</td>
-    <td valign="top">When this attribut is set to <tt>true</tt>, a BuildException 
-    will be thrown if the packaging version specification was broken. If set to 
-    <tt>false</tt> (default) only a message is logged (verbose).
-     <br>Defaults to false.  <em>Since Ant 1.7.1</em></td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">Configures how to handle breaks of the packaging version
+    specification: <ul>
+    <li><b>fail</b> = throws a BuildException</li>
+    <li><b>warn</b> = logs a message on warn level</li>
+    <li><b>ignore</b> = logs a message on verbose level (default)</li>
+    </ul>
+    <em>Since Ant 1.7.1</em></td>
+    <td valign="top" align="center">No, defaults to <tt>ignore</tt>. </td>
   </tr>
 </table>
 

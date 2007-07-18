@@ -268,8 +268,22 @@ public class JarTest extends BuildFileTest {
         executeTarget("testIndexJarsPlusJarMarker");
     }
     
-    public void testNoVersionInfo() {
-        expectBuildExceptionContaining("testNoVersionInfo", "Manifest Implemention information missing.", "No Implementation-Title set.");
+    public void testNoVersionInfoFail() {
+        expectBuildExceptionContaining("testNoVersionInfoFail", "Manifest Implemention information missing.", "No Implementation-Title set.");
+    }
+    
+    public void testNoVersionInfoIgnore() {
+        executeTarget("testNoVersionInfoIgnore");
+        assertTrue( getFullLog().contains("No Implementation-Title set.") );
+        assertTrue( getFullLog().contains("No Implementation-Version set.") );
+        assertTrue( getFullLog().contains("No Implementation-Vendor set.") );
+    }
+
+    public void testNoVersionInfoWarn() {
+        executeTarget("testNoVersionInfoWarn");
+        assertTrue( getLog().contains("No Implementation-Title set.") );
+        assertTrue( getLog().contains("No Implementation-Version set.") );
+        assertTrue( getLog().contains("No Implementation-Vendor set.") );
     }
 
     public void testNoVersionInfoNoStrict() {
