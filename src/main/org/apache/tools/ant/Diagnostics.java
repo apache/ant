@@ -49,6 +49,9 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class Diagnostics {
 
+    /** the version number for java 1.5 returned from JavaEnvUtils */
+    private static final int JAVA_1_5_NUMBER = 15;
+
     /**
      * value for which a difference between clock and temp file time triggers
      * a warning.
@@ -412,7 +415,8 @@ public final class Diagnostics {
         Throwable error = null;
         try {
             Class which = Class.forName("org.apache.env.Which");
-            Method method = which.getMethod("main", new Class[] { String[].class });
+            Method method = which.getMethod(
+                "main", new Class[] {String[].class});
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
@@ -609,7 +613,7 @@ public final class Diagnostics {
         printProperty(out, ProxySetup.SOCKS_PROXY_USERNAME);
         printProperty(out, ProxySetup.SOCKS_PROXY_PASSWORD);
 
-        if (JavaEnvUtils.getJavaVersionNumber() < 15) {
+        if (JavaEnvUtils.getJavaVersionNumber() < JAVA_1_5_NUMBER) {
             return;
         }
         printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
