@@ -268,13 +268,31 @@ public class JarTest extends BuildFileTest {
         executeTarget("testIndexJarsPlusJarMarker");
     }
     
-    public void testNoVersionInfo() {
-        executeTarget("testNoVersionInfo");
-        assertLogContaining("No Implementation-Title set.");
-        assertLogContaining("No Implementation-Version set.");
-        assertLogContaining("No Implementation-Vendor set.");
+    public void testNoVersionInfoFail() {
+        expectBuildExceptionContaining("testNoVersionInfoFail", "Manifest Implemention information missing.", "No Implementation-Title set.");
+    }
+    
+    public void testNoVersionInfoIgnore() {
+        executeTarget("testNoVersionInfoIgnore");
+        assertTrue( getFullLog().contains("No Implementation-Title set.") );
+        assertTrue( getFullLog().contains("No Implementation-Version set.") );
+        assertTrue( getFullLog().contains("No Implementation-Vendor set.") );
     }
 
+    public void testNoVersionInfoWarn() {
+        executeTarget("testNoVersionInfoWarn");
+        assertTrue( getLog().contains("No Implementation-Title set.") );
+        assertTrue( getLog().contains("No Implementation-Version set.") );
+        assertTrue( getLog().contains("No Implementation-Vendor set.") );
+    }
+
+    public void testNoVersionInfoNoStrict() {
+        executeTarget("testNoVersionInfoNoStrict");
+        assertFalse( getLog().contains("No Implementation-Title set.") );
+        assertFalse( getLog().contains("No Implementation-Version set.") );
+        assertFalse( getLog().contains("No Implementation-Vendor set.") );
+    }
+    
     public void testHasVersionInfo() {
         executeTarget("testHasVersionInfo");
         assertFalse( getLog().contains("No Implementation-Title set.") );

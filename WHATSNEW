@@ -172,6 +172,8 @@ Other changes:
 
 * Add new retry task container.
 
+* <jar> has a new strict attribute that checks if the jar complies with
+  the jar packaging version specification.
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

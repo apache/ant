@@ -143,6 +143,14 @@ public class Jar extends Zip {
      */
     private Path indexJars;
 
+    // CheckStyle:LineLength OFF - Link is too long.
+    /**
+     * Strict mode for checking rules of the JAR-Specification.
+     * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
+     */
+    private StrictMode strict;
+    // CheckStyle:LineLength ON
+
     /**
      * Extra fields needed to make Solaris recognize the archive as a jar file.
      *
@@ -159,8 +167,9 @@ public class Jar extends Zip {
         emptyBehavior = "create";
         setEncoding("UTF8");
         rootEntries = new Vector();
+        strict = new StrictMode("ignore");
     }
-    
+
     /**
      * Not used for jar files.
      * @param we not used
@@ -183,6 +192,15 @@ public class Jar extends Zip {
      */
     public void setWhenmanifestonly(WhenEmpty we) {
         emptyBehavior = we.getValue();
+    }
+
+    /**
+     * Activate the strict mode. When set to <i>true</i> a BuildException
+     * will be thrown if the Jar-Packaging specification was broken.
+     * @param strict New value of the strict mode.
+     */
+    public void setStrict(String strict) {
+        this.strict = new StrictMode(strict);
     }
 
     /**
@@ -775,25 +793,7 @@ public class Jar extends Zip {
      */
     protected void cleanUp() {
         super.cleanUp();
-        
-        // check against packaging spec
-        // http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
-        Section mainSection = (configuredManifest==null) ? null : configuredManifest.getMainSection();
-        if (mainSection==null) {
-            log("No Implementation-Title set. (" + getLocation() + ")");
-            log("No Implementation-Version set. (" + getLocation() + ")");
-            log("No Implementation-Vendor set. (" + getLocation() + ")");
-        } else {
-            if (mainSection.getAttribute("Implementation-Title") == null) {
-                log("No Implementation-Title set. (" + getLocation() + ")");
-            }
-            if (mainSection.getAttribute("Implementation-Version") == null) {
-                log("No Implementation-Version set. (" + getLocation() + ")");
-            }
-            if (mainSection.getAttribute("Implementation-Vendor") == null) {
-                log("No Implementation-Vendor set. (" + getLocation() + ")");
-            }
-        }
+        checkJarSpec();
 
         // we want to save this info if we are going to make another pass
         if (!doubleFilePass || !skipWriting) {
@@ -803,6 +803,47 @@ public class Jar extends Zip {
             originalManifest = null;
         }
         rootEntries.removeAllElements();
+    }
+
+    // CheckStyle:LineLength OFF - Link is too long.
+    /**
+     * Check against packaging spec
+     * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
+     */
+    // CheckStyle:LineLength ON
+    private void checkJarSpec() {
+        String br = System.getProperty("line.separator");
+        StringBuffer message = new StringBuffer();
+        Section mainSection = (configuredManifest == null)
+                            ? null
+                            : configuredManifest.getMainSection();
+
+        if (mainSection == null) {
+            message.append("No Implementation-Title set.");
+            message.append("No Implementation-Version set.");
+            message.append("No Implementation-Vendor set.");
+        } else {
+            if (mainSection.getAttribute("Implementation-Title") == null) {
+                message.append("No Implementation-Title set.");
+            }
+            if (mainSection.getAttribute("Implementation-Version") == null) {
+                message.append("No Implementation-Version set.");
+            }
+            if (mainSection.getAttribute("Implementation-Vendor") == null) {
+                message.append("No Implementation-Vendor set.");
+            }
+        }
+
+        if (message.length() > 0) {
+            message.append(br);
+            message.append("Location: ").append(getLocation());
+            message.append(br);
+            if (strict.getValue().equalsIgnoreCase("fail")) {
+                throw new BuildException(message.toString(), getLocation());
+            } else {
+                log(message.toString(), strict.getLogLevel());
+            }
+        }
     }
 
     /**
@@ -989,4 +1030,25 @@ public class Jar extends Zip {
             }
         }
     }
+
+    // CheckStyle:JavadocType OFF - simple enum
+    public class StrictMode extends EnumeratedAttribute {
+        // CheckStyle:JavadocMethod OFF - simple enum
+        public StrictMode() {
+        }
+        public StrictMode(String value) {
+            setValue(value);
+        }
+        public String[] getValues() {
+            return new String[]{"fail", "warn", "ignore"};
+        }
+        /**
+         * @return The log level according to the strict mode.
+         */
+        public int getLogLevel() {
+            return (getValue().equals("ignore")) ? Project.MSG_VERBOSE : Project.MSG_WARN;
+        }
+        // CheckStyle:JavadocMethod ON
+    }
+    // CheckStyle:JavadocType ON
 }

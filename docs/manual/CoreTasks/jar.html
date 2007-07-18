@@ -228,6 +228,17 @@ to a value other than its default, <code>"add"</code>.</b></p>
     (maximum compression/slowest). <em>Since Ant 1.7</em></td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">strict</td>
+    <td valign="top">Configures how to handle breaks of the packaging version
+    specification: <ul>
+    <li><b>fail</b> = throws a BuildException</li>
+    <li><b>warn</b> = logs a message on warn level</li>
+    <li><b>ignore</b> = logs a message on verbose level (default)</li>
+    </ul>
+    <em>Since Ant 1.7.1</em></td>
+    <td valign="top" align="center">No, defaults to <tt>ignore</tt>. </td>
+  </tr>
 </table>
 
 <h3>Nested elements</h3>

@@ -237,15 +237,30 @@
     </jar>
   </target>
     
-  <target name="testNoVersionInfo">
+  <target name="testNoVersionInfoNoStrict">
     <mkdir dir="${tmp.dir}"/>
     <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
   </target>  
 
+  <target name="testNoVersionInfoFail">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="fail"/>
+  </target>  
+
+  <target name="testNoVersionInfoIgnore">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="ignore"/>
+  </target>  
+
+  <target name="testNoVersionInfoWarn">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="warn"/>
+  </target>  
+    
   <!-- see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning -->  
   <target name="testHasVersionInfo">
     <mkdir dir="${tmp.dir}"/>
-    <jar destfile="${tmp.jar}" basedir="${tmp.dir}">
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="fail">
       <manifest>
         <attribute name="Implementation-Title"   value="Packaging Version Test"/>
         <attribute name="Implementation-Version" value="1.0"/>
