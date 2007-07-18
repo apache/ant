@@ -679,7 +679,8 @@ public class ComponentHelper  {
 
     private ClassLoader getClassLoader(ClassLoader classLoader) {
         String buildSysclasspath = project.getProperty(MagicNames.BUILD_SYSCLASSPATH);
-        if (project.getCoreLoader() != null && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
             classLoader = project.getCoreLoader();
         }
         return classLoader;
