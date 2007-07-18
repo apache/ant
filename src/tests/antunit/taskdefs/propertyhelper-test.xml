@@ -1,25 +1,109 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <!-- each test verifies that the PropertyEvaluator delegate works -->
   <import file="../antunit-base.xml" />
 
-  <target name="testScript">
+  <target name="setUp" unless="setup.complete">
     <script language="beanshell" manager="bsf">
       import org.apache.tools.ant.PropertyHelper;
-      public class FooEvaluator implements PropertyHelper.PropertyEvaluator {
+      public class MapEvaluator implements PropertyHelper.PropertyEvaluator {
+        HashMap map = new HashMap();
+        public MapEvaluator() {
+          map.put("string", "string");
+          map.put("object", new Object());
+          map.put("int", new Integer(1));
+          map.put("null", null);
+        }
         public Object evaluate(String property, PropertyHelper propertyHelper) {
-          return "foo".equals(property) ? "foo.value" : null;
+          return map.get(property.toLowerCase());
         }
       }
-      project.addReference("fooEvaluator", new FooEvaluator());
+      project.addReference("mapEvaluator", new MapEvaluator());
     </script>
-    <au:assertFalse>
-      <isset property="foo" />
-    </au:assertFalse>
     <propertyhelper>
-      <delegate refid="fooEvaluator" />
+      <delegate refid="mapEvaluator" />
     </propertyhelper>
+    <property name="setup.complete" value="true" />
+  </target>
+
+  <target name="testValueTypes" depends="setUp">
+    <!-- verify BC, strings -->
+    <au:assertPropertyEquals name="string" value="${STRING}" />
+
+    <!-- verify non-string properties -->
+    <au:assertPropertyEquals name="object" value="${OBJECT}" />
+    <au:assertPropertyEquals name="int" value="${INT}" />
+
+    <!-- verify that a string containing nothing but a property reference is a valid value -->
+    <property name="string2" value="${string}" />
+    <au:assertPropertyEquals name="string2" value="${string}" />
+
+    <property name="object2" value="${object}" />
+    <!-- demonstrate that equals args can be non-string -->
+    <au:assertPropertyEquals name="object2" value="${object}" />
+
+    <property name="int2" value="${int}" />
+    <au:assertPropertyEquals name="int2" value="${int}" />
+  </target>
+
+  <target name="testNull" depends="setUp">
+    <!-- demonstrate that a null value always implies a nonexistent property -->
+    <au:assertFalse>
+      <isset property="null" />
+    </au:assertFalse>
+  </target>
+
+  <target name="testAvailable" depends="setUp">
+    <!-- verify the available task can set a non-string property -->
+    <available file="${ant.file}" type="file" property="available.string" value="bc" />
+    <au:assertPropertyEquals name="available.string" value="bc" />
+    <available file="${ant.file}" type="file" property="available.object" value="${object}" />
+    <au:assertPropertyEquals name="available.object" value="${OBJECT}" />
+  </target>
+
+  <target name="testCondition" depends="setUp">
+    <!-- verify the condition task can set a non-string property -->
+    <echo>$${ant.file}=${ant.file}</echo>
+    <condition property="condition.true.string">
+      <available file="${ant.file}" type="file" />
+    </condition>
+    <au:assertPropertyEquals name="condition.true.string" value="true" />
+    <condition property="condition.else.string" value="true" else="false">
+      <not><available file="${ant.file}" type="file" /></not>
+    </condition>
+    <au:assertPropertyEquals name="condition.else.string" value="false" />
+    <condition property="condition.true.object" value="${object}">
+      <available file="${ant.file}" type="file" />
+    </condition>
+    <au:assertPropertyEquals name="condition.true.object" value="${OBJECT}" />
+    <condition property="condition.else.int" value="${object}" else="${int}">
+      <not><available file="${ant.file}" type="file" /></not>
+    </condition>
+    <au:assertPropertyEquals name="condition.else.int" value="${INT}" />
+  </target>
+
+  <target name="testEmbeddedNonString">
+    <!-- verify that a property embedded in a string is a substring -->
     <au:assertTrue>
-      <equals arg1="${foo}" arg2="foo.value" />
+      <equals arg1="@${int}@" arg2="@1@" />
     </au:assertTrue>
+  </target>
+
+  <target name="testLoadProperties">
+    <au:assertFalse>
+      <isset property="object2" />
+    </au:assertFalse>
+    <string id="props" value="object2=$${object}" />
+    <!-- verify the property is not yet expanded -->
+    <au:assertTrue>
+      <length length="17">
+        <resource refid="props" />
+      </length>
+    </au:assertTrue>
+    <loadproperties>
+      <resource refid="props" />
+    </loadproperties>
+    <au:assertPropertyEquals name="object2" value="${object}" />
+    <au:assertPropertyEquals name="object2" value="${OBJECT}" />
   </target>
 
 </project>
