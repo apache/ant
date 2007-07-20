@@ -229,6 +229,22 @@ restrictions on the classes which may be loaded by an extension.</p>
 </tr>
 </table>
 
+<h3><a name="checkInstallation">Check Installation</a></h3>
+<p>You can check the basic installation with opening a new shell and typing <tt>ant</tt>. You
+should get a message like this
+<pre>
+Buildfile: build.xml does not exist!
+Build failed
+</pre>
+So Ant works. This message is there because you need to write an individual buildfile for your 
+project. With a <tt>ant -version</tt> you should get an output like
+<pre>
+Apache Ant version 1.7.0 compiled on December 13 2006
+</pre> 
+
+
+</p>
+
 <h3><a name="optionalTasks">Optional Tasks</a></h3>
 <p>Ant supports a number of optional tasks. An optional task is a task which
 typically requires an external library to function. The optional tasks are
