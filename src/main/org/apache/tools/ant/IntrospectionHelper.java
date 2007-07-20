@@ -70,10 +70,10 @@ public final class IntrospectionHelper  {
 
     // Set up PRIMITIVE_TYPE_MAP
     static {
-        Class[] primitives = { Boolean.TYPE, Byte.TYPE, Character.TYPE, Short.TYPE,
-                               Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE };
-        Class[] wrappers = { Boolean.class, Byte.class, Character.class, Short.class,
-                             Integer.class, Long.class, Float.class, Double.class };
+        Class[] primitives = {Boolean.TYPE, Byte.TYPE, Character.TYPE, Short.TYPE,
+                              Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE};
+        Class[] wrappers = {Boolean.class, Byte.class, Character.class, Short.class,
+                            Integer.class, Long.class, Float.class, Double.class};
         for (int i = 0; i < primitives.length; i++) {
             PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
         }
@@ -924,7 +924,7 @@ public final class IntrospectionHelper  {
             return new AttributeSetter(m) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, (Object[]) new String[] { value });
+                    m.invoke(parent, (Object[]) new String[] {value});
                 }
             };
         }
@@ -937,7 +937,7 @@ public final class IntrospectionHelper  {
                         throw new BuildException("The value \"\" is not a "
                                 + "legal value for attribute \"" + attrName + "\"");
                     }
-                    m.invoke(parent, (Object[]) new Character[] { new Character(value.charAt(0)) });
+                    m.invoke(parent, (Object[]) new Character[] {new Character(value.charAt(0))});
                 }
             };
         }
@@ -957,7 +957,7 @@ public final class IntrospectionHelper  {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
-                        m.invoke(parent, new Object[] { Class.forName(value) });
+                        m.invoke(parent, new Object[] {Class.forName(value)});
                     } catch (ClassNotFoundException ce) {
                         throw new BuildException(ce);
                     }
@@ -969,7 +969,7 @@ public final class IntrospectionHelper  {
             return new AttributeSetter(m) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, new Object[] { p.resolveFile(value) });
+                    m.invoke(parent, new Object[] {p.resolveFile(value)});
                 }
             };
         }
@@ -981,7 +981,7 @@ public final class IntrospectionHelper  {
                     try {
                         EnumeratedAttribute ea = (EnumeratedAttribute) reflectedArg.newInstance();
                         ea.setValue(value);
-                        m.invoke(parent, new Object[] { ea });
+                        m.invoke(parent, new Object[] {ea});
                     } catch (InstantiationException ie) {
                         throw new BuildException(ie);
                     }
@@ -1104,7 +1104,7 @@ public final class IntrospectionHelper  {
      *
      * @return the lower-cased method name with the prefix removed.
      */
-    private String getPropertyName(String methodName, String prefix) {
+    private static String getPropertyName(String methodName, String prefix) {
         return methodName.substring(prefix.length()).toLowerCase(Locale.US);
     }
 
