@@ -137,7 +137,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
-        if (destDir != null) {
+        if (destDir != null && getJavac().isIncludeDestClasses()) {
             classpath.setLocation(destDir);
         }
 

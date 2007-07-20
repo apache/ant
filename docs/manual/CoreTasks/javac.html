@@ -403,6 +403,29 @@ invoking the compiler.</p>
     </td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">includeDestClasses</td>
+    <td valign="top">
+      This attribute controls whether to include the
+      destination classes directory in the classpath
+      given to the compiler.
+      The default value of this is "true" and this
+      means that previously compiled classes are on
+      the classpath for the compiler. This means that "greedy" compilers
+      will not recompile dependant classes that are already compiled.
+      In general this is a good thing as it stops the compiler
+      for doing unnecessary work. However, for some edge cases,
+      involving generics, the javac compiler
+      needs to compile the dependant classes to get the generics
+      information. One example is documented in the bug report:
+      <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=40776">
+        Bug 40776 - a problem compiling a Java 5 project with generics</a>.
+      Setting the attribute to "false" will cause the compiler
+      to recompile dependent classes.
+      <em>Since Ant 1.7.1</em>.
+    </td>
+    <td align="center" valign="top">No - default is "true"</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>

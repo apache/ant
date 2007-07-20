@@ -175,6 +175,9 @@ Other changes:
 * <jar> has a new strict attribute that checks if the jar complies with
   the jar packaging version specification.
 
+* <javac> has a new attribute - includeDestClasses.
+  Bugzilla 40776.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
