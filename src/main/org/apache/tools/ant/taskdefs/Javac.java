@@ -116,6 +116,7 @@ public class Javac extends MatchingTask {
     private String updatedProperty;
     private String errorProperty;
     private boolean taskSuccess = true; // assume the best
+    private boolean includeDestClasses = true;
 
     /**
      * Javac task for compilation of Java files.
@@ -817,6 +818,25 @@ public class Javac extends MatchingTask {
         this.errorProperty = errorProperty;
     }
 
+    /**
+     * This property controls whether to include the
+     * destination classes directory in the classpath
+     * given to the compiler.
+     * The default value is "true".
+     * @param includeDestClasses the value to use.
+     */
+    public void setIncludeDestClasses(boolean includeDestClasses) {
+        this.includeDestClasses = includeDestClasses;
+    }
+
+    /**
+     * Get the value of the includeDestClasses property.
+     * @return the value.
+     */
+    public boolean isIncludeDestClasses() {
+        return includeDestClasses;
+    }
+        
     /**
      * Get the result of the javac task (success or failure).
      * @return true if compilation succeeded, or

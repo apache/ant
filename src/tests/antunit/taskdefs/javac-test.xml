@@ -2,8 +2,43 @@
   <import file="../antunit-base.xml" />
 
   <property name="ant-build" location="../../../../build"/>
-  <property name="build-dir" location="${ant-build}/ant-unit/javac-dir/build"/>
+  <property name="javac-dir" location="${ant-build}/ant-unit/javac-dir"/>
+  <property name="build-dir" location="${javac-dir}/build"/>
   
+  <target name="test-includeDestClasses">
+    <property name="DATE" value="09/10/1999 4:30 pm"/>
+    <delete dir="${javac-dir}/src"/>
+    <mkdir dir="${javac-dir}/src"/>
+    <echo file="${javac-dir}/src/A.java">
+      public class A { B b;}
+    </echo>
+    <echo file="${javac-dir}/src/B.java">
+      public class B { }
+    </echo>
+    <delete dir="${javac-dir}/classes" quiet="yes"/>
+    <mkdir dir="${javac-dir}/classes"/>
+    <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes"/>
+    <touch file="${javac-dir}/src/B.java" datetime="${DATE}"/>
+    <touch file="${javac-dir}/classes/B.class" datetime="${DATE}"/>
+    <!-- following should not update B.class -->
+    <delete quiet="yes" file="${javac-dir}/classes/A.class"/>
+    <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes"/>
+    <au:assertTrue>
+      <isfileselected file="${javac-dir}/classes/B.class">
+        <date datetime="${DATE}" when="equal"/>
+      </isfileselected>
+    </au:assertTrue>
+    <!-- following should update B.class -->
+    <delete quiet="yes" file="${javac-dir}/classes/A.class"/>
+    <javac srcdir="${javac-dir}/src"
+           destdir="${javac-dir}/classes" includeDestClasses="no"/>
+    <au:assertFalse>
+      <isfileselected file="${javac-dir}/classes/B.class">
+        <date datetime="${DATE}" when="equal"/>
+      </isfileselected>
+    </au:assertFalse>
+  </target>
+
   <target name="test-updated-property">
     <delete quiet="yes" dir="${build-dir}"/>
     <mkdir dir="${build-dir}"/>
