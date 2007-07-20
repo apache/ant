@@ -148,7 +148,8 @@ public class Jar extends Zip {
      * Strict mode for checking rules of the JAR-Specification.
      * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
      */
-    private StrictMode strict;
+    private StrictMode strict = new StrictMode("ignore");
+
     // CheckStyle:LineLength ON
 
     /**
@@ -167,7 +168,6 @@ public class Jar extends Zip {
         emptyBehavior = "create";
         setEncoding("UTF8");
         rootEntries = new Vector();
-        strict = new StrictMode("ignore");
     }
 
     /**
@@ -198,9 +198,10 @@ public class Jar extends Zip {
      * Activate the strict mode. When set to <i>true</i> a BuildException
      * will be thrown if the Jar-Packaging specification was broken.
      * @param strict New value of the strict mode.
+     * @since Ant 1.7.1
      */
-    public void setStrict(String strict) {
-        this.strict = new StrictMode(strict);
+    public void setStrict(StrictMode strict) {
+        this.strict = strict;
     }
 
     /**
@@ -1031,14 +1032,22 @@ public class Jar extends Zip {
         }
     }
 
-    // CheckStyle:JavadocType OFF - simple enum
-    public class StrictMode extends EnumeratedAttribute {
-        // CheckStyle:JavadocMethod OFF - simple enum
+    /** The strict enumerated type. */
+    public static class StrictMode extends EnumeratedAttribute {
+        /** Public no arg constructor. */
         public StrictMode() {
         }
+        /**
+         * Constructor with an arg.
+         * @param value the enumerated value as a string.
+         */
         public StrictMode(String value) {
             setValue(value);
         }
+        /**
+         * Get List of valid strings.
+         * @return the list of values.
+         */
         public String[] getValues() {
             return new String[]{"fail", "warn", "ignore"};
         }
@@ -1048,7 +1057,5 @@ public class Jar extends Zip {
         public int getLogLevel() {
             return (getValue().equals("ignore")) ? Project.MSG_VERBOSE : Project.MSG_WARN;
         }
-        // CheckStyle:JavadocMethod ON
     }
-    // CheckStyle:JavadocType ON
 }
