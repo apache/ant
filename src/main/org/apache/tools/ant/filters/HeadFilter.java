@@ -62,6 +62,9 @@ public final class HeadFilter extends BaseParamFilterReader
     /** the position in the current line */
     private int       linePos   = 0;
 
+    /** Whether this filter is finished */
+    private boolean eof;
+
     /**
      * Constructor for "dummy" instances.
      *
@@ -107,6 +110,9 @@ public final class HeadFilter extends BaseParamFilterReader
                 return -1;
             }
             line = headFilter(line);
+            if (eof) {
+                return -1;
+            }
             linePos = 0;
         }
 
@@ -206,6 +212,7 @@ public final class HeadFilter extends BaseParamFilterReader
 
         if (lines > 0) {
             if (linesRead > (lines + skip)) {
+                eof = true;
                 return null;
             }
         }
