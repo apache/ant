@@ -124,6 +124,9 @@ Fixed bugs:
 * Modified selector doesn't update the cache if only one file has changed.
   Bugzilla 42802.
 
+* Regression: Path subclasses that overrode list() stopped working in
+  resourceCollection contexts in Ant 1.7.0. Bugzilla 42967.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
