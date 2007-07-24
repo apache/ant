@@ -142,7 +142,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
 
     }
 
-    private final boolean preserveBC = delegateIteratorToList();
+    private Boolean preserveBC;
 
     private Union union = null;
 
@@ -687,7 +687,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             return ((Path) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        if (preserveBC) {
+        if (getPreserveBC()) {
             return new FileResourceIterator(null, list());
         }
         return union == null ? EMPTY_ITERATOR
@@ -726,8 +726,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * The default behavior of this method is to return <code>true</code> for any subclass
      * that implements <code>list()</code>; this can, of course, be avoided by overriding
      * this method to return <code>false</code>. It is not expected that the result of this
-     * method should change over time; thus it is called a single time during instance
-     * initialization.
+     * method should change over time, thus it is called only once.
      * @return <code>true</code> if <code>iterator()</code> should delegate to <code>list()</code>.
      */
     protected boolean delegateIteratorToList() {
@@ -741,5 +740,12 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             //shouldn't happen, but
             return false;
         }
+    }
+
+    private synchronized boolean getPreserveBC() {
+        if (preserveBC == null) {
+            preserveBC = delegateIteratorToList() ? Boolean.TRUE : Boolean.FALSE;
+        }
+        return preserveBC.booleanValue();
     }
 }
