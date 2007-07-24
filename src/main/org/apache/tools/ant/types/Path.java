@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
@@ -140,6 +141,8 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         }
 
     }
+
+    private Boolean preserveBC;
 
     private Union union = null;
 
@@ -684,6 +687,9 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             return ((Path) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
+        if (getPreserveBC()) {
+            return new FileResourceIterator(null, list());
+        }
         return union == null ? EMPTY_ITERATOR
             : assertFilesystemOnly(union).iterator();
     }
@@ -713,5 +719,33 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
                 + " allows only filesystem resources.");
         }
         return rc;
+    }
+
+    /**
+     * Helps determine whether to preserve BC by calling <code>list()</code> on subclasses.
+     * The default behavior of this method is to return <code>true</code> for any subclass
+     * that implements <code>list()</code>; this can, of course, be avoided by overriding
+     * this method to return <code>false</code>. It is not expected that the result of this
+     * method should change over time, thus it is called only once.
+     * @return <code>true</code> if <code>iterator()</code> should delegate to <code>list()</code>.
+     */
+    protected boolean delegateIteratorToList() {
+        if (getClass().equals(Path.class)) {
+            return false;
+        }
+        try {
+            Method listMethod = getClass().getMethod("list", (Class[]) null);
+            return !listMethod.getDeclaringClass().equals(Path.class);
+        } catch (Exception e) {
+            //shouldn't happen, but
+            return false;
+        }
+    }
+
+    private synchronized boolean getPreserveBC() {
+        if (preserveBC == null) {
+            preserveBC = delegateIteratorToList() ? Boolean.TRUE : Boolean.FALSE;
+        }
+        return preserveBC.booleanValue();
     }
 }
