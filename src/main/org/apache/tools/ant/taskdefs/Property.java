@@ -71,7 +71,7 @@ import org.apache.tools.ant.types.Reference;
  * @ant.task category="property"
  */
 public class Property extends Task {
-    private class PropertyResolver implements PropertyHelper.PropertyEvaluator {
+    private static class PropertyResolver implements PropertyHelper.PropertyEvaluator {
         private ThreadLocal getStack = new ThreadLocal() {
             protected Object initialValue() {
                 return new Stack();
@@ -114,7 +114,7 @@ public class Property extends Task {
             }
             stk = (Stack) replaceStack.get();
             if (stk.contains(property)) {
-                throw new BuildException("Property " + name + " was circularly defined.");
+                throw new BuildException("Property " + property + " was circularly defined.");
             }
             stk.push(property);
             try {
