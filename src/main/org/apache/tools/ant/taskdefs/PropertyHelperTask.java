@@ -122,7 +122,7 @@ public class PropertyHelperTask extends Task {
         }
         PropertyHelper ph = propertyHelper;
         if (ph == null) {
-            ph = (PropertyHelper) getProject().getReference(MagicNames.REFID_PROPERTY_HELPER);
+            ph = PropertyHelper.getPropertyHelper(getProject());
         } else {
             ph = propertyHelper;
         }
