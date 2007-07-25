@@ -274,30 +274,30 @@ public class JarTest extends BuildFileTest {
     
     public void testNoVersionInfoIgnore() {
         executeTarget("testNoVersionInfoIgnore");
-        assertTrue( getFullLog().contains("No Implementation-Title set.") );
-        assertTrue( getFullLog().contains("No Implementation-Version set.") );
-        assertTrue( getFullLog().contains("No Implementation-Vendor set.") );
+        assertTrue( getFullLog().indexOf("No Implementation-Title set.") > -1 );
+        assertTrue( getFullLog().indexOf("No Implementation-Version set.") > -1 );
+        assertTrue( getFullLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
 
     public void testNoVersionInfoWarn() {
         executeTarget("testNoVersionInfoWarn");
-        assertTrue( getLog().contains("No Implementation-Title set.") );
-        assertTrue( getLog().contains("No Implementation-Version set.") );
-        assertTrue( getLog().contains("No Implementation-Vendor set.") );
+        assertTrue( getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertTrue( getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertTrue( getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
 
     public void testNoVersionInfoNoStrict() {
         executeTarget("testNoVersionInfoNoStrict");
-        assertFalse( getLog().contains("No Implementation-Title set.") );
-        assertFalse( getLog().contains("No Implementation-Version set.") );
-        assertFalse( getLog().contains("No Implementation-Vendor set.") );
+        assertFalse( getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertFalse( getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertFalse( getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
     
     public void testHasVersionInfo() {
         executeTarget("testHasVersionInfo");
-        assertFalse( getLog().contains("No Implementation-Title set.") );
-        assertFalse( getLog().contains("No Implementation-Version set.") );
-        assertFalse( getLog().contains("No Implementation-Vendor set.") );
+        assertFalse( getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertFalse( getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertFalse( getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
     
 }
