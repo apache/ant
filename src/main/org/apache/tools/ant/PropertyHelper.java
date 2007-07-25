@@ -19,11 +19,12 @@ package org.apache.tools.ant;
 
 import java.text.ParsePosition;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Enumeration;
 
@@ -902,8 +903,7 @@ public class PropertyHelper implements Cloneable {
      * @since Ant 1.8
      */
     public synchronized void add(Delegate delegate) {
-        List d = getDelegateInterfaces(delegate);
-        for (Iterator iter = d.iterator(); iter.hasNext();) {
+        for (Iterator iter = getDelegateInterfaces(delegate).iterator(); iter.hasNext();) {
             Object key = iter.next();
             List list = (List) delegates.get(key);
             if (list == null) {
@@ -925,23 +925,28 @@ public class PropertyHelper implements Cloneable {
      */
     protected synchronized List getDelegates(Class type) {
         return delegates.containsKey(type)
-                ? (List) new ArrayList((Collection) delegates.get(type)) : Collections.EMPTY_LIST;
+                ? (List) new ArrayList((List) delegates.get(type)) : Collections.EMPTY_LIST;
     }
 
     /**
      * Get all Delegate interfaces (excluding Delegate itself) from the specified Delegate.
      * @param d the Delegate to inspect.
-     * @return List<Class>
+     * @return Set<Class>
      * @since Ant 1.8
      */
-    protected List getDelegateInterfaces(Delegate d) {
-        Class[] c = d.getClass().getInterfaces();
-        ArrayList result = new ArrayList();
-        for (int i = 0; i < c.length; i++) {
-            if (Delegate.class.isAssignableFrom(c[i]) && !Delegate.class.equals(c[i])) {
-                result.add(c[i]);
+    protected Set getDelegateInterfaces(Delegate d) {
+        HashSet result = new HashSet();
+        Class c = d.getClass();
+        while (c != null) {
+            Class[] ifs = c.getInterfaces();
+            for (int i = 0; i < ifs.length; i++) {
+                if (Delegate.class.isAssignableFrom(ifs[i])) {
+                    result.add(ifs[i]);
+                }
             }
+            c = c.getSuperclass();
         }
+        result.remove(Delegate.class);
         return result;
     }
 
