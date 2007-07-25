@@ -37,6 +37,7 @@ import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Sets a property by name, or set of properties (from file or
@@ -529,12 +530,12 @@ public class Property extends Task {
             // load the xml based property definition 
             // use reflection because of bwc to Java 1.3
             try {
-                Method loadXmlMethod = props.getClass().getMethod("loadFromXML", new Class[]{InputStream.class});
-                loadXmlMethod.invoke(props, new Object[]{is});
+                Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
+                        new Class[] { InputStream.class });
+                loadXmlMethod.invoke(props, new Object[] { is });
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
                 log("Can not load xml based property definition on Java < 5");
-                return;
             } catch (Exception e) {
                 // no-op
                 e.printStackTrace();
@@ -544,7 +545,6 @@ public class Property extends Task {
             props.load(is);
         }
     }
-
 
     /**
      * load properties from a file
@@ -561,14 +561,12 @@ public class Property extends Task {
                     fis = new FileInputStream(file);
                     loadProperties(props, fis, file.getName().endsWith(".xml"));
                 } finally {
-                    if (fis != null) {
-                        fis.close();
-                    }
+                    FileUtils.close(fis);
                 }
                 addProperties(props);
             } else {
                 log("Unable to find property file: " + file.getAbsolutePath(),
-                    Project.MSG_VERBOSE);
+                        Project.MSG_VERBOSE);
             }
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
