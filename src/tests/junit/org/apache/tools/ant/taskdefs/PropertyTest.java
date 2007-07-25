@@ -107,5 +107,16 @@ public class PropertyTest extends BuildFileTest {
     public void testThisIsNotACircularReference() {
         expectLog("thisIsNotACircularReference", "b is A/A/A");
     }
+    
+    public void testXmlProperty() {
+        try {
+            Class.forName("java.lang.Iterable");
+            executeTarget("testXmlProperty");
+            assertEquals("ONE", project.getProperty("xml.one"));
+            assertEquals("TWO", project.getProperty("xml.two"));
+        } catch (ClassNotFoundException e) {
+            // Xml-Loading only on Java5+
+        }
+    }
 
 }

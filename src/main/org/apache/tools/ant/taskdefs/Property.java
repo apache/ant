@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.ReflectUtil;
 
 /**
  * Sets a property by name, or set of properties (from file or
@@ -499,7 +502,7 @@ public class Property extends Task {
         try {
             InputStream is = url.openStream();
             try {
-                props.load(is);
+                loadProperties(props, is, url.getFile().endsWith(".xml"));
             } finally {
                 if (is != null) {
                     is.close();
@@ -508,6 +511,39 @@ public class Property extends Task {
             addProperties(props);
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
+        }
+    }
+
+    /**
+     * Loads the properties defined in the InputStream into the given
+     * property. On Java5+ it supports reading from XML based property 
+     * definition.
+     * @param props The property object to load into
+     * @param is    The input stream from where to load
+     * @param isXml <tt>true</tt> if we should try to load from xml
+     * @throws IOException if something goes wrong
+     * @since 1.7.1
+     * @see http://java.sun.com/dtd/properties.dtd
+     * @see java.util.Properties#loadFromXML(InputStream)
+     */
+    private void loadProperties(Properties props, InputStream is, boolean isXml) throws IOException {
+        if (isXml) {
+            // load the xml based property definition 
+            // use reflection because of bwc to Java 1.3
+            try {
+                Method loadXmlMethod = props.getClass().getMethod("loadFromXML", new Class[]{InputStream.class});
+                loadXmlMethod.invoke(props, new Object[]{is});
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                log("Can not load xml based property definition on Java < 5");
+                return;
+            } catch (Exception e) {
+                // no-op
+                e.printStackTrace();
+            }
+        } else {
+            // load ".properties" format
+            props.load(is);
         }
     }
 
@@ -525,7 +561,7 @@ public class Property extends Task {
                 FileInputStream  fis = null;
                 try {
                     fis = new FileInputStream(file);
-                    props.load(fis);
+                    loadProperties(props, fis, file.getName().endsWith(".xml"));
                 } finally {
                     if (fis != null) {
                         fis.close();
@@ -565,7 +601,7 @@ public class Property extends Task {
             }
 
             if (is != null) {
-                props.load(is);
+                loadProperties(props, is, name.endsWith(".xml"));
                 addProperties(props);
             } else {
                 log("Unable to find resource " + name, Project.MSG_WARN);
@@ -581,7 +617,6 @@ public class Property extends Task {
                 }
             }
         }
-
     }
 
     /**

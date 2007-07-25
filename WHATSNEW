@@ -127,6 +127,10 @@ Fixed bugs:
 * Regression: Path subclasses that overrode list() stopped working in
   resourceCollection contexts in Ant 1.7.0. Bugzilla 42967.
 
+* <property> supports loading from xml based property definition.
+  Bugzilla 42946
+  
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
