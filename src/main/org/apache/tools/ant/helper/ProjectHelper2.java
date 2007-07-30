@@ -27,6 +27,7 @@ import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -973,6 +974,13 @@ public class ProjectHelper2 extends ProjectHelper {
                 // and convert from qualified name to uri/name
                 if (ANT_TYPE.equals(name) || (ANT_CORE_URI.equals(attrUri)
                         && ANT_TYPE.equals(attrs.getLocalName(i)))) {
+                    context.getProject().log(
+                        "WARNING: "
+                        + "the ant-type mechanism has been deprecated"
+                        + StringUtils.LINE_SEP
+                        + "         and"
+                        + " will not be available in Ant 1.8.0 or higher",
+                        Project.MSG_WARN);
                     name = ANT_TYPE;
                     int index = value.indexOf(":");
                     if (index >= 0) {

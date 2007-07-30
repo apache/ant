@@ -19,6 +19,9 @@ Changes that could break older environments:
 * <java> with fork now returns gives -1 instead of 0 as result when failonerror
   is false and some exception (including timeout) occurs. Br 42377. 
 
+* ant-type attribute has been marked as deprecated and a warning has been
+  issued if it is encountered in the build file.
+
 Fixed bugs:
 -----------
 * Regression: Locator fails with URI encoding problem when spaces in path
