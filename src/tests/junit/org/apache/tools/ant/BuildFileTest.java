@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant;
 
-import junit.framework.TestCase;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.Hashtable;
+
+import junit.framework.TestCase;
 
 /**
  * A BuildFileTest is a TestCase which executes targets from an Ant buildfile
@@ -117,18 +117,35 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the output messages.
+     * @param message Print this message if the test fails. Defaults to 
+     *                a meaningful text if <tt>null</tt> is passed.  
      * @since Ant1.7
      */
-    public void assertOutputContaining(String substring) {
+    public void assertOutputContaining(String message, String substring) {
         String realOutput = getOutput();
-        assertTrue("expecting output to contain \"" + substring
-                   + "\" output was \"" + realOutput + "\"",
-                   realOutput.indexOf(substring) >= 0);
+        String realMessage = (message != null) 
+            ? message 
+            : "expecting output to contain \"" + substring + "\" output was \"" + realOutput + "\"";
+        assertTrue(realMessage, realOutput.indexOf(substring) >= 0);
     }
 
     /**
-     * Assert that the given message has been logged with a priority
-     * &lt;= INFO when running the given target.
+     * Assert that the given substring is not in the output messages.
+     * @param message Print this message if the test fails. Defaults to 
+     *                a meaningful text if <tt>null</tt> is passed.  
+     * @since Ant1.7
+     */
+    public void assertOutputNotContaining(String message, String substring) {
+        String realOutput = getOutput();
+        String realMessage = (message != null) 
+            ? message 
+            : "expecting output to contain \"" + substring + "\" output was \"" + realOutput + "\"";
+        assertFalse(realMessage, realOutput.indexOf(substring) >= 0);
+    }
+
+    /**
+     * Assert that the given message has been logged with a priority &lt;= INFO when running the
+     * given target.
      */
     public void expectLogContaining(String target, String log) {
         executeTarget(target);

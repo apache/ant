@@ -163,7 +163,7 @@ public class JUnitTask extends Task {
     private JUnitTaskMirror delegate;
 
     /** A boolean on whether to get the forked path for ant classes */
-    private boolean   forkedPathChecked = false;
+    private boolean forkedPathChecked = false;
 
     //   Attributes for basetest
     private boolean haltOnError = false;

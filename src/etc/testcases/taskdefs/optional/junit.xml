@@ -143,4 +143,94 @@
       </batchtest>
     </junit>
   </target>
+
+  <target name="failureRecorder.prepare">
+    <property name="tmp.dir" value="out"/>
+    <mkdir dir="${tmp.dir}/org"/>
+    <echo file="${tmp.dir}/A.java">
+        import junit.framework.*;
+        public class A extends TestCase {
+            public A(String s) { super(s); }
+            public void test01() { System.out.println("A.test01"); }
+            public void test02() { System.out.println("A.test02"); fail(); }
+            public void test03() { System.out.println("A.test03"); fail(); }
+      }
+    </echo>
+    <echo file="${tmp.dir}/B.java">
+        import junit.framework.*;
+        public class B extends TestCase {
+            public B(String s) { super(s); }
+            public void test04() { System.out.println("B.test04"); fail(); }
+            public void test05() { System.out.println("B.test05"); }
+            public void test06() { System.out.println("B.test06"); }
+        }
+    </echo>
+    <echo file="${tmp.dir}/C.java">
+        import junit.framework.*;
+        public class C extends TestCase {
+            public C(String s) { super(s); }
+            public void test07() { System.out.println("C.test07"); }
+            public void test08() { System.out.println("C.test08"); }
+            public void test09() { System.out.println("C.test09"); }
+        }
+    </echo>
+    <echo file="${tmp.dir}/org/D.java">
+    	package org;
+        import junit.framework.*;
+        public class D extends TestCase {
+            public D(String s) { super(s); }
+            public void test10() { System.out.println("D.test10"); fail(); }
+        }
+    </echo>
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
+  </target>
+
+  <target name="failureRecorder.internal">  
+    <property name="tmp.dir" value="out"/>
+    <!-- 
+    <delete>
+      <fileset dir="${tmp.dir}" includes="FailedTests*.class"/>
+    </delete>
+     -->
+    <!-- compile the FailedTests class if present --> 
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
+    <available file="${tmp.dir}/FailedTests.class" property="hasFailingTests"/>
+    <junit haltonerror="false" haltonfailure="false">
+      <sysproperty key="ant.junit.failureCollector" value="${tmp.dir}/FailedTests"/>
+      <classpath>
+        <pathelement location="${tmp.dir}"/>
+      </classpath>
+      <batchtest todir="${tmp.dir}" unless="hasFailingTests">
+        <fileset dir="${tmp.dir}" includes="**/*.java" excludes="**/FailedTests.*"/>
+        <!-- for initial creation of the FailingTests.java -->
+        <formatter type="failure"/>
+        <!-- I want to see something ... -->
+        <formatter type="plain" usefile="false"/>
+      </batchtest>
+      <test name="FailedTests" if="hasFailingTests">
+      	<!-- update the FailingTests.java -->
+        <formatter type="failure"/>
+        <!-- again, I want to see something -->
+        <formatter type="plain" usefile="false"/>
+      </test>
+    </junit>
+  </target>
+  
+  <target name="failureRecorder.runtest">
+  	<ant target="failureRecorder.internal" antfile="junit.xml" inheritAll="false"/>
+  </target>
+  
+  <target name="failureRecorder.fixing">
+    <property name="tmp.dir" value="out"/>
+    <echo file="${tmp.dir}/A.java">
+        import junit.framework.*;
+        public class A extends TestCase {
+            public A(String s) { super(s); }
+            public void test01() { System.out.println("A.test01"); }
+            public void test02() { System.out.println("A.test02"); }
+            public void test03() { System.out.println("A.test03"); }
+      }
+    </echo>
+  </target>
+
 </project>

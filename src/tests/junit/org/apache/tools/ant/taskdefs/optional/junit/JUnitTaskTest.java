@@ -17,31 +17,31 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildFileTest;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import org.apache.tools.ant.BuildFileTest;
 
 public class JUnitTaskTest extends BuildFileTest {
 
     /**
-     * Constructor for the JUnitTaskTest object
+     * Constructor for the JUnitTaskTest object.
      */
     public JUnitTaskTest(String name) {
         super(name);
     }
 
-
     /**
-     * The JUnit setup method
+     * The JUnit setup method.
      */
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
     }
 
-
     /**
-     * The teardown method for JUnit
+     * The teardown method for JUnit.
      */
     public void tearDown() {
         executeTarget("cleanup");
@@ -86,7 +86,83 @@ public class JUnitTaskTest extends BuildFileTest {
     public void testBatchTestForkOnceExtension() {
         assertResultFilesExist("testBatchTestForkOnceExtension", ".foo");
     }
+    
+    /* Bugzilla Report 42984 */
+    //TODO This scenario works from command line, but not from JUnit ...
+    //     See the _run.bat attachement of the bug.
+    public void _testFailureRecorder() {
+        File testDir = new File(getProjectDir(), "out");
+        File collectorFile = new File(getProjectDir(), "out/FailedTests.java");
 
+        // ensure that there is a clean test environment
+        assertFalse("Test directory must not exist before the test preparation.", 
+                testDir.exists());
+        assertFalse("The collector file must not exist before the test preparation.", 
+                collectorFile.exists());
+
+        // prepare the test environment
+        executeTarget("failureRecorder.prepare");
+        assertTrue("Test directory was not created.", testDir.exists());
+        assertTrue("There should be one class.", (new File(testDir, "A.class")).exists());
+        assertFalse("The collector file " + collectorFile.getAbsolutePath() 
+                + " should not exist before the 1st run.", collectorFile.exists());
+
+        // 1st junit run: should do all tests - failing and not failing tests
+        executeTarget("failureRecorder.runtest");
+        assertTrue("The collector file " + collectorFile.getAbsolutePath() 
+                + " should exist after the 1st run.", collectorFile.exists());
+        // the passing test cases
+        assertOutputContaining("1st run: should run A.test01", "A.test01");
+        assertOutputContaining("1st run: should run B.test05", "B.test05");
+        assertOutputContaining("1st run: should run B.test06", "B.test06");
+        assertOutputContaining("1st run: should run C.test07", "C.test07");
+        assertOutputContaining("1st run: should run C.test08", "C.test08");
+        assertOutputContaining("1st run: should run C.test09", "C.test09");
+        // the failing test cases
+        assertOutputContaining("1st run: should run A.test02", "A.test02");
+        assertOutputContaining("1st run: should run A.test03", "A.test03");
+        assertOutputContaining("1st run: should run B.test04", "B.test04");
+        assertOutputContaining("1st run: should run D.test10", "D.test10");
+
+        // 2nd junit run: should do only failing tests
+        executeTarget("failureRecorder.runtest");
+        assertTrue("The collector file " + collectorFile.getAbsolutePath() 
+                + " should exist after the 2nd run.", collectorFile.exists());
+        // the passing test cases
+        assertOutputNotContaining("2nd run: should not run A.test01", "A.test01");
+        assertOutputNotContaining("2nd run: should not run A.test05", "B.test05");
+        assertOutputNotContaining("2nd run: should not run B.test06", "B.test06");
+        assertOutputNotContaining("2nd run: should not run C.test07", "C.test07");
+        assertOutputNotContaining("2nd run: should not run C.test08", "C.test08");
+        assertOutputNotContaining("2nd run: should not run C.test09", "C.test09");
+        // the failing test cases
+        assertOutputContaining("2nd run: should run A.test02", "A.test02");
+        assertOutputContaining("2nd run: should run A.test03", "A.test03");
+        assertOutputContaining("2nd run: should run B.test04", "B.test04");
+        assertOutputContaining("2nd run: should run D.test10", "D.test10");
+        
+        // "fix" errors in class A
+        executeTarget("failureRecorder.fixing");
+        
+        // 3rd run: four running tests with two errors
+        executeTarget("failureRecorder.runtest");
+        assertTrue("The collector file " + collectorFile.getAbsolutePath() 
+                + " should exist after the 3rd run.", collectorFile.exists());
+        assertOutputContaining("3rd run: should run A.test02", "A.test02");
+        assertOutputContaining("3rd run: should run A.test03", "A.test03");
+        assertOutputContaining("3rd run: should run B.test04", "B.test04");
+        assertOutputContaining("3rd run: should run D.test10", "D.test10");
+        
+        // 4rd run: two running tests with errors
+        executeTarget("failureRecorder.runtest");
+        assertTrue("The collector file " + collectorFile.getAbsolutePath() 
+                + " should exist after the 4th run.", collectorFile.exists());
+        assertOutputNotContaining("4th run: should not run A.test02", "A.test02");
+        assertOutputNotContaining("4th run: should not run A.test03", "A.test03");
+        assertOutputContaining("4th run: should run B.test04", "B.test04");
+        assertOutputContaining("4th run: should run D.test10", "D.test10");
+    }
+    
     public void testBatchTestForkOnceCustomFormatter() {
         assertResultFilesExist("testBatchTestForkOnceCustomFormatter", "foo");
     }
@@ -156,4 +232,3 @@ public class JUnitTaskTest extends BuildFileTest {
     }
 
 }
-

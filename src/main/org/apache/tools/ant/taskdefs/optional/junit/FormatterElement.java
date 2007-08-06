@@ -47,6 +47,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @see XMLJUnitResultFormatter
  * @see BriefJUnitResultFormatter
  * @see PlainJUnitResultFormatter
+ * @see FailureRecorder
  * @see JUnitResultFormatter
  */
 public class FormatterElement {
@@ -68,6 +69,9 @@ public class FormatterElement {
     /** plain formatter class */
     public static final String PLAIN_FORMATTER_CLASS_NAME =
         "org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter";
+    /** failure recorder class */
+    public static final String FAILURE_RECORDER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.FailureRecorder";
 
     /**
      * <p> Quick way to use a standard formatter.
@@ -77,6 +81,7 @@ public class FormatterElement {
      * <li> The <code>xml</code> type uses a <code>XMLJUnitResultFormatter</code>.
      * <li> The <code>brief</code> type uses a <code>BriefJUnitResultFormatter</code>.
      * <li> The <code>plain</code> type (the default) uses a <code>PlainJUnitResultFormatter</code>.
+     * <li> The <code>failure</code> type uses a <code>FailureRecorder</code>.
      * </ul>
      *
      * <p> Sets <code>classname</code> attribute - so you can't use that
@@ -84,13 +89,18 @@ public class FormatterElement {
      * @param type the enumerated value to use.
      */
     public void setType(TypeAttribute type) {
+        //TODO: Besseren Zugriffsalgorithums: TypeAttribut.getClassname()
         if ("xml".equals(type.getValue())) {
             setClassname(XML_FORMATTER_CLASS_NAME);
         } else {
             if ("brief".equals(type.getValue())) {
                 setClassname(BRIEF_FORMATTER_CLASS_NAME);
-            } else { // must be plain, ensured by TypeAttribute
-                setClassname(PLAIN_FORMATTER_CLASS_NAME);
+            } else {
+                if ("failure".equals(type.getValue())) {
+                    setClassname(FAILURE_RECORDER_CLASS_NAME);
+                } else { // must be plain, ensured by TypeAttribute
+                    setClassname(PLAIN_FORMATTER_CLASS_NAME);
+                }
             }
         }
     }
@@ -268,14 +278,14 @@ public class FormatterElement {
     }
 
     /**
-     * <p> Enumerated attribute with the values "plain", "xml" and "brief".
+     * <p> Enumerated attribute with the values "plain", "xml", "brief" and "failure".
      *
      * <p> Use to enumerate options for <code>type</code> attribute.
      */
     public static class TypeAttribute extends EnumeratedAttribute {
         /** {@inheritDoc}. */
         public String[] getValues() {
-            return new String[] {"plain", "xml", "brief"};
+            return new String[] {"plain", "xml", "brief", "failure"};
         }
     }
 }
