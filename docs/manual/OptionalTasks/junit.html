@@ -354,6 +354,12 @@ can be specified.</p>
 that your tests have written as some characters are illegal in XML
 documents and will be dropped.</p>
 
+<p>The formatter named <code>failure</code> collects all failing <code>testXXX()</code>
+methods and creates a new <code>TestCase</code> which delegates only these
+failing methods. The name and the location can be specified via Java System property
+<code>ant.junit.failureCollector</code>. The value has to point to the directory and 
+the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir</i>/FailedTests.</p>
+
 <p><b>Note:</b> Please read the <a
 href="../../faq.html#junit-no-runtime-xml">Ant FAQ</a> if you want to
 set the fork attribute to <code>true</code>, the includeAntRuntime
@@ -615,6 +621,50 @@ test is run in a separate VM. If a test fails, the build process is
 aborted. Results are collected in files named
 <code>TEST-</code><em>name</em><code>.txt</code> and written to
 <code>${reports.tests}</code>.</p>
+
+<pre>
+&lt;target name=&quot;test&quot;&gt;
+    &lt;property name=&quot;collector.dir&quot; value=&quot;${build.dir}/failingTests&quot;/&gt;
+    &lt;property name=&quot;collector.class&quot; value=&quot;FailedTests&quot;/&gt;
+    &lt;!-- Delete 'old' collector classes --&gt;
+    &lt;delete&gt;
+        &lt;fileset dir=&quot;${collector.dir}&quot; includes=&quot;${collector.class}*.class&quot;/&gt;
+    &lt;/delete&gt;
+    &lt;!-- compile the FailedTests class if present --&gt; 
+    &lt;javac srcdir=&quot;${collector.dir}&quot; destdir=&quot;${collector.dir}&quot;/&gt;
+    &lt;available file=&quot;${collector.dir}/${collector.class}.class&quot; property=&quot;hasFailingTests&quot;/&gt;
+    &lt;junit haltonerror=&quot;false&quot; haltonfailure=&quot;false&quot;&gt;
+        &lt;sysproperty key=&quot;ant.junit.failureCollector&quot; value=&quot;${collector.dir}/${collector.class}&quot;/&gt;
+        &lt;classpath&gt;
+            &lt;pathelement location=&quot;${collector.dir}&quot;/&gt;
+        &lt;/classpath&gt;
+        &lt;batchtest todir=&quot;${collector.dir}&quot; unless=&quot;hasFailingTests&quot;&gt;
+            &lt;fileset dir=&quot;${collector.dir}&quot; includes=&quot;**/*.java&quot; excludes=&quot;**/${collector.class}.*&quot;/&gt;
+            &lt;!-- for initial creation of the FailingTests.java --&gt;
+            &lt;formatter type=&quot;failure&quot;/&gt;
+            &lt;!-- I want to see something ... --&gt;
+            &lt;formatter type=&quot;plain&quot; usefile=&quot;false&quot;/&gt;
+        &lt;/batchtest&gt;
+        &lt;test name=&quot;FailedTests&quot; if=&quot;hasFailingTests&quot;&gt;
+            &lt;!-- update the FailingTests.java --&gt;
+            &lt;formatter type=&quot;failure&quot;/&gt;
+            &lt;!-- again, I want to see something --&gt;
+            &lt;formatter type=&quot;plain&quot; usefile=&quot;false&quot;/&gt;
+        &lt;/test&gt;
+    &lt;/junit&gt;
+&lt;/target&gt;
+</pre>
+<p>On the first run all tests are collected via the <code>&lt;batchtest/&gt;</code>
+element. It's <code>plain</code> formatter shows the output on the console. The
+<code>failure</code> formatter creates a java source file in 
+<code>${build.dir}/failingTests/FailedTests.java</code> which extends 
+<code>junit.framework.TestCase</code> and returns from a <code>suite()</code>
+method a test suite for the failing tests. <br/>
+On a second run the collector class exists and instead of the <code>&lt;batchtest/&gt;</code>
+the single <code>&lt;test/&gt;</code> will run. So only the failing test cases are re-run.
+The two nested formatters are for displaying (for the user) and for updating the collector
+class.
+</p>
 
 
 </body>
