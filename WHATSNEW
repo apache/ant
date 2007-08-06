@@ -132,7 +132,9 @@ Fixed bugs:
 
 * <property> supports loading from xml based property definition.
   Bugzilla 42946
-  
+
+* <junit> supports collecting and rerunning failed test cases
+  (textXXX methods). Bugzilla 42984.  
 
 Other changes:
 --------------
