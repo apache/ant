@@ -72,17 +72,6 @@ public class PropertyHelperTask extends Task {
     private List delegates;
 
     /**
-     * Construct the PropertyHelperTask, which is useless without a Project instance.
-     * @param Project the associated Ant project instance.
-     */
-    public PropertyHelperTask(Project project) {
-        if (project == null) {
-            throw new IllegalArgumentException();
-        }
-        setProject(project);
-    }
-
-    /**
      * Add a new PropertyHelper to be set on the Project.
      * @param propertyHelper the PropertyHelper to set.
      */
@@ -116,6 +105,9 @@ public class PropertyHelperTask extends Task {
      * @throws BuildException on error.
      */
     public void execute() throws BuildException {
+        if (getProject() == null) {
+            throw new BuildException("Project instance not set");
+        }
         if (propertyHelper == null && delegates == null) {
             throw new BuildException("Either a new PropertyHelper"
                     + " or one or more PropertyHelper delegates are required");
