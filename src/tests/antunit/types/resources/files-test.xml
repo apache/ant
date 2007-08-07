@@ -1,0 +1,36 @@
+<project name="files-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="antunit">
+    <au:antunit>
+      <au:plainlistener />
+      <file file="${ant.file}" />
+    </au:antunit>
+  </target>
+  
+  <target name="setUp">
+    <property name="out" value="out"/>
+  </target>
+  
+  <target name="tearDown">
+    <delete dir="${out}"/>
+  </target>
+
+  <target name="testEmptyReference" description="Bug43048">
+    <files id="foo"/>
+    <mkdir dir="${out}"/>
+    <copy todir="${out}">
+      <!-- threw a java.lang.NullPointerException -->
+	  <files refid="foo"/>
+    </copy>
+  </target>
+
+  <target name="testEmptyFiles" description="Bug43048">
+    <mkdir dir="${out}"/>
+    <copy todir="${out}">
+      <files/>
+    </copy>
+  </target>
+
+
+</project>
