@@ -117,6 +117,14 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the output messages.
+     * @since Ant1.7
+     */
+    public void assertOutputContaining(String substring) {
+        assertOutputContaining(null, substring);
+    }
+
+    /**
+     * Assert that the given substring is in the output messages.
      * @param message Print this message if the test fails. Defaults to 
      *                a meaningful text if <tt>null</tt> is passed.  
      * @since Ant1.7
@@ -139,7 +147,7 @@ public abstract class BuildFileTest extends TestCase {
         String realOutput = getOutput();
         String realMessage = (message != null) 
             ? message 
-            : "expecting output to contain \"" + substring + "\" output was \"" + realOutput + "\"";
+            : "expecting output to not contain \"" + substring + "\" output was \"" + realOutput + "\"";
         assertFalse(realMessage, realOutput.indexOf(substring) >= 0);
     }
 
