@@ -288,6 +288,16 @@ public abstract class ConditionBase extends ProjectComponent
      * Create a dynamically discovered condition.  Built-in conditions can
      * be discovered from the org.apache.tools.ant.taskdefs.condition
      * antlib.
+     * <p>
+     * This is a temporary fix until restricted type are added
+     * in Ant 1.8.0. The purpose of this method is to stop polluting the
+     * global type namespace with new conditionds - or worse adding new
+     * methods to this class.
+     * </p>
+     * @since 1.7.0
+     * @deprecated since 1.7.1 This method will be removed in Ant 1.8.0.
+     *             Until then, ant core will use it, but third party software
+     *             should not rely on this method.
      * @param name the condition to create.
      * @return the dynamic condition if found, null otherwise.
      */
