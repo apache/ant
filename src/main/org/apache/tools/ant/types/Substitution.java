@@ -25,7 +25,7 @@ import org.apache.tools.ant.Project;
  * that is meant to replace a regular expression.
  *
  * <pre>
- *   &lt;substitition [ [id="id"] expression="expression" | refid="id" ]
+ *   &lt;substitution [ [id="id"] expression="expression" | refid="id" ]
  *   /&gt;
  * </pre>
  *
@@ -33,7 +33,7 @@ import org.apache.tools.ant.Project;
  */
 public class Substitution extends DataType {
     /** The name of this data type */
-    public static final String DATA_TYPE_NAME = "substitition";
+    public static final String DATA_TYPE_NAME = "substitution";
 
     private String expression;
 
