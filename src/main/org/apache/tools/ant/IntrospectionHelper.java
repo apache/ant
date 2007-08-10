@@ -1383,28 +1383,33 @@ public final class IntrospectionHelper  {
         }
         ComponentHelper helper = ComponentHelper.getComponentHelper(project);
 
-        Object addedObject = null;
-        Method addMethod = null;
-        Class clazz = helper.getComponentClass(elementName);
-        if (clazz == null) {
-            return null;
-        }
-        addMethod = findMatchingMethod(clazz, addTypeMethods);
-        if (addMethod == null) {
-            return null;
-        }
-        addedObject = helper.createComponent(elementName);
-        if (addedObject == null) {
-            return null;
-        }
-        Object rObject = addedObject;
-        if (addedObject instanceof PreSetDef.PreSetDefinition) {
-            rObject = ((PreSetDef.PreSetDefinition) addedObject).createObject(project);
-        }
-        final Object nestedObject = addedObject;
-        final Object realObject = rObject;
+        MethodAndObject restricted =  createRestricted(
+            helper, elementName, addTypeMethods);
+        MethodAndObject topLevel = createTopLevel(
+            helper, elementName, addTypeMethods);
 
-        return new NestedCreator(addMethod) {
+        if (restricted == null && topLevel == null) {
+            return null;
+        }
+
+        if (restricted != null && topLevel != null) {
+            throw new BuildException(
+                "ambiguous: type and component definitions for "
+                + elementName);
+        }
+
+        MethodAndObject methodAndObject
+            = restricted != null ? restricted : topLevel;
+        
+        Object rObject = methodAndObject.object;
+        if (methodAndObject.object instanceof PreSetDef.PreSetDefinition) {
+            rObject = ((PreSetDef.PreSetDefinition) methodAndObject.object)
+                .createObject(project);
+        }
+        final Object nestedObject = methodAndObject.object;
+        final Object realObject = rObject;
+ 
+        return new NestedCreator(methodAndObject.method) {
             Object create(Project project, Object parent, Object ignore)
                     throws InvocationTargetException, IllegalAccessException {
                 if (!getMethod().getName().endsWith("Configured")) {
@@ -1460,6 +1465,9 @@ public final class IntrospectionHelper  {
      * @return a matching <code>Method</code>; null if none found.
      */
     private Method findMatchingMethod(Class paramClass, List methods) {
+        if (paramClass == null) {
+            return null;
+        }
         Class matchedClass = null;
         Method matchedMethod = null;
 
@@ -1486,4 +1494,91 @@ public final class IntrospectionHelper  {
         int ends = (MAX_REPORT_NESTED_TEXT - ELLIPSIS.length()) / 2;
         return new StringBuffer(text).replace(ends, text.length() - ends, ELLIPSIS).toString();
     }
+
+
+    private class MethodAndObject {
+        private Method method;
+        private Object object;
+        public MethodAndObject(Method method, Object object) {
+            this.method = method;
+            this.object = object;
+        }
+    }
+
+    /**
+     *
+     */
+    private AntTypeDefinition findRestrictedDefinition(
+        ComponentHelper helper, String componentName, List methods) {
+        AntTypeDefinition definition = null;
+        Class matchedDefinitionClass = null;
+
+        List definitions = helper.getRestrictedDefinitions(componentName);
+        if (definitions == null) {
+            return null;
+        }
+        for (int i = 0; i < definitions.size(); ++i) {
+            AntTypeDefinition d = (AntTypeDefinition) definitions.get(i);
+            Class exposedClass = d.getExposedClass(helper.getProject());
+            if (exposedClass == null) {
+                continue;
+            }
+            Method method  = findMatchingMethod(exposedClass, methods);
+            if (method == null) {
+                continue;
+            }
+            if (matchedDefinitionClass != null) {
+                throw new BuildException(
+                    "ambiguous: restricted definitions for "
+                    + componentName + " " +
+                    matchedDefinitionClass + " and " + exposedClass);
+            }
+            matchedDefinitionClass = exposedClass;
+            definition = d;
+        }
+        return definition;
+    }
+
+    private MethodAndObject createRestricted(
+        ComponentHelper helper, String elementName, List addTypeMethods) {
+
+        Project project = helper.getProject();
+
+        AntTypeDefinition restrictedDefinition =
+            findRestrictedDefinition(helper, elementName, addTypeMethods);
+
+        if (restrictedDefinition == null) {
+            return null;
+        }
+
+        Method addMethod = findMatchingMethod(
+            restrictedDefinition.getExposedClass(project), addTypeMethods);
+        if (addMethod == null) {
+            throw new BuildException(
+                "Ant Internal Error - contract mismatch for "
+                + elementName);
+        }
+        Object addedObject = restrictedDefinition.create(project);
+        if (addedObject == null) {
+            throw new BuildException(
+                "Failed to create object " + elementName
+                + " of type " + restrictedDefinition.getTypeClass(project));
+        }
+        return new MethodAndObject(addMethod, addedObject);
+    }
+
+    private MethodAndObject createTopLevel(
+        ComponentHelper helper, String elementName, List methods) {
+        Class clazz = helper.getComponentClass(elementName);
+        if (clazz == null) {
+            return null;
+        }
+        Method addMethod = findMatchingMethod(clazz, addTypeMethods);
+        if (addMethod == null) {
+            return null;
+        }
+        Object addedObject = helper.createComponent(elementName);
+        return new MethodAndObject(addMethod, addedObject);
+    }
+
 }

@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -56,6 +58,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @since Ant1.6
  */
 public class ComponentHelper  {
+    /** Map of component name to lists of restricted definitions */
+    private Map          restrictedDefinitions = new HashMap();
+
     /** Map from component name to anttypedefinition */
     private AntTypeTable antTypeTable;
 
@@ -122,6 +127,14 @@ public class ComponentHelper  {
 
     // {tasks, types}
     private static Properties[] defaultDefinitions = new Properties[2];
+
+     /**
+     * Get the project.
+     * @return the project owner of this helper.
+     */
+     public Project getProject() {
+         return project;
+     }
 
     /**
      * Find a project component for a specific project, creating
@@ -195,6 +208,14 @@ public class ComponentHelper  {
         // add the parsed namespaces of the parent project
         for (Iterator i = helper.checkedNamespaces.iterator(); i.hasNext();) {
             checkedNamespaces.add(i.next());
+        }
+
+        // Add the restricted definitions
+        for (Iterator i = helper.restrictedDefinitions.entrySet().iterator();
+             i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            restrictedDefinitions.put(
+                entry.getKey(), new ArrayList((List) entry.getValue()));
         }
     }
 
@@ -396,6 +417,15 @@ public class ComponentHelper  {
     }
 
     /**
+     * This returns a list of restricted definitions for a name.
+     * @param componentName the name to use. 
+     * @return the list of restricted definitions for a particular name.
+     */
+    public List getRestrictedDefinitions(String componentName) {
+        return (List) restrictedDefinitions.get(componentName);
+    }
+
+    /**
      * Adds a new datatype definition.
      * Attempting to override an existing definition with an
      * equivalent one (i.e. with the same classname) results in
@@ -423,7 +453,11 @@ public class ComponentHelper  {
      * @param def an <code>AntTypeDefinition</code> value.
      */
     public void addDataTypeDefinition(AntTypeDefinition def) {
-        updateDataTypeDefinition(def);
+        if (!def.isRestrict()) {
+           updateDataTypeDefinition(def);
+        } else {
+            updateRestrictedDefinition(def);
+        }
     }
 
     /**
@@ -605,6 +639,31 @@ public class ComponentHelper  {
         boolean sameValidity = (defValid == validDefinition(old));
         //must have same validity; then if they are valid they must also be the same:
         return sameValidity && (!defValid || def.sameDefinition(old, project));
+    }
+
+    /**
+      * update the restricted definition table with a new or
+      * modified definition.
+      */
+    private void updateRestrictedDefinition(AntTypeDefinition def) {
+        String name = def.getName();
+        synchronized (restrictedDefinitions) {
+            List list = (List) restrictedDefinitions.get(name);
+            if (list == null) {
+                list = new ArrayList();
+                restrictedDefinitions.put(name, list);
+            }
+            // Check if the classname is already present and remove it
+            // if it is
+            for (Iterator i = list.iterator(); i.hasNext();) {
+                AntTypeDefinition current = (AntTypeDefinition) i.next();
+                if (current.getClassName().equals(def.getClassName())) {
+                    i.remove();
+                    break;
+                }
+            }
+            list.add(def);
+        }
     }
 
     /**

@@ -38,6 +38,23 @@ public class AntTypeDefinition {
     private Class       adaptToClass;
     private String      className;
     private ClassLoader classLoader;
+    private boolean     restrict = false;
+
+    /**
+     * Set the restrict attribute.
+     * @param restrict the value to set.
+      */
+     public void setRestrict(boolean restrict) {
+         this.restrict = restrict;
+     }
+
+    /**
+     * Get the restrict attribute.
+      * @return the restrict attribute.
+      */
+    public boolean isRestrict() {
+        return restrict;
+    }
 
     /**
      * Set the definition's name.
@@ -129,7 +146,7 @@ public class AntTypeDefinition {
      * class and the definition class is not
      * assignable from the assignable class.
      * @param project the current project.
-     * @return the exposed class.
+     * @return the exposed class - may return null if upable to load the class
      */
     public Class getExposedClass(Project project) {
         if (adaptToClass != null) {
@@ -327,6 +344,7 @@ public class AntTypeDefinition {
         return (other != null && other.getClass() == getClass()
             && other.getTypeClass(project).equals(getTypeClass(project))
             && other.getExposedClass(project).equals(getExposedClass(project))
+            && other.restrict == restrict
             && other.adapterClass == adapterClass
             && other.adaptToClass == adaptToClass);
     }
@@ -349,7 +367,8 @@ public class AntTypeDefinition {
             || !extractClassname(adapterClass).equals(
             extractClassname(other.adapterClass))
             || !extractClassname(adaptToClass).equals(
-            extractClassname(other.adaptToClass))) {
+            extractClassname(other.adaptToClass))
+            || restrict != other.restrict) {
             return false;
         }
         // all the names are the same: check if the class path of the loader
