@@ -21,8 +21,16 @@
     </sequential>
   </macrodef>
 
+  <condition property="js.avail">
+    <available classname="org.mozilla.javascript.EvaluatorException"/>
+  </condition>
+
+  <condition property="beanshell.avail">
+    <available classname="bsh.BshMethod"/>
+  </condition>
+
   <!-- this is here to test the macro is well coded -->
- <target name="testMacro">
+  <target name="testMacro">
     <t message="testMacro">
       <istrue value="true"/>
     </t>
@@ -42,20 +50,20 @@
     </au:expectfailure>
   </target>
 
-  <target name="testClearByDefault">
+  <target name="testClearByDefault" if="js.avail">
     <f message="testClearByDefault">
       <scriptcondition language="javascript">
       </scriptcondition>
     </f>
   </target>
 
-  <target name="testValueWorks">
+  <target name="testValueWorks" if="js.avail">
     <t message="testValueWorks">
       <scriptcondition language="javascript" value="true" />
     </t>
   </target>
 
-  <target name="testSetWorks">
+  <target name="testSetWorks" if="js.avail">
     <t message="testSetWorks">
       <scriptcondition language="javascript" value="false">
         self.setValue(true);
@@ -63,7 +71,7 @@
     </t>
   </target>
 
-  <target name="testClearWorks">
+  <target name="testClearWorks" if="js.avail">
     <f message="testClearWorks">
       <scriptcondition language="javascript" value="true">
         self.setValue(false);
@@ -71,7 +79,7 @@
     </f>
   </target>
 
-  <target name="testBeanshellReturnTrue">
+  <target name="testBeanshellReturnTrue" if="beanshell.avail">
     <t message="testBeanshellReturnTrue">
       <scriptcondition language="beanshell" value="false">
         return true;
@@ -79,7 +87,7 @@
     </t>
   </target>
 
-  <target name="testBeanshellReturnFalse">
+  <target name="testBeanshellReturnFalse" if="beanshell.avail">
     <f message="testBeanshellReturnFalse">
       <scriptcondition language="beanshell" value="true">
         return false;
@@ -87,7 +95,7 @@
     </f>
   </target>
 
-  <target name="testBeanshellReturnOverridesValue">
+  <target name="testBeanshellReturnOverridesValue" if="beanshell.avail">
     <f message="testBeanshellReturnOverridesValue">
       <scriptcondition language="beanshell" value="false">
         self.setValue(true);
@@ -96,7 +104,7 @@
     </f>
   </target>
 
-  <target name="testBeanshellReturnNullIgnored">
+  <target name="testBeanshellReturnNullIgnored" if="beanshell.avail">
     <t message="testBeanshellReturnNullIgnored">
       <scriptcondition language="beanshell" value="true">
         return null;
@@ -104,7 +112,7 @@
     </t>
   </target>
 
-  <target name="testBeanshellReturnNonBooleanIgnored">
+  <target name="testBeanshellReturnNonBooleanIgnored" if="beanshell.avail">
     <t message="testBeanshellReturnNonBooleanIgnored">
       <scriptcondition language="beanshell" value="true">
         return 20;
@@ -112,7 +120,7 @@
     </t>
   </target>
 
-  <target name="testJsReturnTrue">
+  <target name="testJsReturnTrue" if="js.avail">
     <t message="testJsReturnTrue">
       <scriptcondition language="javascript" value="false">
         java.lang.Boolean.TRUE
@@ -120,7 +128,7 @@
     </t>
   </target>
 
-  <target name="testJsReturnFalse">
+  <target name="testJsReturnFalse" if="js.avail">
     <f message="testJsReturnFalse">
       <scriptcondition language="javascript" value="true">
         java.lang.Boolean.FALSE
@@ -128,7 +136,7 @@
     </f>
   </target>
 
-  <target name="testJsReturnOverridesValue">
+  <target name="testJsReturnOverridesValue" if="js.avail">
     <f message="testJsReturnOverridesValue">
       <scriptcondition language="javascript" value="false">
         self.setValue(true);
@@ -137,7 +145,7 @@
     </f>
   </target>
 
-  <target name="testJsReturnNullIgnored">
+  <target name="testJsReturnNullIgnored" if="js.avail">
     <t message="testJsReturnNullIgnored">
       <scriptcondition language="javascript" value="true">
         null
@@ -145,7 +153,7 @@
     </t>
   </target>
 
-  <target name="testJsReturnNonBooleanIgnored">
+  <target name="testJsReturnNonBooleanIgnored" if="js.avail">
     <t message="testJsReturnNonBooleanIgnored">
       <scriptcondition language="javascript" value="true">
         new java.lang.Integer(20)
