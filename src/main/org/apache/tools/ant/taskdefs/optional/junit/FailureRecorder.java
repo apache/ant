@@ -17,7 +17,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * <p>Collects all failing test <i>cases</i> and creates a new JUnit test class containing 
+ * <p>Collects all failing test <i>cases</i> and creates a new JUnit test class containing
  * a suite() method which calls these failed tests.</p>
  * <p>Having classes <i>A</i> ... <i>D</i> with each several testcases you could earn a new
  * test class like
@@ -35,8 +35,8 @@ import org.apache.tools.ant.util.FileUtils;
  *         return suite;
  *     }
  * }
- * </pre> 
- * 
+ * </pre>
+ *
  * @since Ant 1.7.1
  */
 /*
@@ -46,10 +46,10 @@ import org.apache.tools.ant.util.FileUtils;
  * at each end of a test suite. The last run will contain all failed tests.
  */
 public class FailureRecorder implements JUnitResultFormatter {
-    
-    /** 
-     * This is the name of a magic System property ({@value}). The value of this 
-     * <b>System</b> property should point to the location where to store the 
+
+    /**
+     * This is the name of a magic System property ({@value}). The value of this
+     * <b>System</b> property should point to the location where to store the
      * generated class (without suffix).
      * Default location and name is defined in DEFAULT_CLASS_LOCATION.
      * @see #DEFAULT_CLASS_LOCATION
@@ -58,19 +58,19 @@ public class FailureRecorder implements JUnitResultFormatter {
 
     /** Default location and name for the generated JUnit class file. {@value} */
     public static final String DEFAULT_CLASS_LOCATION = System.getProperty("java.io.tmpdir") + "FailedTests";
-    
+
     /** Class names of failed tests without duplicates. */
     private static HashSet/*<Test>*/ failedTests = new HashSet();
-    
+
     /** A writer for writing the generated source to. */
     private PrintWriter writer;
-    
+
     /**
-     * Location and name of the generated JUnit class. 
+     * Location and name of the generated JUnit class.
      * Lazy instantiated via getLocationName().
      */
     private static String locationName;
-    
+
     //TODO: Dont set the locationName via System.getProperty - better
     //      via Ant properties. But how to access these?
     private String getLocationName() {
@@ -82,7 +82,7 @@ public class FailureRecorder implements JUnitResultFormatter {
     }
 
     /**
-     * After each test suite, the whole new JUnit class will be regenerated. 
+     * After each test suite, the whole new JUnit class will be regenerated.
      * @see org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter#endTestSuite(org.apache.tools.ant.taskdefs.optional.junit.JUnitTest)
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
@@ -102,13 +102,13 @@ public class FailureRecorder implements JUnitResultFormatter {
             }
             createTestSuiteFooter();
             createClassFooter();
-            
+
             FileUtils.close(writer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void addError(Test test, Throwable throwable) {
         failedTests.add(test);
     }
@@ -140,9 +140,9 @@ public class FailureRecorder implements JUnitResultFormatter {
     public void startTest(Test test) {
         // not in use
     }
-    
+
     // "Templates" for generating the JUnit class
-    
+
     private void createClassHeader() {
         String className = getLocationName().replace('\\', '/');
         if (className.indexOf('/') > -1) {
@@ -163,12 +163,12 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.println("        super(s);");
         writer.println("    }");
     }
-    
+
     private void createTestSuiteHeader() {
         writer.println("    public static Test suite() {");
         writer.println("        TestSuite suite = new TestSuite();");
     }
-    
+
     private void createAddTestToSuite(Test test) {
         writer.print("        suite.addTest( new ");
         writer.print( getClassName(test) );
@@ -181,13 +181,13 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.println("        return suite;");
         writer.println("    }");
     }
-    
+
     private void createClassFooter() {
         writer.println("}");
     }
-    
+
     // Helper methods
-    
+
     private String getMethodName(Test test) {
         String methodName = test.toString();
         return methodName.substring(0, methodName.indexOf('('));
@@ -196,5 +196,5 @@ public class FailureRecorder implements JUnitResultFormatter {
     private String getClassName(Test test) {
         return test.getClass().getName();
     }
-    
+
 }

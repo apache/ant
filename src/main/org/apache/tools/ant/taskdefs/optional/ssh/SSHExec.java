@@ -56,7 +56,7 @@ public class SSHExec extends SSHBase {
     private String outputProperty = null;   // like <exec>
     private File outputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
-    
+
     private Resource commandResource = null;
 
     private static final String TIMEOUT_MESSAGE =
@@ -86,7 +86,7 @@ public class SSHExec extends SSHBase {
     public void setCommandResource(String f) {
         this.commandResource = new FileResource(new File(f));
     }
-    
+
     /**
      * The connection can be dropped after a specified number of
      * milliseconds. This is sometimes useful when a connection may be
@@ -166,7 +166,7 @@ public class SSHExec extends SSHBase {
             }
         }
     }
-    
+
     private void executeCommand(String cmd) throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));

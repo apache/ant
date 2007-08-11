@@ -49,7 +49,7 @@ public class ManifestTask extends Task {
      * Specifies the valid characters which can be used in attribute names.
      * {@value}
      */
-    public final String VALID_ATTRIBUTE_CHARS = 
+    public final String VALID_ATTRIBUTE_CHARS =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345679-_";
 
     /**
@@ -126,18 +126,18 @@ public class ManifestTask extends Task {
 
     /**
      * Checks the attribute agains the Jar-specification.
-     * 
+     *
      * Jar-Specification <i>"Name-Value pairs and Sections"</i>: <pre>
-     *   name:       alphanum *headerchar 
-     *   alphanum:   {A-Z} | {a-z} | {0-9} 
+     *   name:       alphanum *headerchar
+     *   alphanum:   {A-Z} | {a-z} | {0-9}
      *   headerchar: alphanum | - | _
      * </pre>
      * So the resulting regexp would be <tt>[A-Za-z0-9][A-Za-z0-9-_]*</tt>.
-     * 
+     *
      * Because of JDK 1.2 compliance and the possible absence of a
      * regexp matcher we can not use regexps here. Instead we have to
      * check each character.
-     * 
+     *
      * @param attribute The attribute to check
      * @throws BuildException if the check fails
      */
@@ -148,7 +148,7 @@ public class ManifestTask extends Task {
         if (ch == '-' || ch == '_') {
             throw new BuildException("Manifest attribute names must not start with '" + ch + "'.");
         }
-        
+
         for (int i = 0; i < name.length(); i++) {
             ch = name.charAt(i);
             if (VALID_ATTRIBUTE_CHARS.indexOf(ch) < 0) {
@@ -156,7 +156,7 @@ public class ManifestTask extends Task {
             }
         }
     }
-    
+
     /**
      * The name of the manifest file to create/update.
      * Required if used as a task.

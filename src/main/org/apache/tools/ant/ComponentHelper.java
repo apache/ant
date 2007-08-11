@@ -418,7 +418,7 @@ public class ComponentHelper  {
 
     /**
      * This returns a list of restricted definitions for a name.
-     * @param componentName the name to use. 
+     * @param componentName the name to use.
      * @return the list of restricted definitions for a particular name.
      */
     public List getRestrictedDefinitions(String componentName) {

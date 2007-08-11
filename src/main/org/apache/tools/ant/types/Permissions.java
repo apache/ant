@@ -51,7 +51,7 @@ public class Permissions {
     private SecurityManager origSm = null;
     private boolean active = false;
     private boolean delegateToOldSM;
-    
+
     // Mandatory constructor for permission object.
     private static final Class[] PARAMS = { String.class, String.class };
 

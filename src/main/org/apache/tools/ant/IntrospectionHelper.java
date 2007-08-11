@@ -1400,7 +1400,7 @@ public final class IntrospectionHelper  {
 
         MethodAndObject methodAndObject
             = restricted != null ? restricted : topLevel;
-        
+
         Object rObject = methodAndObject.object;
         if (methodAndObject.object instanceof PreSetDef.PreSetDefinition) {
             rObject = ((PreSetDef.PreSetDefinition) methodAndObject.object)
@@ -1408,7 +1408,7 @@ public final class IntrospectionHelper  {
         }
         final Object nestedObject = methodAndObject.object;
         final Object realObject = rObject;
- 
+
         return new NestedCreator(methodAndObject.method) {
             Object create(Project project, Object parent, Object ignore)
                     throws InvocationTargetException, IllegalAccessException {

@@ -55,7 +55,7 @@ public class ReflectUtil {
 
     /**
      * Call a method on the object with no parameters.
-     * Note: Unlike the invoke method above, this 
+     * Note: Unlike the invoke method above, this
      * calls class or static methods, not instance methods.
      * @param obj  the object to invoke the method on.
      * @param methodName the name of the method to call
@@ -72,7 +72,7 @@ public class ReflectUtil {
             return null; // NotReached
         }
     }
-    
+
     /**
      * Call a method on the object with one argument.
      * @param obj  the object to invoke the method on.
@@ -168,14 +168,14 @@ public class ReflectUtil {
     }
 
     /**
-     * A method to test if an object responds to a given 
+     * A method to test if an object responds to a given
      * message (method call)
      * @param o the object
      * @param methodName the method to check for
      * @return
      * @throws BuildException
      */
-    public static boolean respondsTo(Object o, String methodName) 
+    public static boolean respondsTo(Object o, String methodName)
         throws BuildException {
         try {
             Method[] methods = o.getClass().getMethods();

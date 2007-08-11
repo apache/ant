@@ -153,7 +153,7 @@ public abstract class Definer extends DefBase {
      protected void setRestrict(boolean restrict) {
          this.restrict = restrict;
      }
- 
+
 
     /**
      * What to do if there is an error in loading the class.

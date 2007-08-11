@@ -515,7 +515,7 @@ public class Property extends Task {
 
     /**
      * Loads the properties defined in the InputStream into the given
-     * property. On Java5+ it supports reading from XML based property 
+     * property. On Java5+ it supports reading from XML based property
      * definition.
      * @param props The property object to load into
      * @param is    The input stream from where to load
@@ -527,7 +527,7 @@ public class Property extends Task {
      */
     private void loadProperties(Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
-            // load the xml based property definition 
+            // load the xml based property definition
             // use reflection because of bwc to Java 1.3
             try {
                 Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
