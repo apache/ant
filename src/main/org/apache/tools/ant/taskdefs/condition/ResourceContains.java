@@ -60,7 +60,7 @@ public class ResourceContains implements Condition {
 
     /**
      * Sets the resource to search
-     * @param r
+     * @param r the value to use.
      */
     public void setResource(String r) {
         this.resource = new FileResource(new File(r));
@@ -69,7 +69,7 @@ public class ResourceContains implements Condition {
     /**
      * Sets the refid to search; should indicate a resource directly
      * or by way of a single-element ResourceCollection.
-     * @param refid
+     * @param refid the value to use.
      */
     public void setRefid(String refid) {
         this.refid = refid;
@@ -88,8 +88,8 @@ public class ResourceContains implements Condition {
                         o = rc.iterator().next();
                     }
                 } else {
-                    throw new BuildException("Illegal value at '" + refid +"': "
-                            + String.valueOf(o));
+                    throw new BuildException(
+                        "Illegal value at '" + refid + "': " + String.valueOf(o));
                 }
             }
             this.resource = (Resource) o;
@@ -100,15 +100,15 @@ public class ResourceContains implements Condition {
 
     /**
      * Sets the substring to look for
-     * @param substring
+     * @param substring the value to use.
      */
     public void setSubstring(String substring) {
         this.substring = substring;
     }
 
     /**
-     * Sets case sensitivity
-     * @param casesensitive
+     * Sets case sensitivity attribute.
+     * @param casesensitive the value to use.
      */
     public void setCasesensitive(boolean casesensitive) {
         this.casesensitive = casesensitive;
@@ -128,15 +128,17 @@ public class ResourceContains implements Condition {
     }
 
     /**
-     * Evaluates
-     * Returns true if the substring is contained in the resource
+     * Evaluates the condition.
+     * @return true if the substring is contained in the resource
+     * @throws BuildException if there is a problem.
      */
     public synchronized boolean eval() throws BuildException {
         validate();
 
         if (substring.length() == 0) {
             if (getProject() != null) {
-                getProject().log("Substring is empty; returning true", Project.MSG_VERBOSE);
+                getProject().log("Substring is empty; returning true",
+                                 Project.MSG_VERBOSE);
             }
             return true;
         }

@@ -80,7 +80,7 @@ public class SSHExec extends SSHBase {
 
     /**
      * Sets a commandResource from a file
-     * @param f
+     * @param f the value to use.
      * @since Ant 1.7.1
      */
     public void setCommandResource(String f) {
@@ -150,14 +150,15 @@ public class SSHExec extends SSHBase {
 
         /* called once */
         if (command != null) {
-            log("cmd : "+command, Project.MSG_INFO);
+            log("cmd : " + command, Project.MSG_INFO);
             executeCommand(command);
         } else { // read command resource and execute for each command
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(commandResource.getInputStream()));
+                BufferedReader br = new BufferedReader(
+                    new InputStreamReader(commandResource.getInputStream()));
                 String cmd;
-                while((cmd = br.readLine()) != null) {
-                    log("cmd : "+cmd, Project.MSG_INFO);
+                while ((cmd = br.readLine()) != null) {
+                    log("cmd : " + cmd, Project.MSG_INFO);
                     executeCommand(cmd);
                 }
                 FileUtils.close(br);

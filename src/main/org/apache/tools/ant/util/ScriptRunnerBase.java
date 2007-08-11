@@ -215,7 +215,7 @@ public abstract class ScriptRunnerBase {
             in = new BufferedReader(reader);
             script += FileUtils.readFully(in);
         } catch (IOException ex) {
-            throw new BuildException("Failed to read "+ name,ex);
+            throw new BuildException("Failed to read " + name, ex);
         } finally {
             FileUtils.close(in);
         }
@@ -234,9 +234,10 @@ public abstract class ScriptRunnerBase {
         try {
             in = sourceResource.getInputStream();
         } catch (IOException e) {
-            throw new BuildException("Failed to open "+name,e);
+            throw new BuildException("Failed to open " + name, e);
         } catch (UnsupportedOperationException e) {
-            throw new BuildException("Failed to open " + name+ " -it is not readable",e);
+            throw new BuildException(
+                "Failed to open " + name + " -it is not readable", e);
         }
         readSource(new InputStreamReader(in), name);
     }
