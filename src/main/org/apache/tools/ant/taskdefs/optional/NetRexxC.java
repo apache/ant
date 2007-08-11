@@ -36,6 +36,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
+// CheckStyle:InnerAssignmentCheck OFF - used too much in the file to be removed
 /**
  * Compiles NetRexx source files.
  * This task can take the following
