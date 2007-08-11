@@ -1,9 +1,10 @@
 /*
- * Copyright  2007 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.listener;
 
 import org.apache.tools.ant.BuildEvent;
@@ -26,7 +26,8 @@ import org.apache.tools.ant.util.StringUtils;
 import java.io.File;
 
 /**
- * This is a special logger that is designed to make it easier to work with big projects, those that use imports and
+ * This is a special logger that is designed to make it easier to work
+ * with big projects, those that use imports and
  * subant to build complex systems.
  *
  * @since Ant1.7.1
@@ -38,15 +39,17 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
      * Header string for the log.
      * {@value}
      */
-    public static final String HEADER="======================================================================";
+    public static final String HEADER
+        = "======================================================================";
     /**
      * Footer string for the log.
      * {@value}
      */
-    public static final String FOOTER=HEADER;
+    public static final String FOOTER = HEADER;
 
     /**
-    * This is an override point: the message that indicates whether a build failed. Subclasses can change/enhance the
+    * This is an override point: the message that indicates whether
+    * a build failed. Subclasses can change/enhance the
     * message.
     *
     * @return The classic "BUILD FAILED" plus a timestamp
@@ -56,7 +59,8 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
     }
 
     /**
-     * This is an override point: the message that indicates that a build succeeded. Subclasses can change/enhance the
+     * This is an override point: the message that indicates that
+     * a build succeeded. Subclasses can change/enhance the
      * message.
      *
      * @return The classic "BUILD SUCCESSFUL" plus a timestamp
@@ -113,13 +117,14 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
         Project project = event.getProject();
 
         File base = project == null ? null : project.getBaseDir();
-        String path = base == null ?
-                "With no base directory"
-                : "In " + base.getAbsolutePath();
+        String path =
+            (base == null)
+            ? "With no base directory"
+            : "In " + base.getAbsolutePath();
         printMessage(StringUtils.LINE_SEP + getHeader()
-                + StringUtils.LINE_SEP +"Entering project " + name
+                + StringUtils.LINE_SEP + "Entering project " + name
                         + StringUtils.LINE_SEP + path
-                        +StringUtils.LINE_SEP + getFooter(),
+                        + StringUtils.LINE_SEP + getFooter(),
                 out,
                 event.getPriority());
     }
@@ -135,7 +140,7 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
         if (name == null) {
             name = "";
         } else {
-            name = '"'+name+'"';
+            name = '"' + name + '"';
         }
         return name;
     }
