@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
  * methods, catch any exceptions, converting them
  * to BuildExceptions.
  */
-
+// CheckStyle:FinalClassCheck OFF - backward compatible
 public class ReflectUtil {
 
     /**  private constructor */
@@ -64,7 +64,7 @@ public class ReflectUtil {
     public static Object invokeStatic(Object obj, String methodName) {
         try {
             Method method;
-            method = ((Class)obj).getMethod(
+            method = ((Class) obj).getMethod(
                     methodName, (Class[]) null);
             return method.invoke(obj, (Object[]) null);
         }  catch (Exception t) {
@@ -152,6 +152,7 @@ public class ReflectUtil {
      * A method to convert an invocationTargetException to
      * a buildexception.
      * @param t the invocation target exception.
+     * @return the converted exception.
      * @since ant 1.7.1
      */
     public static BuildException toBuildException(Exception t) {
@@ -172,20 +173,20 @@ public class ReflectUtil {
      * message (method call)
      * @param o the object
      * @param methodName the method to check for
-     * @return
-     * @throws BuildException
+     * @return true if the object has the method.
+     * @throws BuildException if there is a problem.
      */
     public static boolean respondsTo(Object o, String methodName)
         throws BuildException {
         try {
             Method[] methods = o.getClass().getMethods();
-            for(int i=0; i<methods.length; i++) {
-                if(methods[i].getName().equals(methodName)) {
+            for (int i = 0; i < methods.length; i++) {
+                if (methods[i].getName().equals(methodName)) {
                     return true;
                 }
             }
             return false;
-        } catch(Exception t) {
+        } catch (Exception t) {
             throw toBuildException(t);
         }
     }
