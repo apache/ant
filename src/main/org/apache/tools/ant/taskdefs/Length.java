@@ -188,7 +188,7 @@ public class Length extends Task implements Condition {
         Long ell;
         if (STRING.equals(mode)) {
             ell = new Long(getLength(string, getTrim()));
-        } else { 
+        } else {
             AccumHandler h = new AccumHandler();
             handleResources(h);
             ell = new Long(h.getAccum());

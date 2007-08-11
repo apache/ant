@@ -171,13 +171,13 @@ public class FileUtils {
     /**
      * Convenience method to copy a file from a source to a destination specifying if token
      * filtering must be used and if source files may overwrite newer destination files.
-     * 
+     *
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param overwrite Whether or not the destination file should be overwritten if it already
      *            exists.
-     * 
+     *
      * @throws IOException if the copying fails.
      */
     public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
@@ -190,7 +190,7 @@ public class FileUtils {
      * filtering must be used, if source files may overwrite newer destination files and the last
      * modified time of <code>destFile</code> file should be made equal to the last modified time
      * of <code>sourceFile</code>.
-     * 
+     *
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
@@ -198,7 +198,7 @@ public class FileUtils {
      *            exists.
      * @param preserveLastModified Whether or not the last modified time of the resulting file
      *            should be set to that of the source file.
-     * 
+     *
      * @throws IOException if the copying fails.
      */
     public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
@@ -211,7 +211,7 @@ public class FileUtils {
      * filtering must be used, if source files may overwrite newer destination files and the last
      * modified time of <code>destFile</code> file should be made equal to the last modified time
      * of <code>sourceFile</code>.
-     * 
+     *
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
@@ -220,9 +220,9 @@ public class FileUtils {
      * @param preserveLastModified Whether or not the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
-     * 
+     *
      * @throws IOException if the copying fails.
-     * 
+     *
      * @since Ant 1.5
      */
     public void copyFile(String sourceFile, String destFile,
@@ -272,7 +272,7 @@ public class FileUtils {
      * filtering must be used, if filter chains must be used, if source files may overwrite newer
      * destination files and the last modified time of <code>destFile</code> file should be made
      * equal to the last modified time of <code>sourceFile</code>.
-     * 
+     *
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
@@ -284,9 +284,9 @@ public class FileUtils {
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
      * @param project the project instance.
-     * 
+     *
      * @throws IOException if the copying fails.
-     * 
+     *
      * @since Ant 1.6
      */
     public void copyFile(String sourceFile, String destFile,
@@ -300,10 +300,10 @@ public class FileUtils {
 
     /**
      * Convenience method to copy a file from a source to a destination. No filtering is performed.
-     * 
+     *
      * @param sourceFile the file to copy from. Must not be <code>null</code>.
      * @param destFile the file to copy to. Must not be <code>null</code>.
-     * 
+     *
      * @throws IOException if the copying fails.
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
@@ -377,7 +377,7 @@ public class FileUtils {
      * filtering must be used, if source files may overwrite newer destination files, the last
      * modified time of <code>destFile</code> file should be made equal to the last modified time
      * of <code>sourceFile</code> and which character encoding to assume.
-     * 
+     *
      * @param sourceFile the file to copy from. Must not be <code>null</code>.
      * @param destFile the file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
@@ -386,9 +386,9 @@ public class FileUtils {
      * @param preserveLastModified Whether or not the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
-     * 
+     *
      * @throws IOException if the copying fails.
-     * 
+     *
      * @since Ant 1.5
      */
     public void copyFile(File sourceFile, File destFile,
@@ -874,7 +874,7 @@ public class FileUtils {
     /**
      * This was originally an emulation of {@link File#getParentFile} for JDK 1.1, but it is now
      * implemented using that method (Ant 1.6.3 onwards).
-     * 
+     *
      * @param f the file whose parent is required.
      * @return the given file's parent, or null if the file does not have a parent.
      * @since 1.10
@@ -1183,7 +1183,7 @@ public class FileUtils {
      * Get the granularity of file timestamps. The choice is made based on OS, which is
      * incorrect--it should really be by filesystem. We do not have an easy way to probe for file
      * systems, however, so this heuristic gives us a decent default.
-     * 
+     *
      * @return the difference, in milliseconds, which two file timestamps must have in order for the
      *         two files to be considered to have different timestamps.
      */
@@ -1290,7 +1290,7 @@ public class FileUtils {
     public boolean isUpToDate(long sourceTime, long destTime) {
         return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
     }
-    
+
     /**
      * Close a Writer without throwing any exception if something went wrong.
      * Do not attempt to close it if the argument is null.
@@ -1371,13 +1371,13 @@ public class FileUtils {
      * Implementation note:<br/> This function may throw an IOException if an I/O error occurs
      * because its use of the canonical pathname may require filesystem queries.
      * </p>
-     * 
+     *
      * @param fromFile the <code>File</code> to calculate the path from
      * @param toFile the <code>File</code> to calculate the path to
      * @return the relative path between the files
      * @throws Exception for undocumented reasons
      * @see File#getCanonicalPath()
-     * 
+     *
      * @since Ant 1.7
      */
     public static String getRelativePath(File fromFile, File toFile) throws Exception {
@@ -1423,10 +1423,10 @@ public class FileUtils {
 
     /**
      * Gets all names of the path as an array of <code>String</code>s.
-     * 
+     *
      * @param path to get names from
      * @return <code>String</code>s, never <code>null</code>
-     * 
+     *
      * @since Ant 1.7
      */
     public static String[] getPathStack(String path) {
@@ -1444,10 +1444,10 @@ public class FileUtils {
 
     /**
      * Gets path from a <code>List</code> of <code>String</code>s.
-     * 
+     *
      * @param pathStack <code>List</code> of <code>String</code>s to be concatenated as a path.
      * @return <code>String</code>, never <code>null</code>
-     * 
+     *
      * @since Ant 1.7
      */
     public static String getPath(List pathStack) {
@@ -1457,11 +1457,11 @@ public class FileUtils {
 
     /**
      * Gets path from a <code>List</code> of <code>String</code>s.
-     * 
+     *
      * @param pathStack <code>List</code> of <code>String</code>s to be concated as a path.
      * @param separatorChar <code>char</code> to be used as separator between names in path
      * @return <code>String</code>, never <code>null</code>
-     * 
+     *
      * @since Ant 1.7
      */
     public static String getPath(final List pathStack, final char separatorChar) {

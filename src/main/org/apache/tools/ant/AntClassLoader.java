@@ -851,11 +851,11 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * resource before this one. If the resource matches both the "use parent
      * classloader first" and the "use this classloader first" lists, the latter
      * takes priority.
-     * 
+     *
      * @param resourceName
      *            The name of the resource to check. Must not be
      *            <code>null</code>.
-     * 
+     *
      * @return whether or not the parent classloader should be checked for a
      *         resource before this one is.
      */

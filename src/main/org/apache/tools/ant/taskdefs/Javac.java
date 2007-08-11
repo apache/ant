@@ -836,7 +836,7 @@ public class Javac extends MatchingTask {
     public boolean isIncludeDestClasses() {
         return includeDestClasses;
     }
-        
+
     /**
      * Get the result of the javac task (success or failure).
      * @return true if compilation succeeded, or

@@ -1011,7 +1011,7 @@ public class ComponentHelper  {
      */
     private static class AntTypeTable extends Hashtable {
         private static final long serialVersionUID = -3060442320477772028L;
-        
+
         private Project project;
 
         AntTypeTable(Project project) {

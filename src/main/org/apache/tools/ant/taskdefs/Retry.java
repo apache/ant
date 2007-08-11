@@ -31,19 +31,19 @@ public class Retry extends Task implements TaskContainer {
      * task to execute n times
      */
     private Task nestedTask;
-    
+
     /**
      * set retryCount to 1 by default
      */
     private int retryCount = 1;
-    
+
     /**
      * set the task
      */
     public void addTask(Task t) {
         nestedTask = t;
     }
-    
+
     /**
      * set the number of times to retry the task
      * @param n
@@ -51,7 +51,7 @@ public class Retry extends Task implements TaskContainer {
     public void setRetryCount(int n) {
         retryCount = n;
     }
-    
+
     /**
      * perform the work
      */

@@ -300,7 +300,7 @@ public final class Locator {
         }
         return sb.toString(URI_ENCODING);
     }
-    
+
     /**
      * Encodes an Uri with % characters.
      * The URI is escaped

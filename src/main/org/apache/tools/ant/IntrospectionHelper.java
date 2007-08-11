@@ -44,7 +44,7 @@ import org.apache.tools.ant.util.StringUtils;
  * Ant XML and Java class instances. This is not the best place for someone new
  * to Ant to start contributing to the codebase, as a change here can break the
  * entire system in interesting ways. Always run a full test of Ant before checking
- * in/submitting changes to this file.  
+ * in/submitting changes to this file.
  *
  * The class is final and has a private constructor.
  * To get an instance for a specific (class,project) combination, use {@link #getHelper(Project,Class)}.

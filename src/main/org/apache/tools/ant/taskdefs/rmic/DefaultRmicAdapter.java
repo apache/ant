@@ -275,7 +275,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     /**
      * Strip out all -J args from the command list. Invoke this from
      * {@link #preprocessCompilerArgs(String[])} if you have a non-forking
-     * compiler. 
+     * compiler.
      * @param compilerArgs the original compiler arguments
      * @return the filtered set.
      */

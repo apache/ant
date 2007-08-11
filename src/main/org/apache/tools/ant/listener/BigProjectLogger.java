@@ -162,7 +162,7 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
 
     /**
      * Override point: return the footer string for the entry/exit message
-     * @return the footer string 
+     * @return the footer string
      */
     protected String getFooter() {
         return FOOTER;

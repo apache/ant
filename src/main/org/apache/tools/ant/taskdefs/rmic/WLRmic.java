@@ -115,5 +115,5 @@ public class WLRmic extends DefaultRmicAdapter {
      */
     protected String[] preprocessCompilerArgs(String[] compilerArgs) {
         return filterJvmCompilerArgs(compilerArgs);
-    }    
+    }
 }

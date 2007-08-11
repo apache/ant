@@ -26,11 +26,11 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * Simple Factory Class that produces an implementation of RegexpMatcher based on the system
  * property <code>ant.regexp.regexpimpl</code> and the classes available.
- * 
+ *
  * <p>
  * In a more general framework this class would be abstract and have a static newInstance method.
  * </p>
- * 
+ *
  */
 public class RegexpMatcherFactory {
 
@@ -135,7 +135,7 @@ public class RegexpMatcherFactory {
      */
     public static boolean regexpMatcherPresent(Project project) {
         try {
-            // The factory throws a BuildException if no usable matcher 
+            // The factory throws a BuildException if no usable matcher
             // cant be instantiated. We dont need the matcher itself here.
             new RegexpMatcherFactory().newRegexpMatcher(project);
             return true;
