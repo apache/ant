@@ -281,16 +281,16 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      */
     protected String[] filterJvmCompilerArgs(String[] compilerArgs) {
         int len = compilerArgs.length;
-        List args=new ArrayList(len);
-        for(int i=0;i<len;i++) {
-            String arg=compilerArgs[i];
-            if(!arg.startsWith("-J")) {
+        List args = new ArrayList(len);
+        for (int i = 0; i < len; i++) {
+            String arg = compilerArgs[i];
+            if (!arg.startsWith("-J")) {
                 args.add(arg);
             } else {
-                attributes.log("Dropping "+arg+" from compiler arguments");
+                attributes.log("Dropping " + arg + " from compiler arguments");
             }
         }
-        int count=args.size();
+        int count = args.size();
         return (String[]) args.toArray(new String[count]);
     }
 

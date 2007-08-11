@@ -28,6 +28,7 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;
 
+// CheckStyle:LineLengthCheck OFF - urls are long!
 /**
  * The Locator is a utility class which is used to find certain items
  * in the environment.
@@ -44,6 +45,7 @@ import java.util.Locale;
  * Be very careful when making changes to this class, as a break will upset a lot of people.
  * @since Ant 1.6
  */
+// CheckStyle:LineLengthCheck ON - urls are long!
 public final class Locator {
     /**
      * encoding used to represent URIs
@@ -59,7 +61,9 @@ public final class Locator {
     private static char[] gAfterEscaping2 = new char[128];
     private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
                                      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-    public static final String ERROR_NOT_FILE_URI = "Can only handle valid file: URIs, not ";
+    /** Error string used when an invalid uri is seen */
+    public static final String ERROR_NOT_FILE_URI
+        = "Can only handle valid file: URIs, not ";
 
     // initialize the above 3 arrays
     static {
@@ -202,9 +206,11 @@ public final class Locator {
                 Throwable e2 = e.getTargetException();
                 if (e2 instanceof IllegalArgumentException) {
                     // Bad URI, pass this on.
-                    // no, this is downgraded to a warning after various JRE bugs surfaced. Hand off
+                    // no, this is downgraded to a warning after various
+                    // JRE bugs surfaced. Hand off
                     // to our built in code on a failure
-                    //throw new IllegalArgumentException("Bad URI " + uri + ":" + e2.getMessage(), e2);
+                    //throw new IllegalArgumentException(
+                    //   "Bad URI " + uri + ":" + e2.getMessage(), e2);
                     e2.printStackTrace();
 
                 } else {
@@ -235,7 +241,7 @@ public final class Locator {
             // Ignore malformed exception
         }
         if (url == null || !("file".equals(url.getProtocol()))) {
-            throw new IllegalArgumentException(ERROR_NOT_FILE_URI +uri);
+            throw new IllegalArgumentException(ERROR_NOT_FILE_URI + uri);
         }
         StringBuffer buf = new StringBuffer(url.getHost());
         if (buf.length() > 0) {
@@ -262,8 +268,9 @@ public final class Locator {
         } catch (UnsupportedEncodingException exc) {
             // not sure whether this is clean, but this method is
             // declared not to throw exceptions.
-            throw new IllegalStateException("Could not convert URI "+uri+" to path: "
-                                            + exc.getMessage());
+            throw new IllegalStateException(
+                "Could not convert URI " + uri + " to path: "
+                + exc.getMessage());
         }
         return path;
     }
@@ -415,7 +422,8 @@ public final class Locator {
         }
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
-        String libToolsJar= File.separator + "lib" + File.separator + "tools.jar";
+        String libToolsJar
+            = File.separator + "lib" + File.separator + "tools.jar";
         String javaHome = System.getProperty("java.home");
         File toolsJar = new File(javaHome + libToolsJar);
         if (toolsJar.exists()) {
@@ -424,7 +432,7 @@ public final class Locator {
         }
         if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(0, javaHome.length() - 4);
-            toolsJar = new File(javaHome + libToolsJar );
+            toolsJar = new File(javaHome + libToolsJar);
         }
         if (!toolsJar.exists()) {
             System.out.println("Unable to locate tools.jar. "
