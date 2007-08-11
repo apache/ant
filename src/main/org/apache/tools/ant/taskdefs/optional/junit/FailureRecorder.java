@@ -1,3 +1,20 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
@@ -37,13 +54,12 @@ import org.apache.tools.ant.util.FileUtils;
  * }
  * </pre>
  *
- * @since Ant 1.7.1
- */
-/*
+ *
  * Because each running test case gets its own formatter, we collect
  * the failing test cases in a static list. Because we dont have a finalizer
  * method in the formatters "lifecycle", we regenerate the new java source
  * at each end of a test suite. The last run will contain all failed tests.
+ * @since Ant 1.7.1
  */
 public class FailureRecorder implements JUnitResultFormatter {
 
@@ -54,10 +70,12 @@ public class FailureRecorder implements JUnitResultFormatter {
      * Default location and name is defined in DEFAULT_CLASS_LOCATION.
      * @see #DEFAULT_CLASS_LOCATION
      */
-    public static final String MAGIC_PROPERTY_CLASS_LOCATION = "ant.junit.failureCollector";
+    public static final String MAGIC_PROPERTY_CLASS_LOCATION
+        = "ant.junit.failureCollector";
 
     /** Default location and name for the generated JUnit class file. {@value} */
-    public static final String DEFAULT_CLASS_LOCATION = System.getProperty("java.io.tmpdir") + "FailedTests";
+    public static final String DEFAULT_CLASS_LOCATION
+        = System.getProperty("java.io.tmpdir") + "FailedTests";
 
     /** Class names of failed tests without duplicates. */
     private static HashSet/*<Test>*/ failedTests = new HashSet();
@@ -81,12 +99,18 @@ public class FailureRecorder implements JUnitResultFormatter {
         return locationName;
     }
 
+    // CheckStyle:LineLengthCheck OFF - see is long
     /**
      * After each test suite, the whole new JUnit class will be regenerated.
+     * @param suite the test suite
+     * @throws BuildException if there is a problem.
      * @see org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter#endTestSuite(org.apache.tools.ant.taskdefs.optional.junit.JUnitTest)
      */
+    // CheckStyle:LineLengthCheck ON
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        if (failedTests.isEmpty()) return;
+        if (failedTests.isEmpty()) {
+            return;
+        }
         try {
             File sourceFile = new File(getLocationName() + ".java");
             sourceFile.delete();
@@ -96,7 +120,7 @@ public class FailureRecorder implements JUnitResultFormatter {
             createTestSuiteHeader();
             for (Iterator iter = failedTests.iterator(); iter.hasNext();) {
                 Test test = (Test) iter.next();
-                if (test!=null) {
+                if (test != null) {
                     createAddTestToSuite(test);
                 }
             }
@@ -109,34 +133,66 @@ public class FailureRecorder implements JUnitResultFormatter {
         }
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void addError(Test test, Throwable throwable) {
         failedTests.add(test);
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void addFailure(Test test, AssertionFailedError error) {
         failedTests.add(test);
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void setOutput(OutputStream out) {
         // not in use
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void setSystemError(String err) {
         // not in use
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void setSystemOutput(String out) {
         // not in use
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void startTestSuite(JUnitTest suite) throws BuildException {
         // not in use
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void endTest(Test test) {
         // not in use
     }
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void startTest(Test test) {
         // not in use
     }
@@ -146,14 +202,14 @@ public class FailureRecorder implements JUnitResultFormatter {
     private void createClassHeader() {
         String className = getLocationName().replace('\\', '/');
         if (className.indexOf('/') > -1) {
-            className = className.substring(className.lastIndexOf('/')+1);
+            className = className.substring(className.lastIndexOf('/') +1 );
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
         writer.print("// generated on: ");
         writer.println(sdf.format(new Date()));
         writer.println("import junit.framework.*;");
         writer.print("public class ");
-        writer.print( className );
+        writer.print(className);
         // If this class does not extend TC, Ant doesnt run these
         writer.println(" extends TestCase {");
         // no-arg constructor
@@ -171,9 +227,9 @@ public class FailureRecorder implements JUnitResultFormatter {
 
     private void createAddTestToSuite(Test test) {
         writer.print("        suite.addTest( new ");
-        writer.print( getClassName(test) );
+        writer.print(getClassName(test));
         writer.print("(\"");
-        writer.print( getMethodName(test) );
+        writer.print(getMethodName(test));
         writer.println("\") );");
     }
 
