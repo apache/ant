@@ -61,10 +61,10 @@ public class FileUtils {
     private static Random rand = new Random(System.currentTimeMillis()
             + Runtime.getRuntime().freeMemory());
 
-    private static final boolean onNetWare = Os.isFamily("netware");
-    private static final boolean onDos = Os.isFamily("dos");
-    private static final boolean onWin9x = Os.isFamily("win9x");
-    private static final boolean onWindows = Os.isFamily("windows");
+    private static final boolean ON_NETWARE = Os.isFamily("netware");
+    private static final boolean ON_DOS = Os.isFamily("dos");
+    private static final boolean ON_WIN9X = Os.isFamily("win9x");
+    private static final boolean ON_WINDOWS = Os.isFamily("windows");
 
     static final int BUF_SIZE = 8192;
 
@@ -186,24 +186,31 @@ public class FileUtils {
     }
 
     /**
-     * Convenience method to copy a file from a source to a destination specifying if token
-     * filtering must be used, if source files may overwrite newer destination files and the last
-     * modified time of <code>destFile</code> file should be made equal to the last modified time
+     * Convenience method to copy a file from a source to a destination
+     * specifying if token
+     * filtering must be used, if source files may overwrite newer destination
+     * files and the last
+     * modified time of <code>destFile</code> file should be made equal to
+     * the last modified time
      * of <code>sourceFile</code>.
      *
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
-     *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param overwrite Whether or not the destination file should be
+     *            overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *            the resulting file
      *            should be set to that of the source file.
      *
      * @throws IOException if the copying fails.
      */
-    public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
-                         boolean overwrite, boolean preserveLastModified) throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filters, overwrite, preserveLastModified);
+    public void copyFile(String sourceFile, String destFile,
+                         FilterSetCollection filters,
+                         boolean overwrite, boolean preserveLastModified)
+        throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), filters, overwrite,
+                 preserveLastModified);
     }
 
     /**
@@ -536,7 +543,7 @@ public class FileUtils {
      * @since Ant 1.7
      */
     public static boolean isContextRelativePath(String filename) {
-        if (!(onDos || onNetWare) || filename.length() == 0) {
+        if (!(ON_DOS || ON_NETWARE) || filename.length() == 0) {
             return false;
         }
         char sep = File.separatorChar;
@@ -567,11 +574,11 @@ public class FileUtils {
         char sep = File.separatorChar;
         filename = filename.replace('/', sep).replace('\\', sep);
         char c = filename.charAt(0);
-        if (!(onDos || onNetWare)) {
+        if (!(ON_DOS || ON_NETWARE)) {
             return (c == sep);
         }
         if (c == sep) {
-            if (!(onDos && len > 4 && filename.charAt(1) == sep)) {
+            if (!(ON_DOS && len > 4 && filename.charAt(1) == sep)) {
                 return false;
             }
             int nextsep = filename.indexOf(sep, 2);
@@ -580,7 +587,7 @@ public class FileUtils {
         int colon = filename.indexOf(':');
         return (Character.isLetter(c) && colon == 1
                 && filename.length() > 2 && filename.charAt(2) == sep)
-                || (onNetWare && colon > 0);
+                || (ON_NETWARE && colon > 0);
     }
 
     /**
@@ -687,7 +694,7 @@ public class FileUtils {
         }
         String root = null;
         int colon = path.indexOf(':');
-        if (colon > 0 && (onDos || onNetWare)) {
+        if (colon > 0 && (ON_DOS || ON_NETWARE)) {
 
             int next = colon + 1;
             root = path.substring(0, next);
@@ -1188,34 +1195,40 @@ public class FileUtils {
      *         two files to be considered to have different timestamps.
      */
     public long getFileTimestampGranularity() {
-        if (onWin9x) {
+        if (ON_WIN9X) {
             return FAT_FILE_TIMESTAMP_GRANULARITY;
         }
-        if (onWindows) {
+        if (ON_WINDOWS) {
             return NTFS_FILE_TIMESTAMP_GRANULARITY;
         }
-        if (onDos) {
+        if (ON_DOS) {
             return FAT_FILE_TIMESTAMP_GRANULARITY;
         }
         return UNIX_FILE_TIMESTAMP_GRANULARITY;
     }
 
     /**
-     * test whether a file or directory exists, with an error in the upper/lower case spelling of the name.
-     * Using this method is only interesting on case insensitive file systems (Windows).<br/>
+     * test whether a file or directory exists, with an error in the
+     * upper/lower case spelling of the name.
+     * Using this method is only interesting on case insensitive file systems
+     * (Windows).<br/>
      * It will return true only if 3 conditions are met :
      * <br/>
      * <ul>
      *   <li>operating system is case insensitive</li>
      *   <li>file exists</li>
-     *   <li>actual name from directory reading is different from the supplied argument</li>
+     *   <li>actual name from directory reading is different from the
+     *       supplied argument</li>
      * </ul>
      *  <br/>
-     * the purpose is to identify files or directories on case-insensitive filesystems whose case is not what is expected.<br/>
-     * Possibly to rename them afterwards to the desired upper/lowercase combination.
+     * the purpose is to identify files or directories on case-insensitive
+     * filesystems whose case is not what is expected.<br/>
+     * Possibly to rename them afterwards to the desired upper/lowercase
+     * combination.
      * <br/>
      * @param localFile file to test
-     * @return true if the file exists and the case of the actual file is not the case of the parameter
+     * @return true if the file exists and the case of the actual file
+     *              is not the case of the parameter
      * @since Ant 1.7.1
      */
     public boolean hasErrorInCase(File localFile) {
@@ -1400,10 +1413,14 @@ public class FileUtils {
         }
 
         int minLength = Math.min(fromPathStack.length, toPathStack.length);
-        int same = 1;
+        int same = 1; // Used outside the for loop
 
         // get index of parts which are equal
-        for (; same < minLength && fromPathStack[same].equals(toPathStack[same]); same++);
+        for (;
+             same < minLength && fromPathStack[same].equals(toPathStack[same]);
+             same++) {
+            // Do nothing
+        }
 
         List relativePathStack = new ArrayList();
 
