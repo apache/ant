@@ -370,7 +370,7 @@ public class FilterSet extends DataType implements Cloneable {
               }
            } catch (Exception ex) {
               throw new BuildException("Could not read filters from file: "
-                  + filtersFile,ex);
+                  + filtersFile, ex);
            } finally {
               FileUtils.close(in);
            }

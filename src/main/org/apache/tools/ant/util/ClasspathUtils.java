@@ -102,7 +102,8 @@ public class ClasspathUtils {
      * classloader behaviour)
      * @return The class loader
      */
-    public static ClassLoader getClassLoaderForPath(Project p, Reference ref, boolean reverseLoader) {
+    public static ClassLoader getClassLoaderForPath(
+        Project p, Reference ref, boolean reverseLoader) {
         String pathId = ref.getRefId();
         Object path = p.getReference(pathId);
         if (!(path instanceof Path)) {
@@ -423,8 +424,11 @@ public class ClasspathUtils {
          * @return a loader identifier.
          */
         public String getClassLoadId() {
-            return loaderId == null && classpathId != null ? MagicNames.REFID_CLASSPATH_LOADER_PREFIX
-                    + classpathId : loaderId;
+            if (loaderId == null && classpathId != null) {
+                return MagicNames.REFID_CLASSPATH_LOADER_PREFIX + classpathId;
+            } else {
+                return loaderId;
+            }
         }
 
         /**

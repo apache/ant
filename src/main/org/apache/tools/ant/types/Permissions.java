@@ -53,7 +53,7 @@ public class Permissions {
     private boolean delegateToOldSM;
 
     // Mandatory constructor for permission object.
-    private static final Class[] PARAMS = { String.class, String.class };
+    private static final Class[] PARAMS = {String.class, String.class};
 
     /**
      * Create a set of Permissions.  Equivalent to calling

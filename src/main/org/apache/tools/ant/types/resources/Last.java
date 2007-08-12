@@ -42,7 +42,9 @@ public class Last extends SizeLimitCollection {
         int i = count;
         Iterator iter = rc.iterator();
         int size = rc.size();
-        for (; i < size; i++) iter.next();
+        for (; i < size; i++) {
+            iter.next();
+        }
 
         ArrayList al = new ArrayList(count);
         for (; iter.hasNext(); i++) {
