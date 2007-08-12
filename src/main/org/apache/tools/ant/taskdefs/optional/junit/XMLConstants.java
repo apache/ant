@@ -65,6 +65,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
  * @see XMLJUnitResultFormatter
  * @see XMLResultAggregator
  */
+// CheckStyle:InterfaceIsTypeCheck OFF (bc)
 public interface XMLConstants {
     /** the testsuites element for the aggregate document */
     String TESTSUITES = "testsuites";

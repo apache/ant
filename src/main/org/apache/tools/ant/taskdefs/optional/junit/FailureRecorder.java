@@ -202,7 +202,7 @@ public class FailureRecorder implements JUnitResultFormatter {
     private void createClassHeader() {
         String className = getLocationName().replace('\\', '/');
         if (className.indexOf('/') > -1) {
-            className = className.substring(className.lastIndexOf('/') +1 );
+            className = className.substring(className.lastIndexOf('/') + 1);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
         writer.print("// generated on: ");
