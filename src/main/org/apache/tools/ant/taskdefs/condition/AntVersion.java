@@ -81,13 +81,17 @@ public class AntVersion extends Task implements Condition {
             try {
                 new DeweyDecimal(atLeast);
             } catch (NumberFormatException e) {
-                throw new BuildException("The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : " + atLeast);
+                throw new BuildException(
+                    "The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : "
+                    + atLeast);
             }
         } else {
             try {
                 new DeweyDecimal(exactly);
             } catch (NumberFormatException e) {
-                throw new BuildException("The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : " + exactly);
+                throw new BuildException(
+                    "The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : "
+                    + exactly);
             }
         }
     }
