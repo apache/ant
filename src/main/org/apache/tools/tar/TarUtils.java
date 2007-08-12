@@ -27,6 +27,7 @@ package org.apache.tools.tar;
  * This class provides static utility methods to work with byte streams.
  *
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class TarUtils {
 
     /**

@@ -27,7 +27,7 @@ package org.apache.tools.tar;
  * This interface contains all the definitions used in the package.
  *
  */
-
+// CheckStyle:InterfaceIsTypeCheck OFF (bc)
 public interface TarConstants {
 
     /**
