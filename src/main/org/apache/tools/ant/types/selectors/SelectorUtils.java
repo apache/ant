@@ -124,6 +124,9 @@ public final class SelectorUtils {
             strIdxStart++;
         }
 
+        // CheckStyle:SimplifyBooleanReturnCheck OFF
+        // Check turned off as the code needs the comments for the various
+        // code paths.
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             return true;

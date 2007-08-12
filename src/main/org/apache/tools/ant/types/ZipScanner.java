@@ -27,7 +27,6 @@ import java.util.zip.ZipException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.ZipResource;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 

@@ -59,7 +59,7 @@ public class ScriptRunnerHelper {
         if (text != null) {
             runner.addText(text);
         }
-        if (resources !=null) {
+        if (resources != null) {
             runner.loadResources(resources);
         }
         if (setBeans) {

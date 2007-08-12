@@ -18,7 +18,6 @@
 package org.apache.tools.ant.util;
 
 import java.util.StringTokenizer;
-import java.util.Arrays;
 
 /**
  * Utility class to contain version numbers in "Dewey Decimal"
