@@ -108,7 +108,8 @@ public class PropertyHelper implements Cloneable {
     };
 
     private static final PropertyExpander DEFAULT_EXPANDER = new PropertyExpander() {
-        public String parsePropertyName(String s, ParsePosition pos, PropertyHelper propertyHelper) {
+        public String parsePropertyName(
+            String s, ParsePosition pos, PropertyHelper propertyHelper) {
             int index = pos.getIndex();
             if (s.indexOf("${", index) == index) {
                 int end = s.indexOf('}', index);
@@ -124,19 +125,23 @@ public class PropertyHelper implements Cloneable {
     };
 
     /** dummy */
-    private static final PropertyExpander SKIP_$$ = new PropertyExpander() {
-        /**
-         * {@inheritDoc}
-         * @see org.apache.tools.ant.PropertyHelper.PropertyExpander#parsePropertyName(java.lang.String, java.text.ParsePosition, org.apache.tools.ant.PropertyHelper)
-         */
-        public String parsePropertyName(String s, ParsePosition pos, PropertyHelper propertyHelper) {
-            int index = pos.getIndex();
-            if (s.indexOf("$$", index) == index) {
-                pos.setIndex(++index);
+    private static final PropertyExpander SKIP_DOUBLE_DOLLAR
+        = new PropertyExpander() {
+            // CheckStyle:LineLengthCheck OFF see too long
+            /**
+             * {@inheritDoc}
+             * @see org.apache.tools.ant.PropertyHelper.PropertyExpander#parsePropertyName(java.lang.String, java.text.ParsePosition, org.apache.tools.ant.PropertyHelper)
+             */
+            // CheckStyle:LineLengthCheck ON
+            public String parsePropertyName(
+                String s, ParsePosition pos, PropertyHelper propertyHelper) {
+                int index = pos.getIndex();
+                if (s.indexOf("$$", index) == index) {
+                    pos.setIndex(++index);
+                }
+                return null;
             }
-            return null;
-        }
-    };
+        };
 
     private Project project;
     private PropertyHelper next;
@@ -164,7 +169,7 @@ public class PropertyHelper implements Cloneable {
      */
     protected PropertyHelper() {
         add(TO_STRING);
-        add(SKIP_$$);
+        add(SKIP_DOUBLEDOLLAR);
         add(DEFAULT_EXPANDER);
     }
 
@@ -457,8 +462,10 @@ public class PropertyHelper implements Cloneable {
     }
 
     private String parsePropertyName(String value, ParsePosition pos) {
-        for (Iterator iter = getDelegates(PropertyExpander.class).iterator(); iter.hasNext();) {
-            String propertyName = ((PropertyExpander) iter.next()).parsePropertyName(value, pos, this);
+        for (Iterator iter = getDelegates(PropertyExpander.class).iterator();
+             iter.hasNext();) {
+            String propertyName = ((PropertyExpander) iter.next())
+                .parsePropertyName(value, pos, this);
             if (propertyName == null) {
                 continue;
             }

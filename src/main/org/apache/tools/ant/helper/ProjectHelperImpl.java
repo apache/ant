@@ -397,7 +397,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                     baseDir = value;
                 } else {
                     throw new SAXParseException(
-                            "Unexpected attribute \"" + attrs.getName(i) + "\"", helperImpl.locator);
+                            "Unexpected attribute \"" + attrs.getName(i)
+                            + "\"", helperImpl.locator);
                 }
             }
 

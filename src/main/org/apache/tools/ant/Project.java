@@ -1648,6 +1648,7 @@ public class Project implements ResourceFactory {
 
     /**
      * Get the Project instance associated with the specified object.
+     * @param o the object to query.
      * @return Project instance, if any.
      * @since Ant 1.7.1
      */

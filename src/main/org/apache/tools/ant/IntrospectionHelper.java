@@ -1530,8 +1530,8 @@ public final class IntrospectionHelper  {
             if (matchedDefinitionClass != null) {
                 throw new BuildException(
                     "ambiguous: restricted definitions for "
-                    + componentName + " " +
-                    matchedDefinitionClass + " and " + exposedClass);
+                    + componentName + " "
+                    + matchedDefinitionClass + " and " + exposedClass);
             }
             matchedDefinitionClass = exposedClass;
             definition = d;

@@ -965,7 +965,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 // be namespaced, need to extract the name
                 // and convert from qualified name to uri/name
                 if (ANT_TYPE.equals(name)
-                        || (ANT_CORE_URI.equals(attrUri) && ANT_TYPE.equals(attrs.getLocalName(i)))) {
+                        || (ANT_CORE_URI.equals(attrUri)
+                            && ANT_TYPE.equals(attrs.getLocalName(i)))) {
                     name = ANT_TYPE;
                     int index = value.indexOf(":");
                     if (index >= 0) {

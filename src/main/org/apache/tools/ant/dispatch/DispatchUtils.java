@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 /**
  * Determines and Executes the action method for the task.
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF - (bc)
 public class DispatchUtils {
     /**
      * Determines and Executes the action method for the task.

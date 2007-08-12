@@ -20,9 +20,6 @@ package org.apache.tools.ant.listener;
 
 import org.apache.tools.ant.DefaultLogger;
 
-import java.util.Date;
-import java.text.DateFormat;
-
 /**
  * Like a normal logger, except with timed outputs
  */
