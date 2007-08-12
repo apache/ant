@@ -362,8 +362,10 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                     String nodeName = attributeNode.getNodeName();
                     String attributeValue = getAttributeValue(attributeNode);
 
-                    Path containingPath = container != null && container instanceof Path ? (Path) container
-                            : null;
+                    Path containingPath =
+                        ((container != null) && (container instanceof Path))
+                        ? (Path) container
+                        : null;
                     /*
                      * The main conditional logic -- if the attribute
                      * is somehow "special" (i.e., it has known

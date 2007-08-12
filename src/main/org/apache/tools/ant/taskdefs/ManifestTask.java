@@ -49,7 +49,7 @@ public class ManifestTask extends Task {
      * Specifies the valid characters which can be used in attribute names.
      * {@value}
      */
-    public final String VALID_ATTRIBUTE_CHARS =
+    public static final String VALID_ATTRIBUTE_CHARS =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345679-_";
 
     /**
@@ -105,7 +105,8 @@ public class ManifestTask extends Task {
          throws ManifestException {
         Enumeration attributeKeys = section.getAttributeKeys();
         while (attributeKeys.hasMoreElements()) {
-            Attribute attribute = section.getAttribute((String)attributeKeys.nextElement());
+            Attribute attribute = section.getAttribute(
+                (String) attributeKeys.nextElement());
             checkAttribute(attribute);
         }
         nestedManifest.addConfiguredSection(section);

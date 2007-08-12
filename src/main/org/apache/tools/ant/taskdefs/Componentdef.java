@@ -18,9 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskAdapter;
-
 /**
  * Adds a compenent definition to the current project.
  * used in the current project. Two attributes are needed, the name that identifies

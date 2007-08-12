@@ -38,7 +38,7 @@ public class PropertyHelperTask extends Task {
     /**
      * Nested delegate for refid usage.
      */
-    public class DelegateElement {
+    public final class DelegateElement {
         private String refid;
 
         private DelegateElement() {

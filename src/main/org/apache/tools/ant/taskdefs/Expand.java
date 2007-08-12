@@ -144,9 +144,10 @@ public class Expand extends Task {
 
             log("expand complete", Project.MSG_VERBOSE);
         } catch (IOException ioe) {
-            throw new BuildException("Error while expanding " + srcF.getPath()
-                    +"\n"+ioe.toString(),
-                                     ioe);
+            throw new BuildException(
+                "Error while expanding " + srcF.getPath()
+                + "\n" + ioe.toString(),
+                ioe);
         } finally {
             ZipFile.closeQuietly(zf);
         }

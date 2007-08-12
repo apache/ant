@@ -272,7 +272,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         String[]         dirs;
 
         String baseMessage =
-            "specify the stylesheet either as a filename in style attribute or as a nested resource";
+            "specify the stylesheet either as a filename in style attribute "
+            + "or as a nested resource";
 
         if (xslResource == null && xslFile == null) {
             throw new BuildException(baseMessage, getLocation());
@@ -306,7 +307,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                      * the wrong version has been used.
                      */
                     if (stylesheet.exists()) {
-                        log("DEPRECATED - the 'style' attribute should be relative to the project's");
+                        log("DEPRECATED - the 'style' attribute should be "
+                            + "relative to the project's");
                         log("             basedir, not the tasks's basedir.");
                     }
                 }
@@ -1010,7 +1012,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * @since Ant 1.7
      */
-    private void setLiaisonDynamicFileParameters(XSLTLiaison liaison, File inFile) throws Exception {
+    private void setLiaisonDynamicFileParameters(
+        XSLTLiaison liaison, File inFile) throws Exception {
         if (fileNameParameter != null) {
             liaison.addParam(fileNameParameter, inFile.getName());
         }

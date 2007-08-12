@@ -62,7 +62,7 @@ public class ConditionTask extends ConditionBase {
     /**
      * The value for the property to set, if condition evaluates to true.
      * Defaults to "true".
-     * @param v the (Object) value of the property
+     * @param value the (Object) value of the property
      * @since Ant 1.8
      */
     public void setValue(Object value) {
@@ -82,7 +82,7 @@ public class ConditionTask extends ConditionBase {
     /**
      * The value for the property to set, if condition evaluates to false.
      * If this attribute is not specified, the property will not be set.
-     * @param e the alternate value of the property.
+     * @param alt the alternate value of the property.
      * @since Ant 1.8
      */
     public void setElse(Object alt) {

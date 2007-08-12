@@ -523,7 +523,8 @@ public class Rmic extends MatchingTask {
                 scanDir(baseDir, files, adapter.getMapper());
             } else {
                 // otherwise perform a timestamp comparison - at least
-                scanDir(baseDir, new String[] { classname.replace('.', File.separatorChar)
+                scanDir(baseDir, new String[] {
+                        classname.replace('.', File.separatorChar)
                         + ".class" }, adapter.getMapper());
             }
             int fileCount = compileList.size();
@@ -611,7 +612,8 @@ public class Rmic extends MatchingTask {
     protected void scanDir(File baseDir, String[] files, FileNameMapper mapper) {
         String[] newFiles = files;
         if (idl) {
-            log("will leave uptodate test to rmic implementation in idl mode.", Project.MSG_VERBOSE);
+            log("will leave uptodate test to rmic implementation in idl mode.",
+                Project.MSG_VERBOSE);
         } else if (iiop && iiopOpts != null && iiopOpts.indexOf("-always") > -1) {
             log("no uptodate test as -always option has been specified", Project.MSG_VERBOSE);
         } else {

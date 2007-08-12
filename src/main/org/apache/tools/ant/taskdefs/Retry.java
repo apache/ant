@@ -40,18 +40,20 @@ public class Retry extends Task implements TaskContainer {
 
     /**
      * set the task
+     * @param t the task to retry.
      */
     public synchronized void addTask(Task t) {
         if (nestedTask != null) {
-            throw new BuildException("The retry task container accepts a single nested task"
-                    + " (which may be a sequential task container)");
+            throw new BuildException(
+                "The retry task container accepts a single nested task"
+                + " (which may be a sequential task container)");
         }
         nestedTask = t;
     }
 
     /**
      * set the number of times to retry the task
-     * @param n
+     * @param n the number to use.
      */
     public void setRetryCount(int n) {
         retryCount = n;
@@ -59,6 +61,7 @@ public class Retry extends Task implements TaskContainer {
 
     /**
      * perform the work
+     * @throws BuildException if there is an error.
      */
     public void execute() throws BuildException {
         StringBuffer errorMessages = new StringBuffer();

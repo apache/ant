@@ -93,11 +93,14 @@ public class Property extends Task {
             this.map = map;
         }
 
+        // CheckStyle:LineLengthCheck OFF see to long
         /* (non-Javadoc)
          * @see org.apache.tools.ant.PropertyHelper.PropertyEvaluator#evaluate(java.lang.String, org.apache.tools.ant.PropertyHelper)
          */
+        // CheckStyle:LineLengthCheck ON
         public Object evaluate(String property, PropertyHelper propertyHelper) {
-            //our feeble properties don't matter if the PropertyHelper can resolve the property without us:
+            //our feeble properties don't matter if the PropertyHelper
+            // can resolve the property without us:
             Stack stk = (Stack) getStack.get();
             if (stk.contains(property)) {
                 return null;
@@ -207,7 +210,7 @@ public class Property extends Task {
 
     /**
      * Set the value of the property.
-     * @param value
+     * @param value the value to use.
      */
     public void setValue(Object value) {
         this.untypedValue = value;
@@ -525,14 +528,15 @@ public class Property extends Task {
      * @see http://java.sun.com/dtd/properties.dtd
      * @see java.util.Properties#loadFromXML(InputStream)
      */
-    private void loadProperties(Properties props, InputStream is, boolean isXml) throws IOException {
+    private void loadProperties(
+        Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
             // load the xml based property definition
             // use reflection because of bwc to Java 1.3
             try {
                 Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
-                        new Class[] { InputStream.class });
-                loadXmlMethod.invoke(props, new Object[] { is });
+                        new Class[] {InputStream.class});
+                loadXmlMethod.invoke(props, new Object[] {is});
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
                 log("Can not load xml based property definition on Java < 5");
