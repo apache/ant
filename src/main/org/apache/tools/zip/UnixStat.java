@@ -22,6 +22,7 @@ package org.apache.tools.zip;
  * Constants from stat.h on Unix systems.
  *
  */
+// CheckStyle:InterfaceIsTypeCheck OFF - backward compatible
 public interface UnixStat {
 
     /**

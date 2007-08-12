@@ -26,6 +26,7 @@ import java.util.zip.ZipException;
  * ZipExtraField related methods
  *
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class ExtraFieldUtils {
 
     /**
