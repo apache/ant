@@ -218,7 +218,7 @@ public class Concat extends Task implements ResourceCollection {
      * The concatentated result can then be filtered as
      * a single stream.
      */
-    private class MultiReader extends Reader {
+    private final class MultiReader extends Reader {
         private Reader reader = null;
         private int    lastPos = 0;
         private char[] lastChars = new char[eolString.length()];
@@ -374,7 +374,7 @@ public class Concat extends Task implements ResourceCollection {
         }
     }
 
-    private class ConcatResource extends Resource {
+    private final class ConcatResource extends Resource {
         private ResourceCollection c;
 
         private ConcatResource(ResourceCollection c) {
@@ -618,7 +618,7 @@ public class Concat extends Task implements ResourceCollection {
             newRc.setProject(getProject());
             newRc.add(rc);
             rc = newRc;
-	}
+        }
         ((Resources) rc).add(c);
     }
 

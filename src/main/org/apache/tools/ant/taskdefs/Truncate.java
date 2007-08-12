@@ -84,7 +84,7 @@ public class Truncate extends Task {
     /**
      * Set the length to which files should be set.
      * It is permissible to append K / M / G / T / P.
-     * @param adjust (positive) adjustment amount.
+     * @param length (positive) adjustment amount.
      */
     public void setLength(Long length) {
         this.length = length;

@@ -202,6 +202,7 @@ public class Java extends Task {
     /**
      * Execute the specified CommandlineJava.
      * @param commandLine CommandLineJava instance.
+     * @return the exit value of the process if forked, 0 otherwise.
      */
     protected int executeJava(CommandlineJava commandLine) {
         try {

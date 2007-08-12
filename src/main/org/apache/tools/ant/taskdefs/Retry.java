@@ -54,6 +54,7 @@ public class Retry extends Task implements TaskContainer {
 
     /**
      * perform the work
+     * @throws BuildException if there is an error.
      */
     public void execute() throws BuildException {
         StringBuffer errorMessages = new StringBuffer();

@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.Sort;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
@@ -88,14 +87,15 @@ public class DependSet extends MatchingTask {
         = new org.apache.tools.ant.types.resources.comparators.Date();
     private static final ResourceComparator REVERSE_DATE = new Reverse(DATE);
 
-    private static class NonExistent extends Restrict {
+    private static final class NonExistent extends Restrict {
         private NonExistent(ResourceCollection rc) {
             super.add(rc);
             super.add(NOT_EXISTS);
         }
     }
 
-    private static class HideMissingBasedir implements ResourceCollection {
+    private static final class HideMissingBasedir
+        implements ResourceCollection {
         private FileSet fs;
 
         private HideMissingBasedir(FileSet fs) {

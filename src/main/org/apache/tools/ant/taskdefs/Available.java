@@ -328,9 +328,9 @@ public class Available extends Task implements Condition {
 
                 // **   full-pathname specified == path in list
                 // **   simple name specified   == path in list
-                if (path.exists() &&
-                    (filename.equals(paths[i])
-                     || filename.equals(path.getName()))) {
+                if (path.exists()
+                    && (filename.equals(paths[i])
+                        || filename.equals(path.getName()))) {
                     if (type == null) {
                         log("Found: " + path, Project.MSG_VERBOSE);
                         return true;
