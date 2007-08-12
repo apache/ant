@@ -27,6 +27,7 @@ import junit.framework.TestCase;
  * different JUnit releases.
  * @since Ant 1.7
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class JUnitVersionHelper {
 
     private static Method testCaseName = null;
@@ -36,7 +37,8 @@ public class JUnitVersionHelper {
      * {@value}
      * @since Ant 1.7.1
      */
-    public static final String JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE = "junit.framework.JUnit4TestCaseFacade";
+    public static final String JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE
+        = "junit.framework.JUnit4TestCaseFacade";
     private static final String UNKNOWN_TEST_CASE_NAME = "unknown";
 
     static {
@@ -68,8 +70,7 @@ public class JUnitVersionHelper {
      * @return the name of the test.
      */
     public static String getTestCaseName(Test t) {
-        if (t == null)
-        {
+        if (t == null) {
             return UNKNOWN_TEST_CASE_NAME;
         }
         if (t.getClass().getName().equals(JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE)) {
