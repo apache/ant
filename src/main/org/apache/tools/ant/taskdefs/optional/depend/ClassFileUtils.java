@@ -24,6 +24,7 @@ package org.apache.tools.ant.taskdefs.optional.depend;
  *
  *
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class ClassFileUtils {
 
     /**

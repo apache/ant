@@ -225,7 +225,7 @@ public class Rpm extends Task {
      * @param sf the spec file name to use.
      */
     public void setSpecFile(String sf) {
-        if ((sf == null) || (sf.trim().length()==0)) {
+        if ((sf == null) || (sf.trim().length() == 0)) {
             throw new BuildException("You must specify a spec file", getLocation());
         }
         this.specFile = sf;

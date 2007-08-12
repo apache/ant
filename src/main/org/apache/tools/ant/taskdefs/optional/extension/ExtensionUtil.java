@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.FileSet;
  * A set of useful methods relating to extensions.
  *
  */
-public class ExtensionUtil {
+public final class ExtensionUtil {
     /**
      * Class is not meant to be instantiated.
      */

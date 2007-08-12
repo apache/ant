@@ -28,6 +28,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @since Ant 1.6.3
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class JavahAdapterFactory {
 
     /**

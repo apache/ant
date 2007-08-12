@@ -28,6 +28,7 @@ import org.apache.tools.ant.Project;
  * upgrade to jakarta-commons-net 1.4.0, where FTPClientConfig was
  * introduced.
   */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 class FTPConfigurator {
     /**
      * configures the supplied FTPClient with the various

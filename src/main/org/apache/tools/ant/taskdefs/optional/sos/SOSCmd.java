@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.sos;
  * Interface to hold constants used by the SOS tasks
  *
  */
+// CheckStyle:InterfaceIsTypeCheck OFF (bc)
 public interface SOSCmd {
     // soscmd Command options
     /** The sos executable */
