@@ -169,7 +169,7 @@ public class PropertyHelper implements Cloneable {
      */
     protected PropertyHelper() {
         add(TO_STRING);
-        add(SKIP_DOUBLEDOLLAR);
+        add(SKIP_DOUBLE_DOLLAR);
         add(DEFAULT_EXPANDER);
     }
 
