@@ -35,7 +35,7 @@ public class Equals implements Condition {
 
     /**
      * Set the first argument
-     * @param arg1
+     * @param arg1 the first argument.
      * @since Ant 1.8
      */
     public void setArg1(Object arg1) {
@@ -54,7 +54,7 @@ public class Equals implements Condition {
 
     /**
      * Set the second argument
-     * @param arg2
+     * @param arg2 the second argument.
      * @since Ant 1.8
      */
     public void setArg2(Object arg2) {
