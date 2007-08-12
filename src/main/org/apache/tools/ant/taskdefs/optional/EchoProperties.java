@@ -421,7 +421,7 @@ public class EchoProperties extends Task {
     /**
      * a tuple for the sort list.
      */
-    private static class Tuple implements Comparable {
+    private static final class Tuple implements Comparable {
         private String key;
         private String value;
 

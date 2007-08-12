@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.vss;
  *  Holds all the constants for the VSS tasks.
  *
  */
+// CheckStyle:InterfaceIsType OFF (bc)
 public interface MSVSSConstants {
     /**  Constant for the thing to execute  */
     String SS_EXE = "ss";

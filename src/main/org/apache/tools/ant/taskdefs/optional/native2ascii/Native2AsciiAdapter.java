@@ -26,6 +26,7 @@ import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
  *
  * @since Ant 1.6.3
  */
+// CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public interface Native2AsciiAdapter {
     /**
      * Convert the encoding of srcFile writing to destFile.

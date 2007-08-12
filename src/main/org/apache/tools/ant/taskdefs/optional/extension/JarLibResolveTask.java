@@ -230,7 +230,8 @@ public class JarLibResolveTask extends Task {
                     return;
                 }
             }
-            final String message = "File " + file + " skipped as it " + "does not satisfy extension";
+            final String message = "File " + file + " skipped as it "
+                + "does not satisfy extension";
             getProject().log(message, Project.MSG_VERBOSE);
             throw new BuildException(message);
         }
