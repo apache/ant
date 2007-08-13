@@ -3482,30 +3482,6 @@
         </table>
       </subsection>
 
-      <subsection name="AntMan">
-
-        <p>An AddIn that integrates Ant with the JDeveloper IDE</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4.1</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.erudra.com/antman/index.html">http://www.erudra.com/antman/index.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:ashok@erudra.com">Ashok Sridhar</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU General Public License</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="AntRunner">
 
         <p>An OpenTool that integrates Ant into the JBuilder IDE
@@ -3523,30 +3499,6 @@
           <tr>
             <th>Contact:</th>
             <td><a href="mailto:dirk.schnelle@web.de">Dirk Schnelle</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU General Public License</td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="AntWork">
-
-        <p>A plugin that integrates Ant into the Jext editor.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.2 and 1.3</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip">ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:KHartlage@t-online.de">Klaus Hartlage</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -3581,12 +3533,6 @@
         </table>
       </subsection>
 
-
-
-
-
-
-
       <subsection name="Eclipse">
 
         <p>Eclipse is a universal tool platform with Ant integration.</p>
@@ -3595,8 +3541,10 @@
           <tr>
             <th>Compatibility:</th>
             <td>
-              Ant 1.3 - 1.4.1
-              Bundles Ant 1.6.2 as of Eclipse 3.0.1 (tested with Ant 1.5.4 - 1.6.2)
+              Ant 1.3 and higher <br/>
+              Bundles Ant 1.6.2 as of Eclipse 3.0.1 (tested with Ant 1.5.4 - 1.6.2) <br/>
+              Eclipse 3.2 bundles Ant 1.6.5 <br/>
+              Eclipse 3.3 bundles Ant 1.7.0 
             </td>
           </tr>
           <tr>
@@ -3684,15 +3632,15 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.borland.com/jbuilder/index.html">http://www.borland.com/jbuilder/index.html</a></td>
+            <td><a href="http://www.codegear.com/en/products/jbuilder">http://www.codegear.com/en/products/jbuilder</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:customer_service@borland.com">customer_service@borland.com</a></td>
+            <td><a href="http://support.codegear.com/en">http://support.codegear.com/en</a></td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>Commercial; foundation edition is free.</td>
+            <td>Commercial; Turbo JBuilder 2007 is free.</td>
           </tr>
         </table>
       </subsection>
@@ -3737,7 +3685,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://ant.netbeans.org/">http://ant.netbeans.org/</a></td>
+            <td><a href="http://www.netbeans.org/">http://www.netbeans.org/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -3776,7 +3724,7 @@
         </table>
       </subsection>
 
-      <subsection name="Oracle9i JDeveloper">
+      <subsection name="Oracle JDeveloper 10i">
 
         <p>Java IDE with support for Ant.</p>
 
@@ -3787,11 +3735,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://otn.oracle.com/products/jdev/">http://otn.oracle.com/products/jdev/</a></td>
+            <td><a href="http://www.oracle.com/technology/products/jdev/index.html">http://www.oracle.com/technology/products/jdev/index.html</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:jdeveloperbeta_us@oracle.com">jdeveloperbeta_us@oracle.com</a></td>
+            <td><a href="http://forums.oracle.com/forums/forum.jspa?forumID=83">JDeveloper Forum</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -3842,8 +3790,16 @@
             <td>bundles Ant 1.4.1</td>
           </tr>
           <tr>
+            <th>URL:</th>
+            <td><a href="http://www.ibm.com/developerworks/websphere/">http://www.ibm.com/developerworks/websphere/</a></td>
+          </tr>
+          <tr>
             <th>Article:</th>
-            <td><a href="http://www7b.software.ibm.com/wsdd/library/techarticles/0203_searle/searle1.html">Ant Integration Part1</a></td>
+            <td>Using Ant with WebSphere Studio Application Developer<ul>
+              <li><a href="http://www-128.ibm.com/developerworks/websphere/library/techarticles/0203_searle/searle1.html">Part 1</a></li>
+              <li><a href="http://www-128.ibm.com/developerworks/websphere/library/techarticles/0203_searle/searle2.html">Part 2</a></li>
+              <li><a href="http://www-128.ibm.com/developerworks/websphere/library/techarticles/0203_searle/searle3.html">Part 3</a></li>
+            </ul></td>
           </tr>
           <tr>
             <th>License:</th>
