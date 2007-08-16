@@ -57,18 +57,38 @@ public final class JavaEnvUtils {
 
     /** Version constant for Java 1.0 */
     public static final String JAVA_1_0 = "1.0";
+    /** Number Version constant for Java 1.0 */
+    public static final int VERSION_1_0 = 10;
+
     /** Version constant for Java 1.1 */
     public static final String JAVA_1_1 = "1.1";
+    /** Number Version constant for Java 1.1 */
+    public static final int VERSION_1_1 = 11;
+
     /** Version constant for Java 1.2 */
     public static final String JAVA_1_2 = "1.2";
+    /** Number Version constant for Java 1.2 */
+    public static final int VERSION_1_2 = 12;
+
     /** Version constant for Java 1.3 */
     public static final String JAVA_1_3 = "1.3";
+    /** Number Version constant for Java 1.3 */
+    public static final int VERSION_1_3 = 13;
+
     /** Version constant for Java 1.4 */
     public static final String JAVA_1_4 = "1.4";
+    /** Number Version constant for Java 1.4 */
+    public static final int VERSION_1_4 = 14;
+
     /** Version constant for Java 1.5 */
     public static final String JAVA_1_5 = "1.5";
+    /** Number Version constant for Java 1.5 */
+    public static final int VERSION_1_5 = 15;
+
     /** Version constant for Java 1.6 */
     public static final String JAVA_1_6 = "1.6";
+    /** Number Version constant for Java 1.6 */
+    public static final int VERSION_1_6 = 16;
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
@@ -89,7 +109,7 @@ public final class JavaEnvUtils {
 
         try {
             javaVersion = JAVA_1_0;
-            javaVersionNumber = 10;
+            javaVersionNumber = VERSION_1_0;
             Class.forName("java.lang.Void");
             javaVersion = JAVA_1_1;
             javaVersionNumber++;
@@ -305,13 +325,13 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector();
         switch(javaVersionNumber) {
-            case 16:
-            case 15:
+            case VERSION_1_6:
+            case VERSION_1_5:
                 //In Java1.5, the apache stuff moved.
                 jrePackages.addElement("com.sun.org.apache");
                 //fall through.
-            case 14:
-                if (javaVersionNumber == 14) {
+            case VERSION_1_4:
+                if (javaVersionNumber == VERSION_1_4) {
                     jrePackages.addElement("org.apache.crimson");
                     jrePackages.addElement("org.apache.xalan");
                     jrePackages.addElement("org.apache.xml");
@@ -321,7 +341,7 @@ public final class JavaEnvUtils {
                 jrePackages.addElement("org.w3c.dom");
                 jrePackages.addElement("org.xml.sax");
                 // fall through
-            case 13:
+            case VERSION_1_3:
                 jrePackages.addElement("org.omg");
                 jrePackages.addElement("com.sun.corba");
                 jrePackages.addElement("com.sun.jndi");
@@ -332,12 +352,12 @@ public final class JavaEnvUtils {
                 jrePackages.addElement("sunw.io");
                 jrePackages.addElement("sunw.util");
                 // fall through
-            case 12:
+            case VERSION_1_2:
                 jrePackages.addElement("com.sun.java");
                 jrePackages.addElement("com.sun.image");
                 // are there any here that we forgot?
                 // fall through
-            case 11:
+            case VERSION_1_1:
             default:
                 //things like sun.reflection, sun.misc, sun.net
                 jrePackages.addElement("sun");
@@ -355,14 +375,14 @@ public final class JavaEnvUtils {
         Vector tests = new Vector();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
-            case 16:
-            case 15:
+            case VERSION_1_6:
+            case VERSION_1_5:
                 tests.addElement(
                     "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
                 // Fall tru
-            case 14:
+            case VERSION_1_4:
                 tests.addElement("sun.audio.AudioPlayer");
-                if (javaVersionNumber == 14) {
+                if (javaVersionNumber == VERSION_1_4) {
                     tests.addElement("org.apache.crimson.parser.ContentModel");
                     tests.addElement("org.apache.xalan.processor.ProcessorImport");
                     tests.addElement("org.apache.xml.utils.URI");
@@ -372,7 +392,7 @@ public final class JavaEnvUtils {
                 tests.addElement("org.w3c.dom.Attr");
                 tests.addElement("org.xml.sax.XMLReader");
                 // fall through
-            case 13:
+            case VERSION_1_3:
                 tests.addElement("org.omg.CORBA.Any");
                 tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
                 tests.addElement("com.sun.jndi.ldap.LdapURL");
@@ -382,12 +402,12 @@ public final class JavaEnvUtils {
                 tests.addElement("sunw.io.Serializable");
                 tests.addElement("sunw.util.EventListener");
                 // fall through
-            case 12:
+            case VERSION_1_2:
                 tests.addElement("javax.accessibility.Accessible");
                 tests.addElement("sun.misc.BASE64Encoder");
                 tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
                 // fall through
-            case 11:
+            case VERSION_1_1:
             default:
                 //things like sun.reflection, sun.misc, sun.net
                 tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
