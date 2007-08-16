@@ -262,6 +262,51 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private PrintStream savedOut = null;
+    private PrintStream savedErr = null;
+
+    private PrintStream createEmptyStream() {
+        return new PrintStream(
+            new OutputStream() {
+                public void write(int b) {
+                }
+            });
+    }
+
+    private PrintStream createTeePrint(PrintStream ps1, PrintStream ps2) {
+        return new PrintStream(new TeeOutputStream(ps1, ps2));
+    }
+
+    private void setupIOStreams(ByteArrayOutputStream o,
+                                ByteArrayOutputStream e) {
+        systemOut = new PrintStream(o);
+        systemError = new PrintStream(e);
+
+        if (forked) {
+            if (!outputToFormatters) {
+                if (!showOutput) {
+                    savedOut = System.out;
+                    savedErr = System.err;
+                    System.setOut(createEmptyStream());
+                    System.setErr(createEmptyStream());
+                }
+            } else {
+                savedOut = System.out;
+                savedErr = System.err;
+                if (!showOutput) {
+                    System.setOut(systemOut);
+                    System.setErr(systemError);
+                } else {
+                    System.setOut(createTeePrint(savedOut, systemOut));
+                    System.setErr(createTeePrint(savedErr, systemError));
+                }
+                perm = null;
+            }
+        } else {
+            if (perm != null) {
+                perm.setSecurityManager();
+            }
+        }
+    }
 
     /**
      * Run the test.
@@ -274,55 +319,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
 
         ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
-        systemError = new PrintStream(errStrm);
-
         ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
-        systemOut = new PrintStream(outStrm);
 
-        PrintStream savedErr = null;
-
-        if (forked) {
-            if (!outputToFormatters) {
-                if (!showOutput) {
-                    savedOut = System.out;
-                    savedErr = System.err;
-                    System.setOut(
-                        new PrintStream(
-                            new OutputStream() {
-                                public void write(int b) {
-                                }
-                            }));
-                    System.setErr(
-                        new PrintStream(
-                            new OutputStream() {
-                                public void write(int b) {
-                                }
-                            }));
-                }
-            } else {
-                savedOut = System.out;
-                savedErr = System.err;
-                if (!showOutput) {
-                    System.setOut(systemOut);
-                    System.setErr(systemError);
-                } else {
-                    System.setOut(new PrintStream(
-                                      new TeeOutputStream(savedOut, systemOut)
-                                      )
-                                  );
-                    System.setErr(new PrintStream(
-                                      new TeeOutputStream(savedErr,
-                                                          systemError)
-                                      )
-                                  );
-                }
-                perm = null;
-            }
-        } else {
-            if (perm != null) {
-                perm.setSecurityManager();
-            }
-        }
+        setupIOStreams(outStrm, errStrm);
 
         Test suite = null;
         Throwable exception = null;
@@ -740,9 +739,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     JUnitTest t = new JUnitTest(testCaseName);
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
+                    t.setProperties(props);
                     code = launch(t, haltError, stackfilter, haltFail,
                                   showOut, outputToFormat,
-                                  logTestListenerEvents, props);
+                                  logTestListenerEvents);
                     errorOccurred = (code == ERRORS);
                     failureOccurred = (code != SUCCESS);
                     if (errorOccurred || failureOccurred) {
@@ -763,10 +763,11 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 e.printStackTrace();
             }
         } else {
-            returnCode = launch(new JUnitTest(args[0]), haltError,
-                                stackfilter, haltFail,
-                                showOut, outputToFormat,
-                                logTestListenerEvents, props);
+            JUnitTest t = new JUnitTest(args[0]);
+            t.setProperties(props);
+            returnCode = launch(
+                t, haltError, stackfilter, haltFail,
+                showOut, outputToFormat, logTestListenerEvents);
         }
 
         registerNonCrash();
@@ -899,9 +900,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private static int launch(JUnitTest t, boolean haltError,
                               boolean stackfilter, boolean haltFail,
                               boolean showOut, boolean outputToFormat,
-                              boolean logTestListenerEvents,
-                              Properties props) {
-        t.setProperties(props);
+                              boolean logTestListenerEvents) {
         JUnitTestRunner runner =
             new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut,
                                 logTestListenerEvents, null);
