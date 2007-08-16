@@ -74,6 +74,15 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @ant.task category="java"
  */
 public class Javadoc extends Task {
+    // Whether *this VM* is 1.4+ (but also check executable != null).
+
+    private static final boolean JAVADOC_4 =
+        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
+
+    private static final boolean JAVADOC_5 = JAVADOC_4
+        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
+
     /**
      * Inner class used to manage doclet parameters.
      */
@@ -1614,47 +1623,24 @@ public class Javadoc extends Task {
      * @throws BuildException on error
      */
     public void execute() throws BuildException {
-        if ("javadoc2".equals(getTaskType())) {
-            log("Warning: the task name <javadoc2> is deprecated. Use <javadoc> instead.",
-                Project.MSG_WARN);
-        }
-
-        // Whether *this VM* is 1.4+ (but also check executable != null).
-        boolean javadoc4 =
-            !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
-            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
-        boolean javadoc5 = javadoc4
-            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
+        checkTaskName();
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
 
-        if (packageList != null && sourcePath == null) {
-            String msg = "sourcePath attribute must be set when "
-                + "specifying packagelist.";
-            throw new BuildException(msg);
-        }
+        checkPackageAndSourcePath();
 
         if (sourcePath != null) {
             sourceDirs.addExisting(sourcePath);
         }
 
         parsePackages(packagesToDoc, sourceDirs);
-
-        if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
-            String msg = "sourcePath attribute must be set when "
-                + "specifying package names.";
-            throw new BuildException(msg);
-        }
+        checkPackages(packagesToDoc, sourceDirs);
 
         Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
         addSourceFiles(sourceFilesToDoc);
 
-        if (packageList == null && packagesToDoc.size() == 0
-            && sourceFilesToDoc.size() == 0) {
-            throw new BuildException("No source files and no packages have "
-                                     + "been specified.");
-        }
+        checkPackagesToDoc(packagesToDoc, sourceFilesToDoc);
 
         log("Generating Javadoc", Project.MSG_INFO);
 
@@ -1665,7 +1651,157 @@ public class Javadoc extends Task {
             toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
         }
 
-        // ------------------------------------------ general Javadoc arguments
+        //  Javadoc arguments
+        generalJavadocArguments(toExecute);  // general Javadoc arguments
+        doSourcePath(toExecute, sourceDirs); // sourcepath
+        doDoclet(toExecute);   // arguments for default doclet
+        doBootPath(toExecute); // bootpath
+        doLinks(toExecute);    // links arguments
+        doGroup(toExecute);    // group attribute
+        doGroups(toExecute);  // groups attribute
+
+        // Javadoc 1.4 parameters
+        if (JAVADOC_4 || executable != null) {
+            doJava14(toExecute);
+            if (breakiterator && (doclet == null || JAVADOC_5)) {
+                toExecute.createArgument().setValue("-breakiterator");
+            }
+        } else {
+            doNotJava14();
+        }
+        // Javadoc 1.2/1.3 parameters:
+        if (!JAVADOC_4 || executable != null) {
+            if (old) {
+                toExecute.createArgument().setValue("-1.1");
+            }
+        } else {
+            if (old) {
+                log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
+                    Project.MSG_WARN);
+            }
+        }
+        // If using an external file, write the command line options to it
+        if (useExternalFile && JAVADOC_4) {
+            writeExternalArgs(toExecute);
+        }
+
+        File tmpList = null;
+        PrintWriter srcListWriter = null;
+
+        try {
+            /**
+             * Write sourcefiles and package names to a temporary file
+             * if requested.
+             */
+            if (useExternalFile) {
+                tmpList = FILE_UTILS.createTempFile("javadoc", "", null);
+                tmpList.deleteOnExit();
+                toExecute.createArgument()
+                    .setValue("@" + tmpList.getAbsolutePath());
+                srcListWriter = new PrintWriter(
+                    new FileWriter(tmpList.getAbsolutePath(),
+                                   true));
+            }
+
+            doSourceAndPackageNames(
+                toExecute, packagesToDoc, sourceFilesToDoc,
+                useExternalFile, tmpList, srcListWriter);
+        } catch (IOException e) {
+            tmpList.delete();
+            throw new BuildException("Error creating temporary file",
+                                     e, getLocation());
+        } finally {
+            if (srcListWriter != null) {
+                srcListWriter.close();
+            }
+        }
+
+        if (packageList != null) {
+            toExecute.createArgument().setValue("@" + packageList);
+        }
+        log(toExecute.describeCommand(), Project.MSG_VERBOSE);
+
+        log("Javadoc execution", Project.MSG_INFO);
+
+        JavadocOutputStream out = new JavadocOutputStream(Project.MSG_INFO);
+        JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
+        Execute exe = new Execute(new PumpStreamHandler(out, err));
+        exe.setAntRun(getProject());
+
+        /*
+         * No reason to change the working directory as all filenames and
+         * path components have been resolved already.
+         *
+         * Avoid problems with command line length in some environments.
+         */
+        exe.setWorkingDirectory(null);
+        try {
+            exe.setCommandline(toExecute.getCommandline());
+            int ret = exe.execute();
+            if (ret != 0 && failOnError) {
+                throw new BuildException("Javadoc returned " + ret,
+                                         getLocation());
+            }
+        } catch (IOException e) {
+            throw new BuildException("Javadoc failed: " + e, e, getLocation());
+        } finally {
+            if (tmpList != null) {
+                tmpList.delete();
+                tmpList = null;
+            }
+
+            out.logFlush();
+            err.logFlush();
+            try {
+                out.close();
+                err.close();
+            } catch (IOException e) {
+                // ignore
+            }
+        }
+    }
+
+    private void checkTaskName() {
+        if ("javadoc2".equals(getTaskType())) {
+            log("Warning: the task name <javadoc2> is deprecated."
+                + " Use <javadoc> instead.",
+                Project.MSG_WARN);
+        }
+    }
+
+    private void checkPackageAndSourcePath() {
+        if (packageList != null && sourcePath == null) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying packagelist.";
+            throw new BuildException(msg);
+        }
+    }
+
+    private void checkPackages(Vector packagesToDoc, Path sourceDirs) {
+        if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying package names.";
+            throw new BuildException(msg);
+        }
+    }
+
+    private void checkPackagesToDoc(
+        Vector packagesToDoc, Vector sourceFilesToDoc) {
+        if (packageList == null && packagesToDoc.size() == 0
+            && sourceFilesToDoc.size() == 0) {
+            throw new BuildException("No source files and no packages have "
+                                     + "been specified.");
+        }
+    }
+
+    private void doSourcePath(Commandline toExecute, Path sourceDirs) {
+        if (sourceDirs.size() > 0) {
+            toExecute.createArgument().setValue("-sourcepath");
+            toExecute.createArgument().setPath(sourceDirs);
+        }
+    }
+
+    private void generalJavadocArguments(Commandline toExecute) {
         if (doctitle != null) {
             toExecute.createArgument().setValue("-doctitle");
             toExecute.createArgument().setValue(expand(doctitle.getText()));
@@ -1693,10 +1829,6 @@ public class Javadoc extends Task {
             toExecute.createArgument().setValue("-classpath");
             toExecute.createArgument().setPath(classpath);
         }
-        if (sourceDirs.size() > 0) {
-            toExecute.createArgument().setValue("-sourcepath");
-            toExecute.createArgument().setPath(sourceDirs);
-        }
 
         if (version && doclet == null) {
             toExecute.createArgument().setValue("-version");
@@ -1708,9 +1840,9 @@ public class Javadoc extends Task {
         if (doclet == null && destDir == null) {
             throw new BuildException("destdir attribute must be set!");
         }
+    }
 
-        // ---------------------------- javadoc2 arguments for default doclet
-
+    private void doDoclet(Commandline toExecute) {
         if (doclet != null) {
             if (doclet.getName() == null) {
                 throw new BuildException("The doclet name must be "
@@ -1742,6 +1874,49 @@ public class Javadoc extends Task {
                 }
             }
         }
+    }
+
+    private void writeExternalArgs(Commandline toExecute) {
+        // If using an external file, write the command line options to it
+        File optionsTmpFile = null;
+        PrintWriter optionsListWriter = null;
+        try {
+            optionsTmpFile = FILE_UTILS.createTempFile(
+                "javadocOptions", "", null);
+            optionsTmpFile.deleteOnExit();
+            String[] listOpt = toExecute.getArguments();
+            toExecute.clearArgs();
+            toExecute.createArgument().setValue(
+                "@" + optionsTmpFile.getAbsolutePath());
+            optionsListWriter = new PrintWriter(
+                new FileWriter(optionsTmpFile.getAbsolutePath(), true));
+            for (int i = 0; i < listOpt.length; i++) {
+                String string = listOpt[i];
+                if (string.startsWith("-J-")) {
+                    toExecute.createArgument().setValue(string);
+                } else  {
+                    if (string.startsWith("-")) {
+                        optionsListWriter.print(string);
+                        optionsListWriter.print(" ");
+                    } else {
+                        optionsListWriter.println(quoteString(string));
+                    }
+                }
+            }
+            optionsListWriter.close();
+        } catch (IOException ex) {
+            if (optionsTmpFile != null) {
+                optionsTmpFile.delete();
+            }
+            throw new BuildException(
+                "Error creating or writing temporary file for javadoc options",
+                ex, getLocation());
+        } finally {
+            FILE_UTILS.close(optionsListWriter);
+        }
+    }
+
+    private void doBootPath(Commandline toExecute) {
         Path bcp = new Path(getProject());
         if (bootclasspath != null) {
             bcp.append(bootclasspath);
@@ -1751,8 +1926,9 @@ public class Javadoc extends Task {
             toExecute.createArgument().setValue("-bootclasspath");
             toExecute.createArgument().setPath(bcp);
         }
+    }
 
-        // add the links arguments
+    private void doLinks(Commandline toExecute) {
         if (links.size() != 0) {
             for (Enumeration e = links.elements(); e.hasMoreElements();) {
                 LinkArgument la = (LinkArgument) e.nextElement();
@@ -1830,7 +2006,9 @@ public class Javadoc extends Task {
                 }
             }
         }
+    }
 
+    private void doGroup(Commandline toExecute) {
         // add the single group arguments
         // Javadoc 1.2 rules:
         //   Multiple -group args allowed.
@@ -1857,8 +2035,10 @@ public class Javadoc extends Task {
                 }
             }
         }
+    }
 
-        // add the group arguments
+    // add the group arguments
+    private void doGroups(Commandline toExecute) {
         if (groups.size() != 0) {
             for (Enumeration e = groups.elements(); e.hasMoreElements();) {
                 GroupArgument ga = (GroupArgument) e.nextElement();
@@ -1874,266 +2054,145 @@ public class Javadoc extends Task {
                 toExecute.createArgument().setValue(packages);
             }
         }
+    }
 
-        // Javadoc 1.4 parameters
-        if (javadoc4 || executable != null) {
-            for (Enumeration e = tags.elements(); e.hasMoreElements();) {
-                Object element = e.nextElement();
-                if (element instanceof TagArgument) {
-                    TagArgument ta = (TagArgument) element;
-                    File tagDir = ta.getDir(getProject());
-                    if (tagDir == null) {
-                        // The tag element is not used as a fileset,
-                        // but specifies the tag directly.
-                        toExecute.createArgument().setValue ("-tag");
-                        toExecute.createArgument()
-                            .setValue (ta.getParameter());
-                    } else {
-                        // The tag element is used as a
-                        // fileset. Parse all the files and create
-                        // -tag arguments.
-                        DirectoryScanner tagDefScanner =
-                            ta.getDirectoryScanner(getProject());
-                        String[] files = tagDefScanner.getIncludedFiles();
-                        for (int i = 0; i < files.length; i++) {
-                            File tagDefFile = new File(tagDir, files[i]);
-                            try {
-                                BufferedReader in
-                                    = new BufferedReader(
-                                          new FileReader(tagDefFile)
-                                          );
-                                String line = null;
-                                while ((line = in.readLine()) != null) {
-                                    toExecute.createArgument()
-                                        .setValue("-tag");
-                                    toExecute.createArgument()
-                                        .setValue(line);
-                                }
-                                in.close();
-                            } catch (IOException ioe) {
-                                throw new BuildException("Couldn't read "
-                                    + " tag file from "
-                                    + tagDefFile.getAbsolutePath(), ioe);
-                            }
-                        }
-                    }
-                } else {
-                    ExtensionInfo tagletInfo = (ExtensionInfo) element;
-                    toExecute.createArgument().setValue("-taglet");
-                    toExecute.createArgument().setValue(tagletInfo
-                                                        .getName());
-                    if (tagletInfo.getPath() != null) {
-                        Path tagletPath = tagletInfo.getPath()
-                            .concatSystemClasspath("ignore");
-                        if (tagletPath.size() != 0) {
-                            toExecute.createArgument()
-                                .setValue("-tagletpath");
-                            toExecute.createArgument().setPath(tagletPath);
-                        }
-                    }
-                }
-            }
-
-            String sourceArg = source != null ? source
-                : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
-            if (sourceArg != null) {
-                toExecute.createArgument().setValue("-source");
-                toExecute.createArgument().setValue(sourceArg);
-            }
-
-            if (linksource && doclet == null) {
-                toExecute.createArgument().setValue("-linksource");
-            }
-            if (breakiterator && (doclet == null || javadoc5)) {
-                toExecute.createArgument().setValue("-breakiterator");
-            }
-            if (noqualifier != null && doclet == null) {
-                toExecute.createArgument().setValue("-noqualifier");
-                toExecute.createArgument().setValue(noqualifier);
-            }
-        } else {
-            // Not 1.4+.
-            if (!tags.isEmpty()) {
-                log("-tag and -taglet options not supported on Javadoc < 1.4",
-                     Project.MSG_VERBOSE);
-            }
-            if (source != null) {
-                log("-source option not supported on Javadoc < 1.4",
-                     Project.MSG_VERBOSE);
-            }
-            if (linksource) {
-                log("-linksource option not supported on Javadoc < 1.4",
-                     Project.MSG_VERBOSE);
-            }
-            if (breakiterator) {
-                log("-breakiterator option not supported on Javadoc < 1.4",
-                     Project.MSG_VERBOSE);
-            }
-            if (noqualifier != null) {
-                log("-noqualifier option not supported on Javadoc < 1.4",
-                     Project.MSG_VERBOSE);
-            }
-        }
-        // Javadoc 1.2/1.3 parameters:
-        if (!javadoc4 || executable != null) {
-            if (old) {
-                toExecute.createArgument().setValue("-1.1");
-            }
-        } else {
-            if (old) {
-                log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
-                    Project.MSG_WARN);
-            }
-        }
-        // If using an external file, write the command line options to it
-        if (useExternalFile && javadoc4) {
-            writeExternalArgs(toExecute);
-        }
-
-        File tmpList = null;
-        PrintWriter srcListWriter = null;
-
-        try {
-
-            /**
-             * Write sourcefiles and package names to a temporary file
-             * if requested.
-             */
-            if (useExternalFile) {
-                if (tmpList == null) {
-                    tmpList = FILE_UTILS.createTempFile("javadoc", "", null);
-                    tmpList.deleteOnExit();
+    // Do java1.4 arguments
+    private void doJava14(Commandline toExecute) {
+        for (Enumeration e = tags.elements(); e.hasMoreElements();) {
+            Object element = e.nextElement();
+            if (element instanceof TagArgument) {
+                TagArgument ta = (TagArgument) element;
+                File tagDir = ta.getDir(getProject());
+                if (tagDir == null) {
+                    // The tag element is not used as a fileset,
+                    // but specifies the tag directly.
+                    toExecute.createArgument().setValue ("-tag");
                     toExecute.createArgument()
-                        .setValue("@" + tmpList.getAbsolutePath());
-                }
-                srcListWriter = new PrintWriter(
-                                    new FileWriter(tmpList.getAbsolutePath(),
-                                                   true));
-            }
-
-            Enumeration e = packagesToDoc.elements();
-            while (e.hasMoreElements()) {
-                String packageName = (String) e.nextElement();
-                if (useExternalFile) {
-                    srcListWriter.println(packageName);
+                        .setValue (ta.getParameter());
                 } else {
-                    toExecute.createArgument().setValue(packageName);
-                }
-            }
-
-            e = sourceFilesToDoc.elements();
-            while (e.hasMoreElements()) {
-                SourceFile sf = (SourceFile) e.nextElement();
-                String sourceFileName = sf.getFile().getAbsolutePath();
-                if (useExternalFile) {
-                    // XXX what is the following doing?
-                    //     should it run if !javadoc4 && executable != null?
-                    if (javadoc4 && sourceFileName.indexOf(" ") > -1) {
-                        String name = sourceFileName;
-                        if (File.separatorChar == '\\') {
-                            name = sourceFileName.replace(File.separatorChar, '/');
+                    // The tag element is used as a
+                    // fileset. Parse all the files and create
+                    // -tag arguments.
+                    DirectoryScanner tagDefScanner =
+                        ta.getDirectoryScanner(getProject());
+                    String[] files = tagDefScanner.getIncludedFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        File tagDefFile = new File(tagDir, files[i]);
+                        try {
+                            BufferedReader in
+                                = new BufferedReader(
+                                    new FileReader(tagDefFile)
+                                                     );
+                            String line = null;
+                            while ((line = in.readLine()) != null) {
+                                toExecute.createArgument()
+                                    .setValue("-tag");
+                                toExecute.createArgument()
+                                    .setValue(line);
+                            }
+                            in.close();
+                        } catch (IOException ioe) {
+                            throw new BuildException(
+                                "Couldn't read "
+                                + " tag file from "
+                                + tagDefFile.getAbsolutePath(), ioe);
                         }
-                        srcListWriter.println("\"" + name + "\"");
-                    } else {
-                        srcListWriter.println(sourceFileName);
                     }
-                } else {
-                    toExecute.createArgument().setValue(sourceFileName);
+                }
+            } else {
+                ExtensionInfo tagletInfo = (ExtensionInfo) element;
+                toExecute.createArgument().setValue("-taglet");
+                toExecute.createArgument().setValue(tagletInfo
+                                                    .getName());
+                if (tagletInfo.getPath() != null) {
+                    Path tagletPath = tagletInfo.getPath()
+                        .concatSystemClasspath("ignore");
+                    if (tagletPath.size() != 0) {
+                        toExecute.createArgument()
+                            .setValue("-tagletpath");
+                        toExecute.createArgument().setPath(tagletPath);
+                    }
                 }
             }
-
-        } catch (IOException e) {
-            tmpList.delete();
-            throw new BuildException("Error creating temporary file",
-                                     e, getLocation());
-        } finally {
-            if (srcListWriter != null) {
-                srcListWriter.close();
-            }
         }
 
-        if (packageList != null) {
-            toExecute.createArgument().setValue("@" + packageList);
+        String sourceArg = source != null ? source
+            : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
+        if (sourceArg != null) {
+            toExecute.createArgument().setValue("-source");
+            toExecute.createArgument().setValue(sourceArg);
         }
-        log(toExecute.describeCommand(), Project.MSG_VERBOSE);
 
-        log("Javadoc execution", Project.MSG_INFO);
-
-        JavadocOutputStream out = new JavadocOutputStream(Project.MSG_INFO);
-        JavadocOutputStream err = new JavadocOutputStream(Project.MSG_WARN);
-        Execute exe = new Execute(new PumpStreamHandler(out, err));
-        exe.setAntRun(getProject());
-
-        /*
-         * No reason to change the working directory as all filenames and
-         * path components have been resolved already.
-         *
-         * Avoid problems with command line length in some environments.
-         */
-        exe.setWorkingDirectory(null);
-        try {
-            exe.setCommandline(toExecute.getCommandline());
-            int ret = exe.execute();
-            if (ret != 0 && failOnError) {
-                throw new BuildException("Javadoc returned " + ret,
-                                         getLocation());
-            }
-        } catch (IOException e) {
-            throw new BuildException("Javadoc failed: " + e, e, getLocation());
-        } finally {
-            if (tmpList != null) {
-                tmpList.delete();
-                tmpList = null;
-            }
-
-            out.logFlush();
-            err.logFlush();
-            try {
-                out.close();
-                err.close();
-            } catch (IOException e) {
-                // ignore
-            }
+        if (linksource && doclet == null) {
+            toExecute.createArgument().setValue("-linksource");
+        }
+        if (noqualifier != null && doclet == null) {
+            toExecute.createArgument().setValue("-noqualifier");
+            toExecute.createArgument().setValue(noqualifier);
         }
     }
 
-    private void writeExternalArgs(Commandline toExecute) {
-        // If using an external file, write the command line options to it
-        File optionsTmpFile = null;
-        PrintWriter optionsListWriter = null;
-        try {
-            optionsTmpFile = FILE_UTILS.createTempFile(
-                "javadocOptions", "", null);
-            optionsTmpFile.deleteOnExit();
-            String[] listOpt = toExecute.getArguments();
-            toExecute.clearArgs();
-            toExecute.createArgument().setValue(
-                "@" + optionsTmpFile.getAbsolutePath());
-            optionsListWriter = new PrintWriter(
-                new FileWriter(optionsTmpFile.getAbsolutePath(), true));
-            for (int i = 0; i < listOpt.length; i++) {
-                String string = listOpt[i];
-                if (string.startsWith("-J-")) {
-                    toExecute.createArgument().setValue(string);
-                } else  {
-                    if (string.startsWith("-")) {
-                        optionsListWriter.print(string);
-                        optionsListWriter.print(" ");
-                    } else {
-                        optionsListWriter.println(quoteString(string));
+    private void doNotJava14() {
+        // Not 1.4+.
+        if (!tags.isEmpty()) {
+            log("-tag and -taglet options not supported on Javadoc < 1.4",
+                Project.MSG_VERBOSE);
+        }
+        if (source != null) {
+            log("-source option not supported on Javadoc < 1.4",
+                Project.MSG_VERBOSE);
+        }
+        if (linksource) {
+            log("-linksource option not supported on Javadoc < 1.4",
+                Project.MSG_VERBOSE);
+        }
+        if (breakiterator) {
+            log("-breakiterator option not supported on Javadoc < 1.4",
+                Project.MSG_VERBOSE);
+        }
+        if (noqualifier != null) {
+            log("-noqualifier option not supported on Javadoc < 1.4",
+                Project.MSG_VERBOSE);
+        }
+    }
+
+    private void doSourceAndPackageNames(
+        Commandline toExecute,
+        Vector packagesToDoc,
+        Vector sourceFilesToDoc,
+        boolean useExternalFile,
+        File    tmpList,
+        PrintWriter srcListWriter)
+        throws IOException {
+        Enumeration e = packagesToDoc.elements();
+        while (e.hasMoreElements()) {
+            String packageName = (String) e.nextElement();
+            if (useExternalFile) {
+                srcListWriter.println(packageName);
+            } else {
+                toExecute.createArgument().setValue(packageName);
+            }
+        }
+
+        e = sourceFilesToDoc.elements();
+        while (e.hasMoreElements()) {
+            SourceFile sf = (SourceFile) e.nextElement();
+            String sourceFileName = sf.getFile().getAbsolutePath();
+            if (useExternalFile) {
+                // XXX what is the following doing?
+                //     should it run if !javadoc4 && executable != null?
+                if (JAVADOC_4 && sourceFileName.indexOf(" ") > -1) {
+                    String name = sourceFileName;
+                    if (File.separatorChar == '\\') {
+                        name = sourceFileName.replace(File.separatorChar, '/');
                     }
+                    srcListWriter.println("\"" + name + "\"");
+                } else {
+                    srcListWriter.println(sourceFileName);
                 }
+            } else {
+                toExecute.createArgument().setValue(sourceFileName);
             }
-            optionsListWriter.close();
-        } catch (IOException ex) {
-            if (optionsTmpFile != null) {
-                optionsTmpFile.delete();
-            }
-            throw new BuildException(
-                "Error creating or writing temporary file for javadoc options",
-                ex, getLocation());
-        } finally {
-            FILE_UTILS.close(optionsListWriter);
         }
     }
 
