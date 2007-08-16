@@ -88,9 +88,14 @@ public abstract class Pack extends Task {
      * @param a the resource to pack as a single element Resource collection.
      */
     public void addConfigured(ResourceCollection a) {
+        if (a.size() == 0) {
+            throw new BuildException("No resource selected, " + getTaskName()
+                    + " needs exactly one resource.");
+        }
         if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections"
-                                     + " are supported as archives");
+            throw new BuildException(getTaskName()
+                    + " cannot handle multiple resources at once. (" + a.size()
+                    + " resources were selected.)");
         }
         setSrcResource((Resource) a.iterator().next());
     }
