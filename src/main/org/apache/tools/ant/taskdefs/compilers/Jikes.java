@@ -131,6 +131,36 @@ public class Jikes extends DefaultCompilerAdapter {
             cmd.createArgument().setValue(target);
         }
 
+        addPropertyParams(cmd);
+
+        if (attributes.getSource() != null) {
+            cmd.createArgument().setValue("-source");
+            String source = attributes.getSource();
+            if (source.equals("1.1") || source.equals("1.2")) {
+                // support for -source 1.1 and -source 1.2 has been
+                // added with JDK 1.4.2, Jikes doesn't like it
+                attributes.log("Jikes doesn't support '-source " + source
+                        + "', will use '-source 1.3' instead");
+                cmd.createArgument().setValue("1.3");
+            } else {
+                cmd.createArgument().setValue(source);
+            }
+        }
+        addCurrentCompilerArgs(cmd);
+
+        int firstFileName = cmd.size();
+
+        Path boot = getBootClassPath();
+        if (boot.size() > 0) {
+            cmd.createArgument().setValue("-bootclasspath");
+            cmd.createArgument().setPath(boot);
+        }
+        logAndAddFilesToCompile(cmd);
+
+        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+    }
+
+    private void addPropertyParams(Commandline cmd) {
         /**
          * XXX
          * Perhaps we shouldn't use properties for these
@@ -186,32 +216,6 @@ public class Jikes extends DefaultCompilerAdapter {
             && Project.toBoolean(fullDependProperty)) {
             cmd.createArgument().setValue("+F");
         }
-
-        if (attributes.getSource() != null) {
-            cmd.createArgument().setValue("-source");
-            String source = attributes.getSource();
-            if (source.equals("1.1") || source.equals("1.2")) {
-                // support for -source 1.1 and -source 1.2 has been
-                // added with JDK 1.4.2, Jikes doesn't like it
-                attributes.log("Jikes doesn't support '-source " + source
-                        + "', will use '-source 1.3' instead");
-                cmd.createArgument().setValue("1.3");
-            } else {
-                cmd.createArgument().setValue(source);
-            }
-        }
-        addCurrentCompilerArgs(cmd);
-
-        int firstFileName = cmd.size();
-
-        Path boot = getBootClassPath();
-        if (boot.size() > 0) {
-            cmd.createArgument().setValue("-bootclasspath");
-            cmd.createArgument().setPath(boot);
-        }
-        logAndAddFilesToCompile(cmd);
-
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
 }
