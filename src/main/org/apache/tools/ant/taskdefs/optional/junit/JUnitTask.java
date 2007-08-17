@@ -926,34 +926,9 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(Constants.HALT_ON_ERROR + test.getHaltonerror());
         cmd.createArgument().setValue(Constants.HALT_ON_FAILURE
                                       + test.getHaltonfailure());
-        if (includeAntRuntime) {
-            Vector v = Execute.getProcEnvironment();
-            Enumeration e = v.elements();
-            while (e.hasMoreElements()) {
-                String s = (String) e.nextElement();
-                if (s.startsWith(CLASSPATH)) {
-                    cmd.createClasspath(getProject()).createPath()
-                        .append(new Path(getProject(),
-                                         s.substring(CLASSPATH.length()
-                                                     )));
-                }
-            }
-            log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
-                Project.MSG_VERBOSE);
-            cmd.createClasspath(getProject()).createPath()
-                .append(antRuntimeClasses);
-        }
+        checkIncludeAntRuntime(cmd);
 
-        if (summary) {
-            String prefix = "";
-            if ("withoutanderr".equalsIgnoreCase(summaryValue)) {
-                prefix = "OutErr";
-            }
-            cmd.createArgument()
-                .setValue(Constants.FORMATTER
-                          + "org.apache.tools.ant.taskdefs.optional.junit."
-                          + prefix + "SummaryJUnitResultFormatter");
-        }
+        checkIncludeSummary(cmd);
 
         cmd.createArgument().setValue(Constants.SHOWOUTPUT
                                       + String.valueOf(showOutput));
@@ -1070,6 +1045,42 @@ public class JUnitTask extends Task {
         }
 
         return result;
+    }
+
+    /**
+     * Adding ant runtime.
+     */
+    private void checkIncludeAntRuntime(CommandlineJava cmd) {
+        if (includeAntRuntime) {
+            Vector v = Execute.getProcEnvironment();
+            Enumeration e = v.elements();
+            while (e.hasMoreElements()) {
+                String s = (String) e.nextElement();
+                if (s.startsWith(CLASSPATH)) {
+                    cmd.createClasspath(getProject()).createPath()
+                        .append(new Path(getProject(),
+                                         s.substring(CLASSPATH.length()
+                                                     )));
+                }
+            }
+            log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
+                Project.MSG_VERBOSE);
+            cmd.createClasspath(getProject()).createPath()
+                .append(antRuntimeClasses);
+        }
+    }
+
+    private void checkIncludeSummary(CommandlineJava cmd) {
+        if (summary) {
+            String prefix = "";
+            if ("withoutanderr".equalsIgnoreCase(summaryValue)) {
+                prefix = "OutErr";
+            }
+            cmd.createArgument()
+                .setValue(Constants.FORMATTER
+                          + "org.apache.tools.ant.taskdefs.optional.junit."
+                          + prefix + "SummaryJUnitResultFormatter");
+        }
     }
 
     /**
