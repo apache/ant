@@ -1012,37 +1012,12 @@ public final class IntrospectionHelper  {
                 }
             };
         }
-        Class enumClass = null;
-        try {
-            enumClass = Class.forName("java.lang.Enum");
-        } catch (ClassNotFoundException e) {
-            //ignore
+
+        AttributeSetter setter = getEnumSetter(reflectedArg, m, arg);
+        if (setter != null) {
+            return setter;
         }
-        if (enumClass != null && enumClass.isAssignableFrom(reflectedArg)) {
-            return new AttributeSetter(m, arg) {
-                public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
-                    try {
-                        m.invoke(parent, new Object[] {
-                            reflectedArg.getMethod("valueOf", new Class[] {String.class}).
-                                    invoke(null, new Object[] {value})});
-                    } catch (InvocationTargetException x) {
-                        //there is specific logic here for the value being out of the allowed
-                        //set of enumerations.
-                        if (x.getTargetException() instanceof IllegalArgumentException) {
-                            throw new BuildException("'" + value + "' is not a permitted value for "
-                                    + reflectedArg.getName());
-                        }
-                        //only if the exception is not an IllegalArgument do we request the
-                        //BuildException via extractBuildException():
-                        throw extractBuildException(x);
-                    } catch (Exception x) {
-                        //any other failure of invoke() to work.
-                        throw new BuildException(x);
-                    }
-                }
-            };
-        }
+
         if (java.lang.Long.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 public void set(Project p, Object parent, String value)
@@ -1100,6 +1075,47 @@ public final class IntrospectionHelper  {
                 }
             }
         };
+    }
+
+    private AttributeSetter getEnumSetter(
+        final Class reflectedArg, final Method m, Class arg) {
+        Class enumClass = null;
+        try {
+            enumClass = Class.forName("java.lang.Enum");
+        } catch (ClassNotFoundException e) {
+            //ignore
+        }
+        if (enumClass != null && enumClass.isAssignableFrom(reflectedArg)) {
+            return new AttributeSetter(m, arg) {
+                public void set(Project p, Object parent, String value)
+                    throws InvocationTargetException, IllegalAccessException,
+                    BuildException {
+                    try {
+                        m.invoke(
+                            parent, new Object[] {
+                                reflectedArg.getMethod(
+                                    "valueOf", new Class[] {String.class}).
+                                invoke(null, new Object[] {value})});
+                    } catch (InvocationTargetException x) {
+                        //there is specific logic here for the value
+                        // being out of the allowed set of enumerations.
+                        if (x.getTargetException() instanceof IllegalArgumentException) {
+                            throw new BuildException(
+                                "'" + value + "' is not a permitted value for "
+                                + reflectedArg.getName());
+                        }
+                        //only if the exception is not an IllegalArgument do we
+                        // request the
+                        //BuildException via extractBuildException():
+                        throw extractBuildException(x);
+                    } catch (Exception x) {
+                        //any other failure of invoke() to work.
+                        throw new BuildException(x);
+                    }
+                }
+            };
+        }
+        return null;
     }
 
     /**
