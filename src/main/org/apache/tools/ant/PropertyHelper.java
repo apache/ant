@@ -52,13 +52,19 @@ import java.util.Enumeration;
 /** NOT FINAL. API MAY CHANGE
  *
  * Deals with properties - substitution, dynamic properties, etc.
- *q
+ *
  * This is the same code as in Ant1.5. The main addition is the ability
  * to chain multiple PropertyHelpers and to replace the default.
  *
  * @since Ant 1.6
  */
 public class PropertyHelper implements Cloneable {
+
+    //  --------------------------------------------------------
+    //
+    //    The property delegate interfaces
+    //
+    //  --------------------------------------------------------
 
     /**
      * Marker interface for a PropertyHelper delegate.
@@ -93,8 +99,42 @@ public class PropertyHelper implements Cloneable {
          * @param propertyHelper the invoking PropertyHelper.
          * @return parsed String if any, else <code>null</code>.
          */
-        String parsePropertyName(String s, ParsePosition pos, PropertyHelper propertyHelper);
+        String parsePropertyName(
+            String s, ParsePosition pos, PropertyHelper propertyHelper);
     }
+
+    /**
+     * Describes an entity capable of setting a property to a value.
+     * @since Ant 1.8
+     */
+    public interface PropertySetter extends Delegate {
+        /**
+         * Set a *new" property.
+         * @param property the property's String "identifier".
+         * @param value    the value to set.
+         * @param propertyHelper the invoking PropertyHelper.
+         * @return true if this entity 'owns' the property.
+         */
+        boolean setNew(
+            String property, Object value, PropertyHelper propertyHelper);
+
+        /**
+         * Set a property.
+         * @param property the property's String "identifier".
+         * @param value    the value to set.
+         * @param propertyHelper the invoking PropertyHelper.
+         * @return true if this entity 'owns' the property.
+         */
+        boolean set(
+            String property, Object value, PropertyHelper propertyHelper);
+    }
+
+
+    //  --------------------------------------------------------
+    //
+    //    The predefined property delegates
+    //
+    //  --------------------------------------------------------
 
     private static final PropertyEvaluator TO_STRING = new PropertyEvaluator() {
         private String prefix = "toString:";
@@ -549,6 +589,13 @@ public class PropertyHelper implements Cloneable {
      *  @return true if the property is set.
      */
     public synchronized boolean setProperty(String name, Object value, boolean verbose) {
+        for (Iterator iter = getDelegates(PropertySetter.class).iterator();
+             iter.hasNext();) {
+            PropertySetter setter = (PropertySetter) iter.next();
+            if (setter.set(name, value, this)) {
+                return true;
+            }
+        }
         // user (CLI) properties take precedence
         if (null != userProperties.get(name)) {
             if (verbose) {
@@ -607,6 +654,13 @@ public class PropertyHelper implements Cloneable {
      * @since Ant 1.8
      */
     public synchronized void setNewProperty(String name, Object value) {
+        for (Iterator iter = getDelegates(PropertySetter.class).iterator();
+             iter.hasNext();) {
+            PropertySetter setter = (PropertySetter) iter.next();
+            if (setter.setNew(name, value, this)) {
+                return;
+            }
+        }
         if (null != properties.get(name)) {
             project.log("Override ignored for property \"" + name + "\"", Project.MSG_VERBOSE);
             return;
