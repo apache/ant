@@ -119,26 +119,29 @@ public class MailLogger extends DefaultLogger {
             if (!notify) {
                 return;
             }
-
-            String mailhost = getValue(properties, "mailhost", "localhost");
-            int port = Integer.parseInt(getValue(properties, "port",
-                                        String.valueOf(MailMessage.DEFAULT_PORT)));
-            String user = getValue(properties, "user", "");
-            String password = getValue(properties, "password", "");
-            boolean ssl = Project.toBoolean(getValue(properties,
-                     "ssl", "off"));
-            String from = getValue(properties, "from", null);
-            String replytoList = getValue(properties, "replyto", "");
-            String toList = getValue(properties, prefix + ".to", null);
-            String subject = getValue(properties, prefix + ".subject",
-                    (success) ? "Build Success" : "Build Failure");
-            if (user.equals("") && password.equals("") && !ssl) {
-                sendMail(mailhost, port,  from, replytoList, toList,
-                         subject, buffer.substring(0));
+            Values values = new Values()
+                .mailhost(getValue(properties, "mailhost", "localhost"))
+                .port(Integer.parseInt(
+                          getValue(
+                              properties, "port",
+                              String.valueOf(MailMessage.DEFAULT_PORT))))
+                .user(getValue(properties, "user", ""))
+                .password(getValue(properties, "password", ""))
+                .ssl(Project.toBoolean(getValue(properties,
+                                                "ssl", "off")))
+                .from(getValue(properties, "from", null))
+                .replytoList(getValue(properties, "replyto", ""))
+                .toList(getValue(properties, prefix + ".to", null))
+                .subject(getValue(
+                             properties, prefix + ".subject",
+                             (success) ? "Build Success" : "Build Failure"));
+            if (values.user().equals("")
+                && values.password().equals("")
+                && !values.ssl()) {
+                sendMail(values, buffer.substring(0));
             } else {
-                sendMimeMail(event.getProject(), mailhost, port, user,
-                             password, ssl, from, replytoList, toList,
-                             subject, buffer.substring(0));
+                sendMimeMail(
+                    event.getProject(), values, buffer.substring(0));
             }
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
@@ -146,6 +149,80 @@ public class MailLogger extends DefaultLogger {
         }
     }
 
+    private static class Values {
+        private String mailhost;
+        public String mailhost() {
+            return mailhost;
+        }
+        public Values mailhost(String mailhost) {
+            this.mailhost = mailhost;
+            return this;
+        }
+        private int port;
+        public int port() {
+            return port;
+        }
+        public Values port(int port) {
+            this.port = port;
+            return this;
+        }
+        private String user;
+        public String user() {
+            return user;
+        }
+        public Values user(String user) {
+            this.user = user;
+            return this;
+        }
+        private String password;
+        public String password() {
+            return password;
+        }
+        public Values password(String password) {
+            this.password = password;
+            return this;
+        }
+        private boolean ssl;
+        public boolean ssl() {
+            return ssl;
+        }
+        public Values ssl(boolean ssl) {
+            this.ssl = ssl;
+            return this;
+        }
+        private String from;
+        public String from() {
+            return from;
+        }
+        public Values from(String from) {
+            this.from = from;
+            return this;
+        }
+        private String replytoList;
+        public String replytoList() {
+            return replytoList;
+        }
+        public Values replytoList(String replytoList) {
+            this.replytoList = replytoList;
+            return this;
+        }
+        private String toList;
+        public String toList() {
+            return toList;
+        }
+        public Values toList(String toList) {
+            this.toList = toList;
+            return this;
+        }
+        private String subject;
+        public String subject() {
+            return subject;
+        }
+        public Values subject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+    }
 
     /**
      *  Receives and buffers log messages.
@@ -188,33 +265,29 @@ public class MailLogger extends DefaultLogger {
 
     /**
      *  Send the mail
-     * @param  mailhost         mail server
-     * @param  port             mail server port number
-     * @param  from             from address
-     * @param  replyToList      comma-separated replyto list
-     * @param  toList           comma-separated recipient list
-     * @param  subject          mail subject
+     * @param  values           the various values.
      * @param  message          mail body
      * @exception  IOException  thrown if sending message fails
      */
-    private void sendMail(String mailhost, int port, String from, String replyToList, String toList,
-                          String subject, String message) throws IOException {
-        MailMessage mailMessage = new MailMessage(mailhost, port);
+    private void sendMail(Values values, String message) throws IOException {
+        MailMessage mailMessage = new MailMessage(
+            values.mailhost(), values.port());
         mailMessage.setHeader("Date", DateUtils.getDateForHeader());
 
-        mailMessage.from(from);
-        if (!replyToList.equals("")) {
-            StringTokenizer t = new StringTokenizer(replyToList, ", ", false);
+        mailMessage.from(values.from());
+        if (!values.replytoList().equals("")) {
+            StringTokenizer t = new StringTokenizer(
+                values.replytoList(), ", ", false);
             while (t.hasMoreTokens()) {
                 mailMessage.replyto(t.nextToken());
             }
         }
-        StringTokenizer t = new StringTokenizer(toList, ", ", false);
+        StringTokenizer t = new StringTokenizer(values.toList(), ", ", false);
         while (t.hasMoreTokens()) {
             mailMessage.to(t.nextToken());
         }
 
-        mailMessage.setSubject(subject);
+        mailMessage.setSubject(values.subject());
 
         PrintStream ps = mailMessage.getPrintStream();
         ps.println(message);
@@ -224,22 +297,10 @@ public class MailLogger extends DefaultLogger {
     /**
      *  Send the mail  (MimeMail)
      * @param  project          current ant project
-     * @param  host             mail server
-     * @param  port             mail server port number
-     * @param  user             user name for SMTP auth
-     * @param  password         password for SMTP auth
-     * @param  ssl              if true send message over SSL
-     * @param  from             from address
-     * @param  replyToString    comma-separated replyto list
-     * @param  toString         comma-separated recipient list
-     * @param  subject          mail subject
+     * @param  values           various values
      * @param  message          mail body
      */
-    private void sendMimeMail(Project project, String host, int port,
-                              String user, String password, boolean ssl,
-                              String from, String replyToString,
-                              String toString, String subject,
-                              String message)  {
+    private void sendMimeMail(Project project, Values values, String message) {
         // convert the replyTo string into a vector of emailaddresses
         Mailer mailer = null;
         try {
@@ -251,23 +312,23 @@ public class MailLogger extends DefaultLogger {
             log("Failed to initialise MIME mail: " + t.getMessage());
             return;
         }
-        Vector replyToList = vectorizeEmailAddresses(replyToString);
-        mailer.setHost(host);
-        mailer.setPort(port);
-        mailer.setUser(user);
-        mailer.setPassword(password);
-        mailer.setSSL(ssl);
+        Vector replyToList = vectorizeEmailAddresses(values.replytoList());
+        mailer.setHost(values.mailhost());
+        mailer.setPort(values.port());
+        mailer.setUser(values.user());
+        mailer.setPassword(values.password());
+        mailer.setSSL(values.ssl());
         Message mymessage = new Message(message);
         mymessage.setProject(project);
         mailer.setMessage(mymessage);
-        mailer.setFrom(new EmailAddress(from));
+        mailer.setFrom(new EmailAddress(values.from()));
         mailer.setReplyToList(replyToList);
-        Vector toList = vectorizeEmailAddresses(toString);
+        Vector toList = vectorizeEmailAddresses(values.toList());
         mailer.setToList(toList);
         mailer.setCcList(new Vector());
         mailer.setBccList(new Vector());
         mailer.setFiles(new Vector());
-        mailer.setSubject(subject);
+        mailer.setSubject(values.subject());
         mailer.send();
     }
     private Vector vectorizeEmailAddresses(String listString) {
