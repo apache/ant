@@ -136,6 +136,9 @@ Fixed bugs:
 * <junit> supports collecting and rerunning failed test cases
   (textXXX methods). Bugzilla 42984.  
 
+* War task failed with "No WEB-INF/web.xml file was added" when called
+  a second time. Bugzilla 43121.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
