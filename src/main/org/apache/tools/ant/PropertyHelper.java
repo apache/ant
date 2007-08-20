@@ -52,7 +52,7 @@ import java.util.Enumeration;
 /** NOT FINAL. API MAY CHANGE
  *
  * Deals with properties - substitution, dynamic properties, etc.
- *
+ *q
  * This is the same code as in Ant1.5. The main addition is the ability
  * to chain multiple PropertyHelpers and to replace the default.
  *
@@ -171,6 +171,52 @@ public class PropertyHelper implements Cloneable {
         add(TO_STRING);
         add(SKIP_DOUBLE_DOLLAR);
         add(DEFAULT_EXPANDER);
+    }
+
+    //  --------------------------------------------------------
+    //
+    //    Some helper static methods to get and set properties
+    //
+    //  --------------------------------------------------------
+
+    /**
+     * A helper static method to get a property
+     * from a particular project.
+     * @param project the project in question.
+     * @param name the property name
+     * @return the value of the property if present, null otherwise.
+     * @since Ant 1.8
+     */
+    public static Object getProperty(Project project, String name) {
+        return PropertyHelper.getPropertyHelper(project)
+            .getProperty(name);
+    }
+
+    /**
+     * A helper static method to set a property
+     * from a particular project.
+     * @param project the project in question.
+     * @param name the property name
+     * @param value the value to use.
+     * @since Ant 1.8
+     */
+    public static void setProperty(Project project, String name, Object value) {
+        PropertyHelper.getPropertyHelper(project)
+            .setProperty(name, value, true);
+    }
+
+    /**
+     * A helper static method to set a new property
+     * from a particular project.
+     * @param project the project in question.
+     * @param name the property name
+     * @param value the value to use.
+     * @since Ant 1.8
+     */
+    public static void setNewProperty(
+        Project project, String name, Object value) {
+        PropertyHelper.getPropertyHelper(project)
+            .setNewProperty(name, value);
     }
 
     //override facility for subclasses to put custom hashtables in
