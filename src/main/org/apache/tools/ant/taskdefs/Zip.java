@@ -418,57 +418,14 @@ public class Zip extends MatchingTask {
      */
     public void executeMain() throws BuildException {
 
-        if (baseDir == null && resources.size() == 0
-            && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
-            throw new BuildException("basedir attribute must be set, "
-                                     + "or at least one "
-                                     + "resource collection must be given!");
-        }
-
-        if (zipFile == null) {
-            throw new BuildException("You must specify the "
-                                     + archiveType + " file to create!");
-        }
-
-        if (zipFile.exists() && !zipFile.isFile()) {
-            throw new BuildException(zipFile + " is not a file.");
-        }
-
-        if (zipFile.exists() && !zipFile.canWrite()) {
-            throw new BuildException(zipFile + " is read-only.");
-        }
+        checkAttributesAndElements();
 
         // Renamed version of original file, if it exists
         File renamedFile = null;
         addingNewFiles = true;
 
-        // Whether or not an actual update is required -
-        // we don't need to update if the original file doesn't exist
-        if (doUpdate && !zipFile.exists()) {
-            doUpdate = false;
-            log("ignoring update attribute as " + archiveType
-                + " doesn't exist.", Project.MSG_DEBUG);
-        }
-
-        // Add the files found in groupfileset to fileset
-        for (int i = 0; i < groupfilesets.size(); i++) {
-
-            log("Processing groupfileset ", Project.MSG_VERBOSE);
-            FileSet fs = (FileSet) groupfilesets.elementAt(i);
-            FileScanner scanner = fs.getDirectoryScanner(getProject());
-            String[] files = scanner.getIncludedFiles();
-            File basedir = scanner.getBasedir();
-            for (int j = 0; j < files.length; j++) {
-
-                log("Adding file " + files[j] + " to fileset",
-                    Project.MSG_VERBOSE);
-                ZipFileSet zf = new ZipFileSet();
-                zf.setProject(getProject());
-                zf.setSrc(new File(basedir, files[j]));
-                add(zf);
-                filesetsFromGroupfilesets.addElement(zf);
-            }
-        }
+        processDoUpdate();
+        processGroupFilesets();
 
         // collect filesets to pass them to getResourcesToAdd
         Vector vfss = new Vector();
@@ -493,7 +450,6 @@ public class Zip extends MatchingTask {
             if (!state.isOutOfDate()) {
                 return;
             }
-
             if (!zipFile.exists() && state.isWithoutAnyResources()) {
                 createEmptyZip(zipFile);
                 return;
@@ -501,24 +457,7 @@ public class Zip extends MatchingTask {
             Resource[][] addThem = state.getResourcesToAdd();
 
             if (doUpdate) {
-                renamedFile =
-                    FILE_UTILS.createTempFile("zip", ".tmp",
-                                              zipFile.getParentFile());
-                renamedFile.deleteOnExit();
-
-                try {
-                    FILE_UTILS.rename(zipFile, renamedFile);
-                } catch (SecurityException e) {
-                    throw new BuildException(
-                        "Not allowed to rename old file ("
-                        + zipFile.getAbsolutePath()
-                        + ") to temporary file");
-                } catch (IOException e) {
-                    throw new BuildException(
-                        "Unable to rename old file ("
-                        + zipFile.getAbsolutePath()
-                        + ") to temporary file");
-                }
+                renamedFile = renameFile();
             }
 
             String action = doUpdate ? "Updating " : "Building ";
@@ -594,24 +533,7 @@ public class Zip extends MatchingTask {
                 success = true;
             } finally {
                 // Close the output stream.
-                try {
-                    if (zOut != null) {
-                        zOut.close();
-                    }
-                } catch (IOException ex) {
-                    // If we're in this finally clause because of an
-                    // exception, we don't really care if there's an
-                    // exception when closing the stream. E.g. if it
-                    // throws "ZIP file must have at least one entry",
-                    // because an exception happened before we added
-                    // any files, then we must swallow this
-                    // exception. Otherwise, the error that's reported
-                    // will be the close() error, which is not the
-                    // real cause of the problem.
-                    if (success) {
-                        throw ex;
-                    }
-                }
+                closeZout(zOut, success);
             }
         } catch (IOException ioe) {
             String msg = "Problem creating " + archiveType + ": "
@@ -635,6 +557,108 @@ public class Zip extends MatchingTask {
             throw new BuildException(msg, ioe, getLocation());
         } finally {
             cleanUp();
+        }
+    }
+
+    /** rename the zip file. */
+    private File renameFile() {
+        File renamedFile = FILE_UTILS.createTempFile(
+            "zip", ".tmp", zipFile.getParentFile());
+        renamedFile.deleteOnExit();
+        try {
+            FILE_UTILS.rename(zipFile, renamedFile);
+        } catch (SecurityException e) {
+            throw new BuildException(
+                "Not allowed to rename old file ("
+                + zipFile.getAbsolutePath()
+                + ") to temporary file");
+        } catch (IOException e) {
+            throw new BuildException(
+                "Unable to rename old file ("
+                + zipFile.getAbsolutePath()
+                + ") to temporary file");
+        }
+        return renamedFile;
+    }
+
+    /** Close zout */
+    private void closeZout(ZipOutputStream zOut, boolean success)
+        throws IOException {
+        if (zOut == null) {
+            return;
+        }
+        try {
+            zOut.close();
+        } catch (IOException ex) {
+            // If we're in this finally clause because of an
+            // exception, we don't really care if there's an
+            // exception when closing the stream. E.g. if it
+            // throws "ZIP file must have at least one entry",
+            // because an exception happened before we added
+            // any files, then we must swallow this
+            // exception. Otherwise, the error that's reported
+            // will be the close() error, which is not the
+            // real cause of the problem.
+            if (success) {
+                throw ex;
+            }
+        }
+    }
+
+    /** Check the attributes and elements */
+    private void checkAttributesAndElements() {
+        if (baseDir == null && resources.size() == 0
+            && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
+            throw new BuildException("basedir attribute must be set, "
+                                     + "or at least one "
+                                     + "resource collection must be given!");
+        }
+
+        if (zipFile == null) {
+            throw new BuildException("You must specify the "
+                                     + archiveType + " file to create!");
+        }
+
+        if (zipFile.exists() && !zipFile.isFile()) {
+            throw new BuildException(zipFile + " is not a file.");
+        }
+
+        if (zipFile.exists() && !zipFile.canWrite()) {
+            throw new BuildException(zipFile + " is read-only.");
+        }
+    }
+
+    /** Process doupdate */
+    private void processDoUpdate() {
+        // Whether or not an actual update is required -
+        // we don't need to update if the original file doesn't exist
+        if (doUpdate && !zipFile.exists()) {
+            doUpdate = false;
+            log("ignoring update attribute as " + archiveType
+                + " doesn't exist.", Project.MSG_DEBUG);
+        }
+    }
+
+    /** Process groupfilesets */
+    private void processGroupFilesets() {
+        // Add the files found in groupfileset to fileset
+        for (int i = 0; i < groupfilesets.size(); i++) {
+
+            log("Processing groupfileset ", Project.MSG_VERBOSE);
+            FileSet fs = (FileSet) groupfilesets.elementAt(i);
+            FileScanner scanner = fs.getDirectoryScanner(getProject());
+            String[] files = scanner.getIncludedFiles();
+            File basedir = scanner.getBasedir();
+            for (int j = 0; j < files.length; j++) {
+
+                log("Adding file " + files[j] + " to fileset",
+                    Project.MSG_VERBOSE);
+                ZipFileSet zf = new ZipFileSet();
+                zf.setProject(getProject());
+                zf.setSrc(new File(basedir, files[j]));
+                add(zf);
+                filesetsFromGroupfilesets.addElement(zf);
+            }
         }
     }
 
