@@ -97,6 +97,10 @@ public class Zip extends MatchingTask {
 
     // CheckStyle:VisibilityModifier ON
 
+    // This boolean is set if the task detects that the
+    // target is outofdate and has written to the target file.
+    private boolean updatedFile = false;
+
     /**
      * true when we are adding new files into the Zip file, as opposed
      * to adding back the unchanged files
@@ -412,6 +416,16 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Get the value of the updatedFile attribute.
+     * This should only be called after executeMain has been
+     * called.
+     * @return true if executeMain has written to the zip file.
+     */
+    protected boolean hasUpdatedFile() {
+        return updatedFile;
+    }
+
+    /**
      * Build the zip file.
      * This is called twice if doubleFilePass is true.
      * @throws BuildException on error
@@ -450,6 +464,7 @@ public class Zip extends MatchingTask {
             if (!state.isOutOfDate()) {
                 return;
             }
+            updatedFile = true;
             if (!zipFile.exists() && state.isWithoutAnyResources()) {
                 createEmptyZip(zipFile);
                 return;

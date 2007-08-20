@@ -111,6 +111,9 @@ Fixed bugs:
 * Regression: Path subclasses that overrode list() stopped working in
   resourceCollection contexts in Ant 1.7.0. Bugzilla 42967.
 
+* War task failed with "No WEB-INF/web.xml file was added" when called
+  a second time. Bugzilla 43121.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
