@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.tools.ant.BuildException;
@@ -186,13 +185,11 @@ public class Jikes extends DefaultCompilerAdapter {
          * that don't exist. As this is often the case, these
          * warning can be pretty annoying.
          */
-        String warningsProperty =
-            project.getProperty("build.compiler.warnings");
+        String warningsProperty = project.getProperty("build.compiler.warnings");
         if (warningsProperty != null) {
-            attributes.log("!! the build.compiler.warnings property is "
-                           + "deprecated. !!", Project.MSG_WARN);
-            attributes.log("!! Use the nowarn attribute instead. !!",
-                           Project.MSG_WARN);
+            attributes.log("!! the build.compiler.warnings property is " + "deprecated. !!",
+                    Project.MSG_WARN);
+            attributes.log("!! Use the nowarn attribute instead. !!", Project.MSG_WARN);
             if (!Project.toBoolean(warningsProperty)) {
                 cmd.createArgument().setValue("-nowarn");
             }
@@ -204,8 +201,7 @@ public class Jikes extends DefaultCompilerAdapter {
         /**
          * Jikes can issue pedantic warnings.
          */
-        String pedanticProperty =
-            project.getProperty("build.compiler.pedantic");
+        String pedanticProperty = project.getProperty("build.compiler.pedantic");
         if (pedanticProperty != null && Project.toBoolean(pedanticProperty)) {
             cmd.createArgument().setValue("+P");
         }
@@ -215,42 +211,11 @@ public class Jikes extends DefaultCompilerAdapter {
          * checking", see the jikes documentation for differences
          * between -depend and +F.
          */
-        String fullDependProperty =
-            project.getProperty("build.compiler.fulldepend");
+        String fullDependProperty = project.getProperty("build.compiler.fulldepend");
         if (fullDependProperty != null
             && Project.toBoolean(fullDependProperty)) {
             cmd.createArgument().setValue("+F");
         }
-
-        if (attributes.getSource() != null) {
-            cmd.createArgument().setValue("-source");
-            String source = attributes.getSource();
-            if (source.equals("1.1") || source.equals("1.2")) {
-                // support for -source 1.1 and -source 1.2 has been
-                // added with JDK 1.4.2, Jikes doesn't like it
-                attributes.log("Jikes doesn't support '-source "
-                               + source + "', will use '-source 1.3' instead");
-                cmd.createArgument().setValue("1.3");
-            } else {
-                cmd.createArgument().setValue(source);
-            }
-        }
-
-        addCurrentCompilerArgs(cmd);
-
-        int firstFileName = cmd.size();
-
-        Path boot = getBootClassPath();
-        if (boot.size() > 0) {
-            cmd.createArgument().setValue("-bootclasspath");
-            cmd.createArgument().setPath(boot);
-        }
-
-        logAndAddFilesToCompile(cmd);
-
-        return
-            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
-
 
 }
