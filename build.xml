@@ -1627,7 +1627,7 @@
 
   <target name="test" description="--> run unit tests and reports"
           depends="dump-info,junit-report,antunit-report,check-failed">
-    <fail if="tests.failed">Unit tests failed;
+    <fail if="tests.failed" unless="ignore.tests.failed">Unit tests failed;
 see ${build.junit.reports} / ${antunit.reports}
     </fail>
   </target>
