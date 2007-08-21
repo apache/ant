@@ -34,7 +34,7 @@
 
     <!-- Import conventions -->
     <module name="AvoidStarImport"/>
-    <!-- <module name="IllegalImport"/> -->
+    <module name="IllegalImport"/>
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
 
@@ -83,9 +83,11 @@
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
     <module name="MissingSwitchDefault"/>
+    <!-- Allow redundant throw declarations for doc purposes 
     <module name="RedundantThrows">
       <property name="allowUnchecked" value="true"/>
     </module>
+         -->
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
 
