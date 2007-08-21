@@ -943,6 +943,17 @@ public final class IntrospectionHelper  {
         final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey(arg)
             ? (Class) PRIMITIVE_TYPE_MAP.get(arg) : arg;
 
+        // Object.class - it gets handled differently by AttributeSetter
+        if (java.lang.Object.class == reflectedArg) {
+            return new AttributeSetter(m, arg) {
+                public void set(Project p, Object parent, String value)
+                        throws InvocationTargetException,
+                    IllegalAccessException {
+                    throw new BuildException(
+                        "Internal ant problem - this should not get called");
+                }
+            };
+        }
         // simplest case - setAttribute expects String
         if (java.lang.String.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
