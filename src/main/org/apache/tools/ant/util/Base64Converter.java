@@ -25,6 +25,8 @@ package org.apache.tools.ant.util;
  **/
 public class Base64Converter {
 
+    private static final BYTE_MASK = 0xFF;
+
     private static final char[] ALPHABET = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',  //  0 to  7
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',  //  8 to 15
@@ -65,8 +67,8 @@ public class Base64Converter {
 
         while ((i + 3) <= octetString.length) {
             // store the octets
-            bits24 = (octetString[i++] & 0xFF) << 16;
-            bits24 |= (octetString[i++] & 0xFF) << 8;
+            bits24 = (octetString[i++] & BYTE_MASK) << 16;
+            bits24 |= (octetString[i++] & BYTE_MASK) << 8;
             bits24 |= octetString[i++];
 
             bits6 = (bits24 & 0x00FC0000) >> 18;
@@ -80,8 +82,8 @@ public class Base64Converter {
         }
         if (octetString.length - i == 2) {
             // store the octets
-            bits24 = (octetString[i] & 0xFF) << 16;
-            bits24 |= (octetString[i + 1] & 0xFF) << 8;
+            bits24 = (octetString[i] & BYTE_MASK) << 16;
+            bits24 |= (octetString[i + 1] & BYTE_MASK) << 8;
             bits6 = (bits24 & 0x00FC0000) >> 18;
             out[outIndex++] = ALPHABET[bits6];
             bits6 = (bits24 & 0x0003F000) >> 12;
@@ -93,7 +95,7 @@ public class Base64Converter {
             out[outIndex++] = '=';
         } else if (octetString.length - i == 1) {
             // store the octets
-            bits24 = (octetString[i] & 0xFF) << 16;
+            bits24 = (octetString[i] & BYTE_MASK) << 16;
             bits6 = (bits24 & 0x00FC0000) >> 18;
             out[outIndex++] = ALPHABET[bits6];
             bits6 = (bits24 & 0x0003F000) >> 12;
