@@ -25,7 +25,7 @@ package org.apache.tools.ant.util;
  **/
 public class Base64Converter {
 
-    private static final BYTE_MASK = 0xFF;
+    private static final int BYTE_MASK = 0xFF;
 
     private static final char[] ALPHABET = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',  //  0 to  7
