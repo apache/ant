@@ -59,17 +59,20 @@ import java.util.zip.ZipException;
  *
  */
 public class ZipFile {
+    private static final int HASH_SIZE = 509;
+    private static final int SHORT     =   2;
+    private static final int WORD      =   4;
 
     /**
      * Maps ZipEntrys to Longs, recording the offsets of the local
      * file headers.
      */
-    private Hashtable entries = new Hashtable(509);
+    private Hashtable entries = new Hashtable(HASH_SIZE);
 
     /**
      * Maps String to ZipEntrys, name -> actual entry.
      */
-    private Hashtable nameMap = new Hashtable(509);
+    private Hashtable nameMap = new Hashtable(HASH_SIZE);
 
     private static final class OffsetEntry {
         private long headerOffset = -1;
@@ -232,22 +235,22 @@ public class ZipFile {
     }
 
     private static final int CFH_LEN =
-        /* version made by                 */ 2
-        /* version needed to extract       */ + 2
-        /* general purpose bit flag        */ + 2
-        /* compression method              */ + 2
-        /* last mod file time              */ + 2
-        /* last mod file date              */ + 2
-        /* crc-32                          */ + 4
-        /* compressed size                 */ + 4
-        /* uncompressed size               */ + 4
-        /* filename length                 */ + 2
-        /* extra field length              */ + 2
-        /* file comment length             */ + 2
-        /* disk number start               */ + 2
-        /* internal file attributes        */ + 2
-        /* external file attributes        */ + 4
-        /* relative offset of local header */ + 4;
+        /* version made by                 */ SHORT
+        /* version needed to extract       */ + SHORT
+        /* general purpose bit flag        */ + SHORT
+        /* compression method              */ + SHORT
+        /* last mod file time              */ + SHORT
+        /* last mod file date              */ + SHORT
+        /* crc-32                          */ + WORD
+        /* compressed size                 */ + WORD
+        /* uncompressed size               */ + WORD
+        /* filename length                 */ + SHORT
+        /* extra field length              */ + SHORT
+        /* file comment length             */ + SHORT
+        /* disk number start               */ + SHORT
+        /* internal file attributes        */ + SHORT
+        /* external file attributes        */ + WORD
+        /* relative offset of local header */ + WORD;
 
     /**
      * Reads the central directory of the given archive and populates
@@ -263,7 +266,7 @@ public class ZipFile {
 
         byte[] cfh = new byte[CFH_LEN];
 
-        byte[] signatureBytes = new byte[4];
+        byte[] signatureBytes = new byte[WORD];
         archive.readFully(signatureBytes);
         long sig = ZipLong.getValue(signatureBytes);
         final long cfhSig = ZipLong.getValue(ZipOutputStream.CFH_SIG);
@@ -273,46 +276,46 @@ public class ZipFile {
             ZipEntry ze = new ZipEntry();
 
             int versionMadeBy = ZipShort.getValue(cfh, off);
-            off += 2;
+            off += SHORT;
             ze.setPlatform((versionMadeBy >> 8) & 0x0F);
 
-            off += 4; // skip version info and general purpose byte
+            off += WORD; // skip version info and general purpose byte
 
             ze.setMethod(ZipShort.getValue(cfh, off));
-            off += 2;
+            off += SHORT;
 
             // FIXME this is actually not very cpu cycles friendly as we are converting from
             // dos to java while the underlying Sun implementation will convert
             // from java to dos time for internal storage...
             long time = dosToJavaTime(ZipLong.getValue(cfh, off));
             ze.setTime(time);
-            off += 4;
+            off += WORD;
 
             ze.setCrc(ZipLong.getValue(cfh, off));
-            off += 4;
+            off += WORD;
 
             ze.setCompressedSize(ZipLong.getValue(cfh, off));
-            off += 4;
+            off += WORD;
 
             ze.setSize(ZipLong.getValue(cfh, off));
-            off += 4;
+            off += WORD;
 
             int fileNameLen = ZipShort.getValue(cfh, off);
-            off += 2;
+            off += SHORT;
 
             int extraLen = ZipShort.getValue(cfh, off);
-            off += 2;
+            off += SHORT;
 
             int commentLen = ZipShort.getValue(cfh, off);
-            off += 2;
+            off += SHORT;
 
-            off += 2; // disk number
+            off += SHORT; // disk number
 
             ze.setInternalAttributes(ZipShort.getValue(cfh, off));
-            off += 2;
+            off += SHORT;
 
             ze.setExternalAttributes(ZipLong.getValue(cfh, off));
-            off += 4;
+            off += WORD;
 
             byte[] fileName = new byte[fileNameLen];
             archive.readFully(fileName);
@@ -339,30 +342,30 @@ public class ZipFile {
     }
 
     private static final int MIN_EOCD_SIZE =
-        /* end of central dir signature    */ 4
-        /* number of this disk             */ + 2
+        /* end of central dir signature    */ WORD
+        /* number of this disk             */ + SHORT
         /* number of the disk with the     */
-        /* start of the central directory  */ + 2
+        /* start of the central directory  */ + SHORT
         /* total number of entries in      */
-        /* the central dir on this disk    */ + 2
+        /* the central dir on this disk    */ + SHORT
         /* total number of entries in      */
-        /* the central dir                 */ + 2
-        /* size of the central directory   */ + 4
+        /* the central dir                 */ + SHORT
+        /* size of the central directory   */ + WORD
         /* offset of start of central      */
         /* directory with respect to       */
-        /* the starting disk number        */ + 4
-        /* zipfile comment length          */ + 2;
+        /* the starting disk number        */ + WORD
+        /* zipfile comment length          */ + SHORT;
 
     private static final int CFD_LOCATOR_OFFSET =
-        /* end of central dir signature    */ 4
-        /* number of this disk             */ + 2
+        /* end of central dir signature    */ WORD
+        /* number of this disk             */ + SHORT
         /* number of the disk with the     */
-        /* start of the central directory  */ + 2
+        /* start of the central directory  */ + SHORT
         /* total number of entries in      */
-        /* the central dir on this disk    */ + 2
+        /* the central dir on this disk    */ + SHORT
         /* total number of entries in      */
-        /* the central dir                 */ + 2
-        /* size of the central directory   */ + 4;
+        /* the central dir                 */ + SHORT
+        /* size of the central directory   */ + WORD;
 
     /**
      * Searches for the &quot;End of central dir record&quot;, parses
@@ -382,7 +385,7 @@ public class ZipFile {
                     curr = archive.read();
                     if (curr == sig[1]) {
                         curr = archive.read();
-                        if (curr == sig[2]) {
+                        if (curr == sig[SHORT]) {
                             curr = archive.read();
                             if (curr == sig[3]) {
                                 found = true;
@@ -399,7 +402,7 @@ public class ZipFile {
             throw new ZipException("archive is not a ZIP archive");
         }
         archive.seek(off + CFD_LOCATOR_OFFSET);
-        byte[] cfdOffset = new byte[4];
+        byte[] cfdOffset = new byte[WORD];
         archive.readFully(cfdOffset);
         archive.seek(ZipLong.getValue(cfdOffset));
     }
@@ -409,15 +412,15 @@ public class ZipFile {
      * filename&quot; entry.
      */
     private static final long LFH_OFFSET_FOR_FILENAME_LENGTH =
-        /* local file header signature     */ 4
-        /* version needed to extract       */ + 2
-        /* general purpose bit flag        */ + 2
-        /* compression method              */ + 2
-        /* last mod file time              */ + 2
-        /* last mod file date              */ + 2
-        /* crc-32                          */ + 4
-        /* compressed size                 */ + 4
-        /* uncompressed size               */ + 4;
+        /* local file header signature     */ WORD
+        /* version needed to extract       */ + SHORT
+        /* general purpose bit flag        */ + SHORT
+        /* compression method              */ + SHORT
+        /* last mod file time              */ + SHORT
+        /* last mod file date              */ + SHORT
+        /* crc-32                          */ + WORD
+        /* compressed size                 */ + WORD
+        /* uncompressed size               */ + WORD;
 
     /**
      * Walks through all recorded entries and adds the data available
@@ -434,7 +437,7 @@ public class ZipFile {
             OffsetEntry offsetEntry = (OffsetEntry) entries.get(ze);
             long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
-            byte[] b = new byte[2];
+            byte[] b = new byte[SHORT];
             archive.readFully(b);
             int fileNameLen = ZipShort.getValue(b);
             archive.readFully(b);
@@ -445,10 +448,10 @@ public class ZipFile {
             ze.setExtra(localExtraData);
             /*dataOffsets.put(ze,
                             new Long(offset + LFH_OFFSET_FOR_FILENAME_LENGTH
-                                     + 2 + 2 + fileNameLen + extraFieldLen));
+                                     + SHORT + SHORT + fileNameLen + extraFieldLen));
             */
             offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
-                                     + 2 + 2 + fileNameLen + extraFieldLen;
+                                     + SHORT + SHORT + fileNameLen + extraFieldLen;
         }
     }
 
