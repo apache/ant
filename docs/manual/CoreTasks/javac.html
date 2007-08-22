@@ -761,6 +761,36 @@ while all others are <code>false</code>.</p>
                  debug="yes"/&gt;
 </pre></blockquote>
 
+  <h3>Note on package-info.java</h3>
+  <p>
+    <code>package-info.java</code> files were introduced in Java5 to
+    allow package level annotations. On compilation, if the java file
+    does not contain runtime annotations, there will be no .class file
+    for the java file. Up to <b>Ant 1.7.1</b>, when the &lt;javac&gt;
+    task is run again, the
+    task will try to compile the package-info java files again.
+  </p>
+  <p>
+    In <b>Ant 1.7.1</b> the package-info.java will only be compiled if:
+    <ol>
+      <li>
+        If a <code>package-info.class</code> file exists and is older than
+        the <code>package-info.java</code> file.
+      </li>
+      <li>
+        If the directory for the 
+        <code>package-info.class</code> file does not exist.
+      </li>
+      <li>
+        If the directory for the
+        <code>package-info.class</code> file exists, and has an older
+        modification time than the
+        the <code>package-info.java</code> file. In this case
+        &lt;javac&gt; will touch the corresponding .class directory
+        on successful compilation.
+      </li>
+    </ol>
+  </p>
 
 </body>
 </html>

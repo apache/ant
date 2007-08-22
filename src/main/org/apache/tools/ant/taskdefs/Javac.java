@@ -20,6 +20,10 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.MagicNames;
@@ -82,6 +86,9 @@ public class Javac extends MatchingTask {
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
 
+    private static final String PACKAGE_INFO_JAVA = "package-info.java";
+    private static final String PACKAGE_INFO_CLASS = "package-info.class";
+
     private Path src;
     private File destDir;
     private Path compileClasspath;
@@ -117,6 +124,7 @@ public class Javac extends MatchingTask {
     private String errorProperty;
     private boolean taskSuccess = true; // assume the best
     private boolean includeDestClasses = true;
+    private List    updateDirList = new ArrayList();
 
     /**
      * Javac task for compilation of Java files.
@@ -901,6 +909,7 @@ public class Javac extends MatchingTask {
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
 
+        newFiles = removePackageInfoFiles(newFiles, srcDir, destDir);
         if (newFiles.length > 0) {
             File[] newCompileList
                 = new File[compileList.length + newFiles.length];
@@ -1053,7 +1062,14 @@ public class Javac extends MatchingTask {
             adapter.setJavac(this);
 
             // finally, lets execute the compiler!!
-            if (!adapter.execute()) {
+            if (adapter.execute()) {
+                // Success - check
+                for (Iterator i = updateDirList.iterator(); i.hasNext();) {
+                    File file = (File) i.next();
+                    file.setLastModified(System.currentTimeMillis());
+                }
+            } else {
+                // Fail path
                 this.taskSuccess = false;
                 if (errorProperty != null) {
                     getProject().setNewProperty(
@@ -1084,4 +1100,75 @@ public class Javac extends MatchingTask {
         }
     }
 
+    // ----------------------------------------------------------------
+    //  Code to remove package-info.java files from compilation
+    //  Since Ant 1.7.1.
+    //
+    //    package-info.java are files that contain package level
+    //    annotations. They may or may not have corresponding .class
+    //    files.
+    //
+    //    The following code uses the algorithm:
+    //     * on entry we have the files that need to be compiled
+    //     * if the filename is not package-info.java compile it
+    //     * if a corresponding .class file exists compile it
+    //     * if the corresponding class directory does not exist compile it
+    //     * if the corresponding directory lastmodifed time is
+    //       older than the java file, compile the java file and
+    //       touch the corresponding class directory (on successful
+    //       compilation).
+    //    
+    // ----------------------------------------------------------------
+    private File[] removePackageInfoFiles(
+        File[] newFiles, File srcDir, File destDir) {
+        if (!hasPackageInfo(newFiles)) {
+            return newFiles;
+        }
+        List ret = new ArrayList();
+        for (int i = 0; i < newFiles.length; ++i) {
+            if (needsCompilePackageFile(newFiles[i], srcDir, destDir)) {
+                ret.add(newFiles[i]);
+            }
+        }
+        return (File[]) ret.toArray(new File[0]);
+    }
+
+    private boolean hasPackageInfo(File[] newFiles) {
+        for (int i = 0; i < newFiles.length; ++i) {
+            if (newFiles[i].getName().equals(PACKAGE_INFO_JAVA)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean needsCompilePackageFile(
+        File file, File srcDir, File destDir) {
+        if (!file.getName().equals(PACKAGE_INFO_JAVA)) {
+            return true;
+        }
+        // return true if destDir contains the file
+        String rel = relativePath(srcDir, file);
+        File destFile = new File(destDir, rel);
+        File parent = destFile.getParentFile();
+        destFile = new File(parent, PACKAGE_INFO_CLASS);
+        File sourceFile = new File(srcDir, rel);
+        if (destFile.exists()) {
+            return true;
+        }
+        // Dest file does not exist
+        // Compile Source file if sourceFile is newer that destDir
+        // TODO - use fs
+        if (sourceFile.lastModified()
+            > destFile.getParentFile().lastModified()) {
+            updateDirList.add(destFile.getParentFile());
+            return true;
+        }
+        return false;
+    }
+
+    private String relativePath(File src, File file) {
+        return file.getAbsolutePath().substring(
+            src.getAbsolutePath().length() + 1);
+    }
 }

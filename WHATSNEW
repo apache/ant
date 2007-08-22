@@ -226,6 +226,9 @@ Other changes:
 * <fileset> has a new attribute - errorOnMissingDir.
   Bugzilla 11270.
 
+* <javac> handles package-info.java files, there were repeatedly compiled.
+  Bugzilla 43114.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
