@@ -65,6 +65,7 @@ public abstract class AbstractFileSet extends DataType
     private boolean useDefaultExcludes = true;
     private boolean caseSensitive = true;
     private boolean followSymlinks = true;
+    private boolean errorOnMissingDir = true;
 
     /* cached DirectoryScanner instance for our own Project only */
     private DirectoryScanner directoryScanner = null;
@@ -89,6 +90,7 @@ public abstract class AbstractFileSet extends DataType
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.caseSensitive = fileset.caseSensitive;
         this.followSymlinks = fileset.followSymlinks;
+        this.errorOnMissingDir = fileset.errorOnMissingDir;
         setProject(fileset.getProject());
     }
 
@@ -393,6 +395,16 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Sets whether an error is thrown if a directory does not exist.
+     *
+     * @param errorOnMissingDir true if missing directories cause errors,
+     *                        false if not.
+     */
+     public void setErrorOnMissingDir(boolean errorOnMissingDir) {
+         this.errorOnMissingDir = errorOnMissingDir;
+     }
+ 
+    /**
      * Returns the directory scanner needed to access the files to process.
      * @return a <code>DirectoryScanner</code> instance.
      */
@@ -418,17 +430,18 @@ public abstract class AbstractFileSet extends DataType
                     throw new BuildException("No directory specified for "
                                              + getDataTypeName() + ".");
                 }
-                if (!dir.exists()) {
+                if (!dir.exists() && errorOnMissingDir) {
                     throw new BuildException(dir.getAbsolutePath()
                                              + " not found.");
                 }
-                if (!dir.isDirectory()) {
+                if (!dir.isDirectory() && dir.exists()) {
                     throw new BuildException(dir.getAbsolutePath()
                                              + " is not a directory.");
                 }
                 ds = new DirectoryScanner();
                 setupDirectoryScanner(ds, p);
                 ds.setFollowSymlinks(followSymlinks);
+                ds.setErrorOnMissingDir(errorOnMissingDir);
                 directoryScanner = (p == getProject()) ? ds : directoryScanner;
             }
         }

@@ -1,5 +1,15 @@
 <project xmlns:au="antlib:org.apache.ant.antunit" default="all">
 
+  <target name="test-fileset-missing-dir">
+    <path id="missing.path.id">
+      <fileset dir="not present"
+               erroronmissingdir="false"/>
+    </path>
+    <au:assertTrue>
+      <equals arg1="" arg2="${toString:missing.path.id}"/>
+    </au:assertTrue>
+  </target>
+
   <target name="test-fileset-with-if">
     <fileset id="this.xml" dir=".">
       <include if="trigger.include" name="fileset-test.xml"/>

@@ -223,6 +223,9 @@ Other changes:
 * <javac> has a new attribute - includeDestClasses.
   Bugzilla 40776.
 
+* <fileset> has a new attribute - errorOnMissingDir.
+  Bugzilla 11270.
+
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================
 
