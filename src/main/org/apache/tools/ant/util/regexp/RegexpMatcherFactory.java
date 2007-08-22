@@ -74,7 +74,9 @@ public class RegexpMatcherFactory {
             testAvailability("java.util.regex.Matcher");
             return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
         } catch (BuildException be) {
-            cause = orCause(cause, be, JavaEnvUtils.getJavaVersionNumber() < 14);
+            cause = orCause(
+                cause, be,
+                JavaEnvUtils.getJavaVersionNumber() < JavaEnvUtils.VERSION_1_4);
         }
 
         try {

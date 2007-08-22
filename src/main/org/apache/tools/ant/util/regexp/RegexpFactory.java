@@ -71,7 +71,9 @@ public class RegexpFactory extends RegexpMatcherFactory {
             testAvailability("java.util.regex.Matcher");
             return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
         } catch (BuildException be) {
-            cause = orCause(cause, be, JavaEnvUtils.getJavaVersionNumber() < 14);
+            cause = orCause(
+                cause, be,
+                JavaEnvUtils.getJavaVersionNumber() < JavaEnvUtils.VERSION_1_4);
         }
 
         try {

@@ -54,6 +54,10 @@ import java.util.zip.ZipException;
  */
 public class ZipOutputStream extends FilterOutputStream {
 
+    private static final int BYTE_MASK = 0xFF;
+    private static final int SHORT = 2;
+    private static final int WORD = 4;
+
     /**
      * Compression method for deflated entries.
      *
@@ -500,7 +504,7 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     public void write(int b) throws IOException {
         byte[] buff = new byte[1];
-        buff[0] = (byte) (b & 0xff);
+        buff[0] = (byte) (b & BYTE_MASK);
         write(buff, 0, 1);
     }
 
@@ -587,7 +591,7 @@ public class ZipOutputStream extends FilterOutputStream {
         offsets.put(ze, ZipLong.getBytes(written));
 
         writeOut(LFH_SIG);
-        written += 4;
+        written += WORD;
 
         //store method in local variable to prevent multiple method calls
         final int zipMethod = ze.getMethod();
@@ -605,15 +609,15 @@ public class ZipOutputStream extends FilterOutputStream {
             writeOut(ZipShort.getBytes(10));
             writeOut(ZERO);
         }
-        written += 4;
+        written += WORD;
 
         // compression method
         writeOut(ZipShort.getBytes(zipMethod));
-        written += 2;
+        written += SHORT;
 
         // last mod. time and date
         writeOut(toDosTime(ze.getTime()));
-        written += 4;
+        written += WORD;
 
         // CRC
         // compressed length
@@ -633,12 +637,12 @@ public class ZipOutputStream extends FilterOutputStream {
         // file name length
         byte[] name = getBytes(ze.getName());
         writeOut(ZipShort.getBytes(name.length));
-        written += 2;
+        written += SHORT;
 
         // extra field length
         byte[] extra = ze.getLocalFileDataExtra();
         writeOut(ZipShort.getBytes(extra.length));
-        written += 2;
+        written += SHORT;
 
         // file name
         writeOut(name);
@@ -678,11 +682,11 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     protected void writeCentralFileHeader(ZipEntry ze) throws IOException {
         writeOut(CFH_SIG);
-        written += 4;
+        written += WORD;
 
         // version made by
         writeOut(ZipShort.getBytes((ze.getPlatform() << 8) | 20));
-        written += 2;
+        written += SHORT;
 
         // version needed to extract
         // general purpose bit flag
@@ -697,15 +701,15 @@ public class ZipOutputStream extends FilterOutputStream {
             writeOut(ZipShort.getBytes(10));
             writeOut(ZERO);
         }
-        written += 4;
+        written += WORD;
 
         // compression method
         writeOut(ZipShort.getBytes(ze.getMethod()));
-        written += 2;
+        written += SHORT;
 
         // last mod. time and date
         writeOut(toDosTime(ze.getTime()));
-        written += 4;
+        written += WORD;
 
         // CRC
         // compressed length
@@ -718,12 +722,12 @@ public class ZipOutputStream extends FilterOutputStream {
         // file name length
         byte[] name = getBytes(ze.getName());
         writeOut(ZipShort.getBytes(name.length));
-        written += 2;
+        written += SHORT;
 
         // extra field length
         byte[] extra = ze.getCentralDirectoryExtra();
         writeOut(ZipShort.getBytes(extra.length));
-        written += 2;
+        written += SHORT;
 
         // file comment length
         String comm = ze.getComment();
@@ -732,23 +736,23 @@ public class ZipOutputStream extends FilterOutputStream {
         }
         byte[] commentB = getBytes(comm);
         writeOut(ZipShort.getBytes(commentB.length));
-        written += 2;
+        written += SHORT;
 
         // disk number start
         writeOut(ZERO);
-        written += 2;
+        written += SHORT;
 
         // internal file attributes
         writeOut(ZipShort.getBytes(ze.getInternalAttributes()));
-        written += 2;
+        written += SHORT;
 
         // external file attributes
         writeOut(ZipLong.getBytes(ze.getExternalAttributes()));
-        written += 4;
+        written += WORD;
 
         // relative offset of LFH
         writeOut((byte[]) offsets.get(ze));
-        written += 4;
+        written += WORD;
 
         // file name
         writeOut(name);
@@ -818,6 +822,8 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     protected static byte[] toDosTime(long t) {
         Date time = new Date(t);
+        // CheckStyle:MagicNumberCheck OFF - I do not think that using constants
+        //                                   here will improve the readablity
         int year = time.getYear() + 1900;
         if (year < 1980) {
             return DOS_TIME_MIN;
@@ -830,6 +836,7 @@ public class ZipOutputStream extends FilterOutputStream {
             |         (time.getMinutes() << 5)
             |         (time.getSeconds() >> 1);
         return ZipLong.getBytes(value);
+        // CheckStyle:MagicNumberCheck ON
     }
 
     /**

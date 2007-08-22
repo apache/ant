@@ -31,6 +31,24 @@ import org.apache.tools.ant.types.Parameter;
  */
 public class SizeSelector extends BaseExtendSelector {
 
+    /** Constants for kilo, kibi etc */
+    private static final int  KILO = 1000;
+    private static final int  KIBI = 1024;
+    private static final int  KIBI_POS = 4;
+    private static final int  MEGA = 1000000;
+    private static final int  MEGA_POS = 9;
+    private static final int  MEBI = 1048576;
+    private static final int  MEBI_POS = 13;
+    private static final long GIGA = 1000000000L;
+    private static final int  GIGA_POS = 18;
+    private static final long GIBI = 1073741824L;
+    private static final int  GIBI_POS = 22;
+    private static final long TERA = 1000000000000L;
+    private static final int  TERA_POS = 27;
+    private static final long TEBI = 1099511627776L;
+    private static final int  TEBI_POS = 31;
+    private static final int  END_POS = 36;
+
     /** Used for parameterized custom selector */
     public static final String SIZE_KEY = "value";
     /** Used for parameterized custom selector */
@@ -107,22 +125,22 @@ public class SizeSelector extends BaseExtendSelector {
     public void setUnits(ByteUnits units) {
         int i = units.getIndex();
         multiplier = 0;
-        if (i > -1 && i < 4) {
-            multiplier = 1000;
-        } else if (i > 3 && i < 9) {
-            multiplier = 1024;
-        } else if (i > 8 && i < 13) {
-            multiplier = 1000000;
-        } else if (i > 12 && i < 18) {
-            multiplier = 1048576;
-        } else if (i > 17 && i < 22) {
-            multiplier = 1000000000L;
-        } else if (i > 21 && i < 27) {
-            multiplier = 1073741824L;
-        } else if (i > 26 && i < 31) {
-            multiplier = 1000000000000L;
-        } else if (i > 30 && i < 36) {
-            multiplier = 1099511627776L;
+        if (i > -1 && i < KIBI_POS) {
+            multiplier = KILO;
+        } else if (i < MEGA_POS) {
+            multiplier = KIBI;
+        } else if (i < MEBI_POS) {
+            multiplier = MEGA;
+        } else if (i < GIGA_POS) {
+            multiplier = MEBI;
+        } else if (i < GIBI_POS) {
+            multiplier = GIGA;
+        } else if (i < TERA_POS) {
+            multiplier = GIBI;
+        } else if (i < TEBI_POS) {
+            multiplier = TERA;
+        } else if (i < END_POS) {
+            multiplier = TEBI;
         }
         if (multiplier > 0 && size > -1) {
             sizelimit = size * multiplier;
