@@ -2,11 +2,14 @@
 
   <target name="test-fileset-missing-dir">
     <path id="missing.path.id">
-      <fileset dir="not present"
+      <fileset id="missing.dir.fs" dir="not present"
                erroronmissingdir="false"/>
     </path>
     <au:assertTrue>
-      <equals arg1="" arg2="${toString:missing.path.id}"/>
+      <and>
+        <equals arg1="" arg2="${toString:missing.path.id}"/>
+        <resourcecount count="0" refid="missing.dir.fs" />
+      </and>
     </au:assertTrue>
   </target>
 
