@@ -1117,7 +1117,7 @@ public class Javac extends MatchingTask {
     //       older than the java file, compile the java file and
     //       touch the corresponding class directory (on successful
     //       compilation).
-    //    
+    //
     // ----------------------------------------------------------------
     private File[] removePackageInfoFiles(
         File[] newFiles, File srcDir, File destDir) {
