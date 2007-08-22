@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Enumeration;
 
+import org.apache.tools.ant.property.NullReturn;
+
 /* ISSUES:
  - ns param. It could be used to provide "namespaces" for properties, which
  may be more flexible.
@@ -784,6 +786,9 @@ public class PropertyHelper implements Cloneable {
         for (Iterator iter = getDelegates(PropertyEvaluator.class).iterator(); iter.hasNext();) {
             Object o = ((PropertyEvaluator) iter.next()).evaluate(name, this);
             if (o != null) {
+                if (o instanceof NullReturn) {
+                    return null;
+                }
                 return o;
             }
         }
