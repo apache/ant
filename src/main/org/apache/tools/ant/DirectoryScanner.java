@@ -252,6 +252,12 @@ public class DirectoryScanner
     protected boolean isCaseSensitive = true;
 
     /**
+     * Whether a missing base directory is an error.
+     * @since Ant 1.7.1
+     */
+    protected boolean errorOnMissingDir = true;
+ 
+    /**
      * Whether or not symbolic links should be followed.
      *
      * @since Ant 1.5
@@ -610,6 +616,17 @@ public class DirectoryScanner
     }
 
     /**
+     * Sets whether or not a missing base directory is an error
+     *
+     * @param errorOnMissingDir whether or not a missing base directory
+     *                        is an error
+     * @since Ant 1.7.1
+     */
+    public void setErrorOnMissingDir(boolean errorOnMissingDir) {
+        this.errorOnMissingDir = errorOnMissingDir;
+    }
+
+    /**
      * Get whether or not a DirectoryScanner follows symbolic links.
      *
      * @return flag indicating whether symbolic links should be followed.
@@ -790,8 +807,13 @@ public class DirectoryScanner
                     }
                 } else {
                     if (!basedir.exists()) {
-                        illegal = new IllegalStateException("basedir " + basedir
-                                                            + " does not exist");
+                        if (errorOnMissingDir) {
+                            illegal = new IllegalStateException(
+                                "basedir " + basedir + " does not exist");
+                        } else {
+                            // Nothing to do - basedir does not exist
+                            return;
+                        }
                     }
                     if (!basedir.isDirectory()) {
                         illegal = new IllegalStateException("basedir " + basedir
