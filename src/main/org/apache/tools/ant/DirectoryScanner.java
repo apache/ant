@@ -256,7 +256,7 @@ public class DirectoryScanner
      * @since Ant 1.7.1
      */
     protected boolean errorOnMissingDir = true;
- 
+
     /**
      * Whether or not symbolic links should be followed.
      *

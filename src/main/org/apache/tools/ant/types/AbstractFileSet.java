@@ -403,7 +403,7 @@ public abstract class AbstractFileSet extends DataType
      public void setErrorOnMissingDir(boolean errorOnMissingDir) {
          this.errorOnMissingDir = errorOnMissingDir;
      }
- 
+
     /**
      * Returns the directory scanner needed to access the files to process.
      * @return a <code>DirectoryScanner</code> instance.
