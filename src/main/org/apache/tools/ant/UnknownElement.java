@@ -283,17 +283,17 @@ public class UnknownElement extends Task {
             throw new BuildException("Could not create task of type: "
                                      + elementName, getLocation());
         }
-
-        if (realThing instanceof Task) {
-            ((Task) realThing).execute();
+        try {
+            if (realThing instanceof Task) {
+                ((Task) realThing).execute();
+            }
+        } finally {
+            // Finished executing the task, null it to allow
+            // GC do its job
+            // If this UE is used again, a new "realthing" will be made
+            realThing = null;
+            getWrapper().setProxy(null);
         }
-
-        // Finished executing the task, null it to allow
-        // GC do its job
-        // If this UE is used again, a new "realthing" will be made
-        realThing = null;
-        getWrapper().setProxy(null);
-
     }
 
     /**
