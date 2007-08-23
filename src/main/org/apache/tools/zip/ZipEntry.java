@@ -30,6 +30,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     private static final int PLATFORM_UNIX = 3;
     private static final int PLATFORM_FAT  = 0;
+    private static final int SHORT_MASK = 0xFFFF;
+    private static final int SHORT_SHIFT = 16;
 
     private int internalAttributes = 0;
     private int platform = PLATFORM_FAT;
@@ -142,11 +144,13 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since Ant 1.5.2
      */
     public void setUnixMode(int mode) {
+        // CheckStyle:MagicNumberCheck OFF - no point
         setExternalAttributes((mode << 16)
                               // MS-DOS read-only attribute
                               | ((mode & 0200) == 0 ? 1 : 0)
                               // MS-DOS directory flag
                               | (isDirectory() ? 0x10 : 0));
+        // CheckStyle:MagicNumberCheck ON
         platform = PLATFORM_UNIX;
     }
 
@@ -156,7 +160,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since Ant 1.6
      */
     public int getUnixMode() {
-        return (int) ((getExternalAttributes() >> 16) & 0xFFFF);
+        return (int) ((getExternalAttributes() >> SHORT_SHIFT) & SHORT_MASK);
     }
 
     /**

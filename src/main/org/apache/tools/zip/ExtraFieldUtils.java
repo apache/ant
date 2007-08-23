@@ -29,6 +29,8 @@ import java.util.zip.ZipException;
 // CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class ExtraFieldUtils {
 
+    private static final int WORD = 4;
+
     /**
      * Static registry of known extra fields.
      *
@@ -95,23 +97,23 @@ public class ExtraFieldUtils {
     public static ZipExtraField[] parse(byte[] data) throws ZipException {
         Vector v = new Vector();
         int start = 0;
-        while (start <= data.length - 4) {
+        while (start <= data.length - WORD) {
             ZipShort headerId = new ZipShort(data, start);
             int length = (new ZipShort(data, start + 2)).getValue();
-            if (start + 4 + length > data.length) {
+            if (start + WORD + length > data.length) {
                 throw new ZipException("data starting at " + start
                     + " is in unknown format");
             }
             try {
                 ZipExtraField ze = createExtraField(headerId);
-                ze.parseFromLocalFileData(data, start + 4, length);
+                ze.parseFromLocalFileData(data, start + WORD, length);
                 v.addElement(ze);
             } catch (InstantiationException ie) {
                 throw new ZipException(ie.getMessage());
             } catch (IllegalAccessException iae) {
                 throw new ZipException(iae.getMessage());
             }
-            start += (length + 4);
+            start += (length + WORD);
         }
         if (start != data.length) { // array not exhausted
             throw new ZipException("data starting at " + start
@@ -130,7 +132,7 @@ public class ExtraFieldUtils {
      * @since 1.1
      */
     public static byte[] mergeLocalFileDataData(ZipExtraField[] data) {
-        int sum = 4 * data.length;
+        int sum = WORD * data.length;
         for (int i = 0; i < data.length; i++) {
             sum += data[i].getLocalFileDataLength().getValue();
         }
@@ -142,8 +144,8 @@ public class ExtraFieldUtils {
             System.arraycopy(data[i].getLocalFileDataLength().getBytes(),
                              0, result, start + 2, 2);
             byte[] local = data[i].getLocalFileDataData();
-            System.arraycopy(local, 0, result, start + 4, local.length);
-            start += (local.length + 4);
+            System.arraycopy(local, 0, result, start + WORD, local.length);
+            start += (local.length + WORD);
         }
         return result;
     }
@@ -155,7 +157,7 @@ public class ExtraFieldUtils {
      * @since 1.1
      */
     public static byte[] mergeCentralDirectoryData(ZipExtraField[] data) {
-        int sum = 4 * data.length;
+        int sum = WORD * data.length;
         for (int i = 0; i < data.length; i++) {
             sum += data[i].getCentralDirectoryLength().getValue();
         }
@@ -167,8 +169,8 @@ public class ExtraFieldUtils {
             System.arraycopy(data[i].getCentralDirectoryLength().getBytes(),
                              0, result, start + 2, 2);
             byte[] local = data[i].getCentralDirectoryData();
-            System.arraycopy(local, 0, result, start + 4, local.length);
-            start += (local.length + 4);
+            System.arraycopy(local, 0, result, start + WORD, local.length);
+            start += (local.length + WORD);
         }
         return result;
     }
