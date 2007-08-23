@@ -62,6 +62,12 @@ public class ZipFile {
     private static final int HASH_SIZE = 509;
     private static final int SHORT     =   2;
     private static final int WORD      =   4;
+    private static final int NIBLET_MASK = 0x0f;
+    private static final int BYTE_SHIFT = 8;
+    private static final int POS_0 = 0;
+    private static final int POS_1 = 1;
+    private static final int POS_2 = 2;
+    private static final int POS_3 = 3;
 
     /**
      * Maps ZipEntrys to Longs, recording the offsets of the local
@@ -277,7 +283,7 @@ public class ZipFile {
 
             int versionMadeBy = ZipShort.getValue(cfh, off);
             off += SHORT;
-            ze.setPlatform((versionMadeBy >> 8) & 0x0F);
+            ze.setPlatform((versionMadeBy >> BYTE_SHIFT) & NIBLET_MASK);
 
             off += WORD; // skip version info and general purpose byte
 
@@ -381,13 +387,13 @@ public class ZipFile {
             byte[] sig = ZipOutputStream.EOCD_SIG;
             int curr = archive.read();
             while (curr != -1) {
-                if (curr == sig[0]) {
+                if (curr == sig[POS_0]) {
                     curr = archive.read();
-                    if (curr == sig[1]) {
+                    if (curr == sig[POS_1]) {
                         curr = archive.read();
-                        if (curr == sig[SHORT]) {
+                        if (curr == sig[POS_2]) {
                             curr = archive.read();
-                            if (curr == sig[3]) {
+                            if (curr == sig[POS_3]) {
                                 found = true;
                                 break;
                             }
@@ -471,12 +477,14 @@ public class ZipFile {
      */
     private static long dosToJavaTime(long dosTime) {
         Calendar cal = Calendar.getInstance();
+        // CheckStyle:MagicNumberCheck OFF - no point
         cal.set(Calendar.YEAR, (int) ((dosTime >> 25) & 0x7f) + 1980);
         cal.set(Calendar.MONTH, (int) ((dosTime >> 21) & 0x0f) - 1);
         cal.set(Calendar.DATE, (int) (dosTime >> 16) & 0x1f);
         cal.set(Calendar.HOUR_OF_DAY, (int) (dosTime >> 11) & 0x1f);
         cal.set(Calendar.MINUTE, (int) (dosTime >> 5) & 0x3f);
         cal.set(Calendar.SECOND, (int) (dosTime << 1) & 0x3e);
+        // CheckStyle:MagicNumberCheck ON
         return cal.getTime().getTime();
     }
 

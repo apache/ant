@@ -57,6 +57,7 @@ public class ZipOutputStream extends FilterOutputStream {
     private static final int BYTE_MASK = 0xFF;
     private static final int SHORT = 2;
     private static final int WORD = 4;
+    private static final int BUFFER_SIZE = 512;
 
     /**
      * Compression method for deflated entries.
@@ -221,7 +222,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.14
      */
-    protected byte[] buf = new byte[512];
+    protected byte[] buf = new byte[BUFFER_SIZE];
 
     // CheckStyle:VisibilityModifier ON
 
