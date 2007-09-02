@@ -231,44 +231,48 @@ public class Touch extends Task {
         }
         if (dateTime != null && !dateTimeConfigured) {
             long workmillis = millis;
-            DateFormat df = dfFactory.getPrimaryFormat();
-            ParseException pe = null;
-            try {
-                workmillis = df.parse(dateTime).getTime();
-            } catch (ParseException peOne) {
-                df = dfFactory.getFallbackFormat();
-                if (df == null) {
-                    pe = peOne;
-                } else {
-                    try {
-                        workmillis = df.parse(dateTime).getTime();
-                    } catch (ParseException peTwo) {
-                        pe = peTwo;
+            if ("now".equalsIgnoreCase(dateTime)) {
+                workmillis = System.currentTimeMillis();
+            } else {
+                DateFormat df = dfFactory.getPrimaryFormat();
+                ParseException pe = null;
+                try {
+                    workmillis = df.parse(dateTime).getTime();
+                } catch (ParseException peOne) {
+                    df = dfFactory.getFallbackFormat();
+                    if (df == null) {
+                        pe = peOne;
+                    } else {
+                        try {
+                            workmillis = df.parse(dateTime).getTime();
+                        } catch (ParseException peTwo) {
+                            pe = peTwo;
+                        }
                     }
                 }
-            }
-            if (pe != null) {
-                throw new BuildException(pe.getMessage(), pe, getLocation());
-            }
-            if (workmillis < 0) {
-                throw new BuildException("Date of " + dateTime
-                                         + " results in negative "
-                                         + "milliseconds value "
-                                         + "relative to epoch "
-                                         + "(January 1, 1970, "
-                                         + "00:00:00 GMT).");
+                if (pe != null) {
+                    throw new BuildException(pe.getMessage(), pe, getLocation());
+                }
+                if (workmillis < 0) {
+                    throw new BuildException("Date of " + dateTime
+                            + " results in negative " + "milliseconds value "
+                            + "relative to epoch " + "(January 1, 1970, "
+                            + "00:00:00 GMT).");
+                }
             }
             log("Setting millis to " + workmillis + " from datetime attribute",
-                ((millis < 0) ? Project.MSG_DEBUG : Project.MSG_VERBOSE));
+                    ((millis < 0) ? Project.MSG_DEBUG : Project.MSG_VERBOSE));
             setMillis(workmillis);
-            //only set if successful to this point:
+            // only set if successful to this point:
             dateTimeConfigured = true;
         }
     }
 
     /**
      * Execute the touch operation.
-     * @throws BuildException if an error occurs.
+     * 
+     * @throws BuildException
+     *             if an error occurs.
      */
     public void execute() throws BuildException {
         checkConfiguration();
@@ -339,8 +343,10 @@ public class Touch extends Task {
         } else {
             String[] mapped = fileNameMapper.mapFileName(r.getName());
             if (mapped != null && mapped.length > 0) {
-                long modTime = (r.isExists()) ? r.getLastModified()
-                    : defaultTimestamp;
+                long modTime = defaultTimestamp;
+                if (millis < 0 && r.isExists()){
+                    modTime = r.getLastModified();
+                }
                 for (int i = 0; i < mapped.length; i++) {
                     touch(getProject().resolveFile(mapped[i]), modTime);
                 }

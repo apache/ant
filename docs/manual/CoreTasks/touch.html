@@ -56,7 +56,9 @@ resource collections (which also includes directories).  Prior to Ant
   </tr>
   <tr>
     <td valign="top">datetime</td>
-    <td valign="top">Specifies the new modification time of the file.</td>
+    <td valign="top">Specifies the new modification time of the file. The 
+       special value &quot;now&quot; indicates the current time 
+       (now supported since Ant 1.8).</td>
   </tr>
   <tr>
     <td valign="top">pattern</td>
@@ -99,9 +101,12 @@ collection.</p>
     mapper</a> can be specified.  Files specified via nested
     <code>fileset</code>s, <code>filelist</code>s, or the <code>file</code>
     attribute are mapped using the specified mapper.  For each file mapped,
-    the resulting files are touched.  If the original file exists its
-    timestamp will be used.  Otherwise the task settings (<code>millis</code>,
-    <code>datetime</code>) take effect.</p>
+    the resulting files are touched. If no time has been specified and
+    the original file exists its timestamp will be used.
+    If no time has been specified and the original file does not exist the 
+    current time is used. Since Ant 1.8 the task settings (<code>millis</code>,
+    and <code>datetime</code>) have priority over the timestamp of the original
+    file.</p>
 <h3>Examples</h3>
 <pre>  &lt;touch file=&quot;myfile&quot;/&gt;</pre>
 <p>creates <code>myfile</code> if it doesn't exist and changes the
@@ -126,6 +131,14 @@ time close to it otherwise.</p>
 </pre>
 <p>creates <code>bar</code> if it doesn't exist and changes the
 modification time to that of <code>foo</code>.</p>
+
+<pre>  &lt;touch file=&quot;foo&quot; datetime=&quot;now&quot;&gt;
+    &lt;mapper type=&quot;regexp&quot; from=&quot;^src(.*)\.java&quot; to=&quot;shadow\1.empty&quot; /&gt;
+  &lt;/touch&gt;
+</pre>
+<p>creates files in the <code>shadow</code> directory for every java file in the
+   <code>src</code> directory if it doesn't exist and changes the modification
+   time of those files to the current time.</p>
 
 
 </body>

@@ -21,6 +21,10 @@ Changes that could break older environments:
   in Ant 1.7.0 has been removed.
   Bugzilla report 40511.
 
+* In the <touch> task when a <mapper> is used, the millis and datetime
+  attributes now override the time of the source resource if provisioned. 
+  Bugzilla report 43235.
+  
 Fixed bugs:
 -----------
 
