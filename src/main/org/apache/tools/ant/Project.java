@@ -1886,28 +1886,6 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Attempt to resolve an Unknown Reference using the
-     * parsed id's - for BC.
-     */
-    private Object resolveIdReference(String key, Project callerProject) {
-        UnknownElement origUE = (UnknownElement) idReferences.get(key);
-        if (origUE == null) {
-            return parentIdProject == null
-                ? null
-                : parentIdProject.resolveIdReference(key, callerProject);
-        }
-        callerProject.log(
-            "Warning: Reference " + key + " has not been set at runtime,"
-            + " but was found during" + LINE_SEP
-            + "build file parsing, attempting to resolve."
-            + " Future versions of Ant may support" + LINE_SEP
-            + " referencing ids defined in non-executed targets.", MSG_WARN);
-        UnknownElement copyUE = origUE.copy(callerProject);
-        copyUE.maybeConfigure();
-        return copyUE.getRealThing();
-    }
-
-    /**
      * Add an id reference.
      * Used for broken build files.
      * @param id the id to set.
@@ -1963,9 +1941,7 @@ public class Project implements ResourceFactory {
         if (ret != null) {
             return ret;
         }
-        // Check for old id behaviour
-        ret = resolveIdReference(key, this);
-        if (ret == null && !key.equals(MagicNames.REFID_PROPERTY_HELPER)) {
+        if (!key.equals(MagicNames.REFID_PROPERTY_HELPER)) {
             try {
                 if (PropertyHelper.getPropertyHelper(this).containsProperties(key)) {
                     log("Unresolvable reference " + key

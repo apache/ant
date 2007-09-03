@@ -24,7 +24,10 @@ Changes that could break older environments:
 * In the <touch> task when a <mapper> is used, the millis and datetime
   attributes now override the time of the source resource if provisioned. 
   Bugzilla report 43235.
-  
+
+* Remove fall-back mechanism for references that are not resolved
+  during normal runtime execution.
+
 Fixed bugs:
 -----------
 

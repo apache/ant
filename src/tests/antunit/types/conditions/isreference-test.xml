@@ -1,0 +1,23 @@
+<project name="isreference-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <target name="out-of-band">
+    <path id="out-of-band" path="."/>
+  </target>
+
+  <target name="testOutOfBand">
+    <au:assertFalse>
+      <isreference refid="out-of-band"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="testInBand">
+    <path id="in-band" path="."/>
+    <au:assertTrue>
+      <isreference refid="in-band"/>
+    </au:assertTrue>
+  </target>
+</project>
+
