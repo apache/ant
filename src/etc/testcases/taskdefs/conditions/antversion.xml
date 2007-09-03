@@ -16,10 +16,11 @@
 		<fail>
 			<condition>
 				<not>
+					<antversion exactly="1.8.0" />
 					<antversion exactly="1.7.1" />
 				</not>
 			</condition>
-			Should be exactly 1.7.1
+			Should be exactly 1.8.0
   		</fail>
 	</target>
 
