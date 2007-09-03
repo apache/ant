@@ -930,7 +930,7 @@ public class FileUtils {
                 textBuffer.append(new String(buffer, 0, bufferLength));
             }
         }
-        return (textBuffer == null) ? null : textBuffer.toString();
+        return (textBuffer == null) ? "" : textBuffer.toString();
     }
 
     /**
