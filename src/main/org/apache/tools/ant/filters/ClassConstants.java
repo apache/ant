@@ -101,7 +101,7 @@ public final class ClassConstants
             }
         } else {
             final String clazz = readFully();
-            if (clazz == null) {
+            if (clazz == null || clazz.length() == 0) {
                 ch = -1;
             } else {
                 final byte[] bytes = clazz.getBytes("ISO-8859-1");

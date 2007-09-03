@@ -84,7 +84,7 @@ public final class ExpandProperties
             }
         } else {
             queuedData = readFully();
-            if (queuedData == null) {
+            if (queuedData.length() == 0) {
                 ch = -1;
             } else {
                 Project project = getProject();
