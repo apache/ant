@@ -424,10 +424,7 @@ public class ReplaceRegExp extends Task {
 
                 pw.flush();
             } else {
-                String buf = FileUtils.readFully(br);
-                if (buf == null) {
-                    buf = "";
-                }
+                String buf = FileUtils.safeReadFully(br);
 
                 String res = doReplace(regex, subs, buf, options);
 

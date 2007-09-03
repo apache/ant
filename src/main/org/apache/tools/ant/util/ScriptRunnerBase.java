@@ -213,7 +213,7 @@ public abstract class ScriptRunnerBase {
         BufferedReader in = null;
         try {
             in = new BufferedReader(reader);
-            script += FileUtils.readFully(in);
+            script += FileUtils.safeReadFully(in);
         } catch (IOException ex) {
             throw new BuildException("Failed to read " + name, ex);
         } finally {
