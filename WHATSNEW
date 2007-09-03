@@ -260,6 +260,10 @@ Changes that could break older environments:
   an error about an undefined reference, locate the reference and move it somewhere
   where it is used, or fix the depends attribute of the target in question to
   depend on the target which defines the reference/datatype.
+  As a result of testing on real live build scripts, a fall-back mechanism
+  was put it place to allow references taht are out-of-band to be resolved. If
+  this happens a big warning message is logged. This fall-back mechanism will
+  be removed in Ant 1.8.0.
 
 * <script> and <scriptdef> now set the current thread context.
 
