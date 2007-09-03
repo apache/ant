@@ -114,6 +114,9 @@ Fixed bugs:
 * War task failed with "No WEB-INF/web.xml file was added" when called
   a second time. Bugzilla 43121.
 
+* FilterMapper could throw an NPE.
+  Bugzilla 43292.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
