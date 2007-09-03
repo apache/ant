@@ -3,14 +3,6 @@
     <filelist id="ref1" dir="${basedir}" files="xxx" />
   </target>
   
-  <target name="test-notcalled">
-    <!-- bug 36955 -->
-    <pathconvert property="_output2" refid="ref1"
-                 pathsep="${line.separator}" />
-    <echo>${_output2}</echo>
-    <au:assertLogContains text="Future versions of Ant"/>
-  </target>
-
   <target name="test-macrodef-embedded-ref">
     <!-- bug 34458 -->
     <macrodef name="foo">
