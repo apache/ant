@@ -164,7 +164,7 @@ public class LoadProperties extends Task {
 
             String text = crh.readFully(instream);
 
-            if (text != null) {
+            if (text != null && text.length() != 0) {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
