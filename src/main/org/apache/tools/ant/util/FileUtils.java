@@ -930,7 +930,18 @@ public class FileUtils {
                 textBuffer.append(new String(buffer, 0, bufferLength));
             }
         }
-        return (textBuffer == null) ? "" : textBuffer.toString();
+        return (textBuffer == null) ? null : textBuffer.toString();
+    }
+
+    /**
+     * Safe read fully - do not return a null for an empty reader.
+     * @param reader the input to read from.
+     * @return the string.
+     * @throws IOException if unable to read from reader.
+     */
+    public static String safeReadFully(Reader reader) throws IOException {
+        String ret = readFully(reader);
+        return ret == null ? "" : ret;
     }
 
     /**

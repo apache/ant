@@ -140,7 +140,7 @@ public class Concat extends Task implements ResourceCollection {
                         new InputStreamReader(new FileInputStream(file),
                                               this.encoding));
                 }
-                value = FileUtils.readFully(reader);
+                value = FileUtils.safeReadFully(reader);
             } catch (IOException ex) {
                 throw new BuildException(ex);
             } finally {

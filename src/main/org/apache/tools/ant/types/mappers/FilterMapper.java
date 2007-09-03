@@ -70,7 +70,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
             Vector filterChains = new Vector();
             filterChains.add(this);
             helper.setFilterChains(filterChains);
-            String result = FileUtils.readFully(helper.getAssembledReader());
+            String result = FileUtils.safeReadFully(helper.getAssembledReader());
             if (result.length() == 0) {
                 return null;
             } else {

@@ -149,7 +149,7 @@ public class ResourceContains implements Condition {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-            String contents = FileUtils.readFully(reader);
+            String contents = FileUtils.safeReadFully(reader);
             String sub = substring;
             if (!casesensitive) {
                 contents = contents.toLowerCase();
