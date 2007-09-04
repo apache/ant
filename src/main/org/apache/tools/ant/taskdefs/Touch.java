@@ -270,7 +270,7 @@ public class Touch extends Task {
 
     /**
      * Execute the touch operation.
-     * 
+     *
      * @throws BuildException
      *             if an error occurs.
      */
@@ -344,7 +344,7 @@ public class Touch extends Task {
             String[] mapped = fileNameMapper.mapFileName(r.getName());
             if (mapped != null && mapped.length > 0) {
                 long modTime = defaultTimestamp;
-                if (millis < 0 && r.isExists()){
+                if (millis < 0 && r.isExists()) {
                     modTime = r.getLastModified();
                 }
                 for (int i = 0; i < mapped.length; i++) {
