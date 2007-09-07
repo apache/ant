@@ -647,6 +647,20 @@ public final class IntrospectionHelper  {
         if (isDynamic() || addTypeMethods.size() > 0) {
             return true;
         }
+        return supportsReflectElement(parentUri, elementName);
+    }
+
+    /**
+     * Check if this element supports a nested element from refection.
+     *
+     * @param parentUri   the uri of the parent
+     * @param elementName the name of the nested element being checked
+     *
+     * @return true if the given nested element is supported
+     * @since Ant 1.8.0
+     */
+    public boolean supportsReflectElement(
+        String parentUri, String elementName) {
         String name = ProjectHelper.extractNameFromComponentName(elementName);
         if (!nestedCreators.containsKey(name.toLowerCase(Locale.US))) {
             return false;
