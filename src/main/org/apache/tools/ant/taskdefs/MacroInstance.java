@@ -242,7 +242,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         this.text = text;
     }
 
-    private UnknownElement copy(UnknownElement ue) {
+    private UnknownElement copy(UnknownElement ue, boolean nested) {
         UnknownElement ret = new UnknownElement(ue.getTag());
         ret.setNamespace(ue.getNamespace());
         ret.setProject(getProject());
@@ -281,8 +281,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             }
             MacroDef.TemplateElement templateElement =
                 (MacroDef.TemplateElement) getNsElements().get(tag);
-            if (templateElement == null) {
-                UnknownElement child = copy(unknownElement);
+            if (templateElement == null || nested) {
+                UnknownElement child = copy(unknownElement, nested);
                 rc.addChild(child.getWrapper());
                 ret.addChild(child);
             } else if (templateElement.isImplicit()) {
@@ -293,7 +293,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 }
                 for (Iterator i = unknownElements.iterator();
                      i.hasNext();) {
-                    UnknownElement child = copy((UnknownElement) i.next());
+                    UnknownElement child
+                        = copy((UnknownElement) i.next(), true);
                     rc.addChild(child.getWrapper());
                     ret.addChild(child);
                 }
@@ -317,7 +318,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 if (list != null) {
                     for (Iterator i = list.iterator();
                          i.hasNext();) {
-                        UnknownElement child = copy((UnknownElement) i.next());
+                        UnknownElement child
+                            = copy((UnknownElement) i.next(), true);
                         rc.addChild(child.getWrapper());
                         ret.addChild(child);
                     }
@@ -386,7 +388,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         }
 
         // need to set the project on unknown element
-        UnknownElement c = copy(macroDef.getNestedTask());
+        UnknownElement c = copy(macroDef.getNestedTask(), false);
         c.init();
         try {
             c.perform();

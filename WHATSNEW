@@ -117,6 +117,9 @@ Fixed bugs:
 * FilterMapper could throw an NPE.
   Bugzilla 43292.
 
+* Regession nested macrodefs with elements could cause StackOverFlow.
+  Bugzilla 43324.
+
 Other changes:
 --------------
 * <script> now has basic support for JavaFX scripts
