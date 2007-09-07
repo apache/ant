@@ -1,0 +1,51 @@
+<project name="length-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="testnested">
+    <macrodef name="root-macro">
+      <element name="sub-tasks" optional="false" />
+
+      <sequential>
+        <!-- do stuff -->
+        <sub-tasks />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="used-macro-a">
+      <element name="a-sub-tasks" optional="false" implicit="true" />
+
+      <sequential>
+        <root-macro>
+          <sub-tasks>
+            <!-- do stuff -->
+            <a-sub-tasks />
+          </sub-tasks>
+        </root-macro>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="used-macro-b">
+      <element name="b-sub-tasks" optional="false" implicit="true" />
+
+      <sequential>
+        <used-macro-a>
+          <root-macro>
+            <sub-tasks>
+              <!-- do stuff -->
+              <b-sub-tasks />
+            </sub-tasks>
+          </root-macro>
+        </used-macro-a>
+      </sequential>
+    </macrodef>
+
+    <used-macro-b>
+      <echo message="Test B" />
+    </used-macro-b>
+
+    <au:assertLogContains text="Test B"/>
+  </target>
+
+</project>
