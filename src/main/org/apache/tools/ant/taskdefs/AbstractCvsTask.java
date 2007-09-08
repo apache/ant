@@ -334,10 +334,13 @@ public abstract class AbstractCvsTask extends Task {
 
         try {
             String actualCommandLine = executeToString(exe);
+            
+            
+            
             log(actualCommandLine, Project.MSG_VERBOSE);
             int retCode = exe.execute();
             log("retCode=" + retCode, Project.MSG_DEBUG);
-            /*Throw an exception if cvs exited with error. (Iulian)*/
+            
             if (failOnError && Execute.isFailure(retCode)) {
                 throw new BuildException("cvs exited with error code "
                                          + retCode
@@ -406,9 +409,9 @@ public abstract class AbstractCvsTask extends Task {
 
     private String executeToString(Execute execute) {
 
-        StringBuffer stringBuffer =
-            new StringBuffer(Commandline.describeCommand(execute
-                                                         .getCommandline()));
+        String cmdLine = Commandline.describeCommand(execute
+                .getCommandline());
+        StringBuffer stringBuffer = removeCvsPassword(cmdLine);
 
         String newLine = StringUtils.LINE_SEP;
         String[] variableArray = execute.getEnvironment();
@@ -429,9 +432,38 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
+     * Removes the cvs password from the command line, if given on the command 
+     * line. This password can be given on the command line in the cvsRoot
+     * -d:pserver:user:password@server:path
+     * It has to be noted that the password may be omitted altogether.
+     * @param cmdLine the CVS command line
+     * @return a StringBuffer where the password has been removed (if available)
+     */
+    private StringBuffer removeCvsPassword(String cmdLine) {
+        StringBuffer stringBuffer = new StringBuffer(cmdLine);
+
+        int start = cmdLine.indexOf("-d:");
+
+        if (start >= 0) {
+            int stop = cmdLine.indexOf("@", start);
+            int startproto = cmdLine.indexOf(":", start);
+            int startuser = cmdLine.indexOf(":", startproto + 1);
+            int startpass = cmdLine.indexOf(":", startuser + 1);
+            stop = cmdLine.indexOf("@", start);
+            if (stop >= 0 && startpass > startproto && startpass < stop) {
+                for (int i = startpass + 1; i < stop; i++) {
+                    stringBuffer.replace(i, i+1, "*");
+                }
+            }
+        }
+        return stringBuffer;
+    }
+    
+    /**
      * The CVSROOT variable.
-     *
-     * @param root the CVSROOT variable
+     * 
+     * @param root
+     *            the CVSROOT variable
      */
     public void setCvsRoot(String root) {
 
