@@ -334,13 +334,11 @@ public abstract class AbstractCvsTask extends Task {
 
         try {
             String actualCommandLine = executeToString(exe);
-            
-            
-            
+
             log(actualCommandLine, Project.MSG_VERBOSE);
             int retCode = exe.execute();
             log("retCode=" + retCode, Project.MSG_DEBUG);
-            
+
             if (failOnError && Execute.isFailure(retCode)) {
                 throw new BuildException("cvs exited with error code "
                                          + retCode
@@ -458,7 +456,7 @@ public abstract class AbstractCvsTask extends Task {
         }
         return stringBuffer;
     }
-    
+
     /**
      * The CVSROOT variable.
      * 
