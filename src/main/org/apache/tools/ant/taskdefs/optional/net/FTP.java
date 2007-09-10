@@ -371,8 +371,9 @@ public class FTP
                 }
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
-                    if (!file.getName().equals(".")
-                         && !file.getName().equals("..")) {
+                    if (file != null 
+                            && !file.getName().equals(".")
+                            && !file.getName().equals("..")) {
                         if (isFunctioningAsDirectory(ftp, dir, file)) {
                             String name = vpath + file.getName();
                             boolean slowScanAllowed = true;
@@ -571,7 +572,7 @@ public class FTP
             boolean candidateFound = false;
             String target = null;
             for (int icounter = 0; icounter < array.length; icounter++) {
-                if (array[icounter].isDirectory()) {
+                if (array[icounter] != null && array[icounter].isDirectory()) {
                     if (!array[icounter].getName().equals(".")
                         && !array[icounter].getName().equals("..")) {
                         candidateFound = true;
@@ -580,7 +581,7 @@ public class FTP
                             + target + " where a directory called " + array[icounter].getName()
                             + " exists", Project.MSG_DEBUG);
                         for (int pcounter = 0; pcounter < array.length; pcounter++) {
-                            if (array[pcounter].getName().equals(target) && pcounter != icounter) {
+                            if (array[pcounter] != null && pcounter != icounter && target.equals(array[pcounter].getName()) ) {
                                 candidateFound = false;
                             }
                         }
@@ -719,7 +720,7 @@ public class FTP
                     return null;
                 }
                 for (int icounter = 0; icounter < theFiles.length; icounter++) {
-                    if (theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
+                    if (theFiles[icounter] != null && theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
                         return theFiles[icounter].getName();
                     }
                 }
@@ -841,12 +842,15 @@ public class FTP
                     return null;
                 }
                 for (int fcount = 0; fcount < theFiles.length; fcount++) {
-                     if (theFiles[fcount].getName().equals(lastpathelement)) {
-                         return theFiles[fcount];
-                     } else if (!isCaseSensitive()
-                         && theFiles[fcount].getName().equalsIgnoreCase(lastpathelement)) {
-                         return theFiles[fcount];
-                     }
+                    if (theFiles[fcount] != null) {
+                        if (theFiles[fcount].getName().equals(lastpathelement)) {
+                            return theFiles[fcount];
+                        } else if (!isCaseSensitive()
+                                && theFiles[fcount].getName().equalsIgnoreCase(
+                                        lastpathelement)) {
+                            return theFiles[fcount];
+                        }
+                    }
                 }
                 return null;
             }
@@ -1825,11 +1829,11 @@ public class FTP
             String fileName = localFile.getName();
             boolean found = false;
             try {
-                if (counter == 1) {
+                if (theFiles == null) {
                     theFiles = ftp.listFiles();
                 }
                 for (int counter2 = 0; counter2 < theFiles.length; counter2++) {
-                    if (theFiles[counter2].getName().equals(fileName)) {
+                    if (theFiles[counter2] != null && theFiles[counter2].getName().equals(fileName)) {
                         found = true;
                         break;
                     }

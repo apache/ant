@@ -61,6 +61,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Error in FTP task
+  Bugzilla report 41724
+
 * Regression: Locator fails with URI encoding problem when spaces in path
   Bugzilla report 42222
 
