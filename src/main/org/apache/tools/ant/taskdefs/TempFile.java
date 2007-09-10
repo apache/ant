@@ -65,6 +65,9 @@ public class TempFile extends Task {
 
     /** deleteOnExit flag */
     private boolean deleteOnExit;
+    
+    /** createFile flag */
+    private boolean createFile;
 
     /**
      * Sets the property you wish to assign the temporary file to.
@@ -123,6 +126,22 @@ public class TempFile extends Task {
     public boolean isDeleteOnExit() {
         return deleteOnExit;
     }
+    
+    /**
+     * If set the file is actually created, if not just a name is created.
+     * @param createFile boolean flag.
+     */
+    public void setCreateFile(boolean createFile) {
+        this.createFile = deleteOnExit;
+    }
+
+    /**
+     * Learn whether createFile flag is set for this tempfile task.
+     * @return the createFile flag.
+     */
+    public boolean isCreateFile() {
+        return createFile;
+    }
 
     /**
      * Creates the temporary file.
@@ -136,8 +155,14 @@ public class TempFile extends Task {
         if (destDir == null) {
             destDir = getProject().resolveFile(".");
         }
-        File tfile = FILE_UTILS.createTempFile(
-                prefix, suffix, destDir, deleteOnExit);
+        File tfile;
+        if (createFile) {
+            tfile = FILE_UTILS.createTempFile(prefix, suffix, destDir,
+                    deleteOnExit);
+        } else {
+            tfile = FILE_UTILS.createTempFileName(prefix, suffix, destDir,
+                    deleteOnExit);
+        }
 
         getProject().setNewProperty(property, tfile.toString());
     }
