@@ -48,7 +48,10 @@ public class FileUtilsTest extends TestCase {
 
     public void tearDown() {
         if (removeThis != null && removeThis.exists()) {
-            removeThis.delete();
+            if (!removeThis.delete())
+            {
+                removeThis.deleteOnExit();
+            }
         }
     }
 
@@ -333,12 +336,43 @@ public class FileUtilsTest extends TestCase {
         assertEquals(f, new File("a").getAbsoluteFile());
     }
 
+    
     /**
      * Test createTempFile
      */
-    public void testCreateTempFile() {
+    public void testCreateTempFile()
+    {
+    // null parent dir
+    File tmp1 = FILE_UTILS.createTempFile("pre", ".suf", null, false);
+    String  tmploc = System.getProperty("java.io.tmpdir");
+    String name = tmp1.getName();
+    assertTrue("starts with pre", name.startsWith("pre"));
+    assertTrue("ends with .suf", name.endsWith(".suf"));
+    assertTrue("File was created", tmp1.exists());
+    assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(),
+                 tmp1.getAbsolutePath());
+    tmp1.delete();
+    
+    File dir2 = new File(tmploc+"/ant-test");
+    dir2.mkdir();
+    removeThis = dir2;
+    
+    File tmp2 = FILE_UTILS.createTempFile("pre", ".suf", dir2, true);
+    String name2 = tmp2.getName();
+    assertTrue("starts with pre", name2.startsWith("pre"));
+    assertTrue("ends with .suf", name2.endsWith(".suf"));
+    assertTrue("File was created", tmp2.exists());
+    assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(),
+                 tmp2.getAbsolutePath());
+    tmp2.delete();
+    dir2.delete();
+    }
+    /**
+     * Test createTempFileName
+     */
+    public void testCreateTempFileName() {
         File parent = new File((new File("/tmp")).getAbsolutePath());
-        File tmp1 = FILE_UTILS.createTempFile("pre", ".suf", parent);
+        File tmp1 = FILE_UTILS.createTempFileName("pre", ".suf", parent, false);
         assertTrue("new file", !tmp1.exists());
 
         String name = tmp1.getName();
@@ -348,12 +382,12 @@ public class FileUtilsTest extends TestCase {
                      parent.getAbsolutePath(),
                      tmp1.getParent());
 
-        File tmp2 = FILE_UTILS.createTempFile("pre", ".suf", parent);
+        File tmp2 = FILE_UTILS.createTempFileName("pre", ".suf", parent, false);
         assertTrue("files are different",
                    !tmp1.getAbsolutePath().equals(tmp2.getAbsolutePath()));
 
         // null parent dir
-        File tmp3 = FILE_UTILS.createTempFile("pre", ".suf", null);
+        File tmp3 = FILE_UTILS.createTempFileName("pre", ".suf", null, false);
         String  tmploc = System.getProperty("java.io.tmpdir");
         assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(),
                      tmp3.getAbsolutePath());
