@@ -577,9 +577,8 @@ public class Zip extends MatchingTask {
 
     /** rename the zip file. */
     private File renameFile() {
-        File renamedFile = FILE_UTILS.createTempFile(
-            "zip", ".tmp", zipFile.getParentFile());
-        renamedFile.deleteOnExit();
+        File renamedFile = FILE_UTILS.createTempFileName(
+            "zip", ".tmp", zipFile.getParentFile(), true);
         try {
             FILE_UTILS.rename(zipFile, renamedFile);
         } catch (SecurityException e) {

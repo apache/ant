@@ -391,7 +391,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      * configure() method of ModifiedSelector. This testcase tests that.
      */
     public void testCreatePropertiesCacheViaCustomSelector() {
-        File cachefile = FILE_UTILS.createTempFile("tmp-cache-", ".properties", null);
+        File cachefile = FILE_UTILS.createTempFileName("tmp-cache-", ".properties", null, false);
         try {
             // initialize test environment (called "bed")
             makeBed();
