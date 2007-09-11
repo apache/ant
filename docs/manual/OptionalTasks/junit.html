@@ -342,7 +342,7 @@ The name of the file is determined by the
 name of the test and can be set by the <code>outfile</code> attribute
 of <code>&lt;test&gt;</code>.</p>
 
-<p>There are three predefined formatters - one prints the test results
+<p>There are four predefined formatters - one prints the test results
 in XML format, the other emits plain text.  The formatter named
 <code>brief</code> will only print detailed information for testcases
 that failed, while <code>plain</code> gives a little statistics line
@@ -354,7 +354,8 @@ can be specified.</p>
 that your tests have written as some characters are illegal in XML
 documents and will be dropped.</p>
 
-<p>The formatter named <code>failure</code> collects all failing <code>testXXX()</code>
+<p>The fourth formatter named <code>failure</code> (since Ant 1.8.0) 
+collects all failing <code>testXXX()</code>
 methods and creates a new <code>TestCase</code> which delegates only these
 failing methods. The name and the location can be specified via Java System property
 <code>ant.junit.failureCollector</code>. The value has to point to the directory and 
@@ -375,7 +376,7 @@ time.</p>
   <tr>
     <td valign="top">type</td>
     <td valign="top">Use a predefined formatter (either
-      <code>xml</code>, <code>plain</code>, or <code>brief</code>).</td>
+      <code>xml</code>, <code>plain</code>, <code>brief</code> or <code>failure</code>).</td>
     <td align="center" rowspan="2">Exactly one of these.</td>
   </tr>
   <tr>

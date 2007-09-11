@@ -24,8 +24,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -42,8 +43,8 @@ import org.apache.tools.ant.util.FileUtils;
  * // generated on: 2007.08.06 09:42:34,555
  * import junit.framework.*;
  * public class FailedTests extends TestCase {
- *     public FailedTests(String s) {
- *         super(s);
+ *     public FailedTests(String testname) {
+ *         super(testname);
  *     }
  *     public static Test suite() {
  *         TestSuite suite = new TestSuite();
@@ -59,7 +60,7 @@ import org.apache.tools.ant.util.FileUtils;
  * the failing test cases in a static list. Because we dont have a finalizer
  * method in the formatters "lifecycle", we regenerate the new java source
  * at each end of a test suite. The last run will contain all failed tests.
- * @since Ant 1.7.1
+ * @since Ant 1.8.0
  */
 public class FailureRecorder implements JUnitResultFormatter {
 
@@ -78,7 +79,7 @@ public class FailureRecorder implements JUnitResultFormatter {
         = System.getProperty("java.io.tmpdir") + "FailedTests";
 
     /** Class names of failed tests without duplicates. */
-    private static HashSet/*<Test>*/ failedTests = new HashSet();
+    private static SortedSet/*<TestInfos>*/ failedTests = new TreeSet();
 
     /** A writer for writing the generated source to. */
     private PrintWriter writer;
@@ -99,7 +100,7 @@ public class FailureRecorder implements JUnitResultFormatter {
         return locationName;
     }
 
-    // CheckStyle:LineLengthCheck OFF - see is long
+    // CheckStyle:LineLengthCheck OFF - @see is long
     /**
      * After each test suite, the whole new JUnit class will be regenerated.
      * @param suite the test suite
@@ -117,14 +118,7 @@ public class FailureRecorder implements JUnitResultFormatter {
             writer = new PrintWriter(new FileOutputStream(sourceFile));
 
             createClassHeader();
-            createTestSuiteHeader();
-            for (Iterator iter = failedTests.iterator(); iter.hasNext();) {
-                Test test = (Test) iter.next();
-                if (test != null) {
-                    createAddTestToSuite(test);
-                }
-            }
-            createTestSuiteFooter();
+            createSuiteMethod();
             createClassFooter();
 
             FileUtils.close(writer);
@@ -134,19 +128,21 @@ public class FailureRecorder implements JUnitResultFormatter {
     }
 
     /**
-     * Not used
-     * {@inheritDoc}
+     * Add the failed test to the list.
+     * @see junit.framework.TestListener#addError(junit.framework.Test, java.lang.Throwable)
      */
     public void addError(Test test, Throwable throwable) {
-        failedTests.add(test);
+        failedTests.add(new TestInfos(test));
     }
 
+    // CheckStyle:LineLengthCheck OFF - @see is long
     /**
-     * Not used
-     * {@inheritDoc}
+     * Add the failed test to the list.
+     * @see junit.framework.TestListener#addFailure(junit.framework.Test, junit.framework.AssertionFailedError)
      */
+    // CheckStyle:LineLengthCheck ON
     public void addFailure(Test test, AssertionFailedError error) {
-        failedTests.add(test);
+        failedTests.add(new TestInfos(test));
     }
 
     /**
@@ -215,42 +211,74 @@ public class FailureRecorder implements JUnitResultFormatter {
         // no-arg constructor
         writer.print("    public ");
         writer.print(className);
-        writer.println("(String s) {");
-        writer.println("        super(s);");
+        writer.println("(String testname) {");
+        writer.println("        super(testname);");
         writer.println("    }");
     }
-
-    private void createTestSuiteHeader() {
+    
+    private void createSuiteMethod() {
         writer.println("    public static Test suite() {");
         writer.println("        TestSuite suite = new TestSuite();");
-    }
-
-    private void createAddTestToSuite(Test test) {
-        writer.print("        suite.addTest( new ");
-        writer.print(getClassName(test));
-        writer.print("(\"");
-        writer.print(getMethodName(test));
-        writer.println("\") );");
-    }
-
-    private void createTestSuiteFooter() {
+        for (Iterator iter = failedTests.iterator(); iter.hasNext();) {
+            TestInfos testInfos = (TestInfos) iter.next();
+            writer.print("        suite.addTest(");
+            writer.print(testInfos);
+            writer.println(");");
+        }
         writer.println("        return suite;");
         writer.println("    }");
     }
-
+    
     private void createClassFooter() {
         writer.println("}");
     }
 
-    // Helper methods
-
-    private String getMethodName(Test test) {
-        String methodName = test.toString();
-        return methodName.substring(0, methodName.indexOf('('));
-    }
-
-    private String getClassName(Test test) {
-        return test.getClass().getName();
+    // Helper classes
+    
+    /**
+     * TestInfos holds information about a given test for later use.
+     */
+    public class TestInfos implements Comparable {
+        
+        /** The class name of the test. */
+        String className;
+        
+        /** The method name of the testcase. */
+        String methodName;
+        
+        /**
+         * This constructor extracts the needed information from the given test.
+         * @param test Test to analyze
+         */
+        public TestInfos(Test test) {
+            className = test.getClass().getName();
+            methodName = test.toString();
+            methodName = methodName.substring(0, methodName.indexOf('('));
+        }
+        
+        /**
+         * This String-Representation can directly be used for instantiation of
+         * the JUnit testcase.
+         * @see java.lang.Object#toString()
+         * @see FailureRecorder#createSuiteMethod()
+         */
+        public String toString() {
+            return "new " + className + "(\"" + methodName + "\")";
+        }
+        
+        /*
+         * The SortedMap needs comparable elements.
+         * @see java.lang.Comparable#compareTo(T)
+         * @see SortedSet#comparator() 
+         */
+        public int compareTo(Object other) {
+            if (other instanceof TestInfos) {
+                TestInfos otherInfos = (TestInfos) other;
+                return toString().compareTo(otherInfos.toString());
+            } else {
+                return -1;
+            }
+        }
     }
 
 }
