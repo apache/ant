@@ -56,25 +56,6 @@
 
   <!--
        ===================================================================
-         Set the properties that control various build options
-       ===================================================================
-  -->
-  <property name="debug" value="true"/>
-  <property name="chmod.fail" value="true"/>
-  <property name="chmod.maxparallel" value="250"/>
-  <property name="deprecation" value="false"/>
-  <property name="optimize" value="true"/>
-  <property name="javac.target" value="1.2"/>
-  <property name="javac.source" value="1.2"/>
-  <property name="junit.fork" value="false"/>
-  <property name="junit.filtertrace" value="off"/>
-  <property name="junit.summary" value="no"/>
-  <property name="test.haltonfailure" value="false"/>
-  <property name="junit.forkmode" value="once"/>
-  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf,**/*.zip"/>
-
-  <!--
-       ===================================================================
          Set the properties related to the source tree
        ===================================================================
   -->
@@ -109,6 +90,27 @@
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
+
+  <!--
+       ===================================================================
+         Set the properties that control various build options
+       ===================================================================
+  -->
+  <property name="debug" value="true"/>
+  <property name="chmod.fail" value="true"/>
+  <property name="chmod.maxparallel" value="250"/>
+  <property name="deprecation" value="false"/>
+  <property name="optimize" value="true"/>
+  <property name="javac.target" value="1.2"/>
+  <property name="javac.source" value="1.2"/>
+  <property name="junit.fork" value="false"/>
+  <property name="junit.filtertrace" value="off"/>
+  <property name="junit.summary" value="no"/>
+  <property name="test.haltonfailure" value="false"/>
+  <property name="junit.forkmode" value="once"/>
+  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf,**/*.zip"/>
+  <property name="junit.collector.dir" value="${build.dir}/failingTests"/>
+  <property name="junit.collector.class" value="FailedTests"/>
 
   <!--
        ===================================================================
@@ -1641,6 +1643,21 @@ see ${build.junit.reports} / ${antunit.reports}
     <macrodef name="test-junit">
       <element name="junit-nested" implicit="true" />
       <sequential>
+        <!-- Delete 'old' collector classes -->
+        <delete failonerror="false">
+          <fileset dir="${junit.collector.dir}" includes="${junit.collector.class}*.class"/>
+        </delete>
+        <!-- compile the FailedTests class if present -->
+        <mkdir dir="${junit.collector.dir}"/>
+        <javac srcdir="${junit.collector.dir}" destdir="${junit.collector.dir}">
+          <classpath id="failure.cp">
+            <pathelement location="${build.classes}"/>
+            <pathelement location="${build.tests}"/>
+          </classpath>
+        </javac>
+        <available file="${junit.collector.dir}/${junit.collector.class}.class"
+                   property="hasFailingTests"/>
+        <!-- run the tests -->
         <mkdir dir="${build.junit.xml}" />
         <property name="test.junit.vmargs" value=""/>
         <junit printsummary="${junit.summary}"
@@ -1660,9 +1677,18 @@ see ${build.junit.reports} / ${antunit.reports}
           <sysproperty key="build.compiler" value="${build.compiler}"/>
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
-          <classpath refid="tests-classpath"/>
+          <sysproperty key="ant.junit.failureCollector"
+                       value="${junit.collector.dir}/${junit.collector.class}"/>
+          <classpath>
+            <path refid="tests-classpath"/>
+            <pathelement location="${junit.collector.dir}"/>
+            <path refid="failure.cp"/>
+          </classpath>
+          <formatter type="failure" usefile="false"/>
           <formatter type="xml"/>
           <jvmarg line="${test.junit.vmargs}"/>
+          <test name="${junit.collector.class}" if="hasFailingTests"/>
+          
           <junit-nested />
         </junit>
       </sequential>
@@ -1770,7 +1796,7 @@ see ${build.junit.reports} / ${antunit.reports}
     <test-junit>
       <formatter type="brief" usefile="false"/>
 
-      <batchtest todir="${build.junit.xml}">
+      <batchtest todir="${build.junit.xml}" unless="hasFailingTests">
         <fileset dir="${src.junit}"
                  includes="${junit.includes}" excludes="${junit.excludes}">
 
