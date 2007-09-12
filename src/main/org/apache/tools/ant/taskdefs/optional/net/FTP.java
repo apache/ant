@@ -371,7 +371,7 @@ public class FTP
                 }
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
-                    if (file != null 
+                    if (file != null
                             && !file.getName().equals(".")
                             && !file.getName().equals("..")) {
                         if (isFunctioningAsDirectory(ftp, dir, file)) {
@@ -581,7 +581,9 @@ public class FTP
                             + target + " where a directory called " + array[icounter].getName()
                             + " exists", Project.MSG_DEBUG);
                         for (int pcounter = 0; pcounter < array.length; pcounter++) {
-                            if (array[pcounter] != null && pcounter != icounter && target.equals(array[pcounter].getName()) ) {
+                            if (array[pcounter] != null
+                                && pcounter != icounter
+                                && target.equals(array[pcounter].getName())) {
                                 candidateFound = false;
                             }
                         }
@@ -720,7 +722,8 @@ public class FTP
                     return null;
                 }
                 for (int icounter = 0; icounter < theFiles.length; icounter++) {
-                    if (theFiles[icounter] != null && theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
+                    if (theFiles[icounter] != null
+                        && theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
                         return theFiles[icounter].getName();
                     }
                 }
@@ -1833,7 +1836,8 @@ public class FTP
                     theFiles = ftp.listFiles();
                 }
                 for (int counter2 = 0; counter2 < theFiles.length; counter2++) {
-                    if (theFiles[counter2] != null && theFiles[counter2].getName().equals(fileName)) {
+                    if (theFiles[counter2] != null
+                        && theFiles[counter2].getName().equals(fileName)) {
                         found = true;
                         break;
                     }
