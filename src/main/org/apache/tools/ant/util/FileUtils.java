@@ -826,19 +826,17 @@ public class FileUtils {
         String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
-        
         try {
             result = File.createTempFile(prefix, suffix, new File(parent));
         } catch (IOException e) {
             throw new BuildException("Could not create tempfile in " + parent, e);
         }
-        
         if (deleteOnExit) {
             result.deleteOnExit();
         }
         return result;
     }
-    
+
     /**
      * Create a File object for a temporary file in a given directory. Without
      * actually creating the file.
@@ -878,8 +876,6 @@ public class FileUtils {
         }
         return result;
     }
-    
-    
 
     /**
      * Compares the contents of two files.

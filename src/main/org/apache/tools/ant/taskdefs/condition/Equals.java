@@ -59,7 +59,7 @@ public class Equals implements Condition {
         this.arg1 = arg1;
         args |= 1;
     }
-    
+
     /**
      * Set the second argument
      * @param arg2 the second argument.
@@ -86,7 +86,7 @@ public class Equals implements Condition {
         this.arg2 = arg2;
         args |= 2;
     }
-    
+
     /**
      * Should we want to trim the arguments before comparing them?
      * @param b if true trim the arguments

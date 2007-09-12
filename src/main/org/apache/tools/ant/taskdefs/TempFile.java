@@ -65,7 +65,7 @@ public class TempFile extends Task {
 
     /** deleteOnExit flag */
     private boolean deleteOnExit;
-    
+
     /** createFile flag */
     private boolean createFile;
 
@@ -126,7 +126,7 @@ public class TempFile extends Task {
     public boolean isDeleteOnExit() {
         return deleteOnExit;
     }
-    
+
     /**
      * If set the file is actually created, if not just a name is created.
      * @param createFile boolean flag.

@@ -129,6 +129,8 @@ public class FailureRecorder implements JUnitResultFormatter {
 
     /**
      * Add the failed test to the list.
+     * @param test the test that errored.
+     * @param throwable the reason it errored.
      * @see junit.framework.TestListener#addError(junit.framework.Test, java.lang.Throwable)
      */
     public void addError(Test test, Throwable throwable) {
@@ -138,6 +140,8 @@ public class FailureRecorder implements JUnitResultFormatter {
     // CheckStyle:LineLengthCheck OFF - @see is long
     /**
      * Add the failed test to the list.
+     * @param test the test that failed.
+     * @param error the assertion that failed.
      * @see junit.framework.TestListener#addFailure(junit.framework.Test, junit.framework.AssertionFailedError)
      */
     // CheckStyle:LineLengthCheck ON
@@ -215,7 +219,7 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.println("        super(testname);");
         writer.println("    }");
     }
-    
+
     private void createSuiteMethod() {
         writer.println("    public static Test suite() {");
         writer.println("        TestSuite suite = new TestSuite();");
@@ -228,24 +232,24 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.println("        return suite;");
         writer.println("    }");
     }
-    
+
     private void createClassFooter() {
         writer.println("}");
     }
 
     // Helper classes
-    
+
     /**
      * TestInfos holds information about a given test for later use.
      */
     public class TestInfos implements Comparable {
-        
+
         /** The class name of the test. */
-        String className;
-        
+        private String className;
+
         /** The method name of the testcase. */
-        String methodName;
-        
+        private String methodName;
+
         /**
          * This constructor extracts the needed information from the given test.
          * @param test Test to analyze
@@ -255,21 +259,24 @@ public class FailureRecorder implements JUnitResultFormatter {
             methodName = test.toString();
             methodName = methodName.substring(0, methodName.indexOf('('));
         }
-        
+
         /**
          * This String-Representation can directly be used for instantiation of
          * the JUnit testcase.
+         * @return the string representation.
          * @see java.lang.Object#toString()
          * @see FailureRecorder#createSuiteMethod()
          */
         public String toString() {
             return "new " + className + "(\"" + methodName + "\")";
         }
-        
-        /*
+
+        /**
          * The SortedMap needs comparable elements.
+         * @param other the object to compare to.
+         * @return the result of the comparison.
          * @see java.lang.Comparable#compareTo(T)
-         * @see SortedSet#comparator() 
+         * @see SortedSet#comparator()
          */
         public int compareTo(Object other) {
             if (other instanceof TestInfos) {

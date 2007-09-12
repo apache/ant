@@ -338,7 +338,7 @@ public abstract class AbstractCvsTask extends Task {
             log(actualCommandLine, Project.MSG_VERBOSE);
             int retCode = exe.execute();
             log("retCode=" + retCode, Project.MSG_DEBUG);
-            
+
             if (failOnError && Execute.isFailure(retCode)) {
                 throw new BuildException("cvs exited with error code "
                                          + retCode
@@ -430,7 +430,7 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
-     * Removes the cvs password from the command line, if given on the command 
+     * Removes the cvs password from the command line, if given on the command
      * line. This password can be given on the command line in the cvsRoot
      * -d:pserver:user:password@server:path
      * It has to be noted that the password may be omitted altogether.
@@ -450,16 +450,16 @@ public abstract class AbstractCvsTask extends Task {
             stop = cmdLine.indexOf("@", start);
             if (stop >= 0 && startpass > startproto && startpass < stop) {
                 for (int i = startpass + 1; i < stop; i++) {
-                    stringBuffer.replace(i, i+1, "*");
+                    stringBuffer.replace(i, i + 1, "*");
                 }
             }
         }
         return stringBuffer;
     }
-    
+
     /**
      * The CVSROOT variable.
-     * 
+     *
      * @param root
      *            the CVSROOT variable
      */
