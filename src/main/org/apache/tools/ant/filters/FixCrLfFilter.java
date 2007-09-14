@@ -70,9 +70,12 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  */
 public final class FixCrLfFilter extends BaseParamFilterReader implements ChainableReader {
+    private static final int DEFAULT_TAB_LENGTH = 8;
+    private static final int MIN_TAB_LENGTH = 2;
+    private static final int MAX_TAB_LENGTH = 80;
     private static final char CTRLZ = '\u001A';
 
-    private int tabLength = 8;
+    private int tabLength = DEFAULT_TAB_LENGTH;
 
     private CrLf eol;
 
@@ -376,8 +379,11 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * @throws IOException on error.
      */
     public void setTablength(int tabLength) throws IOException {
-        if (tabLength < 2 || tabLength > 80) {
-            throw new IOException("tablength must be between 2 and 80");
+        if (tabLength < MIN_TAB_LENGTH
+            || tabLength > MAX_TAB_LENGTH) {
+            throw new IOException(
+                "tablength must be between " + MIN_TAB_LENGTH
+                + " and " + MAX_TAB_LENGTH);
         }
         this.tabLength = tabLength;
     }
@@ -393,9 +399,10 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * </P>
      */
     private static class SimpleFilterReader extends Reader {
+        private static int PREEMPT_BUFFER_LENGTH = 16;
         private Reader in;
 
-        private int[] preempt = new int[16];
+        private int[] preempt = new int[PREEMPT_BUFFER_LENGTH];
 
         private int preemptIndex = 0;
 

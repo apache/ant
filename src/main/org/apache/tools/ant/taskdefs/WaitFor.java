@@ -52,10 +52,19 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @ant.task category="control"
  */
 public class WaitFor extends ConditionBase {
+    private static final long ONE_SECOND = 1000L;
+    private static final long ONE_MINUTE = ONE_SECOND * 60L;
+    private static final long ONE_HOUR   = ONE_MINUTE * 60L;
+    private static final long ONE_DAY    = ONE_HOUR * 24L;
+    private static final long ONE_WEEK   = ONE_DAY * 7L;
+
+    private static final long DEFAULT_MAX_WAIT_MILLIS = ONE_MINUTE * 3L;
+    private static final long DEFAULT_CHECK_MILLIS = 500L;
+
     /** default max wait time */
-    private long maxWaitMillis = 1000L * 60L * 3L;
+    private long maxWaitMillis = DEFAULT_MAX_WAIT_MILLIS;
     private long maxWaitMultiplier = 1L;
-    private long checkEveryMillis = 500L;
+    private long checkEveryMillis = DEFAULT_CHECK_MILLIS;
     private long checkEveryMultiplier = 1L;
     private String timeoutProperty;
 
@@ -201,11 +210,11 @@ public class WaitFor extends ConditionBase {
         /** Constructor the Unit enumerated type. */
         public Unit() {
             timeTable.put(MILLISECOND, new Long(1L));
-            timeTable.put(SECOND,      new Long(1000L));
-            timeTable.put(MINUTE,      new Long(1000L * 60L));
-            timeTable.put(HOUR,        new Long(1000L * 60L * 60L));
-            timeTable.put(DAY,         new Long(1000L * 60L * 60L * 24L));
-            timeTable.put(WEEK,        new Long(1000L * 60L * 60L * 24L * 7L));
+            timeTable.put(SECOND,      new Long(ONE_SECOND));
+            timeTable.put(MINUTE,      new Long(ONE_MINUTE));
+            timeTable.put(HOUR,        new Long(ONE_HOUR));
+            timeTable.put(DAY,         new Long(ONE_DAY));
+            timeTable.put(WEEK,        new Long(ONE_WEEK));
         }
 
         /**
