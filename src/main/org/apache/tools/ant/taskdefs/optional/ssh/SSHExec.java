@@ -187,7 +187,7 @@ public class SSHExec extends SSHBase {
             thread =
                 new Thread() {
                     public void run() {
-                        while (!channel.isEOF()) {
+                        while (!channel.isClosed()) {
                             if (thread == null) {
                                 return;
                             }
