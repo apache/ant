@@ -37,6 +37,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Truncate extends Task {
 
+    private static final int BUFFER_SIZE = 1024;
+
     private static final Long ZERO = new Long(0L);
 
     private static final String NO_CHILD = "No files specified.";
@@ -47,7 +49,7 @@ public class Truncate extends Task {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    private static final byte[] FILL_BUFFER = new byte[1024];
+    private static final byte[] FILL_BUFFER = new byte[BUFFER_SIZE];
 
     private Path path;
     private boolean create = true;
