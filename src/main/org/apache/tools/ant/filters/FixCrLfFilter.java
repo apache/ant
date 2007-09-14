@@ -399,7 +399,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * </P>
      */
     private static class SimpleFilterReader extends Reader {
-        private final static int PREEMPT_BUFFER_LENGTH = 16;
+        private static final int PREEMPT_BUFFER_LENGTH = 16;
         private Reader in;
 
         private int[] preempt = new int[PREEMPT_BUFFER_LENGTH];
@@ -483,6 +483,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             int count = 0;
             int c = 0;
 
+            // CheckStyle:InnerAssignment OFF - leave alone
             while (length-- > 0 && (c = this.read()) != -1) {
                 buf[start++] = (char) c;
                 count++;
