@@ -399,7 +399,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * </P>
      */
     private static class SimpleFilterReader extends Reader {
-        private static int PREEMPT_BUFFER_LENGTH = 16;
+        private final static int PREEMPT_BUFFER_LENGTH = 16;
         private Reader in;
 
         private int[] preempt = new int[PREEMPT_BUFFER_LENGTH];
