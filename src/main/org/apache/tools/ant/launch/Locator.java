@@ -47,6 +47,22 @@ import java.util.Locale;
  */
 // CheckStyle:LineLengthCheck ON - urls are long!
 public final class Locator {
+
+    private static final int NIBBLE = 4;
+    private static final int NIBBLE_MASK   = 0xF;
+
+    private static final int ASCII = 7;
+    private static final int ASCII_SIZE = 128;
+
+    private static final int BYTE = 8;
+    private static final int BYTE_MASK = 0xFF;
+    private static final int BYTE_SIZE = 256;
+
+    private static final int WORD = 16;
+
+    private static final int SPACE = 0x20;
+    private static final int DEL = 0x7F;
+
     /**
      * encoding used to represent URIs
      */
@@ -54,11 +70,11 @@ public final class Locator {
     // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
     // of the Xerces-J team
     // which ASCII characters need to be escaped
-    private static boolean[] gNeedEscaping = new boolean[128];
+    private static boolean[] gNeedEscaping = new boolean[ASCII_SIZE];
     // the first hex character if a character needs to be escaped
-    private static char[] gAfterEscaping1 = new char[128];
+    private static char[] gAfterEscaping1 = new char[ASCII_SIZE];
     // the second hex character if a character needs to be escaped
-    private static char[] gAfterEscaping2 = new char[128];
+    private static char[] gAfterEscaping2 = new char[ASCII_SIZE];
     private static char[] gHexChs = {'0', '1', '2', '3', '4', '5', '6', '7',
                                      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     /** Error string used when an invalid uri is seen */
@@ -67,14 +83,14 @@ public final class Locator {
 
     // initialize the above 3 arrays
     static {
-        for (int i = 0; i <= 0x1f; i++) {
+        for (int i = 0; i < SPACE; i++) {
             gNeedEscaping[i] = true;
-            gAfterEscaping1[i] = gHexChs[i >> 4];
-            gAfterEscaping2[i] = gHexChs[i & 0xf];
+            gAfterEscaping1[i] = gHexChs[i >> NIBBLE];
+            gAfterEscaping2[i] = gHexChs[i & NIBBLE_MASK];
         }
-        gNeedEscaping[0x7f] = true;
-        gAfterEscaping1[0x7f] = '7';
-        gAfterEscaping2[0x7f] = 'F';
+        gNeedEscaping[DEL] = true;
+        gAfterEscaping1[DEL] = '7';
+        gAfterEscaping2[DEL] = 'F';
         char[] escChs = {' ', '<', '>', '#', '%', '"', '{', '}',
                          '|', '\\', '^', '~', '[', ']', '`'};
         int len = escChs.length;
@@ -82,8 +98,8 @@ public final class Locator {
         for (int i = 0; i < len; i++) {
             ch = escChs[i];
             gNeedEscaping[ch] = true;
-            gAfterEscaping1[ch] = gHexChs[ch >> 4];
-            gAfterEscaping2[ch] = gHexChs[ch & 0xf];
+            gAfterEscaping1[ch] = gHexChs[ch >> NIBBLE];
+            gAfterEscaping2[ch] = gHexChs[ch & NIBBLE_MASK];
         }
     }
     /**
@@ -132,7 +148,7 @@ public final class Locator {
             try {
                 if (u.startsWith("jar:file:")) {
                     int pling = u.indexOf("!");
-                    String jarName = u.substring(4, pling);
+                    String jarName = u.substring("jar:".length(), pling);
                     return new File(fromURI(jarName));
                 } else if (u.startsWith("file:")) {
                     int tail = u.indexOf(resource);
@@ -294,11 +310,11 @@ public final class Locator {
             if (c == '%') {
                 char c1 = iter.next();
                 if (c1 != CharacterIterator.DONE) {
-                    int i1 = Character.digit(c1, 16);
+                    int i1 = Character.digit(c1, WORD);
                     char c2 = iter.next();
                     if (c2 != CharacterIterator.DONE) {
-                        int i2 = Character.digit(c2, 16);
-                        sb.write((char) ((i1 << 4) + i2));
+                        int i2 = Character.digit(c2, WORD);
+                        sb.write((char) ((i1 << NIBBLE) + i2));
                     }
                 }
             } else {
@@ -324,7 +340,7 @@ public final class Locator {
         for (; i < len; i++) {
             ch = path.charAt(i);
             // if it's not an ASCII character, break here, and use UTF-8 encoding
-            if (ch >= 128) {
+            if (ch >= ASCII_SIZE) {
                 break;
             }
             if (gNeedEscaping[ch]) {
@@ -356,10 +372,10 @@ public final class Locator {
                 b = bytes[i];
                 // for non-ascii character: make it positive, then escape
                 if (b < 0) {
-                    ch = b + 256;
+                    ch = b + BYTE_SIZE;
                     sb.append('%');
-                    sb.append(gHexChs[ch >> 4]);
-                    sb.append(gHexChs[ch & 0xf]);
+                    sb.append(gHexChs[ch >> NIBBLE]);
+                    sb.append(gHexChs[ch & NIBBLE_MASK]);
                 } else if (gNeedEscaping[b]) {
                     sb.append('%');
                     sb.append(gAfterEscaping1[b]);
@@ -431,7 +447,8 @@ public final class Locator {
             return toolsJar;
         }
         if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
-            javaHome = javaHome.substring(0, javaHome.length() - 4);
+            javaHome = javaHome.substring(
+                0, javaHome.length() - "/jre".length());
             toolsJar = new File(javaHome + libToolsJar);
         }
         if (!toolsJar.exists()) {
