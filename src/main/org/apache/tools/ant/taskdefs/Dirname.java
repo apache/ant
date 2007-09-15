@@ -63,7 +63,6 @@ public class Dirname extends Task {
         this.property = property;
     }
 
-
     /**
      * Execute this task.
      * @throws BuildException on error
@@ -80,4 +79,3 @@ public class Dirname extends Task {
         }
     }
 }
-
