@@ -135,21 +135,22 @@ public class WaitFor extends ConditionBase {
         long savedMaxWaitMillis = maxWaitMillis;
         long savedCheckEveryMillis = checkEveryMillis;
         try {
-            maxWaitMillis *= maxWaitMultiplier;
-            checkEveryMillis *= checkEveryMultiplier;
-            long start = System.currentTimeMillis();
-            long end = start + maxWaitMillis;
+            try {
+                maxWaitMillis *= maxWaitMultiplier;
+                checkEveryMillis *= checkEveryMultiplier;
+                long start = System.currentTimeMillis();
+                long end = start + maxWaitMillis;
 
-            while (System.currentTimeMillis() < end) {
-                if (c.eval()) {
-                    processSuccess();
-                    return;
-                }
-                try {
+                while (System.currentTimeMillis() < end) {
+                    if (c.eval()) {
+                        processSuccess();
+                        return;
+                    }
                     Thread.sleep(checkEveryMillis);
-                } catch (InterruptedException e) {
-                    // ignore
                 }
+            } catch (InterruptedException e) {
+                log("Task " + getTaskName()
+                        + " interrupted, treating as timed out.");
             }
             processTimeout();
         } finally {

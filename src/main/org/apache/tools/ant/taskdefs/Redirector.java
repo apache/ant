@@ -781,7 +781,11 @@ public class Redirector {
                 }
                 wait(1000);
             } catch (InterruptedException eyeEx) {
-                // Ignore exception
+                Thread[] thread = new Thread[threadGroup.activeCount()];
+                threadGroup.enumerate(thread);
+                for (int i = 0; i < thread.length && thread[i] != null; i++) {
+                    thread[i].interrupt();
+                }
             }
         }
 
