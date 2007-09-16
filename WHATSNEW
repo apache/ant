@@ -4,6 +4,11 @@ Changes from Ant 1.7.x TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* Improved handling of InterruptException (lets suppose someone/thing is
+  trying to kill the thread when we receive an InterruptException),
+  when an InterruptException is received, we do not wait anymore in a while
+  loop till the end time has been reached. Bugzilla report 42924.
+
 * Refactor PropertyHelper and introspection APIs to make extension more
   granular and support setting task/type attribute values to objects
   decoded by custom PropertyEvaluator delegates. Also add <propertyhelper>
