@@ -35,7 +35,7 @@ import org.apache.tools.ant.types.resources.FileResource;
  */
 
 public abstract class Pack extends Task {
-
+    private static final int BUFFER_SIZE = 8 * 1024;
     // CheckStyle:VisibilityModifier OFF - bc
     protected File zipFile;
     protected File source;
@@ -148,7 +148,7 @@ public abstract class Pack extends Task {
      */
     private void zipFile(InputStream in, OutputStream zOut)
         throws IOException {
-        byte[] buffer = new byte[8 * 1024];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int count = 0;
         do {
             zOut.write(buffer, 0, count);

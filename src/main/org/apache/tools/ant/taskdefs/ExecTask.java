@@ -43,13 +43,13 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ExecTask extends Task {
 
-    // CheckStyle:VisibilityModifier OFF - bc
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String os;
     private String osFamily;
 
     private File dir;
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
     private Long timeout = null;
@@ -433,7 +433,7 @@ public class ExecTask extends Task {
             if (environment != null) {
                 for (int i = 0; i < environment.length; i++) {
                     if (isPath(environment[i])) {
-                        p = new Path(getProject(), environment[i].substring(5));
+                        p = new Path(getProject(), getPath(environment[i]));
                         break;
                     }
                 }
@@ -444,7 +444,7 @@ public class ExecTask extends Task {
                 while (e.hasMoreElements()) {
                     String line = (String) e.nextElement();
                     if (isPath(line)) {
-                        p = new Path(getProject(), line.substring(5));
+                        p = new Path(getProject(), getPath(line));
                         break;
                     }
                 }
@@ -703,7 +703,11 @@ public class ExecTask extends Task {
     }
 
     private boolean isPath(String line) {
-        return line.startsWith("PATH=") || line.startsWith("Path=");
+        return line.startsWith("PATH=")
+            || line.startsWith("Path=");
     }
 
+    private String getPath(String line) {
+        return line.substring("PATH=".length());
+    }
 }

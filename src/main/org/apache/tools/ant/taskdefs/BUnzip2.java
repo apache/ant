@@ -39,6 +39,8 @@ import org.apache.tools.bzip2.CBZip2InputStream;
 
 public class BUnzip2 extends Unpack {
 
+    private static final int BUFFER_SIZE = 8 * 1024;
+
     private static final String DEFAULT_EXTENSION = ".bz2";
 
     /**
@@ -74,7 +76,7 @@ public class BUnzip2 extends Unpack {
                     throw new BuildException("Invalid bz2 file.", getLocation());
                 }
                 zIn = new CBZip2InputStream(bis);
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
                     out.write(buffer, 0, count);

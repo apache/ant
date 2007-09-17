@@ -49,6 +49,8 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Execute {
 
+    private static final int ONE_SECOND = 1000;
+
     /** Invalid exit code.
      * set to {@link Integer#MAX_VALUE}
      */
@@ -518,7 +520,7 @@ public class Execute {
                                        useVMLauncher);
         if (Os.isFamily("windows")) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(ONE_SECOND);
             } catch (InterruptedException e) {
                 project.log("interruption in the sleep after having spawned a"
                             + " process", Project.MSG_VERBOSE);
@@ -911,6 +913,7 @@ public class Execute {
             final int preCmdLength = 7;
             final String cmdDir = commandDir.getAbsolutePath();
             String[] newcmd = new String[cmd.length + preCmdLength];
+            // CheckStyle:MagicNumber OFF - do not bother
             newcmd[0] = "cmd";
             newcmd[1] = "/c";
             newcmd[2] = cmdDir.substring(0, 2);
@@ -918,6 +921,7 @@ public class Execute {
             newcmd[4] = "cd";
             newcmd[5] = cmdDir.substring(2);
             newcmd[6] = "&&";
+            // CheckStyle:MagicNumber ON
             System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
 
             return exec(project, newcmd, env);
@@ -959,12 +963,14 @@ public class Execute {
             // the command
             final int preCmdLength = 6;
             String[] newcmd = new String[cmd.length + preCmdLength];
+            // CheckStyle:MagicNumber OFF - do not bother
             newcmd[0] = "cmd";
             newcmd[1] = "/c";
             newcmd[2] = "cd";
             newcmd[3] = "/d";
             newcmd[4] = commandDir.getAbsolutePath();
             newcmd[5] = "&&";
+            // CheckStyle:MagicNumber ON
             System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
 
             return exec(project, newcmd, env);
