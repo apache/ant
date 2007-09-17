@@ -44,7 +44,7 @@ import java.util.Date;
  * @ant.task category="network"
  */
 public class Get extends Task {
-
+    private static final int BIG_BUFFER_SIZE = 100 * 1024;
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private URL source; // required
@@ -202,7 +202,7 @@ public class Get extends Task {
         progress.beginDownload();
         boolean finished = false;
         try {
-            byte[] buffer = new byte[100 * 1024];
+            byte[] buffer = new byte[BIG_BUFFER_SIZE];
             int length;
             while ((length = is.read(buffer)) >= 0) {
                 fos.write(buffer, 0, length);

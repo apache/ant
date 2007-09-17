@@ -58,6 +58,7 @@ import org.apache.tools.zip.ZipFile;
  *           name="unwar"
  */
 public class Expand extends Task {
+    private static final int BUFFER_SIZE = 1024;
     private File dest; //req
     private File source; // req
     private boolean overwrite = true;
@@ -275,7 +276,7 @@ public class Expand extends Task {
             if (isDirectory) {
                 f.mkdirs();
             } else {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[BUFFER_SIZE];
                 int length = 0;
                 FileOutputStream fos = null;
                 try {

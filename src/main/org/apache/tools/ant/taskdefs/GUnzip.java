@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class GUnzip extends Unpack {
-
+    private static final int BUFFER_SIZE = 8 * 1024;
     private static final String DEFAULT_EXTENSION = ".gz";
 
     /**
@@ -62,7 +62,7 @@ public class GUnzip extends Unpack {
                 out = new FileOutputStream(dest);
                 fis = srcResource.getInputStream();
                 zIn = new GZIPInputStream(fis);
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
                     out.write(buffer, 0, count);

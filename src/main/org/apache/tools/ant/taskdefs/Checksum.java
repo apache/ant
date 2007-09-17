@@ -58,6 +58,12 @@ import org.apache.tools.ant.util.StringUtils;
  * @ant.task category="control"
  */
 public class Checksum extends MatchingTask implements Condition {
+
+    private static final int NIBBLE = 4;
+    private static final int WORD = 16;
+    private static final int BUFFER_SIZE = 8 * 1024;
+    private static final int BYTE_MASK = 0xFF;
+
     private static class FileUnion extends Restrict {
         private Union u;
         FileUnion() {
@@ -144,7 +150,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Size of the read buffer to use.
      */
-    private int readBufferSize = 8 * 1024;
+    private int readBufferSize = BUFFER_SIZE;
 
     /**
      * Formater for the checksum file.
@@ -572,7 +578,7 @@ public class Checksum extends MatchingTask implements Condition {
     private String createDigestString(byte[] fileDigest) {
         StringBuffer checksumSb = new StringBuffer();
         for (int i = 0; i < fileDigest.length; i++) {
-            String hexStr = Integer.toHexString(0x00ff & fileDigest[i]);
+            String hexStr = Integer.toHexString(BYTE_MASK & fileDigest[i]);
             if (hexStr.length() < 2) {
                 checksumSb.append("0");
             }
@@ -604,9 +610,9 @@ public class Checksum extends MatchingTask implements Condition {
 
         // two characters form the hex value.
         for (int i = 0, j = 0; j < l; i++) {
-            int f = Character.digit(data[j++], 16) << 4;
-            f = f | Character.digit(data[j++], 16);
-            out[i] = (byte) (f & 0xFF);
+            int f = Character.digit(data[j++], WORD) << NIBBLE;
+            f = f | Character.digit(data[j++], WORD);
+            out[i] = (byte) (f & BYTE_MASK);
         }
 
         return out;
