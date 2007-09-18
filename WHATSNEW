@@ -44,6 +44,12 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * There is now a FileProvider interface for resources that act as a source
+   of filenames. This should be used by tasks that require resources
+   to provide filenames, rather than require that all resources
+   are instances or subclasses of FileResource
+   Bugzilla report 43348
+
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
