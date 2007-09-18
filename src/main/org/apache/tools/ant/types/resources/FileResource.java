@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.Reference;
  * A Resource representation of a File.
  * @since Ant 1.7
  */
-public class FileResource extends Resource implements Touchable {
+public class FileResource extends Resource implements Touchable, FileProvider {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NULL_FILE
