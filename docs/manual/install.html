@@ -25,6 +25,65 @@
 <body>
 <h1>Installing Ant</h1>
 <h2><a name="getting">Getting Ant</a></h2>
+
+<h3>Download Area Layout</h3>
+<table>
+<tr>
+  <th>Filename</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>KEYS</td>
+  <td>PGP-Keysfile. It contains the PGP-keys of Ant developers so you can 'trust' the distribution. </td>
+</tr>
+<tr>
+  <td>RELEASE-NOTES-{version}.html</td>
+  <td>
+    Release notes of the given version in HTML format. When upgrading your Ant installation you
+    should have a look on the <i>Changes that could break older environments</i> section.
+  </td>
+</tr>
+<tr>
+  <td>ant-current-bin.zip</td>
+  <td>
+    ZIP-Archive containing the compiled version of Ant in the last released version. This is the file
+    most of the users want to have.
+  </td>
+</tr>
+<tr>
+  <td>ant-current-src.zip</td>
+  <td>
+    ZIP-Archive containing the sources of Ant. If you have this you could compile Ant itself.
+    If you do not have the <i>required</i> dependencies, the classes depeding on them are just not
+    build.
+  </td>
+</tr>
+<tr>
+  <td>ant-current-*.asc</td>
+  <td>
+    Security file for checking the correctness of the zip file. This one is the
+    <a href="http://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a> key.
+  </td>
+</tr>
+<tr>
+  <td>ant-current-*.md5</td>
+  <td>
+    Security file for checking the correctness of the zip file. This one is the
+    <a href="http://en.wikipedia.org/wiki/Md5" target="_blank">MD5</a> key.
+  </td>
+</tr>
+<tr>
+  <td>ant-current-*.sha1</td>
+  <td>
+    Security file for checking the correctness of the zip file. This one is the
+    <a href="http://en.wikipedia.org/wiki/SHA-1" target="_blank">SHA1</a> key.
+  </td>
+</tr>
+
+</table>
+
+
+
 <h3>Binary Edition</h3>
 <p>The latest stable version of Ant is available from the Ant web page <a
 href="http://ant.apache.org/" target="_top">http://ant.apache.org/</a>.
