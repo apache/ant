@@ -58,6 +58,7 @@ import org.apache.tools.tar.TarOutputStream;
  * @ant.task category="packaging"
  */
 public class Tar extends MatchingTask {
+    private static final int BUFFER_SIZE = 8 * 1024;
 
     /**
      * @deprecated since 1.5.x.
@@ -466,7 +467,7 @@ public class Tar extends MatchingTask {
             if (!r.isDirectory()) {
                 in = r.getInputStream();
 
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
                     tOut.write(buffer, 0, count);

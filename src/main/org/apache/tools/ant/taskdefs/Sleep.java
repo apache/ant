@@ -144,8 +144,10 @@ public class Sleep extends Task {
      */
 
     private long getSleepTime() {
+        // CheckStyle:MagicNumber OFF
         return ((((long) hours * 60) + minutes) * 60 + seconds) * 1000
             + milliseconds;
+        // CheckStyle:MagicNumber ON
     }
 
 

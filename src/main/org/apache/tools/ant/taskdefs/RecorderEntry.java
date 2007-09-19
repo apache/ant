@@ -267,6 +267,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
 
     private static String formatTime(long millis) {
+        // CheckStyle:MagicNumber OFF
         long seconds = millis / 1000;
         long minutes = seconds / 60;
 
@@ -280,7 +281,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             return Long.toString(seconds) + " second"
                  + (seconds % 60 == 1 ? "" : "s");
         }
-
+        // CheckStyle:MagicNumber ON
     }
 
     /**

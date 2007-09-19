@@ -66,6 +66,8 @@ import org.apache.tools.zip.ZipOutputStream;
  * @ant.task category="packaging"
  */
 public class Zip extends MatchingTask {
+    private static final int BUFFER_SIZE = 8 * 1024;
+    private static final int ROUNDUP_MILLIS = 1999; // 2 seconds - 1
     // CheckStyle:VisibilityModifier OFF - bc
 
     protected File zipFile;
@@ -927,6 +929,7 @@ public class Zip extends MatchingTask {
         OutputStream os = null;
         try {
             os = new FileOutputStream(zipFile);
+            // CheckStyle:MagicNumber OFF
             // Cf. PKZIP specification.
             byte[] empty = new byte[22];
             empty[0] = 80; // P
@@ -934,6 +937,7 @@ public class Zip extends MatchingTask {
             empty[2] = 5;
             empty[3] = 6;
             // remainder zeros
+            // CheckStyle:MagicNumber ON
             os.write(empty);
         } catch (IOException ioe) {
             throw new BuildException("Could not create empty ZIP archive "
@@ -1404,10 +1408,11 @@ public class Zip extends MatchingTask {
             ZipEntry ze = new ZipEntry (vPath);
             if (dir != null && dir.exists()) {
                 // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(dir.lastModified() + (roundUp ? 1999 : 0));
+                ze.setTime(dir.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0));
             } else {
                 // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(System.currentTimeMillis() + (roundUp ? 1999 : 0));
+                ze.setTime(System.currentTimeMillis()
+                           + (roundUp ? ROUNDUP_MILLIS : 0));
             }
             ze.setSize (0);
             ze.setMethod (ZipEntry.STORED);
@@ -1479,7 +1484,7 @@ public class Zip extends MatchingTask {
                     // Store data into a byte[]
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-                    byte[] buffer = new byte[8 * 1024];
+                    byte[] buffer = new byte[BUFFER_SIZE];
                     int count = 0;
                     do {
                         size += count;
@@ -1491,7 +1496,7 @@ public class Zip extends MatchingTask {
 
                 } else {
                     in.mark(Integer.MAX_VALUE);
-                    byte[] buffer = new byte[8 * 1024];
+                    byte[] buffer = new byte[BUFFER_SIZE];
                     int count = 0;
                     do {
                         size += count;
@@ -1507,7 +1512,7 @@ public class Zip extends MatchingTask {
             ze.setUnixMode(mode);
             zOut.putNextEntry(ze);
 
-            byte[] buffer = new byte[8 * 1024];
+            byte[] buffer = new byte[BUFFER_SIZE];
             int count = 0;
             do {
                 if (count != 0) {
@@ -1544,7 +1549,7 @@ public class Zip extends MatchingTask {
         try {
             // ZIPs store time with a granularity of 2 seconds, round up
             zipFile(fIn, zOut, vPath,
-                    file.lastModified() + (roundUp ? 1999 : 0),
+                    file.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0),
                     null, mode);
         } finally {
             fIn.close();

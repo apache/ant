@@ -28,6 +28,8 @@ import java.io.OutputStream;
  */
 public class StreamPumper implements Runnable {
 
+    private static final int SMALL_BUFFER_SIZE = 128;
+
     private InputStream is;
     private OutputStream os;
     private volatile boolean finish;
@@ -35,7 +37,7 @@ public class StreamPumper implements Runnable {
     private boolean closeWhenExhausted;
     private boolean autoflush = false;
     private Exception exception = null;
-    private int bufferSize = 128;
+    private int bufferSize = SMALL_BUFFER_SIZE;
     private boolean started = false;
 
     /**
