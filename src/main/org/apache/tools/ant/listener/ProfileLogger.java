@@ -36,7 +36,7 @@ public class ProfileLogger extends DefaultLogger {
 
     /**
      * Logs a message to say that the target has started.
-     * 
+     *
      * @param event
      *            An event with any relevant extra information. Must not be
      *            <code>null</code>.
@@ -50,7 +50,7 @@ public class ProfileLogger extends DefaultLogger {
 
     /**
      * Logs a message to say that the target has finished.
-     * 
+     *
      * @param event
      *            An event with any relevant extra information. Must not be
      *            <code>null</code>.
@@ -63,7 +63,7 @@ public class ProfileLogger extends DefaultLogger {
 
     /**
      * Logs a message to say that the task has started.
-     * 
+     *
      * @param event
      *            An event with any relevant extra information. Must not be
      *            <code>null</code>.
@@ -77,7 +77,7 @@ public class ProfileLogger extends DefaultLogger {
 
     /**
      * Logs a message to say that the task has finished.
-     * 
+     *
      * @param event
      *            An event with any relevant extra information. Must not be
      *            <code>null</code>.
