@@ -696,7 +696,7 @@ public class ComponentHelper  {
      * Called at the start of processing an antlib.
      * @param uri the uri that is associated with this antlib.
      */
-    public void enterAntLib(String uri) {
+    public synchronized void enterAntLib(String uri) {
         antLibCurrentUri = uri;
         antLibStack.push(uri);
     }
@@ -711,7 +711,7 @@ public class ComponentHelper  {
     /**
      * Called at the end of processing an antlib.
      */
-    public void exitAntLib() {
+    public synchronized void exitAntLib() {
         antLibStack.pop();
         antLibCurrentUri = (antLibStack.size() == 0) ? null : (String) antLibStack.peek();
     }
