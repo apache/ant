@@ -180,6 +180,7 @@ public class KeySubst extends Task {
         int index = 0;
         int i = 0;
         String key = null;
+        // CheckStyle:MagicNumber OFF
         while ((index = origString.indexOf("${", i)) > -1) {
             key = origString.substring(index + 2, origString.indexOf("}",
                                        index + 3));
@@ -193,6 +194,7 @@ public class KeySubst extends Task {
             }
             i = index + 3 + key.length();
         }
+        // CheckStyle:MagicNumber ON
         finalString.append (origString.substring(i));
         return finalString.toString();
     }
