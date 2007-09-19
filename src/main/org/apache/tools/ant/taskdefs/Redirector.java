@@ -53,6 +53,7 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
  * @since Ant 1.6
  */
 public class Redirector {
+    private static final int ONE_SECOND = 1000;
 
     private static final String DEFAULT_ENCODING
         = System.getProperty("file.encoding");
@@ -779,7 +780,7 @@ public class Redirector {
                         // Ignore exception
                     }
                 }
-                wait(1000);
+                wait(ONE_SECOND);
             } catch (InterruptedException eyeEx) {
                 // Ignore exception
             }
