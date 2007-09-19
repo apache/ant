@@ -39,7 +39,9 @@ import org.apache.tools.ant.util.FileUtils;
  *             Merged into the class Javac.
  */
 public class Jikes {
-
+    // There have been reports that 300 files could be compiled
+    // on a command line so 250 is a conservative approach
+    private static final int MAX_FILES_ON_COMMAND_LINE = 250;
     // CheckStyle:VisibilityModifier OFF - bc
     protected JikesOutputParser jop;
     protected String command;
@@ -80,10 +82,8 @@ public class Jikes {
             // Windows has a 32k limit on total arg size, so
             // create a temporary file to store all the arguments
 
-            // There have been reports that 300 files could be compiled
-            // so 250 is a conservative approach
             if (myos.toLowerCase().indexOf("windows") >= 0
-                && args.length > 250) {
+                && args.length > MAX_FILES_ON_COMMAND_LINE) {
                 PrintWriter out = null;
                 try {
                     String tempFileName = "jikes"

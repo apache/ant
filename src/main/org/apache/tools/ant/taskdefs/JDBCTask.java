@@ -92,14 +92,14 @@ public class SQLExampleTask extends JDBCTask {
  */
 
 public abstract class JDBCTask extends Task {
-
+    private static final int HASH_TABLE_SIZE = 3;
 
     /**
      * Used for caching loaders / driver. This is to avoid
      * getting an OutOfMemoryError when calling this task
      * multiple times in a row.
      */
-    private static Hashtable loaderMap = new Hashtable(3);
+    private static Hashtable loaderMap = new Hashtable(HASH_TABLE_SIZE);
 
     private boolean caching = true;
 

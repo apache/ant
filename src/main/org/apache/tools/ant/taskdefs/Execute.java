@@ -712,6 +712,7 @@ public class Execute {
         HashMap logicals = new HashMap();
         String logName = null, logValue = null, newLogName;
         String line = null;
+        // CheckStyle:MagicNumber OFF
         while ((line = in.readLine()) != null) {
             // parse the VMS logicals into required format ("VAR=VAL[,VAL2]")
             if (line.startsWith("\t=")) {
@@ -735,6 +736,7 @@ public class Execute {
                 }
             }
         }
+        // CheckStyle:MagicNumber ON
         // Since we "look ahead" before adding, there's one last env var.
         if (logName != null) {
             logicals.put(logName, logValue);
@@ -1115,11 +1117,13 @@ public class Execute {
             if (workingDir == null) {
                 commandDir = project.getBaseDir();
             }
+            // CheckStyle:MagicNumber OFF
             String[] newcmd = new String[cmd.length + 3];
             newcmd[0] = "perl";
             newcmd[1] = antRun;
             newcmd[2] = commandDir.getAbsolutePath();
             System.arraycopy(cmd, 0, newcmd, 3, cmd.length);
+            // CheckStyle:MagicNumber ON
 
             return exec(project, newcmd, env);
         }
