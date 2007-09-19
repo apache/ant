@@ -52,7 +52,6 @@ import org.apache.tools.ant.dispatch.DispatchUtils;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -396,15 +395,13 @@ public class Symlink extends DispatchTask {
      *
      * @param linkfil    A <code>File</code> object of the symlink to delete.
      *
-     * @throws FileNotFoundException   When the path results in a
-     *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>,
      *                                   <code>File.delete</code> or
      *                                   <code>File.getCanonicalPath</code>
      *                                   fail.
      */
     public static void deleteSymlink(File linkfil)
-        throws IOException{
+        throws IOException {
         if (!linkfil.exists()) {
             throw new FileNotFoundException("No such symlink: " + linkfil);
         }
@@ -495,7 +492,8 @@ public class Symlink extends DispatchTask {
                 } catch (FileNotFoundException fnfe) {
                     log("Symlink disappeared before it was deleted: " + lnk);
                 } catch (IOException ioe) {
-                    log("Unable to overwrite preexisting link or file: " + lnk,ioe, Project.MSG_INFO);
+                    log("Unable to overwrite preexisting link or file: " + lnk,
+                        ioe, Project.MSG_INFO);
                 }
             }
         }
