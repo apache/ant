@@ -39,6 +39,8 @@ import org.apache.tools.ant.util.ClasspathUtils;
  * @ant.task name="mail" category="network"
  */
 public class EmailTask extends Task {
+    private static final int SMTP_PORT = 25;
+
     /** Constant to show that the best available mailer should be used.  */
     public static final String AUTO = "auto";
     /** Constant to allow the Mime mailer to be requested  */
@@ -65,7 +67,7 @@ public class EmailTask extends Task {
     private String encoding = AUTO;
     /** host running SMTP  */
     private String host = "localhost";
-    private int port = 25;
+    private int port = SMTP_PORT;
     /** subject field  */
     private String subject = null;
     /** any text  */

@@ -169,8 +169,10 @@ public class ChangeLogTask extends AbstractCvsTask {
      * @param days the number of days of log to process.
      */
     public void setDaysinpast(final int days) {
+        // CheckStyle:MagicNumber OFF
         final long time = System.currentTimeMillis()
              - (long) days * 24 * 60 * 60 * 1000;
+        // CheckStyle:MagicNumber ON
 
         setStart(new Date(time));
     }

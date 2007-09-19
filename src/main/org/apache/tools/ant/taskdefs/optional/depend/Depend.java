@@ -44,6 +44,8 @@ import org.apache.tools.ant.util.depend.DependencyAnalyzer;
  *
  */
 public class Depend extends MatchingTask {
+    private static final int ONE_SECOND = 1000;
+
     /**
      * A class (struct) user to manage information about a class
      *
@@ -693,7 +695,7 @@ public class Depend extends MatchingTask {
             determineOutOfDateClasses();
             int count = deleteAllAffectedFiles();
 
-            long duration = (System.currentTimeMillis() - start) / 1000;
+            long duration = (System.currentTimeMillis() - start) / ONE_SECOND;
 
             final int summaryLogLevel;
             if (count > 0) {
@@ -817,8 +819,9 @@ public class Depend extends MatchingTask {
             } else if (file.getName().endsWith(".class")) {
                 ClassFileInfo info = new ClassFileInfo();
                 info.absoluteFile = file;
-                String relativeName = file.getPath().substring(rootLength + 1,
-                    file.getPath().length() - 6);
+                String relativeName = file.getPath().substring(
+                    rootLength + 1,
+                    file.getPath().length() - ".class".length());
                 info.className
                     = ClassFileUtils.convertSlashName(relativeName);
                 info.sourceFile = findSourceFile(relativeName);

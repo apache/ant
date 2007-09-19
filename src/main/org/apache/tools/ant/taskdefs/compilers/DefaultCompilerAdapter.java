@@ -45,6 +45,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @since Ant 1.3
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
+    private static final int COMMAND_LINE_LIMIT = 4096;  // 4K
     // CheckStyle:VisibilityModifier OFF - bc
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -460,7 +461,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              * POSIX seems to define a lower limit of 4k, so use a temporary
              * file if the total length of the command line exceeds this limit.
              */
-            if (Commandline.toString(args).length() > 4096
+            if (Commandline.toString(args).length() > COMMAND_LINE_LIMIT
                 && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
