@@ -44,7 +44,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class Cab extends MatchingTask {
-
+    private static final int DEFAULT_RESULT = -99;
     private File cabFile;
     private File baseDir;
     private Vector filesets = new Vector();
@@ -279,7 +279,8 @@ public class Cab extends MatchingTask {
                 out.flush();
                 out.close();
 
-                int result = -99; // A wild default for when the thread is interrupted
+                // A wild default for when the thread is interrupted
+                int result = DEFAULT_RESULT;
 
                 try {
                     // Wait for the process to finish

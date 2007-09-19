@@ -149,7 +149,9 @@ class ChangeLogParser {
      */
     private void processFile(final String line) {
         if (line.startsWith("Working file:")) {
+            // CheckStyle:MagicNumber OFF
             file = line.substring(14, line.length());
+            // CheckStyle:MagicNumber ON
             status = GET_REVISION;
         }
     }
@@ -161,7 +163,9 @@ class ChangeLogParser {
      */
     private void processRevision(final String line) {
         if (line.startsWith("revision")) {
+            // CheckStyle:MagicNumber OFF
             revision = line.substring(9);
+            // CheckStyle:MagicNumber ON
             status = GET_DATE;
         } else if (line.startsWith("======")) {
             //There were no revisions in this changelog

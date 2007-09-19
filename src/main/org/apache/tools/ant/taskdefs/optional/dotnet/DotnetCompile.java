@@ -70,6 +70,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public abstract class DotnetCompile
          extends DotnetBaseMatchingTask {
 
+    private static final int DEFAULT_WARN_LEVEL = 3;
+
     /**
      *  list of reference classes. (pretty much a classpath equivalent)
      */
@@ -194,7 +196,7 @@ public abstract class DotnetCompile
         win32icon = null;
         srcDir = null;
         mainClass = null;
-        warnLevel = 3;
+        warnLevel = DEFAULT_WARN_LEVEL;
         optimize = false;
         debug = true;
         references = null;

@@ -503,9 +503,11 @@ public class SchemaValidate extends XMLValidateTask {
          */
         public int hashCode() {
             int result;
+            // CheckStyle:MagicNumber OFF
             result = (namespace != null ? namespace.hashCode() : 0);
             result = 29 * result + (file != null ? file.hashCode() : 0);
             result = 29 * result + (url != null ? url.hashCode() : 0);
+            // CheckStyle:MagicNumber OFF
             return result;
         }
 
