@@ -404,7 +404,7 @@ public class Symlink extends DispatchTask {
      *                                   fail.
      */
     public static void deleteSymlink(File linkfil)
-        throws IOException, FileNotFoundException {
+        throws IOException{
         if (!linkfil.exists()) {
             throw new FileNotFoundException("No such symlink: " + linkfil);
         }
@@ -466,6 +466,7 @@ public class Symlink extends DispatchTask {
      *
      * @param msg    The message to log, or include in the
      *                  <code>BuildException</code>.
+     * @throws BuildException with the message if failonerror=true
      */
     private void handleError(String msg) {
         if (failonerror) {
@@ -481,20 +482,24 @@ public class Symlink extends DispatchTask {
      *
      * @param res   The path of the resource we are linking to.
      * @param lnk       The name of the link we wish to make.
+     * @throws BuildException when things go wrong
      */
     private void doLink(String res, String lnk) throws BuildException {
         File linkfil = new File(lnk);
-        if (overwrite && linkfil.exists()) {
-            try {
-                deleteSymlink(linkfil);
-            } catch (FileNotFoundException fnfe) {
-                handleError("Symlink disappeared before it was deleted: " + lnk);
-            } catch (IOException ioe) {
-                handleError("Unable to overwrite preexisting link: " + lnk);
+        String options = "-s";
+        if (overwrite) {
+            options += "f";
+            if (linkfil.exists()) {
+                try {
+                    deleteSymlink(linkfil);
+                } catch (FileNotFoundException fnfe) {
+                    log("Symlink disappeared before it was deleted: " + lnk);
+                } catch (IOException ioe) {
+                    log("Unable to overwrite preexisting link or file: " + lnk,ioe, Project.MSG_INFO);
+                }
             }
         }
-        String[] cmd = new String[] {"ln", "-s", res, lnk};
-        log(Commandline.toString(cmd));
+        String[] cmd = new String[] {"ln", options, res, lnk};
         Execute.runCommand(this, cmd);
     }
 
