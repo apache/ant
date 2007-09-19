@@ -49,6 +49,8 @@ import org.apache.tools.ant.util.StringUtils;
 public class Parallel extends Task
                       implements TaskContainer {
 
+    private static final int NUMBER_TRIES = 100;
+
     /** Class which holds a list of tasks to execute */
     public static class TaskList implements TaskContainer {
         /** Collection holding the nested tasks */
@@ -354,7 +356,7 @@ public class Parallel extends Task
             killAll(running);
         }
 
-        if (interrupted){
+        if (interrupted) {
             throw new BuildException("Parallel execution interrupted.");
         }
         if (timedOut) {
@@ -383,30 +385,26 @@ public class Parallel extends Task
 
     /**
      * Doesn't do anything if all threads where already gone,
-     * else it tries to kill the threads 3 times.
+     * else it tries to interrupt the threads 100 times.
      * @param running The list of tasks that may currently be running.
      */
     private void killAll(TaskRunnable[] running) {
         boolean oneAlive;
         int tries = 0;
-        do
-        {
+        do {
             oneAlive = false;
-            for (int i = 0; i < running.length; i++)
-            {
-                if (running[i] != null && ! running[i].isFinished())
-                {
+            for (int i = 0; i < running.length; i++) {
+                if (running[i] != null && !running[i].isFinished()) {
                     running[i].interrupt();
                     Thread.yield();
                     oneAlive = true;
                 }
             }
-            if (oneAlive)
-            {
+            if (oneAlive) {
                 tries++;
                 Thread.yield();
             }
-        } while (oneAlive && tries < 100);        
+        } while (oneAlive && tries < NUMBER_TRIES);
     }
 
     /**
@@ -484,8 +482,7 @@ public class Parallel extends Task
             return finished;
         }
 
-        void interrupt()
-        {
+        void interrupt() {
             thread.interrupt();
         }
     }
