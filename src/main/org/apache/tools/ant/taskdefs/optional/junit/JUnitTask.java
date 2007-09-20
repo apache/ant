@@ -1670,9 +1670,11 @@ public class JUnitTask extends Task {
          * @return hash code value
          */
         public int hashCode() {
+            // CheckStyle:MagicNumber OFF
             return (filterTrace ? 1 : 0)
                 + (haltOnError ? 2 : 0)
                 + (haltOnFailure ? 4 : 0);
+            // CheckStyle:MagicNumber ON
         }
     }
 

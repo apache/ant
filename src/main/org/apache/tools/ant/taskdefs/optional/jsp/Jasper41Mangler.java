@@ -63,7 +63,7 @@ public class Jasper41Mangler implements JspMangler {
      * Mangle the specified character to create a legal Java class name.
      */
     private static String mangleChar(char ch) {
-
+        // CheckStyle:MagicNumber OFF
         String s = Integer.toHexString(ch);
         int nzeros = 5 - s.length();
         char[] result = new char[6];
@@ -75,6 +75,7 @@ public class Jasper41Mangler implements JspMangler {
             result[i] = s.charAt(j);
         }
         return new String(result);
+        // CheckStyle:MagicNumber ON
     }
 
 

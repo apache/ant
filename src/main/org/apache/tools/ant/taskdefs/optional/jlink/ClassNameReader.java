@@ -105,6 +105,7 @@ class ConstantPool {
  * minimal task only.
  */
 public class ClassNameReader extends Object {
+    private static final int CLASS_MAGIC_NUMBER =  0xCAFEBABE;
 
     /**
      * Get the class name of a class in an input stream.
@@ -117,7 +118,7 @@ public class ClassNameReader extends Object {
         DataInputStream data = new DataInputStream(input);
         // verify this is a valid class file.
         int cookie = data.readInt();
-        if (cookie != 0xCAFEBABE) {
+        if (cookie != CLASS_MAGIC_NUMBER) {
             return null;
         }
         /* int version = */ data.readInt();

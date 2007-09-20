@@ -35,6 +35,9 @@ import org.apache.tools.ant.Task;
  */
 
 public class TelnetTask extends Task {
+    private static final int QUARTER_SECOND = 250;
+    private static final int TELNET_PORT = 23;
+
     /**
      *  The userid to login with, if automated login is used
      */
@@ -53,7 +56,7 @@ public class TelnetTask extends Task {
     /**
      *  The tcp port to connect to.
      */
-    private int port = 23;
+    private int port = TELNET_PORT;
 
     /**
      *  The list of read/write commands for this session
@@ -347,7 +350,7 @@ public class TelnetTask extends Task {
                     while (sb.toString().indexOf(s) == -1) {
                         while (Calendar.getInstance().before(endTime)
                                && is.available() == 0) {
-                            Thread.sleep(250);
+                            Thread.sleep(QUARTER_SECOND);
                         }
                         if (is.available() == 0) {
                             log("Read before running into timeout: "
