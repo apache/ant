@@ -38,14 +38,14 @@ import org.apache.tools.ant.util.Base64Converter;
  * @since Ant1.5
  */
 public class SplashTask extends Task {
-    private static final int FIVE_SECONDS = 5000;
+    private static final int DEFAULT_SHOW_DURATION = 5000;
 
     private String imgurl = null;
     private String proxy = null;
     private String user = null;
     private String password = null;
     private String port = "80";
-    private int showDuration = FIVE_SECONDS;
+    private int showDuration = DEFAULT_SHOW_DURATION;
     private boolean useProxy = false;
 
     private static SplashScreen splash = null;

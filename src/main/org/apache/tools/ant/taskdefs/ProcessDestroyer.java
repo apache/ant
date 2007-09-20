@@ -29,7 +29,7 @@ import java.util.Vector;
  * @since Ant 1.5
  */
 class ProcessDestroyer implements Runnable {
-    private static final int TWENTY_SECONDS = 20000;
+    private static final int THREAD_DIE_TIMEOUT = 20000;
     private Vector processes = new Vector();
     // methods to register and unregister shutdown hooks
     private Method addShutdownHookMethod;
@@ -150,7 +150,7 @@ class ProcessDestroyer implements Runnable {
             }
             // this should return quickly, since it basically is a NO-OP.
             try {
-                destroyProcessThread.join(TWENTY_SECONDS);
+                destroyProcessThread.join(THREAD_DIE_TIMEOUT);
             } catch (InterruptedException ie) {
                 // the thread didn't die in time
                 // it should not kill any processes unexpectedly

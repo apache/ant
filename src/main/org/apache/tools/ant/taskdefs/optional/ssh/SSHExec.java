@@ -45,7 +45,7 @@ import com.jcraft.jsch.Session;
 public class SSHExec extends SSHBase {
 
     private static final int BUFFER_SIZE = 8192;
-    private static final int HALF_SECOND = 500;
+    private static final int RETRY_INTERVAL = 500;
 
     /** the command to execute via ssh */
     private String command = null;
@@ -195,7 +195,7 @@ public class SSHExec extends SSHBase {
                                 return;
                             }
                             try {
-                                sleep(HALF_SECOND);
+                                sleep(RETRY_INTERVAL);
                             } catch (Exception e) {
                                 // ignored
                             }

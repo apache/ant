@@ -35,7 +35,7 @@ import org.apache.tools.ant.Task;
  */
 
 public class TelnetTask extends Task {
-    private static final int QUARTER_SECOND = 250;
+    private static final int WAIT_INTERVAL = 250;
     private static final int TELNET_PORT = 23;
 
     /**
@@ -350,7 +350,7 @@ public class TelnetTask extends Task {
                     while (sb.toString().indexOf(s) == -1) {
                         while (Calendar.getInstance().before(endTime)
                                && is.available() == 0) {
-                            Thread.sleep(QUARTER_SECOND);
+                            Thread.sleep(WAIT_INTERVAL);
                         }
                         if (is.available() == 0) {
                             log("Read before running into timeout: "

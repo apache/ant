@@ -53,7 +53,7 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
  * @since Ant 1.6
  */
 public class Redirector {
-    private static final int ONE_SECOND = 1000;
+    private static final int STREAMPUMPER_WAIT_INTERVAL = 1000;
 
     private static final String DEFAULT_ENCODING
         = System.getProperty("file.encoding");
@@ -780,7 +780,7 @@ public class Redirector {
                         // Ignore exception
                     }
                 }
-                wait(ONE_SECOND);
+                wait(STREAMPUMPER_WAIT_INTERVAL);
             } catch (InterruptedException eyeEx) {
                 Thread[] thread = new Thread[threadGroup.activeCount()];
                 threadGroup.enumerate(thread);
