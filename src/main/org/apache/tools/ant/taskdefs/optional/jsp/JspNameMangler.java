@@ -18,6 +18,8 @@
 package org.apache.tools.ant.taskdefs.optional.jsp;
 import java.io.File;
 
+import org.apache.tools.ant.util.StringUtils;
+
 /**
  * This is a class derived from the Jasper code
  * (org.apache.jasper.compiler.CommandLineCompiler) to map from a JSP filename
@@ -109,14 +111,7 @@ public class JspNameMangler implements JspMangler {
      * @return file without any jsp extension
      */
     private String stripExtension(File jspFile) {
-        String className;
-        String filename = jspFile.getName();
-        if (filename.endsWith(".jsp")) {
-            className = filename.substring(0, filename.length() - ".jsp".length());
-        } else {
-            className = filename;
-        }
-        return className;
+        return StringUtils.removeSuffix(jspFile.getName(), ".jsp");
     }
 
 

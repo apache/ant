@@ -241,4 +241,19 @@ public final class StringUtils {
         }
         return factor * Long.parseLong(humanSize);
     }
+
+    /**
+     * Removes the suffix from a given string, if the string contains 
+     * that suffix.
+     * @param string String for check
+     * @param suffix Suffix to remove
+     * @return the <i>string</i> with the <i>suffix</i>
+     */
+    public static String removeSuffix(String string, String suffix) {
+        if (string.endsWith(suffix)) {
+            return string.substring(0, string.length() - suffix.length());
+        } else {
+            return string;
+        }
+    }
 }
