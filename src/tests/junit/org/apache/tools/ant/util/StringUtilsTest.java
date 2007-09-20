@@ -117,4 +117,38 @@ public class StringUtilsTest extends TestCase {
     	assertEquals(StringUtils.parseHumanSizes("1P"), PETABYTE);
     	assertEquals(StringUtils.parseHumanSizes("1"), 1L);
     }
+    
+    public void testRemoveSuffix() {
+        String prefix = "Prefix";
+        String name = "Name";
+        String suffix = "Suffix";
+        String input = prefix + name + suffix;
+        assertEquals(
+            "Does not remove the suffix right.",    
+            prefix + name, 
+            StringUtils.removeSuffix(input, suffix)
+        );
+        assertEquals(
+            "Should leave the string unattended.",    
+            prefix + name + suffix, 
+            StringUtils.removeSuffix(input, "bla")
+        );
+    }
+    
+    public void testRemovePrefix() {
+        String prefix = "Prefix";
+        String name = "Name";
+        String suffix = "Suffix";
+        String input = prefix + name + suffix;
+        assertEquals(
+            "Does not remove the prefix right.",    
+            name + suffix, 
+            StringUtils.removePrefix(input, prefix)
+        );
+        assertEquals(
+            "Should leave the string unattended.",    
+            prefix + name + suffix, 
+            StringUtils.removePrefix(input, "bla")
+        );
+    }    
 }

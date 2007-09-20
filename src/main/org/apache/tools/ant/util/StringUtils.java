@@ -256,4 +256,19 @@ public final class StringUtils {
             return string;
         }
     }
+
+    /**
+     * Removes the prefix from a given string, if the string contains 
+     * that prefix.
+     * @param string String for check
+     * @param prefix Prefix to remove
+     * @return the <i>string</i> with the <i>prefix</i>
+     */
+    public static String removePrefix(String string, String prefix) {
+        if (string.startsWith(prefix)) {
+            return string.substring(prefix.length());
+        } else {
+            return string;
+        }
+    }
 }
