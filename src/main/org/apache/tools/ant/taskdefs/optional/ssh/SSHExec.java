@@ -44,6 +44,9 @@ import com.jcraft.jsch.Session;
  */
 public class SSHExec extends SSHBase {
 
+    private static final int BUFFER_SIZE = 8192;
+    private static final int HALF_SECOND = 500;
+
     /** the command to execute via ssh */
     private String command = null;
 
@@ -192,7 +195,7 @@ public class SSHExec extends SSHBase {
                                 return;
                             }
                             try {
-                                sleep(500);
+                                sleep(HALF_SECOND);
                             } catch (Exception e) {
                                 // ignored
                             }
@@ -277,7 +280,7 @@ public class SSHExec extends SSHBase {
         try {
             out = new FileWriter(to.getAbsolutePath(), append);
             StringReader in = new StringReader(from);
-            char[] buffer = new char[8192];
+            char[] buffer = new char[BUFFER_SIZE];
             int bytesRead;
             while (true) {
                 bytesRead = in.read(buffer);

@@ -44,19 +44,20 @@ import java.util.zip.ZipOutputStream;
  * jlink links together multiple .jar files.
  */
 public class jlink {
-
+    private static final int BUFFER_SIZE = 8192;
+    private static final int VECTOR_INIT_SIZE = 10;
 
     private String outfile = null;
 
-    private Vector mergefiles = new Vector(10);
+    private Vector mergefiles = new Vector(VECTOR_INIT_SIZE);
 
-    private Vector addfiles = new Vector(10);
+    private Vector addfiles = new Vector(VECTOR_INIT_SIZE);
 
     private boolean compression = false;
 
     // CheckStyle:VisibilityModifier OFF - bc
 
-    byte[] buffer = new byte[8192];
+    byte[] buffer = new byte[BUFFER_SIZE];
 
     // CheckStyle:VisibilityModifier OFF - bc
 

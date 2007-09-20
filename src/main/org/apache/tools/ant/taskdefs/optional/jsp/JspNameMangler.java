@@ -112,7 +112,7 @@ public class JspNameMangler implements JspMangler {
         String className;
         String filename = jspFile.getName();
         if (filename.endsWith(".jsp")) {
-            className = filename.substring(0, filename.length() - 4);
+            className = filename.substring(0, filename.length() - ".jsp".length());
         } else {
             className = filename;
         }
@@ -127,7 +127,7 @@ public class JspNameMangler implements JspMangler {
      * @return mangled string; 5 digit hex value
      */
     private static String mangleChar(char ch) {
-
+        // CheckStyle:MagicNumber OFF
         if (ch == File.separatorChar) {
             ch = '/';
         }
@@ -143,6 +143,7 @@ public class JspNameMangler implements JspMangler {
             result[i] = s.charAt(resultIndex++);
         }
         return new String(result);
+        // CheckStyle:MagicNumber ON
     }
 
     /**

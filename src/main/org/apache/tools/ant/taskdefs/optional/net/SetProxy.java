@@ -56,7 +56,8 @@ import org.apache.tools.ant.util.ProxySetup;
  * @ant.task category="network"
  */
 public class SetProxy extends Task {
-
+    private static final int HTTP_PORT = 80;
+    private static final int SOCKS_PORT = 1080;
     // CheckStyle:VisibilityModifier OFF - bc
     /**
      * proxy details
@@ -66,7 +67,7 @@ public class SetProxy extends Task {
     /**
      * name of proxy port
      */
-    protected int proxyPort = 80;
+    protected int proxyPort = HTTP_PORT;
 
     // CheckStyle:VisibilityModifier ON
 
@@ -78,7 +79,7 @@ public class SetProxy extends Task {
     /**
      * Socks proxy port. Default is 1080.
      */
-    private int socksProxyPort = 1080;
+    private int socksProxyPort = SOCKS_PORT;
 
 
     /**
