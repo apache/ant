@@ -532,6 +532,7 @@ public class DOMElementWriter {
      * @since 1.10, Ant 1.5
      */
     public boolean isLegalCharacter(char c) {
+        // CheckStyle:MagicNumber OFF
         if (c == 0x9 || c == 0xA || c == 0xD) {
             return true;
         } else if (c < 0x20) {
@@ -543,6 +544,7 @@ public class DOMElementWriter {
         } else if (c <= 0xFFFD) {
             return true;
         }
+        // CheckStyle:MagicNumber ON
         return false;
     }
 

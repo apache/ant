@@ -38,6 +38,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public abstract class CompressedResource extends Resource {
 
+    private static final int BUFFER_SIZE = 8192;
+
     private Resource resource;
 
     /** no arg constructor */
@@ -153,7 +155,7 @@ public abstract class CompressedResource extends Resource {
             InputStream in = null;
             try {
                 in = getInputStream();
-                byte[] buf = new byte[8192];
+                byte[] buf = new byte[BUFFER_SIZE];
                 int size = 0;
                 int readNow;
                 while ((readNow = in.read(buf, 0, buf.length)) > 0) {

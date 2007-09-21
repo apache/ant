@@ -78,6 +78,7 @@ public class Quantifier extends EnumeratedAttribute {
     private static final Predicate[] PREDS = new Predicate[VALUES.length];
 
     static {
+        // CheckStyle:MagicNumber OFF
         PREDS[0] = ALL_PRED;
         PREDS[1] = ALL_PRED;
         PREDS[2] = ALL_PRED;
@@ -87,6 +88,7 @@ public class Quantifier extends EnumeratedAttribute {
         PREDS[6] = MAJORITY_PRED;
         PREDS[7] = MAJORITY_PRED;
         PREDS[8] = NONE_PRED;
+        // CheckStyle:MagicNumber ON
     }
 
     /**

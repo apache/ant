@@ -36,6 +36,8 @@ import org.apache.tools.ant.util.FileUtils;
 
 public abstract class SOS extends Task implements SOSCmd {
 
+    private static final int ERROR_EXIT_STATUS = 255;
+
     private String sosCmdDir = null;
     private String sosUsername = null;
     private String sosPassword = "";
@@ -390,7 +392,7 @@ public abstract class SOS extends Task implements SOSCmd {
         int result = 0;
         buildCmdLine();
         result = run(commandLine);
-        if (result == 255) {  // This is the exit status
+        if (result == ERROR_EXIT_STATUS) {  // This is the exit status
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
