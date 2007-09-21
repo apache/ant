@@ -37,6 +37,9 @@ import org.apache.tools.ant.Task;
  */
 
 public class RExecTask extends Task {
+
+    private static final int PAUSE_TIME = 250;
+
     /**
      *  The userid to login with, if automated login is used
      */
@@ -210,7 +213,7 @@ public class RExecTask extends Task {
                     while (sb.toString().indexOf(s) == -1) {
                         while (Calendar.getInstance().before(endTime)
                             && is.available() == 0) {
-                            Thread.sleep(250);
+                            Thread.sleep(PAUSE_TIME);
                         }
                         if (is.available() == 0) {
                             throw new BuildException(
@@ -270,7 +273,7 @@ public class RExecTask extends Task {
                 int read = 0;
                     while (read != -1) {
                         while (Calendar.getInstance().before(endTime) && is.available() == 0) {
-                            Thread.sleep(250);
+                            Thread.sleep(PAUSE_TIME);
                         }
                         if (is.available() == 0) {
                         log(sb.toString(), Project.MSG_INFO);

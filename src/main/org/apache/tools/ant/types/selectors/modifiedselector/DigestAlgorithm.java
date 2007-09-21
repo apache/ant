@@ -56,6 +56,7 @@ import org.apache.tools.ant.BuildException;
  */
 public class DigestAlgorithm implements Algorithm {
 
+    private static final int BUFFER_SIZE = 8192;
 
     // -----  member variables  -----
 
@@ -78,7 +79,7 @@ public class DigestAlgorithm implements Algorithm {
     /**
      * Size of the read buffer to use.
      */
-    private int readBufferSize = 8 * 1024;
+    private int readBufferSize = BUFFER_SIZE;
 
 
     // -----  Algorithm-Configuration  -----

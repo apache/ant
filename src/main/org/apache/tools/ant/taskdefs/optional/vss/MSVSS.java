@@ -138,11 +138,13 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     public final void setVsspath(final String vssPath) {
         String projectPath;
+        // CheckStyle:MagicNumber OFF
         if (vssPath.startsWith("vss://")) { //$NON-NLS-1$
             projectPath = vssPath.substring(5);
         } else {
             projectPath = vssPath;
         }
+        // CheckStyle:MagicNumber ON
 
         if (projectPath.startsWith(PROJECT_PREFIX)) {
             this.vssPath = projectPath;
@@ -425,6 +427,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     private String getShortLabel() {
         String shortLabel;
+        // CheckStyle:MagicNumber OFF
         if (label !=  null && label.length() > 31) {
             shortLabel = this.label.substring(0, 30);
             log("Label is longer than 31 characters, truncated to: " + shortLabel,
@@ -432,6 +435,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         } else {
             shortLabel = label;
         }
+        // CheckStyle:MagicNumber ON
         return shortLabel;
     }
     /**
@@ -554,6 +558,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         if (fromLabel == null && toLabel == null) {
             return "";
         }
+        // CheckStyle:MagicNumber OFF
         if (fromLabel != null && toLabel != null) {
             if (fromLabel.length() > 31) {
                 fromLabel = fromLabel.substring(0, 30);
@@ -581,6 +586,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             }
             return FLAG_VERSION_LABEL + toLabel;
         }
+        // CheckStyle:MagicNumber ON
     }
 
     /**
