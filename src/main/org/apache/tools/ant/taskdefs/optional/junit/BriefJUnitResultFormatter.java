@@ -38,6 +38,8 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
+    private static final double ONE_SECOND = 1000.0;
+
     /**
      * Where to write the log to.
      */
@@ -134,7 +136,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
         sb.append(", Time elapsed: ");
-        sb.append(numberFormat.format(suite.getRunTime() / 1000.0));
+        sb.append(numberFormat.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
         sb.append(StringUtils.LINE_SEP);
         sb.append(StringUtils.LINE_SEP);

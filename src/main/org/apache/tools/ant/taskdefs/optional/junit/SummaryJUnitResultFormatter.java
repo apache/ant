@@ -33,6 +33,8 @@ import org.apache.tools.ant.BuildException;
 public class SummaryJUnitResultFormatter
     implements JUnitResultFormatter, JUnitTaskMirror.SummaryJUnitResultFormatterMirror {
 
+    private static final double ONE_SECOND = 1000.0;
+
     /**
      * Formatter for timings.
      */
@@ -143,7 +145,7 @@ public class SummaryJUnitResultFormatter
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
         sb.append(", Time elapsed: ");
-        sb.append(nf.format(suite.getRunTime() / 1000.0));
+        sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
         sb.append(newLine);
 

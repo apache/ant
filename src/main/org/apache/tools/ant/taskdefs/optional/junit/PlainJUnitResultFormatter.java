@@ -40,6 +40,8 @@ import org.apache.tools.ant.util.StringUtils;
 
 public class PlainJUnitResultFormatter implements JUnitResultFormatter {
 
+    private static final double ONE_SECOND = 1000.0;
+
     /**
      * Formatter for timings.
      */
@@ -122,7 +124,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
         sb.append(", Time elapsed: ");
-        sb.append(nf.format(suite.getRunTime() / 1000.0));
+        sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
         sb.append(StringUtils.LINE_SEP);
 
@@ -190,7 +192,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             // can be null if an error occurred in setUp
             if (l != null) {
                 seconds =
-                    (System.currentTimeMillis() - l.longValue()) / 1000.0;
+                    (System.currentTimeMillis() - l.longValue()) / ONE_SECOND;
             }
 
             wri.println(" took " + nf.format(seconds) + " sec");

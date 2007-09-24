@@ -35,7 +35,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 
 class SplashScreen extends JWindow implements ActionListener, BuildListener {
-
+    private static final int FONT_SIZE = 12;
     private JLabel text;
     private JProgressBar pb;
     private int total;
@@ -63,7 +63,7 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
 
         piccy.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         text = new JLabel("Building....", JLabel.CENTER);
-        text.setFont(new Font("Sans-Serif", Font.BOLD, 12));
+        text.setFont(new Font("Sans-Serif", Font.BOLD, FONT_SIZE));
         text.setBorder(BorderFactory.createEtchedBorder());
 
         pb = new JProgressBar(MIN, MAX);
