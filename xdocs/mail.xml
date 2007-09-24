@@ -40,7 +40,7 @@
       <p>To subscribe to a mailinglist use the links below. In your first email you will get some
       information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.</p>
 
-      <subsection name="User List">
+      <subsection name="User List: user@ant.apache.org">
         <p>
           <b>High Traffic</b>
           <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>
@@ -56,7 +56,7 @@
         related to using Ant as a build tool.</p>
       </subsection>
 
-      <subsection name="Developer List">
+      <subsection name="Developer List: dev@ant.apache.org">
         <p>
           <b>High Traffic</b>
           <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>
