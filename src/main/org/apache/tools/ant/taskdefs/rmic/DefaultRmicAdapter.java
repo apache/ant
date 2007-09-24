@@ -365,7 +365,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             }
 
             // we know that name.endsWith(".class")
-            String base = name.substring(0, name.length() - 6);
+            String base = name.substring(0, name.length() - ".class".length());
 
             String classname = base.replace(File.separatorChar, '.');
             if (attributes.getVerify()

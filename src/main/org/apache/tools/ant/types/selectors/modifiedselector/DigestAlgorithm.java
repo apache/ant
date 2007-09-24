@@ -56,6 +56,7 @@ import org.apache.tools.ant.BuildException;
  */
 public class DigestAlgorithm implements Algorithm {
 
+    private static final int BYTE_MASK = 0xFF;
     private static final int BUFFER_SIZE = 8192;
 
     // -----  member variables  -----
@@ -171,7 +172,8 @@ public class DigestAlgorithm implements Algorithm {
                 byte[] fileDigest = messageDigest.digest();
                 StringBuffer checksumSb = new StringBuffer();
                 for (int i = 0; i < fileDigest.length; i++) {
-                    String hexStr = Integer.toHexString(0x00ff & fileDigest[i]);
+                    String hexStr
+                        = Integer.toHexString(BYTE_MASK & fileDigest[i]);
                     if (hexStr.length() < 2) {
                         checksumSb.append("0");
                     }

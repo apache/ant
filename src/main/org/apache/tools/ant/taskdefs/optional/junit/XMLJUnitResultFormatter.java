@@ -50,6 +50,8 @@ import org.w3c.dom.Text;
 
 public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstants {
 
+    private static final double ONE_SECOND = 1000.0;
+
     /** constant for unnnamed testsuites/cases */
     private static final String UNKNOWN = "unknown";
 
@@ -159,7 +161,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
         rootElement.setAttribute(ATTR_FAILURES, "" + suite.failureCount());
         rootElement.setAttribute(ATTR_ERRORS, "" + suite.errorCount());
-        rootElement.setAttribute(ATTR_TIME, "" + (suite.getRunTime() / 1000.0));
+        rootElement.setAttribute(
+            ATTR_TIME, "" + (suite.getRunTime() / ONE_SECOND));
         if (out != null) {
             Writer wri = null;
             try {
@@ -219,7 +222,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
         Long l = (Long) testStarts.get(test);
         currentTest.setAttribute(ATTR_TIME,
-            "" + ((System.currentTimeMillis() - l.longValue()) / 1000.0));
+            "" + ((System.currentTimeMillis()
+                   - l.longValue()) / ONE_SECOND));
     }
 
     /**

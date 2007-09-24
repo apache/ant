@@ -36,6 +36,7 @@ import org.apache.tools.ant.BuildException;
  * Abstract class for ssh upload and download
  */
 public abstract class AbstractSshMessage {
+    private static final double ONE_SECOND = 1000.0;
 
     private Session session;
     private boolean verbose;
@@ -172,7 +173,7 @@ public abstract class AbstractSshMessage {
     protected void logStats(long timeStarted,
                              long timeEnded,
                              long totalLength) {
-        double duration = (timeEnded - timeStarted) / 1000.0;
+        double duration = (timeEnded - timeStarted) / ONE_SECOND;
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(2);
         format.setMinimumFractionDigits(1);
@@ -201,6 +202,7 @@ public abstract class AbstractSshMessage {
     protected final int trackProgress(long filesize, long totalLength,
                                       int percentTransmitted) {
 
+        // CheckStyle:MagicNumber OFF
         int percent = (int) Math.round(Math.floor((totalLength
                                                    / (double) filesize) * 100));
 
@@ -223,6 +225,7 @@ public abstract class AbstractSshMessage {
                 }
             }
         }
+        // CheckStyle:MagicNumber ON
 
         return percent;
     }

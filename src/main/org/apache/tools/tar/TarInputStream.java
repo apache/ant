@@ -36,6 +36,8 @@ import java.io.OutputStream;
  *
  */
 public class TarInputStream extends FilterInputStream {
+    private static final int BUFFER_SIZE = 8 * 1024;
+    private static final int BYTE_MASK = 0xFF;
 
     // CheckStyle:VisibilityModifier OFF - bc
     protected boolean debug;
@@ -149,7 +151,7 @@ public class TarInputStream extends FilterInputStream {
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
         //
-        byte[] skipBuf = new byte[8 * 1024];
+        byte[] skipBuf = new byte[BUFFER_SIZE];
         long skip = numToSkip;
         while (skip > 0) {
             int realSkip = (int) (skip > skipBuf.length ? skipBuf.length : skip);
@@ -287,7 +289,7 @@ public class TarInputStream extends FilterInputStream {
      */
     public int read() throws IOException {
         int num = this.read(this.oneBuf, 0, 1);
-        return num == -1 ? -1 : ((int) this.oneBuf[0]) & 0xFF;
+        return num == -1 ? -1 : ((int) this.oneBuf[0]) & BYTE_MASK;
     }
 
     /**

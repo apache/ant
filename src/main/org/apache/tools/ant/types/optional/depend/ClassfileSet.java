@@ -126,7 +126,8 @@ public class ClassfileSet extends FileSet {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].endsWith(".class")) {
                     String classFilePath
-                        = files[i].substring(0, files[i].length() - 6);
+                        = files[i].substring(
+                            0, files[i].length() - ".class".length());
                     String className
                         = classFilePath.replace('/', '.').replace('\\', '.');
                     allRootClasses.addElement(className);
