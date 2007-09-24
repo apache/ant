@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * A ClassfileSet is a FileSet that enlists all classes that depend on a
@@ -125,9 +126,7 @@ public class ClassfileSet extends FileSet {
             String[] files = additionalScanner.getIncludedFiles();
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].endsWith(".class")) {
-                    String classFilePath
-                        = files[i].substring(
-                            0, files[i].length() - ".class".length());
+                    String classFilePath = StringUtils.removeSuffix(files[i], ".class");
                     String className
                         = classFilePath.replace('/', '.').replace('\\', '.');
                     allRootClasses.addElement(className);

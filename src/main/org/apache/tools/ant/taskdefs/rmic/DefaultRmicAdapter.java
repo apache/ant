@@ -29,6 +29,7 @@ import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is the default implementation for the RmicAdapter interface.
@@ -365,7 +366,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             }
 
             // we know that name.endsWith(".class")
-            String base = name.substring(0, name.length() - ".class".length());
+            String base = StringUtils.removeSuffix(name, ".class");
 
             String classname = base.replace(File.separatorChar, '.');
             if (attributes.getVerify()
