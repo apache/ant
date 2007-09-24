@@ -32,6 +32,7 @@ import org.apache.tools.ant.Project;
  * @since Ant 1.6.2
  */
 public class LeadPipeInputStream extends PipedInputStream {
+    private static final int BYTE_MASK = 0xFF;
     private ProjectComponent managingPc;
 
     /**
@@ -88,7 +89,7 @@ public class LeadPipeInputStream extends PipedInputStream {
             if ("write end dead".equalsIgnoreCase(eyeOhEx.getMessage())) {
                 if (super.in > 0 && super.out < super.buffer.length
                     && super.out > super.in) {
-                    result = super.buffer[super.out++] & 0xFF;
+                    result = super.buffer[super.out++] & BYTE_MASK;
                 }
             } else {
                 log("error at LeadPipeInputStream.read():  "

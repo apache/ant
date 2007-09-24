@@ -31,8 +31,9 @@ import org.apache.tools.ant.ProjectComponent;
  * @since Ant 1.7
  */
 public class StringTokenizer extends ProjectComponent implements Tokenizer {
+    private static final int NOT_A_CHAR = -2;
     private String intraString = "";
-    private int    pushed = -2;
+    private int    pushed = NOT_A_CHAR;
     private char[] delims = null;
     private boolean delimsAreTokens = false;
     private boolean suppressDelims = false;
@@ -83,9 +84,9 @@ public class StringTokenizer extends ProjectComponent implements Tokenizer {
      */
     public String getToken(Reader in) throws IOException {
         int ch = -1;
-        if (pushed != -2) {
+        if (pushed != NOT_A_CHAR) {
             ch = pushed;
-            pushed = -2;
+            pushed = NOT_A_CHAR;
         } else {
             ch = in.read();
         }

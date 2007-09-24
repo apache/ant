@@ -29,8 +29,9 @@ import org.apache.tools.ant.ProjectComponent;
  */
 public class LineTokenizer extends ProjectComponent
     implements Tokenizer {
+    private static final int NOT_A_CHAR = -2;
     private String  lineEnd = "";
-    private int     pushed = -2;
+    private int     pushed = NOT_A_CHAR;
     private boolean includeDelims = false;
 
     /**
@@ -54,9 +55,9 @@ public class LineTokenizer extends ProjectComponent
      */
     public String getToken(Reader in) throws IOException {
         int ch = -1;
-        if (pushed != -2) {
+        if (pushed != NOT_A_CHAR) {
             ch = pushed;
-            pushed = -2;
+            pushed = NOT_A_CHAR;
         } else {
             ch = in.read();
         }
