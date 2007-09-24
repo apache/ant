@@ -243,7 +243,7 @@ public final class StringUtils {
     }
 
     /**
-     * Removes the suffix from a given string, if the string contains 
+     * Removes the suffix from a given string, if the string contains
      * that suffix.
      * @param string String for check
      * @param suffix Suffix to remove
@@ -258,7 +258,7 @@ public final class StringUtils {
     }
 
     /**
-     * Removes the prefix from a given string, if the string contains 
+     * Removes the prefix from a given string, if the string contains
      * that prefix.
      * @param string String for check
      * @param prefix Prefix to remove
