@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 
 /**
@@ -576,8 +577,7 @@ public class Rmic extends MatchingTask {
                 // have a corresponding Java source for example.
                 continue;
             }
-            final int pos = generatedFile.length() - ".class".length();
-            String sourceFileName = generatedFile.substring(0, pos) + ".java";
+            String sourceFileName = StringUtils.removeSuffix(generatedFile, ".class"); 
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {
