@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -38,6 +37,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.property.ResolvePropertyMap;
 
 /**
  * Sets a property by name, or set of properties (from file or
@@ -73,62 +73,6 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task category="property"
  */
 public class Property extends Task {
-    private static class PropertyResolver implements PropertyHelper.PropertyEvaluator {
-        private ThreadLocal getStack = new ThreadLocal() {
-            protected Object initialValue() {
-                return new Stack();
-            }
-        };
-        private ThreadLocal replaceStack = new ThreadLocal() {
-            protected Object initialValue() {
-                return new Stack();
-            }
-        };
-        private Map map;
-
-        /**
-         * Construct a new Property.PropertyResolver instance.
-         */
-        public PropertyResolver(Map map) {
-            this.map = map;
-        }
-
-        // CheckStyle:LineLengthCheck OFF see to long
-        /* (non-Javadoc)
-         * @see org.apache.tools.ant.PropertyHelper.PropertyEvaluator#evaluate(java.lang.String, org.apache.tools.ant.PropertyHelper)
-         */
-        // CheckStyle:LineLengthCheck ON
-        public Object evaluate(String property, PropertyHelper propertyHelper) {
-            //our feeble properties don't matter if the PropertyHelper
-            // can resolve the property without us:
-            Stack stk = (Stack) getStack.get();
-            if (stk.contains(property)) {
-                return null;
-            }
-            stk.push(property);
-            try {
-                if (propertyHelper.getProperty(property) != null) {
-                    return null;
-                }
-            } finally {
-                stk.pop();
-            }
-            Object value = map.get(property);
-            if (!(value instanceof String)) {
-                return null;
-            }
-            stk = (Stack) replaceStack.get();
-            if (stk.contains(property)) {
-                throw new BuildException("Property " + property + " was circularly defined.");
-            }
-            stk.push(property);
-            try {
-                return propertyHelper.replaceProperties((String) value);
-            } finally {
-                stk.pop();
-            }
-        }
-    }
 
     // CheckStyle:VisibilityModifier OFF - bc
     protected String name;
@@ -696,16 +640,12 @@ public class Property extends Task {
      * @param props properties object to resolve
      */
     private void resolveAllProperties(Map props) throws BuildException {
-        PropertyHelper propertyHelper = (PropertyHelper) PropertyHelper.getPropertyHelper(
-                getProject()).clone();
-        propertyHelper.add(new PropertyResolver(props));
-        for (Iterator it = props.keySet().iterator(); it.hasNext();) {
-            Object k = it.next();
-            if (k instanceof String) {
-                Object value = propertyHelper.getProperty((String) k);
-                props.put(k, value);
-            }
-        }
+        PropertyHelper propertyHelper
+            = (PropertyHelper) PropertyHelper.getPropertyHelper(getProject());
+        new ResolvePropertyMap(
+            getProject(),
+            propertyHelper,
+            propertyHelper.getExpanders()).resolveAllProperties(props);
     }
 
 }

@@ -27,8 +27,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Collection;
 
 import org.apache.tools.ant.property.NullReturn;
+import org.apache.tools.ant.property.GetProperty;
+import org.apache.tools.ant.property.ParseNextProperty;
+import org.apache.tools.ant.property.PropertyExpander;
+import org.apache.tools.ant.property.ParseProperties;
 
 /* ISSUES:
  - ns param. It could be used to provide "namespaces" for properties, which
@@ -60,7 +65,7 @@ import org.apache.tools.ant.property.NullReturn;
  *
  * @since Ant 1.6
  */
-public class PropertyHelper implements Cloneable {
+public class PropertyHelper implements GetProperty {
 
     //  --------------------------------------------------------
     //
@@ -87,22 +92,6 @@ public class PropertyHelper implements Cloneable {
          * @return Object value.
          */
         Object evaluate(String property, PropertyHelper propertyHelper);
-    }
-
-    /**
-     * Describes an entity capable of expanding properties embedded in a string.
-     * @since Ant 1.8
-     */
-    public interface PropertyExpander extends Delegate {
-        /**
-         * Parse the next property name.
-         * @param s the String to parse.
-         * @param pos the ParsePosition in use.
-         * @param propertyHelper the invoking PropertyHelper.
-         * @return parsed String if any, else <code>null</code>.
-         */
-        String parsePropertyName(
-            String s, ParsePosition pos, PropertyHelper propertyHelper);
     }
 
     /**
@@ -151,7 +140,7 @@ public class PropertyHelper implements Cloneable {
 
     private static final PropertyExpander DEFAULT_EXPANDER = new PropertyExpander() {
         public String parsePropertyName(
-            String s, ParsePosition pos, PropertyHelper propertyHelper) {
+            String s, ParsePosition pos, ParseNextProperty notUsed) {
             int index = pos.getIndex();
             if (s.indexOf("${", index) == index) {
                 int end = s.indexOf('}', index);
@@ -176,7 +165,8 @@ public class PropertyHelper implements Cloneable {
              */
             // CheckStyle:LineLengthCheck ON
             public String parsePropertyName(
-                String s, ParsePosition pos, PropertyHelper propertyHelper) {
+                String s, ParsePosition pos, ParseNextProperty notUsed) {
+                //System.out.println("parseproperty " + s);
                 int index = pos.getIndex();
                 if (s.indexOf("$$", index) == index) {
                     pos.setIndex(++index);
@@ -331,6 +321,15 @@ public class PropertyHelper implements Cloneable {
         return helper;
     }
 
+    /**
+     * Get the expanders.
+     * @return the exapanders.
+     */
+    public Collection getExpanders() {
+        return getDelegates(PropertyExpander.class);
+    }
+
+
     // --------------------  Methods to override  --------------------
 
     /**
@@ -483,31 +482,8 @@ public class PropertyHelper implements Cloneable {
      *         <code>null</code> if the original string is <code>null</code>.
      */
     public Object parseProperties(String value) throws BuildException {
-        if (value == null || "".equals(value)) {
-            return value;
-        }
-        ParsePosition pos = new ParsePosition(0);
-        Object o = parseNextProperty(value, pos);
-        if (o != null && pos.getIndex() == value.length()) {
-            return o;
-        }
-        StringBuffer sb = new StringBuffer(value.length() * 2);
-        if (o == null) {
-            sb.append(value.charAt(pos.getIndex()));
-            pos.setIndex(pos.getIndex() + 1);
-        } else {
-            sb.append(o);
-        }
-        while (pos.getIndex() < value.length()) {
-            o = parseNextProperty(value, pos);
-            if (o == null) {
-                sb.append(value.charAt(pos.getIndex()));
-                pos.setIndex(pos.getIndex() + 1);
-            } else {
-                sb.append(o);
-            }
-        }
-        return sb.toString();
+        return new ParseProperties(getProject(), getExpanders(), this)
+            .parseProperties(value);
     }
 
     /**
@@ -516,50 +492,8 @@ public class PropertyHelper implements Cloneable {
      * @return <code>true</code> if <code>value</code> contains property notation.
      */
     public boolean containsProperties(String value) {
-        if (value == null) {
-            return false;
-        }
-        for (ParsePosition pos = new ParsePosition(0); pos.getIndex() < value.length();) {
-            if (parsePropertyName(value, pos) != null) {
-                return true;
-            }
-            pos.setIndex(pos.getIndex() + 1);
-        }
-        return false;
-    }
-
-    /**
-     * Return any property that can be parsed from the specified position in the specified String.
-     * @param value String to parse
-     * @param pos ParsePosition
-     * @return Object or null if no property is at the current location.
-     */
-    public Object parseNextProperty(String value, ParsePosition pos) {
-        int start = pos.getIndex();
-        String propertyName = parsePropertyName(value, pos);
-        if (propertyName != null) {
-            Object result = getProperty(propertyName);
-            if (result != null) {
-                return result;
-            }
-            getProject().log("Property \"" + propertyName
-                    + "\" has not been set", Project.MSG_VERBOSE);
-            return value.substring(start, pos.getIndex());
-        }
-        return null;
-    }
-
-    private String parsePropertyName(String value, ParsePosition pos) {
-        for (Iterator iter = getDelegates(PropertyExpander.class).iterator();
-             iter.hasNext();) {
-            String propertyName = ((PropertyExpander) iter.next())
-                .parsePropertyName(value, pos, this);
-            if (propertyName == null) {
-                continue;
-            }
-            return propertyName;
-        }
-        return null;
+        return new ParseProperties(getProject(), getExpanders(), this)
+            .containsProperties(value);
     }
 
     // -------------------- Default implementation  --------------------
@@ -1062,22 +996,4 @@ public class PropertyHelper implements Cloneable {
         return result;
     }
 
-    /**
-     * Make a clone of this PropertyHelper.
-     * @return the cloned PropertyHelper.
-     * @since Ant 1.8
-     */
-    public synchronized Object clone() {
-        PropertyHelper result;
-        try {
-            result = (PropertyHelper) super.clone();
-            result.delegates = (Hashtable) delegates.clone();
-            result.properties = (Hashtable) properties.clone();
-            result.userProperties = (Hashtable) userProperties.clone();
-            result.inheritedProperties = (Hashtable) inheritedProperties.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new BuildException(e);
-        }
-        return result;
-    }
 }
