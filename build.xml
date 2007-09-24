@@ -263,21 +263,6 @@
     <filename name="${optional.package}/NetRexxC*"/>
   </selector>
 
-  <selector id="needs.weblogic.ejbc">
-    <filename name="${optional.package}/ejb/Ejbc*"/>
-  </selector>
-
-  <selector id="needs.weblogic.ddcreator">
-    <filename name="${optional.package}/ejb/DDCreator*"/>
-  </selector>
-
-  <selector id="needs.weblogic.server">
-    <or>
-      <filename name="${optional.package}/ejb/WLRun*"/>
-      <filename name="${optional.package}/ejb/WLStop*"/>
-    </or>
-  </selector>
-
   <selector id="needs.commons-net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
@@ -407,15 +392,6 @@
       classpathref="classpath"/>
     <available property="xalan2.present"
       classname="org.apache.xalan.transformer.TransformerImpl"
-      classpathref="classpath"/>
-    <available property="ejb.ejbc.present"
-      classname="weblogic.ejbc"
-      classpathref="classpath"/>
-    <available property="ejb.DDCreator.present"
-      classname="weblogic.ejb.utils.DDCreator"
-      classpathref="classpath"/>
-    <available property="ejb.wls.present"
-      classname="weblogic.Server"
       classpathref="classpath"/>
     <available property="junit.present"
       classname="junit.framework.TestCase"
@@ -657,10 +633,6 @@
             <selector refid="needs.stylebook" unless="stylebook.present"/>
             <selector refid="needs.javamail" unless="javamail.complete"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
-            <selector refid="needs.weblogic.ejbc" unless="ejb.ejbc.present"/>
-            <selector refid="needs.weblogic.ddcreator"
-              unless="ejb.DDCreator.present"/>
-            <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.starteam" unless="starteam.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
@@ -840,9 +812,6 @@
             <selector refid="needs.stylebook"/>
             <selector refid="needs.javamail"/>
             <selector refid="needs.netrexx"/>
-            <selector refid="needs.weblogic.ejbc"/>
-            <selector refid="needs.weblogic.ddcreator"/>
-            <selector refid="needs.weblogic.server"/>
             <selector refid="needs.commons-net"/>
             <selector refid="needs.starteam"/>
             <selector refid="needs.antlr"/>
@@ -892,17 +861,6 @@
     <optional-jar dep="swing"/>
     <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
-
-    <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
-      basedir="${build.classes}"
-      manifest="${manifest.tmp}"
-      whenmanifestonly="${optional.jars.whenmanifestonly}">
-      <or>
-        <selector refid="needs.weblogic.ejbc"/>
-        <selector refid="needs.weblogic.ddcreator"/>
-        <selector refid="needs.weblogic.server"/>
-      </or>
-    </jar>
 
   </target>
 
