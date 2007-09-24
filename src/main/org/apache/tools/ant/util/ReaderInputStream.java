@@ -27,6 +27,7 @@ import java.io.Reader;
  *
  */
 public class ReaderInputStream extends InputStream {
+    private static final int BYTE_MASK = 0xFF;
 
     /** Source Reader */
     private Reader in;
@@ -90,7 +91,7 @@ public class ReaderInputStream extends InputStream {
                 result = buf[0];
             }
         }
-        return result & 0xFF;
+        return result & BYTE_MASK;
     }
 
     /**

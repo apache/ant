@@ -126,10 +126,12 @@ public class UUEncoder {
                 }
             }
 
+            // CheckStyle:MagicNumber OFF
             byte d1 = (byte) (((a >>> 2) & 0x3F) + ' ');
             byte d2 = (byte) ((((a << 4) & 0x30) | ((b >>> 4) & 0x0F)) + ' ');
             byte d3 = (byte) ((((b << 2) & 0x3C) | ((c >>> 6) & 0x3)) + ' ');
             byte d4 = (byte) ((c & 0x3F) + ' ');
+            // CheckStyle:MagicNumber ON
 
             out.write(d1);
             out.write(d2);

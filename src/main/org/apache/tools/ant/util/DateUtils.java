@@ -37,6 +37,10 @@ import java.util.TimeZone;
  */
 public final class DateUtils {
 
+    private static final int ONE_SECOND = 1000;
+    private static final int ONE_MINUTE = 60;
+    private static final int ONE_HOUR = 60;
+    private static final int TEN = 10;
     /**
      * ISO8601-like pattern for date-time. It does not support timezone.
      *  <tt>yyyy-MM-ddTHH:mm:ss</tt>
@@ -125,9 +129,9 @@ public final class DateUtils {
      * @return the formatted text in minutes/seconds.
      */
     public static String formatElapsedTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = seconds / 60;
-        Object[] args = {new Long(minutes), new Long(seconds % 60)};
+        long seconds = millis / ONE_SECOND;
+        long minutes = seconds / ONE_MINUTE;
+        Object[] args = {new Long(minutes), new Long(seconds % ONE_MINUTE)};
         return MINUTE_SECONDS.format(args);
     }
 
@@ -179,6 +183,7 @@ public final class DateUtils {
      * @since 1.2, Ant 1.5
      */
     public static int getPhaseOfMoon(Calendar cal) {
+        // CheckStyle:MagicNumber OFF
         int dayOfTheYear = cal.get(Calendar.DAY_OF_YEAR);
         int yearInMetonicCycle = ((cal.get(Calendar.YEAR) - 1900) % 19) + 1;
         int epact = (11 * yearInMetonicCycle + 18) % 30;
@@ -186,6 +191,7 @@ public final class DateUtils {
             epact++;
         }
         return (((((dayOfTheYear + epact) * 6) + 11) % 177) / 22) & 7;
+        // CheckStyle:MagicNumber ON
     }
 
     /**
@@ -205,13 +211,13 @@ public final class DateUtils {
                                   cal.get(Calendar.MILLISECOND));
         StringBuffer tzMarker = new StringBuffer(offset < 0 ? "-" : "+");
         offset = Math.abs(offset);
-        int hours = offset / (60 * 60 * 1000);
-        int minutes = offset / (60 * 1000) - 60 * hours;
-        if (hours < 10) {
+        int hours = offset / (ONE_HOUR * ONE_MINUTE * ONE_SECOND);
+        int minutes = offset / (ONE_MINUTE * ONE_SECOND) - ONE_HOUR * hours;
+        if (hours < TEN) {
             tzMarker.append("0");
         }
         tzMarker.append(hours);
-        if (minutes < 10) {
+        if (minutes < TEN) {
             tzMarker.append("0");
         }
         tzMarker.append(minutes);
