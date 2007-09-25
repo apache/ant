@@ -577,7 +577,7 @@ public class Rmic extends MatchingTask {
                 // have a corresponding Java source for example.
                 continue;
             }
-            String sourceFileName = StringUtils.removeSuffix(generatedFile, ".class"); 
+            String sourceFileName = StringUtils.removeSuffix(generatedFile, ".class");
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {
