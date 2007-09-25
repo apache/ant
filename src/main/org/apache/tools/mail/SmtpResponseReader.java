@@ -56,10 +56,12 @@ public class SmtpResponseReader {
     public String getResponse() throws IOException {
         result.setLength(0);
         String line = reader.readLine();
+        // CheckStyle:MagicNumber OFF
         if (line != null && line.length() >= 3) {
             result.append(line.substring(0, 3));
             result.append(" ");
         }
+        // CheckStyle:MagicNumber ON
 
         while (line != null) {
             append(line);
@@ -85,16 +87,20 @@ public class SmtpResponseReader {
      * @return true if there are more lines to check.
      */
     protected boolean hasMoreLines(String line) {
+        // CheckStyle:MagicNumber OFF
         return line.length() > 3 && line.charAt(3) == '-';
+        // CheckStyle:MagicNumber ON
     }
 
     /**
      * Append the text from this line of the resonse.
      */
     private void append(String line) {
+        // CheckStyle:MagicNumber OFF
         if (line.length() > 4) {
             result.append(line.substring(4));
             result.append(" ");
         }
+        // CheckStyle:MagicNumber ON
     }
 }

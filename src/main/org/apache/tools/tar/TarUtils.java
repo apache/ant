@@ -30,6 +30,8 @@ package org.apache.tools.tar;
 // CheckStyle:HideUtilityClassConstructorCheck OFF (bc)
 public class TarUtils {
 
+    private static final int BYTE_MASK = 255;
+
     /**
      * Parse an octal string from a header buffer. This is used for the
      * file permission mode value.
@@ -60,7 +62,9 @@ public class TarUtils {
             }
 
             stillPadding = false;
+            // CheckStyle:MagicNumber OFF
             result = (result << 3) + (header[i] - '0');
+            // CheckStyle:MagicNumber ON
         }
 
         return result;
@@ -134,8 +138,10 @@ public class TarUtils {
             --idx;
         } else {
             for (long val = value; idx >= 0 && val > 0; --idx) {
+                // CheckStyle:MagicNumber OFF
                 buf[offset + idx] = (byte) ((byte) '0' + (byte) (val & 7));
                 val = val >> 3;
+                // CheckStyle:MagicNumber ON
             }
         }
 
@@ -192,7 +198,7 @@ public class TarUtils {
         long sum = 0;
 
         for (int i = 0; i < buf.length; ++i) {
-            sum += 255 & buf[i];
+            sum += BYTE_MASK & buf[i];
         }
 
         return sum;

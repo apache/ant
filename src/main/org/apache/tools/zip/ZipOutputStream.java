@@ -599,6 +599,7 @@ public class ZipOutputStream extends FilterOutputStream {
 
         // version needed to extract
         // general purpose bit flag
+        // CheckStyle:MagicNumber OFF
         if (zipMethod == DEFLATED && raf == null) {
             // requires version 2 as we are going to store length info
             // in the data descriptor
@@ -610,6 +611,7 @@ public class ZipOutputStream extends FilterOutputStream {
             writeOut(ZipShort.getBytes(10));
             writeOut(ZERO);
         }
+        // CheckStyle:MagicNumber ON
         written += WORD;
 
         // compression method
@@ -633,7 +635,9 @@ public class ZipOutputStream extends FilterOutputStream {
             writeOut(ZipLong.getBytes(ze.getSize()));
             writeOut(ZipLong.getBytes(ze.getSize()));
         }
+        // CheckStyle:MagicNumber OFF
         written += 12;
+        // CheckStyle:MagicNumber ON
 
         // file name length
         byte[] name = getBytes(ze.getName());
@@ -671,7 +675,9 @@ public class ZipOutputStream extends FilterOutputStream {
         writeOut(ZipLong.getBytes(entry.getCrc()));
         writeOut(ZipLong.getBytes(entry.getCompressedSize()));
         writeOut(ZipLong.getBytes(entry.getSize()));
+        // CheckStyle:MagicNumber OFF
         written += 16;
+        // CheckStyle:MagicNumber ON
     }
 
     /**
@@ -686,6 +692,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += WORD;
 
         // version made by
+        // CheckStyle:MagicNumber OFF
         writeOut(ZipShort.getBytes((ze.getPlatform() << 8) | 20));
         written += SHORT;
 
@@ -702,6 +709,7 @@ public class ZipOutputStream extends FilterOutputStream {
             writeOut(ZipShort.getBytes(10));
             writeOut(ZERO);
         }
+        // CheckStyle:MagicNumber ON
         written += WORD;
 
         // compression method
@@ -718,7 +726,9 @@ public class ZipOutputStream extends FilterOutputStream {
         writeOut(ZipLong.getBytes(ze.getCrc()));
         writeOut(ZipLong.getBytes(ze.getCompressedSize()));
         writeOut(ZipLong.getBytes(ze.getSize()));
+        // CheckStyle:MagicNumber OFF
         written += 12;
+        // CheckStyle:MagicNumber ON
 
         // file name length
         byte[] name = getBytes(ze.getName());
