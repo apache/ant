@@ -36,7 +36,9 @@ import java.io.OutputStream;
  *
  */
 public class TarInputStream extends FilterInputStream {
+    private static final int SMALL_BUFFER_SIZE = 256;
     private static final int BUFFER_SIZE = 8 * 1024;
+    private static final int LARGE_BUFFER_SIZE = 32 * 1024;
     private static final int BYTE_MASK = 0xFF;
 
     // CheckStyle:VisibilityModifier OFF - bc
@@ -257,7 +259,7 @@ public class TarInputStream extends FilterInputStream {
         if (this.currEntry != null && this.currEntry.isGNULongNameEntry()) {
             // read in the name
             StringBuffer longName = new StringBuffer();
-            byte[] buf = new byte[256];
+            byte[] buf = new byte[SMALL_BUFFER_SIZE];
             int length = 0;
             while ((length = read(buf)) >= 0) {
                 longName.append(new String(buf, 0, length));
@@ -380,7 +382,7 @@ public class TarInputStream extends FilterInputStream {
      * @throws IOException on error
      */
     public void copyEntryContents(OutputStream out) throws IOException {
-        byte[] buf = new byte[32 * 1024];
+        byte[] buf = new byte[LARGE_BUFFER_SIZE];
 
         while (true) {
             int numRead = this.read(buf, 0, buf.length);

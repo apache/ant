@@ -139,6 +139,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         System.arraycopy(ZipShort.getBytes(getMode()), 0, data, 0, 2);
 
         byte[] linkArray = getLinkedFile().getBytes();
+        // CheckStyle:MagicNumber OFF
         System.arraycopy(ZipLong.getBytes(linkArray.length),
                          0, data, 2, WORD);
 
@@ -148,6 +149,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
                          0, data, 8, 2);
 
         System.arraycopy(linkArray, 0, data, 10, linkArray.length);
+        // CheckStyle:MagicNumber ON
 
         crc.reset();
         crc.update(data);
@@ -300,6 +302,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         }
 
         int newMode = ZipShort.getValue(tmp, 0);
+        // CheckStyle:MagicNumber OFF
         byte[] linkArray = new byte[(int) ZipLong.getValue(tmp, 2)];
         uid = ZipShort.getValue(tmp, 6);
         gid = ZipShort.getValue(tmp, 8);
@@ -310,6 +313,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
             System.arraycopy(tmp, 10, linkArray, 0, linkArray.length);
             link = new String(linkArray);
         }
+        // CheckStyle:MagicNumber ON
         setDirectory((newMode & DIR_FLAG) != 0);
         setMode(newMode);
     }
