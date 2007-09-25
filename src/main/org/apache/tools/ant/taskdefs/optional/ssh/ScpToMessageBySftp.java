@@ -34,6 +34,8 @@ import java.util.Iterator;
  */
 public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
 
+    private static final int HUNDRED_KILOBYTES = 102400;
+
     private File localFile;
     private String remotePath;
     private List directoryList;
@@ -205,7 +207,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         long totalLength = filesize;
 
         // only track progress for files larger than 100kb in verbose mode
-        boolean trackProgress = getVerbose() && filesize > 102400;
+        boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
 
         SftpProgressMonitor monitor = null;
         if (trackProgress) {
