@@ -29,7 +29,7 @@
 <h3>Download Area Layout</h3>
 <table>
 <tr>
-  <th>Filename</th>
+  <th>Filename or Path</th>
   <th>Description</th>
 </tr>
 <tr>
@@ -40,14 +40,14 @@
   <td>RELEASE-NOTES-{version}.html</td>
   <td>
     Release notes of the given version in HTML format. When upgrading your Ant installation you
-    should have a look on the <i>Changes that could break older environments</i> section.
+    should have a look at the <i>Changes that could break older environments</i> section.
   </td>
 </tr>
 <tr>
   <td>ant-current-bin.zip</td>
   <td>
     ZIP-Archive containing the compiled version of Ant in the last released version. This is the file
-    most of the users want to have.
+    most users will want to download.
   </td>
 </tr>
 <tr>
@@ -79,10 +79,39 @@
     <a href="http://en.wikipedia.org/wiki/SHA-1" target="_blank">SHA1</a> key.
   </td>
 </tr>
-
+<tr>
+  <td>antlibs/</td>
+  <td>
+    This directory holds the Antlibs that are made of available by the Apache Ant project.
+    Antlibs are bundles of Ant tasks that are not delivered as part of the Ant core but are
+    available as optional downloads.
+  </td>
+</tr>
+<tr>
+  <td>binaries/</td>
+  <td>
+    The binaries directory holds specific Ant releases bundled in both ZIP and tar.gz compression
+    formats. The named releases are in contrast to the ant-current-bin.zip file in the parent 
+    directory, which is always guaranteed to be the most current release of Ant.
+  </td>
+</tr>
+<tr>
+  <td>common/</td>
+  <td>
+    The common directory holds various files, such as the Apache License file that Ant is licensed
+    under, that people may wish to examine without having to download the whole Ant distribution.
+  </td>
+</tr>
+<tr>
+  <td>source/</td>
+  <td>
+    The source directory holds the source code for specific Ant releases bundled in both ZIP and 
+    tar.gz compression formats. The named releases are in contrast to the ant-current-src.zip file
+    in the parent directory, which is always guaranteed to hold the source code for the most current 
+    release of Ant.
+  </td>
+</tr>
 </table>
-
-
 
 <h3>Binary Edition</h3>
 <p>The latest stable version of Ant is available from the Ant web page <a
