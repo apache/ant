@@ -43,6 +43,8 @@ import org.w3c.dom.Text;
  */
 public class DOMElementWriter {
 
+    private static final int HEX = 16;
+
     /** prefix for generated prefixes */
     private static final String NS = "ns";
 
@@ -497,7 +499,7 @@ public class DOMElementWriter {
         if (ent.charAt(1) == '#') {
             if (ent.charAt(2) == 'x') {
                 try {
-                    Integer.parseInt(ent.substring(3, ent.length() - 1), 16);
+                    Integer.parseInt(ent.substring(3, ent.length() - 1), HEX);
                     return true;
                 } catch (NumberFormatException nfe) {
                     return false;
