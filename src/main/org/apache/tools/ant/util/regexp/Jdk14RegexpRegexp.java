@@ -26,6 +26,8 @@ import org.apache.tools.ant.BuildException;
  */
 public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 
+    private static final int DECIMAL = 10;
+
     /** Constructor for Jdk14RegexpRegexp */
     public Jdk14RegexpRegexp() {
         super();
@@ -65,7 +67,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
             } else if (c == '\\') {
                 if (++i < argument.length()) {
                     c = argument.charAt(i);
-                    int value = Character.digit(c, 10);
+                    int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
                         subst.append("$").append(value);
                     } else {

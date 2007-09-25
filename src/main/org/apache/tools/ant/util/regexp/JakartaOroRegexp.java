@@ -27,6 +27,8 @@ import org.apache.tools.ant.BuildException;
  */
 public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
 
+    private static final int DECIMAL = 10;
+
     /** Constructor for JakartaOroRegexp */
     public JakartaOroRegexp() {
         super();
@@ -52,7 +54,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
             } else if (c == '\\') {
                 if (++i < argument.length()) {
                     c = argument.charAt(i);
-                    int value = Character.digit(c, 10);
+                    int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
                         subst.append("$").append(value);
                     } else {

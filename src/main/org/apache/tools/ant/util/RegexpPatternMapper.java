@@ -29,6 +29,9 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  *
  */
 public class RegexpPatternMapper implements FileNameMapper {
+
+    private static final int DECIMAL = 10;
+
     // CheckStyle:VisibilityModifier OFF - bc
     protected RegexpMatcher reg = null;
     protected char[] to = null;
@@ -130,7 +133,7 @@ public class RegexpPatternMapper implements FileNameMapper {
         for (int i = 0; i < to.length; i++) {
             if (to[i] == '\\') {
                 if (++i < to.length) {
-                    int value = Character.digit(to[i], 10);
+                    int value = Character.digit(to[i], DECIMAL);
                     if (value > -1) {
                         result.append((String) v.elementAt(value));
                     } else {
