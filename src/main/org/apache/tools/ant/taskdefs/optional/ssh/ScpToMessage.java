@@ -34,6 +34,7 @@ import java.util.Iterator;
  */
 public class ScpToMessage extends AbstractSshMessage {
 
+    private static final int HUNDRED_KILOBYTES = 102400;
     private static final int BUFFER_SIZE = 1024;
 
     private File localFile;
@@ -234,7 +235,7 @@ public class ScpToMessage extends AbstractSshMessage {
         long totalLength = 0;
 
         // only track progress for files larger than 100kb in verbose mode
-        boolean trackProgress = getVerbose() && filesize > 102400;
+        boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
         // since filesize keeps on decreasing we have to store the
         // initial filesize
         long initFilesize = filesize;

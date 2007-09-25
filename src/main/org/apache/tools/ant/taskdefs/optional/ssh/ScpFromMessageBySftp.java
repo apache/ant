@@ -33,6 +33,8 @@ import com.jcraft.jsch.SftpProgressMonitor;
  */
 public class ScpFromMessageBySftp extends ScpFromMessage {
 
+    private static final int HUNDRED_KILOBYTES = 102400;
+
     private String remoteFile;
     private File localFile;
     private boolean isRecursive = false;
@@ -154,7 +156,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         long totalLength = le.getAttrs().getSize();
 
         SftpProgressMonitor monitor = null;
-        boolean trackProgress = getVerbose() && totalLength > 102400;
+        boolean trackProgress = getVerbose() && totalLength > HUNDRED_KILOBYTES;
         if (trackProgress) {
             monitor = getProgressMonitor();
         }

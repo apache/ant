@@ -34,6 +34,7 @@ import com.jcraft.jsch.Channel;
  */
 public class ScpFromMessage extends AbstractSshMessage {
 
+    private static final int HUNDRED_KILOBYTES = 102400;
     private static final byte LINE_FEED = 0x0a;
     private static final int BUFFER_SIZE = 1024;
 
@@ -207,7 +208,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         long startTime = System.currentTimeMillis();
 
         // only track progress for files larger than 100kb in verbose mode
-        boolean trackProgress = getVerbose() && filesize > 102400;
+        boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
         // since filesize keeps on decreasing we have to store the
         // initial filesize
         long initFilesize = filesize;
