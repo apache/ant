@@ -111,7 +111,7 @@ public class Watchdog implements Runnable {
     public synchronized void run() {
         long now = System.currentTimeMillis();
         final long until = now + timeout;
-        
+
         try {
             while (!stopped && until > now) {
                 wait(until - now);
