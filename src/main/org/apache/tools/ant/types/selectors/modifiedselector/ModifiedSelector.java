@@ -145,6 +145,9 @@ import org.apache.tools.ant.util.ResourceUtils;
 public class ModifiedSelector extends BaseExtendSelector
                               implements BuildListener, ResourceSelector {
 
+    private static final String CACHE_START = "cache.";
+    private static final String ALGORITHM_START = "algorithm.";
+    private static final String COMPARATOR_START = "comparator.";
 
     // -----  attributes  -----
 
@@ -747,14 +750,14 @@ public class ModifiedSelector extends BaseExtendSelector
                 ? true
                 : false;
             setSeldirs(sdValue);
-        } else if (key.startsWith("cache.")) {
-            String name = key.substring(6);
+        } else if (key.startsWith(CACHE_START)) {
+            String name = key.substring(CACHE_START.length());
             tryToSetAParameter(cache, name, value);
-        } else if (key.startsWith("algorithm.")) {
-            String name = key.substring(10);
+        } else if (key.startsWith(ALGORITHM_START)) {
+            String name = key.substring(ALGORITHM_START.length());
             tryToSetAParameter(algorithm, name, value);
-        } else if (key.startsWith("comparator.")) {
-            String name = key.substring(11);
+        } else if (key.startsWith(COMPARATOR_START)) {
+            String name = key.substring(COMPARATOR_START.length());
             tryToSetAParameter(comparator, name, value);
         } else {
             setError("Invalid parameter " + key);

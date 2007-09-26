@@ -87,7 +87,8 @@ public class DependencyVisitor extends EmptyVisitor {
         String name = obj.getName(constantPool);
         if (obj.getSignature(constantPool).equals("Ljava/lang/Class;")
                 && name.startsWith("class$")) {
-            String classname = name.substring(6).replace('$', '.');
+            String classname
+                = name.substring("class$".length()).replace('$', '.');
             // does the class have a package structure
             int index = classname.lastIndexOf(".");
             if (index > 0) {

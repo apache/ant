@@ -676,6 +676,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *      see if it needs to be rebuilt.
      * @return true if a rebuild is required.
      */
+    // CheckStyle:MethodLength OFF - this will no be fixed
     protected boolean isRebuildRequired(File genericJarFile, File websphereJarFile) {
         boolean rebuild = false;
 

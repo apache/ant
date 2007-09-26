@@ -36,6 +36,7 @@ import org.apache.tools.ant.taskdefs.Java;
  */
 public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
                                        implements HotDeploymentTool {
+    private static final int STRING_BUFFER_SIZE = 1024;
     /** The classname of the tool to run **/
     private static final String WEBLOGIC_DEPLOY_CLASS_NAME = "weblogic.deploy";
 
@@ -161,7 +162,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
         ServerDeploy task = getTask();
         // constructs the "-url <url> -debug <action> <password>" portion
         // of the commmand line
-        return new StringBuffer(1024)
+        return new StringBuffer(STRING_BUFFER_SIZE)
                 .append((getServer() != null)
                     ? "-url " + getServer()
                     : "")
