@@ -477,8 +477,10 @@ public class DOMElementWriter {
         int cdEnd = result.indexOf("]]>");
         while (cdEnd != -1) {
             sb.setLength(cdEnd);
+            // CheckStyle:MagicNumber OFF
             sb.append("&#x5d;&#x5d;&gt;")
                 .append(result.substring(cdEnd + 3));
+            // CheckStyle:MagicNumber ON
             result = sb.substring(0);
             cdEnd = result.indexOf("]]>");
         }
@@ -499,7 +501,9 @@ public class DOMElementWriter {
         if (ent.charAt(1) == '#') {
             if (ent.charAt(2) == 'x') {
                 try {
+                    // CheckStyle:MagicNumber OFF
                     Integer.parseInt(ent.substring(3, ent.length() - 1), HEX);
+                    // CheckStyle:MagicNumber ON
                     return true;
                 } catch (NumberFormatException nfe) {
                     return false;

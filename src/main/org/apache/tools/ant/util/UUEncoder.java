@@ -33,6 +33,7 @@ import java.io.PrintStream;
 public class UUEncoder {
     protected static final int DEFAULT_MODE = 644;
     private static final int MAX_CHARS_PER_LINE = 45;
+    private static final int INPUT_BUFFER_SIZE = MAX_CHARS_PER_LINE * 100;
     private OutputStream out;
     private String name;
 
@@ -60,7 +61,7 @@ public class UUEncoder {
         throws IOException {
         this.out = out;
         encodeBegin();
-        byte[] buffer = new byte[MAX_CHARS_PER_LINE * 100];
+        byte[] buffer = new byte[INPUT_BUFFER_SIZE];
         int count;
         while ((count = is.read(buffer, 0, buffer.length)) != -1) {
             int pos = 0;

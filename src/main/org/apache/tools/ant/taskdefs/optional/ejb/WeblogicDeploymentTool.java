@@ -706,6 +706,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *      see if it needs to be rebuilt.
      * @return true if the jar needs to be rebuilt.
      */
+    // CheckStyle:MethodLength OFF - this will no be fixed
     protected boolean isRebuildRequired(File genericJarFile, File weblogicJarFile) {
         boolean rebuild = false;
 
