@@ -3278,6 +3278,33 @@
         </table>
       </subsection>
 
+      <subsection name="XML Directory Listing Ant Task">
+
+        <p>The XML Directory Listing task can recurse through a directory structure and produce an 
+        XML representation. The resulting file can then be transformed further with Ant. </p>
+        <p>The XML output is configurable through various options. The SAX parsing is fast and has a 
+        low memory footprint.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.5 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://code.google.com/p/xml-dir-listing/">http://code.google.com/p/xml-dir-listing/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:matt_at_matthaynes_dot_net">M. Haynes</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>      
+	  </subsection>
+
       <subsection name="XMLReleaseNotes (XRN)">
 
         <p>This framework is a release notes framework that enables to
