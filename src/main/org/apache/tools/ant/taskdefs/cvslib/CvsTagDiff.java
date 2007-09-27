@@ -289,13 +289,14 @@ public class CvsTagDiff extends AbstractCvsTask {
                         line = line.substring(FILE_STRING.length());
                     }
 
-                    if ((index = line.indexOf(FILE_IS_NEW)) != -1) {
+                    index = line.indexOf(FILE_IS_NEW);
+                    if (index  != -1) {
                         // it is a new file
                         // set the revision but not the prevrevision
                         String filename = line.substring(0, index);
                         String rev = null;
-                        int indexrev = -1;
-                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                        int indexrev = line.indexOf(REVISION, index);
+                        if (indexrev != -1) {
                             rev = line.substring(indexrev + REVISION.length());
                         }
                         entry = new CvsTagEntry(filename, rev);
@@ -319,8 +320,8 @@ public class CvsTagDiff extends AbstractCvsTask {
                         // it is a removed file
                         String filename = line.substring(0, index);
                         String rev = null;
-                        int indexrev = -1;
-                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                        int indexrev = line.indexOf(REVISION, index);
+                        if (indexrev != -1) {
                             rev = line.substring(indexrev + REVISION.length());
                         }
                         entry = new CvsTagEntry(filename, null, rev);

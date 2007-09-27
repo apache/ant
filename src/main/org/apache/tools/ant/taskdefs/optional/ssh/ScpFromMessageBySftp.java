@@ -140,8 +140,8 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         String remoteFile = le.getFilename();
         if (!localFile.exists()) {
             String path = localFile.getAbsolutePath();
-            int i = 0;
-            if ((i = path.lastIndexOf(File.pathSeparator)) != -1) {
+            int i = path.lastIndexOf(File.pathSeparator);
+            if (i != -1) {
                 if (path.length() > File.pathSeparator.length()) {
                     new File(path.substring(0, i)).mkdirs();
                 }

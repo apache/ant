@@ -211,6 +211,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         //Get default P4 settings from environment - Mark would have done something cool with
         //introspection here.....:-)
         String tmpprop;
+        // CheckStyle:InnerAssignment OFF
         if ((tmpprop = getProject().getProperty("p4.port")) != null) {
             setPort(tmpprop);
         }
@@ -220,6 +221,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
         if ((tmpprop = getProject().getProperty("p4.user")) != null) {
             setUser(tmpprop);
         }
+        // CheckStyle:InnerAssignment ON
     }
     /**
     *  no usages found for this method

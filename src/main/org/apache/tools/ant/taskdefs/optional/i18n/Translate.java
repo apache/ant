@@ -457,7 +457,8 @@ public class Translate extends MatchingTask {
                         //Handle line continuations, if any
                         while (value.endsWith("\\")) {
                             value = value.substring(0, value.length() - 1);
-                            if ((line = in.readLine()) != null) {
+                            line = in.readLine();
+                            if (line != null) {
                                 value = value + line.trim();
                             } else {
                                 break;
