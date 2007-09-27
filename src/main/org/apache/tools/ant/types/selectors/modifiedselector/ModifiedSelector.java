@@ -145,9 +145,10 @@ import org.apache.tools.ant.util.ResourceUtils;
 public class ModifiedSelector extends BaseExtendSelector
                               implements BuildListener, ResourceSelector {
 
-    private static final String CACHE_START = "cache.";
-    private static final String ALGORITHM_START = "algorithm.";
-    private static final String COMPARATOR_START = "comparator.";
+    private static final String CACHE_PREFIX = "cache.";
+    private static final String ALGORITHM_PREFIX = "algorithm.";
+    private static final String COMPARATOR_PREFIX = "comparator.";
+
 
     // -----  attributes  -----
 
@@ -750,14 +751,14 @@ public class ModifiedSelector extends BaseExtendSelector
                 ? true
                 : false;
             setSeldirs(sdValue);
-        } else if (key.startsWith(CACHE_START)) {
-            String name = key.substring(CACHE_START.length());
+        } else if (key.startsWith(CACHE_PREFIX)) {
+            String name = key.substring(CACHE_PREFIX.length());
             tryToSetAParameter(cache, name, value);
-        } else if (key.startsWith(ALGORITHM_START)) {
-            String name = key.substring(ALGORITHM_START.length());
+        } else if (key.startsWith(ALGORITHM_PREFIX)) {
+            String name = key.substring(ALGORITHM_PREFIX.length());
             tryToSetAParameter(algorithm, name, value);
-        } else if (key.startsWith(COMPARATOR_START)) {
-            String name = key.substring(COMPARATOR_START.length());
+        } else if (key.startsWith(COMPARATOR_PREFIX)) {
+            String name = key.substring(COMPARATOR_PREFIX.length());
             tryToSetAParameter(comparator, name, value);
         } else {
             setError("Invalid parameter " + key);
@@ -884,7 +885,9 @@ public class ModifiedSelector extends BaseExtendSelector
      * Get the cache type to use.
      * @return the enumerated cache type
      */
-    public Cache getCache() { return cache; }
+    public Cache getCache() {
+        return cache;
+    }
 
     /**
      * Set the cache type to use.
@@ -899,8 +902,10 @@ public class ModifiedSelector extends BaseExtendSelector
      * The values are "propertyfile".
      */
     public static class CacheName extends EnumeratedAttribute {
-        /** @see EnumeratedAttribute#getValues() */
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
             return new String[] {"propertyfile" };
         }
@@ -910,7 +915,9 @@ public class ModifiedSelector extends BaseExtendSelector
      * Get the algorithm type to use.
      * @return the enumerated algorithm type
      */
-    public Algorithm getAlgorithm() { return algorithm; }
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
 
     /**
      * Set the algorithm type to use.
@@ -925,8 +932,10 @@ public class ModifiedSelector extends BaseExtendSelector
      * The values are "hashValue", "digest" and "checksum".
      */
     public static class AlgorithmName extends EnumeratedAttribute {
-        /** @see EnumeratedAttribute#getValues() */
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
             return new String[] {"hashvalue", "digest", "checksum" };
         }
@@ -936,7 +945,9 @@ public class ModifiedSelector extends BaseExtendSelector
      * Get the comparator type to use.
      * @return the enumerated comparator type
      */
-    public Comparator getComparator() { return comparator; }
+    public Comparator getComparator() {
+        return comparator;
+    }
 
     /**
      * Set the comparator type to use.
@@ -951,8 +962,10 @@ public class ModifiedSelector extends BaseExtendSelector
      * The values are "equal" and "rule".
      */
     public static class ComparatorName extends EnumeratedAttribute {
-        /** @see EnumeratedAttribute#getValues() */
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
             return new String[] {"equal", "rule" };
         }
