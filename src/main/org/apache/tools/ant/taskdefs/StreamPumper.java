@@ -89,7 +89,11 @@ public class StreamPumper implements Runnable {
 
         int length;
         try {
-            while ((length = is.read(buf)) > 0 && !finish) {
+            while (true) {
+                length = is.read(buf);
+                if ((length <= 0) || finish) {
+                    break;
+                }
                 os.write(buf, 0, length);
                 if (autoflush) {
                     os.flush();
