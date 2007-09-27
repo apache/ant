@@ -109,7 +109,9 @@ public class UUEncoder {
         byte[] data, int offset, int length, OutputStream out)
         throws IOException {
         // write out the number of characters encoded in this line.
+        // CheckStyle:MagicNumber OFF
         out.write((byte) ((length & 0x3F) + ' '));
+        // CheckStyle:MagicNumber ON
         byte a;
         byte b;
         byte c;

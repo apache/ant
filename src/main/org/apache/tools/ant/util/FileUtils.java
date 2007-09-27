@@ -54,7 +54,7 @@ import org.apache.tools.ant.types.resources.FileResource;
  *
  */
 public class FileUtils {
-
+    private static final int EXPAND_SPACE = 50;
     private static final FileUtils PRIMARY_INSTANCE = new FileUtils();
 
     //get some non-crypto-grade randomness from various places.
@@ -578,9 +578,11 @@ public class FileUtils {
             return (c == sep);
         }
         if (c == sep) {
+            // CheckStyle:MagicNumber OFF
             if (!(ON_DOS && len > 4 && filename.charAt(1) == sep)) {
                 return false;
             }
+            // CheckStyle:MagicNumber ON
             int nextsep = filename.indexOf(sep, 2);
             return nextsep > 2 && nextsep + 1 < len;
         }
@@ -611,7 +613,7 @@ public class FileUtils {
         if (toProcess == null || toProcess.length() == 0) {
             return "";
         }
-        StringBuffer path = new StringBuffer(toProcess.length() + 50);
+        StringBuffer path = new StringBuffer(toProcess.length() + EXPAND_SPACE);
         PathTokenizer tokenizer = new PathTokenizer(toProcess);
         while (tokenizer.hasMoreTokens()) {
             String pathComponent = tokenizer.nextToken();
@@ -740,9 +742,10 @@ public class FileUtils {
         String name = f.getName();
         boolean isAbsolute = path.charAt(0) == File.separatorChar;
         // treat directories specified using .DIR syntax as files
+        // CheckStyle:MagicNumber OFF
         boolean isDirectory = f.isDirectory()
                 && !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
-
+        // CheckStyle:MagicNumber ON
         String device = null;
         StringBuffer directory = null;
         String file = null;
