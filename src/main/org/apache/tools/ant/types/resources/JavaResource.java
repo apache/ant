@@ -130,8 +130,12 @@ public class JavaResource extends Resource {
     public boolean isExists() {
         InputStream is = null;
         try {
-            return isReference() ? ((Resource) getCheckedRef()).isExists()
-                : (is = getInputStream()) != null;
+            if (isReference()) {
+                return  ((Resource) getCheckedRef()).isExists();
+            } else {
+                is = getInputStream();
+                return is != null;
+            }
         } catch (IOException ex) {
             return false;
         } finally {
