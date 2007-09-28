@@ -153,7 +153,7 @@ public class WLJspc extends MatchingTask {
         args[j++] = destinationDirectory.getAbsolutePath().trim();
         args[j++] = "-docroot";
         args[j++] = sourceDirectory.getAbsolutePath().trim();
-        args[j++] = "-keepgenerated";  //TODO: Parameterise ??
+        args[j++] = "-keepgenerated";
         //Call compiler as class... dont want to fork again
         //Use classic compiler -- can be parameterised?
         args[j++] =  "-compilerclass";

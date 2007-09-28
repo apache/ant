@@ -260,8 +260,11 @@ public class MimeMailer extends Mailer {
     }
 
     private String parseCharSetFromMimeType(String type) {
-        int pos;
-        if (type == null || (pos = type.indexOf("charset")) < 0) {
+        if (type == null) {
+            return null;
+        }
+        int pos = type.indexOf("charset");
+        if (pos < 0) {
           return null;
         }
         // Assuming mime type in form "text/XXXX; charset=XXXXXX"
