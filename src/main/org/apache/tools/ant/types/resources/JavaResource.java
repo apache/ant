@@ -128,14 +128,13 @@ public class JavaResource extends Resource {
      * @return true if this resource exists.
      */
     public boolean isExists() {
+        if (isReference()) {
+            return  ((Resource) getCheckedRef()).isExists();
+        }
         InputStream is = null;
         try {
-            if (isReference()) {
-                return  ((Resource) getCheckedRef()).isExists();
-            } else {
-                is = getInputStream();
-                return is != null;
-            }
+            is = getInputStream();
+            return is != null;
         } catch (IOException ex) {
             return false;
         } finally {
