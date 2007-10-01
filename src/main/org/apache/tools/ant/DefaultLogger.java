@@ -149,6 +149,15 @@ public class DefaultLogger implements BuildLogger {
             message.append(getBuildFailedMessage());
             message.append(StringUtils.LINE_SEP);
 
+            while (error instanceof BuildException) { // #43398
+                Throwable cause = ((BuildException) error).getCause();
+                if (cause != null && cause.toString().equals(error.getMessage())) {
+                    error = cause;
+                } else {
+                    break;
+                }
+            }
+
             if (Project.MSG_VERBOSE <= msgOutputLevel
                 || !(error instanceof BuildException)) {
                 message.append(StringUtils.getStackTrace(error));
