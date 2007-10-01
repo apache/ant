@@ -310,10 +310,21 @@ public class Scp extends SSHBase {
     }
 
     private String parseUri(String uri) {
-        int indexOfAt = uri.lastIndexOf('@');
+
+        int indexOfAt = uri.indexOf('@');
         int indexOfColon = uri.indexOf(':');
+
         if (indexOfColon > -1 && indexOfColon < indexOfAt) {
             // user:password@host:/path notation
+            // everything upto the last @ before the last : is considered
+            // password. (so if the path contains an @ and a : it will not work)
+            int indexOfCurrentAt = indexOfAt;
+            int indexOfLastColon = uri.lastIndexOf(':');
+            while (indexOfCurrentAt > -1 && indexOfCurrentAt < indexOfLastColon)
+            {
+                indexOfAt = indexOfCurrentAt;
+                indexOfCurrentAt = uri.indexOf('@', indexOfCurrentAt + 1);
+            }
             setUsername(uri.substring(0, indexOfColon));
             setPassword(uri.substring(indexOfColon + 1, indexOfAt));
         } else {
