@@ -84,6 +84,11 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+* The default logger was failing to print complete stack traces for exceptions
+  other than BuildException, thus omitting often important diagnostic
+  information. Bugzilla 43398.
+
 * Error in FTP task
   Bugzilla report 41724
 
