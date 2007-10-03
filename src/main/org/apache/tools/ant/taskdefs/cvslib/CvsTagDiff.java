@@ -278,8 +278,6 @@ public class CvsTagDiff extends AbstractCvsTask {
             Vector entries = new Vector();
 
             String line = reader.readLine();
-            int index;
-            CvsTagEntry entry = null;
 
             while (null != line) {
                 if (line.length() > headerLength) {
@@ -289,45 +287,11 @@ public class CvsTagDiff extends AbstractCvsTask {
                         line = line.substring(FILE_STRING.length());
                     }
 
-                    index = line.indexOf(FILE_IS_NEW);
-                    if (index  != -1) {
-                        // it is a new file
-                        // set the revision but not the prevrevision
-                        String filename = line.substring(0, index);
-                        String rev = null;
-                        int indexrev = line.indexOf(REVISION, index);
-                        if (indexrev != -1) {
-                            rev = line.substring(indexrev + REVISION.length());
-                        }
-                        entry = new CvsTagEntry(filename, rev);
-                        entries.addElement(entry);
-                        log(entry.toString(), Project.MSG_VERBOSE);
-                    } else if ((index = line.indexOf(FILE_HAS_CHANGED)) != -1) {
-                        // it is a modified file
-                        // set the revision and the prevrevision
-                        String filename = line.substring(0, index);
-                        int revSeparator = line.indexOf(" to ", index);
-                        String prevRevision =
-                            line.substring(index + FILE_HAS_CHANGED.length(),
-                                revSeparator);
-                        String revision = line.substring(revSeparator + TO_STRING.length());
-                        entry = new CvsTagEntry(filename,
-                            revision,
-                            prevRevision);
-                        entries.addElement(entry);
-                        log(entry.toString(), Project.MSG_VERBOSE);
-                    } else if ((index = line.indexOf(FILE_WAS_REMOVED)) != -1) {
-                        // it is a removed file
-                        String filename = line.substring(0, index);
-                        String rev = null;
-                        int indexrev = line.indexOf(REVISION, index);
-                        if (indexrev != -1) {
-                            rev = line.substring(indexrev + REVISION.length());
-                        }
-                        entry = new CvsTagEntry(filename, null, rev);
-                        entries.addElement(entry);
-                        log(entry.toString(), Project.MSG_VERBOSE);
-                    }
+                    // use || in a perl like fashion
+                    boolean processed
+                        =  doFileIsNew(entries, line)
+                        || doFileHasChanged(entries, line)
+                        || doFileWasRemoved(entries, line);
                 }
                 line = reader.readLine();
             }
@@ -347,6 +311,64 @@ public class CvsTagDiff extends AbstractCvsTask {
                 }
             }
         }
+    }
+
+    private boolean doFileIsNew(Vector entries, String line) {
+        int index = line.indexOf(FILE_IS_NEW);
+        if (index == -1) {
+            return false;
+        }
+        // it is a new file
+        // set the revision but not the prevrevision
+        String filename = line.substring(0, index);
+        String rev = null;
+        int indexrev = line.indexOf(REVISION, index);
+        if (indexrev != -1) {
+            rev = line.substring(indexrev + REVISION.length());
+        }
+        CvsTagEntry entry = new CvsTagEntry(filename, rev);
+        entries.addElement(entry);
+        log(entry.toString(), Project.MSG_VERBOSE);
+        return true;
+    }
+
+    private boolean doFileHasChanged(Vector entries, String line) {
+        int index = line.indexOf(FILE_HAS_CHANGED);
+        if (index == -1) {
+            return false;
+        }
+        // it is a modified file
+        // set the revision and the prevrevision
+        String filename = line.substring(0, index);
+        int revSeparator = line.indexOf(" to ", index);
+        String prevRevision =
+            line.substring(index + FILE_HAS_CHANGED.length(),
+                           revSeparator);
+        String revision = line.substring(revSeparator + TO_STRING.length());
+        CvsTagEntry entry = new CvsTagEntry(filename,
+                                            revision,
+                                            prevRevision);
+        entries.addElement(entry);
+        log(entry.toString(), Project.MSG_VERBOSE);
+        return true;
+    }
+
+    private boolean doFileWasRemoved(Vector entries, String line) {
+        int index = line.indexOf(FILE_WAS_REMOVED);
+        if (index == -1) {
+            return false;
+        }
+        // it is a removed file
+        String filename = line.substring(0, index);
+        String rev = null;
+        int indexrev = line.indexOf(REVISION, index);
+        if (indexrev != -1) {
+            rev = line.substring(indexrev + REVISION.length());
+        }
+        CvsTagEntry entry = new CvsTagEntry(filename, null, rev);
+        entries.addElement(entry);
+        log(entry.toString(), Project.MSG_VERBOSE);
+        return true;
     }
 
     /**
