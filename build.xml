@@ -271,13 +271,6 @@
     </or>
   </selector>
 
-  <selector id="needs.starteam">
-    <or>
-      <filename name="${optional.package}/scm/AntStarTeam*"/>
-      <filename name="${optional.package}/starteam/*"/>
-    </or>
-  </selector>
-
   <selector id="needs.antlr">
     <filename name="${optional.package}/ANTLR*"/>
   </selector>
@@ -401,9 +394,6 @@
       classpathref="classpath"/>
     <available property="commons.net.present"
       classname="org.apache.commons.net.ftp.FTPClient"
-      classpathref="classpath"/>
-    <available property="starteam.present"
-      classname="com.starbase.util.Platform"
       classpathref="classpath"/>
     <available property="antlr.present"
       classname="antlr.Tool"
@@ -634,7 +624,6 @@
             <selector refid="needs.javamail" unless="javamail.complete"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
-            <selector refid="needs.starteam" unless="starteam.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
             <selector refid="needs.jmf" unless="jmf.present"/>
             <selector refid="needs.jai" unless="jai.present"/>
@@ -813,7 +802,6 @@
             <selector refid="needs.javamail"/>
             <selector refid="needs.netrexx"/>
             <selector refid="needs.commons-net"/>
-            <selector refid="needs.starteam"/>
             <selector refid="needs.antlr"/>
             <selector refid="needs.jmf"/>
             <selector refid="needs.jai"/>
@@ -854,7 +842,6 @@
     <optional-jar dep="javamail"/>
     <optional-jar dep="netrexx"/>
     <optional-jar dep="commons-net"/>
-    <optional-jar dep="starteam"/>
     <optional-jar dep="antlr"/>
     <optional-jar dep="jmf"/>
     <optional-jar dep="jai"/>
