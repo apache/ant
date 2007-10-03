@@ -61,17 +61,6 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
  */
 public class ResourceUtils {
 
-    private static final class Outdated implements ResourceSelector {
-        private Resource control;
-        private long granularity;
-        private Outdated(Resource control, long granularity) {
-            this.control = control;
-            this.granularity = granularity;
-        }
-        public boolean isSelected(Resource r) {
-            return SelectorUtils.isOutOfDate(control, r, granularity);
-        }
-    }
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -144,7 +133,7 @@ public class ResourceUtils {
                                                             ResourceCollection source,
                                                             FileNameMapper mapper,
                                                             ResourceFactory targets,
-                                                            long granularity) {
+                                                            final long granularity) {
         if (source.size() == 0) {
             logTo.log("No sources found.", Project.MSG_VERBOSE);
             return Resources.NONE;
@@ -154,7 +143,7 @@ public class ResourceUtils {
 
         Union result = new Union();
         for (Iterator iter = source.iterator(); iter.hasNext();) {
-            Resource sr = (Resource) iter.next();
+            final Resource sr = (Resource) iter.next();
             String srName = sr.getName();
             srName = srName == null
                 ? srName : srName.replace('/', File.separatorChar);
@@ -178,8 +167,16 @@ public class ResourceUtils {
             }
             //find the out-of-date targets:
             Restrict r = new Restrict();
-            r.add(new And(new ResourceSelector[] {Type.FILE, new Or(
-                new ResourceSelector[] {NOT_EXISTS, new Outdated(sr, granularity)})}));
+            r.add(new ResourceSelector() {
+                public boolean isSelected(Resource target) {
+                    /* Extra I/O, probably wasted:
+                    if (target.isDirectory()) {
+                        return false;
+                    }
+                     */
+                    return SelectorUtils.isOutOfDate(sr, target, granularity);
+                }
+            });
             r.add(targetColl);
             if (r.size() > 0) {
                 result.add(sr);

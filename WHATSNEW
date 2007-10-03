@@ -130,6 +130,12 @@ Fixed bugs:
 
 Other changes:
 --------------
+
+* Various small optimizations speed up common tasks such as <javac> on large
+  filesets, reducing both I/O and CPU usage.
+
+* Profiling logger has been added with basic profiling capabilities.
+
 * <script> now has basic support for JavaFX scripts
 
 * SSH task can now take a command parameter containing the commands to execute.
