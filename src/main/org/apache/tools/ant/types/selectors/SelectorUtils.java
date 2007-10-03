@@ -318,7 +318,7 @@ public final class SelectorUtils {
      *                Must not be <code>null</code>.
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
+     * @param caseSensitive Whether or not matching should be performed
      *                        case sensitively.
      *
      *
@@ -326,7 +326,7 @@ public final class SelectorUtils {
      *         or <code>false</code> otherwise.
      */
     public static boolean match(String pattern, String str,
-                                boolean isCaseSensitive) {
+                                boolean caseSensitive) {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();
         int patIdxStart = 0;
@@ -351,12 +351,8 @@ public final class SelectorUtils {
             for (int i = 0; i <= patIdxEnd; i++) {
                 ch = patArr[i];
                 if (ch != '?') {
-                    if (isCaseSensitive && ch != strArr[i]) {
+                    if (different(caseSensitive, ch, strArr[i])) {
                         return false; // Character mismatch
-                    }
-                    if (!isCaseSensitive && Character.toUpperCase(ch)
-                            != Character.toUpperCase(strArr[i])) {
-                        return false;  // Character mismatch
                     }
                 }
             }
@@ -368,13 +364,13 @@ public final class SelectorUtils {
         }
 
         // Process characters before first star
-        while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
+        while (true) {
+            ch = patArr[patIdxStart];
+            if (ch == '*' || strIdxStart > strIdxEnd) {
+                break;
+            }
             if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxStart]) {
-                    return false; // Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch)
-                        != Character.toUpperCase(strArr[strIdxStart])) {
+                if (different(caseSensitive, ch, strArr[strIdxStart])) {
                     return false; // Character mismatch
                 }
             }
@@ -384,22 +380,17 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // All characters in the string are used. Check if only '*'s are
             // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (patArr[i] != '*') {
-                    return false;
-                }
-            }
-            return true;
+            return allStars(patArr, patIdxStart, patIdxEnd);
         }
 
         // Process characters after last star
-        while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
+        while (true) {
+            ch = patArr[patIdxEnd];
+            if (ch == '*' || strIdxStart > strIdxEnd) {
+                break;
+            }
             if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxEnd]) {
-                    return false; // Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch)
-                        != Character.toUpperCase(strArr[strIdxEnd])) {
+                if (different(caseSensitive, ch, strArr[strIdxEnd])) {
                     return false; // Character mismatch
                 }
             }
@@ -409,12 +400,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // All characters in the string are used. Check if only '*'s are
             // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (patArr[i] != '*') {
-                    return false;
-                }
-            }
-            return true;
+            return allStars(patArr, patIdxStart, patIdxEnd);
         }
 
         // process pattern between stars. padIdxStart and patIdxEnd point
@@ -442,13 +428,8 @@ public final class SelectorUtils {
                 for (int j = 0; j < patLength; j++) {
                     ch = patArr[patIdxStart + j + 1];
                     if (ch != '?') {
-                        if (isCaseSensitive && ch != strArr[strIdxStart + i
-                                + j]) {
-                            continue strLoop;
-                        }
-                        if (!isCaseSensitive
-                            && Character.toUpperCase(ch)
-                                != Character.toUpperCase(strArr[strIdxStart + i + j])) {
+                        if (different(caseSensitive, ch,
+                                      strArr[strIdxStart + i + j])) {
                             continue strLoop;
                         }
                     }
@@ -468,12 +449,23 @@ public final class SelectorUtils {
 
         // All characters in the string are used. Check if only '*'s are left
         // in the pattern. If so, we succeeded. Otherwise failure.
-        for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (patArr[i] != '*') {
+        return allStars(patArr, patIdxStart, patIdxEnd);
+    }
+
+    private static boolean allStars(char[] chars, int start, int end) {
+        for (int i = start; i <= end; ++i) {
+            if (chars[i] != '*') {
                 return false;
             }
         }
         return true;
+    }
+
+    private static boolean different(
+        boolean caseSensitive, char ch, char other) {
+        return caseSensitive
+            ? ch != other
+            : Character.toUpperCase(ch) != Character.toUpperCase(other);
     }
 
     /**
