@@ -615,16 +615,16 @@ public final class SelectorUtils {
      */
     public static boolean isOutOfDate(Resource src, Resource target,
                                       long granularity) {
-        if (!src.isExists()) {
+        long sourceLastModified = src.getLastModified();
+        if (sourceLastModified == 0L) {
+            // Does not exist. Quicker than checking exists() again.
             return false;
         }
-        if (!target.isExists()) {
+        long targetLastModified = target.getLastModified();
+        if (targetLastModified == 0L) {
             return true;
         }
-        if ((src.getLastModified() - granularity) > target.getLastModified()) {
-            return true;
-        }
-        return false;
+        return (sourceLastModified - granularity) > targetLastModified;
     }
 
     /**

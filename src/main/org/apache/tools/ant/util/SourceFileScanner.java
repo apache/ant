@@ -91,9 +91,12 @@ public class SourceFileScanner implements ResourceFactory {
         this.destDir = destDir;
         Vector v = new Vector();
         for (int i = 0; i < files.length; i++) {
-            File src = FILE_UTILS.resolveFile(srcDir, files[i]);
-            v.addElement(new Resource(files[i], src.exists(),
-                                      src.lastModified(), src.isDirectory()));
+            final String name = files[i];
+            v.addElement(new FileResource(srcDir, name) {
+                public String getName() {
+                    return name;
+                }
+            });
         }
         Resource[] sourceresources = new Resource[v.size()];
         v.copyInto(sourceresources);

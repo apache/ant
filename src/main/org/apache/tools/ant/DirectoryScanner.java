@@ -1065,27 +1065,24 @@ public class DirectoryScanner
     protected void scandir(File dir, String vpath, boolean fast) {
         if (dir == null) {
             throw new BuildException("dir must not be null.");
-        } else if (!dir.exists()) {
-            throw new BuildException(dir + " doesn't exist.");
-        } else if (!dir.isDirectory()) {
-            throw new BuildException(dir + " is not a directory.");
         }
+        String[] newfiles = dir.list();
+        if (newfiles == null) {
+            if (!dir.exists()) {
+                throw new BuildException(dir + " doesn't exist.");
+            } else if (!dir.isDirectory()) {
+                throw new BuildException(dir + " is not a directory.");
+            } else {
+                throw new BuildException("IO error scanning directory '"
+                                         + dir.getAbsolutePath() + "'");
+            }
+        }
+        scandir(dir, vpath, fast, newfiles);
+    }
+    private void scandir(File dir, String vpath, boolean fast, String[] newfiles) {
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
-        }
-        String[] newfiles = dir.list();
-
-        if (newfiles == null) {
-            /*
-             * two reasons are mentioned in the API docs for File.list
-             * (1) dir is not a directory. This is impossible as
-             *     we wouldn't get here in this case.
-             * (2) an IO error occurred (why doesn't it throw an exception
-             *     then???)
-             */
-            throw new BuildException("IO error scanning directory '"
-                                     + dir.getAbsolutePath() + "'");
         }
         if (!followSymlinks) {
             Vector noLinks = new Vector();
@@ -1112,25 +1109,26 @@ public class DirectoryScanner
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath + newfiles[i];
             File file = new File(dir, newfiles[i]);
-            if (file.isDirectory()) {
-                if (isIncluded(name)) {
-                    accountForIncludedDir(name, file, fast);
-                } else {
-                    everythingIncluded = false;
-                    dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(name)) {
-                        scandir(file, name + File.separator, fast);
-                    }
-                }
-                if (!fast) {
-                    scandir(file, name + File.separator, fast);
-                }
-            } else if (file.isFile()) {
+            String[] children = file.list();
+            if (children == null) { // probably file
                 if (isIncluded(name)) {
                     accountForIncludedFile(name, file);
                 } else {
                     everythingIncluded = false;
                     filesNotIncluded.addElement(name);
+                }
+            } else { // dir
+                if (isIncluded(name)) {
+                    accountForIncludedDir(name, file, fast, children);
+                } else {
+                    everythingIncluded = false;
+                    dirsNotIncluded.addElement(name);
+                    if (fast && couldHoldIncluded(name)) {
+                        scandir(file, name + File.separator, fast, children);
+                    }
+                }
+                if (!fast) {
+                    scandir(file, name + File.separator, fast, children);
                 }
             }
         }
@@ -1156,6 +1154,12 @@ public class DirectoryScanner
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast);
+        }
+    }
+    private void accountForIncludedDir(String name, File file, boolean fast, String[] children) {
+        processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
+        if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
+            scandir(file, name + File.separator, fast, children);
         }
     }
 

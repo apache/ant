@@ -524,9 +524,15 @@ public class Rmic extends MatchingTask {
                 scanDir(baseDir, files, adapter.getMapper());
             } else {
                 // otherwise perform a timestamp comparison - at least
-                scanDir(baseDir, new String[] {
-                        classname.replace('.', File.separatorChar)
-                        + ".class" }, adapter.getMapper());
+                String path = classname.replace('.', File.separatorChar) + ".class";
+                File f = new File(baseDir, path);
+                if (f.isFile()) {
+                    scanDir(baseDir, new String[] { path }, adapter.getMapper());
+                } else {
+                    // Does not exist, so checking whether it is up to date makes no sense.
+                    // Compilation will fail later anyway, but tests expect a certain output.
+                    compileList.add(classname);
+                }
             }
             int fileCount = compileList.size();
             if (fileCount > 0) {
