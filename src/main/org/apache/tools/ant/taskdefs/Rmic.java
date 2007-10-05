@@ -527,7 +527,7 @@ public class Rmic extends MatchingTask {
                 String path = classname.replace('.', File.separatorChar) + ".class";
                 File f = new File(baseDir, path);
                 if (f.isFile()) {
-                    scanDir(baseDir, new String[] { path }, adapter.getMapper());
+                    scanDir(baseDir, new String[] {path}, adapter.getMapper());
                 } else {
                     // Does not exist, so checking whether it is up to date makes no sense.
                     // Compilation will fail later anyway, but tests expect a certain output.

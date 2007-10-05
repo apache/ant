@@ -150,16 +150,16 @@ public class SSHExec extends SSHBase {
         if (command == null && commandResource == null) {
             throw new BuildException("Command or commandResource is required.");
         }
-        
+
         Session session = null;
-        
+
         try {
             session = openSession();
             /* called once */
             if (command != null) {
                 log("cmd : " + command, Project.MSG_INFO);
                 ByteArrayOutputStream out = executeCommand(session, command);
-                if(outputProperty != null) {
+                if (outputProperty != null) {
                     //#bugzilla 43437
                     getProject().setNewProperty(outputProperty, command + " : " + out);
                 }
@@ -174,7 +174,7 @@ public class SSHExec extends SSHBase {
                         ByteArrayOutputStream out = executeCommand(session, cmd);
                         output += cmd + " : " + out + "\n";
                     }
-                    if(outputProperty != null) {
+                    if (outputProperty != null) {
                         //#bugzilla 43437
                         getProject().setNewProperty(outputProperty, output);
                     }
@@ -183,7 +183,7 @@ public class SSHExec extends SSHBase {
                     throw new BuildException(e);
                 }
             }
-        } catch(JSchException e) {
+        } catch (JSchException e) {
             throw new BuildException(e);
         } finally {
             if (session != null && session.isConnected()) {
@@ -191,8 +191,9 @@ public class SSHExec extends SSHBase {
             }
         }
     }
-   
-    private ByteArrayOutputStream executeCommand(Session session, String cmd) throws BuildException {
+
+    private ByteArrayOutputStream executeCommand(Session session, String cmd)
+        throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
 

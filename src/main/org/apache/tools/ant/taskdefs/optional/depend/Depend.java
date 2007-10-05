@@ -773,7 +773,8 @@ public class Depend extends MatchingTask {
      * Find the source file for a given class
      *
      * @param classname the classname in slash format.
-     * @param sourceFileKnownToExist if not null, a file already known to exist (saves call to .exists())
+     * @param sourceFileKnownToExist if not null, a file already known to exist
+     *                               (saves call to .exists())
      */
     private File findSourceFile(String classname, File sourceFileKnownToExist) {
         String sourceFilename;
@@ -826,7 +827,8 @@ public class Depend extends MatchingTask {
                     file.getPath().length() - ".class".length());
                 info.className
                     = ClassFileUtils.convertSlashName(relativeName);
-                info.sourceFile = sourceFileKnownToExist = findSourceFile(relativeName, sourceFileKnownToExist);
+                info.sourceFile = sourceFileKnownToExist = findSourceFile(
+                    relativeName, sourceFileKnownToExist);
                 classFileList.addElement(info);
             } else {
                 addClassFiles(classFileList, file, root);
