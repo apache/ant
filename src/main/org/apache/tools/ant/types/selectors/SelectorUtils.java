@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * <p>This is a utility class used by selectors and DirectoryScanner. The
@@ -616,10 +617,12 @@ public final class SelectorUtils {
     public static boolean isOutOfDate(Resource src, Resource target,
                                       long granularity) {
         long sourceLastModified = src.getLastModified();
-        if (sourceLastModified == 0L) {
-            // Does not exist. Quicker than checking exists() again.
-            return false;
-        }
+        // Check if source exists - use sourceLastModified for file resources
+        // as it quicker that checking exists() again, however string reources
+        // have a last modified time of 0
+        boolean sourceExists = (src instanceof FileResource)
+            ? sourceLastModified != 0L : src.isExists();
+
         long targetLastModified = target.getLastModified();
         if (targetLastModified == 0L) {
             return true;
