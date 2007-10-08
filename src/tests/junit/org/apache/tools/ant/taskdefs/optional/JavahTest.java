@@ -42,4 +42,9 @@ public class JavahTest extends BuildFileTest {
                    .exists());
     }
 
+    public void testCompileFileset() {
+        executeTarget("test-fileset");
+        assertTrue(getProject().resolveFile("output/org_example_Foo.h")
+                   .exists());
+    }
 }
