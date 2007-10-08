@@ -45,4 +45,15 @@
       </classpath>
     </javah>
   </target>
+	
+  <target name="test-fileset" depends="compile">
+  	<javah destdir="${out}">
+  	  <fileset dir="${out}">
+  		<include name="**/*.class"/>
+  	  </fileset>
+  	  <classpath>
+  		<pathelement location="${out}"/>
+  	  </classpath>
+  	</javah>
+  </target>
 </project>
