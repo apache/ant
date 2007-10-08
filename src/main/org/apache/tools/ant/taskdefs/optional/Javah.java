@@ -23,14 +23,17 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.optional.javah.JavahAdapter;
 import org.apache.tools.ant.taskdefs.optional.javah.JavahAdapterFactory;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 import org.apache.tools.ant.util.facade.ImplementationSpecificArgument;
 
@@ -78,9 +81,9 @@ public class Javah extends Task {
     private boolean stubs   = false;
     private Path bootclasspath;
     //private Path extdirs;
-    private static String lSep = System.getProperty("line.separator");
     private FacadeTaskHelper facade = null;
-
+    private Vector files = new Vector();
+    
     /**
      * No arg constructor.
      */
@@ -134,6 +137,10 @@ public class Javah extends Task {
         }
     }
 
+    public void addFileSet(FileSet fs) {
+        files.add(fs);
+    }
+    
     /**
      * Names of the classes to process.
      * @return the array of classes.
@@ -148,6 +155,18 @@ public class Javah extends Task {
             }
         }
 
+        if(files.size() > 0) {
+            for(Enumeration e = files.elements(); e.hasMoreElements();){
+                FileSet fs = (FileSet)e.nextElement();
+                String[] includedClasses = fs.getDirectoryScanner(getProject()).getIncludedFiles();
+                for(int i = 0; i < includedClasses.length; i++) {
+                    String className = 
+                        includedClasses[i].replace('\\', '.').replace('/', '.').substring(0,includedClasses[i].length()-6);
+                    al.add(className);
+                }
+            }
+        }
+        
         Enumeration e = classes.elements();
         while (e.hasMoreElements()) {
             ClassArgument arg = (ClassArgument) e.nextElement();
@@ -390,14 +409,14 @@ public class Javah extends Task {
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir
 
-        if ((cls == null) && (classes.size() == 0)) {
+        if ((cls == null) && (classes.size() == 0) && (files.size() == 0)) {
             throw new BuildException("class attribute must be set!",
                 getLocation());
         }
 
-        if ((cls != null) && (classes.size() > 0)) {
-            throw new BuildException("set class attribute or class element, "
-                + "not both.", getLocation());
+        if ((cls != null) && (classes.size() > 0) && (files.size() > 0)) {
+            throw new BuildException("set class attribute OR class element OR fileset, "
+                + "not 2 or more of them.", getLocation());
         }
 
         if (destDir != null) {
@@ -449,7 +468,7 @@ public class Javah extends Task {
             cmd.createArgument().setValue(c[i]);
             niceClassList.append("    ");
             niceClassList.append(c[i]);
-            niceClassList.append(lSep);
+            niceClassList.append(StringUtils.LINE_SEP);
         }
 
         StringBuffer prefix = new StringBuffer("Class");
@@ -457,9 +476,8 @@ public class Javah extends Task {
             prefix.append("es");
         }
         prefix.append(" to be compiled:");
-        prefix.append(lSep);
+        prefix.append(StringUtils.LINE_SEP);
 
         log(prefix.toString() + niceClassList.toString(), Project.MSG_VERBOSE);
     }
 }
-
