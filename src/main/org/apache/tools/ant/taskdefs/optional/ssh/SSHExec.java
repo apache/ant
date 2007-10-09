@@ -16,6 +16,7 @@
  *
  */
 
+
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.BufferedReader;
@@ -45,7 +46,7 @@ import com.jcraft.jsch.Session;
 public class SSHExec extends SSHBase {
 
     private static final int BUFFER_SIZE = 8192;
-    private static final int HALF_SECOND = 500;
+    private static final int RETRY_INTERVAL = 500;
 
     /** the command to execute via ssh */
     private String command = null;
@@ -151,36 +152,56 @@ public class SSHExec extends SSHBase {
             throw new BuildException("Command or commandResource is required.");
         }
 
-        /* called once */
-        if (command != null) {
-            log("cmd : " + command, Project.MSG_INFO);
-            executeCommand(command);
-        } else { // read command resource and execute for each command
-            try {
-                BufferedReader br = new BufferedReader(
-                    new InputStreamReader(commandResource.getInputStream()));
-                String cmd;
-                while ((cmd = br.readLine()) != null) {
-                    log("cmd : " + cmd, Project.MSG_INFO);
-                    executeCommand(cmd);
+        Session session = null;
+
+        try {
+            session = openSession();
+            /* called once */
+            if (command != null) {
+                log("cmd : " + command, Project.MSG_INFO);
+                ByteArrayOutputStream out = executeCommand(session, command);
+                if (outputProperty != null) {
+                    //#bugzilla 43437
+                    getProject().setNewProperty(outputProperty, command + " : " + out);
                 }
-                FileUtils.close(br);
-            } catch (IOException e) {
-                throw new BuildException(e);
+            } else { // read command resource and execute for each command
+                try {
+                    BufferedReader br = new BufferedReader(
+                            new InputStreamReader(commandResource.getInputStream()));
+                    String cmd;
+                    String output = "";
+                    while ((cmd = br.readLine()) != null) {
+                        log("cmd : " + cmd, Project.MSG_INFO);
+                        ByteArrayOutputStream out = executeCommand(session, cmd);
+                        output += cmd + " : " + out + "\n";
+                    }
+                    if (outputProperty != null) {
+                        //#bugzilla 43437
+                        getProject().setNewProperty(outputProperty, output);
+                    }
+                    FileUtils.close(br);
+                } catch (IOException e) {
+                    throw new BuildException(e);
+                }
+            }
+        } catch (JSchException e) {
+            throw new BuildException(e);
+        } finally {
+            if (session != null && session.isConnected()) {
+                session.disconnect();
             }
         }
     }
 
-    private void executeCommand(String cmd) throws BuildException {
+    private ByteArrayOutputStream executeCommand(Session session, String cmd)
+        throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
 
-        Session session = null;
         try {
             final ChannelExec channel;
-            /* execute the command */
-            session = openSession();
             session.setTimeout((int) maxwait);
+            /* execute the command */
             channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(cmd);
             channel.setOutputStream(tee);
@@ -195,7 +216,7 @@ public class SSHExec extends SSHBase {
                                 return;
                             }
                             try {
-                                sleep(HALF_SECOND);
+                                sleep(RETRY_INTERVAL);
                             } catch (Exception e) {
                                 // ignored
                             }
@@ -215,10 +236,7 @@ public class SSHExec extends SSHBase {
                     log(TIMEOUT_MESSAGE, Project.MSG_ERR);
                 }
             } else {
-                // completed successfully
-                if (outputProperty != null) {
-                    getProject().setProperty(outputProperty, out.toString());
-                }
+                //success
                 if (outputFile != null) {
                     writeToFile(out.toString(), append, outputFile);
                 }
@@ -258,11 +276,8 @@ public class SSHExec extends SSHBase {
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
-        } finally {
-            if (session != null && session.isConnected()) {
-                session.disconnect();
-            }
         }
+        return out;
     }
 
     /**
