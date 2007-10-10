@@ -618,7 +618,7 @@ public final class SelectorUtils {
                                       long granularity) {
         long sourceLastModified = src.getLastModified();
         // Check if source exists - use sourceLastModified for file resources
-        // as it quicker that checking exists() again, however string reources
+        // as it is quicker than checking exists() again, however string resources
         // have a last modified time of 0
         boolean sourceExists = (src instanceof FileResource)
             ? sourceLastModified != 0L : src.isExists();
