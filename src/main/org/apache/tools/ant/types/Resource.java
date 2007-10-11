@@ -174,9 +174,12 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
     /**
      * Tells the modification time in milliseconds since 01.01.1970 (the "epoch").
      *
-     * @return the modification time, if that is meaningful (e.g. for a file resource which exists);
-     *         0 if the resource does not exist, to mirror the behavior of {@link java.io.File#lastModified};
-     *         or 0 if the notion of modification time is meaningless for this class of resource (e.g. an inline string)
+     * @return the modification time, if that is meaningful
+     *            (e.g. for a file resource which exists);
+     *         0 if the resource does not exist, to mirror the behavior
+     *         of {@link java.io.File#lastModified};
+     *         or 0 if the notion of modification time is meaningless for this class
+     *           of resource (e.g. an inline string)
      */
     public long getLastModified() {
         if (isReference()) {

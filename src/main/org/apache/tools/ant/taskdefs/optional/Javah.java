@@ -83,7 +83,7 @@ public class Javah extends Task {
     //private Path extdirs;
     private FacadeTaskHelper facade = null;
     private Vector files = new Vector();
-    
+
     /**
      * No arg constructor.
      */
@@ -137,10 +137,14 @@ public class Javah extends Task {
         }
     }
 
+    /**
+     * Add a fileset.
+     * @param fs the fileset to add.
+     */
     public void addFileSet(FileSet fs) {
         files.add(fs);
     }
-    
+
     /**
      * Names of the classes to process.
      * @return the array of classes.
@@ -155,18 +159,19 @@ public class Javah extends Task {
             }
         }
 
-        if(files.size() > 0) {
-            for(Enumeration e = files.elements(); e.hasMoreElements();){
-                FileSet fs = (FileSet)e.nextElement();
-                String[] includedClasses = fs.getDirectoryScanner(getProject()).getIncludedFiles();
-                for(int i = 0; i < includedClasses.length; i++) {
-                    String className = 
-                        includedClasses[i].replace('\\', '.').replace('/', '.').substring(0,includedClasses[i].length()-6);
+        if (files.size() > 0) {
+            for (Enumeration e = files.elements(); e.hasMoreElements();) {
+                FileSet fs = (FileSet) e.nextElement();
+                String[] includedClasses = fs.getDirectoryScanner(
+                    getProject()).getIncludedFiles();
+                for (int i = 0; i < includedClasses.length; i++) {
+                    String className =
+                        includedClasses[i].replace('\\', '.').replace('/', '.')
+                        .substring(0,includedClasses[i].length() - 6);
                     al.add(className);
                 }
             }
         }
-        
         Enumeration e = classes.elements();
         while (e.hasMoreElements()) {
             ClassArgument arg = (ClassArgument) e.nextElement();
