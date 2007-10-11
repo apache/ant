@@ -24,6 +24,20 @@
   </properties>
 
 <body>
+  <section name="Apache Ivy is an Ant Sub-Project Now!">
+    <h3>October 11, 2007 - Apache Ivy is an Ant Sub-Project Now!</h3>
+
+    <p>Apache Ivy, "A Java based tool for tracking, resolving and
+    managing project dependencies.", just finished <a
+    href="http://incubator.apache.org/">Incubation</a> and has joined
+    the Ant project.  More information will be available from the Ant
+    site soon.</p>
+
+    <p>Until we've finished the migration, you can learn more about
+    Ivy from its <a href="http://incubator.apache.org/ivy/">Incubator
+    website</a>.</p>
+  </section>
+
    <section name="Ant 1.7.0">
     <h3>December 19, 2006 - Ant 1.7.0 Available</h3>
     <p>Apache Ant 1.7.0 is now available for <a
