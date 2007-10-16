@@ -35,6 +35,7 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -285,8 +286,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             throw new BuildException("input file " + inFile + " does not exist", getLocation());
         }
         try {
+            Resource styleResource;
             if (baseDir == null) {
-                baseDir = getProject().resolveFile(".");
+                baseDir = getProject().getBaseDir();
             }
             liaison = getLiaison();
 
@@ -315,11 +317,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 FileResource fr = new FileResource();
                 fr.setProject(getProject());
                 fr.setFile(stylesheet);
-                xslResource = fr;
+                styleResource = fr;
+            } else {
+                styleResource = xslResource;
             }
             // if we have an in file and out then process them
             if (inFile != null && outFile != null) {
-                process(inFile, outFile, xslResource);
+                process(inFile, outFile, styleResource);
                 return;
             }
             /*
@@ -337,7 +341,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 // Process all the files marked for styling
                 list = scanner.getIncludedFiles();
                 for (int i = 0; i < list.length; ++i) {
-                    process(baseDir, list[i], destDir, xslResource);
+                    process(baseDir, list[i], destDir, styleResource);
                 }
                 if (performDirectoryScan) {
                     // Process all the directories marked for styling
@@ -346,7 +350,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                         list = new File(baseDir, dirs[j]).list();
                         for (int i = 0; i < list.length; ++i) {
                             process(baseDir, dirs[j] + File.separator + list[i], destDir,
-                                    xslResource);
+                                    styleResource);
                         }
                     }
                 }
@@ -355,7 +359,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     throw new BuildException("no resources specified");
                 }
             }
-            processResources(xslResource);
+            processResources(styleResource);
         } finally {
             if (loader != null) {
                 loader.resetThreadContextLoader();
@@ -575,6 +579,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Styles all existing resources.
      *
+     * @param stylesheet style sheet to use
      * @since Ant 1.7
      */
     private void processResources(Resource stylesheet) {
@@ -983,8 +988,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 // If we are here we cannot set the stylesheet as
                 // a resource, but we can set it as a file. So,
                 // we make an attempt to get it as a file
-                if (stylesheet instanceof FileResource) {
-                    liaison.setStylesheet(((FileResource) stylesheet).getFile());
+                if (stylesheet instanceof FileProvider) {
+                    liaison.setStylesheet(((FileProvider) stylesheet).getFile());
                 } else {
                     throw new BuildException(liaison.getClass().toString()
                             + " accepts the stylesheet only as a file", getLocation());
