@@ -167,7 +167,7 @@ public class Javah extends Task {
                 for (int i = 0; i < includedClasses.length; i++) {
                     String className =
                         includedClasses[i].replace('\\', '.').replace('/', '.')
-                        .substring(0,includedClasses[i].length() - 6);
+                        .substring(0, includedClasses[i].length() - 6);
                     al.add(className);
                 }
             }
