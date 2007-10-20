@@ -427,12 +427,9 @@
     <available property="starteam.present"
       classname="com.starbase.util.Platform"
       classpathref="classpath"/>
-  	<condition property="antlr.present">
-  		<or>
-  		  <available classname="org.antlr.Tool" classpathref="classpath"/>
-  		  <available classname="antlr.Tool" classpathref="classpath"/>
-  		</or>
-  	</condition>
+    <available property="antlr.present" 
+      classname="antlr.Tool" 
+      classpathref="classpath"/>
     <available property="stylebook.present"
       classname="org.apache.stylebook.Engine"
       classpathref="classpath"/>
