@@ -754,10 +754,19 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         return getClass().equals(XmlProperty.class);
     }
 
+    /**
+     * Get the current delimiter.
+     * @return delimiter
+     */
     public String getDelimiter() {
         return delimiter;
     }
 
+    /**
+     * Sets a new delimiter.
+     * @param delimiter new value
+     * @since Ant 1.7.1
+     */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
     }
