@@ -22,8 +22,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -59,6 +62,12 @@ public class FormatterElement {
     private boolean useFile = true;
     private String ifProperty;
     private String unlessProperty;
+
+    /**
+     * Store the project reference for passing it to nested components.
+     * @since Ant 1.8
+     */
+    private Project project;
 
     /** xml formatter class */
     public static final String XML_FORMATTER_CLASS_NAME =
@@ -224,6 +233,16 @@ public class FormatterElement {
     }
 
     /**
+     * Store the project reference for passing it to nested components.
+     * @param project the reference
+     * @since Ant 1.8
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    
+    
+    /**
      * @since Ant 1.6
      */
     JUnitTaskMirror.JUnitResultFormatterMirror createFormatter(ClassLoader loader)
@@ -251,7 +270,7 @@ public class FormatterElement {
                 "Using loader " + loader + " on class " + classname
                 + ": " + e, e);
         }
-
+        
         Object o = null;
         try {
             o = f.newInstance();
@@ -260,7 +279,7 @@ public class FormatterElement {
         } catch (IllegalAccessException e) {
             throw new BuildException(e);
         }
-
+        
         if (!(o instanceof JUnitTaskMirror.JUnitResultFormatterMirror)) {
             throw new BuildException(classname + " is not a JUnitResultFormatter");
         }
@@ -274,6 +293,30 @@ public class FormatterElement {
             }
         }
         r.setOutput(out);
+        
+
+        boolean needToSetProjectReference = true;
+        try {
+            Field field = r.getClass().getField("project");
+            Object value = field.get(r);
+            if (value instanceof Project) {
+                // there is already a project reference so dont overwrite this
+                needToSetProjectReference = false;
+            }
+        } catch (Exception e) {
+            // no field present, so no previous reference exists
+        }
+        
+        if (needToSetProjectReference) {
+            Method setter;
+            try {
+                setter = r.getClass().getMethod("setProject", new Class[] { Project.class });
+                setter.invoke(r, new Object[] { project });
+            } catch (Exception e) {
+                // no setProject to invoke; just ignore
+            }
+        }
+        
         return r;
     }
 

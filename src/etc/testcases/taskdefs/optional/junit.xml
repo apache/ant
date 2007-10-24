@@ -9,7 +9,7 @@
 
   <target name="cleanup">
     <delete file="testlog.txt"/>
-    <delete dir="out"/>
+    <delete dir="out" includeemptydirs="true" failonerror="false"/>
   </target>
 
   <target name="testForkedOutput">
@@ -154,7 +154,7 @@
             public void test01() { System.out.println("A.test01"); }
             public void test02() { System.out.println("A.test02"); fail(); }
             public void test03() { System.out.println("A.test03"); fail(); }
-      }
+        }
     </echo>
     <echo file="${tmp.dir}/B.java">
         import junit.framework.*;
@@ -187,16 +187,15 @@
 
   <target name="failureRecorder.internal">  
     <property name="tmp.dir" value="out"/>
-    <!-- 
     <delete>
       <fileset dir="${tmp.dir}" includes="FailedTests*.class"/>
     </delete>
-     -->
-    <!-- compile the FailedTests class if present --> 
+    <!-- compile the FailedTests class if present -->
     <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
     <available file="${tmp.dir}/FailedTests.class" property="hasFailingTests"/>
+    
+    <property name="ant.junit.failureCollector" value="${tmp.dir}/FailedTests"/>
     <junit haltonerror="false" haltonfailure="false">
-      <sysproperty key="ant.junit.failureCollector" value="${tmp.dir}/FailedTests"/>
       <classpath>
         <pathelement location="${tmp.dir}"/>
       </classpath>
@@ -217,7 +216,11 @@
   </target>
   
   <target name="failureRecorder.runtest">
-  	<ant target="failureRecorder.internal" antfile="junit.xml" inheritAll="false"/>
+  	<ant target="failureRecorder.internal"
+         antfile="junit.xml" 
+         inheritAll="false"
+         inheritRefs="false" 
+    />
   </target>
   
   <target name="failureRecorder.fixing">
@@ -229,8 +232,14 @@
             public void test01() { System.out.println("A.test01"); }
             public void test02() { System.out.println("A.test02"); }
             public void test03() { System.out.println("A.test03"); }
-      }
+        }
     </echo>
   </target>
+  
+<target name="copy">
+  <mkdir dir="c:/temp/ant-log"/>
+  <copy file="out/${file}" tofile="c:/temp/ant-log/${nr}-${file}" failonerror="false"/>
+</target>
+
 
 </project>

@@ -27,11 +27,16 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -55,14 +60,14 @@ import org.apache.tools.ant.util.FileUtils;
  * }
  * </pre>
  *
- *
  * Because each running test case gets its own formatter, we collect
  * the failing test cases in a static list. Because we dont have a finalizer
- * method in the formatters "lifecycle", we regenerate the new java source
- * at each end of a test suite. The last run will contain all failed tests.
+ * method in the formatters "lifecycle", we register this formatter as
+ * BuildListener and generate the new java source on taskFinished event.
+ * 
  * @since Ant 1.8.0
  */
-public class FailureRecorder implements JUnitResultFormatter {
+public class FailureRecorder extends DataType implements JUnitResultFormatter, BuildListener {
 
     /**
      * This is the name of a magic System property ({@value}). The value of this
@@ -78,53 +83,93 @@ public class FailureRecorder implements JUnitResultFormatter {
     public static final String DEFAULT_CLASS_LOCATION
         = System.getProperty("java.io.tmpdir") + "FailedTests";
 
+    /** Prefix for logging. {@value} */
+    private static final String LOG_PREFIX = "    [junit]";
+
     /** Class names of failed tests without duplicates. */
     private static SortedSet/*<TestInfos>*/ failedTests = new TreeSet();
 
     /** A writer for writing the generated source to. */
     private PrintWriter writer;
-
+    
     /**
      * Location and name of the generated JUnit class.
      * Lazy instantiated via getLocationName().
      */
     private static String locationName;
 
-    //TODO: Dont set the locationName via System.getProperty - better
-    //      via Ant properties. But how to access these?
+    /**
+     * Returns the (lazy evaluated) location for the collector class.
+     * Order for evaluation: System property > Ant property > default value
+     * @return location for the collector class
+     * @see #MAGIC_PROPERTY_CLASS_LOCATION
+     * @see #DEFAULT_CLASS_LOCATION
+     */
     private String getLocationName() {
         if (locationName == null) {
-            String propValue = System.getProperty(MAGIC_PROPERTY_CLASS_LOCATION);
-            locationName = (propValue != null) ? propValue : DEFAULT_CLASS_LOCATION;
+            String syspropValue = System.getProperty(MAGIC_PROPERTY_CLASS_LOCATION);
+            String antpropValue = getProject().getProperty(MAGIC_PROPERTY_CLASS_LOCATION);
+
+            if (syspropValue != null) {
+                locationName = syspropValue;
+                verbose("System property '" + MAGIC_PROPERTY_CLASS_LOCATION + "' set, so use "
+                        + "its value '" + syspropValue + "' as location for collector class.");
+            } else if (antpropValue != null) {
+                locationName = antpropValue;
+                verbose("Ant property '" + MAGIC_PROPERTY_CLASS_LOCATION + "' set, so use "
+                        + "its value '" + antpropValue + "' as location for collector class.");
+            } else {
+                locationName = DEFAULT_CLASS_LOCATION;
+                verbose("System property '" + MAGIC_PROPERTY_CLASS_LOCATION + "' not set, so use "
+                        + "value as location for collector class: '" + DEFAULT_CLASS_LOCATION + "'");
+            }
+
+            File locationFile = new File(locationName);
+            if (!locationFile.isAbsolute()) {
+                File f = new File(getProject().getBaseDir(), locationName);
+                locationName = f.getAbsolutePath();
+                verbose("Location file is relative (" + locationFile + ")"
+                        + " use absolute path instead (" + locationName + ")");
+            }
         }
+        
         return locationName;
     }
 
-    // CheckStyle:LineLengthCheck OFF - @see is long
     /**
-     * After each test suite, the whole new JUnit class will be regenerated.
-     * @param suite the test suite
-     * @throws BuildException if there is a problem.
-     * @see org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter#endTestSuite(org.apache.tools.ant.taskdefs.optional.junit.JUnitTest)
+     * This method is called by the Ant runtime by reflection. We use the project reference for
+     * registration of this class as BuildListener.
+     * 
+     * @param project
+     *            project reference
      */
-    // CheckStyle:LineLengthCheck ON
+    public void setProject(Project project) {
+        // store project reference for logging
+        super.setProject(project);
+        // check if already registered
+        boolean alreadyRegistered = false;
+        Vector allListeners = project.getBuildListeners();
+        for(int i=0; i<allListeners.size(); i++) {
+            Object listener = allListeners.get(i);
+            if (listener instanceof FailureRecorder) {
+                alreadyRegistered = true;
+                continue;
+            }
+        }
+        // register if needed
+        if (!alreadyRegistered) {
+            verbose("Register FailureRecorder (@" + this.hashCode() + ") as BuildListener");
+            project.addBuildListener(this);
+        }
+    }
+    
+    // ===== JUnitResultFormatter =====
+    
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        if (failedTests.isEmpty()) {
-            return;
-        }
-        try {
-            File sourceFile = new File(getLocationName() + ".java");
-            sourceFile.delete();
-            writer = new PrintWriter(new FileOutputStream(sourceFile));
-
-            createClassHeader();
-            createSuiteMethod();
-            createClassFooter();
-
-            FileUtils.close(writer);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -154,7 +199,6 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void setOutput(OutputStream out) {
-        // not in use
     }
 
     /**
@@ -162,7 +206,6 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void setSystemError(String err) {
-        // not in use
     }
 
     /**
@@ -170,7 +213,6 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void setSystemOutput(String out) {
-        // not in use
     }
 
     /**
@@ -178,7 +220,6 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void startTestSuite(JUnitTest suite) throws BuildException {
-        // not in use
     }
 
     /**
@@ -186,7 +227,6 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void endTest(Test test) {
-        // not in use
     }
 
     /**
@@ -194,10 +234,27 @@ public class FailureRecorder implements JUnitResultFormatter {
      * {@inheritDoc}
      */
     public void startTest(Test test) {
-        // not in use
     }
 
-    // "Templates" for generating the JUnit class
+    // ===== "Templates" for generating the JUnit class =====
+
+    private void writeJavaClass() {
+        try {
+            File sourceFile = new File((getLocationName() + ".java"));
+            verbose("Write collector class to '" + sourceFile.getAbsolutePath() + "'");
+            
+            sourceFile.delete();
+            writer = new PrintWriter(new FileOutputStream(sourceFile));
+
+            createClassHeader();
+            createSuiteMethod();
+            createClassFooter();
+
+            FileUtils.close(writer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void createClassHeader() {
         String className = getLocationName().replace('\\', '/');
@@ -212,7 +269,7 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.print(className);
         // If this class does not extend TC, Ant doesnt run these
         writer.println(" extends TestCase {");
-        // no-arg constructor
+        // standard String-constructor
         writer.print("    public ");
         writer.print(className);
         writer.println("(String testname) {");
@@ -237,7 +294,14 @@ public class FailureRecorder implements JUnitResultFormatter {
         writer.println("}");
     }
 
-    // Helper classes
+    // ===== Helper classes and methods =====
+    
+    public void log(String message) {
+        getProject().log(LOG_PREFIX + " " + message, Project.MSG_INFO);
+    }
+    public void verbose(String message) {
+        getProject().log(LOG_PREFIX + " " + message, Project.MSG_VERBOSE);
+    }
 
     /**
      * TestInfos holds information about a given test for later use.
@@ -287,5 +351,60 @@ public class FailureRecorder implements JUnitResultFormatter {
             }
         }
     }
+    
+    // ===== BuildListener =====
 
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void buildFinished(BuildEvent event) {
+    }
+
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void buildStarted(BuildEvent event) {
+    }
+
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void messageLogged(BuildEvent event) {
+    }
+
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void targetFinished(BuildEvent event) {
+    }
+
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void targetStarted(BuildEvent event) {
+    }
+
+    /**
+     * The task outside of this JUnitResultFormatter is the <junit> task. So all tests passed 
+     * and we could create the new java class. 
+     * @see org.apache.tools.ant.BuildListener#taskFinished(org.apache.tools.ant.BuildEvent)
+     */
+    public void taskFinished(BuildEvent event) {
+        if (!failedTests.isEmpty()) {
+            writeJavaClass();
+        }
+    }
+
+    /**
+     * Not used
+     * {@inheritDoc}
+     */
+    public void taskStarted(BuildEvent event) {
+    }
+    
 }

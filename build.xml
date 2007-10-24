@@ -1605,6 +1605,8 @@ see ${build.junit.reports} / ${antunit.reports}
         <!-- run the tests -->
         <mkdir dir="${build.junit.xml}" />
         <property name="test.junit.vmargs" value=""/>
+        <property name="ant.junit.failureCollector"
+                  value="${junit.collector.dir}/${junit.collector.class}"/>
         <junit printsummary="${junit.summary}"
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"
@@ -1622,8 +1624,6 @@ see ${build.junit.reports} / ${antunit.reports}
           <sysproperty key="build.compiler" value="${build.compiler}"/>
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
-          <sysproperty key="ant.junit.failureCollector"
-                       value="${junit.collector.dir}/${junit.collector.class}"/>
           <classpath>
             <path refid="tests-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
