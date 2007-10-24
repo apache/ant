@@ -64,7 +64,7 @@ import org.apache.tools.ant.util.FileUtils;
  * the failing test cases in a static list. Because we dont have a finalizer
  * method in the formatters "lifecycle", we register this formatter as
  * BuildListener and generate the new java source on taskFinished event.
- * 
+ *
  * @since Ant 1.8.0
  */
 public class FailureRecorder extends DataType implements JUnitResultFormatter, BuildListener {
@@ -91,7 +91,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
 
     /** A writer for writing the generated source to. */
     private PrintWriter writer;
-    
+
     /**
      * Location and name of the generated JUnit class.
      * Lazy instantiated via getLocationName().
@@ -121,7 +121,8 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
             } else {
                 locationName = DEFAULT_CLASS_LOCATION;
                 verbose("System property '" + MAGIC_PROPERTY_CLASS_LOCATION + "' not set, so use "
-                        + "value as location for collector class: '" + DEFAULT_CLASS_LOCATION + "'");
+                        + "value as location for collector class: '"
+                        + DEFAULT_CLASS_LOCATION + "'");
             }
 
             File locationFile = new File(locationName);
@@ -132,14 +133,14 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
                         + " use absolute path instead (" + locationName + ")");
             }
         }
-        
+
         return locationName;
     }
 
     /**
      * This method is called by the Ant runtime by reflection. We use the project reference for
      * registration of this class as BuildListener.
-     * 
+     *
      * @param project
      *            project reference
      */
@@ -149,7 +150,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
         // check if already registered
         boolean alreadyRegistered = false;
         Vector allListeners = project.getBuildListeners();
-        for(int i=0; i<allListeners.size(); i++) {
+        for (int i = 0; i < allListeners.size(); i++) {
             Object listener = allListeners.get(i);
             if (listener instanceof FailureRecorder) {
                 alreadyRegistered = true;
@@ -162,9 +163,9 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
             project.addBuildListener(this);
         }
     }
-    
+
     // ===== JUnitResultFormatter =====
-    
+
     /**
      * Not used
      * {@inheritDoc}
@@ -242,7 +243,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
         try {
             File sourceFile = new File((getLocationName() + ".java"));
             verbose("Write collector class to '" + sourceFile.getAbsolutePath() + "'");
-            
+
             sourceFile.delete();
             writer = new PrintWriter(new FileOutputStream(sourceFile));
 
@@ -295,10 +296,17 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
     }
 
     // ===== Helper classes and methods =====
-    
+
+    /**
+     * Logging facade in INFO-mode.
+     */
     public void log(String message) {
         getProject().log(LOG_PREFIX + " " + message, Project.MSG_INFO);
     }
+
+    /**
+     * Logging facade in VERBOSE-mode.
+     */
     public void verbose(String message) {
         getProject().log(LOG_PREFIX + " " + message, Project.MSG_VERBOSE);
     }
@@ -351,7 +359,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
             }
         }
     }
-    
+
     // ===== BuildListener =====
 
     /**
@@ -390,8 +398,9 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
     }
 
     /**
-     * The task outside of this JUnitResultFormatter is the <junit> task. So all tests passed 
-     * and we could create the new java class. 
+     * The task outside of this JUnitResultFormatter is the <junit> task. So all tests passed
+     * and we could create the new java class.
+     * @param event  not used
      * @see org.apache.tools.ant.BuildListener#taskFinished(org.apache.tools.ant.BuildEvent)
      */
     public void taskFinished(BuildEvent event) {
@@ -406,5 +415,5 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
      */
     public void taskStarted(BuildEvent event) {
     }
-    
+
 }

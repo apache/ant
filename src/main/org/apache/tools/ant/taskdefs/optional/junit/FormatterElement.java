@@ -98,7 +98,6 @@ public class FormatterElement {
      * @param type the enumerated value to use.
      */
     public void setType(TypeAttribute type) {
-        //TODO: Besseren Zugriffsalgorithums: TypeAttribut.getClassname()
         if ("xml".equals(type.getValue())) {
             setClassname(XML_FORMATTER_CLASS_NAME);
         } else {
@@ -240,8 +239,8 @@ public class FormatterElement {
     public void setProject(Project project) {
         this.project = project;
     }
-    
-    
+
+
     /**
      * @since Ant 1.6
      */
@@ -270,7 +269,7 @@ public class FormatterElement {
                 "Using loader " + loader + " on class " + classname
                 + ": " + e, e);
         }
-        
+
         Object o = null;
         try {
             o = f.newInstance();
@@ -279,7 +278,7 @@ public class FormatterElement {
         } catch (IllegalAccessException e) {
             throw new BuildException(e);
         }
-        
+
         if (!(o instanceof JUnitTaskMirror.JUnitResultFormatterMirror)) {
             throw new BuildException(classname + " is not a JUnitResultFormatter");
         }
@@ -293,7 +292,7 @@ public class FormatterElement {
             }
         }
         r.setOutput(out);
-        
+
 
         boolean needToSetProjectReference = true;
         try {
@@ -306,17 +305,17 @@ public class FormatterElement {
         } catch (Exception e) {
             // no field present, so no previous reference exists
         }
-        
+
         if (needToSetProjectReference) {
             Method setter;
             try {
-                setter = r.getClass().getMethod("setProject", new Class[] { Project.class });
-                setter.invoke(r, new Object[] { project });
+                setter = r.getClass().getMethod("setProject", new Class[] {Project.class});
+                setter.invoke(r, new Object[] {project} );
             } catch (Exception e) {
                 // no setProject to invoke; just ignore
             }
         }
-        
+
         return r;
     }
 
