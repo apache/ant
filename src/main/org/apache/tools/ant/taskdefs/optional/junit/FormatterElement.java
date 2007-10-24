@@ -310,7 +310,7 @@ public class FormatterElement {
             Method setter;
             try {
                 setter = r.getClass().getMethod("setProject", new Class[] {Project.class});
-                setter.invoke(r, new Object[] {project} );
+                setter.invoke(r, new Object[] {project});
             } catch (Exception e) {
                 // no setProject to invoke; just ignore
             }

@@ -299,6 +299,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
 
     /**
      * Logging facade in INFO-mode.
+     * @param message Log-message
      */
     public void log(String message) {
         getProject().log(LOG_PREFIX + " " + message, Project.MSG_INFO);
@@ -306,6 +307,7 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
 
     /**
      * Logging facade in VERBOSE-mode.
+     * @param message Log-message
      */
     public void verbose(String message) {
         getProject().log(LOG_PREFIX + " " + message, Project.MSG_VERBOSE);
