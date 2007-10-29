@@ -185,7 +185,6 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     private File rootDirectory = null;
     private Hashtable addedAttributes = new Hashtable();
     private XMLCatalog xmlCatalog = new XMLCatalog();
-    private String delimiter = ",";
 
     private static final String ID = "id";
     private static final String REF_ID = "refid";
@@ -498,7 +497,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             // when we read them, though (instead of keeping them
             // outside of the project and batch adding them at the end)
             // to allow other properties to reference them.
-            value = (String) addedAttributes.get(name) + getDelimiter() + value;
+            value = (String) addedAttributes.get(name) + "," + value;
             getProject().setProperty(name, value);
             addedAttributes.put(name, value);
         } else if (getProject().getProperty(name) == null) {
@@ -788,22 +787,5 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      */
     protected boolean supportsNonFileResources() {
         return getClass().equals(XmlProperty.class);
-    }
-
-    /**
-     * Get the current delimiter.
-     * @return delimiter
-     */
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    /**
-     * Sets a new delimiter.
-     * @param delimiter new value
-     * @since Ant 1.7.1
-     */
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
     }
 }
