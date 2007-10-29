@@ -43,8 +43,8 @@ public class ScriptCondition extends AbstractScriptComponent implements Conditio
      */
     public boolean eval() throws BuildException {
         initScriptRunner();
-        Object result = evaluateScript("ant_condition");
-        return result instanceof Boolean ? ((Boolean) result).booleanValue() : getValue();
+        evaluateScript("ant_condition");
+        return getValue();
     }
 
     /**
