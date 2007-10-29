@@ -34,26 +34,6 @@ public class TaskAdapter extends Task implements TypeAdapter {
     private Object proxy;
 
     /**
-     * No-arg constructor for reflection.
-     */
-    public TaskAdapter() {
-    }
-
-    /**
-     * Constructor for given proxy.
-     * So you could write easier code
-     * <pre>
-     * myTaskContainer.addTask( new TaskAdapter(myProxy) );
-     * </pre>
-     *
-     * @param proxy The object which Ant should use as task.
-     */
-    public TaskAdapter(Object proxy) {
-        this();
-        setProxy(proxy);
-    }
-
-    /**
      * Checks whether or not a class is suitable to be adapted by TaskAdapter.
      * If the class is of type Dispatchable, the check is not performed because
      * the method that will be executed will be determined only at runtime of
