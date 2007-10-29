@@ -408,7 +408,7 @@ public class Parallel extends Task
     }
 
     /**
-     * Determine the number of processors. Only effective on later VMs
+     * Determine the number of processors. Only effective on Java 1.4+
      *
      * @return the number of processors available or 0 if not determinable.
      */
