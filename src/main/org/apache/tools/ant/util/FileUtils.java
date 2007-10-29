@@ -971,6 +971,7 @@ public class FileUtils {
      * @param reader the input to read from.
      * @return the string.
      * @throws IOException if unable to read from reader.
+     * @since Ant 1.7.1
      */
     public static String safeReadFully(Reader reader) throws IOException {
         String ret = readFully(reader);
