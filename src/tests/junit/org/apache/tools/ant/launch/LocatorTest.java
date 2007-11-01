@@ -15,23 +15,18 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant.launch;
 
 import junit.framework.TestCase;
 
-import java.net.URISyntaxException;
 import java.io.File;
 
-import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /** Test the locator in the ant-launch JAR */
-
 public class LocatorTest extends TestCase {
     private boolean windows;
     private boolean unix;
-
 
     /**
      * No-arg constructor to enable serialization. This method is not intended to be used by mere mortals without calling
@@ -45,7 +40,6 @@ public class LocatorTest extends TestCase {
         super(name);
     }
 
-
     /**
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
@@ -57,9 +51,9 @@ public class LocatorTest extends TestCase {
     }
 
     private String resolve(String uri) {
-        String j14= Locator.fromURI(uri);
+        String j14 = Locator.fromURI(uri);
         String j13 = Locator.fromURIJava13(uri);
-        assertEquals("Different fromURI conversion.\nJava1.4="+j14+"\nJava1.3="+j13+"\n",
+        assertEquals("Different fromURI conversion.\nJava1.4=" + j14 + "\nJava1.3=" + j13 + "\n",
                 j14, j13);
         return j14;
     }
@@ -78,9 +72,9 @@ public class LocatorTest extends TestCase {
     }
 
     private void assertResolved(String uri, String expectedResult, String result, boolean condition) {
-        if(condition && expectedResult!=null && expectedResult.length()>0) {
-            assertEquals("Expected "+uri+" to resolve to \n"+expectedResult+"\n but got\n"+result+"\n",
-                expectedResult,result);
+        if (condition && expectedResult != null && expectedResult.length() > 0) {
+            assertEquals("Expected " + uri + " to resolve to \n" + expectedResult + "\n but got\n"
+                    + result + "\n", expectedResult, result);
         }
     }
 
@@ -92,8 +86,8 @@ public class LocatorTest extends TestCase {
     private String assertResolves(String path) throws Exception {
         String asuri = new File(path).toURI().toASCIIString();
         String fullpath = System.getProperty("user.dir") + File.separator + path;
-        String result=resolveTo(asuri, fullpath, fullpath);
-        return result.substring(result.lastIndexOf(File.separatorChar)+1);
+        String result = resolveTo(asuri, fullpath, fullpath);
+        return result.substring(result.lastIndexOf(File.separatorChar) + 1);
     }
 
 
@@ -102,8 +96,8 @@ public class LocatorTest extends TestCase {
      * @throws Exception
      */
     public void testNetworkURI() throws Exception {
-        resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar","" +
-                "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar",
+        resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar", ""
+                + "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar",
                 "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
@@ -139,22 +133,20 @@ public class LocatorTest extends TestCase {
             Locator.fromURI(url);
         } catch (IllegalArgumentException e) {
             String message = e.getMessage();
-            assertTrue(message,message.indexOf(Locator.ERROR_NOT_FILE_URI)>=0);
+            assertTrue(message, message.indexOf(Locator.ERROR_NOT_FILE_URI) >= 0);
             assertTrue(message, message.indexOf(url) >= 0);
         }
     }
 
-
     public void testInternationalURI() throws Exception {
-        String result=assertResolves("L\u00f6wenbrau.aus.M\u00fcnchen");
+        String result = assertResolves("L\u00f6wenbrau.aus.M\u00fcnchen");
         char umlauted = result.charAt(1);
-        assertEquals("expected 0xf6 (\u00f6), but got "+Integer.toHexString(umlauted)+" '"+umlauted+"'",
-                0xf6, umlauted);
+        assertEquals("expected 0xf6 (\u00f6), but got " + Integer.toHexString(umlauted) + " '"
+                + umlauted + "'", 0xf6, umlauted);
     }
 
     public void testOddLowAsciiURI() throws Exception {
         assertResolves("hash# and percent%");
     }
-
 
 }
