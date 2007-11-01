@@ -23,9 +23,14 @@ import junit.framework.TestCase;
 import java.net.URISyntaxException;
 import java.io.File;
 
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 /** Test the locator in the ant-launch JAR */
 
 public class LocatorTest extends TestCase {
+    private boolean windows;
+    private boolean unix;
 
 
     /**
@@ -40,6 +45,17 @@ public class LocatorTest extends TestCase {
         super(name);
     }
 
+
+    /**
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        windows = Os.isFamily(Os.FAMILY_DOS);
+        unix = Os.isFamily(Os.FAMILY_UNIX);
+    }
+
     private String resolve(String uri) {
         String j14= Locator.fromURI(uri);
         String j13 = Locator.fromURIJava13(uri);
@@ -48,44 +64,47 @@ public class LocatorTest extends TestCase {
         return j14;
     }
 
-    private void resolveTo(String uri,String expectedResult) {
+    /**
+     * expect a uri to resolve to strings on different platforms
+     * @param uri uri to parse
+     * @param expectedUnix unix string (or null to skip that test)
+     * @param expectedDos DOS string (or null to skip that test)
+     */
+    private String resolveTo(String uri, String expectedUnix, String expectedDos) {
         String result = resolve(uri);
-        assertResolved(uri, expectedResult, result);
+        assertResolved(uri, expectedUnix, result, unix);
+        assertResolved(uri, expectedDos, result, windows);
+        return result;
     }
 
-    private void assertResolved(String uri, String expectedResult, String result) {
-        assertEquals("Expected "+uri+" to resolve to \n"+expectedResult+"\n but got\n"+result+"\n",
+    private void assertResolved(String uri, String expectedResult, String result, boolean condition) {
+        if(condition && expectedResult!=null && expectedResult.length()>0) {
+            assertEquals("Expected "+uri+" to resolve to \n"+expectedResult+"\n but got\n"+result+"\n",
                 expectedResult,result);
+        }
     }
 
     /**
      * This asserts that we can round trip the path to a URI and back again
-     * @param path
+     * @param path filename with no directory separators
+     * @return the trailing filename
      */
-    private void assertResolves(String path) throws Exception {
+    private String assertResolves(String path) throws Exception {
         String asuri = new File(path).toURI().toASCIIString();
-        logURI(path +" => "+asuri);
-        resolveTo(asuri,path);
+        String fullpath = System.getProperty("user.dir") + File.separator + path;
+        String result=resolveTo(asuri, fullpath, fullpath);
+        return result.substring(result.lastIndexOf(File.separatorChar)+1);
     }
 
-    private void resolveTo13(String uri, String expectedResult) {
-        String result = Locator.fromURIJava13(uri);
-        assertResolved(uri, expectedResult, result);
-    }
-
-    private void logURI(String path) throws URISyntaxException{
-
-        String s = new File(path).toURI().toASCIIString();
-        System.out.println(path+" => "+s);
-
-    }
 
     /**
      * this isnt really a valid URI, except maybe in IE
      * @throws Exception
      */
     public void testNetworkURI() throws Exception {
-        resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar","\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
+        resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar","" +
+                "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar",
+                "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
     /**
@@ -93,23 +112,25 @@ public class LocatorTest extends TestCase {
      * @throws Exception
      */
     public void NotestTripleForwardSlashNetworkURI() throws Exception {
-        resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar", "///PC03/jclasses/lib/ant-1.7.0.jar");
+        resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar",
+                "///PC03/jclasses/lib/ant-1.7.0.jar",
+                "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
     public void testUnixNetworkPath() throws Exception {
-        resolveTo("file://cluster/home/ant/lib", "//cluster/home/ant/lib");
-    }
-
-    public void testUnixNetworkPath13() throws Exception {
-        resolveTo13("file://cluster/home/ant/lib", "//cluster/home/ant/lib");
+        resolveTo("file://cluster/home/ant/lib",
+                "//cluster/home/ant/lib",
+                "\\\\cluster\\home\\ant\\lib");
     }
 
     public void testUnixPath() throws Exception {
-        resolveTo("file:/home/ant/lib", "/home/ant/lib");
+        resolveTo("file:/home/ant/lib", "/home/ant/lib", null);
     }
 
     public void testSpacedURI() throws Exception {
-        resolveTo("file:C:\\Program Files\\Ant\\lib","C:\\Program Files\\Ant\\lib");
+        resolveTo("file:C:\\Program Files\\Ant\\lib",
+                "C:\\Program Files\\Ant\\lib",
+                "C:\\Program Files\\Ant\\lib");
     }
 
     public void testHttpURI() throws Exception {
@@ -125,11 +146,14 @@ public class LocatorTest extends TestCase {
 
 
     public void testInternationalURI() throws Exception {
-        assertResolves("/L\\u00f6wenbrau/aus/M\\u00fcnchen");
+        String result=assertResolves("L\\u00f6wenbrau.aus.M\\u00fcnchen");
+        char umlauted = result.charAt(1);
+        assertEquals("expected 0xf6 (\\u00f6), but got "+Integer.toHexString(umlauted)+" '"+umlauted+"'",
+                0xf6, umlauted);
     }
 
     public void testOddLowAsciiURI() throws Exception {
-        assertResolves("/hash#/ and /percent%");
+        assertResolves("hash# and percent%");
     }
 
 
