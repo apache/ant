@@ -114,10 +114,9 @@ public class WorkerAnt extends Thread {
      */
     public void waitUntilFinished(long timeout) throws InterruptedException {
         synchronized(notify) {
-            if(finished) {
-                return;
+            while (!finished) {
+                notify.wait(timeout);
             }
-            notify.wait(timeout);
         }
     }
 
