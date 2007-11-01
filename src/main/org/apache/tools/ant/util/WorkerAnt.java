@@ -54,7 +54,7 @@ public class WorkerAnt extends Thread {
      */
     public WorkerAnt(Task task, Object notify) {
         this.task = task;
-        this.notify = notify;
+        this.notify = notify != null ? notify : this;
     }
 
     /**
@@ -65,7 +65,6 @@ public class WorkerAnt extends Thread {
      */
     public WorkerAnt(Task task) {
         this(task,null);
-        notify = this;
     }
 
     /**
