@@ -146,9 +146,9 @@ public class LocatorTest extends TestCase {
 
 
     public void testInternationalURI() throws Exception {
-        String result=assertResolves("L\\u00f6wenbrau.aus.M\\u00fcnchen");
+        String result=assertResolves("L\u00f6wenbrau.aus.M\u00fcnchen");
         char umlauted = result.charAt(1);
-        assertEquals("expected 0xf6 (\\u00f6), but got "+Integer.toHexString(umlauted)+" '"+umlauted+"'",
+        assertEquals("expected 0xf6 (\u00f6), but got "+Integer.toHexString(umlauted)+" '"+umlauted+"'",
                 0xf6, umlauted);
     }
 
