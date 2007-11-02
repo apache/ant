@@ -51,11 +51,8 @@ public final class Locator {
     private static final int NIBBLE = 4;
     private static final int NIBBLE_MASK   = 0xF;
 
-    private static final int ASCII = 7;
     private static final int ASCII_SIZE = 128;
 
-    private static final int BYTE = 8;
-    private static final int BYTE_MASK = 0xFF;
     private static final int BYTE_SIZE = 256;
 
     private static final int WORD = 16;
@@ -242,12 +239,12 @@ public final class Locator {
     }
 
     /**
-     * This is only public for testing purposes, so its use is strongly discouraged.
+     * package-private for testing in same classloader
      * @param uri uri to expand
      * @return the decoded URI
      * @since Ant1.7.1
      */
-    public static String fromURIJava13(String uri) {
+    static String fromURIJava13(String uri) {
         // Fallback method for Java 1.3 or earlier.
 
         URL url = null;
