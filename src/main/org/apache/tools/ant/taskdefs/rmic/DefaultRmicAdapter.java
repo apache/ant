@@ -209,7 +209,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
-        String stubOption=addStubVersionOptions();
+        String stubOption = addStubVersionOptions();
         if (stubOption != null) {
             //set the non-null stubOption
             cmd.createArgument().setValue(stubOption);

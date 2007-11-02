@@ -1080,7 +1080,8 @@ public class JUnitTask extends Task {
      * @return true if the run should be withoutput and error
      */
     private boolean equalsWithOutAndErr(String summaryOption) {
-        return summaryOption != null && "withoutanderr".equals(summaryOption.toLowerCase(Locale.ENGLISH));
+        return summaryOption != null && "withoutanderr".equals(
+            summaryOption.toLowerCase(Locale.ENGLISH));
     }
 
     private void checkIncludeSummary(CommandlineJava cmd) {

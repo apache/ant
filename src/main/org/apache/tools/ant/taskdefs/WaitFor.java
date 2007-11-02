@@ -52,14 +52,22 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @ant.task category="control"
  */
 public class WaitFor extends ConditionBase {
+    /** a millisecond */
     public static final long ONE_MILLISECOND = 1L;
+    /** a second in milliseconds */
     public static final long ONE_SECOND = 1000L;
+    /** a minute in milliseconds */
     public static final long ONE_MINUTE = ONE_SECOND * 60L;
+    /** an hour in milliseconds */
     public static final long ONE_HOUR   = ONE_MINUTE * 60L;
+    /** a day in milliseconds */
     public static final long ONE_DAY    = ONE_HOUR * 24L;
+    /** a week in milliseconds */
     public static final long ONE_WEEK   = ONE_DAY * 7L;
 
+    /** default wait time */
     public static final long DEFAULT_MAX_WAIT_MILLIS = ONE_MINUTE * 3L;
+    /** default check time */
     public static final long DEFAULT_CHECK_MILLIS = 500L;
 
     /** default max wait time in the current unit*/

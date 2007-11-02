@@ -1,9 +1,10 @@
 /*
- * Copyright  2007 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -38,14 +39,19 @@ import org.apache.tools.ant.taskdefs.WaitFor;
  * <li>A reporting sequence that runs after the tests have finished</li>
  * <li>A "teardown" clause that runs after the rest.</li>
  * <li>Automated termination of the program it executes, if a timeout is not met</li>
- * <li>Checking of a failure property and automatic raising of a fault (with the text in failureText)
+ * <li>Checking of a failure property and automatic raising of a fault
+ *     (with the text in failureText)
  * if test shutdown and reporting succeeded</li>
  *  </ul>
  *
- * The task is designed to be framework neutral; it will work with JUnit, TestNG and other test frameworks That can be
- * executed from Ant. It bears a resemblance to the FunctionalTest task from SmartFrog, as the attribute names were
- * chosen to make migration easier. However, this task benefits from the ability to tweak Ant's internals, and so
- * simplify the workflow, and from the experience of using the SmartFrog task. No code has been shared.
+ * The task is designed to be framework neutral; it will work with JUnit,
+ *  TestNG and other test frameworks That can be
+ * executed from Ant. It bears a resemblance to the FunctionalTest task from
+ * SmartFrog, as the attribute names were
+ * chosen to make migration easier. However, this task benefits from the
+ * ability to tweak Ant's internals, and so
+ * simplify the workflow, and from the experience of using the SmartFrog task.
+ * No code has been shared.
  *
  * @since Ant 1.8
  */
@@ -53,7 +59,8 @@ import org.apache.tools.ant.taskdefs.WaitFor;
 public class Funtest extends Task {
 
     /**
-     * A condition that must be true before the tests are run. This makes it easier to define complex tests that only
+     * A condition that must be true before the tests are run. This makes it
+     * easier to define complex tests that only
      * run if certain conditions are met, such as OS or network state.
      */
     private Condition condition;
@@ -65,7 +72,8 @@ public class Funtest extends Task {
     private Parallel timedTests;
 
     /**
-     * Setup runs if the condition is met. Once setup is complete, teardown will be run when the task finishes
+     * Setup runs if the condition is met. Once setup is complete, teardown
+     * will be run when the task finishes
      */
     private Sequential setup;
 
@@ -85,7 +93,8 @@ public class Funtest extends Task {
     private Sequential tests;
 
     /**
-     * Reporting only runs if the tests were executed. If the block stopped them, reporting is skipped.
+     * Reporting only runs if the tests were executed. If the block stopped
+     * them, reporting is skipped.
      */
     private Sequential reporting;
 
@@ -99,12 +108,12 @@ public class Funtest extends Task {
      */
     private long timeout;
 
-    private long timeoutUnitMultiplier= WaitFor.ONE_MILLISECOND;
+    private long timeoutUnitMultiplier = WaitFor.ONE_MILLISECOND;
 
     /**
      * time for the execution to time out.
      */
-    private long shutdownTime = 10*WaitFor.ONE_SECOND;
+    private long shutdownTime = 10 * WaitFor.ONE_SECOND;
 
     private long shutdownUnitMultiplier = WaitFor.ONE_MILLISECOND;
 
@@ -116,7 +125,7 @@ public class Funtest extends Task {
     /**
      * Message to send when tests failed
      */
-    private String failureMessage="Tests failed";
+    private String failureMessage = "Tests failed";
 
     /**
      * Flag to set to true if you don't care about any shutdown errors.
@@ -125,7 +134,7 @@ public class Funtest extends Task {
      * turned into BuildFault events. Similar to catching and ignoring
      * <code>finally {}</code> clauses in Java/
      */
-    private boolean failOnTeardownErrors=true;
+    private boolean failOnTeardownErrors = true;
 
 
     /**
@@ -153,7 +162,9 @@ public class Funtest extends Task {
     public static final String APPLICATION_FORCIBLY_SHUT_DOWN = "Application forcibly shut down";
     /** {@value} */
     public static final String SHUTDOWN_INTERRUPTED = "Shutdown interrupted";
-    public static final String SKIPPING_TESTS = "Condition failed -skipping tests";
+    /** {@value} */
+    public static final String SKIPPING_TESTS
+        = "Condition failed -skipping tests";
 
     /**
      * Log if the definition is overriding something
@@ -224,7 +235,7 @@ public class Funtest extends Task {
     }
 
     public void setTimeoutUnit(WaitFor.Unit unit) {
-        timeoutUnitMultiplier=unit.getMultiplier();
+        timeoutUnitMultiplier = unit.getMultiplier();
     }
 
     public void setShutdownUnit(WaitFor.Unit unit) {
@@ -263,7 +274,7 @@ public class Funtest extends Task {
      * @return a bound and initialised parallel instance.
      */
     private Parallel newParallel(long parallelTimeout) {
-        Parallel par=new Parallel();
+        Parallel par = new Parallel();
         bind(par);
         par.setFailOnAny(true);
         par.setTimeout(parallelTimeout);
@@ -275,7 +286,7 @@ public class Funtest extends Task {
      * @param parallelTimeout timeout
      * @return a bound and initialised parallel instance.
      */
-    private Parallel newParallel(long parallelTimeout,Task child) {
+    private Parallel newParallel(long parallelTimeout, Task child) {
         Parallel par = newParallel(parallelTimeout);
         par.addTask(child);
         return par;
@@ -443,7 +454,7 @@ public class Funtest extends Task {
              && getProject().getProperty(failureProperty) != null) {
             //we've failed
             log(failureMessage);
-            if(taskException == null) {
+            if (taskException == null) {
                 taskException = new BuildException(failureMessage);
             }
         }

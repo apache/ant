@@ -19,8 +19,6 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -51,6 +49,7 @@ public class WLRmic extends DefaultRmicAdapter {
     public static final String WL_RMI_STUB_SUFFIX = "_WLStub";
     /** The skeleton suffix */
     public static final String WL_RMI_SKEL_SUFFIX = "_WLSkel";
+    /** upsupported error message */
     public static final String UNSUPPORTED_STUB_OPTION = "Unsupported stub option: ";
 
     /**
@@ -128,7 +127,8 @@ public class WLRmic extends DefaultRmicAdapter {
         //handle the many different stub options.
         String stubVersion = getRmic().getStubVersion();
         if (null != stubVersion) {
-            getRmic().log(UNSUPPORTED_STUB_OPTION + stubVersion,Project.MSG_WARN);
+            getRmic().log(UNSUPPORTED_STUB_OPTION + stubVersion,
+                          Project.MSG_WARN);
         }
         return null;
     }

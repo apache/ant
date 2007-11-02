@@ -1,9 +1,10 @@
 /*
- * Copyright  2007 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,6 +15,7 @@
  *  limitations under the License.
  *
  */
+
 package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.Task;
@@ -35,7 +37,7 @@ public class WorkerAnt extends Thread {
 
     private Task task;
     private Object notify;
-    private volatile boolean finished=false;
+    private volatile boolean finished = false;
     private volatile BuildException buildException;
     private volatile Throwable exception;
 
@@ -64,12 +66,13 @@ public class WorkerAnt extends Thread {
      * @param task the task
      */
     public WorkerAnt(Task task) {
-        this(task,null);
+        this(task, null);
     }
 
     /**
      * Get any build exception.
-     * This would seem to be oversynchronised, but know that Java pre-1.5 can reorder volatile access.
+     * This would seem to be oversynchronised, but know that Java pre-1.5 can
+     * reorder volatile access.
      * The synchronized attribute is to force an ordering.
      *
      * @return the exception or null
@@ -81,7 +84,7 @@ public class WorkerAnt extends Thread {
     /**
      * Get whatever was thrown, which may or may not be a buildException.
      * Assertion: getException() instanceof BuildException <=> getBuildException()==getException()
-     * @return
+     * @return the exception.
      */
     public synchronized Throwable getException() {
         return exception;
@@ -99,7 +102,8 @@ public class WorkerAnt extends Thread {
 
     /**
      * Query the task/thread for being finished.
-     * This would seem to be oversynchronised, but know that Java pre-1.5 can reorder volatile access.
+     * This would seem to be oversynchronised, but know that Java pre-1.5 can
+     * reorder volatile access.
      * The synchronized attribute is to force an ordering.
      * @return true if the task is finished.
      */
@@ -113,8 +117,8 @@ public class WorkerAnt extends Thread {
      * @throws InterruptedException if the execution was interrupted
      */
     public void waitUntilFinished(long timeout) throws InterruptedException {
-        synchronized(notify) {
-            if(!finished) {
+        synchronized (notify) {
+            if (!finished) {
                 notify.wait(timeout);
             }
         }
@@ -140,9 +144,9 @@ public class WorkerAnt extends Thread {
      */
     private synchronized void caught(Throwable thrown) {
         exception = thrown;
-        buildException = (thrown instanceof BuildException)?
-                (BuildException)thrown
-                :new BuildException(thrown);
+        buildException = (thrown instanceof BuildException)
+            ? (BuildException) thrown
+            : new BuildException(thrown);
     }
 
     /**
@@ -158,7 +162,7 @@ public class WorkerAnt extends Thread {
             caught(thrown);
         } finally {
             synchronized (notify) {
-                finished=true;
+                finished = true;
                 //reset the task.
                 //wake up our owner, if it is waiting
                 notify.notifyAll();
