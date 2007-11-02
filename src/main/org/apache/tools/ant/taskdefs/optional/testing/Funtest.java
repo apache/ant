@@ -178,41 +178,68 @@ public class Funtest extends Task {
         }
     }
 
+    /**
+     * Add a condition.
+     * @param newCondition the condition to add.
+     */
     public void addCondition(Condition newCondition) {
         logOverride("condition", condition);
         condition = newCondition;
     }
 
+    /**
+     * Add an application.
+     * @param sequence the application to add.
+     */
     public void addApplication(Sequential sequence) {
         logOverride("application", application);
         application = sequence;
     }
 
+    /**
+     * Add a setup sequence.
+     * @param sequence the setup sequence to add.
+     */
     public void addSetup(Sequential sequence) {
         logOverride("setup", setup);
         setup = sequence;
     }
 
+    /**
+     * Add a block.
+     * @param sequence the block for to add.
+     */
     public void addBlock(BlockFor sequence) {
         logOverride("block", block);
         block = sequence;
     }
 
+    /**
+     * add tests.
+     * @param sequence a sequence to add.
+     */
     public void addTests(Sequential sequence) {
         logOverride("tests", tests);
         tests = sequence;
     }
 
+    /**
+     * set reporting sequence of tasks.
+     * @param sequence a reporting sequence to use.
+     */
     public void addReporting(Sequential sequence) {
         logOverride("reporting", reporting);
         reporting = sequence;
     }
 
+    /**
+     * set teardown sequence of tasks.
+     * @param sequence a teardown sequence to use.
+     */
     public void addTeardown(Sequential sequence) {
         logOverride("teardown", teardown);
         teardown = sequence;
     }
-
 
     public void setFailOnTeardownErrors(boolean failOnTeardownErrors) {
         this.failOnTeardownErrors = failOnTeardownErrors;

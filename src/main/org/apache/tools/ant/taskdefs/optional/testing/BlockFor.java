@@ -58,7 +58,7 @@ public class BlockFor extends WaitFor {
      */
     protected void processTimeout() throws BuildTimeoutException {
         super.processTimeout();
-        throw new BuildTimeoutException(text,getLocation());
+        throw new BuildTimeoutException(text, getLocation());
     }
 
     /**
