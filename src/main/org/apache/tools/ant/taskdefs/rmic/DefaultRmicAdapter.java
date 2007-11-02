@@ -43,18 +43,31 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     private Rmic attributes;
     private FileNameMapper mapper;
     private static final Random RAND = new Random();
-    /** suffix denoting a stub file */
+    /** suffix denoting a stub file: {@value} */
     public static final String RMI_STUB_SUFFIX = "_Stub";
-    /** suffix denoting a skel file */
+    /** suffix denoting a skel file: {@value} */
     public static final String RMI_SKEL_SUFFIX = "_Skel";
-    /** suffix denoting a tie file */
+    /** suffix denoting a tie file: {@value} */
     public static final String RMI_TIE_SUFFIX = "_Tie";
-    /** arg for compat */
+    /** arg for compat: {@value} */
     public static final String STUB_COMPAT = "-vcompat";
-    /** arg for 1.1 */
+    /** arg for 1.1: {@value} */
     public static final String STUB_1_1 = "-v1.1";
-    /** arg for 1.2 */
+    /** arg for 1.2: {@value} */
     public static final String STUB_1_2 = "-v1.2";
+
+    /**
+     * option for stub 1.1 in the rmic task: {@value}
+     */
+    public static final String STUB_OPTION_1_1 = "1.1";
+    /**
+     * option for stub 1.2 in the rmic task: {@value}
+     */
+    public static final String STUB_OPTION_1_2 = "1.2";
+    /**
+     * option for stub compat in the rmic task: {@value}
+     */
+    public static final String STUB_OPTION_COMPAT = "compat";
 
     /**
      * Default constructor
@@ -196,35 +209,13 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
-
-        //handle the many different stub options.
-        String stubVersion = attributes.getStubVersion();
-        //default is compatibility
-        String stubOption = null;
-        if (null != stubVersion) {
-            if ("1.1".equals(stubVersion)) {
-                stubOption = STUB_1_1;
-            } else if ("1.2".equals(stubVersion)) {
-                stubOption = STUB_1_2;
-            } else if ("compat".equals(stubVersion)) {
-                stubOption = STUB_COMPAT;
-            } else {
-                //anything else
-                attributes.log("Unknown stub option " + stubVersion);
-                //do nothing with the value? or go -v+stubVersion??
-            }
-        }
-        //for java1.5+, we generate compatible stubs, that is, unless
-        //the caller asked for IDL or IIOP support.
-        if (stubOption == null
-            && !attributes.getIiop()
-            && !attributes.getIdl()) {
-            stubOption = STUB_COMPAT;
-        }
+        String stubOption=addStubVersionOptions();
         if (stubOption != null) {
             //set the non-null stubOption
             cmd.createArgument().setValue(stubOption);
         }
+
+
         if (null != attributes.getSourceBase()) {
             cmd.createArgument().setValue("-keepgenerated");
         }
@@ -260,6 +251,40 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         logAndAddFilesToCompile(cmd);
         return cmd;
      }
+
+    /**
+     * This is an override point; get the stub version off the rmic command and
+     * translate that into a compiler-specific argument
+     * @return a string to use for the stub version; can be null
+     * @since Ant1.7.1
+     */
+    protected String addStubVersionOptions() {
+        //handle the many different stub options.
+        String stubVersion = attributes.getStubVersion();
+        //default is compatibility
+        String stubOption = null;
+        if (null != stubVersion) {
+            if (STUB_OPTION_1_1.equals(stubVersion)) {
+                stubOption = STUB_1_1;
+            } else if (STUB_OPTION_1_2.equals(stubVersion)) {
+                stubOption = STUB_1_2;
+            } else if (STUB_OPTION_COMPAT.equals(stubVersion)) {
+                stubOption = STUB_COMPAT;
+            } else {
+                //anything else
+                attributes.log("Unknown stub option " + stubVersion);
+                //do nothing with the value? or go -v+stubVersion??
+            }
+        }
+        //for java1.5+, we generate compatible stubs, that is, unless
+        //the caller asked for IDL or IIOP support.
+        if (stubOption == null
+            && !attributes.getIiop()
+            && !attributes.getIdl()) {
+            stubOption = STUB_COMPAT;
+        }
+        return stubOption;
+    }
 
     /**
      * Preprocess the compiler arguments in any way you see fit.
@@ -386,7 +411,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
             if (!attributes.getIiop() && !attributes.getIdl()) {
                 // JRMP with simple naming convention
-                if ("1.2".equals(attributes.getStubVersion())) {
+                if (STUB_OPTION_1_2.equals(attributes.getStubVersion())) {
                     target = new String[] {
                         base + getStubClassSuffix() + ".class"
                     };

@@ -19,6 +19,9 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.ArrayList;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -40,9 +43,7 @@ public class WLRmic extends DefaultRmicAdapter {
     /** The error string to use if not able to find the weblogic rmic */
     public static final String ERROR_NO_WLRMIC_ON_CLASSPATH =
         "Cannot use WebLogic rmic, as it is not "
-        + "available.  A common solution is to "
-        + "set the environment variable "
-        + "CLASSPATH.";
+        + "available. Add it to Ant's classpath with the -lib option";
 
     /** The error string to use if not able to start the weblogic rmic */
     public static final String ERROR_WLRMIC_FAILED = "Error starting WebLogic rmic: ";
@@ -50,6 +51,7 @@ public class WLRmic extends DefaultRmicAdapter {
     public static final String WL_RMI_STUB_SUFFIX = "_WLStub";
     /** The skeleton suffix */
     public static final String WL_RMI_SKEL_SUFFIX = "_WLSkel";
+    public static final String UNSUPPORTED_STUB_OPTION = "Unsupported stub option: ";
 
     /**
      * Carry out the rmic compilation.
@@ -116,4 +118,19 @@ public class WLRmic extends DefaultRmicAdapter {
     protected String[] preprocessCompilerArgs(String[] compilerArgs) {
         return filterJvmCompilerArgs(compilerArgs);
     }
+
+    /**
+     * This is an override point; no stub version is returned. If any
+     * stub option is set, a warning is printed.
+     * @return null, for no stub version
+     */
+    protected String addStubVersionOptions() {
+        //handle the many different stub options.
+        String stubVersion = getRmic().getStubVersion();
+        if (null != stubVersion) {
+            getRmic().log(UNSUPPORTED_STUB_OPTION + stubVersion,Project.MSG_WARN);
+        }
+        return null;
+    }
+
 }
