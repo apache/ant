@@ -126,6 +126,10 @@ Fixed bugs:
 * Regession nested macrodefs with elements could cause StackOverFlow.
   Bugzilla 43324.
 
+* <touch> task couldn't differentiate between "no resources specified" and "no resources
+  matched." Bugzilla report 43799.
+
+
 Other changes:
 --------------
 
