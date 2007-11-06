@@ -291,6 +291,9 @@ public class Touch extends Task {
             touch(new FileResource(file.getParentFile(), file.getName()),
                   defaultTimestamp);
         }
+        if (resources == null) {
+            return;
+        }
         // deal with the resource collections
         Iterator iter = resources.iterator();
         while (iter.hasNext()) {
