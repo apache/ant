@@ -42,10 +42,13 @@ Fixed bugs:
 -----------
 
  * <symlink> task couldn't overwrite existing symlinks that pointed to nonexistent files
-   Bugzilla report 38199
+   Bugzilla report 38199.
 
  * <symlink> task couldn't overwrite files that were in the way of the symlink.
-   Bugzilla report 43426
+   Bugzilla report 43426.
+
+ * <touch> task couldn't differentiate between "no resources specified" and "no resources
+   matched."  Bugzilla report 43799.
 
 
 Other changes:
