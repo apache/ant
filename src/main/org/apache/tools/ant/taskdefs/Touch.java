@@ -85,7 +85,7 @@ public class Touch extends Task {
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
-    private Union resources = new Union();
+    private Union resources;
     private boolean dateTimeConfigured;
     private boolean mkdirs;
     private boolean verbose = true;
@@ -212,7 +212,8 @@ public class Touch extends Task {
      * @param rc the collection to add.
      * @since Ant 1.7
      */
-    public void add(ResourceCollection rc) {
+    public synchronized void add(ResourceCollection rc) {
+        resources = resources == null ? new Union() : resources;
         resources.add(rc);
     }
 
@@ -222,7 +223,7 @@ public class Touch extends Task {
      * @since Ant 1.6.3
      */
     protected synchronized void checkConfiguration() throws BuildException {
-        if (file == null && resources.size() == 0) {
+        if (file == null && resources == null) {
             throw new BuildException("Specify at least one source"
                                    + "--a file or resource collection.");
         }
