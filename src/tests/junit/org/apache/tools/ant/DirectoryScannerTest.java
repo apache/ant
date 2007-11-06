@@ -504,11 +504,11 @@ public class DirectoryScannerTest extends BuildFileTest {
                      includedDirectories.length);
 
         TreeSet files = new TreeSet();
-        for (int counter=0; counter < includedFiles.length; counter++) {
+        for (int counter = 0; counter < includedFiles.length; counter++) {
             files.add(includedFiles[counter].replace(File.separatorChar, '/'));
         }
         TreeSet directories = new TreeSet();
-        for (int counter=0; counter < includedDirectories.length; counter++) {
+        for (int counter = 0; counter < includedDirectories.length; counter++) {
             directories.add(includedDirectories[counter]
                             .replace(File.separatorChar, '/'));
         }
