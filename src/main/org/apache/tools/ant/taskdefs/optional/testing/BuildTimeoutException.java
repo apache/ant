@@ -30,6 +30,7 @@ import org.apache.tools.ant.Location;
 
 public class BuildTimeoutException extends BuildException {
 
+    private static final long serialVersionUID = -8057644603246297562L;
 
     /**
      * Constructs a build exception with no descriptive information.
