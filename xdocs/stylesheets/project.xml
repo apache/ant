@@ -55,6 +55,11 @@
                 <item name="Subversion Repositories"      href="/svn.html"/>
                 <item name="Nightly Builds"      href="/nightlies.html"/>
                 <item name="Bug Database"          href="/bugs.html"/>
+            </menu>
+
+            <menu name="Sponsorship">
+                <item name="Thanks"                href="http://www.apache.org/foundation/thanks.html"/>
+                <item name="Sponsorship"           href="http://www.apache.org/foundation/sponsorship.html"/>
                 <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>
 
