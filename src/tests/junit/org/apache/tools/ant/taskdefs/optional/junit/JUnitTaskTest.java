@@ -19,20 +19,10 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.BuildListener;
 
 public class JUnitTaskTest extends BuildFileTest {
 
