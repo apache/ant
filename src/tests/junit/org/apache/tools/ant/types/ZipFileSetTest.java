@@ -86,7 +86,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
         }
         // check that reference zipfilesets cannot have specific attributes
         f = (ZipFileSet)getInstance();
-        f.setRefid(new Reference("test"));
+        f.setRefid(new Reference(getProject(), "test"));
         try {
             f.setSrc(new File("example.zip"));
             fail("Can add src to "
@@ -104,7 +104,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
         f.setDirMode("530");
         getProject().addReference("test",f);
         ZipFileSet zid=(ZipFileSet)getInstance();
-        zid.setRefid(new Reference("test"));
+        zid.setRefid(new Reference(getProject(), "test"));
         assertTrue("src attribute copied by copy constructor",zid.getSrc(getProject()).equals(f.getSrc(getProject())));
         assertTrue("prefix attribute copied by copy constructor",f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
         assertTrue("file mode attribute copied by copy constructor",f.getFileMode(getProject())==zid.getFileMode(getProject()));

@@ -136,7 +136,7 @@ public class XMLCatalogTest extends TestCase {
         project.addReference("catalog", catalog);
 
         try {
-            catalog.setRefid(new Reference("dummyref"));
+            catalog.setRefid(new Reference(project, "dummyref"));
             fail("Can add reference to nonexistent XMLCatalog");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one "
@@ -144,7 +144,7 @@ public class XMLCatalogTest extends TestCase {
         }
 
         XMLCatalog catalog2 = newCatalog();
-        catalog2.setRefid(new Reference("catalog"));
+        catalog2.setRefid(new Reference(project, "catalog"));
 
         try {
             catalog2.addConfiguredXMLCatalog(catalog);
@@ -159,7 +159,7 @@ public class XMLCatalogTest extends TestCase {
 
         // catalog <--> catalog
         project.addReference("catalog", catalog);
-        catalog.setRefid(new Reference("catalog"));
+        catalog.setRefid(new Reference(project, "catalog"));
 
         try {
             InputSource result = catalog.resolveEntity("PUBLIC ID ONE",
@@ -180,9 +180,9 @@ public class XMLCatalogTest extends TestCase {
         XMLCatalog catalog3 = newCatalog();
         project.addReference("catalog3", catalog3);
 
-        catalog3.setRefid(new Reference("catalog1"));
-        catalog2.setRefid(new Reference("catalog3"));
-        catalog1.setRefid(new Reference("catalog2"));
+        catalog3.setRefid(new Reference(project, "catalog1"));
+        catalog2.setRefid(new Reference(project, "catalog3"));
+        catalog1.setRefid(new Reference(project, "catalog2"));
 
         try {
             InputSource result = catalog1.resolveEntity("PUBLIC ID ONE",
@@ -267,8 +267,8 @@ public class XMLCatalogTest extends TestCase {
         XMLCatalog catalog2 = newCatalog();
         project.addReference("catalog2", catalog1);
 
-        catalog1.setRefid(new Reference("catalog"));
-        catalog2.setRefid(new Reference("catalog1"));
+        catalog1.setRefid(new Reference(project, "catalog"));
+        catalog2.setRefid(new Reference(project, "catalog1"));
 
         try {
             InputSource result = catalog2.resolveEntity(publicId,
