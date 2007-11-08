@@ -241,4 +241,36 @@ public final class StringUtils {
         }
         return factor * Long.parseLong(humanSize);
     }
+    
+    /**
+     * Removes the suffix from a given string, if the string contains
+     * that suffix.
+     * @param string String for check
+     * @param suffix Suffix to remove
+     * @return the <i>string</i> with the <i>suffix</i>
+     * @since Ant 1.7.1
+     */
+    public static String removeSuffix(String string, String suffix) {
+        if (string.endsWith(suffix)) {
+            return string.substring(0, string.length() - suffix.length());
+        } else {
+            return string;
+        }
+    }
+
+    /**
+     * Removes the prefix from a given string, if the string contains
+     * that prefix.
+     * @param string String for check
+     * @param prefix Prefix to remove
+     * @return the <i>string</i> with the <i>prefix</i>
+     * @since Ant 1.7.1
+     */
+    public static String removePrefix(String string, String prefix) {
+        if (string.startsWith(prefix)) {
+            return string.substring(prefix.length());
+        } else {
+            return string;
+        }
+    }
 }
