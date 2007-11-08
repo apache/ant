@@ -789,12 +789,8 @@ public class FileUtils {
      * <p>The file denoted by the returned abstract pathname did not
      * exist before this method was invoked, any subsequent invocation
      * of this method will yield a different file name.</p>
-     * <p>
-     * The filename is prefixNNNNNsuffix where NNNN is a random number.
-     * </p>
-     * <p>This method is different from File.createTempFile() of JDK 1.2
-     * as it doesn't create the file itself.  It uses the location pointed
-     * to by java.io.tmpdir when the parentDir attribute is null.</p>
+     *
+     * <p>As of ant 1.8 the file is actually created.</p>
      *
      * @param prefix prefix before the random number.
      * @param suffix file extension; include the '.'.
@@ -814,19 +810,15 @@ public class FileUtils {
      * <p>The file denoted by the returned abstract pathname did not
      * exist before this method was invoked, any subsequent invocation
      * of this method will yield a different file name.</p>
-     * <p>
-     * The filename is prefixNNNNNsuffix where NNNN is a random number.
-     * </p>
-     * <p>This method is different from File.createTempFile() of JDK 1.2
-     * as it doesn't create the file itself.  It uses the location pointed
-     * to by java.io.tmpdir when the parentDir attribute is null.</p>
+     *
+     * <p>As of ant 1.8 the file is actually created.</p>
      *
      * @param prefix prefix before the random number.
      * @param suffix file extension; include the '.'.
      * @param parentDir Directory to create the temporary file in;
+     * java.io.tmpdir used if not specified.
      * @param deleteOnExit whether to set the tempfile for deletion on
      *        normal VM exit.
-     * java.io.tmpdir used if not specified.
      *
      * @return a File reference to the new temporary file.
      * @since Ant 1.7
@@ -837,11 +829,49 @@ public class FileUtils {
         String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
+        try {
+            result = File.createTempFile(prefix, suffix, new File(parent));
+        } catch (IOException e) {
+            throw new BuildException("Could not create tempfile in " + parent, e);
+        }
+        if (deleteOnExit) {
+            result.deleteOnExit();
+        }
+        return result;
+    }
+
+    /**
+     * Create a File object for a temporary file in a given directory. Without
+     * actually creating the file.
+     *
+     * <p>The file denoted by the returned abstract pathname did not
+     * exist before this method was invoked, any subsequent invocation
+     * of this method will yield a different file name.</p>
+     * <p>
+     * The filename is prefixNNNNNsuffix where NNNN is a random number.
+     * </p>
+     *
+     * @param prefix prefix before the random number.
+     * @param suffix file extension; include the '.'.
+     * @param parentDir Directory to create the temporary file in;
+     * java.io.tmpdir used if not specified.
+     * @param deleteOnExit whether to set the tempfile for deletion on
+     *        normal VM exit.
+     *
+     * @return a File reference to the new, nonexistent temporary file.
+     * @since Ant 1.8
+     */
+    public File createTempFileName(String prefix, String suffix,
+            File parentDir, boolean deleteOnExit) {
+        File result = null;
+        String parent = (parentDir == null) ? System
+                .getProperty("java.io.tmpdir") : parentDir.getPath();
 
         DecimalFormat fmt = new DecimalFormat("#####");
         synchronized (rand) {
             do {
-                result = new File(parent, prefix + fmt.format(Math.abs(rand.nextInt())) + suffix);
+                result = new File(parent, prefix
+                        + fmt.format(Math.abs(rand.nextInt())) + suffix);
             } while (result.exists());
         }
         if (deleteOnExit) {
