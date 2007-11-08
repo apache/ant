@@ -67,7 +67,7 @@
 
   <target name="testFiltering">
     <au:assertTrue>
-      <resourcesmatch>
+      <resourcesmatch astext="true">
         <concat>foo${br}bar${br}baz${br}</concat>
         <concat>
 foo
