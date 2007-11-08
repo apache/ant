@@ -7,7 +7,7 @@
     <property name="dest" value="${java.io.tmpdir}/dest"/>
     <!-- just in case this ever becomes a legit url... -->
     <property name="src" value="http://iojasodjojaosdj"/>
-    <au:expectfailure expectedmessage="Task [get] failed after [${i}] attempts, giving up.">
+    <au:expectfailure expectedmessage="Task [get] failed after [3] attempts; giving up.">
       <retry retrycount="${i}">
         <get src="${src}" dest="${dest}"/>
       </retry>
