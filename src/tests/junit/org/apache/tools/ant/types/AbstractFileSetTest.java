@@ -55,7 +55,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         AbstractFileSet f = getInstance();
         f.setIncludes("**/*.java");
         try {
-            f.setRefid(new Reference("dummyref"));
+            f.setRefid(new Reference(getProject(), "dummyref"));
             fail("Can add reference to "
                  + f.getDataTypeName()
                  + " with elements from setIncludes");
@@ -67,7 +67,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         f = getInstance();
         f.createPatternSet();
         try {
-            f.setRefid(new Reference("dummyref"));
+            f.setRefid(new Reference(getProject(), "dummyref"));
             fail("Can add reference to "
                  + f.getDataTypeName()
                  + " with nested patternset element.");
@@ -79,7 +79,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         f = getInstance();
         f.createInclude();
         try {
-            f.setRefid(new Reference("dummyref"));
+            f.setRefid(new Reference(getProject(), "dummyref"));
             fail("Can add reference to "
                  + f.getDataTypeName()
                  + " with nested include element.");
@@ -89,7 +89,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         }
 
         f = getInstance();
-        f.setRefid(new Reference("dummyref"));
+        f.setRefid(new Reference(getProject(), "dummyref"));
         try {
             f.setIncludes("**/*.java");
             fail("Can set includes in "
@@ -185,7 +185,7 @@ public abstract class AbstractFileSetTest extends TestCase {
     public void testCircularReferenceCheck() {
         AbstractFileSet f = getInstance();
         project.addReference("dummy", f);
-        f.setRefid(new Reference("dummy"));
+        f.setRefid(new Reference(getProject(), "dummy"));
         try {
             f.getDir(project);
             fail("Can make " + f.getDataTypeName()
@@ -206,13 +206,13 @@ public abstract class AbstractFileSetTest extends TestCase {
         // dummy1 --> dummy2 --> dummy3 --> dummy1
         AbstractFileSet f1 = getInstance();
         project.addReference("dummy1", f1);
-        f1.setRefid(new Reference("dummy2"));
+        f1.setRefid(new Reference(getProject(), "dummy2"));
         AbstractFileSet f2 = getInstance();
         project.addReference("dummy2", f2);
-        f2.setRefid(new Reference("dummy3"));
+        f2.setRefid(new Reference(getProject(), "dummy3"));
         AbstractFileSet f3 = getInstance();
         project.addReference("dummy3", f3);
-        f3.setRefid(new Reference("dummy1"));
+        f3.setRefid(new Reference(getProject(), "dummy1"));
         try {
             f1.getDir(project);
             fail("Can make circular reference.");
@@ -232,10 +232,10 @@ public abstract class AbstractFileSetTest extends TestCase {
         // (which has the Project's basedir as root).
         f1 = getInstance();
         project.addReference("dummy1", f1);
-        f1.setRefid(new Reference("dummy2"));
+        f1.setRefid(new Reference(getProject(), "dummy2"));
         f2 = getInstance();
         project.addReference("dummy2", f2);
-        f2.setRefid(new Reference("dummy3"));
+        f2.setRefid(new Reference(getProject(), "dummy3"));
         f3 = getInstance();
         project.addReference("dummy3", f3);
         f3.setDir(project.resolveFile("."));

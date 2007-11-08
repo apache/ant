@@ -152,7 +152,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
     public void testIllegalCustomAlgorithm() {
         try {
-            String algo = getAlgoName("java.lang.Object");
+            getAlgoName("java.lang.Object");
             fail("Illegal classname used.");
         } catch (Exception e) {
             assertTrue("Wrong exception type: " + e.getClass().getName(), e instanceof BuildException);
@@ -167,7 +167,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     public void testNonExistentCustomAlgorithm() {
         boolean noExcThrown = false;
         try {
-            String algo = getAlgoName("non.existent.custom.Algorithm");
+            getAlgoName("non.existent.custom.Algorithm");
             noExcThrown = true;
         } catch (Exception e) {
             if (noExcThrown) {
@@ -367,8 +367,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
             s.setUpdate(true);
 
-            // does the selection
-            String results = selectionString(s);
+            selectionString(s);
 
             // evaluate correctness
             assertTrue("Cache file is not created.", cachefile.exists());
@@ -404,8 +403,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             s.addParam(createParam("cache.cachefile", cachefile.getAbsolutePath()));
             s.addParam(createParam("cache", "propertyfile"));
 
-            // does the selection
-            String results = selectionString(s);
+            selectionString(s);
 
             // evaluate correctness
             assertTrue("Cache file is not created.", cachefile.exists());

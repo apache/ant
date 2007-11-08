@@ -54,7 +54,7 @@ public class MapperTest extends TestCase {
         Mapper m = new Mapper(project);
         m.setFrom("*.java");
         try {
-            m.setRefid(new Reference("dummyref"));
+            m.setRefid(new Reference(project, "dummyref"));
             fail("Can add reference to Mapper with from attribute set");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -62,7 +62,7 @@ public class MapperTest extends TestCase {
         }
 
         m = new Mapper(project);
-        m.setRefid(new Reference("dummyref"));
+        m.setRefid(new Reference(project, "dummyref"));
         try {
             m.setFrom("*.java");
             fail("Can set from in Mapper that is a reference.");
@@ -72,7 +72,7 @@ public class MapperTest extends TestCase {
         }
 
         m = new Mapper(project);
-        m.setRefid(new Reference("dummyref"));
+        m.setRefid(new Reference(project, "dummyref"));
         try {
             m.setTo("*.java");
             fail("Can set to in Mapper that is a reference.");
@@ -94,7 +94,7 @@ public class MapperTest extends TestCase {
     public void testCircularReferenceCheck() {
         Mapper m = new Mapper(project);
         project.addReference("dummy", m);
-        m.setRefid(new Reference("dummy"));
+        m.setRefid(new Reference(project, "dummy"));
         try {
             m.getImplementation();
             fail("Can make Mapper a Reference to itself.");
@@ -106,13 +106,13 @@ public class MapperTest extends TestCase {
         // dummy1 --> dummy2 --> dummy3 --> dummy1
         Mapper m1 = new Mapper(project);
         project.addReference("dummy1", m1);
-        m1.setRefid(new Reference("dummy2"));
+        m1.setRefid(new Reference(project, "dummy2"));
         Mapper m2 = new Mapper(project);
         project.addReference("dummy2", m2);
-        m2.setRefid(new Reference("dummy3"));
+        m2.setRefid(new Reference(project, "dummy3"));
         Mapper m3 = new Mapper(project);
         project.addReference("dummy3", m3);
-        m3.setRefid(new Reference("dummy1"));
+        m3.setRefid(new Reference(project, "dummy1"));
         try {
             m1.getImplementation();
             fail("Can make circular reference.");
@@ -125,10 +125,10 @@ public class MapperTest extends TestCase {
         // (which holds a glob mapper from "*.java" to "*.class"
         m1 = new Mapper(project);
         project.addReference("dummy1", m1);
-        m1.setRefid(new Reference("dummy2"));
+        m1.setRefid(new Reference(project, "dummy2"));
         m2 = new Mapper(project);
         project.addReference("dummy2", m2);
-        m2.setRefid(new Reference("dummy3"));
+        m2.setRefid(new Reference(project, "dummy3"));
         m3 = new Mapper(project);
         project.addReference("dummy3", m3);
         Mapper.MapperType mt = new Mapper.MapperType();

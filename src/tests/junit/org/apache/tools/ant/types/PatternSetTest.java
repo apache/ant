@@ -49,7 +49,7 @@ public class PatternSetTest extends TestCase {
         PatternSet p = new PatternSet();
         p.setIncludes("**/*.java");
         try {
-            p.setRefid(new Reference("dummyref"));
+            p.setRefid(new Reference(project, "dummyref"));
             fail("Can add reference to PatternSet with elements from setIncludes");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -57,7 +57,7 @@ public class PatternSetTest extends TestCase {
         }
 
         p = new PatternSet();
-        p.setRefid(new Reference("dummyref"));
+        p.setRefid(new Reference(project, "dummyref"));
         try {
             p.setIncludes("**/*.java");
             fail("Can set includes in PatternSet that is a reference.");
@@ -67,7 +67,7 @@ public class PatternSetTest extends TestCase {
         }
 
         p = new PatternSet();
-        p.setRefid(new Reference("dummyref"));
+        p.setRefid(new Reference(project, "dummyref"));
         try {
             p.setIncludesfile(new File("/a"));
             fail("Can set includesfile in PatternSet that is a reference.");
@@ -122,7 +122,7 @@ public class PatternSetTest extends TestCase {
     public void testCircularReferenceCheck() {
         PatternSet p = new PatternSet();
         project.addReference("dummy", p);
-        p.setRefid(new Reference("dummy"));
+        p.setRefid(new Reference(project, "dummy"));
         try {
             p.getIncludePatterns(project);
             fail("Can make PatternSet a Reference to itself.");
@@ -141,13 +141,13 @@ public class PatternSetTest extends TestCase {
         // dummy1 --> dummy2 --> dummy3 --> dummy1
         PatternSet p1 = new PatternSet();
         project.addReference("dummy1", p1);
-        p1.setRefid(new Reference("dummy2"));
+        p1.setRefid(new Reference(project, "dummy2"));
         PatternSet p2 = new PatternSet();
         project.addReference("dummy2", p2);
-        p2.setRefid(new Reference("dummy3"));
+        p2.setRefid(new Reference(project, "dummy3"));
         PatternSet p3 = new PatternSet();
         project.addReference("dummy3", p3);
-        p3.setRefid(new Reference("dummy1"));
+        p3.setRefid(new Reference(project, "dummy1"));
         try {
             p1.getIncludePatterns(project);
             fail("Can make circular reference.");
@@ -167,10 +167,10 @@ public class PatternSetTest extends TestCase {
         // (which holds patterns "include" and "exclude")
         p1 = new PatternSet();
         project.addReference("dummy1", p1);
-        p1.setRefid(new Reference("dummy2"));
+        p1.setRefid(new Reference(project, "dummy2"));
         p2 = new PatternSet();
         project.addReference("dummy2", p2);
-        p2.setRefid(new Reference("dummy3"));
+        p2.setRefid(new Reference(project, "dummy3"));
         p3 = new PatternSet();
         project.addReference("dummy3", p3);
         p3.setIncludes("include");

@@ -387,7 +387,7 @@ public class PathTest extends TestCase {
     public void testEmptyElementIfIsReference() {
         Path p = new Path(project, "/a:/a");
         try {
-            p.setRefid(new Reference("dummyref"));
+            p.setRefid(new Reference(project, "dummyref"));
             fail("Can add reference to Path with elements from constructor");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -397,7 +397,7 @@ public class PathTest extends TestCase {
         p = new Path(project);
         p.setLocation(new File("/a"));
         try {
-            p.setRefid(new Reference("dummyref"));
+            p.setRefid(new Reference(project, "dummyref"));
             fail("Can add reference to Path with elements from setLocation");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -407,7 +407,7 @@ public class PathTest extends TestCase {
         Path another = new Path(project, "/a:/a");
         project.addReference("dummyref", another);
         p = new Path(project);
-        p.setRefid(new Reference("dummyref"));
+        p.setRefid(new Reference(project, "dummyref"));
         try {
             p.setLocation(new File("/a"));
             fail("Can set location in Path that is a reference.");
@@ -468,7 +468,7 @@ public class PathTest extends TestCase {
     public void testCircularReferenceCheck() {
         Path p = new Path(project);
         project.addReference("dummy", p);
-        p.setRefid(new Reference("dummy"));
+        p.setRefid(new Reference(project, "dummy"));
         try {
             p.list();
             fail("Can make Path a Reference to itself.");
@@ -484,7 +484,7 @@ public class PathTest extends TestCase {
         project.addReference("dummy2", p2);
         Path p3 = p2.createPath();
         project.addReference("dummy3", p3);
-        p3.setRefid(new Reference("dummy1"));
+        p3.setRefid(new Reference(project, "dummy1"));
         try {
             p1.list();
             fail("Can make circular reference.");

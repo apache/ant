@@ -41,7 +41,7 @@ public class FileListTest extends BuildFileTest {
         FileList f = new FileList();
         f.setDir(project.resolveFile("."));
         try {
-            f.setRefid(new Reference("dummyref"));
+            f.setRefid(new Reference(getProject(), "dummyref"));
             fail("Can add reference to FileList with directory attribute set.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -51,7 +51,7 @@ public class FileListTest extends BuildFileTest {
         f = new FileList();
         f.setFiles("foo.xml,c/d/bar.xml");
         try {
-            f.setRefid(new Reference("dummyref"));
+            f.setRefid(new Reference(getProject(), "dummyref"));
             fail("Can add reference to FileList with file attribute set.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -59,7 +59,7 @@ public class FileListTest extends BuildFileTest {
         }
 
         f = new FileList();
-        f.setRefid(new Reference("dummyref"));
+        f.setRefid(new Reference(getProject(), "dummyref"));
         try {
             f.setFiles("a/b/foo.java");
             fail("Can set files in FileList that is a reference.");
@@ -79,7 +79,7 @@ public class FileListTest extends BuildFileTest {
     public void testCircularReferenceCheck() {
         FileList f = new FileList();
         project.addReference("dummy", f);
-        f.setRefid(new Reference("dummy"));
+        f.setRefid(new Reference(getProject(), "dummy"));
         try {
             f.getDir(project);
             fail("Can make FileList a Reference to itself.");
@@ -98,13 +98,13 @@ public class FileListTest extends BuildFileTest {
         // dummy1 --> dummy2 --> dummy3 --> dummy1
         FileList f1 = new FileList();
         project.addReference("dummy1", f1);
-        f1.setRefid(new Reference("dummy2"));
+        f1.setRefid(new Reference(getProject(), "dummy2"));
         FileList f2 = new FileList();
         project.addReference("dummy2", f2);
-        f2.setRefid(new Reference("dummy3"));
+        f2.setRefid(new Reference(getProject(), "dummy3"));
         FileList f3 = new FileList();
         project.addReference("dummy3", f3);
-        f3.setRefid(new Reference("dummy1"));
+        f3.setRefid(new Reference(getProject(), "dummy1"));
         try {
             f1.getDir(project);
             fail("Can make circular reference.");
@@ -124,10 +124,10 @@ public class FileListTest extends BuildFileTest {
         // (which has the Project's basedir as root).
         f1 = new FileList();
         project.addReference("dummy1", f1);
-        f1.setRefid(new Reference("dummy2"));
+        f1.setRefid(new Reference(getProject(), "dummy2"));
         f2 = new FileList();
         project.addReference("dummy2", f2);
-        f2.setRefid(new Reference("dummy3"));
+        f2.setRefid(new Reference(getProject(), "dummy3"));
         f3 = new FileList();
         project.addReference("dummy3", f3);
         f3.setDir(project.resolveFile("."));

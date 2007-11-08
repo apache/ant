@@ -25,6 +25,8 @@ import java.util.Stack;
  */
 public class IdentityStack extends Stack {
 
+    private static final long serialVersionUID = -5555522620060077046L;
+
     /**
      * Get an IdentityStack containing the contents of the specified Stack.
      * @param s the Stack to copy; ignored if null.

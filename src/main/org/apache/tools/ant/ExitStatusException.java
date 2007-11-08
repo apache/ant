@@ -24,6 +24,8 @@ package org.apache.tools.ant;
  */
 public class ExitStatusException extends BuildException {
 
+    private static final long serialVersionUID = 7760846806886585968L;
+
     /** Status code */
     private int status;
 

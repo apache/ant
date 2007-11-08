@@ -86,6 +86,8 @@ public final class DOMUtil {
 
     /** custom implementation of a nodelist */
     public static class NodeListImpl extends Vector implements NodeList {
+        private static final long serialVersionUID = 3175749150080946423L;
+
         /**
          * Get the number of nodes in the list.
          * @return the length of the list.

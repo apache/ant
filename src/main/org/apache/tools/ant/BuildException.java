@@ -25,6 +25,8 @@ import java.io.PrintWriter;
  */
 public class BuildException extends RuntimeException {
 
+    private static final long serialVersionUID = -5419014565354664240L;
+
     /** Exception that might have caused this one. */
     private Throwable cause;
 

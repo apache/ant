@@ -29,6 +29,8 @@ import java.util.EventObject;
  */
 public class BuildEvent extends EventObject {
 
+    private static final long serialVersionUID = 4538050075952288486L;
+
     /** Project which emitted the event. */
     private Project project;
     /** Target which emitted the event, if specified. */
