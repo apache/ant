@@ -25,7 +25,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testStringEncoding">
+  <target name="testStringEncoding" if="os.unix">
     <property name="br" value="${line.separator}" />
     <concat destfile="encodeStringDest"
             outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
@@ -35,6 +35,18 @@
         <file file="encodeStringDest" />
       </resourcesmatch>
     </au:assertTrue>
+  </target>
+	
+  <target name="testStringEncodingWindows" if="os.windows">
+    <property name="br" value="${line.separator}" />
+	<concat destfile="encodeStringDest"
+	        outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+	<au:assertTrue>
+	  <resourcesmatch astext="true">
+	    <file file="utf-16.expected.windows" />
+	    <file file="encodeStringDest" />
+	  </resourcesmatch>
+	</au:assertTrue>
   </target>
 
   <target name="testDoNotFixNestedText" description="Bugzilla 42369">
