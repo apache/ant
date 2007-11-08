@@ -16,7 +16,6 @@
  *
  */
 
-
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
@@ -24,10 +23,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
 
-/**
- * Date: 04-Aug-2004
- * Time: 22:15:46
- */
 public class RmicAdvancedTest extends BuildFileTest {
 
     public RmicAdvancedTest(String name) {
