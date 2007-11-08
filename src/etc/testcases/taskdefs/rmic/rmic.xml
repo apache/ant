@@ -278,12 +278,15 @@
     <assertBaseCompiled/>
   </target>
 
-  <target name="testXnew" if="rmic5.present" depends="init">
-    <base-rmic compiler="sun">
-      <compilerarg value="-Xnew"/>
-    </base-rmic>
-    <assertBaseCompiled/>
-  </target>
+	<!--
+	  This test stamps on the XML parser settings on java6, so it is disabled.
+	-->
+	<target name="testXnew" if="rmic5.present" unless="rmic6.present" depends="init">
+	  <base-rmic compiler="sun">
+	    <compilerarg value="-Xnew"/>
+	  </base-rmic>
+	  <assertBaseCompiled/>
+	</target>
 
   <target name="testXnewForked" if="rmic5.present" depends="init">
     <base-rmic compiler="forking">
