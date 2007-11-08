@@ -3,7 +3,7 @@
 
   <target name="tearDown">
     <delete file="binaryAppendDest" />
-    <!--<delete file="encodeStringDest" />-->
+    <delete file="encodeStringDest" />
   </target>
 
   <target name="testBinaryAppend">
