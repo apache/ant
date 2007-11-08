@@ -64,7 +64,7 @@ public class Retry extends Task implements TaskContainer {
                 break;
             } catch (Exception e) {
                 if (i<retryCount) {
-                    log("Attempt ["+i+"] error occured, retrying...", e, Project.MSG_INFO);
+                    log("Attempt ["+i+"] error occurred, retrying...", e, Project.MSG_INFO);
                     errorMessages.append(e.getMessage());
                     errorMessages.append(getProject().getProperty("line.separator"));
                 } else {
