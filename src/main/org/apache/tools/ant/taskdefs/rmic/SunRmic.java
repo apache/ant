@@ -52,7 +52,7 @@ public class SunRmic extends DefaultRmicAdapter {
     public static final String ERROR_NO_RMIC_ON_CLASSPATH = "Cannot use SUN rmic, as it is not "
                                          + "available.  A common solution is to "
                                          + "set the environment variable "
-                                         + "JAVA_HOME or CLASSPATH.";
+                                         + "JAVA_HOME";
     /** Error message to use when there is an error starting the sun rmic compiler */
     public static final String ERROR_RMIC_FAILED = "Error starting SUN rmic: ";
 
