@@ -51,10 +51,24 @@
     </au:assertTrue>
   </target>
 
-  <target name="testEncoding">
+  <target name="testEncoding" if="os.unix">
     <au:assertTrue>
       <resourcesmatch astext="true">
         <file file="utf-16.in" />
+        <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+        <concat outputEncoding="utf-16" fixlastline="true">
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+	
+  <target name="testEncodingWindows" if="os.windows">
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.in.windows" />
         <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
         <concat outputEncoding="utf-16" fixlastline="true">
           <string value="foo" />
