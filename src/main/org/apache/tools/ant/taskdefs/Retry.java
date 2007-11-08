@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Retries the nested task a set number of times
@@ -65,7 +66,6 @@ public class Retry extends Task implements TaskContainer {
      */
     public void execute() throws BuildException {
         StringBuffer errorMessages = new StringBuffer();
-        String br = getProject().getProperty("line.separator");
         for (int i = 0; i <= retryCount; i++) {
             try {
                 nestedTask.perform();
@@ -76,13 +76,13 @@ public class Retry extends Task implements TaskContainer {
                     StringBuffer exceptionMessage = new StringBuffer();
                     exceptionMessage.append("Task [").append(nestedTask.getTaskName());
                     exceptionMessage.append("] failed after [").append(retryCount);
-                    exceptionMessage.append("] attempts; giving up.").append(br);
-                    exceptionMessage.append("Error messages:").append(br);
+                    exceptionMessage.append("] attempts; giving up.").append(StringUtils.LINE_SEP);
+                    exceptionMessage.append("Error messages:").append(StringUtils.LINE_SEP);
                     exceptionMessage.append(errorMessages);
                     throw new BuildException(exceptionMessage.toString(), getLocation());
                 }
-                log("Attempt [" + i + "]:  error occurred; retrying...", e, Project.MSG_INFO);
-                errorMessages.append(br);
+                log("Attempt [" + i + "]: error occurred; retrying...", e, Project.MSG_INFO);
+                errorMessages.append(StringUtils.LINE_SEP);
             }
         }
     }
