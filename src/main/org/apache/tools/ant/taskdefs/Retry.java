@@ -21,9 +21,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Retries the nested task a set number of times
+ * @since Ant 1.7.1
  */
 public class Retry extends Task implements TaskContainer {
 
@@ -39,14 +41,20 @@ public class Retry extends Task implements TaskContainer {
 
     /**
      * set the task
+     * @param t the task to retry.
      */
-    public void addTask(Task t) {
+    public synchronized void addTask(Task t) {
+        if (nestedTask != null) {
+            throw new BuildException(
+                "The retry task container accepts a single nested task"
+                + " (which may be a sequential task container)");
+        }
         nestedTask = t;
     }
 
     /**
      * set the number of times to retry the task
-     * @param n
+     * @param n the number to use.
      */
     public void setRetryCount(int n) {
         retryCount = n;
@@ -58,26 +66,23 @@ public class Retry extends Task implements TaskContainer {
      */
     public void execute() throws BuildException {
         StringBuffer errorMessages = new StringBuffer();
-        for(int i=0; i<=retryCount; i++) {
+        for (int i = 0; i <= retryCount; i++) {
             try {
                 nestedTask.perform();
                 break;
             } catch (Exception e) {
-                if (i<retryCount) {
-                    log("Attempt ["+i+"] error occurred, retrying...", e, Project.MSG_INFO);
-                    errorMessages.append(e.getMessage());
-                    errorMessages.append(getProject().getProperty("line.separator"));
-                } else {
-                    errorMessages.append(e.getMessage());
+                errorMessages.append(e.getMessage());
+                if (i >= retryCount) {
                     StringBuffer exceptionMessage = new StringBuffer();
                     exceptionMessage.append("Task [").append(nestedTask.getTaskName());
                     exceptionMessage.append("] failed after [").append(retryCount);
-                    exceptionMessage.append("] attempts, giving up.");
-                    exceptionMessage.append(getProject().getProperty("line.separator"));
-                    exceptionMessage.append("Error messages:").append(getProject().getProperty("line.separator"));
+                    exceptionMessage.append("] attempts; giving up.").append(StringUtils.LINE_SEP);
+                    exceptionMessage.append("Error messages:").append(StringUtils.LINE_SEP);
                     exceptionMessage.append(errorMessages);
                     throw new BuildException(exceptionMessage.toString(), getLocation());
                 }
+                log("Attempt [" + i + "]: error occurred; retrying...", e, Project.MSG_INFO);
+                errorMessages.append(StringUtils.LINE_SEP);
             }
         }
     }
