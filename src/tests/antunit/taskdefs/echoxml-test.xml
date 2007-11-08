@@ -40,10 +40,12 @@
     </au:expectfailure>
   </target>
   
-  <target name="test-ns"> <!-- comment this if you don't have the svn trunk of antunit -->
+  <!-- 
+  <target name="test-ns"> 
     <echoxml file="${file}" xmlns:a="antlib:a">
       <a:something />
     </echoxml>
     <au:assertResourceContains resource="${file}" value="a:something"/>
   </target>
+  comment this if you don't have the svn trunk of antunit -->
 </project>
