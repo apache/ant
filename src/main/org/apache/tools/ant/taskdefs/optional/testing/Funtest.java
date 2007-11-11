@@ -241,47 +241,91 @@ public class Funtest extends Task {
         teardown = sequence;
     }
 
+    /**
+     * Set the failOnTeardownErrors attribute.
+     * @param failOnTeardownErrors the value to use.
+     */
     public void setFailOnTeardownErrors(boolean failOnTeardownErrors) {
         this.failOnTeardownErrors = failOnTeardownErrors;
     }
 
+    /**
+     * Set the failureMessage attribute.
+     * @param failureMessage the value to use.
+     */
     public void setFailureMessage(String failureMessage) {
         this.failureMessage = failureMessage;
     }
 
+    /**
+     * Set the failureProperty attribute.
+     * @param failureProperty the value to use.
+     */
     public void setFailureProperty(String failureProperty) {
         this.failureProperty = failureProperty;
     }
 
+    /**
+     * Set the shutdownTime attribute.
+     * @param shutdownTime the value to use.
+     */
     public void setShutdownTime(long shutdownTime) {
         this.shutdownTime = shutdownTime;
     }
 
+    /**
+     * Set the timeout attribute.
+     * @param timeout the value to use.
+     */
     public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * Set the timeoutunit attribute.
+     * @param unit the value to use.
+     */
     public void setTimeoutUnit(WaitFor.Unit unit) {
         timeoutUnitMultiplier = unit.getMultiplier();
     }
 
+    /**
+     * Set the shutdownunit attribute.
+     * @param unit the value to use.
+     */
     public void setShutdownUnit(WaitFor.Unit unit) {
         shutdownUnitMultiplier = unit.getMultiplier();
     }
 
 
+    /**
+     * Get the application exception.
+     * @return the application exception.
+     */
     public BuildException getApplicationException() {
         return applicationException;
     }
 
+    /**
+     * Get the teardown exception.
+     * @return the teardown exception.
+     */
     public BuildException getTeardownException() {
         return teardownException;
     }
 
+    /**
+     * Get the test exception.
+     * @return the test exception.
+     */
     public BuildException getTestException() {
         return testException;
     }
 
+    /**
+     * Get the task exception.
+     * @return the task exception.
+     */
     public BuildException getTaskException() {
         return taskException;
     }
