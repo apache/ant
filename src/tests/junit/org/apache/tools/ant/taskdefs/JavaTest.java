@@ -175,7 +175,7 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void testSpawn() {
-        File logFile = FILE_UTILS.createTempFile("spawn","log", project.getBaseDir());
+        File logFile = FILE_UTILS.createTempFileName("spawn", "log", project.getBaseDir(), false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         project.setProperty("logFile", logFile.getAbsolutePath());
