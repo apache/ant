@@ -19,6 +19,11 @@ Changes that could break older environments:
 
 * ant-type attribute has been marked as deprecated and a warning has been
   issued if it is encountered in the build file.
+  
+* FileUtils.createTempFile now actually creates the file.
+  The TempFile task still does not create the file by default, can be instructed
+  to do so however using a new parameter.
+  Bugzilla report 33969.
 
 Fixed bugs:
 -----------
