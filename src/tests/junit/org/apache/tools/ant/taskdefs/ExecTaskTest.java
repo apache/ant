@@ -347,7 +347,7 @@ public class ExecTaskTest extends BuildFileTest {
             return;
         }
         myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
-        logFile = FILE_UTILS.createTempFile("spawn","log", project.getBaseDir());
+        logFile = FILE_UTILS.createTempFileName("spawn","log", project.getBaseDir(),false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         // make the spawned process run 4 seconds
