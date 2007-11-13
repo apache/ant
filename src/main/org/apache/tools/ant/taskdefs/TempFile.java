@@ -132,7 +132,7 @@ public class TempFile extends Task {
      * @param createFile boolean flag.
      */
     public void setCreateFile(boolean createFile) {
-        this.createFile = deleteOnExit;
+        this.createFile = createFile;
     }
 
     /**
