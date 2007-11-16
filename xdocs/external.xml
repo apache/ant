@@ -2297,6 +2297,32 @@
           </tr>
         </table>
       </subsection>
+      
+     <subsection name="MakeRunScript">
+
+        <p>MakeRunScript creates a run script for your application.  Even if you are developing on windows,
+        you can make a run script for *nix and vice versa.  If you've used the built-in java task before, you
+        already know how to use 90% of MakeRunScript.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/makerunscript/">http://sourceforge.net/projects/makerunscript/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/forum/?group_id=210204">MakeRunScript forums</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache 2.0</td>
+          </tr>
+        </table>
+      </subsection>      
 
       <subsection name="mtxslt">
 
