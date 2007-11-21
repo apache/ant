@@ -181,7 +181,7 @@ public class TarEntry implements TarConstants {
     }
 
     /**
-     * Construct an entry with a name an a link flag.
+     * Construct an entry with a name and a link flag.
      *
      * @param name the entry name
      * @param linkFlag the entry link flag.
@@ -267,7 +267,7 @@ public class TarEntry implements TarConstants {
      */
     public TarEntry(byte[] headerBuf) {
         this();
-        this.parseTarHeader(headerBuf);
+        parseTarHeader(headerBuf);
     }
 
     /**
@@ -278,7 +278,7 @@ public class TarEntry implements TarConstants {
      * @return True if the entries are equal.
      */
     public boolean equals(TarEntry it) {
-        return this.getName().equals(it.getName());
+        return getName().equals(it.getName());
     }
 
     /**
@@ -313,7 +313,7 @@ public class TarEntry implements TarConstants {
      * @return True if entry is a descendant of this.
      */
     public boolean isDescendent(TarEntry desc) {
-        return desc.getName().startsWith(this.getName());
+        return desc.getName().startsWith(getName());
     }
 
     /**
@@ -322,7 +322,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's name.
      */
     public String getName() {
-        return this.name.toString();
+        return name.toString();
     }
 
     /**
@@ -349,7 +349,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's link name.
      */
     public String getLinkName() {
-        return this.linkName.toString();
+        return linkName.toString();
     }
 
     /**
@@ -358,7 +358,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's user id.
      */
     public int getUserId() {
-        return this.userId;
+        return userId;
     }
 
     /**
@@ -376,7 +376,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's group id.
      */
     public int getGroupId() {
-        return this.groupId;
+        return groupId;
     }
 
     /**
@@ -394,7 +394,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's user name.
      */
     public String getUserName() {
-        return this.userName.toString();
+        return userName.toString();
     }
 
     /**
@@ -412,7 +412,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's group name.
      */
     public String getGroupName() {
-        return this.groupName.toString();
+        return groupName.toString();
     }
 
     /**
@@ -431,8 +431,8 @@ public class TarEntry implements TarConstants {
      * @param groupId This entry's new group id.
      */
     public void setIds(int userId, int groupId) {
-        this.setUserId(userId);
-        this.setGroupId(groupId);
+        setUserId(userId);
+        setGroupId(groupId);
     }
 
     /**
@@ -442,8 +442,8 @@ public class TarEntry implements TarConstants {
      * @param groupName This entry's new group name.
      */
     public void setNames(String userName, String groupName) {
-        this.setUserName(userName);
-        this.setGroupName(groupName);
+        setUserName(userName);
+        setGroupName(groupName);
     }
 
     /**
@@ -453,7 +453,7 @@ public class TarEntry implements TarConstants {
      * @param time This entry's new modification time.
      */
     public void setModTime(long time) {
-        this.modTime = time / MILLIS_PER_SECOND;
+        modTime = time / MILLIS_PER_SECOND;
     }
 
     /**
@@ -462,7 +462,7 @@ public class TarEntry implements TarConstants {
      * @param time This entry's new modification time.
      */
     public void setModTime(Date time) {
-        this.modTime = time.getTime() / MILLIS_PER_SECOND;
+        modTime = time.getTime() / MILLIS_PER_SECOND;
     }
 
     /**
@@ -471,7 +471,7 @@ public class TarEntry implements TarConstants {
      * @return time This entry's new modification time.
      */
     public Date getModTime() {
-        return new Date(this.modTime * MILLIS_PER_SECOND);
+        return new Date(modTime * MILLIS_PER_SECOND);
     }
 
     /**
@@ -480,7 +480,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's file.
      */
     public File getFile() {
-        return this.file;
+        return file;
     }
 
     /**
@@ -489,7 +489,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's mode.
      */
     public int getMode() {
-        return this.mode;
+        return mode;
     }
 
     /**
@@ -498,7 +498,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's file size.
      */
     public long getSize() {
-        return this.size;
+        return size;
     }
 
     /**
@@ -527,15 +527,15 @@ public class TarEntry implements TarConstants {
      * @return True if this entry is a directory.
      */
     public boolean isDirectory() {
-        if (this.file != null) {
-            return this.file.isDirectory();
+        if (file != null) {
+            return file.isDirectory();
         }
 
-        if (this.linkFlag == LF_DIR) {
+        if (linkFlag == LF_DIR) {
             return true;
         }
 
-        if (this.getName().endsWith("/")) {
+        if (getName().endsWith("/")) {
             return true;
         }
 
@@ -549,15 +549,15 @@ public class TarEntry implements TarConstants {
      * @return An array of TarEntry's for this entry's children.
      */
     public TarEntry[] getDirectoryEntries() {
-        if (this.file == null || !this.file.isDirectory()) {
+        if (file == null || !file.isDirectory()) {
             return new TarEntry[0];
         }
 
-        String[]   list = this.file.list();
+        String[]   list = file.list();
         TarEntry[] result = new TarEntry[list.length];
 
         for (int i = 0; i < list.length; ++i) {
-            result[i] = new TarEntry(new File(this.file, list[i]));
+            result[i] = new TarEntry(new File(file, list[i]));
         }
 
         return result;
@@ -571,12 +571,12 @@ public class TarEntry implements TarConstants {
     public void writeEntryHeader(byte[] outbuf) {
         int offset = 0;
 
-        offset = TarUtils.getNameBytes(this.name, outbuf, offset, NAMELEN);
-        offset = TarUtils.getOctalBytes(this.mode, outbuf, offset, MODELEN);
-        offset = TarUtils.getOctalBytes(this.userId, outbuf, offset, UIDLEN);
-        offset = TarUtils.getOctalBytes(this.groupId, outbuf, offset, GIDLEN);
-        offset = TarUtils.getLongOctalBytes(this.size, outbuf, offset, SIZELEN);
-        offset = TarUtils.getLongOctalBytes(this.modTime, outbuf, offset, MODTIMELEN);
+        offset = TarUtils.getNameBytes(name, outbuf, offset, NAMELEN);
+        offset = TarUtils.getOctalBytes(mode, outbuf, offset, MODELEN);
+        offset = TarUtils.getOctalBytes(userId, outbuf, offset, UIDLEN);
+        offset = TarUtils.getOctalBytes(groupId, outbuf, offset, GIDLEN);
+        offset = TarUtils.getLongOctalBytes(size, outbuf, offset, SIZELEN);
+        offset = TarUtils.getLongOctalBytes(modTime, outbuf, offset, MODTIMELEN);
 
         int csOffset = offset;
 
@@ -584,13 +584,13 @@ public class TarEntry implements TarConstants {
             outbuf[offset++] = (byte) ' ';
         }
 
-        outbuf[offset++] = this.linkFlag;
-        offset = TarUtils.getNameBytes(this.linkName, outbuf, offset, NAMELEN);
-        offset = TarUtils.getNameBytes(this.magic, outbuf, offset, MAGICLEN);
-        offset = TarUtils.getNameBytes(this.userName, outbuf, offset, UNAMELEN);
-        offset = TarUtils.getNameBytes(this.groupName, outbuf, offset, GNAMELEN);
-        offset = TarUtils.getOctalBytes(this.devMajor, outbuf, offset, DEVLEN);
-        offset = TarUtils.getOctalBytes(this.devMinor, outbuf, offset, DEVLEN);
+        outbuf[offset++] = linkFlag;
+        offset = TarUtils.getNameBytes(linkName, outbuf, offset, NAMELEN);
+        offset = TarUtils.getNameBytes(magic, outbuf, offset, MAGICLEN);
+        offset = TarUtils.getNameBytes(userName, outbuf, offset, UNAMELEN);
+        offset = TarUtils.getNameBytes(groupName, outbuf, offset, GNAMELEN);
+        offset = TarUtils.getOctalBytes(devMajor, outbuf, offset, DEVLEN);
+        offset = TarUtils.getOctalBytes(devMinor, outbuf, offset, DEVLEN);
 
         while (offset < outbuf.length) {
             outbuf[offset++] = 0;
@@ -609,30 +609,30 @@ public class TarEntry implements TarConstants {
     public void parseTarHeader(byte[] header) {
         int offset = 0;
 
-        this.name = TarUtils.parseName(header, offset, NAMELEN);
+        name = TarUtils.parseName(header, offset, NAMELEN);
         offset += NAMELEN;
-        this.mode = (int) TarUtils.parseOctal(header, offset, MODELEN);
+        mode = (int) TarUtils.parseOctal(header, offset, MODELEN);
         offset += MODELEN;
-        this.userId = (int) TarUtils.parseOctal(header, offset, UIDLEN);
+        userId = (int) TarUtils.parseOctal(header, offset, UIDLEN);
         offset += UIDLEN;
-        this.groupId = (int) TarUtils.parseOctal(header, offset, GIDLEN);
+        groupId = (int) TarUtils.parseOctal(header, offset, GIDLEN);
         offset += GIDLEN;
-        this.size = TarUtils.parseOctal(header, offset, SIZELEN);
+        size = TarUtils.parseOctal(header, offset, SIZELEN);
         offset += SIZELEN;
-        this.modTime = TarUtils.parseOctal(header, offset, MODTIMELEN);
+        modTime = TarUtils.parseOctal(header, offset, MODTIMELEN);
         offset += MODTIMELEN;
         offset += CHKSUMLEN;
-        this.linkFlag = header[offset++];
-        this.linkName = TarUtils.parseName(header, offset, NAMELEN);
+        linkFlag = header[offset++];
+        linkName = TarUtils.parseName(header, offset, NAMELEN);
         offset += NAMELEN;
-        this.magic = TarUtils.parseName(header, offset, MAGICLEN);
+        magic = TarUtils.parseName(header, offset, MAGICLEN);
         offset += MAGICLEN;
-        this.userName = TarUtils.parseName(header, offset, UNAMELEN);
+        userName = TarUtils.parseName(header, offset, UNAMELEN);
         offset += UNAMELEN;
-        this.groupName = TarUtils.parseName(header, offset, GNAMELEN);
+        groupName = TarUtils.parseName(header, offset, GNAMELEN);
         offset += GNAMELEN;
-        this.devMajor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
+        devMajor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
         offset += DEVLEN;
-        this.devMinor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
+        devMinor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
     }
 }
