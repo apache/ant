@@ -165,6 +165,8 @@ public class Funtest extends Task {
     /** {@value} */
     public static final String SKIPPING_TESTS
         = "Condition failed -skipping tests";
+    public static final String APPLICATION_EXCEPTION = "Application Exception";
+    public static final String TEARDOWN_EXCEPTION = "Teardown Exception";
 
     /**
      * Log if the definition is overriding something
@@ -355,6 +357,7 @@ public class Funtest extends Task {
     /**
      * Create a newly bound parallel instance with one child
      * @param parallelTimeout timeout
+     * @param child task
      * @return a bound and initialised parallel instance.
      */
     private Parallel newParallel(long parallelTimeout, Task child) {
@@ -463,16 +466,7 @@ public class Funtest extends Task {
         }
         applicationException = worker.getBuildException();
 
-        /**Now faults are analysed
-            the priority is
-          -testexceptions, except those indicating a build timeout when the application itself
-            failed.
-            (because often it is the application fault that is more interesting than the probe
-             failure, which is usually triggered by the application not starting
-          -application exceptions (above test timeout exceptions)
-          -teardown exceptions -except when they are being ignored
-          -any
-        */
+        //Now faults are analysed
 
         processExceptions();
     }
@@ -502,9 +496,7 @@ public class Funtest extends Task {
             if (taskException == null || taskException instanceof BuildTimeoutException) {
                 taskException = applicationException;
             } else {
-                log("Application Exception:" + applicationException.toString(),
-                        applicationException,
-                        Project.MSG_WARN);
+                ignoringThrowable(APPLICATION_EXCEPTION, applicationException);
             }
         }
 
@@ -514,9 +506,7 @@ public class Funtest extends Task {
                 taskException = teardownException;
             } else {
                 //don't let the cleanup exception get in the way of any other failure
-                log("teardown exception" + teardownException.toString(),
-                        teardownException,
-                        Project.MSG_WARN);
+                ignoringThrowable(TEARDOWN_EXCEPTION, teardownException);
             }
         }
 
@@ -535,5 +525,16 @@ public class Funtest extends Task {
         if (taskException != null) {
             throw taskException;
         }
+    }
+
+    /**
+     * log that we are ignoring something rather than rethrowing it.
+     * @param type name of exception
+     * @param thrown what was thrown
+     */
+    protected void ignoringThrowable(String type, Throwable thrown) {
+        log(type + ": "+ thrown.toString(),
+                thrown,
+                Project.MSG_WARN);
     }
 }
