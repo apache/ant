@@ -83,9 +83,10 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class FixCRLF extends MatchingTask implements ChainableReader {
 
+    private static final String FIXCRLF_ERROR = "<fixcrlf> error: ";
     /** error string for using srcdir and file */
     public static final String ERROR_FILE_AND_SRCDIR
-        = "srcdir and file are mutually exclusive";
+        =FIXCRLF_ERROR+"srcdir and file are mutually exclusive";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -105,6 +106,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * Encoding to use for output files
      */
     private String outputEncoding = null;
+
 
     /**
      * Chain this task as a reader.
@@ -312,20 +314,20 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             srcDir = file.getParentFile();
         }
         if (srcDir == null) {
-            throw new BuildException("srcdir attribute must be set!");
+            throw new BuildException(FIXCRLF_ERROR +"srcdir attribute must be set!");
         }
         if (!srcDir.exists()) {
-            throw new BuildException("srcdir does not exist!");
+            throw new BuildException(FIXCRLF_ERROR +"srcdir does not exist: '"+srcDir+"'");
         }
         if (!srcDir.isDirectory()) {
-            throw new BuildException("srcdir is not a directory!");
+            throw new BuildException(FIXCRLF_ERROR +"srcdir is not a directory: '"+srcDir+"'");
         }
         if (destDir != null) {
             if (!destDir.exists()) {
-                throw new BuildException("destdir does not exist!");
+                throw new BuildException(FIXCRLF_ERROR +"destdir does not exist: '" + destDir + "'");
             }
             if (!destDir.isDirectory()) {
-                throw new BuildException("destdir is not a directory!");
+                throw new BuildException(FIXCRLF_ERROR +"destdir is not a directory: '" + destDir + "'");
             }
         }
     }
