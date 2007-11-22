@@ -443,6 +443,7 @@ public class Symlink extends DispatchTask {
      *
      * @param properties     The properties object to be written.
      * @param dir            The directory for which we are writing the links.
+     * @throws BuildException if the property file could not be written
      */
     private void writePropertyFile(Properties properties, File dir)
         throws BuildException {
@@ -498,7 +499,16 @@ public class Symlink extends DispatchTask {
             }
         }
         String[] cmd = new String[] {"ln", options, res, lnk};
-        Execute.runCommand(this, cmd);
+        try {
+            Execute.runCommand(this, cmd);
+        } catch (BuildException failedToExecute) {
+            if(failonerror) {
+                throw failedToExecute;
+            } else {
+                //log at the info level, and keep going.
+                log(failedToExecute.getMessage(), failedToExecute, Project.MSG_INFO);
+            }
+        }
     }
 
     /**

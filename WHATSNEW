@@ -46,6 +46,9 @@ Fixed bugs:
 
  * <symlink> task couldn't overwrite files that were in the way of the symlink.
    Bugzilla report 43426.
+   
+ * <symlink> task failonerror="false" does not stop build from failing when 'ln' 
+   command returns non-zero. Bugzilla report 43624  
 
  * <touch> task couldn't differentiate between "no resources specified" and "no resources
    matched."  Bugzilla report 43799.
