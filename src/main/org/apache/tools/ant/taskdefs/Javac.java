@@ -984,7 +984,7 @@ public class Javac extends MatchingTask {
             if (isJdkCompiler(compilerImpl)) {
                 compilerImpl = "extJavac";
             } else {
-                log("Since compiler setting isn't classic or modern,"
+                log("Since compiler setting isn't classic or modern, "
                     + "ignoring fork setting.", Project.MSG_WARN);
             }
         }
