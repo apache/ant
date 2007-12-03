@@ -92,6 +92,7 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 </table>
 
 <h4>Examples</h4>
+
 <blockquote><pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
   &lt;include name=&quot;apps/**/classes&quot;/&gt;
@@ -101,6 +102,7 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <p>Groups all directories named <code>classes</code> found under the
 <code>apps</code> subdirectory of <code>${build.dir}</code>, except those
 that have the text <code>Test</code> in their name.</p>
+
 <blockquote><pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
   &lt;patternset id=&quot;non.test.classes&quot;&gt;
@@ -112,6 +114,7 @@ that have the text <code>Test</code> in their name.</p>
 <p>Groups the same directories as the above example, but also establishes
 a PatternSet that can be referenced in other
 <code>&lt;dirset&gt;</code> elements, rooted at a different directory.</p>
+
 <blockquote><pre>
 &lt;dirset dir=&quot;${debug_build.dir}&quot;&gt;
   &lt;patternset refid=&quot;non.test.classes&quot;/&gt;
@@ -120,6 +123,15 @@ a PatternSet that can be referenced in other
 <p>Groups all directories in directory <code>${debug_build.dir}</code>,
 using the same patterns as the above example.</p>
 
+<blockquote><pre>
+&lt;dirset id=&quot;dirset&quot; dir=&quot;${workingdir}&quot;&gt;
+   &lt;present targetdir=&quot;${workingdir}&quot;&gt;
+        &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*/${markerfile}&quot; /&gt;
+   &lt;/present&gt;
+&lt;/dirset&gt;
+</pre></blockquote>
+<p>Selects all directories somewhere under <code>${workingdir}</code>
+which contain a <code>${markerfile}</code>.</p>
 
 
 </body>
