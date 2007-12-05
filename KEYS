@@ -829,3 +829,93 @@ GwwACgkQoL/5PaoAd7BQAwCeJFb9yZvOWfdf73A7t2MvPXn1y6kAnRquMmA5eVdh
 HbAUXWyYuT2OHOSD
 =F2q3
 -----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/DE8884A0 2007-04-27 Xavier Hanin <xavier.hanin@gmail.com>
+sig 3       DE8884A0 2007-04-27   Xavier Hanin <xavier.hanin@gmail.com>
+sig         5F298824 2007-05-06   Simon Pepping <spepping@leverkruid.eu>
+sig         A99F75DD 2007-05-03   Rodent of Unusual Size <coar@OpenSource.Org>
+sig         E222DE4F 2007-05-02   Mathias Herberts <Mathias.Herberts@iroise.net>
+sig         911203E4 2007-05-02   [User id not found]
+sig         302DA568 2007-05-03   Rodent of Unusual Size (DSA) <coar@Apache.Org>
+sig         2C312D2F 2007-05-03   Rodent of Unusual Size <coar@OpenSource.Org>
+sig         F12F6072 2007-05-05   Fred Vos <fred.vos@mokolo.org>
+sig 3       311A3DE5 2007-05-05   Ruediger Pluem <rpluem@apache.org>
+sig 3       88817402 2007-05-06   Thomas Vandahl <thomas@vandahl.org>
+sig         01530235 2007-05-02   Luc Maisonobe (SpaceRoots) <luc@spaceroots.org>
+sig         5F6B8B72 2007-05-12   Stefan Bodewig <bodewig@apache.org>
+sig         9C85222B 2007-05-14   Henning Schmiedehausen <hps@intermeta.de>
+sig         4358C584 2007-05-06   Vincent Hennebert <vhennebert@apache.org>
+sig         0B7E6CFA 2007-05-06   Sami Siren <siren@apache.org>
+sig         4CEED75F 2007-05-07   Nick Burch <nick@gagravarr.org>
+sig         40581837 2007-05-08   Nick Kew <nick@webthing.com>
+sig         6BD872A0 2007-05-17   Michael Busch (Lucene Committer) <buschmi@apache.org>
+sig         6210BFC0 2007-05-17   Jean-Frederic Clere <jfclere@apache.org>
+sig 3       990ED4AA 2007-05-06   Knut Anders Hatlen <kahatlen@apache.org>
+sig         0F143BC1 2007-05-22   Matt Hogstrom <matt@hogstrom.org>
+sig         A46C4CA1 2007-05-22   Matt Hogstrom <hogstrom@apache.org>
+sig         152924AF 2007-05-23   Sander Temme <sander@temme.net>
+sub  1024g/A5EB8D3D 2007-04-27
+sig         DE8884A0 2007-04-27   Xavier Hanin <xavier.hanin@gmail.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.3 (MingW32)
+
+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
+0P7XxTpZ4EKSvOkQ6IhGBBARAgAGBQJGTEaDAAoJEB8hI8Nr2HKgtRoAnReqmHxs
+MbATTtCEF+WbTqREe1+JAJ9pM5VmM/Apfh1hPM8i55Q96BP1h4hGBBARAgAGBQJG
+TIFwAAoJEA9FCiZiEL/A4j0AnAsAjAu6nDTd73TM3S80JtbuatX8AJ0WBRJk5ZZI
+TmnMyz2yp6k57tyeRohGBBMRAgAGBQJGPbLbAAoJEOHh8rCZDtSqCOQAn0SVan9j
+r55MJrDGk8D3M5pQvTd8AJ9uU45i0OQUP+zY5LSacNtOzSy6MIhGBBARAgAGBQJG
+Una1AAoJEDLB1u8PFDvBK+EAoMjrujpsE1XQs3YxDwz5HHSWv9E7AKCJLU0W2MbF
+OIgs9Smxz2LbuYH7lIhGBBARAgAGBQJGUnbGAAoJEMuuvjmkbEyh9uMAoJ2fBgZo
+2kl+jOzhQnXHHDHzyLyAAKCR8Z6tloKXkhPRIV/N/OjwIW0i54ipBBARAgBpBQJG
+U8qkIBxTYW5kZXIgVGVtbWUgPHNhbmRlckB0ZW1tZS5uZXQ+IhxTYW5kZXIgVGVt
+bWUgPHNjdGVtbWVAYXBhY2hlLm9yZz4eHFNhbmRlciBUZW1tZSA8c2FuZGVyQG1h
+Yy5jb20+AAoJELK+vEAVKSSveJAAniq8wB4b/DdGTK9Ygmu5Y76tqsw/AJsHGkn3
+5JyiHbXCvVujWmPtY1/OZbkBDQRGMZ4PEAQA+T0YRtd2aeXU+AOJnrhChy0dptVt
+CE6PW9LrwZGqeV4THNWhdYuWRWlyzgU4HSfuk1Svu3WKMbnwp+Fv8fU6MmidOvEJ
+p9IV1l4DidIXyhAacwpCN11hXvj5cHdF4KhJr/NG9oedin6nQoQFRQ7EfkUjAXOf
+MCZnSps9XBJdy3cAAwUEAIGrITayVmWfUgjPvQg8L+4R2i31XQ70HIELQtYDs0Ln
+iWrwZuO+aLI6Jw1RbZii6DM2QsVdZj+v36S2KJTvXeJVyb51d0uXYFxre1uCZrb2
+I1Lle8v3GVQvlrTpmZIPhOTotskKFWUCh2jqgLaEvJPpRWgIRXPF4g12nBXcLLXE
+iEkEGBECAAkFAkYxng8CGwwACgkQA/aMvd6IhKDVtQCeKdUGQS0lD0nAJsGiSbKg
+gLwEM0sAn0dUIIsbxE0fTHQVIQK4bII82UhZ
+=jwNf
+-----END PGP PUBLIC KEY BLOCK-----
