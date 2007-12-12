@@ -89,10 +89,12 @@ See details in the documentation of the <a href="../CoreTypes/regexp.html#implem
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;replaceregexp file=&quot;${src}/build.properties&quot;
-                         match=&quot;OldProperty=(.*)&quot;
-                         replace=&quot;NewProperty=\1&quot;
-                         byline=&quot;true&quot;/&gt;
+<pre>
+&lt;replaceregexp file=&quot;${src}/build.properties&quot;
+               match=&quot;OldProperty=(.*)&quot;
+               replace=&quot;NewProperty=\1&quot;
+               byline=&quot;true&quot;
+/&gt;
 </pre>
 <p>replaces occurrences of the property name &quot;OldProperty&quot;
  with &quot;NewProperty&quot; in a properties file, preserving the existing
@@ -122,9 +124,9 @@ value, in the file <code>${src}/build.properties</code></p>
   &lt;regexp pattern=&quot;OldProperty=(.*)&quot;/&gt;
   &lt;substitution expression=&quot;NewProperty=\1&quot;/&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
-   &lt;includes=&quot;*.properties&quot;/&gt;
+    &lt;include name=&quot;*.properties&quot;/&gt;
   &lt;/fileset&gt;
- &lt;/replaceregexp&gt;
+&lt;/replaceregexp&gt;
 </pre></blockquote>
 <p>replaces occurrences of the property name &quot;OldProperty&quot;
  with &quot;NewProperty&quot; in a properties file, preserving the existing
