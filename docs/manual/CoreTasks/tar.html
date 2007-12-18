@@ -156,15 +156,16 @@ supported as a nested element.</p>
 
 <h3>Examples</h3>
 <pre>
-&lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
-&lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
+&lt;tar destfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
+&lt;gzip destfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code>  directory, then applies the gzip task to compress
 it.</p>
+
 <pre>
 &lt;tar destfile=&quot;${dist}/manual.tar&quot;
-      basedir=&quot;htdocs/manual&quot;
-      excludes=&quot;mydocs/**, **/todo.html&quot;
+     basedir=&quot;htdocs/manual&quot;
+     excludes=&quot;mydocs/**, **/todo.html&quot;
 /&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
@@ -183,7 +184,6 @@ or files with the name <code>todo.html</code> are excluded.</p>
     &lt;include name=&quot;*.html&quot;/&gt;
   &lt;/tarfileset&gt;
 &lt;/tar&gt;</pre>
-
 <p>
   Writes the file <code>docs/readme.txt</code> as
   <code>/usr/doc/ant/README</code> into the archive. All
@@ -193,10 +193,9 @@ or files with the name <code>todo.html</code> are excluded.</p>
   <code>/usr/doc/ant/index.html</code> to the archive.
 </p>
 
-
 <pre>
 &lt;tar longfile=&quot;gnu&quot;
-     destfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
+     destfile=&quot;${dist.base}/${dist.name}-src.tar&quot;&gt;
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
@@ -208,7 +207,6 @@ or files with the name <code>todo.html</code> are excluded.</p>
   &lt;/tarfileset&gt;
 &lt;/tar&gt;
 </pre>
-
 <p>This example shows building a tar which uses the GNU extensions for long paths and
 where some files need to be marked as executable (mode 755)
 and the rest are use the default mode (read-write by owner). The first
@@ -228,23 +226,24 @@ attribute as with all other filesets.  In the example above,
 of a directory, so <code>${dist.name}</code> is a valid path relative
 to <code>${dist.name}/..</code>.</p>
 
+
 <pre>
-&lt;tar dest="release.tar.gz" compress="gzip"&gt;
+&lt;tar destfile="release.tar.gz" compression="gzip"&gt;
   &lt;zipfileset src="release.zip"/&gt;
 &lt;/tar&gt;
 </pre>
-
 <p>Re-packages a ZIP archive as a GZip compressed tar archive.  If
 Unix file permissions have been stored as part of the ZIP file, they
 will be retained in the resulting tar archive.</p>
 
-  <p><strong>Note:</strong>
-    Please note the tar task creates a tar file, it does not append 
-    to an existing tar file. The existing tar file is replaced instead.
-    As with most tasks in Ant, the task only takes action if the output
-    file (the tar file in this case) is older than the input files, or
-    if the output file does not exist.
-  </p>
+
+<p><strong>Note:</strong>
+  Please note the tar task creates a tar file, it does not append 
+  to an existing tar file. The existing tar file is replaced instead.
+  As with most tasks in Ant, the task only takes action if the output
+  file (the tar file in this case) is older than the input files, or
+  if the output file does not exist.
+</p>
 
 </body>
 </html>
