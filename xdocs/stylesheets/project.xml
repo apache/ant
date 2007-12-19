@@ -83,6 +83,12 @@
                 <item name="Binary Distributions" href="http://ant.apache.org/antlibs/bindownload.cgi"/>
                 <item name="Source Distributions" href="http://ant.apache.org/antlibs/srcdownload.cgi"/>
             </menu>
+            <menu name="Ivy">
+                <item name="Introduction"         href="/projects/ivy.html"/>
+                <item name="Homepage"             href="http://ant.apache.org/ivy/"/>
+                <item name="Distributions"        href="http://ant.apache.org/ivy/download.cgi"/>
+                <item name="Wiki"                 href="http://wiki.apache.org/ivy/"/>
+            </menu>
         </menusection>
     </body>
 </project>
