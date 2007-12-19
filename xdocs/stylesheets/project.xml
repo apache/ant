@@ -85,10 +85,9 @@
             </menu>
             <menu name="Ivy">
                 <item name="Introduction"         href="/projects/ivy.html"/>
-                <item name="Homepage"             href="http://incubator.apache.org/ivy/"/>
-                <item name="Binary Distributions" href="http://people.apache.org/dist/incubator/ivy/"/>
-                <item name="Source Distributions" href="http://people.apache.org/dist/incubator/ivy/"/>
-                <item name="Wiki"                 href="http://incubator.apache.org/ivy/wiki.html"/>
+                <item name="Homepage"             href="http://ant.apache.org/ivy/"/>
+                <item name="Distributions"        href="http://ant.apache.org/ivy/download.cgi"/>
+                <item name="Wiki"                 href="http://wiki.apache.org/ivy/"/>
             </menu>
         </menusection>
     </body>
