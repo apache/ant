@@ -91,7 +91,7 @@ public abstract class BuildFileTest extends TestCase {
      * @param  target target to run
      * @param  cause  information string to reader of report
      */
-    public  void expectBuildException(String target, String cause) {
+    public void expectBuildException(String target, String cause) {
         expectSpecificBuildException(target, cause, null);
     }
 
@@ -167,7 +167,7 @@ public abstract class BuildFileTest extends TestCase {
      * @pre logBuffer!=null
      * @return    The log value
      */
-    public  String getLog() {
+    public String getLog() {
         return logBuffer.toString();
     }
 
