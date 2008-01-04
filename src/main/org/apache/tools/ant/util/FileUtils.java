@@ -804,7 +804,7 @@ public class FileUtils {
      *            Directory to create the temporary file in; java.io.tmpdir used
      *            if not specified.
      *            
-     * @deprecated since ant 1.8 use createTempFile(String, String, File, 
+     * @deprecated since ant 1.7.1 use createTempFile(String, String, File, 
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */
@@ -831,13 +831,14 @@ public class FileUtils {
      * If possible set to true.
      *
      * @return a File reference to the new temporary file.
-     * @since Ant 1.8
+     * @since Ant 1.7.1
      */
     public File createTempFile(String prefix, String suffix, File parentDir,
             boolean deleteOnExit, boolean createFile) {
         File result = null;
-        String parent = (parentDir == null) ? System
-                .getProperty("java.io.tmpdir") : parentDir.getPath();
+        String parent = (parentDir == null) 
+                ? System.getProperty("java.io.tmpdir")
+                : parentDir.getPath();
 
         if (createFile) {
             try {
@@ -885,7 +886,7 @@ public class FileUtils {
      * @param deleteOnExit
      *            whether to set the tempfile for deletion on normal VM exit.
      *            
-     * @deprecated since ant 1.8 use createTempFile(String, String, File, 
+     * @deprecated since ant 1.7.1 use createTempFile(String, String, File, 
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */
