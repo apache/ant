@@ -600,7 +600,7 @@ public class Replace extends MatchingTask {
             in = new FileInput(src);
 
             temp = FILE_UTILS.createTempFile("rep", ".tmp",
-                    src.getParentFile());
+                    src.getParentFile(), false, true);
             out = new FileOutput(temp);
 
             int repCountStart = replaceCount;

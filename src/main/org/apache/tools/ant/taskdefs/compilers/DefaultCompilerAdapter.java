@@ -466,8 +466,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 PrintWriter out = null;
                 try {
                     tmpFile = FILE_UTILS.createTempFile(
-                        "files", "", getJavac().getTempdir());
-                    tmpFile.deleteOnExit();
+                        "files", "", getJavac().getTempdir(), true, true);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {

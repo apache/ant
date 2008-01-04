@@ -1827,9 +1827,9 @@ public class FTP
         FTPFile [] theFiles = null;
         final int maxIterations = 1000;
         for (int counter = 1; counter < maxIterations; counter++) {
-            File localFile = FILE_UTILS.createTempFileName(
+            File localFile = FILE_UTILS.createTempFile(
             	"ant" + Integer.toString(counter), ".tmp",
-                null, false);
+                null, false, false);
             String fileName = localFile.getName();
             boolean found = false;
             try {

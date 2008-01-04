@@ -341,7 +341,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             fcv = new Vector(1);
             fcv.add(fc);
         }
-        File tmpFile = FILE_UTILS.createTempFileName("fixcrlf", "", null, true);
+        File tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null, true, false);
         try {
             FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, false, false,
                 encoding, outputEncoding == null ? encoding : outputEncoding,

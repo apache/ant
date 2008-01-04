@@ -224,8 +224,7 @@ public class CvsTagDiff extends AbstractCvsTask {
         setCommand("");
         File tmpFile = null;
         try {
-            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null);
-            tmpFile.deleteOnExit();
+            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null, true, true);
             setOutput(tmpFile);
 
             // run the cvs command
