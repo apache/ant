@@ -1694,8 +1694,7 @@ public class Javadoc extends Task {
              * if requested.
              */
             if (useExternalFile) {
-                tmpList = FILE_UTILS.createTempFile("javadoc", "", null);
-                tmpList.deleteOnExit();
+                tmpList = FILE_UTILS.createTempFile("javadoc", "", null, true, true);
                 toExecute.createArgument()
                     .setValue("@" + tmpList.getAbsolutePath());
                 srcListWriter = new PrintWriter(
@@ -1882,8 +1881,7 @@ public class Javadoc extends Task {
         PrintWriter optionsListWriter = null;
         try {
             optionsTmpFile = FILE_UTILS.createTempFile(
-                "javadocOptions", "", null);
-            optionsTmpFile.deleteOnExit();
+                "javadocOptions", "", null, true, true);
             String[] listOpt = toExecute.getArguments();
             toExecute.clearArgs();
             toExecute.createArgument().setValue(

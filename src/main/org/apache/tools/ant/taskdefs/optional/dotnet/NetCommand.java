@@ -346,7 +346,7 @@ public class NetCommand {
             //afterwards
             FileOutputStream fos = null;
 
-            temporaryCommandFile = FILE_UTILS.createTempFile("cmd", ".txt", null);
+            temporaryCommandFile = FILE_UTILS.createTempFile("cmd", ".txt", null, false, true);
             owner.log("Using response file " + temporaryCommandFile, Project.MSG_VERBOSE);
 
             try {

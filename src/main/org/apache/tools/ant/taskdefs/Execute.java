@@ -1190,8 +1190,7 @@ public class Execute {
          */
         private File createCommandFile(String[] cmd, String[] env)
             throws IOException {
-            File script = FILE_UTILS.createTempFile("ANT", ".COM", null);
-            script.deleteOnExit();
+            File script = FILE_UTILS.createTempFile("ANT", ".COM", null, true, true);
             PrintWriter out = null;
             try {
                 out = new PrintWriter(new FileWriter(script));

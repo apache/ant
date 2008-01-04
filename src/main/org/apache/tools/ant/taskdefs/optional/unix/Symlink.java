@@ -409,8 +409,8 @@ public class Symlink extends DispatchTask {
         File canfil = linkfil.getCanonicalFile();
 
         // rename the resource, thus breaking the link:
-        File temp = FILE_UTILS.createTempFileName("symlink", ".tmp",
-                                              canfil.getParentFile(), false);
+        File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
+                                              canfil.getParentFile(), false, false);
         try {
             try {
                 FILE_UTILS.rename(canfil, temp);

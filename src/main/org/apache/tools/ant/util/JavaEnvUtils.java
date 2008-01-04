@@ -440,7 +440,7 @@ public final class JavaEnvUtils {
      */
     public static File createVmsJavaOptionFile(String[] cmd)
             throws IOException {
-        File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null);
+        File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null, false, true);
         PrintWriter out = null;
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(script)));
