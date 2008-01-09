@@ -757,39 +757,6 @@
         </table>
       </subsection>
 
-      <subsection name="Modern Development Crises">
-        <p>This presentation is an overview of the state of software
-        development in 2001.  There are a couple of slides that briefly cover
-        Ant.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Author:</th>
-            <td>Steve Loughran</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.iseran.com/Steve/modern_development_processes.html">http://www.iseran.com/Steve/modern_development_processes.html</a></td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="When Web Services Go Bad">
-        <p>A presentation from the <a
-        href="http://www.sellsbrothers.com/conference/">Web Services
-        DevCon</a> in March 2002.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Author:</th>
-            <td>Steve Loughran</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.iseran.com/Steve/papers/when_web_services_go_bad.html">http://www.iseran.com/Steve/papers/when_web_services_go_bad.html</a></td>
-          </tr>
-        </table>
-      </subsection>
 
     </section>
   </body>
