@@ -34,6 +34,9 @@ Note: At this point, the random selection is based on all the files
 in the directory, not just those ending in appropriate suffixes
 for sound-files, so be sure you only have sound-files in the 
 directory you specify.</p>
+<p>More precisely <code>&lt;sound&gt;</code> registers a hook that is
+triggered when the build finishes. Therefore you have to place this
+task as top level or inside a target which is always executed.</p>
 <p>
 Unless you are running on Java 1.3 or later, you need the Java Media Framework
 on the classpath (javax.sound). 
@@ -59,7 +62,8 @@ and <code>&lt;fail&gt;</code> elements:</p>
   <tr>
     <td valign="top">source</td>
     <td valign="top">the path to a sound-file directory, or the name of a
-specific sound-file, to be played.
+specific sound-file, to be played. If this file does not exist, an error message
+will be logged.
     </td>
     <td valign="top" align="center">Yes</td>
   </tr>
