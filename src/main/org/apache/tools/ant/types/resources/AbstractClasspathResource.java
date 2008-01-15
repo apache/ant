@@ -26,8 +26,8 @@ import java.io.IOException;
 
 /**
  *
- * A Resource representation of anything thta is accessed via a Java classloader.
- * The core methods to set/resolve the classpath are provided, and
+ * A Resource representation of anything that is accessed via a Java classloader.
+ * The core methods to set/resolve the classpath are provided.
  * @since Ant 1.8
  *
  */
