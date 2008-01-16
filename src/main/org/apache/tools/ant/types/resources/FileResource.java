@@ -29,12 +29,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.ResourceFactory;
 
 /**
  * A Resource representation of a File.
  * @since Ant 1.7
  */
-public class FileResource extends Resource implements Touchable, FileProvider {
+public class FileResource extends Resource implements Touchable, FileProvider,
+        ResourceFactory {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NULL_FILE
@@ -321,4 +323,18 @@ public class FileResource extends Resource implements Touchable, FileProvider {
         return getFile();
     }
 
+    /**
+     * Create a new resource that matches a relative or absolute path.
+     * If the current instance has a baseDir attribute, it is copied.
+     * @param path relative/absolute path to a resource
+     * @return a new resource of type FileResource
+     * @throws BuildException if desired
+     * @since Ant1.8
+     */
+    public Resource getResource(String path) {
+        File newfile = FILE_UTILS.resolveFile(getFile(), path);
+        FileResource fileResource = new FileResource(newfile);
+        fileResource.setBaseDir(getBaseDir());
+        return fileResource;
+    }
 }
