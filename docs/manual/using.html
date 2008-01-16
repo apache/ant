@@ -642,6 +642,27 @@ implementation of the element upon which it is specified. Some tasks (the
 deliberately assign a different meaning to <code>refid</code>.</p>
 
 
+<h3><a name="toString">Getting the value of a Reference with ${toString:}</a></h3>
+<p>
+Any Ant type which has been declared with a reference can also its string
+value extracted by using the <code>${toString:}</code> operation,
+with the name of the reference listed after the  <code>toString:</code> text. 
+The  <code>toString()</code> method of the Java class instance that is
+referenced is invoked -all built in types strive to produce useful and relevant
+output in such an instance.
+</p>
+<p>
+For example, here is how to get a listing of the files in a fileset, 
+<p>
+<pre>
+&lt;fileset id=&quot;sourcefiles&quot; dir=&quot;src&quot; includes=&quot;**/*.java&quot; /&gt;
+&lt;echo&gt; sourcefiles = ${toString:sourcefiles} &lt;/echo&gt;
+</pre>
+<p>
+There is no guarantee that external types provide meaningful information in such
+a situation</p>
+
+
 <h3><a name="external-tasks">Use of external tasks</a></h3> 
 Ant supports a plugin mechanism for using third party tasks. For using them you 
 have to do two steps: 
