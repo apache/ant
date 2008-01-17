@@ -40,9 +40,9 @@
       <p>To subscribe to a mailinglist use the links below. In your first email you will get some
       information about working with the list manager <a href="http://www.ezmlm.org/">EZMLM</a>.</p>
 
-      <subsection name="User List">
+      <subsection name="User List: user@ant.apache.org">
         <p>
-          <b>High Traffic</b>
+          <b>Medium Traffic</b>
           <a href="mailto:user-subscribe@ant.apache.org">Subscribe</a>
           <a href="mailto:user-unsubscribe@ant.apache.org">Unsubscribe</a>
           <a href="http://mail-archives.apache.org/mod_mbox/ant-user/">ASF Archive</a>
@@ -54,7 +54,20 @@
         related to using Ant as a build tool.</p>
       </subsection>
 
-      <subsection name="Developer List">
+      <subsection name="Ivy User List: ivy-user@ant.apache.org">
+        <p>
+          <b>Medium Traffic</b>
+          <a href="mailto:ivy-user-subscribe@ant.apache.org">Subscribe</a>
+          <a href="mailto:ivy-user-unsubscribe@ant.apache.org">Unsubscribe</a>
+          <a href="http://mail-archives.apache.org/mod_mbox/ant-ivy-user/">ASF Archive</a>
+        </p>
+
+        <p>This list is for developers that are using Ivy or IvyDE in
+        their own projects to ask questions, share knowledge, and
+        discuss issues related to using Ivy with or without Ant.</p>
+      </subsection>
+
+      <subsection name="Developer List: dev@ant.apache.org">
         <p>
           <b>Medium Traffic</b>
           <a href="mailto:dev-subscribe@ant.apache.org">Subscribe</a>
