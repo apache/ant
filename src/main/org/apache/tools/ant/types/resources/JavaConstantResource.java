@@ -1,9 +1,10 @@
 /*
- * Copyright  2008 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -47,14 +48,18 @@ public class JavaConstantResource extends AbstractClasspathResource {
         String classname = constant.substring(0, index);
         String fieldname = constant.substring(index + 1, constant.length());
         try {
-            clazz = cl!=null?Class.forName(classname,true,cl):Class.forName(classname);
+            clazz =
+                cl != null
+                ? Class.forName(classname, true, cl)
+                : Class.forName(classname);
             Field field = clazz.getField(fieldname);
-            String value=field.get(null).toString();
+            String value = field.get(null).toString();
             return new ByteArrayInputStream(value.getBytes("UTF-8"));
         } catch (ClassNotFoundException e) {
-            throw new IOException("Class not found:"+ classname);
+            throw new IOException("Class not found:" + classname);
         } catch (NoSuchFieldException e) {
-            throw new IOException("Field not found:" + fieldname+ " in "+classname);
+            throw new IOException(
+                "Field not found:" + fieldname + " in " + classname);
         } catch (IllegalAccessException e) {
             throw new IOException("Illegal access to :" + fieldname + " in " + classname);
         } catch (NullPointerException npe) {

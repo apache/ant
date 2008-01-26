@@ -20,10 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * A Resource representation of something loadable via a Java classloader.
@@ -46,7 +43,7 @@ public class JavaResource extends AbstractClasspathResource {
      */
     public JavaResource(String name, Path path) {
         setName(name);
-        classpath = path;
+        setClasspath(path);
     }
 
     /**
@@ -76,14 +73,15 @@ public class JavaResource extends AbstractClasspathResource {
             if (!getName().equals(otherjr.getName())) {
                 return getName().compareTo(otherjr.getName());
             }
-            if (loader != otherjr.loader) {
-                if (loader == null) {
+            if (getLoader() != otherjr.getLoader()) {
+                if (getLoader() == null) {
                     return -1;
                 }
-                if (otherjr.loader == null) {
+                if (otherjr.getLoader() == null) {
                     return 1;
                 }
-                return loader.getRefId().compareTo(otherjr.loader.getRefId());
+                return getLoader().getRefId()
+                    .compareTo(otherjr.getLoader().getRefId());
             }
             Path p = getClasspath();
             Path op = otherjr.getClasspath();

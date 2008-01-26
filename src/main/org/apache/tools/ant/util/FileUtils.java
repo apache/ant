@@ -786,7 +786,7 @@ public class FileUtils {
     /**
      * Create a File object for a temporary file in a given directory. Without
      * actually creating the file.
-     * 
+     *
      * <p>
      * The file denoted by the returned abstract pathname did not exist before
      * this method was invoked, any subsequent invocation of this method will
@@ -795,7 +795,7 @@ public class FileUtils {
      * <p>
      * The filename is prefixNNNNNsuffix where NNNN is a random number.
      * </p>
-     * 
+     *
      * @param prefix
      *            prefix before the random number.
      * @param suffix
@@ -803,8 +803,8 @@ public class FileUtils {
      * @param parentDir
      *            Directory to create the temporary file in; java.io.tmpdir used
      *            if not specified.
-     *            
-     * @deprecated since ant 1.7.1 use createTempFile(String, String, File, 
+     *
+     * @deprecated since ant 1.7.1 use createTempFile(String, String, File,
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */
@@ -836,7 +836,7 @@ public class FileUtils {
     public File createTempFile(String prefix, String suffix, File parentDir,
             boolean deleteOnExit, boolean createFile) {
         File result = null;
-        String parent = (parentDir == null) 
+        String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
 
@@ -866,7 +866,7 @@ public class FileUtils {
     /**
      * Create a File object for a temporary file in a given directory. Without
      * actually creating the file.
-     * 
+     *
      * <p>
      * The file denoted by the returned abstract pathname did not exist before
      * this method was invoked, any subsequent invocation of this method will
@@ -875,7 +875,7 @@ public class FileUtils {
      * <p>
      * The filename is prefixNNNNNsuffix where NNNN is a random number.
      * </p>
-     * 
+     *
      * @param prefix
      *            prefix before the random number.
      * @param suffix
@@ -885,8 +885,8 @@ public class FileUtils {
      *            if not specified.
      * @param deleteOnExit
      *            whether to set the tempfile for deletion on normal VM exit.
-     *            
-     * @deprecated since ant 1.7.1 use createTempFile(String, String, File, 
+     *
+     * @deprecated since ant 1.7.1 use createTempFile(String, String, File,
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */

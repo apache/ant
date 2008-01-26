@@ -502,7 +502,7 @@ public class Symlink extends DispatchTask {
         try {
             Execute.runCommand(this, cmd);
         } catch (BuildException failedToExecute) {
-            if(failonerror) {
+            if (failonerror) {
                 throw failedToExecute;
             } else {
                 //log at the info level, and keep going.

@@ -165,7 +165,9 @@ public class Funtest extends Task {
     /** {@value} */
     public static final String SKIPPING_TESTS
         = "Condition failed -skipping tests";
+    /** Application exception */
     public static final String APPLICATION_EXCEPTION = "Application Exception";
+    /** Teardown exception */
     public static final String TEARDOWN_EXCEPTION = "Teardown Exception";
 
     /**
@@ -533,7 +535,7 @@ public class Funtest extends Task {
      * @param thrown what was thrown
      */
     protected void ignoringThrowable(String type, Throwable thrown) {
-        log(type + ": "+ thrown.toString(),
+        log(type + ": " + thrown.toString(),
                 thrown,
                 Project.MSG_WARN);
     }
