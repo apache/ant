@@ -378,7 +378,7 @@ public class FileUtilsTest extends TestCase {
 
         // null parent dir
         File tmp3 = FILE_UTILS.createTempFile("pre", ".suf", null, false);
-        String  tmploc = System.getProperty("java.io.tmpdir");
+        tmploc = System.getProperty("java.io.tmpdir");
         assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(),
                      tmp3.getAbsolutePath());
     }
