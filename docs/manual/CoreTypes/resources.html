@@ -792,7 +792,38 @@ platforms.
      Because the resource comparators used (<code>&lt;reverse&gt;</code>
      and <code>&lt;date&gt;</code>) are in an internal antlib
      their namespace must be set explicitly.
-  </p>  
+  </p>
+
+  <pre>
+    &lt;project rsel=&quot;antlib:org.apache.tools.ant.types.resources.selectors&quot;&gt;
+        &lt;macrodef name=&quot;copyFromPath&quot;&gt;
+            &lt;attribute name=&quot;todir&quot;/&gt;
+            &lt;attribute name=&quot;refid&quot;/&gt;
+            &lt;element name=&quot;nested-resource-selectors&quot; optional=&quot;yes&quot; implicit=&quot;true&quot;/&gt;
+            &lt;sequential&gt;
+                &lt;mkdir dir=&quot;@{todir}&quot; taskname=&quot;copyFromPath&quot;/&gt;
+                &lt;copy todir=&quot;@{todir}&quot; taskname=&quot;copyFromPath&quot;&gt;
+                    &lt;restrict&gt;
+                        &lt;path refid=&quot;@{refid}&quot;/&gt;
+                        &lt;rsel:or&gt;
+                            &lt;nested-resource-selectors/&gt;
+                        &lt;/rsel:or&gt;
+                    &lt;/restrict&gt;
+                    &lt;flattenmapper/&gt;
+                &lt;/copy&gt;
+            &lt;/sequential&gt;
+        &lt;/macrodef&gt;
+        &lt;copyFromPath refid=&quot;classpath&quot; todir=&quot;todir&quot;&gt;
+            &lt;rsel:name name=&quot;log4j.properties&quot;/&gt;
+            &lt;rsel:name name=&quot;default.properties&quot;/&gt;
+        &lt;/copyFromPath&gt;
+     &lt;/project&gt;
+  </pre>
+  <p>Creates the <tt>todir</tt> directory and copies (if present) the
+     files <tt>log4j.properties</tt> and <tt>default.properties</tt>
+     from the Classpath (already used while compiling).
+  </p>
+
 
 </blockquote>
 
@@ -920,6 +951,29 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
       <td valign="top" align="center">No, default <i>true</i></td>
     </tr>
   </table>
+  
+  <h4>Example</h4>
+  <pre>
+    &lt;union id=&quot;A&quot;&gt;
+        &lt;string value=&quot;a&quot;/&gt;
+        &lt;string value=&quot;b&quot;/&gt;
+    &lt;/union&gt;
+    &lt;union id=&quot;B&quot;&gt;
+        &lt;string value=&quot;b&quot;/&gt;
+        &lt;string value=&quot;c&quot;/&gt;
+    &lt;/union&gt;
+    &lt;union id=&quot;union&quot;&gt;&lt;resources refid=&quot;A&quot;/&gt;&lt;resources refid=&quot;B&quot;/&gt;&lt;/union&gt;
+    &lt;intersect id=&quot;intersect&quot;&gt;&lt;resources refid=&quot;A&quot;/&gt;&lt;resources refid=&quot;B&quot;/&gt;&lt;/intersect&gt;
+    &lt;difference id=&quot;difference&quot;&gt;&lt;resources refid=&quot;A&quot;/&gt;&lt;resources refid=&quot;B&quot;/&gt;&lt;/difference&gt;
+    &lt;echo&gt;
+      A: ${toString:A}                    = a;b
+      B: ${toString:B}                    = b;c
+
+      union     : ${toString:union}       = a;b;c
+      intersect : ${toString:intersect}   = b
+      difference: ${toString:difference}  = a;c
+    &lt;/echo&gt;
+  </pre>
 </blockquote>
 
 
