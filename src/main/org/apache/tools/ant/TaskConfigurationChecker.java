@@ -75,7 +75,7 @@ public class TaskConfigurationChecker {
      * @param errormessage  errormessage to throw if a condition failed
      */
     public void assertConfig(boolean condition, String errormessage) {
-        if (condition) {
+        if (!condition) {
             errors.add(errormessage);
         }
     }
