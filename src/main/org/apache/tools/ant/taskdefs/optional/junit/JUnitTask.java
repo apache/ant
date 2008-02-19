@@ -162,6 +162,7 @@ public class JUnitTask extends Task {
 
     private boolean splitJunit = false;
     private JUnitTaskMirror delegate;
+    private ClassLoader mirrorLoader;
 
     /** A boolean on whether to get the forked path for ant classes */
     private boolean forkedPathChecked = false;
@@ -746,14 +747,10 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Runs the testcase.
-     *
-     * @throws BuildException in case of test failures or errors
-     * @since Ant 1.2
+     * Sets up the delegate that will actually run the tests.
      */
-    public void execute() throws BuildException {
+    protected void setupJUnitDelegate() {
         ClassLoader myLoader = JUnitTask.class.getClassLoader();
-        ClassLoader mirrorLoader;
         if (splitJunit) {
             Path path = new Path(getProject());
             path.add(antRuntimeClasses);
@@ -766,6 +763,16 @@ public class JUnitTask extends Task {
             mirrorLoader = myLoader;
         }
         delegate = createMirror(this, mirrorLoader);
+    }
+
+    /**
+     * Runs the testcase.
+     *
+     * @throws BuildException in case of test failures or errors
+     * @since Ant 1.2
+     */
+    public void execute() throws BuildException {
+        setupJUnitDelegate();
 
         List testLists = new ArrayList();
 
@@ -793,11 +800,7 @@ public class JUnitTask extends Task {
                 }
             }
         } finally {
-            deleteClassLoader();
-            if (mirrorLoader instanceof SplitLoader) {
-                ((SplitLoader) mirrorLoader).cleanup();
-            }
-            delegate = null;
+            cleanup();
         }
     }
 
@@ -1262,6 +1265,10 @@ public class JUnitTask extends Task {
      * @return the results
      */
     private TestResultHolder executeInVM(JUnitTest arg) throws BuildException {
+        if (delegate == null) {
+            setupJUnitDelegate();
+        }
+
         JUnitTest test = (JUnitTest) arg.clone();
         test.setProperties(getProject().getProperties());
         if (dir != null) {
@@ -1514,6 +1521,10 @@ public class JUnitTask extends Task {
      */
     private void logVmExit(FormatterElement[] feArray, JUnitTest test,
                            String message, String testCase) {
+        if (delegate == null) {
+            setupJUnitDelegate();
+        }
+
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
@@ -1592,6 +1603,14 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Removes resources.
+     */
+    protected void cleanup() {
+        deleteClassLoader();
+        delegate = null;
+    }
+
+    /**
      * Removes a classloader if needed.
      * @since Ant 1.7
      */
@@ -1600,6 +1619,10 @@ public class JUnitTask extends Task {
             classLoader.cleanup();
             classLoader = null;
         }
+        if (mirrorLoader instanceof SplitLoader) {
+            ((SplitLoader) mirrorLoader).cleanup();
+        }
+        mirrorLoader = null;
     }
 
     /**
