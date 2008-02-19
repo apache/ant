@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.testing;
 import org.apache.tools.ant.taskdefs.WaitFor;
 
 /**
- *
- * Created 29-Oct-2007 12:28:28
  * @since Ant 1.8
  */
 
@@ -69,6 +67,5 @@ public class BlockFor extends WaitFor {
     public void addText(String message) {
         text = getProject().replaceProperties(message);
     }
-
 
 }
