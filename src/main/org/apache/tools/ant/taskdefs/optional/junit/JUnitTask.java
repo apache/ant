@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Locale;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -161,9 +162,10 @@ public class JUnitTask extends Task {
 
     private boolean splitJunit = false;
     private JUnitTaskMirror delegate;
+    private ClassLoader mirrorLoader;
 
     /** A boolean on whether to get the forked path for ant classes */
-    private boolean   forkedPathChecked = false;
+    private boolean forkedPathChecked = false;
 
     //   Attributes for basetest
     private boolean haltOnError = false;
@@ -745,14 +747,10 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Runs the testcase.
-     *
-     * @throws BuildException in case of test failures or errors
-     * @since Ant 1.2
+     * Sets up the delegate that will actually run the tests.
      */
-    public void execute() throws BuildException {
+    protected void setupJUnitDelegate() {
         ClassLoader myLoader = JUnitTask.class.getClassLoader();
-        ClassLoader mirrorLoader;
         if (splitJunit) {
             Path path = new Path(getProject());
             path.add(antRuntimeClasses);
@@ -765,6 +763,16 @@ public class JUnitTask extends Task {
             mirrorLoader = myLoader;
         }
         delegate = createMirror(this, mirrorLoader);
+    }
+
+    /**
+     * Runs the testcase.
+     *
+     * @throws BuildException in case of test failures or errors
+     * @since Ant 1.2
+     */
+    public void execute() throws BuildException {
+        setupJUnitDelegate();
 
         List testLists = new ArrayList();
 
@@ -792,11 +800,7 @@ public class JUnitTask extends Task {
                 }
             }
         } finally {
-            deleteClassLoader();
-            if (mirrorLoader instanceof SplitLoader) {
-                ((SplitLoader) mirrorLoader).cleanup();
-            }
-            delegate = null;
+            cleanup();
         }
     }
 
@@ -831,10 +835,10 @@ public class JUnitTask extends Task {
 
     /**
      * Execute a list of tests in a single forked Java VM.
-     * @param tests the list of tests to execute.
+     * @param testList the list of tests to execute.
      * @throws BuildException on error.
      */
-    protected void execute(List tests) throws BuildException {
+    protected void execute(List testList) throws BuildException {
         JUnitTest test = null;
         // Create a temporary file to pass the test cases to run to
         // the runner (one test case per line)
@@ -843,7 +847,7 @@ public class JUnitTask extends Task {
         try {
             writer =
                 new PrintWriter(new BufferedWriter(new FileWriter(casesFile)));
-            Iterator iter = tests.iterator();
+            Iterator iter = testList.iterator();
             while (iter.hasNext()) {
                 test = (JUnitTest) iter.next();
                 writer.print(test.getName());
@@ -895,6 +899,7 @@ public class JUnitTask extends Task {
      * the test could probably hang forever.
      * @param casesFile list of test cases to execute. Can be <tt>null</tt>,
      * in this case only one test is executed.
+     * @return the test results from the JVM itself.
      * @throws BuildException in case of error creating a temporary property file,
      * or if the junit process can not be forked
      */
@@ -1049,6 +1054,7 @@ public class JUnitTask extends Task {
 
     /**
      * Adding ant runtime.
+     * @param cmd command to run
      */
     private void checkIncludeAntRuntime(CommandlineJava cmd) {
         if (includeAntRuntime) {
@@ -1070,10 +1076,21 @@ public class JUnitTask extends Task {
         }
     }
 
+
+    /**
+     * check for the parameter being "withoutanderr" in a locale-independent way.
+     * @param summaryOption the summary option -can be null
+     * @return true if the run should be withoutput and error
+     */
+    private boolean equalsWithOutAndErr(String summaryOption) {
+        return summaryOption != null && "withoutanderr".equals(
+            summaryOption.toLowerCase(Locale.ENGLISH));
+    }
+
     private void checkIncludeSummary(CommandlineJava cmd) {
         if (summary) {
             String prefix = "";
-            if ("withoutanderr".equalsIgnoreCase(summaryValue)) {
+            if (equalsWithOutAndErr(summaryValue)) {
                 prefix = "OutErr";
             }
             cmd.createArgument()
@@ -1086,6 +1103,7 @@ public class JUnitTask extends Task {
     /**
      * Check the path for multiple different versions of
      * ant.
+     * @param cmd command to execute
      */
     private void checkForkedPath(CommandlineJava cmd) {
         if (forkedPathChecked) {
@@ -1244,8 +1262,13 @@ public class JUnitTask extends Task {
      * Execute inside VM.
      * @param arg one JUnitTest
      * @throws BuildException under unspecified circumstances
+     * @return the results
      */
     private TestResultHolder executeInVM(JUnitTest arg) throws BuildException {
+        if (delegate == null) {
+            setupJUnitDelegate();
+        }
+
         JUnitTest test = (JUnitTest) arg.clone();
         test.setProperties(getProject().getProperties());
         if (dir != null) {
@@ -1288,8 +1311,7 @@ public class JUnitTask extends Task {
 
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
-                f.setWithOutAndErr("withoutanderr"
-                                   .equalsIgnoreCase(summaryValue));
+                f.setWithOutAndErr(equalsWithOutAndErr(summaryValue));
                 f.setOutput(getDefaultOutput());
                 runner.addFormatter(f);
             }
@@ -1499,6 +1521,10 @@ public class JUnitTask extends Task {
      */
     private void logVmExit(FormatterElement[] feArray, JUnitTest test,
                            String message, String testCase) {
+        if (delegate == null) {
+            setupJUnitDelegate();
+        }
+
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
@@ -1577,6 +1603,14 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Removes resources.
+     */
+    protected void cleanup() {
+        deleteClassLoader();
+        delegate = null;
+    }
+
+    /**
      * Removes a classloader if needed.
      * @since Ant 1.7
      */
@@ -1585,6 +1619,10 @@ public class JUnitTask extends Task {
             classLoader.cleanup();
             classLoader = null;
         }
+        if (mirrorLoader instanceof SplitLoader) {
+            ((SplitLoader) mirrorLoader).cleanup();
+        }
+        mirrorLoader = null;
     }
 
     /**
@@ -1807,7 +1845,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * A value class that contains thee result of a test.
+     * A value class that contains the result of a test.
      */
     protected class TestResultHolder {
         // CheckStyle:VisibilityModifier OFF - bc
