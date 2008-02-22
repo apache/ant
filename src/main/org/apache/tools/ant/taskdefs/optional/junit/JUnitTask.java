@@ -748,6 +748,10 @@ public class JUnitTask extends Task {
 
     /**
      * Sets up the delegate that will actually run the tests.
+     *
+     * <p>Will be invoked implicitly once the delegate is needed.</p>
+     *
+     * @since Ant 1.7.1
      */
     protected void setupJUnitDelegate() {
         ClassLoader myLoader = JUnitTask.class.getClassLoader();
@@ -1604,6 +1608,12 @@ public class JUnitTask extends Task {
 
     /**
      * Removes resources.
+     *
+     * <p>Is invoked in {@link #execute execute}.  Subclasses that
+     * don't invoke execute should invoke this method in a finally
+     * block.</p>
+     *
+     * @since Ant 1.7.1
      */
     protected void cleanup() {
         deleteClassLoader();
