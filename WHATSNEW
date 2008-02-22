@@ -134,6 +134,10 @@ Fixed bugs:
 * <touch> task couldn't differentiate between "no resources specified" and "no resources
   matched." Bugzilla report 43799.
 
+* Some changes to <junit> broke third party tasks that extend it (like
+  Apache Cactus' Ant task).  The changes have been modified so that
+  subclases should now work again - without any changes to the
+  subclass.
 
 Other changes:
 --------------
