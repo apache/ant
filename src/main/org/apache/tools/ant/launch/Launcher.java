@@ -60,6 +60,11 @@ public class Launcher {
     public static final String ANT_PRIVATELIB = "lib";
 
     /**
+     * launch diagnostics flag; for debugging trouble at launch time.
+     */
+    public static boolean launchDiag = false;
+
+    /**
      * The location of a per-user library directory.
      * <p>
      * It's value is the concatenation of {@link #ANT_PRIVATEDIR}
@@ -110,6 +115,9 @@ public class Launcher {
             t.printStackTrace(System.err);
         }
         if (exitCode != 0) {
+            if (launchDiag) {
+                System.out.println("Exit code: "+exitCode);
+            }
             System.exit(exitCode);
         }
     }
@@ -122,6 +130,7 @@ public class Launcher {
      * @param getJars     if true and a path is a directory, add the jars in
      *                    the directory to the path urls
      * @param libPathURLs the list of paths to add to
+     * @throws MalformedURLException if we can't create a URL
      */
     private void addPath(String path, boolean getJars, List libPathURLs)
             throws MalformedURLException {
@@ -129,18 +138,21 @@ public class Launcher {
         while (tokenizer.hasMoreElements()) {
             String elementName = tokenizer.nextToken();
             File element = new File(elementName);
-            if (elementName.indexOf("%") != -1 && !element.exists()) {
+            if (elementName.indexOf('%') != -1 && !element.exists()) {
                 continue;
             }
             if (getJars && element.isDirectory()) {
                 // add any jars in the directory
                 URL[] dirURLs = Locator.getLocationURLs(element);
                 for (int j = 0; j < dirURLs.length; ++j) {
+                    if (launchDiag) { System.out.println("adding library JAR: " + dirURLs[j]);}
                     libPathURLs.add(dirURLs[j]);
                 }
             }
 
-            libPathURLs.add(Locator.fileToURL(element));
+            URL url = Locator.fileToURL(element);
+            if (launchDiag) { System.out.println("adding library URL: " + url) ;}
+            libPathURLs.add(url);
         }
     }
 
@@ -150,8 +162,9 @@ public class Launcher {
      * @param args the command line arguments
      * @return an exit code. As the normal ant main calls exit when it ends,
      *         this is for handling failures at bind-time
-     * @exception MalformedURLException if the URLs required for the classloader
+     * @throws MalformedURLException if the URLs required for the classloader
      *            cannot be created.
+     * @throws LaunchException for launching problems
      */
     private int run(String[] args)
             throws LaunchException, MalformedURLException {
@@ -168,12 +181,12 @@ public class Launcher {
 
         if (antHome == null || !antHome.exists()) {
             antHome = jarDir.getParentFile();
-            System.setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
+            setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
         }
 
         if (!antHome.exists()) {
             throw new LaunchException("Ant home is set incorrectly or "
-                + "ant could not be located");
+                + "ant could not be located (estimated value="+antHome.getAbsolutePath()+")");
         }
 
         List libPaths = new ArrayList();
@@ -202,6 +215,8 @@ public class Launcher {
                 cpString = args[++i];
             } else if (args[i].equals("--nouserlib") || args[i].equals("-nouserlib")) {
                 noUserLib = true;
+            } else if (args[i].equals("--launchdiag")) {
+                launchDiag = true;
             } else if (args[i].equals("--noclasspath") || args[i].equals("-noclasspath")) {
                 noClassPath = true;
             } else if (args[i].equals("-main")) {
@@ -214,6 +229,10 @@ public class Launcher {
                 argList.add(args[i]);
             }
         }
+
+        logPath("Launcher JAR",sourceJar);
+        logPath("Launcher JAR directory", sourceJar.getParentFile());
+        logPath("java.home", new File(System.getProperty("java.home")));
 
         //decide whether to copy the existing arg set, or
         //build a new one from the list of all args excluding the special
@@ -229,8 +248,10 @@ public class Launcher {
         URL[] systemURLs = getSystemURLs(jarDir);
         URL[] userURLs   = noUserLib ? new URL[0] : getUserURLs();
 
+        File toolsJAR = Locator.getToolsJar();
+        logPath("tools.jar",toolsJAR);
         URL[] jars = getJarArray(
-            libURLs, userURLs, systemURLs, Locator.getToolsJar());
+            libURLs, userURLs, systemURLs, toolsJAR);
 
         // now update the class.path property
         StringBuffer baseClassPath
@@ -245,12 +266,13 @@ public class Launcher {
             baseClassPath.append(Locator.fromURI(jars[i].toString()));
         }
 
-        System.setProperty(JAVA_CLASS_PATH, baseClassPath.toString());
+        setProperty(JAVA_CLASS_PATH, baseClassPath.toString());
 
         URLClassLoader loader = new URLClassLoader(jars);
         Thread.currentThread().setContextClassLoader(loader);
         Class mainClass = null;
         int exitCode = 0;
+        Throwable thrown=null;
         try {
             mainClass = loader.loadClass(mainClassname);
             AntMain main = (AntMain) mainClass.newInstance();
@@ -261,9 +283,20 @@ public class Launcher {
             File mainJar = Locator.getClassSource(mainClass);
             System.err.println(
                 "Location of this class " + mainJar);
-            exitCode = EXIT_CODE_ERROR;
+            thrown = ex;
+        } catch (ClassNotFoundException cnfe) {
+            System.err.println(
+                    "Failed to locate" + mainClassname);
+            thrown = cnfe;
         } catch (Throwable t) {
             t.printStackTrace(System.err);
+            thrown=t;
+        }
+        if(thrown!=null) {
+            System.err.println(ANTHOME_PROPERTY+": "+antHome.getAbsolutePath());
+            System.err.println("Classpath: " + baseClassPath.toString());
+            System.err.println("Launcher JAR: " + sourceJar.getAbsolutePath());
+            System.err.println("Launcher Directory: " + jarDir.getAbsolutePath());
             exitCode = EXIT_CODE_ERROR;
         }
         return exitCode;
@@ -275,6 +308,7 @@ public class Launcher {
      * @param cpString the classpath string
      * @param libPaths the list of -lib entries.
      * @return an array of URLs.
+     * @throws MalformedURLException if the URLs  cannot be created.
      */
     private URL[] getLibPathURLs(String cpString, List libPaths)
         throws MalformedURLException {
@@ -296,6 +330,9 @@ public class Launcher {
      * Get the jar files in ANT_HOME/lib.
      * determine ant library directory for system jars: use property
      * or default using location of ant-launcher.jar
+     * @param antLauncherDir the dir that ant-launcher ran from
+     * @return the URLs
+     * @throws MalformedURLException if the URLs cannot be created.
      */
     private URL[] getSystemURLs(File antLauncherDir) throws MalformedURLException {
         File antLibDir = null;
@@ -305,13 +342,15 @@ public class Launcher {
         }
         if ((antLibDir == null) || !antLibDir.exists()) {
             antLibDir = antLauncherDir;
-            System.setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
+            setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
         }
         return Locator.getLocationURLs(antLibDir);
     }
 
     /**
      * Get the jar files in user.home/.ant/lib
+     * @return the URLS from the user's lib dir
+     * @throws MalformedURLException if the URLs cannot be created.
      */
     private URL[] getUserURLs() throws MalformedURLException {
         File userLibDir
@@ -346,5 +385,23 @@ public class Launcher {
             jars[jars.length - 1] = Locator.fileToURL(toolsJar);
         }
         return jars;
+    }
+
+    /**
+     * set a system property, optionally log what is going on
+     * @param name property name
+     * @param value value
+     */
+    private void setProperty(String name, String value) {
+        if (launchDiag) {
+            System.out.println("Setting \"" + name + "\" to \"" + value + "\"");
+        }
+        System.setProperty(name, value);
+    }
+
+    private void logPath(String name,File path) {
+        if(launchDiag) {
+            System.out.println(name+"= \""+path+"\"");
+        }
     }
 }

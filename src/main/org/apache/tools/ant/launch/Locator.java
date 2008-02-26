@@ -144,9 +144,7 @@ public final class Locator {
             String u = url.toString();
             try {
                 if (u.startsWith("jar:file:")) {
-                    int pling = u.indexOf("!");
-                    String jarName = u.substring("jar:".length(), pling);
-                    return new File(fromURI(jarName));
+                    return new File(fromJarURI(u));
                 } else if (u.startsWith("file:")) {
                     int tail = u.indexOf(resource);
                     String dirName = u.substring(0, tail);
@@ -159,6 +157,8 @@ public final class Locator {
         }
         return null;
     }
+
+
 
     /**
      * Constructs a file path from a <code>file:</code> URI.
@@ -238,13 +238,16 @@ public final class Locator {
         return null;
     }
 
+
+
+
     /**
-     * package-private for testing in same classloader
+     * This method is public for testing; we may delete it without any warning -it is not part of Ant's stable API.
      * @param uri uri to expand
      * @return the decoded URI
      * @since Ant1.7.1
      */
-    static String fromURIJava13(String uri) {
+    public static String fromURIJava13(String uri) {
         // Fallback method for Java 1.3 or earlier.
 
         URL url = null;
@@ -273,10 +276,14 @@ public final class Locator {
         String path = null;
         try {
             path = decodeUri(uri);
+            //consider adding the current directory. This is not done when
+            //the path is a UNC name
             String cwd = System.getProperty("user.dir");
-            int posi = cwd.indexOf(":");
-            if ((posi > 0) && path.startsWith(File.separator)) {
-               path = cwd.substring(0, posi + 1) + path;
+            int posi = cwd.indexOf(':');
+            boolean pathStartsWithFileSeparator = path.startsWith(File.separator);
+            boolean pathStartsWithUNC = path.startsWith("" + File.separator + File.separator);
+            if ((posi > 0) && pathStartsWithFileSeparator && !pathStartsWithUNC) {
+                path = cwd.substring(0, posi + 1) + path;
             }
         } catch (UnsupportedEncodingException exc) {
             // not sure whether this is clean, but this method is
@@ -286,6 +293,19 @@ public final class Locator {
                 + exc.getMessage());
         }
         return path;
+    }
+
+    /**
+     * Crack a JAR URI.
+     * This method is public for testing; we may delete it without any warning -it is not part of Ant's stable API.
+     * @param uri uri to expand; contains jar: somewhere in it
+     * @return the decoded URI
+     * @since Ant1.7.1
+     */
+    public static String fromJarURI(String uri) {
+        int pling = uri.indexOf('!');
+        String jarName = uri.substring("jar:".length(), pling);
+        return fromURI(jarName);
     }
 
     /**

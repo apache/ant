@@ -27,6 +27,8 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 public class LocatorTest extends TestCase {
     private boolean windows;
     private boolean unix;
+    private static final String LAUNCHER_JAR = "//morzine/slo/Java/Apache/ant/lib/ant-launcher.jar";
+    private static final String SHARED_JAR_URI = "jar:file:"+ LAUNCHER_JAR +"!/org/apache/tools/ant/launch/Launcher.class";
 
     /**
      * No-arg constructor to enable serialization. This method is not intended to be used by mere mortals without calling
@@ -35,7 +37,9 @@ public class LocatorTest extends TestCase {
     public LocatorTest() {
     }
 
-    /** Constructs a test case with the given name. */
+    /** Constructs a test case with the given name.
+     * @param name
+     */
     public LocatorTest(String name) {
         super(name);
     }
@@ -63,6 +67,7 @@ public class LocatorTest extends TestCase {
      * @param uri uri to parse
      * @param expectedUnix unix string (or null to skip that test)
      * @param expectedDos DOS string (or null to skip that test)
+     * @return the resolved string
      */
     private String resolveTo(String uri, String expectedUnix, String expectedDos) {
         String result = resolve(uri);
@@ -71,8 +76,15 @@ public class LocatorTest extends TestCase {
         return result;
     }
 
-    private void assertResolved(String uri, String expectedResult, String result, boolean condition) {
-        if (condition && expectedResult != null && expectedResult.length() > 0) {
+    /**
+     * Assert something resolved
+     * @param uri original URI
+     * @param expectedResult what we expected
+     * @param result what we got
+     * @param enabled is the test enabled?
+     */
+    private void assertResolved(String uri, String expectedResult, String result, boolean enabled) {
+        if (enabled && expectedResult != null && expectedResult.length() > 0) {
             assertEquals("Expected " + uri + " to resolve to \n" + expectedResult + "\n but got\n"
                     + result + "\n", expectedResult, result);
         }
@@ -83,7 +95,7 @@ public class LocatorTest extends TestCase {
      * @param path filename with no directory separators
      * @return the trailing filename
      */
-    private String assertResolves(String path) throws Exception {
+    private String assertResolves(String path) {
         String asuri = new File(path).toURI().toASCIIString();
         String fullpath = System.getProperty("user.dir") + File.separator + path;
         String result = resolveTo(asuri, fullpath, fullpath);
@@ -125,6 +137,28 @@ public class LocatorTest extends TestCase {
         resolveTo("file:C:\\Program Files\\Ant\\lib",
                 "C:\\Program Files\\Ant\\lib",
                 "C:\\Program Files\\Ant\\lib");
+    }
+
+    /**
+     * Bug 42275; Ant failing to run off a remote share
+     * @throws Throwable if desired
+     */
+    public void testAntOnRemoteShare() throws Throwable {
+        String resolved=Locator.fromJarURI(SHARED_JAR_URI);
+        assertResolved(SHARED_JAR_URI, LAUNCHER_JAR,resolved,true);
+    }
+
+    /**
+     * Bug 42275; Ant failing to run off a remote share
+     *
+     * @throws Throwable if desired
+     */
+    public void testFileFromRemoteShare() throws Throwable {
+        String resolved = Locator.fromJarURI(SHARED_JAR_URI);
+        assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, true);
+        File f=new File(resolved);
+        String path = f.getAbsolutePath();
+        assertTrue(path.indexOf("\\\\")==0);
     }
 
     public void testHttpURI() throws Exception {
