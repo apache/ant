@@ -103,7 +103,7 @@ public class SQLExec extends JDBCTask {
     /**
      * files to load
      */
-    private Union resources = new Union();
+    private Union resources;
 
     /**
      * SQL statement
@@ -255,6 +255,14 @@ public class SQLExec extends JDBCTask {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
+        if (rc == null) {
+            throw new BuildException("Cannot add null ResourceCollection");
+        }
+        synchronized (this) {
+            if (resources == null) {
+                resources = new Union();
+            }
+        }
         resources.add(rc);
     }
 
@@ -399,8 +407,7 @@ public class SQLExec extends JDBCTask {
         sqlCommand = sqlCommand.trim();
 
         try {
-            if (srcFile == null && sqlCommand.length() == 0
-                && resources.size() == 0) {
+            if (srcFile == null && sqlCommand.length() == 0 && resources == null) {
                 if (transactions.size() == 0) {
                     throw new BuildException("Source file or resource collection, "
                                              + "transactions or sql statement "
@@ -413,13 +420,15 @@ public class SQLExec extends JDBCTask {
                         + " is not a file!", getLocation());
             }
 
-            // deal with the resources
-            Iterator iter = resources.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
-                // Make a transaction for each resource
-                Transaction t = createTransaction();
-                t.setSrcResource(r);
+            if (resources != null) {
+                // deal with the resources
+                Iterator iter = resources.iterator();
+                while (iter.hasNext()) {
+                    Resource r = (Resource) iter.next();
+                    // Make a transaction for each resource
+                    Transaction t = createTransaction();
+                    t.setSrcResource(r);
+                }
             }
 
             // Make a transaction group for the outer command
