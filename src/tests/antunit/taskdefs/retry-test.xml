@@ -12,7 +12,7 @@
         <get src="${src}" dest="${dest}"/>
       </retry>
     </au:expectfailure>
-    <au:assertLogContains text="Attempt [1]:  error occurred; retrying..."/>
+    <au:assertLogContains text="Attempt [1]: error occurred; retrying..."/>
   </target>
 
   <target name="test-success">
@@ -21,7 +21,7 @@
     <retry retrycount="${i}">
       <touch file="${dest}"/>
     </retry>
-    <au:assertLogDoesntContain text="Attempt [1]:  error occurred; retrying..."/>
+    <au:assertLogDoesntContain text="Attempt [1]: error occurred; retrying..."/>
   </target>
 
 </project>
