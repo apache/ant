@@ -420,6 +420,10 @@ public class Main implements AntMain {
             throw new BuildException("Build failed");
         }
 
+        // Normalize buildFile for re-import detection
+        buildFile =
+            FileUtils.getFileUtils().normalize(buildFile.getAbsolutePath());
+
         // Load the property files specified by -propertyfile
         loadPropertyFiles();
 
