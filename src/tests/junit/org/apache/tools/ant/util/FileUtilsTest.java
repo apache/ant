@@ -575,7 +575,8 @@ public class FileUtilsTest extends TestCase {
 
     public void testHasErrorInCase() {
         File tempFolder = new File(System.getProperty("java.io.tmpdir"));
-        File wellcased = FILE_UTILS.createTempFile("alpha", "beta", tempFolder);
+        File wellcased = FILE_UTILS.createTempFile("alpha", "beta", tempFolder,
+                                                   true, true);
         String s = wellcased.getName().toUpperCase();
         File wrongcased = new File(tempFolder, s);
         if (Os.isFamily("dos")) {
