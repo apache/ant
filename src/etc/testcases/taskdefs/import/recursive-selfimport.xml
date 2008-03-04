@@ -1,0 +1,5 @@
+<project>
+  <echo>Before import: ${foo}</echo>
+  <property name="foo" value="bar"/>
+  <import file="./recursive-selfimport.xml"/>
+</project>
