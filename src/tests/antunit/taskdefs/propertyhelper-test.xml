@@ -2,7 +2,9 @@
   <!-- each test verifies that the PropertyEvaluator delegate works -->
   <import file="../antunit-base.xml" />
 
-  <target name="setUp" unless="setup.complete">
+  <available property="prereqs-ok" classname="org.apache.bsf.BSFManager"/>
+
+  <target name="setUp" unless="setup.complete" if="prereqs-ok">
     <script language="beanshell" manager="bsf">
       import org.apache.tools.ant.PropertyHelper;
       public class MapEvaluator implements PropertyHelper.PropertyEvaluator {
@@ -25,7 +27,7 @@
     <property name="setup.complete" value="true" />
   </target>
 
-  <target name="testValueTypes" depends="setUp">
+  <target name="testValueTypes" depends="setUp" if="prereqs-ok">
     <!-- verify BC, strings -->
     <au:assertPropertyEquals name="string" value="${STRING}" />
 
@@ -45,14 +47,14 @@
     <au:assertPropertyEquals name="int2" value="${int}" />
   </target>
 
-  <target name="testNull" depends="setUp">
+  <target name="testNull" depends="setUp" if="prereqs-ok">
     <!-- demonstrate that a null value always implies a nonexistent property -->
     <au:assertFalse>
       <isset property="null" />
     </au:assertFalse>
   </target>
 
-  <target name="testAvailable" depends="setUp">
+  <target name="testAvailable" depends="setUp" if="prereqs-ok">
     <!-- verify the available task can set a non-string property -->
     <available file="${ant.file}" type="file" property="available.string" value="bc" />
     <au:assertPropertyEquals name="available.string" value="bc" />
@@ -60,7 +62,7 @@
     <au:assertPropertyEquals name="available.object" value="${OBJECT}" />
   </target>
 
-  <target name="testCondition" depends="setUp">
+  <target name="testCondition" depends="setUp" if="prereqs-ok">
     <!-- verify the condition task can set a non-string property -->
     <echo>$${ant.file}=${ant.file}</echo>
     <condition property="condition.true.string">
@@ -81,14 +83,14 @@
     <au:assertPropertyEquals name="condition.else.int" value="${INT}" />
   </target>
 
-  <target name="testEmbeddedNonString">
+  <target name="testEmbeddedNonString" if="prereqs-ok">
     <!-- verify that a property embedded in a string is a substring -->
     <au:assertTrue>
       <equals arg1="@${int}@" arg2="@1@" />
     </au:assertTrue>
   </target>
 
-  <target name="testLoadProperties">
+  <target name="testLoadProperties" if="prereqs-ok">
     <au:assertFalse>
       <isset property="object2" />
     </au:assertFalse>

@@ -11,6 +11,13 @@
   <target name="tearDown">
   </target>
 
+  <condition property="prereqs-ok">
+    <or>
+      <available classname="org.apache.bsf.BSFManager"/>
+      <available classname="javax.script.ScriptEngineManager"/>
+    </or>
+  </condition>
+
   <property name="script.manager" value="auto" />
 
   <string id="script.code">
@@ -35,19 +42,19 @@
 
 
   <!--purely to test that everything works -->
-  <target name="testInline">
+  <target name="testInline" if="prereqs-ok">
     <js>self.log("Hello");</js>
     <scripttest/>
   </target>
 
-  <target name="testStringResource">
+  <target name="testStringResource" if="prereqs-ok">
     <js>
       <string value='self.log("Ant version =${ant.version}");' />
     </js>
     <scripttest/>
   </target>
 
-  <target name="testStringResourceRef">
+  <target name="testStringResourceRef" if="prereqs-ok">
     <js>
       <string refid="script.code" />
     </js>
@@ -55,7 +62,7 @@
     <assertPropSet />
   </target>
 
-  <target name="testStringResourceInline">
+  <target name="testStringResourceInline" if="prereqs-ok">
     <js>
       <string>
         self.log("Ant version =${ant.version}");
@@ -66,7 +73,7 @@
     <assertPropSet/>
   </target>
 
-  <target name="testPropertyResource">
+  <target name="testPropertyResource" if="prereqs-ok">
     <js>
       <propertyresource name="prop" />
     </js>
@@ -74,7 +81,7 @@
     <assertPropSet/>
   </target>
 
-  <target name="testMixedResources">
+  <target name="testMixedResources" if="prereqs-ok">
     <js>
       <string refid="script.code" />
       <propertyresource name="prop" />
