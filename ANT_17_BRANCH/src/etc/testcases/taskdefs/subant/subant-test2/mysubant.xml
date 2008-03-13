@@ -1,0 +1,11 @@
+<project name="subant" basedir=".." default="mysubant">
+    <target name="mysubant">
+        <echo message="${basedir}"/>
+    </target>
+    <target name="one">
+        <echo message="test2-one"/>
+    </target>
+    <target name="two">
+        <echo message="test2-two"/>
+    </target>
+</project>

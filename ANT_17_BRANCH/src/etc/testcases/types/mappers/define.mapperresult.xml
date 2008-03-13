@@ -1,0 +1,8 @@
+<project>
+  <typedef name="mapperresult"
+           classpath="../../../../../build/testcases"
+           classname="org.apache.tools.ant.types.mappers.MapperResult"/>
+
+  <!-- this is what you get with no result -->           
+  <property name="no-results" value="&lt;NULL&gt;" />           
+</project>

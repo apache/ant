@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="test" xmlns:other="this is the other uri"
+         other:attr="this should be ignored by ant">
+
+  <property name="testcases.dir" location="../../../../build/testcases"/>
+
+  <path id="testclasses">
+    <pathelement location="${testcases.dir}" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="xmlns" xmlns:test="this.is.another.test.uri">
+    <typedef classname="org.apache.tools.ant.taskdefs.XmlnsTest$MyTask"
+             classpathref="testclasses"
+             name="mytask"
+             uri="this.is.another.test.uri" />
+    <test:mytask/>
+  </target>
+
+  <target name="other" other:a="this is another attribute">
+    <echo other:g="abc" message="a message"/>
+  </target>
+
+  <target name="ns.attributes">
+    <taskdef name="my.echo" classname="org.apache.tools.ant.taskdefs.Echo"
+             uri="x-uri"/>
+    <x:my.echo x:message="hello world" xmlns:x="x-uri"/>
+  </target>
+
+  <target name="xmlns.file" xmlns:test="this.is.a.test.uri">
+    <typedef file="test.antlib.xml"
+             classpathref="testclasses"
+             uri="this.is.a.test.uri" />
+    <test:mytask/>
+  </target>
+
+  <target name="core">
+    <typedef file="test.antlib.xml"
+             classpathref="testclasses"
+             uri="antlib:org.apache.tools.ant" />
+    <mytask/>
+  </target>
+
+  <target name="excluded">
+    <typedef file="test.antlib.xml"
+             classpathref="testclasses"
+             uri="ant:notallowed" />
+  </target>
+
+
+</project>

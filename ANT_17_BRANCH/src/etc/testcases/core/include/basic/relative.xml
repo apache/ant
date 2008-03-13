@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+  <!ENTITY include SYSTEM "./include.inc">
+]>
+
+<project name="include-test" basedir="." default="test1">
+    &include;
+</project>

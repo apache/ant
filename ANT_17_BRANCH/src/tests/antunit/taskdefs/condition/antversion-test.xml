@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project name="antversion-test" default="all" basedir="." xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="test-atleast">
+    <au:assertTrue message="Expected antversion of ${ant.version} to be at least 1.7.0">
+        <!-- AntVersion was introduced like AntUnit in 1.7 - so this must be true -->
+    	<antversion atleast="1.7.0"/>
+    </au:assertTrue>	
+  </target>
+
+  <target name="test-exactly">
+    <antversion property="ant.actual.version"/>
+    <au:assertTrue message="Expected antversion of ${ant.actual.version}">
+    	<antversion exactly="${ant.actual.version}"/>
+    </au:assertTrue>	
+  </target>
+
+  <target name="test-atleast-fail">
+  	<property name="version" value="1.8.9"/>
+    <au:assertFalse>
+   	  <antversion atleast="1.9.0"/>
+    </au:assertFalse>
+  </target>
+    
+  <target name="test-task">
+    <antversion property="antversion"/>
+    <au:assertPropertySet name="antversion" message="Property 'antversion' should be set."/>
+    <echo>AntVersion=${antversion}</echo>  
+  </target>    
+    
+  <target name="test-property-conditional1">
+    <antversion property="antversion" atleast="2.0.0"/>
+    <au:assertTrue message="Property 'antversion' should not be set because this is not Ant 2.0.0+.">
+      <not>
+        <isset property="antversion"/>  
+      </not>  
+    </au:assertTrue>  
+  </target>
+    
+  <target name="test-property-conditional2">
+    <antversion property="antversion" atleast="1.7.0"/>
+    <au:assertTrue message="Property 'antversion' should be set because we should have Ant 1.7.0+ (${ant.version}).">
+      <isset property="antversion"/>  
+    </au:assertTrue>  
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+
+</project>

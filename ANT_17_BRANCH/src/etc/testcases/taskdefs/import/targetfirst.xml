@@ -1,0 +1,4 @@
+<project>
+  <target name="first"/>
+  <echo>After target first</echo>
+</project>

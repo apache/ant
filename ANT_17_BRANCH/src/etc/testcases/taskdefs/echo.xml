@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<project name="echo-test" basedir="." default="test1">
+
+  <property name="dest.dir" location="echo.dest"/>
+
+  <target name="init">
+    <mkdir dir="${dest.dir}" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${dest.dir}"/>
+  </target>
+
+  <target name="test1">
+    <echo/>
+  </target>
+
+  <target name="test2">
+    <echo message="OUTPUT OF ECHO"/>
+  </target>
+
+  <target name="test3">
+    <echo>
+    This 
+    is
+    a 
+    multiline
+    message
+    </echo>
+  </target>
+
+  <macrodef name="assertContains">
+    <attribute name="expected" />
+    <attribute name="actual" />
+    <sequential>
+      <fail>
+        <condition>
+          <not>
+            <contains string="@{actual}" substring="@{expected}"></contains>
+          </not>
+        </condition>
+        Did not find @{expected} in @{actual}
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="testFile" depends="init">
+    <echo file="${dest.dir}/echo.txt">Simple text</echo>
+    <loadfile srcfile="${dest.dir}/echo.txt" property="echo" />
+    <assertContains actual="${echo}" expected="Simple text" />
+  </target>
+
+
+  <target name="testAppend" depends="init">
+    <echo file="${dest.dir}/echo.txt">Simple text</echo>
+    <echo file="${dest.dir}/echo.txt" append="true">Appended</echo>
+    <loadfile srcfile="${dest.dir}/echo.txt" property="echo"/>
+    <assertContains actual="${echo}" expected="Simple text"/>
+    <assertContains actual="${echo}" expected="Appended"/>
+  </target>
+
+  <target name="testEmptyEncoding" depends="init">
+    <echo file="${dest.dir}/echo.txt" encoding="">Simple text</echo>
+    <loadfile srcfile="${dest.dir}/echo.txt" property="echo"/>
+    <assertContains actual="${echo}" expected="Simple text"/>
+  </target>
+
+  <target name="testUTF16Encoding" depends="init">
+    <property name="char" value="&#169;" />
+    <echo file="${dest.dir}/echo16.txt" encoding="UTF-16">${char}</echo>
+    <loadfile srcfile="${dest.dir}/echo16.txt" property="echo16" encoding="UTF16"/>
+    <assertContains actual="${echo16}" expected="${char}"/>
+  </target>
+  
+  <target name="testUTF8Encoding" depends="init">
+    <property name="char" value="&#169;" />
+    <echo file="${dest.dir}/echo8.txt" encoding="UTF8">${char}</echo>
+    <loadfile srcfile="${dest.dir}/echo8.txt" property="echo" encoding="UTF8"/>
+    <assertContains actual="${echo}" expected="${char}"/>
+  </target>
+
+
+</project>

@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<project default="cleanup" basedir=".">
+
+  <property name="mappermillis" value="1072224000000" />
+  
+  <selector id="map.selector">
+    <date millis="${mappermillis}" />
+  </selector>
+
+  <target name="cleanup">
+    <delete>
+      <fileset dir="." includes="touchtest*" />
+    </delete>
+  </target>
+
+  <target name="noSeconds">
+    <touch file="touchtest" datetime="06/24/2003 2:20 pm"/>
+  </target>
+
+  <target name="seconds">
+    <touch file="touchtest" datetime="06/24/2003 2:20:12 pm"/>
+  </target>
+
+  <target name="testNow">
+    <touch file="touchtest" />
+  </target>
+  
+  <target name="testMillis">
+    <!-- this one is about 21 years after the epoch -->
+    <!-- less than 20 years after the epoch, test does not pass on my Win2K/FAT -->
+    <!-- Antoine February 8, 2004 -->
+    <!-- see http://developer.java.sun.com/developer/bugParade/bugs/4177432.html -->
+    <!-- and http://developer.java.sun.com/developer/bugParade/bugs/4697792.html -->
+    <!-- not sure why -->
+    <touch file="touchtest" millis="662256000000" />
+  </target>
+  
+  <target name="test2000">
+    <!-- this number of milliseconds is 30 * 365 * 24 * 3600 * 1000 -->
+    <!-- so the corresponding time is at the end of 1999 -->
+    <touch file="touchtest" millis="946080000000" />
+  </target>
+  
+  <target name="testFilelist">
+    <touch millis="662256000000" >
+      <filelist dir="." files="touchtest"/>
+    </touch>
+  </target>
+
+  <target name="testFileset" depends="testNow">
+    <touch millis="946080000000" >
+      <fileset dir="." includes="touchtest"/>
+    </touch>
+  </target>
+
+  <target name="testResourceCollection">
+    <touch millis="1662256000000">
+      <file file="touchtest"/>
+    </touch>
+  </target>
+
+  <target name="testMappedFileset">
+    <touch file="touchtest" millis="${mappermillis}" />
+    <touch>
+      <fileset file="touchtest" />
+      <compositemapper>
+        <globmapper from="*" to="*foo" />
+        <globmapper from="*" to="*bar" />
+      </compositemapper>
+    </touch>
+
+    <fileset id="touchtest" file="touchtest">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <fileset id="touchtestfoo" file="touchtestfoo">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <fileset id="touchtestbar" file="touchtestbar">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <pathconvert property="touchtest" pathsep=" "
+                 refid="touchtest" setonempty="false" />
+
+    <pathconvert property="touchtestfoo" pathsep=" "
+                 refid="touchtestfoo" setonempty="false" />
+
+    <pathconvert property="touchtestbar" pathsep=" "
+                 refid="touchtestbar" setonempty="false" />
+
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <isset property="touchtest" />
+            <isset property="touchtestfoo" />
+            <isset property="touchtestbar" />
+          </and>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="testExplicitMappedFileset">
+    <touch file="touchtest" millis="${mappermillis}" />
+    <touch>
+      <fileset file="touchtest" />
+      <mapper>
+        <compositemapper>
+          <globmapper from="*" to="*foo" />
+          <globmapper from="*" to="*bar" />
+        </compositemapper>
+      </mapper>
+    </touch>
+
+    <fileset id="touchtest" file="touchtest">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <fileset id="touchtestfoo" file="touchtestfoo">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <fileset id="touchtestbar" file="touchtestbar">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <pathconvert property="touchtest" pathsep=" "
+                 refid="touchtest" setonempty="false" />
+
+    <pathconvert property="touchtestfoo" pathsep=" "
+                 refid="touchtestfoo" setonempty="false" />
+
+    <pathconvert property="touchtestbar" pathsep=" "
+                 refid="touchtestbar" setonempty="false" />
+
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <isset property="touchtest" />
+            <isset property="touchtestfoo" />
+            <isset property="touchtestbar" />
+          </and>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="testMappedFilelist">
+    <touch millis="${mappermillis}">
+      <filelist dir="." files="idonotexist" />
+      <mergemapper to="touchtest" />
+    </touch>
+
+    <fileset id="touchtest" file="touchtest">
+      <selector refid="map.selector" />
+    </fileset>
+
+    <pathconvert property="touchtest" pathsep=" "
+                 refid="touchtest" setonempty="false" />
+
+    <fail>
+      <condition>
+        <not>
+          <isset property="touchtest" />
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="testGoodPattern">
+    <touch file="touchtest" datetime="06242003142012GMTfoo" pattern="MMddyyyyHHmmssz'foo'" />
+
+    <fileset id="touchtest" file="touchtest">
+      <date millis="1056464412000" />
+    </fileset>
+
+    <pathconvert property="touchtest" pathsep=" "
+                 refid="touchtest" setonempty="false" />
+
+    <fail>
+      <condition>
+        <not>
+          <isset property="touchtest" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testBadPattern">
+    <touch file="touchtest" datetime="06242003142012GMTfoo" pattern="MMddyyyyHHmmssz'bar'" />
+  </target>
+
+</project>

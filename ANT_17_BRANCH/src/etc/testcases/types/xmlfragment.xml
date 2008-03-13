@@ -1,0 +1,14 @@
+<project>
+  <typedef name="fragment"
+           classname="org.apache.tools.ant.util.XMLFragment"/>
+
+  <fragment id="nested-text">foo</fragment>
+
+  <fragment id="with-children">
+    <child1>foo</child1>
+    <child2 foo="bar"/>
+    <child3>
+      <child4/>
+    </child3>
+  </fragment>
+</project>

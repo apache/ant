@@ -1,0 +1,51 @@
+<project xmlns:au="antlib:org.apache.ant.antunit">
+  <description/>
+  <target name="test-empty">
+    <xmlproperty file="xmlproperty-test.xml"/>
+    <au:assertTrue>
+      <equals arg1="" arg2="${project.description}"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-multi">
+    <property name="root.element.value" value="original"/>
+    <xmlproperty file="xmlproperty.multi.xml" collapseAttributes="yes"/>
+    <au:assertTrue>
+      <equals arg1="original" arg2="${root.element.value}"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="load">
+    <xmlproperty
+        file="xmlproperty.inline-expansion.xml"
+        collapseAttributes="true"
+        keepRoot="false"
+        semanticAttributes="true"/>
+    <echo>
+ element      expected    actual
+    p         $${app.n}    ${app.p}
+    n            n        ${app.n}
+    o            n        ${app.o}
+    m            n        ${app.m}
+    </echo>
+  </target>
+
+  <target name="NotestInlineExpansion" depends="load">
+    <au:assertPropertyEquals name="app.m" value="n"/>
+    <au:assertPropertyEquals name="app.n" value="n"/>
+    <au:assertPropertyEquals name="app.o" value="n"/>
+    <au:assertPropertyEquals name="app.p" value="$${app.n}"/>
+    <property name="sequence" value="${app.m}${app.n}${app.o}${app.p}"/>
+    <fail>
+      xml attributes are not expanding correctly
+      expected: mnop=nnn$${app.n}
+      actual    mnop=${sequence}
+      <condition>
+        <not>
+          <equals arg1="${sequence}" arg2="nnn${app.n}"/>
+        </not>
+      </condition>
+    </fail>
+  </target>
+</project>
+

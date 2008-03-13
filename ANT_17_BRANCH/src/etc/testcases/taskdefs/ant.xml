@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+
+<project name="ant-test" basedir="." default="test1">
+
+  <path id="inheritable">
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="cleanup">
+    <delete file="test1.log" />
+    <delete file="test2.log" />
+    <delete file="ant/test3.log" />
+    <delete file="ant/test4.log" />
+  </target>
+
+  <target name="all" depends="test1,test2,test3,test4"/>
+
+  <target name="test1">
+    <ant antfile="ant.xml" dir="." target="test1"/>
+  </target>
+
+  <target name="test2">
+    <antcall/>
+  </target>
+
+  <target name="test3">
+    <antcall target="test3"/>
+  </target>
+
+  <target name="test4">
+    <antcall target=""/>
+  </target>
+
+  <target name="test4b">
+    <antcall target="does-not-exist"/>
+  </target>
+
+  <target name="test5">
+    <antcall target="dummy"/>
+  </target>
+
+  <target name="test6">
+    <ant antfile="ant.xml" dir="." target="dummy"/>
+  </target>
+
+  <target name="dummy">
+  </target>
+
+  <target name="inheritBasedir">
+    <ant antfile="ant/ant.xml" target="dummy" inheritAll="true" />
+  </target>
+
+  <target name="doNotInheritBasedir">
+    <ant antfile="ant/ant.xml" target="dummy" inheritAll="false" />
+  </target>
+
+  <target name="explicitBasedir1">
+    <ant antfile="taskdefs/ant/ant.xml" target="dummy" inheritAll="true" 
+         dir=".." />
+  </target>
+
+  <target name="explicitBasedir2">
+    <ant antfile="taskdefs/ant/ant.xml" target="dummy" inheritAll="false" 
+         dir=".." />
+  </target>
+
+  <target name="tripleCall">
+    <ant antfile="ant/ant.xml" target="callback" inheritAll="false" />
+  </target>
+
+  <target name="testInherit">
+    <ant antfile="ant/references.xml" inheritRefs="true" target="dummy" />
+  </target>
+
+  <target name="testNoInherit">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy" />
+  </target>
+
+  <target name="testRename">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy">
+      <reference refid="path" torefid="newpath" />
+    </ant>
+  </target>
+
+  <target name="testInheritPath" description="try to pass a reference to a path, which refers itself to a second path">
+    <property name="rootdir" location="."/>
+    <path id="project.classpath">
+      <pathelement location="../classes"/>
+    </path>
+    <path id="test.classpath">
+      <pathelement location="${rootdir}/test/testframework.jar"/>
+      <path refid="project.classpath"/>
+    </path>
+    <ant antfile="ant/references.xml"  target="testInheritPath">
+      <reference refid="test.classpath"/>
+    </ant>
+  </target>
+
+  <target name="testLogfilePlacement">
+    <ant antfile="ant.xml" target="dummy" output="test1.log"
+         inheritall="false" />
+    <ant antfile="ant.xml" target="dummy" output="test2.log" />
+    <ant antfile="ant.xml" target="dummy" output="test3.log"
+         inheritall="false" dir="ant" />
+    <ant antfile="ant.xml" target="dummy" output="test4.log" 
+         dir="ant" />
+  </target>
+
+  <target name="testRefid">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy">
+      <property name="testprop" refid="inheritable" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-start">
+    <property name="test" value="1" />
+    <ant antfile="ant.xml"
+         target="test-property-override-inheritall-level-2"
+         inheritall="true">
+      <property name="test" value="2" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-level-2">
+    <property name="test" value="3" />
+    <ant antfile="ant.xml"
+         target="test-property-override-inheritall-level-3"
+         inheritall="true">
+      <property name="test" value="4" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-level-3">
+    <property name="test" value="5" />
+    <echo message="The value of test is ${test}" />
+  </target>
+
+  <target name="test-property-override-no-inheritall-start">
+    <property name="test" value="1" />
+    <ant antfile="ant.xml"
+         target="test-property-override-no-inheritall-level-2"
+         inheritall="false">
+      <property name="test" value="2" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-no-inheritall-level-2">
+    <property name="test" value="3" />
+    <ant antfile="ant.xml"
+         target="test-property-override-no-inheritall-level-3"
+         inheritall="false">
+      <property name="test" value="4" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-no-inheritall-level-3">
+    <property name="test" value="5" />
+    <echo message="The value of test is ${test}" />
+  </target>
+
+  <target name="test-propertyset">
+    <property name="test1" value="1"/>
+    <property name="test2" value="2"/>
+    <propertyset id="set">
+      <propertyref name="test1"/>
+      <mapper type="glob" from="*" to="*.x"/>
+    </propertyset>
+    <ant antfile="ant.xml" target="echo-for-propertyset-test" 
+         inheritall="false">
+      <propertyset refid="set"/>
+    </ant>
+  </target>
+
+  <target name="echo-for-propertyset-test">
+    <echo>test1 is ${test1}</echo>
+    <echo>test2 is ${test2}</echo>
+    <echo>test1.x is ${test1.x}</echo>
+  </target>
+
+  <target name="infinite-loop-via-depends">
+    <antcall target="dependent"/>
+  </target>
+
+  <target name="middleman" depends="infinite-loop-via-depends"/>
+  <target name="dependent" depends="middleman"/>
+  
+  <target name="multi-same-property">
+    <ant antfile="ant.xml" target="echo-for-multi-same">
+      <property name="prop" value="one"/>
+      <property name="prop" value="two"/>
+    </ant>
+  </target>
+
+  <target name="echo-for-multi-same">
+    <echo>prop is ${prop}</echo>
+  </target>
+
+  <target name="topleveltarget">
+    <ant antfile="ant.topleveltest.xml"/>
+  </target>
+
+  <target name="multiple-property-file-children">
+    <ant target="dummy" antfile="ant.xml">
+      <property file="foo.properties"/>
+      <property file="bar.properties"/>
+    </ant>
+  </target>
+
+  <target name="blank-target">
+    <ant antfile="ant.topleveltest.xml">
+      <target name="" />
+    </ant>
+  </target>
+
+  <target name="multiple-targets">
+    <ant antfile="ant.xml">
+      <target name="ta" />
+      <target name="tb" />
+      <target name="tc" />
+    </ant>
+  </target>
+
+  <target name="multiple-targets-2">
+    <ant antfile="ant.xml">
+      <target name="tb" />
+      <target name="da" />
+    </ant>
+  </target>
+
+  <target name="ta"><echo>ta</echo></target>
+  <target name="tb" depends="da,dc"><echo>tb</echo></target>
+  <target name="tc" depends="db,dc"><echo>tc</echo></target>
+
+  <target name="da"><echo>da</echo></target>
+  <target name="db"><echo>db</echo></target>
+  <target name="dc"><echo>dc</echo></target>
+
+</project>

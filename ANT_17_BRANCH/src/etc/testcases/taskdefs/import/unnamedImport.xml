@@ -1,0 +1,8 @@
+<project name="unnamed-import" default="test">
+
+  <import file="unnamed1.xml"/>
+
+  <target name="test">
+    <echo level="info">Tests import of unnamed projects</echo>
+  </target>
+</project>

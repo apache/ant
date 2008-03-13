@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="pvcs-test" basedir="." default="test1">
+
+  <taskdef name="pvcs" classname="org.apache.tools.ant.taskdefs.Pvcs"/>
+
+  <target name="test1">
+    <pvcs/>
+  </target>
+
+  <target name="test2">
+    <pvcs pvcsbin="/home/tc/projects/pvcsant/src/etc/testcases/taskdefs" repository="/mnt/pvcs"/>
+  </target>
+
+  <target name="test3">
+    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs" repository="/mnt/pvcs" pvcsproject="/qviknet"/>
+  </target>
+
+  <target name="test4">
+    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs" repository="/mnt/pvcs" pvcsproject="/qviknet" workspace="/@/Public/buildws"/>
+  </target>
+
+  <target name="test5" description="Get the latest from PVCS">
+    <pvcs pvcsbin="/home/cvs/pvcsant/src/etc/testcases/taskdefs" 
+			 repository="//ct4serv2/pvcs/monitor"/>
+  </target>
+
+  <target name="test6" description="No pcli to be found">
+    <pvcs pvcsbin="/never/heard/of/a/directory/structure/like/this" 
+			 repository="//ct4serv2/pvcs/monitor"/>
+  </target>
+
+
+</project>

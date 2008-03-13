@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="touch-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml"/>
+
+  <target name="test-no-child">
+    <au:expectfailure>
+      <touch />
+    </au:expectfailure>
+  </target>
+
+  <target name="test-no-match">
+    <touch>
+      <fileset file="${ant.file}">
+        <filename name="IDONOTMATCH" />
+      </fileset>
+    </touch>
+  </target>
+
+</project>

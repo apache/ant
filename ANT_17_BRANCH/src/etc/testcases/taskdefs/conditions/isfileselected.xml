@@ -1,0 +1,53 @@
+<project>
+  <macrodef name="pass">
+    <element name="conditions" implicit="yes"/>
+    <attribute name="failmessage"/>
+    <sequential>
+      <fail message="@{failmessage}">
+        <condition>
+          <not>
+            <conditions/>
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="simple">
+    <pass failmessage="a simple test">
+      <isfileselected file="jars/pass.jar">
+        <signedselector/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="name">
+    <pass failmessage="name did not match">
+      <isfileselected file="jars/nosign.jar">
+        <filename name="jars/nosign.jar"/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="basedir">
+    <pass failmessage="name did not match with a basedir change">
+      <isfileselected file="jars/nosign.jar" basedir="jars">
+        <filename name="nosign.jar"/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="type">
+    <pass failmessage="type selector did not work">
+      <isfileselected file="isfileselected.xml">
+        <type type="file"/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="not.selector">
+    <fileset dir=".">
+      <isfileselected file="nosigned.jar"/>
+    </fileset>
+  </target>
+</project>

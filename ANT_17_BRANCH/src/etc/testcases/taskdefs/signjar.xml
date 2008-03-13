@@ -1,0 +1,272 @@
+<project name="signjartest" default="help" basedir="..">
+
+  <property name="classes.dir" value="../../../build/classes"/>
+  <property name="sign.dir" location="signedjars" />
+  <property name="subdir" location="${sign.dir}/subdir" />
+  <property name="test.jar" location="${sign.dir}/signtest.jar" />
+  <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+  
+  
+  <macrodef name="assertSigned">
+    <attribute name="jar" default="${test.jar}" />
+    <sequential>
+      <fail message="not signed: @{jar}" >
+        <condition>
+          <not><issigned file="@{jar}" /></not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <presetdef name="sign-base">
+    <signjar alias="testonly" keystore="testkeystore"
+           storepass="apacheant"/>
+  </presetdef>
+
+  <presetdef name="verify-base">
+    <verifyjar keystore="testkeystore"
+           storepass="apacheant"/>
+  </presetdef>
+
+
+  
+  <presetdef name="sign">
+    <sign-base jar="${test.jar}" />
+  </presetdef>
+
+  <target name="init">
+    <mkdir dir="${sign.dir}" />
+    <mkdir dir="${subdir}" />
+  </target>
+  
+  <target name="jar" depends="init">
+    <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
+  </target>  
+
+  
+  
+  <target name="clean">
+    <delete dir="${sign.dir}"/>
+  </target>
+
+  <target name="help">
+    <echo>This build is for use with Ant's test cases</echo>
+  </target>
+  
+  <target name="basic" depends="jar">
+    <sign />
+    <assertSigned/>             
+  </target>
+
+  <target name="sigfile" depends="jar">
+    <sign sigfile="TEST"/>
+    <assertSigned/>             
+  </target>
+
+  <target name="maxmemory" depends="jar">
+    <sign maxmemory="128m"/>
+    <assertSigned/>             
+  </target>
+
+  <target name="urlKeystoreFile" depends="jar">
+    <sign keystore="file://../testkeystore"
+       maxmemory="128m"/>
+    <assertSigned/>             
+  </target>
+
+  
+  <target name="urlKeystoreHTTP" depends="jar">
+    <sign
+      keystore="http://ant.apache.org/webtest/testkeystore"
+      />
+    <assertSigned/>             
+  </target>
+
+  <target name="preserveLastModified" depends="jar">
+    <touch file="${test.jar}" datetime="06/28/2000 2:02 pm"/>
+    <sign 
+    	preservelastmodified="true"/>
+    <assertSigned />
+    <fail message="preserveLastModified did not preserve the last modified time">
+      <condition>
+        <not>
+          <isfileselected file="${test.jar}" >
+            <date datetime="06/28/2000 2:02 pm" when="equal"/>
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testFileset" depends="jar">
+    <sign-base>
+      <fileset file="${test.jar}" />
+    </sign-base>
+    <assertSigned/>
+  </target>
+
+  <target name="testFilesetAndJar" depends="jar">
+    <sign-base jar="${test.jar}" lazy="true">
+      <fileset file="${test.jar}" />
+    </sign-base>
+    <assertSigned/>
+  </target>
+  
+  <target name="testFilesetAndSignedJar" depends="jar">
+    <sign-base signedjar="${sign.dir}/newfile.jar">
+      <fileset file="${test.jar}" />
+    </sign-base>
+  </target>
+  
+  <target name="testPath" depends="jar">
+    <sign-base>
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned/>
+  </target>
+
+  <target name="testPathAndJar" depends="jar">
+    <sign-base jar="${test.jar}" lazy="true">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned/>
+  </target>
+  
+  <target name="testPathAndSignedJar" depends="jar">
+    <sign-base signedjar="${sign.dir}/newfile.jar">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+  </target>
+  
+  <target name="testSignedJar" depends="jar">
+    <sign signedjar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+
+  <target name="testDestDirAndSignedJar" depends="jar">
+    <sign destDir="${subdir}" signedjar="${sign.dir}/newfile.jar"/>
+  </target>
+
+  <target name="testDestDir" depends="jar">
+    <sign destDir="${subdir}" />
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+  
+  <target name="testDestDirFileset" depends="jar">
+    <sign-base destDir="${subdir}">
+      <fileset file="${test.jar}" />
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+  
+  <target name="testDestDirPath" depends="jar">
+    <sign-base destDir="${subdir}">
+      <path>
+        <fileset file="${test.jar}" />
+      </path>
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+  
+  <target name="testMapperNoDest" depends="jar">
+    <sign-base >
+      <flattenmapper />
+      <fileset file="${test.jar}" />
+    </sign-base>
+  </target>
+  
+  <target name="testMapperFileset" depends="jar">
+    <sign-base destDir="${subdir}">
+      <fileset file="${test.jar}" />
+      <flattenmapper />
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+
+  <target name="testMapperPath" depends="jar">
+    <sign-base destDir="${subdir}">
+      <path>
+        <pathelement location="${test.jar}" />
+      </path>
+      <flattenmapper />
+    </sign-base>
+    <assertSigned jar="${subdirtest.jar}"/>
+  </target>
+
+  <target name="testTwoMappers" depends="jar">
+    <sign-base destDir="${subdir}">
+      <fileset file="${test.jar}" />
+      <flattenmapper />
+      <flattenmapper />
+    </sign-base>
+  </target>
+
+  <target name="testNoAlias" depends="jar">
+    <signjar keystore="testkeystore"
+       jar="${test.jar}"
+       storepass="apacheant"/>
+  </target>
+
+  <target name="testNoFiles" >
+    <sign-base />
+  </target>
+
+  <target name="testNoStorePass" depends="jar">
+    <signjar keystore="testkeystore"
+       alias="testonly"
+       jar="${test.jar}"/>
+  </target>
+
+  <target name="testTsaLocalhost" depends="jar">
+    <sign tsaurl="http://localhost:0/" />
+  </target>
+  
+  <target name="testSysProperty" depends="jar">
+    <sign>
+      <sysproperty key="ant.home" value="${ant.home}" />
+    </sign>
+    <assertSigned/>    
+  </target>
+  
+  <target name="testVerifyJar" depends="basic">
+    <verify-base jar="${test.jar}"/>
+  </target>
+
+  <target name="testVerifyJarCertificates" depends="basic">
+    <verify-base jar="${test.jar}" certificates="true" verbose="true"/>
+  </target>
+  
+  <target name="testVerifyJarUnsigned" depends="jar">
+    <verify-base jar="${test.jar}"/>
+  </target>
+  
+  <target name="testVerifyJarNotInKeystore" depends="basic">
+    <verifyjar jar="${test.jar}" certificates="true" verbose="true"/>
+  </target>
+    
+  <target name="testVerifyFileset" depends="basic">
+    <verify-base >
+      <fileset file="${test.jar}" />
+    </verify-base>
+  </target>
+
+  <target name="testVerifyPath" depends="basic">
+    <verify-base >
+      <path>
+        <pathelement location="${test.jar}" />
+      </path>
+    </verify-base>
+  </target>
+
+  <target name="testVerifyNoArgs">
+    <verify-base />
+  </target>
+  
+</project>
+

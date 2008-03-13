@@ -1,0 +1,314 @@
+<project name="ftp-test" basedir=".">
+    <property file="../../../../../../ftp.properties"/>
+    <property environment="env"/>
+    <property file="${env.HOME}/ant-ftp.properties"/>
+    <property name="ftp.user" value="${user.name}"/>
+    <property name="ftp.host" value="localhost"/>
+    <property name="ftp.port" value="21" />
+    <property name="ftp.password" value="sunshine" />
+    <property name="ftp.filesep" value="/"/>
+    <property name="tmp.dir" location="tmp"/>
+    <property name="tmp.get.dir" location="tmp.get"/>
+    <property name="tmp.local" location="${tmp.get.dir}"/>
+    <property name="tmp.remote" location="${tmp.dir}"/>
+    <property name="tstamp.format" value="yyyy-MM-dd HH:mm"/>
+    <property name="server.timestamp.granularity.millis" value="60000"/>
+    <property name="ftp.server.timezone" value="GMT"/>
+    <property name="ftp.listing.file" value="/dev/null"/>
+    <property name="ftp.retries" value="2"/>
+
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
+        <include name="alpha/**"/>
+        <filename name="**/alpha.xml" />
+    </fileset>
+    <fileset dir="${tmp.dir}" id="fileset-source-without-selector">
+        <include name="alpha/**"/>
+    </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-without-selector">
+        <include name="alpha/**"/>
+    </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-followsymlinks" followsymlinks="true">
+        <include name="alpha/**"/>
+    </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-nofollowsymlinks" followsymlinks="false">
+        <include name="alpha/**"/>
+    </fileset>
+
+    <filelist dir="${tmp.local}" id="timed-files" files="A.timed,B.timed,C.timed,D.timed"/>
+
+    <patternset id="timed-test-files">
+        <include name="A.timed"/>
+        <include name="B.timed"/>
+        <include name="C.timed"/>
+        <include name="D.timed"/>
+    </patternset>
+
+    <target name="setup">
+        <mkdir dir="${tmp.get.dir}"/>
+        <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
+        <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+        <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
+    </target>
+
+    <target name="ftp-get-with-selector">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.dir}">
+            <fileset refid="fileset-destination-with-selector"/>
+        </ftp>
+    </target>
+    <target name="children-of-excluded-dir-setup" depends="setup">
+        <mkdir dir="${tmp.dir}/delta"/>
+        <touch file="${tmp.dir}/delta/delta.xml"/>
+    </target>
+    <target name="cleanup">
+        <delete dir="${tmp.dir}" quiet="true"/>
+        <delete dir="${tmp.get.dir}" quiet="true"/>
+    </target>
+    <target name="symlink-setup" depends="setup">
+        <mkdir dir="${tmp.dir}/epsilon/gamma"/>
+        <delete dir="${tmp.dir}/alpha/beta"/>
+        <symlink link="${tmp.dir}/alpha/beta" resource="${tmp.dir}/epsilon"/>
+        <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+    </target>
+    <target name="ftp-get-directory-symbolic-link" depends="symlink-setup">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.dir}"
+            >
+            <fileset refid="fileset-destination-followsymlinks"/>
+        </ftp>
+    </target>
+    <target name="ftp-get-directory-no-symbolic-link" depends="symlink-setup">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.dir}"
+            >
+            <fileset refid="fileset-destination-nofollowsymlinks"/>
+        </ftp>
+    </target>
+    <target name="symlink-file-setup" depends="setup">
+        <delete file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+        <symlink link="${tmp.dir}/alpha/beta/gamma/gamma.xml"
+            resource="${tmp.dir}/alpha/beta/beta.xml"/>
+    </target>
+    <target name="ftp-delete">
+        <!-- this target can produce an error if the rmdir does not work -->
+        <!-- there can be problems with the rmdir action if the directories are not removed in a proper order -->
+        <!-- which means beginning by the leaves of the tree, going back to the trunk -->
+        <ftp action="del"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}">
+            <fileset dir="${tmp.get.dir}">
+                <include name="**"/>
+            </fileset>
+        </ftp>
+        <ftp action="rmdir"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}">
+            <fileset dir="${tmp.get.dir}">
+                <include name="**"/>
+            </fileset>
+        </ftp>
+    </target>   
+
+    <target name="timed.test.setup">
+        <touch>
+            <filelist refid="timed-files"/>
+        </touch>    
+        <ftp action="put"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+
+    <target name="timed.test.put.older">
+        <tstamp>
+            <format property="one.minute.older" pattern="${tstamp.format}" offset="-60" unit="second"/>
+        </tstamp>
+
+        <touch datetime="${one.minute.older}" pattern="${tstamp.format}" verbose="true">
+            <fileset dir="${tmp.remote}">
+                <include name="A.timed"/>
+            </fileset>
+        </touch>
+        <ftp action="put"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            newer="true"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+    <target name="timed.test.get.older">
+        <tstamp>
+            <format property="five.minutes.older" pattern="${tstamp.format}" offset="-5" unit="minute"/>
+        </tstamp>
+
+        <touch datetime="${five.minutes.older}" pattern="${tstamp.format}" verbose="true">
+            <fileset dir="${tmp.local}">
+                <include name="A.timed"/>
+                <include name="C.timed"/>
+                <include name="D.timed"/>
+            </fileset>
+        </touch>
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            preservelastmodified="true"
+            newer="true"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+    
+    <target name="configuration.1">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.2">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverTimeZoneConfig="${ftp.server.timezone}"
+            listing="${ftp.listing.file}"
+            systemTypeKey="WINDOWS"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.3">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            defaultDateFormatConfig="yyyy/MM/dd HH:mm"
+            listing="${ftp.listing.file}"
+            systemTypeKey="UNIX"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="configuration.lang.good">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverLanguageCodeConfig="de"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>    
+    <target name="configuration.lang.bad">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            serverLanguageCodeConfig="QQ"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>    
+    <target name="configuration.none">
+        <ftp action="list"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            listing="${ftp.listing.file}"
+            >
+             <fileset dir="${tmp.local}"/>
+         </ftp>
+    </target>
+    <target name="ftp-get-with-selector-retryable">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.dir}"
+            retriesAllowed="${ftp.retries}"
+            >
+            <fileset refid="fileset-destination-with-selector"/>
+        </ftp>
+    </target>
+    <target name="test-initial-command">
+        <ftp action="put"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            initialSiteCommand="umask 222"
+            >
+            <fileset dir="${tmp.local}">
+                <patternset refid="timed-test-files"/>
+            </fileset>
+        </ftp>
+    </target>
+
+    <target name="test-site-action">
+        <ftp action="site"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            separator="${ftp.filesep}"
+            remotedir="${tmp.remote}"
+            siteCommand="umask 222"
+            >
+        </ftp>
+    </target>
+</project>

@@ -1,0 +1,56 @@
+<project name="extended-taskdef" default="testRun">
+
+  <description>
+    Try and replicate a reported problem.
+
+  </description>
+  <property name="src" value="Foo.java"/>
+  <property name="taskdefs" value="tasks.properties"/>
+
+  <target name="write" >
+    <echo file="${src}">
+      import org.apache.tools.ant.BuildException;
+
+      public class Foo extends org.apache.tools.ant.taskdefs.WaitFor {
+
+        public void execute() {
+          throw  new BuildException("executing the Foo task");
+        }
+      }
+    </echo>
+    <propertyfile file="${taskdefs}">
+      <entry key="foo2" value="Foo"/>
+    </propertyfile>
+  </target>
+
+  <target name="compile" depends="write">
+    <javac srcdir="${basedir}" includes="${src}"/>
+  </target>
+
+  <target name="testRun" depends="compile">
+    <taskdef name="foo" classname="Foo"
+        classpath="${basedir}"/>
+    <foo maxwait="5" maxwaitunit="second"
+        timeoutproperty="foo">
+      <or/>
+    </foo>
+  </target>
+
+  <target name="testRun2" depends="compile">
+    <taskdef resource="${taskdefs}" classpath="${basedir}"/>
+    <foo2 maxwait="5" maxwaitunit="second"
+        timeoutproperty="foo">
+      <or/>
+    </foo2>
+  </target>
+
+
+  <target name="teardown">
+    <delete>
+      <fileset dir="${basedir}"
+          includes="${src},*.class"/>
+    </delete>
+    <delete file="${taskdefs}" />
+  </target>
+
+</project>

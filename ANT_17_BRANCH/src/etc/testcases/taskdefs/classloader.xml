@@ -1,0 +1,23 @@
+<project name="classloader-test" default="main" basedir=".">
+
+  <target name="init">
+
+    <path id="myJars" >
+      <!-- both ant-junit.jar and junit.jar must be loaded from the same path -->
+      <pathelement path="${ant.home}/lib/ant-junit.jar" />
+      <pathelement path="${junit.jar}" />
+    </path>
+
+    <classloader classpathRef="myJars" 
+                 reverse="true" >
+      
+    </classloader>
+    <junit />
+  
+  </target>
+
+  <target name="main" depends="init">
+    <echo message="Found JUNIT" />
+  </target>
+
+</project>

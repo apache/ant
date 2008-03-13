@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+
+<project name="jspc-test" default="main" basedir=".">
+
+   <target name="main" depends="testSimple">
+   </target>
+
+    <target name="init">
+        <property name="jsp.dir" location="jsp"/>
+        <property name="jsp.output.dir" location="${jsp.dir}/java"/>
+        <property name="jsp.verbosity" value="3"/>
+        <property name="jsp.compiler" value="jasper41"/>
+        <mkdir dir="${jsp.output.dir}"/>
+    </target>
+    
+    <target name="cleanup">
+        <delete dir="${jsp.output.dir}"/>   
+    </target>
+   
+   <!-- this should fail -->
+   <!-- it should not create an output file, but it does, which needs
+        cleanup -->
+   <target name="testNoTld" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="missing_tld.jsp"/>
+        </jspc>
+   </target>
+
+   <!-- this should compile to simple.java -->
+    <!-- also, stick to the default compiler here to ensure it still works-->
+   <target name="testSimple" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="simple.jsp"/>
+        </jspc>
+   </target>   
+
+    <!-- this should compile to uriroot.java -->
+    <target name="testUriroot" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           uriroot="${jsp.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+                name="uriroot.jsp"/>
+        </jspc>
+    </target> 
+   
+   <!-- this should compile an xml format jsp page to xml.java -->
+    <target name="testXml" depends="init">
+      <jspc
+        destdir="${jsp.output.dir}"
+        uriroot="${jsp.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+          <include name="xml.jsp"/>
+      </jspc>
+   </target>
+   
+   <!-- this should compile default.jsp to mangled(%default).java -->
+   <target name="testKeyword" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="default.jsp"/>
+        </jspc>
+   </target>  
+   
+   <!-- this should compile default.jsp to mangled(%default).java -->
+   <target name="testInvalidClassname" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="1nvalid-classname.jsp"/>
+        </jspc>
+   </target>  
+
+   <!-- non jsp pages should be ignored -->
+   <target name="testNotAJspFile" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           srcdir="${jsp.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <include
+               name="wrong_type.txt"/>
+        </jspc>
+   </target>
+   
+   <!-- test for webapp compilation -->
+   <target name="testWebapp" depends="init">
+        <jspc
+           destdir="${jsp.output.dir}"
+           compiler="${jsp.compiler}"
+           verbose="${jsp.verbosity}">
+            <webapp basedir="${jsp.dir}" />
+        </jspc>
+   </target>  
+   
+</project>

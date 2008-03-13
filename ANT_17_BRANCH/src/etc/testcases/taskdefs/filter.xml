@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<project name="filter-test" basedir="." default="test1">
+
+  <target name="test1">
+    <filter/>
+  </target>
+
+  <target name="test2">
+    <filter token=""/>
+  </target>
+
+  <target name="test3">
+    <filter value=""/>
+  </target>
+
+  <target name="test4">
+    <filter token="" value=""/>
+  </target>
+
+  <target name="test5">
+    <filter token="year" value="2000" />
+    <copy file="filter1.txt" tofile="filtered.tmp" filtering="yes" overwrite="yes" />
+  </target>
+
+  <target name="test6">
+    <filter token="year" value="2000" />
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter1.txt" />
+    </copy>
+  </target>
+
+  <target name="test7">
+    <filter token="ROOT" value="root" />
+    <copy file="filter2.txt" tofile="filtered.tmp" filtering="yes" overwrite="yes" />
+  </target>
+
+  <target name="test8">
+    <filter token="ROOT" value="root" />
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter2.txt"/>
+    </copy>
+  </target>
+
+  <target name="test9">
+    <filter filtersfile="filterdefs.properties" />
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter3.txt"/>
+    </copy>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="taskdefs.tmp" />
+  </target>
+
+</project>

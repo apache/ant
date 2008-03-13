@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <!-- note relies on antunit built from svn trunk (1.1-alpha) -->
+  <import file="../antunit-base.xml"/>
+
+  <target name="setUp">
+  <property name="file" location="${java.io.tmpdir}/echoed.xml"/>
+    <echoxml file="${file}">
+      <project>
+        <property name="foo" value="bar" />
+        <fail message="$$$${foo}=$${foo}">
+          <condition>
+            <istrue value="${mustfail}" />
+          </condition>
+        </fail>
+      </project>
+    </echoxml>
+  </target>
+  
+  <target name="tearDown">
+    <delete file="${file}"/>
+  </target>  
+
+  <target name="testPass">
+  <ant antfile="${file}"/>
+  </target>
+  
+  <target name="testFail">
+    <au:expectfailure expectedmessage="${foo}=bar" message="Should have thrown an exception">
+      <ant antfile="${file}">
+        <property name="mustfail" value="true" />
+      </ant>
+    </au:expectfailure>
+  </target>
+  
+  <target name="testEmpty">
+    <au:expectfailure expectedmessage="No nested XML specified" message="Should have thrown an exception">
+      <echoxml />
+    </au:expectfailure>
+  </target>
+  
+  <!-- 
+  <target name="test-ns"> 
+    <echoxml file="${file}" xmlns:a="antlib:a">
+      <a:something />
+    </echoxml>
+    <au:assertResourceContains resource="${file}" value="a:something"/>
+  </target>
+  comment this if you don't have the svn trunk of antunit -->
+</project>

@@ -1,0 +1,130 @@
+<project>
+  <path id="test-classes">
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
+  </path>
+  
+  <target name="simple">
+    <presetdef name="my.echo">
+      <echo message="Hello world"/>
+    </presetdef>
+    <my.echo/>
+  </target>
+
+  <target name="text">
+    <presetdef name="my.echo">
+      <echo>Inner Text</echo>
+    </presetdef>
+    <my.echo/>
+  </target>
+
+  <target name="uri">
+    <presetdef name="echo" uri="abc">
+      <echo message="Hello world"/>
+    </presetdef>
+    <x:echo xmlns:x="abc"/>
+  </target>
+
+  <target name="defaulttest">
+    <taskdef name="defaulttest"
+             classname="org.apache.tools.ant.taskdefs.PreSetDefTest$DefaultTest"
+             classpathref="test-classes"/>
+    <presetdef name="d">
+      <defaulttest attribute="true"/>
+    </presetdef>
+    <d attribute="false"/>
+  </target>
+
+  <target name="doubledefault">
+    <taskdef name="defaulttest"
+             classname="org.apache.tools.ant.taskdefs.PreSetDefTest$DefaultTest"
+             classpathref="test-classes"/>
+    <presetdef name="d">
+      <defaulttest attribute="true"/>
+    </presetdef>
+    <presetdef name="dd">
+      <d attribute="false"/>
+    </presetdef>
+    <dd/>
+    <dd attribute="true"/>
+  </target>
+
+  <target name="antTypeTest">
+    <taskdef name="anttypetest"
+             classname="org.apache.tools.ant.taskdefs.PreSetDefTest$AntTypeTest"
+             classpathref="test-classes"/>
+    <presetdef name="java.fileset">
+      <fileset>
+        <include name="**/*.java"/>
+      </fileset>
+    </presetdef>
+    
+    <anttypetest>
+      <fileset ant-type="java.fileset" dir="."/>
+      <configured ant-type="java.fileset" dir="."/>
+    </anttypetest>
+  </target>
+
+  <target name="text.optional">
+    <presetdef name="echo.mytext">
+      <echo>MyText</echo>
+    </presetdef>
+    <echo.mytext/>
+    <echo.mytext>override text</echo.mytext>
+  </target>
+
+  <target name="element.order">
+    <presetdef name="el.order">
+      <sequential>
+        <echo>Line 1</echo>
+      </sequential>
+    </presetdef>
+    <el.order>
+      <echo>Line 2</echo>
+    </el.order>
+  </target>
+
+  <target name="element.order2">
+    <presetdef name="el.order">
+      <sequential>
+        <echo>Line 1</echo>
+      </sequential>
+    </presetdef>
+    <presetdef name="el.order2">
+      <el.order>
+        <echo>Line 2</echo>
+      </el.order>
+    </presetdef>
+    <el.order2>
+      <echo>Line 3</echo>
+    </el.order2>
+  </target>
+
+  <target name="correct_taskname_badattr">
+    <presetdef name="mytask">
+       <javac srcdir="whatever"/>
+    </presetdef>
+
+    <javac srcdir="whatever" badattr="whatever"/>
+  </target>
+
+  <target name="correct_taskname_badel">
+    <presetdef name="mytask">
+       <javac srcdir="whatever"/>
+    </presetdef>
+
+    <javac srcdir="whatever">
+      <badel/>
+    </javac>
+  </target>
+
+    <target name="presetdef-with-nested-element-twice">
+        <copy todir=".">
+            <fileset dir="." includes="nonexistent"/>
+        </copy>
+        <presetdef name="copy">
+            <copy verbose="true"/>
+        </presetdef>
+    </target>
+
+</project>

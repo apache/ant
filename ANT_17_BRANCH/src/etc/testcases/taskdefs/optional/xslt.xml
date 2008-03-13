@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="xslt" default="xslt" basedir=".">
+  <property name="nonasciidir" value="xml/&#0227;nt"/>
+  <target name="init">
+      <mkdir dir="xml/out"/>
+  </target>
+
+  <target name="initNonAscii">
+      <mkdir dir="${nonasciidir}"/>
+      <copy todir="${nonasciidir}">
+        <fileset dir="xml">
+          <include name="docwithentity.xml"/>
+          <include name="entity.xml"/>
+        </fileset>
+      </copy>
+  </target>
+
+  <target name="teardown">
+      <delete dir="xml/out"/>
+      <delete dir="${nonasciidir}" quiet="true"/>
+  </target>
+  
+  <target name="testCatchNoDtd" depends="init">
+    <xslt basedir="xml" destdir="xml/out"
+           includes="about.xml"
+           extension=".txt"
+           style="xml/doc.xsl">
+     </xslt>
+  </target>
+  
+  <xmlcatalog id="xdocs.catalog">
+   <dtd publicID="-//stevo//DTD doc 1.0//EN"
+     location="xml/doc.dtd"/>
+  </xmlcatalog>  
+  
+  <target name="testCatalog" depends="init">
+    <xslt destdir="xml/out"
+           includes="about.xml"
+           extension=".txt"
+           style="xml/doc.xsl">
+       <xmlcatalog refid="xdocs.catalog"/>
+     </xslt>
+  </target>
+
+  <target name="testOutputProperty" depends="init">
+    <xslt in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl">
+      <outputproperty name="method" value="xml"/>
+      <outputproperty name="standalone" value="yes"/>
+      <outputproperty name="encoding" value="iso8859_1"/>
+      <outputproperty name="indent" value="yes"/>
+    </xslt>
+  </target>
+  
+  
+  <target name="testFactory" depends="init">
+    <xslt in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl">
+           <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
+    </xslt>
+  </target>
+
+  <target name="testAttribute" depends="init">
+    <xslt in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl">
+           <factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+            <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+           </factory>
+    </xslt>
+  </target>
+  <!-- inspired by bug report 37348 -->
+  <target name="testXMLWithEntitiesInNonAsciiPath" depends="initNonAscii">
+    <xslt in="${nonasciidir}/docwithentity.xml"
+           out="xml/out/test-out.xml"
+           style="xml/apache.xsl">
+    </xslt>
+  </target>
+  <target name="testStyleSheetWithInclude" depends="init">
+    <xslt in="xml/books.xml"
+           out="xml/out/test-out.xml"
+           style="xml/stylesheet_with_include.xsl">
+    </xslt>
+  </target>
+</project>

@@ -1,0 +1,9 @@
+#hebrew shalom olam (hello world)
+text.hebrew=\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd
+#goethe gingko biloba
+text.german.1=Sp\u00fcrst du nicht an meinen Liedern,
+text.german.2=Da\u00df ich eins und doppelt bin ?
+# Francois Villon Ballade des Pendus
+text.french=Fr\u00e8res humains qui apr\u00e8s nous vivez
+# Usual IT example
+text.basic.latin=Hello World 

@@ -1,0 +1,29 @@
+<project name="testproject" default="def" basedir=".">
+
+  <target name="def">
+    <fail>This build-file is intended to be run from the test cases</fail>
+  </target>
+
+  <target name="setup1">
+
+    <script language="javascript"> <![CDATA[
+
+      for (i=1; i<=10; i++) {
+        echo = testproject.createTask("echo");
+        setup1.addTask(echo);
+        echo.setMessage(i*i);
+      }
+
+    ]]> </script>
+
+  </target>
+
+  <target name="example1" depends="setup1"/>
+
+  <target name="useBeanshell">
+    <script language="beanshell"><![CDATA[
+       self.log("I'm here", org.apache.tools.ant.Project.MSG_INFO);
+    ]]></script>
+  </target>
+
+</project>

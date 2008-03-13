@@ -1,0 +1,10 @@
+<project name="test-reference" default="script">
+  <target name="script">
+    <script language="javascript">
+    </script>
+  </target>
+  <target name="def">
+    <taskdef name="my.echo" classname="org.apache.tools.ant.taskdefs.Echo"/>
+    <my.echo id="my.echo.ref" message="hello world"/>
+  </target>
+</project>

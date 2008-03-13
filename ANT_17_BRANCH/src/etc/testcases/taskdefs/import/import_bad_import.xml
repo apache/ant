@@ -1,0 +1,3 @@
+<project>
+  <import file="bad.xml"/>
+</project>

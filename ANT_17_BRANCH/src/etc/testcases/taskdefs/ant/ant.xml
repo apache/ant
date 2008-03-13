@@ -1,0 +1,16 @@
+<project name="test" default="def" basedir=".">
+
+  <target name="def">
+    <fail>This build file should only be run from within the testcase</fail>
+  </target>
+
+  <target name="dummy">
+    <echo message="${basedir}" />
+  </target>
+
+  <target name="callback">
+    <ant antfile="../ant.xml" target="dummy" inheritAll="false" />
+  </target>
+
+
+</project>

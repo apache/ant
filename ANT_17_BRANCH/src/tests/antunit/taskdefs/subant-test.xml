@@ -1,0 +1,25 @@
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <description>
+    Test that subant properly sets various properties
+  </description>
+  <import file="../antunit-base.xml" />
+
+  <target name="tearDown">
+    <delete file="binaryAppendDest" />
+    <delete file="encodeStringDest" />
+  </target>
+
+  <target name="assertProperties">
+    <au:assertPropertySet name="ant.version" />
+    <au:assertPropertySet name="java.home" />
+    <au:assertPropertySet name="java.class.path" />
+  </target>
+
+  <target name="testAntVersion">
+    <subant inheritall="false" target="assertProperties">
+      <fileset file="${ant.file}" />
+    </subant>
+  </target>
+
+</project>

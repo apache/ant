@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+  <!-- I belong to:
+       org.apache.tools.ant.types.XMLCatalogBuildFileTest.java 
+       -->
+
+<fragment>
+  <para>
+    <Ref file="xmlcatalog1.xml"/>
+  </para>
+</fragment>

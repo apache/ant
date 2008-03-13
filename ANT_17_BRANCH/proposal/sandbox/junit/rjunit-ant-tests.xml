@@ -1,0 +1,34 @@
+<project name="rjunit-ant-tests" basedir="." default="ant-tests">  
+  <!--
+    run ant tests. This is unusable if not running it
+    via build.xml as it should inherits properties
+    -->
+  <taskdef classname="org.apache.tools.ant.taskdefs.optional.rjunit.RJUnitTask"
+    name="rjunit">
+      <classpath>
+        <path location="${build.classes}"/>
+        <path location="${java.dir}"/>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+      </classpath>
+  </taskdef>
+  <target name="ant-tests">
+      <rjunit>
+          <server port="6666">
+              <formatter type="brief">
+                  <!--param name="file" location="junit-test-log.txt"/-->
+              </formatter>
+          </server>
+          <client host="127.0.0.1"  port="6666">
+              <classpath>
+                <fileset dir="${ant.lib.dir}" includes="**/*.jar"/>
+                <path location="${ant.base.dir}/build/classes"/>
+                <path location="${java.dir}"/>
+              </classpath>
+              <jvmarg value="-Xmx256MB"/>
+              <batchtest path="${ant.base.dir}/build/testcases">
+                  <include name="**/*Test.class"/>
+              </batchtest>
+          </client>
+      </rjunit>
+   </target>
+ </project>

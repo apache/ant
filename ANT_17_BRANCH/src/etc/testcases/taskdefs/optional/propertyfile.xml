@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<project name="propertyfile-test" default="main" basedir=".">
+
+   <property file="propertyfile.build.properties"/>
+
+   <target name="main">
+      <fail>
+         This file is for testing purposes only...
+         @see PropertyFileTest.java for more info.
+      </fail>
+   </target>
+
+   <target name="update-existing-properties">
+      <propertyfile
+          file="${test.propertyfile}"
+          comment="unit test for the property file task..." >
+        <entry  key="firstname" value="${firstname}" />
+        <entry  key="lastname"  value="${lastname}" />
+        <entry  key="email"     value="${email}" />
+        <entry  key="phone"     default="${phone}" />
+        <entry  key="age"       default="${age}" type="int"/>
+        <entry  key="date"      default="${date}" type="date"/>
+      </propertyfile>
+
+   </target>
+
+   <target name="exercise">
+     <propertyfile file="${test.propertyfile}">
+        <entry key="existing.prop"
+               type="int"
+               default="23"/>
+        <entry key="ethans.birth"
+               value="2002/01/21 12:18"
+               type="date"/>
+        <entry key="first.birthday"
+               value="1"
+               default="2002/01/21"
+               pattern="yyyy/MM/dd"
+               unit="year"
+               type="date"
+               operation="+"/>
+        <entry key="int.with.default"
+               value="1"
+               default="2"
+               operation="+"
+               type="int"/>
+        <entry key="int.without.value"
+               default="5"
+               operation="+"
+               type="int"/>
+        <entry key="int.without.default"
+               value="1"
+               operation="+"
+               type="int"/>
+        <entry key="string.with.default"
+               value="&gt;"
+               default="--"
+               operation="+"/>
+        <entry key="string.without.default"
+               value="."
+               operation="+"/>
+        <entry key="olderThanAWeek"
+               type="date"
+               default="0201"
+               operation="-"
+               value="8"
+               pattern="MMdd"/>
+     </propertyfile>
+     <property file="${test.propertyfile}"/>
+   </target>
+    <target name="createfile">
+       <echo file="${overwrite.test.propertyfile}">
+ foo=3
+       </echo>
+    </target>
+    <target name="bugDemo1" depends="createfile,bugDemoInit"/>
+    <target name="bugDemo2" depends="bugDemoInit">
+        <property file="${overwrite.test.propertyfile}"/>
+    </target>
+    <target name="bugDemoInit">
+       <propertyfile file="${overwrite.test.propertyfile}">
+          <entry key="foo" default="0" value="1" operation="+" type="int"/>
+       </propertyfile>
+    </target>
+
+</project>
+
+

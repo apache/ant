@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir="." default="test1">
+
+  <target name="test1">
+    <gzip/>
+  </target>
+
+  <target name="test2">
+    <gzip src=""/>
+  </target>
+
+  <target name="test3">
+    <gzip zipfile=""/>
+  </target>
+
+  <target name="test4">
+    <gzip src="gzip.xml" zipfile="." />
+  </target>
+
+  <target name="realTest">
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+  </target>
+
+  <target name="realTestWithResource">
+    <gzip zipfile="asf-logo.gif.gz">
+      <file file="../asf-logo.gif"/>
+    </gzip>    
+  </target>
+
+  <target name="testDateCheck">
+    <touch file="asf-logo.gif.gz"/>
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+  </target>
+
+  <target name="cleanup">
+    <delete file="asf-logo.gif.gz" />
+  </target>
+
+</project>

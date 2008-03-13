@@ -1,0 +1,116 @@
+<project name="test" default="def" basedir=".">
+
+  <target name="def">
+  </target>
+
+  <target name="setup">
+    <property name="a.set" value="true" />
+    <property name="b.set" value="false" />
+  </target>
+
+  <target name="testEchoToLog" depends="setup">
+    <echoproperties />
+  </target>
+
+  <target name="testEchoWithEmptyPrefixToLog" depends="setup">
+    <echoproperties prefix=""/>
+  </target>
+
+  <target name="testEchoToLogXml" depends="setup">
+    <echoproperties format="xml" />
+  </target>
+
+  <target name="testReadAndEchoToLog" depends="setup">
+    <echoproperties srcfile="echoproperties.properties" />
+  </target>
+
+  <target name="testReadBadFile" depends="setup">
+    <echoproperties srcfile="." />
+  </target>
+
+  <target name="testReadBadFileFail" depends="setup">
+    <echoproperties srcfile="." failonerror="yes" />
+  </target>
+
+  <target name="testReadBadFileNoFail" depends="setup">
+    <echoproperties srcfile="." failonerror="no" />
+  </target>
+
+  <target name="testEchoToBadFile" depends="setup">
+    <echoproperties destfile="." />
+  </target>
+
+  <target name="testEchoToBadFileFail" depends="setup">
+    <echoproperties destfile="." failonerror="yes" />
+  </target>
+
+  <target name="testEchoToBadFileNoFail" depends="setup">
+    <echoproperties destfile="." failonerror="no" />
+  </target>
+
+  <target name="testEchoToGoodFile" depends="setup">
+    <echoproperties destfile="test.properties" />
+  </target>
+
+  <target name="testEchoToGoodFileXml" depends="setup">
+    <echoproperties destfile="test.xml" format="xml" />
+  </target>
+
+  <target name="testEchoToGoodFileFail" depends="setup">
+    <echoproperties destfile="test.properties" failonerror="yes" />
+  </target>
+
+  <target name="testEchoToGoodFileNoFail" depends="setup">
+    <echoproperties destfile="test.properties" failonerror="no" />
+  </target>
+
+  <target name="testEchoPrefix" depends="setup">
+    <echoproperties destfile="test-prefix.properties" prefix="a." />
+  </target>
+
+  <target name="testEchoPrefixAsPropertyset" depends="setup">
+    <echoproperties destfile="test-prefix.properties">
+      <propertyset>
+        <propertyref prefix="a."/>
+      </propertyset>
+    </echoproperties>
+  </target>
+
+  <target name="testEchoPrefixAsNegatedPropertyset" depends="setup">
+    <echoproperties destfile="test-prefix.properties">
+      <propertyset negate="true">
+        <propertyref prefix="b."/>
+      </propertyset>
+    </echoproperties>
+  </target>
+
+  <target name="testEchoPrefixAsDoublyNegatedPropertyset" depends="setup">
+    <echoproperties destfile="test-prefix.properties">
+      <propertyset negate="true">
+        <propertyset negate="true">
+          <propertyref prefix="a."/>
+        </propertyset>
+      </propertyset>
+    </echoproperties>
+  </target>
+
+  <target name="testWithPrefixAndRegex" depends="setup">
+    <echoproperties prefix="ant." regex=".*ant.*"/>
+  </target>
+
+  <target name="testWithEmptyPrefixAndRegex" depends="setup">
+    <echoproperties prefix="" regex=""/>
+  </target>
+
+  <target name="testWithRegex" depends="setup">
+    <echoproperties regex=".*ant.*"/>
+  </target>
+
+  <target name="cleanup">
+    <delete file="test.properties" failonerror="no" />
+    <delete file="test-prefix.properties" failonerror="no" />
+    <delete file="test.xml" failonerror="no" />
+  </target>
+
+</project>
+

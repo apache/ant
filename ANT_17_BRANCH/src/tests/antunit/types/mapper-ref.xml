@@ -1,0 +1,38 @@
+<!-- does not address/replace the circular reference checks, etc.
+     in MapperTest.java (yet).
+ -->
+
+<project xmlns:au="antlib:org.apache.ant.antunit">
+  <macrodef name="test">
+    <sequential>
+      <pathconvert property="dest">
+        <string value="foo" />
+        <mapper refid="mapper" />
+      </pathconvert>
+      <au:assertTrue>
+        <equals arg1="${dest}" arg2="bar" />
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <target name="testBasic" description="success">
+    <mapper id="mapper" type="merge" to="bar" />
+    <test />
+  </target>
+
+  <target name="testFileNameMapper" description="success">
+    <mergemapper id="mapper" to="bar" />
+    <test />
+  </target>
+
+  <target name="testWrongType" description="failure">
+    <path id="mapper" path="whocares" />
+    <au:expectfailure 
+      expectedMessage="org.apache.tools.ant.types.Path at reference 'mapper' is not a valid mapper reference.">
+      <test />
+    </au:expectfailure>
+  </target>
+
+  <target name="all" depends="testBasic,testFileNameMapper,testWrongType" />
+
+</project>

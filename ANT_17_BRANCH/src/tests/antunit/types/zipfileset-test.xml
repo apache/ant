@@ -1,0 +1,58 @@
+<project xmlns:au="antlib:org.apache.ant.antunit" default="all">
+  <property name="top.build.dir" location="../../../../build"/>
+  <property name="build.dir"
+            location="${top.build.dir}/ant-unit/zipfileset-dir"/>
+
+  <target name="test-refid-modify">
+    <fileset id="modify-refid-1"
+             dir="${basedir}"
+             includes="*.xml"
+             />
+    <zipfileset id="modify-refid-2"
+                refid="modify-refid-1"
+                prefix="WEB-INF/lib/"/>
+    <delete quiet="yes" dir="${build.dir}"/>
+    <mkdir dir="${build.dir}"/>
+    <jar jarfile="${build.dir}/jar.jar">
+      <zipfileset refid="modify-refid-2"/>
+    </jar>
+    <unjar src="${build.dir}/jar.jar"
+           dest="${build.dir}"/>
+    <au:assertTrue>
+      <available file="${build.dir}/WEB-INF/lib/zipfileset-test.xml"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-refid-check-prefix">
+    <zipfileset id="test-refid"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref2"
+                  refid="test-refid"
+                  prefix="WEB-INF/lib/"/>
+    </au:expectfailure>
+    <au:expectfailure>
+      <zipfileset id="ref3"
+                  prefix="WEB-INF/lib/"
+                  ReFiD="test-refid"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-refid-check-encoding">
+    <zipfileset id="test-refid2"
+                encoding="utf-8"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref4"
+                  encoding="utf-8"
+                  refid="test-refid2"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset dir="${basedir}" includes="zipfileset-test.xml"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>

@@ -1,0 +1,25 @@
+<project name="pathconvert">
+
+    <path id="testpath">
+        <pathelement path="${ant.file}" />
+    </path>
+
+    <target name="testmap">
+        <pathconvert property="result" dirsep="#">
+            <path refid="testpath" />
+            <map from="${basedir}" to="test" />
+        </pathconvert>
+    </target>
+
+    <target name="testmapper">
+        <pathconvert property="result" dirsep="#">
+            <path refid="testpath" />
+            <mapper type="glob" from="${basedir}" to="test" />
+        </pathconvert>
+    </target>
+
+    <target name="testnotargetos">
+        <pathconvert property="result" refid="testpath" />
+    </target>
+
+</project>

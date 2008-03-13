@@ -1,0 +1,20 @@
+<project name="length-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="testDefaultTest">
+    <macrodef name="test-log">
+      <text name="log" default="DEFAULT-LOG-VALUE"/>
+      <sequential>
+        <concat>@{log}</concat>
+      </sequential>
+    </macrodef>
+    <test-log/>
+    <au:assertLogContains text="DEFAULT-LOG-VALUE"/>
+    <test-log>THIS IS NOT DEFAULT LOG</test-log>
+    <au:assertLogContains text="THIS IS NOT DEFAULT LOG"/>
+  </target>
+
+
+</project>

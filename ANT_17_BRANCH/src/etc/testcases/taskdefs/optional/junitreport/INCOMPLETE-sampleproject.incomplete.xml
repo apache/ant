@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" name="sampleproject.incomplete" tests="5" time="0.038">
+  </properties>
+  <testcase name="testEquals" time="0.0"></testcase>
+  <testcase name="testHashCode" time="0.0"></testcase>
+  <testcase name="testToString" time="0.0010"></testcase>
+  <testcase name="testgetUniqueString" time="0.0"></testcase>
+  <testcase name="testSerialization" time="0.024"></testcase>
+  <system-out><![CDATA[testEquals
+testHashCode
+testToString
+testgetUniqueString
+testSerialization
+]]></system-out>
+  <system-err>

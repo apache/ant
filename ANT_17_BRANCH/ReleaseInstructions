@@ -1,0 +1,265 @@
+Instructions for making a Release:
+
+Authors: Conor MacNeill
+         Stefan Bodewig
+         Magesh Umasankar
+         Antoine Levy-Lambert
+
+Note: This document was updated in the context of releasing Ant 1.7.
+      Please interpret the branch names, tags, etc. according to
+      your context.
+
+1.  Propose a release plan for vote.  This should set out the timetable for
+    the release under ideal circumstances.  
+
+    The issue of whether to create a branch for the release should be discussed
+    in the release vote.
+
+    The level of bugs reported  can delay things. Generally, give a few weeks to 
+    "close" the source tree to further changes so people can finalise 
+    contributions, etc. At this time, the first beta will be cut and there will be 
+    then a period of beta testing, usually 1 month but this should be flexible.
+
+2.  Note that any mention of a deadline causes a flood of bug fixes, new tasks,
+    etc.  This needs to be managed as best it can. Some fixes will be applied,
+    others held over. Make this clear in the release plan. The committers and
+    particularly the release manager will need to make judgement calls here.
+    Anything too "big" is likely to be held over.
+
+3.  Once the freeze date arrives, create a branch for the release builds,
+    if this was decided in the release vote. This was done for Ant 1.6, 
+    but not for Ant 1.7. 
+
+    You will need to be comfortable in handling SVN branches with multiple
+    merge-backs to the main branch and even selected merges from the the main
+    branch to the release branch.
+
+    For more information on performing branching and merging, please visit
+    http://svnbook.red-bean.com/nightly/en/svn-book.html
+
+    Label such branches ANT_16_BRANCH.
+
+4.  Once the branch is setup, the version numbers in SVN are changed. On the
+    branch, the project.version property in build.xml becomes 1.7Beta.
+
+    If there were a main branch, its build.xml would have 1.8alpha.
+
+    [[ TODO: Check if the documentation files also need to be updated to point
+    to the right areas of Ant's website. ]]
+
+5.  Before a build :
+
+    the first beta on the 1.7 branch has been called 1.7.0Beta1, ...
+
+    the project.version property in build.xml governs the output of ant -version and
+    the naming of the distribution files.
+
+    Update the following files for version number:
+
+        On the branch only :
+
+            * docs/manual/cover.html
+            * docs/manual/credits.html
+            * build.xml (version property & manifest-version property)
+
+        Commit your changes.
+
+        On the branch and on the main trunk (*):
+
+            * WHATSNEW
+            * xdocs/antnews.xml (Announcement)
+            * xdocs/faq.xml (Ant's history details - not for betas)
+            * xdocs/index.xml (Announcement, latest release details, link to
+            manual under "Documentation")
+            * xdocs/srcdownload.xml
+            * xdocs/bindownload.xml
+
+        Generate the html files by invoking ant on docs.xml
+        (use -projecthelp for instructions).
+        Commit the modified/generated files
+
+6.  Ensure you have all the external libraries that Ant uses in your
+    lib/optional directory.  To find out what libraries you need, execute
+    the build with -verbose option and scan for lines beginning with
+    "Unable to load...".
+
+7.  Make sure that your directory tree is clean by running svn status.
+    Some tests leave behind leftovers which end up in the source distribution otherwise.
+
+8.   Next bootstrap, build and run the tests.  Then build the distribution
+    on the branch. It is important that this be a clean build. Label this with
+    a tag ANT_170_B1.
+
+    C:\dev\asf\ant-core>
+    svn copy https://svn.apache.org/repos/asf/ant/core/trunk \
+    https://svn.apache.org/repos/asf/ant/core/tags/ANT_170_B1 \
+    -m "Tagging version 1.7.0Beta1 of Ant"
+
+    Revision 437509 ?\195?\188bertragen.
+
+9.  Sign the distribution files using the following simple script
+    #!/bin/sh
+    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
+    do
+         echo "Signing " $i
+         gpg -a -b --force-v3-sigs $i
+    done
+
+    The --force-v3-sigs will improve the interoperability with PGP 5.x,
+    see <http://www.gnupg.org/(en)/documentation/faqs.html#q5.5>.
+
+    Before you do that, ensure that the key you use is inside the KEYS
+    file in Ant's SVN repository - and that you perform a svn update on
+    the KEYS file in /www/www.apache.org/dist/ant/
+
+    Also make sure you have sent the key that you use to a public
+    keyserver.
+
+10. The beta distribution is now ready to go. Bundle it up into a tar.gz file
+    and scp to your apache account.
+
+11. Meanwhile, convert the part of the WHATSNEW file covering the changes
+    since the last release into HTML for the README file on the
+    website. See the previous release directories for examples of these files.
+    Add instructions and warnings (GNU tar format issues, etc).
+
+    You may choose to use the text2html convertor present at
+    http://txt2html.sourceforge.net/#test
+
+    Name the generated file RELEASE-NOTES-x.y.z.html.
+
+    Change the title to something like "Release Notes of Apache Ant 1.7.0Beta2" (from the default txt2html)
+
+    [[ TODO: This must perhaps be an Ant task. ]]
+
+12. Once this is uploaded, unpack things, create the release directory,
+    something like v1.7.0Beta1, push the release and RELEASE-NOTES files
+    into this directory.  Create a symbolic link named README.html
+    that points to the RELEASE-NOTES.
+
+    The files should go to /www/people.apache.org/dist/ant/ on people.apache.org.
+
+13. Address the available release tags in BugZilla. Create a new tag 1.7.0Beta1.
+    If there is a separate main branch, create a 1.8alpha tag.
+    Assign all existing 1.7 alpha bugs to 1.7.0Beta1.
+    Note that such massive changes can be done at once by choosing the
+    link "Change several bugs at once" at the bottom of the bug list
+    displaying the 1.7alpha bugs.
+
+14. Once that is done, do a test download to make sure everything is OK. A
+    common problem may be:
+    * the file's mime type is not recognized and is interpreted as
+      text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
+    * Your gz.asc files are not being displayed properly (RemoveEncoing stuff)
+
+    If it looks OK, announce it on dev@ant and user@ant. After a few
+    days pass and there are no major problems, a wider announcement is
+    made (ant website, main jakarta website, announcements@jakarta.apache.org,
+    etc).
+
+    and also perform a svn update on files in people.apache.org's
+    /www/ant.apache.org/
+
+    you also need to checkout parallel to ant-core https://svn.apache.org/repos/asf/ant/site
+    then go to the subdirectory generated
+    svn propedit svn:externals to change the location of the manual
+
+    Announce beta releases at freshmeat.net (Stefan Bodewig is the
+    owner of Ant's project entry - bug him ;-).
+
+15. As problems in the beta are discovered, there may be a need for
+    one or more subsequent betas. The release manager makes this
+    call. Each time, the versions are updated and the above process is
+    repeated. Try not to have too many betas.
+
+16. Try to advertise the need for testing of the betas as much as possible.
+    This would eliminate the need to release minor patch versions like
+    we had to do when releasing Ant 1.4.
+
+    To monitor the number of downloads, look at the access_log
+    file under /usr/local/apache2/logs
+
+17. When the final beta is considered OK, propose a vote on dev@ant to
+    officially adopt the latest beta as the Ant 1.6 release. If it is passed,
+    (it usually does,) this would be labelled ANT_16 and built in a similar
+    fashion to the above process.
+
+18. BUT
+
+    This time the directory you upload the files to is different and
+    you'll have to do some house-keeping for the old release:
+
+    * upload the new release files to
+
+      from distribution
+      to   /www/www.apache.org/dist/ant/[source|binaries].
+      
+      and 
+
+      from java-repository/org.apache.ant
+      to   /www/people.apache.org/repo/m1-ibiblio-rsync-repository/org.apache.ant
+
+      this can be done using the target upload of the build.xml
+
+    * remove the symbolic links from /www/www.apache.org/dist/ant.
+
+    * Create proper -current symlinks in /www/www.apache.org/dist/ant/
+
+    * Make sure that the symbolic link README.html points to the new
+      RELEASE-NOTES.
+
+    (**)
+
+19. Update the ant.apache.org site :
+
+    running svn update *.html under /www/ant.apache.org should update the
+    files regenerated and committed in point 5 above (index.html, faq.html,
+    antnews.html, srcdownload.html, bindownload.html).
+
+    Update the online manual too.
+
+20. Clean up.
+
+    * remove the remaining files of the previous release from
+      /www/www.apache.org/dist/ant/[source|binaries].
+      This includes the old release notes.
+
+21. Now and perhaps during previous betas any changes on the branch must
+    be merged back into the tree.
+
+22. At this point in time, the release is done and announcements are made.
+    PGP-sign your announcement posts.
+
+    [[TODO: Identify the mailing lists where announcements are to be made.
+      Also identify the webpages to which the announcements must go. ]]
+
+    Apache mailing lists that should get the announcements:
+    announcements@jakarta.apache.org, announcements@xml.apache.org,
+    announce@apache.org, dev@ant and user@ant.
+
+    Announce release at freshmeat.net
+    (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
+
+    Announce release in the usenet groups comp.lang.java.softwaretools
+    and comp.lang.java.announce.
+
+23. You can now reacquaint yourself with your family and friends.
+
+(*)  the xdocs need to be updated on both the branch and the HEAD revision
+     because traditionally the ant.apache.org web site reflects the HEAD
+     revision of the xdocs, but the users downloading a distribution will get
+     the xdocs and the generated html from the branch and will complain if there
+     are discrepancies in version numbers.
+
+(**) Mirrors : the srcdownload.html and bindownload.html each list a number of
+     mirrors. For ant 1.6.0 the mirrors picked up the new version in 8 hours
+     or less, the release having been done at midnight on Dec 18th, the
+     mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
+     contain a note advising users to be patient immediately after the release.
+
+Related Information
+
+http://www.apache.org/dev/release-publishing.html
+http://jakarta.apache.org/commons/releases/
+http://wiki.apache.org/jakarta-commons/SigningReleases
+
