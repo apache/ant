@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project xmlns:au="antlib:org.apache.ant.antunit">
 
   <target name="testAcceptNested">

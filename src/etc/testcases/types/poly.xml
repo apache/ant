@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="test" basedir=".">
   
   <property name="c" value="org.apache.tools.ant.types.PolyTest"/>

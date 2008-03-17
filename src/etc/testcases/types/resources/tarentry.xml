@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="not me">
   <target name="not me">
     <fail>only use from within unit tests</fail>

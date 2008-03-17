@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="scriptselector" default="def" basedir=".">
 
   <property name="src.file" location="${ant.file}" />

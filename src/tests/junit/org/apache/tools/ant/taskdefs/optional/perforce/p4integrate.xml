@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!-- author Antoine Levy-Lambert levylambert@tiscali-dsl.de -->
 <!-- this test demonstrates p4integrate -->
 <project name="integrate" default= "testintegrate">

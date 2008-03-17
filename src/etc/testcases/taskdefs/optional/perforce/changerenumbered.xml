@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!-- author Antoine Levy-Lambert  -->
 <!-- this file demonstrates that p4.change will be modified by p4submit -->
 <!-- if the change number is modified by the Perforce daemon during the submission -->

@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="test" default="test" basedir=".">
 
   <target name="test">

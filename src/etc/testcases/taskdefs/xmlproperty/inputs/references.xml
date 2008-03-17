@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <references>
   <property value="foo" id="foo.property"/>
   <foo bar="${property}">

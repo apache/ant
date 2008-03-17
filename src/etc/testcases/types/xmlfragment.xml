@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project>
   <typedef name="fragment"
            classname="org.apache.tools.ant.util.XMLFragment"/>

@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
   <import file="../antunit-base.xml" />

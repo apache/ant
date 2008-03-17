@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="exec-test" default="spawn" basedir=".">
     <target name="init">
         <!-- this property can be overriden programatically in the Java test case -->

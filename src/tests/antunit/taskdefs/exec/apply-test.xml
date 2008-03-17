@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="apply-test" xmlns:au="antlib:org.apache.ant.antunit">
   <property environment="env" />
   <!-- UNIX -->

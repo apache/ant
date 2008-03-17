@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="imported-test" default="imported" basedir=".">
 
   <echo message="In imported top"/>

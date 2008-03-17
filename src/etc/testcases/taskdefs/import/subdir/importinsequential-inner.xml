@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project>
   <target name="within-imported">
     <property name="foo" value="bar"/>

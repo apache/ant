@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="sleeptest" default="all" >
 
     <target name="test1">

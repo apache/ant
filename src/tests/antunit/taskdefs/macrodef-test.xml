@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="length-test" default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 

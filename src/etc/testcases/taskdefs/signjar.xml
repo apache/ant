@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="signjartest" default="help" basedir="..">
 
   <property name="classes.dir" value="../../../build/classes"/>

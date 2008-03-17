@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project>
   <property name="foo" value="bar"/>
   <path id="baz">

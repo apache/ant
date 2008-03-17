@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">

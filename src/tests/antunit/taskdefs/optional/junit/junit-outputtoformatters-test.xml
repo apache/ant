@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
   <property name="ant-build" location="../../../../../../build"/>
   <property name="build-junit-dir" location="${ant-build}/ant-unit/junit-dir"/>

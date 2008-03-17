@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="B">
    <import file="a.xml"/>
    <target name="x" depends="A.x"/>

@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
   <property name="ant.build.dir" location="../../../../../build"/>
   <property name="my.build.dir"

@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="truncate-test" default="default"
          xmlns:au="antlib:org.apache.ant.antunit">
 

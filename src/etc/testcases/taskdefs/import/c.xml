@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="C">
    <import file="a.xml"/>
    <import file="b.xml"/>

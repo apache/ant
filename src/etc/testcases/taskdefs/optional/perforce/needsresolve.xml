@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!-- author Antoine Levy-Lambert -->
 <!-- this test shows that p4 submit can now indicate that a file needs to be resolved -->
 <!-- before running the test, edit this xml and change the 5 properties at the top to values which make sense on your system-->

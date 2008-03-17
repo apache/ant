@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project name="classloader-test" default="main" basedir=".">
 
   <target name="init">

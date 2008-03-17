@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
   <target name="notcalled">
     <filelist id="ref1" dir="${basedir}" files="xxx" />

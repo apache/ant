@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project xmlns:au="antlib:org.apache.ant.antunit">
   <!-- NB: ant's interface to JDK14 regex enables UNIX_LINES -->
   <property name="NL" value="&#10;"/>
