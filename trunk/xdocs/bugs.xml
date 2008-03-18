@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <author email="">Antoine Levy-Lambert</author>
+    <title>Bug database</title>
+  </properties>
+
+  <body>
+    <section name="Bug Database">
+         <p>
+           This page gives you some bookmarks to use the Bugzilla <a href="http://issues.apache.org/bugzilla/">
+            Apache Bug Database</a>.
+         </p>
+         <p>
+           This link <a href="http://issues.apache.org/">issues.apache.org</a> connects you
+           to the complete list of Apache Bug Database systems.
+         </p>
+      <subsection name="Has It Been Reported?">
+         <p>
+            If the current nightly build doesn't resolve your problem, it is
+            possible that someone else has reported the issue. It is time to
+            look at the bug database. This system is easy to use, and it will
+            let you search the <a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Ant&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.bug_id">
+            currently open</a> and resolved bugs to see if your problem has
+            already been reported. If your problem has been reported, you can
+            see whether any of the developers have commented, suggesting
+            workarounds, or the reason for the bug, etc. Or you may have
+            information to add (see about creating and modifying bug reports
+            below), in which case, go right ahead and add the information.
+            If you don't have any additional information, you may just want
+            to vote for this bug, and perhaps
+            add yourself to the <code>CC</code> list to follow the progress
+            of this bug.
+         </p>
+         <p><a href="http://issues.apache.org/bugzilla/buglist.cgi?query_format=advanced&amp;short_desc_type=allwordssubstr&amp;short_desc=&amp;product=Ant&amp;long_desc_type=substring&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailassigned_to1=1&amp;emailtype1=substring&amp;email1=&amp;emailassigned_to2=1&amp;emailreporter2=1&amp;emailcc2=1&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">Open Ant bugs by order of priority</a>.</p>
+         <p><a href="http://issues.apache.org/bugzilla/buglist.cgi?query_format=advanced&amp;short_desc_type=allwordssubstr&amp;short_desc=&amp;product=Ant&amp;long_desc_type=substring&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailassigned_to1=1&amp;emailtype1=substring&amp;email1=&amp;emailassigned_to2=1&amp;emailreporter2=1&amp;emailcc2=1&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.votes,bugs.priority%2Cbugs.bug_severity&amp;query_based_on=">Open Ant bugs by number of votes</a>.</p>
+      </subsection>
+
+      <subsection name="Filing a Bug Report">
+         <p>
+            Please read our document about <a href="problems.html">problems</a>
+            before deciding that there is an unreported
+            bug in Ant.
+        </p>
+        <p>
+            You have a few choices at this point. You can send
+            an email to the <code>user</code> mailing list
+            to see if
+            others have encountered your issue and find out how they may
+            have worked around it. If after some discussion, you feel it
+            is time to create
+            a bug report, this is a simple operation in the bug database.
+            Please try to provide as much information as possible in order
+            to assist the developers in resolving the bug. Please try to enter
+            correct values for the various inputs when creating the bug, such
+            as which version of Ant you are running, and on which platform,
+            etc. Once the bug is created, you can also add attachments to
+            the bug report.
+         </p>
+         <p>
+            What information should you include in your bug report? The
+            easiest bugs to fix are those that are most easily reproducible,
+            so it is really helpful if you can produce a small test case that
+            exhibits the problem. In this case, you would attach the build file
+            and any other files necessary to reproduce the problem, probably
+            packed together in an archive. If you can't produce a test case,
+            you should try to include a snippet from your build file and the
+            relevant sections from the verbose or debug output from Ant. Try
+            to include the header information where Ant states the version,
+            the OS and VM information, etc. As debug output is likely to be
+            very large, it's best to remove any output that is not
+            relevant. Once the bug is entered into the bug database, you
+            will be kept informed by email about progress on the bug. If
+            you receive email asking for further information, please try to
+            respond, as it will aid in the resolution of your bug.
+         </p>
+         <p>
+            To create the bug report hit this
+            <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant">
+            link</a>.
+         </p>
+      </subsection>
+
+      <subsection name="Asking for an Enhancement">
+         <p>
+            Sometimes, you may find that Ant just doesn't do what you need it
+            to. It isn't a bug, as such, since Ant is working the way it is
+            supposed to work. Perhaps it is some additional functionality for
+            a task that hasn't been thought of yet, or maybe a completely new
+            task. For these situations, you will
+            want to raise an <i>enhancement request</i>. Enhancement requests
+            are managed using the same Apache Bug Database described above.
+            These are just a different type of bug report. If you look in the
+            bug database, you will see that one of the severity settings for
+            a bug is &quot;Enhancement&quot;. Just fill the bug report in,
+            set the severity of the bug to &quot;Enhancement&quot;, and
+            state in the description how you would like to have Ant enhanced.
+            Again, you should first check whether there are any existing
+            enhancment requests that cover your needs. If so, just add your
+            vote to these.
+         </p>
+        <p>
+          <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=enhancement">
+          Create an enhancement report</a>
+
+        </p>
+      </subsection>
+
+      <subsection name="Fixing the Bug">
+         <p>
+            If you aren't satisfied with just filing a bug report, you can
+            try to find the cause of the problem and provide a fix yourself.
+            The best way to do that is by working with the latest code from Subversion.
+            Alternatively, you can work with the source code available from the
+            <a href="http://ant.apache.org/srcdownload.cgi">
+            source distributions</a>. If you
+            are going to tackle the problem at this level, you may want to
+            discuss some details first on the <code>dev</code>
+            mailing list. Once you have a fix for the problem, you may submit
+            the fix as a <i>patch</i> to either the
+            <code>dev</code> mailing
+            list, or enter the bug database as described above and attach the
+            patch to the bug report. Using the bug database has the advantage
+            of being able to track the progress of your patch.
+         </p>
+         <p>
+            If you have a patch to submit and are sending it to the
+            <code>dev</code> mailing list,
+            prefix &quot;[PATCH]&quot;
+            to your message subject (this is also a good idea for
+            a subject line in the bug database).
+            Please include any relevant bug numbers.
+            Patch files should be created with the <code>-u</code>
+            option of the
+            <code>diff</code> or <code>svn diff</code> command. For
+            example:<br></br><br></br>
+            <font face="verdana" size="-1">
+            diff -u Javac.java.orig Javac.java &gt; javac.diffs<br></br><br></br>
+            </font>
+            or, if you have source from Subversion:<br></br><br></br>
+            <font face="verdana" size="-1">
+            svn diff Javac.java &gt; javac.diffs<br></br><br></br>
+            </font>
+
+           Note: You should give your patch files meaningful names.
+           This makes it easier for developers who need to apply a number
+           of different patch files.
+        </p>
+      </subsection>
+
+
+   </section>
+  </body>
+</document>

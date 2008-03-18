@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <property name="ant.build.dir" location="../../../../../build"/>
+  <property name="my.build.dir"
+            location="${ant.build.dir}/ant-unit/uuencode-dir"/>
+  <property name="classes.dir" location="${my.build.dir}/classes"/>
+
+  <available property="sun.uudecode.avail" classname="sun.misc.UUDecoder"/>
+
+  <target name="define" if="sun.uudecode.avail">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src" destdir="${classes.dir}" debug="yes"/>
+    <taskdef name="uuencode" classname="task.UUEncodeTask"
+             classpath="${classes.dir}"/>
+    <taskdef name="uudecode" classname="task.UUDecodeTask"
+             classpath="${classes.dir}"/>
+  </target>
+
+  <target name="test-simple" depends="define" if="sun.uudecode.avail">
+    <uuencode infile="${ant.file}"
+              outfile="${my.build.dir}/uuencoded"/>
+    <uudecode infile="${my.build.dir}/uuencoded"
+              outfile="${my.build.dir}/decoded"/>
+    <au:assertTrue>
+      <filesmatch file1="${ant.file}" file2="${my.build.dir}/decoded"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}"/>
+      <au:plainlistener/>
+    </au:antunit>
+  </target>
+</project>

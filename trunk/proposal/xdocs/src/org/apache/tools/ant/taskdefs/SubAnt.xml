@@ -1,0 +1,129 @@
+<external>
+    <description>
+        <p>
+            Calls a given target for all defined sub-builds.
+            This is an extension
+            of ant for bulk project execution.
+
+            <strong>This task must no be used outside of a
+                <code>target</code> if it invokes the same build file it is
+                part of.</strong>
+        </p>
+        <subsection name="Use with directories">
+            <p>
+                subant can be used with directory sets to execute a build from different directories.
+                2 different options are offered :
+            </p>
+            <ul>
+                <li>
+                    to run the same build file <code>/somepath/otherpath/mybuild.xml</code>
+                    with different base directories, use the genericantfile attribute
+                </li>
+                <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
+                    use the antfile attribute. The subant task does not set the base directory for you in this case, because you can specify it in each build file.
+                </li>
+            </ul>
+        </subsection>
+     </description>
+    <section anchor="examples" name="Examples">
+        <pre>
+        &lt;project name="subant" default="subant1"&gt;
+        &lt;property name="build.dir" value="subant.build"/&gt;
+        &lt;target name="subant1"&gt;
+            &lt;subant target=""&gt;
+              &lt;property name="build.dir" value="subant1.build"/&gt;
+              &lt;property name="not.overloaded" value="not.overloaded"/&gt;
+              &lt;fileset dir="." includes="*/build.xml"/&gt;
+            &lt;/subant&gt;
+        &lt;/target&gt;
+        &lt;/project&gt;
+        </pre>
+        <p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+            The property build.dir will have the value subant1.build in the ant projects called by subant.
+        </p>
+        <pre>
+          &lt;subant target=""&gt;
+             &lt;propertyset&gt;
+                  &lt;propertyref prefix="toplevel"/&gt;
+                  &lt;mapper type="glob" from="foo*" to="bar*"/&gt;
+             &lt;/propertyset&gt;
+             &lt;fileset dir="." includes="*/build.xml"/&gt;
+          &lt;/subant&gt;
+        </pre>
+        <p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+            All properties whose name starts with &quot;foo&quot; are passed, their names are changed to start with &quot;bar&quot; instead
+        </p>
+        <pre>
+          &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
+             &lt;dirset dir="." includes="projects*"/&gt;
+          &lt;/subant&gt;
+        </pre>
+        <p>
+            assuming the subdirs of the project dir are called projects1, projects2, projects3
+            this snippet will execute the compile target of /opt/project/build1.xml,
+            setting the basedir to projects1, projects2, projects3
+        </p>
+        <p>Now a little more complex - but useful - scenario. Assume that we have
+        a directory structure like this:</p>
+        <pre>
+        root
+          |  common.xml
+          |  build.xml
+          |
+          +-- modules
+                +-- modA
+                |     +-- src
+                +-- modB
+                      +-- src
+
+        <u><b>common.xml:</b></u><br/>
+        &lt;project&gt;
+            &lt;property name="src.dir"      value="src"/&gt;
+            &lt;property name="build.dir"    value="build"/&gt;
+            &lt;property name="classes.dir"  value="${build.dir}/classes"/&gt;
+
+            &lt;target name="compile"&gt;
+                &lt;mkdir dir="${classes.dir}"/&gt;
+                &lt;javac srcdir="${src.dir}" destdir="${classes.dir}"/&gt;
+            &lt;/target&gt;
+
+            &lt;!-- more targets --&gt;
+        &lt;/project&gt;
+
+        <u><b>build.xml:</b></u><br/>
+        &lt;project&gt;
+
+            &lt;macrodef name="iterate"&gt;
+                &lt;attribute name="target"/&gt;
+                &lt;sequential&gt;
+                    &lt;subant target="@{target}"&gt;
+                        &lt;fileset dir="modules" includes="*/build.xml"/&gt;
+                    &lt;/subant&gt;
+                &lt;/sequential&gt;
+            &lt;/macrodef&gt;
+
+
+            &lt;target name="compile"&gt;
+                &lt;iterate target="compile"/&gt;
+            &lt;/target&gt;
+
+            &lt;!-- more targets --&gt;
+        &lt;/project&gt;
+
+        <u><b>modules/modA/build.xml:</b></u><br/>
+        &lt;project name="modA"&gt;
+            &lt;import file="../../common.xml"/&gt;
+        &lt;/project&gt;
+        </pre>
+
+        <p>This results in very small buildfiles in the modules, maintainable
+        buildfile (common.xml) and a clear project structure. Additionally
+        the root buildfile is capable to run the whole build over all
+        modules.
+        </p>
+    </section>
+</external>

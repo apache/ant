@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit">
+
+  <tokens id="testrc">
+    <string value="1,2,3,4,5" />
+    <stringtokenizer delims="," />
+  </tokens>
+
+  <target name="testfirst0">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <first count="0"><resources refid="testrc" /></first>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst1">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <first><resources refid="testrc" /></first>
+          <string value="1" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst2">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <first count="2"><resources refid="testrc" /></first>
+          <resources>
+            <string value="1" />
+            <string value="2" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst5">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <first count="5"><resources refid="testrc" /></first>
+          <resources refid="testrc" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst6">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <first count="6"><resources refid="testrc" /></first>
+          <resources refid="testrc" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testfirst-1">
+    <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
+      <resourcecount>
+        <first count="-1"><resources refid="testrc" /></first>
+      </resourcecount>
+    </au:expectfailure>
+  </target>
+
+  <target name="testlast0">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <last count="0"><resources refid="testrc" /></last>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testlast1">
+    <pathconvert>
+      <last count="1"><resources refid="testrc" /></last>
+    </pathconvert>
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <last><resources refid="testrc" /></last>
+          <string value="5" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testlast2">
+    <pathconvert>
+      <last count="2"><resources refid="testrc" /></last>
+    </pathconvert>
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <last count="2"><resources refid="testrc" /></last>
+          <resources>
+            <string value="4" />
+            <string value="5" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testlast5">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <last count="5"><resources refid="testrc" /></last>
+          <resources refid="testrc" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testlast6">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <last count="6"><resources refid="testrc" /></last>
+          <resources refid="testrc" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testlast-1">
+    <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
+      <resourcecount>
+        <last count="-1"><resources refid="testrc" /></last>
+      </resourcecount>
+    </au:expectfailure>
+  </target>
+
+</project>

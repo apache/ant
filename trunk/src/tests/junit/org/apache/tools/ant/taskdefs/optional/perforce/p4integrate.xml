@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- author Antoine Levy-Lambert levylambert@tiscali-dsl.de -->
+<!-- this test demonstrates p4integrate -->
+<project name="integrate" default= "testintegrate">
+  <property name="second_client" value="levyant_cygwin_test"/>
+  <property name="second_client_root" value="C:\dev\test"/>
+  <property name="depot_file_spec" value="//depot/foobar"/>
+  <property name="depot_file_spec_2" value="//depot/hello"/>
+  <target name="testintegrate">
+    <p4change client="${second_client}"/>
+    <property name="change1" value="${p4.change}" />
+    <p4integrate client="${second_client}" change="${p4.change}" fromfile="${depot_file_spec}" tofile="${depot_file_spec_2}" forceintegrate="true" />
+    <p4resolve  client="${second_client}" view="${depot_file_spec_2}" resolvemode="theirs"/>
+    <p4submit client="${second_client}" change="${p4.change}"/>
+  </target>
+</project>

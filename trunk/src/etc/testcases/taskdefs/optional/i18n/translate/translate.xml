@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="translate-test" default="test1" basedir=".">
+    <property name="input.dir" value="input"/>
+    <property name="output.dir" value="output"/>
+    <property name="expected.dir" value="expected"/>
+    <target name="setup">
+        <mkdir dir="${output.dir}/de"/>
+    </target>
+    <target name="test1" depends="setup">
+      <translate toDir="${output.dir}/de"
+        starttoken="@"
+        endtoken="@"
+        bundle="${input.dir}/resources"
+        bundlecountry="DE"
+        bundlelanguage="ger"
+        forceoverwrite="yes"
+        srcencoding="ISO8859_1"
+        destencoding="ISO8859_1"
+        bundleencoding="Cp1252">
+        <fileset dir="${input.dir}">
+            <include name="template.txt"/>
+        </fileset>
+      </translate>
+     </target>
+     <target name="cleanup">
+         <delete dir="${output.dir}" quiet="true"/>
+     </target>
+</project>
+

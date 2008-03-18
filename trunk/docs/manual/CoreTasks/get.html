@@ -1,0 +1,125 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>Get Task</title>
+</head>
+
+<body>
+
+<h2><a name="get">Get</a></h2>
+<h3>Description</h3>
+<p>Gets a file from a URL. When the verbose option is &quot;on&quot;, this task
+displays a '.' for every 100 Kb retrieved. Any URL schema supported by
+the runtime is valid here, including http:, ftp: and jar:; 
+https: is only valid if the appropriate support is added to the pre-1.4 Java
+runtimes. 
+ 
+</p>
+The <i>usetimestamp</i> option enables you to control downloads so that the remote file is
+only fetched if newer than the local copy. If there is no local copy, the download always takes 
+place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp,
+if  the JVM is Java1.2 or later. 
+NB: This timestamp facility only works on downloads using the HTTP protocol. 
+<p>
+A username and password can be specified, in which case basic 'slightly encoded
+plain text' authentication is used. This is only secure over an HTTPS link.
+</p>
+<p>
+<b>Proxies</b>. Since Ant1.7, Ant running on Java1.5 or later defaults to 
+    <a href="../proxy.html">using
+    the proxy settings of the operating system</a>. There is also the  
+ <a href="../OptionalTasks/setproxy.html">&lt;setproxy&gt;</a> task for
+    earlier Java versions. With proxies turned on, <code>&lt;get&gt;</code> requests against
+    localhost may not work as expected, if the request is relayed to the proxy.
+    The <code>-noproxy</code> option can be used to turn this feature off.
+</p>
+ 
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the URL from which to retrieve a file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the file where to store the retrieved file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">show verbose progress information (&quot;on&quot;/&quot;off&quot;).</td>
+    <td align="center" valign="top">No; default "false"</td>
+  </tr>
+  <tr>
+    <td valign="top">ignoreerrors</td>
+    <td valign="top">Log errors but don't treat as fatal.</td>
+    <td align="center" valign="top">No; default "false"</td>
+  </tr>
+  <tr>
+    <td valign="top">usetimestamp</td>
+    <td valign="top">conditionally download a file based on the timestamp of the
+    local copy. HTTP only</td>
+    <td align="center" valign="top">No; default "false"</td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">username for 'BASIC' http authentication</td>
+    <td align="center" valign="top">if password is set</td>
+  </tr>  
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">password: required </td>
+    <td align="center" valign="top">if username is set</td>
+  </tr>  
+
+</table>
+<h3>Examples</h3>
+<pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
+<p>Gets the index page of http://ant.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
+
+<pre>  &lt;get src=&quot;http://www.apache.org/dist/ant/KEYS&quot; 
+    dest=&quot;KEYS&quot; 
+    verbose=&quot;true&quot;
+    usetimestamp=&quot;true&quot;/&gt;</pre>
+<p>
+Gets the PGP keys of Ant's (current and past) release managers, if the local copy
+is missing or out of date. Uses the verbose option 
+for progress information.
+</p>
+
+<pre>  &lt;get src=&quot;https://insecure-bank.org/statement/user=1214&quot; 
+    dest=&quot;statement.html&quot; 
+    username="1214";
+    password="secret"/&gt;</pre>
+<p>
+Fetches some file from a server with access control. Because https is being used the
+fact that basic auth sends passwords in plaintext is moot.
+
+
+</body>
+</html>
+

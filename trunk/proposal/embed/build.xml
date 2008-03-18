@@ -1,0 +1,98 @@
+<project name="embed" default="main" basedir=".">
+  <description>Embed proposal</description>
+  <property file="${user.home}/build.properties" />
+  <property file="user.properties" />
+
+  <property name="base.path" location="/usr/share/java"/>
+  <property name="ant.src" location="../.."/>
+  <property name="commons.src" location="${ant.src}/../jakarta-commons"/>
+  <property name="sandbox.src" location="${ant.src}/../jakarta-commons-sandbox"/>
+
+  <property name="embed.build" location="build"/>
+  <property name="debug" value="true"/>
+
+  <!-- Those 2 should be moved to JXPath and velocity. -->  
+  <property name="commons-logging.jar" location="${commons.src}/logging/dist/commons-logging.jar" /> 
+  <property name="jxpath.jar" location="${commons.src}/jxpath/dist/commons-jxpath.jar" /> 
+  <property name="velocity.jar" location="${base.path}/velocity/velocity-20020220.jar" />
+  <property name="velocity-dep.jar" location="${base.path}/velocity/velocity-dep-20020220.jar" />
+  <property name="jexl.jar" location="${sandbox.src}/jexl/dist/commons-jexl.jar" />
+
+  <property name="commons-discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
+
+  <target name="init">
+      <mkdir dir="build/classes" />
+  </target>
+    
+  <target name="build" depends="main" />
+
+  <target name="main" depends="init,main-ant15" >
+  </target>
+
+  <target name="main-ant15" depends="init" 
+          description="Build hacks into ant1.5 to support some 1.6 features" >
+   <echo>Embed is no longer supported with ant1.6. It is only used with ant1.5 ! The dynamic properties work with both, use embed-optional target</echo>
+    <javac srcdir="src/java"  
+           debug="${debug}"
+           destdir="${embed.build}/classes" >
+      <include name="**" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
+    </javac>
+
+    <copy toDir="${embed.build}/classes">
+      <fileset dir="src/java" includes="META-INF/**" />
+    </copy>
+
+    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes">
+      <include name="**" />
+    </jar>
+        
+  </target>
+
+  <target name="embed-optional" depends="init" >
+    <javac srcdir="src/java"  
+           debug="${debug}"
+           destdir="${embed.build}/classes" >
+      <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <include name="org/apache/tools/ant/taskdefs/XMLDOM**" />
+      <classpath>
+        <!-- all this will move to their package -->
+        <pathelement location="build/classes" />
+        <pathelement location="${jxpath.jar}" />
+        <pathelement location="${velocity.jar}" />
+        <pathelement location="${jexl.jar}" />
+        <pathelement location="${commons-discovery.jar}" />
+        <pathelement location="${commons-logging.jar}" />
+      </classpath>
+    </javac>
+
+    <copy toDir="${embed.build}/classes">
+      <fileset dir="src/java" includes="META-INF/**" />
+    </copy>
+
+    <jar file="${embed.build}/optional-dynprop.jar" basedir="${embed.build}/classes">
+      <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <include name="org/apache/tools/ant/taskdefs/XMLDOM**" />
+    </jar>
+        
+  </target>
+
+  <target name="gump" description="Patch gump bootstrap ant" depends="main" >
+  </target>
+
+  <target name="install" description="Installs built jars">
+    <echo message="Copy ${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+
+    <mkdir dir="${ant.home}/lib" />
+    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+
+  </target>
+
+  <target name="install-embed" depends="main, install" 
+          description="Builds and installs embed without optional"/>
+ 
+  <target name="install-embed-optional" depends="embed-optional, install" 
+          description="Installs extra built jars" >
+    <copy file="${embed.build}/optional-dynprop.jar" toDir="${ant.home}/lib"/>
+  </target> 
+</project>
