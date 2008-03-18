@@ -108,7 +108,8 @@
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
   <property name="junit.forkmode" value="once"/>
-  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf,**/*.zip"/>
+  <property name="expandproperty.files"
+            value="**/version.txt,**/defaultManifest.mf"/>
   <property name="junit.collector.dir" value="${build.dir}/failingTests"/>
   <property name="junit.collector.class" value="FailedTests"/>
 
@@ -978,14 +979,14 @@
     </checksum>
 
     <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}" excludes="${unfiltered.files}">
+      <fileset dir="${docs.dir}" includes="${expandproperty.files}">
         <patternset refid="site.excludes"/>
       </fileset>
       <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
-      <fileset dir="${docs.dir}" includes="${unfiltered.files}">
+      <fileset dir="${docs.dir}" excludes="${expandproperty.files}">
         <patternset refid="site.excludes"/>
       </fileset>
     </copy>
