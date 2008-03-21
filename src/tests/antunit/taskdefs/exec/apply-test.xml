@@ -697,7 +697,7 @@
     <au:assertFileExists file="${nodest}" />
   </target>
 
-  <target name="testLsPath" if="ls.can.run">
+  <target name="testLsPath" if="ls.can.run" depends="xyz">
     <apply executable="ls" parallel="false" outputproperty="lsPathOut"
            force="true" dest="${basedir}" append="true" type="both">
       <path path="${env.PATH}" />
@@ -714,7 +714,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testLsPathParallel" if="ls.can.run">
+  <target name="testLsPathParallel" if="ls.can.run" depends="xyz">
     <apply executable="ls" parallel="true" outputproperty="lsPathParallelOut"
            force="true" dest="${basedir}" append="true" type="both">
       <path path="${env.PATH}" />
