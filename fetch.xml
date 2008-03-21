@@ -237,8 +237,13 @@ Set -Ddest=LOCATION on the command line
     <f2 project="which" />
   </target>
 
+  <target name="javamail" depends="init"
+          description="load javamail">
+    <f2 project="javax.mail" archive="mail"/>
+  </target>
+
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script" />
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail" />
 
 </project>
