@@ -29,8 +29,8 @@
 
   You can choose three locations, by going -Ddest=LOCATION on the command line
   -Ddest=user     user lib dir  ${user.home}/.ant/lib
-  -Ddest=system   ant lib dir   ${ant.home}/lib --Default--
-  -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
+  -Ddest=system   ant lib dir   ${ant.home}/lib
+  -Ddest=optional optional dir  $${basedir}/lib/optional  (for Ant developers)
 
   You may also need to set proxy settings. On Java1.5, Ant tries to get
   this from the OS, unless you use the -noproxy option.
@@ -63,7 +63,18 @@
   <import file="get-m2.xml" />
 
   <target name="pick-dest">
-    <property name="dest" value="system" />
+    <fail>
+      <condition>
+        <not>
+          <isset property="dest"/>
+        </not>
+      </condition>ERROR
+Set -Ddest=LOCATION on the command line
+  -Ddest=user     user lib dir  ${user.home}/.ant/lib
+  -Ddest=system   ant lib dir   ${ant.home}/lib
+  -Ddest=optional optional dir  $${basedir}/lib/optional  (for Ant developers)
+    </fail>
+
     <condition property="dest.dir"
       value="${lib.dir}">
       <equals arg1="${dest}" arg2="system" />
