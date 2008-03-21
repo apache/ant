@@ -228,8 +228,8 @@ Set -Ddest=LOCATION on the command line
   </target>
 
   <target name="script"
-          description="load script languages"
-          depends="bsf,jruby,jython,beanshell,rhino"/>
+          description="load script languages (except jython)"
+          depends="bsf,jruby,beanshell,rhino"/>
 
   <target name="debugging"
     description="internal ant debugging"
@@ -238,7 +238,7 @@ Set -Ddest=LOCATION on the command line
   </target>
 
   <target name="all"
-    description="load all the libraries"
+    description="load all the libraries (except jython)"
     depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script" />
 
 </project>
