@@ -1595,12 +1595,14 @@ see ${build.junit.reports} / ${antunit.reports}
         </delete>
         <!-- compile the FailedTests class if present -->
         <mkdir dir="${junit.collector.dir}"/>
+        <!-- FIXME: removed junit collector build code
         <javac srcdir="${junit.collector.dir}" destdir="${junit.collector.dir}">
           <classpath id="failure.cp">
             <pathelement location="${build.classes}"/>
             <pathelement location="${build.tests}"/>
           </classpath>
         </javac>
+             -->
         <available file="${junit.collector.dir}/${junit.collector.class}.class"
                    property="hasFailingTests"/>
         <!-- run the tests -->
@@ -1628,13 +1630,18 @@ see ${build.junit.reports} / ${antunit.reports}
           <classpath>
             <path refid="tests-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
-            <path refid="failure.cp"/>
+            <!-- FIXME: remove failure collector build code for the moment
+                 <path refid="failure.cp"/> 
+                 -->
           </classpath>
+          <!-- FIXME: remove failure collector build code for the moment
           <formatter type="failure" usefile="false"/>
+               -->
           <formatter type="xml"/>
           <jvmarg line="${test.junit.vmargs}"/>
+          <!-- FIXME: remove failure collector build code for the moment
           <test name="${junit.collector.class}" if="hasFailingTests"/>
-          
+          -->
           <junit-nested />
         </junit>
       </sequential>
