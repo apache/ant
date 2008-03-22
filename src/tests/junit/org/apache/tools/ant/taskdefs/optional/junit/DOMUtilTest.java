@@ -35,8 +35,9 @@ public class DOMUtilTest extends TestCase {
         DocumentBuilder db = JAXPUtils.getDocumentBuilder();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("taskdefs/optional/junit/matches.xml");
         Document doc = db.parse(is);
-        NodeList nl = DOMUtil.listChildNodes(doc.getFirstChild(), new FooNodeFilter(), true);
-        assertEquals(nl.getLength(), 3);
+        // First child is now a LICENSE comment
+        NodeList nl = DOMUtil.listChildNodes(doc.getFirstChild().getNextSibling(), new FooNodeFilter(), true);
+        assertEquals("expecting 3", 3, nl.getLength());
     }
     public class FooNodeFilter implements DOMUtil.NodeFilter {
         public boolean accept(Node node) {
