@@ -52,6 +52,9 @@ Fixed bugs:
 
  * <touch> task couldn't differentiate between "no resources specified" and "no resources
    matched."  Bugzilla report 43799.
+
+ * ManifestClassPath throws when a relative path would traverse the file system root. Bugzilla
+   report 44499.
    
 Other changes:
 --------------

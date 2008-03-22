@@ -75,7 +75,10 @@ public class ManifestClassPath extends Task {
         File currDir = dir;
         String[] dirs = new String[maxParentLevels + 1];
         for (int i = 0; i < maxParentLevels + 1; ++i) {
-            dirs[i] = currDir.getAbsolutePath() + File.separatorChar;
+            dirs[i] = currDir.getAbsolutePath();
+            if (!dirs[i].equals("" + File.separatorChar)) {
+                dirs[i] = dirs[i] + File.separatorChar;
+            }
             currDir = currDir.getParentFile();
             if (currDir == null) {
                 maxParentLevels = i + 1;
@@ -95,7 +98,7 @@ public class ManifestClassPath extends Task {
             // Find the longest prefix shared by the current file
             // and the reference directory.
             String relPath = null;
-            for (int j = 0; j <= maxParentLevels; ++j) {
+            for (int j = 0; j <= maxParentLevels && j < dirs.length; ++j) {
                 String dir = dirs[j];
                 if (!fullPath.startsWith(dir)) {
                     continue;
