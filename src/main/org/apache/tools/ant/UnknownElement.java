@@ -288,11 +288,14 @@ public class UnknownElement extends Task {
                 ((Task) realThing).execute();
             }
         } finally {
-            // Finished executing the task, null it to allow
+            // Finished executing the task
+            // null it (unless it has an ID) to allow
             // GC do its job
             // If this UE is used again, a new "realthing" will be made
-            realThing = null;
-            getWrapper().setProxy(null);
+            if (getWrapper().getId() == null) {
+                realThing = null;
+                getWrapper().setProxy(null);
+            }
         }
     }
 
