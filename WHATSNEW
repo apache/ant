@@ -104,8 +104,10 @@ Fixed bugs:
 * Regression: concat fixlastline="true" should not have applied to
   nested text, but did in Ant 1.7.0. Bugzilla 42369.
 
-* Regression: ant.version was not passed down in <subant>.
-  This worked in Ant1.6.5, but not in 1.7.0. Bugzilla bug 42263
+* Regression: ant.version was not passed down in <ant>, <subant>.
+  This worked in Ant 1.6.5, but not in 1.7.0.
+  ant.core.lib (added in 1.7.0) was also not being propagated.
+  Bugzilla bug 42263
 
 * Regression: bzip2 task created corrupted output files for some inputs.
   Bugzilla bug 41596.
