@@ -311,6 +311,11 @@ public class AntTest extends BuildFileTest {
         expectLog("multiple-targets-2", "dadctb");
     }
 
+    public void testAntCoreLib() {
+        // Cf. #42263
+        expectLogContaining("sub-show-ant.core.lib", "ant.jar");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;

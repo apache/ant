@@ -251,4 +251,11 @@
   <target name="db"><echo>db</echo></target>
   <target name="dc"><echo>dc</echo></target>
 
+  <target name="show-ant.core.lib">
+    <echo>${ant.core.lib}</echo>
+  </target>
+  <target name="sub-show-ant.core.lib">
+    <ant antfile="${ant.file}" target="show-ant.core.lib" inheritall="false" inheritrefs="false"/>
+  </target>
+
 </project>
