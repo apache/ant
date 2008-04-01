@@ -245,6 +245,7 @@ Set -Ddest=LOCATION on the command line
   <target name="jspc" depends="init" description="loads Jasper">
     <f2 project="tomcat" archive="jasper-compiler"/>
     <f2 project="tomcat" archive="jasper-runtime"/>
+    <f2 project="javax.servlet" archive="servlet-api"/>
   </target>
 
   <target name="all"
