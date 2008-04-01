@@ -242,8 +242,13 @@ Set -Ddest=LOCATION on the command line
     <f2 project="javax.mail" archive="mail"/>
   </target>
 
+  <target name="jspc" depends="init" description="loads Jasper">
+    <f2 project="tomcat" archive="jasper-compiler"/>
+    <f2 project="tomcat" archive="jasper-runtime"/>
+  </target>
+
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail" />
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc" />
 
 </project>
