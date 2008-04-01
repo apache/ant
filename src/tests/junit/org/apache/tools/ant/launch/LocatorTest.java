@@ -158,7 +158,9 @@ public class LocatorTest extends TestCase {
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, true);
         File f=new File(resolved);
         String path = f.getAbsolutePath();
-        assertTrue(path.indexOf("\\\\")==0);
+        if (windows) {
+            assertEquals(0, path.indexOf("\\\\"));
+        }
     }
 
     public void testHttpURI() throws Exception {
