@@ -222,7 +222,7 @@
         <!-- I want to see something ... -->
         <formatter type="plain" usefile="false"/>
       </batchtest>
-      <test name="FailedTests" if="hasFailingTests">
+      <test name="FailedTests" if="hasFailingTests" todir="${tmp.dir}">
       	<!-- update the FailingTests.java -->
         <formatter type="failure"/>
         <!-- again, I want to see something -->
@@ -232,7 +232,7 @@
   </target>
   
   <target name="failureRecorder.runtest">
-  	<ant target="failureRecorder.internal"
+    <ant target="failureRecorder.internal"
          antfile="junit.xml" 
          inheritAll="false"
          inheritRefs="false" 
@@ -252,10 +252,4 @@
     </echo>
   </target>
   
-<target name="copy">
-  <mkdir dir="c:/temp/ant-log"/>
-  <copy file="out/${file}" tofile="c:/temp/ant-log/${nr}-${file}" failonerror="false"/>
-</target>
-
-
 </project>
