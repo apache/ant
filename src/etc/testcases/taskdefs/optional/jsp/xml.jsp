@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -14,7 +15,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<?xml version="1.0" ?>
 <!-- :mode=xml:indentSize=2 -->
 <!-- note the lack of a language setting here. crimson whined when ISO-8859-1 was set,
 	 that it thought it was loading a file of type ISO_8859_1 and
