@@ -55,6 +55,9 @@ Fixed bugs:
 
  * ManifestClassPath throws when a relative path would traverse the file system root. Bugzilla
    report 44499.
+
+ * <globmapper> had an indexoutofbounds when the prefix and postfix overlapped. Bugzilla report
+   44731.
    
 Other changes:
 --------------
