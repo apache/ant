@@ -132,7 +132,9 @@ public class GlobPatternMapper implements FileNameMapper {
     public String[] mapFileName(String sourceFileName) {
         if (fromPrefix == null
             || !modifyName(sourceFileName).startsWith(modifyName(fromPrefix))
-            || !modifyName(sourceFileName).endsWith(modifyName(fromPostfix))) {
+            || !modifyName(sourceFileName).endsWith(modifyName(fromPostfix))
+            || (sourceFileName.length() < (prefixLength + postfixLength))
+            ) {
             return null;
         }
         return new String[] {toPrefix
