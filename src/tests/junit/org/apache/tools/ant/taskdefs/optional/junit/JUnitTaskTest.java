@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 public class JUnitTaskTest extends BuildFileTest {
@@ -99,6 +100,7 @@ public class JUnitTaskTest extends BuildFileTest {
     //     $ ant -f junit.xml failureRecorder.runtest
     //     But running the JUnit testcase fails in 4th run.
     public void testFailureRecorder() {
+        try {
         File testDir = new File(getProjectDir(), "out");
         File collectorFile = new File(getProjectDir(), "out/FailedTests.java");
         
@@ -175,6 +177,13 @@ public class JUnitTaskTest extends BuildFileTest {
         //assertOutputNotContaining("4th run: should not run A.test03", "A.test03");
         assertOutputContaining("4th run: should run B.test04", "B.test04");
         assertOutputContaining("4th run: should run D.test10", "D.test10");
+        } catch (BuildException be) {
+            be.printStackTrace();
+            System.err.println("nested build's log: " + getLog());
+            System.err.println("nested build's System.out: " + getOutput());
+            System.err.println("nested build's System.err: " + getError());
+            fail("Ant execution failed: " + be.getMessage());
+        }
     }
 
 
