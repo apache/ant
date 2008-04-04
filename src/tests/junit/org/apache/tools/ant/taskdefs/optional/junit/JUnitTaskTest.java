@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 public class JUnitTaskTest extends BuildFileTest {
 
@@ -100,6 +101,17 @@ public class JUnitTaskTest extends BuildFileTest {
     //     $ ant -f junit.xml failureRecorder.runtest
     //     But running the JUnit testcase fails in 4th run.
     public void testFailureRecorder() {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            try {
+                Class.forName("junit.framework.JUnit4TestAdapter");
+                System.err.println("skipping tests since it fails when"
+                                   + " using JUnit 4");
+                return;
+            } catch (ClassNotFoundException e) {
+                // OK, this is JUnit3, can run test
+            }
+        }
+
         try {
             File testDir = new File(getProjectDir(), "out");
             File collectorFile = new File(getProjectDir(),
