@@ -38,6 +38,35 @@
 
     <section name="Current Sandbox Ant Libraries">
 
+      <subsection name="DBPatch">
+
+        <p>DBPatch library is intended to maintain versioning of a
+        database schema and data during iterative development.</p>
+
+        <table>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/sandbox/antlibs/dbpatch/">https://svn.apache.org/repos/asf/ant/sandbox/antlibs/dbpatch/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/dbpatch/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/dbpatch/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2008-04-22</td>
+          </tr>
+          <tr>
+            <th>Sponsoring Committers</th>
+            <td>Stefan Bodewig</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Debian - Debian related tasks">
 
         <p>Debian provides tasks for generating Debian packages.</p>
