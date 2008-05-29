@@ -657,8 +657,9 @@ with text contents, and the packages may be listed with nested
 <code>&lt;package&gt;</code> elements as for the main task.</p>
 
 <h4>doclet</h4>
-<p>The doclet nested element is used to specify the doclet that javadoc will
-use to process the input source files. A number of the standard javadoc arguments
+<p>The doclet nested element is used to specify the
+<a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/javadoc/overview.html">doclet</a>
+that javadoc will use to process the input source files. A number of the standard javadoc arguments
 are actually arguments of the standard doclet. If these are specified in the javadoc
 task's attributes, they will be passed to the doclet specified in the
 <code>&lt;doclet&gt;</code> nested element. Such attributes should only be specified,
@@ -740,8 +741,9 @@ the javadoc program.
 </table>
 
 <h4><a name="tagletelement">taglet</a></h4>
-<p>The taglet nested element is used to specify custom taglets. This option is
-only available with Java 1.4.</p>
+<p>The taglet nested element is used to specify custom
+<a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/javadoc/taglet/overview.html">taglets</a>.
+This option is only available with Java 1.4 or newer.</p>
 
 <h5>Parameters</h5>
 <table width="90%" border="1" cellpadding="2" cellspacing="0">
@@ -753,7 +755,8 @@ only available with Java 1.4.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">The name of the taglet class
-              (e.g. <code>com.sun.tools.doclets.ToDoTaglet</code>)</td>
+              (e.g. <a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/javadoc/taglet/ToDoTaglet.java">
+              <code>com.sun.tools.doclets.ToDoTaglet</code></a>)</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
