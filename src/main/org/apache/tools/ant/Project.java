@@ -705,7 +705,7 @@ public class Project implements ResourceFactory {
      *             Must not be <code>null</code>.
      */
     public void setName(String name) {
-        setUserProperty("ant.project.name",  name);
+        setUserProperty(MagicNames.PROJECT_NAME,  name);
         this.name = name;
     }
 

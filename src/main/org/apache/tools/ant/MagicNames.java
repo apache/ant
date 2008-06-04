@@ -193,5 +193,14 @@ public final class MagicNames {
      */
     public static final String REFID_PROJECT_HELPER = "ant.projectHelper";
 
+    /**
+     * Name of the property holding the name of the currently
+     * executing project, if one has been specified.
+     *
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String PROJECT_NAME = "ant.project.name";
+
 }
 
