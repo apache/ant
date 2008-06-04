@@ -202,5 +202,15 @@ public final class MagicNames {
      */
     public static final String PROJECT_NAME = "ant.project.name";
 
+    /**
+     * Name of the property holding the default target of the
+     * currently executing project, if one has been specified.
+     *
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String PROJECT_DEFAULT_TARGET
+        = "ant.project.default-target";
+
 }
 

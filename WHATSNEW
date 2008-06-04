@@ -71,7 +71,8 @@ Other changes:
  * Fixcrlf now gives better error messages on bad directory attributes.
    Bugzilla report 43936
    
-
+ * a new property ant.project.default-target holds the value of the
+   current <project>'s default attribute.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
