@@ -21,6 +21,9 @@
 
   <target name="default target"/>
 
+  <target name="setUp"
+          description="only here to force a second target into testInvokedTargets' list"/>
+
   <target name="testProjectName">
     <au:assertPropertyEquals
        name="ant.project.name" value="magicnames-test"/>
@@ -29,6 +32,20 @@
   <target name="testDefaultTarget">
     <au:assertPropertyEquals
        name="ant.project.default-target" value="default target"/>
+  </target>
+
+  <target name="testInvokedTargets">
+    <au:assertPropertyEquals
+       name="ant.project.invoked-targets" value="setUp,testInvokedTargets"/>
+  </target>
+
+  <target name="nested">
+    <au:assertPropertyEquals
+       name="ant.project.invoked-targets" value="nested"/>
+  </target>
+
+  <target name="testInvokedTargetsWithNestedAntcall">
+    <antcall target="nested"/>
   </target>
 
 </project>

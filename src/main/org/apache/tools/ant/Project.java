@@ -45,6 +45,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -694,7 +695,7 @@ public class Project implements ResourceFactory {
      *                      no default target.
      */
     public void setDefault(String defaultTarget) {
-        setUserProperty(MagicNames.PROJECT_DEFAULT_TARGET,  defaultTarget);
+        setUserProperty(MagicNames.PROJECT_DEFAULT_TARGET, defaultTarget);
         this.defaultTarget = defaultTarget;
     }
 
@@ -1174,6 +1175,8 @@ public class Project implements ResourceFactory {
      * @exception BuildException if the build failed.
      */
     public void executeTargets(Vector names) throws BuildException {
+        setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
+                        CollectionUtils.flattenToString(names));
         getExecutor().executeTargets(this,
             (String[]) (names.toArray(new String[names.size()])));
     }

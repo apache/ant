@@ -212,5 +212,14 @@ public final class MagicNames {
     public static final String PROJECT_DEFAULT_TARGET
         = "ant.project.default-target";
 
+    /**
+     * Name of the property holding a comma separated list of targets
+     * that have been invoked (from the command line).
+     *
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String PROJECT_INVOKED_TARGETS
+        = "ant.project.invoked-targets";
 }
 

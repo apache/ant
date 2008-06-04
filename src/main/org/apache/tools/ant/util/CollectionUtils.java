@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Collection;
 import java.util.Vector;
 import java.util.Iterator;
 import java.util.Dictionary;
@@ -90,6 +91,26 @@ public class CollectionUtils {
         // same size, so we've also covered all keys of d2 already.
 
         return true;
+    }
+
+    /**
+     * Creates a comma separated list of all values held in the given
+     * collection.
+     *
+     * @since Ant 1.8.0
+     */
+    public static String flattenToString(Collection c) {
+        Iterator iter = c.iterator();
+        boolean first = true;
+        StringBuffer sb = new StringBuffer();
+        while (iter.hasNext()) {
+            if (!first) {
+                sb.append(",");
+            }
+            sb.append(String.valueOf(iter.next()));
+            first = false;
+        }
+        return sb.toString();
     }
 
     /**

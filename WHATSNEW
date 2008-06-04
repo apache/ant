@@ -74,6 +74,10 @@ Other changes:
  * a new property ant.project.default-target holds the value of the
    current <project>'s default attribute.
 
+ * a new property ant.project.invoked-targets holds a comma separated
+   list of the targets that have been specified on the command line
+   (the IDE, an <ant> task ...) when invoking the current project.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
