@@ -17,26 +17,25 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 
+import junit.framework.TestCase;
+
 import org.apache.tools.ant.util.JAXPUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import java.io.InputStream;
-import java.io.IOException;
 
 public class DOMUtilTest extends TestCase {
     public void testListChildNodes() throws SAXException, IOException {
         DocumentBuilder db = JAXPUtils.getDocumentBuilder();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("taskdefs/optional/junit/matches.xml");
         Document doc = db.parse(is);
-        // First child is now a LICENSE comment
-        NodeList nl = DOMUtil.listChildNodes(doc.getFirstChild().getNextSibling(), new FooNodeFilter(), true);
+        NodeList nl = DOMUtil.listChildNodes(doc.getDocumentElement(), new FooNodeFilter(), true);
         assertEquals("expecting 3", 3, nl.getLength());
     }
     public class FooNodeFilter implements DOMUtil.NodeFilter {
@@ -44,7 +43,7 @@ public class DOMUtilTest extends TestCase {
             if (node.getNodeName().equals("foo")) {
                 return true;
             }
-            return false;  //To change body of implemented methods use File | Settings | File Templates.
+            return false;
         }
     }
 }
