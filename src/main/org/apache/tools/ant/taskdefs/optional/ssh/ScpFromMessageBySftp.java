@@ -94,7 +94,11 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             }
             getDir(channel, remoteFile, localFile);
         } catch (SftpException e) {
-            throw new JSchException(e.toString());
+            JSchException schException = new JSchException("Could not get '"+ remoteFile
+                    +"' to '"+localFile+"' - "
+                    +e.toString());
+            schException.initCause(e);
+            throw schException;
         } finally {
             if (channel != null) {
                 channel.disconnect();

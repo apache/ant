@@ -134,7 +134,11 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             try {
                 sendFileToRemote(channel, localFile, remotePath);
             } catch (SftpException e) {
-                throw new JSchException(e.toString());
+                JSchException schException = new JSchException("Could not send '" + localFile
+                        + "' to '" + remotePath + "' - "
+                        + e.toString());
+                schException.initCause(e);
+                throw schException;
             }
         } finally {
             if (channel != null) {
@@ -150,12 +154,23 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
 
             try {
                 channel.cd(remotePath);
+            } catch (SftpException e) {
+                JSchException schException = new JSchException("Could not CD to '" + remotePath + "' - " + e.toString());
+                schException.initCause(e);
+                throw schException;
+            }
+            try {
                 for (Iterator i = directoryList.iterator(); i.hasNext();) {
                     Directory current = (Directory) i.next();
+                    if(getVerbose()) {
+                        log("Sending directory " + current);
+                    }
                     sendDirectory(channel, current);
                 }
             } catch (SftpException e) {
-                throw new JSchException(e.toString());
+                JSchException schException = new JSchException(e.toString());
+                schException.initCause(e);
+                throw schException;
             }
         } finally {
             if (channel != null) {
