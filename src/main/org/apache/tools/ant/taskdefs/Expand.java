@@ -133,6 +133,12 @@ public class Expand extends Task {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         ZipFile zf = null;
         FileNameMapper mapper = getMapper();
+        if (!srcF.exists()) {
+            throw new BuildException("Unable to expand "
+                    + srcF
+                    + " as the file does not exist",
+                    getLocation());
+        }
         try {
             zf = new ZipFile(srcF, encoding);
             Enumeration e = zf.getEntries();
@@ -296,7 +302,9 @@ public class Expand extends Task {
 
             fileUtils.setFileLastModified(f, entryDate.getTime());
         } catch (FileNotFoundException ex) {
-            log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
+            log("Unable to expand to file " + f.getPath(),
+                    ex,
+                    Project.MSG_WARN);
         }
 
     }

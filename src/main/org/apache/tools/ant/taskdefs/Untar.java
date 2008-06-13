@@ -39,8 +39,6 @@ import org.apache.tools.tar.TarInputStream;
 
 /**
  * Untar a file.
- * <p>For JDK 1.1 &quot;last modified time&quot; field is set to current time instead of being
- * carried from the archive file.</p>
  * <p>PatternSets are used to select files to extract
  * <I>from</I> the archive.  If no patternset is used, all files are extracted.
  * </p>
@@ -94,11 +92,18 @@ public class Untar extends Expand {
     /** {@inheritDoc} */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         FileInputStream fis = null;
+        if (!srcF.exists()) {
+            throw new BuildException("Unable to untar "
+                    + srcF
+                    + " as the file does not exist",
+                    getLocation());
+        }
         try {
             fis = new FileInputStream(srcF);
             expandStream(srcF.getPath(), fis, dir);
         } catch (IOException ioe) {
-            throw new BuildException("Error while expanding " + srcF.getPath(),
+            throw new BuildException("Error while expanding " + srcF.getPath()
+                                     + "\n" + ioe.toString(),
                                      ioe, getLocation());
         } finally {
             FileUtils.close(fis);
