@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -2107,6 +2107,38 @@
           <tr>
             <th>License:</th>
             <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="JsDoc Toolkit Ant Task">
+
+        <p>JsDoc Toolkit is an application, written in JavaScript, for
+          automatically generating template-formatted, multi-page HTML
+          (or XML, JSON, or any other text-based) documentation from
+          commented JavaScript source code.</p>
+
+        <p>This project is a simple wrapper around the JsDoc Toolkit
+          documentation program. It gives the user all the command
+          line options, with the flexibility of using in within an Ant
+          build file.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7.0 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://code.google.com/p/jsdoc-toolkit-ant-task/">http://code.google.com/p/jsdoc-toolkit-ant-task/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:ironsidevsquincy@googlemail.com">Darren Hurley</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
