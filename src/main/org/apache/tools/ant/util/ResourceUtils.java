@@ -39,6 +39,8 @@ import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
@@ -473,6 +475,21 @@ public class ResourceUtils {
             return d1 ? -1 : 1;
         }
         return text ? textCompare(r1, r2) : binaryCompare(r1, r2);
+    }
+
+    /**
+     * Convenience method to turn any fileProvider into a basic FileResource with the
+     * file's immediate parent as the basedir, for tasks that need one.
+     * @param fileProvider input
+     * @return fileProvider if it is a FileResource instance, or a new FileResource with fileProvider's file.
+     */
+    public static FileResource asFileResource(FileProvider fileProvider) {
+        if (fileProvider instanceof FileResource || fileProvider == null) {
+            return (FileResource) fileProvider;
+        }
+        FileResource result = new FileResource(fileProvider.getFile());
+        result.setProject(Project.getProject(fileProvider));
+        return result;
     }
 
     /**
