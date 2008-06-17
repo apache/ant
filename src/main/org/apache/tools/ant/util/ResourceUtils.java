@@ -43,9 +43,7 @@ import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Touchable;
-import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.Date;
-import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 
@@ -60,8 +58,6 @@ public class ResourceUtils {
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    private static final ResourceSelector NOT_EXISTS = new Not(new Exists());
 
     /**
      * Tells which source files should be reprocessed based on the
