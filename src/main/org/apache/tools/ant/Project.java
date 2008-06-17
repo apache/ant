@@ -62,8 +62,6 @@ import org.apache.tools.ant.util.StringUtils;
  *
  */
 public class Project implements ResourceFactory {
-    private static final String LINE_SEP = System.getProperty("line.separator");
-
     /** Message priority of &quot;error&quot;. */
     public static final int MSG_ERR = 0;
     /** Message priority of &quot;warning&quot;. */
