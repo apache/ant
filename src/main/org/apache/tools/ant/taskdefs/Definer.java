@@ -340,15 +340,15 @@ public abstract class Definer extends DefBase {
         if (message == null && !(file.isFile())) {
             message = "File " + file + " is not a file";
         }
-            if (message == null) {
-        try {
+        if (message == null) {
+            try {
                 return FileUtils.getFileUtils().getFileURL(file);
-        } catch (Exception ex) {
-            message =
-                "File " + file + " cannot use as URL: "
-                + ex.toString();
-        }
+            } catch (Exception ex) {
+                message =
+                    "File " + file + " cannot use as URL: "
+                    + ex.toString();
             }
+        }
         // Here if there is an error
         switch (onError) {
             case OnError.FAIL_ALL:
