@@ -58,7 +58,7 @@ svn co http://svn.apache.org/repos/asf/ant/[project]/trunk/ ant-[project]</sourc
         <a href="http://svn.apache.org/snapshots/ant/">http://svn.apache.org/snapshots/ant/</a>.</p>
 
       <p>A nice view of the source history is available through
-      <a href="http://fisheye3.cenqua.com/browse/ant/">Cenqua's Fisheye instance</a>.</p>
+      <a href="http://fisheye6.atlassian.com/browse/ant">Cenqua's Fisheye instance</a>.</p>
          
 
   </section>
