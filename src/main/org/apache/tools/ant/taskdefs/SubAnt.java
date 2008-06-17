@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.Enumeration;
 
+import org.apache.tools.ant.Main;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -60,14 +61,13 @@ import org.apache.tools.ant.taskdefs.Ant.TargetElement;
  * @since Ant1.6
  * @ant.task name="subant" category="control"
  */
-public class SubAnt
-             extends Task {
+public class SubAnt extends Task {
 
     private Path buildpath;
 
     private Ant ant = null;
     private String subTarget = null;
-    private String antfile = "build.xml";
+    private String antfile = Main.DEFAULT_BUILD_FILENAME;
     private File genericantfile = null;
     private boolean verbose = false;
     private boolean inheritAll = false;
