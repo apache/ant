@@ -59,6 +59,10 @@ Fixed bugs:
  * <globmapper> had an indexoutofbounds when the prefix and postfix overlapped. Bugzilla report
    44731.
    
+* <typedef> and <taskdef> failed to accept file names with #
+  characters in them.
+  Bugzilla report 45190
+
 Other changes:
 --------------
 
