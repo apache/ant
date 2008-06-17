@@ -1811,6 +1811,34 @@
         </table>
       </subsection>
 
+      <subsection name="JDeb">
+
+        <p>JDeb provides an Ant task and a Maven plugin to create
+          Debian packages from Java builds in a truly cross platform
+          manner. Build your Debian packages on any platform that has
+          Java support. Windows, Linux - it does not require
+          additional native tools installed.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7 (not tested on earlier versions)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://vafer.org/projects/jdeb/">http://vafer.org/projects/jdeb/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:tcurdt@apache.org">Torsten Curdt</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Apache Software License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Jdiff">
 
         <p>A task that generates an HTML report of all the packages, classes,
