@@ -342,7 +342,7 @@ public abstract class Definer extends DefBase {
         }
         try {
             if (message == null) {
-                return file.toURL();
+                return FileUtils.getFileUtils().getFileURL(file);
             }
         } catch (Exception ex) {
             message =
