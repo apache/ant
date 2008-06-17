@@ -323,7 +323,7 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Get the expanders.
-     * @return the exapanders.
+     * @return the expanders.
      */
     public Collection getExpanders() {
         return getDelegates(PropertyExpander.class);
@@ -524,41 +524,34 @@ public class PropertyHelper implements GetProperty {
      *  @param verbose If this is true output extra log messages.
      *  @return true if the property is set.
      */
-    public synchronized boolean setProperty(String name, Object value, boolean verbose) {
-        for (Iterator iter = getDelegates(PropertySetter.class).iterator();
-             iter.hasNext();) {
+    public boolean setProperty(String name, Object value, boolean verbose) {
+        for (Iterator iter = getDelegates(PropertySetter.class).iterator(); iter.hasNext();) {
             PropertySetter setter = (PropertySetter) iter.next();
             if (setter.set(name, value, this)) {
                 return true;
             }
         }
-        // user (CLI) properties take precedence
-        if (null != userProperties.get(name)) {
-            if (verbose) {
-                project.log("Override ignored for user property \"" + name
-                        + "\"", Project.MSG_VERBOSE);
+        synchronized (this) {
+            // user (CLI) properties take precedence
+            if (userProperties.containsKey(name)) {
+                if (verbose) {
+                    project.log("Override ignored for user property \"" + name + "\"",
+                            Project.MSG_VERBOSE);
+                }
+                return false;
             }
-            return false;
+            if (verbose) {
+                if (properties.containsKey(name)) {
+                    project.log("Overriding previous definition of property \"" + name + "\"",
+                            Project.MSG_VERBOSE);
+                }
+                project.log("Setting project property: " + name + " -> " + value, Project.MSG_DEBUG);
+            }
+            if (name != null && value != null) {
+                properties.put(name, value);
+            }
+            return true;
         }
-
-//        boolean done = setPropertyHook(ns, name, value, false, false, false);
-//        if (done) {
-//            return true;
-//        }
-
-        if (null != properties.get(name) && verbose) {
-            project.log("Overriding previous definition of property \"" + name
-                    + "\"", Project.MSG_VERBOSE);
-        }
-
-        if (verbose) {
-            project.log("Setting project property: " + name + " -> "
-                    + value, Project.MSG_DEBUG);
-        }
-        if (name != null && value != null) {
-            properties.put(name, value);
-        }
-        return true;
     }
 
     /**
@@ -589,7 +582,7 @@ public class PropertyHelper implements GetProperty {
      *              Must not be <code>null</code>.
      * @since Ant 1.8
      */
-    public synchronized void setNewProperty(String name, Object value) {
+    public void setNewProperty(String name, Object value) {
         for (Iterator iter = getDelegates(PropertySetter.class).iterator();
              iter.hasNext();) {
             PropertySetter setter = (PropertySetter) iter.next();
@@ -597,17 +590,15 @@ public class PropertyHelper implements GetProperty {
                 return;
             }
         }
-        if (null != properties.get(name)) {
-            project.log("Override ignored for property \"" + name + "\"", Project.MSG_VERBOSE);
-            return;
-        }
-//        boolean done = setPropertyHook(ns, name, value, false, false, true);
-//        if (done) {
-//            return;
-//        }
-        project.log("Setting project property: " + name + " -> " + value, Project.MSG_DEBUG);
-        if (name != null && value != null) {
-            properties.put(name, value);
+        synchronized (this) {
+            if (properties.containsKey(name)) {
+                project.log("Override ignored for property \"" + name + "\"", Project.MSG_VERBOSE);
+                return;
+            }
+            project.log("Setting project property: " + name + " -> " + value, Project.MSG_DEBUG);
+            if (name != null && value != null) {
+                properties.put(name, value);
+            }
         }
     }
 
@@ -633,15 +624,12 @@ public class PropertyHelper implements GetProperty {
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
      */
-    public synchronized void setUserProperty(String name, Object value) {
+    public void setUserProperty(String name, Object value) {
         project.log("Setting ro project property: " + name + " -> " + value, Project.MSG_DEBUG);
-        userProperties.put(name, value);
-
-//        boolean done = setPropertyHook(ns, name, value, false, true, false);
-//        if (done) {
-//            return;
-//        }
-        properties.put(name, value);
+        synchronized (this) {
+            userProperties.put(name, value);
+            properties.put(name, value);
+        }
     }
 
     /**
@@ -672,17 +660,14 @@ public class PropertyHelper implements GetProperty {
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
      */
-    public synchronized void setInheritedProperty(String name, Object value) {
-        inheritedProperties.put(name, value);
-
+    public void setInheritedProperty(String name, Object value) {
         project.log("Setting ro project property: " + name + " -> " + value, Project.MSG_DEBUG);
-        userProperties.put(name, value);
 
-//        boolean done = setPropertyHook(ns, name, value, true, false, false);
-//        if (done) {
-//            return;
-//        }
-        properties.put(name, value);
+        synchronized (this) {
+            inheritedProperties.put(name, value);
+            userProperties.put(name, value);
+            properties.put(name, value);
+        }
     }
 
     // -------------------- Getting properties  --------------------
@@ -699,7 +684,7 @@ public class PropertyHelper implements GetProperty {
      *         or if a <code>null</code> name is provided.
      * @deprecated namespaces are unnecessary.
      */
-    public synchronized Object getProperty(String ns, String name) {
+    public Object getProperty(String ns, String name) {
         return getProperty(name);
     }
 
@@ -713,7 +698,7 @@ public class PropertyHelper implements GetProperty {
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-    public synchronized Object getProperty(String name) {
+    public Object getProperty(String name) {
         if (name == null) {
             return null;
         }
@@ -726,10 +711,6 @@ public class PropertyHelper implements GetProperty {
                 return o;
             }
         }
-//        Object o = getPropertyHook(ns, name, false);
-//        if (o != null) {
-//            return o;
-//        }
         return properties.get(name);
     }
 
@@ -757,16 +738,10 @@ public class PropertyHelper implements GetProperty {
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-    public synchronized Object getUserProperty(String name) {
+    public Object getUserProperty(String name) {
         if (name == null) {
             return null;
         }
-/*
-        Object o = getPropertyHook(ns, name, true);
-        if (o != null) {
-            return o;
-        }
-*/
         return userProperties.get(name);
     }
 
@@ -948,18 +923,22 @@ public class PropertyHelper implements GetProperty {
      * @param delegate the delegate to add.
      * @since Ant 1.8
      */
-    public synchronized void add(Delegate delegate) {
-        for (Iterator iter = getDelegateInterfaces(delegate).iterator(); iter.hasNext();) {
-            Object key = iter.next();
-            List list = (List) delegates.get(key);
-            if (list == null) {
-                list = new ArrayList();
-                delegates.put(key, list);
+    public void add(Delegate delegate) {
+        synchronized (Delegate.class) {
+            Hashtable newDelegates = (Hashtable) delegates.clone();
+            for (Iterator iter = getDelegateInterfaces(delegate).iterator(); iter.hasNext();) {
+                Object key = iter.next();
+                List list = (List) newDelegates.get(key);
+                if (list == null) {
+                    list = new ArrayList();
+                    newDelegates.put(key, list);
+                }
+                if (list.contains(delegate)) {
+                    list.remove(delegate);
+                }
+                list.add(0, delegate);
             }
-            if (list.contains(delegate)) {
-                list.remove(delegate);
-            }
-            list.add(0, delegate);
+            delegates = newDelegates;
         }
     }
 
@@ -969,7 +948,7 @@ public class PropertyHelper implements GetProperty {
      * @return Collection.
      * @since Ant 1.8
      */
-    protected synchronized List getDelegates(Class type) {
+    protected List getDelegates(Class type) {
         return delegates.containsKey(type)
                 ? (List) new ArrayList((List) delegates.get(type)) : Collections.EMPTY_LIST;
     }
@@ -980,7 +959,7 @@ public class PropertyHelper implements GetProperty {
      * @return Set<Class>
      * @since Ant 1.8
      */
-    protected Set getDelegateInterfaces(Delegate d) {
+    protected static Set getDelegateInterfaces(Delegate d) {
         HashSet result = new HashSet();
         Class c = d.getClass();
         while (c != null) {
