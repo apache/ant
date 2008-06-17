@@ -30,10 +30,10 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Sort;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
-import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
 import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.resources.comparators.FileSystem;
@@ -590,17 +590,17 @@ public class Delete extends MatchingTask {
         try {
             if (resourcesToDelete.isFilesystemOnly()) {
                 for (Iterator iter = resourcesToDelete.iterator(); iter.hasNext();) {
-                    FileResource r = (FileResource) iter.next();
                     // nonexistent resources could only occur if we already
                     // deleted something from a fileset:
-                    if (!r.isExists()) {
+                    File f = ((FileProvider) iter.next()).getFile();
+                    if (!f.exists()) {
                         continue;
                     }
-                    if (!(r.isDirectory()) || r.getFile().list().length == 0) {
-                        log("Deleting " + r, verbosity);
-                        if (!delete(r.getFile()) && failonerror) {
+                    if (!(f.isDirectory()) || f.list().length == 0) {
+                        log("Deleting " + f, verbosity);
+                        if (!delete(f) && failonerror) {
                             handle("Unable to delete "
-                                + (r.isDirectory() ? "directory " : "file ") + r);
+                                + (f.isDirectory() ? "directory " : "file ") + f);
                         }
                     }
                 }

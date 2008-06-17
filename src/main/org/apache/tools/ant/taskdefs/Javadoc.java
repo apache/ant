@@ -46,7 +46,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -1910,7 +1910,7 @@ public class Javadoc extends Task {
                 "Error creating or writing temporary file for javadoc options",
                 ex, getLocation());
         } finally {
-            FILE_UTILS.close(optionsListWriter);
+            FileUtils.close(optionsListWriter);
         }
     }
 
@@ -2267,7 +2267,7 @@ public class Javadoc extends Task {
             }
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                sf.addElement(new SourceFile(((FileResource) iter.next())
+                sf.addElement(new SourceFile(((FileProvider) iter.next())
                                              .getFile()));
             }
         }

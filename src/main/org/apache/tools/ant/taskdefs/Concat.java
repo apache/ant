@@ -45,9 +45,9 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
-import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.Exists;
@@ -854,8 +854,8 @@ public class Concat extends Task implements ResourceCollection {
         if (destinationFile != null) {
             for (Iterator i = rc.iterator(); i.hasNext();) {
                 Object o = i.next();
-                if (o instanceof FileResource) {
-                    File f = ((FileResource) o).getFile();
+                if (o instanceof FileProvider) {
+                    File f = ((FileProvider) o).getFile();
                     if (FILE_UTILS.fileNameEquals(f, destinationFile)) {
                         throw new BuildException("Input file \""
                             + f + "\" is the same as the output file.");

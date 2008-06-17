@@ -19,7 +19,7 @@ package org.apache.tools.ant.types.resources.comparators;
 
 import java.io.File;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -38,8 +38,8 @@ public class FileSystem extends ResourceComparator {
      * @throws ClassCastException if either resource is not an instance of FileResource.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        File foofile = ((FileResource) foo).getFile();
-        File barfile = ((FileResource) bar).getFile();
+        File foofile = ((FileProvider) foo).getFile();
+        File barfile = ((FileProvider) bar).getFile();
         return foofile.equals(barfile) ? 0
             : FILE_UTILS.isLeadingPath(foofile, barfile) ? -1
             : FILE_UTILS.normalize(foofile.getAbsolutePath()).compareTo(

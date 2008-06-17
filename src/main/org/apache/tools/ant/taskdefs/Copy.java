@@ -41,6 +41,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ResourceFactory;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -465,8 +466,8 @@ public class Copy extends Task {
 
                         File baseDir = NULL_FILE_PLACEHOLDER;
                         String name = r.getName();
-                        if (r instanceof FileResource) {
-                            FileResource fr = (FileResource) r;
+                        if (r instanceof FileProvider) {
+                            FileResource fr = ResourceUtils.asFileResource((FileProvider) r);
                             baseDir = getKeyFile(fr.getBaseDir());
                             if (fr.getBaseDir() == null) {
                                 name = fr.getFile().getAbsolutePath();
@@ -476,7 +477,7 @@ public class Copy extends Task {
                         // copying of dirs is trivial and can be done
                         // for non-file resources as well as for real
                         // files.
-                        if (r.isDirectory() || r instanceof FileResource) {
+                        if (r.isDirectory() || r instanceof FileProvider) {
                             add(baseDir, name,
                                 r.isDirectory() ? dirsByBasedir
                                                 : filesByBasedir);
@@ -620,7 +621,7 @@ public class Copy extends Task {
                     throw new BuildException(
                         "Cannot perform operation from directory to file.");
                 } else if (rc.size() == 1) {
-                    FileResource r = (FileResource) rc.iterator().next();
+                    FileProvider r = (FileProvider) rc.iterator().next();
                     if (file == null) {
                         file = r.getFile();
                         rcs.removeElementAt(0);

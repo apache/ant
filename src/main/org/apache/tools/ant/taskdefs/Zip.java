@@ -46,7 +46,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.types.resources.ArchiveResource;
-import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
@@ -863,8 +863,8 @@ public class Zip extends MatchingTask {
                 continue;
             }
             File base = null;
-            if (resources[i] instanceof FileResource) {
-                base = ((FileResource) resources[i]).getBaseDir();
+            if (resources[i] instanceof FileProvider) {
+                base = ResourceUtils.asFileResource((FileProvider) resources[i]).getBaseDir();
             }
             if (resources[i].isDirectory()) {
                 if (!name.endsWith("/")) {
@@ -876,8 +876,8 @@ public class Zip extends MatchingTask {
                           ArchiveFileSet.DEFAULT_DIR_MODE);
 
             if (!resources[i].isDirectory()) {
-                if (resources[i] instanceof FileResource) {
-                    File f = ((FileResource) resources[i]).getFile();
+                if (resources[i] instanceof FileProvider) {
+                    File f = ((FileProvider) resources[i]).getFile();
                     zipFile(f, zOut, name, ArchiveFileSet.DEFAULT_FILE_MODE);
                 } else {
                     InputStream is = null;
@@ -1254,8 +1254,8 @@ public class Zip extends MatchingTask {
             }
 
             for (int j = 0; j < initialResources[i].length; j++) {
-                if (initialResources[i][j] instanceof FileResource
-                    && zipFile.equals(((FileResource)
+                if (initialResources[i][j] instanceof FileProvider
+                    && zipFile.equals(((FileProvider)
                                        initialResources[i][j]).getFile())) {
                     throw new BuildException("A zip file cannot include "
                                              + "itself", getLocation());

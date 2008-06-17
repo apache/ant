@@ -24,6 +24,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 
 /**
@@ -90,8 +91,8 @@ public abstract class Unpack extends Task {
             throw new BuildException(
                 "the archive " + src.getName() + " can't be a directory");
         }
-        if (src instanceof FileResource) {
-            source = ((FileResource) src).getFile();
+        if (src instanceof FileProvider) {
+            source = ((FileProvider) src).getFile();
         } else if (!supportsNonFileResources()) {
             throw new BuildException(
                 "The source " + src.getName()

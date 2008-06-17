@@ -38,7 +38,7 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -114,8 +114,8 @@ public class Expand extends Task {
                 continue;
             }
 
-            if (r instanceof FileResource) {
-                expandFile(FILE_UTILS, ((FileResource) r).getFile(), dest);
+            if (r instanceof FileProvider) {
+                expandFile(FILE_UTILS, ((FileProvider) r).getFile(), dest);
             } else {
                 expandResource(r, dest);
             }

@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Processes a set of XML documents via XSLT. This is
@@ -591,8 +592,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
             File base = baseDir;
             String name = r.getName();
-            if (r instanceof FileResource) {
-                FileResource f = (FileResource) r;
+            if (r instanceof FileProvider) {
+                FileResource f = ResourceUtils.asFileResource((FileProvider) r);
                 base = f.getBaseDir();
                 if (base == null) {
                     name = f.getFile().getAbsolutePath();

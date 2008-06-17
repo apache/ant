@@ -29,6 +29,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
@@ -243,8 +244,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               DocumentBuilder builder = factory.newDocumentBuilder();
               builder.setEntityResolver(getEntityResolver());
               Document document = null;
-              if (src instanceof FileResource) {
-                  document = builder.parse(((FileResource) src).getFile());
+              if (src instanceof FileProvider) {
+                  document = builder.parse(((FileProvider) src).getFile());
               } else {
                   document = builder.parse(src.getInputStream());
               }
@@ -573,10 +574,11 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (src.isDirectory()) {
             throw new BuildException("the source can't be a directory");
         }
-        if (src instanceof FileResource && !supportsNonFileResources()) {
+        if (src instanceof FileProvider || supportsNonFileResources()) {
+            this.src = src;
+        } else {
             throw new BuildException("Only FileSystem resources are supported.");
         }
-        this.src = src;
     }
 
     /**
@@ -667,7 +669,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * @return the file attribute.
      */
     protected File getFile () {
-        return src instanceof FileResource ? ((FileResource) src).getFile() : null;
+        return src instanceof FileProvider ? ((FileProvider) src).getFile() : null;
     }
 
     /**
@@ -677,8 +679,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         // delegate this way around to support subclasses that
         // overwrite getFile
         File f = getFile();
-        return f == null ? src : src instanceof FileResource
-                && ((FileResource) src).getFile().equals(f) ? src : new FileResource(f);
+        return f == null ? src : src instanceof FileProvider
+                && ((FileProvider) src).getFile().equals(f) ? src : new FileResource(f);
     }
 
     /**

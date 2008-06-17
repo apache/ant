@@ -27,6 +27,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -125,7 +126,7 @@ public class Truncate extends Task {
             throw new BuildException(NO_CHILD);
         }
         for (Iterator it = path.iterator(); it.hasNext();) {
-            File f = ((FileResource) it.next()).getFile();
+            File f = ((FileProvider) it.next()).getFile();
             if (shouldProcess(f)) {
                 process(f);
             }

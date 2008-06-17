@@ -39,11 +39,13 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.ArchiveResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.resources.TarResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 import org.apache.tools.tar.TarConstants;
@@ -559,7 +561,7 @@ public class Tar extends MatchingTask {
             HashMap basedirToFilesMap = new HashMap();
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = (FileResource) iter.next();
+                FileResource r = ResourceUtils.asFileResource((FileProvider) iter.next());
                 File base = r.getBaseDir();
                 if (base == null) {
                     base = Copy.NULL_FILE_PLACEHOLDER;
@@ -652,7 +654,7 @@ public class Tar extends MatchingTask {
         } else if (rc.isFilesystemOnly()) {
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = (FileResource) iter.next();
+                FileResource r = ResourceUtils.asFileResource((FileProvider) iter.next());
                 File f = r.getFile();
                 if (f == null) {
                     f = new File(r.getBaseDir(), r.getName());

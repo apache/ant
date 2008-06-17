@@ -52,6 +52,7 @@ import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileUtils;
@@ -271,8 +272,8 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     }
 
     private String resourceToURI(Resource resource) {
-        if (resource instanceof FileResource) {
-            File f = ((FileResource) resource).getFile();
+        if (resource instanceof FileProvider) {
+            File f = ((FileProvider) resource).getFile();
             return FILE_UTILS.toURI(f.getAbsolutePath());
         }
         if (resource instanceof URLResource) {

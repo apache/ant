@@ -31,7 +31,6 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
-import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
@@ -205,7 +204,7 @@ public class DependSet extends MatchingTask {
             log(neTargets + " nonexistent targets", Project.MSG_VERBOSE);
             return false;
         }
-        FileResource oldestTarget = (FileResource) getOldest(targets);
+        Resource oldestTarget = getOldest(targets);
         log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
 
         logFuture(sources, datesel);

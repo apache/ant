@@ -35,6 +35,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Touchable;
 import org.apache.tools.ant.types.resources.Union;
@@ -338,9 +339,9 @@ public class Touch extends Task {
 
     private void touch(Resource r, long defaultTimestamp) {
         if (fileNameMapper == null) {
-            if (r instanceof FileResource) {
+            if (r instanceof FileProvider) {
                 // use this to create file and deal with non-writable files
-                touch(((FileResource) r).getFile(), defaultTimestamp);
+                touch(((FileProvider) r).getFile(), defaultTimestamp);
             } else {
                 ((Touchable) r).touch(defaultTimestamp);
             }

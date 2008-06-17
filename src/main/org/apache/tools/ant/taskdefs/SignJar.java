@@ -26,10 +26,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.IsSigned;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Signs JAR or ZIP files with the javasign command line tool. The tool detailed
@@ -320,7 +322,7 @@ public class SignJar extends AbstractJarSignerTask {
             // deal with the paths
             Iterator iter = sources.iterator();
             while (iter.hasNext()) {
-                FileResource fr = (FileResource) iter.next();
+                FileResource fr = ResourceUtils.asFileResource((FileProvider) iter.next());
 
                 //calculate our destination directory; it is either the destDir
                 //attribute, or the base dir of the fileset (for in situ updates)

@@ -35,9 +35,11 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
@@ -424,8 +426,8 @@ public class ExecuteOn extends ExecTask {
 
                     File base = null;
                     String name = res.getName();
-                    if (res instanceof FileResource) {
-                        FileResource fr = (FileResource) res;
+                    if (res instanceof FileProvider) {
+                        FileResource fr = ResourceUtils.asFileResource((FileProvider) res);
                         base = fr.getBaseDir();
                         if (base == null) {
                             name = fr.getFile().getAbsolutePath();

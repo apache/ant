@@ -42,10 +42,11 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
-import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.Type;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -392,13 +393,13 @@ public class Checksum extends MatchingTask implements Condition {
         try {
             if (resources != null) {
                 for (Iterator i = resources.iterator(); i.hasNext();) {
-                    FileResource fr = (FileResource) i.next();
-                    File src = fr.getFile();
+                    Resource r = (Resource) i.next();
+                    File src = ((FileProvider) r).getFile();
                     if (totalproperty != null || todir != null) {
                         // Use '/' to calculate digest based on file name.
                         // This is required in order to get the same result
                         // on different platforms.
-                        relativeFilePaths.put(src, fr.getName().replace(File.separatorChar, '/'));
+                        relativeFilePaths.put(src, r.getName().replace(File.separatorChar, '/'));
                     }
                     addToIncludeFileMap(src);
                 }
