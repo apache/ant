@@ -98,8 +98,6 @@ Changes that could break older environments:
   been modified to encode outgoing (InputStream) content as well as encoding
   incoming (OutputStream) content.
 
-* <scriptcondition> now prefers evaluation result/return value over value property.
-
 * <java> with fork now returns gives -1 instead of 0 as result when failonerror
   is false and some exception (including timeout) occurs. Br 42377. 
 
