@@ -166,6 +166,9 @@ public class Project implements ResourceFactory {
     /** Project base directory. */
     private File baseDir;
 
+    /** lock object used when adding/removing listeners */
+    private final Object listenersLock = new Object();
+
     /** List of listeners to notify of build events. */
     private Vector listeners = new Vector();
 
@@ -378,16 +381,17 @@ public class Project implements ResourceFactory {
      * @param listener The listener to add to the list.
      *                 Must not be <code>null</code>.
      */
-    public synchronized void addBuildListener(BuildListener listener) {
-        // If the listeners already has this listener, do nothing
-        if (listeners.contains(listener)) {
-            return;
+    public void addBuildListener(BuildListener listener) {
+        synchronized (listenersLock) {
+            // If the listeners already has this listener, do nothing
+            if (listeners.contains(listener)) {
+                return;
+            }
+            // copy on write semantics
+            Vector newListeners = getBuildListeners();
+            newListeners.addElement(listener);
+            listeners = newListeners;
         }
-        // create a new Vector to avoid ConcurrentModificationExc when
-        // the listeners get added/removed while we are in fire
-        Vector newListeners = getBuildListeners();
-        newListeners.addElement(listener);
-        listeners = newListeners;
     }
 
     /**
@@ -397,12 +401,13 @@ public class Project implements ResourceFactory {
      * @param listener The listener to remove from the list.
      *                 Should not be <code>null</code>.
      */
-    public synchronized void removeBuildListener(BuildListener listener) {
-        // create a new Vector to avoid ConcurrentModificationExc when
-        // the listeners get added/removed while we are in fire
-        Vector newListeners = getBuildListeners();
-        newListeners.removeElement(listener);
-        listeners = newListeners;
+    public void removeBuildListener(BuildListener listener) {
+        synchronized (listenersLock) {
+            // copy on write semantics
+            Vector newListeners = getBuildListeners();
+            newListeners.removeElement(listener);
+            listeners = newListeners;
+        }
     }
 
     /**
@@ -2152,7 +2157,7 @@ public class Project implements ResourceFactory {
                  *
                  * @see http://marc.theaimsgroup.com/?t=110538624200006&r=1&w=2
                  *
-                 * We now (Ant 1.7 and 1.6.3) simply swallow the message.
+                 * We now (Ant 1.6.3 and later) simply swallow the message.
                  */
                 return;
             }
