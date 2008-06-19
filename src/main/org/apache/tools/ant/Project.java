@@ -1904,19 +1904,17 @@ public class Project implements ResourceFactory {
      * @param value The value of the reference.
      */
     public void addReference(String referenceName, Object value) {
-        synchronized (references) {
-            Object old = ((AntRefTable) references).getReal(referenceName);
-            if (old == value) {
-                // no warning, this is not changing anything
-                return;
-            }
-            if (old != null && !(old instanceof UnknownElement)) {
-                log("Overriding previous definition of reference to " + referenceName,
-                    MSG_VERBOSE);
-            }
-            log("Adding reference: " + referenceName, MSG_DEBUG);
-            references.put(referenceName, value);
+        Object old = ((AntRefTable) references).getReal(referenceName);
+        if (old == value) {
+            // no warning, this is not changing anything
+            return;
         }
+        if (old != null && !(old instanceof UnknownElement)) {
+            log("Overriding previous definition of reference to " + referenceName,
+                MSG_VERBOSE);
+        }
+        log("Adding reference: " + referenceName, MSG_DEBUG);
+        references.put(referenceName, value);
     }
 
     /**
