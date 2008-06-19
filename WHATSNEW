@@ -38,6 +38,12 @@ Changes that could break older environments:
   to do so however using a new parameter.
   Bugzilla report 33969.
   
+* A lock in Project ensured that a BuildListener's messageLogged
+  method was only ever executed by a single thread at a time, while
+  all other methods could be invoked by multiple threads
+  simultaniously (while within <parallel>, for example).  This lock is
+  no longer in place, messageLogged should be made thread-safe now.
+
 Fixed bugs:
 -----------
 
@@ -62,6 +68,10 @@ Fixed bugs:
 * <typedef> and <taskdef> failed to accept file names with #
   characters in them.
   Bugzilla report 45190
+
+ * A deadlock could occur if a BuildListener tried to access an Ant property
+   within messageLogged while a different thread also accessed one.
+   Bugzilla report 45194
 
 Other changes:
 --------------

@@ -172,6 +172,14 @@ public class Project implements ResourceFactory {
     /** List of listeners to notify of build events. */
     private Vector listeners = new Vector();
 
+    /** for each thread, record whether it is currently executing
+        messageLogged */
+    private final ThreadLocal isLoggingMessage = new ThreadLocal() {
+            protected Object initialValue() {
+                return Boolean.FALSE;
+            }
+        };
+
     /**
      * The Ant core classloader--may be <code>null</code> if using
      * parent classloader.
@@ -200,11 +208,6 @@ public class Project implements ResourceFactory {
      * Keep going flag.
      */
     private boolean keepGoingMode = false;
-
-    /**
-     * Flag which catches Listeners which try to use System.out or System.err .
-     */
-    private boolean loggingMessage = false;
 
     /**
      * Set the input handler.
@@ -2144,8 +2147,7 @@ public class Project implements ResourceFactory {
         } else {
             event.setMessage(message, priority);
         }
-        synchronized (this) {
-            if (loggingMessage) {
+            if (isLoggingMessage.get() != Boolean.FALSE) {
                 /*
                  * One of the Listeners has attempted to access
                  * System.err or System.out.
@@ -2162,16 +2164,15 @@ public class Project implements ResourceFactory {
                 return;
             }
             try {
-                loggingMessage = true;
+                isLoggingMessage.set(Boolean.TRUE);
                 Iterator iter = listeners.iterator();
                 while (iter.hasNext()) {
                     BuildListener listener = (BuildListener) iter.next();
                     listener.messageLogged(event);
                 }
             } finally {
-                loggingMessage = false;
+                isLoggingMessage.set(Boolean.FALSE);
             }
-        }
     }
 
     /**

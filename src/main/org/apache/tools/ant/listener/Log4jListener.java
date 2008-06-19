@@ -34,7 +34,7 @@ import org.apache.tools.ant.Task;
 public class Log4jListener implements BuildListener {
 
     /** Indicates if the listener was initialized. */
-    private boolean initialized = false;
+    private final boolean initialized;
 
     /**
      * log category we log into

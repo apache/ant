@@ -498,6 +498,11 @@ not access System.out and System.err directly. It must use the streams with whic
 been configured.
 </p>
 
+<p><b>Note2:</b> All methods of a BuildListener except for the "Build
+  Started" and "Build Finished" events may occur on several threads
+  simultaneously - for example while Ant is executing
+  a <code>&lt;parallel&gt;</code> task.</p>
+
 <hr>
 <h2><a name="integration">Source code integration</a></h2>
 
