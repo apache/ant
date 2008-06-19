@@ -245,6 +245,36 @@ public class ProjectTest extends TestCase {
         bft.expectLog("once", "once from buildfile");
     }
 
+    public void testOutputDuringMessageLoggedIsSwallowed()
+        throws InterruptedException {
+        final String FOO = "foo", BAR = "bar";
+        p.addBuildListener(new BuildListener() {
+                public void buildStarted(BuildEvent event) {}
+                public void buildFinished(BuildEvent event) {}
+                public void targetStarted(BuildEvent event) {}
+                public void targetFinished(BuildEvent event) {}
+                public void taskStarted(BuildEvent event) {}
+                public void taskFinished(BuildEvent event) {}
+                public void messageLogged(final BuildEvent actual) {
+                    assertEquals(FOO, actual.getMessage());
+                    // each of the following lines would cause an
+                    // infinite loop if the message wasn't swallowed
+                    System.err.println(BAR);
+                    System.out.println(BAR);
+                    p.log(BAR, Project.MSG_INFO);
+                }
+            });
+        final boolean[] done = new boolean[] {false};
+        Thread t = new Thread() {
+                public void run() {
+                    p.log(FOO, Project.MSG_INFO);
+                    done[0] = true;
+                }
+            };
+        t.start();
+        t.join(2000);
+        assertTrue("Expected logging thread to finish successfully", done[0]);
+    }
 
     private class DummyTaskPrivate extends Task {
         public DummyTaskPrivate() {}
