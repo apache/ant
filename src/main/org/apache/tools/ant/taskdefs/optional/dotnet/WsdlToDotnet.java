@@ -412,7 +412,7 @@ public class WsdlToDotnet extends Task  {
             }
             if (makeURL) {
                 try {
-                    return file.toURL().toExternalForm();
+                    return FILE_UTILS.getFileURL(file).toExternalForm();
                 } catch (MalformedURLException e) {
                     throw new BuildException(ERROR_NO_URL_CONVERT + file);
                 }
