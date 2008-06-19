@@ -176,10 +176,11 @@ public class Project implements ResourceFactory {
     private ClassLoader coreLoader = null;
 
     /** Records the latest task to be executed on a thread. */
-    private Map/*<Thread,Task>*/ threadTasks = Collections.synchronizedMap(new WeakHashMap());
+    private final Map/*<Thread,Task>*/ threadTasks =
+        Collections.synchronizedMap(new WeakHashMap());
 
     /** Records the latest task to be executed on a thread group. */
-    private Map/*<ThreadGroup,Task>*/ threadGroupTasks
+    private final Map/*<ThreadGroup,Task>*/ threadGroupTasks
         = Collections.synchronizedMap(new WeakHashMap());
 
     /**
@@ -2271,13 +2272,15 @@ public class Project implements ResourceFactory {
      * @param task the task to be registered.
      * @since Ant 1.5
      */
-    public synchronized void registerThreadTask(Thread thread, Task task) {
-        if (task != null) {
-            threadTasks.put(thread, task);
-            threadGroupTasks.put(thread.getThreadGroup(), task);
-        } else {
-            threadTasks.remove(thread);
-            threadGroupTasks.remove(thread.getThreadGroup());
+    public void registerThreadTask(Thread thread, Task task) {
+        synchronized(threadTasks) {
+            if (task != null) {
+                threadTasks.put(thread, task);
+                threadGroupTasks.put(thread.getThreadGroup(), task);
+            } else {
+                threadTasks.remove(thread);
+                threadGroupTasks.remove(thread.getThreadGroup());
+            }
         }
     }
 
@@ -2289,15 +2292,17 @@ public class Project implements ResourceFactory {
      *         null if no task is registered.
      */
     public Task getThreadTask(Thread thread) {
-        Task task = (Task) threadTasks.get(thread);
-        if (task == null) {
-            ThreadGroup group = thread.getThreadGroup();
-            while (task == null && group != null) {
-                task = (Task) threadGroupTasks.get(group);
-                group = group.getParent();
+        synchronized(threadTasks) {
+            Task task = (Task) threadTasks.get(thread);
+            if (task == null) {
+                ThreadGroup group = thread.getThreadGroup();
+                while (task == null && group != null) {
+                    task = (Task) threadGroupTasks.get(group);
+                    group = group.getParent();
+                }
             }
+            return task;
         }
-        return task;
     }
 
 
