@@ -45,12 +45,10 @@ public class Log4jListener implements BuildListener {
      * Construct the listener and make sure there is a valid appender.
      */
     public Log4jListener() {
-        initialized = false;
         Logger log = Logger.getLogger(LOG_ANT);
         Logger rootLog = Logger.getRootLogger();
-        if (!(rootLog.getAllAppenders() instanceof NullEnumeration)) {
-            initialized = true;
-        } else {
+        initialized = !(rootLog.getAllAppenders() instanceof NullEnumeration);
+        if (!initialized) {
             log.error("No log4j.properties in build area");
         }
     }
