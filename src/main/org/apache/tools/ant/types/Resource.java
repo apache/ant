@@ -24,6 +24,8 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.tools.ant.types.resources.FileProvider;
+
 /**
  * Describes a "File-like" resource (File, ZipEntry, etc.).
  *
@@ -373,12 +375,12 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
 
     /**
      * Fulfill the ResourceCollection contract.
-     * @return whether this Resource is a FileResource.
+     * @return whether this Resource is a FileProvider.
      * @since Ant 1.7
      */
     public boolean isFilesystemOnly() {
-        //default false:
-        return isReference() && ((Resource) getCheckedRef()).isFilesystemOnly();
+        return (isReference() && ((Resource) getCheckedRef()).isFilesystemOnly())
+                || this instanceof FileProvider;
     }
 
     /**
