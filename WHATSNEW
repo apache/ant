@@ -73,6 +73,9 @@ Fixed bugs:
    within messageLogged while a different thread also accessed one.
    Bugzilla report 45194
 
+ * Handle null result of system getProperty() in CommandlineJava.
+   Similar to Bugzilla report 42334.
+
 Other changes:
 --------------
 
