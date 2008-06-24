@@ -76,6 +76,9 @@ Fixed bugs:
  * Handle null result of system getProperty() in CommandlineJava.
    Similar to Bugzilla report 42334.
 
+ * Length task did not process nonexistent Resources even though these might
+   conceivably still carry file length information.  Bugzilla report 45271.
+
 Other changes:
 --------------
 
