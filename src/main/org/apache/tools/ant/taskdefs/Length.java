@@ -225,13 +225,12 @@ public class Length extends Task implements Condition {
         for (Iterator i = resources.iterator(); i.hasNext();) {
             Resource r = (Resource) i.next();
             if (!r.isExists()) {
-                log(r + " does not exist", Project.MSG_ERR);
-            } else if (r.isDirectory()) {
-                log(r + " is a directory; length unspecified",
-                    Project.MSG_ERR);
-            } else {
-                h.handle(r);
+                log(r + " does not exist", Project.MSG_WARN);
             }
+            if (r.isDirectory()) {
+                log(r + " is a directory; length may not be meaningful", Project.MSG_WARN);
+            }
+            h.handle(r);
         }
         h.complete();
     }
