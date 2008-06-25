@@ -35,7 +35,7 @@ import org.apache.tools.ant.types.ResourceCollection;
  * @since Ant 1.7
  */
 public abstract class BaseResourceCollectionContainer
-    extends DataType implements ResourceCollection, Cloneable {
+        extends DataType implements ResourceCollection, Cloneable {
     private List rc = new ArrayList();
     private Collection coll = null;
     private boolean cache = true;
@@ -222,7 +222,7 @@ public abstract class BaseResourceCollectionContainer
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
         }
-   }
+    }
 
     /**
      * Format this BaseResourceCollectionContainer as a String.
