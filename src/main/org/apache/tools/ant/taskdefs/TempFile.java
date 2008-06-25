@@ -23,8 +23,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- *  This task sets a property to  the name of a temporary file.
- *  Unlike {@link File#createTempFile}, this task does not actually create the
+ *  This task sets a property to the name of a temporary file.
+ *  Unlike {@link File#createTempFile}, this task does not (by default) actually create the
  *  temporary file, but it does guarantee that the file did not
  *  exist when the task was executed.
  * <p>
@@ -35,8 +35,8 @@ import org.apache.tools.ant.util.FileUtils;
  * create a temporary file with the .xml suffix.
  * <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
  * create a temp file in the build subdir
- *@since       Ant 1.5
- *@ant.task
+ * @since       Ant 1.5
+ * @ant.task
  */
 
 public class TempFile extends Task {
@@ -146,7 +146,7 @@ public class TempFile extends Task {
     /**
      * Creates the temporary file.
      *
-     *@exception  BuildException  if something goes wrong with the build
+     * @exception  BuildException  if something goes wrong with the build
      */
     public void execute() throws BuildException {
         if (property == null || property.length() == 0) {
