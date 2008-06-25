@@ -654,11 +654,7 @@ public class Tar extends MatchingTask {
         } else if (rc.isFilesystemOnly()) {
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = ResourceUtils.asFileResource((FileProvider) iter.next());
-                File f = r.getFile();
-                if (f == null) {
-                    f = new File(r.getBaseDir(), r.getName());
-                }
+                File f = ((FileProvider) iter.next()).getFile();
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources
