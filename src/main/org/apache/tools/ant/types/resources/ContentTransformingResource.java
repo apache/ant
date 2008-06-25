@@ -237,7 +237,7 @@ public abstract class ContentTransformingResource extends Resource {
      * @return whether this Resource is a FileProvider.
      */
     public boolean isFilesystemOnly() {
-        return getResource().isFilesystemOnly();
+        return false;
     }
 
     /**
