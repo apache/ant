@@ -121,7 +121,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
          * @return an iterator.
          */
         public Iterator iterator() {
-            return new FileResourceIterator(null, parts);
+            return new FileResourceIterator(getProject(), null, parts);
         }
 
         /**
@@ -688,7 +688,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         }
         dieOnCircularReference();
         if (getPreserveBC()) {
-            return new FileResourceIterator(null, list());
+            return new FileResourceIterator(getProject(), null, list());
         }
         return union == null ? EMPTY_ITERATOR
             : assertFilesystemOnly(union).iterator();

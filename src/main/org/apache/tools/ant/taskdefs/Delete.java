@@ -83,15 +83,17 @@ public class Delete extends MatchingTask {
                 return ((Comparable) foo).compareTo(bar) * -1;
             }
         };
+        private Project project;
         private File basedir;
         private String[] dirs;
-        ReverseDirs(File basedir, String[] dirs) {
+        ReverseDirs(Project project, File basedir, String[] dirs) {
+            this.project = project;
             this.basedir = basedir;
             this.dirs = dirs;
             Arrays.sort(this.dirs, REVERSE);
         }
         public Iterator iterator() {
-            return new FileResourceIterator(basedir, dirs);
+            return new FileResourceIterator(project, basedir, dirs);
         }
         public boolean isFilesystemOnly() { return true; }
         public int size() { return dirs.length; }
@@ -571,7 +573,7 @@ public class Delete extends MatchingTask {
             } else {
                 resourcesToDelete.add(fs);
                 if (includeEmpty) {
-                    filesetDirs.add(new ReverseDirs(fsDir, fs
+                    filesetDirs.add(new ReverseDirs(getProject(), fsDir, fs
                             .getDirectoryScanner().getIncludedDirectories()));
                 }
             }

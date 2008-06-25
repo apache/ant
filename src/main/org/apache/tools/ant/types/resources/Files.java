@@ -321,7 +321,7 @@ public class Files extends AbstractSelectorContainer
         if (fct + dct == 0) {
             return EMPTY_ITERATOR;
         }
-        FileResourceIterator result = new FileResourceIterator();
+        FileResourceIterator result = new FileResourceIterator(getProject());
         if (fct > 0) {
             result.addFiles(ds.getIncludedFiles());
         }

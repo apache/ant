@@ -192,7 +192,7 @@ public class FileList extends DataType implements ResourceCollection {
         if (isReference()) {
             return ((FileList) getRef(getProject())).iterator();
         }
-        return new FileResourceIterator(dir,
+        return new FileResourceIterator(getProject(), dir,
             (String[]) (filenames.toArray(new String[filenames.size()])));
     }
 

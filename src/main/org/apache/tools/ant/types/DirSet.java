@@ -67,7 +67,7 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
         if (isReference()) {
             return ((DirSet) getRef(getProject())).iterator();
         }
-        return new FileResourceIterator(getDir(getProject()),
+        return new FileResourceIterator(getProject(), getDir(getProject()),
             getDirectoryScanner(getProject()).getIncludedDirectories());
     }
 

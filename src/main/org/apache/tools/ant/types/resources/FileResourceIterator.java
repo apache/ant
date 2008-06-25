@@ -21,39 +21,78 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.tools.ant.Project;
+
 /**
  * Iterator of FileResources from filenames.
  * @since Ant 1.7
  */
 public class FileResourceIterator implements Iterator {
+    private Project project;
     private File basedir;
     private String[] files;
     private int pos = 0;
 
     /**
      * Construct a new FileResourceIterator.
+     * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project)}
      */
     public FileResourceIterator() {
     }
 
     /**
+     * Create a new FileResourceIterator.
+     * @param project associated Project instance
+     * @since Ant 1.8
+     */
+    public FileResourceIterator(Project project) {
+        this.project = project;
+    }
+
+    /**
      * Construct a new FileResourceIterator relative to the specified
      * base directory.
-     * @param f the base directory of this instance.
+     * @param basedir the base directory of this instance.
+     * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project, File)}
      */
-    public FileResourceIterator(File f) {
-        basedir = f;
+    public FileResourceIterator(File basedir) {
+        this(null, basedir);
+    }
+
+    /**
+     * Construct a new FileResourceIterator relative to the specified
+     * base directory.
+     * @param project associated Project instance
+     * @param basedir the base directory of this instance.
+     * @since Ant 1.8
+     */
+    public FileResourceIterator(Project project, File basedir) {
+        this(project);
+        this.basedir = basedir;
     }
 
     /**
      * Construct a new FileResourceIterator over the specified filenames,
      * relative to the specified base directory.
-     * @param f the base directory of this instance.
-     * @param s the String[] of filenames.
+     * @param basedir the base directory of this instance.
+     * @param filenames the String[] of filenames.
+     * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project, File, String[])}
      */
-    public FileResourceIterator(File f, String[] s) {
-        this(f);
-        addFiles(s);
+    public FileResourceIterator(File basedir, String[] filenames) {
+        this(null, basedir, filenames);
+    }
+
+    /**
+     * Construct a new FileResourceIterator over the specified filenames,
+     * relative to the specified base directory.
+     * @param project associated Project instance
+     * @param basedir the base directory of this instance.
+     * @param filenames the String[] of filenames.
+     * @since Ant 1.8
+     */
+    public FileResourceIterator(Project project, File basedir, String[] filenames) {
+        this(project, basedir);
+        addFiles(filenames);
     }
 
     /**
@@ -101,7 +140,9 @@ public class FileResourceIterator implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return new FileResource(basedir, files[pos++]);
+        FileResource result = new FileResource(basedir, files[pos++]);
+        result.setProject(project);
+        return result;
     }
 
 }

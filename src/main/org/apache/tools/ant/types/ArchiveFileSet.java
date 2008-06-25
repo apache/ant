@@ -270,7 +270,7 @@ public abstract class ArchiveFileSet extends FileSet {
             return super.iterator();
         }
         ArchiveScanner as = (ArchiveScanner) getDirectoryScanner(getProject());
-        return as.getResourceFiles();
+        return as.getResourceFiles(getProject());
     }
 
     /**

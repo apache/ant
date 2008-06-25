@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import java.util.Iterator;
 
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
 
@@ -189,12 +190,13 @@ public abstract class ArchiveScanner extends DirectoryScanner {
 
     /**
      * Get the set of Resources that represent files.
+     * @param project since Ant 1.8
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    /* package-private for now */ Iterator getResourceFiles() {
+    /* package-private for now */ Iterator getResourceFiles(Project project) {
         if (src == null) {
-            return new FileResourceIterator(getBasedir(), getIncludedFiles());
+            return new FileResourceIterator(project, getBasedir(), getIncludedFiles());
         }
         scanme();
         return matchFileEntries.values().iterator();
@@ -202,12 +204,13 @@ public abstract class ArchiveScanner extends DirectoryScanner {
 
     /**
      * Get the set of Resources that represent directories.
+     * @param project since Ant 1.8
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    /* package-private for now */  Iterator getResourceDirectories() {
+    /* package-private for now */  Iterator getResourceDirectories(Project project) {
         if (src == null) {
-            return new FileResourceIterator(getBasedir(), getIncludedDirectories());
+            return new FileResourceIterator(project, getBasedir(), getIncludedDirectories());
         }
         scanme();
         return matchDirEntries.values().iterator();
