@@ -35,7 +35,9 @@ be triggered when using nested filesets by setting the
 <code>includeEmptyDirs</code> attribute to <i>true</i>. Note that this
 attribute is meaningless in the context of any of the various resource
 collection types that <i>do</i> include directories, but that no attempt
-will be made to delete non-empty directories in any case.</p>
+will be made to delete non-empty directories in any case.  Whether a
+directory is empty or not is decided by looking into the filesystem -
+include or exclude patterns don't apply here.</p>
 <p>
 If you use this task to delete temporary files created by editors
 and it doesn't seem to work, read up on the
