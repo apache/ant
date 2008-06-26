@@ -27,7 +27,7 @@
 <h2><a name="componentdef">componentdef</a></h2>
 <h3>Description</h3>
   <p>
-    Adds a component definination to the current project.
+    Adds a component definition to the current project.
     A compenent definition is the same as a
     <a href="typedef.html">typedef</a> except:
   </p>
@@ -37,13 +37,13 @@
         accept components (by having an <i>add()</i> method).
       </li>
       <li>
-        multiple components may have the same name, provided them
+        multiple components may have the same name, provided they
         implement different interfaces.
       </li>
     </ol>
   <p>
-    The purpose of this it allow internal ant definitions to be
-    be made for tags like "and" or "or".
+    The purpose of this is to allow internal Ant definitions to be
+    made for tags like "and" or "or".
   </p>
 
   <h3>Examples</h3>
@@ -53,7 +53,7 @@
   &lt;componentdef name="or" onerror="ignore"
     classname="com.apache.tools.ant.types.resources.selectors.Or"/&gt;</pre>
   <p>
-    defines two components with the same name "or", one is a condition
+    defines two components with the same name "or"; one is a condition
     (see <a href="conditions.html">conditions</a>) and one is 
     a selector (see <a href="../CoreTypes/selectors.html">selectors</a>).
   </p>
