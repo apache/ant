@@ -51,7 +51,7 @@ public final class RmicAdapterFactory {
      * <p>The current mapping for rmic names are as follows:</p>
      * <ul><li>sun = SUN's rmic
      * <li>kaffe = Kaffe's rmic
-     * <li><i>a fully quallified classname</i> = the name of a rmic
+     * <li><i>a fully qualified classname</i> = the name of a rmic
      * adapter
      * <li>weblogic = weblogic compiler
      * <li>forking = Sun's RMIC by forking a new JVM

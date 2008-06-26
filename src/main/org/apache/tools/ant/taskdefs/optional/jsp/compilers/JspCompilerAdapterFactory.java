@@ -40,7 +40,7 @@ public final class JspCompilerAdapterFactory {
      *
      * The current mapping for compiler names are as follows:
      * <ul><li>jasper = jasper compiler (the default)
-     * <li><i>a fully quallified classname</i> = the name of a jsp compiler
+     * <li><i>a fully qualified classname</i> = the name of a jsp compiler
      * adapter
      * </ul>
      *
@@ -63,7 +63,7 @@ public final class JspCompilerAdapterFactory {
      *
      * The current mapping for compiler names are as follows:
      * <ul><li>jasper = jasper compiler (the default)
-     * <li><i>a fully quallified classname</i> = the name of a jsp compiler
+     * <li><i>a fully qualified classname</i> = the name of a jsp compiler
      * adapter
      * </ul>
      *
