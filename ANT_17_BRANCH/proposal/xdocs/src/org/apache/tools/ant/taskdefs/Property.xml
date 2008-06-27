@@ -1,0 +1,65 @@
+<!-- property task -->
+<external>
+<description>
+
+<p>Sets a property (by name and value), or set of properties (from file or resource) in the project.</p>
+
+<p>Properties are case sensitive.</p>
+
+<p>Properties are immutable: whoever sets a property first freezes it for the rest of the build; they are most definately not variable.</p>
+
+<p>There are five ways to set properties:
+  <ul>
+    <li>By supplying both the name and value attribute.</li>
+    <li>By supplying both the name and refid attribute.</li>
+    <li>By setting the file attribute with the filename of the property file to load. This property file has the format as defined by the file used in the class java.util.Properties.</li>
+    <li>By setting the resource attribute with the resource name of the property file to load. This property file has the format as defined by the file used in the class java.util.Properties.</li>
+    <li>By setting the environment attribute with a prefix to use. Properties will be defined for every environment variable by prefixing the supplied name and a period to the name of the variable.</li>
+  </ul>
+</p>  
+<p>Although combinations of these ways are possible, only one should be used at a time. Problems might occur with the order in which properties are set, for instance.</p>
+
+<p>The value part of the properties being set, might contain references to other properties. These references are resolved at the time these properties are set. This also holds for properties loaded from a property file.</p>
+
+<p>A list of predefined properties can be found here.</p>
+
+</description>
+
+<section anchor="examples" name="Examples">
+    <source><![CDATA[
+    <property name="foo.dist" value="dist"/>
+        ]]></source>
+<p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
+    <source><![CDATA[
+    <property file="foo.properties"/>
+        ]]></source>
+<p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
+    <source><![CDATA[
+    <property resource="foo.properties"/>
+        ]]></source>
+<p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
+<p>Note that you can reference a global properties file for all of your Ant
+builds using the following:</p>
+    <source><![CDATA[
+    <property file="${user.home}/.ant-global.properties"/>
+        ]]></source>
+<p>since the &quot;user.home&quot; property is defined by the Java virtual machine
+to be your home directory.  Where the &quot;user.home&quot; property resolves to in
+the file system depends on the operating system version and the JVM implementation.
+On Unix based systems, this will map to the user's home directory. On modern Windows
+variants, this will most likely resolve to the user's directory in the &quot;Documents
+and Settings&quot; folder. Older windows variants such as Windows 98/ME are less 
+predictable, as are other operating system/JVM combinations.</p>
+
+<source><![CDATA[
+  <property environment="env">
+  <echo message="Number of Processors = ${env.NUMBER_OF_PROCESSORS}">
+  <echo message="ANT_HOME is set to = ${env.ANT_HOME}">
+]]></source>
+<p>reads the system environment variables and stores them in properties, prefixed with &quot;env&quot;.
+Note that this only works on <em>select</em> operating systems.
+Two of the values are shown being echoed. 
+</p>
+
+</section>
+</external>

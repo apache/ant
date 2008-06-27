@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="scriptcondition-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <macrodef name="t">
+    <element name="test" implicit="yes" />
+    <attribute name="message"/>
+    <sequential>
+      <au:assertTrue message="query @{message} failed; result was false">
+        <test />
+      </au:assertTrue>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="f">
+    <element name="test" implicit="yes" />
+    <attribute name="message"/>
+    <sequential>
+      <au:assertFalse message="test @{message} failed; result was true">
+        <test />
+      </au:assertFalse>
+    </sequential>
+  </macrodef>
+
+  <condition property="js.avail">
+    <available classname="org.mozilla.javascript.EvaluatorException"/>
+  </condition>
+
+  <condition property="beanshell.avail">
+    <available classname="bsh.BshMethod"/>
+  </condition>
+
+  <!-- this is here to test the macro is well coded -->
+  <target name="testMacro">
+    <t message="testMacro">
+      <istrue value="true"/>
+    </t>
+    <f message="testMacro2">
+      <istrue value="false"/>
+    </f>
+  </target>
+
+ <target name="testNolanguage">
+    <au:expectfailure message="Absence of language attribute not detected"
+                      expectedMessage="script language must be specified">
+      <t message="testNolanguage">
+        <scriptcondition>
+          self.setValue(true);
+        </scriptcondition>
+      </t>
+    </au:expectfailure>
+  </target>
+
+  <target name="testClearByDefault" if="js.avail">
+    <f message="testClearByDefault">
+      <scriptcondition language="javascript">
+      </scriptcondition>
+    </f>
+  </target>
+
+  <target name="testValueWorks" if="js.avail">
+    <t message="testValueWorks">
+      <scriptcondition language="javascript" value="true" />
+    </t>
+  </target>
+
+  <target name="testSetWorks" if="js.avail">
+    <t message="testSetWorks">
+      <scriptcondition language="javascript" value="false">
+        self.setValue(true);
+      </scriptcondition>
+    </t>
+  </target>
+
+  <target name="testClearWorks" if="js.avail">
+    <f message="testClearWorks">
+      <scriptcondition language="javascript" value="true">
+        self.setValue(false);
+      </scriptcondition>
+    </f>
+  </target>
+
+</project>

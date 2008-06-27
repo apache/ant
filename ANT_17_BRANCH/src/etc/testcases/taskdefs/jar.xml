@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="jar-test" basedir="." default="test1">
+
+  <property name="tmp.jar" location="tmp.jar"/>
+  <property name="tmp.dir" location="jartmp"/>
+  <property name="tmp.zip" location="tmp.zip"/>
+  <property name="tmp1.dir" location="jartmp1"/>
+  <property name="tmp2.dir" location="jartmp2"/>
+
+  <target name="test1">
+    <jar/>
+  </target>
+
+  <target name="test2">
+    <jar
+    	jarfile="jar.tmp"
+    	manifest="none"
+    />
+  </target>
+
+  <target name="test3">
+    <jar
+    	destfile="jar.tmp"
+	whenempty="format C: /y" 
+    />
+  </target>
+
+  <target name="test4">
+   <jar
+    	destfile="${tmp.jar}"
+	basedir="."
+	includes="jar.xml"
+    />
+  </target>
+
+  <target name="testNoRecreateWithUpdate">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateNewerFileSetup" depends="test4">
+    <touch file="jar.xml"/>
+  </target>
+
+  <target name="testRecreateWithoutUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         includes="*.xml"
+         basedir="."
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="*.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateWithoutUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testManifestStaysIntact">
+    <mkdir dir="${tmp.dir}"/>
+    <manifest file="${tmp.dir}/manifest">
+      <attribute name="Foo" value="bar"/>
+    </manifest>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         manifest="${tmp.dir}/manifest"/>
+    <sleep seconds="3"/>
+    <touch file="jar.xml"/>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         update="true"/>
+    <unjar src="${tmp.jar}" dest="${tmp.dir}"/>
+  </target>    
+
+  <target name="testNoRecreateBasedirExcludesWithUpdate">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="j*.xml"
+         excludes="java.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testNoRecreateBasedirExcludesWithoutUpdate">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="j*.xml"
+         excludes="java.xml"
+    />
+  </target>
+
+  <target name="makezip">
+    <zip destfile="${tmp.zip}"
+         basedir="." includes="j*.xml"/>
+  </target>
+
+  <target name="testNoRecreateZipfilesetExcludesWithUpdate"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+    </jar>
+  </target>
+
+  <target name="testNoRecreateZipfilesetExcludesWithoutUpdate"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithoutUpdateAdditionalFiles"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithUpdateAdditionalFiles"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithoutUpdateNewerFile"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}" includes="jar.xml"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithUpdateNewerFile"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}" includes="jar.xml"/>
+    </jar>
+  </target>
+
+  <target name="cleanup">
+    <delete file="${tmp.jar}" />
+    <delete file="${tmp.jar}2" />
+    <delete dir="${tmp.dir}"/>
+    <delete file="${tmp.zip}" />
+    <delete dir="${tmp1.dir}"/>
+    <delete dir="${tmp2.dir}"/>
+  </target>
+
+  <target name="testCreateWithEmptyFilesetSetUp">
+    <mkdir dir="${tmp1.dir}"/>
+    <mkdir dir="${tmp2.dir}"/>
+    <echo file="${tmp2.dir}/foo.txt" message="foo"/>
+  </target>
+
+  <target name="testCreateWithEmptyFileset">
+    <jar destfile="${tmp.jar}">
+      <fileset dir="${tmp1.dir}">
+        <include name="**/*.doesNotExist"/>
+      </fileset>
+      <fileset dir="${tmp2.dir}">
+        <include name="**/foo.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <!-- bug 17780 -->
+  <target name="testUpdateIfOnlyManifestHasChanged"
+          depends="test4">
+    <jar destfile="${tmp.jar}" update="true">
+      <manifest>
+        <attribute name="Foo" value="bar"/>
+      </manifest>
+    </jar>
+    <mkdir dir="${tmp.dir}"/>
+    <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
+  </target>
+
+  <!-- bugs 10262 and 16972 -->
+  <target name="testIndexTests">
+    <mkdir dir="${tmp.dir}/META-INF"/>
+    <touch file="${tmp.dir}/META-INF/INDEX.LIST"/>
+    <touch file="${tmp.dir}/foo"/>
+    <mkdir dir="${tmp.dir}/sub"/>
+    <touch file="${tmp.dir}/sub/foo"/>
+    <jar destfile="${tmp.jar}" index="yes" basedir="${tmp.dir}"/>
+  </target>
+    <!-- bug 32802 -->
+  <target name="testManifestOnlyJar">
+    <mkdir dir="${tmp.dir}"/>  
+    <jar destfile="${tmp.jar}" duplicate="preserve">
+      <manifest>
+        <attribute name="Foo" value="bar"/>
+      </manifest>
+    </jar>
+    <mkdir dir="${tmp.dir}"/>
+    <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
+
+  </target>
+
+  <!-- bug 37237 -->
+  <target name="testIndexJarsPlusJarMarker">
+    <mkdir dir="${tmp.dir}/a/b/c"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
+    <delete dir="${tmp.dir}/a" quiet="true"/>
+    <mkdir dir="${tmp.dir}/d/e/f"/>
+    <jar destfile="${tmp.jar}2" basedir="${tmp.dir}" index="true">
+      <indexjars>
+        <fileset file="${tmp.jar}"/>
+      </indexjars>
+    </jar>
+  </target>
+    
+  <target name="testNoVersionInfoNoStrict">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
+  </target>  
+
+  <target name="testNoVersionInfoFail">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="fail"/>
+  </target>  
+
+  <target name="testNoVersionInfoIgnore">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="ignore"/>
+  </target>  
+
+  <target name="testNoVersionInfoWarn">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="warn"/>
+  </target>  
+    
+  <!-- see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning -->  
+  <target name="testHasVersionInfo">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="fail">
+      <manifest>
+        <attribute name="Implementation-Title"   value="Packaging Version Test"/>
+        <attribute name="Implementation-Version" value="1.0"/>
+        <attribute name="Implementation-Vendor"  value="Apache Software Foundation"/>
+      </manifest>
+    </jar>
+  </target>  
+
+    
+</project>

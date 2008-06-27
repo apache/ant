@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="test">
+
+  <property name="testcases.dir" location="../../../../build/testcases"/>
+
+  <path id="testclasses">
+    <pathelement location="${testcases.dir}" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="antlib.file">
+    <typedef file="test.antlib.xml"
+             classpathref="testclasses"/>
+    <mytask/>
+  </target>
+
+  <target name="antlib.resource">
+    <typedef resource="taskdefs/test.antlib.xml">
+        <classpath>
+            <!-- To load the task classes: -->
+            <path refid="testclasses"/>
+            <!-- For test.antlib.xml: -->
+            <pathelement location=".."/>
+            <!-- For test2.antlib.xml: -->
+            <pathelement location="${testcases.dir}/org/apache/tools/ant/taskdefs/test2-antlib.jar"/>
+        </classpath>
+    </typedef>
+    <mytask/>
+    <echo>-and-then-</echo>
+    <mytask2/>
+  </target>
+
+  <target name="ns.current">
+    <typedef file="antlib.current-test.xml" uri="abc"/>
+    <x:useecho2 xmlns:x="abc"/>
+    <x:preset.echo xmlns:x="abc" name="p"/>
+    <x:p xmlns:x="abc">Hello from x:p</x:p>
+  </target>
+
+  <target name="antlib_uri" >
+    <typedef uri="antlib:org.example.tasks" onerror="failall"/>
+  </target>
+
+  <target name="antlib_uri_auto" xmlns:ex="antlib:org.example.tasks">
+    <ex:simple>
+      <echo message="inside simple" />
+    </ex:simple>
+  </target>
+
+  <target name="antlib_uri_auto2" xmlns:ex="antlib://org/example/tasks/antlib2.xml">
+    <ex:simple>
+      <echo message="inside simple"/>
+    </ex:simple>
+  </target>
+  
+</project>

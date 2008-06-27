@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="test" basedir="." default="invalid">
+
+  <target name="invalid">
+    <fail>This file should only be run via a testcase</fail>
+  </target>
+
+  <target name="empty">
+    <typedef />
+  </target>
+
+  <target name="noClassname">
+    <typedef name="dummy" />
+  </target>
+
+  <target name="noName">
+    <typedef classname="org.example.types.TypedefTestType">
+      <classpath refid="testclasses" />
+    </typedef>
+  </target>
+
+  <target name="classNotFound">
+    <typedef name="" classname="oops"/>
+  </target>
+
+  <path id="testclasses">
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <typedef name="global"
+           classname="org.example.types.TypedefTestType">
+    <classpath refid="testclasses" />
+  </typedef>
+
+  <target name="testGlobal">
+    <global id="global" />
+  </target>
+
+  <target name="testLocal">
+    <typedef name="localtype"
+             classname="org.example.types.TypedefTestType">
+      <classpath refid="testclasses" />
+    </typedef>
+    <localtype id="local" />
+  </target>
+
+  <target name="double-notpresent">
+    <typedef name="mytask" classname="notpresent" onerror="ignore"/>
+    <typedef name="mytask" classname="notpresent" onerror="ignore"/>
+    <typedef name="mytask" classname="org.apache.tools.ant.taskdefs.Echo"
+             onerror="ignore"/>
+    <mytask>hi</mytask>
+  </target>
+  
+  <target name="noresourcefailall">
+  	<typedef resource="somenotpresentfile.properties" onerror="failall"/>
+  </target>
+  
+  <target name="noresourcefail">
+  	<typedef resource="somenotpresentfile.properties" onerror="fail"/>
+  </target>
+  
+  <target name="noresourcenotfail">
+  	<typedef resource="somenotpresentfile.properties" />
+  </target>
+</project>

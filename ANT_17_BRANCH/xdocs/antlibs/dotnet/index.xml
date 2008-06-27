@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <index value="1"/>
+    <title>.NET Ant Library</title>
+  </properties>
+
+  <body>
+
+    <section name=".NET Ant Library 1.0">
+      <h3>November 6, 2006 - Apache .NET Ant Library 1.0
+      Available</h3>
+
+      <p>Apache .NET Ant Library 1.0 is now available for
+      download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+    </section>
+
+    <section name="Idea">
+
+      <p>This library doesn't strive to replace NAnt or MSBuild, its
+      main purpose is to help those of us who work on projects
+      crossing platform boundaries.  With this library you can use Ant
+      to build and test the Java as well as the .NET parts of your
+      project.</p>
+
+      <p>This library provides a special version of the
+      <code>&lt;exec&gt;</code> task tailored to run .NET executables.
+      On Windows it will assume the Microsoft framework is around and
+      run the executable directly, while it will invoke Mono on any
+      other platform.  Of course you can override these
+      assumptions.</p>
+
+      <p>Based on this a few tasks to run well known .NET utilities
+      from within Ant are provided, namely tasks to run <a
+      href="http://www.nunit.org/">NUnit</a>, <a
+      href="http://nant.sf.net/">NAnt</a>, <a
+      href="http://forums.microsoft.com/MSDN/ShowForum.aspx?ForumID=27&amp;SiteID=1">MSBuild</a>
+      and the <a href="http://wix.sf.net/">Wix</a> toolkit.</p>
+
+      <p>The initial .NET tasks of Ant (compiler tasks for C#, J# and VB.NET
+      for example) have also been moved to this Antlib and will see further
+      development here.</p>
+    </section>
+
+    <section name="Tasks">
+      <subsection name="dotnetexec">
+        <p>Runs a .NET executable.</p>
+      </subsection>
+
+      <subsection name="nunit">
+        <p>Runs NUnit tests.</p>
+      </subsection>
+
+      <subsection name="nant">
+        <p>Invokes NAnt, either on an external file or a build file
+        snippet contained inside your Ant build file.</p>
+      </subsection>
+
+      <subsection name="msbuild">
+        <p>Invokes MSBuild, either on an external file or a build file
+        snippet contained inside your Ant build file.</p>
+      </subsection>
+
+      <subsection name="wix">
+        <p>Invokes the candle and light executables of the WiX toolkit
+          in order to create MSI installers from within Ant.</p>
+      </subsection>
+    </section>
+
+    <section name="Examples">
+      <subsection name="nant">
+        <source><![CDATA[
+<project xmlns:dn="antlib:org.apache.ant.dotnet">
+  <dn:nant>
+    <build>
+      <echo message="Hello world"/>
+    </build>
+  </dn:nant>
+</project>
+]]></source>
+
+        <p>runs NAnt on the embedded <code>&lt;echo&gt;</code>
+        task, output looks like</p>
+
+        <source><![CDATA[
+Buildfile: test.xml
+[dn:nant] NAnt 0.85 (Build 0.85.1932.0; rc3; 16.04.2005)
+[dn:nant] Copyright (C) 2001-2005 Gerry Shaw
+[dn:nant] http://nant.sourceforge.net
+[dn:nant] 
+[dn:nant] Buildfile: file:///c:/DOKUME~1/STEFAN~1.BOD/LOKALE~1/Temp/build1058451555.xml
+[dn:nant] Target framework: Microsoft .NET Framework 1.1
+[dn:nant] 
+[dn:nant]      [echo] Hello world
+[dn:nant] 
+[dn:nant] BUILD SUCCEEDED
+[dn:nant] 
+[dn:nant] Total time: 0.2 seconds.
+
+BUILD SUCCESSFUL
+Total time: 2 seconds]]></source>
+      </subsection>
+
+      <subsection name="msbuild">
+        <source><![CDATA[
+<project xmlns:dn="antlib:org.apache.ant.dotnet">
+  <dn:msbuild>
+    <build>
+      <Message Text="Hello world"
+        xmlns="http://schemas.microsoft.com/developer/msbuild/2003"/>
+    </build>
+  </dn:msbuild>
+</project>]]></source>
+
+        <p>runs MSBuild on the embedded <code>&lt;Message&gt;</code>
+        task, output looks like</p>
+
+        <source><![CDATA[
+Buildfile: test.xml
+[dn:msbuild] Microsoft (R) Build Engine Version 2.0.50727.42
+[dn:msbuild] [Microsoft .NET Framework, Version 2.0.50727.42]
+[dn:msbuild] Copyright (C) Microsoft Corporation 2005. All rights reserved.
+
+[dn:msbuild] Build started 15.12.2005 20:21:56.
+[dn:msbuild] __________________________________________________
+[dn:msbuild] Project "c:\Dokumente und Einstellungen\stefan.bodewig\Lokale Einstellungen\Temp\build1543310185.xml" (default targets):
+
+[dn:msbuild] Target generated-by-ant:
+[dn:msbuild]     Hello world
+
+[dn:msbuild] Build succeeded.
+[dn:msbuild]     0 Warning(s)
+[dn:msbuild]     0 Error(s)
+
+[dn:msbuild] Time Elapsed 00:00:00.10
+
+BUILD SUCCESSFUL
+Total time: 0 seconds
+]]></source>
+
+      </subsection>
+    </section>
+  </body>
+</document>

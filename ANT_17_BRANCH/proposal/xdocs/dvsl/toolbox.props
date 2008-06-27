@@ -1,0 +1,4 @@
+toolbox.contextname = toolbox
+toolbox.tool.htmlescape = org.apache.velocity.anakia.Escape
+
+

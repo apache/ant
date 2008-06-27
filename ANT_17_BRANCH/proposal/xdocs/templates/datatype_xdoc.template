@@ -1,0 +1,49 @@
+<XDtTagDef:tagDef namespace="AntDatatype" handler="org.apache.tools.ant.xdoclet.DatatypeTagsHandler"/>
+<XDtTagDef:tagDef namespace="AntTask" handler="org.apache.tools.ant.xdoclet.TaskTagsHandler"/>
+<datatype name="<XDtAntDatatype:typeName/>"
+          classname="<XDtClass:fullClassName/>">
+  <short-description><![CDATA[<XDtClass:firstSentenceDescription/>]]></short-description>
+  <long-description>
+    <![CDATA[<XDtClass:classComment no-comment-signs="true"/>]]>
+  </long-description>
+
+  <structure>
+
+    <attributes>
+    <XDtAntTask:forAllAttributes>
+      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+        <description><![CDATA[
+          <XDtMethod:methodComment no-comment-signs="true"/>
+        ]]></description>
+      </attribute>
+    </XDtAntTask:forAllAttributes>
+    </attributes>
+
+    <elements>
+    <XDtAntTask:forAllElements>
+      <element name="<XDtAntTask:elementName/>" type="<XDtAntTask:elementType/>">
+        <description>
+          <![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]>
+        </description>
+        <XDtClass:pushClass value="<XDtAntTask:elementType/>">
+        <XDtAntTask:ifHasAttributes>
+        <attributes>
+          <XDtAntTask:forAllAttributes>
+          <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+            <description><![CDATA[
+              <XDtMethod:methodComment no-comment-signs="true"/>
+            ]]></description>
+          </attribute>
+          </XDtAntTask:forAllAttributes>
+        </attributes>
+        </XDtAntTask:ifHasAttributes>
+        </XDtClass:pushClass>
+      </element>
+
+    </XDtAntTask:forAllElements>
+    </elements>
+
+    </structure>
+</datatype>
+
+
