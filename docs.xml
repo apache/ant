@@ -22,6 +22,8 @@
         For building XDocs, edit xdocs/**/*.xml first.
         If ../jakarta-site2 does not exist, set -Dsite.dir=... for it,
         or just use -Dvelocity.dir=.../velocity-4.x if you have downloaded Velocity somewhere.
+    	
+    	If you are using velocity-1.5, ensure that the jdom-*.jar is copied under velocity-1.5/build/lib.
 
         XXX for no apparent reason, your CWD must be the main Ant source dir, or this will fail:
         .../docs.xml:64: org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource './site.vsl'
