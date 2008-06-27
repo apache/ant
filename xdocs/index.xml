@@ -24,9 +24,9 @@
   </properties>
 
 <body>
-  <section name="Ant 1.7.1beta">
-    <h3>March ??, 2008 - Ant 1.7.1beta Available</h3>
-    <p>Apache Ant 1.7.1beta is now available for <a
+  <section name="Ant 1.7.1">
+    <h3>June 27, 2008 - Ant 1.7.1 Available</h3>
+    <p>Apache Ant 1.7.1 is now available for <a
     href="http://ant.apache.org/bindownload.cgi">download</a>.</p>
 
     <p> Ant 1.7.1 is mainly a bugfix release.</p>
