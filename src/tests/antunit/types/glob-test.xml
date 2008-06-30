@@ -24,6 +24,12 @@
 
   <dirname property="glob-test.dir"
            file="${ant.file.glob-test}"/>
+
+  <target name="tearDown">
+    <delete dir="${glob-test.dir}/src"/>
+    <delete dir="${glob-test.dir}/dst"/>
+  </target>
+
   <target name="test-move">
     <property 
       name="glob-test-out-dir"
