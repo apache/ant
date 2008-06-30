@@ -122,7 +122,7 @@ public class Resources extends DataType implements ResourceCollection {
             rc = new Vector();
         }
         rc.add(c);
-        FailFast.invalidate(this);
+        invalidateExistingIterators();
         coll = null;
         setChecked(false);
     }
@@ -213,6 +213,13 @@ public class Resources extends DataType implements ResourceCollection {
             }
             setChecked(true);
         }
+    }
+
+    /**
+     * Allow subclasses to notify existing Iterators they have experienced concurrent modification.
+     */
+    protected void invalidateExistingIterators() {
+        FailFast.invalidate(this);
     }
 
     /**
