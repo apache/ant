@@ -887,7 +887,7 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
 <h4><a name="tokens">tokens</a></h4>
 <p>Includes the <a href="#string">string</a> tokens gathered from a nested
  resource collection. Uses the same tokenizers supported by the
-<a href="filterchain.html#tokenfilter">TokenFilter</a>. Hint: imaginative
+<a href="filterchain.html#tokenfilter">TokenFilter</a>. Imaginative
   use of this resource collection can implement equivalents for such Unix
   functions as <code>sort</code>, <code>grep -c</code>, <code>wc</code> and
   <code>wc -l</code>.</p>
@@ -917,6 +917,19 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
         <a href="filterchain.html#linetokenizer">LineTokenizer</a> will be used.
     </li>
   </ul>
+  <h4>Examples</h4>
+  <pre>&lt;concat&gt;
+  &lt;union&gt;
+    &lt;sort&gt;
+      &lt;tokens&gt;
+        &lt;resources refid="input" /&gt;
+        &lt;linetokenizer includedelims="true" /&gt;
+      &lt;/tokens&gt;
+    &lt;/sort&gt;
+  &lt;/union&gt;
+&lt;/concat&gt;
+  </pre>
+  <p>Implements Unix <i>sort -u</i> against resource collection <i>input</i>.</p>
 </blockquote>
 
 <h4><a name="setlogic">Set operations</a></h4>
