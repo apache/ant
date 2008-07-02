@@ -85,7 +85,7 @@ Other changes:
  * There is now a FileProvider interface for resources that act as a source
    of filenames. This should be used by tasks that require resources
    to provide filenames, rather than require that all resources
-   are instances or subclasses of FileResource
+   are instances or subclasses of FileResource.
    Bugzilla report 43348
    
  * Fixcrlf now gives better error messages on bad directory attributes.
@@ -97,6 +97,9 @@ Other changes:
  * a new property ant.project.invoked-targets holds a comma separated
    list of the targets that have been specified on the command line
    (the IDE, an <ant> task ...) when invoking the current project.
+
+ * The <type> resource selector has had an "any" type added for better
+   configurability.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================

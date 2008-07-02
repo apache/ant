@@ -29,6 +29,7 @@ public class Type implements ResourceSelector {
 
     private static final String FILE_ATTR = "file";
     private static final String DIR_ATTR = "dir";
+    private static final String ANY_ATTR = "any";
 
     /** Static file type selector. */
     public static final Type FILE = new Type(new FileDir(FILE_ATTR));
@@ -36,11 +37,14 @@ public class Type implements ResourceSelector {
     /** Static dir type selector. */
     public static final Type DIR = new Type(new FileDir(DIR_ATTR));
 
+    /** Static any type selector. Since Ant 1.8. */
+    public static final Type ANY = new Type(new FileDir(ANY_ATTR));
+
     /**
      * Implements the type attribute.
      */
     public static class FileDir extends EnumeratedAttribute {
-        private static final String[] VALUES = new String[] {FILE_ATTR, DIR_ATTR};
+        private static final String[] VALUES = new String[] { FILE_ATTR, DIR_ATTR, ANY_ATTR };
 
         /**
          * Default constructor.
@@ -99,7 +103,7 @@ public class Type implements ResourceSelector {
             throw new BuildException("The type attribute is required.");
         }
         int i = type.getIndex();
-        return r.isDirectory() ? i == 1 : i == 0;
+        return i == 2 || (r.isDirectory() ? i == 1 : i == 0);
     }
 
 }

@@ -15,9 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project default="all" xmlns:au="antlib:org.apache.ant.antunit"
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
+
+  <import file="../../../antunit-base.xml" />
 
   <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
   <condition property="some.regexp.support">
@@ -145,16 +147,33 @@
   <target name="instanceof" depends="instanceoftype,testinstanceofclass" />
 
   <target name="testtype">
+    <resources id="testtype">
+       <file file="${basedir}" />
+       <file file="${ant.file}" />
+       <resource directory="true" />
+       <resource directory="false" />
+    </resources>
     <au:assertTrue>
       <resourcecount when="equal" count="2">
         <restrict>
-          <resources>
-             <file file="${basedir}" />
-             <file file="${ant.file}" />
-             <resource directory="true" />
-             <resource directory="false" />
-          </resources>
+          <resources refid="testtype" />
           <rsel:type type="dir" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertTrue>
+      <resourcecount when="equal" count="2">
+        <restrict>
+          <resources refid="testtype" />
+          <rsel:type type="file" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertTrue>
+      <resourcecount when="equal" count="4">
+        <restrict>
+          <resources refid="testtype" />
+          <rsel:type type="any" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
