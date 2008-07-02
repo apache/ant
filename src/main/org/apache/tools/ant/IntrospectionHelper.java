@@ -54,7 +54,7 @@ import org.apache.tools.ant.util.StringUtils;
  * instance has finished its build.
  *
  */
-public final class IntrospectionHelper  {
+public final class IntrospectionHelper {
 
     /**
      * Helper instances we've already created (Class.getName() to IntrospectionHelper).
@@ -651,7 +651,7 @@ public final class IntrospectionHelper  {
     }
 
     /**
-     * Check if this element supports a nested element from refection.
+     * Check if this element supports a nested element from reflection.
      *
      * @param parentUri   the uri of the parent
      * @param elementName the name of the nested element being checked
