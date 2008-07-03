@@ -579,7 +579,9 @@ public class FileUtilsTest extends TestCase {
                                                    true, true);
         String s = wellcased.getName().toUpperCase();
         File wrongcased = new File(tempFolder, s);
-        if (Os.isFamily("dos")) {
+        if (Os.isFamily("mac") && Os.isFamily("unix")) {
+            //no guarantees on filesystem case-sensitivity
+        } else if (Os.isFamily("dos")) {
             assertTrue(FILE_UTILS.hasErrorInCase(wrongcased));
             assertFalse(FILE_UTILS.hasErrorInCase(wellcased));
         } else {
