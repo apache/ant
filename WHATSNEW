@@ -106,6 +106,10 @@ Other changes:
  * The <type> resource selector has had an "any" type added for better
    configurability.
 
+ * Ant should detect the OS as both a Mac and a Unix system when
+   running on OpenJDK.
+   Bugzilla Report 44889.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

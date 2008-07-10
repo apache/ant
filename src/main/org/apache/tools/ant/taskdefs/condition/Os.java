@@ -101,6 +101,13 @@ public class Os implements Condition {
     public static final String FAMILY_OS400 = "os/400";
 
     /**
+     * OpenJDK is reported to call MacOS X "Darwin"
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=44889
+     * @see https://issues.apache.org/jira/browse/HADOOP-3318
+     */
+    private static final String DARWIN = "darwin";
+
+    /**
      * Default constructor
      *
      */
@@ -276,13 +283,15 @@ public class Os implements Condition {
                 } else if (family.equals(FAMILY_DOS)) {
                     isFamily = PATH_SEP.equals(";") && !isFamily(FAMILY_NETWARE);
                 } else if (family.equals(FAMILY_MAC)) {
-                    isFamily = OS_NAME.indexOf(FAMILY_MAC) > -1;
+                    isFamily = OS_NAME.indexOf(FAMILY_MAC) > -1
+                        || OS_NAME.indexOf(DARWIN) > -1;
                 } else if (family.equals(FAMILY_TANDEM)) {
                     isFamily = OS_NAME.indexOf("nonstop_kernel") > -1;
                 } else if (family.equals(FAMILY_UNIX)) {
                     isFamily = PATH_SEP.equals(":")
                         && !isFamily(FAMILY_VMS)
-                        && (!isFamily(FAMILY_MAC) || OS_NAME.endsWith("x"));
+                        && (!isFamily(FAMILY_MAC) || OS_NAME.endsWith("x")
+                            || OS_NAME.indexOf(DARWIN) > -1);
                 } else if (family.equals(FAMILY_ZOS)) {
                     isFamily = OS_NAME.indexOf(FAMILY_ZOS) > -1
                         || OS_NAME.indexOf("os/390") > -1;
