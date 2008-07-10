@@ -415,7 +415,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
         if (java2iioparams != null) {
             log("additional  " + java2iioparams + " to java2iiop ", 0);
-            commandline.createArgument().setValue(java2iioparams);
+            commandline.createArgument().setLine(java2iioparams);
         }
 
 
