@@ -237,6 +237,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
       /www/www.apache.org/dist/ant/[source|binaries].
       This includes the old release notes.
 
+    (+)
+
 22. Now and perhaps during previous betas any changes on the branch must
     be merged back into the tree.
 
@@ -256,7 +258,9 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Announce release in the usenet groups comp.lang.java.softwaretools
     and comp.lang.java.announce.
 
-24. You can now reacquaint yourself with your family and friends.
+24. Add a new release tag to doap_Ant.rdf in Ant's trunk.
+
+25. You can now reacquaint yourself with your family and friends.
 
 (*)  the xdocs need to be updated on both the branch and the HEAD revision
      because traditionally the ant.apache.org web site reflects the HEAD
@@ -269,6 +273,12 @@ Note: This document was updated in the context of releasing Ant 1.7.
      or less, the release having been done at midnight on Dec 18th, the
      mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
      contain a note advising users to be patient immediately after the release.
+
+(+)  Don't expect the old releases to disappear from
+     www.apache.org/dist as soon as the new releases are there.
+     The rsync process from people.a.o to www.a.o adds files once per
+     hour but only deletes once per day.
+
 
 Related Information
 
