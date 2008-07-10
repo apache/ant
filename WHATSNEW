@@ -44,6 +44,11 @@ Changes that could break older environments:
   simultaniously (while within <parallel>, for example).  This lock is
   no longer in place, messageLogged should be made thread-safe now.
 
+ * <sql>'s onError="stop" no longer fails the build if an error
+   occurs,  this is the main difference between stop and error and
+   matches what the documentation implied.
+   Bugzilla Report 24668.
+
 Fixed bugs:
 -----------
 

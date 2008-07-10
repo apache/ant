@@ -466,10 +466,14 @@ public class SQLExec extends JDBCTask {
                 }
             } catch (IOException e) {
                 closeQuietly();
-                throw new BuildException(e, getLocation());
+                if (onError.equals("abort")) {
+                    throw new BuildException(e, getLocation());
+                }
             } catch (SQLException e) {
                 closeQuietly();
-                throw new BuildException(e, getLocation());
+                if (onError.equals("abort")) {
+                    throw new BuildException(e, getLocation());
+                }
             } finally {
                 try {
                     if (statement != null) {
@@ -603,10 +607,12 @@ public class SQLExec extends JDBCTask {
             goodSql++;
         } catch (SQLException e) {
             log("Failed to execute: " + sql, Project.MSG_ERR);
+            if (!onError.equals("abort")) {
+                log(e.toString(), Project.MSG_ERR);
+            }
             if (!onError.equals("continue")) {
                 throw e;
             }
-            log(e.toString(), Project.MSG_ERR);
         } finally {
             if (resultSet != null) {
                 try {
