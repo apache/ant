@@ -484,6 +484,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         if (generateclient) {
             generateClient(jarFile);
         }
+        genfiles.clear();
     }
 
     /**
