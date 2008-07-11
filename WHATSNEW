@@ -115,6 +115,11 @@ Other changes:
    running on OpenJDK.
    Bugzilla Report 44889.
 
+ * new protected getConnection and getStatement methods allow
+   subclasses of SQLExec more control - or access to the cached
+   instances when overriding other methods like runStatements.
+   Bugzilla Report 27178.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

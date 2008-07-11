@@ -435,14 +435,8 @@ public class SQLExec extends JDBCTask {
             Transaction t = createTransaction();
             t.setSrc(srcFile);
             t.addText(sqlCommand);
-            conn = getConnection();
-            if (!isValidRdbms(conn)) {
-                return;
-            }
-            try {
-                statement = conn.createStatement();
-                statement.setEscapeProcessing(escapeProcessing);
 
+            try {
                 PrintStream out = System.out;
                 try {
                     if (output != null) {
@@ -458,7 +452,7 @@ public class SQLExec extends JDBCTask {
                         ((Transaction) e.nextElement()).runTransaction(out);
                         if (!isAutocommit()) {
                             log("Committing transaction", Project.MSG_VERBOSE);
-                            conn.commit();
+                            getConnection().commit();
                         }
                     }
                 } finally {
@@ -476,15 +470,15 @@ public class SQLExec extends JDBCTask {
                 }
             } finally {
                 try {
-                    if (statement != null) {
-                        statement.close();
+                    if (getStatement() != null) {
+                        getStatement().close();
                     }
                 } catch (SQLException ex) {
                     // ignore
                 }
                 try {
-                    if (conn != null) {
-                        conn.close();
+                    if (getConnection() != null) {
+                        getConnection().close();
                     }
                 } catch (SQLException ex) {
                     // ignore
@@ -575,9 +569,9 @@ public class SQLExec extends JDBCTask {
             boolean ret;
             int updateCount = 0, updateCountTotal = 0;
 
-            ret = statement.execute(sql);
-            updateCount = statement.getUpdateCount();
-            resultSet = statement.getResultSet();
+            ret = getStatement().execute(sql);
+            updateCount = getStatement().getUpdateCount();
+            resultSet = getStatement().getResultSet();
             do {
                 if (!ret) {
                     if (updateCount != -1) {
@@ -586,10 +580,10 @@ public class SQLExec extends JDBCTask {
                 } else if (print) {
                     printResults(resultSet, out);
                 }
-                ret = statement.getMoreResults();
+                ret = getStatement().getMoreResults();
                 if (ret) {
-                    updateCount = statement.getUpdateCount();
-                    resultSet = statement.getResultSet();
+                    updateCount = getStatement().getUpdateCount();
+                    resultSet = getStatement().getResultSet();
                 }
             } while (ret);
 
@@ -598,12 +592,12 @@ public class SQLExec extends JDBCTask {
             if (print && showtrailers) {
                 out.println(updateCountTotal + " rows affected");
             }
-            SQLWarning warning = conn.getWarnings();
+            SQLWarning warning = getConnection().getWarnings();
             while (warning != null) {
                 log(warning + " sql warning", Project.MSG_VERBOSE);
                 warning = warning.getNextWarning();
             }
-            conn.clearWarnings();
+            getConnection().clearWarnings();
             goodSql++;
         } catch (SQLException e) {
             log("Failed to execute: " + sql, Project.MSG_ERR);
@@ -633,7 +627,7 @@ public class SQLExec extends JDBCTask {
      * @throws SQLException on SQL problems.
      */
     protected void printResults(PrintStream out) throws SQLException {
-        ResultSet rs = statement.getResultSet();
+        ResultSet rs = getStatement().getResultSet();
         try {
             printResults(rs, out);
         } finally {
@@ -692,15 +686,52 @@ public class SQLExec extends JDBCTask {
      * @since Ant 1.7
      */
     private void closeQuietly() {
-        if (!isAutocommit() && conn != null && onError.equals("abort")) {
+        if (!isAutocommit() && getConnection() != null && onError.equals("abort")) {
             try {
-                conn.rollback();
+                getConnection().rollback();
             } catch (SQLException ex) {
                 // ignore
             }
         }
     }
 
+
+    /**
+     * Caches the connection returned by the base class's getConnection method.
+     *
+     * <p>Subclasses that need to provide a different connection than
+     * the base class would, should override this method but keep in
+     * mind that this class expects to get the same connection
+     * instance on consecutive calls.</p>
+     */
+    protected Connection getConnection() {
+        if (conn == null) {
+            conn = super.getConnection();
+            if (!isValidRdbms(conn)) {
+                conn = null;
+            }
+        }
+        return conn;
+    }
+
+    /**
+     * Creates and configures a Statement instance which is then
+     * cached for subsequent calls.
+     *
+     * <p>Subclasses that want to provide different Statement
+     * instances, should override this method but keep in mind that
+     * this class expects to get the same connection instance on
+     * consecutive calls.</p>
+     */
+    protected Statement getStatement() throws SQLException {
+        if (statement == null) {
+            statement = getConnection().createStatement();
+            statement.setEscapeProcessing(escapeProcessing);
+        }
+
+        return statement;
+    }
+        
     /**
      * The action a task should perform on an error,
      * one of "continue", "stop" and "abort"
