@@ -143,6 +143,12 @@ public abstract class JDBCTask extends Task {
     private String version = null;
 
     /**
+     * whether the task fails when ant fails to connect to the database.
+     * @since Ant 1.8.0
+     */
+    private boolean failOnConnectionError = true;
+
+    /**
      * Sets the classpath for loading the driver.
      * @param classpath The classpath to set
      */
@@ -232,6 +238,15 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
+     * whether the task should cause the build to fail if it cannot
+     * connect to the database.
+     * @since Ant 1.8.0
+     */
+    public void setFailOnConnectionError(boolean b) {
+        failOnConnectionError = b;
+    }
+
+    /**
      * Verify we are connected to the correct RDBMS
      * @param conn the jdbc connection
      * @return true if we are connected to the correct RDBMS
@@ -296,7 +311,8 @@ public abstract class JDBCTask extends Task {
      *
      * The calling method is responsible for closing the connection.
      *
-     * @return Connection the newly created connection.
+     * @return Connection the newly created connection or null if the
+     * connection failed and failOnConnectionError is false.
      * @throws BuildException if the UserId/Password/Url is not set or there
      * is no suitable driver or the driver fails to load.
      */
@@ -326,7 +342,13 @@ public abstract class JDBCTask extends Task {
             conn.setAutoCommit(autocommit);
             return conn;
         } catch (SQLException e) {
-            throw new BuildException(e, getLocation());
+            // failed to connect
+            if (!failOnConnectionError) {
+                log("Failed to connect: " + e.getMessage(), Project.MSG_WARN);
+                return null;
+            } else {
+                throw new BuildException(e, getLocation());
+            }
         }
 
     }

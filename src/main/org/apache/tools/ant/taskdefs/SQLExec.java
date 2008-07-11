@@ -159,7 +159,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Action to perform if an error is found
-     **/
+     */
     private String onError = "abort";
 
     /**

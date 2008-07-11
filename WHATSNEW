@@ -132,6 +132,11 @@ Other changes:
    instances when overriding other methods like runStatements.
    Bugzilla Report 27178.
 
+ * <sql> has a new failOnConnectionError attribute that can be used to
+   keep a build going even if the task failed to connect to the
+   database.
+   Bugzilla Report 36712.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
