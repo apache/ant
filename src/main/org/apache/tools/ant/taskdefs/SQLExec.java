@@ -436,6 +436,11 @@ public class SQLExec extends JDBCTask {
             t.setSrc(srcFile);
             t.addText(sqlCommand);
 
+            if (getConnection() == null) {
+                // not a valid rdbms
+                return;
+            }
+
             try {
                 PrintStream out = System.out;
                 try {
