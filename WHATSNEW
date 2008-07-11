@@ -143,6 +143,9 @@ Other changes:
    and "go" as delimiters.
    Bugzilla Report 26459.
 
+ * A new showWarnings attribute of <sql> allows warnings to be logged.
+   Bugzilla Report 41836.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
