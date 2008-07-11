@@ -33,6 +33,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 /**
@@ -172,7 +173,7 @@ public class XmlLogger implements BuildLogger {
             Text errText = doc.createCDATASection(StringUtils.getStackTrace(t));
             Element stacktrace = doc.createElement(STACKTRACE_TAG);
             stacktrace.appendChild(errText);
-            buildElement.element.appendChild(stacktrace);
+            synchronizedAppend(buildElement.element, stacktrace);
         }
         String outFilename = event.getProject().getProperty("XmlLogger.file");
         if (outFilename == null) {
@@ -267,9 +268,10 @@ public class XmlLogger implements BuildLogger {
                 }
             }
             if (parentElement == null) {
-                buildElement.element.appendChild(targetElement.element);
+                synchronizedAppend(buildElement.element, targetElement.element);
             } else {
-                parentElement.element.appendChild(targetElement.element);
+                synchronizedAppend(parentElement.element,
+                                   targetElement.element);
             }
         }
         targets.remove(target);
@@ -320,9 +322,9 @@ public class XmlLogger implements BuildLogger {
             targetElement = (TimedElement) targets.get(target);
         }
         if (targetElement == null) {
-            buildElement.element.appendChild(taskElement.element);
+            synchronizedAppend(buildElement.element, taskElement.element);
         } else {
-            targetElement.element.appendChild(taskElement.element);
+            synchronizedAppend(targetElement.element, taskElement.element);
         }
         Stack threadStack = getStack();
         if (!threadStack.empty()) {
@@ -394,7 +396,7 @@ public class XmlLogger implements BuildLogger {
             Text errText = doc.createCDATASection(StringUtils.getStackTrace(ex));
             Element stacktrace = doc.createElement(STACKTRACE_TAG);
             stacktrace.appendChild(errText);
-            buildElement.element.appendChild(stacktrace);
+            synchronizedAppend(buildElement.element, stacktrace);
         }
         Text messageText = doc.createCDATASection(event.getMessage());
         messageElement.appendChild(messageText);
@@ -411,9 +413,9 @@ public class XmlLogger implements BuildLogger {
             parentElement = (TimedElement) targets.get(target);
         }
         if (parentElement != null) {
-            parentElement.element.appendChild(messageElement);
+            synchronizedAppend(parentElement.element, messageElement);
         } else {
-            buildElement.element.appendChild(messageElement);
+            synchronizedAppend(buildElement.element, messageElement);
         }
     }
 
@@ -457,6 +459,12 @@ public class XmlLogger implements BuildLogger {
      * @param err the stream we are going to ignore.
      */
     public void setErrorPrintStream(PrintStream err) {
+    }
+
+    private void synchronizedAppend(Node parent, Node child) {
+        synchronized(parent) {
+            parent.appendChild(child);
+        }
     }
 
 }

@@ -101,6 +101,9 @@ Fixed bugs:
    parts, some result sets wouldn't get printed.
    Bugzilla Report 32168.
 
+ * XmlLogger could lose messages if <parallel> is used.
+   Bugzilla Report 25734.
+
 Other changes:
 --------------
 
