@@ -212,6 +212,12 @@ public class SQLExec extends JDBCTask {
     private boolean showWarnings = false;
 
     /**
+     * Whether a warning is an error - in which case onError aplies.
+     * @since Ant 1.8.0
+     */
+    private boolean treatWarningsAsErrors = false;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      * @param srcFile the file containing the SQL command.
@@ -428,6 +434,14 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Whether a warning is an error - in which case onError aplies.
+     * @since Ant 1.8.0
+     */
+    public void setTreatWarningsAsErrors(boolean b) {
+        treatWarningsAsErrors =  b;
+    }
+
+    /**
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
@@ -613,10 +627,7 @@ public class SQLExec extends JDBCTask {
                 }
                 if (ret) {
                     resultSet = getStatement().getResultSet();
-                    if (showWarnings) {
-                        printWarnings(resultSet.getWarnings(),
-                                      Project.MSG_WARN);
-                    }
+                    printWarnings(resultSet.getWarnings(), false);
                     resultSet.clearWarnings();
                     if (print) {
                         printResults(resultSet, out);
@@ -626,9 +637,7 @@ public class SQLExec extends JDBCTask {
                 updateCount = getStatement().getUpdateCount();
             } while (ret || updateCount != -1);
 
-            if (showWarnings) {
-                printWarnings(getStatement().getWarnings(), Project.MSG_WARN);
-            }
+            printWarnings(getStatement().getWarnings(), false);
             getStatement().clearWarnings();
 
             log(updateCountTotal + " rows affected", Project.MSG_VERBOSE);
@@ -637,8 +646,7 @@ public class SQLExec extends JDBCTask {
                 out.println(updateCountTotal + " rows affected");
             }
             SQLWarning warning = getConnection().getWarnings();
-            printWarnings(warning, showWarnings
-                          ? Project.MSG_WARN : Project.MSG_VERBOSE);
+            printWarnings(warning, true);
             getConnection().clearWarnings();
             goodSql++;
         } catch (SQLException e) {
@@ -707,9 +715,7 @@ public class SQLExec extends JDBCTask {
                         printValue(rs, col, out);
                     }
                     out.println();
-                    if (showWarnings) {
-                        printWarnings(rs.getWarnings(), Project.MSG_WARN);
-                    }
+                    printWarnings(rs.getWarnings(), false);
                 }
             }
         }
@@ -917,10 +923,18 @@ public class SQLExec extends JDBCTask {
         }
     }
 
-    private void printWarnings(SQLWarning warning, int level) {
-        while (warning != null) {
-            log(warning + " sql warning", level);
-            warning = warning.getNextWarning();
+    private void printWarnings(SQLWarning warning, boolean force)
+        throws SQLException {
+        SQLWarning initialWarning = warning;
+        if (showWarnings || force) {
+            while (warning != null) {
+                log(warning + " sql warning",
+                    showWarnings ? Project.MSG_WARN : Project.MSG_VERBOSE);
+                warning = warning.getNextWarning();
+            }
+        }
+        if (treatWarningsAsErrors && initialWarning != null) {
+            throw initialWarning;
         }
     }
 }

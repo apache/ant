@@ -146,6 +146,10 @@ Other changes:
  * A new showWarnings attribute of <sql> allows warnings to be logged.
    Bugzilla Report 41836.
 
+ * A new treatWarningsAsErrors attribute of <sql> can be used to fail
+   a build if a warning occurs.
+   Bugzilla Report 41836.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
