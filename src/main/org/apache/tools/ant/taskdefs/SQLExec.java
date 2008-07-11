@@ -853,12 +853,11 @@ public class SQLExec extends JDBCTask {
 
     public int lastDelimiterPosition(StringBuffer buf, String currentLine) {
         if (strictDelimiterMatching) {
-            if (delimiterType.equals(DelimiterType.NORMAL)
-                && StringUtils.endsWith(buf, delimiter)) {
+            if ((delimiterType.equals(DelimiterType.NORMAL)
+                 && StringUtils.endsWith(buf, delimiter)) ||
+                (delimiterType.equals(DelimiterType.ROW)
+                 && currentLine.equals(delimiter))) {
                 return buf.length() - delimiter.length();
-            } else if (delimiterType.equals(DelimiterType.ROW)
-                       && currentLine.equals(delimiter)) {
-                return 0;
             }
             // no match
             return -1;
@@ -877,17 +876,18 @@ public class SQLExec extends JDBCTask {
                     return -1;
                 }
                 while (endIndex >= 0) {
-                    if (buf.substring(bufferIndex, 1).toLowerCase(Locale.US)
-                        .charAt(0) != d.charAt(endIndex)) {
+                    if (buf.substring(bufferIndex, bufferIndex + 1)
+                        .toLowerCase(Locale.US).charAt(0)
+                        != d.charAt(endIndex)) {
                         return -1;
                     }
                     bufferIndex--;
                     endIndex--;
                 }
-                return bufferIndex;
+                return bufferIndex + 1;
             } else {
                 return currentLine.trim().toLowerCase(Locale.US).equals(d)
-                    ? 0 : -1;
+                    ? buf.length() - currentLine.length() : -1;
             }
         }
     }

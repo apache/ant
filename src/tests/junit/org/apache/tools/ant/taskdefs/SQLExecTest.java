@@ -252,4 +252,57 @@ public class SQLExecTest extends TestCase {
         assertEquals(0,
                      s.lastDelimiterPosition(new StringBuffer("GO"), null));
     }
+
+    public void testLastDelimiterPositionNormalModeNonStrict() {
+        SQLExec s = new SQLExec();
+        s.setStrictDelimiterMatching(false);
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer(), null));
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer("GO"), null));
+        assertEquals(0,
+                     s.lastDelimiterPosition(new StringBuffer("; "), null));
+        assertEquals(2,
+                     s.lastDelimiterPosition(new StringBuffer("ab;"), null));
+        s.setDelimiter("GO");
+        assertEquals(0,
+                     s.lastDelimiterPosition(new StringBuffer("GO "), null));
+        assertEquals(0,
+                     s.lastDelimiterPosition(new StringBuffer("go"), null));
+        assertEquals(0,
+                     s.lastDelimiterPosition(new StringBuffer("GO"), null));
+    }
+
+    public void testLastDelimiterPositionRowModeStrict() {
+        SQLExec s = new SQLExec();
+        SQLExec.DelimiterType t = new SQLExec.DelimiterType();
+        t.setValue("row");
+        s.setDelimiterType(t);
+        assertEquals(-1, s.lastDelimiterPosition(null, ""));
+        assertEquals(-1, s.lastDelimiterPosition(null, "GO"));
+        assertEquals(-1, s.lastDelimiterPosition(null, "; "));
+        assertEquals(1, s.lastDelimiterPosition(new StringBuffer("ab"), ";"));
+        s.setDelimiter("GO");
+        assertEquals(-1, s.lastDelimiterPosition(null, "GO "));
+        assertEquals(-1, s.lastDelimiterPosition(null, "go"));
+        assertEquals(0, s.lastDelimiterPosition(new StringBuffer("ab"), "GO"));
+    }
+
+    public void testLastDelimiterPositionRowModeNonStrict() {
+        SQLExec s = new SQLExec();
+        SQLExec.DelimiterType t = new SQLExec.DelimiterType();
+        t.setValue("row");
+        s.setDelimiterType(t);
+        s.setStrictDelimiterMatching(false);
+        assertEquals(-1, s.lastDelimiterPosition(null, ""));
+        assertEquals(-1, s.lastDelimiterPosition(null, "GO"));
+        assertEquals(0, s.lastDelimiterPosition(new StringBuffer("; "), "; "));
+        assertEquals(1, s.lastDelimiterPosition(new StringBuffer("ab"), ";"));
+        s.setDelimiter("GO");
+        assertEquals(1,
+                     s.lastDelimiterPosition(new StringBuffer("abcd"), "GO "));
+        assertEquals(0, s.lastDelimiterPosition(new StringBuffer("go"), "go"));
+        assertEquals(0, s.lastDelimiterPosition(new StringBuffer("ab"), "GO"));
+    }
+
 }

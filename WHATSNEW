@@ -137,6 +137,12 @@ Other changes:
    database.
    Bugzilla Report 36712.
 
+ * A new attribute strictDelimiterMatching can be used to ignore case
+   or whitespace differences when <sql> searches for delimiters.
+   This is useful if you execute a SQL script that has contains "GO"
+   and "go" as delimiters.
+   Bugzilla Report 26459.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
