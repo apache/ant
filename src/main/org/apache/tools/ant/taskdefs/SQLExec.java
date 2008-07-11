@@ -571,21 +571,19 @@ public class SQLExec extends JDBCTask {
 
             ret = getStatement().execute(sql);
             updateCount = getStatement().getUpdateCount();
-            resultSet = getStatement().getResultSet();
             do {
-                if (!ret) {
-                    if (updateCount != -1) {
-                        updateCountTotal += updateCount;
+                if (updateCount != -1) {
+                    updateCountTotal += updateCount;
+                }
+                if (ret) {
+                    resultSet = getStatement().getResultSet();
+                    if (print) {
+                        printResults(resultSet, out);
                     }
-                } else if (print) {
-                    printResults(resultSet, out);
                 }
                 ret = getStatement().getMoreResults();
-                if (ret) {
-                    updateCount = getStatement().getUpdateCount();
-                    resultSet = getStatement().getResultSet();
-                }
-            } while (ret);
+                updateCount = getStatement().getUpdateCount();
+            } while (ret || updateCount != -1);
 
             log(updateCountTotal + " rows affected", Project.MSG_VERBOSE);
 

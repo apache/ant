@@ -89,6 +89,18 @@ Fixed bugs:
    have full control.
    Bugzilla Report 34638.
 
+ * <sql> would fail if the executed statment didn't return a result
+   set with some JDBC driver that dissalow Statement.getResultSet to
+   be called in such a situation.
+   Bugzilla report 36265 
+
+ * if the executed statement in <sql> returned a result set and an
+   update count, the count would be lost.
+
+ * if an executed statement in <sql> mixes update count and result set
+   parts, some result sets wouldn't get printed.
+   Bugzilla Report 32168.
+
 Other changes:
 --------------
 
