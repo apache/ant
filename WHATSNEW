@@ -84,6 +84,11 @@ Fixed bugs:
  * Length task did not process nonexistent Resources even though these might
    conceivably still carry file length information.  Bugzilla report 45271.
 
+ * <javac>'s includeJavaRuntime="false" should work for gcj now.  Note
+   that you may need to set includeAntRuntime to false in order to
+   have full control.
+   Bugzilla Report 34638.
+
 Other changes:
 --------------
 
