@@ -47,6 +47,24 @@ Prior to Ant 1.7 only fileset has been supported as a nested element.</p>
 </p>
 <p>File permissions will not be restored on extracted files.</p>
 <p>The untar task recognizes the long pathname entries used by GNU tar.<p>
+
+<p><b>Please note</b> that different ZIP tools handle timestamps
+differently when it comes to applying timezone offset calculations of
+files.  Some ZIP libraries will store the timestamps as they've been
+read from the filesystem while others will modify the timestamps both
+when reading and writing the files to make all timestamps use the same
+timezone.  A ZIP archive created by one library may extract files with
+"wrong timestamps" when extracted by another library.</p>
+
+<p>Ant's ZIP classes use the same algorithm as the InfoZIP tools and
+zlib (timestamps get adjusted), Windows' "compressed folders" function
+and WinZIP don't change the timestamps.  This means that using the
+unzip task on files created by Windows' compressed folders function
+may create files with timestamps that are "wrong", the same is true if
+you use Windows' functions to extract an Ant generated ZIP
+archive.</p>
+
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
