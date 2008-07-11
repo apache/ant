@@ -17,7 +17,10 @@
  */
 package org.apache.tools.ant.property;
 
-/** Interface to a class (normally PropertyHelper) to get a property */
+/**
+ * Interface to a class (normally PropertyHelper) to get a property.
+ * @since Ant 1.8.0
+ */
 public interface GetProperty {
     /**
      * Returns the value of a property if it is set.

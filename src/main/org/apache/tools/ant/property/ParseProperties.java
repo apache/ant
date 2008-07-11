@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 
 /**
  * Parse properties using a collection of expanders.
+ * @since Ant 1.8.0
  */
 public class ParseProperties implements ParseNextProperty {
 
@@ -37,8 +38,7 @@ public class ParseProperties implements ParseNextProperty {
      * @param expanders a sequence of exapanders
      * @param getProperty property resolver.
      */
-    public ParseProperties(
-        Project project, Collection expanders, GetProperty getProperty) {
+    public ParseProperties(Project project, Collection expanders, GetProperty getProperty) {
         this.project = project;
         this.expanders = expanders;
         this.getProperty = getProperty;

@@ -17,7 +17,10 @@
  */
 package org.apache.tools.ant.property;
 
-/** Class to represent a null and to stop the chain of lookups. */
+/**
+ * Class to represent a null and to stop the chain of lookups.
+ * @since Ant 1.8.0
+ */
 public final class NullReturn {
     /** a value to use in a property helper to stop looking properties */
     public static final NullReturn NULL = new NullReturn();
@@ -25,5 +28,11 @@ public final class NullReturn {
     /** Private constructor */
     private NullReturn() {
     }
-}
 
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return String.valueOf(null);
+    }
+}

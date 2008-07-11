@@ -27,12 +27,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
 /**
- *  Class to resolve properties in a map.
+ * Class to resolve properties in a map.
+ * @since Ant 1.8.0
  */
 public class ResolvePropertyMap implements GetProperty {
-    private final Set       seen = new HashSet();
+    private final Set seen = new HashSet();
     private final ParseProperties parseProperties;
-    private final GetProperty    master;
+    private final GetProperty master;
     private Map map;
 
     /**
@@ -41,8 +42,7 @@ public class ResolvePropertyMap implements GetProperty {
      * @param master the master property holder (usually PropertyHelper)
      * @param expanders a collection of expanders (usually from PropertyHelper).
      */
-    public ResolvePropertyMap(
-        Project project, GetProperty master, Collection expanders) {
+    public ResolvePropertyMap(Project project, GetProperty master, Collection expanders) {
         this.master = master;
         this.parseProperties = new ParseProperties(project, expanders, this);
     }

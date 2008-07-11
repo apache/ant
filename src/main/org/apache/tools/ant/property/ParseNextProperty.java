@@ -21,7 +21,10 @@ import java.text.ParsePosition;
 
 import org.apache.tools.ant.Project;
 
-/** Interface to parse a property */
+/**
+ * Interface to parse a property.
+ * @since Ant 1.8.0
+ */
 public interface ParseNextProperty {
     /**
      * Get the current project.

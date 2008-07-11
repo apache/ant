@@ -21,7 +21,10 @@ import org.apache.tools.ant.PropertyHelper;
 
 import java.text.ParsePosition;
 
-/** Interface to a class (normally PropertyHelper) to get a property */
+/**
+ * Interface to a class (normally PropertyHelper) to get a property.
+ * @since Ant 1.8.0
+ */
 public interface PropertyExpander extends PropertyHelper.Delegate {
     /**
      * Parse the next property name.
@@ -30,7 +33,6 @@ public interface PropertyExpander extends PropertyHelper.Delegate {
      * @param parseNextProperty parse next property
      * @return parsed String if any, else <code>null</code>.
      */
-    String parsePropertyName(
-        String s, ParsePosition pos, ParseNextProperty parseNextProperty);
+    String parsePropertyName(String s, ParsePosition pos, ParseNextProperty parseNextProperty);
 }
 
