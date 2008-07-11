@@ -27,7 +27,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Class to resolve properties in a map.
+ * Class to resolve properties in a map. This class is explicitly not threadsafe.
  * @since Ant 1.8.0
  */
 public class ResolvePropertyMap implements GetProperty {
