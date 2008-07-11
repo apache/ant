@@ -234,4 +234,22 @@ public class SQLExecTest extends TestCase {
         }
     }
 
+    public void testLastDelimiterPositionNormalModeStrict() {
+        SQLExec s = new SQLExec();
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer(), null));
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer("GO"), null));
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer("; "), null));
+        assertEquals(2,
+                     s.lastDelimiterPosition(new StringBuffer("ab;"), null));
+        s.setDelimiter("GO");
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer("GO "), null));
+        assertEquals(-1,
+                     s.lastDelimiterPosition(new StringBuffer("go"), null));
+        assertEquals(0,
+                     s.lastDelimiterPosition(new StringBuffer("GO"), null));
+    }
 }

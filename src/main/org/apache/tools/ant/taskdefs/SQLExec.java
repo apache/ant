@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -197,6 +198,12 @@ public class SQLExec extends JDBCTask {
      * @since Ant 1.7.1
      */
     private boolean rawBlobs;
+
+    /**
+     * delimers must match in case and whitespace is significant.
+     * @since Ant 1.8.0
+     */
+    private boolean strictDelimiterMatching = true;
 
     /**
      * Set the name of the SQL file to be run.
@@ -397,6 +404,16 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * If false, delimiters will be searched for in a case-insesitive
+     * manner (i.e. delimer="go" matches "GO") and surrounding
+     * whitespace will be ignored (delimter="go" matches "GO ").
+     * @since Ant 1.8.0
+     */
+    public void setStrictDelimiterMatching(boolean b) {
+        strictDelimiterMatching = b;
+    }
+
+    /**
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
@@ -542,9 +559,9 @@ public class SQLExec extends JDBCTask {
             if (!keepformat && line.indexOf("--") >= 0) {
                 sql.append("\n");
             }
-            if ((delimiterType.equals(DelimiterType.NORMAL) && StringUtils.endsWith(sql, delimiter))
-                    || (delimiterType.equals(DelimiterType.ROW) && line.equals(delimiter))) {
-                execSQL(sql.substring(0, sql.length() - delimiter.length()), out);
+            int lastDelimPos = lastDelimiterPosition(sql, line);
+            if (lastDelimPos > -1) {
+                execSQL(sql.substring(0, lastDelimPos), out);
                 sql.replace(0, sql.length(), "");
             }
         }
@@ -830,6 +847,47 @@ public class SQLExec extends JDBCTask {
                     FileUtils.close(is);
                     FileUtils.close(reader);
                 }
+            }
+        }
+    }
+
+    public int lastDelimiterPosition(StringBuffer buf, String currentLine) {
+        if (strictDelimiterMatching) {
+            if (delimiterType.equals(DelimiterType.NORMAL)
+                && StringUtils.endsWith(buf, delimiter)) {
+                return buf.length() - delimiter.length();
+            } else if (delimiterType.equals(DelimiterType.ROW)
+                       && currentLine.equals(delimiter)) {
+                return 0;
+            }
+            // no match
+            return -1;
+        } else {
+            String d = delimiter.trim().toLowerCase(Locale.US);
+            if (delimiterType.equals(DelimiterType.NORMAL)) {
+                // still trying to avoid wasteful copying, see
+                // StringUtils.endsWith
+                int endIndex = delimiter.length() - 1;
+                int bufferIndex = buf.length() - 1;
+                while (bufferIndex >= 0
+                       && Character.isWhitespace(buf.charAt(bufferIndex))) {
+                    --bufferIndex;
+                }
+                if (bufferIndex < endIndex) {
+                    return -1;
+                }
+                while (endIndex >= 0) {
+                    if (buf.substring(bufferIndex, 1).toLowerCase(Locale.US)
+                        .charAt(0) != d.charAt(endIndex)) {
+                        return -1;
+                    }
+                    bufferIndex--;
+                    endIndex--;
+                }
+                return bufferIndex;
+            } else {
+                return currentLine.trim().toLowerCase(Locale.US).equals(d)
+                    ? 0 : -1;
             }
         }
     }

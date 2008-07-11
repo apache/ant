@@ -204,6 +204,16 @@ and <b>abort</b> execution and transaction and fail task.</p>
 </tr>
 </table>
 
+<tr>
+  <td width="12%" valign="top">strictDelimiterMatching</td>
+  <td width="78%" valign="top">If false, delimiters will be searched
+    for in a case-insesitive manner (i.e. delimer="go" matches "GO")
+    and surrounding whitespace will be ignored (delimter="go" matches
+    "GO ").  <em>Since Ant 1.8.0</em>.</td>
+  <td width="10%" valign="top">No, default <em>true</em></td>
+</tr>
+</table>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>transaction</h4>
 <p>Use nested <code>&lt;transaction&gt;</code> 
