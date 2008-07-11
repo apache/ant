@@ -37,6 +37,7 @@ import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.property.LocalProperties;
 
 /**
  * The class to be placed in the ant type definition.
@@ -390,6 +391,9 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         // need to set the project on unknown element
         UnknownElement c = copy(macroDef.getNestedTask(), false);
         c.init();
+        LocalProperties localProperties
+            = LocalProperties.get(getProject());
+        localProperties.enterScope();
         try {
             c.perform();
         } catch (BuildException ex) {
@@ -403,6 +407,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         } finally {
             presentElements = null;
             localAttributes = null;
+            localProperties.exitScope();
         }
     }
 }

@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
+import org.apache.tools.ant.property.LocalProperties;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -451,6 +452,7 @@ public class Parallel extends Task
          */
         public void run() {
             try {
+                LocalProperties.get(getProject()).copy();
                 thread = Thread.currentThread();
                 task.perform();
             } catch (Throwable t) {

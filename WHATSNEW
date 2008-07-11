@@ -153,6 +153,8 @@ Other changes:
    a build if a warning occurs.
    Bugzilla Report 41836.
 
+ * Ant now supports local properties. Bugzilla report 23942.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

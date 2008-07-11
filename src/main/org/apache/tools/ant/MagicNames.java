@@ -175,6 +175,12 @@ public final class MagicNames {
     public static final String REFID_PROPERTY_HELPER = "ant.PropertyHelper";
 
     /**
+     * Reference used to store the local properties.
+     * Value: {@value}
+     */
+    public static final String REFID_LOCAL_PROPERTIES = "ant.LocalProperties";
+
+    /**
      * Name of JVM system property which provides the name of the ProjectHelper class to use.
      * Value: {@value}
      */

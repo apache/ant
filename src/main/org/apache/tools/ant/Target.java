@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.tools.ant.property.LocalProperties;
+
 /**
  * Class to implement a target object with required parameters.
  *
@@ -347,14 +349,22 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            for (int taskPosition = 0; taskPosition < children.size(); ++taskPosition) {
-                Object o = children.get(taskPosition);
-                if (o instanceof Task) {
-                    Task task = (Task) o;
-                    task.perform();
-                } else {
-                    ((RuntimeConfigurable) o).maybeConfigure(project);
+            LocalProperties localProperties
+                = LocalProperties.get(getProject());
+            localProperties.enterScope();
+            try {
+                for (int taskPosition = 0; taskPosition < children.size();
+                     ++taskPosition) {
+                    Object o = children.get(taskPosition);
+                    if (o instanceof Task) {
+                        Task task = (Task) o;
+                        task.perform();
+                    } else {
+                        ((RuntimeConfigurable) o).maybeConfigure(project);
+                    }
                 }
+            } finally {
+                localProperties.exitScope();
             }
         } else if (!testIfCondition()) {
             project.log(this, "Skipped because property '" + project.replaceProperties(ifCondition)

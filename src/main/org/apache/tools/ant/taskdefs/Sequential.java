@@ -23,6 +23,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 
+import org.apache.tools.ant.property.LocalProperties;
+
 /**
  * Sequential is a container task - it can contain other Ant tasks. The nested
  * tasks are simply executed in sequence. Sequential's primary use is to support
@@ -57,9 +59,16 @@ public class Sequential extends Task implements TaskContainer {
      * @throws BuildException if one of the nested tasks fails.
      */
     public void execute() throws BuildException {
-        for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
-            Task nestedTask = (Task) i.next();
-            nestedTask.perform();
+        LocalProperties localProperties
+            = LocalProperties.get(getProject());
+        localProperties.enterScope();
+        try {
+            for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
+                Task nestedTask = (Task) i.next();
+                nestedTask.perform();
+            }
+        } finally {
+            localProperties.exitScope();
         }
     }
 }
