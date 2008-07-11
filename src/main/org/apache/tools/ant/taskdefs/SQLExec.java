@@ -706,6 +706,9 @@ public class SQLExec extends JDBCTask {
      * the base class would, should override this method but keep in
      * mind that this class expects to get the same connection
      * instance on consecutive calls.</p>
+     *
+     * <p>returns null if the connection does not connect to the
+     * expected RDBMS.</p>
      */
     protected Connection getConnection() {
         if (conn == null) {
