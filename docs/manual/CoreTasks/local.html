@@ -31,7 +31,10 @@ various "block" levels. These include targets as well as the
 <a href="parallel.html">Parallel</a> and <a href="sequential.html">Sequential</a>
 task containers (including <a href="macrodef.html">Macrodef</a> bodies). A local
 property at a given scope "shadows" properties of the same name at higher scopes,
-including the global scope. <b>Since Ant 1.8</b></p>
+including the global scope. Note that using the Local task at the global
+level effectively makes the property local to the "anonymous target" in which
+top-level operations are carried out; it will not be defined for other targets
+in the buildfile. <b>Since Ant 1.8</b></p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0"> 

@@ -20,6 +20,16 @@
 
   <property name="foo" value="foo" />
 
+  <local name="bar" />
+  <property name="bar" value="bar" />
+  <au:assertPropertyEquals name="bar" value="bar" />
+
+  <target name="testGlobalLocal">
+    <au:assertFalse>
+      <isset property="bar" />
+    </au:assertFalse>
+  </target>
+
   <target name="testBaseline">
     <au:assertPropertyEquals name="foo" value="foo" />
   </target>
