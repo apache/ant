@@ -2366,7 +2366,8 @@ public class FTP
                     }, "Site Command: " + this.siteCommand);
             } else {
                 if (remotedir != null) {
-                    log("changing the remote directory", Project.MSG_VERBOSE);
+                    log("changing the remote directory to " + remotedir,
+                        Project.MSG_VERBOSE);
                     ftp.changeWorkingDirectory(remotedir);
                     if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                         throw new BuildException("could not change remote "
