@@ -243,8 +243,17 @@ try to set up a new connection.</p>
   <tr>
     <td valign="top">initialSiteCommand</td>
     <td valign="top">Set a server-specific SITE command to execute immediately
-    after login.
+      after login.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">enableRemoteVerification</td>
+    <td valign="top">Whether data connection sshould be verified to
+    connect to the same host as the control connection.  This is a
+    security measure that is enabled by default, but it may be useful
+    to disable it in certain firewall scenarios.
+      <em>since Ant 1.8.0</em></td>
+    <td valign="top" align="center">No, default is true</td>
   </tr>
 
     <tr>

@@ -162,6 +162,9 @@ Other changes:
  * <ftp>'s logging has been improved.
    Bugzilla reports 30932, 31743.
 
+ * It is now possible to disable <ftp>'s remote verification.
+   Bugzilla report 35471.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

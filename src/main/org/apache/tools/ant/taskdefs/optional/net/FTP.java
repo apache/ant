@@ -136,6 +136,7 @@ public class FTP
     private int retriesAllowed = 0;
     private String siteCommand = null;
     private String initialSiteCommand = null;
+    private boolean enableRemoteVerification = true;
 
     protected static final String[] ACTION_STRS = {
         "sending",
@@ -1487,6 +1488,17 @@ public class FTP
     public void setInitialSiteCommand(String initialCommand) {
         this.initialSiteCommand = initialCommand;
     }
+
+    /**
+     * Whether to verify that data and control connections are
+     * connected to the same remote host.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setEnableRemoteVerification(boolean b) {
+        enableRemoteVerification = b;
+    }
+
     /**
      * Checks to see that all required parameters are set.
      *
@@ -2282,6 +2294,7 @@ public class FTP
                 ftp = FTPConfigurator.configure(ftp, this);
             }
 
+            ftp.setRemoteVerificationEnabled(enableRemoteVerification);
             ftp.connect(server, port);
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                 throw new BuildException("FTP connection failed: "
