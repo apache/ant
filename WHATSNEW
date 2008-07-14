@@ -153,7 +153,7 @@ Other changes:
    a build if a warning occurs.
    Bugzilla Report 41836.
 
- * Ant now supports local properties. Bugzilla report 23942.
+ * Ant now supports scoped properties (see Local task). Bugzilla report 23942.
 
  * <sql>'s CSV output can be controlled via the new attributes
    csvColumnSeparator and csvQuoteCharacter.
