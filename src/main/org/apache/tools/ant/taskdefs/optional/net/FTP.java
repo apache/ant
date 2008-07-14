@@ -2205,7 +2205,11 @@ public class FTP
          throws IOException, BuildException {
         String workingDirectory = ftp.printWorkingDirectory();
         if (verbose) {
-            log("Creating directory: " + dir);
+            if (dir.indexOf("/") == 0 || workingDirectory == null) {
+                log("Creating directory: " + dir + " in /");
+            } else {
+                log("Creating directory: " + dir + " in " + workingDirectory);
+            }
         }
         if (dir.indexOf("/") == 0) {
             ftp.changeWorkingDirectory("/");

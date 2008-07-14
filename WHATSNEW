@@ -160,7 +160,7 @@ Other changes:
    Bugzilla report 35627.
 
  * <ftp>'s logging has been improved.
-   Bugzilla report 30932.
+   Bugzilla reports 30932, 31743.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
