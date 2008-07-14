@@ -155,6 +155,10 @@ Other changes:
 
  * Ant now supports local properties. Bugzilla report 23942.
 
+ * <sql>'s CSV output can be controlled via the new attributes
+   csvColumnSeparator and csvQuoteCharacter.
+   Bugzilla report 35627.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

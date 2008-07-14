@@ -226,8 +226,30 @@ and <b>abort</b> execution and transaction and fail task.</p>
   <td width="78%" valign="top">If true, SQLWarnings will be treated
     like errors - and the logic selected via the onError attribute
     applies.
-    <em>Since Ant 1.8.0</em>.<br/>
+    <em>Since Ant 1.8.0</em>.</td>
   <td width="10%" valign="top">No, default <em>false</em></td>
+</tr>
+
+<tr>
+  <td width="12%" valign="top">csvColumnSeparator</td>
+  <td width="78%" valign="top">The column separator used when printing
+    the results.
+    <em>Since Ant 1.8.0</em>.</td>
+  <td width="10%" valign="top">No, default <em>','</em></td>
+</tr>
+
+<tr>
+  <td width="12%" valign="top">csvQuoteCharacter</td>
+  <td width="78%" valign="top">The character used to quote column
+    values.<br/>
+    If set, columns that contain either the column separator or the
+    quote character itself will be surrounded by the quote character.
+    The quote character itself will be doubled if it appears inside of
+    the column's value.<br/>
+    <b>Note:</b> BLOB values will never be quoted.
+    <em>Since Ant 1.8.0</em>.</td>
+  <td width="10%" valign="top">No, default is not set (i.e. no quoting
+    ever occurs)</td>
 </tr>
 
 </table>

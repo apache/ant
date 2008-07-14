@@ -212,6 +212,35 @@ public class SQLExec extends JDBCTask {
     private boolean showWarnings = false;
 
     /**
+     * The column separator used when printing the results.
+     *
+     * <p>Defaults to ","</p>
+     *
+     * @since Ant 1.8.0
+     */
+    private String csvColumnSep = ",";
+
+    /**
+     * The character used to quote column values.
+     *
+     * <p>If set, columns that contain either the column separator or
+     * the quote character itself will be surrounded by the quote
+     * character.  The quote character itself will be doubled if it
+     * appears inside of the column's value.</p>
+     *
+     * <p>If this value is not set (the default), no column values
+     * will be quoted, not even if they contain the column
+     * separator.</p>
+     *
+     * <p><b>Note:<b> BLOB values will never be quoted.</p>
+     *
+     * <p>Defaults to "not set"</p>
+     *
+     * @since Ant 1.8.0
+     */
+    private String csvQuoteChar = null;
+
+    /**
      * Whether a warning is an error - in which case onError aplies.
      * @since Ant 1.8.0
      */
@@ -439,6 +468,43 @@ public class SQLExec extends JDBCTask {
      */
     public void setTreatWarningsAsErrors(boolean b) {
         treatWarningsAsErrors =  b;
+    }
+
+    /**
+     * The column separator used when printing the results.
+     *
+     * <p>Defaults to ","</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setCsvColumnSeparator(String s) {
+        csvColumnSep = s;
+    }
+
+    /**
+     * The character used to quote column values.
+     *
+     * <p>If set, columns that contain either the column separator or
+     * the quote character itself will be surrounded by the quote
+     * character.  The quote character itself will be doubled if it
+     * appears inside of the column's value.</p>
+     *
+     * <p>If this value is not set (the default), no column values
+     * will be quoted, not even if they contain the column
+     * separator.</p>
+     *
+     * <p><b>Note:<b> BLOB values will never be quoted.</p>
+     *
+     * <p>Defaults to "not set"</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setCsvQuoteCharacter(String s) {
+        if (s != null && s.length() > 1) {
+            throw new BuildException("The quote character must be a single"
+                                     + " character.");
+        }
+        csvQuoteChar = s;
     }
 
     /**
@@ -703,15 +769,15 @@ public class SQLExec extends JDBCTask {
                 if (showheaders) {
                     out.print(md.getColumnName(1));
                     for (int col = 2; col <= columnCount; col++) {
-                         out.write(',');
-                         out.print(md.getColumnName(col));
+                         out.print(csvColumnSep);
+                         out.print(maybeQuote(md.getColumnName(col)));
                     }
                     out.println();
                 }
                 while (rs.next()) {
                     printValue(rs, 1, out);
                     for (int col = 2; col <= columnCount; col++) {
-                        out.write(',');
+                        out.print(csvColumnSep);
                         printValue(rs, col, out);
                     }
                     out.println();
@@ -727,8 +793,27 @@ public class SQLExec extends JDBCTask {
         if (rawBlobs && rs.getMetaData().getColumnType(col) == Types.BLOB) {
             new StreamPumper(rs.getBlob(col).getBinaryStream(), out).run();
         } else {
-            out.print(rs.getString(col));
+            out.print(maybeQuote(rs.getString(col)));
         }
+    }
+
+    private String maybeQuote(String s) {
+        if (csvQuoteChar == null || s == null
+            || (s.indexOf(csvColumnSep) == -1 && s.indexOf(csvQuoteChar) == -1)
+            ) {
+            return s;
+        }
+        StringBuffer sb = new StringBuffer(csvQuoteChar);
+        int len = s.length();
+        char q = csvQuoteChar.charAt(0);
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            if (c == q) {
+                sb.append(q);
+            }
+            sb.append(c);
+        }
+        return sb.append(csvQuoteChar).toString();
     }
 
     /*
