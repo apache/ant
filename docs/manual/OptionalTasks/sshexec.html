@@ -134,7 +134,9 @@ and won't work with versions of jsch earlier than
   <tr>
     <td valign="top">timeout</td>
     <td valign="top">Stop the command if it doesn't finish within the
-      specified time (given in milliseconds). Defaults to 0 which means &quot;wait forever&quot;.</td>
+      specified time (given in milliseconds <b>unlike telnet, which
+        expects a timeout in seconds</b>).
+      Defaults to 0 which means &quot;wait forever&quot;.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
