@@ -165,6 +165,9 @@ Other changes:
  * It is now possible to disable <ftp>'s remote verification.
    Bugzilla report 35471.
 
+ * <sshexec> now supports input in a way similar to <exec>
+   Bugzilla report 39197.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

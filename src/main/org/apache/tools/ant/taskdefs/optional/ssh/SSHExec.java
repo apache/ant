@@ -19,10 +19,13 @@
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
@@ -58,6 +61,8 @@ public class SSHExec extends SSHBase {
 
     private String outputProperty = null;   // like <exec>
     private File outputFile = null;   // like <exec>
+    private String inputProperty = null;   // like <exec>
+    private File inputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
 
     private Resource commandResource = null;
@@ -111,6 +116,24 @@ public class SSHExec extends SSHBase {
     }
 
     /**
+     * If used, the content of the file is piped to the remote command
+     *
+     * @param input  The file which provides the input data for the remote command
+     */
+    public void setInput(File input) {
+        inputFile = input;
+    }
+
+    /**
+     * If used, the content of the property is piped to the remote command
+     *
+     * @param inputProperty  The property which contains the input data for the remote command.
+     */
+    public void setInputProperty(String inputProperty) {
+    	this.inputProperty = inputProperty;
+    }
+
+    /**
      * Determines if the output is appended to the file given in
      * <code>setOutput</code>. Default is false, that is, overwrite
      * the file.
@@ -149,6 +172,16 @@ public class SSHExec extends SSHBase {
         }
         if (command == null && commandResource == null) {
             throw new BuildException("Command or commandResource is required.");
+        }
+
+        if (inputFile != null && inputProperty != null) {
+            throw new BuildException("You can't specify both inputFile and"
+                                     + " inputProperty.");
+        }
+        if (inputFile != null && !inputFile.exists()) {
+            throw new BuildException("The input file "
+                                     + inputFile.getAbsolutePath()
+                                     + " does not exist.");
         }
 
         Session session = null;
@@ -197,6 +230,25 @@ public class SSHExec extends SSHBase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
 
+        InputStream istream = null ;
+        if (inputFile != null) {
+            try {
+                istream = new FileInputStream(inputFile) ;
+            } catch (IOException e) {
+                // because we checked the existence before, this one
+                // shouldn't happen What if the file exists, but there
+                // are no read permissions?
+                log("Failed to read " + inputFile + " because of: "
+                    + e.getMessage(), Project.MSG_WARN);
+            }
+        }
+        if (inputProperty != null) {
+            String inputData = getProject().getProperty(inputProperty) ;
+            if (inputData != null) {
+                istream = new ByteArrayInputStream(inputData.getBytes()) ;
+            }        	
+        }
+
         try {
             final ChannelExec channel;
             session.setTimeout((int) maxwait);
@@ -205,6 +257,9 @@ public class SSHExec extends SSHBase {
             channel.setCommand(cmd);
             channel.setOutputStream(tee);
             channel.setExtOutputStream(tee);
+            if (istream != null) {
+                channel.setInputStream(istream);
+            }
             channel.connect();
             // wait for it to finish
             thread =
@@ -275,7 +330,10 @@ public class SSHExec extends SSHBase {
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
+        } finally {
+            FileUtils.close(istream);
         }
+
         return out;
     }
 
