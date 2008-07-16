@@ -51,7 +51,7 @@ ignored</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the file to write the message to.</td>
-    <td valign="top" align="center" rowspan="2">Optionally one of these may be specified</td>
+    <td valign="top" align="center" rowspan="2">Optionally one of these may be specified.</td>
   </tr>
   <tr>
     <td valign="top">output</td>
@@ -63,9 +63,10 @@ ignored</p>
     <td valign="top">append</td>
     <td valign="top">Append to an existing file (or
       <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/FileWriter.html#FileWriter(java.lang.String, boolean)" target="_blank">
-      open a new file / overwrite an existing file</a>)?
+      open a new file / overwrite an existing file</a>)? Default <i>false</i>.
     </td>
-    <td valign="top" align="center">No - default is false.</td>
+    <td valign="top" align="center">No; ignored unless <i>output</i> indicates a
+      filesystem destination.</td>
   </tr>
   <tr>
     <td valign="top">level</td>
