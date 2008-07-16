@@ -205,13 +205,16 @@ substitution and include the password on the command line.  For example:<br>
 	password=&quot;${password}&quot;
 	command=&quot;touch somefile&quot;/&gt;
 </pre>
-Invoke ant with the following command line:
+Invoking ant with the following command line:
 <pre>
     ant -Dusername=me -Dpassword=mypassword target1 target2
 </pre>
-which trades hard coded passwords for the possibility that any other
-user tracing processes on the machine running Ant (or reading your
-command shell's history) may now read the password.
+
+Is slightly better, but the username/password is exposed to all users
+on an Unix system (via the ps command). The best approach is to use
+the
+<code>&lt;input&gt;</code> task and/or retrieve the password from a (secured)
+.properties file.
 </p>
 </body>
 </html>
