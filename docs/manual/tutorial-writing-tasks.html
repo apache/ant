@@ -282,8 +282,10 @@ arguments of the set-method:<ul>
 <li>its wrapper classes like <i>java.lang.Integer</i>, <i>java.lang.Long</i>, ...</li>
 <li><i>java.lang.String</i></li>
 <li>some more classes (e.g. <i>java.io.File</i>; see
-    <a href="http://ant.apache.org/manual/develop.html#set-magic">Manual
+    <a href="develop.html#set-magic">Manual
     'Writing Your Own Task' [3]</a>)</li>
+<li>Any Java Object parsed from Ant 1.8's <a href="using.html#propertyhelper">Property
+Helper</a></li>
 </ul>
 Before calling the set-method all properties are resolved. So a <tt>&lt;helloworld message="${msg}"/&gt;</tt>
 would not set the message string to "${msg}" if there is a property "msg" with a set value.

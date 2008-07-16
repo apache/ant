@@ -325,6 +325,17 @@ maybe not set inside IDEs:</p>
 ant.home            home directory of Ant
 </pre>
 
+<a name="propertyHelper"><h3>Property Helpers</h3></a>
+Ant's property handling is accomplished by an instance of
+<code>org.apache.tools.ant.PropertyHelper</code> associated with the current Project.
+You can learn more about this class by examining Ant's Java API. In Ant 1.8 the
+PropertyHelper class was much reworked and now itself employs a number of helper
+classes (actually instances of the <code>org.apache.tools.ant.PropertyHelper$Delegate</code>
+marker interface) to take care of discrete tasks such as property setting, retrieval,
+parsing, etc. This makes Ant's property handling highly extensible; also of interest is the
+new <a href="CoreTasks/propertyhelper.html">propertyhelper</a> task used to manipulate the
+PropertyHelper and its delegates from the context of the Ant buildfile.
+
 <a name="example"><h3>Example Buildfile</h3></a>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;

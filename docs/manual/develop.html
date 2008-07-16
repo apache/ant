@@ -128,7 +128,14 @@ good convention, though.</p>
 <h3><a name="set-magic">Conversions Ant will perform for attributes</a></h3>
 
 <p>Ant will always expand properties before it passes the value of an
-attribute to the corresponding setter method.</p>
+attribute to the corresponding setter method. <b>Since Ant 1.8</b>, it is
+possible to <a href="using.html#propertyhelper">extend Ant's property handling</a>
+such that a non-string Object may be the result of the evaluation of a string
+containing a single property reference. These will be assigned directly via
+setter methods of matching type. Since it requires some beyond-the-basics
+intervention to enable this behavior, it may be a good idea to flag attributes
+intended to permit this usage paradigm.
+</p>
 
 <p>The most common way to write an attribute setter is to use a
 <code>java.lang.String</code> argument.  In this case Ant will pass
@@ -155,6 +162,13 @@ is more!  If the argument of you setter method is</p>
   value given in the build file represents an absolute path name.  If
   not, Ant will interpret the value as a path name relative to the
   project's basedir.</li>
+
+  <li><code>org.apache.tools.ant.types.Resource</code>
+  <code>org.apache.tools.ant.types.Resource</code>, Ant will
+  resolve the string as a <code>java.io.File</code> as above, then
+  pass in as a <code>org.apache.tools.ant.types.resources.FileResource</code>.
+  <b>Since Ant 1.8</b>
+  </li>
 
   <li><code>org.apache.tools.ant.types.Path</code>, Ant will tokenize
   the value specified in the build file, accepting <code>:</code> and
