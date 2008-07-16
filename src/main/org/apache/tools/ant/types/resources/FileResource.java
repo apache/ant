@@ -70,14 +70,24 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     }
 
     /**
+     * Create a new FileResource.
+     * @param p Project
+     * @param f File represented
+     * @since Ant 1.8
+     */
+    public FileResource(Project p, File f) {
+        setProject(p);
+        setFile(f);
+    }
+
+    /**
      * Constructor for Ant attribute introspection.
      * @param p the Project against which to resolve <code>s</code>.
      * @param s the absolute or Project-relative filename as a String.
      * @see org.apache.tools.ant.IntrospectionHelper
      */
     public FileResource(Project p, String s) {
-        this(p.resolveFile(s));
-        setProject(p);
+        this(p, p.resolveFile(s));
     }
 
     /**
