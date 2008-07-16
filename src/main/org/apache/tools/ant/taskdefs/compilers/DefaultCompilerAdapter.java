@@ -435,6 +435,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Do the compile with the specified arguments.
+     *
+     * <p>The working directory if the executed process will be the
+     * project's base directory.</p>
+     *
      * @param args - arguments to pass to process on command line
      * @param firstFileName - index of the first source file in args,
      * if the index is negative, no temporary file will ever be

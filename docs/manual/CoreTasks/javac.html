@@ -110,6 +110,8 @@ current JDK is 1.2+.  If you use
 switch <code>-depend</code> instead of <code>-Xdepend</code>.</p>
 <p>This task will drop all entries that point to non-existent
 files/directories from the classpath it passes to the compiler.</p>
+<p>The working directory for a forked executable (if any) is the
+  project's base directory.</p>
 <p><strong>Windows Note:</strong>When the modern compiler is used
 in unforked mode on Windows, it locks up the files present in the
 classpath of the <code>&lt;javac&gt;</code> task, and does not release them.
