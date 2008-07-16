@@ -27,7 +27,11 @@ import java.io.FileOutputStream;
 import java.io.ByteArrayOutputStream;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A helper object representing an scp download.
@@ -41,6 +45,7 @@ public class ScpFromMessage extends AbstractSshMessage {
     private String remoteFile;
     private File localFile;
     private boolean isRecursive = false;
+    private boolean preserveLastModified = false;
 
     /**
      * Constructor for ScpFromMessage
@@ -74,10 +79,7 @@ public class ScpFromMessage extends AbstractSshMessage {
                           String aRemoteFile,
                           File aLocalFile,
                           boolean recursive) {
-        super(verbose, session);
-        this.remoteFile = aRemoteFile;
-        this.localFile = aLocalFile;
-        this.isRecursive = recursive;
+        this(false, session, aRemoteFile, aLocalFile, recursive, false);
     }
 
     /**
@@ -92,6 +94,30 @@ public class ScpFromMessage extends AbstractSshMessage {
                            File aLocalFile,
                            boolean recursive) {
         this(false, session, aRemoteFile, aLocalFile, recursive);
+    }
+
+    /**
+     * Constructor for ScpFromMessage.
+     * @param verbose if true log extra information
+     * @param session the Scp session to use
+     * @param aRemoteFile the remote file name
+     * @param aLocalFile  the local file
+     * @param recursive   if true use recursion (-r option to scp)
+     * @param preservceLastModified whether to preserve file
+     * modification times
+     * @since Ant 1.8.0
+     */
+    public ScpFromMessage(boolean verbose,
+                          Session session,
+                          String aRemoteFile,
+                          File aLocalFile,
+                          boolean recursive,
+                          boolean preserveLastModified) {
+        super(verbose, session);
+        this.remoteFile = aRemoteFile;
+        this.localFile = aLocalFile;
+        this.isRecursive = recursive;
+        this.preserveLastModified = preserveLastModified;
     }
 
     /**
@@ -123,9 +149,14 @@ public class ScpFromMessage extends AbstractSshMessage {
         log("done\n");
     }
 
+    protected boolean getPreserveLastModified() {
+        return preserveLastModified;
+    }
+
     private void startRemoteCpProtocol(InputStream in,
                                        OutputStream out,
-                                       File localFile) throws IOException {
+                                       File localFile)
+        throws IOException, JSchException {
         File startFile = localFile;
         while (true) {
             // C0644 filesize filename - header for a regular file
@@ -147,7 +178,7 @@ public class ScpFromMessage extends AbstractSshMessage {
                 parseAndFetchFile(serverResponse, startFile, out, in);
             } else if (serverResponse.charAt(0) == 'D') {
                 startFile = parseAndCreateDirectory(serverResponse,
-                        startFile);
+                                                    startFile);
                 sendAck(out);
             } else if (serverResponse.charAt(0) == 'E') {
                 startFile = startFile.getParentFile();
@@ -178,7 +209,8 @@ public class ScpFromMessage extends AbstractSshMessage {
     private void parseAndFetchFile(String serverResponse,
                                    File localFile,
                                    OutputStream out,
-                                   InputStream in) throws IOException {
+                                   InputStream in)
+        throws IOException, JSchException  {
         int start = 0;
         int end = serverResponse.indexOf(" ", start + 1);
         start = end + 1;
@@ -197,7 +229,8 @@ public class ScpFromMessage extends AbstractSshMessage {
     private void fetchFile(File localFile,
                             long filesize,
                             OutputStream out,
-                            InputStream in) throws IOException {
+                           InputStream in)
+        throws IOException, JSchException {
         byte[] buf = new byte[BUFFER_SIZE];
         sendAck(out);
 
@@ -241,6 +274,37 @@ public class ScpFromMessage extends AbstractSshMessage {
             fos.flush();
             fos.close();
         }
+
+        if (getPreserveLastModified()) {
+            setLastModified(localFile);
+        }
     }
 
+    private void setLastModified(File localFile) throws JSchException {
+        SftpATTRS fileAttributes = null;
+        String remotePath = null;
+        ChannelSftp channel = openSftpChannel();
+        channel.connect();
+        try {
+            fileAttributes = channel.lstat(remoteDir(remoteFile)
+                                           + localFile.getName());
+        } catch (SftpException e) {
+            throw new JSchException("failed to stat remote file", e);
+        }
+        FileUtils.getFileUtils().setFileLastModified(localFile,
+                                                     ((long) fileAttributes
+                                                      .getMTime())
+                                                     * 1000);
+    }
+
+    /**
+     * returns the directory part of the remote file, if any.
+     */
+    private static String remoteDir(String remoteFile) {
+        int index = remoteFile.lastIndexOf("/");
+        if (index < 0) {
+            index = remoteFile.lastIndexOf("\\");
+        }
+        return index > -1 ? remoteFile.substring(0, index + 1) : "";
+    }
 }

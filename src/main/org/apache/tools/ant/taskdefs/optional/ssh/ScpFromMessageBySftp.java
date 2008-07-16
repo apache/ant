@@ -28,6 +28,8 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpProgressMonitor;
 
+import org.apache.tools.ant.util.FileUtils;
+
 /**
  * A helper object representing an scp download.
  */
@@ -54,11 +56,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                                 String aRemoteFile,
                                 File aLocalFile,
                                 boolean recursive) {
-        super(verbose, session);
-        this.verbose = verbose;
-        this.remoteFile = aRemoteFile;
-        this.localFile = aLocalFile;
-        this.isRecursive = recursive;
+        this(verbose, session, aRemoteFile, aLocalFile, recursive, false);
     }
 
     /**
@@ -73,6 +71,31 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                                 File aLocalFile,
                                 boolean recursive) {
         this(false, session, aRemoteFile, aLocalFile, recursive);
+    }
+
+    /**
+     * Constructor for ScpFromMessageBySftp.
+     * @param verbose if true log extra information
+     * @param session the Scp session to use
+     * @param aRemoteFile the remote file name
+     * @param aLocalFile  the local file
+     * @param recursive   if true use recursion
+     * @param preservceLastModified whether to preserve file
+     * modification times
+     * @since Ant 1.8.0
+     */
+    public ScpFromMessageBySftp(boolean verbose,
+                                Session session,
+                                String aRemoteFile,
+                                File aLocalFile,
+                                boolean recursive,
+                                boolean preserveLastModified) {
+        super(verbose, session, aRemoteFile, aLocalFile, recursive,
+              preserveLastModified);
+        this.verbose = verbose;
+        this.remoteFile = aRemoteFile;
+        this.localFile = aLocalFile;
+        this.isRecursive = recursive;
     }
 
     /**
@@ -170,6 +193,12 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         } finally {
             long endTime = System.currentTimeMillis();
             logStats(startTime, endTime, (int) totalLength);
+        }
+        if (getPreserveLastModified()) {
+            FileUtils.getFileUtils().setFileLastModified(localFile,
+                                                         ((long) le.getAttrs()
+                                                          .getMTime())
+                                                         * 1000);
         }
     }
 }

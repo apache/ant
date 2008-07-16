@@ -168,6 +168,10 @@ Other changes:
  * <sshexec> now supports input in a way similar to <exec>
    Bugzilla report 39197.
 
+ * <scp> can now preserve the file modification time when downloading
+   files.
+   Bugzilla Issue 33939.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

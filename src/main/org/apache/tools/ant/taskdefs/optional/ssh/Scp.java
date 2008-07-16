@@ -49,6 +49,7 @@ public class Scp extends SSHBase {
 
     private String fromUri;
     private String toUri;
+    private boolean preserveLastModified = false;
     private List fileSets = null;
     private boolean isFromRemote, isToRemote;
     private boolean isSftp = false;
@@ -115,6 +116,15 @@ public class Scp extends SSHBase {
         setToUri(aToUri);
         this.isToRemote = false;
     }
+
+    /**
+     * Sets flag to determine if file timestamp from
+     * remote system is to be preserved during copy.
+     * @since Ant 1.8.0
+     */
+    public void setPreservelastmodified(boolean yesOrNo) {
+    	this.preserveLastModified = yesOrNo;
+    }    
 
     /**
      * Similiar to {@link #setTodir setTodir} but explicitly states
@@ -231,12 +241,14 @@ public class Scp extends SSHBase {
                 message =
                     new ScpFromMessage(getVerbose(), session, file,
                                        getProject().resolveFile(toPath),
-                                       fromSshUri.endsWith("*"));
+                                       fromSshUri.endsWith("*"),
+                                       preserveLastModified);
             } else {
                 message =
                     new ScpFromMessageBySftp(getVerbose(), session, file,
                                              getProject().resolveFile(toPath),
-                                             fromSshUri.endsWith("*"));
+                                             fromSshUri.endsWith("*"),
+                                             preserveLastModified);
             }
             log("Receiving file: " + file);
             message.setLogListener(this);
