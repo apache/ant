@@ -190,6 +190,8 @@ Other changes:
 
  * <echo> supports an "output" Resource attribute as an alternative to "file".
 
+ * <sql> "output" attribute now supports any Resource in addition to a file.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

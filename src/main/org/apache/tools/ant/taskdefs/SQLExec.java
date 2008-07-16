@@ -25,10 +25,12 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -153,10 +155,9 @@ public class SQLExec extends JDBCTask {
     private boolean showtrailers = true;
 
     /**
-     * Results Output file.
+     * Results Output Resource.
      */
-    private File output = null;
-
+    private Resource output = null;
 
     /**
      * Action to perform if an error is found
@@ -392,6 +393,15 @@ public class SQLExec extends JDBCTask {
      * @param output the output file to use for logging messages.
      */
     public void setOutput(File output) {
+        setOutput(new FileResource(getProject(), output));
+    }
+
+    /**
+     * Set the output Resource;
+     * optional, defaults to the Ant log.
+     * @param output the output Resource to store results.
+     */
+    public void setOutput(Resource output) {
         this.output = output;
     }
 
@@ -556,9 +566,17 @@ public class SQLExec extends JDBCTask {
                 PrintStream out = System.out;
                 try {
                     if (output != null) {
-                        log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
-                        out = new PrintStream(new BufferedOutputStream(
-                                new FileOutputStream(output.getAbsolutePath(), append)));
+                        log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);
+                        OutputStream os;
+                        if (output instanceof FileProvider) {
+                            os = new FileOutputStream(((FileProvider) output).getFile(), append);
+                        } else {
+                            os = output.getOutputStream();
+                            if (append) {
+                                log("Ignoring append=true for non-file resource " + output, Project.MSG_WARN);
+                            }
+                        }
+                        out = new PrintStream(new BufferedOutputStream(os));
                     }
 
                     // Process all transactions
