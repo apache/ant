@@ -400,6 +400,7 @@ public class SQLExec extends JDBCTask {
      * Set the output Resource;
      * optional, defaults to the Ant log.
      * @param output the output Resource to store results.
+     * @since Ant 1.8
      */
     public void setOutput(Resource output) {
         this.output = output;
