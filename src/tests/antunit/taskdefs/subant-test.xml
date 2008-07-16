@@ -39,4 +39,24 @@
     </subant>
   </target>
 
+  <!-- four testcases for bug 30542, the last one failed -->
+  <target name="testSubAntDoesntSetBasedir">
+    <subant antfile="echo.xml">
+      <dirset dir="." includes="subant-helper"/>
+    </subant>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAntCall">
+    <antcall target="testSubAntDoesntSetBasedir"/>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAnt">
+    <ant antfile="${ant.file}" target="testSubAntDoesntSetBasedir"/>
+  </target>
+
+  <target name="XtestSubAntDoesntSetBasedirAfterAntWithDir">
+    <ant antfile="${ant.file}" dir="${basedir}"
+         target="testSubAntDoesntSetBasedir"/>
+  </target>
+
 </project>
