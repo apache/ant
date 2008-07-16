@@ -49,6 +49,11 @@ Changes that could break older environments:
    matches what the documentation implied.
    Bugzilla Report 24668.
 
+ * Ant's configuration introspection mechanisms have been modified to prefer
+   Resource and FileProvider attributes to plain java.io.File attributes;
+   however the configuration-from-String behavior remains equivalent, rendering
+   a FileResource.
+
 Fixed bugs:
 -----------
 
