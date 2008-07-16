@@ -101,6 +101,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteFile(String aFromUri) {
+        validateRemoteUri("remoteFile", aFromUri);
         setFromUri(aFromUri);
         this.isFromRemote = true;
      }
@@ -133,9 +134,20 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteTodir(String aToUri) {
+        validateRemoteUri("remoteToDir", aToUri);
         setToUri(aToUri);
         this.isToRemote = true;
     }
+
+    private static void validateRemoteUri(String type, String aToUri) {
+    	if (!isRemoteUri(aToUri)) {
+            throw new BuildException(type + " '" + aToUri + "' is invalid. "
+                                     + "The 'remoteToDir' attribute must "
+                                     + "have syntax like the "
+                                     + "following: user:password@host:/path"
+                                     + " - the :password part is optional");
+    	}
+    } 
 
     /**
      * Changes the file name to the given name while receiving it,
@@ -155,6 +167,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.6.2
      */
     public void setRemoteTofile(String aToUri) {
+        validateRemoteUri("remoteToFile", aToUri);
         setToUri(aToUri);
         this.isToRemote = true;
     }
@@ -339,9 +352,11 @@ public class Scp extends SSHBase {
             }
             setUsername(uri.substring(0, indexOfColon));
             setPassword(uri.substring(indexOfColon + 1, indexOfAt));
-        } else {
+        } else if (indexOfAt > -1) {
             // no password, will require passphrase
             setUsername(uri.substring(0, indexOfAt));
+        } else {
+            throw new BuildException("no username was given.  Can't authenticate."); 
         }
 
         if (getUserInfo().getPassword() == null
@@ -364,7 +379,7 @@ public class Scp extends SSHBase {
         return remotePath;
     }
 
-    private boolean isRemoteUri(String uri) {
+    private static boolean isRemoteUri(String uri) {
         boolean isRemote = true;
         int indexOfAt = uri.indexOf('@');
         if (indexOfAt < 0) {

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.FilesMatch;
 import org.apache.tools.ant.types.FileSet;
@@ -48,7 +49,7 @@ import org.apache.tools.ant.types.selectors.FilenameSelector;
  */
 public class ScpTest extends TestCase {
 
-    private File tempDir = new File( System.getProperty("scp.tmp") );
+    private File tempDir;
     private String sshHostUri = System.getProperty("scp.host");
     private int port = Integer.parseInt( System.getProperty( "scp.port", "22" ) );
     private String knownHosts = System.getProperty("scp.known.hosts");
@@ -57,6 +58,9 @@ public class ScpTest extends TestCase {
 
     public ScpTest(String testname) {
         super(testname);
+        if (System.getProperty("scp.tmp") != null) {
+            tempDir = new File(System.getProperty("scp.tmp"));
+        }
     }
 
     protected void setUp() {
@@ -71,8 +75,10 @@ public class ScpTest extends TestCase {
     }
 
     public void testSingleFileUploadAndDownload() throws IOException {
+        assertNotNull("system property scp.tmp must be set", tempDir);
         File uploadFile = createTemporaryFile();
 
+        // upload
         Scp scpTask = createTask();
         scpTask.setFile( uploadFile.getPath() );
         scpTask.setTodir( sshHostUri );
@@ -84,6 +90,8 @@ public class ScpTest extends TestCase {
         assertTrue( "Assert that the testFile does not exist.",
                 !testFile.exists() );
 
+        // download
+        scpTask = createTask(); 
         scpTask.setFile( sshHostUri + "/" + uploadFile.getName() );
         scpTask.setTodir( testFile.getPath() );
         scpTask.execute();
@@ -93,6 +101,7 @@ public class ScpTest extends TestCase {
     }
 
     public void testMultiUploadAndDownload() throws IOException {
+        assertNotNull("system property scp.tmp must be set", tempDir);
         List uploadList = new ArrayList();
         for( int i = 0; i < 5; i++ ) {
             uploadList.add( createTemporaryFile() );
@@ -128,6 +137,25 @@ public class ScpTest extends TestCase {
         }
     }
 
+    public void testRemoteToDir() throws IOException {
+        Scp scpTask = createTask();
+        
+        // first try an invalid URI
+        try {
+            scpTask.setRemoteTodir( "host:/a/path/without/an/at" );
+            fail("Expected a BuildException to be thrown due to invalid"
+                    + " remoteToDir"); 
+        }
+        catch (BuildException e)
+        {
+            // expected
+        }
+        
+        // And this one should work
+        scpTask.setRemoteTodir( "user:password@host:/a/path/with/an/at" );
+        // no exception
+    }
+    
     public void addCleanup( File file ) {
         cleanUpList.add( file );
     }
