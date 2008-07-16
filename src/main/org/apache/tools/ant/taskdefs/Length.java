@@ -141,7 +141,7 @@ public class Length extends Task implements Condition {
     }
 
     /**
-     * Set whether to trim in string mode.
+     * Set whether to trim in string mode. Default false.
      * @param trim <code>boolean</code>.
      */
     public synchronized void setTrim(boolean trim) {
@@ -149,7 +149,7 @@ public class Length extends Task implements Condition {
     }
 
     /**
-     * Learn whether strings will be trimmed.
+     * Learn whether strings will be trimmed. Default false.
      * @return boolean trim setting.
      */
     public boolean getTrim() {
