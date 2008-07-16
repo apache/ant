@@ -58,6 +58,14 @@ public class ZipOutputStream extends FilterOutputStream {
     private static final int SHORT = 2;
     private static final int WORD = 4;
     private static final int BUFFER_SIZE = 512;
+    /* 
+     * Apparently Deflater.setInput gets slowed down a lot on Sun JVMs
+     * when it gets handed a really big buffer.  See
+     * https://issues.apache.org/bugzilla/show_bug.cgi?id=45396
+     *
+     * Using a buffer size of 8 kB proved to be a good compromise
+     */
+    private static final int DEFLATER_BLOCK_SIZE = 8192;
 
     /**
      * Compression method for deflated entries.
@@ -482,9 +490,21 @@ public class ZipOutputStream extends FilterOutputStream {
         if (entry.getMethod() == DEFLATED) {
             if (length > 0) {
                 if (!def.finished()) {
-                    def.setInput(b, offset, length);
-                    while (!def.needsInput()) {
-                        deflate();
+                    if (length <= DEFLATER_BLOCK_SIZE) {
+                        def.setInput(b, offset, length);
+                        deflateUntilInputIsNeeded();
+                    } else {
+                        final int fullblocks = length / DEFLATER_BLOCK_SIZE;
+                        for (int i = 0; i < fullblocks; i++) {
+                            def.setInput(b, offset + i * DEFLATER_BLOCK_SIZE,
+                                         DEFLATER_BLOCK_SIZE);
+                            deflateUntilInputIsNeeded();
+                        }
+                        final int done = fullblocks * DEFLATER_BLOCK_SIZE;
+                        if (done < length) {
+                            def.setInput(b, offset + done, length - done);
+                            deflateUntilInputIsNeeded();
+                        }
                     }
                 }
             }
@@ -912,6 +932,12 @@ public class ZipOutputStream extends FilterOutputStream {
             return 2 * ((long) Integer.MAX_VALUE) + 2 + i;
         } else {
             return i;
+        }
+    }
+
+    private void deflateUntilInputIsNeeded() throws IOException {
+        while (!def.needsInput()) {
+            deflate();
         }
     }
 

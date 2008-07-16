@@ -179,6 +179,10 @@ Other changes:
    an SSH session providing (local and remote) tunnels.
    Bugzilla Issue 43083.
 
+ * ZipOutputStream has been sped up for certain usage scenarios that
+   are not used by Ant's family of zip tasks.
+   Bugzilla report 45396.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
