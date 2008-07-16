@@ -153,24 +153,37 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             channel.connect();
 
             try {
+                try {
+                    channel.stat(remotePath);
+                } catch (SftpException e) {
+                    if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+                        // dir does not exist.
+                        channel.mkdir(remotePath);
+                    } else {
+                        throw new JSchException("failed to access remote dir '"
+                                                + remotePath + "'", e);
+                    }
+                }
                 channel.cd(remotePath);
             } catch (SftpException e) {
-                JSchException schException = new JSchException("Could not CD to '" + remotePath + "' - " + e.toString());
-                schException.initCause(e);
-                throw schException;
+                throw new JSchException("Could not CD to '" + remotePath
+                                        + "' - " + e.toString(), e);
             }
+            Directory current = null;
             try {
                 for (Iterator i = directoryList.iterator(); i.hasNext();) {
-                    Directory current = (Directory) i.next();
-                    if(getVerbose()) {
+                    current = (Directory) i.next();
+                    if (getVerbose()) {
                         log("Sending directory " + current);
                     }
                     sendDirectory(channel, current);
                 }
             } catch (SftpException e) {
-                JSchException schException = new JSchException(e.toString());
-                schException.initCause(e);
-                throw schException;
+                String msg = "Error sending directory";
+                if (current != null && current.getDirectory() != null) {
+                    msg += " '" + current.getDirectory().getName() + "'";
+                }
+                throw new JSchException(msg, e);
             }
         } finally {
             if (channel != null) {

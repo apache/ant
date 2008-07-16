@@ -104,6 +104,9 @@ Fixed bugs:
  * XmlLogger could lose messages if <parallel> is used.
    Bugzilla Report 25734.
 
+ * <scp> creates remoteToDir if it doesn't exist.
+   Bugzilla Report 42781
+
 Other changes:
 --------------
 
