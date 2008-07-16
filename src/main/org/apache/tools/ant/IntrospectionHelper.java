@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.taskdefs.PreSetDef;
 import org.apache.tools.ant.util.StringUtils;
 
@@ -137,9 +140,14 @@ public final class IntrospectionHelper {
      * adding PCDATA to a bean.
      * <li><code>void setFoo(Bar)</code> is recognised as a method for
      * setting the value of attribute <code>foo</code>, so long as
-     * <code>Bar</code> is non-void and is not an array type. Non-String
-     * parameter types always overload String parameter types, but that is
-     * the only guarantee made in terms of priority.
+     * <code>Bar</code> is non-void and is not an array type.
+     * As of Ant 1.8, a Resource or FileProvider parameter overrides a java.io.File parameter;
+     * in practice the only effect of this is to allow objects rendered from
+     * the 1.8 PropertyHelper implementation to be used as Resource parameters,
+     * since Resources set from Strings are resolved as project-relative files
+     * to preserve backward compatibility.  Beyond this, non-String
+     * parameter types always overload String parameter types; these are
+     * the only guarantees made in terms of priority.
      * <li><code>Foo createBar()</code> is recognised as a method for
      * creating a nested element called <code>bar</code> of type
      * <code>Foo</code>, so long as <code>Foo</code> is not a primitive or
@@ -198,7 +206,8 @@ public final class IntrospectionHelper {
             } else if (name.startsWith("set") && java.lang.Void.TYPE.equals(returnType)
                     && args.length == 1 && !args[0].isArray()) {
                 String propName = getPropertyName(name, "set");
-                if (attributeSetters.get(propName) != null) {
+                AttributeSetter as = (AttributeSetter) attributeSetters.get(propName);
+                if (as != null) {
                     if (java.lang.String.class.equals(args[0])) {
                         /*
                             Ignore method m, as there is an overloaded
@@ -208,9 +217,14 @@ public final class IntrospectionHelper {
                         */
                         continue;
                     }
+                    if (java.io.File.class.equals(args[0])) {
+                        // Ant Resources/FileProviders override java.io.File
+                        if (Resource.class.equals(as.type) || FileProvider.class.equals(as.type)) {
+                            continue;
+                        }
+                    }
                     /*
-                        If the argument is not a String and if there
-                        is an overloaded form of this method already defined,
+                        In cases other than those just explicitly covered,
                         we just override that with the new one.
                         This mechanism does not guarantee any specific order
                         in which the methods will be selected: so any code
@@ -219,7 +233,7 @@ public final class IntrospectionHelper {
                         particular order.
                     */
                 }
-                AttributeSetter as = createAttributeSetter(m, args[0], propName);
+                as = createAttributeSetter(m, args[0], propName);
                 if (as != null) {
                     attributeTypes.put(propName, args[0]);
                     attributeSetters.put(propName, as);
@@ -930,6 +944,8 @@ public final class IntrospectionHelper {
      * <li>Class (Class.forName is used)
      * <li>File (resolved relative to the appropriate project)
      * <li>Path (resolve relative to the appropriate project)
+     * <li>Resource (resolved as a FileResource relative to the appropriate project)
+     * <li>FileProvider (resolved as a FileResource relative to the appropriate project)
      * <li>EnumeratedAttribute (uses its own
      * {@link EnumeratedAttribute#setValue(String) setValue} method)
      * <li>Other primitive types (wrapper classes are used with constructors
@@ -1020,6 +1036,15 @@ public final class IntrospectionHelper {
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, new Object[] {p.resolveFile(value)});
                 }
+            };
+        }
+        // resolve Resources/FileProviders as FileResources relative to Project:
+        if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
+            return new AttributeSetter(m, arg) {
+                void set(Project p, Object parent, String value) throws InvocationTargetException,
+                        IllegalAccessException, BuildException {
+                    m.invoke(parent, new Object[] { new FileResource(p, p.resolveFile(value)) });
+                };
             };
         }
         // EnumeratedAttributes have their own helper class
