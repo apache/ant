@@ -175,6 +175,10 @@ Other changes:
    files.
    Bugzilla Issue 33939.
 
+ * the new task sshsession can run multiple tasks in the presence of
+   an SSH session providing (local and remote) tunnels.
+   Bugzilla Issue 43083.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
