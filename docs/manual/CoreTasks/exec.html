@@ -35,7 +35,18 @@ to send input to it is via the input and inputstring attributes. Also note that
 since Ant 1.6, any attempt to read input in the forked program will receive an
 EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
-
+<p>If you want to execute an executable using a path relative to the
+  project's basedir, you may need to
+  use <code>vmlauncher="false"</code> on some operating systems - but
+  even this may fail (Solaris 8/9 has been reported as problematic).
+  The <code>resolveexecutable</code> attribute should be more
+  reliable, as would be something like
+<pre>
+  &lt;property name="executable-full-path"
+            location="../relative/path/to/executable"/&gt;
+  &lt;exec executable="${executable-full-path}" ...
+</pre>
+</p>
 
 <h4>Windows Users</h4>
 <p>The <code>&lt;exec&gt;</code> task delegates to <code>Runtime.exec</code> which in turn
