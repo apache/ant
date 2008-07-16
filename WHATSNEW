@@ -188,6 +188,8 @@ Other changes:
    are not used by Ant's family of zip tasks.
    Bugzilla report 45396.
 
+ * <echo> supports an "output" Resource attribute as an alternative to "file".
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

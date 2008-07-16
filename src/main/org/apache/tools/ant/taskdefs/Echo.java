@@ -19,8 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -31,6 +31,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.LogLevel;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * Writes a message to the Ant logging facilities.
@@ -51,25 +54,25 @@ public class Echo extends Task {
     protected int logLevel = Project.MSG_WARN;
     // CheckStyle:VisibilityModifier ON
 
+    private Resource output;
+
     /**
      * Does the work.
      *
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
-        if (file == null) {
+        if (output == null) {
             log(message, logLevel);
         } else {
             Writer out = null;
             try {
-                String filename = file.getAbsolutePath();
-                if (encoding == null || encoding.length() == 0) {
-                    out = new FileWriter(filename, append);
-                } else {
-                    out = new BufferedWriter(
-                            new OutputStreamWriter(
-                                new FileOutputStream(filename, append), encoding));
-                }
+                OutputStream os = output instanceof FileProvider ? os = new FileOutputStream(
+                        ((FileProvider) output).getFile(), append) : output.getOutputStream();
+                OutputStreamWriter osw = (encoding == null || "".equals(encoding)) ? new OutputStreamWriter(
+                        os)
+                        : new OutputStreamWriter(os, encoding);
+                out = new BufferedWriter(osw);
                 out.write(message, 0, message.length());
             } catch (IOException ioe) {
                 throw new BuildException(ioe, getLocation());
@@ -95,6 +98,20 @@ public class Echo extends Task {
      */
     public void setFile(File file) {
         this.file = file;
+        setOutput(new FileResource(getProject(), file));
+    }
+
+    /**
+     * Resource to write to.
+     * @param output the Resource to write to.
+     * @since Ant 1.8
+     */
+    public void setOutput(Resource output) {
+        if (this.output != null) {
+            throw new BuildException("Cannot set > 1 output target");
+        }
+        this.output = output;
+        this.file = output instanceof FileProvider ? ((FileProvider) output).getFile() : null;
     }
 
     /**
