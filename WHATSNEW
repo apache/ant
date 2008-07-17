@@ -73,7 +73,7 @@ Changes that could break older environments:
    If Ant now encounters a permission set of 0 it will assume that
    this is not the intended value and instead apply its own default
    values.  Ant used to create entries with 0 permissions itself.
-   The <zip> family of tasks has a new attribute preservce0permissions
+   The <zip> family of tasks has a new attribute preserve0permissions
    that can be set to restore the old behavior.
    Bugzilla Report 42122.
 
