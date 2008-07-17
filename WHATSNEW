@@ -58,7 +58,9 @@ Changes that could break older environments:
    passed in a null or empty InputStream to read from.
    Bugzilla Report 32200
 
- * <unzip> will now fail on archives with an empty central directory.
+ * <unzip> and <untar> will now fail on empty archives (or ZIP
+   archives with an empty central directory).
+   set failOnEmptyArchive to false to restore the old behavior.
    Bugzilla report 35000.
 
 Fixed bugs:

@@ -142,11 +142,16 @@ public class Untar extends Expand {
                                                           new BufferedInputStream(stream)));
             log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
             TarEntry te = null;
+            boolean empty = true;
             FileNameMapper mapper = getMapper();
             while ((te = tis.getNextEntry()) != null) {
+                empty = false;
                 extractFile(FileUtils.getFileUtils(), null, dir, tis,
                             te.getName(), te.getModTime(),
                             te.isDirectory(), mapper);
+            }
+            if (empty && getFailOnEmptyArchive()) {
+                throw new BuildException("archive is empty");
             }
             log("expand complete", Project.MSG_VERBOSE);
         } finally {

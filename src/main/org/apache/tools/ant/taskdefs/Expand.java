@@ -66,6 +66,7 @@ public class Expand extends Task {
     private Vector patternsets = new Vector();
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
+    private boolean failOnEmptyArchive = true;
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
@@ -74,6 +75,24 @@ public class Expand extends Task {
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /**
+     * Whether try ing to expand an empty archive would be an error.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnEmptyArchive(boolean b) {
+        failOnEmptyArchive = b;
+    }
+
+    /**
+     * Whether try ing to expand an empty archive would be an error.
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean getFailOnEmptyArchive() {
+        return failOnEmptyArchive;
+    }
 
     /**
      * Do the work.
@@ -140,7 +159,7 @@ public class Expand extends Task {
                     getLocation());
         }
         try {
-            zf = new ZipFile(srcF, encoding);
+            zf = new ZipFile(srcF, encoding, failOnEmptyArchive);
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
