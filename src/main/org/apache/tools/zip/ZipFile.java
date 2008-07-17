@@ -276,6 +276,10 @@ public class ZipFile {
         archive.readFully(signatureBytes);
         long sig = ZipLong.getValue(signatureBytes);
         final long cfhSig = ZipLong.getValue(ZipOutputStream.CFH_SIG);
+        if (sig != cfhSig) {
+            throw new IOException("central directory is empty, can't expand"
+                                  + " archive.");
+        }
         while (sig == cfhSig) {
             archive.readFully(cfh);
             int off = 0;

@@ -58,6 +58,9 @@ Changes that could break older environments:
    passed in a null or empty InputStream to read from.
    Bugzilla Report 32200
 
+ * <unzip> will now fail on archives with an empty central directory.
+   Bugzilla report 35000.
+
 Fixed bugs:
 -----------
 
