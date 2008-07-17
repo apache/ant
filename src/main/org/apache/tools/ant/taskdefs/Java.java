@@ -76,6 +76,9 @@ public class Java extends Task {
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
+    private static final String TIMEOUT_MESSAGE = 
+        "Timeout: killed the sub-process";
+
     /**
      * Normal constructor
      */
@@ -228,7 +231,11 @@ public class Java extends Task {
             if (failOnError) {
                 throw e;
             } else {
-                log(e);
+                if (TIMEOUT_MESSAGE.equals(e.getMessage())) {
+                    log(TIMEOUT_MESSAGE);
+                } else {
+                    log(e);
+                }
                 return -1;
             }
         } catch (ThreadDeath t) {
@@ -764,7 +771,7 @@ public class Java extends Task {
             exe.execute(getProject());
             redirector.complete();
             if (exe.killedProcess()) {
-                throw new BuildException("Timeout: killed the sub-process");
+                throw new BuildException(TIMEOUT_MESSAGE);
             }
         } catch (IOException e) {
             throw new BuildException(e);
@@ -784,7 +791,7 @@ public class Java extends Task {
             int rc = exe.execute();
             redirector.complete();
             if (exe.killedProcess()) {
-                throw new BuildException("Timeout: killed the sub-process");
+                throw new BuildException(TIMEOUT_MESSAGE);
             }
             return rc;
         } catch (IOException e) {
