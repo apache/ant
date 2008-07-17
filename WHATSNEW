@@ -54,6 +54,10 @@ Changes that could break older environments:
    however the configuration-from-String behavior remains equivalent, rendering
    a FileResource.
 
+ * CBZip2InputStream will now throw an IOException if
+   passed in a null or empty InputStream to read from.
+   Bugzilla Report 32200
+
 Fixed bugs:
 -----------
 
@@ -111,6 +115,10 @@ Fixed bugs:
 
  * <scp> creates remoteToDir if it doesn't exist.
    Bugzilla Report 42781
+
+ * CBZip2OutputStream threw an exception if it was closed prior to
+   writing anything.
+   Bugzilla Report 32200
 
 Other changes:
 --------------

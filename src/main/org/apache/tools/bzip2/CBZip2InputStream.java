@@ -23,8 +23,9 @@
  */
 package org.apache.tools.bzip2;
 
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * An input stream that decompresses from the BZip2 format (without the file
@@ -223,6 +224,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     private void init() throws IOException {
+        if (null == in) {
+            throw new IOException("No InputStream");
+        }
+        if (in.available() == 0) {
+            throw new IOException("Empty InputStream");
+        }
         int magic2 = this.in.read();
         if (magic2 != 'h') {
             throw new IOException("Stream is not BZip2 formatted: expected 'h'"
