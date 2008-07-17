@@ -248,6 +248,18 @@
     </zip>
   </target>
 
+  <target name="rewriteZeroPermissions">
+    <zip destfile="test3.zip">
+      <zipfileset src="nopermissions.zip"/>
+    </zip>
+  </target>
+
+  <target name="acceptZeroPermissions">
+    <zip destfile="test3.zip" preserve0permissions="true">
+      <zipfileset src="nopermissions.zip"/>
+    </zip>
+  </target>
+
   <target name="cleanup">
     <delete file="testLevel.zip"/>
     <delete file="test3.zip"/>

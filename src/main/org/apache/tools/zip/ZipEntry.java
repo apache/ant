@@ -28,8 +28,8 @@ import java.util.zip.ZipException;
  */
 public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
-    private static final int PLATFORM_UNIX = 3;
-    private static final int PLATFORM_FAT  = 0;
+    public static final int PLATFORM_UNIX = 3;
+    public static final int PLATFORM_FAT  = 0;
     private static final int SHORT_MASK = 0xFFFF;
     private static final int SHORT_SHIFT = 16;
 
@@ -145,7 +145,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void setUnixMode(int mode) {
         // CheckStyle:MagicNumberCheck OFF - no point
-        setExternalAttributes((mode << 16)
+        setExternalAttributes((mode << SHORT_SHIFT)
                               // MS-DOS read-only attribute
                               | ((mode & 0200) == 0 ? 1 : 0)
                               // MS-DOS directory flag
@@ -160,15 +160,16 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since Ant 1.6
      */
     public int getUnixMode() {
-        return (int) ((getExternalAttributes() >> SHORT_SHIFT) & SHORT_MASK);
+        return platform != PLATFORM_UNIX ? 0 :
+            (int) ((getExternalAttributes() >> SHORT_SHIFT) & SHORT_MASK);
     }
 
     /**
      * Platform specification to put into the &quot;version made
      * by&quot; part of the central file header.
      *
-     * @return 0 (MS-DOS FAT) unless {@link #setUnixMode setUnixMode}
-     * has been called, in which case 3 (Unix) will be returned.
+     * @return PLATFORM_FAT unless {@link #setUnixMode setUnixMode}
+     * has been called, in which case PLATORM_UNIX will be returned.
      *
      * @since Ant 1.5.2
      */

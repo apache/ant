@@ -63,6 +63,20 @@ Changes that could break older environments:
    set failOnEmptyArchive to false to restore the old behavior.
    Bugzilla report 35000.
 
+ * Ant's <zip> family of tasks tries to preserve the existing Unix
+   permissions when updating archives or copying entries from one
+   archive to another.
+   Since not all archiving tools support storing Unix permissions in
+   the same way that is used by Ant, sometimes the permissions read by
+   Ant seem to be 0, which means nobody is allowed to do anything to
+   the file or directory.
+   If Ant now encounters a permission set of 0 it will assume that
+   this is not the intended value and instead apply its own default
+   values.  Ant used to create entries with 0 permissions itself.
+   The <zip> family of tasks has a new attribute preservce0permissions
+   that can be set to restore the old behavior.
+   Bugzilla Report 42122.
+
 Fixed bugs:
 -----------
 

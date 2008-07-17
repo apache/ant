@@ -53,6 +53,7 @@ import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.ResourceUtils;
+import org.apache.tools.zip.UnixStat;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
@@ -138,6 +139,12 @@ public class Zip extends MatchingTask {
     private String comment = "";
 
     private int level = ZipOutputStream.DEFAULT_COMPRESSION;
+
+    /**
+     * Assume 0 Unix mode is intentional.
+     * @since Ant 1.8.0
+     */
+    private boolean preserve0Permissions = false;
 
     /**
      * This is the name/location of where to
@@ -399,6 +406,22 @@ public class Zip extends MatchingTask {
      */
     public void setRoundUp(boolean r) {
         roundUp = r;
+    }
+
+    /**
+     * Assume 0 Unix mode is intentional.
+     * @since Ant 1.8.0
+     */
+    public void setPreserve0Permissions(boolean b) {
+        preserve0Permissions = b;
+    }
+
+    /**
+     * Assume 0 Unix mode is intentional.
+     * @since Ant 1.8.0
+     */
+    public boolean getPreserve0Permissions() {
+        return preserve0Permissions;
     }
 
     /**
@@ -774,8 +797,13 @@ public class Zip extends MatchingTask {
                     }
                     if (zf != null) {
                         ZipEntry ze = zf.getEntry(resources[i].getName());
+                        int unixMode = ze.getUnixMode();
+                        if ((unixMode == 0 || unixMode == UnixStat.DIR_FLAG)
+                            && !preserve0Permissions) {
+                            unixMode = dirMode;
+                        }
                         addParentDirs(base, name, zOut, prefix,
-                                      ze.getUnixMode());
+                                      unixMode);
                     } else {
                         ArchiveResource tr = (ArchiveResource) resources[i];
                         addParentDirs(base, name, zOut, prefix,
@@ -802,10 +830,16 @@ public class Zip extends MatchingTask {
                         InputStream is = null;
                         try {
                             is = zf.getInputStream(ze);
+                            int unixMode = ze.getUnixMode();
+                            if (zfs.hasFileModeBeenSet()
+                                || ((unixMode == 0
+                                     || unixMode == UnixStat.FILE_FLAG)
+                                    && !preserve0Permissions)) {
+                                unixMode = fileMode;
+                            }
                             zipFile(is, zOut, prefix + name,
                                     ze.getTime(), zfs.getSrc(getProject()),
-                                    zfs.hasFileModeBeenSet() ? fileMode
-                                    : ze.getUnixMode());
+                                    unixMode);
                         } finally {
                             doCompress = oldCompress;
                             FileUtils.close(is);

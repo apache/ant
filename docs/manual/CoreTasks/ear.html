@@ -185,6 +185,18 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     (maximum compression/slowest). <em>Since Ant 1.7</em></td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">preserve0permissions</td>
+    <td valign="top">when updating an archive or adding entries from a
+    different archive Ant will assume that a Unix permissions value of
+    0 (nobody is allowed to do anything to the file/directory) means
+    that the permissions haven't been stored at all rather than real
+    permissions and will instead apply its own default values.<br/>
+    Set this attribute to true if you really want to preserve the
+      original permission field.<em>since Ant 1.8.0</em>
+    </td>
+    <td valign="top" align="center">No, default is false</td>
+  </tr>
 </table>
 
 <h3>Nested elements</h3>
