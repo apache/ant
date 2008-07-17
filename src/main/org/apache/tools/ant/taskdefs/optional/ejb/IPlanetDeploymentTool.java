@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Iterator;
 import javax.xml.parsers.SAXParser;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -251,6 +252,15 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
         ejbc.setDebugOutput(debug);
         if (iashome != null) {
             ejbc.setIasHomeDir(iashome);
+        }
+        if (getConfig().dtdLocations != null) {
+            for (Iterator i = getConfig().dtdLocations.iterator();
+                 i.hasNext(); ) {
+                EjbJar.DTDLocation dtdLocation =
+                    (EjbJar.DTDLocation) i.next();
+                ejbc.registerDTD(dtdLocation.getPublicId(),
+                                 dtdLocation.getLocation());
+            }
         }
 
         /* Execute the ejbc utility -- stubs/skeletons are rebuilt, if needed */

@@ -120,6 +120,9 @@ Fixed bugs:
    writing anything.
    Bugzilla Report 32200
 
+ * The IPlanetDeploymentToll didn't use the configured DTD locations.
+   Bugzilla Report 31876.
+
 Other changes:
 --------------
 
