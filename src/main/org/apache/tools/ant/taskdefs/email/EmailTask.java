@@ -417,10 +417,16 @@ public class EmailTask extends Task {
             if (encoding.equals(MIME)
                  || (encoding.equals(AUTO) && !autoFound)) {
                 try {
+                    //check to make sure that activation.jar 
+                    //and mail.jar are available - see bug 31969
+                    Class.forName("javax.activation.DataHandler");
+                    Class.forName("javax.mail.internet.MimeMessage");
+
                     mailer = (Mailer) ClasspathUtils.newInstance(
                             "org.apache.tools.ant.taskdefs.email.MimeMailer",
                             EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
+
                     log("Using MIME mail", Project.MSG_VERBOSE);
                 } catch (BuildException e) {
                     logBuildException("Failed to initialise MIME mail: ", e);
