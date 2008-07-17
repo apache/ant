@@ -353,15 +353,15 @@ public class Scp extends SSHBase {
             setUsername(uri.substring(0, indexOfColon));
             setPassword(uri.substring(indexOfColon + 1, indexOfAt));
         } else if (indexOfAt > -1) {
-            // no password, will require passphrase
+            // no password, will require keyfile
             setUsername(uri.substring(0, indexOfAt));
         } else {
             throw new BuildException("no username was given.  Can't authenticate."); 
         }
 
         if (getUserInfo().getPassword() == null
-            && getUserInfo().getPassphrase() == null) {
-            throw new BuildException("neither password nor passphrase for user "
+            && getUserInfo().getKeyfile() == null) {
+            throw new BuildException("neither password nor keyfile for user "
                                      + getUserInfo().getName() + " has been "
                                      + "given.  Can't authenticate.");
         }

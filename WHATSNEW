@@ -203,6 +203,10 @@ Other changes:
 
  * <sql> "output" attribute now supports any Resource in addition to a file.
 
+ * <scp> no longer requires a passphrase when using key based
+   authentication.
+   Bugzilla report 33718.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
