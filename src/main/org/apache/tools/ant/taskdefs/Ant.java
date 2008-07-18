@@ -341,12 +341,12 @@ public class Ant extends Task {
 
             if (dir != null) {
                 if (!allowNativeBasedir) {
-                newProject.setBaseDir(dir);
-                if (savedDir != null) {
-                    // has been set explicitly
-                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
-                                                    dir.getAbsolutePath());
-                }
+                    newProject.setBaseDir(dir);
+                    if (savedDir != null) {
+                        // has been set explicitly
+                        newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
+                                                        dir.getAbsolutePath());
+                    }
                 }
             } else {
                 dir = getProject().getBaseDir();
