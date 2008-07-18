@@ -58,9 +58,8 @@ Changes that could break older environments:
    passed in a null or empty InputStream to read from.
    Bugzilla Report 32200
 
- * <unzip> and <untar> will now fail on empty archives (or ZIP
-   archives with an empty central directory).
-   set failOnEmptyArchive to false to restore the old behavior.
+ * <unzip> will now fail when trying to extract certain broken
+   archives that would have been silently ignored in earlier version.
    Bugzilla report 35000.
 
  * Ant's <zip> family of tasks tries to preserve the existing Unix
@@ -225,6 +224,10 @@ Other changes:
  * <scp> no longer requires a passphrase when using key based
    authentication.
    Bugzilla report 33718.
+
+ * a new failOnEmptyArchive attribute on <unzip> and <untar> can now
+   make the task fail the build if it tries to extract an empty
+   archive.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================

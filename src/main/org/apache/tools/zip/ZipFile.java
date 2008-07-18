@@ -146,78 +146,10 @@ public class ZipFile {
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(File f, String encoding) throws IOException {
-        this(f, encoding, false);
-    }
-
-    /**
-     * Opens the given file for reading, assuming the platform's
-     * native encoding for file names.
-     *
-     * @param f the archive.
-     * @param mustNotBeEmpty whether an empty central directory should
-     * case an error
-     *
-     * @throws IOException if an error occurs while reading the file.
-     *
-     * @since Ant 1.8.0
-     */
-    public ZipFile(File f, boolean mustNotBeEmpty) throws IOException {
-        this(f, null, mustNotBeEmpty);
-    }
-
-    /**
-     * Opens the given file for reading, assuming the platform's
-     * native encoding for file names.
-     *
-     * @param name name of the archive.
-     * @param mustNotBeEmpty whether an empty central directory should
-     * case an error
-     *
-     * @throws IOException if an error occurs while reading the file.
-     *
-     * @since Ant 1.8.0
-     */
-    public ZipFile(String name, boolean mustNotBeEmpty) throws IOException {
-        this(new File(name), null, mustNotBeEmpty);
-    }
-
-    /**
-     * Opens the given file for reading, assuming the specified
-     * encoding for file names.
-     *
-     * @param name name of the archive.
-     * @param encoding the encoding to use for file names
-     * @param mustNotBeEmpty whether an empty central directory should
-     * case an error
-     *
-     * @throws IOException if an error occurs while reading the file.
-     *
-     * @since Ant 1.8.0
-     */
-    public ZipFile(String name, String encoding,
-                   boolean mustNotBeEmpty) throws IOException {
-        this(new File(name), encoding, mustNotBeEmpty);
-    }
-
-    /**
-     * Opens the given file for reading, assuming the specified
-     * encoding for file names.
-     *
-     * @param f the archive.
-     * @param encoding the encoding to use for file names
-     * @param mustNotBeEmpty whether an empty central directory should
-     * case an error
-     *
-     * @throws IOException if an error occurs while reading the file.
-     *
-     * @since Ant 1.8.0
-     */
-    public ZipFile(File f, String encoding,
-                   boolean mustNotBeEmpty) throws IOException {
         this.encoding = encoding;
         archive = new RandomAccessFile(f, "r");
         try {
-            populateFromCentralDirectory(mustNotBeEmpty);
+            populateFromCentralDirectory();
             resolveLocalFileHeaderData();
         } catch (IOException e) {
             try {
@@ -334,7 +266,7 @@ public class ZipFile {
      * the central directory alone, but not the data that requires the
      * local file header or additional data to be read.</p>
      */
-    private void populateFromCentralDirectory(boolean mustNotBeEmpty)
+    private void populateFromCentralDirectory()
         throws IOException {
         positionAtCentralDirectory();
 
@@ -344,9 +276,9 @@ public class ZipFile {
         archive.readFully(signatureBytes);
         long sig = ZipLong.getValue(signatureBytes);
         final long cfhSig = ZipLong.getValue(ZipOutputStream.CFH_SIG);
-        if (mustNotBeEmpty && sig != cfhSig) {
+        if (sig != cfhSig && startsWithLocalFileHeader()) {
             throw new IOException("central directory is empty, can't expand"
-                                  + " archive.");
+                                  + " corrupt archive.");
         }
         while (sig == cfhSig) {
             archive.readFully(cfh);
@@ -579,6 +511,22 @@ public class ZipFile {
                 throw new ZipException(uee.getMessage());
             }
         }
+    }
+
+    /**
+     * Checks whether the archive starts with a LFH.  If it doesn't,
+     * it may be an empty archive.
+     */
+    private boolean startsWithLocalFileHeader() throws IOException {
+        archive.seek(0);
+        final byte[] start = new byte[WORD];
+        archive.readFully(start);
+        for (int i = 0; i < start.length; i++) {
+            if (start[i] != ZipOutputStream.LFH_SIG[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

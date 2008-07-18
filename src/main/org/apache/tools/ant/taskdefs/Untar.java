@@ -158,7 +158,7 @@ public class Untar extends Expand {
                             te.isDirectory(), mapper);
             }
             if (empty && getFailOnEmptyArchive()) {
-                throw new BuildException("archive is empty");
+                throw new BuildException("archive '" + name + "' is empty");
             }
             log("expand complete", Project.MSG_VERBOSE);
         } finally {

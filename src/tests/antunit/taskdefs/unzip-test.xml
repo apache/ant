@@ -32,7 +32,7 @@
 
   <target name="testFailureOnBrokenCentralDirectoryStructure">
     <au:expectfailure
-       expectedmessage="central directory is empty, can't expand archive.">
+       expectedmessage="central directory is empty, can't expand corrupt archive.">
       <unzip src="broken_cd.zip" dest="${dest.dir}"/>
     </au:expectfailure>
   </target>

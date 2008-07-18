@@ -66,7 +66,7 @@ public class Expand extends Task {
     private Vector patternsets = new Vector();
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
-    private boolean failOnEmptyArchive = true;
+    private boolean failOnEmptyArchive = false;
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
@@ -164,15 +164,19 @@ public class Expand extends Task {
                     getLocation());
         }
         try {
-            zf = new ZipFile(srcF, encoding, failOnEmptyArchive);
+            zf = new ZipFile(srcF, encoding);
+            boolean empty = true;
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
+                empty = false;
                 ZipEntry ze = (ZipEntry) e.nextElement();
                 extractFile(fileUtils, srcF, dir, zf.getInputStream(ze),
                             ze.getName(), new Date(ze.getTime()),
                             ze.isDirectory(), mapper);
             }
-
+            if (empty && getFailOnEmptyArchive()) {
+                throw new BuildException("archive '" + srcF + "' is empty");
+            }
             log("expand complete", Project.MSG_VERBOSE);
         } catch (IOException ioe) {
             throw new BuildException(
