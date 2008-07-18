@@ -229,6 +229,12 @@ Other changes:
    make the task fail the build if it tries to extract an empty
    archive.
 
+ * <unzip> and <untar> have a new attribute stripAbsolutePathSpec.
+   When set to true, Ant will remove any leading path separator from
+   the archived entry's name before extracting it (making the name a
+   relative file name).
+   Bugzilla Report 28911.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

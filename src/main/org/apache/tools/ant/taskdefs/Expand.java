@@ -67,6 +67,7 @@ public class Expand extends Task {
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
     private boolean failOnEmptyArchive = false;
+    private boolean stripAbsolutePathSpec = false;
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
@@ -232,9 +233,19 @@ public class Expand extends Task {
                                boolean isDirectory, FileNameMapper mapper)
                                throws IOException {
 
+        if (stripAbsolutePathSpec && entryName.length() > 0
+            && (entryName.charAt(0) == File.separatorChar
+                || entryName.charAt(0) == '/'
+                || entryName.charAt(0) == '\\')) {
+            log("stripped absolute path spec from " + entryName,
+                Project.MSG_VERBOSE);
+            entryName = entryName.substring(1);
+        }
+
         if (patternsets != null && patternsets.size() > 0) {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
+
             boolean included = false;
             Set includePatterns = new HashSet();
             Set excludePatterns = new HashSet();
@@ -430,6 +441,15 @@ public class Expand extends Task {
             encoding = null;
         }
         this.encoding = encoding;
+    }
+
+    /**
+     * Whether leading path separators should be stripped.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setStripAbsolutePathSpec(boolean b) {
+        stripAbsolutePathSpec = b;
     }
 
 }

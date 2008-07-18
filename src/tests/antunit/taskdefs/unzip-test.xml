@@ -36,4 +36,19 @@
       <unzip src="broken_cd.zip" dest="${dest.dir}"/>
     </au:expectfailure>
   </target>
+
+  <!-- Issue 28911 -->
+  <target name="testStrippingOfPathsep">
+    <property name="in" location="${dest.dir}/input"/>
+    <property name="out" location="${dest.dir}/out"/>
+    <mkdir dir="${in}"/>
+    <mkdir dir="${out}"/>
+    <touch file="${in}/file"/>
+    <zip destfile="${dest.dir}/a.zip">
+      <zipfileset dir="${dest.dir}/input" prefix="/foo"/>
+    </zip>
+    <unzip src="${dest.dir}/a.zip" stripAbsolutePathSpec="true"
+           dest="${out}"/>
+    <au:assertFileExists file="${out}/foo/file"/>
+  </target>
 </project>
