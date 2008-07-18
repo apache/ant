@@ -118,6 +118,13 @@ public class Untar extends Expand {
      * @since Ant 1.7
      */
     protected void expandResource(Resource srcR, File dir) {
+        if (!srcR.isExists()) {
+            throw new BuildException("Unable to untar "
+                                     + srcR.getName()
+                                     + " as the it does not exist",
+                                     getLocation());
+        }
+
         InputStream i = null;
         try {
             i = srcR.getInputStream();

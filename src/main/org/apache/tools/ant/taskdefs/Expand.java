@@ -122,6 +122,10 @@ public class Expand extends Task {
             if (source.isDirectory()) {
                 throw new BuildException("Src must not be a directory."
                     + " Use nested filesets instead.", getLocation());
+            } else if (!source.exists()) {
+                throw new BuildException("src '" + source + "' doesn't exist.");
+            } else if (!source.canRead()) {
+                throw new BuildException("src '" + source + "' cannot be read.");
             } else {
                 expandFile(FILE_UTILS, source, dest);
             }
@@ -130,6 +134,7 @@ public class Expand extends Task {
         while (iter.hasNext()) {
             Resource r = (Resource) iter.next();
             if (!r.isExists()) {
+                log("Skipping '" + r.getName() + "' because it doesn't exist.");
                 continue;
             }
 
