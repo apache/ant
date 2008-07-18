@@ -260,6 +260,14 @@
     </zip>
   </target>
 
+  <target name="testForBugzilla34764">
+    <mkdir dir="ziptest"/>
+    <touch file="ziptest/file1"/>
+    <zip destfile="test3.zip" basedir="ziptest"/>
+    <touch file="ziptest/file2"/>
+    <zip destfile="test3.zip" basedir="ziptest" update="true"/>
+  </target>
+
   <target name="cleanup">
     <delete file="testLevel.zip"/>
     <delete file="test3.zip"/>

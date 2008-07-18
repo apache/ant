@@ -219,4 +219,19 @@ public class ZipTest extends BuildFileTest {
         }
     }
 
+    public void testForBugzilla34764() throws IOException {
+        executeTarget("testForBugzilla34764");
+        org.apache.tools.zip.ZipFile zf = null;
+        try {
+            zf = new org.apache.tools.zip.ZipFile(getProject()
+                                                  .resolveFile("test3.zip"));
+            org.apache.tools.zip.ZipEntry ze = zf.getEntry("file1");
+            assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
+        } finally {
+            if (zf != null) {
+                zf.close();
+            }
+        }
+    }
+
 }
