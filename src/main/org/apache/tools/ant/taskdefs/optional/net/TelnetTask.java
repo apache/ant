@@ -340,14 +340,17 @@ public class TelnetTask extends Task {
             InputStream is = this.getInputStream();
             try {
                 StringBuffer sb = new StringBuffer();
+                int windowStart = -s.length();
                 if (timeout == null || timeout.intValue() == 0) {
-                    while (sb.toString().indexOf(s) == -1) {
+                    while (windowStart++ < 0
+                           || !sb.substring(windowStart).equals(s)) {
                         sb.append((char) is.read());
                     }
                 } else {
                     Calendar endTime = Calendar.getInstance();
                     endTime.add(Calendar.SECOND, timeout.intValue());
-                    while (sb.toString().indexOf(s) == -1) {
+                    while (windowStart++ < 0
+                           || !sb.substring(windowStart).equals(s)) {
                         while (Calendar.getInstance().before(endTime)
                                && is.available() == 0) {
                             Thread.sleep(WAIT_INTERVAL);
