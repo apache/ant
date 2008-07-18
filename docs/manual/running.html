@@ -520,6 +520,22 @@ shell (of course unless called automatically from <code>ant.cmd</code>). It is t
 <p>Scripts <code>envset.cmd</code> and <code>runrc.cmd</code> perform auxiliary tasks. All scripts
 have some documentation inside.</p>
 
+<h2><a name="background">Running Ant as a background process on
+    Unix(-like) systems</a></h2>
+
+<p>If you start Ant as a background process (like in <code>ant
+    &</code>) and the build process creates another process, Ant will
+    immediately try to read from standard input, which in turn will
+    most likely suspend the process.  In order to avoid this, you must
+    redirect Ant's standard input or explicitly provide input to each
+    spawned process via the input related attributes of the
+    corresponding tasks.</p>
+
+<p>Tasks that create such new processes
+  include <code>&lt;exec&gt;</code>, <code>&lt;apply&gt;</code>
+  or <code>&lt;java&gt;</code> when the <code>fork</code> attribute is
+  <code>true</code>.</p>
+
 <h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
 from one of two entry points:</p>

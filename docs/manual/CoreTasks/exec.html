@@ -131,6 +131,15 @@ or the task will fail as follows:
 </blockquote>
 </p>
 
+<h4><a name="background">Running Ant as a background process on
+    Unix(-like) systems</a></h4>
+
+<p>If you run Ant as a background process (like <code>ant &</code>)
+  and use the <code>&lt;exec&gt;</code> task with <code>spawn</code>
+  set to <code>false</code>, you must provide explicit input to the
+  forked process or Ant will be suspended because it tries to read
+  from the standard input.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
