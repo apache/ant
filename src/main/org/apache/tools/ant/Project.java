@@ -822,7 +822,7 @@ public class Project implements ResourceFactory {
         this.baseDir = baseDir;
         setPropertyInternal(MagicNames.PROJECT_BASEDIR, this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
-         log(msg, MSG_VERBOSE);
+        log(msg, MSG_VERBOSE);
     }
 
     /**

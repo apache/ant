@@ -59,4 +59,10 @@
          target="testSubAntDoesntSetBasedir"/>
   </target>
 
+  <target name="testSubAntDoesntSetBasedirAfterAntWithDirWhenNativeDir">
+    <ant antfile="${ant.file}" dir="${basedir}"
+         target="testSubAntDoesntSetBasedir"
+         allowNativeBaseDir="true"/>
+  </target>
+
 </project>

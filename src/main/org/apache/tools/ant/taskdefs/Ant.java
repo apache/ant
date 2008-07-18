@@ -107,6 +107,15 @@ public class Ant extends Task {
     private boolean targetAttributeSet = false;
 
     /**
+     * Whether the basedir of the new project should be the same one
+     * as it would be when running the build file directly -
+     * independent of dir and/or inheritAll settings.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean allowNativeBasedir = false;
+
+    /**
      * simple constructor
      */
     public Ant() {
@@ -121,6 +130,16 @@ public class Ant extends Task {
         bindToOwner(owner);
     }
 
+    /**
+     * Whether the basedir of the new project should be the same one
+     * as it would be when running the build file directly -
+     * independent of dir and/or inheritAll settings.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setAllowNativeBasedir(boolean b) {
+        allowNativeBasedir = b;
+    }
 
     /**
      * If true, pass all properties to the new Ant project.
@@ -321,11 +340,13 @@ public class Ant extends Task {
             initializeProject();
 
             if (dir != null) {
+                if (!allowNativeBasedir) {
                 newProject.setBaseDir(dir);
                 if (savedDir != null) {
                     // has been set explicitly
                     newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
                                                     dir.getAbsolutePath());
+                }
                 }
             } else {
                 dir = getProject().getBaseDir();

@@ -553,6 +553,8 @@ public class SubAnt extends Task {
 
         if (directory != null) {
             antTask.setDir(directory);
+        } else {
+            antTask.setAllowNativeBasedir(true);
         }
 
         antTask.setInheritAll(inheritAll);
