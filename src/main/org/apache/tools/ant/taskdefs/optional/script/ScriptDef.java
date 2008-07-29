@@ -132,7 +132,7 @@ public class ScriptDef extends DefBase {
      * Class to represent a nested element definition
      */
     public static class NestedElement {
-        /** The name of the neseted element */
+        /** The name of the nested element */
         private String name;
 
         /** The Ant type to which this nested element corresponds. */
@@ -264,7 +264,7 @@ public class ScriptDef extends DefBase {
     /**
      * Find or create the script repository - it is stored in the project.
      * This method is synchronized on the project under {@link MagicNames#SCRIPT_REPOSITORY}
-     * @return the current script repository registered as a refrence.
+     * @return the current script repository registered as a reference.
      */
     private Map lookupScriptRepository() {
         Map scriptRepository = null;
