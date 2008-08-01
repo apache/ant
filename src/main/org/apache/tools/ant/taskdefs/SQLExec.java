@@ -46,6 +46,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
@@ -810,7 +811,10 @@ public class SQLExec extends JDBCTask {
     private void printValue(ResultSet rs, int col, PrintStream out)
             throws SQLException {
         if (rawBlobs && rs.getMetaData().getColumnType(col) == Types.BLOB) {
-            new StreamPumper(rs.getBlob(col).getBinaryStream(), out).run();
+            Blob blob = rs.getBlob(col);
+            if (blob != null) {
+                new StreamPumper(rs.getBlob(col).getBinaryStream(), out).run();
+            }
         } else {
             out.print(maybeQuote(rs.getString(col)));
         }
