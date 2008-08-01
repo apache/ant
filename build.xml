@@ -119,6 +119,7 @@
        ===================================================================
   -->
   <path id="classpath">
+    <fileset dir="lib/optional" includes="junit*.jar"/>
   </path>
 
   <path id="tests-classpath">
