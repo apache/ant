@@ -229,6 +229,23 @@
   </faqsection>
 
   <faqsection title="Installation">
+    <faq id="java-version">
+      <question>Which version of Java is required to run
+        Ant?</question>
+      <answer>
+
+        <p>You will need Java installed on your system, version 1.3 or
+          later required, 1.5 or later strongly recommended. The later
+          the version of Java, the more Ant tasks you get.</p>
+
+        <p>If only the JRE is present but not a full JDK then many
+          tasks will not work.</p>
+
+        <p>Ant 1.6.* works with jdk 1.2 and higher, Ant 1.1 to Ant
+          1.5.* work with jdk 1.1 and higher.</p>
+      </answer>
+    </faq>
+
     <faq id="no-gnu-tar">
       <question>I get checksum errors when I try to extract the
       <code>tar.gz</code> distribution file. Why?</question>
