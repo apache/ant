@@ -251,9 +251,9 @@ if $cygwin; then
   else
     format=windows
   fi
-  ANT_HOME=`cygpath --$format "$ANT_HOME"`
+  [ -n "$ANT_HOME" ] && ANT_HOME=`cygpath --$format "$ANT_HOME"`
   ANT_LIB=`cygpath --$format "$ANT_LIB"`
-  JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
   LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --$format "$LCP_TEMP"`
   if [ -n "$CLASSPATH" ] ; then
