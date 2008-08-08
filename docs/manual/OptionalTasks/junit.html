@@ -143,7 +143,10 @@ elements</a>).</p>
     <td valign="top">timeout</td>
     <td valign="top">Cancel the individual tests if they don't finish
       in the given time (measured in milliseconds).  Ignored if
-      <code>fork</code> is disabled.</td>
+      <code>fork</code> is disabled.  When running multiple tests
+      inside the same Java VM (see forkMode), timeout applies to the
+      time that all tests use together, not to an individual
+      test.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
