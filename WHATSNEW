@@ -235,6 +235,10 @@ Other changes:
    relative file name).
    Bugzilla Report 28911.
 
+ * <unzip> will now detect that it was asked to extract a file that is
+   not an archive earlier if the file is big.
+   Bugzilla Report 45463.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

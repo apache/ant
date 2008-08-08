@@ -366,6 +366,9 @@ public class ZipFile {
         /* the starting disk number        */ + WORD
         /* zipfile comment length          */ + SHORT;
 
+    private static final int MAX_EOCD_SIZE = MIN_EOCD_SIZE
+        /* maximum length of zipfile comment */ + 0xFFFF;
+
     private static final int CFD_LOCATOR_OFFSET =
         /* end of central dir signature    */ WORD
         /* number of this disk             */ + SHORT
@@ -386,11 +389,12 @@ public class ZipFile {
         throws IOException {
         boolean found = false;
         long off = archive.length() - MIN_EOCD_SIZE;
+        long stopSearching = Math.max(0L, archive.length() - MAX_EOCD_SIZE);
         if (off >= 0) {
             archive.seek(off);
             byte[] sig = ZipOutputStream.EOCD_SIG;
             int curr = archive.read();
-            while (curr != -1) {
+            while (off >= stopSearching && curr != -1) {
                 if (curr == sig[POS_0]) {
                     curr = archive.read();
                     if (curr == sig[POS_1]) {
