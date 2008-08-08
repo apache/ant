@@ -141,6 +141,10 @@ Fixed bugs:
  * The IPlanetDeploymentToll didn't use the configured DTD locations.
    Bugzilla Report 31876.
 
+ * The ant shell script printed a warning unser Cygwin if JAVA_HOME
+   was not set.
+   Bugzilla Report 45245.
+
 Other changes:
 --------------
 
