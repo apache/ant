@@ -984,6 +984,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 }
             }
         } catch (Exception e) {
+            log("Unable to obtain resource from " + file + ": " + e, Project.MSG_WARN);
             e.printStackTrace();
         }
         return null;
