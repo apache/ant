@@ -1039,10 +1039,18 @@ public class JUnitTask extends Task {
                     vmWatcher.delete();
                 }
             }
+
+            boolean crash = (watchdog != null && watchdog.killedProcess())
+                || !Constants.TERMINATED_SUCCESSFULLY.equals(vmCrashString);
+
+            if (casesFile != null && crash) {
+                test = createDummyTestForBatchTest(test);
+            }
+
             if (watchdog != null && watchdog.killedProcess()) {
                 result.timedOut = true;
                 logTimeout(feArray, test, vmCrashString);
-            } else if (!Constants.TERMINATED_SUCCESSFULLY.equals(vmCrashString)) {
+            } else if (crash) {
                 result.crashed = true;
                 logVmCrash(feArray, test, vmCrashString);
             }
@@ -1916,5 +1924,29 @@ public class JUnitTask extends Task {
             super(new JUnitLogOutputStream(task, outlevel),
                   new LogOutputStream(task, errlevel));
         }
+    }
+
+    /**
+     * Creates a JUnitTest instance that shares all flags with the
+     * passed in instance but has a more meaningful name.
+     *
+     * <p>If a VM running multiple tests crashes, we don't know which
+     * test failed.  Prior to Ant 1.8.0 Ant would log the error with
+     * the last test of the batch test, which caused some confusion
+     * since the log might look as if a test had been executed last
+     * that was never started.  With Ant 1.8.0 the test's name will
+     * indicate that something went wrong with a test inside the batch
+     * without giving it a real name.</p>
+     *
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=45227
+     */
+    private static JUnitTest createDummyTestForBatchTest(JUnitTest test) {
+        JUnitTest t = (JUnitTest) test.clone();
+        int index = test.getName().indexOf(".");
+        // make sure test looks as if it was in the same "package" as
+        // the last test of the batch
+        String pack = index > 0 ? test.getName().substring(0, index + 1) : "";
+        t.setName(pack + "Batch-With-Multiple-Tests");
+        return t;
     }
 }

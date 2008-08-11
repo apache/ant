@@ -76,6 +76,15 @@ Changes that could break older environments:
    that can be set to restore the old behavior.
    Bugzilla Report 42122.
 
+ * If a batch containing multiple JUnit tests running inside a forked
+   Java VM caused the VM to crash (or caused a timeout), the
+   formatters would receive an error message for the last test in the
+   batch.
+   Ant will now pass in a test with the name "Batch-With-Multiple-Tests"
+   instead - this is supposed to show more clearly that the last test
+   may not have started at all.
+   Bugzilla Report 45227.
+
 Fixed bugs:
 -----------
 

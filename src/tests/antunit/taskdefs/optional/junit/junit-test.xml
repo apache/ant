@@ -44,7 +44,7 @@ public class @{classname} extends TestCase {
     </sequential>
   </macrodef>
 
-  <target name="XtestTimeoutLogOfBatchTests">
+  <target name="testTimeoutLogOfBatchTests">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
     <empty-test classname="ATest"/>
@@ -72,6 +72,8 @@ public class BTest extends TestCase {
         </fileset>
       </batchtest>
     </junit>
+    <au:assertLogContains text="ATest"/>
+    <au:assertLogContains text="BTest"/>
     <au:assertLogDoesntContain text="CTest"/>
     <au:assertLogDoesntContain text="DTest"/>
   </target>
