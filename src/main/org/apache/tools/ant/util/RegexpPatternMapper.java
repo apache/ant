@@ -81,14 +81,14 @@ public class RegexpPatternMapper implements FileNameMapper {
      */
     public void setFrom(String from) throws BuildException {
         if (from != null) {
-        try {
-            reg.setPattern(from);
-        } catch (NoClassDefFoundError e) {
-            // depending on the implementation the actual RE won't
-            // get instantiated in the constructor.
-            throw new BuildException("Cannot load regular expression matcher",
-                                     e);
-        }
+            try {
+                reg.setPattern(from);
+            } catch (NoClassDefFoundError e) {
+                // depending on the implementation the actual RE won't
+                // get instantiated in the constructor.
+                throw new BuildException("Cannot load regular expression matcher",
+                                         e);
+            }
         } else {
             throw new BuildException("this mapper requires a 'from' attribute");
         }
@@ -101,7 +101,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      */
     public void setTo(String to) {
         if (to != null) {
-        this.to = to.toCharArray();
+            this.to = to.toCharArray();
         } else {
             throw new BuildException("this mapper requires a 'to' attribute");
         }

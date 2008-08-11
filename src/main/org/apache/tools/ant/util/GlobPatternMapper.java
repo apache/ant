@@ -98,16 +98,16 @@ public class GlobPatternMapper implements FileNameMapper {
      */
     public void setFrom(String from) {
         if (from != null) {
-        int index = from.lastIndexOf("*");
-        if (index == -1) {
-            fromPrefix = from;
-            fromPostfix = "";
-        } else {
-            fromPrefix = from.substring(0, index);
-            fromPostfix = from.substring(index + 1);
-        }
-        prefixLength = fromPrefix.length();
-        postfixLength = fromPostfix.length();
+            int index = from.lastIndexOf("*");
+            if (index == -1) {
+                fromPrefix = from;
+                fromPostfix = "";
+            } else {
+                fromPrefix = from.substring(0, index);
+                fromPostfix = from.substring(index + 1);
+            }
+            prefixLength = fromPrefix.length();
+            postfixLength = fromPostfix.length();
         } else {
             throw new BuildException("this mapper requires a 'from' attribute");
         }
@@ -119,14 +119,14 @@ public class GlobPatternMapper implements FileNameMapper {
      */
     public void setTo(String to) {
         if (to != null) {
-        int index = to.lastIndexOf("*");
-        if (index == -1) {
-            toPrefix = to;
-            toPostfix = "";
-        } else {
-            toPrefix = to.substring(0, index);
-            toPostfix = to.substring(index + 1);
-        }
+            int index = to.lastIndexOf("*");
+            if (index == -1) {
+                toPrefix = to;
+                toPostfix = "";
+            } else {
+                toPrefix = to.substring(0, index);
+                toPostfix = to.substring(index + 1);
+            }
         } else {
             throw new BuildException("this mapper requires a 'to' attribute");
         }
