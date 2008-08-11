@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Implementation of FileNameMapper that does simple wildcard pattern
  * replacements.
@@ -95,6 +97,7 @@ public class GlobPatternMapper implements FileNameMapper {
      * @param from a string
      */
     public void setFrom(String from) {
+        if (from != null) {
         int index = from.lastIndexOf("*");
         if (index == -1) {
             fromPrefix = from;
@@ -105,6 +108,9 @@ public class GlobPatternMapper implements FileNameMapper {
         }
         prefixLength = fromPrefix.length();
         postfixLength = fromPostfix.length();
+        } else {
+            throw new BuildException("this mapper requires a 'from' attribute");
+        }
     }
 
     /**
@@ -112,6 +118,7 @@ public class GlobPatternMapper implements FileNameMapper {
      * @param to a string
      */
     public void setTo(String to) {
+        if (to != null) {
         int index = to.lastIndexOf("*");
         if (index == -1) {
             toPrefix = to;
@@ -119,6 +126,9 @@ public class GlobPatternMapper implements FileNameMapper {
         } else {
             toPrefix = to.substring(0, index);
             toPostfix = to.substring(index + 1);
+        }
+        } else {
+            throw new BuildException("this mapper requires a 'to' attribute");
         }
     }
 

@@ -221,7 +221,7 @@ leading directory information stripped off. Both <code>to</code> and
     <!--                                        -->
 
 <h4><a name="glob-mapper">glob</a></h4>
-<p>Both <code>to</code> and <code>from</code> define patterns that may
+<p>Both <code>to</code> and <code>from</code> are required and define patterns that may
 contain at most one <code>*</code>. For each source file that matches
 the <code>from</code> pattern, a target file name will be constructed
 from the <code>to</code> pattern by substituting the <code>*</code> in
@@ -350,7 +350,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
     <!--                                        -->
 
 <h4><a name="regexp-mapper">regexp</a></h4>
-<p>Both <code>to</code> and <code>from</code> define regular
+<p>Both <code>to</code> and <code>from</code> are required and define regular
 expressions. If the source file name matches the <code>from</code>
 pattern, the target file name will be constructed from the
 <code>to</code> pattern, using <code>\0</code> to <code>\9</code> as
@@ -571,6 +571,7 @@ the package mapper replaces
 directory separators found in the matched source pattern with dots in the target
 pattern placeholder. This mapper is particularly useful in combination
 with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
+<p>The to and from attributes are both required.</p>
 <b>Example:</b>
 <blockquote><pre>
 &lt;mapper type="package" from="*Test.java" to="TEST-*Test.xml"/&gt;
@@ -602,6 +603,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     test cases. The mapper shares the sample syntax
     as the <a href="#glob-mapper">glob mapper</a>.
   </p>
+<p>The to and from attributes are both required.</p>
 <b>Example:</b>
 <blockquote><pre>
 &lt;mapper type="unpackage" from="TEST-*Test.xml" to="${test.src.dir}/*Test.java"&gt;
