@@ -42,8 +42,12 @@
     classname="org.apache.tools.ant.types.resources.selectors.Not" />
   <typedef name="or"
     classname="org.apache.tools.ant.types.resources.selectors.Or" />
+  <typedef name="readable"
+    classname="org.apache.tools.ant.types.selectors.ReadableSelector" />
   <typedef name="size"
     classname="org.apache.tools.ant.types.resources.selectors.Size" />
   <typedef name="type"
     classname="org.apache.tools.ant.types.resources.selectors.Type" />
+  <typedef name="writable"
+    classname="org.apache.tools.ant.types.selectors.WritableSelector" />
 </antlib>

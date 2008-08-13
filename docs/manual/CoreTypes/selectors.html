@@ -89,6 +89,10 @@
         Use a BSF or JSR 223 scripting language to create
         your own selector
       </li>
+      <li><a href="#readable"><code>&lt;readable&gt;</code></a> -
+        Select files if they are readable.</li>
+      <li><a href="#writable"><code>&lt;writable&gt;</code></a> -
+        Select files if they are writable.</li>
     </ul>
 
     <a name="containsselect"></a>
@@ -968,6 +972,24 @@
           <td valign="top" align="center">no</td>
         </tr>
       </table>
+
+      <a name="readable"></a>
+      <h4>Readable Selector</h4>
+
+      <p>The <code>&lt;readable&gt;</code> selector selects only files
+        that are readable.  Ant only invokes
+        <code>java.io.File#canRead</code> so if a file is unreadable
+        but the Java VM cannot detect this state, this selector will
+        still select the file.</p>
+
+      <a name="writable"></a>
+      <h4>Writable Selector</h4>
+
+      <p>The <code>&lt;writable&gt;</code> selector selects only files
+        that are writable.  Ant only invokes
+        <code>java.io.File#canWrite</code> so if a file is unwritable
+        but the Java VM cannot detect this state, this selector will
+        still select the file.</p>
 
       <a name="scriptselector"></a>
       <h4>Script Selector</h4>

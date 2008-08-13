@@ -252,6 +252,11 @@ Other changes:
    not an archive earlier if the file is big.
    Bugzilla Report 45463.
 
+ * New file and resource selectors <readable/> and <writable/> have
+   been added that select file which the current process can read or
+   write.
+   Bugzilla Report 45081.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

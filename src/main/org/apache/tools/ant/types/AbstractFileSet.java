@@ -45,6 +45,8 @@ import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.DifferentSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
+import org.apache.tools.ant.types.selectors.ReadableSelector;
+import org.apache.tools.ant.types.selectors.WritableSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
@@ -722,6 +724,14 @@ public abstract class AbstractFileSet extends DataType
      */
     public void addModified(ModifiedSelector selector) {
         appendSelector(selector);
+    }
+
+    public void addReadable(ReadableSelector r) {
+        appendSelector(r);
+    }
+
+    public void addWritable(WritableSelector w) {
+        appendSelector(w);
     }
 
     /**

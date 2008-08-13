@@ -301,6 +301,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
+    public void addReadable(ReadableSelector r) {
+        appendSelector(r);
+    }
+
+    public void addWritable(WritableSelector w) {
+        appendSelector(w);
+    }
+
     /**
      * add an arbitary selector
      * @param selector the selector to add
