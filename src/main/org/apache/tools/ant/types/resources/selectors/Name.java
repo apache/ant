@@ -17,16 +17,30 @@
  */
 package org.apache.tools.ant.types.resources.selectors;
 
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
  * Name ResourceSelector.
  * @since Ant 1.7
  */
 public class Name implements ResourceSelector {
+    private String regex = null;
     private String pattern;
     private boolean cs = true;
+
+    // caches for performance reasons
+    private RegularExpression reg;
+    private Regexp expression;
+
+    private Project project;
+
+    public void setProject(Project p) {
+        project = p;
+    }
 
     /**
      * Set the pattern to compare names against.
@@ -42,6 +56,23 @@ public class Name implements ResourceSelector {
      */
     public String getName() {
         return pattern;
+    }
+
+    /**
+     * Set the regular expression to compare names against.
+     * @param r the regex to set.
+     */
+    public void setRegex(String r) {
+        regex = r;
+        reg = null;
+    }
+
+    /**
+     * Get the regular expression used by this Name ResourceSelector.
+     * @return the String selection pattern.
+     */
+    public String getRegex() {
+        return regex;
     }
 
     /**
@@ -67,11 +98,27 @@ public class Name implements ResourceSelector {
      */
     public boolean isSelected(Resource r) {
         String n = r.getName();
-        if (SelectorUtils.match(pattern, n, cs)) {
+        if (matches(n)) {
             return true;
         }
         String s = r.toString();
-        return s.equals(n) ? false : SelectorUtils.match(pattern, s, cs);
+        return s.equals(n) ? false : matches(s);
     }
 
+    private boolean matches(String name) {
+        if (pattern != null) {
+            return SelectorUtils.match(pattern, name, cs);
+        } else {
+            if (reg == null) {
+                reg = new RegularExpression();
+                reg.setPattern(regex);
+                expression = reg.getRegexp(project);
+            }
+            int options = Regexp.MATCH_DEFAULT;
+            if (!cs) {
+                options |= Regexp.MATCH_CASE_INSENSITIVE;
+            }
+            return expression.matches(name, options);
+        }
+    }
 }

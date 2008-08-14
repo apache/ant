@@ -51,7 +51,7 @@ public class FilenameSelectorTest extends BaseSelectorTest {
             s.isSelected(basedir,filenames[0],files[0]);
             fail("FilenameSelector did not check for required fields");
         } catch (BuildException be1) {
-            assertEquals("The name attribute is required", be1.getMessage());
+            assertEquals("The name or regex attribute is required", be1.getMessage());
         }
 
         s = (FilenameSelector)getInstance();

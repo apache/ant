@@ -257,6 +257,16 @@ Other changes:
    write.
    Bugzilla Report 45081.
 
+ * The filename file selector has a new attribute regex that allows
+   files to be selected by matching their names against a regular
+   expression.
+   Bugzilla Report 45284
+
+ * The name resource selector has a new attribute regex that allows
+   resources to be selected by matching their names against a regular
+   expression.
+   Bugzilla Report 45284
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

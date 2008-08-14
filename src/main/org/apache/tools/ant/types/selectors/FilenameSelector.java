@@ -22,6 +22,8 @@ import java.io.File;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.RegularExpression;
+import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
  * Selector that filters files based on the filename.
@@ -31,6 +33,7 @@ import org.apache.tools.ant.types.Parameter;
 public class FilenameSelector extends BaseExtendSelector {
 
     private String pattern = null;
+    private String regex = null;
     private boolean casesensitive = true;
 
     private boolean negated = false;
@@ -40,6 +43,12 @@ public class FilenameSelector extends BaseExtendSelector {
     public static final String CASE_KEY = "casesensitive";
     /** Used for parameterized custom selector */
     public static final String NEGATE_KEY = "negate";
+    /** Used for parameterized custom selector */
+    public static final String REGEX_KEY = "regex";
+
+    // caches for performance reasons
+    private RegularExpression reg;
+    private Regexp expression;
 
     /**
      * Creates a new <code>FilenameSelector</code> instance.
@@ -53,19 +62,14 @@ public class FilenameSelector extends BaseExtendSelector {
      */
     public String toString() {
         StringBuffer buf = new StringBuffer("{filenameselector name: ");
+        if (pattern != null) {
         buf.append(pattern);
-        buf.append(" negate: ");
-        if (negated) {
-            buf.append("true");
-        } else {
-            buf.append("false");
         }
-        buf.append(" casesensitive: ");
-        if (casesensitive) {
-            buf.append("true");
-        } else {
-            buf.append("false");
+        if (regex != null) {
+            buf.append(regex).append(" [as regular expression]");
         }
+        buf.append(" negate: ").append(negated);
+        buf.append(" casesensitive: ").append(casesensitive);
         buf.append("}");
         return buf.toString();
     }
@@ -84,6 +88,17 @@ public class FilenameSelector extends BaseExtendSelector {
             pattern += "**";
         }
         this.pattern = pattern;
+    }
+
+    /**
+     * The regular expression the file name will be matched against.
+     *
+     * @param pattern the regular expression that any filename must match
+     *                against in order to be selected.
+     */
+    public void setRegex(String pattern) {
+        this.regex = pattern;
+        this.reg = null;
     }
 
     /**
@@ -125,6 +140,8 @@ public class FilenameSelector extends BaseExtendSelector {
                             parameters[i].getValue()));
                 } else if (NEGATE_KEY.equalsIgnoreCase(paramname)) {
                     setNegate(Project.toBoolean(parameters[i].getValue()));
+                } else if (REGEX_KEY.equalsIgnoreCase(paramname)) {
+                    setRegex(parameters[i].getValue());
                 } else {
                     setError("Invalid parameter " + paramname);
                 }
@@ -138,8 +155,10 @@ public class FilenameSelector extends BaseExtendSelector {
      *
      */
     public void verifySettings() {
-        if (pattern == null) {
-            setError("The name attribute is required");
+        if (pattern == null && regex == null) {
+            setError("The name or regex attribute is required");
+        } else if (pattern != null && regex != null) {
+            setError("Only one of name and regex attribute is allowed");
         }
     }
 
@@ -157,9 +176,21 @@ public class FilenameSelector extends BaseExtendSelector {
      */
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
-
+        if (pattern != null) {
         return (SelectorUtils.matchPath(pattern, filename,
                 casesensitive) == !(negated));
+        } else {
+            if (reg == null) {
+                reg = new RegularExpression();
+                reg.setPattern(regex);
+                expression = reg.getRegexp(getProject());
+            }
+            int options = Regexp.MATCH_DEFAULT;
+            if (!casesensitive) {
+                options |= Regexp.MATCH_CASE_INSENSITIVE;
+            }
+            return expression.matches(filename, options) == !negated;
+        }
     }
 
 }
