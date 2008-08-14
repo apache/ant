@@ -63,7 +63,7 @@ public class FilenameSelector extends BaseExtendSelector {
     public String toString() {
         StringBuffer buf = new StringBuffer("{filenameselector name: ");
         if (pattern != null) {
-        buf.append(pattern);
+            buf.append(pattern);
         }
         if (regex != null) {
             buf.append(regex).append(" [as regular expression]");
@@ -177,8 +177,8 @@ public class FilenameSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
         if (pattern != null) {
-        return (SelectorUtils.matchPath(pattern, filename,
-                casesensitive) == !(negated));
+            return (SelectorUtils.matchPath(pattern, filename,
+                                            casesensitive) == !(negated));
         } else {
             if (reg == null) {
                 reg = new RegularExpression();
