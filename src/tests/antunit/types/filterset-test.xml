@@ -15,27 +15,29 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml" />
 
   <property name="br" value="${line.separator}" />
 
   <target name="testRecursionRegression">
     <copy todir="${basedir}">
-      <string value="@a@${br}@b@${br}@c@${br}" />
+      <string value="@a@${br}@b@${br}@c@${br}@d@${br}" />
       <mergemapper to="filterset-output.txt" />
       <filterset>
         <filter token="a" value="aaa" />
         <filter token="b" value="bbb" />
         <filter token="c" value="@a@:@b@" />
+        <filter token="d" value="@c@:@c@" />
       </filterset>
     </copy>
 
-    <au:assertTrue>
-      <resourcesmatch astext="true">
-        <file file="filterset-output.txt" />
-        <string value="aaa${br}bbb${br}aaa:bbb${br}" />
-      </resourcesmatch>
-    </au:assertTrue>
+    <loadfile property="afterfiltering" srcFile="filterset-output.txt"/>
+
+    <au:assertEquals
+       expected="aaa${br}bbb${br}aaa:bbb${br}aaa:bbb:aaa:bbb${br}"
+       actual="${afterfiltering}"/>
   </target>
 
   <target name="tearDown">

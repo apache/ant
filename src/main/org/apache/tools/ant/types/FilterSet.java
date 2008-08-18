@@ -593,6 +593,9 @@ public class FilterSet extends DataType implements Cloneable {
                     duplicateToken = false;
                 }
             }
+        } else if (passedTokens.size() > 0) {
+            // remove last seen token when crawling out of recursion 
+            passedTokens.remove(passedTokens.size() - 1);
         }
         recurseDepth--;
         return value;

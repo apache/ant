@@ -154,6 +154,10 @@ Fixed bugs:
    was not set.
    Bugzilla Report 45245.
 
+ * <filterset> sometimes incorrectly flagged infinite recursions of
+   filter tokens
+   Bugzilla Report 44226.
+
 Other changes:
 --------------
 
