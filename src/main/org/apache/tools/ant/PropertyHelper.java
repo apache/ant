@@ -951,7 +951,8 @@ public class PropertyHelper implements GetProperty {
     protected List getDelegates(Class type) {
         Hashtable curDelegates = delegates;
         return curDelegates.containsKey(type)
-                ? (List) new ArrayList((List) curDelegates.get(type)) : Collections.EMPTY_LIST;
+            ? (List) new ArrayList((List) curDelegates.get(type))
+            : Collections.EMPTY_LIST;
     }
 
     /**
