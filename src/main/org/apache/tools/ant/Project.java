@@ -2004,7 +2004,7 @@ public class Project implements ResourceFactory {
     public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].buildStarted(event);
         }
     }
@@ -2020,7 +2020,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].buildFinished(event);
         }
         // Inform IH to clear the cache
@@ -2036,7 +2036,7 @@ public class Project implements ResourceFactory {
     public void fireSubBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             if (currListeners[i] instanceof SubBuildListener) {
                 ((SubBuildListener) currListeners[i]).subBuildStarted(event);
             }
@@ -2056,7 +2056,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             if (currListeners[i] instanceof SubBuildListener) {
                 ((SubBuildListener) currListeners[i]).subBuildFinished(event);
             }
@@ -2073,7 +2073,7 @@ public class Project implements ResourceFactory {
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].targetStarted(event);
         }
 
@@ -2093,7 +2093,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].targetFinished(event);
         }
 
@@ -2111,7 +2111,7 @@ public class Project implements ResourceFactory {
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].taskStarted(event);
         }
     }
@@ -2133,7 +2133,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
         BuildListener[] currListeners = listeners;
-        for (int i = 0; i<currListeners.length; i++) {
+        for (int i = 0; i < currListeners.length; i++) {
             currListeners[i].targetFinished(event);
         }
 
@@ -2178,7 +2178,7 @@ public class Project implements ResourceFactory {
         try {
             isLoggingMessage.set(Boolean.TRUE);
             BuildListener[] currListeners = listeners;
-            for (int i = 0; i<currListeners.length; i++) {
+            for (int i = 0; i < currListeners.length; i++) {
                 currListeners[i].messageLogged(event);
             }
         } finally {
