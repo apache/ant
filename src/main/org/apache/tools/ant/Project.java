@@ -422,10 +422,10 @@ public class Project implements ResourceFactory {
     }
 
     /**
-	 * Return a copy of the list of build listeners for the project.
-	 * 
-	 * @return a list of build listeners for the project
-	 */
+         * Return a copy of the list of build listeners for the project.
+         * 
+         * @return a list of build listeners for the project
+         */
     public Vector getBuildListeners() {
         synchronized (listenersLock) {
             Vector r = new Vector(listeners.length);
@@ -2002,7 +2002,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(this);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].buildStarted(event);
+                currListeners[i].buildStarted(event);
         }
     }
 
@@ -2018,7 +2018,7 @@ public class Project implements ResourceFactory {
         event.setException(exception);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].buildFinished(event);
+                currListeners[i].buildFinished(event);
         }
         // Inform IH to clear the cache
         IntrospectionHelper.clearCache();
@@ -2034,7 +2034,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(this);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	if (currListeners[i] instanceof SubBuildListener) {
+                if (currListeners[i] instanceof SubBuildListener) {
                 ((SubBuildListener) currListeners[i]).subBuildStarted(event);
             }
         }
@@ -2054,7 +2054,7 @@ public class Project implements ResourceFactory {
         event.setException(exception);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	if (currListeners[i] instanceof SubBuildListener) {
+                if (currListeners[i] instanceof SubBuildListener) {
                 ((SubBuildListener) currListeners[i]).subBuildFinished(event);
             }
         }
@@ -2071,7 +2071,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(target);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].targetStarted(event);
+                currListeners[i].targetStarted(event);
         }
 
     }
@@ -2091,7 +2091,7 @@ public class Project implements ResourceFactory {
         event.setException(exception);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].targetFinished(event);
+                currListeners[i].targetFinished(event);
         }
 
     }
@@ -2109,7 +2109,7 @@ public class Project implements ResourceFactory {
         BuildEvent event = new BuildEvent(task);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].taskStarted(event);
+                currListeners[i].taskStarted(event);
         }
     }
 
@@ -2131,7 +2131,7 @@ public class Project implements ResourceFactory {
         event.setException(exception);
         BuildListener[] currListeners = listeners;
         for (int i=0; i<currListeners.length; i++) {
-        	currListeners[i].targetFinished(event);
+                currListeners[i].targetFinished(event);
         }
 
     }
@@ -2176,7 +2176,7 @@ public class Project implements ResourceFactory {
             isLoggingMessage.set(Boolean.TRUE);
             BuildListener[] currListeners = listeners;
             for (int i=0; i<currListeners.length; i++) {
-            	currListeners[i].messageLogged(event);
+                currListeners[i].messageLogged(event);
             }
         } finally {
             isLoggingMessage.set(Boolean.FALSE);
