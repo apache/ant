@@ -157,6 +157,9 @@ Fixed bugs:
  * <filterset> sometimes incorrectly flagged infinite recursions of
    filter tokens
    Bugzilla Report 44226.
+   
+ * Enhance performance of Project.fireMessageLoggedEvent  
+   Bugzilla Report 45651.
 
 Other changes:
 --------------
