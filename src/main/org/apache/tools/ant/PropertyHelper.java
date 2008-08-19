@@ -177,7 +177,7 @@ public class PropertyHelper implements GetProperty {
 
     private Project project;
     private PropertyHelper next;
-    private Hashtable delegates = new Hashtable();
+    private volatile Hashtable delegates = new Hashtable();
 
     /** Project properties map (usually String to String). */
     private Hashtable properties = new Hashtable();
@@ -949,8 +949,9 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8
      */
     protected List getDelegates(Class type) {
-        return delegates.containsKey(type)
-                ? (List) new ArrayList((List) delegates.get(type)) : Collections.EMPTY_LIST;
+        Hashtable curDelegates = delegates;
+        return curDelegates.containsKey(type)
+                ? (List) new ArrayList((List) curDelegates.get(type)) : Collections.EMPTY_LIST;
     }
 
     /**
