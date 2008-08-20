@@ -65,19 +65,19 @@ public class ComponentHelper  {
     private AntTypeTable antTypeTable;
 
     /** Map of tasks generated from antTypeTable */
-    private Hashtable taskClassDefinitions = new Hashtable();
+    private final Hashtable taskClassDefinitions = new Hashtable();
 
     /** flag to rebuild taskClassDefinitions */
     private boolean rebuildTaskClassDefinitions = true;
 
     /** Map of types generated from antTypeTable */
-    private Hashtable typeClassDefinitions = new Hashtable();
+    private final Hashtable typeClassDefinitions = new Hashtable();
 
     /** flag to rebuild typeClassDefinitions */
     private boolean rebuildTypeClassDefinitions = true;
 
     /** Set of namespaces that have been checked for antlibs */
-    private Set checkedNamespaces = new HashSet();
+    private final HashSet checkedNamespaces = new HashSet();
 
     /**
      * Stack of antlib contexts used to resolve definitions while
@@ -193,6 +193,13 @@ public class ComponentHelper  {
     }
 
     /**
+     * @return A copy of the CheckedNamespace.
+     */
+    private synchronized Set getCheckedNamespace() {
+        return (Set) checkedNamespaces.clone();
+    }
+    
+    /**
      * Used with creating child projects. Each child
      * project inherits the component definitions
      * from its parent.
@@ -200,14 +207,17 @@ public class ComponentHelper  {
      */
     public void initSubProject(ComponentHelper helper) {
         // add the types of the parent project
-        AntTypeTable typeTable = helper.antTypeTable;
-        for (Iterator i = typeTable.values().iterator(); i.hasNext();) {
-            AntTypeDefinition def = (AntTypeDefinition) i.next();
-            antTypeTable.put(def.getName(), def);
+        AntTypeTable typeTable = (AntTypeTable) helper.antTypeTable.clone();
+        synchronized (antTypeTable) { 
+            for (Iterator i = typeTable.values().iterator(); i.hasNext();) {
+                AntTypeDefinition def = (AntTypeDefinition) i.next();
+                antTypeTable.put(def.getName(), def);
+            }
         }
         // add the parsed namespaces of the parent project
-        for (Iterator i = helper.checkedNamespaces.iterator(); i.hasNext();) {
-            checkedNamespaces.add(i.next());
+        Set inheritedCheckedNamespace = helper.getCheckedNamespace();
+        synchronized (this) {
+            checkedNamespaces.addAll(inheritedCheckedNamespace);
         }
 
         // Add the restricted definitions
@@ -581,12 +591,14 @@ public class ComponentHelper  {
         //      but this is for logging only...
         Class elementClass = o.getClass();
         String elementClassname = elementClass.getName();
-        for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
-            AntTypeDefinition def = (AntTypeDefinition) i.next();
-            if (elementClassname.equals(def.getClassName())
-                    && (elementClass == def.getExposedClass(project))) {
-                String name = def.getName();
-                return brief ? name : "The <" + name + "> type";
+        synchronized (antTypeTable) {
+            for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
+                AntTypeDefinition def = (AntTypeDefinition) i.next();
+                if (elementClassname.equals(def.getClassName())
+                        && (elementClass == def.getExposedClass(project))) {
+                    String name = def.getName();
+                    return brief ? name : "The <" + name + "> type";
+                }
             }
         }
         return getUnmappedElementName(o.getClass(), brief);
@@ -1071,7 +1083,7 @@ public class ComponentHelper  {
             return def == null ? null : def.getExposedClass(project);
         }
 
-        public boolean contains(Object clazz) {
+        public synchronized boolean contains(Object clazz) {
             boolean found = false;
             if (clazz instanceof Class) {
                 for (Iterator i = values().iterator(); i.hasNext() && !found;) {
@@ -1091,7 +1103,7 @@ public class ComponentHelper  {
          * @param prefix prefix to match off
          * @return the (possibly empty) list of definitions
          */
-        public List/*<AntTypeDefinition>*/ findMatches(String prefix) {
+        public synchronized List/*<AntTypeDefinition>*/ findMatches(String prefix) {
             ArrayList matches = new ArrayList();
             for (Iterator i = values().iterator(); i.hasNext();) {
                 AntTypeDefinition def = (AntTypeDefinition) (i.next());
