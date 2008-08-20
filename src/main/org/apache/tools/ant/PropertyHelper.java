@@ -177,7 +177,7 @@ public class PropertyHelper implements GetProperty {
 
     private Project project;
     private PropertyHelper next;
-    private volatile Hashtable delegates = new Hashtable();
+    private Hashtable delegates = new Hashtable();
 
     /** Project properties map (usually String to String). */
     private Hashtable properties = new Hashtable();
@@ -924,35 +924,33 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8
      */
     public void add(Delegate delegate) {
-        synchronized (Delegate.class) {
-            Hashtable newDelegates = (Hashtable) delegates.clone();
+        synchronized (delegates) {
             for (Iterator iter = getDelegateInterfaces(delegate).iterator(); iter.hasNext();) {
                 Object key = iter.next();
-                List list = (List) newDelegates.get(key);
+                List list = (List) delegates.get(key);
                 if (list == null) {
                     list = new ArrayList();
-                    newDelegates.put(key, list);
-                }
-                if (list.contains(delegate)) {
+                } else {
+                    list = new ArrayList(list);
                     list.remove(delegate);
                 }
                 list.add(0, delegate);
+                delegates.put(key, Collections.unmodifiableList(list));
             }
-            delegates = newDelegates;
         }
     }
 
     /**
      * Get the Collection of delegates of the specified type.
-     * @param type delegate type.
+     * 
+     * @param type
+     *            delegate type.
      * @return Collection.
      * @since Ant 1.8
      */
     protected List getDelegates(Class type) {
-        Hashtable curDelegates = delegates;
-        return curDelegates.containsKey(type)
-            ? (List) new ArrayList((List) curDelegates.get(type))
-            : Collections.EMPTY_LIST;
+        List r = (List) delegates.get(type);
+        return r == null ? Collections.EMPTY_LIST : r;
     }
 
     /**
