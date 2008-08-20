@@ -1181,6 +1181,7 @@ public class Javadoc extends Task {
         private String href;
         private boolean offline = false;
         private File packagelistLoc;
+        private URL packagelistURL;
         private boolean resolveLink = false;
 
         /** Constructor for LinkArguement */
@@ -1218,6 +1219,22 @@ public class Javadoc extends Task {
          */
         public File getPackagelistLoc() {
             return packagelistLoc;
+        }
+
+        /**
+         * Set the packetlist location attribute.
+         * @param src an <code>URL</code> value
+         */
+        public void setPackagelistURL(URL src) {
+            packagelistURL = src;
+        }
+
+        /**
+         * Get the packetList location attribute.
+         * @return the packetList location attribute.
+         */
+        public URL getPackagelistURL() {
+            return packagelistURL;
         }
 
         /**
@@ -1968,7 +1985,9 @@ public class Javadoc extends Task {
 
                 if (la.isLinkOffline()) {
                     File packageListLocation = la.getPackagelistLoc();
-                    if (packageListLocation == null) {
+                    URL packageListURL = la.getPackagelistURL();
+                    if (packageListLocation == null
+                        && packageListURL == null) {
                         throw new BuildException("The package list"
                                                  + " location for link "
                                                  + la.getHref()
@@ -1976,19 +1995,13 @@ public class Javadoc extends Task {
                                                  + "because the link is "
                                                  + "offline");
                     }
+                    if (packageListLocation != null) {
                     File packageListFile =
                         new File(packageListLocation, "package-list");
                     if (packageListFile.exists()) {
                         try {
-                            String packageListURL =
-                                FILE_UTILS.getFileURL(packageListLocation)
-                                .toExternalForm();
-                            toExecute.createArgument()
-                                .setValue("-linkoffline");
-                            toExecute.createArgument()
-                                .setValue(link);
-                            toExecute.createArgument()
-                                .setValue(packageListURL);
+                            packageListURL =
+                                FILE_UTILS.getFileURL(packageListLocation);
                         } catch (MalformedURLException ex) {
                             log("Warning: Package list location was "
                                 + "invalid " + packageListLocation,
@@ -1997,6 +2010,13 @@ public class Javadoc extends Task {
                     } else {
                         log("Warning: No package list was found at "
                             + packageListLocation, Project.MSG_VERBOSE);
+                    }
+                    }
+                    if (packageListURL != null) {
+                        toExecute.createArgument().setValue("-linkoffline");
+                        toExecute.createArgument().setValue(link);
+                        toExecute.createArgument()
+                            .setValue(packageListURL.toExternalForm());
                     }
                 } else {
                     toExecute.createArgument().setValue("-link");

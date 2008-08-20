@@ -274,6 +274,10 @@ Other changes:
    expression.
    Bugzilla Report 45284
 
+ * The package list location for offline links can now be specified as
+   an URL.
+   Bugzilla Report 28881
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
