@@ -1996,21 +1996,21 @@ public class Javadoc extends Task {
                                                  + "offline");
                     }
                     if (packageListLocation != null) {
-                    File packageListFile =
-                        new File(packageListLocation, "package-list");
-                    if (packageListFile.exists()) {
-                        try {
-                            packageListURL =
-                                FILE_UTILS.getFileURL(packageListLocation);
-                        } catch (MalformedURLException ex) {
-                            log("Warning: Package list location was "
-                                + "invalid " + packageListLocation,
-                                Project.MSG_WARN);
+                        File packageListFile =
+                            new File(packageListLocation, "package-list");
+                        if (packageListFile.exists()) {
+                            try {
+                                packageListURL =
+                                    FILE_UTILS.getFileURL(packageListLocation);
+                            } catch (MalformedURLException ex) {
+                                log("Warning: Package list location was "
+                                    + "invalid " + packageListLocation,
+                                    Project.MSG_WARN);
+                            }
+                        } else {
+                            log("Warning: No package list was found at "
+                                + packageListLocation, Project.MSG_VERBOSE);
                         }
-                    } else {
-                        log("Warning: No package list was found at "
-                            + packageListLocation, Project.MSG_VERBOSE);
-                    }
                     }
                     if (packageListURL != null) {
                         toExecute.createArgument().setValue("-linkoffline");
