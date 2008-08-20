@@ -38,6 +38,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.LayoutPreservingProperties;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -118,6 +119,7 @@ public class PropertyFile extends Task {
 
     private Properties          properties;
     private File                propertyfile;
+    private boolean             useJDKProperties;
 
     private Vector entries = new Vector();
 
@@ -160,8 +162,12 @@ public class PropertyFile extends Task {
     }
 
     private void readFile() throws BuildException {
-        // Create the PropertyFile
-        properties = new Properties();
+        if (useJDKProperties) {
+            // user chose to use standard Java properties, which loose comments and layout
+            properties = new Properties();
+        } else {
+            properties = new LayoutPreservingProperties();
+        }
         try {
             if (propertyfile.exists()) {
                 log("Updating property file: "
@@ -216,6 +222,13 @@ public class PropertyFile extends Task {
         comment = hdr;
     }
 
+    /**
+     * optional flag to use original Java properties (as opposed to layout preserving properties)
+     */
+    public void setJDKProperties(boolean val) {
+        useJDKProperties = val;
+    }
+    
     private void writeFile() throws BuildException {
         BufferedOutputStream bos = null;
         try {

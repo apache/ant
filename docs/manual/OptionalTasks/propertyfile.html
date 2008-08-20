@@ -44,8 +44,8 @@
 <p>Ant provides an optional task for editing property files.  This is very useful
 when wanting to make unattended modifications to configuration files for application
 servers and applications.  Currently, the task maintains a working property file with
-the ability to add properties or make changes to existing ones.  However, any comments
-are lost.</p>
+the ability to add properties or make changes to existing ones. Comments and layout
+of the original properties file are preserved.</p>
 
 <hr>
 <h2><a name="proptask">PropertyFile Task</a></h2>
@@ -66,7 +66,14 @@ are lost.</p>
   <td width="78%" valign="top">Header for the file itself</td>
   <td width="10%" valign="top">no</td>
 </tr>
+<tr>
+  <td width="12%" valign="top">jdkproperties</td>
+  <td width="78%" valign="top">Use java.lang.Properties, which will loose comments and layout of file (default is 'false')</td>
+  <td width="10%" valign="top">no</td>
+</tr>
 </table>
+
+<p>The boolean attribute 'jdkproperties' is provided to recover the previous behaviour of the task, in which the layout and any comments in the properties file were lost by the task.</p>
 
 <h3>Parameters specified as nested elements</h3>
 <h4><a name="entryElement">Entry</a></h4>
@@ -151,20 +158,35 @@ operation occurs <b>after</b> these rules are considered.</p>
 
 <p>The following changes the my.properties file.  Assume my.properties look like:</p>
 
-<pre># A comment
-akey=novalue</pre>
+<pre># A string value
+akey=original value
+
+# The following is a counter, which will be incremented by 1 for
+# each time the build is run.
+anint=1</pre>
 
 <p>After running, the file would now look like
 </p>
-<pre>#Thu Nov 02 23:41:47 EST 2000
+<pre>#My properties
+#Wed Aug 31 13:47:19 BST 2005
+# A string value
 akey=avalue
-adate=2000/11/02 23\:41
-anint=1
+
+# The following is a counter, which will be incremented by 1 for
+# each time the build is run.
+anint=2
+
+adate=2005/08/31 13\:47
+
 formated.int=0014
-formated.date=028 17\:34
-</pre>
+
+formated.date=243 13\:47</pre>
 <p>
-The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary.  Note that the original comment is now lost.  Please keep this in mind when running this task against heavily commented properties files.  It may be best to have a commented version in the source tree, copy it to a deployment area, and then run the modifications on the copy.  Future versions of PropertyFile will hopefully eliminate this shortcoming.
+The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary. 
+</p>
+
+<p>
+The layout and comment of the original file is preserved. New properties are added at the end of the file. Existing properties are overwritten in place.
 </p>
 
 <blockquote><pre>&lt;propertyfile
@@ -172,7 +194,7 @@ The slashes conform to the expectations of the Properties class.  The file will 
     comment=&quot;My properties&quot;&gt;
   &lt;entry  key=&quot;akey&quot; value=&quot;avalue&quot;/&gt;
   &lt;entry  key=&quot;adate&quot; type=&quot;date&quot; value=&quot;now&quot;/&gt;
-  &lt;entry  key=&quot;anint&quot; type=&quot;int&quot; operation=&quot;+&quot;/&gt;
+  &lt;entry  key=&quot;anint&quot; type=&quot;int&quot; default=&quot;0&quot; operation=&quot;+&quot;/&gt;
   &lt;entry  key=&quot;formated.int&quot; type=&quot;int&quot; default=&quot;0013&quot; operation=&quot;+&quot; pattern=&quot;0000&quot;/&gt;
   &lt;entry  key=&quot;formated.date&quot; type=&quot;date&quot; value=&quot;now&quot; pattern=&quot;DDD HH:mm&quot;/&gt;
 &lt;/propertyfile&gt;
