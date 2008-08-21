@@ -65,7 +65,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Eclipse Public License</td>
           </tr>
         </table>
       </subsection>
@@ -82,15 +82,15 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://jakarta.apache.org/velocity/anakia.html">http://jakarta.apache.org/velocity/anakia.html</a></td>
+            <td><a href="http://velocity.apache.org/anakia/devel/">http://velocity.apache.org/anakia/devel/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="http://jakarta.apache.org/site/mail2.html">Velocity mailing lists</a></td>
+            <td><a href="http://velocity.apache.org/contact.html">Velocity mailing lists</a></td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -144,7 +144,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>The Apache Software License 2.0</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -242,7 +242,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>The Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -301,7 +301,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -438,7 +438,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -487,7 +487,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License 2.0</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -628,7 +628,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -716,7 +716,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache License 2.0</td>
           </tr>
        </table>
      </subsection>
@@ -747,7 +747,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>License derived from Apache Software License</td>
+            <td>License derived from Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -843,29 +843,6 @@
       </subsection>
 
       <subsection name="Doxygen task">
-        <p>There are two Ant tasks for running the Doxygen
-        documentation system.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.1 and later</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.bgw.org/projects/java/ant/">http://www.bgw.org/projects/java/ant/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:mortis@voicenet.com">Kyle R. Burton</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>Apache Software Foundation License</td>
-          </tr>
-        </table>
-
-        <p>and</p>
 
         <table class="externals">
           <tr>
@@ -882,7 +859,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software Foundation License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -1011,7 +988,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software Foundation License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -1068,7 +1045,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -1230,7 +1207,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -1345,19 +1322,19 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>1.5.1 (1.6.5 or 1.7.0 recommended)</td>
+            <td>1.5.1 (1.6.5 or 1.7.1 recommended)</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://incubator.apache.org/ivy/">http://incubator.apache.org/ivy/</a></td>
+            <td><a href="http://ant.apache.org/ivy/">http://ant.apache.org/ivy/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td>ivy-user (at) incubator (dot) apache (dot) org [User Mailinglist]</td>
+            <td>ivy-user (at) ant (dot) apache (dot) org [User Mailinglist]</td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -1449,7 +1426,7 @@
             </tr>
             <tr>
               <th>License:</th>
-              <td>Apache Software License</td>
+              <td>Apache Software License 1.1</td>
             </tr>
           </table>
         </subsubsection>
@@ -1779,7 +1756,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -1834,7 +1811,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>The Apache Software License 2.0</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -2104,7 +2081,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -2406,7 +2383,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software Foundation License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -2544,7 +2521,7 @@
           </tr>
           <tr>
             <th>Licence:</th>
-            <td>Apache Software Foundation License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -2591,7 +2568,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software Foundation License</td>
+            <td>BSD style license</td>
           </tr>
         </table>
       </subsection>
@@ -2672,7 +2649,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License 2.0</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -2748,7 +2725,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>The Apache Software License</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
@@ -2807,7 +2784,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -3413,7 +3390,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -3442,7 +3419,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>Apache Software License 1.1</td>
           </tr>
         </table>
       </subsection>
@@ -3528,7 +3505,8 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache Software License</a></td>
+            <td><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache
+            License 2.0</a></td>
           </tr>
         </table>
       </subsection>
@@ -3615,7 +3593,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>Apache Software License</td>
+            <td>GNU General Public License</td>
           </tr>
         </table>
       </subsection>
@@ -3981,7 +3959,7 @@
           </tr>
           <tr>
             <th>License:</th>
-            <td>The Apache Software License 2.0</td>
+            <td>Apache License 2.0</td>
           </tr>
         </table>
       </subsection>
