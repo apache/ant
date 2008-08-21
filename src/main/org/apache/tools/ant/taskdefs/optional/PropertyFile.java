@@ -110,9 +110,9 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public class PropertyFile extends Task {
 
     /* ========================================================================
-    *
-    * Instance variables.
-    */
+     *
+     * Instance variables.
+     */
 
     // Use this to prepend a message to the properties file
     private String              comment;
@@ -124,14 +124,14 @@ public class PropertyFile extends Task {
     private Vector entries = new Vector();
 
     /* ========================================================================
-    *
-    * Constructors
-    */
+     *
+     * Constructors
+     */
 
     /* ========================================================================
-    *
-    * Methods
-    */
+     *
+     * Methods
+     */
 
     /**
      * Execute the task.
@@ -163,7 +163,8 @@ public class PropertyFile extends Task {
 
     private void readFile() throws BuildException {
         if (useJDKProperties) {
-            // user chose to use standard Java properties, which loose comments and layout
+            // user chose to use standard Java properties, which loose
+            // comments and layout
             properties = new Properties();
         } else {
             properties = new LayoutPreservingProperties();
@@ -202,7 +203,8 @@ public class PropertyFile extends Task {
 
     private void checkParameters() throws BuildException {
         if (!checkParam(propertyfile)) {
-            throw new BuildException("file token must not be null.", getLocation());
+            throw new BuildException("file token must not be null.",
+                                     getLocation());
         }
     }
 
@@ -223,12 +225,13 @@ public class PropertyFile extends Task {
     }
 
     /**
-     * optional flag to use original Java properties (as opposed to layout preserving properties)
+     * optional flag to use original Java properties (as opposed to
+     * layout preserving properties)
      */
     public void setJDKProperties(boolean val) {
         useJDKProperties = val;
     }
-    
+
     private void writeFile() throws BuildException {
         BufferedOutputStream bos = null;
         try {
@@ -356,7 +359,7 @@ public class PropertyFile extends Task {
                     executeString(oldValue);
                 } else {
                     throw new BuildException("Unknown operation type: "
-                        + type);
+                                             + type);
                 }
             } catch (NullPointerException npe) {
                 // Default to string type
@@ -373,17 +376,17 @@ public class PropertyFile extends Task {
         }
 
         /**
-        * Handle operations for type <code>date</code>.
-        *
-        * @param oldValue the current value read from the property file or
-        *                 <code>null</code> if the <code>key</code> was
-        *                 not contained in the property file.
-        */
+         * Handle operations for type <code>date</code>.
+         *
+         * @param oldValue the current value read from the property file or
+         *                 <code>null</code> if the <code>key</code> was
+         *                 not contained in the property file.
+         */
         private void executeDate(String oldValue) throws BuildException {
             Calendar currentValue = Calendar.getInstance();
 
             if (pattern == null) {
-              pattern = "yyyy/MM/dd HH:mm";
+                pattern = "yyyy/MM/dd HH:mm";
             }
             DateFormat fmt = new SimpleDateFormat(pattern);
 
@@ -420,19 +423,19 @@ public class PropertyFile extends Task {
 
 
         /**
-        * Handle operations for type <code>int</code>.
-        *
-        * @param oldValue the current value read from the property file or
-        *                 <code>null</code> if the <code>key</code> was
-        *                 not contained in the property file.
-        */
+         * Handle operations for type <code>int</code>.
+         *
+         * @param oldValue the current value read from the property file or
+         *                 <code>null</code> if the <code>key</code> was
+         *                 not contained in the property file.
+         */
         private void executeInteger(String oldValue) throws BuildException {
             int currentValue = DEFAULT_INT_VALUE;
             int newV  = DEFAULT_INT_VALUE;
 
 
             DecimalFormat fmt = (pattern != null) ? new DecimalFormat(pattern)
-                                                    : new DecimalFormat();
+                : new DecimalFormat();
             try {
                 String curval = getCurrentValue(oldValue);
                 if (curval != null) {
@@ -471,12 +474,12 @@ public class PropertyFile extends Task {
         }
 
         /**
-        * Handle operations for type <code>string</code>.
-        *
-        * @param oldValue the current value read from the property file or
-        *                 <code>null</code> if the <code>key</code> was
-        *                 not contained in the property file.
-        */
+         * Handle operations for type <code>string</code>.
+         *
+         * @param oldValue the current value read from the property file or
+         *                 <code>null</code> if the <code>key</code> was
+         *                 not contained in the property file.
+         */
         private void executeString(String oldValue) throws BuildException {
             String newV  = DEFAULT_STRING_VALUE;
 
@@ -503,18 +506,18 @@ public class PropertyFile extends Task {
             if (type == Type.STRING_TYPE
                 && operation == Operation.DECREMENT_OPER) {
                 throw new BuildException("- is not supported for string "
-                    + "properties (key:" + key + ")");
+                                         + "properties (key:" + key + ")");
             }
             if (value == null && defaultValue == null) {
                 throw new BuildException("\"value\" and/or \"default\" "
-                    + "attribute must be specified (key:" + key + ")");
+                                         + "attribute must be specified (key:" + key + ")");
             }
             if (key == null) {
                 throw new BuildException("key is mandatory");
             }
             if (type == Type.STRING_TYPE && pattern != null) {
                 throw new BuildException("pattern is not supported for string "
-                    + "properties (key:" + key + ")");
+                                         + "properties (key:" + key + ")");
             }
         }
 
@@ -651,7 +654,7 @@ public class PropertyFile extends Task {
         /** no arg constructor */
         public Unit() {
             calendarFields.put(MILLISECOND,
-                                    new Integer(Calendar.MILLISECOND));
+                               new Integer(Calendar.MILLISECOND));
             calendarFields.put(SECOND, new Integer(Calendar.SECOND));
             calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
             calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
