@@ -263,7 +263,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
         assertTrue("should have had prop.new", s2.indexOf("prop.new") > -1);
     }
 
-    public void testPreserveEsacpeName() throws Exception {
+    public void testPreserveEscapeName() throws Exception {
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         File unusual = new File(System.getProperty("root"),
                                 "src/etc/testcases/util/unusual.properties");
