@@ -42,6 +42,12 @@ public class DateUtilsTest extends TestCase {
         assertEquals("2 minutes 1 second", text);
     }
 
+    // https://issues.apache.org/bugzilla/show_bug.cgi?id=44659
+    public void XtestLongElapsedTime(){
+        assertEquals("2926 minutes 13 seconds",
+                     DateUtils.formatElapsedTime(1000 * 175573));
+    }
+
     public void testDateTimeISO(){
         TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
         Calendar cal = Calendar.getInstance(timeZone);
