@@ -73,7 +73,11 @@ could use as initial value for these experiments.</p>
   <tr>
     <td valign="top">dir</td>
     <td valign="top">the directory which holds the files whose permissions 
-      must be changed.</td>
+      must be changed.<br/>
+      <b>Note:</b> for backwards compatibility
+      reasons <code>&lt;chmod&nbsp;dir="some-dir"/&gt;</code> will
+      only change the permissions on "some-dir" but not recurse into
+      it, unless you also specify any patterns.</td>
   </tr>
   <tr>
     <td valign="top">perm</td>
