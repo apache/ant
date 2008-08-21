@@ -1377,7 +1377,7 @@ public void buildFinished(BuildEvent e) {
 
         <p>When Ant forks a new process for example by using the
           <code>&lt;exec&gt;</code>, <code>&lt;apply&gt;</code>
-          or <code>&lt;java&gt;</code> tasks, it will also start a
+          or <code>&lt;java&gt;</code> tasks, it will also start a
           new thread reading from standard input and sending
           everything that it has read to that process.</p>
 
