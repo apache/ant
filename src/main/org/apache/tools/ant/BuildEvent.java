@@ -32,11 +32,11 @@ public class BuildEvent extends EventObject {
     private static final long serialVersionUID = 4538050075952288486L;
 
     /** Project which emitted the event. */
-    private Project project;
+    private final Project project;
     /** Target which emitted the event, if specified. */
-    private Target target;
+    private final Target target;
     /** Task which emitted the event, if specified. */
-    private Task task;
+    private final Task task;
     /**
      * Message associated with the event. This is only used for
      * "messageLogged" events.
