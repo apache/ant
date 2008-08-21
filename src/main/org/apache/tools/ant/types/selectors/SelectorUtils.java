@@ -38,7 +38,7 @@ import org.apache.tools.ant.types.resources.FileResource;
  */
 public final class SelectorUtils {
 
-    private static SelectorUtils instance = new SelectorUtils();
+    private static final SelectorUtils instance = new SelectorUtils();
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
@@ -144,6 +144,11 @@ public final class SelectorUtils {
     /**
      * Tests whether or not a given path matches a given pattern.
      *
+     * If you need to call this method multiple times with the same 
+     * pattern you should rather use PathPattern
+     *
+     * @see PathPattern
+     * 
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
@@ -153,12 +158,18 @@ public final class SelectorUtils {
      *         or <code>false</code> otherwise.
      */
     public static boolean matchPath(String pattern, String str) {
-        return matchPath(pattern, str, true);
+        String[] patDirs = tokenizePathAsArray(pattern);
+        return matchPath(patDirs, str, true);
     }
 
     /**
      * Tests whether or not a given path matches a given pattern.
+     * 
+     * If you need to call this method multiple times with the same 
+     * pattern you should rather use PathPattern
      *
+     * @see PathPattern
+     * 
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
@@ -172,22 +183,28 @@ public final class SelectorUtils {
     public static boolean matchPath(String pattern, String str,
                                     boolean isCaseSensitive) {
         String[] patDirs = tokenizePathAsArray(pattern);
+        return matchPath(patDirs, str, isCaseSensitive);
+    }
+
+    /**
+     * Core implementation of matchPath.  It is isolated so that it can be called from
+     * PathPattern.
+     */
+    static boolean matchPath(String[] tokenizedPattern, String str, boolean isCaseSensitive) {
         String[] strDirs = tokenizePathAsArray(str);
 
         int patIdxStart = 0;
-        int patIdxEnd = patDirs.length - 1;
+        int patIdxEnd = tokenizedPattern.length - 1;
         int strIdxStart = 0;
         int strIdxEnd = strDirs.length - 1;
 
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = patDirs[patIdxStart];
+            String patDir = tokenizedPattern[patIdxStart];
             if (patDir.equals("**")) {
                 break;
             }
             if (!match(patDir, strDirs[strIdxStart], isCaseSensitive)) {
-                patDirs = null;
-                strDirs = null;
                 return false;
             }
             patIdxStart++;
@@ -196,9 +213,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs[i].equals("**")) {
-                    patDirs = null;
-                    strDirs = null;
+                if (!tokenizedPattern[i].equals("**")) {
                     return false;
                 }
             }
@@ -206,21 +221,17 @@ public final class SelectorUtils {
         } else {
             if (patIdxStart > patIdxEnd) {
                 // String not exhausted, but pattern is. Failure.
-                patDirs = null;
-                strDirs = null;
                 return false;
             }
         }
 
         // up to last '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = patDirs[patIdxEnd];
+            String patDir = tokenizedPattern[patIdxEnd];
             if (patDir.equals("**")) {
                 break;
             }
             if (!match(patDir, strDirs[strIdxEnd], isCaseSensitive)) {
-                patDirs = null;
-                strDirs = null;
                 return false;
             }
             patIdxEnd--;
@@ -229,9 +240,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs[i].equals("**")) {
-                    patDirs = null;
-                    strDirs = null;
+                if (!tokenizedPattern[i].equals("**")) {
                     return false;
                 }
             }
@@ -241,7 +250,7 @@ public final class SelectorUtils {
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
             for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
-                if (patDirs[i].equals("**")) {
+                if (tokenizedPattern[i].equals("**")) {
                     patIdxTmp = i;
                     break;
                 }
@@ -259,7 +268,7 @@ public final class SelectorUtils {
             strLoop:
                         for (int i = 0; i <= strLength - patLength; i++) {
                             for (int j = 0; j < patLength; j++) {
-                                String subPat = patDirs[patIdxStart + j + 1];
+                                String subPat = tokenizedPattern[patIdxStart + j + 1];
                                 String subStr = strDirs[strIdxStart + i + j];
                                 if (!match(subPat, subStr, isCaseSensitive)) {
                                     continue strLoop;
@@ -271,8 +280,6 @@ public final class SelectorUtils {
                         }
 
             if (foundIdx == -1) {
-                patDirs = null;
-                strDirs = null;
                 return false;
             }
 
@@ -281,9 +288,7 @@ public final class SelectorUtils {
         }
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (!patDirs[i].equals("**")) {
-                patDirs = null;
-                strDirs = null;
+            if (!tokenizedPattern[i].equals("**")) {
                 return false;
             }
         }
@@ -507,7 +512,7 @@ public final class SelectorUtils {
     /**
      * Same as {@link #tokenizePath tokenizePath} but hopefully faster.
      */
-    private static String[] tokenizePathAsArray(String path) {
+    /*package*/ static String[] tokenizePathAsArray(String path) {
         String root = null;
         if (FileUtils.isAbsolutePath(path)) {
             String[] s = FILE_UTILS.dissect(path);

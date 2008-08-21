@@ -1,4 +1,4 @@
-Changes from Ant 1.7.x TO current SVN version
+eol-styleChanges from Ant 1.7.x TO current SVN version
 =============================================
 
 Changes that could break older environments:
@@ -158,8 +158,6 @@ Fixed bugs:
    filter tokens
    Bugzilla Report 44226.
    
- * Enhance performance of Project.fireMessageLoggedEvent  
-   Bugzilla Report 45651.
 
 Other changes:
 --------------
@@ -273,6 +271,9 @@ Other changes:
    resources to be selected by matching their names against a regular
    expression.
    Bugzilla Report 45284
+
+ * Enhanced performance of Project.fireMessageLoggedEvent and DirectoryScanner 
+   Bugzilla Report 45651 & 45665
 
  * The package list location for offline links can now be specified as
    an URL.

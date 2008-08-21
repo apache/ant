@@ -34,6 +34,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.PathPattern;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -319,10 +320,8 @@ public class DirectoryScanner
      * <p>Gets lazily initialized on the first invocation of
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
-     *
-     * @since Ant 1.6.3
      */
-    private String[] includePatterns;
+    private PathPattern[] includePatterns;
 
     /**
      * Array of all exclude patterns that contain wildcards.
@@ -330,10 +329,8 @@ public class DirectoryScanner
      * <p>Gets lazily initialized on the first invocation of
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
-     *
-     * @since Ant 1.6.3
      */
-    private String[] excludePatterns;
+    private PathPattern[] excludePatterns;
 
     /**
      * Have the non-pattern sets and pattern arrays for in- and
@@ -1196,7 +1193,7 @@ public class DirectoryScanner
             return true;
         }
         for (int i = 0; i < includePatterns.length; i++) {
-            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
+            if (includePatterns[i].matchPath(name, isCaseSensitive())) {
                 return true;
             }
         }
@@ -1296,7 +1293,7 @@ public class DirectoryScanner
             return true;
         }
         for (int i = 0; i < excludePatterns.length; i++) {
-            if (matchPath(excludePatterns[i], name, isCaseSensitive())) {
+            if (excludePatterns[i].matchPath(name, isCaseSensitive())) {
                 return true;
             }
         }
@@ -1696,18 +1693,17 @@ public class DirectoryScanner
      * @param patterns String[] of patterns.
      * @since Ant 1.6.3
      */
-    private String[] fillNonPatternSet(Set set, String[] patterns) {
+    private PathPattern[] fillNonPatternSet(Set set, String[] patterns) {
         ArrayList al = new ArrayList(patterns.length);
         for (int i = 0; i < patterns.length; i++) {
             if (!SelectorUtils.hasWildcards(patterns[i])) {
                 set.add(isCaseSensitive() ? patterns[i]
                     : patterns[i].toUpperCase());
             } else {
-                al.add(patterns[i]);
+                al.add(new PathPattern(patterns[i]));
             }
         }
-        return set.size() == 0 ? patterns
-            : (String[]) al.toArray(new String[al.size()]);
+        return (PathPattern[]) al.toArray(new PathPattern[al.size()]);
     }
 
 }
