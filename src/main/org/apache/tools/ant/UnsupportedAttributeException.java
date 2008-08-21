@@ -24,7 +24,7 @@ package org.apache.tools.ant;
  */
 public class UnsupportedAttributeException extends BuildException {
 
-    private String attribute;
+    private final String attribute;
 
     /**
      * Constructs an unsupported attribute exception.

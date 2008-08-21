@@ -39,7 +39,7 @@ public class UnknownElement extends Task {
      * task/type that hasn't been defined at parser time or has
      * been redefined since original creation.
      */
-    private String elementName;
+    private final String elementName;
 
     /**
      * Holds the namespace of the element.

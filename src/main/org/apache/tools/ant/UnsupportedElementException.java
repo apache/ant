@@ -33,7 +33,7 @@ package org.apache.tools.ant;
  */
 public class UnsupportedElementException extends BuildException {
 
-    private String element;
+    private final String element;
 
     /**
      * Constructs an unsupported element exception.

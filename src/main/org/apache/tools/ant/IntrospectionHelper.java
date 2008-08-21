@@ -90,40 +90,40 @@ public final class IntrospectionHelper {
      * Map from attribute names to attribute types
      * (String to Class).
      */
-    private Hashtable attributeTypes = new Hashtable();
+    private final Hashtable attributeTypes = new Hashtable();
 
     /**
      * Map from attribute names to attribute setter methods
      * (String to AttributeSetter).
      */
-    private Hashtable attributeSetters = new Hashtable();
+    private final Hashtable attributeSetters = new Hashtable();
 
     /**
      * Map from attribute names to nested types
      * (String to Class).
      */
-    private Hashtable nestedTypes = new Hashtable();
+    private final Hashtable nestedTypes = new Hashtable();
 
     /**
      * Map from attribute names to methods to create nested types
      * (String to NestedCreator).
      */
-    private Hashtable nestedCreators = new Hashtable();
+    private final Hashtable nestedCreators = new Hashtable();
 
     /**
      * Vector of methods matching add[Configured](Class) pattern.
      */
-    private List addTypeMethods = new ArrayList();
+    private final List addTypeMethods = new ArrayList();
 
     /**
      * The method to invoke to add PCDATA.
      */
-    private Method addText = null;
+    private final Method addText;
 
     /**
      * The class introspected by this instance.
      */
-    private Class bean;
+    private final Class bean;
 
     /**
      * Sole constructor, which is private to ensure that all
@@ -178,6 +178,7 @@ public final class IntrospectionHelper {
     private IntrospectionHelper(final Class bean) {
         this.bean = bean;
         Method[] methods = bean.getMethods();
+        Method addTextMethod = null;
         for (int i = 0; i < methods.length; i++) {
             final Method m = methods[i];
             final String name = m.getName();
@@ -202,7 +203,7 @@ public final class IntrospectionHelper {
             }
             if ("addText".equals(name) && java.lang.Void.TYPE.equals(returnType)
                     && args.length == 1 && java.lang.String.class.equals(args[0])) {
-                addText = methods[i];
+                addTextMethod = methods[i];
             } else if (name.startsWith("set") && java.lang.Void.TYPE.equals(returnType)
                     && args.length == 1 && !args[0].isArray()) {
                 String propName = getPropertyName(name, "set");
@@ -294,6 +295,7 @@ public final class IntrospectionHelper {
                 }
             }
         }
+        addText = addTextMethod;
     }
 
     /**

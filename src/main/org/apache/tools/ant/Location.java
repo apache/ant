@@ -31,11 +31,11 @@ import org.xml.sax.Locator;
 public class Location implements Serializable {
 
     /** Name of the file. */
-    private String fileName;
+    private final String fileName;
     /** Line number within the file. */
-    private int lineNumber;
+    private final int lineNumber;
     /** Column number within the file. */
-    private int columnNumber;
+    private final int columnNumber;
 
     /** Location to use when one is needed but no information is available */
     public static final Location UNKNOWN_LOCATION = new Location();

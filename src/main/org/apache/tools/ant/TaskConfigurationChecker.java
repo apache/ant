@@ -59,7 +59,7 @@ public class TaskConfigurationChecker {
     private List/*<String>*/ errors = new ArrayList();
 
     /** Task for which the configuration should be checked. */
-    private Task task;
+    private final Task task;
 
     /**
      * Constructor.
