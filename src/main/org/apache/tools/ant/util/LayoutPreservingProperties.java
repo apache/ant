@@ -38,7 +38,7 @@ import java.util.Properties;
  * present in the input stream from which it was loaded.</p>
  * <p>The class defers the usual work of the <a href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>
  * class to there, but it also keeps track of the contents of the
- * input stream from which it was loaded (if applicable), so that in can
+ * input stream from which it was loaded (if applicable), so that it can
  * write out the properties in as close a form as possible to the input.</p>
  * If no changes occur to property values, the output should be the same
  * as the input, except for the leading date stamp, as normal for a
@@ -259,7 +259,7 @@ public class LayoutPreservingProperties extends Properties {
         osw.write("#" + (new Date()).toString() + LS);
 
         boolean writtenSep = false;
-        for (Iterator i = logicalLines.iterator();i.hasNext();) {
+        for (Iterator i = logicalLines.iterator(); i.hasNext();) {
             LogicalLine line = (LogicalLine) i.next();
             if (line instanceof Pair) {
                 if (((Pair)line).isNew()) {
