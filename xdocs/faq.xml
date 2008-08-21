@@ -1368,6 +1368,37 @@ public void buildFinished(BuildEvent e) {
   </faqsection>
 
   <faqsection title="Known Problems">
+    <faq id="input-makes-exec-hang">
+      <question><code>&lt;exec&gt;</code> causes other tasks to hang
+        or leads to strange behaviour of <code>&lt;input&gt;</code>
+        tasks.</question>
+
+      <answer>
+
+        <p>When Ant forks a new process for example by using the
+          <code>&lt;exec&gt;</code>, <code>&lt;apply&gt;</code>
+          or <code>&lt;java&gt;</code> tasks, it will also start a
+          new thread reading from standard input and sending
+          everything that it has read to that process.</p>
+
+        <p>Unfortunately Ant has no way to know whether the forked
+          process is ever going to read any input, so it will start such
+          a thread even if the process doesn't need one.</p>
+
+        <p>This behaviour leads to strange side effects like the Ant
+          process being suspended when a build forking new process is
+          run as a background process on Unix-like systems or
+          <code>&lt;input&gt;</code> tasks requiring additional inputs
+          if they come after an <code>&lt;exec&gt;</code> task.</p>
+
+        <p>Fortunately there is a workaround for this, always specify
+          <code>inputstring=""</code> for
+          any <code>&lt;exec&gt;</code> task (or one of its sibblings)
+          if you know the forked process doesn't consume any
+          input.</p>
+      </answer>
+    </faq>
+
     <faq id="170-requires-junit">
       <question>Ant 1.7.0 doesn't build from sources without
         JUnit</question>
