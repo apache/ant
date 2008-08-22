@@ -56,10 +56,35 @@
     </au:expectfailure>
   </target>
   
-  <target name="test-ns"> <!-- comment this if you don't have the svn trunk of antunit -->
-    <echoxml file="${file}" xmlns:a="antlib:a">
-      <a:something />
+ <!-- comment this and the next targets if you don't have the svn
+      trunk of antunit -->
+  <target name="test-ns-all">
+    <echoxml file="${file}" xmlns:a="antlib:a"
+             namespacepolicy="all">
+      <a:something a:foo="bar"/>
     </echoxml>
     <au:assertResourceContains resource="${file}" value="a:something"/>
+    <au:assertResourceContains resource="${file}" value="antlib:a"/>
   </target>
+
+  <target name="test-ns-elementsOnly">
+    <echoxml file="${file}" xmlns:a="antlib:a"
+             namespacepolicy="elementsOnly">
+      <a:something a:foo="bar"/>
+    </echoxml>
+    <au:assertResourceContains resource="${file}" value="a:something"/>
+    <au:assertResourceContains resource="${file}" value="antlib:a"/>
+  </target>
+
+  <target name="test-ns-ignore">
+    <echoxml file="${file}" xmlns:a="antlib:a"
+             namespacepolicy="ignore">
+      <a:something a:foo="bar"/>
+    </echoxml>
+    <au:assertResourceContains resource="${file}" value="a:something"/>
+    <au:assertFalse message="Didn't expecte ${file} to contain antlib:a">
+      <resourcecontains resource="${file}" substring="antlib:a"/>
+    </au:assertFalse>
+  </target>
+
 </project>

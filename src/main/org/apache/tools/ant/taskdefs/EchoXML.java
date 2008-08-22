@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.XMLFragment;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.FileUtils;
@@ -35,7 +36,6 @@ import org.w3c.dom.Element;
  *
  * Known limitations:
  * <ol>
- * <li>Currently no XMLNS support</li>
  * <li>Processing Instructions get ignored</li>
  * <li>Encoding is always UTF-8</li>
  * </ol>
@@ -46,6 +46,7 @@ public class EchoXML extends XMLFragment {
 
     private File file;
     private boolean append;
+    private NamespacePolicy namespacePolicy = NamespacePolicy.DEFAULT;
     private static final String ERROR_NO_XML = "No nested XML specified";
 
     /**
@@ -56,6 +57,16 @@ public class EchoXML extends XMLFragment {
         file = f;
     }
 
+    /**
+     * Set the namespace policy for the xml file
+     * @param s namespace policy: "ignore," "elementsOnly," or "all"
+     * @see
+     * org.apache.tools.ant.util.DOMElementWriter.XmlNamespacePolicy
+     */
+    public void setNamespacePolicy(NamespacePolicy n) {
+        namespacePolicy = n;
+    }
+    
     /**
      * Set whether to append the output file.
      * @param b boolean append flag.
@@ -68,7 +79,8 @@ public class EchoXML extends XMLFragment {
      * Execute the task.
      */
     public void execute() {
-        DOMElementWriter writer = new DOMElementWriter(!append);
+        DOMElementWriter writer =
+            new DOMElementWriter(!append, namespacePolicy.getPolicy());
         OutputStream os = null;
         try {
             if (file != null) {
@@ -90,4 +102,36 @@ public class EchoXML extends XMLFragment {
         }
     }
 
+    public static class NamespacePolicy extends EnumeratedAttribute {
+        private static final String IGNORE = "ignore";
+        private static final String ELEMENTS = "elementsOnly";
+        private static final String ALL = "all";
+
+        public static final NamespacePolicy DEFAULT
+            = new NamespacePolicy(IGNORE);
+
+        public NamespacePolicy() {}
+
+        public NamespacePolicy(String s) {
+            setValue(s);
+        }
+        /** {@inheritDoc}. */
+        public String[] getValues() {
+            return new String[] {IGNORE, ELEMENTS, ALL};
+        }
+
+        public DOMElementWriter.XmlNamespacePolicy getPolicy() {
+            String s = getValue();
+            if (IGNORE.equalsIgnoreCase(s)) {
+                return DOMElementWriter.XmlNamespacePolicy.IGNORE;
+            } else if (ELEMENTS.equalsIgnoreCase(s)) {
+                return
+                    DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS;
+            } else if (ALL.equalsIgnoreCase(s)) {
+                return DOMElementWriter.XmlNamespacePolicy.QUALIFY_ALL;
+            } else {
+                throw new BuildException("Invalid namespace policy: " + s);
+            }
+        }
+    }
 }

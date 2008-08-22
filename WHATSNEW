@@ -282,6 +282,9 @@ Other changes:
    an URL.
    Bugzilla Report 28881
 
+ * <echoxml> now supports XML namespaces.
+   Bugzilla Report 36804.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
