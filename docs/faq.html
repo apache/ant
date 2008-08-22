@@ -384,6 +384,10 @@
         or leads to strange behaviour of <code>&lt;input&gt;</code>
         tasks.
       </a></li>
+                <li><a href="#javac-stackoverflow">
+  <code>&lt;javac&gt;</code> causes a
+        StackOverflowError
+      </a></li>
                 <li><a href="#170-requires-junit">
   Ant 1.7.0 doesn't build from sources without
         JUnit
@@ -1719,15 +1723,31 @@ public void buildFinished(BuildEvent e) {
           process is ever going to read any input, so it will start such
           a thread even if the process doesn't need one.</p>
                         <p>This behaviour leads to strange side effects like the Ant
-          process being suspended when a build forking new process is
-          run as a background process on Unix-like systems or
-          <code>&lt;input&gt;</code> tasks requiring additional inputs
-          if they come after an <code>&lt;exec&gt;</code> task.</p>
+          process
+          being <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=34461">suspended
+          when a build forking new process is run as a background
+          process</a> on Unix-like systems or
+          <code>&lt;input&gt;</code>
+          tasks <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=41024">requiring
+          additional inputs</a> if they come after
+          an <code>&lt;exec&gt;</code> task.</p>
                         <p>Fortunately there is a workaround for this, always specify
           <code>inputstring=""</code> for
           any <code>&lt;exec&gt;</code> task (or one of its sibblings)
           if you know the forked process doesn't consume any
           input.</p>
+                    <p class="faq">
+      <a name="javac-stackoverflow"></a>
+      <code>&lt;javac&gt;</code> causes a
+        StackOverflowError
+    </p>
+                  <p>For some Java source files it is possible
+          that <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=45370">causes
+          a StackOverlowError</a> is thrown inside Sun's javac
+          compiler.  As far as we can tell this is not triggered by a
+          bug in Ant.</p>
+                        <p>It is possible to work around this problem by setting 
+          <code>&lt;javac&gt;</code>'s fork attribute to true.</p>
                     <p class="faq">
       <a name="170-requires-junit"></a>
       Ant 1.7.0 doesn't build from sources without
