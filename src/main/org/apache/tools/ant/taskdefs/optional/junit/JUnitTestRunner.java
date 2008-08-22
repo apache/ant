@@ -94,6 +94,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      */
     private Permissions perm = null;
 
+    private static final String JUNIT_4_TEST_ADAPTER
+        = "junit.framework.JUnit4TestAdapter";
+
     private static final String[] DEFAULT_TRACE_FILTERS = new String[] {
                 "junit.framework.TestCase",
                 "junit.framework.TestResult",
@@ -370,10 +373,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                         Class.forName("java.lang.annotation.Annotation");
                         if (loader == null) {
                             junit4TestAdapterClass =
-                                Class.forName("junit.framework.JUnit4TestAdapter");
+                                Class.forName(JUNIT_4_TEST_ADAPTER);
                         } else {
                             junit4TestAdapterClass =
-                                Class.forName("junit.framework.JUnit4TestAdapter",
+                                Class.forName(JUNIT_4_TEST_ADAPTER,
                                               true, loader);
                         }
                     } catch (ClassNotFoundException e) {
@@ -419,7 +422,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     logTestListenerEvent("tests to run: " + suite.countTestCases());
                     suite.run(res);
                 } finally {
-                    if (junit4) {
+                    if (junit4 ||
+                        suite.getClass().getName().equals(JUNIT_4_TEST_ADAPTER)) {
                         int[] cnts = findJUnit4FailureErrorCount(res);
                         junitTest.setCounts(res.runCount(), cnts[0], cnts[1]);
                     } else {
