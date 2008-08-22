@@ -1386,10 +1386,14 @@ public void buildFinished(BuildEvent e) {
           a thread even if the process doesn't need one.</p>
 
         <p>This behaviour leads to strange side effects like the Ant
-          process being suspended when a build forking new process is
-          run as a background process on Unix-like systems or
-          <code>&lt;input&gt;</code> tasks requiring additional inputs
-          if they come after an <code>&lt;exec&gt;</code> task.</p>
+          process
+          being <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=34461">suspended
+          when a build forking new process is run as a background
+          process</a> on Unix-like systems or
+          <code>&lt;input&gt;</code>
+          tasks <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=41024">requiring
+          additional inputs</a> if they come after
+          an <code>&lt;exec&gt;</code> task.</p>
 
         <p>Fortunately there is a workaround for this, always specify
           <code>inputstring=""</code> for
