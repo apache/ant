@@ -1399,6 +1399,23 @@ public void buildFinished(BuildEvent e) {
       </answer>
     </faq>
 
+    <faq id="javac-stackoverflow">
+      <question><code>&lt;javac&gt;</code> causes a
+        StackOverflowError</question>
+
+      <answer>
+
+        <p>For some Java source files it is possible
+          that <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=45370">causes
+          a StackOverlowError</a> is thrown inside Sun's javac
+          compiler.  As far as we can tell this is not triggered by a
+          bug in Ant.</p>
+
+        <p>It is possible to work around this problem by setting 
+          <code>&lt;javac&gt;</code>'s fork attribute to true.</p>
+      </answer>
+    </faq>
+
     <faq id="170-requires-junit">
       <question>Ant 1.7.0 doesn't build from sources without
         JUnit</question>
