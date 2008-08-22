@@ -158,6 +158,9 @@ Fixed bugs:
    filter tokens
    Bugzilla Report 44226.
    
+ * failures were treated as errors in forked JUnit tests when JUnit 4
+   was used.
+   Bugzilla Report 43892.
 
 Other changes:
 --------------

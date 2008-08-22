@@ -451,9 +451,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
         fireEndTestSuite();
 
-        if (retCode != SUCCESS || res.errorCount() != 0) {
+        // junitTest has the correct counts for JUnit4, while res doesn't
+        if (retCode != SUCCESS || junitTest.errorCount() != 0) {
             retCode = ERRORS;
-        } else if (res.failureCount() != 0) {
+        } else if (junitTest.failureCount() != 0) {
             retCode = FAILURES;
         }
     }
