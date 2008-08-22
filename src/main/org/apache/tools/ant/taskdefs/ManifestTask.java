@@ -50,7 +50,7 @@ public class ManifestTask extends Task {
      * {@value}
      */
     public static final String VALID_ATTRIBUTE_CHARS =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345679-_";
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 
     /**
      * Holds the real data.

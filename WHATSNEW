@@ -162,6 +162,10 @@ Fixed bugs:
    was used.
    Bugzilla Report 43892.
 
+ * <jar> and <manifest> disallowed manifest attributes whose name
+   contained the character '8'.
+   Bugzilla Report 45675.
+
 Other changes:
 --------------
 
