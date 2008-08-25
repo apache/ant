@@ -1585,24 +1585,26 @@ public final class IntrospectionHelper {
         if (definitions == null) {
             return null;
         }
-        for (int i = 0; i < definitions.size(); ++i) {
-            AntTypeDefinition d = (AntTypeDefinition) definitions.get(i);
-            Class exposedClass = d.getExposedClass(helper.getProject());
-            if (exposedClass == null) {
-                continue;
+        synchronized (definitions) {
+            for (int i = 0; i < definitions.size(); ++i) {
+                AntTypeDefinition d = (AntTypeDefinition) definitions.get(i);
+                Class exposedClass = d.getExposedClass(helper.getProject());
+                if (exposedClass == null) {
+                    continue;
+                }
+                Method method  = findMatchingMethod(exposedClass, methods);
+                if (method == null) {
+                    continue;
+                }
+                if (matchedDefinitionClass != null) {
+                    throw new BuildException(
+                        "ambiguous: restricted definitions for "
+                        + componentName + " "
+                        + matchedDefinitionClass + " and " + exposedClass);
+                }
+                matchedDefinitionClass = exposedClass;
+                definition = d;
             }
-            Method method  = findMatchingMethod(exposedClass, methods);
-            if (method == null) {
-                continue;
-            }
-            if (matchedDefinitionClass != null) {
-                throw new BuildException(
-                    "ambiguous: restricted definitions for "
-                    + componentName + " "
-                    + matchedDefinitionClass + " and " + exposedClass);
-            }
-            matchedDefinitionClass = exposedClass;
-            definition = d;
         }
         return definition;
     }
