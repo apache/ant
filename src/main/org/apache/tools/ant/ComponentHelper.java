@@ -198,6 +198,28 @@ public class ComponentHelper  {
     private synchronized Set getCheckedNamespace() {
         return (Set) checkedNamespaces.clone();
     }
+
+    /**
+     * @return A deep copy of the restrictredDefinition
+     */
+    private Map getRestrictedDefintion() {
+        Map result = new HashMap();
+        synchronized (restrictedDefinitions) {
+            for(Iterator i = restrictedDefinitions.entrySet().iterator();
+                         i.hasNext();) {
+                Map.Entry entry = (Map.Entry) i.next();
+                List entryVal = (List) entry.getValue();
+                synchronized (entryVal) {
+                    //copy the entryVal
+                    entryVal = new ArrayList(entryVal);
+                }
+                Object entryKey = entry.getKey();                                    
+                result.put(entryKey, entryKey);
+            }
+        }
+        return result;
+    }
+
     
     /**
      * Used with creating child projects. Each child
@@ -219,13 +241,9 @@ public class ComponentHelper  {
         synchronized (this) {
             checkedNamespaces.addAll(inheritedCheckedNamespace);
         }
-
-        // Add the restricted definitions
-        for (Iterator i = helper.restrictedDefinitions.entrySet().iterator();
-             i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            restrictedDefinitions.put(
-                entry.getKey(), new ArrayList((List) entry.getValue()));
+        Map inheritedRestrictedDef = helper.getRestrictedDefintion();
+        synchronized (restrictedDefinitions) {
+            restrictedDefinitions.putAll(inheritedRestrictedDef);
         }
     }
 
@@ -370,7 +388,8 @@ public class ComponentHelper  {
 
     /**
      * Returns the current task definition hashtable. The returned hashtable is
-     * "live" and so should not be modified.
+     * "live" and so should not be modified.  Also, the returned table may be 
+     * modifed asynchronously.
      *
      * @return a map of from task name to implementing class
      *         (String to Class).
@@ -428,11 +447,17 @@ public class ComponentHelper  {
 
     /**
      * This returns a list of restricted definitions for a name.
+     * The returned List is "live" and so should not be modified.  
+     * Also, the returned list may be modifed asynchronously.  
+     * Any access must be guarded with a lock on the list itself.
+     * 
      * @param componentName the name to use.
      * @return the list of restricted definitions for a particular name.
      */
     public List getRestrictedDefinitions(String componentName) {
-        return (List) restrictedDefinitions.get(componentName);
+        synchronized (restrictedDefinitions) {
+            return (List) restrictedDefinitions.get(componentName);
+        }
     }
 
     /**
@@ -659,14 +684,17 @@ public class ComponentHelper  {
       */
     private void updateRestrictedDefinition(AntTypeDefinition def) {
         String name = def.getName();
+        List list = null;
         synchronized (restrictedDefinitions) {
-            List list = (List) restrictedDefinitions.get(name);
+            list = (List) restrictedDefinitions.get(name);
             if (list == null) {
                 list = new ArrayList();
                 restrictedDefinitions.put(name, list);
             }
-            // Check if the classname is already present and remove it
-            // if it is
+        }
+        // Check if the classname is already present and remove it
+        // if it is
+        synchronized (list) {
             for (Iterator i = list.iterator(); i.hasNext();) {
                 AntTypeDefinition current = (AntTypeDefinition) i.next();
                 if (current.getClassName().equals(def.getClassName())) {
