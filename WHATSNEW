@@ -166,9 +166,8 @@ Fixed bugs:
    contained the character '8'.
    Bugzilla Report 45675.
 
- * If the buildfile's project element didn't contain any basedir
-   attribute, BigProjectLogger would set the project's basedir to the
-   current working directory.
+ * BigProjectLogger would set the project's basedir to the current
+   working directory.
    Bugzilla Report 45607.
 
 Other changes:
