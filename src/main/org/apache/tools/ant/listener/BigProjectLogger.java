@@ -33,7 +33,11 @@ import java.io.File;
  * @since Ant1.7.1
  */
 
-public class BigProjectLogger extends NoBannerLogger implements SubBuildListener {
+public class BigProjectLogger extends NoBannerLogger
+    implements SubBuildListener {
+
+    private volatile boolean subBuildStartedRaised = false;
+    private final Object subBuildLock = new Object();
 
     /**
      * Header string for the log.
@@ -69,15 +73,24 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
         return super.getBuildSuccessfulMessage() + TimestampedLogger.SPACER + getTimestamp();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param event
+     */
+    public void targetStarted(BuildEvent event) {
+        maybeRaiseSubBuildStarted(event);
+        super.targetStarted(event);
+    }
 
     /**
      * {@inheritDoc}
      *
      * @param event
      */
-    public void buildStarted(BuildEvent event) {
-        super.buildStarted(event);
-        subBuildStarted(event);
+    public void taskStarted(BuildEvent event) {
+        maybeRaiseSubBuildStarted(event);
+        super.taskStarted(event);
     }
 
     /**
@@ -86,8 +99,19 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
      * @param event
      */
     public void buildFinished(BuildEvent event) {
+        maybeRaiseSubBuildStarted(event);
         subBuildFinished(event);
         super.buildFinished(event);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param event
+     */
+    public void messageLogged(BuildEvent event) {
+        maybeRaiseSubBuildStarted(event);
+        super.messageLogged(event);
     }
 
     /**
@@ -173,4 +197,15 @@ public class BigProjectLogger extends NoBannerLogger implements SubBuildListener
         return FOOTER;
     }
 
+    private void maybeRaiseSubBuildStarted(BuildEvent event) {
+        // double checked locking should be OK since the flag is write-once
+        if (!subBuildStartedRaised) {
+            synchronized (subBuildLock) {
+                if (!subBuildStartedRaised) {
+                    subBuildStartedRaised = true;
+                    subBuildStarted(event);
+                }
+            }
+        }
+    }
 }
