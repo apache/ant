@@ -214,7 +214,7 @@ public class ComponentHelper  {
                     entryVal = new ArrayList(entryVal);
                 }
                 Object entryKey = entry.getKey();                                    
-                result.put(entryKey, entryKey);
+                result.put(entryKey, entryVal);
             }
         }
         return result;
