@@ -1553,15 +1553,24 @@ public class JUnitTask extends Task {
             test.setProperties(getProject().getProperties());
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
-                File outFile = getOutput(fe, test);
-                JUnitTaskMirror.JUnitResultFormatterMirror formatter =
-                    fe.createFormatter(classLoader);
-                if (outFile != null && formatter != null) {
-                    try {
-                        OutputStream out = new FileOutputStream(outFile);
-                        delegate.addVmExit(test, formatter, out, message, testCase);
-                    } catch (IOException e) {
-                        // ignore
+                if (fe.shouldUse(this)) {
+                    JUnitTaskMirror.JUnitResultFormatterMirror formatter =
+                        fe.createFormatter(classLoader);
+                    if (formatter != null) {
+                        OutputStream out = null;
+                        File outFile = getOutput(fe, test);
+                        if (outFile != null) {
+                            try {
+                                out = new FileOutputStream(outFile);
+                            } catch (IOException e) {
+                                // ignore
+                            }
+                        }
+                        if (out == null) {
+                            out = getDefaultOutput();
+                        }
+                        delegate.addVmExit(test, formatter, out, message,
+                                           testCase);
                     }
                 }
             }

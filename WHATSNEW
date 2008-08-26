@@ -176,6 +176,10 @@ Fixed bugs:
    working directory.
    Bugzilla Report 45607.
 
+ * only <formatter>s that logged to a file were notified if forked VM
+   crashed or a timeout occured in <junit>.
+   Bugzilla Report 37312.
+
 Other changes:
 --------------
 
