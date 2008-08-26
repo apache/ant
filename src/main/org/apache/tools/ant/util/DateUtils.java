@@ -73,7 +73,7 @@ public final class DateUtils {
 
     private static final double[] LIMITS = {0, 1, 2};
 
-    private static final String[] MINUTES_PART = {"", "1 minute ", "{0,number} minutes "};
+    private static final String[] MINUTES_PART = {"", "1 minute ", "{0,number,###############} minutes "};
 
     private static final String[] SECONDS_PART = {"0 seconds", "1 second", "{1,number} seconds"};
 

@@ -43,7 +43,7 @@ public class DateUtilsTest extends TestCase {
     }
 
     // https://issues.apache.org/bugzilla/show_bug.cgi?id=44659
-    public void XtestLongElapsedTime(){
+    public void testLongElapsedTime(){
         assertEquals("2926 minutes 13 seconds",
                      DateUtils.formatElapsedTime(1000 * 175573));
     }

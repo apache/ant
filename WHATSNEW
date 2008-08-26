@@ -85,6 +85,12 @@ Changes that could break older environments:
    may not have started at all.
    Bugzilla Report 45227.
 
+ * If the number of minutes a build takes is bigger then 1000 Ant will
+   no longer print a thousands separator in the "elapsed time"
+   message.  It used to be the thousands separator of the current
+   locale.
+   Bugzilla Report 44659.
+
 Fixed bugs:
 -----------
 
