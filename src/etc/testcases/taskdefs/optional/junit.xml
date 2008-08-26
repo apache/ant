@@ -25,7 +25,7 @@
 
   <target name="cleanup">
     <delete file="testlog.txt"/>
-    <delete dir="out" includeemptydirs="true" failonerror="false"/>
+    <delete dir="out"/>
   </target>
 
   <target name="testForkedOutput">

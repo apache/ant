@@ -37,6 +37,13 @@ public class JUnitTestListenerTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
     }
 
+    /**
+     * The teardown method for JUnit.
+     */
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void testFullLogOutput() {
         executeTarget(PASS_TEST_TARGET);
         assertTrue("expecting full log to have BuildListener events", 
