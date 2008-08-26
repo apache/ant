@@ -46,6 +46,8 @@ public class DateUtilsTest extends TestCase {
     public void testLongElapsedTime(){
         assertEquals("2926 minutes 13 seconds",
                      DateUtils.formatElapsedTime(1000 * 175573));
+        assertEquals("153722867280912 minutes 55 seconds",
+                     DateUtils.formatElapsedTime(Long.MAX_VALUE));
     }
 
     public void testDateTimeISO(){
