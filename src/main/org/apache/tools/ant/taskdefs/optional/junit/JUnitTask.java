@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.net.URL;
@@ -851,20 +852,28 @@ public class JUnitTask extends Task {
         try {
             writer =
                 new PrintWriter(new BufferedWriter(new FileWriter(casesFile)));
+
+            log("Creating casesfile '" + casesFile.getAbsolutePath()
+                + "' with content: ", Project.MSG_VERBOSE);
+            PrintStream logWriter =
+                new PrintStream(new LogOutputStream(this, Project.MSG_VERBOSE));
+
             Iterator iter = testList.iterator();
             while (iter.hasNext()) {
                 test = (JUnitTest) iter.next();
-                writer.print(test.getName());
+                printDual(writer, logWriter, test.getName());
                 if (test.getTodir() == null) {
-                    writer.print("," + getProject().resolveFile("."));
+                    printDual(writer, logWriter,
+                              "," + getProject().resolveFile("."));
                 } else {
-                    writer.print("," + test.getTodir());
+                    printDual(writer, logWriter, "," + test.getTodir());
                 }
 
                 if (test.getOutfile() == null) {
-                    writer.println("," + "TEST-" + test.getName());
+                    printlnDual(writer, logWriter,
+                                "," + "TEST-" + test.getName());
                 } else {
-                    writer.println("," + test.getOutfile());
+                    printlnDual(writer, logWriter, "," + test.getOutfile());
                 }
             }
             writer.flush();
@@ -880,9 +889,7 @@ public class JUnitTask extends Task {
             log(e.toString(), Project.MSG_ERR);
             throw new BuildException(e);
         } finally {
-            if (writer != null) {
-                writer.close();
-            }
+            FILE_UTILS.close(writer);
 
             try {
                 casesFile.delete();
@@ -1957,5 +1964,17 @@ public class JUnitTask extends Task {
         String pack = index > 0 ? test.getName().substring(0, index + 1) : "";
         t.setName(pack + "Batch-With-Multiple-Tests");
         return t;
+    }
+
+    private static void printDual(PrintWriter w, PrintStream s, String text)
+        throws IOException {
+        w.print(text);
+        s.print(text);
+    }
+
+    private static void printlnDual(PrintWriter w, PrintStream s, String text)
+        throws IOException {
+        w.println(text);
+        s.println(text);
     }
 }
