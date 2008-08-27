@@ -261,6 +261,16 @@ public final class Diagnostics {
      * @param out the stream to print the report to.
      */
     public static void doReport(PrintStream out) {
+        doReport(out, Project.MSG_INFO);
+    }
+
+    /**
+     * Print a report to the given stream.
+     * @param out the stream to print the report to.
+     * @param logLevel denotes the level of detail requested as one of
+     * Project's MSG_* constants.
+     */
+    public static void doReport(PrintStream out, int logLevel) {
         out.println("------- Ant diagnostics report -------");
         out.println(Main.getAntVersion());
         header(out, "Implementation Version");

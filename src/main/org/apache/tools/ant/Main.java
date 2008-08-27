@@ -305,25 +305,24 @@ public class Main implements AntMain {
 
         // cycle through given args
 
+        boolean justPrintUsage = false;
+        boolean justPrintVersion = false;
+        boolean justPrintDiagnostics = false;
+
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
 
             if (arg.equals("-help") || arg.equals("-h")) {
-                printUsage();
-                return;
+                justPrintUsage = true;
             } else if (arg.equals("-version")) {
-                printVersion();
-                return;
+                justPrintVersion = true;
             } else if (arg.equals("-diagnostics")) {
-                Diagnostics.doReport(System.out);
-                return;
+                justPrintDiagnostics = true;
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
-                printVersion();
                 msgOutputLevel = Project.MSG_VERBOSE;
             } else if (arg.equals("-debug") || arg.equals("-d")) {
-                printVersion();
                 msgOutputLevel = Project.MSG_DEBUG;
             } else if (arg.equals("-noinput")) {
                 allowInput = false;
@@ -393,6 +392,20 @@ public class Main implements AntMain {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
             }
+        }
+
+        if (msgOutputLevel >= Project.MSG_VERBOSE || justPrintVersion) {
+            printVersion(msgOutputLevel);
+        }
+
+        if (justPrintUsage || justPrintVersion || justPrintDiagnostics) {
+            if (justPrintUsage) {
+                printUsage();
+            }
+            if (justPrintDiagnostics) {
+                Diagnostics.doReport(System.out, msgOutputLevel);
+            }
+            return;
         }
 
         // if buildFile was not specified on the command line,
@@ -919,7 +932,7 @@ public class Main implements AntMain {
      *
      * @exception BuildException if the version information is unavailable
      */
-    private static void printVersion() throws BuildException {
+    private static void printVersion(int logLevel) throws BuildException {
         System.out.println(getAntVersion());
     }
 

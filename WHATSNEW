@@ -180,6 +180,9 @@ Fixed bugs:
    crashed or a timeout occured in <junit>.
    Bugzilla Report 37312.
 
+ * ant -v -version would print the version information twice.
+   Bugzilla Report 45695.
+
 Other changes:
 --------------
 
