@@ -180,8 +180,16 @@ targets so specified, in the order specified.</p>
 <h3>Basedir of the new project</h3>
 
 <p>The basedir value of the new project is affected by the two
-attributes dir and inheritall, see the following table for
-details:</p>
+  attributes dir and inheritall as well as
+  the <code>&lt;ant&gt;</code> task's history.  The current behaviour
+  is known to be confusing but cannot be changed without breaking
+  backwards compatibility in subtle ways.</p>
+
+<p>If the <code>&lt;ant&gt;</code> task is in a "top level" build
+  file, i.e. the project containing the <code>&lt;ant&gt;</code> task
+  has not itself been invoked as part of a
+  different <code>&lt;ant&gt;</code> (or <code>&lt;antcall&gt;</code>)
+  task "higher up", the following table shows the details:</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -212,6 +220,60 @@ details:</p>
         of the new project</td>
   </tr>
 </table>
+
+<p>If on the other hand the <code>&lt;ant&gt;</code> task is already
+  nested into another invocation, the parent invocation's settings
+  affect the outcome of the basedir value.  The current task's dir
+  attribute will always win, but if the dir attribute has been omitted
+  an even more complex situation arises:</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>parent dir attribute</b></td>
+    <td valign="top"><b>parent inheritAll attribute</b></td>
+    <td valign="top"><b>current inheritAll attribute</b></td>
+    <td valign="top"><b>new project's basedir</b></td>
+  </tr>
+  <tr>
+    <td valign="top">value provided</td>
+    <td valign="top">any</td>
+    <td valign="top">any</td>
+    <td valign="top">value of parent's dir attribute</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">true</td>
+    <td valign="top">true</td>
+    <td valign="top">basedir of parent project (the one whose build
+        file called the build file that contains
+        the current <code>&lt;ant&gt;</code> task).</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">true</td>
+    <td valign="top">false</td>
+    <td valign="top">basedir of parent project (the one whose build
+        file called the build file that contains
+        the current <code>&lt;ant&gt;</code> task).</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">false</td>
+    <td valign="top">true</td>
+    <td valign="top">basedir of calling project (the one whose build
+        file contains the current <code>&lt;ant&gt;</code> task).</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">false</td>
+    <td valign="top">false</td>
+    <td valign="top">basedir attribute of the <code>&lt;project&gt;</code> element
+        of the new project</td>
+  </tr>
+</table>
+
+<p>If you add even deeper levels of nesting, things get even more
+  complicated and you need to apply the above table recursively.</p>
 
 <h3>Examples</h3>
 <blockquote><pre>
