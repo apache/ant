@@ -80,11 +80,14 @@ inside of targets.</p>
   </tr>
   <tr>
     <td valign="top">dir</td>
-         <td valign="top">the directory to use as a basedir for the new Ant project.
+    <td valign="top">the directory to use as a basedir for the new Ant project.
       Defaults to the current project's basedir, unless
       inheritall has been set to false, in which case it doesn't
       have a default value.  This will override the basedir
-      setting of the called project.</td>
+      setting of the called project.<br/>
+      Also serves as the directory to resolve the antfile and output
+      attribute's values (if any).
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -274,6 +277,14 @@ targets so specified, in the order specified.</p>
 
 <p>If you add even deeper levels of nesting, things get even more
   complicated and you need to apply the above table recursively.</p>
+
+<p>If the basedir of the outer most build has been specified as a
+  property on the command line (i.e. <code>-Dbasedir=some-value</code>
+  or a <code>-propertyfile</code> argument) the value provided will
+  get an even higher priority.  For any <code>&lt;ant&gt;</code> task
+  that doesn't specify a dir attribute, the new project's basedir will
+  be the value specified on the command line - no matter how deeply
+  nested into layers of build files the task may be.</p>
 
 <h3>Examples</h3>
 <blockquote><pre>
