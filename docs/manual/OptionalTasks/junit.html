@@ -569,6 +569,46 @@ supported.</p>
 <p>Batchtests can define their own formatters via nested
 <code>&lt;formatter&gt;</code> elements.</p>
 
+<h3>Forked tests and <code>tearDown</code></h3>
+
+<p>If a forked test runs into a timeout, Ant will terminate the Java
+  VM process it has created, which probably means the
+  test's <code>tearDown</code> method will never be called.  The same
+  is true if the forked VM crashes for some other reason.</p>
+
+<p>Starting with Ant 1.8.0, a special formatter is distributed with
+  Ant that tries to load the testcase that was in the forked VM and
+  invoke that class' <code>tearDown</code> method.  This formatter has
+  the following limitations:</p>
+
+<ul>
+  <li>It runs in the same Java VM as Ant itself, this is a different
+    Java VM than the one that was executing the test and it may see a
+    different classloader (and thus may be unable to load the tast
+    class).</li>
+  <li>It cannot determine which test was run when the timeout/crash
+    occured if the forked VM was running multiple test.  I.e. the
+    formatter cannot work with any <code>forkMode</code> other
+    than <code>perTest</code> and it won't do anything if the test
+    class contains a <code>suite()</code> method.</li>
+</ul>
+
+<p>If the formatter recognizes an incompatible <code>forkMode</code>
+  or a <code>suite</code> method or fails to load the test class it
+  will silently do nothing.</p>
+
+<p>The formatter doesn't have any effect on tests that were not
+  forked or didn't cause timeouts or VM crashes.</p>
+
+<p>To enable the formatter, add a <code>formatter</code> like</p>
+
+<pre>
+&lt;formatter classname="org.apache.tools.ant.taskdefs.optional.junit.TearDownOnVmCrash"
+           usefile="false"/&gt;
+</pre>
+
+<p>to your <code>junit</code> task.</p>
+
 <h3>Examples</h3>
 
 <pre>

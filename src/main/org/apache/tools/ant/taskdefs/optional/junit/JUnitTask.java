@@ -731,6 +731,7 @@ public class JUnitTask extends Task {
             "OutErrSummaryJUnitResultFormatter",
             "PlainJUnitResultFormatter",
             "SummaryJUnitResultFormatter",
+            "TearDownOnVmCrash",
             "XMLJUnitResultFormatter",
         };
 
@@ -1502,19 +1503,19 @@ public class JUnitTask extends Task {
         }
     }
 
+    static final String TIMEOUT_MESSAGE = 
+        "Timeout occurred. Please note the time in the report does"
+        + " not reflect the time until the timeout.";
+
     /**
      * Take care that some output is produced in report files if the
      * watchdog kills the test.
      *
      * @since Ant 1.5.2
      */
-
-    private void logTimeout(FormatterElement[] feArray, JUnitTest test, String testCase) {
-        logVmExit(
-            feArray, test,
-            "Timeout occurred. Please note the time in the report does"
-            + " not reflect the time until the timeout.",
-            testCase);
+    private void logTimeout(FormatterElement[] feArray, JUnitTest test,
+                            String testCase) {
+        logVmExit(feArray, test, TIMEOUT_MESSAGE, testCase);
     }
 
     /**
@@ -1942,6 +1943,8 @@ public class JUnitTask extends Task {
         }
     }
 
+    static final String NAME_OF_DUMMY_TEST = "Batch-With-Multiple-Tests";
+
     /**
      * Creates a JUnitTest instance that shares all flags with the
      * passed in instance but has a more meaningful name.
@@ -1962,7 +1965,7 @@ public class JUnitTask extends Task {
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch
         String pack = index > 0 ? test.getName().substring(0, index + 1) : "";
-        t.setName(pack + "Batch-With-Multiple-Tests");
+        t.setName(pack + NAME_OF_DUMMY_TEST);
         return t;
     }
 

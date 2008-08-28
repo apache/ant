@@ -306,6 +306,12 @@ Other changes:
  * <echoxml> now supports XML namespaces.
    Bugzilla Report 36804.
 
+ * A new listener for <junit> has been added that tries to invoke the
+   tearDown method of a TestCase if that TestCase was run in a forked
+   VM and the VM crashed or a timeout occured.  See the <junit> task's
+   manual page for details.
+   Bugzilla Report 37241.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
