@@ -286,6 +286,12 @@ targets so specified, in the order specified.</p>
   be the value specified on the command line - no matter how deeply
   nested into layers of build files the task may be.</p>
 
+<p>The samae happens if the basedir is specified as a
+  nested <code>&lt;property&gt;</code> of an <code>&lt;ant&gt;</code>
+  task.  The basedir of build files started at deeper levels will be
+  set to the specified value of the property element unless the
+  corresponding Ant tasks set the dir attribute explicitly.</p>
+
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;ant antfile=&quot;subproject/subbuild.xml&quot; target=&quot;compile&quot;/&gt;
