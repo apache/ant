@@ -183,6 +183,10 @@ Fixed bugs:
  * ant -v -version would print the version information twice.
    Bugzilla Report 45695.
 
+ * when nested into builds that have been invoked by <ant> tasks
+   <subant> might set the wrong basedir on the called projects.
+   Bugzilla Report 30569.
+
 Other changes:
 --------------
 

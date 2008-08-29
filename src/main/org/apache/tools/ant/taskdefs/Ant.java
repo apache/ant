@@ -215,7 +215,11 @@ public class Ant extends Task {
             }
         }
         // set user-defined properties
+        if (allowNativeBasedir) {
+            addAlmostAll(getProject().getUserProperties(), PropertyType.USER);
+        } else {
         getProject().copyUserProperties(newProject);
+        }
 
         if (!inheritAll) {
            // set Ant's built-in properties separately,
@@ -224,13 +228,13 @@ public class Ant extends Task {
 
         } else {
             // set all properties from calling project
-            addAlmostAll(getProject().getProperties());
+            addAlmostAll(getProject().getProperties(), PropertyType.PLAIN);
         }
 
         Enumeration e = propertySets.elements();
         while (e.hasMoreElements()) {
             PropertySet ps = (PropertySet) e.nextElement();
-            addAlmostAll(ps.getProperties());
+            addAlmostAll(ps.getProperties(), PropertyType.PLAIN);
         }
     }
 
@@ -490,7 +494,12 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
+        if (allowNativeBasedir) {
+            addAlmostAll(getProject().getInheritedProperties(),
+                         PropertyType.INHERITED);
+        } else {
         getProject().copyInheritedProperties(newProject);
+        }
     }
 
     /**
@@ -601,22 +610,31 @@ public class Ant extends Task {
      * well as properties named basedir or ant.file.
      * @param props properties <code>Hashtable</code> to copy to the
      * new project.
-     * @since Ant 1.6
+     * @param the type of property to set (a plain Ant property, a
+     * user property or an inherited property).
+     * @since Ant 1.8.0
      */
-    private void addAlmostAll(Hashtable props) {
+    private void addAlmostAll(Hashtable props, PropertyType type) {
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
             String key = e.nextElement().toString();
-            if (MagicNames.PROJECT_BASEDIR.equals(key) || MagicNames.ANT_FILE.equals(key)) {
+            if (MagicNames.PROJECT_BASEDIR.equals(key)
+                || MagicNames.ANT_FILE.equals(key)) {
                 // basedir and ant.file get special treatment in execute()
                 continue;
             }
 
             String value = props.get(key).toString();
+            if (type == PropertyType.PLAIN) {
             // don't re-set user properties, avoid the warning message
             if (newProject.getProperty(key) == null) {
                 // no user property
                 newProject.setNewProperty(key, value);
+            }
+            } else if (type == PropertyType.USER) {
+                newProject.setUserProperty(key, value);
+            } else if (type == PropertyType.INHERITED) {
+                newProject.setInheritedProperty(key, value);
             }
         }
     }
@@ -800,5 +818,12 @@ public class Ant extends Task {
         public String getName() {
             return name;
         }
+    }
+
+    private static final class PropertyType {
+        private PropertyType() {}
+        private static final PropertyType PLAIN = new PropertyType();
+        private static final PropertyType INHERITED = new PropertyType();
+        private static final PropertyType USER = new PropertyType();
     }
 }

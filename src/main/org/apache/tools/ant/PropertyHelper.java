@@ -775,6 +775,17 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
+     * Returns a copy of the inherited property hashtable
+     * @return a hashtable containing just the inherited properties
+     */
+    public Hashtable getInheritedProperties() {
+        //avoid concurrent modification:
+        synchronized (inheritedProperties) {
+            return new Hashtable(inheritedProperties);
+        }
+    }
+
+    /**
      * special back door for subclasses, internal access to the hashtables
      * @return the live hashtable of all properties
      */

@@ -656,6 +656,15 @@ public class Project implements ResourceFactory {
     }
 
     /**
+     * Return a copy of the inherited property hashtable.
+     * @return a hashtable containing just the inherited properties.
+     * @since Ant 1.8.0
+     */
+    public Hashtable getInheritedProperties() {
+        return PropertyHelper.getPropertyHelper(this).getInheritedProperties();
+    }
+
+    /**
      * Copy all user properties that have been set on the command
      * line or a GUI tool from this instance to the Project instance
      * given as the argument.

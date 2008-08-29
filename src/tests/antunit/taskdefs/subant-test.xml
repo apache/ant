@@ -54,7 +54,7 @@
     <ant antfile="${ant.file}" target="testSubAntDoesntSetBasedir"/>
   </target>
 
-  <target name="XtestSubAntDoesntSetBasedirAfterAntWithDir">
+  <target name="testSubAntDoesntSetBasedirAfterAntWithDir">
     <ant antfile="${ant.file}" dir="${basedir}"
          target="testSubAntDoesntSetBasedir"/>
   </target>
