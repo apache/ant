@@ -73,6 +73,8 @@ public class Copy extends Task {
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
     protected Vector rcs = new Vector();
+    // here to provide API backwards compatibility
+    protected Vector filesets = rcs;
 
     private boolean enableMultipleMappings = false;
     protected boolean filtering = false;
