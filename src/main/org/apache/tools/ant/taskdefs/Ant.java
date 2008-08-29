@@ -218,7 +218,7 @@ public class Ant extends Task {
         if (allowNativeBasedir) {
             addAlmostAll(getProject().getUserProperties(), PropertyType.USER);
         } else {
-        getProject().copyUserProperties(newProject);
+            getProject().copyUserProperties(newProject);
         }
 
         if (!inheritAll) {
@@ -498,7 +498,7 @@ public class Ant extends Task {
             addAlmostAll(getProject().getInheritedProperties(),
                          PropertyType.INHERITED);
         } else {
-        getProject().copyInheritedProperties(newProject);
+            getProject().copyInheritedProperties(newProject);
         }
     }
 
@@ -626,11 +626,11 @@ public class Ant extends Task {
 
             String value = props.get(key).toString();
             if (type == PropertyType.PLAIN) {
-            // don't re-set user properties, avoid the warning message
-            if (newProject.getProperty(key) == null) {
-                // no user property
-                newProject.setNewProperty(key, value);
-            }
+                // don't re-set user properties, avoid the warning message
+                if (newProject.getProperty(key) == null) {
+                    // no user property
+                    newProject.setNewProperty(key, value);
+                }
             } else if (type == PropertyType.USER) {
                 newProject.setUserProperty(key, value);
             } else if (type == PropertyType.INHERITED) {
