@@ -65,7 +65,7 @@ public class ParseProperties implements ParseNextProperty {
      *         <code>null</code> if the original string is <code>null</code>.
      */
     public Object parseProperties(String value) {
-        if (value == null || "".equals(value) || value.indexOf('$') == -1) {
+        if (value == null || "".equals(value)) {
             return value;
         }
         ParsePosition pos = new ParsePosition(0);
