@@ -340,6 +340,29 @@ public class Jar extends Zip {
         return newManifest;
     }
 
+    private boolean jarHasIndex(File jarFile) throws IOException {
+        ZipFile zf = null;
+        try {
+            zf = new ZipFile(jarFile);
+            Enumeration e = zf.entries();
+            while (e.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) e.nextElement();
+                if (ze.getName().equalsIgnoreCase(INDEX_NAME)) {
+                    return true;
+                }
+            }
+            return false;
+        } finally {
+            if (zf != null) {
+                try {
+                    zf.close();
+                } catch (IOException e) {
+                    // XXX - log an error?  throw an exception?
+                }
+            }
+        }
+    }
+    
     /**
      * Behavior when a Manifest is found in a zipfileset or zipgroupfileset file.
      * Valid values are "skip", "merge", and "mergewithoutmain".
@@ -593,7 +616,7 @@ public class Jar extends Zip {
             }
         } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
             log("Warning: selected " + archiveType
-                + " files include a META-INF/INDEX.LIST which will"
+                + " files include a " + INDEX_NAME + " which will"
                 + " be replaced by a newly generated one.", Project.MSG_WARN);
         } else {
             if (index && vPath.indexOf("/") == -1) {
@@ -734,6 +757,14 @@ public class Jar extends Zip {
         }
 
         createEmpty = needsUpdate;
+        if (!needsUpdate && index) {
+            try {
+                needsUpdate = !jarHasIndex(zipFile);
+            } catch (IOException e) {
+                //if we couldn't read it, we might as well recreate it?
+                needsUpdate = true;
+            }
+        }
         return super.getResourcesToAdd(rcs, zipFile, needsUpdate);
     }
 

@@ -316,6 +316,10 @@ Other changes:
    manual page for details.
    Bugzilla Report 37241.
 
+ * The Jar task now supports the addition of a jar index file in update mode.
+   Previously the absence of the index was not enough to trigger the rebuild;
+   some other update was necessary.  Bugzilla report 45098.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
