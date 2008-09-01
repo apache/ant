@@ -200,6 +200,10 @@ public class FailureRecorder extends DataType implements JUnitResultFormatter, B
      * {@inheritDoc}
      */
     public void setOutput(OutputStream out) {
+        // unused, close output file so it can be deleted before the VM exits
+        if (out != System.out) {
+            FileUtils.close(out);
+        }
     }
 
     /**
