@@ -2143,7 +2143,7 @@ public class Project implements ResourceFactory {
         event.setException(exception);
         BuildListener[] currListeners = listeners;
         for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].targetFinished(event);
+            currListeners[i].taskFinished(event);
         }
 
     }
