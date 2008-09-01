@@ -320,6 +320,12 @@ Other changes:
    Previously the absence of the index was not enough to trigger the rebuild;
    some other update was necessary.  Bugzilla report 45098.
 
+ * <ant> has a new attribute "useNativeBasedir" that makes the child
+   build use the same basedir it would have used if invoked from the
+   command line.  No matter what other attributes/properties have been
+   set.
+   Bugzilla Report 45711.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

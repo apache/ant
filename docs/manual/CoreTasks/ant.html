@@ -80,7 +80,8 @@ inside of targets.</p>
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">the directory to use as a basedir for the new Ant project.
+    <td valign="top">the directory to use as a basedir for the new Ant
+      project (unless useNativeBasedir is set to true).
       Defaults to the current project's basedir, unless
       inheritall has been set to false, in which case it doesn't
       have a default value.  This will override the basedir
@@ -115,6 +116,15 @@ inside of targets.</p>
     <td valign="top">If <code>true</code>, pass all references to the
       new Ant project.  Defaults to <code>false</code>.</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">useNativeBasedir</td>
+    <td valign="top">If set to true, the child build will use the same
+      basedir as it would have used when run from the command line
+      (i.e. the basedir one would expect when looking at the child
+      build's buildfile).  Defaults to <code>false</code>.  <em>since
+      Ant 1.8.0</em></td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 
@@ -181,6 +191,17 @@ targets so specified, in the order specified.</p>
 <p><em>since Ant 1.6.3</em>.</p>
 
 <h3>Basedir of the new project</h3>
+
+<p>If you set <code>useNativeBasedir</code> to true, the basedir of
+  the new project will be whatever the basedir attribute of
+  the <code>&lt;project&gt;</code> element of the new project says (or
+  the new project's directory if the there is no basedir attribute) -
+  no matter what any other attribute of this task says and no matter
+  how deeply nested into levels of
+  <code>&lt;ant&gt;</code> invocations this task lives.</p>
+ 
+<p>If you haven't set <code>useNativeBasedir</code> or set it to
+  false, the following rules apply:</p>
 
 <p>The basedir value of the new project is affected by the two
   attributes dir and inheritall as well as

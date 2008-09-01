@@ -113,7 +113,7 @@ public class Ant extends Task {
      *
      * @since Ant 1.8.0
      */
-    private boolean allowNativeBasedir = false;
+    private boolean useNativeBasedir = false;
 
     /**
      * simple constructor
@@ -137,8 +137,8 @@ public class Ant extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void setAllowNativeBasedir(boolean b) {
-        allowNativeBasedir = b;
+    public void setUseNativeBasedir(boolean b) {
+        useNativeBasedir = b;
     }
 
     /**
@@ -215,7 +215,7 @@ public class Ant extends Task {
             }
         }
         // set user-defined properties
-        if (allowNativeBasedir) {
+        if (useNativeBasedir) {
             addAlmostAll(getProject().getUserProperties(), PropertyType.USER);
         } else {
             getProject().copyUserProperties(newProject);
@@ -344,7 +344,7 @@ public class Ant extends Task {
             initializeProject();
 
             if (dir != null) {
-                if (!allowNativeBasedir) {
+                if (!useNativeBasedir) {
                     newProject.setBaseDir(dir);
                     if (savedDir != null) {
                         // has been set explicitly
@@ -494,7 +494,7 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
-        if (allowNativeBasedir) {
+        if (useNativeBasedir) {
             addAlmostAll(getProject().getInheritedProperties(),
                          PropertyType.INHERITED);
         } else {
