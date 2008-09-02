@@ -52,6 +52,12 @@ regardless of the setting of <i>inheritAll</i>.  This allows you to
 parameterize your subprojects.  Properties defined on the command line
 cannot be overridden by nested <code>&lt;property&gt;</code> elements.</p>
 
+<p>When more than one nested <code>&lt;property&gt;</code> element
+  would set a property of the same name, the one declared last will
+  win.  This is for backwards compatibility reasons even so it is
+  different from the way <code>&lt;property&gt;</code> tasks in build
+  files behave.</p>
+
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
 true, all references will be copied, but they will not override

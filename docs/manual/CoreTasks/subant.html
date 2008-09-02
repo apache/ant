@@ -355,6 +355,13 @@
       </td></tr>
       <tr><td><blockquote>
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.
+
+<p>When more than one nested <code>&lt;property&gt;</code> element
+  would set a property of the same name, the one declared last will
+  win.  This is for backwards compatibility reasons even so it is
+  different from the way <code>&lt;property&gt;</code> tasks in build
+  files behave.</p>
+
  <!-- Ignore -->
  <!-- Ignore -->
 
