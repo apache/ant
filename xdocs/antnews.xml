@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -26,6 +26,25 @@
   </properties>
 
 <body>
+  <section name="AntUnit 1.1 Beta 1">
+    <h3>September 3, 2008 - Apache AntUnit 1.1 Beta 1 Available</h3>
+    
+    <p>Apache AntUnit 1.1 Beta 1 is now available for download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+
+    <p>In addition to a few bugfixes and some new assertions AntUnit
+      1.1 allows test listeners to receive the log output of the
+      project under test.  Both plainlistener and xmllistener have
+      an option that makes them echo the projects output into their
+      respective logs.</p>
+
+    <p>For more information see the <a href="antlibs/antunit/">Antlib's
+        home page</a></p>
+  </section>
+
   <section name="Ant 1.7.1">
     <h3>June 27, 2008 - Ant 1.7.1 Available</h3>
     <p>Apache Ant 1.7.1 is now available for <a

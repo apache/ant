@@ -24,6 +24,22 @@
 
   <body>
 
+    <section name="AntUnit 1.1 Beta 1">
+      <h3>September 3, 2008 - Apache AntUnit 1.1 Beta 1 Available</h3>
+
+      <p>Apache AntUnit 1.1 Beta 1 is now available for download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+
+      <p>In addition to a few bugfixes and some new assertions AntUnit
+        1.1 allows test listeners to receive the log output of the
+        project under test.  Both plainlistener and xmllistener have
+        an option that makes them echo the projects output into their
+        respective logs.</p>
+    </section>
+
     <section name="AntUnit 1.0">
       <h3>January 8, 2007 - Apache AntUnit 1.0 Available</h3>
 
@@ -32,6 +48,7 @@
       or <a
       href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
       release.</p>
+
     </section>
 
     <section name="Idea">
