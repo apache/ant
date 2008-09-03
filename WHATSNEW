@@ -187,6 +187,10 @@ Fixed bugs:
    <subant> might set the wrong basedir on the called projects.
    Bugzilla Report 30569.
 
+ * If the message of the failed assertion of a forked JUnit test
+   contained line feeds some excess output ended up in Ant's log.
+   Bugzilla Report 45411.
+
 Other changes:
 --------------
 

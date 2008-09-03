@@ -227,7 +227,7 @@ public class JUnitTaskTest extends BuildFileTest {
     }
 
     // Bugzilla Issue 45411
-    public void XtestMultilineAssertsFork() {
+    public void testMultilineAssertsFork() {
         expectLogNotContaining("testMultilineAssertsFork", "messed up)");
         assertLogNotContaining("crashed)");
     }

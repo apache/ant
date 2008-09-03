@@ -495,10 +495,17 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private void logTestListenerEvent(String msg) {
-        PrintStream out = savedOut != null ? savedOut : System.out;
         if (logTestListenerEvents) {
+            PrintStream out = savedOut != null ? savedOut : System.out;
             out.flush();
-            out.println(JUnitTask.TESTLISTENER_PREFIX + msg);
+            if (msg == null) {
+                msg = "null";
+            }
+            StringTokenizer msgLines = new StringTokenizer(msg, "\r\n", false);
+            while (msgLines.hasMoreTokens()) {
+                out.println(JUnitTask.TESTLISTENER_PREFIX
+                            + msgLines.nextToken());
+            }
             out.flush();
         }
     }
