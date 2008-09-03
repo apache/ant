@@ -116,6 +116,16 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
+     * Assert that the given substring is not in the log messages.
+     */
+    public void assertLogNotContaining(String substring) {
+        String realLog = getLog();
+        assertFalse("didn't expect log to contain \"" + substring + "\" log was \""
+                    + realLog + "\"",
+                    realLog.indexOf(substring) >= 0);
+    }
+
+    /**
      * Assert that the given substring is in the output messages.
      * @since Ant1.7
      */
@@ -158,6 +168,15 @@ public abstract class BuildFileTest extends TestCase {
     public void expectLogContaining(String target, String log) {
         executeTarget(target);
         assertLogContaining(log);
+    }
+
+    /**
+     * Assert that the given message has not been logged with a
+     * priority &lt;= INFO when running the given target.
+     */
+    public void expectLogNotContaining(String target, String log) {
+        executeTarget(target);
+        assertLogNotContaining(log);
     }
 
     /**

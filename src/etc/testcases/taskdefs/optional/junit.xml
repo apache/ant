@@ -258,4 +258,20 @@
     </echo>
   </target>
   
+  <!-- Bugzilla Issue 45411 -->
+  <target name="testMultilineAssertsNoFork">
+    <junit>
+      <test name="org.example.junit.MultilineAsserts"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <!-- Bugzilla Issue 45411 -->
+  <target name="testMultilineAssertsFork">
+    <junit fork="true">
+      <test name="org.example.junit.MultilineAsserts"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
 </project>

@@ -216,9 +216,20 @@ public class JUnitTaskTest extends BuildFileTest {
         }
     }
 
-
     public void testBatchTestForkOnceCustomFormatter() {
         assertResultFilesExist("testBatchTestForkOnceCustomFormatter", "foo");
+    }
+
+    // Bugzilla Issue 45411
+    public void testMultilineAssertsNoFork() {
+        expectLogNotContaining("testMultilineAssertsNoFork", "messed up)");
+        assertLogNotContaining("crashed)");
+    }
+
+    // Bugzilla Issue 45411
+    public void XtestMultilineAssertsFork() {
+        expectLogNotContaining("testMultilineAssertsFork", "messed up)");
+        assertLogNotContaining("crashed)");
     }
 
     private void assertResultFilesExist(String target, String extension) {
