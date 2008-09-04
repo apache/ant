@@ -291,6 +291,10 @@
   How can I delete everything beneath a particular directory,
     preserving the directory itself?
       </a></li>
+                <li><a href="#delete-directory-only-if-empty">
+  How can I delete a particular directory,
+        if and only if it is empty?
+      </a></li>
             </ul>
                 <h4 class="toc">It doesn't work (as expected)</h4>
         <ul>
@@ -1165,6 +1169,22 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
                         <pre class="code">
 &lt;delete includeemptydirs=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;dirtokeep&quot; includes=&quot;**/*&quot; /&gt;
+&lt;/delete&gt;
+</pre>
+                    <p class="faq">
+      <a name="delete-directory-only-if-empty"></a>
+      How can I delete a particular directory,
+        if and only if it is empty?
+    </p>
+                  <p>Most users who go down this path have no problem figuring
+          out that
+          <code>&lt;delete includeemptydirs="true" /&gt;</code> will
+          help them.  The seemingly tricky part is preserving the
+          non-empty directories, which Ant includes in the directory
+          scan. Fortunately the answer is simple:</p>
+                        <pre class="code">
+&lt;delete includeemptydirs=&quot;true&quot;&gt;
+  &lt;fileset dir=&quot;dirtokeepifnotempty&quot; excludes=&quot;**/*&quot; /&gt;
 &lt;/delete&gt;
 </pre>
                                 <p class="faq">
