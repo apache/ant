@@ -375,6 +375,8 @@ public class Symlink extends DispatchTask {
      *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>
      *                                   or <code>File.delete</code> fail.
+     * @deprecated use the two-arg version which also works if the link's
+     *             target can not be renamed.
      */
     public static void deleteSymlink(String path)
         throws IOException, FileNotFoundException {
@@ -388,11 +390,13 @@ public class Symlink extends DispatchTask {
      * <code>deleteSymlink(java.io.File)</code>.
      *
      * @param path    A string containing the path of the symlink to delete.
+     * @param task       An Ant Task required if "rm" needs to be invoked.
      *
      * @throws FileNotFoundException   When the path results in a
      *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>
      *                                   or <code>File.delete</code> fail.
+     * @since Ant 1.8.0
      */
     public static void deleteSymlink(String path, Task t)
         throws IOException, FileNotFoundException {
@@ -458,6 +462,7 @@ public class Symlink extends DispatchTask {
      *                                   <code>File.delete</code> or
      *                                   <code>File.getCanonicalPath</code>
      *                                   fail.
+     * @since Ant 1.8.0
      */
     public static void deleteSymlink(File linkfil, Task task)
         throws IOException {
@@ -475,47 +480,51 @@ public class Symlink extends DispatchTask {
 
         if (task == null || canfil.getParentFile().canWrite()) {
 
-        // rename the resource, thus breaking the link:
-        File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
-                                              canfil.getParentFile(), false,
-                                              false);
+            // rename the resource, thus breaking the link:
+            File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
+                                                  canfil.getParentFile(), false,
+                                                  false);
 
-        if (FILE_UTILS.isLeadingPath(canfil, linkfil)) {
-            // link points to a parent directory, renaming the parent
-            // will rename the file
-            linkfil = new File(temp,
-                               FILE_UTILS.removeLeadingPath(canfil, linkfil));
-        }
+            if (FILE_UTILS.isLeadingPath(canfil, linkfil)) {
+                // link points to a parent directory, renaming the parent
+                // will rename the file
+                linkfil = new File(temp,
+                                   FILE_UTILS.removeLeadingPath(canfil,
+                                                                linkfil));
+            }
 
-        boolean renamedTarget = false;
-        try {
+            boolean renamedTarget = false;
             try {
-                FILE_UTILS.rename(canfil, temp);
-                renamedTarget = true;
-            } catch (IOException e) {
-                throw new IOException(
-                    "Couldn't rename resource when attempting to delete "
-                    + linkfil);
-            }
-            // delete the (now) broken link:
-            if (!linkfil.delete()) {
-                throw new IOException("Couldn't delete symlink: " + linkfil
-                    + " (was it a real file? is this not a UNIX system?)");
-            }
-        } finally {
-            if (renamedTarget) {
-                // return the resource to its original name:
                 try {
-                    FILE_UTILS.rename(temp, canfil);
+                    FILE_UTILS.rename(canfil, temp);
+                    renamedTarget = true;
                 } catch (IOException e) {
-                    throw new IOException("Couldn't return resource " + temp
-                                          + " to its original name: "
-                                          + canfil.getAbsolutePath()
-                                          + "\n THE RESOURCE'S NAME ON DISK HAS "
-                                          + "BEEN CHANGED BY THIS ERROR!\n");
+                    throw new IOException("Couldn't rename resource when "
+                                          + "attempting to delete " + linkfil);
+                }
+                // delete the (now) broken link:
+                if (!linkfil.delete()) {
+                    throw new IOException("Couldn't delete symlink: "
+                                          + linkfil
+                                          + " (was it a real file? is this "
+                                          + "not a UNIX system?)");
+                }
+            } finally {
+                if (renamedTarget) {
+                    // return the resource to its original name:
+                    try {
+                        FILE_UTILS.rename(temp, canfil);
+                    } catch (IOException e) {
+                        throw new IOException("Couldn't return resource "
+                                              + temp
+                                              + " to its original name: "
+                                              + canfil.getAbsolutePath()
+                                              + "\n THE RESOURCE'S NAME ON DISK"
+                                              + " HAS BEEN CHANGED BY THIS"
+                                              + " ERROR!\n");
+                    }
                 }
             }
-        }
         } else {
             Execute.runCommand(task,
                                new String[] {"rm", linkfil.getAbsolutePath()});
