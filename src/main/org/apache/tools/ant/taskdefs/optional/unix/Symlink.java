@@ -449,15 +449,16 @@ public class Symlink extends DispatchTask {
             }
         } finally {
             if (renamedTarget) {
-            // return the resource to its original name:
-            try {
-                FILE_UTILS.rename(temp, canfil);
-            } catch (IOException e) {
-                throw new IOException("Couldn't return resource " + temp
-                    + " to its original name: " + canfil.getAbsolutePath()
-                    + "\n THE RESOURCE'S NAME ON DISK HAS "
-                    + "BEEN CHANGED BY THIS ERROR!\n");
-            }
+                // return the resource to its original name:
+                try {
+                    FILE_UTILS.rename(temp, canfil);
+                } catch (IOException e) {
+                    throw new IOException("Couldn't return resource " + temp
+                                          + " to its original name: "
+                                          + canfil.getAbsolutePath()
+                                          + "\n THE RESOURCE'S NAME ON DISK HAS "
+                                          + "BEEN CHANGED BY THIS ERROR!\n");
+                }
             }
         }
     }
