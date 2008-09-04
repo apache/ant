@@ -720,6 +720,25 @@ shell-prompt> m4 foo.m4 > foo
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="delete-directory-only-if-empty">
+      <question>How can I delete a particular directory,
+        if and only if it is empty?</question>
+      <answer>
+        <p>Most users who go down this path have no problem figuring
+          out that
+          <code>&lt;delete includeemptydirs="true" /&gt;</code> will
+          help them.  The seemingly tricky part is preserving the
+          non-empty directories, which Ant includes in the directory
+          scan. Fortunately the answer is simple:</p>
+
+        <source><![CDATA[
+<delete includeemptydirs="true">
+  <fileset dir="dirtokeepifnotempty" excludes="**/*" />
+</delete>
+]]></source>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="It doesn&apos;t work (as expected)">
