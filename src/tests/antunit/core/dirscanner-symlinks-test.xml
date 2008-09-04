@@ -46,10 +46,34 @@
     <au:assertFileDoesntExist file="${output}/B/file.txt"/>
   </target>
 
+  <target name="testBasedirIsSymlinkFollow"
+          depends="checkOs, setUp, -basedir-as-symlink"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <au:assertFileExists file="${output}/file.txt"/>
+  </target>
+
+  <target name="FAILStestBasedirIsSymlinkNoFollow"
+          depends="checkOs, setUp, -basedir-as-symlink"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/file.txt"/>
+  </target>
+
   <target name="-sibling" if="unix">
     <mkdir dir="${base}/A"/>
     <touch file="${base}/A/file.txt"/>
     <symlink link="${base}/B" resource="${base}/A"/>
   </target>
-    
+
+  <target name="-basedir-as-symlink" if="unix">
+    <delete dir="${base}"/>
+    <mkdir dir="${input}/realdir"/>
+    <touch file="${input}/realdir/file.txt"/>
+    <symlink link="${base}" resource="${input}/realdir"/>
+  </target>    
 </project>
