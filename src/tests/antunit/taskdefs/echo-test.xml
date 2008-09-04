@@ -19,14 +19,8 @@
 <project name="echo-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="dest.dir" location="echo.dest"/>
-
   <target name="setUp">
-    <mkdir dir="${dest.dir}" />
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dest.dir}"/>
+    <mkdir dir="${output}" />
   </target>
 
   <target name="test1">
@@ -66,11 +60,11 @@
   </target>
 
   <target name="testFile">
-    <echo file="${dest.dir}/echo.txt">Simple text</echo>
+    <echo file="${output}/echo.txt">Simple text</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${dest.dir}/echo.txt" />
+          <file file="${output}/echo.txt" />
           <contains text="Simple text" />
         </restrict>
       </resourcecount>
@@ -78,11 +72,11 @@
   </target>
 
   <target name="testOutputFile">
-    <echo output="${dest.dir}/echo.txt">Simple text</echo>
+    <echo output="${output}/echo.txt">Simple text</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${dest.dir}/echo.txt" />
+          <file file="${output}/echo.txt" />
           <contains text="Simple text" />
         </restrict>
       </resourcecount>
@@ -90,12 +84,12 @@
   </target>
 
   <target name="testAppend">
-    <echo file="${dest.dir}/echo.txt">Simple text</echo>
-    <echo file="${dest.dir}/echo.txt" append="true">Appended</echo>
+    <echo file="${output}/echo.txt">Simple text</echo>
+    <echo file="${output}/echo.txt" append="true">Appended</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${dest.dir}/echo.txt" />
+          <file file="${output}/echo.txt" />
           <contains text="Simple text" />
           <contains text="Appended" />
         </restrict>
@@ -104,11 +98,11 @@
   </target>
 
   <target name="testEmptyEncoding">
-    <echo file="${dest.dir}/echo.txt" encoding="">Simple text</echo>
+    <echo file="${output}/echo.txt" encoding="">Simple text</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${dest.dir}/echo.txt" />
+          <file file="${output}/echo.txt" />
           <contains text="Simple text" />
         </restrict>
       </resourcecount>
@@ -117,12 +111,12 @@
 
   <target name="testUTF16Encoding">
     <property name="char" value="&#169;" />
-    <echo file="${dest.dir}/echo16.txt" encoding="UTF-16">${char}</echo>
+    <echo file="${output}/echo16.txt" encoding="UTF-16">${char}</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
           <concat encoding="UTF-16">
-            <file file="${dest.dir}/echo16.txt" />
+            <file file="${output}/echo16.txt" />
           </concat>
           <contains text="${char}" />
         </restrict>
@@ -132,12 +126,12 @@
 
   <target name="testUTF8Encoding">
     <property name="char" value="&#169;" />
-    <echo file="${dest.dir}/echo8.txt" encoding="UTF8">${char}</echo>
+    <echo file="${output}/echo8.txt" encoding="UTF8">${char}</echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
           <concat encoding="UTF-8">
-            <file file="${dest.dir}/echo8.txt" />
+            <file file="${output}/echo8.txt" />
           </concat>
           <contains text="${char}" />
         </restrict>

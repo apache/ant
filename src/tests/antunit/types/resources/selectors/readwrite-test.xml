@@ -28,19 +28,15 @@
   </condition>
 
   <target name="createTestdir">
-    <mkdir dir="${dir}"/>
-    <touch file="${dir}/${file}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dir}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${output}/${file}"/>
   </target>
 
   <target name="testReadable" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:readable/>
         </restrict>
       </resourcecount>
@@ -48,7 +44,7 @@
     <au:assertTrue>
       <resourcecount when="equal" count="0">
         <restrict>
-          <fileset dir="${dir}" excludes="${file}"/>
+          <fileset dir="${output}" excludes="${file}"/>
           <rsel:readable/>
         </restrict>
       </resourcecount>
@@ -59,7 +55,7 @@
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:writable/>
         </restrict>
       </resourcecount>
@@ -67,7 +63,7 @@
     <au:assertTrue>
       <resourcecount when="equal" count="0">
         <restrict>
-          <fileset dir="${dir}" excludes="${file}"/>
+          <fileset dir="${output}" excludes="${file}"/>
           <rsel:writable/>
         </restrict>
       </resourcecount>
@@ -77,17 +73,17 @@
   <target name="makeFileUnwritable"
           depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
   <target name="makeFileUnwritable-Unix" id="unix">
-    <chmod file="${dir}/${file}" perm="444"/>
+    <chmod file="${output}/${file}" perm="444"/>
   </target>
   <target name="makeFileUnwritable-Windows" unless="unix">
-    <attrib file="${dir}/${file}" readonly="true"/>
+    <attrib file="${output}/${file}" readonly="true"/>
   </target>
 
   <target name="testUnwritable" depends="makeFileUnwritable">
     <au:assertTrue>
       <resourcecount when="equal" count="0">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:writable/>
         </restrict>
       </resourcecount>
@@ -96,12 +92,12 @@
 
   <target name="testAsConditions" depends="makeFileUnwritable">
     <au:assertTrue>
-      <isfileselected file="${dir}/${file}">
+      <isfileselected file="${output}/${file}">
         <rsel:readable/>
       </isfileselected>
     </au:assertTrue>
     <au:assertFalse>
-      <isfileselected file="${dir}/${file}">
+      <isfileselected file="${output}/${file}">
         <rsel:writable/>
       </isfileselected>
     </au:assertFalse>

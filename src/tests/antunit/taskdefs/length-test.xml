@@ -20,12 +20,12 @@
 
   <import file="../antunit-base.xml" />
 
-  <property name="dir" location="lengthtestdir" />
-  <property name="dir.a" location="${dir}/a" />
-  <property name="dir.b" location="${dir}/b" />
-  <property name="zipfile" location="lengthtest.zip" />
+  <property name="dir.a" location="${input}/a" />
+  <property name="dir.b" location="${input}/b" />
+  <property name="zipfile" location="${output}/lengthtest.zip" />
 
   <target name="setUp">
+    <mkdir dir="${output}" />
     <mkdir dir="${dir.a}" />
     <mkdir dir="${dir.b}" />
     <property name="foo" location="${dir.a}/foo" />
@@ -34,14 +34,9 @@
     <echo file="${bar}" message="bar" />
   </target>
 
-  <target name="tearDown">
-    <delete dir="${dir}" />
-    <delete file="${zipfile}" />
-  </target>
-
   <target name="testEach" depends="setUp">
     <length mode="each" property="length.each">
-      <fileset id="fs" dir="${dir}" />
+      <fileset id="fs" dir="${input}" />
     </length>
     <length string="${length.each}" property="length.length.each" />
     <length string="${foo}${bar}........${line.separator}"
@@ -60,7 +55,7 @@
 
   <target name="testEachCondition" depends="setUp">
     <length mode="each" property="length.each">
-      <fileset id="fs" dir="${dir}" />
+      <fileset id="fs" dir="${input}" />
     </length>
     <length string="${foo}${bar}........${line.separator}"
             property="length.expected" />
@@ -126,7 +121,7 @@
 
   <target name="testDupes" depends="setUp">
     <length property="length.foo" file="${dir.a}/foo">
-      <fileset dir="${dir}" />
+      <fileset dir="${input}" />
     </length>
     <au:assertTrue>
       <equals arg1="9" arg2="${length.foo}" />
@@ -136,7 +131,7 @@
   <target name="testDupesCondition" depends="setUp">
     <au:assertTrue>
       <length length="9" file="${dir.a}/foo">
-        <fileset dir="${dir}" />
+        <fileset dir="${input}" />
       </length>
     </au:assertTrue>
   </target>

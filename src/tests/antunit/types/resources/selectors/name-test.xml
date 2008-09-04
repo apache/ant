@@ -20,23 +20,18 @@
 
   <import file="../../../antunit-base.xml" />
 
-  <property name="dir" location="testdir"/>
   <property name="file" value="testfile"/>
 
   <target name="createTestdir">
-    <mkdir dir="${dir}"/>
-    <touch file="${dir}/${file}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dir}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${output}/${file}"/>
   </target>
 
   <target name="testPattern" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:name name="*"/>
         </restrict>
       </resourcecount>
@@ -44,7 +39,7 @@
     <au:assertTrue>
       <resourcecount when="equal" count="0">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:name name=".*"/>
         </restrict>
       </resourcecount>
@@ -55,7 +50,7 @@
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
-          <fileset dir="${dir}"/>
+          <fileset dir="${output}"/>
           <rsel:name regex=".*"/>
         </restrict>
       </resourcecount>

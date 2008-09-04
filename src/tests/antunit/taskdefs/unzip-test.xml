@@ -20,35 +20,27 @@
          xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="dest.dir" location="unzip.dest"/>
-
   <target name="setUp">
-    <mkdir dir="${dest.dir}" />
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dest.dir}"/>
+    <mkdir dir="${output}" />
   </target>
 
   <target name="testFailureOnBrokenCentralDirectoryStructure">
     <au:expectfailure
        expectedmessage="central directory is empty, can't expand corrupt archive.">
-      <unzip src="broken_cd.zip" dest="${dest.dir}"/>
+      <unzip src="broken_cd.zip" dest="${output}"/>
     </au:expectfailure>
   </target>
 
   <!-- Issue 28911 -->
   <target name="testStrippingOfPathsep">
-    <property name="in" location="${dest.dir}/input"/>
-    <property name="out" location="${dest.dir}/out"/>
-    <mkdir dir="${in}"/>
-    <mkdir dir="${out}"/>
-    <touch file="${in}/file"/>
-    <zip destfile="${dest.dir}/a.zip">
-      <zipfileset dir="${dest.dir}/input" prefix="/foo"/>
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/file"/>
+    <zip destfile="${output}/a.zip">
+      <zipfileset dir="${input}" prefix="/foo"/>
     </zip>
-    <unzip src="${dest.dir}/a.zip" stripAbsolutePathSpec="true"
-           dest="${out}"/>
-    <au:assertFileExists file="${out}/foo/file"/>
+    <unzip src="${output}/a.zip" stripAbsolutePathSpec="true"
+           dest="${output}"/>
+    <au:assertFileExists file="${output}/foo/file"/>
   </target>
 </project>

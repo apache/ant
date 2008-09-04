@@ -21,16 +21,14 @@
   <target name="test-move-caseonly">
     <!-- this test is inspired by bugzilla 41948 -->
     <!-- Especially interesting if executed on case-insensitive file systems -->
-    <touch file="${java.io.tmpdir}/abc"/>
-    <move file="${java.io.tmpdir}/abc" tofile="${java.io.tmpdir}/aBc"/>
-    <fileset dir="${java.io.tmpdir}" id="myfs">
+    <mkdir dir="${output}"/>
+    <touch file="${output}/abc"/>
+    <move file="${output}/abc" tofile="${output}/aBc"/>
+    <fileset dir="${output}" id="myfs">
       <include name="aBc"/>
     </fileset>
     <pathconvert refid="myfs" property="myproperty" setonempty="false"/>
     <au:assertPropertySet name="myproperty" message="abc was not renamed aBc"/>
   </target>
 
-  <target name="tearDown">
-    <delete file="${java.io.tmpdir}/aBc"/>
-  </target>
 </project>

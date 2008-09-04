@@ -18,17 +18,9 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../../antunit-base.xml" />
 
-  <property name="input" location="in"/>
-  <property name="output" location="out"/>
-
   <path id="junit">
     <fileset dir="../../../../../../lib/optional" includes="junit*"/>
   </path>
-
-  <target name="tearDown">
-    <delete dir="${input}"/>
-    <delete dir="${output}"/>
-  </target>
 
   <macrodef name="empty-test">
     <attribute name="classname"/>

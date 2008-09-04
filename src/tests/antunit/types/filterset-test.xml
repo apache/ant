@@ -22,7 +22,8 @@
   <property name="br" value="${line.separator}" />
 
   <target name="testRecursionRegression">
-    <copy todir="${basedir}">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
       <string value="@a@${br}@b@${br}@c@${br}@d@${br}" />
       <mergemapper to="filterset-output.txt" />
       <filterset>
@@ -33,15 +34,11 @@
       </filterset>
     </copy>
 
-    <loadfile property="afterfiltering" srcFile="filterset-output.txt"/>
+    <loadfile property="afterfiltering" srcFile="${output}/filterset-output.txt"/>
 
     <au:assertEquals
        expected="aaa${br}bbb${br}aaa:bbb${br}aaa:bbb:aaa:bbb${br}"
        actual="${afterfiltering}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete file="filterset-output.txt" />
   </target>
 
 </project>

@@ -22,30 +22,22 @@
 
   <import file="../antunit-base.xml" />
 
-  <dirname property="glob-test.dir"
-           file="${ant.file.glob-test}"/>
-
-  <target name="tearDown">
-    <delete dir="${glob-test.dir}/src"/>
-    <delete dir="${glob-test.dir}/dst"/>
-  </target>
-
   <target name="test-move">
     <property 
       name="glob-test-out-dir"
       location="${glob-test.dir}/../../../../../build/antunit/glob-test"/>
     <echo>${glob-test-out-dir}</echo>
     <!-- the following should work -->
-    <delete dir="${glob-test.dir}/src"/>
-    <delete dir="${glob-test.dir}/dst"/>
-    <mkdir dir="${glob-test.dir}/src"/>
-    <mkdir dir="${glob-test.dir}/dst"/>
-    <touch file="${glob-test.dir}/src/foobar-1.2.3.jar"/>
-    <touch file="${glob-test.dir}/src/foobar-janfu-1.2.3.jar"/>
-    <touch file="${glob-test.dir}/src/foobar--1.2.3.jar"/>
-    <touch file="${glob-test.dir}/src/foobar-x-1.2.3.jar"/>
-    <move todir="${glob-test.dir}/dst">
-      <fileset dir="${glob-test.dir}/src">
+    <delete dir="${input}"/>
+    <delete dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/foobar-1.2.3.jar"/>
+    <touch file="${input}/foobar-janfu-1.2.3.jar"/>
+    <touch file="${input}/foobar--1.2.3.jar"/>
+    <touch file="${input}/foobar-x-1.2.3.jar"/>
+    <move todir="${output}">
+      <fileset dir="${input}">
         <include name="**/*.jar"/>
       </fileset>
       <mapper type="glob" from="foobar-*-1.2.3.jar" to="*.jar"/>

@@ -20,11 +20,7 @@
 
   <import file="../antunit-base.xml" />
 
-  <property name="file" location="test.mf"/>
-
-  <target name="tearDown">
-    <delete file="${file}"/>
-  </target>
+  <property name="file" location="${output}test.mf"/>
 
   <target name="test8IsAllowed"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45675"

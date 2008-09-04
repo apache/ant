@@ -18,15 +18,11 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="ant-build" location="../../../../build"/>
-  <property name="build-dir" 
-            location="${ant-build}/ant-unit/whichresource/build"/>
-
   <target name="init">
-    <delete quiet="yes" dir="${build-dir}"/>
-    <mkdir dir="${build-dir}"/>
-    <javac srcdir="javac-dir/good-src" destdir="${build-dir}"/>
-    <path id="whichresource-build" path="${build-dir}"/>
+    <delete quiet="yes" dir="${output}"/>
+    <mkdir dir="${output}"/>
+    <javac srcdir="javac-dir/good-src" destdir="${output}"/>
+    <path id="whichresource-build" path="${output}"/>
   </target>
   
   <target name="test-reference" depends="init">

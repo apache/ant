@@ -24,12 +24,6 @@
   <property name="br" value="${line.separator}" />
   <property name="world" value="World" />
 
-  <property name="out.dir" location="tempdir"/>
-
-  <target name="tearDown">
-    <delete dir="${out.dir}" quiet="true"/>
-  </target>
-
   <target name="testCountEquals1">
     <au:assertTrue>
       <resourcecount count="1">
@@ -74,15 +68,15 @@
   </target>
 
   <target name="testEncoding">
-    <mkdir dir="${out.dir}"/>
-    <copy file="utf-16.in" toDir="${out.dir}" encoding="utf-16">
+    <mkdir dir="${output}"/>
+    <copy file="utf-16.in" toDir="${output}" encoding="utf-16">
       <filterchain>
         <fixcrlf/>
       </filterchain>
     </copy>
     <au:assertTrue>
       <resourcesmatch astext="true">
-        <file file="${out.dir}/utf-16.in" />
+        <file file="${output}/utf-16.in" />
         <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
         <concat outputEncoding="utf-16" fixlastline="true">
           <string value="foo" />

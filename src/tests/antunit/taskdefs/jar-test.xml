@@ -18,13 +18,10 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="index.jar" location="index.jar" />
-
-  <target name="tearDown">
-    <delete file="${index.jar}" />
-  </target>
-
   <target name="testIndexOnlyUpdate">
+    <mkdir dir="${output}"/>
+    <property name="index.jar" location="${output}/index.jar" />
+
     <jar destfile="${index.jar}" index="false">
       <fileset dir="${basedir}" includes="*-test.xml" />
     </jar>

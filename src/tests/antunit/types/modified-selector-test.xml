@@ -18,22 +18,20 @@
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
   <import file="../antunit-base.xml"/>
-  <property name="test-build-dir"
-            location="../../../../build/ant-unit/modified-selector"/>
 
   <target name="test-one-file">
-    <delete dir="${test-build-dir}"/>
-    <mkdir dir="${test-build-dir}"/>
-    <copy todir="${test-build-dir}" overwrite="yes">
+    <delete dir="${output}"/>
+    <mkdir dir="${output}"/>
+    <copy todir="${output}" overwrite="yes">
       <fileset dir="." includes="modified-selector-test.xml">
         <modified update="true">
-          <param name="cache.cachefile" value="${test-build-dir}/cc.properties"/>
+          <param name="cache.cachefile" value="${output}/cc.properties"/>
         </modified>
       </fileset>
     </copy>
 
     <au:assertTrue>
-      <available file="${test-build-dir}/cc.properties"/>
+      <available file="${output}/cc.properties"/>
     </au:assertTrue>
   </target>
 </project>

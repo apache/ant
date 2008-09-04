@@ -20,12 +20,9 @@
   <import file="../../antunit-base.xml"/>
 
   <target name="setUp">
-    <property name="file" location="${java.io.tmpdir}/test-resource.txt"/>
+    <mkdir dir="${output}"/>
+    <property name="file" location="${output}/test-resource.txt"/>
     <echo file="${file}" message="loads of text!"/>
-  </target>
-
-  <target name="tearDown">
-    <delete file="${file}"/>
   </target>
 
   <target name="testcontains">

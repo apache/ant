@@ -25,9 +25,6 @@
     additions on Java6+.
   </description>
   
-  <target name="tearDown">
-  </target>
-
   <condition property="prereqs-ok">
     <or>
       <available classname="org.apache.bsf.BSFManager"/>

@@ -22,11 +22,6 @@
   </description>
   <import file="../antunit-base.xml" />
 
-  <target name="tearDown">
-    <delete file="binaryAppendDest" />
-    <delete file="encodeStringDest" />
-  </target>
-
   <target name="assertProperties">
     <au:assertPropertySet name="ant.version" />
     <au:assertPropertySet name="java.home" />

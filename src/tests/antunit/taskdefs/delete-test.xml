@@ -18,20 +18,16 @@
 
 <project name="delete-test" basedir="." default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
-  <property name="working.dir" value="working"/>
-  <property name="existing.dir" value="working/exists"/>
-  <property name="nonexistent.dir" value="working/nonexists"/>
   
   <import file="../antunit-base.xml" />
 
-  <target name="init">
-    <delete dir="${working.dir}"/>
-    <mkdir dir="${working.dir}"/>
-    <mkdir dir="${existing.dir}"/>
-  </target>
+  <property name="existing.dir" location="${output}/exists"/>
+  <property name="nonexistent.dir" location="${output}/nonexists"/>
 
-  <target name="tearDown">
-    <delete dir="${working.dir}"/>
+  <target name="init">
+    <delete dir="${output}"/>
+    <mkdir dir="${output}"/>
+    <mkdir dir="${existing.dir}"/>
   </target>
 
   <!--test that you can delete a fileset with a nonexistent dir without failure-->

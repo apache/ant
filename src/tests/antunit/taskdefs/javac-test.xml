@@ -18,8 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="ant-build" location="../../../../build"/>
-  <property name="javac-dir" location="${ant-build}/ant-unit/javac-dir"/>
+  <property name="javac-dir" location="${output}/javac-dir"/>
   <property name="build-dir" location="${javac-dir}/build"/>
   
   <target name="test-includeDestClasses">

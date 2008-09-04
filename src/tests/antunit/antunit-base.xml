@@ -17,6 +17,14 @@
 -->
 <project name="antunit-base">
 
+  <property name="input" location="${java.io.tmpdir}/testinput"/>
+  <property name="output" location="${java.io.tmpdir}/testoutput"/>
+
+  <target name="tearDown">
+    <delete dir="${input}"/>
+    <delete dir="${output}"/>
+  </target>
+
   <target name="antunit">
     <antunit xmlns="antlib:org.apache.ant.antunit">
       <plainlistener />

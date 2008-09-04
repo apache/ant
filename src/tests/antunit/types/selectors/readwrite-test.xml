@@ -19,7 +19,6 @@
 
   <import file="../../antunit-base.xml" />
 
-  <property name="dir" location="testdir"/>
   <property name="file" value="testfile"/>
 
   <condition property="unix">
@@ -27,25 +26,21 @@
   </condition>
 
   <target name="createTestdir">
-    <mkdir dir="${dir}"/>
-    <touch file="${dir}/${file}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dir}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${output}/${file}"/>
   </target>
 
   <target name="testReadable" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <readable/>
         </fileset>
       </resourcecount>
     </au:assertTrue>
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}" excludes="${file}">
+        <fileset dir="${output}" excludes="${file}">
           <readable/>
         </fileset>
       </resourcecount>
@@ -55,14 +50,14 @@
   <target name="testWritable" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <writable/>
         </fileset>
       </resourcecount>
     </au:assertTrue>
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}" excludes="${file}">
+        <fileset dir="${output}" excludes="${file}">
           <writable/>
         </fileset>
       </resourcecount>
@@ -72,16 +67,16 @@
   <target name="makeFileUnwritable"
           depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
   <target name="makeFileUnwritable-Unix" id="unix">
-    <chmod file="${dir}/${file}" perm="444"/>
+    <chmod file="${output}/${file}" perm="444"/>
   </target>
   <target name="makeFileUnwritable-Windows" unless="unix">
-    <attrib file="${dir}/${file}" readonly="true"/>
+    <attrib file="${output}/${file}" readonly="true"/>
   </target>
 
   <target name="testUnwritable" depends="makeFileUnwritable">
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <writable/>
         </fileset>
       </resourcecount>
@@ -90,12 +85,12 @@
 
   <target name="testAsConditions" depends="makeFileUnwritable">
     <au:assertTrue>
-      <isfileselected file="${dir}/${file}">
+      <isfileselected file="${output}/${file}">
         <readable/>
       </isfileselected>
     </au:assertTrue>
     <au:assertFalse>
-      <isfileselected file="${dir}/${file}">
+      <isfileselected file="${output}/${file}">
         <writable/>
       </isfileselected>
     </au:assertFalse>

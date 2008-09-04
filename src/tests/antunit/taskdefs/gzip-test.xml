@@ -17,34 +17,28 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-    <!-- note relies on antunit built from svn trunk (1.1-alpha) -->
+    <!-- note relies on antunit 1.1 -->
     <import file="../antunit-base.xml" />
 
     <target name="setUp">
-        <mkdir dir="${java.io.tmpdir}/gzip-test" />
-        <mkdir dir="${java.io.tmpdir}/gzip-test/empty" />
-        <touch file="${java.io.tmpdir}/gzip-test/fileone" />
-        <touch file="${java.io.tmpdir}/gzip-test/filetwo" />
-    </target>
-
-    <target name="tearDown">
-        <delete includeemptydirs="true">
-            <fileset dir="${java.io.tmpdir}/gzip-test" />
-        </delete>
+        <mkdir dir="${output}" />
+        <mkdir dir="${output}/empty" />
+        <touch file="${output}/fileone" />
+        <touch file="${output}/filetwo" />
     </target>
 
     <target name="testFailNone">
         <au:expectfailure expectedmessage="No resource selected, gzip needs exactly one resource." message="Should have thrown an exception">
-            <gzip destfile="${java.io.tmpdir}/gzip-test/file.gz">
-                <fileset dir="${java.io.tmpdir}/gzip-test/empty" />
+            <gzip destfile="${output}/file.gz">
+                <fileset dir="${output}/empty" />
             </gzip>
         </au:expectfailure>
     </target>
 
     <target name="testFailTwo">
         <au:expectfailure expectedmessage="gzip cannot handle multiple resources at once. (2 resources were selected.)" message="Should have thrown an exception">
-            <gzip destfile="${java.io.tmpdir}/gzip-test/file.gz">
-                <fileset dir="${java.io.tmpdir}/gzip-test" />
+            <gzip destfile="${output}/file.gz">
+                <fileset dir="${output}" />
             </gzip>
         </au:expectfailure>
     </target>

@@ -19,36 +19,31 @@
 
   <import file="../../antunit-base.xml" />
 
-  <property name="dir" location="testdir"/>
   <property name="file" value="testfile"/>
 
   <target name="createTestdir">
-    <mkdir dir="${dir}"/>
-    <touch file="${dir}/${file}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${dir}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${output}/${file}"/>
   </target>
 
   <target name="testPattern" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <filename name="*"/>
         </fileset>
       </resourcecount>
     </au:assertTrue>
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <filename name="*" negate="true"/>
         </fileset>
       </resourcecount>
     </au:assertTrue>
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <filename name=".*"/>
         </fileset>
       </resourcecount>
@@ -58,14 +53,14 @@
   <target name="testRegex" depends="createTestdir">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <filename regex=".*"/>
         </fileset>
       </resourcecount>
     </au:assertTrue>
     <au:assertTrue>
       <resourcecount when="equal" count="0">
-        <fileset dir="${dir}">
+        <fileset dir="${output}">
           <filename regex=".*" negate="true"/>
         </fileset>
       </resourcecount>
