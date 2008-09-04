@@ -432,9 +432,11 @@ public class Symlink extends DispatchTask {
                                FILE_UTILS.removeLeadingPath(canfil, linkfil));
         }
 
+        boolean renamedTarget = false;
         try {
             try {
                 FILE_UTILS.rename(canfil, temp);
+                renamedTarget = true;
             } catch (IOException e) {
                 throw new IOException(
                     "Couldn't rename resource when attempting to delete "
@@ -446,6 +448,7 @@ public class Symlink extends DispatchTask {
                     + " (was it a real file? is this not a UNIX system?)");
             }
         } finally {
+            if (renamedTarget) {
             // return the resource to its original name:
             try {
                 FILE_UTILS.rename(temp, canfil);
@@ -454,6 +457,7 @@ public class Symlink extends DispatchTask {
                     + " to its original name: " + canfil.getAbsolutePath()
                     + "\n THE RESOURCE'S NAME ON DISK HAS "
                     + "BEEN CHANGED BY THIS ERROR!\n");
+            }
             }
         }
     }
