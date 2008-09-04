@@ -28,20 +28,20 @@
     <condition property="unix"><os family="unix"/></condition>
   </target>
 
-  <target name="YtestSymlinkToSiblingFollow"
+  <target name="testSymlinkToSiblingFollow"
           depends="checkOs, setUp, -sibling"
           if="unix">
-    <copy todir="${output}" followSymlinks="true">
-      <fileset dir="${base}"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
     </copy>
     <au:assertFileExists file="${output}/B/file.txt"/>
   </target>
 
-  <target name="YtestSymlinkToSiblingNoFollow"
+  <target name="testSymlinkToSiblingNoFollow"
           depends="checkOs, setUp, -sibling"
           if="unix">
-    <copy todir="${output}" followSymlinks="false">
-      <fileset dir="${base}"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
     </copy>
     <au:assertFileDoesntExist file="${output}/B/file.txt"/>
   </target>
