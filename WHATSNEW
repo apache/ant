@@ -200,6 +200,10 @@ Fixed bugs:
    a parent directory.
    Bugzilla Report 45743.
 
+ * <symlink action="delete"> failed if ant lacked permission to rename
+   the link's target.
+   Bugzilla Report 41525.
+
 Other changes:
 --------------
 

@@ -25,6 +25,12 @@
     </condition>
   </target>
 
+  <target name="tearDown" depends="antunit-base.tearDown"
+          if="chmod.tmp">
+    <chmod dir="${chmod.tmp}" perm="755"/>
+    <delete dir="${chmod.tmp}"/>
+  </target>
+
   <target name="os">
 
     <mkdir dir="${output}" />
@@ -71,6 +77,17 @@
 
   <target name="testDeleteLinkToParent" depends="init" if="unix">
     <symlink link="${output}/link" resource="${output}"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
+  <target name="testDeleteWithNoPermissionToRenameTarget"
+          depends="init" if="unix">
+    <!-- must be outside of ${output} or "base" tearDown will fail -->
+    <property name="chmod.tmp" location="${java.io.tmpdir}/ant-symlink-test"/>
+    <mkdir dir="${chmod.tmp}/A"/>
+    <chmod perm="555" dir="${chmod.tmp}"/>
+    <symlink link="${output}/link" resource="${chmod.tmp}/A"/>
     <symlink link="${output}/link" action="delete"/>
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
