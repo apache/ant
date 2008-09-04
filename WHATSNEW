@@ -196,6 +196,10 @@ Fixed bugs:
    contained line feeds some excess output ended up in Ant's log.
    Bugzilla Report 45411.
 
+ * <symlink action="delete"> failed to delete a link that pointed to
+   a parent directory.
+   Bugzilla Report 45743.
+
 Other changes:
 --------------
 

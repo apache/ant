@@ -386,12 +386,18 @@ public class Symlink extends DispatchTask {
      * <p>This is a utility method that removes a unix symlink without removing
      * the resource that the symlink points to. If it is accidentally invoked
      * on a real file, the real file will not be harmed, but an exception
-     * will be thrown when the deletion is attempted. This method works by
+     * will be thrown when the deletion is attempted.</p>
+     *
+     * <p>Normaly this method works by
      * getting the canonical path of the link, using the canonical path to
      * rename the resource (breaking the link) and then deleting the link.
      * The resource is then returned to its original name inside a finally
      * block to ensure that the resource is unharmed even in the event of
      * an exception.</p>
+     *
+     * <p>There may be cases where the algorithm described above doesn't work,
+     * in that case the method tries to use the native "rm" command on
+     * the symlink instead.</p>
      *
      * <p>Since Ant 1.8.0 this method will try to delete the File object if
      * it reports it wouldn't exist (as symlinks pointing nowhere usually do). 
@@ -410,12 +416,22 @@ public class Symlink extends DispatchTask {
             linkfil.delete();
             return;
         }
+
         // find the resource of the existing link:
         File canfil = linkfil.getCanonicalFile();
 
         // rename the resource, thus breaking the link:
         File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
-                                              canfil.getParentFile(), false, false);
+                                              canfil.getParentFile(), false,
+                                              false);
+
+        if (FILE_UTILS.isLeadingPath(canfil, linkfil)) {
+            // link points to a parent directory, renaming the parent
+            // will rename the file
+            linkfil = new File(temp,
+                               FILE_UTILS.removeLeadingPath(canfil, linkfil));
+        }
+
         try {
             try {
                 FILE_UTILS.rename(canfil, temp);

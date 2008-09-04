@@ -69,4 +69,10 @@
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
+  <target name="testDeleteLinkToParent" depends="init" if="unix">
+    <symlink link="${output}/link" resource="${output}"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
 </project>

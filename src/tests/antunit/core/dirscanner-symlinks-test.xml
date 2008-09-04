@@ -81,9 +81,7 @@
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true"/>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}/A"/>
-    </exec>
+    <symlink action="delete" link="${base}/A"/>
     <au:assertFileExists file="${output}/A/B/file.txt"/>
   </target>
 
@@ -95,9 +93,7 @@
         <include name="A/B/*"/>
       </fileset>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}/A"/>
-    </exec>
+    <symlink action="delete" link="${base}/A"/>
     <au:assertFileExists file="${output}/A/B/file.txt"/>
   </target>
 
@@ -110,9 +106,7 @@
         <include name="A/base/A/B/*"/>
       </fileset>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}/A"/>
-    </exec>
+    <symlink action="delete" link="${base}/A"/>
     <au:assertFileExists file="${output}/A/base/A/B/file.txt"/>
   </target>
 
@@ -122,9 +116,7 @@
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}/A"/>
-    </exec>
+    <symlink action="delete" link="${base}/A"/>
     <au:assertFileDoesntExist file="${output}/A/B/file.txt"/>
   </target>
 
@@ -134,9 +126,7 @@
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true"/>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}"/>
-    </exec>
+    <symlink action="delete" link="${base}"/>
     <assertDirIsEmpty/>
   </target>
 
@@ -146,9 +136,7 @@
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
-    <exec executable="rm">
-      <arg file="${base}"/>
-    </exec>
+    <symlink action="delete" link="${base}"/>
     <assertDirIsEmpty/>
   </target>
 
