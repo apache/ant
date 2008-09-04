@@ -28,6 +28,17 @@
     <condition property="unix"><os family="unix"/></condition>
   </target>
 
+  <macrodef name="assertDirIsEmpty">
+    <attribute name="dir" default="${output}"/>
+    <sequential>
+      <local name="resources"/>
+      <resourcecount property="resources">
+        <fileset dir="@{dir}"/>
+      </resourcecount>
+      <au:assertEquals expected="0" actual="${resources}"/>
+    </sequential>
+  </macrodef>
+
   <target name="testSymlinkToSiblingFollow"
           depends="checkOs, setUp, -sibling"
           if="unix">
@@ -64,6 +75,82 @@
     <au:assertFileDoesntExist file="${output}/file.txt"/>
   </target>
 
+  <target name="INFINITEtestLinkToParentFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}/A"/>
+    </exec>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentFollowWithInclude"
+          depends="checkOs, setUp, -link-to-parent"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true">
+        <include name="A/B/*"/>
+      </fileset>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}/A"/>
+    </exec>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+  </target>
+
+  <target name="Supposed to fail? testLinkToParentFollowWithIncludeMultiFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true">
+        <include name="A/B/B/B/*"/>
+      </fileset>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}/A"/>
+    </exec>
+    <au:assertFileExists file="${output}/A/B/B/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentNoFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}/A"/>
+    </exec>
+    <au:assertFileDoesntExist file="${output}/A/B/file.txt"/>
+  </target>
+
+  <target name="INFINITE testSillyLoopFollow"
+          depends="checkOs, setUp, -silly-loop"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}"/>
+    </exec>
+    <assertDirIsEmpty/>
+  </target>
+
+  <target name="testSillyLoopNoFollow"
+          depends="checkOs, setUp, -silly-loop"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <exec executable="rm">
+      <arg file="${base}"/>
+    </exec>
+    <assertDirIsEmpty/>
+  </target>
+
   <target name="-sibling" if="unix">
     <mkdir dir="${base}/A"/>
     <touch file="${base}/A/file.txt"/>
@@ -76,4 +163,15 @@
     <touch file="${input}/realdir/file.txt"/>
     <symlink link="${base}" resource="${input}/realdir"/>
   </target>    
+
+  <target name="-link-to-parent" if="unix">
+    <mkdir dir="${input}/B"/>
+    <touch file="${input}/B/file.txt"/>
+    <symlink link="${base}/A" resource="${input}"/>
+  </target>
+
+  <target name="-silly-loop" if="unix">
+    <delete dir="${base}"/>
+    <symlink link="${base}" resource="${input}"/>
+  </target>
 </project>
