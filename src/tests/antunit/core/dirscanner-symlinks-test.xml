@@ -101,18 +101,19 @@
     <au:assertFileExists file="${output}/A/B/file.txt"/>
   </target>
 
-  <target name="Supposed to fail? testLinkToParentFollowWithIncludeMultiFollow"
+  <!-- supposed to fail? -->
+  <target name="testLinkToParentFollowWithIncludeMultiFollow"
           depends="checkOs, setUp, -link-to-parent"
           if="unix">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true">
-        <include name="A/B/B/B/*"/>
+        <include name="A/base/A/B/*"/>
       </fileset>
     </copy>
     <exec executable="rm">
       <arg file="${base}/A"/>
     </exec>
-    <au:assertFileExists file="${output}/A/B/B/B/file.txt"/>
+    <au:assertFileExists file="${output}/A/base/A/B/file.txt"/>
   </target>
 
   <target name="testLinkToParentNoFollow"
