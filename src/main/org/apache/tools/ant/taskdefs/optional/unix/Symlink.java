@@ -391,7 +391,11 @@ public class Symlink extends DispatchTask {
      * rename the resource (breaking the link) and then deleting the link.
      * The resource is then returned to its original name inside a finally
      * block to ensure that the resource is unharmed even in the event of
-     * an exception.
+     * an exception.</p>
+     *
+     * <p>Since Ant 1.8.0 this method will try to delete the File object if
+     * it reports it wouldn't exist (as symlinks pointing nowhere usually do). 
+     * Prior version would throw a FileNotFoundException in that case.</p>
      *
      * @param linkfil    A <code>File</code> object of the symlink to delete.
      *
@@ -403,7 +407,8 @@ public class Symlink extends DispatchTask {
     public static void deleteSymlink(File linkfil)
         throws IOException {
         if (!linkfil.exists()) {
-            throw new FileNotFoundException("No such symlink: " + linkfil);
+            linkfil.delete();
+            return;
         }
         // find the resource of the existing link:
         File canfil = linkfil.getCanonicalFile();

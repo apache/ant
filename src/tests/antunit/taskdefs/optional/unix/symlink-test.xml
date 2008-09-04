@@ -62,4 +62,11 @@
         resource="${file_ref}"/>
   </target>
 
+  <target name="testDeleteOfBrokenLink" depends="init" if="unix">
+    <symlink link="${output}/link" resource="${file_ref}"/>
+    <delete file="${file_ref}"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
 </project>

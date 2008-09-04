@@ -91,6 +91,11 @@ Changes that could break older environments:
    locale.
    Bugzilla Report 44659.
 
+ * <symlink action="delete"> used to fail if the link was broken (i.e.
+   pointing to a file or directory that no longer existed).  It will now
+   silently try to remove the link.
+   Bugzilla Report 41285.
+
 Fixed bugs:
 -----------
 
