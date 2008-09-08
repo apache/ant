@@ -54,8 +54,8 @@
   </target>
 
   <target name="all"
-	      depends="setup, test-single, test-delete, test-record, test-recreate, teardown"/>
-	
+              depends="setup, test-single, test-delete, test-record, test-recreate, teardown"/>
+        
   <!-- test for action = single -->
   <!-- 
     Creates:
@@ -333,6 +333,22 @@
                property="test.recreate.dirlink3.was.altered"/>
   </target>
 
+
+  <!-- actually tests the symlink methods in FileUtils, but this
+       testfixture already has all the necessary envirnment in place
+       -->
+  <target name="test-fileutils" depends="setup">
+      <mkdir dir="${tdir}/dir1"/>
+      <mkdir dir="${tdir}/dir2"/>
+      <touch file="${tdir}/file1"/>
+      <touch file="${tdir}/file2"/>
+      <symlink link="${tdir}/dir.there" resource="${tdir}/dir1"/>
+      <symlink link="${tdir}/dir.notthere" resource="${tdir}/dir2"/>
+      <symlink link="${tdir}/file.there" resource="${tdir}/file1"/>
+      <symlink link="${tdir}/file.notthere" resource="${tdir}/file2"/>
+      <delete dir="${tdir}/dir2"/>
+      <delete file="${tdir}/file2"/>
+  </target>
 
 <!-- CALL THIS to clean things up afterwards -->
 

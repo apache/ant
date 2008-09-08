@@ -204,6 +204,9 @@ Fixed bugs:
    the link's target.
    Bugzilla Report 41525.
 
+ * <delete file="..."> failed to delete broken symbolic links.
+   Bugzilla Report 41285.
+
 Other changes:
 --------------
 

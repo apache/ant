@@ -57,6 +57,7 @@ import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -112,6 +113,7 @@ public class Delete extends MatchingTask {
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
     private Resources rcs = null;
+    private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -523,6 +525,13 @@ public class Delete extends MatchingTask {
                         handle("Unable to delete file " + file.getAbsolutePath());
                     }
                 }
+            } else if (isDanglingSymlink(file)) {
+                log("Trying to delete file " + file.getAbsolutePath()
+                    + " which looks like a broken symlink.",
+                    quiet ? Project.MSG_VERBOSE : verbosity);
+                if (!delete(file)) {
+                    handle("Unable to delete file " + file.getAbsolutePath());
+                }
             } else {
                 log("Could not find file " + file.getAbsolutePath()
                     + " to delete.", quiet ? Project.MSG_VERBOSE : verbosity);
@@ -530,8 +539,9 @@ public class Delete extends MatchingTask {
         }
 
         // delete the directory
-        if (dir != null && dir.exists() && dir.isDirectory()
+        if (dir != null
             && !usedMatchingTask) {
+            if (dir.exists() && dir.isDirectory()) {
             /*
                If verbosity is MSG_VERBOSE, that mean we are doing
                regular logging (backwards as that sounds).  In that
@@ -543,6 +553,15 @@ public class Delete extends MatchingTask {
                 log("Deleting directory " + dir.getAbsolutePath());
             }
             removeDir(dir);
+            } else if (isDanglingSymlink(dir)) {
+                log("Trying to delete directory " + dir.getAbsolutePath()
+                    + " which looks like a broken symlink.",
+                    quiet ? Project.MSG_VERBOSE : verbosity);
+                if (!delete(dir)) {
+                    handle("Unable to delete directory "
+                           + dir.getAbsolutePath());
+                }
+            }
         }
         Resources resourcesToDelete = new Resources();
         resourcesToDelete.setProject(getProject());
@@ -737,6 +756,18 @@ public class Delete extends MatchingTask {
                      + " form " + d.getAbsolutePath(),
                      quiet ? Project.MSG_VERBOSE : verbosity);
             }
+        }
+    }
+
+    private boolean isDanglingSymlink(File f) {
+        try {
+            return FILE_UTILS.isDanglingSymbolicLink(f.getParentFile(),
+                                                     f.getName());
+        } catch (java.io.IOException e) {
+            log("Error while trying to detect " + f.getAbsolutePath()
+                + " as broken symbolic link. " + e.getMessage(),
+                quiet ? Project.MSG_VERBOSE : verbosity);
+            return false;
         }
     }
 }
