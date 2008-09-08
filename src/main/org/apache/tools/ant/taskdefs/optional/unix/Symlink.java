@@ -466,9 +466,20 @@ public class Symlink extends DispatchTask {
      */
     public static void deleteSymlink(File linkfil, Task task)
         throws IOException {
-        if (!linkfil.exists()) {
+        if (FILE_UTILS.isDanglingSymbolicLink(linkfil.getParentFile(),
+                                              linkfil.getName())) {
             linkfil.delete();
             return;
+        }
+
+        if (!FILE_UTILS.isSymbolicLink(linkfil.getParentFile(),
+                                       linkfil.getName())) {
+            // plain file, not a link
+            return;
+        }
+
+        if (!linkfil.exists()) {
+            throw new FileNotFoundException("No such symlink: " + linkfil);
         }
 
         // find the resource of the existing link:
