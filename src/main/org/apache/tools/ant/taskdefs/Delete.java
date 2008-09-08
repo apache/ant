@@ -539,20 +539,19 @@ public class Delete extends MatchingTask {
         }
 
         // delete the directory
-        if (dir != null
-            && !usedMatchingTask) {
+        if (dir != null && !usedMatchingTask) {
             if (dir.exists() && dir.isDirectory()) {
-            /*
-               If verbosity is MSG_VERBOSE, that mean we are doing
-               regular logging (backwards as that sounds).  In that
-               case, we want to print one message about deleting the
-               top of the directory tree.  Otherwise, the removeDir
-               method will handle messages for _all_ directories.
-             */
-            if (verbosity == Project.MSG_VERBOSE) {
-                log("Deleting directory " + dir.getAbsolutePath());
-            }
-            removeDir(dir);
+                /*
+                  If verbosity is MSG_VERBOSE, that mean we are doing
+                  regular logging (backwards as that sounds).  In that
+                  case, we want to print one message about deleting the
+                  top of the directory tree.  Otherwise, the removeDir
+                  method will handle messages for _all_ directories.
+                */
+                if (verbosity == Project.MSG_VERBOSE) {
+                    log("Deleting directory " + dir.getAbsolutePath());
+                }
+                removeDir(dir);
             } else if (isDanglingSymlink(dir)) {
                 log("Trying to delete directory " + dir.getAbsolutePath()
                     + " which looks like a broken symlink.",
