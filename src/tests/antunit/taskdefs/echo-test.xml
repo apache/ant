@@ -112,16 +112,9 @@
   <target name="testUTF16Encoding">
     <property name="char" value="&#169;" />
     <echo file="${output}/echo16.txt" encoding="UTF-16">${char}</echo>
-    <au:assertTrue>
-      <resourcecount count="1">
-        <restrict>
-          <concat encoding="UTF-16">
-            <file file="${output}/echo16.txt" />
-          </concat>
-          <contains text="${char}" />
-        </restrict>
-      </resourcecount>
-    </au:assertTrue>
+    <loadfile property="out.16" srcfile="${output}/echo16.txt"
+              encoding="UTF-16"/>
+    <au:assertEquals expected="${char}" actual="${out.16}"/>
   </target>
 
   <target name="testUTF8Encoding">
