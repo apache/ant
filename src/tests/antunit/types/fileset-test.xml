@@ -15,7 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit" default="all">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml"/>
 
   <target name="test-fileset-missing-dir">
     <path id="missing.path.id">
@@ -28,6 +30,15 @@
         <resourcecount count="0" refid="missing.dir.fs" />
       </and>
     </au:assertTrue>
+  </target>
+
+  <target name="test-fileset-missing-dir-exception">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedmessage="not present does not exist">
+      <copy todir="${output}">
+        <fileset dir="not present" />
+      </copy>
+    </au:expectfailure>
   </target>
 
   <target name="test-fileset-with-if">
@@ -53,10 +64,4 @@
     <au:assertLogContains text="fileset-test.xml"/>
   </target>
 
-  <target name="all">
-    <au:antunit>
-      <fileset dir="${basedir}" includes="fileset-test.xml"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
 </project>

@@ -434,7 +434,7 @@ public abstract class AbstractFileSet extends DataType
                 }
                 if (!dir.exists() && errorOnMissingDir) {
                     throw new BuildException(dir.getAbsolutePath()
-                                             + " not found.");
+                                             + " does not exist.");
                 }
                 if (!dir.isDirectory() && dir.exists()) {
                     throw new BuildException(dir.getAbsolutePath()

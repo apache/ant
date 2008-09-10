@@ -806,17 +806,16 @@ public class DirectoryScanner
                     if (!basedir.exists()) {
                         if (errorOnMissingDir) {
                             illegal = new IllegalStateException(
-                                "basedir " + basedir + " does not exist");
+                                "basedir " + basedir + " does not exist.");
                         } else {
                             // Nothing to do - basedir does not exist
                             return;
                         }
-                    }
-                    if (!basedir.isDirectory()) {
+                    } else if (!basedir.isDirectory()) {
                         illegal = new IllegalStateException("basedir "
                                                             + basedir
                                                             + " is not a"
-                                                            + " directory");
+                                                            + " directory.");
                     }
                     if (illegal != null) {
                         throw illegal;
