@@ -96,6 +96,11 @@ Changes that could break older environments:
    silently try to remove the link.
    Bugzilla Report 41285.
 
+ * <delete file="..."> used to log a warning and not delete broken
+   symbolic links.  <delete dir="..."/> didn't even log a warning.
+   The task will now try to delete them in both cases.
+   Bugzilla Report 41285.
+
 Fixed bugs:
 -----------
 
@@ -203,9 +208,6 @@ Fixed bugs:
  * <symlink action="delete"> failed if ant lacked permission to rename
    the link's target.
    Bugzilla Report 41525.
-
- * <delete file="..."> failed to delete broken symbolic links.
-   Bugzilla Report 41285.
 
 Other changes:
 --------------
