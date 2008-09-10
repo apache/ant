@@ -27,7 +27,10 @@
   
   <condition property="prereqs-ok">
     <or>
-      <available classname="org.apache.bsf.BSFManager"/>
+      <and>
+        <available classname="org.apache.bsf.BSFManager"/>
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine"/>
+      </and>
       <available classname="javax.script.ScriptEngineManager"/>
     </or>
   </condition>
