@@ -289,7 +289,7 @@ public class DirectoryScanner
      * contain any wildcards.
      *
      * <p>If this instance is not case sensitive, the file names get
-     * turned to lower case.</p>
+     * turned to upper case.</p>
      *
      * <p>Gets lazily initialized on the first invocation of
      * isIncluded or isExcluded and cleared at the end of the scan
@@ -304,7 +304,7 @@ public class DirectoryScanner
      * contain any wildcards.
      *
      * <p>If this instance is not case sensitive, the file names get
-     * turned to lower case.</p>
+     * turned to upper case.</p>
      *
      * <p>Gets lazily initialized on the first invocation of
      * isIncluded or isExcluded and cleared at the end of the scan
@@ -813,8 +813,10 @@ public class DirectoryScanner
                         }
                     }
                     if (!basedir.isDirectory()) {
-                        illegal = new IllegalStateException("basedir " + basedir
-                                                            + " is not a directory");
+                        illegal = new IllegalStateException("basedir "
+                                                            + basedir
+                                                            + " is not a"
+                                                            + " directory");
                     }
                     if (illegal != null) {
                         throw illegal;
@@ -889,7 +891,8 @@ public class DirectoryScanner
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
                 String currentelement = (String) entry.getKey();
-                if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
+                if (basedir == null
+                    && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;
                 }
                 String originalpattern = (String) entry.getValue();
@@ -1063,7 +1066,7 @@ public class DirectoryScanner
         if (dir == null) {
             throw new BuildException("dir must not be null.");
         }
-        String[] newfiles = dir.list();
+        String[] newfiles = list(dir);
         if (newfiles == null) {
             if (!dir.exists()) {
                 throw new BuildException(dir + " doesn't exist.");
@@ -1076,7 +1079,9 @@ public class DirectoryScanner
         }
         scandir(dir, vpath, fast, newfiles);
     }
-    private void scandir(File dir, String vpath, boolean fast, String[] newfiles) {
+
+    private void scandir(File dir, String vpath, boolean fast,
+                         String[] newfiles) {
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
@@ -1106,7 +1111,7 @@ public class DirectoryScanner
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath + newfiles[i];
             File file = new File(dir, newfiles[i]);
-            String[] children = file.list();
+            String[] children = list(file);
             if (children == null) { // probably file
                 if (isIncluded(name)) {
                     accountForIncludedFile(name, file);
@@ -1137,7 +1142,8 @@ public class DirectoryScanner
      * @param file  included File.
      */
     private void accountForIncludedFile(String name, File file) {
-        processIncluded(name, file, filesIncluded, filesExcluded, filesDeselected);
+        processIncluded(name, file, filesIncluded, filesExcluded,
+                        filesDeselected);
     }
 
     /**
@@ -1153,16 +1159,21 @@ public class DirectoryScanner
             scandir(file, name + File.separator, fast);
         }
     }
-    private void accountForIncludedDir(String name, File file, boolean fast, String[] children) {
+
+    private void accountForIncludedDir(String name, File file, boolean fast,
+                                       String[] children) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast, children);
         }
     }
 
-    private void processIncluded(String name, File file, Vector inc, Vector exc, Vector des) {
+    private void processIncluded(String name, File file, Vector inc,
+                                 Vector exc, Vector des) {
 
-        if (inc.contains(name) || exc.contains(name) || des.contains(name)) { return; }
+        if (inc.contains(name) || exc.contains(name) || des.contains(name)) {
+            return;
+        }
 
         boolean included = false;
         if (isExcluded(name)) {
@@ -1229,8 +1240,11 @@ public class DirectoryScanner
      */
     private boolean isDeeper(String pattern, String name) {
         Vector p = SelectorUtils.tokenizePath(pattern);
-        Vector n = SelectorUtils.tokenizePath(name);
-        return p.contains("**") || p.size() > n.size();
+        if (!p.contains("**")) {
+            Vector n = SelectorUtils.tokenizePath(name);
+            return p.size() > n.size();
+        }
+        return true;
     }
 
     /**
@@ -1246,10 +1260,12 @@ public class DirectoryScanner
      *
      *  @param name the relative path to test.
      *  @param includepattern one include pattern.
-     *  @return true if there is no exclude pattern more powerful than this include pattern.
+     *  @return true if there is no exclude pattern more powerful than
+     *  this include pattern.
      *  @since Ant 1.6
      */
-    private boolean isMorePowerfulThanExcludes(String name, String includepattern) {
+    private boolean isMorePowerfulThanExcludes(String name,
+                                               String includepattern) {
         String soughtexclude = name + File.separator + "**";
         for (int counter = 0; counter < excludes.length; counter++) {
             if (excludes[counter].equals(soughtexclude))  {
@@ -1327,12 +1343,15 @@ public class DirectoryScanner
      * @return the names of the files which matched at least one of the
      *         include patterns and none of the exclude patterns.
      */
-    public synchronized String[] getIncludedFiles() {
-        if (filesIncluded == null) {
-            throw new IllegalStateException("Must call scan() first");
+    public String[] getIncludedFiles() {
+        String[] files;
+        synchronized (this) {
+            if (filesIncluded == null) {
+                throw new IllegalStateException("Must call scan() first");
+            }
+            files = new String[filesIncluded.size()];
+            filesIncluded.copyInto(files);
         }
-        String[] files = new String[filesIncluded.size()];
-        filesIncluded.copyInto(files);
         Arrays.sort(files);
         return files;
     }
@@ -1410,12 +1429,15 @@ public class DirectoryScanner
      * @return the names of the directories which matched at least one of the
      * include patterns and none of the exclude patterns.
      */
-    public synchronized String[] getIncludedDirectories() {
-        if (dirsIncluded == null) {
-            throw new IllegalStateException("Must call scan() first");
+    public String[] getIncludedDirectories() {
+        String[] directories;
+        synchronized (this) {
+            if (dirsIncluded == null) {
+                throw new IllegalStateException("Must call scan() first");
+            }
+            directories = new String[dirsIncluded.size()];
+            dirsIncluded.copyInto(directories);
         }
-        String[] directories = new String[dirsIncluded.size()];
-        dirsIncluded.copyInto(directories);
         Arrays.sort(directories);
         return directories;
     }
@@ -1515,6 +1537,8 @@ public class DirectoryScanner
         return new FileResource(basedir, name);
     }
 
+    private static final String[] NULL_FILE_LIST = new String[0];
+
     /**
      * Return a cached result of list performed on file, if
      * available.  Invokes the method and caches the result otherwise.
@@ -1528,7 +1552,11 @@ public class DirectoryScanner
             files = file.list();
             if (files != null) {
                 fileListMap.put(file, files);
+            } else {
+                fileListMap.put(file, NULL_FILE_LIST);
             }
+        } else if (files == NULL_FILE_LIST) {
+            files = null;
         }
         return files;
     }
@@ -1554,7 +1582,8 @@ public class DirectoryScanner
                 File f = FILE_UTILS.normalize(path);
                 String s = FILE_UTILS.removeLeadingPath(base, f);
                 if (s.equals(f.getAbsolutePath())) {
-                    //removing base from path yields no change; path not child of base
+                    //removing base from path yields no change; path
+                    //not child of base
                     return null;
                 }
                 path = s;
