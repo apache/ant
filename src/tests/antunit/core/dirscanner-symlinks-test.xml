@@ -75,14 +75,26 @@
     <au:assertFileDoesntExist file="${output}/file.txt"/>
   </target>
 
-  <target name="INFINITEtestLinkToParentFollow"
+  <target name="testLinkToParentFollow"
           depends="checkOs, setUp, -link-to-parent"
           if="unix">
     <copy todir="${output}">
-      <fileset dir="${base}" followsymlinks="true"/>
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
     </copy>
     <symlink action="delete" link="${base}/A"/>
     <au:assertFileExists file="${output}/A/B/file.txt"/>
+    <au:assertFileDoesntExist file="${output}/A/base/A/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentFollowMax2"
+          depends="checkOs, setUp, -link-to-parent"
+          if="unix">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="2"/>
+    </copy>
+    <symlink action="delete" link="${base}/A"/>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+    <au:assertFileExists file="${output}/A/base/A/B/file.txt"/>
   </target>
 
   <target name="testLinkToParentFollowWithInclude"
@@ -120,7 +132,7 @@
     <au:assertFileDoesntExist file="${output}/A/B/file.txt"/>
   </target>
 
-  <target name="INFINITE testSillyLoopFollow"
+  <target name="testSillyLoopFollow"
           depends="checkOs, setUp, -silly-loop"
           if="unix">
     <copy todir="${output}">
@@ -138,6 +150,28 @@
     </copy>
     <symlink action="delete" link="${base}"/>
     <au:assertFileDoesntExist file="${output}"/>
+  </target>
+
+  <target name="testRepeatedName"
+          depends="setUp">
+    <mkdir dir="${base}/A/A/A/A"/>
+    <touch file="${base}/A/A/A/A/file.txt"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
+    </copy>
+    <au:assertFileExists file="${output}/A/A/A/A/file.txt"/>
+  </target>
+
+  <target name="testRepeatedNameWithLinkButNoLoop"
+          depends="checkOs, setUp"
+          if="unix">
+    <mkdir dir="${base}/A/A/A/B"/>
+    <touch file="${base}/A/A/A/B/file.txt"/>
+    <symlink link="${base}/A/A/A/A" resource="${base}/A/A/A/B"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
+    </copy>
+    <au:assertFileExists file="${output}/A/A/A/A/file.txt"/>
   </target>
 
   <target name="-sibling" if="unix">

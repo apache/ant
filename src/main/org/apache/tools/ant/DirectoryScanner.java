@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -37,6 +38,7 @@ import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.PathPattern;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -167,6 +169,8 @@ public class DirectoryScanner
         // Mac
         "**/.DS_Store"
     };
+
+    public static final int MAX_LEVELS_OF_SYMLINKS = 1;
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -374,6 +378,14 @@ public class DirectoryScanner
      * @since Ant 1.6.3
      */
     private IllegalStateException illegal = null;
+
+    /**
+     * The maximum number of times a symbolic link may be followed
+     * during a scan.
+     *
+     * @since Ant 1.8.0
+     */
+    private int maxLevelsOfSymlinks = MAX_LEVELS_OF_SYMLINKS;
 
     /**
      * Sole constructor.
@@ -641,6 +653,16 @@ public class DirectoryScanner
      */
     public synchronized void setFollowSymlinks(boolean followSymlinks) {
         this.followSymlinks = followSymlinks;
+    }
+
+    /**
+     * The maximum number of times a symbolic link may be followed
+     * during a scan.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setMaxLevelsOfSymlinks(int max) {
+        maxLevelsOfSymlinks = max;
     }
 
     /**
@@ -1086,11 +1108,11 @@ public class DirectoryScanner
                                          + dir.getAbsolutePath() + "'");
             }
         }
-        scandir(dir, vpath, fast, newfiles);
+        scandir(dir, vpath, fast, newfiles, new Stack());
     }
 
     private void scandir(File dir, String vpath, boolean fast,
-                         String[] newfiles) {
+                         String[] newfiles, Stack directoryNamesFollowed) {
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
@@ -1116,7 +1138,10 @@ public class DirectoryScanner
                 }
             }
             newfiles = (String[]) (noLinks.toArray(new String[noLinks.size()]));
+        } else {
+            directoryNamesFollowed.push(dir.getName());
         }
+
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath + newfiles[i];
             File file = new File(dir, newfiles[i]);
@@ -1129,19 +1154,38 @@ public class DirectoryScanner
                     filesNotIncluded.addElement(name);
                 }
             } else { // dir
+
+                if (followSymlinks
+                    && causesIllegalSymlinkLoop(newfiles[i], dir,
+                                                directoryNamesFollowed)) {
+                    // will be caught and redirected to Ant's logging system
+                    System.err.println("skipping symbolic link "
+                                       + file.getAbsolutePath()
+                                       + " -- too many levels of symbolic"
+                                       + " links.");
+                    continue;
+                }
+
                 if (isIncluded(name)) {
-                    accountForIncludedDir(name, file, fast, children);
+                    accountForIncludedDir(name, file, fast, children,
+                                          directoryNamesFollowed);
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
                     if (fast && couldHoldIncluded(name)) {
-                        scandir(file, name + File.separator, fast, children);
+                        scandir(file, name + File.separator, fast, children,
+                                directoryNamesFollowed);
                     }
                 }
                 if (!fast) {
-                    scandir(file, name + File.separator, fast, children);
+                    scandir(file, name + File.separator, fast, children,
+                            directoryNamesFollowed);
                 }
             }
+        }
+
+        if (followSymlinks) {
+            directoryNamesFollowed.pop();
         }
     }
 
@@ -1170,10 +1214,12 @@ public class DirectoryScanner
     }
 
     private void accountForIncludedDir(String name, File file, boolean fast,
-                                       String[] children) {
+                                       String[] children,
+                                       Stack directoryNamesFollowed) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
-            scandir(file, name + File.separator, fast, children);
+            scandir(file, name + File.separator, fast, children,
+                    directoryNamesFollowed);
         }
     }
 
@@ -1742,6 +1788,52 @@ public class DirectoryScanner
             }
         }
         return (PathPattern[]) al.toArray(new PathPattern[al.size()]);
+    }
+
+    /**
+     * Would following the given directory cause a loop of symbolic
+     * links deeper than allowed?
+     *
+     * <p>Can only happen if the given directory has been seen at
+     * least more often than allowed during the current scan and it is
+     * a symbolic link and enough other occurences of the same name
+     * higher up are symbolic links that point to the same place.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean causesIllegalSymlinkLoop(String dirName, File parent,
+                                             Stack directoryNamesFollowed) {
+        try {
+            if (CollectionUtils.frequency(directoryNamesFollowed, dirName)
+                   >= maxLevelsOfSymlinks
+                && FILE_UTILS.isSymbolicLink(parent, dirName)) {
+
+                Stack s = (Stack) directoryNamesFollowed.clone();
+                ArrayList files = new ArrayList();
+                File f = FILE_UTILS.resolveFile(parent, dirName);
+                String target = f.getCanonicalPath();
+                files.add(target);
+
+                String relPath = "";
+                while (!s.empty()) {
+                    relPath += "../";
+                    String dir = (String) s.pop();
+                    if (dirName.equals(dir)) {
+                        f = FILE_UTILS.resolveFile(parent, relPath + dir);
+                        files.add(f.getCanonicalPath());
+                        if (CollectionUtils.frequency(files, target)
+                            > maxLevelsOfSymlinks) {
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            return false;
+        } catch (IOException ex) {
+            throw new BuildException("Caught error while checking for"
+                                     + " symbolic links", ex);
+        }
     }
 
 }

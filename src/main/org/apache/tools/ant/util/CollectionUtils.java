@@ -222,4 +222,24 @@ public class CollectionUtils {
 
     }
 
+    /**
+     * Counts how often the given Object occurs in the given
+     * collection using equals() for comparison.
+     *
+     * @since Ant 1.8.0
+     */
+    public static int frequency(Collection c, Object o) {
+        // same as Collections.frequency introduced with JDK 1.5
+        int freq = 0;
+        if (c != null) {
+            for (Iterator i = c.iterator(); i.hasNext(); ) {
+                Object test = i.next();
+                if (o == null ? test == null : o.equals(test)) {
+                    freq++;
+                }
+            }
+        }
+        return freq;
+    }
+            
 }

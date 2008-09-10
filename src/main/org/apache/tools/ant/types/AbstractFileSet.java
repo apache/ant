@@ -68,6 +68,7 @@ public abstract class AbstractFileSet extends DataType
     private boolean caseSensitive = true;
     private boolean followSymlinks = true;
     private boolean errorOnMissingDir = true;
+    private int maxLevelsOfSymlinks = DirectoryScanner.MAX_LEVELS_OF_SYMLINKS;
 
     /* cached DirectoryScanner instance for our own Project only */
     private DirectoryScanner directoryScanner = null;
@@ -93,6 +94,7 @@ public abstract class AbstractFileSet extends DataType
         this.caseSensitive = fileset.caseSensitive;
         this.followSymlinks = fileset.followSymlinks;
         this.errorOnMissingDir = fileset.errorOnMissingDir;
+        this.maxLevelsOfSymlinks = fileset.maxLevelsOfSymlinks;
         setProject(fileset.getProject());
     }
 
@@ -397,6 +399,16 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * The maximum number of times a symbolic link may be followed
+     * during a scan.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setMaxLevelsOfSymlinks(int max) {
+        maxLevelsOfSymlinks = max;
+    }
+
+    /**
      * Sets whether an error is thrown if a directory does not exist.
      *
      * @param errorOnMissingDir true if missing directories cause errors,
@@ -444,6 +456,7 @@ public abstract class AbstractFileSet extends DataType
                 setupDirectoryScanner(ds, p);
                 ds.setFollowSymlinks(followSymlinks);
                 ds.setErrorOnMissingDir(errorOnMissingDir);
+                ds.setMaxLevelsOfSymlinks(maxLevelsOfSymlinks);
                 directoryScanner = (p == getProject()) ? ds : directoryScanner;
             }
         }
