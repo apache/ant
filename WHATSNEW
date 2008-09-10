@@ -101,6 +101,11 @@ Changes that could break older environments:
    The task will now try to delete them in both cases.
    Bugzilla Report 41285.
 
+ * if the dir attribute of a <fileset> point to a symbolic link and
+   followsymlinks is set to false, the fileset will no longer be
+   scanned and always seem empty.
+   Bugzilla Report 45741.
+
 Fixed bugs:
 -----------
 

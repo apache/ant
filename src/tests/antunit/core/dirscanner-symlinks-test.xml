@@ -66,7 +66,7 @@
     <au:assertFileExists file="${output}/file.txt"/>
   </target>
 
-  <target name="FAILStestBasedirIsSymlinkNoFollow"
+  <target name="testBasedirIsSymlinkNoFollow"
           depends="checkOs, setUp, -basedir-as-symlink"
           if="unix">
     <copy todir="${output}">
@@ -137,7 +137,7 @@
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
     <symlink action="delete" link="${base}"/>
-    <assertDirIsEmpty/>
+    <au:assertFileDoesntExist file="${output}"/>
   </target>
 
   <target name="-sibling" if="unix">

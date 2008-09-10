@@ -786,6 +786,7 @@ public class DirectoryScanner
             }
             scanning = true;
         }
+        File savedBase = basedir;
         try {
             synchronized (this) {
                 illegal = null;
@@ -796,6 +797,12 @@ public class DirectoryScanner
                 includes = nullIncludes ? new String[] {"**"} : includes;
                 boolean nullExcludes = (excludes == null);
                 excludes = nullExcludes ? new String[0] : excludes;
+
+                if (basedir != null && !followSymlinks
+                    && FILE_UTILS.isSymbolicLink(basedir.getParentFile(),
+                                                 basedir.getName())) {
+                    basedir = null;
+                }
 
                 if (basedir == null) {
                     // if no basedir and no includes, nothing to do:
@@ -839,7 +846,10 @@ public class DirectoryScanner
                 includes = nullIncludes ? null : includes;
                 excludes = nullExcludes ? null : excludes;
             }
+        } catch (IOException ex) {
+            throw new BuildException(ex);
         } finally {
+            basedir = savedBase;
             synchronized (scanLock) {
                 scanning = false;
                 scanLock.notifyAll();
