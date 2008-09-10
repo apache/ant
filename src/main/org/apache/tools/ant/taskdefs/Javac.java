@@ -32,6 +32,7 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
@@ -88,6 +89,8 @@ public class Javac extends MatchingTask {
 
     private static final String PACKAGE_INFO_JAVA = "package-info.java";
     private static final String PACKAGE_INFO_CLASS = "package-info.class";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private Path src;
     private File destDir;
@@ -1148,7 +1151,7 @@ public class Javac extends MatchingTask {
             return true;
         }
         // return true if destDir contains the file
-        String rel = relativePath(srcDir, file);
+        String rel = FILE_UTILS.removeLeadingPath(srcDir, file);
         File destFile = new File(destDir, rel);
         File parent = destFile.getParentFile();
         destFile = new File(parent, PACKAGE_INFO_CLASS);
@@ -1167,8 +1170,4 @@ public class Javac extends MatchingTask {
         return false;
     }
 
-    private String relativePath(File src, File file) {
-        return file.getAbsolutePath().substring(
-            src.getAbsolutePath().length() + 1);
-    }
 }
