@@ -153,7 +153,7 @@ public class CopyTest extends BuildFileTest {
 
     public void testMissingDirBail() {
         expectBuildException("testMissingDirBail", "not-there doesn't exist");
-        assertTrue(getBuildException().getMessage().endsWith(" not found."));
+        assertTrue(getBuildException().getMessage().endsWith(" does not exist."));
     }
     
     public void testFileResourcePlain() {

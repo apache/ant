@@ -171,6 +171,7 @@ public class DirectoryScanner
     };
 
     public static final int MAX_LEVELS_OF_SYMLINKS = 1;
+    public static final String DOES_NOT_EXIST_POSTFIX = " does not exist.";
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -834,8 +835,9 @@ public class DirectoryScanner
                 } else {
                     if (!basedir.exists()) {
                         if (errorOnMissingDir) {
-                            illegal = new IllegalStateException(
-                                "basedir " + basedir + " does not exist.");
+                            illegal = new IllegalStateException("basedir "
+                                                                + basedir
+                                                                + DOES_NOT_EXIST_POSTFIX);
                         } else {
                             // Nothing to do - basedir does not exist
                             return;
@@ -1100,7 +1102,7 @@ public class DirectoryScanner
         String[] newfiles = list(dir);
         if (newfiles == null) {
             if (!dir.exists()) {
-                throw new BuildException(dir + " doesn't exist.");
+                throw new BuildException(dir + DOES_NOT_EXIST_POSTFIX);
             } else if (!dir.isDirectory()) {
                 throw new BuildException(dir + " is not a directory.");
             } else {

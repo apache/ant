@@ -434,7 +434,8 @@ public class Copy extends Task {
                         ds = fs.getDirectoryScanner(getProject());
                     } catch (BuildException e) {
                         if (failonerror
-                            || !getMessage(e).endsWith(" not found.")) {
+                            || !getMessage(e).endsWith(DirectoryScanner
+                                                       .DOES_NOT_EXIST_POSTFIX)) {
                             throw e;
                         } else {
                             log("Warning: " + getMessage(e), Project.MSG_ERR);
