@@ -38,6 +38,26 @@ import org.apache.tools.ant.types.resources.FileResource;
  */
 public final class SelectorUtils {
 
+    /**
+     * The pattern that matches an arbitrary number of directories.
+     * @since Ant 1.8.0
+     */
+    public static final String DEEP_TREE_MATCH = "**";
+
+    /**
+     * The pattern that matches an arbitrary number of directories at
+     * the leaves.
+     * @since Ant 1.8.0
+     */
+    public static final String DEEP_LEAVES_MATCH = File.separatorChar + "**";
+
+    /**
+     * The pattern that matches an arbitrary number of directories at
+     * the root.
+     * @since Ant 1.8.0
+     */
+    public static final String DEEP_ROOT_MATCH = "**" + File.separatorChar;
+
     private static final SelectorUtils instance = new SelectorUtils();
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -115,7 +135,7 @@ public final class SelectorUtils {
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
             String patDir = patDirs[patIdxStart];
-            if (patDir.equals("**")) {
+            if (patDir.equals(DEEP_TREE_MATCH)) {
                 break;
             }
             if (!match(patDir, strDirs[strIdxStart], isCaseSensitive)) {
@@ -201,7 +221,7 @@ public final class SelectorUtils {
         // up to first '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
             String patDir = tokenizedPattern[patIdxStart];
-            if (patDir.equals("**")) {
+            if (patDir.equals(DEEP_TREE_MATCH)) {
                 break;
             }
             if (!match(patDir, strDirs[strIdxStart], isCaseSensitive)) {
@@ -213,7 +233,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!tokenizedPattern[i].equals("**")) {
+                if (!tokenizedPattern[i].equals(DEEP_TREE_MATCH)) {
                     return false;
                 }
             }
@@ -228,7 +248,7 @@ public final class SelectorUtils {
         // up to last '**'
         while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
             String patDir = tokenizedPattern[patIdxEnd];
-            if (patDir.equals("**")) {
+            if (patDir.equals(DEEP_TREE_MATCH)) {
                 break;
             }
             if (!match(patDir, strDirs[strIdxEnd], isCaseSensitive)) {
@@ -240,7 +260,7 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!tokenizedPattern[i].equals("**")) {
+                if (!tokenizedPattern[i].equals(DEEP_TREE_MATCH)) {
                     return false;
                 }
             }
@@ -250,7 +270,7 @@ public final class SelectorUtils {
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
             for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
-                if (tokenizedPattern[i].equals("**")) {
+                if (tokenizedPattern[i].equals(DEEP_TREE_MATCH)) {
                     patIdxTmp = i;
                     break;
                 }
@@ -288,7 +308,7 @@ public final class SelectorUtils {
         }
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (!tokenizedPattern[i].equals("**")) {
+            if (!tokenizedPattern[i].equals(DEEP_TREE_MATCH)) {
                 return false;
             }
         }

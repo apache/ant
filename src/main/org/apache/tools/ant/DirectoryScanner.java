@@ -145,33 +145,41 @@ public class DirectoryScanner
      */
     protected static final String[] DEFAULTEXCLUDES = {
         // Miscellaneous typical temporary files
-        "**/*~",
-        "**/#*#",
-        "**/.#*",
-        "**/%*%",
-        "**/._*",
+        SelectorUtils.DEEP_ROOT_MATCH + "*~",
+        SelectorUtils.DEEP_ROOT_MATCH + "#*#",
+        SelectorUtils.DEEP_ROOT_MATCH + ".#*",
+        SelectorUtils.DEEP_ROOT_MATCH + "%*%",
+        SelectorUtils.DEEP_ROOT_MATCH + "._*",
 
         // CVS
-        "**/CVS",
-        "**/CVS/**",
-        "**/.cvsignore",
+        SelectorUtils.DEEP_ROOT_MATCH + "CVS",
+        SelectorUtils.DEEP_ROOT_MATCH + "CVS" + SelectorUtils.DEEP_LEAVES_MATCH,
+        SelectorUtils.DEEP_ROOT_MATCH + ".cvsignore",
 
         // SCCS
-        "**/SCCS",
-        "**/SCCS/**",
+        SelectorUtils.DEEP_ROOT_MATCH + "SCCS",
+        SelectorUtils.DEEP_ROOT_MATCH + "SCCS" + SelectorUtils.DEEP_LEAVES_MATCH,
 
         // Visual SourceSafe
-        "**/vssver.scc",
+        SelectorUtils.DEEP_ROOT_MATCH + "vssver.scc",
 
         // Subversion
-        "**/.svn",
-        "**/.svn/**",
+        SelectorUtils.DEEP_ROOT_MATCH + ".svn",
+        SelectorUtils.DEEP_ROOT_MATCH + ".svn" + SelectorUtils.DEEP_LEAVES_MATCH,
 
         // Mac
-        "**/.DS_Store"
+        SelectorUtils.DEEP_ROOT_MATCH + ".DS_Store"
     };
 
+    /**
+     * default value for {@link #maxLevelsOfSymlinks maxLevelsOfSymlinks}
+     * @since Ant 1.8.0
+     */
     public static final int MAX_LEVELS_OF_SYMLINKS = 1;
+    /**
+     * The end of the exception message if something that should be
+     * there doesn't exist.
+     */
     public static final String DOES_NOT_EXIST_POSTFIX = " does not exist.";
 
     /** Helper. */
@@ -765,7 +773,7 @@ public class DirectoryScanner
         String pattern = p.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
         if (pattern.endsWith(File.separator)) {
-            pattern += "**";
+            pattern += SelectorUtils.DEEP_TREE_MATCH;
         }
         return pattern;
     }
@@ -825,7 +833,8 @@ public class DirectoryScanner
 
                 // set in/excludes to reasonable defaults if needed:
                 boolean nullIncludes = (includes == null);
-                includes = nullIncludes ? new String[] {"**"} : includes;
+                includes = nullIncludes
+                    ? new String[] {SelectorUtils.DEEP_TREE_MATCH} : includes;
                 boolean nullExcludes = (excludes == null);
                 excludes = nullExcludes ? new String[0] : excludes;
 
@@ -1049,7 +1058,8 @@ public class DirectoryScanner
 
                 // set in/excludes to reasonable defaults if needed:
                 boolean nullIncludes = (includes == null);
-                includes = nullIncludes ? new String[] {"**"} : includes;
+                includes = nullIncludes
+                    ? new String[] {SelectorUtils.DEEP_TREE_MATCH} : includes;
                 boolean nullExcludes = (excludes == null);
                 excludes = nullExcludes ? new String[0] : excludes;
 
@@ -1305,7 +1315,7 @@ public class DirectoryScanner
      */
     private boolean isDeeper(String pattern, String name) {
         Vector p = SelectorUtils.tokenizePath(pattern);
-        if (!p.contains("**")) {
+        if (!p.contains(SelectorUtils.DEEP_TREE_MATCH)) {
             Vector n = SelectorUtils.tokenizePath(name);
             return p.size() > n.size();
         }
@@ -1331,7 +1341,7 @@ public class DirectoryScanner
      */
     private boolean isMorePowerfulThanExcludes(String name,
                                                String includepattern) {
-        String soughtexclude = name + File.separator + "**";
+        String soughtexclude = name + SelectorUtils.DEEP_LEAVES_MATCH;
         for (int counter = 0; counter < excludes.length; counter++) {
             if (excludes[counter].equals(soughtexclude))  {
                 return false;
@@ -1349,7 +1359,7 @@ public class DirectoryScanner
         name = (name.endsWith(File.separator)) ? name : name + File.separator;
         for (int i = 0; i < excludes.length; i++) {
             String e = excludes[i];
-            if (e.endsWith("**") && SelectorUtils.matchPath(
+            if (e.endsWith(SelectorUtils.DEEP_TREE_MATCH) && SelectorUtils.matchPath(
                 e.substring(0, e.length() - 2), name, isCaseSensitive())) {
                 return true;
             }
