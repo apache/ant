@@ -1359,8 +1359,9 @@ public class DirectoryScanner
         name = (name.endsWith(File.separator)) ? name : name + File.separator;
         for (int i = 0; i < excludes.length; i++) {
             String e = excludes[i];
-            if (e.endsWith(SelectorUtils.DEEP_TREE_MATCH) && SelectorUtils.matchPath(
-                e.substring(0, e.length() - 2), name, isCaseSensitive())) {
+            if (e.endsWith(SelectorUtils.DEEP_TREE_MATCH)
+                && SelectorUtils.matchPath(e.substring(0, e.length() - 2),
+                                           name, isCaseSensitive())) {
                 return true;
             }
         }
