@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -387,6 +388,13 @@ public class DirectoryScanner
      * @since Ant 1.8.0
      */
     private int maxLevelsOfSymlinks = MAX_LEVELS_OF_SYMLINKS;
+
+    /**
+     * Temporary table to speed up checking of canonical file names.
+     *
+     * @since Ant 1.8.0
+     */
+    private Map canonicalPathMap = new HashMap();
 
     /**
      * Sole constructor.
@@ -916,7 +924,7 @@ public class DirectoryScanner
             File canonBase = null;
             if (basedir != null) {
                 try {
-                    canonBase = basedir.getCanonicalFile();
+                    canonBase = getCanonicalFile(basedir);
                 } catch (IOException ex) {
                     throw new BuildException(ex);
                 }
@@ -937,9 +945,9 @@ public class DirectoryScanner
                     // we need to double check.
                     try {
                         String path = (basedir == null)
-                            ? myfile.getCanonicalPath()
+                            ? getCanonicalPath(myfile)
                             : FILE_UTILS.removeLeadingPath(canonBase,
-                            myfile.getCanonicalFile());
+                                         getCanonicalFile(myfile));
                         if (!path.equals(currentelement) || ON_VMS) {
                             myfile = findFile(basedir, currentelement, true);
                             if (myfile != null && basedir != null) {
@@ -1604,13 +1612,20 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     private String[] list(File file) {
-        String[] files = (String[]) fileListMap.get(file);
+        String[] files = null;
+        SoftReference s = (SoftReference) fileListMap.get(file);
+        if (s != null) {
+            files = (String[]) s.get();
+            if (files == null) {
+                fileListMap.remove(file);
+            }
+        }
         if (files == null) {
             files = file.list();
             if (files != null) {
-                fileListMap.put(file, files);
+                fileListMap.put(file, new SoftReference(files));
             } else {
-                fileListMap.put(file, NULL_FILE_LIST);
+                fileListMap.put(file, new SoftReference(NULL_FILE_LIST));
             }
         } else if (files == NULL_FILE_LIST) {
             files = null;
@@ -1750,6 +1765,7 @@ public class DirectoryScanner
      */
     private synchronized void clearCaches() {
         fileListMap.clear();
+        canonicalPathMap.clear();
         includeNonPatterns.clear();
         excludeNonPatterns.clear();
         includePatterns = null;
@@ -1813,7 +1829,7 @@ public class DirectoryScanner
                 Stack s = (Stack) directoryNamesFollowed.clone();
                 ArrayList files = new ArrayList();
                 File f = FILE_UTILS.resolveFile(parent, dirName);
-                String target = f.getCanonicalPath();
+                String target = getCanonicalPath(f);
                 files.add(target);
 
                 String relPath = "";
@@ -1822,7 +1838,7 @@ public class DirectoryScanner
                     String dir = (String) s.pop();
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
-                        files.add(f.getCanonicalPath());
+                        files.add(getCanonicalPath(f));
                         if (CollectionUtils.frequency(files, target)
                             > maxLevelsOfSymlinks) {
                             return true;
@@ -1836,6 +1852,38 @@ public class DirectoryScanner
             throw new BuildException("Caught error while checking for"
                                      + " symbolic links", ex);
         }
+    }
+
+    /**
+     * Returns a cached canonical path for a given file or first
+     * obtains and adds it to the cache.
+     *
+     * @since Ant 1.8.0
+     */
+    private String getCanonicalPath(File file) throws IOException {
+        String path = null;
+        SoftReference s = (SoftReference) canonicalPathMap.get(file);
+        if (s != null) {
+            path = (String) s.get();
+            if (path == null) {
+                canonicalPathMap.remove(file);
+            }
+        }
+        if (path == null) {
+            path = file.getCanonicalPath();
+            canonicalPathMap.put(file, new SoftReference(path));
+        }
+        return path;
+    }
+
+    /**
+     * Returns a cached canonical path for a given file or first
+     * obtains and adds it to the cache.
+     *
+     * @since Ant 1.8.0
+     */
+    private File getCanonicalFile(File file) throws IOException {
+        return new File(getCanonicalPath(file));
     }
 
 }
