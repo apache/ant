@@ -44,20 +44,6 @@ public final class SelectorUtils {
      */
     public static final String DEEP_TREE_MATCH = "**";
 
-    /**
-     * The pattern that matches an arbitrary number of directories at
-     * the leaves.
-     * @since Ant 1.8.0
-     */
-    public static final String DEEP_LEAVES_MATCH = File.separatorChar + "**";
-
-    /**
-     * The pattern that matches an arbitrary number of directories at
-     * the root.
-     * @since Ant 1.8.0
-     */
-    public static final String DEEP_ROOT_MATCH = "**" + File.separatorChar;
-
     private static final SelectorUtils instance = new SelectorUtils();
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -126,7 +112,30 @@ public final class SelectorUtils {
 
         String[] patDirs = tokenizePathAsArray(pattern);
         String[] strDirs = tokenizePathAsArray(str);
+        return matchPatternStart(patDirs, strDirs, isCaseSensitive);
+    }
 
+
+    /**
+     * Tests whether or not a given path matches the start of a given
+     * pattern up to the first "**".
+     * <p>
+     * This is not a general purpose test and should only be used if you
+     * can live with false positives. For example, <code>pattern=**\a</code>
+     * and <code>str=b</code> will yield <code>true</code>.
+     *
+     * @param patDirs The tokenized pattern to match against. Must not be
+     *                <code>null</code>.
+     * @param strDirs The tokenized path to match. Must not be
+     *                <code>null</code>.
+     * @param isCaseSensitive Whether or not matching should be performed
+     *                        case sensitively.
+     *
+     * @return whether or not a given path matches the start of a given
+     * pattern up to the first "**".
+     */
+    static boolean matchPatternStart(String[] patDirs, String[] strDirs,
+                                     boolean isCaseSensitive) {
         int patIdxStart = 0;
         int patIdxEnd = patDirs.length - 1;
         int strIdxStart = 0;

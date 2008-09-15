@@ -145,30 +145,30 @@ public class DirectoryScanner
      */
     protected static final String[] DEFAULTEXCLUDES = {
         // Miscellaneous typical temporary files
-        SelectorUtils.DEEP_ROOT_MATCH + "*~",
-        SelectorUtils.DEEP_ROOT_MATCH + "#*#",
-        SelectorUtils.DEEP_ROOT_MATCH + ".#*",
-        SelectorUtils.DEEP_ROOT_MATCH + "%*%",
-        SelectorUtils.DEEP_ROOT_MATCH + "._*",
+        SelectorUtils.DEEP_TREE_MATCH + "/*~",
+        SelectorUtils.DEEP_TREE_MATCH + "/#*#",
+        SelectorUtils.DEEP_TREE_MATCH + "/.#*",
+        SelectorUtils.DEEP_TREE_MATCH + "/%*%",
+        SelectorUtils.DEEP_TREE_MATCH + "/._*",
 
         // CVS
-        SelectorUtils.DEEP_ROOT_MATCH + "CVS",
-        SelectorUtils.DEEP_ROOT_MATCH + "CVS" + SelectorUtils.DEEP_LEAVES_MATCH,
-        SelectorUtils.DEEP_ROOT_MATCH + ".cvsignore",
+        SelectorUtils.DEEP_TREE_MATCH + "/CVS",
+        SelectorUtils.DEEP_TREE_MATCH + "/CVS/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.cvsignore",
 
         // SCCS
-        SelectorUtils.DEEP_ROOT_MATCH + "SCCS",
-        SelectorUtils.DEEP_ROOT_MATCH + "SCCS" + SelectorUtils.DEEP_LEAVES_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/SCCS",
+        SelectorUtils.DEEP_TREE_MATCH + "/SCCS/" + SelectorUtils.DEEP_TREE_MATCH,
 
         // Visual SourceSafe
-        SelectorUtils.DEEP_ROOT_MATCH + "vssver.scc",
+        SelectorUtils.DEEP_TREE_MATCH + "/vssver.scc",
 
         // Subversion
-        SelectorUtils.DEEP_ROOT_MATCH + ".svn",
-        SelectorUtils.DEEP_ROOT_MATCH + ".svn" + SelectorUtils.DEEP_LEAVES_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.svn",
+        SelectorUtils.DEEP_TREE_MATCH + "/.svn/" + SelectorUtils.DEEP_TREE_MATCH,
 
         // Mac
-        SelectorUtils.DEEP_ROOT_MATCH + ".DS_Store"
+        SelectorUtils.DEEP_TREE_MATCH + "/.DS_Store"
     };
 
     /**
@@ -1295,10 +1295,13 @@ public class DirectoryScanner
      *         least one include pattern, or <code>false</code> otherwise.
      */
     protected boolean couldHoldIncluded(String name) {
+        final PathPattern tokenizedName = new PathPattern(name);
         for (int i = 0; i < includes.length; i++) {
-            if (matchPatternStart(includes[i], name, isCaseSensitive())
+            PathPattern tokenizedInclude = new PathPattern(includes[i]);
+            if (tokenizedName.matchPatternStartOf(tokenizedInclude,
+                                                  isCaseSensitive())
                 && isMorePowerfulThanExcludes(name, includes[i])
-                && isDeeper(includes[i], name)) {
+                && isDeeper(tokenizedInclude, tokenizedName)) {
                 return true;
             }
         }
@@ -1313,13 +1316,9 @@ public class DirectoryScanner
      * @return whether the pattern is deeper than the name.
      * @since Ant 1.6.3
      */
-    private boolean isDeeper(String pattern, String name) {
-        Vector p = SelectorUtils.tokenizePath(pattern);
-        if (!p.contains(SelectorUtils.DEEP_TREE_MATCH)) {
-            Vector n = SelectorUtils.tokenizePath(name);
-            return p.size() > n.size();
-        }
-        return true;
+    private boolean isDeeper(PathPattern pattern, PathPattern name) {
+        return pattern.containsPattern(SelectorUtils.DEEP_TREE_MATCH)
+            || pattern.depth() > name.depth();
     }
 
     /**
@@ -1341,7 +1340,8 @@ public class DirectoryScanner
      */
     private boolean isMorePowerfulThanExcludes(String name,
                                                String includepattern) {
-        String soughtexclude = name + SelectorUtils.DEEP_LEAVES_MATCH;
+        final String soughtexclude =
+            name + File.separatorChar + SelectorUtils.DEEP_TREE_MATCH;
         for (int counter = 0; counter < excludes.length; counter++) {
             if (excludes[counter].equals(soughtexclude))  {
                 return false;

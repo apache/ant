@@ -70,6 +70,16 @@ public class PathPattern {
     }
     
     /**
+     * Tests whether or not this PathPattern matches the start of
+     * another pattern.
+     */
+    public boolean matchPatternStartOf(PathPattern other,
+                                       boolean caseSensitive) {
+        return SelectorUtils.matchPatternStart(other.tokenizedPattern,
+                                               tokenizedPattern, caseSensitive);
+    }
+
+    /**
      * @return The pattern String
      */
     public String toString() {
@@ -78,5 +88,24 @@ public class PathPattern {
     
     public String getPattern() {
         return pattern;
+    }
+
+    /**
+     * The depth (or length) of a pattern.
+     */
+    public int depth() {
+        return tokenizedPattern.length;
+    }
+
+    /**
+     * Does the tokenized pattern contain the given string?
+     */
+    public boolean containsPattern(String pat) {
+        for (int i = 0; i < tokenizedPattern.length; i++) {
+            if (tokenizedPattern[i].equals(pat)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
