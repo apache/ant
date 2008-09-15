@@ -1850,8 +1850,9 @@ public class DirectoryScanner
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
                         files.add(getCanonicalPath(f));
-                        if (CollectionUtils.frequency(files, target)
-                            > maxLevelsOfSymlinks) {
+                        if (files.size() > maxLevelsOfSymlinks
+                            && CollectionUtils.frequency(files, target)
+                                 > maxLevelsOfSymlinks) {
                             return true;
                         }
                     }
