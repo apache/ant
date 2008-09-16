@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
@@ -506,5 +507,38 @@ public class ProjectHelper {
             return new BuildException(errorMessage, ex);
         }
         return new BuildException(errorMessage, ex, newLocation);
+    }
+
+    /**
+     * Whether this instance of ProjectHelper can parse an Antlib
+     * descriptor given by the URL and return its content as an
+     * UnknownElement ready to be turned into an Antlib task.
+     *
+     * <p>This method should not try to parse the content of the
+     * descriptor, the URL is only given as an argument to allow
+     * subclasses to decide whether they can support a given URL
+     * scheme or not.</p>
+     *
+     * <p>Subclasses that return true in this method must also
+     * override {@link #parseAntlibDescriptor
+     * parseAntlibDescriptor}.</p>
+     *
+     * <p>This implementation returns false.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean canParseAntlibDescriptor(URL url) {
+        return false;
+    }
+
+    /**
+     * Parse the given URL as an antlib descriptor an return the
+     * content as something that can be turned into an Antlib task.
+     *
+     * @since ant 1.8.0
+     */
+    public UnknownElement parseAntlibDescriptor(Project containingProject,
+                                                URL source) {
+        throw new BuildException("can't parse antlib descriptors");
     }
 }

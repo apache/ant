@@ -364,6 +364,13 @@ Other changes:
  * <patch> has a new optional failOnError attribute.
    Bugzilla Report 44772.
 
+ * Antlib descriptors will now be parsed by the configured
+   ProjectHelper if the implementation overrides the new
+   canParseAntlibDescriptor and parseAntlibDescriptor methods.  If the
+   configured helper doesn't override the methods, a new instance of
+   ProjectHelper2 will be used just like in ant 1.7.1.
+   Bugzilla Report 42208.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

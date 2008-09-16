@@ -24,13 +24,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.helper.ProjectHelper2;
+import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.helper.ProjectHelper2;
 
 
 /**
@@ -71,9 +72,23 @@ public class Antlib extends Task implements TaskContainer {
         helper.enterAntLib(uri);
         try {
             // Should be safe to parse
-            ProjectHelper2 parser = new ProjectHelper2();
+            ProjectHelper parser = null;
+            Object p =
+                project.getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+            if (p instanceof ProjectHelper) {
+                parser = (ProjectHelper) p;
+                if (!parser.canParseAntlibDescriptor(antlibUrl)) {
+                    project.log("ProjectHelper class " + p.getClass().getName()
+                                + " can't parse Antlib descriptors, falling back"
+                                + " to ProjectHelper2.");
+                    parser = null;
+                }
+            }
+            if (parser == null) {
+                parser = new ProjectHelper2();
+            }
             UnknownElement ue =
-                parser.parseUnknownElement(project, antlibUrl);
+                parser.parseAntlibDescriptor(project, antlibUrl);
             // Check name is "antlib"
             if (!(ue.getTag().equals(TAG))) {
                 throw new BuildException(

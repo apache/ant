@@ -73,6 +73,33 @@ public class ProjectHelper2 extends ProjectHelper {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
+     * Whether this instance of ProjectHelper can parse an Antlib
+     * descriptor given by the URL and return its content as an
+     * UnknownElement ready to be turned into an Antlib task.
+     *
+     * <p>This implementation returns true.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean canParseAntlibDescriptor(URL url) {
+        return true;
+    }
+
+    /**
+     * Parse the given URL as an antlib descriptor an return the
+     * content as something that can be turned into an Antlib task.
+     *
+     * <p>simply delegates to {@link #parseUnknownElement
+     * parseUnknownElement}.</p>
+     *
+     * @since ant 1.8.0
+     */
+    public UnknownElement parseAntlibDescriptor(Project containingProject,
+                                                URL source) {
+        return parseUnknownElement(containingProject, source);
+    }
+
+    /**
      * Parse an unknown element from a url
      *
      * @param project the current project
@@ -80,7 +107,8 @@ public class ProjectHelper2 extends ProjectHelper {
      * @return a configured task
      * @exception BuildException if an error occurs
      */
-    public UnknownElement parseUnknownElement(Project project, URL source) throws BuildException {
+    public UnknownElement parseUnknownElement(Project project, URL source)
+        throws BuildException {
         Target dummyTarget = new Target();
         dummyTarget.setProject(project);
 
