@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -56,6 +57,27 @@ public class SignJarTest extends BuildFileTest {
 
     public void testSigFile() {
         executeTarget("sigfile");
+        SignJarChild sj = new SignJarChild();
+        sj.setAlias("testonly");
+        sj.setKeystore("testkeystore");
+        sj.setStorepass("apacheant");
+        File jar = new File(getProject().getProperty("test.jar"));
+        sj.setJar(jar);
+        assertFalse("mustn't find signature without sigfile attribute",
+                    sj.isSigned());
+        sj.setSigfile("TEST");
+        assertTrue("must find signature with sigfile attribute",
+                   sj.isSigned());
+    }
+
+    /**
+     * subclass in order to get access to protected isSigned method if
+     * tests and task come from different classloaders.
+     */
+    private static class SignJarChild extends SignJar {
+        public boolean isSigned() {
+            return isSigned(jar);
+        }
     }
 
     public void testMaxMemory() {

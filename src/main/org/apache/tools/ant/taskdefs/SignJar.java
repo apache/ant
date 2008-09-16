@@ -474,7 +474,7 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      * test for a file being signed, by looking for a signature in the META-INF
-     * directory with our alias.
+     * directory with our alias/sigfile.
      *
      * @param file the file to be checked
      * @return true if the file is signed
@@ -482,7 +482,7 @@ public class SignJar extends AbstractJarSignerTask {
      */
     protected boolean isSigned(File file) {
         try {
-            return IsSigned.isSigned(file, alias);
+            return IsSigned.isSigned(file, sigfile == null ? alias : sigfile);
         } catch (IOException e) {
             //just log this
             log(e.toString(), Project.MSG_VERBOSE);

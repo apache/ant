@@ -214,6 +214,10 @@ Fixed bugs:
    the link's target.
    Bugzilla Report 41525.
 
+ * when checking whether a jar is signed, <signjar> ignored the
+   sigfile attribute.
+   Bugzilla Report 44805.
+
 Other changes:
 --------------
 
