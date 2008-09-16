@@ -218,6 +218,10 @@ Fixed bugs:
    sigfile attribute.
    Bugzilla Report 44805.
 
+ * When using JavaMail all <mail> tasks used the same mail host
+   regardless of their configuration.
+   Bugzilla Report 37970.
+
 Other changes:
 --------------
 

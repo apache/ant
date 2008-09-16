@@ -136,7 +136,7 @@ public class MimeMailer extends Mailer {
             // 'session', which involves excessive quantities of
             // alcohol :-)
             Session sesh;
-            Authenticator auth;
+            Authenticator auth = null;
             if (SSL) {
                 try {
                     Provider p = (Provider) Class.forName(
@@ -151,13 +151,12 @@ public class MimeMailer extends Mailer {
                 props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
                 props.put("mail.smtp.socketFactory.fallback", "false");
             }
-            if (user == null && password == null) {
-                sesh = Session.getDefaultInstance(props, null);
-            } else {
+            if (user != null || password != null) {
                 props.put("mail.smtp.auth", "true");
                 auth = new SimpleAuthenticator(user, password);
-                sesh = Session.getInstance(props, auth);
             }
+            sesh = Session.getInstance(props, auth);
+
             //create the message
             MimeMessage msg = new MimeMessage(sesh);
             MimeMultipart attachments = new MimeMultipart();
