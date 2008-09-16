@@ -41,6 +41,11 @@ public class Patch extends Task {
     private Commandline cmd = new Commandline();
 
     /**
+     * Halt on error return value from patch invocation.
+     */
+    private boolean failOnError = false;
+
+    /**
      * The file to patch; optional if it can be inferred from
      * the diff file
      * @param file the file to patch
@@ -143,6 +148,19 @@ public class Patch extends Task {
     }
 
     /**
+     * If <code>true</code>, stop the build process if the patch command
+     * exits with an error status.
+     * @param value <code>true</code> if it should halt, otherwise
+     * <code>false</code>. The default is <code>false</code>.
+     * @since Ant 1.8.0
+     */
+    public void setFailOnError(boolean value) {
+        failOnError = value;
+    }
+
+    private static final String PATCH = "patch";
+
+    /**
      * execute patch
      * @throws BuildException when it all goes a bit pear shaped
      */
@@ -152,7 +170,7 @@ public class Patch extends Task {
                                      getLocation());
         }
         Commandline toExecute = (Commandline) cmd.clone();
-        toExecute.setExecutable("patch");
+        toExecute.setExecutable(PATCH);
 
         if (originalFile != null) {
             toExecute.createArgument().setFile(originalFile);
@@ -179,7 +197,16 @@ public class Patch extends Task {
 
         log(toExecute.describeCommand(), Project.MSG_VERBOSE);
         try {
-            exe.execute();
+            int returncode = exe.execute();
+            if (Execute.isFailure(returncode)) {
+                String msg = "'" + PATCH + "' failed with exit code "
+                    + returncode;
+                if (failOnError) {
+                    throw new BuildException(msg);
+                } else {
+                    log(msg, Project.MSG_ERR);
+                }
+            }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
         }

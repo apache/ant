@@ -84,6 +84,13 @@
     <td valign="top">The directory in which to run the patch command.</td>
     <td align="center" valign="top">No, default is the project's basedir.</td>
   </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      return code signaling failure. Defaults to false.
+      <em>since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot;/&gt;</pre>

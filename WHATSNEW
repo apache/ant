@@ -353,6 +353,9 @@ Other changes:
    set.
    Bugzilla Report 45711.
 
+ * <patch> has a new optional failOnError attribute.
+   Bugzilla Report 44772.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
