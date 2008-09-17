@@ -198,4 +198,8 @@ public class TokenizedPath {
         }
         return pathElements.length == 0 && !base.isDirectory() ? null : base;
     }
+
+    public TokenizedPattern toPattern() {
+        return new TokenizedPattern(path, tokenizedPath);
+    }
 }

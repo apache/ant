@@ -294,8 +294,10 @@ public class DirectoryScanner
     private Set scannedDirs = new HashSet();
 
     /**
-     * Set of all include patterns that are full file names and don't
+     * Map of all include patterns that are full file names and don't
      * contain any wildcards.
+     *
+     * <p>Maps pattern string to TokenizedPath.</p>
      *
      * <p>If this instance is not case sensitive, the file names get
      * turned to upper case.</p>
@@ -304,13 +306,15 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.6.3
+     * @since Ant 1.8.0
      */
-    private Set includeNonPatterns = new HashSet();
+    private Map includeNonPatterns = new HashMap();
 
     /**
-     * Set of all include patterns that are full file names and don't
+     * Map of all exclude patterns that are full file names and don't
      * contain any wildcards.
+     *
+     * <p>Maps pattern string to TokenizedPath.</p>
      *
      * <p>If this instance is not case sensitive, the file names get
      * turned to upper case.</p>
@@ -319,9 +323,9 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      *
-     * @since Ant 1.6.3
+     * @since Ant 1.8.0
      */
-    private Set excludeNonPatterns = new HashSet();
+    private Map excludeNonPatterns = new HashMap();
 
     /**
      * Array of all include patterns that contain wildcards.
@@ -897,35 +901,25 @@ public class DirectoryScanner
     private void checkIncludePatterns() {
         ensureNonPatternSetsReady();
         Map newroots = new HashMap();
+
         // put in the newroots map the include patterns without
         // wildcard tokens
-        int wildcardPatternIndex = 0;
-        for (int i = 0; i < includes.length; i++) {
-            boolean wildcards = SelectorUtils.hasWildcards(includes[i]);
-            if (FileUtils.isAbsolutePath(includes[i])) {
-                //skip abs. paths not under basedir, if set:
-                if (basedir != null
-                    && !SelectorUtils.matchPatternStart(includes[i],
-                    basedir.getAbsolutePath(), isCaseSensitive())) {
-                    if (wildcards) {
-                        wildcardPatternIndex++;
-                    }
-                    continue;
-                }
-            } else if (basedir == null) {
-                //skip non-abs. paths if basedir == null:
-                if (wildcards) {
-                    wildcardPatternIndex++;
-                }
-                continue;
-            }
-            if (wildcards) {
-                newroots.put(includePatterns[wildcardPatternIndex++]
-                             .rtrimWildcardTokens(), includes[i]);
-            } else {
-                newroots.put(new TokenizedPath(includes[i]), includes[i]);
+        for (int i = 0; i < includePatterns.length; i++) {
+            String pattern = includePatterns[i].toString();
+            if (!shouldSkipPattern(pattern)) {
+                newroots.put(includePatterns[i].rtrimWildcardTokens(),
+                             pattern);
             }
         }
+        for (Iterator iter = includeNonPatterns.entrySet().iterator();
+             iter.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String pattern = (String) entry.getKey();
+            if (!shouldSkipPattern(pattern)) {
+                newroots.put((TokenizedPath) entry.getValue(), pattern);
+            }
+        }
+
         if (newroots.containsKey(TokenizedPath.EMPTY_PATH)
             && basedir != null) {
             // we are going to scan everything anyway
@@ -1015,6 +1009,28 @@ public class DirectoryScanner
                 }
             }
         }
+    }
+
+    /**
+     * true if the pattern specifies a relative path without basedir
+     * or an absolute path not inside basedir.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean shouldSkipPattern(String pattern) {
+        if (FileUtils.isAbsolutePath(pattern)) {
+            //skip abs. paths not under basedir, if set:
+            if (basedir != null
+                && !SelectorUtils.matchPatternStart(pattern,
+                                                    basedir.getAbsolutePath(),
+                                                    isCaseSensitive())) {
+                return true;
+            }
+        } else if (basedir == null) {
+            //skip non-abs. paths if basedir == null:
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -1322,8 +1338,8 @@ public class DirectoryScanner
         ensureNonPatternSetsReady();
 
         if (isCaseSensitive()
-            ? includeNonPatterns.contains(path.toString())
-            : includeNonPatterns.contains(path.toString().toUpperCase())) {
+            ? includeNonPatterns.containsKey(path.toString())
+            : includeNonPatterns.containsKey(path.toString().toUpperCase())) {
             return true;
         }
         for (int i = 0; i < includePatterns.length; i++) {
@@ -1355,22 +1371,34 @@ public class DirectoryScanner
      *         least one include pattern, or <code>false</code> otherwise.
      */
     private boolean couldHoldIncluded(TokenizedPath tokenizedName) {
-        int wildCardCount = 0;
-        for (int i = 0; i < includes.length; i++) {
-            TokenizedPattern tokenizedInclude;
-            boolean wildcard = SelectorUtils.hasWildcards(includes[i]);
-            if (wildcard) {
-                tokenizedInclude = includePatterns[wildCardCount++];
-            } else {
-                tokenizedInclude = new TokenizedPattern(includes[i]);
+        for (int i = 0; i < includePatterns.length; i++) {
+            if (couldHoldIncluded(tokenizedName, includePatterns[i])) {
+                return true;
             }
-            if (tokenizedInclude.matchStartOf(tokenizedName, isCaseSensitive())
-                && isMorePowerfulThanExcludes(tokenizedName.toString())
-                && isDeeper(tokenizedInclude, tokenizedName)) {
+        }
+        for (Iterator iter = includeNonPatterns.values().iterator();
+             iter.hasNext(); ) {
+            if (couldHoldIncluded(tokenizedName,
+                                  ((TokenizedPath) iter.next()).toPattern())) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Test whether or not a name matches the start of the given
+     * include pattern.
+     *
+     * @param tokenizedName The name to match. Must not be <code>null</code>.
+     * @return <code>true</code> when the name matches against the start of the
+     *         include pattern, or <code>false</code> otherwise.
+     */
+    private boolean couldHoldIncluded(TokenizedPath tokenizedName,
+                                      TokenizedPattern tokenizedInclude) {
+        return tokenizedInclude.matchStartOf(tokenizedName, isCaseSensitive())
+            && isMorePowerfulThanExcludes(tokenizedName.toString())
+            && isDeeper(tokenizedInclude, tokenizedName);
     }
 
     /**
@@ -1453,8 +1481,8 @@ public class DirectoryScanner
         ensureNonPatternSetsReady();
 
         if (isCaseSensitive()
-            ? excludeNonPatterns.contains(name.toString())
-            : excludeNonPatterns.contains(name.toString().toUpperCase())) {
+            ? excludeNonPatterns.containsKey(name.toString())
+            : excludeNonPatterns.containsKey(name.toString().toUpperCase())) {
             return true;
         }
         for (int i = 0; i < excludePatterns.length; i++) {
@@ -1771,16 +1799,17 @@ public class DirectoryScanner
      * Add all patterns that are not real patterns (do not contain
      * wildcards) to the set and returns the real patterns.
      *
-     * @param set Set to populate.
+     * @param map Map to populate.
      * @param patterns String[] of patterns.
-     * @since Ant 1.6.3
+     * @since Ant 1.8.0
      */
-    private TokenizedPattern[] fillNonPatternSet(Set set, String[] patterns) {
+    private TokenizedPattern[] fillNonPatternSet(Map map, String[] patterns) {
         ArrayList al = new ArrayList(patterns.length);
         for (int i = 0; i < patterns.length; i++) {
             if (!SelectorUtils.hasWildcards(patterns[i])) {
-                set.add(isCaseSensitive() ? patterns[i]
-                    : patterns[i].toUpperCase());
+                String s = isCaseSensitive()
+                    ? patterns[i] : patterns[i].toUpperCase();
+                map.put(s, new TokenizedPath(s));
             } else {
                 al.add(new TokenizedPattern(patterns[i]));
             }

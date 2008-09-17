@@ -49,7 +49,7 @@ public class TokenizedPattern {
         this(pattern, SelectorUtils.tokenizePathAsArray(pattern));
     }
     
-    private TokenizedPattern(String pattern, String[] tokens) {
+    TokenizedPattern(String pattern, String[] tokens) {
         this.pattern = pattern;
         this.tokenizedPattern = tokens;
     }
