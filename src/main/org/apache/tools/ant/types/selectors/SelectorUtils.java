@@ -216,12 +216,21 @@ public final class SelectorUtils {
     }
 
     /**
-     * Core implementation of matchPath.  It is isolated so that it can be called from
-     * PathPattern.
+     * Core implementation of matchPath.  It is isolated so that it
+     * can be called from TokenizedPattern.
      */
-    static boolean matchPath(String[] tokenizedPattern, String str, boolean isCaseSensitive) {
-        String[] strDirs = tokenizePathAsArray(str);
+    static boolean matchPath(String[] tokenizedPattern, String str,
+                             boolean isCaseSensitive) {
+        return matchPath(tokenizedPattern, tokenizePathAsArray(str),
+                         isCaseSensitive);
+    }
 
+    /**
+     * Core implementation of matchPath.  It is isolated so that it
+     * can be called from TokenizedPattern.
+     */
+    static boolean matchPath(String[] tokenizedPattern, String[] strDirs,
+                             boolean isCaseSensitive) {
         int patIdxStart = 0;
         int patIdxEnd = tokenizedPattern.length - 1;
         int strIdxStart = 0;

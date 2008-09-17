@@ -860,8 +860,8 @@ public class DirectoryScanner
                         throw illegal;
                     }
                 }
-                if (isIncluded("")) {
-                    if (!isExcluded("")) {
+                if (isIncluded(TokenizedPath.EMPTY_PATH)) {
+                    if (!isExcluded(TokenizedPath.EMPTY_PATH)) {
                         if (isSelected("", basedir)) {
                             dirsIncluded.addElement("");
                         } else {
@@ -997,19 +997,11 @@ public class DirectoryScanner
                         continue;
                     }
                     if (myfile.isDirectory()) {
-                        if (isIncluded(currentelement)
+                        if (isIncluded(currentPath)
                             && currentelement.length() > 0) {
-                            accountForIncludedDir(currentelement, myfile, true);
+                            accountForIncludedDir(currentPath, myfile, true);
                         }  else {
-                            if (currentelement.length() > 0) {
-                                if (currentelement.charAt(currentelement
-                                                          .length() - 1)
-                                    != File.separatorChar) {
-                                    currentelement =
-                                        currentelement + File.separatorChar;
-                                }
-                            }
-                            scandir(myfile, currentelement, true);
+                            scandir(myfile, currentPath, true);
                         }
                     } else {
                         String originalpattern = (String) entry.getValue();
@@ -1017,7 +1009,7 @@ public class DirectoryScanner
                             ? originalpattern.equals(currentelement)
                             : originalpattern.equalsIgnoreCase(currentelement);
                         if (included) {
-                            accountForIncludedFile(currentelement, myfile);
+                            accountForIncludedFile(currentPath, myfile);
                         }
                     }
                 }
@@ -1099,9 +1091,9 @@ public class DirectoryScanner
 
     private void processSlowScan(String[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            if (!couldHoldIncluded(arr[i])) {
-                scandir(new File(basedir, arr[i]),
-                        arr[i] + File.separator, false);
+            TokenizedPath path  = new TokenizedPath(arr[i]);
+            if (!couldHoldIncluded(path)) {
+                scandir(new File(basedir, arr[i]), path, false);
             }
         }
     }
@@ -1127,6 +1119,30 @@ public class DirectoryScanner
      * @see #slowScan
      */
     protected void scandir(File dir, String vpath, boolean fast) {
+        scandir(dir, new TokenizedPath(vpath), fast);
+    }
+
+    /**
+     * Scan the given directory for files and directories. Found files and
+     * directories are placed in their respective collections, based on the
+     * matching of includes, excludes, and the selectors.  When a directory
+     * is found, it is scanned recursively.
+     *
+     * @param dir   The directory to scan. Must not be <code>null</code>.
+     * @param path The path relative to the base directory (needed to
+     *              prevent problems with an absolute path when using
+     *              dir). Must not be <code>null</code>.
+     * @param fast  Whether or not this call is part of a fast scan.
+     *
+     * @see #filesIncluded
+     * @see #filesNotIncluded
+     * @see #filesExcluded
+     * @see #dirsIncluded
+     * @see #dirsNotIncluded
+     * @see #dirsExcluded
+     * @see #slowScan
+     */
+    private void scandir(File dir, TokenizedPath path, boolean fast) {
         if (dir == null) {
             throw new BuildException("dir must not be null.");
         }
@@ -1141,11 +1157,16 @@ public class DirectoryScanner
                                          + dir.getAbsolutePath() + "'");
             }
         }
-        scandir(dir, vpath, fast, newfiles, new LinkedList());
+        scandir(dir, path, fast, newfiles, new LinkedList());
     }
 
-    private void scandir(File dir, String vpath, boolean fast,
+    private void scandir(File dir, TokenizedPath path, boolean fast,
                          String[] newfiles, LinkedList directoryNamesFollowed) {
+        String vpath = path.toString();
+        if (vpath.length() > 0 && !vpath.endsWith(File.separator)) {
+            vpath += File.separator;
+        }
+
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
@@ -1177,11 +1198,12 @@ public class DirectoryScanner
 
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath + newfiles[i];
+            TokenizedPath newPath = new TokenizedPath(path, newfiles[i]);
             File file = new File(dir, newfiles[i]);
             String[] children = list(file);
             if (children == null) { // probably file
-                if (isIncluded(name)) {
-                    accountForIncludedFile(name, file);
+                if (isIncluded(newPath)) {
+                    accountForIncludedFile(newPath, file);
                 } else {
                     everythingIncluded = false;
                     filesNotIncluded.addElement(name);
@@ -1199,20 +1221,19 @@ public class DirectoryScanner
                     continue;
                 }
 
-                if (isIncluded(name)) {
-                    accountForIncludedDir(name, file, fast, children,
+                if (isIncluded(newPath)) {
+                    accountForIncludedDir(newPath, file, fast, children,
                                           directoryNamesFollowed);
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(name)) {
-                        scandir(file, name + File.separator, fast, children,
+                    if (fast && couldHoldIncluded(newPath)) {
+                        scandir(file, newPath, fast, children,
                                 directoryNamesFollowed);
                     }
                 }
                 if (!fast) {
-                    scandir(file, name + File.separator, fast, children,
-                            directoryNamesFollowed);
+                    scandir(file, newPath, fast, children, directoryNamesFollowed);
                 }
             }
         }
@@ -1227,7 +1248,7 @@ public class DirectoryScanner
      * @param name  path of the file relative to the directory of the FileSet.
      * @param file  included File.
      */
-    private void accountForIncludedFile(String name, File file) {
+    private void accountForIncludedFile(TokenizedPath name, File file) {
         processIncluded(name, file, filesIncluded, filesExcluded,
                         filesDeselected);
     }
@@ -1239,32 +1260,34 @@ public class DirectoryScanner
      * @param file directory as File.
      * @param fast whether to perform fast scans.
      */
-    private void accountForIncludedDir(String name, File file, boolean fast) {
+    private void accountForIncludedDir(TokenizedPath name, File file,
+                                       boolean fast) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
-            scandir(file, name + File.separator, fast);
+            scandir(file, name, fast);
         }
     }
 
-    private void accountForIncludedDir(String name, File file, boolean fast,
+    private void accountForIncludedDir(TokenizedPath name,
+                                       File file, boolean fast,
                                        String[] children,
                                        LinkedList directoryNamesFollowed) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
-            scandir(file, name + File.separator, fast, children,
-                    directoryNamesFollowed);
+            scandir(file, name, fast, children, directoryNamesFollowed);
         }
     }
 
-    private void processIncluded(String name, File file, Vector inc,
-                                 Vector exc, Vector des) {
-
+    private void processIncluded(TokenizedPath path,
+                                 File file, Vector inc, Vector exc,
+                                 Vector des) {
+        String name = path.toString();
         if (inc.contains(name) || exc.contains(name) || des.contains(name)) {
             return;
         }
 
         boolean included = false;
-        if (isExcluded(name)) {
+        if (isExcluded(path)) {
             exc.add(name);
         } else if (isSelected(name, file)) {
             included = true;
@@ -1284,15 +1307,27 @@ public class DirectoryScanner
      *         include pattern, or <code>false</code> otherwise.
      */
     protected boolean isIncluded(String name) {
+        return isIncluded(new TokenizedPath(name));
+    }
+
+    /**
+     * Test whether or not a name matches against at least one include
+     * pattern.
+     *
+     * @param name The name to match. Must not be <code>null</code>.
+     * @return <code>true</code> when the name matches against at least one
+     *         include pattern, or <code>false</code> otherwise.
+     */
+    private boolean isIncluded(TokenizedPath path) {
         ensureNonPatternSetsReady();
 
         if (isCaseSensitive()
-            ? includeNonPatterns.contains(name)
-            : includeNonPatterns.contains(name.toUpperCase())) {
+            ? includeNonPatterns.contains(path.toString())
+            : includeNonPatterns.contains(path.toString().toUpperCase())) {
             return true;
         }
         for (int i = 0; i < includePatterns.length; i++) {
-            if (includePatterns[i].matchPath(name, isCaseSensitive())) {
+            if (includePatterns[i].matchPath(path, isCaseSensitive())) {
                 return true;
             }
         }
@@ -1308,12 +1343,29 @@ public class DirectoryScanner
      *         least one include pattern, or <code>false</code> otherwise.
      */
     protected boolean couldHoldIncluded(String name) {
-        final TokenizedPath tokenizedName = new TokenizedPath(name);
+        return couldHoldIncluded(new TokenizedPath(name));
+    }
+
+    /**
+     * Test whether or not a name matches the start of at least one include
+     * pattern.
+     *
+     * @param tokenizedName The name to match. Must not be <code>null</code>.
+     * @return <code>true</code> when the name matches against the start of at
+     *         least one include pattern, or <code>false</code> otherwise.
+     */
+    private boolean couldHoldIncluded(TokenizedPath tokenizedName) {
+        int wildCardCount = 0;
         for (int i = 0; i < includes.length; i++) {
-            TokenizedPattern tokenizedInclude =
-                new TokenizedPattern(includes[i]);
+            TokenizedPattern tokenizedInclude;
+            boolean wildcard = SelectorUtils.hasWildcards(includes[i]);
+            if (wildcard) {
+                tokenizedInclude = includePatterns[wildCardCount++];
+            } else {
+                tokenizedInclude = new TokenizedPattern(includes[i]);
+            }
             if (tokenizedInclude.matchStartOf(tokenizedName, isCaseSensitive())
-                && isMorePowerfulThanExcludes(name, includes[i])
+                && isMorePowerfulThanExcludes(tokenizedName.toString())
                 && isDeeper(tokenizedInclude, tokenizedName)) {
                 return true;
             }
@@ -1346,17 +1398,15 @@ public class DirectoryScanner
      *  IMPORTANT : this function should return false "with care".
      *
      *  @param name the relative path to test.
-     *  @param includepattern one include pattern.
      *  @return true if there is no exclude pattern more powerful than
      *  this include pattern.
      *  @since Ant 1.6
      */
-    private boolean isMorePowerfulThanExcludes(String name,
-                                               String includepattern) {
+    private boolean isMorePowerfulThanExcludes(String name) {
         final String soughtexclude =
             name + File.separatorChar + SelectorUtils.DEEP_TREE_MATCH;
-        for (int counter = 0; counter < excludes.length; counter++) {
-            if (excludes[counter].equals(soughtexclude))  {
+        for (int counter = 0; counter < excludePatterns.length; counter++) {
+            if (excludePatterns[counter].toString().equals(soughtexclude))  {
                 return false;
             }
         }
@@ -1365,16 +1415,14 @@ public class DirectoryScanner
 
     /**
      * Test whether all contents of the specified directory must be excluded.
-     * @param name the directory name to check.
+     * @param path the path to check.
      * @return whether all the specified directory's contents are excluded.
      */
-    private boolean contentsExcluded(String name) {
-        name = (name.endsWith(File.separator)) ? name : name + File.separator;
-        for (int i = 0; i < excludes.length; i++) {
-            String e = excludes[i];
-            if (e.endsWith(SelectorUtils.DEEP_TREE_MATCH)
-                && SelectorUtils.matchPath(e.substring(0, e.length() - 2),
-                                           name, isCaseSensitive())) {
+    private boolean contentsExcluded(TokenizedPath path) {
+        for (int i = 0; i < excludePatterns.length; i++) {
+            if (excludePatterns[i].endsWith(SelectorUtils.DEEP_TREE_MATCH)
+                && excludePatterns[i].withoutLastToken()
+                   .matchPath(path, isCaseSensitive())) {
                 return true;
             }
         }
@@ -1390,11 +1438,23 @@ public class DirectoryScanner
      *         exclude pattern, or <code>false</code> otherwise.
      */
     protected boolean isExcluded(String name) {
+        return isExcluded(new TokenizedPath(name));
+    }
+
+    /**
+     * Test whether or not a name matches against at least one exclude
+     * pattern.
+     *
+     * @param name The name to match. Must not be <code>null</code>.
+     * @return <code>true</code> when the name matches against at least one
+     *         exclude pattern, or <code>false</code> otherwise.
+     */
+    private boolean isExcluded(TokenizedPath name) {
         ensureNonPatternSetsReady();
 
         if (isCaseSensitive()
-            ? excludeNonPatterns.contains(name)
-            : excludeNonPatterns.contains(name.toUpperCase())) {
+            ? excludeNonPatterns.contains(name.toString())
+            : excludeNonPatterns.contains(name.toString().toUpperCase())) {
             return true;
         }
         for (int i = 0; i < excludePatterns.length; i++) {

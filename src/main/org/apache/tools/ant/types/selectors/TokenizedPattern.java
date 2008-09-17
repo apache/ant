@@ -31,6 +31,12 @@ import java.io.File;
  */
 public class TokenizedPattern {
 
+    /**
+     * Instance that holds no tokens at all.
+     */
+    public static final TokenizedPattern EMPTY_PATTERN =
+        new TokenizedPattern("", new String[0]);
+
     private final String pattern;
     private final String tokenizedPattern[];
 
@@ -74,6 +80,22 @@ public class TokenizedPattern {
      */
     public boolean matchPath(String str, boolean isCaseSensitive) {
         return SelectorUtils.matchPath(tokenizedPattern, str, isCaseSensitive);
+    }
+    
+    /**
+     * Tests whether or not a given path matches a given pattern.
+     *
+     * @param str     The path to match, as a String. Must not be
+     *                <code>null</code>.
+     * @param isCaseSensitive Whether or not matching should be performed
+     *                        case sensitively.
+     *
+     * @return <code>true</code> if the pattern matches against the string,
+     *         or <code>false</code> otherwise.
+     */
+    public boolean matchPath(TokenizedPath path, boolean isCaseSensitive) {
+        return SelectorUtils.matchPath(tokenizedPattern, path.getTokens(),
+                                       isCaseSensitive);
     }
     
     /**
@@ -153,4 +175,31 @@ public class TokenizedPattern {
         System.arraycopy(tokenizedPattern, 0, newPats, 0, newLen);
         return new TokenizedPath(sb.toString(), newPats);
     }
+
+    /**
+     * true if the last token equals the given string.
+     */
+    public boolean endsWith(String s) {
+        return tokenizedPattern.length > 0
+            && tokenizedPattern[tokenizedPattern.length - 1].equals(s);
+    }
+
+    /**
+     * Returns a new pattern without the last token of this pattern.
+     */
+    public TokenizedPattern withoutLastToken() {
+        if (tokenizedPattern.length == 0) {
+            throw new IllegalStateException("cant strip a token from nothing");
+        } else if (tokenizedPattern.length == 1) {
+            return EMPTY_PATTERN;
+        } else {
+            String toStrip = tokenizedPattern[tokenizedPattern.length - 1];
+            int index = pattern.lastIndexOf(toStrip);
+            String[] tokens = new String[tokenizedPattern.length - 1];
+            System.arraycopy(tokenizedPattern, 0, tokens, 0,
+                             tokenizedPattern.length - 1);
+            return new TokenizedPattern(pattern.substring(0, index), tokens);
+        }
+    }
+        
 }

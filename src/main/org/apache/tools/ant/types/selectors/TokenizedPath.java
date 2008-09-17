@@ -54,6 +54,26 @@ public class TokenizedPath {
         this(path, SelectorUtils.tokenizePathAsArray(path));
     }
     
+    /**
+     * Creates a new path as a child of another path.
+     *
+     * @param parent the parent path
+     * @param child the child, must not contain the file separator
+     */
+    public TokenizedPath(TokenizedPath parent, String child) {
+        if (parent.path.length() > 0
+            && parent.path.charAt(parent.path.length() - 1)
+               != File.separatorChar) {
+            path = parent.path + File.separatorChar + child;
+        } else {
+            path = parent.path + child;
+        }
+        tokenizedPath = new String[parent.tokenizedPath.length + 1];
+        System.arraycopy(parent.tokenizedPath, 0, tokenizedPath, 0,
+                         parent.tokenizedPath.length);
+        tokenizedPath[parent.tokenizedPath.length] = child;
+    }
+
     /* package */ TokenizedPath(String path, String[] tokens) {
         this.path = path;
         this.tokenizedPath = tokens;
