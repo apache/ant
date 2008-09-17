@@ -26,7 +26,7 @@ package org.apache.tools.ant.types.selectors;
  * @see SelectorUtils#matchPath(String, String, boolean)
  * @since 1.8
  */
-public class PathPattern {
+public class TokenizedPattern {
 
     private final String pattern;
     private final String tokenizedPattern[];
@@ -36,7 +36,7 @@ public class PathPattern {
     * @param pattern The pattern to match against. Must not be
     *                <code>null</code>.
     */
-    public PathPattern(String pattern) {
+    public TokenizedPattern(String pattern) {
         this.pattern = pattern;    
         this.tokenizedPattern = SelectorUtils.tokenizePathAsArray(pattern);
     }
@@ -70,13 +70,13 @@ public class PathPattern {
     }
     
     /**
-     * Tests whether or not this PathPattern matches the start of
-     * another pattern.
+     * Tests whether or not this pattern matches the start of
+     * a path.
      */
-    public boolean matchPatternStartOf(PathPattern other,
-                                       boolean caseSensitive) {
-        return SelectorUtils.matchPatternStart(other.tokenizedPattern,
-                                               tokenizedPattern, caseSensitive);
+    public boolean matchStartOf(TokenizedPath path,
+                                boolean caseSensitive) {
+        return SelectorUtils.matchPatternStart(tokenizedPattern,
+                                               path.getTokens(), caseSensitive);
     }
 
     /**

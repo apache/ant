@@ -36,9 +36,10 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.selectors.FileSelector;
-import org.apache.tools.ant.types.selectors.PathPattern;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.types.selectors.TokenizedPath;
+import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -335,7 +336,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      */
-    private PathPattern[] includePatterns;
+    private TokenizedPattern[] includePatterns;
 
     /**
      * Array of all exclude patterns that contain wildcards.
@@ -344,7 +345,7 @@ public class DirectoryScanner
      * isIncluded or isExcluded and cleared at the end of the scan
      * method (cleared in clearCaches, actually).</p>
      */
-    private PathPattern[] excludePatterns;
+    private TokenizedPattern[] excludePatterns;
 
     /**
      * Have the non-pattern sets and pattern arrays for in- and
@@ -1291,11 +1292,11 @@ public class DirectoryScanner
      *         least one include pattern, or <code>false</code> otherwise.
      */
     protected boolean couldHoldIncluded(String name) {
-        final PathPattern tokenizedName = new PathPattern(name);
+        final TokenizedPath tokenizedName = new TokenizedPath(name);
         for (int i = 0; i < includes.length; i++) {
-            PathPattern tokenizedInclude = new PathPattern(includes[i]);
-            if (tokenizedName.matchPatternStartOf(tokenizedInclude,
-                                                  isCaseSensitive())
+            TokenizedPattern tokenizedInclude =
+                new TokenizedPattern(includes[i]);
+            if (tokenizedInclude.matchStartOf(tokenizedName, isCaseSensitive())
                 && isMorePowerfulThanExcludes(name, includes[i])
                 && isDeeper(tokenizedInclude, tokenizedName)) {
                 return true;
@@ -1312,7 +1313,7 @@ public class DirectoryScanner
      * @return whether the pattern is deeper than the name.
      * @since Ant 1.6.3
      */
-    private boolean isDeeper(PathPattern pattern, PathPattern name) {
+    private boolean isDeeper(TokenizedPattern pattern, TokenizedPath name) {
         return pattern.containsPattern(SelectorUtils.DEEP_TREE_MATCH)
             || pattern.depth() > name.depth();
     }
@@ -1802,17 +1803,17 @@ public class DirectoryScanner
      * @param patterns String[] of patterns.
      * @since Ant 1.6.3
      */
-    private PathPattern[] fillNonPatternSet(Set set, String[] patterns) {
+    private TokenizedPattern[] fillNonPatternSet(Set set, String[] patterns) {
         ArrayList al = new ArrayList(patterns.length);
         for (int i = 0; i < patterns.length; i++) {
             if (!SelectorUtils.hasWildcards(patterns[i])) {
                 set.add(isCaseSensitive() ? patterns[i]
                     : patterns[i].toUpperCase());
             } else {
-                al.add(new PathPattern(patterns[i]));
+                al.add(new TokenizedPattern(patterns[i]));
             }
         }
-        return (PathPattern[]) al.toArray(new PathPattern[al.size()]);
+        return (TokenizedPattern[]) al.toArray(new TokenizedPattern[al.size()]);
     }
 
     /**
