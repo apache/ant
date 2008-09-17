@@ -532,7 +532,7 @@ public class ProjectHelper {
     }
 
     /**
-     * Parse the given URL as an antlib descriptor an return the
+     * Parse the given URL as an antlib descriptor and return the
      * content as something that can be turned into an Antlib task.
      *
      * @since ant 1.8.0
