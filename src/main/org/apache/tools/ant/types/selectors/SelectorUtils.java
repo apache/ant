@@ -188,7 +188,7 @@ public final class SelectorUtils {
      */
     public static boolean matchPath(String pattern, String str) {
         String[] patDirs = tokenizePathAsArray(pattern);
-        return matchPath(patDirs, str, true);
+        return matchPath(patDirs, tokenizePathAsArray(str), true);
     }
 
     /**
@@ -212,17 +212,7 @@ public final class SelectorUtils {
     public static boolean matchPath(String pattern, String str,
                                     boolean isCaseSensitive) {
         String[] patDirs = tokenizePathAsArray(pattern);
-        return matchPath(patDirs, str, isCaseSensitive);
-    }
-
-    /**
-     * Core implementation of matchPath.  It is isolated so that it
-     * can be called from TokenizedPattern.
-     */
-    static boolean matchPath(String[] tokenizedPattern, String str,
-                             boolean isCaseSensitive) {
-        return matchPath(tokenizedPattern, tokenizePathAsArray(str),
-                         isCaseSensitive);
+        return matchPath(patDirs, tokenizePathAsArray(str), isCaseSensitive);
     }
 
     /**

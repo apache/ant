@@ -199,7 +199,11 @@ public class TokenizedPath {
         return pathElements.length == 0 && !base.isDirectory() ? null : base;
     }
 
+    /**
+     * Creates a TokenizedPattern from the same tokens that make up
+     * this path.
+     */
     public TokenizedPattern toPattern() {
-        return new TokenizedPattern(path, tokenizedPath);
+        return new TokenizedPattern(path, tokenizedPath); 
     }
 }

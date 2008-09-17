@@ -59,34 +59,6 @@ public class TokenizedPattern {
      *
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     *                
-     * @return <code>true</code> if the pattern matches against the string,
-     *         or <code>false</code> otherwise.
-     */
-    public boolean matchPath(String str) {
-        return SelectorUtils.matchPath(tokenizedPattern, str, true);
-    }
-    
-    /**
-     * Tests whether or not a given path matches a given pattern.
-     *
-     * @param str     The path to match, as a String. Must not be
-     *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
-     *                        case sensitively.
-     *
-     * @return <code>true</code> if the pattern matches against the string,
-     *         or <code>false</code> otherwise.
-     */
-    public boolean matchPath(String str, boolean isCaseSensitive) {
-        return SelectorUtils.matchPath(tokenizedPattern, str, isCaseSensitive);
-    }
-    
-    /**
-     * Tests whether or not a given path matches a given pattern.
-     *
-     * @param str     The path to match, as a String. Must not be
-     *                <code>null</code>.
      * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.
      *
