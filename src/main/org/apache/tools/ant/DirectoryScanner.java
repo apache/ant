@@ -287,6 +287,11 @@ public class DirectoryScanner
     private Map fileListMap = new HashMap();
 
     /**
+     * Uses fileListMap to cache directory listings.
+     */
+    private final TokenizedPath.FileLister fileLister = new CachedFileLister();
+
+    /**
      * List of all scanned directories.
      *
      * @since Ant 1.6
@@ -957,7 +962,8 @@ public class DirectoryScanner
                             : FILE_UTILS.removeLeadingPath(canonBase,
                                          getCanonicalFile(myfile));
                         if (!path.equals(currentelement) || ON_VMS) {
-                            myfile = currentPath.findFile(basedir, true);
+                            myfile = currentPath.findFile(basedir, true,
+                                                          fileLister);
                             if (myfile != null && basedir != null) {
                                 currentelement = FILE_UTILS.removeLeadingPath(
                                     basedir, myfile);
@@ -974,7 +980,7 @@ public class DirectoryScanner
                 }
 
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
-                    File f = currentPath.findFile(basedir, false);
+                    File f = currentPath.findFile(basedir, false, fileLister);
                     if (f != null && f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
@@ -1896,4 +1902,9 @@ public class DirectoryScanner
         return new File(getCanonicalPath(file));
     }
 
+    private class CachedFileLister implements TokenizedPath.FileLister {
+        public String[] list(File f) {
+            return DirectoryScanner.this.list(f);
+        }
+    }
 }

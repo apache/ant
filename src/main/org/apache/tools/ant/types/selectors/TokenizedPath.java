@@ -105,7 +105,7 @@ public class TokenizedPath {
      * @param cs whether to scan case-sensitively.
      * @return File object that points to the file in question or null.
      */
-    public File findFile(File base, final boolean cs) {
+    public File findFile(File base, final boolean cs, FileLister fileLister) {
         String[] tokens = tokenizedPath;
         if (FileUtils.isAbsolutePath(path)) {
             if (base == null) {
@@ -123,7 +123,7 @@ public class TokenizedPath {
                 tokens = SelectorUtils.tokenizePathAsArray(s);
             }
         }
-        return findFile(base, tokens, cs);
+        return findFile(base, tokens, cs, fileLister);
     }
 
     /**
@@ -170,12 +170,12 @@ public class TokenizedPath {
      * @return File object that points to the file in question or null.
      */
     private static File findFile(File base, final String[] pathElements,
-                                 final boolean cs) {
+                                 final boolean cs, FileLister fileLister) {
         for (int current = 0; current < pathElements.length; current++) {
             if (!base.isDirectory()) {
                 return null;
             }
-            String[] files = base.list();
+            String[] files = fileLister.list(base);
             if (files == null) {
                 throw new BuildException("IO error scanning directory "
                                          + base.getAbsolutePath());
@@ -205,5 +205,21 @@ public class TokenizedPath {
      */
     public TokenizedPattern toPattern() {
         return new TokenizedPattern(path, tokenizedPath); 
+    }
+
+    /**
+     * Helper that obtains the listing of a directory.
+     */
+    public static interface FileLister {
+        String[] list(File file);
+    }
+
+    /**
+     * Default implementation using File.list().
+     */
+    public static final class DefaultLister implements FileLister {
+        public String[] list(File file) {
+            return file.list();
+        }
     }
 }
