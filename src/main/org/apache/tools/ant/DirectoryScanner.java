@@ -186,12 +186,6 @@ public class DirectoryScanner
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    /** iterations for case-sensitive scanning. */
-    private static final boolean[] CS_SCAN_ONLY = new boolean[] {true};
-
-    /** iterations for non-case-sensitive scanning. */
-    private static final boolean[] CS_THEN_NON_CS = new boolean[] {true, false};
-
     /**
      * Patterns which should be excluded by default.
      *
@@ -901,25 +895,39 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     private void checkIncludePatterns() {
+        ensureNonPatternSetsReady();
         Map newroots = new HashMap();
         // put in the newroots map the include patterns without
         // wildcard tokens
+        int wildcardPatternIndex = 0;
         for (int i = 0; i < includes.length; i++) {
+            boolean wildcards = SelectorUtils.hasWildcards(includes[i]);
             if (FileUtils.isAbsolutePath(includes[i])) {
                 //skip abs. paths not under basedir, if set:
                 if (basedir != null
                     && !SelectorUtils.matchPatternStart(includes[i],
                     basedir.getAbsolutePath(), isCaseSensitive())) {
+                    if (wildcards) {
+                        wildcardPatternIndex++;
+                    }
                     continue;
                 }
             } else if (basedir == null) {
                 //skip non-abs. paths if basedir == null:
+                if (wildcards) {
+                    wildcardPatternIndex++;
+                }
                 continue;
             }
-            newroots.put(SelectorUtils.rtrimWildcardTokens(
-                includes[i]), includes[i]);
+            if (wildcards) {
+                newroots.put(includePatterns[wildcardPatternIndex++]
+                             .rtrimWildcardTokens(), includes[i]);
+            } else {
+                newroots.put(new TokenizedPath(includes[i]), includes[i]);
+            }
         }
-        if (newroots.containsKey("") && basedir != null) {
+        if (newroots.containsKey(TokenizedPath.EMPTY_PATH)
+            && basedir != null) {
             // we are going to scan everything anyway
             scandir(basedir, "", true);
         } else {
@@ -937,12 +945,12 @@ public class DirectoryScanner
             }
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
-                String currentelement = (String) entry.getKey();
+                TokenizedPath currentPath = (TokenizedPath) entry.getKey();
+                String currentelement = currentPath.toString();
                 if (basedir == null
                     && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;
                 }
-                String originalpattern = (String) entry.getValue();
                 File myfile = new File(basedir, currentelement);
 
                 if (myfile.exists()) {
@@ -955,18 +963,24 @@ public class DirectoryScanner
                             : FILE_UTILS.removeLeadingPath(canonBase,
                                          getCanonicalFile(myfile));
                         if (!path.equals(currentelement) || ON_VMS) {
-                            myfile = findFile(basedir, currentelement, true);
+                            myfile = currentPath.findFile(basedir, true);
                             if (myfile != null && basedir != null) {
                                 currentelement = FILE_UTILS.removeLeadingPath(
                                     basedir, myfile);
+                                if (!currentPath.toString()
+                                    .equals(currentelement)) {
+                                    currentPath =
+                                        new TokenizedPath(currentelement);
+                                }
                             }
                         }
                     } catch (IOException ex) {
                         throw new BuildException(ex);
                     }
                 }
+
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
-                    File f = findFile(basedir, currentelement, false);
+                    File f = currentPath.findFile(basedir, false);
                     if (f != null && f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
@@ -974,11 +988,12 @@ public class DirectoryScanner
                             ? f.getAbsolutePath()
                             : FILE_UTILS.removeLeadingPath(basedir, f);
                         myfile = f;
+                        currentPath = new TokenizedPath(currentelement);
                     }
                 }
+
                 if (myfile != null && myfile.exists()) {
-                    if (!followSymlinks
-                        && isSymlink(basedir, currentelement)) {
+                    if (!followSymlinks && currentPath.isSymlink(basedir)) {
                         continue;
                     }
                     if (myfile.isDirectory()) {
@@ -997,6 +1012,7 @@ public class DirectoryScanner
                             scandir(myfile, currentelement, true);
                         }
                     } else {
+                        String originalpattern = (String) entry.getValue();
                         boolean included = isCaseSensitive()
                             ? originalpattern.equals(currentelement)
                             : originalpattern.equalsIgnoreCase(currentelement);
@@ -1639,110 +1655,6 @@ public class DirectoryScanner
             files = null;
         }
         return files;
-    }
-
-    /**
-     * From <code>base</code> traverse the filesystem in order to find
-     * a file that matches the given name.
-     *
-     * @param base base File (dir).
-     * @param path file path.
-     * @param cs whether to scan case-sensitively.
-     * @return File object that points to the file in question or null.
-     *
-     * @since Ant 1.6.3
-     */
-    private File findFile(File base, String path, boolean cs) {
-        if (FileUtils.isAbsolutePath(path)) {
-            if (base == null) {
-                String[] s = FILE_UTILS.dissect(path);
-                base = new File(s[0]);
-                path = s[1];
-            } else {
-                File f = FILE_UTILS.normalize(path);
-                String s = FILE_UTILS.removeLeadingPath(base, f);
-                if (s.equals(f.getAbsolutePath())) {
-                    //removing base from path yields no change; path
-                    //not child of base
-                    return null;
-                }
-                path = s;
-            }
-        }
-        return findFile(base, SelectorUtils.tokenizePath(path), cs);
-    }
-
-    /**
-     * From <code>base</code> traverse the filesystem in order to find
-     * a file that matches the given stack of names.
-     *
-     * @param base base File (dir).
-     * @param pathElements Vector of path elements (dirs...file).
-     * @param cs whether to scan case-sensitively.
-     * @return File object that points to the file in question or null.
-     *
-     * @since Ant 1.6.3
-     */
-    private File findFile(File base, Vector pathElements, boolean cs) {
-        if (pathElements.size() == 0) {
-            return base;
-        }
-        String current = (String) pathElements.remove(0);
-        if (base == null) {
-            return findFile(new File(current), pathElements, cs);
-        }
-        if (!base.isDirectory()) {
-            return null;
-        }
-        String[] files = list(base);
-        if (files == null) {
-            throw new BuildException("IO error scanning directory "
-                                     + base.getAbsolutePath());
-        }
-        boolean[] matchCase = cs ? CS_SCAN_ONLY : CS_THEN_NON_CS;
-        for (int i = 0; i < matchCase.length; i++) {
-            for (int j = 0; j < files.length; j++) {
-                if (matchCase[i] ? files[j].equals(current)
-                                 : files[j].equalsIgnoreCase(current)) {
-                    return findFile(new File(base, files[j]), pathElements, cs);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Do we have to traverse a symlink when trying to reach path from
-     * basedir?
-     * @param base base File (dir).
-     * @param path file path.
-     * @since Ant 1.6
-     */
-    private boolean isSymlink(File base, String path) {
-        return isSymlink(base, SelectorUtils.tokenizePath(path));
-    }
-
-    /**
-     * Do we have to traverse a symlink when trying to reach path from
-     * basedir?
-     * @param base base File (dir).
-     * @param pathElements Vector of path elements (dirs...file).
-     * @since Ant 1.6
-     */
-    private boolean isSymlink(File base, Vector pathElements) {
-        if (pathElements.size() > 0) {
-            String current = (String) pathElements.remove(0);
-            try {
-                return FILE_UTILS.isSymbolicLink(base, current)
-                    || isSymlink(new File(base, current), pathElements);
-            } catch (IOException ioe) {
-                String msg = "IOException caught while checking "
-                    + "for links, couldn't get canonical path!";
-                // will be caught and redirected to Ant's logging system
-                System.err.println(msg);
-            }
-        }
-        return false;
     }
 
     /**

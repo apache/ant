@@ -18,13 +18,16 @@
 
 package org.apache.tools.ant.types.selectors;
 
+import java.io.File;
+
 /**
- * Provides reusable path pattern matching.  PathPattern is preferable to equivalent
- * SelectorUtils methods if you need to execute multiple matching with the same pattern 
- * because here the pattern itself will be parsed only once.
+ * Provides reusable path pattern matching.  PathPattern is preferable
+ * to equivalent SelectorUtils methods if you need to execute multiple
+ * matching with the same pattern because here the pattern itself will
+ * be parsed only once.
  * @see SelectorUtils#matchPath(String, String)
  * @see SelectorUtils#matchPath(String, String, boolean)
- * @since 1.8
+ * @since 1.8.0
  */
 public class TokenizedPattern {
 
@@ -37,10 +40,14 @@ public class TokenizedPattern {
     *                <code>null</code>.
     */
     public TokenizedPattern(String pattern) {
-        this.pattern = pattern;    
-        this.tokenizedPattern = SelectorUtils.tokenizePathAsArray(pattern);
+        this(pattern, SelectorUtils.tokenizePathAsArray(pattern));
     }
     
+    private TokenizedPattern(String pattern, String[] tokens) {
+        this.pattern = pattern;
+        this.tokenizedPattern = tokens;
+    }
+
     /**
      * Tests whether or not a given path matches a given pattern.
      *
@@ -91,6 +98,18 @@ public class TokenizedPattern {
     }
 
     /**
+     * true if the original patterns are equal.
+     */
+    public boolean equals(Object o) {
+        return o instanceof TokenizedPattern
+            && pattern.equals(((TokenizedPattern) o).pattern);
+    }
+
+    public int hashCode() {
+        return pattern.hashCode();
+    }
+
+    /**
      * The depth (or length) of a pattern.
      */
     public int depth() {
@@ -107,5 +126,31 @@ public class TokenizedPattern {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns a new TokenizedPath where all tokens of this pattern to
+     * the right containing wildcards have been removed
+     * @return the leftmost part of the pattern without wildcards
+     */
+    public TokenizedPath rtrimWildcardTokens() {
+        StringBuffer sb = new StringBuffer();
+        int newLen = 0;
+        for (; newLen < tokenizedPattern.length; newLen++) {
+            if (SelectorUtils.hasWildcards(tokenizedPattern[newLen])) {
+                break;
+            }
+            if (newLen > 0
+                && sb.charAt(sb.length() - 1) != File.separatorChar) {
+                sb.append(File.separator);
+            }
+            sb.append(tokenizedPattern[newLen]);
+        }
+        if (newLen == 0) {
+            return TokenizedPath.EMPTY_PATH;
+        }
+        String[] newPats = new String[newLen];
+        System.arraycopy(tokenizedPattern, 0, newPats, 0, newLen);
+        return new TokenizedPath(sb.toString(), newPats);
     }
 }

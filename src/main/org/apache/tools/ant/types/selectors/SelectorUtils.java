@@ -698,18 +698,7 @@ public final class SelectorUtils {
      * @return the leftmost part of the pattern without wildcards
      */
     public static String rtrimWildcardTokens(String input) {
-        String[] tokens = tokenizePathAsArray(input);
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < tokens.length; i++) {
-            if (hasWildcards(tokens[i])) {
-                break;
-            }
-            if (i > 0 && sb.charAt(sb.length() - 1) != File.separatorChar) {
-                sb.append(File.separator);
-            }
-            sb.append(tokens[i]);
-        }
-        return sb.toString();
+        return new TokenizedPattern(input).rtrimWildcardTokens().toString();
     }
 }
 
