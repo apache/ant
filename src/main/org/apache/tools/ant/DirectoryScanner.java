@@ -26,9 +26,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -196,7 +196,7 @@ public class DirectoryScanner
      *
      * @see #addDefaultExcludes()
      */
-    private static Vector defaultExcludes = new Vector();
+    private static Set defaultExcludes = new HashSet();
     static {
         resetDefaultExcludes();
     }
@@ -532,7 +532,7 @@ public class DirectoryScanner
      *
      * @return An array of <code>String</code> based on the current
      *         contents of the <code>defaultExcludes</code>
-     *         <code>Vector</code>.
+     *         <code>Set</code>.
      *
      * @since Ant 1.6
      */
@@ -552,11 +552,7 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static boolean addDefaultExclude(String s) {
-        if (defaultExcludes.indexOf(s) == -1) {
-            defaultExcludes.add(s);
-            return true;
-        }
-        return false;
+        return defaultExcludes.add(s);
     }
 
     /**
@@ -580,7 +576,7 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static void resetDefaultExcludes() {
-        defaultExcludes = new Vector();
+        defaultExcludes = new HashSet();
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             defaultExcludes.add(DEFAULTEXCLUDES[i]);
         }
@@ -1128,17 +1124,17 @@ public class DirectoryScanner
                                          + dir.getAbsolutePath() + "'");
             }
         }
-        scandir(dir, vpath, fast, newfiles, new Stack());
+        scandir(dir, vpath, fast, newfiles, new LinkedList());
     }
 
     private void scandir(File dir, String vpath, boolean fast,
-                         String[] newfiles, Stack directoryNamesFollowed) {
+                         String[] newfiles, LinkedList directoryNamesFollowed) {
         // avoid double scanning of directories, can only happen in fast mode
         if (fast && hasBeenScanned(vpath)) {
             return;
         }
         if (!followSymlinks) {
-            Vector noLinks = new Vector();
+            ArrayList noLinks = new ArrayList();
             for (int i = 0; i < newfiles.length; i++) {
                 try {
                     if (FILE_UTILS.isSymbolicLink(dir, newfiles[i])) {
@@ -1147,19 +1143,19 @@ public class DirectoryScanner
                         (file.isDirectory()
                             ? dirsExcluded : filesExcluded).addElement(name);
                     } else {
-                        noLinks.addElement(newfiles[i]);
+                        noLinks.add(newfiles[i]);
                     }
                 } catch (IOException ioe) {
                     String msg = "IOException caught while checking "
                         + "for links, couldn't get canonical path!";
                     // will be caught and redirected to Ant's logging system
                     System.err.println(msg);
-                    noLinks.addElement(newfiles[i]);
+                    noLinks.add(newfiles[i]);
                 }
             }
             newfiles = (String[]) (noLinks.toArray(new String[noLinks.size()]));
         } else {
-            directoryNamesFollowed.push(dir.getName());
+            directoryNamesFollowed.addFirst(dir.getName());
         }
 
         for (int i = 0; i < newfiles.length; i++) {
@@ -1205,7 +1201,7 @@ public class DirectoryScanner
         }
 
         if (followSymlinks) {
-            directoryNamesFollowed.pop();
+            directoryNamesFollowed.removeFirst();
         }
     }
 
@@ -1235,7 +1231,7 @@ public class DirectoryScanner
 
     private void accountForIncludedDir(String name, File file, boolean fast,
                                        String[] children,
-                                       Stack directoryNamesFollowed) {
+                                       LinkedList directoryNamesFollowed) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name + File.separator, fast, children,
@@ -1831,22 +1827,22 @@ public class DirectoryScanner
      * @since Ant 1.8.0
      */
     private boolean causesIllegalSymlinkLoop(String dirName, File parent,
-                                             Stack directoryNamesFollowed) {
+                                             LinkedList directoryNamesFollowed) {
         try {
             if (CollectionUtils.frequency(directoryNamesFollowed, dirName)
                    >= maxLevelsOfSymlinks
                 && FILE_UTILS.isSymbolicLink(parent, dirName)) {
 
-                Stack s = (Stack) directoryNamesFollowed.clone();
+                LinkedList s = (LinkedList) directoryNamesFollowed.clone();
                 ArrayList files = new ArrayList();
                 File f = FILE_UTILS.resolveFile(parent, dirName);
                 String target = getCanonicalPath(f);
                 files.add(target);
 
                 String relPath = "";
-                while (!s.empty()) {
+                while (s.size() > 0) {
                     relPath += "../";
-                    String dir = (String) s.pop();
+                    String dir = (String) s.removeFirst();
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
                         files.add(getCanonicalPath(f));

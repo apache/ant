@@ -103,8 +103,13 @@ public class DefaultExcludesTest extends BuildFileTest {
     private void assertEquals(String message, String[] expected, String[] actual) {
         // check that both arrays have the same size
         assertEquals(message + " : string array length match", expected.length, actual.length);
-        for (int counter=0; counter <expected.length; counter++) {
-            assertEquals(message + " : " + counter + "th element in array match", expected[counter], actual[counter]);
+        for (int counter=0; counter < expected.length; counter++) {
+            boolean found = false;
+            for (int i = 0; !found && i < actual.length; i++) {
+                found |= expected[counter].equals(actual[i]);
+            }
+            assertTrue(message + " : didn't find element "
+                       + expected[counter] + " in array match", found);
         }
 
     }
