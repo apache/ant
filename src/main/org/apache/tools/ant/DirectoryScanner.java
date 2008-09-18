@@ -42,6 +42,7 @@ import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Class for scanning a directory for files/directories which match certain
@@ -1043,14 +1044,14 @@ public class DirectoryScanner
      * Clear the result caches for a scan.
      */
     protected synchronized void clearResults() {
-        filesIncluded    = new Vector();
-        filesNotIncluded = new Vector();
-        filesExcluded    = new Vector();
-        filesDeselected  = new Vector();
-        dirsIncluded     = new Vector();
-        dirsNotIncluded  = new Vector();
-        dirsExcluded     = new Vector();
-        dirsDeselected   = new Vector();
+        filesIncluded    = new VectorSet();
+        filesNotIncluded = new VectorSet();
+        filesExcluded    = new VectorSet();
+        filesDeselected  = new VectorSet();
+        dirsIncluded     = new VectorSet();
+        dirsNotIncluded  = new VectorSet();
+        dirsExcluded     = new VectorSet();
+        dirsDeselected   = new VectorSet();
         everythingIncluded = (basedir != null);
         scannedDirs.clear();
     }
