@@ -1785,20 +1785,21 @@ public class DirectoryScanner
     private boolean causesIllegalSymlinkLoop(String dirName, File parent,
                                              LinkedList directoryNamesFollowed) {
         try {
-            if (CollectionUtils.frequency(directoryNamesFollowed, dirName)
+            if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
+                && CollectionUtils.frequency(directoryNamesFollowed, dirName)
                    >= maxLevelsOfSymlinks
                 && FILE_UTILS.isSymbolicLink(parent, dirName)) {
 
-                LinkedList s = (LinkedList) directoryNamesFollowed.clone();
                 ArrayList files = new ArrayList();
                 File f = FILE_UTILS.resolveFile(parent, dirName);
                 String target = f.getCanonicalPath();
                 files.add(target);
 
                 String relPath = "";
-                while (s.size() > 0) {
+                for (Iterator i = directoryNamesFollowed.iterator();
+                     i.hasNext(); ) {
                     relPath += "../";
-                    String dir = (String) s.removeFirst();
+                    String dir = (String) i.next();
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
                         files.add(f.getCanonicalPath());
