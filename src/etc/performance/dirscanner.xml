@@ -32,9 +32,11 @@
     Consider taking a nap if you run Ant 1.6.x or 1.7.0 against a
     "big" setup.
 
-    The tests use the pathconvert task whose performance should be
-    dominated by directory scanner, they would use ressourcecount if
-    that had been available in Ant 1.6.5.
+    If Ant 1.6.x is detected or the property ant16 has been specified
+    on the command line then the tests will use the pathconvert task
+    instead of resourcecount.  So if you want to compare Ant 1.6.x
+    with later versions of you must specify ant16 on the command line
+    during your 1.[78].x tests.
 
     The tests will use the default settings of followsymlinks="true"
     and casesensitive="true" unless those values get overwritten by
@@ -45,6 +47,10 @@
 
   <property name="symlinks" value="true"/>
   <property name="casesensitive" value="true"/>
+
+  <condition property="ant16">
+    <contains string="${ant.version}" substring="1.6."/>
+  </condition>
 
   <echo>This is ${ant.version}</echo>
 
@@ -154,6 +160,7 @@ public class DirscannerSetup extends Task {
     <delete dir="${test.dir}"/>
   </target>
 
+  <target name="define-scan-16" if="ant16">
   <macrodef name="scan">
     <attribute name="test"/>
     <element name="patterns" optional="true"/>
@@ -168,13 +175,33 @@ public class DirscannerSetup extends Task {
       </pathconvert>
     </sequential>
   </macrodef>
+  </target>
+
+  <target name="define-scan-17+" unless="ant16">
+    <macrodef name="scan">
+      <attribute name="test"/>
+      <element name="patterns" optional="true"/>
+      <sequential>
+        <resourcecount property="@{test}">
+          <fileset dir="${test.dir}" followSymlinks="${symlinks}"
+                   casesensitive="${casesensitive}">
+            <patterns/>
+          </fileset>
+        </resourcecount>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="define-scan" depends="define-scan-16,define-scan-17+"/>
 
   <target name="matchall"
+          depends="define-scan"
           description="doesn't specify any patterns">
     <scan test="matchall"/>
   </target>
 
   <target name="roots"
+          depends="define-scan"
           description="only contains include patterns that match starts">
     <scan test="roots">
       <patterns>
@@ -185,6 +212,7 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="many-roots"
+          depends="define-scan"
           description="only contains include patterns that match starts">
     <scan test="many-roots">
       <patterns>
@@ -233,6 +261,7 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="recursive-excludes"
+          depends="define-scan"
           description="specifies include and exclude patterns with wildcards">
     <scan test="recursive-excludes">
       <patterns>
@@ -243,6 +272,7 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="name-matches"
+          depends="define-scan"
           description="specifies include and exclude patterns matching on file names">
     <scan test="names-matches">
       <patterns>
@@ -253,6 +283,7 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="many-patterns"
+          depends="define-scan"
           description="specifies many include and exclude patterns">
     <scan test="many-patterns">
       <patterns>
@@ -281,5 +312,5 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="all"
-          depends="matchall, roots, recursive-excludes, name-matches, many-patterns, many-roots"/>
+          depends="define-scan,matchall, roots, recursive-excludes, name-matches, many-patterns, many-roots"/>
 </project>
