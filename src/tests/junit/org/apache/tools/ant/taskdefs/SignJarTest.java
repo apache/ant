@@ -70,6 +70,17 @@ public class SignJarTest extends BuildFileTest {
                    sj.isSigned());
     }
 
+    public void testInvalidChars() {
+        executeTarget("invalidchars");
+        SignJarChild sj = new SignJarChild();
+        sj.setAlias("test@nly");
+        sj.setKeystore("testkeystore");
+        sj.setStorepass("apacheant");
+        File jar = new File(getProject().getProperty("test.jar"));
+        sj.setJar(jar);
+        assertTrue(sj.isSigned());
+    }
+
     /**
      * subclass in order to get access to protected isSigned method if
      * tests and task come from different classloaders.

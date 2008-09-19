@@ -222,6 +222,10 @@ Fixed bugs:
    regardless of their configuration.
    Bugzilla Report 37970.
 
+ * <signjar> and <issigned> didn't handle aliases with characters other
+   than numbers, letters, hyphen or underscore properly.
+   Bugzilla Report 45820.
+
 Other changes:
 --------------
 

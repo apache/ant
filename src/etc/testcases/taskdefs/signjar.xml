@@ -80,6 +80,11 @@
     <assertSigned/>             
   </target>
 
+  <target name="invalidchars" depends="jar">
+    <sign alias="test@nly"/>
+    <assertSigned/>             
+  </target>
+
   <target name="maxmemory" depends="jar">
     <sign maxmemory="128m"/>
     <assertSigned/>             

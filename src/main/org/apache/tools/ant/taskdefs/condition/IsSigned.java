@@ -23,6 +23,7 @@ import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.ManifestTask;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -84,6 +85,7 @@ public class IsSigned extends DataType implements Condition {
                 }
                 return false;
             }
+            name = replaceInvalidChars(name);
             boolean shortSig = jarFile.getEntry(SIG_START
                         + name.toUpperCase()
                         + SIG_END) != null;
@@ -130,5 +132,21 @@ public class IsSigned extends DataType implements Condition {
                 Project.MSG_VERBOSE);
         }
         return r;
+    }
+
+    private static String replaceInvalidChars(final String name) {
+        StringBuffer sb = new StringBuffer();
+        final int len = name.length();
+        boolean changes = false;
+        for (int i = 0; i < len; i++) {
+            final char ch = name.charAt(i);
+            if (ManifestTask.VALID_ATTRIBUTE_CHARS.indexOf(ch) < 0) {
+                sb.append("_");
+                changes = true;
+            } else {
+                sb.append(ch);
+            }
+        }
+        return changes ? sb.toString() : name;
     }
 }
