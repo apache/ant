@@ -22,10 +22,15 @@
     changes between Ant releases.
 
     Before you run any tests, you need to set up the environment by
-    running the setup target.  Note that this will create a directory
-    tree holding 10000 directories and about 22000 files.
+    running the setup or big-setup target.  Note that this will create
+    a directory tree holding 10000 (setup) or 100000 (big-setup)
+    directories and about 22000 (setup) or 222000 (big-setup) files.
 
-    The setup target requires Ant 1.7.0 or later.
+    The setup/big-setup targets require Ant 1.7.0 or later.  It may be
+    a good idea to use the -logfile option.
+
+    Consider taking a nap if you run Ant 1.6.x or 1.7.0 against a
+    "big" setup.
 
     The tests use the pathconvert task whose performance should be
     dominated by directory scanner, they would use ressourcecount if
@@ -43,7 +48,7 @@
 
   <echo>This is ${ant.version}</echo>
 
-  <target name="setup" description="Sets up the environment for tests">
+  <target name="prepare-setup">
     <mkdir dir="${test.dir}/src/org/apache/tools/ant"/>
     <mkdir dir="${test.dir}/dest"/>
     <echo file="${test.dir}/src/org/apache/tools/ant/DirscannerSetup.java"
@@ -73,14 +78,32 @@ import org.apache.tools.ant.taskdefs.Mkdir;
 import org.apache.tools.ant.taskdefs.Touch;
 
 public class DirscannerSetup extends Task {
+    private boolean biggerSetup = false;
+
+    public void setBig(boolean b) {
+        biggerSetup = b;
+    }
+
     public void execute() {
         Mkdir mkdir = new Mkdir();
         mkdir.bindToOwner(this);
         Touch touch = new Touch();
         touch.bindToOwner(this);
         String tmp = getProject().getProperty("test.dir");
+        if (!biggerSetup) {
+            createTree(new File(tmp), mkdir, touch);
+        } else {
+            for (int i = 0; i < 10; i++) {
+                File f = new File(tmp, String.valueOf(i));
+                createTree(f, mkdir, touch);
+                mkfiles(touch, f);
+            }
+        }
+    }
+
+    private static void createTree(File root, Mkdir mkdir, Touch touch) {
         for (int i1 = 0; i1 < 10; i1++) {
-            File f1 = new File(tmp, String.valueOf(i1));
+            File f1 = new File(root, String.valueOf(i1));
             for (int i2 = 0; i2 < 10; i2++) {
                 File f2 = new File(f1, String.valueOf(i2));
                 for (int i3 = 0; i3 < 10; i3++) {
@@ -113,7 +136,17 @@ public class DirscannerSetup extends Task {
        <pathelement location="${test.dir}/dest"/>
      </classpath>
    </taskdef>
+  </target>
+
+  <target name="setup" description="Sets up the environment for tests"
+          depends="prepare-setup">
    <setup/>
+  </target>
+
+  <target name="big-setup"
+          description="Sets up the &quot;big&quot; environment for tests"
+          depends="prepare-setup">
+   <setup big="true"/>
   </target>
 
   <target name="cleanup"
@@ -248,5 +281,5 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="all"
-          depends="matchall, roots, recursive-excludes, name-matches, many-patterns"/>
+          depends="matchall, roots, recursive-excludes, name-matches, many-patterns, many-roots"/>
 </project>
