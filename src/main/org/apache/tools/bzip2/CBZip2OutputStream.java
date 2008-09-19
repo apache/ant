@@ -434,6 +434,12 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         combinedCRC = (combinedCRC << 1) | (combinedCRC >>> 31);
         combinedCRC ^= blockCRC;
 
+        // If the stream was empty we must skip the rest of this method.
+        // See bug#32200.
+        if (last == -1) {
+	    return;
+        }
+        
         /* sort the block and establish posn of original string */
         doReversibleTransformation();
 
@@ -1131,15 +1137,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         */
 
         //   if (verbosity >= 4) fprintf ( stderr, "   sort initialise ...\n" );
-        
-        // set last to zero in case it's never been set before
-        // see bug#32200, initBlock is the real culprit 
-        // setting last to -1, but not sure if this -1 is important
-        // in normal scheme
-        if (last < 0) {
-            last = 0;
-        }
-        
+
         for (i = 0; i < NUM_OVERSHOOT_BYTES; i++) {
             block[last + i + 2] = block[(i % (last + 1)) + 1];
         }

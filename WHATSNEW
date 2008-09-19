@@ -56,7 +56,7 @@ Changes that could break older environments:
 
  * CBZip2InputStream will now throw an IOException if
    passed in a null or empty InputStream to read from.
-   Bugzilla Report 32200
+   Bugzilla Reports 32200.
 
  * <unzip> will now fail when trying to extract certain broken
    archives that would have been silently ignored in earlier version.
@@ -166,9 +166,9 @@ Fixed bugs:
 
  * CBZip2OutputStream threw an exception if it was closed prior to
    writing anything.
-   Bugzilla Report 32200
+   Bugzilla Reports 32200, 45836
 
- * The IPlanetDeploymentToll didn't use the configured DTD locations.
+ * The IPlanetDeploymentTool didn't use the configured DTD locations.
    Bugzilla Report 31876.
 
  * The ant shell script printed a warning unser Cygwin if JAVA_HOME
