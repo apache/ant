@@ -281,18 +281,6 @@ public class DirectoryScanner
     // CheckStyle:VisibilityModifier ON
 
     /**
-     * Temporary table to speed up the various scanning methods.
-     *
-     * @since Ant 1.6
-     */
-    private Map fileListMap = new HashMap();
-
-    /**
-     * Uses fileListMap to cache directory listings.
-     */
-    private final TokenizedPath.FileLister fileLister = new CachedFileLister();
-
-    /**
      * List of all scanned directories.
      *
      * @since Ant 1.6
@@ -401,13 +389,6 @@ public class DirectoryScanner
      * @since Ant 1.8.0
      */
     private int maxLevelsOfSymlinks = MAX_LEVELS_OF_SYMLINKS;
-
-    /**
-     * Temporary table to speed up checking of canonical file names.
-     *
-     * @since Ant 1.8.0
-     */
-    private Map canonicalPathMap = new HashMap();
 
     /**
      * Sole constructor.
@@ -938,7 +919,7 @@ public class DirectoryScanner
             File canonBase = null;
             if (basedir != null) {
                 try {
-                    canonBase = getCanonicalFile(basedir);
+                    canonBase = basedir.getCanonicalFile();
                 } catch (IOException ex) {
                     throw new BuildException(ex);
                 }
@@ -959,12 +940,11 @@ public class DirectoryScanner
                     // we need to double check.
                     try {
                         String path = (basedir == null)
-                            ? getCanonicalPath(myfile)
+                            ? myfile.getCanonicalPath()
                             : FILE_UTILS.removeLeadingPath(canonBase,
-                                         getCanonicalFile(myfile));
+                                         myfile.getCanonicalFile());
                         if (!path.equals(currentelement) || ON_VMS) {
-                            myfile = currentPath.findFile(basedir, true,
-                                                          fileLister);
+                            myfile = currentPath.findFile(basedir, true);
                             if (myfile != null && basedir != null) {
                                 currentelement = FILE_UTILS.removeLeadingPath(
                                     basedir, myfile);
@@ -981,7 +961,7 @@ public class DirectoryScanner
                 }
 
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
-                    File f = currentPath.findFile(basedir, false, fileLister);
+                    File f = currentPath.findFile(basedir, false);
                     if (f != null && f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
@@ -1169,7 +1149,7 @@ public class DirectoryScanner
         if (dir == null) {
             throw new BuildException("dir must not be null.");
         }
-        String[] newfiles = list(dir);
+        String[] newfiles = dir.list();
         if (newfiles == null) {
             if (!dir.exists()) {
                 throw new BuildException(dir + DOES_NOT_EXIST_POSTFIX);
@@ -1223,7 +1203,7 @@ public class DirectoryScanner
             String name = vpath + newfiles[i];
             TokenizedPath newPath = new TokenizedPath(path, newfiles[i]);
             File file = new File(dir, newfiles[i]);
-            String[] children = list(file);
+            String[] children = file.list();
             if (children == null) { // probably file
                 if (isIncluded(newPath)) {
                     accountForIncludedFile(newPath, file);
@@ -1721,37 +1701,6 @@ public class DirectoryScanner
         return new FileResource(basedir, name);
     }
 
-    private static final String[] NULL_FILE_LIST = new String[0];
-
-    /**
-     * Return a cached result of list performed on file, if
-     * available.  Invokes the method and caches the result otherwise.
-     *
-     * @param file File (dir) to list.
-     * @since Ant 1.6
-     */
-    private String[] list(File file) {
-        String[] files = null;
-        SoftReference s = (SoftReference) fileListMap.get(file);
-        if (s != null) {
-            files = (String[]) s.get();
-            if (files == null) {
-                fileListMap.remove(file);
-            }
-        }
-        if (files == null) {
-            files = file.list();
-            if (files != null) {
-                fileListMap.put(file, new SoftReference(files));
-            } else {
-                fileListMap.put(file, new SoftReference(NULL_FILE_LIST));
-            }
-        } else if (files == NULL_FILE_LIST) {
-            files = null;
-        }
-        return files;
-    }
-
     /**
      * Has the directory with the given path relative to the base
      * directory already been scanned?
@@ -1779,8 +1728,6 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     private synchronized void clearCaches() {
-        fileListMap.clear();
-        canonicalPathMap.clear();
         includeNonPatterns.clear();
         excludeNonPatterns.clear();
         includePatterns = null;
@@ -1845,7 +1792,7 @@ public class DirectoryScanner
                 LinkedList s = (LinkedList) directoryNamesFollowed.clone();
                 ArrayList files = new ArrayList();
                 File f = FILE_UTILS.resolveFile(parent, dirName);
-                String target = getCanonicalPath(f);
+                String target = f.getCanonicalPath();
                 files.add(target);
 
                 String relPath = "";
@@ -1854,7 +1801,7 @@ public class DirectoryScanner
                     String dir = (String) s.removeFirst();
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
-                        files.add(getCanonicalPath(f));
+                        files.add(f.getCanonicalPath());
                         if (files.size() > maxLevelsOfSymlinks
                             && CollectionUtils.frequency(files, target)
                                  > maxLevelsOfSymlinks) {
@@ -1871,41 +1818,4 @@ public class DirectoryScanner
         }
     }
 
-    /**
-     * Returns a cached canonical path for a given file or first
-     * obtains and adds it to the cache.
-     *
-     * @since Ant 1.8.0
-     */
-    private String getCanonicalPath(File file) throws IOException {
-        String path = null;
-        SoftReference s = (SoftReference) canonicalPathMap.get(file);
-        if (s != null) {
-            path = (String) s.get();
-            if (path == null) {
-                canonicalPathMap.remove(file);
-            }
-        }
-        if (path == null) {
-            path = file.getCanonicalPath();
-            canonicalPathMap.put(file, new SoftReference(path));
-        }
-        return path;
-    }
-
-    /**
-     * Returns a cached canonical path for a given file or first
-     * obtains and adds it to the cache.
-     *
-     * @since Ant 1.8.0
-     */
-    private File getCanonicalFile(File file) throws IOException {
-        return new File(getCanonicalPath(file));
-    }
-
-    private class CachedFileLister implements TokenizedPath.FileLister {
-        public String[] list(File f) {
-            return DirectoryScanner.this.list(f);
-        }
-    }
 }
