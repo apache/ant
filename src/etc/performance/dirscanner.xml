@@ -186,7 +186,7 @@ public class DirscannerSetup extends Task {
 
   <target name="many-roots"
           description="only contains include patterns that match starts">
-    <scan test="roots">
+    <scan test="many-roots">
       <patterns>
         <include name="0/"/>
         <include name="0/0/"/>
