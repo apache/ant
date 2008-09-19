@@ -151,6 +151,54 @@ public class DirscannerSetup extends Task {
     </scan>
   </target>
 
+  <target name="many-roots"
+          description="only contains include patterns that match starts">
+    <scan test="roots">
+      <patterns>
+        <include name="0/"/>
+        <include name="0/0/"/>
+        <include name="0/0/0/"/>
+        <include name="0/0/0/0/"/>
+        <include name="1/"/>
+        <include name="1/1/"/>
+        <include name="1/1/1/"/>
+        <include name="1/1/1/1/"/>
+        <include name="2/"/>
+        <include name="2/2/"/>
+        <include name="2/2/2/"/>
+        <include name="2/2/2/2/"/>
+        <include name="3/"/>
+        <include name="3/3/"/>
+        <include name="3/3/3/"/>
+        <include name="3/3/3/3/"/>
+        <include name="4/"/>
+        <include name="4/4/"/>
+        <include name="4/4/4/"/>
+        <include name="4/4/4/4/"/>
+        <include name="5/"/>
+        <include name="5/5/"/>
+        <include name="5/5/5/"/>
+        <include name="5/5/5/5/"/>
+        <include name="6/"/>
+        <include name="6/6/"/>
+        <include name="6/6/6/"/>
+        <include name="6/6/6/6/"/>
+        <include name="7/"/>
+        <include name="7/7/"/>
+        <include name="7/7/7/"/>
+        <include name="7/7/7/7/"/>
+        <include name="8/"/>
+        <include name="8/8/"/>
+        <include name="8/8/8/"/>
+        <include name="8/8/8/8/"/>
+        <include name="9/"/>
+        <include name="9/9/"/>
+        <include name="9/9/9/"/>
+        <include name="9/9/9/9/"/>
+      </patterns>
+    </scan>
+  </target>
+
   <target name="recursive-excludes"
           description="specifies include and exclude patterns with wildcards">
     <scan test="recursive-excludes">
