@@ -104,6 +104,13 @@ public abstract class AbstractJarSignerTask extends Task {
     private Path path = null;
 
     /**
+     * The executable to use instead of jarsigner.
+     *
+     * @since Ant 1.8.0
+     */
+    private String executable;
+
+    /**
      * Set the maximum memory to be used by the jarsigner process
      *
      * @param max a string indicating the maximum memory according to the JVM
@@ -251,6 +258,16 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
+     * Sets the actual executable command to invoke, instead of the binary
+     * <code>jarsigner</code> found in Ant's JDK.
+     * @param executable the command to invoke.
+     * @since Ant 1.8.0
+     */
+    public void setExecutable(String executable) {
+        this.executable = executable;
+    }
+
+    /**
      * these are options common to signing and verifying
      * @param cmd  command to configure
      */
@@ -315,7 +332,11 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected ExecTask createJarSigner() {
         final ExecTask cmd = new ExecTask(this);
-        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(JARSIGNER_COMMAND));
+        if (executable == null) {
+            cmd.setExecutable(JavaEnvUtils.getJdkExecutable(JARSIGNER_COMMAND));
+        } else {
+            cmd.setExecutable(executable);
+        }
         cmd.setTaskType(JARSIGNER_COMMAND);
         cmd.setFailonerror(true);
         cmd.addConfiguredRedirector(redirector);

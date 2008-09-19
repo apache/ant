@@ -371,6 +371,10 @@ Other changes:
    ProjectHelper2 will be used just like in ant 1.7.1.
    Bugzilla Report 42208.
 
+ * It is now possible to explicitly set the executable used by
+   <signjar>.
+   Bugzilla Report 39189.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
