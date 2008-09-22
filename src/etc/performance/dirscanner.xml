@@ -161,20 +161,20 @@ public class DirscannerSetup extends Task {
   </target>
 
   <target name="define-scan-16" if="ant16">
-  <macrodef name="scan">
-    <attribute name="test"/>
-    <element name="patterns" optional="true"/>
-    <sequential>
-      <pathconvert property="@{test}">
-        <path>
-          <fileset dir="${test.dir}" followSymlinks="${symlinks}"
-                   casesensitive="${casesensitive}">
-            <patterns/>
-          </fileset>
-        </path>
-      </pathconvert>
-    </sequential>
-  </macrodef>
+    <macrodef name="scan">
+      <attribute name="test"/>
+      <element name="patterns" optional="true"/>
+      <sequential>
+        <pathconvert property="@{test}">
+          <path>
+            <fileset dir="${test.dir}" followSymlinks="${symlinks}"
+                     casesensitive="${casesensitive}">
+              <patterns/>
+            </fileset>
+          </path>
+        </pathconvert>
+      </sequential>
+    </macrodef>
   </target>
 
   <target name="define-scan-17+" unless="ant16">
