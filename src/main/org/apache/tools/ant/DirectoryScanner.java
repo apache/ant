@@ -177,7 +177,7 @@ public class DirectoryScanner
      * default value for {@link #maxLevelsOfSymlinks maxLevelsOfSymlinks}
      * @since Ant 1.8.0
      */
-    public static final int MAX_LEVELS_OF_SYMLINKS = 1;
+    public static final int MAX_LEVELS_OF_SYMLINKS = 5;
     /**
      * The end of the exception message if something that should be
      * there doesn't exist.
