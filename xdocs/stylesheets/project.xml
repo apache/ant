@@ -51,10 +51,10 @@
             </menu>
 
             <menu name="Contributing">
-                <item name="Mailing Lists"         href="/mail.html"/>
+                <item name="Mailing Lists"                href="/mail.html"/>
                 <item name="Subversion Repositories"      href="/svn.html"/>
-                <item name="Nightly Builds"      href="/nightlies.html"/>
-                <item name="Bug Database"          href="/bugs.html"/>
+                <item name="Nightly+Continuous Builds"    href="/nightlies.html"/>
+                <item name="Bug Database"                 href="/bugs.html"/>
             </menu>
 
             <menu name="Sponsorship">

@@ -18,7 +18,7 @@
 <document>
 
   <properties>
-    <title>Nightly Builds</title>
+    <title>Nightly+Continuous Builds</title>
     <base/>
   </properties>
 
@@ -29,6 +29,19 @@
 <p>We don't provide binary nightly builds at the moment, but if you
 want to build Ant from sources, you can use a <a
 href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
+
+</section>
+
+
+
+<section name="Continuous Builds">
+
+<p>JetBrains is offering Ant the service of a Continuous Build on there TeamCity
+system. You can directly access
+<a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastSuccessful">
+the last successful build</a> and
+<a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastFinished">
+the last build</a>.</p>
 
 </section>
 
