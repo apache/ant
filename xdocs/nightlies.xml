@@ -43,33 +43,53 @@ system. You can directly access the builds of Ant and Ivy:
   <th>Title</th>
   <th>Description</th>
   <th>Build command</th>
+  <th>When</th>
   <th>last build</th>
   <th>last success</th>
 </tr>
 <tr>
-  <td colspan="5" class="title"><b>Apache Ant</b></td>
+  <td colspan="6" class="title"><b>Apache Ant</b></td>
 </tr>
 <tr>
-  <td class="title">Ant Core Trunk</td>
-  <td class="description">current development </td>
+  <td class="title">Core Trunk</td>
+  <td class="description">current development</td>
   <td class="command">clean test</td>
+  <td class="when">continuously</td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
 <tr>
-  <td class="title">Ant Distribution</td>
-  <td class="description">a 'distribution' nearly as done while releasing.</td>
+  <td class="title">Distribution</td>
+  <td class="description">a 'distribution' nearly as done while releasing</td>
   <td class="command">allclean main_distribution</td>
+  <td class="when">Daily at 08:00 GMT <br/> (if there are pending changes)</td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt130&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt130&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
 <tr>
-  <td colspan="5" class="title"><b>Apache Ivy</b></td>
+  <td class="title">JavaDoc</td>
+  <td class="description">JavaDocs for classes and testclasses</td>
+  <td class="command">javadocs javadocs.test</td>
+  <td class="when">Daily at 08:00 GMT <br/> (if there are pending changes)</td>
+  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt131&amp;buildId=lastFinished">last build</a></td>
+  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt131&amp;buildId=lastSuccessful">last success</a></td>
+</tr>
+<tr>
+  <td class="title">Checkstyle</td>
+  <td class="description">check the conformance against coding styleguide</td>
+  <td class="command">-f check.xml checkstyle htmlreport</td>
+  <td class="when">continuously</td>
+  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt132&amp;buildId=lastFinished">last build</a></td>
+  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt132&amp;buildId=lastSuccessful">last success</a></td>
+</tr>
+<tr>
+  <td colspan="6" class="title"><b>Apache Ivy</b></td>
 </tr>
 <tr>
   <td class="title">Core 2.0.x</td>
   <td class="description">maintenance of 2.x releases</td>
   <td class="command"> </td>
+  <td class="when"> </td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt126&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt126&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
@@ -77,6 +97,7 @@ system. You can directly access the builds of Ant and Ivy:
   <td class="title">Core Trunk</td>
   <td class="description">current development </td>
   <td class="command"> </td>
+  <td class="when"> </td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt125&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt125&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
@@ -84,6 +105,7 @@ system. You can directly access the builds of Ant and Ivy:
   <td class="title">Core Trunk - Checkstyle</td>
   <td class="description">check of code styleguide</td>
   <td class="command"> </td>
+  <td class="when"> </td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt127&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt127&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
@@ -91,6 +113,7 @@ system. You can directly access the builds of Ant and Ivy:
   <td class="title">Core Trunk - Distribution</td>
   <td class="description">a 'distribution' nearly as done while releasing.</td>
   <td class="command"> </td>
+  <td class="when"> </td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt128&amp;buildId=lastFinished">last build</a></td>
   <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt128&amp;buildId=lastSuccessful">last success</a></td>
 </tr>
@@ -100,6 +123,7 @@ system. You can directly access the builds of Ant and Ivy:
   <td class="title"> </td>
   <td class="description"> </td>
   <td class="command"> </td>
+  <td class="when"> </td>
   <td class="link"><a href="">last build</a></td>
   <td class="link"><a href="">last success</a></td>
 </tr>
