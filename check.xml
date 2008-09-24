@@ -85,6 +85,7 @@
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
+      <param name="output.dir" expression="${checkstyle.reportdir}"/>
     </xslt>
   </target>
 
