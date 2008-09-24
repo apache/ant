@@ -81,8 +81,6 @@
   </target>
 
   <target name="htmlreport" description="--> generates a html checkstyle report" depends="init-ivy">
-    <ivy:cachepath organisation="xalan" module="xalan" revision="2.7.0"
-                   inline="true" conf="default" pathid="xalan.classpath" transitive="true"/>
     <mkdir dir="${checkstyle.reportdir}"/>
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
