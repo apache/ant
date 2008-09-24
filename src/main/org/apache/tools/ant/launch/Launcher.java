@@ -125,6 +125,7 @@ public class Launcher {
 
     /**
      * Add a CLASSPATH or -lib to lib path urls.
+     * Only filesystem resources are supported.
      *
      * @param path        the classpath or lib path to add to the libPathULRLs
      * @param getJars     if true and a path is a directory, add the jars in
@@ -303,7 +304,7 @@ public class Launcher {
     }
 
     /**
-     * Get the list of -lib enties and -cp entry into
+     * Get the list of -lib entries and -cp entry into
      * a URL array.
      * @param cpString the classpath string
      * @param libPaths the list of -lib entries.
