@@ -49,7 +49,6 @@
   <property name="javadoc.scope" value="public"/>
 
   <taskdef resource="simiantask.properties"/>
-  <!--<taskdef resource="checkstyletask.properties"/>-->
 
 
 
