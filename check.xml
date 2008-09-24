@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project default="checkstyle" name="CheckAnt">
+<project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <description>
     Check Ants codebase against certain code styleguide rules using
@@ -49,9 +49,27 @@
   <property name="javadoc.scope" value="public"/>
 
   <taskdef resource="simiantask.properties"/>
-  <taskdef resource="checkstyletask.properties"/>
+  <!--<taskdef resource="checkstyletask.properties"/>-->
 
-  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config">
+
+
+  <target name="init-ivy">
+    <property name="ivy.version"  value="2.0.0-beta1"/>
+    <property name="ivy.jar.url"  value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
+    <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+    <mkdir dir="${ivy.jar.dir}"/>
+    <get src="${ivy.jar.url}" dest="${ivy.jar.file}" usetimestamp="true"/>
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+  </target>
+
+  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
+    <ivy:cachepath organisation="checkstyle" module="checkstyle" revision="4.3"
+                   inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
+    <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
     <mkdir dir="${checkstyle.reportdir}"/>
     <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
       <formatter type="xml" toFile="${checkstyle.raw}"/>
@@ -63,10 +81,12 @@
     </checkstyle>
   </target>
 
-  <target name="htmlreport" description="--> generates a html checkstyle report">
+  <target name="htmlreport" description="--> generates a html checkstyle report" depends="init-ivy">
+    <ivy:cachepath organisation="xalan" module="xalan" revision="2.7.0"
+                   inline="true" conf="default" pathid="xalan.classpath" transitive="true"/>
     <mkdir dir="${checkstyle.reportdir}"/>
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
-           out="${checkstyle.reportdir}/html/output.txt">
+          out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </xslt>
   </target>
