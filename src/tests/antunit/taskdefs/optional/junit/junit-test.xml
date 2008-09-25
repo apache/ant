@@ -69,4 +69,64 @@ public class BTest extends TestCase {
     <au:assertLogDoesntContain text="CTest"/>
     <au:assertLogDoesntContain text="DTest"/>
   </target>
+
+  <target name="testFailurePropertyOnTestCase">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/ATest.java"><![CDATA[
+package test;
+import junit.framework.TestCase;
+
+public class ATest extends TestCase {
+    public void testFail() {
+        assertTrue(false);
+    }
+}
+]]>  </echo>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit failureProperty="testcase.failed" haltonfailure="false">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest>
+        <fileset dir="${output}">
+          <include name="**/*Test.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+    <au:assertPropertySet name="testcase.failed"/>
+  </target>
+
+  <target name="testFailurePropertyOnTestSuite">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/ATest.java"><![CDATA[
+package test;
+import junit.framework.Assert;
+import junit.framework.TestSuite;
+
+public class ATest extends TestSuite {
+    public ATest() {
+        super(test.ATest.class);
+    }
+    public void testFail() {
+        Assert.assertTrue(false);
+    }
+}
+]]>  </echo>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit failureProperty="testsuite.failed" haltonfailure="false">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest>
+        <fileset dir="${output}">
+          <include name="**/*Test.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+    <au:assertPropertySet name="testsuite.failed"/>
+  </target>
 </project>
