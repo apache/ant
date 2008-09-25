@@ -185,6 +185,7 @@ public class Classloader extends Task {
             }
 
             AntClassLoader acl = (AntClassLoader) obj;
+            boolean existingLoader = acl != null;
 
             if (acl == null) {
                 // Construct a new class loader
@@ -220,7 +221,8 @@ public class Classloader extends Task {
                     getProject().setCoreLoader(acl);
                 }
             }
-            if (classpath != null) {
+
+            if (existingLoader && classpath != null) {
                 String[] list = classpath.list();
                 for (int i = 0; i < list.length; i++) {
                     File f = new File(list[i]);
