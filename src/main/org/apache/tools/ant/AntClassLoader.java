@@ -471,7 +471,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @throws IOException if data needed from the file cannot be read.
      */
     protected void addPathFile(File pathComponent) throws IOException {
-        pathComponents.addElement(pathComponent);
+        if (!pathComponents.contains(pathComponent)) {
+            pathComponents.addElement(pathComponent);
+        }
         if (pathComponent.isDirectory()) {
             return;
         }
