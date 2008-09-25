@@ -318,11 +318,19 @@ ant.project.invoked-targets
                     project.
 ant.java.version    the JVM version Ant detected; currently it can hold
                     the values &quot;1.2&quot;, &quot;1.3&quot;, &quot;1.4&quot; and &quot;1.5&quot;.
+ant.core.lib        the absolute path of the <code>ant.jar</code> file.
 </pre>
 <p>There is also another property, but this is set by the launcher script and therefore
 maybe not set inside IDEs:</p>
 <pre>
 ant.home            home directory of Ant
+</pre>
+<p>The following property is only set if Ant is started via the
+  Launcher class (which means it may not be set inside IDEs
+  either):</p>
+<pre>
+ant.library.dir     the directory that has been used to load Ant's
+                    jars from.  In most cases this is ANT_HOME/lib.
 </pre>
 
 <a name="propertyHelper"><h3>Property Helpers</h3></a>
