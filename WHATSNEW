@@ -226,6 +226,9 @@ Fixed bugs:
    than numbers, letters, hyphen or underscore properly.
    Bugzilla Report 45820.
 
+ * <filterset> could miss multi-character begin tokens in some cases.
+   Bugzilla Report 45094.
+
 Other changes:
 --------------
 

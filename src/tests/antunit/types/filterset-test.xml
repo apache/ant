@@ -41,4 +41,23 @@
        actual="${afterfiltering}"/>
   </target>
 
+  <!-- https://issues.apache.org/bugzilla/show_bug.cgi?id=45094 -->
+  <target name="testOverlappingMulticharToken">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <string value="@@USER@@@@@HOST@@" />
+      <mergemapper to="filterset-output.txt" />
+      <filterset begintoken="@@" endtoken="@@">
+        <filter token="USER" value="user" />
+        <filter token="HOST" value="host" />
+      </filterset>
+    </copy>
+
+    <loadfile property="afterfiltering" srcFile="${output}/filterset-output.txt"/>
+
+    <au:assertEquals
+       expected="user@host"
+       actual="${afterfiltering}"/>
+  </target>
+
 </project>

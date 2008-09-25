@@ -537,9 +537,13 @@ public class FilterSet extends DataType implements Cloneable {
                         i = index + beginToken.length() + token.length()
                             + endToken.length();
                     } else {
-                        // just append beginToken and search further
-                        b.append(beginToken);
-                        i = index + beginToken.length();
+                        // just append first character of beginToken
+                        // and search further
+                        // we can't skip the complete beginToken since
+                        // it may contain the start of another
+                        // candidate begin token (Bugzilla 45094)
+                        b.append(beginToken.charAt(0));
+                        i = index + 1;
                     }
                     index = line.indexOf(beginToken, i);
                 }
