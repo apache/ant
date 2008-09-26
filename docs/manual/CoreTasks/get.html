@@ -95,7 +95,14 @@ plain text' authentication is used. This is only secure over an HTTPS link.
     <td valign="top">password: required </td>
     <td align="center" valign="top">if username is set</td>
   </tr>  
-
+  <tr>
+    <td valign="top">maxtime</td>
+    <td valign="top">Maximum time in seconds the download may take,
+    otherwise it will be interrupted and treated like a download
+      error.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No: default 0 which means no
+      maximum time</td>
+  </tr>  
 </table>
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>

@@ -390,6 +390,10 @@ Other changes:
    mapper that matches.
    Bugzilla Report 44873
 
+ * <get> has a new maxtime attribute that terminates downloads that
+   are taking too long.
+   Bugzilla Report 45181.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,8 +57,7 @@ public class Get extends Task {
     private boolean ignoreErrors = false;
     private String uname = null;
     private String pword = null;
-
-
+    private long maxTime = 0;
 
     /**
      * Does the work.
@@ -121,128 +121,32 @@ public class Get extends Task {
             hasTimestamp = true;
         }
 
-        //set up the URL connection
-        URLConnection connection = source.openConnection();
-        //modify the headers
-        //NB: things like user authentication could go in here too.
-        if (hasTimestamp) {
-            connection.setIfModifiedSince(timestamp);
-        }
-        // prepare Java 1.1 style credentials
-        if (uname != null || pword != null) {
-            String up = uname + ":" + pword;
-            String encoding;
-            //we do not use the sun impl for portability,
-            //and always use our own implementation for consistent
-            //testing
-            Base64Converter encoder = new Base64Converter();
-            encoding = encoder.encode(up.getBytes());
-            connection.setRequestProperty ("Authorization",
-                    "Basic " + encoding);
-        }
-
-        //connect to the remote site (may take some time)
-        connection.connect();
-        //next test for a 304 result (HTTP only)
-        if (connection instanceof HttpURLConnection) {
-            HttpURLConnection httpConnection
-                    = (HttpURLConnection) connection;
-            long lastModified = httpConnection.getLastModified();
-            if (httpConnection.getResponseCode()
-                    == HttpURLConnection.HTTP_NOT_MODIFIED
-                || (lastModified != 0 && hasTimestamp
-                && timestamp >= lastModified)) {
-                //not modified so no file download. just return
-                //instead and trace out something so the user
-                //doesn't think that the download happened when it
-                //didn't
-                log("Not modified - so not downloaded", logLevel);
-                return false;
-            }
-            // test for 401 result (HTTP only)
-            if (httpConnection.getResponseCode()
-                    == HttpURLConnection.HTTP_UNAUTHORIZED)  {
-                String message = "HTTP Authorization failure";
-                if (ignoreErrors) {
-                    log(message, logLevel);
-                    return false;
-                } else {
-                    throw new BuildException(message);
-                }
-            }
-
-        }
-
-        //REVISIT: at this point even non HTTP connections may
-        //support the if-modified-since behaviour -we just check
-        //the date of the content and skip the write if it is not
-        //newer. Some protocols (FTP) don't include dates, of
-        //course.
-
-        InputStream is = null;
-        for (int i = 0; i < NUMBER_RETRIES; i++) {
-            //this three attempt trick is to get round quirks in different
-            //Java implementations. Some of them take a few goes to bind
-            //property; we ignore the first couple of such failures.
-            try {
-                is = connection.getInputStream();
-                break;
-            } catch (IOException ex) {
-                log("Error opening connection " + ex, logLevel);
-            }
-        }
-        if (is == null) {
-            log("Can't get " + source + " to " + dest, logLevel);
-            if (ignoreErrors) {
-                return false;
-            }
-            throw new BuildException("Can't get " + source + " to " + dest,
-                    getLocation());
-        }
-
-        FileOutputStream fos = new FileOutputStream(dest);
-        progress.beginDownload();
-        boolean finished = false;
+        GetThread getThread = new GetThread(hasTimestamp, timestamp, progress,
+                                            logLevel);
+        getThread.setDaemon(true);
+        getProject().registerThreadTask(getThread, this);
+        getThread.start();
         try {
-            byte[] buffer = new byte[BIG_BUFFER_SIZE];
-            int length;
-            while ((length = is.read(buffer)) >= 0) {
-                fos.write(buffer, 0, length);
-                progress.onTick();
-            }
-            finished = true;
-        } finally {
-            FileUtils.close(fos);
-            FileUtils.close(is);
-
-            // we have started to (over)write dest, but failed.
-            // Try to delete the garbage we'd otherwise leave
-            // behind.
-            if (!finished) {
-                dest.delete();
-            }
-        }
-        progress.endDownload();
-
-        //if (and only if) the use file time option is set, then
-        //the saved file now has its timestamp set to that of the
-        //downloaded file
-        if (useTimestamp)  {
-            long remoteTimestamp = connection.getLastModified();
-            if (verbose)  {
-                Date t = new Date(remoteTimestamp);
-                log("last modified = " + t.toString()
-                        + ((remoteTimestamp == 0)
-                        ? " - using current time instead"
-                        : ""), logLevel);
-            }
-            if (remoteTimestamp != 0) {
-                FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
-            }
+            getThread.join(maxTime * 1000);
+        } catch (InterruptedException ie) {
+            log("interrupted waiting for GET to finish",
+                Project.MSG_VERBOSE);
         }
 
-        //successful download
-        return true;
+        if (getThread.isAlive()) {
+            String msg = "The GET operation took longer than " + maxTime
+                + " seconds, stopping it.";
+            if (ignoreErrors) {
+                log(msg);
+            }
+            getThread.closeStreams();
+            if (!ignoreErrors) {
+                throw new BuildException(msg);
+            }
+            return false;
+        }
+
+        return getThread.wasSuccessful();
     }
 
     /**
@@ -353,6 +257,16 @@ public class Get extends Task {
     }
 
     /**
+     * The time in seconds the download is allowed to take before
+     * being terminated.
+     *
+     * @since ant 1.8.0
+     */
+    public void setMaxTime(long maxTime) {
+        this.maxTime = maxTime;
+    }
+
+    /**
      * Interface implemented for reporting
      * progess of downloading.
      */
@@ -446,4 +360,183 @@ public class Get extends Task {
         }
     }
 
+    private class GetThread extends Thread {
+        private final boolean hasTimestamp;
+        private final long timestamp;
+        private final DownloadProgress progress;
+        private final int logLevel;
+
+        private boolean success = false;
+        private IOException ioexception = null;
+        private BuildException exception = null;
+        private InputStream is = null;
+        private OutputStream os = null;
+
+        GetThread(boolean h, long t, DownloadProgress p, int l) {
+            hasTimestamp = h;
+            timestamp = t;
+            progress = p;
+            logLevel = l;
+        }
+
+        public void run() {
+            try {
+                success = get();
+            } catch (IOException ioex) {
+                ioexception = ioex;
+            } catch (BuildException bex) {
+                exception = bex;
+            }
+        }
+
+        private boolean get() throws IOException, BuildException {
+            //set up the URL connection
+            URLConnection connection = source.openConnection();
+            //modify the headers
+            //NB: things like user authentication could go in here too.
+            if (hasTimestamp) {
+                connection.setIfModifiedSince(timestamp);
+            }
+            // prepare Java 1.1 style credentials
+            if (uname != null || pword != null) {
+                String up = uname + ":" + pword;
+                String encoding;
+                //we do not use the sun impl for portability,
+                //and always use our own implementation for consistent
+                //testing
+                Base64Converter encoder = new Base64Converter();
+                encoding = encoder.encode(up.getBytes());
+                connection.setRequestProperty ("Authorization",
+                                               "Basic " + encoding);
+            }
+
+            //connect to the remote site (may take some time)
+            connection.connect();
+            //next test for a 304 result (HTTP only)
+            if (connection instanceof HttpURLConnection) {
+                HttpURLConnection httpConnection
+                    = (HttpURLConnection) connection;
+                long lastModified = httpConnection.getLastModified();
+                if (httpConnection.getResponseCode()
+                    == HttpURLConnection.HTTP_NOT_MODIFIED
+                    || (lastModified != 0 && hasTimestamp
+                        && timestamp >= lastModified)) {
+                    //not modified so no file download. just return
+                    //instead and trace out something so the user
+                    //doesn't think that the download happened when it
+                    //didn't
+                    log("Not modified - so not downloaded", logLevel);
+                    return false;
+                }
+                // test for 401 result (HTTP only)
+                if (httpConnection.getResponseCode()
+                    == HttpURLConnection.HTTP_UNAUTHORIZED)  {
+                    String message = "HTTP Authorization failure";
+                    if (ignoreErrors) {
+                        log(message, logLevel);
+                        return false;
+                    } else {
+                        throw new BuildException(message);
+                    }
+                }
+
+            }
+
+            //REVISIT: at this point even non HTTP connections may
+            //support the if-modified-since behaviour -we just check
+            //the date of the content and skip the write if it is not
+            //newer. Some protocols (FTP) don't include dates, of
+            //course.
+
+            for (int i = 0; i < NUMBER_RETRIES; i++) {
+                //this three attempt trick is to get round quirks in different
+                //Java implementations. Some of them take a few goes to bind
+                //property; we ignore the first couple of such failures.
+                try {
+                    is = connection.getInputStream();
+                    break;
+                } catch (IOException ex) {
+                    log("Error opening connection " + ex, logLevel);
+                }
+            }
+            if (is == null) {
+                log("Can't get " + source + " to " + dest, logLevel);
+                if (ignoreErrors) {
+                    return false;
+                }
+                throw new BuildException("Can't get " + source + " to "
+                                         + dest, getLocation());
+            }
+
+            os = new FileOutputStream(dest);
+            progress.beginDownload();
+            boolean finished = false;
+            try {
+                byte[] buffer = new byte[BIG_BUFFER_SIZE];
+                int length;
+                while (!isInterrupted() && (length = is.read(buffer)) >= 0) {
+                    os.write(buffer, 0, length);
+                    progress.onTick();
+                }
+                finished = !isInterrupted();
+            } finally {
+                FileUtils.close(os);
+                FileUtils.close(is);
+
+                // we have started to (over)write dest, but failed.
+                // Try to delete the garbage we'd otherwise leave
+                // behind.
+                if (!finished) {
+                    dest.delete();
+                }
+            }
+            progress.endDownload();
+
+            //if (and only if) the use file time option is set, then
+            //the saved file now has its timestamp set to that of the
+            //downloaded file
+            if (useTimestamp)  {
+                long remoteTimestamp = connection.getLastModified();
+                if (verbose)  {
+                    Date t = new Date(remoteTimestamp);
+                    log("last modified = " + t.toString()
+                        + ((remoteTimestamp == 0)
+                           ? " - using current time instead"
+                           : ""), logLevel);
+                }
+                if (remoteTimestamp != 0) {
+                    FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
+                }
+            }
+            return true;
+        }
+
+        /**
+         * Has the download completed successfully?
+         *
+         * <p>Re-throws any exception caught during executaion.</p>
+         */
+        boolean wasSuccessful() throws IOException, BuildException {
+            if (ioexception != null) {
+                throw ioexception;
+            }
+            if (exception != null) {
+                throw exception;
+            }
+            return success;
+        }
+
+        /**
+         * Closes streams, interrupts the download, may delete the
+         * output file.
+         */
+        void closeStreams() {
+            interrupt();
+            FileUtils.close(os);
+            FileUtils.close(is);
+            if (!success && dest.exists()) {
+                dest.delete();
+            }
+        }
+    }
 }
