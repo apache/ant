@@ -98,6 +98,7 @@ public class Classloader extends Task {
     /**
      * Set reverse attribute.
      * @param b if true reverse the normal classloader lookup.
+     * @deprecated use setParentFirst with a negated argument instead
      */
     public void setReverse(boolean b) {
         this.parentFirst = !b;
