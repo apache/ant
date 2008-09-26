@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * A <CODE>ContainerMapper</CODE> that unites the results of its constituent
@@ -30,6 +31,7 @@ public class CompositeMapper extends ContainerMapper {
     /** {@inheritDoc}. */
     public String[] mapFileName(String sourceFileName) {
         HashSet results = new HashSet();
+        LinkedList sortedResults = new LinkedList();
 
         FileNameMapper mapper = null;
         for (Iterator mIter = getMappers().iterator(); mIter.hasNext();) {
@@ -37,12 +39,17 @@ public class CompositeMapper extends ContainerMapper {
             if (mapper != null) {
                 String[] mapped = mapper.mapFileName(sourceFileName);
                 if (mapped != null) {
-                    results.addAll(Arrays.asList(mapped));
+                    for (int i = 0; i < mapped.length; i++) {
+                        if (!results.contains(mapped[i])) {
+                            results.add(mapped[i]);
+                            sortedResults.addLast(mapped[i]);
+                        }
+                    }
                 }
             }
         }
         return (results.size() == 0) ? null
-            : (String[]) results.toArray(new String[results.size()]);
+            : (String[]) sortedResults.toArray(new String[results.size()]);
     }
 
 }

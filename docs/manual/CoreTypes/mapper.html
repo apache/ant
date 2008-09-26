@@ -629,6 +629,9 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     File mapping is performed by passing the source filename to each nested
     <code>&lt;mapper&gt;</code> in turn, returning all results.
     The <i>to</i> and <i>from</i> attributes are ignored.</p>
+  <p>Starting with Ant 1.8.0 the order of the mapped results is the
+    same as the order of the nested mappers; prior to Ant 1.8.0 the
+    order has been undefined.</p>
 <b>Examples:</b>
 <blockquote><pre>
 &lt;compositemapper&gt;

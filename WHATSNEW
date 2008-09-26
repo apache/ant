@@ -382,6 +382,9 @@ Other changes:
    <signjar>.
    Bugzilla Report 39189.
 
+ * <compositemapper>'s order of results is now predictable.
+   Bugzilla Report 44873
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
