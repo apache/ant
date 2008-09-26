@@ -192,6 +192,11 @@ public class UpToDate extends Task implements Condition {
                                   null, null,
                                   mapperElement.getImplementation()).length == 0;
             }
+            if (!upToDate) {
+                log(sourceFile.getAbsolutePath()
+                    + " is newer than (one of) its target(s).",
+                    Project.MSG_VERBOSE);
+            }
         }
 
         // filesets are separate from the rest for performance
@@ -208,8 +213,10 @@ public class UpToDate extends Task implements Condition {
 
         if (upToDate) {
             Resource[] r = sourceResources.listResources();
-            upToDate = ResourceUtils.selectOutOfDateSources(
+            if (r.length > 0) {
+                upToDate = ResourceUtils.selectOutOfDateSources(
                         this, r, getMapper(), getProject()).length == 0;
+            }
         }
 
         return upToDate;
