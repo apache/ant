@@ -385,6 +385,11 @@ Other changes:
  * <compositemapper>'s order of results is now predictable.
    Bugzilla Report 44873
 
+ * a new <firstmatchmapper> has been added, which works similar to
+   <compositemapper> but only returns the results of the first nested
+   mapper that matches.
+   Bugzilla Report 44873
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

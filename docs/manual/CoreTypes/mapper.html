@@ -887,6 +887,39 @@ list of mapped names reset after every invocation.
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
 
+<h4><a name="firstmatch-mapper">firstmatchmapper (since Ant 1.8.0)</a></h4>
+    <p>
+      This mapper supports an arbitrary number of nested mappers and
+      returns the results of the first mapper that matches.  This is
+      different from <a href="#composite-mapper">composite mapper</a>
+      which collects the results of all matching children.</p>
+<b>Examples:</b>
+<blockquote><pre>
+&lt;firstmatchmapper&gt;
+  &lt;globmapper from="*.txt" to="*.bak"/&gt;
+  &lt;globmapper from="*A.*" to="*B.*"/&gt;
+&lt;/firstmatchmapper&gt;
+</pre></blockquote>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file names</b></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo/bar/A.txt</code></td>
+    <td valign="top"><code>foo/bar/A.bak</code></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo/bar/A.java</code></td>
+    <td valign="top"><code>foo/bar/B.java</code></td>
+  </tr>
+</table>
+
+  <p>The firstmatchmapper has no corresponding
+    <code>&lt;mapper <b>type</b>&gt;</code> attribute.
+  </p>
+
 
 
 </body>
