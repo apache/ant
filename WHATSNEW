@@ -394,6 +394,9 @@ Other changes:
    are taking too long.
    Bugzilla Report 45181.
 
+ * <ftp> now supports selectors for remote directories as well.
+   Bugzilla Report 44726.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
