@@ -46,6 +46,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.VectorSet;
 import org.apache.tools.ant.launch.Locator;
 
 /**
@@ -166,7 +167,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * The components of the classpath that the classloader searches
      * for classes.
      */
-    private Vector pathComponents  = new Vector();
+    private Vector pathComponents  = new VectorSet();
 
     /**
      * The project to which this class loader belongs.
@@ -1260,13 +1261,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @return true if the file is in the class path
      */
     protected boolean isInPath(File component) {
-        for (Enumeration e = pathComponents.elements(); e.hasMoreElements();) {
-            File pathComponent = (File) e.nextElement();
-            if (pathComponent.equals(component)) {
-                return true;
-            }
-        }
-        return false;
+        return pathComponents.contains(component);
     }
 
     /**

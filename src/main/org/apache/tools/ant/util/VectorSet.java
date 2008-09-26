@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -50,9 +51,22 @@ public class VectorSet extends Vector {
      * This implementation may not add the element at the given index
      * if it is already contained in the collection.
      */
-    public synchronized void add(int index, Object o) {
+    public void add(int index, Object o) {
+        doAdd(index, o);
+    }
+
+    private synchronized void doAdd(int index, Object o) {
+        // Vector.add seems to delegate to insertElementAt, but this
+        // is not documented so we may better implement it ourselves
         if (set.add(o)) {
-            super.add(index, o);
+            ensureCapacity(size() + 1);
+            Object[] elems = new Object[elementData.length];
+            System.arraycopy(elementData, 0, elems, 0, index);
+            elems[index] = o;
+            System.arraycopy(elementData, index, elems, index + 1,
+                             size() - index);
+            elementData = elems;
+            elementCount++;
         }
     }
 
@@ -105,18 +119,28 @@ public class VectorSet extends Vector {
     }
 
     public void insertElementAt(Object o, int index) {
-        add(index, o);
+        doAdd(index, o);
     }
 
     public synchronized Object remove(int index) {
-        Object o = super.remove(index);
-        set.remove(o);
+        Object o = get(index);
+        remove(o);
         return o;
     }
 
-    public synchronized boolean remove(Object o) {
+    public boolean remove(Object o) {
+        return doRemove(o);
+    }
+
+    private synchronized boolean doRemove(Object o) {
+        // again, remove seems to delegate to removeElement, but we
+        // shouldn't trust it
         if (set.remove(o)) {
-            return super.remove(o);
+            int index = indexOf(o);
+            System.arraycopy(elementData, index + 1, elementData, index,
+                             size() - index);
+            elementCount--;
+            return true;
         }
         return false;
     }
@@ -129,12 +153,13 @@ public class VectorSet extends Vector {
         return changed;
     }
 
-    public void removeAllElements() {
-        clear();
+    public synchronized void removeAllElements() {
+        set.clear();
+        super.removeAllElements();
     }
 
     public boolean removeElement(Object o) {
-        return remove(o);
+        return doRemove(o);
     }
 
     public synchronized void removeElementAt(int index) {
@@ -148,9 +173,15 @@ public class VectorSet extends Vector {
     }
 
     public synchronized boolean retainAll(Collection c) {
-        if (super.retainAll(c)) {
-            clear();
-            addAll(c);
+        LinkedList l = new LinkedList();
+        for (Iterator i = iterator(); i.hasNext(); ) {
+            Object o = i.next();
+            if (!c.contains(o)) {
+                l.addLast(o);
+            }
+        }
+        if (!l.isEmpty()) {
+            removeAll(l);
             return true;
         }
         return false;
