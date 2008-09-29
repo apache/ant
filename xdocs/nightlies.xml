@@ -37,136 +37,50 @@ href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
 <section name="Continuous Builds">
 
 <p>JetBrains is offering Ant the service of a Continuous Build on there TeamCity
-system. You can directly access the builds of Ant and Ivy:
-<table class="ContinuousBuild">
-<tr>
-  <th>Title</th>
-  <th>Description</th>
-  <th>Build command</th>
-  <th>When</th>
-  <th>last build</th>
-  <th>last success</th>
-</tr>
-<tr>
-  <td colspan="6" class="title"><b>Apache Ant</b></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk (Windows)</td>
-  <td class="description">current development (Windows platform)</td>
-  <td class="command">clean test</td>
-  <td class="when">continuously</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt133&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt133&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk (Linux)</td>
-  <td class="description">current development (Linux platform)</td>
-  <td class="command">clean test</td>
-  <td class="when">continuously</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt134&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt134&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk (MacOS)</td>
-  <td class="description">current development (MacOS platform)</td>
-  <td class="command">clean test</td>
-  <td class="when">continuously</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt135&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt135&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Distribution</td>
-  <td class="description">a 'distribution' nearly as done while releasing</td>
-  <td class="command">allclean main_distribution</td>
-  <td class="when">Daily at 08:00 GMT <br/> (if there are pending changes)</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt130&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt130&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">JavaDoc</td>
-  <td class="description">JavaDocs for classes and testclasses</td>
-  <td class="command">javadocs javadocs.test</td>
-  <td class="when">Daily at 08:00 GMT <br/> (if there are pending changes)</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt131&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt131&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Checkstyle</td>
-  <td class="description">check the conformance against coding styleguide</td>
-  <td class="command">-f check.xml checkstyle htmlreport</td>
-  <td class="when">continuously</td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt132&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt132&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td colspan="6" class="title"><b>Apache Ivy</b></td>
-</tr>
-<tr>
-  <td class="title">Core 2.0.x</td>
-  <td class="description">maintenance of 2.x releases</td>
-  <td class="command"> </td>
-  <td class="when"> </td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt126&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt126&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk</td>
-  <td class="description">current development </td>
-  <td class="command"> </td>
-  <td class="when"> </td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt125&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt125&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk - Checkstyle</td>
-  <td class="description">check of code styleguide</td>
-  <td class="command"> </td>
-  <td class="when"> </td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt127&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt127&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
-<tr>
-  <td class="title">Core Trunk - Distribution</td>
-  <td class="description">a 'distribution' nearly as done while releasing.</td>
-  <td class="command"> </td>
-  <td class="when"> </td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt128&amp;buildId=lastFinished">last build</a></td>
-  <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt128&amp;buildId=lastSuccessful">last success</a></td>
-</tr>
+system. You can directly access the builds of Ant and Ivy:</p>
 
-<!-- TEMPLATE>
-<tr>
-  <td class="title"> </td>
-  <td class="description"> </td>
-  <td class="command"> </td>
-  <td class="when"> </td>
-  <td class="link"><a href="">last build</a></td>
-  <td class="link"><a href="">last success</a></td>
-</tr>
--->
-</table>
-</p>
+<teamcity viewlog="http://teamcity.jetbrains.com/viewLog.html">
+    <project name="Apache Ant">
+        <configuration id="bt133" title="Core Trunk (Windows)" command="clean test">
+            <description>current development (Windows platform)</description>
+        </configuration>
+        <configuration id="bt134" title="Core Trunk (Linux)" command="clean test">
+            <description>current development (Linux platform)</description>
+        </configuration>
+        <configuration id="bt135" title="Core Trunk (MacOS)" command="clean test">
+            <description>current development (Linux platform)</description>
+        </configuration>
+        <configuration id="bt131" title="JavaDoc" command="javadocs javadocs.test">
+            <description>JavaDocs for classes and testclasses</description>
+            <when>Daily at 08:00 GMT <br/> (if there are pending changes)</when>
+        </configuration>
+        <configuration id="bt132" title="Checkstyle" command="-f check.xml checkstyle htmlreport">
+            <description>check the conformance against coding styleguide</description>
+        </configuration>
+        <configuration id="bt130" title="Distribution" command="allclean main_distribution">
+            <description>a 'distribution' nearly as done while releasing</description>
+            <when>Daily at 08:00 GMT <br/> (if there are pending changes)</when>
+        </configuration>
+    </project>
+    <project name="Apache Ivy">
+        <configuration id="bt125" title="Core Trunk" command="clean-all test">
+            <description>current development</description>
+        </configuration>
+        <configuration id="bt126" title="Core 2.0.x" command="clean-all test">
+            <description>maintenance of 2.x releases</description>
+        </configuration>
+        <configuration id="bt127" title="Core Trunk - Checkstyle" command="clean checkstyle">
+            <description>check of code styleguide</description>
+            <when>Daily at 00:00 GMT + 12:00 GMT <br/> (if there are pending changes)</when>
+        </configuration>
+        <configuration id="bt128" title="Core Trunk - Distribution" command="-f build-release.xml snapshot-maven2">
+            <description>a 'distribution' nearly as done while releasing.</description>
+            <when>Daily at 09:00 GMT <br/> (if there are pending changes)</when>
+        </configuration>
+    </project>
+</teamcity>
 
-<!-->
-<ul>
-<li>Apache Ant <ul>
-    <li><a href="http://teamcity.jetbrains.com/viewType.html?buildTypeId=bt129">Core Trunk</a>
-</ul></li>
-<li>Apache Ivy
-</li>
-
-
-<li><a href="http://teamcity.jetbrains.com/viewType.html?buildTypeId=bt129">Ant Core</a> <ul>
-    <li>
-
-
-<a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastSuccessful">
-the last successful build</a> and
-<a href="http://teamcity.jetbrains.com/viewLog.html?&amp;buildTypeId=bt129&amp;buildId=lastFinished">
-the last build</a>.</p>
--->
 </section>
 
 </body>
-
 </document>
