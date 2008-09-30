@@ -48,7 +48,7 @@ system. You can directly access the builds of Ant and Ivy:</p>
             <description>current development (Linux platform)</description>
         </configuration>
         <configuration id="bt135" title="Core Trunk (MacOS)" command="clean test">
-            <description>current development (Linux platform)</description>
+            <description>current development (MacOS platform)</description>
         </configuration>
         <configuration id="bt131" title="JavaDoc" command="javadocs javadocs.test">
             <description>JavaDocs for classes and testclasses</description>
