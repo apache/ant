@@ -61,6 +61,7 @@ public class Main {
     <touch file="${src1}/a/B.java" />
     <javac srcdir="${src1}" destdir="${output}"/>
     <jar destfile="${output}/A.jar" basedir="${output}" includes="a/**"/>
+    <delete dir="${output}/a"/>
 
     <depend srcDir="${src1}"
             destDir="${output}" cache="${output}"

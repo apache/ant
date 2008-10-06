@@ -229,6 +229,9 @@ Fixed bugs:
  * <filterset> could miss multi-character begin tokens in some cases.
    Bugzilla Report 45094.
 
+ * <depend> didn't close JARs that were part of the classpath.
+   Bugzilla Report 45955.
+
 Other changes:
 --------------
 

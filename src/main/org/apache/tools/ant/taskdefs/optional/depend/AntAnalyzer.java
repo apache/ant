@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 
 /**
@@ -96,9 +97,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                             analyzedDeps.put(dependency, dependency);
                         }
                     } finally {
-                        if (inStream != null) {
-                            inStream.close();
-                        }
+                        FileUtils.close(inStream);
                         if (zipFile != null) {
                             zipFile.close();
                         }

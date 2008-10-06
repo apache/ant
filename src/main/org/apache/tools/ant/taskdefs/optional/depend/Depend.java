@@ -201,9 +201,7 @@ public class Depend extends MatchingTask {
                 }
             }
         } finally {
-            if (in != null) {
-                in.close();
-            }
+            FileUtils.close(in);
         }
 
         return dependencyMap;
@@ -238,9 +236,7 @@ public class Depend extends MatchingTask {
                     }
                 }
             } finally {
-                if (pw != null) {
-                    pw.close();
-                }
+                FileUtils.close(pw);
             }
         }
     }
@@ -373,7 +369,9 @@ public class Depend extends MatchingTask {
         if (checkPath != null) {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
-            AntClassLoader loader = getProject().createClassLoader(checkPath);
+            AntClassLoader loader = null;
+            try {
+                loader = getProject().createClassLoader(checkPath);
 
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();
@@ -424,6 +422,11 @@ public class Depend extends MatchingTask {
                         File jarFile = (File) classpathFileObject;
                         dependencies.put(jarFile, jarFile);
                     }
+                }
+            }
+            } finally {
+                if (loader != null) {
+                    loader.cleanup();
                 }
             }
         }
