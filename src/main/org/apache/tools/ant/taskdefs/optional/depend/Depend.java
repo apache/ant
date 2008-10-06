@@ -214,7 +214,7 @@ public class Depend extends MatchingTask {
      * @exception IOException if the dependency file cannot be written out.
      */
     private void writeCachedDependencies(Hashtable dependencyMap)
-         throws IOException {
+        throws IOException {
         if (cache != null) {
             PrintWriter pw = null;
             try {
@@ -229,7 +229,7 @@ public class Depend extends MatchingTask {
                     pw.println(CLASSNAME_PREPEND + className);
 
                     Vector dependencyList
-                         = (Vector) dependencyMap.get(className);
+                        = (Vector) dependencyMap.get(className);
                     int size = dependencyList.size();
                     for (int x = 0; x < size; x++) {
                         pw.println(dependencyList.elementAt(x));
@@ -373,57 +373,57 @@ public class Depend extends MatchingTask {
             try {
                 loader = getProject().createClassLoader(checkPath);
 
-            Hashtable classpathFileCache = new Hashtable();
-            Object nullFileMarker = new Object();
-            for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
-                String className = (String) e.nextElement();
-                Vector dependencyList = (Vector) dependencyMap.get(className);
-                Hashtable dependencies = new Hashtable();
-                classpathDependencies.put(className, dependencies);
-                Enumeration e2 = dependencyList.elements();
-                while (e2.hasMoreElements()) {
-                    String dependency = (String) e2.nextElement();
-                    Object classpathFileObject
-                        = classpathFileCache.get(dependency);
-                    if (classpathFileObject == null) {
-                        classpathFileObject = nullFileMarker;
+                Hashtable classpathFileCache = new Hashtable();
+                Object nullFileMarker = new Object();
+                for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
+                    String className = (String) e.nextElement();
+                    Vector dependencyList = (Vector) dependencyMap.get(className);
+                    Hashtable dependencies = new Hashtable();
+                    classpathDependencies.put(className, dependencies);
+                    Enumeration e2 = dependencyList.elements();
+                    while (e2.hasMoreElements()) {
+                        String dependency = (String) e2.nextElement();
+                        Object classpathFileObject
+                            = classpathFileCache.get(dependency);
+                        if (classpathFileObject == null) {
+                            classpathFileObject = nullFileMarker;
 
-                        if (!dependency.startsWith("java.")
-                            && !dependency.startsWith("javax.")) {
-                            URL classURL
-                                = loader.getResource(dependency.replace('.', '/') + ".class");
-                            if (classURL != null) {
-                                if (classURL.getProtocol().equals("jar")) {
-                                    String jarFilePath = classURL.getFile();
-                                    int classMarker = jarFilePath.indexOf('!');
-                                    jarFilePath = jarFilePath.substring(0, classMarker);
-                                    if (jarFilePath.startsWith("file:")) {
+                            if (!dependency.startsWith("java.")
+                                && !dependency.startsWith("javax.")) {
+                                URL classURL
+                                    = loader.getResource(dependency.replace('.', '/') + ".class");
+                                if (classURL != null) {
+                                    if (classURL.getProtocol().equals("jar")) {
+                                        String jarFilePath = classURL.getFile();
+                                        int classMarker = jarFilePath.indexOf('!');
+                                        jarFilePath = jarFilePath.substring(0, classMarker);
+                                        if (jarFilePath.startsWith("file:")) {
+                                            classpathFileObject = new File(
+                                                                           FileUtils.getFileUtils().fromURI(jarFilePath));
+                                        } else {
+                                            throw new IOException(
+                                                                  "Bizarre nested path in jar: protocol: "
+                                                                  + jarFilePath);
+                                        }
+                                    } else if (classURL.getProtocol().equals("file")) {
                                         classpathFileObject = new File(
-                                            FileUtils.getFileUtils().fromURI(jarFilePath));
-                                    } else {
-                                        throw new IOException(
-                                            "Bizarre nested path in jar: protocol: "
-                                            + jarFilePath);
+                                                                       FileUtils.getFileUtils()
+                                                                       .fromURI(classURL.toExternalForm()));
                                     }
-                                } else if (classURL.getProtocol().equals("file")) {
-                                    classpathFileObject = new File(
-                                        FileUtils.getFileUtils()
-                                        .fromURI(classURL.toExternalForm()));
+                                    log("Class " + className
+                                        + " depends on " + classpathFileObject
+                                        + " due to " + dependency, Project.MSG_DEBUG);
                                 }
-                                log("Class " + className
-                                    + " depends on " + classpathFileObject
-                                    + " due to " + dependency, Project.MSG_DEBUG);
                             }
+                            classpathFileCache.put(dependency, classpathFileObject);
                         }
-                        classpathFileCache.put(dependency, classpathFileObject);
-                    }
-                    if (classpathFileObject != nullFileMarker) {
-                        // we need to add this jar to the list for this class.
-                        File jarFile = (File) classpathFileObject;
-                        dependencies.put(jarFile, jarFile);
+                        if (classpathFileObject != nullFileMarker) {
+                            // we need to add this jar to the list for this class.
+                            File jarFile = (File) classpathFileObject;
+                            dependencies.put(jarFile, jarFile);
+                        }
                     }
                 }
-            }
             } finally {
                 if (loader != null) {
                     loader.cleanup();
@@ -502,11 +502,11 @@ public class Depend extends MatchingTask {
                 }
                 // need to delete the main class
                 String topLevelClassName
-                     = affectedClass.substring(0, affectedClass.indexOf("$"));
+                    = affectedClass.substring(0, affectedClass.indexOf("$"));
                 log("Top level class = " + topLevelClassName,
                     Project.MSG_VERBOSE);
                 ClassFileInfo topLevelClassInfo
-                     = (ClassFileInfo) classFileInfoMap.get(topLevelClassName);
+                    = (ClassFileInfo) classFileInfoMap.get(topLevelClassName);
                 if (topLevelClassInfo != null
                     && topLevelClassInfo.absoluteFile.exists()) {
                     log("Deleting file "
@@ -533,8 +533,8 @@ public class Depend extends MatchingTask {
      * @param className the file that is triggering the out of dateness
      */
     private void warnOutOfDateButNotDeleted(
-            ClassFileInfo affectedClassInfo, String affectedClass,
-            String className) {
+                                            ClassFileInfo affectedClassInfo, String affectedClass,
+                                            String className) {
         if (affectedClassInfo.isUserWarned) {
             return;
         }
@@ -563,9 +563,9 @@ public class Depend extends MatchingTask {
      */
     private boolean isRmiStub(String affectedClass, String className) {
         return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)
-                || isStub(affectedClass, className, DefaultRmicAdapter.RMI_SKEL_SUFFIX)
-                || isStub(affectedClass, className, WLRmic.RMI_STUB_SUFFIX)
-                || isStub(affectedClass, className, WLRmic.RMI_SKEL_SUFFIX);
+            || isStub(affectedClass, className, DefaultRmicAdapter.RMI_SKEL_SUFFIX)
+            || isStub(affectedClass, className, WLRmic.RMI_STUB_SUFFIX)
+            || isStub(affectedClass, className, WLRmic.RMI_SKEL_SUFFIX);
     }
 
     private boolean isStub(String affectedClass, String baseClass, String suffix) {
@@ -684,7 +684,7 @@ public class Depend extends MatchingTask {
 
             if (cache != null && cache.exists() && !cache.isDirectory()) {
                 throw new BuildException("The cache, if specified, must "
-                    + "point to a directory");
+                                         + "point to a directory");
             }
 
             if (cache != null && !cache.exists()) {
@@ -731,7 +731,7 @@ public class Depend extends MatchingTask {
                 String filePath = srcFile.getPath();
                 String className
                     = filePath.substring(srcDir.getPath().length() + 1,
-                        filePath.length() - ".java".length());
+                                         filePath.length() - ".java".length());
                 className = ClassFileUtils.convertSlashName(className);
                 ClassFileInfo info
                     = (ClassFileInfo) classFileInfoMap.get(className);
@@ -826,12 +826,12 @@ public class Depend extends MatchingTask {
                 ClassFileInfo info = new ClassFileInfo();
                 info.absoluteFile = file;
                 String relativeName = file.getPath().substring(
-                    rootLength + 1,
-                    file.getPath().length() - ".class".length());
+                                                               rootLength + 1,
+                                                               file.getPath().length() - ".class".length());
                 info.className
                     = ClassFileUtils.convertSlashName(relativeName);
                 info.sourceFile = sourceFileKnownToExist = findSourceFile(
-                    relativeName, sourceFileKnownToExist);
+                                                                          relativeName, sourceFileKnownToExist);
                 classFileList.addElement(info);
             } else {
                 addClassFiles(classFileList, file, root);
