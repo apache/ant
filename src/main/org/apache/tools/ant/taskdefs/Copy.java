@@ -567,8 +567,10 @@ public class Copy extends Task {
             }
         }
     }
+
     private void iterateOverBaseDirs(
         HashSet baseDirs, HashMap dirsByBasedir, HashMap filesByBasedir) {
+
         Iterator iter = baseDirs.iterator();
         while (iter.hasNext()) {
             File f = (File) iter.next();
