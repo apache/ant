@@ -33,7 +33,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Test cases for the Symlink task. Link creation, link deletion, recording
@@ -182,53 +182,53 @@ public class SymlinkTest extends BuildFileTest {
         }
     }
 
-    public void testFileUtilsMethods() throws Exception {
+    public void testSymbolicLinkUtilsMethods() throws Exception {
         if (supportsSymlinks) {
             executeTarget("test-fileutils");
-            FileUtils fu = FileUtils.getFileUtils();
+            SymbolicLinkUtils su = SymbolicLinkUtils.getSymbolicLinkUtils();
 
             java.io.File f = getProject().resolveFile("test-working/file1");
             assertTrue(f.exists());
             assertFalse(f.isDirectory());
             assertTrue(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
             f = getProject().resolveFile("test-working/dir1");
             assertTrue(f.exists());
             assertTrue(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
             f = getProject().resolveFile("test-working/file2");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
             f = getProject().resolveFile("test-working/dir2");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
 
@@ -236,44 +236,44 @@ public class SymlinkTest extends BuildFileTest {
             assertTrue(f.exists());
             assertFalse(f.isDirectory());
             assertTrue(f.isFile());
-            assertTrue(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertTrue(fu.isSymbolicLink(f.getParentFile(),
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()));
+            assertTrue(su.isSymbolicLink(f.getParentFile(),
                                          f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
             f = getProject().resolveFile("test-working/dir.there");
             assertTrue(f.exists());
             assertTrue(f.isDirectory());
             assertFalse(f.isFile());
-            assertTrue(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertTrue(fu.isSymbolicLink(f.getParentFile(),
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()));
+            assertTrue(su.isSymbolicLink(f.getParentFile(),
                                          f.getName()));
-            assertFalse(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertFalse(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
             f = getProject().resolveFile("test-working/file.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertTrue(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertTrue(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
 
             f = getProject().resolveFile("test-working/dir.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(fu.isSymbolicLink(null, f.getAbsolutePath()));
-            assertFalse(fu.isSymbolicLink(f.getParentFile(),
+            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+            assertFalse(su.isSymbolicLink(f.getParentFile(),
                                           f.getName()));
-            assertTrue(fu.isDanglingSymbolicLink(null, f.getAbsolutePath()));
-            assertTrue(fu.isDanglingSymbolicLink(f.getParentFile(),
+            assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
+            assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
 
         }

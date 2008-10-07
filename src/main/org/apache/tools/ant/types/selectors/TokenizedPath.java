@@ -22,6 +22,7 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Container for a path that has been split into its components.
@@ -37,6 +38,9 @@ public class TokenizedPath {
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    /** Helper. */
+    private static final SymbolicLinkUtils SYMLINK_UTILS =
+        SymbolicLinkUtils.getSymbolicLinkUtils();
     /** iterations for case-sensitive scanning. */
     private static final boolean[] CS_SCAN_ONLY = new boolean[] {true};
     /** iterations for non-case-sensitive scanning. */
@@ -134,7 +138,12 @@ public class TokenizedPath {
     public boolean isSymlink(File base) {
         for (int i = 0; i < tokenizedPath.length; i++) {
             try {
-                if (FILE_UTILS.isSymbolicLink(base, tokenizedPath[i])) {
+                if ((base != null
+                     && SYMLINK_UTILS.isSymbolicLink(base, tokenizedPath[i]))
+                    ||
+                    (base == null
+                     && SYMLINK_UTILS.isSymbolicLink(tokenizedPath[i]))
+                    ) {
                     return true;
                 }
                 base = new File(base, tokenizedPath[i]);

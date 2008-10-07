@@ -57,7 +57,7 @@ import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -107,14 +107,15 @@ public class Delete extends MatchingTask {
     protected boolean usedMatchingTask = false;
     // by default, remove matching empty dirs
     protected boolean includeEmpty = false;
+    // CheckStyle:VisibilityModifier ON
 
     private int verbosity = Project.MSG_VERBOSE;
     private boolean quiet = false;
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
     private Resources rcs = null;
-    private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    // CheckStyle:VisibilityModifier ON
+    private static SymbolicLinkUtils SYMLINK_UTILS =
+        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     /**
      * Set the name of a single file to be removed.
@@ -760,8 +761,7 @@ public class Delete extends MatchingTask {
 
     private boolean isDanglingSymlink(File f) {
         try {
-            return FILE_UTILS.isDanglingSymbolicLink(f.getParentFile(),
-                                                     f.getName());
+            return SYMLINK_UTILS.isDanglingSymbolicLink(f);
         } catch (java.io.IOException e) {
             log("Error while trying to detect " + f.getAbsolutePath()
                 + " as broken symbolic link. " + e.getMessage(),

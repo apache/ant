@@ -42,6 +42,7 @@ import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -186,6 +187,10 @@ public class DirectoryScanner
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /** Helper. */
+    private static final SymbolicLinkUtils SYMLINK_UTILS =
+        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     /**
      * Patterns which should be excluded by default.
@@ -821,8 +826,7 @@ public class DirectoryScanner
                 excludes = nullExcludes ? new String[0] : excludes;
 
                 if (basedir != null && !followSymlinks
-                    && FILE_UTILS.isSymbolicLink(basedir.getParentFile(),
-                                                 basedir.getName())) {
+                    && SYMLINK_UTILS.isSymbolicLink(basedir)) {
                     basedir = null;
                 }
 
@@ -1178,7 +1182,7 @@ public class DirectoryScanner
             ArrayList noLinks = new ArrayList();
             for (int i = 0; i < newfiles.length; i++) {
                 try {
-                    if (FILE_UTILS.isSymbolicLink(dir, newfiles[i])) {
+                    if (SYMLINK_UTILS.isSymbolicLink(dir, newfiles[i])) {
                         String name = vpath + newfiles[i];
                         File file = new File(dir, newfiles[i]);
                         (file.isDirectory()
@@ -1788,7 +1792,7 @@ public class DirectoryScanner
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && CollectionUtils.frequency(directoryNamesFollowed, dirName)
                    >= maxLevelsOfSymlinks
-                && FILE_UTILS.isSymbolicLink(parent, dirName)) {
+                && SYMLINK_UTILS.isSymbolicLink(parent, dirName)) {
 
                 ArrayList files = new ArrayList();
                 File f = FILE_UTILS.resolveFile(parent, dirName);

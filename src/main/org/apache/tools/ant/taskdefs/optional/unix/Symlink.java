@@ -54,6 +54,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Creates, Deletes, Records and Restores Symlinks.
@@ -114,6 +115,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class Symlink extends DispatchTask {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final SymbolicLinkUtils SYMLINK_UTILS =
+        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     private String resource;
     private String link;
@@ -212,7 +215,7 @@ public class Symlink extends DispatchTask {
                 // handle the case where lnk points to a directory (bug 25181)
                 try {
                     File test = new File(lnk);
-                    if (!FILE_UTILS.isSymbolicLink(null, lnk)) {
+                    if (!SYMLINK_UTILS.isSymbolicLink(lnk)) {
                         doLink(res, lnk);
                     } else if (!test.getCanonicalPath().equals(
                         new File(res).getCanonicalPath())) {
@@ -466,14 +469,14 @@ public class Symlink extends DispatchTask {
      */
     public static void deleteSymlink(File linkfil, Task task)
         throws IOException {
-        if (FILE_UTILS.isDanglingSymbolicLink(linkfil.getParentFile(),
-                                              linkfil.getName())) {
+        if (SYMLINK_UTILS.isDanglingSymbolicLink(linkfil.getParentFile(),
+                                                 linkfil.getName())) {
             linkfil.delete();
             return;
         }
 
-        if (!FILE_UTILS.isSymbolicLink(linkfil.getParentFile(),
-                                       linkfil.getName())) {
+        if (!SYMLINK_UTILS.isSymbolicLink(linkfil.getParentFile(),
+                                          linkfil.getName())) {
             // plain file, not a link
             return;
         }
@@ -641,7 +644,7 @@ public class Symlink extends DispatchTask {
                         File f = new File(dir, fnd[j][k]);
                         File pf = f.getParentFile();
                         String name = f.getName();
-                        if (FILE_UTILS.isSymbolicLink(pf, name)) {
+                        if (SYMLINK_UTILS.isSymbolicLink(pf, name)) {
                             result.add(new File(pf.getCanonicalFile(), name));
                         }
                     } catch (IOException e) {

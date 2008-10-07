@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 
 import java.io.File;
@@ -247,7 +248,7 @@ public class DirectoryScannerTest extends BuildFileTest {
 
                 File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
                 System.err.println("link exists after exec? " + linkFile.exists());
-                System.err.println("Ant knows it is a link? " + FileUtils.getFileUtils().isSymbolicLink(dir, "ThisIsALink"));
+                System.err.println("Ant knows it is a link? " + SymbolicLinkUtils.getSymbolicLinkUtils().isSymbolicLink(dir, "ThisIsALink"));
 
                 DirectoryScanner ds = new DirectoryScanner();
 

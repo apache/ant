@@ -1039,57 +1039,15 @@ public class FileUtils {
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
      * @since Ant 1.5
+     * @deprecated use SymbolicLinkUtils instead
      */
     public boolean isSymbolicLink(File parent, String name)
         throws IOException {
+        SymbolicLinkUtils u = SymbolicLinkUtils.getSymbolicLinkUtils();
         if (parent == null) {
-            File f = new File(name);
-            parent = f.getParentFile();
-            name = f.getName();
+            return u.isSymbolicLink(name);
         }
-        File toTest = new File(parent.getCanonicalPath(), name);
-        return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
-    }
-
-    /**
-     * Checks whether a given file is a broken symbolic link.
-     *
-     * <p>It doesn't really test for symbolic links but whether Java
-     * reports that the File doesn't exist but its parent's child list
-     * contains it--this may lead to false positives on some
-     * platforms.</p>
-     *
-     * <p>Note that #isSymbolicLink returns false if this method
-     * returns true since Java won't produce a canonical name
-     * different from the abolute one if the link is broken.</p>
-     *
-     * @param parent the parent directory of the file to test
-     * @param name the name of the file to test.
-     *
-     * @return true if the file is a broken symbolic link.
-     * @throws IOException on error.
-     * @since Ant 1.8.0
-     */
-    public boolean isDanglingSymbolicLink(File parent, String name) 
-        throws IOException {
-        File f = null;
-        if (parent == null) {
-            f = new File(name);
-            parent = f.getParentFile();
-            name = f.getName();
-        } else {
-            f = new File(parent, name);
-        }
-        if (!f.exists()) {
-            final String localName = f.getName();
-            String[] c = parent.list(new FilenameFilter() {
-                    public boolean accept(File d, String n) {
-                        return localName.equals(n);
-                    }
-                });
-            return c != null && c.length > 0;
-        }
-        return false;
+        return u.isSymbolicLink(parent, name);
     }
 
     /**
