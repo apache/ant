@@ -41,8 +41,9 @@ public class VectorSet extends Vector {
     private final HashSet set = new HashSet();
 
     public synchronized boolean add(Object o) {
-        if (set.add(o)) {
-            return super.add(o);
+        if (!set.contains(o)) {
+            doAdd(size(), o);
+            return true;
         }
         return false;
     }
@@ -70,8 +71,8 @@ public class VectorSet extends Vector {
         }
     }
 
-    public void addElement(Object o) {
-        add(o);
+    public synchronized void addElement(Object o) {
+        doAdd(size(), o);
     }
 
     public synchronized boolean addAll(Collection c) {
@@ -90,11 +91,10 @@ public class VectorSet extends Vector {
         boolean changed = false;
         for (Iterator i = c.iterator(); i.hasNext(); ) {
             Object o = i.next();
-            boolean added = set.add(o);
-            if (added) {
-                super.add(index++, o);
+            if (!set.contains(o)) {
+                doAdd(index++, o);
+                changed = true;
             }
-            changed |= added;
         }
         return changed;
     }
@@ -190,7 +190,7 @@ public class VectorSet extends Vector {
     public synchronized Object set(int index, Object o) {
         Object orig = get(index);
         if (set.add(o)) {
-            super.set(index, o);
+            elementData[index] = o;
             set.remove(orig);
         } else {
             int oldIndexOfO = indexOf(o);
