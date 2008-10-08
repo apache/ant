@@ -451,8 +451,12 @@ public class Depend extends MatchingTask {
             ClassFileInfo classInfo
                 = (ClassFileInfo) classFileInfoMap.get(className);
             if (classInfo != null && classInfo.absoluteFile.exists()) {
+                if (classInfo.sourceFile == null) {
+                    warnOutOfDateButNotDeleted(classInfo, className, className);
+                } else {
                 classInfo.absoluteFile.delete();
                 count++;
+                }
             }
         }
         return count;

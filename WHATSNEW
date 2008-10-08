@@ -232,6 +232,10 @@ Fixed bugs:
  * <depend> didn't close JARs that were part of the classpath.
    Bugzilla Report 45955.
 
+ * in some cases <depend> would delete class files even if it didn't
+   find the corresponding source files.
+   Bugzilla Report 45916.
+
 Other changes:
 --------------
 

@@ -24,7 +24,7 @@
     <delete dir="${src1}"/>
   </target>
 
-  <target name="xtestBug45916">
+  <target name="testBug45916">
     <mkdir dir="${src1}"/>
     <mkdir dir="${output}"/>
     <mkdir dir="${src1}/a"/>
