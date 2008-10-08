@@ -454,8 +454,8 @@ public class Depend extends MatchingTask {
                 if (classInfo.sourceFile == null) {
                     warnOutOfDateButNotDeleted(classInfo, className, className);
                 } else {
-                classInfo.absoluteFile.delete();
-                count++;
+                    classInfo.absoluteFile.delete();
+                    count++;
                 }
             }
         }
