@@ -49,6 +49,40 @@
   <property name="javadoc.scope" value="public"/>
 
   <taskdef resource="simiantask.properties"/>
+  
+  <!-- Findbugs: Getting Findbugs -->
+  <property name="findbugs.download.name" 
+            value="findbugs-1.3.5"
+            description="Name of the download file without suffix. Also the internal root directory of the ZIP."/>
+  <property name="findbugs.download.file" 
+            value="${findbugs.download.name}.zip"
+            description="The filename of the ZIP."/>
+  <property name="findbugs.download.url"  
+            value="http://garr.dl.sourceforge.net/sourceforge/findbugs/${findbugs.download.file}"
+            description="The download adress at a mirror of Sourceforge."/>
+  <property name="findbugs.download.to"   
+            value=".downloads"
+            description="Where to store the download and 'install' Findbugs."/>
+  <available 
+    property="findbugs.home" 
+    value="${findbugs.download.to}/${findbugs.download.name}"
+    file="${findbugs.download.to}/${findbugs.download.name}/lib/findbugs.jar"
+    description="Check if Findbugs is already installed."
+  />
+  
+  <!-- Findbugs: Running Findbugs -->
+  <property name="findbugs.reportdir" 
+            location="${build.dir}/reports/findbugs" 
+            description="Where to store Findbugs results"/>
+  <property name="findbugs.raw"       
+            value="raw.xml" 
+            description="Findbugs Output xml-file"/>
+  <property name="findbugs.xsl"       
+            value="fancy.xsl" 
+            description="Which XSL to use for generating Output: default, fancy, plain, summary"/>
+  <property name="findbugs.jvmargs"   
+            value="-Xms128m -Xmx512m" 
+            description="JVMArgs for invoking Findbugs"/>
 
 
 
@@ -136,54 +170,17 @@
   	<fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
+  <target name="init-findbugs" unless="findbugs.home">
+    <mkdir dir="${findbugs.download.to}"/>
+    <get src="${findbugs.download.url}" dest="${findbugs.download.to}/${findbugs.download.file}"/>
+    <unzip src="${findbugs.download.to}/${findbugs.download.file}" dest="${findbugs.download.to}"/>
+    <property name="findbugs.home" location="${findbugs.download.to}/${findbugs.download.name}"/>
+    <mkdir dir="${findbugs.home}/plugin"/>
+  </target>
 
-
-
-
-  <property name="findbugs.reportdir" 
-            location="${build.dir}/reports/findbugs" 
-            description="Where to store Findbugs results"/>
-  <property name="findbugs.raw"       
-            value="raw.xml" 
-            description="Findbugs Output xml-file"/>
-  <property name="findbugs.plugins"   
-            value="" 
-            description="Which Findbugs plugin to run"/>
-  <property name="findbugs.xsl"       
-            value="fancy.xsl" 
-            description="Which XSL to use for generating Output: default, fancy, plain, summary"/>
-  <property name="findbugs.jvmargs"   
-            value="-Xms128m -Xmx512m" 
-            description="JVMArgs for invoking Findbugs"/>
-
-
-  
-  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy" xmlns:fb="http://findbugs.sourceforge.net/">
-    <!-- Getting Findbugs -->
-    <!--
-      RFE : [2114752] Put 1.3.5 in Maven repository
-      http://sourceforge.net/tracker/index.php?func=detail&aid=2114752&group_id=96405&atid=614693
-      Currently (2008-10-07 the newest one is 1.0.0)
-    -->
-    <ivy:cachepath organisation="findbugs" module="findbugs" revision="1.0.0"
-                   inline="true" conf="default" pathid="findbugs.classpath" transitive="true"/>
-    <!-- Findbugs needs Dom4J, but doesnt declare it in its pom -->               
-    <ivy:cachepath organisation="dom4j" module="dom4j" revision="1.6.1"
-                   inline="true" conf="default" pathid="dom4j.classpath" transitive="true"/>
-    <!-- Getting Findbugs Plugins -->
-    <ivy:cachepath organisation="findbugs" module="coreplugin" revision="1.0.0"
-                   inline="true" conf="default" pathid="findbugs.plugin.1" transitive="true"/>
-
-    <!-- Create a path using both downloads -->               
+  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-findbugs" xmlns:fb="http://findbugs.sourceforge.net/">
     <path id="findbugs.real.classpath">
-        <path refid="findbugs.classpath"/>
-        <path refid="dom4j.classpath"/>
-    </path>
-    <!-- Path for Findbugs PlugIns -->
-    <path id="findbugs.plugins.classpath">
-        <!--
-        <path refid="findbugs.plugin.1"/>
-        -->
+      <fileset dir="${findbugs.home}/lib" includes="*.jar"/>
     </path>
 
     <!-- Load the Findbugs AntTasks -->               
@@ -191,13 +188,14 @@
         
     <!-- Start Findbugs -->
     <mkdir dir="${findbugs.reportdir}"/>
-    <fb:findbugs classpathref="findbugs.real.classpath" pluginlist="${findbugs.plugins}"
-              output="xml:withMessages"
-              outputFile="${findbugs.reportdir}/${findbugs.raw}"
-              jvmargs="${findbugs.jvmargs}">
+    <fb:findbugs home="${findbugs.home}"
+                 classpathref="findbugs.real.classpath"
+                 output="xml:withMessages"
+                 outputFile="${findbugs.reportdir}/${findbugs.raw}"
+                 jvmargs="${findbugs.jvmargs}"
+                 projectName="${Name} ${project.version}">
       <class location="${build.classes}" />
       <sourcePath path="${java.dir}" />
-      <pluginlist refid="findbugs.plugins.classpath"/>
     </fb:findbugs>
     
     <!-- Generate (human) readable output -->
