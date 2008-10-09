@@ -1230,7 +1230,8 @@ public class FileUtils {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
         }
-        if (to.exists() && !(from.equals(to.getCanonicalFile()) || tryHardToDelete(to))) {
+        if (to.exists() &&
+            !(from.equals(to.getCanonicalFile()) || tryHardToDelete(to))) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();

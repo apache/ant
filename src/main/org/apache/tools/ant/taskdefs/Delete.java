@@ -661,15 +661,15 @@ public class Delete extends MatchingTask {
      */
     private boolean delete(File f) {
         if (!FILE_UTILS.tryHardToDelete(f)) {
-                if (deleteOnExit) {
-                    int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
-                    log("Failed to delete " + f + ", calling deleteOnExit."
-                        + " This attempts to delete the file when the Ant jvm"
-                        + " has exited and might not succeed.", level);
-                    f.deleteOnExit();
-                    return true;
-                }
-                return false;
+            if (deleteOnExit) {
+                int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
+                log("Failed to delete " + f + ", calling deleteOnExit."
+                    + " This attempts to delete the file when the Ant jvm"
+                    + " has exited and might not succeed.", level);
+                f.deleteOnExit();
+                return true;
+            }
+            return false;
         }
         return true;
     }
