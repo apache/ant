@@ -24,24 +24,6 @@
     <touch file="${input}/file.txt"/>
   </target>
 
-  <target name="xtestCopyFile" depends="-fileResourceSetup">
-    <au:assertFileDoesntExist file="${output}/file.txt"/>
-    <copy todir="${output}">
-      <file file="${input}/file.txt"/>
-    </copy>
-    <au:assertFileExists file="${output}/file.txt"/>
-  </target>
-
-  <target name="xtestCopyFileInResources" depends="-fileResourceSetup">
-    <au:assertFileDoesntExist file="${output}/file.txt"/>
-    <copy todir="${output}">
-      <resources>
-        <file file="${input}/file.txt"/>
-      </resources>
-    </copy>
-    <au:assertFileExists file="${output}/file.txt"/>
-  </target>
-
   <target name="testCopyFileFlatten" depends="-fileResourceSetup">
     <au:assertFileDoesntExist file="${output}/file.txt"/>
     <copy todir="${output}" flatten="true">

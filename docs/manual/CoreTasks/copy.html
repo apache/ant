@@ -33,7 +33,12 @@ overwrite files with the <code>overwrite</code> attribute.</p>
 
 <p><a href="../CoreTypes/resources.html#collection">Resource
 Collection</a>s are used to select a group of files to copy.  To use a
-resource collection, the <code>todir</code> attribute must be set.</p>
+resource collection, the <code>todir</code> attribute must be set.
+<strong>Note</strong> that some resources (for example
+the <a href="../CoreTypes/resources.html#file">file</a> resource)
+return absolute paths as names and the result of using them without
+using a nested mapper (or the flatten attribute) may not be what you
+expect.</p>
 
 <p>
 <strong>Note: </strong>If you employ filters in your copy operation,
@@ -153,6 +158,7 @@ operation as <a href="../CoreTypes/filterset.html">filtersets</a>.
     systems.  This can also be useful if source and target files live
     on separate machines with clocks being out of sync.  <em>since Ant
     1.6.2</em>.</td>
+    <td align="center">No</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
@@ -263,6 +269,13 @@ destination directory, flattening the directory structure.</b></p>
   &lt;/copy&gt;
 </pre>
 
+<p>If the example above didn't use the flatten attribute,
+  the <code>&lt;file&gt;</code> resource would have returned its full
+  path as source and target name and would not have been copied at
+  all.  In general it is a good practice to use an explicit mapper
+  together with resources that use an absolute path as their
+  names.</p>
+
 <p><b>Copies the two newest resources into a destination directory.</b></p>
 <pre>
   &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
@@ -280,6 +293,8 @@ destination directory, flattening the directory structure.</b></p>
   &lt;/copy&gt;
 </pre>
 
+<p>The paragraph following the previous example applies to this
+  example as well.</p>
 
 <p><strong>Unix Note:</strong> File permissions are not retained when files
 are copied; they end up with the default <code>UMASK</code> permissions
