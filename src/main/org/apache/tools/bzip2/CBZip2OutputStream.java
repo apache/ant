@@ -999,13 +999,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         int dd;
     }
 
-    private void qSort3(int loSt, int hiSt, int dSt) {
+    private void qSort3(int loSt, int hiSt, int dSt, StackElem[] stack) {
         int unLo, unHi, ltLo, gtHi, med, n, m;
         int sp, lo, hi, d;
-        StackElem[] stack = new StackElem[QSORT_STACK_SIZE];
-        for (int count = 0; count < QSORT_STACK_SIZE; count++) {
-            stack[count] = new StackElem();
-        }
 
         sp = 0;
 
@@ -1228,6 +1224,11 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                 } while (h != 1);
             }
 
+            StackElem[] stack = new StackElem[QSORT_STACK_SIZE];
+            for (int count = 0; count < QSORT_STACK_SIZE; count++) {
+                stack[count] = new StackElem();
+            }
+
             /*
               The main sorting loop.
             */
@@ -1251,7 +1252,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                         int lo = ftab[sb] & CLEARMASK;
                         int hi = (ftab[sb + 1] & CLEARMASK) - 1;
                         if (hi > lo) {
-                            qSort3(lo, hi, 2);
+                            qSort3(lo, hi, 2, stack);
                             numQSorted += (hi - lo + 1);
                             if (workDone > workLimit && firstAttempt) {
                                 return;
