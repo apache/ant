@@ -259,6 +259,14 @@ system. You can directly access the builds of Ant and Ivy:</p>
       <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&buildTypeId=bt132&buildId=lastSuccessful">last success</a></td>
     </tr>
                         <tr>
+      <td class="title">Findbugs</td>
+      <td class="description">runs Findbugs against Ant Codebase</td>
+      <td class="command">-f check.xml findbugs</td>
+              <td class="when">Daily at 08:00 <br /> (if there are pending changes)</td>
+            <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&buildTypeId=bt136&buildId=lastFinished">last build</a></td>
+      <td class="link"><a href="http://teamcity.jetbrains.com/viewLog.html?&buildTypeId=bt136&buildId=lastSuccessful">last success</a></td>
+    </tr>
+                        <tr>
       <td class="title">Distribution</td>
       <td class="description">a 'distribution' nearly as done while releasing</td>
       <td class="command">allclean main_distribution</td>

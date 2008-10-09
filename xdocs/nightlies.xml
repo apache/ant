@@ -57,6 +57,10 @@ system. You can directly access the builds of Ant and Ivy:</p>
         <configuration id="bt132" title="Checkstyle" command="-f check.xml checkstyle htmlreport">
             <description>check the conformance against coding styleguide</description>
         </configuration>
+        <configuration id="bt136" title="Findbugs" command="-f check.xml findbugs">
+            <description>runs Findbugs against Ant Codebase</description>
+            <when>Daily at 08:00 <br/> (if there are pending changes)</when>
+        </configuration>
         <configuration id="bt130" title="Distribution" command="allclean main_distribution">
             <description>a 'distribution' nearly as done while releasing</description>
             <when>Daily at 08:00 GMT <br/> (if there are pending changes)</when>
