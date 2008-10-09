@@ -447,7 +447,7 @@ public class ReplaceRegExp extends Task {
                     temp = null;
                 } catch (IOException e) {
                     throw new BuildException("Couldn't rename temporary file "
-                                             + temp, getLocation());
+                                             + temp, e, getLocation());
                 }
             } else {
                 log("No change made", Project.MSG_DEBUG);
