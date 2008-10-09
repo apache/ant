@@ -404,6 +404,12 @@ Other changes:
  * <ftp> now supports selectors for remote directories as well.
    Bugzilla Report 44726.
 
+ * In some cases Ant fails to rename files if the source or target
+   file has just recently been closed on Windows.  It will now try to
+   delete the offending file once again after giving the Java VM time
+   to really close the file.
+   Bugzilla Report 45960.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

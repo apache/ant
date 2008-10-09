@@ -57,6 +57,7 @@ import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
@@ -74,7 +75,6 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
  * @ant.task category="filesystem"
  */
 public class Delete extends MatchingTask {
-    private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
     private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
     private static final ResourceSelector EXISTS = new Exists();
 
@@ -114,6 +114,7 @@ public class Delete extends MatchingTask {
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
     private Resources rcs = null;
+    private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static SymbolicLinkUtils SYMLINK_UTILS =
         SymbolicLinkUtils.getSymbolicLinkUtils();
 
@@ -659,16 +660,7 @@ public class Delete extends MatchingTask {
      * wait a little and try again.
      */
     private boolean delete(File f) {
-        if (!f.delete()) {
-            if (Os.isFamily("windows")) {
-                System.gc();
-            }
-            try {
-                Thread.sleep(DELETE_RETRY_SLEEP_MILLIS);
-            } catch (InterruptedException ex) {
-                // Ignore Exception
-            }
-            if (!f.delete()) {
+        if (!FILE_UTILS.tryHardToDelete(f)) {
                 if (deleteOnExit) {
                     int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
                     log("Failed to delete " + f + ", calling deleteOnExit."
@@ -678,7 +670,6 @@ public class Delete extends MatchingTask {
                     return true;
                 }
                 return false;
-            }
         }
         return true;
     }

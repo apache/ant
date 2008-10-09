@@ -54,6 +54,7 @@ import org.apache.tools.ant.types.resources.FileResource;
  *
  */
 public class FileUtils {
+    private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
     private static final int EXPAND_SPACE = 50;
     private static final FileUtils PRIMARY_INSTANCE = new FileUtils();
 
@@ -1229,7 +1230,7 @@ public class FileUtils {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
         }
-        if (to.exists() && !(from.equals(to.getCanonicalFile()) || to.delete())) {
+        if (to.exists() && !(from.equals(to.getCanonicalFile()) || tryHardToDelete(to))) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();
@@ -1239,7 +1240,7 @@ public class FileUtils {
         }
         if (!from.renameTo(to)) {
             copyFile(from, to);
-            if (!from.delete()) {
+            if (!tryHardToDelete(from)) {
                 throw new IOException("Failed to delete " + from + " while trying to rename it.");
             }
         }
@@ -1436,6 +1437,30 @@ public class FileUtils {
             file.delete();
         }
     }
+
+    /**
+     * Accommodate Windows bug encountered in both Sun and IBM JDKs.
+     * Others possible. If the delete does not work, call System.gc(),
+     * wait a little and try again.
+     *
+     * @return whether deletion was successful
+     * @since Ant 1.8.0
+     */
+    public boolean tryHardToDelete(File f) {
+        if (!f.delete()) {
+            if (ON_WINDOWS) {
+                System.gc();
+            }
+            try {
+                Thread.sleep(DELETE_RETRY_SLEEP_MILLIS);
+            } catch (InterruptedException ex) {
+                // Ignore Exception
+            }
+            return f.delete();
+        }
+        return true;
+    }
+
 
     /**
      * Calculates the relative path between two files.
