@@ -1948,6 +1948,33 @@ see ${build.junit.reports} / ${antunit.reports}
       <fileset dir="${antunit.xml}" includes="TEST-*.xml" />
     </length>
   </target>
+  
+  
+  <target name="printFailingTests">
+    <property name="failingtests.dir" value="${build.dir}/errors"/>
+    <mkdir dir=""/>
+    <xslt 
+      style="${etc.dir}/printFailingTests.xsl" 
+      destdir="${failingtests.dir}" extension=".txt"
+      basedir="${build.dir}" includes="testcases/**/TEST-*.xml,antunit/xml/TEST-*.xml"
+    />
+    <echo>+-------------------------------------------------------------------------------------</echo>
+    <echo>| FAILING TESTS:</echo>
+    <echo>+-------------------------------------------------------------------------------------</echo>
+    <concat>
+      <!-- generated message files if they arent empty -->
+      <fileset dir="${failingtests.dir}">
+        <size value="0" when="more"/>
+      </fileset>
+      <!-- 'skip' empty lines -->
+      <filterchain>
+        <linecontains>
+          <contains value="|"/>
+        </linecontains>
+      </filterchain>
+    </concat>
+    <echo>+-------------------------------------------------------------------------------------</echo>
+  </target>
 
   <!--
        ===================================================================
