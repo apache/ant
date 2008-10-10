@@ -254,13 +254,15 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
+            //apparently OS X knows a symlink is a symlink even if the target is missing:
+            boolean mac = Os.isFamily(Os.FAMILY_MAC);
+
             f = getProject().resolveFile("test-working/file.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
-            assertFalse(su.isSymbolicLink(f.getParentFile(),
-                                          f.getName()));
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == mac);
+            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == mac);
             assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
             assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
@@ -269,9 +271,8 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
-            assertFalse(su.isSymbolicLink(f.getParentFile(),
-                                          f.getName()));
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == mac);
+            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == mac);
             assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
             assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
