@@ -548,8 +548,7 @@ public class ExecuteOn extends ExecTask {
                 }
             }
         }
-        String[] targetFiles = new String[targets.size()];
-        targets.copyInto(targetFiles);
+        String[] targetFiles = (String[]) targets.toArray(new String[targets.size()]);
 
         if (!addSourceFile) {
             srcFiles = new String[0];
@@ -617,16 +616,16 @@ public class ExecuteOn extends ExecTask {
         }
         // fill in source file names
         for (int i = 0; i < srcFiles.length; i++) {
-            if (!relative) {
-                result[srcIndex + i] =
-                    (new File(baseDirs[i], srcFiles[i])).getAbsolutePath();
+            String src;
+            if (relative) {
+                src = srcFiles[i];
             } else {
-                result[srcIndex + i] = srcFiles[i];
+                src = new File(baseDirs[i], srcFiles[i]).getAbsolutePath();
             }
             if (forwardSlash && fileSeparator != '/') {
-                result[srcIndex + i] =
-                    result[srcIndex + i].replace(fileSeparator, '/');
+                src = src.replace(fileSeparator, '/');
             }
+            result[srcIndex + i] = src;
         }
         return result;
     }
@@ -752,4 +751,5 @@ public class ExecuteOn extends ExecTask {
             return new String[] {FILE, DIR, "both"};
         }
     }
+
 }
