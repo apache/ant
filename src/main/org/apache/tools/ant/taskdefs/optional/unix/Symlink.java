@@ -185,7 +185,7 @@ public class Symlink extends DispatchTask {
                 return;
             }
             log("Removing symlink: " + link);
-            deleteSymlink(link, this);
+            SYMLINK_UTILS.deleteSymbolicLink(new File(link), this);
         } catch (FileNotFoundException fnfe) {
             handleError(fnfe.toString());
         } catch (IOException ioe) {
@@ -219,7 +219,7 @@ public class Symlink extends DispatchTask {
                         doLink(res, lnk);
                     } else if (!test.getCanonicalPath().equals(
                         new File(res).getCanonicalPath())) {
-                        deleteSymlink(lnk, this);
+                        SYMLINK_UTILS.deleteSymbolicLink(test, this);
                         doLink(res, lnk);
                     } // else lnk exists, do nothing
                 } catch (IOException ioe) {
@@ -378,32 +378,13 @@ public class Symlink extends DispatchTask {
      *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>
      *                                   or <code>File.delete</code> fail.
-     * @deprecated use the two-arg version which also works if the link's
-     *             target can not be renamed.
+     * @deprecated use
+     * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
+     * instead
      */
     public static void deleteSymlink(String path)
         throws IOException, FileNotFoundException {
-        deleteSymlink(new File(path));
-    }
-
-    /**
-     * Delete a symlink (without deleting the associated resource).
-     *
-     * <p>This is a convenience method that simply invokes
-     * <code>deleteSymlink(java.io.File)</code>.
-     *
-     * @param path    A string containing the path of the symlink to delete.
-     * @param task       An Ant Task required if "rm" needs to be invoked.
-     *
-     * @throws FileNotFoundException   When the path results in a
-     *                                   <code>File</code> that doesn't exist.
-     * @throws IOException             If calls to <code>File.rename</code>
-     *                                   or <code>File.delete</code> fail.
-     * @since Ant 1.8.0
-     */
-    public static void deleteSymlink(String path, Task t)
-        throws IOException, FileNotFoundException {
-        deleteSymlink(new File(path), t);
+        SYMLINK_UTILS.deleteSymbolicLink(new File(path), null);
     }
 
     /**
@@ -411,8 +392,7 @@ public class Symlink extends DispatchTask {
      *
      * <p>This is a utility method that removes a unix symlink without removing
      * the resource that the symlink points to. If it is accidentally invoked
-     * on a real file, the real file will not be harmed, but an exception
-     * will be thrown when the deletion is attempted.</p>
+     * on a real file, the real file will not be harmed.</p>
      *
      * <p>This method works by
      * getting the canonical path of the link, using the canonical path to
@@ -431,118 +411,13 @@ public class Symlink extends DispatchTask {
      *                                   <code>File.delete</code> or
      *                                   <code>File.getCanonicalPath</code>
      *                                   fail.
-     * @deprecated use the two-arg version which also works if the link's
-     *             target can not be renamed.
+     * @deprecated use
+     * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
+     * instead
      */
     public static void deleteSymlink(File linkfil)
         throws IOException {
-        deleteSymlink(linkfil, null);
-    }
-
-    /**
-     * Delete a symlink (without deleting the associated resource).
-     *
-     * <p>This is a utility method that removes a unix symlink without removing
-     * the resource that the symlink points to. If it is accidentally invoked
-     * on a real file, the real file will not be harmed, but an exception
-     * will be thrown when the deletion is attempted.</p>
-     *
-     * <p>Normaly this method works by
-     * getting the canonical path of the link, using the canonical path to
-     * rename the resource (breaking the link) and then deleting the link.
-     * The resource is then returned to its original name inside a finally
-     * block to ensure that the resource is unharmed even in the event of
-     * an exception.</p>
-     *
-     * <p>There may be cases where the algorithm described above doesn't work,
-     * in that case the method tries to use the native "rm" command on
-     * the symlink instead.</p>
-     *
-     * @param linkfil    A <code>File</code> object of the symlink to delete.
-     * @param task       An Ant Task required if "rm" needs to be invoked.
-     *
-     * @throws IOException             If calls to <code>File.rename</code>,
-     *                                   <code>File.delete</code> or
-     *                                   <code>File.getCanonicalPath</code>
-     *                                   fail.
-     * @since Ant 1.8.0
-     */
-    public static void deleteSymlink(File linkfil, Task task)
-        throws IOException {
-        if (SYMLINK_UTILS.isDanglingSymbolicLink(linkfil.getParentFile(),
-                                                 linkfil.getName())) {
-            linkfil.delete();
-            return;
-        }
-
-        if (!SYMLINK_UTILS.isSymbolicLink(linkfil.getParentFile(),
-                                          linkfil.getName())) {
-            // plain file, not a link
-            return;
-        }
-
-        if (!linkfil.exists()) {
-            throw new FileNotFoundException("No such symlink: " + linkfil);
-        }
-
-        // find the resource of the existing link:
-        File canfil = linkfil.getCanonicalFile();
-
-        // no reason to try the renaming algorithm if we aren't allowed to
-        // write to the target's parent directory.  Let's hope that
-        // File.canWrite works on all platforms.
-
-        if (task == null || canfil.getParentFile().canWrite()) {
-
-            // rename the resource, thus breaking the link:
-            File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
-                                                  canfil.getParentFile(), false,
-                                                  false);
-
-            if (FILE_UTILS.isLeadingPath(canfil, linkfil)) {
-                // link points to a parent directory, renaming the parent
-                // will rename the file
-                linkfil = new File(temp,
-                                   FILE_UTILS.removeLeadingPath(canfil,
-                                                                linkfil));
-            }
-
-            boolean renamedTarget = false;
-            try {
-                try {
-                    FILE_UTILS.rename(canfil, temp);
-                    renamedTarget = true;
-                } catch (IOException e) {
-                    throw new IOException("Couldn't rename resource when "
-                                          + "attempting to delete " + linkfil);
-                }
-                // delete the (now) broken link:
-                if (!linkfil.delete()) {
-                    throw new IOException("Couldn't delete symlink: "
-                                          + linkfil
-                                          + " (was it a real file? is this "
-                                          + "not a UNIX system?)");
-                }
-            } finally {
-                if (renamedTarget) {
-                    // return the resource to its original name:
-                    try {
-                        FILE_UTILS.rename(temp, canfil);
-                    } catch (IOException e) {
-                        throw new IOException("Couldn't return resource "
-                                              + temp
-                                              + " to its original name: "
-                                              + canfil.getAbsolutePath()
-                                              + "\n THE RESOURCE'S NAME ON DISK"
-                                              + " HAS BEEN CHANGED BY THIS"
-                                              + " ERROR!\n");
-                    }
-                }
-            }
-        } else {
-            Execute.runCommand(task,
-                               new String[] {"rm", linkfil.getAbsolutePath()});
-        }
+        SYMLINK_UTILS.deleteSymbolicLink(linkfil, null);
     }
 
     /**
@@ -597,7 +472,7 @@ public class Symlink extends DispatchTask {
             options += "f";
             if (linkfil.exists()) {
                 try {
-                    deleteSymlink(linkfil);
+                    SYMLINK_UTILS.deleteSymbolicLink(linkfil, this);
                 } catch (FileNotFoundException fnfe) {
                     log("Symlink disappeared before it was deleted: " + lnk);
                 } catch (IOException ioe) {

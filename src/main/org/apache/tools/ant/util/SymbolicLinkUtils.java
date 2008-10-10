@@ -18,8 +18,12 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Execute;
 
 /**
  * Contains methods related to symbolic links - or what Ant thinks is
@@ -177,6 +181,113 @@ public class SymbolicLinkUtils {
             return c != null && c.length > 0;
         }
         return false;
+    }
+
+    /**
+     * Delete a symlink (without deleting the associated resource).
+     *
+     * <p>This is a utility method that removes a unix symlink without
+     * removing the resource that the symlink points to. If it is
+     * accidentally invoked on a real file, the real file will not be
+     * harmed, but silently ignored.</p>
+     *
+     * <p>Normaly this method works by
+     * getting the canonical path of the link, using the canonical path to
+     * rename the resource (breaking the link) and then deleting the link.
+     * The resource is then returned to its original name inside a finally
+     * block to ensure that the resource is unharmed even in the event of
+     * an exception.</p>
+     *
+     * <p>There may be cases where the algorithm described above doesn't work,
+     * in that case the method tries to use the native "rm" command on
+     * the symlink instead.</p>
+     *
+     * @param link A <code>File</code> object of the symlink to delete.
+     * @param task An Ant Task required if "rm" needs to be invoked.
+     *
+     * @throws IOException If calls to <code>File.rename</code>,
+     * <code>File.delete</code> or <code>File.getCanonicalPath</code>
+     * fail.
+     * @throws BuildException if the execution of "rm" failed.
+     */
+    public void deleteSymbolicLink(File link, Task task)
+        throws IOException {
+        if (isDanglingSymbolicLink(link)) {
+            if (!link.delete()) {
+                throw new IOException("failed to remove dangling symbolic link "
+                                      + link);
+            }
+            return;
+        }
+
+        if (!isSymbolicLink(link)) {
+            // plain file, not a link
+            return;
+        }
+
+        if (!link.exists()) {
+            throw new FileNotFoundException("No such symbolic link: " + link);
+        }
+
+        // find the resource of the existing link:
+        File target = link.getCanonicalFile();
+
+        // no reason to try the renaming algorithm if we aren't allowed to
+        // write to the target's parent directory.  Let's hope that
+        // File.canWrite works on all platforms.
+
+        if (task == null || target.getParentFile().canWrite()) {
+
+            // rename the resource, thus breaking the link:
+            File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
+                                                  target.getParentFile(), false,
+                                                  false);
+
+            if (FILE_UTILS.isLeadingPath(target, link)) {
+                // link points to a parent directory, renaming the parent
+                // will rename the file
+                link = new File(temp,
+                                FILE_UTILS.removeLeadingPath(target, link));
+            }
+
+            boolean renamedTarget = false;
+            try {
+                try {
+                    FILE_UTILS.rename(target, temp);
+                    renamedTarget = true;
+                } catch (IOException e) {
+                    throw new IOException("Couldn't rename resource when "
+                                          + "attempting to delete '" + link
+                                          + "'.  Reason: " + e.getMessage());
+                }
+                // delete the (now) broken link:
+                if (!link.delete()) {
+                    throw new IOException("Couldn't delete symlink: "
+                                          + link
+                                          + " (was it a real file? is this "
+                                          + "not a UNIX system?)");
+                }
+            } finally {
+                if (renamedTarget) {
+                    // return the resource to its original name:
+                    try {
+                        FILE_UTILS.rename(temp, target);
+                    } catch (IOException e) {
+                        throw new IOException("Couldn't return resource "
+                                              + temp
+                                              + " to its original name: "
+                                              + target.getAbsolutePath()
+                                              + ". Reason: " + e.getMessage()
+                                              + "\n THE RESOURCE'S NAME ON DISK"
+                                              + " HAS BEEN CHANGED BY THIS"
+                                              + " ERROR!\n");
+                    }
+                }
+            }
+        } else {
+            Execute.runCommand(task,
+                               new String[] {"rm", link.getAbsolutePath()});
+        }
     }
 
 }
