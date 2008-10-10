@@ -2243,30 +2243,46 @@ public class Javadoc extends Task {
         return false;
     }
 
-    private String quoteString(String str, final char delim) {
+    private String quoteString(final String str, final char delim) {
         StringBuffer buf = new StringBuffer(str.length() * 2);
         buf.append(delim);
-        if (str.indexOf('\\') != -1) {
-            str = replace(str, '\\', "\\\\");
-        }
-        if (str.indexOf(delim) != -1) {
-            str = replace(str, delim, "\\" + delim);
-        }
-        buf.append(str);
-        buf.append(delim);
-        return buf.toString();
-    }
-
-    private String replace(String str, char fromChar, String toString) {
-        StringBuffer buf = new StringBuffer(str.length() * 2);
-        for (int i = 0; i < str.length(); ++i) {
-            char ch = str.charAt(i);
-            if (ch == fromChar) {
-                buf.append(toString);
+        final int len = str.length();
+        boolean lastCharWasCR = false;
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (c == delim) { // can't put the non-constant delim into a case
+                buf.append('\\').append(c);
+                lastCharWasCR = false;
             } else {
-                buf.append(ch);
+                switch (c) {
+                case '\\':
+                    buf.append("\\\\");
+                    lastCharWasCR = false;
+                    break;
+                case '\r':
+                    // insert a line continuation marker
+                    buf.append("\\\r");
+                    lastCharWasCR = true;
+                    break;
+                case '\n':
+                    // insert a line continuation marker unless this
+                    // is a \r\n sequence in which case \r already has
+                    // created the marker
+                    if (!lastCharWasCR) {
+                        buf.append("\\\n");
+                    } else {
+                        buf.append("\n");
+                    }
+                    lastCharWasCR = false;
+                    break;
+                default:
+                    buf.append(c);
+                    lastCharWasCR = false;
+                    break;
+                }
             }
         }
+        buf.append(delim);
         return buf.toString();
     }
 

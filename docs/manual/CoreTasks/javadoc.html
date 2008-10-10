@@ -413,7 +413,7 @@ to ensure that this command supports the attributes you wish to use.</p>
       in srcfiles or as nested source elements should be written to a
       temporary file to make the command line shorter. Also applies to
       the package names specified via the packagenames attribute or
-      nested package elements.<em>Since Ant 1.7.0</em>, also applies
+      nested package elements.  <em>Since Ant 1.7.0</em>, also applies
       to all the other command line options.
       (<code>yes</code> | <code>no</code>). Default is no.</td>
     <td align="center" valign="top">all</td>
@@ -570,6 +570,9 @@ Same as for <code>package</code>.
 
 <p>Same as the <code>doctitle</code> attribute, but you can nest text
 inside the element this way.</p>
+
+<p>If the nested text contains line breaks, you must use the
+  useexternalfile attribute and set it to true.</p>
 
 <h4>header</h4>
 

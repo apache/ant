@@ -236,6 +236,10 @@ Fixed bugs:
    find the corresponding source files.
    Bugzilla Report 45916.
 
+ * <javadoc> failed if the nested <bottom> or <head> contained line
+   breaks.
+   Bugzilla Report 43342.
+
 Other changes:
 --------------
 
