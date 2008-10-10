@@ -2220,8 +2220,8 @@ public class Javadoc extends Task {
      * @return the quoted string, if there is no need to quote the string,
      *         return the original string.
      */
-    private String quoteString(String str) {
-        if (str.indexOf(' ') == -1
+    private String quoteString(final String str) {
+        if (!containsWhitespace(str)
             && str.indexOf('\'') == -1
             && str.indexOf('"') == -1) {
             return str;
@@ -2233,7 +2233,17 @@ public class Javadoc extends Task {
         }
     }
 
-    private String quoteString(String str, char delim) {
+    private boolean containsWhitespace(final String s) {
+        final int len = s.length();
+        for (int i = 0; i < len; i++) {
+            if (Character.isWhitespace(s.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String quoteString(String str, final char delim) {
         StringBuffer buf = new StringBuffer(str.length() * 2);
         buf.append(delim);
         if (str.indexOf('\\') != -1) {
