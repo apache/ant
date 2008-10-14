@@ -240,6 +240,10 @@ Fixed bugs:
    breaks.
    Bugzilla Report 43342.
 
+ * encoding="auto" has been broken in <mail> since Ant 1.7.0 and only
+   worked if JavaMail was available.
+   Bugzilla Report 42389.
+
 Other changes:
 --------------
 

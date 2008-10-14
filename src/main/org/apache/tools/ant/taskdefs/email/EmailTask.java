@@ -430,7 +430,6 @@ public class EmailTask extends Task {
                     log("Using MIME mail", Project.MSG_VERBOSE);
                 } catch (BuildException e) {
                     logBuildException("Failed to initialise MIME mail: ", e);
-                    return;
                 }
             }
             // SMTP auth only allowed with MIME mail
@@ -454,7 +453,6 @@ public class EmailTask extends Task {
                     log("Using UU mail", Project.MSG_VERBOSE);
                 } catch (BuildException e) {
                     logBuildException("Failed to initialise UU mail: ", e);
-                    return;
                 }
             }
             // try plain format
