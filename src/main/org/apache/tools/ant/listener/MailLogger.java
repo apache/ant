@@ -355,6 +355,7 @@ public class MailLogger extends DefaultLogger {
         mailer.setBccList(new Vector());
         mailer.setFiles(new Vector());
         mailer.setSubject(values.subject());
+        mailer.setHeaders(new Vector());
         mailer.send();
     }
     private Vector vectorizeEmailAddresses(String listString) {

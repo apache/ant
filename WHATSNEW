@@ -244,6 +244,9 @@ Fixed bugs:
    worked if JavaMail was available.
    Bugzilla Report 42389.
 
+ * MailLogger could cause a NullPointerException.
+   Bugzilla Report 44009.
+
 Other changes:
 --------------
 
