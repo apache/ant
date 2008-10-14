@@ -738,8 +738,52 @@
           the version of Java, the more Ant tasks you get.</p>
                         <p>If only the JRE is present but not a full JDK then many
           tasks will not work.</p>
-                        <p>Ant 1.6.* works with jdk 1.2 and higher, Ant 1.1 to Ant
-          1.5.* work with jdk 1.1 and higher.</p>
+                        <p>The following table lists the minimum Java versions
+          required to compile and run Ant.  Note that most committers
+          work with more recent versions of the JDK and that Ant doesn't
+          get tested much for older versions.</p>
+                              <table class="ForrestTable" cellspacing="1" cellpadding="4">
+              <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Ant Version
+      </th>
+                          <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Minimum Java Version
+      </th>
+      </tr>
+                  <tr>
+                      <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.1 up to 1.5.4
+      </td>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.1
+      </td>
+      </tr>
+                  <tr>
+                      <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.6.0 up to 1.7.0
+      </td>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.2
+      </td>
+      </tr>
+                  <tr>
+                      <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.7.1 up to the current svn trunk
+      </td>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          1.3
+      </td>
+      </tr>
+          </table>
                     <p class="faq">
       <a name="no-gnu-tar"></a>
       I get checksum errors when I try to extract the
@@ -2171,6 +2215,8 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </p>
     </body>
   </html>
+
+
 
 
 
