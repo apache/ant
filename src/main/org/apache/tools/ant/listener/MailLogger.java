@@ -46,7 +46,15 @@ import org.apache.tools.mail.MailMessage;
  *  <ul>
  *    <li> MailLogger.mailhost [default: localhost] - Mail server to use</li>
  *    <li> MailLogger.port [default: 25] - Default port for SMTP </li>
+ *    <li> Maillogger.user [no default] - user name for SMPT auth
+ *    (requires JavaMail)</li>
+ *    <li> Maillogger.password [no default] - password for SMPT auth
+ *    (requires JavaMail)</li>
+ *    <li> Maillogger.ssl [default: false] - on or true if ssl is
+ *    needed (requires JavaMail)</li>
  *    <li> MailLogger.from [required] - Mail "from" address</li>
+ *    <li> MailLogger.from [no default] - Mail "replyto" address(es),
+ *    comma-separated</li>
  *    <li> MailLogger.failure.notify [default: true] - Send build failure
  *    e-mails?</li>
  *    <li> MailLogger.success.notify [default: true] - Send build success
@@ -59,6 +67,10 @@ import org.apache.tools.mail.MailMessage;
  *    failed build</li>
  *    <li> MailLogger.success.subject [default: "Build Success"] - Subject of
  *    successful build</li>
+ *    <li> MailLogger.mimeType [default: text/plain] - MIME-Type of email</li>
+ *    <li> MailLogger.charset [no default] - character set of email</li>
+ *    <li> MailLogger.properties.file [no default] - Filename of
+ *    properties file that will override other values.</li>
  *  </ul>
  *  These properties are set using standard Ant property setting mechanisms
  *  (&lt;property&gt;, command-line -D, etc). Ant properties can be overridden
