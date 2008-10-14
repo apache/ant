@@ -103,6 +103,9 @@ public class EmailTask extends Task {
     /** indicate if the user wishes SSL-TLS */
     private boolean ssl = false;
 
+    /** ignore invalid recipients? */
+    private boolean ignoreInvalidRecipients = false;
+
     /**
      * Set the user for SMTP auth; this requires JavaMail.
      * @param user the String username.
@@ -403,6 +406,19 @@ public class EmailTask extends Task {
     }
 
     /**
+     * Whether invalid recipients should be ignored (but a warning
+     * will be logged) instead of making the task fail.
+     *
+     * <p>Even with this property set to true the task will still fail
+     * if the mail couldn't be sent to any recipient at all.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setIgnoreInvalidRecipients(boolean b) {
+        ignoreInvalidRecipients = b;
+    }
+
+    /**
      * Send an email.
      */
     public void execute() {
@@ -532,6 +548,7 @@ public class EmailTask extends Task {
             mailer.setTask(this);
             mailer.setIncludeFileNames(includeFileNames);
             mailer.setHeaders(headers);
+            mailer.setIgnoreInvalidRecipients(ignoreInvalidRecipients);
 
             // send the email
             mailer.send();

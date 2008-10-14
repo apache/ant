@@ -38,19 +38,22 @@ import java.security.Security;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.Authenticator;
+import javax.mail.Address;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.InternetAddress;
+import javax.mail.SendFailedException;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Uses the JavaMail classes to send Mime format email.
@@ -59,6 +62,9 @@ import org.apache.tools.ant.BuildException;
  */
 public class MimeMailer extends Mailer {
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
+    private static final String GENERIC_ERROR =
+        "Problem while sending mime mail:";
 
     /** Default character set */
     private static final String DEFAULT_CHARSET
@@ -237,11 +243,36 @@ public class MimeMailer extends Mailer {
                 attachments.addBodyPart(body);
             }
             msg.setContent(attachments);
-            Transport.send(msg);
+            try {
+                Transport.send(msg);
+            } catch (SendFailedException sfe) {
+                if (!shouldIgnoreInvalidRecipients()) {
+                    throw new BuildException(GENERIC_ERROR, sfe);
+                } else if (sfe.getValidSentAddresses() == null
+                           || sfe.getValidSentAddresses().length == 0) {
+                    throw new BuildException("Couldn't reach any recipient",
+                                             sfe);
+                } else {
+                    Address[] invalid = sfe.getInvalidAddresses();
+                    if (invalid == null) {
+                        invalid = new Address[0];
+                    }
+                    for (int i = 0; i < invalid.length; i++) {
+                        didntReach(invalid[i], "invalid", sfe);
+                    }
+                    Address[] validUnsent = sfe.getValidUnsentAddresses();
+                    if (validUnsent == null) {
+                        validUnsent = new Address[0];
+                    }
+                    for (int i = 0; i < validUnsent.length; i++) {
+                        didntReach(validUnsent[i], "valid", sfe);
+                    }
+                }
+            }
         } catch (MessagingException e) {
-            throw new BuildException("Problem while sending mime mail:", e);
+            throw new BuildException(GENERIC_ERROR, e);
         } catch (IOException e) {
-            throw new BuildException("Problem while sending mime mail:", e);
+            throw new BuildException(GENERIC_ERROR, e);
         }
     }
 
@@ -272,6 +303,17 @@ public class MimeMailer extends Mailer {
         StringTokenizer token = new StringTokenizer(type.substring(pos), "=; ");
         token.nextToken(); // Skip 'charset='
         return token.nextToken();
+    }
+
+    private void didntReach(Address addr, String category,
+                            MessagingException ex) {
+        String msg = "Failed to send mail to " + category + " address "
+            + addr + " because of " + ex.getMessage();
+        if (task != null) {
+            task.log(msg, Project.MSG_WARN);
+        } else {
+            System.err.println(msg);
+        }
     }
 
     static class SimpleAuthenticator extends Authenticator {

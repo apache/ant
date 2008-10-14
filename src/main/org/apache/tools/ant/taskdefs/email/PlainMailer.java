@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.mail.MailMessage;
 
 /**
@@ -44,6 +45,7 @@ class PlainMailer extends Mailer {
             mailMessage.from(from.toString());
 
             Enumeration e;
+            boolean atLeastOneRcptReached = false;
 
             e = replyToList.elements();
             while (e.hasMoreElements()) {
@@ -51,15 +53,36 @@ class PlainMailer extends Mailer {
             }
             e = toList.elements();
             while (e.hasMoreElements()) {
-                mailMessage.to(e.nextElement().toString());
+                String to = e.nextElement().toString();
+                try {
+                    mailMessage.to(to);
+                    atLeastOneRcptReached = true;
+                } catch (IOException ex) {
+                    badRecipient(to, ex);
+                }
             }
             e = ccList.elements();
             while (e.hasMoreElements()) {
-                mailMessage.cc(e.nextElement().toString());
+                String to = e.nextElement().toString();
+                try {
+                    mailMessage.cc(to);
+                    atLeastOneRcptReached = true;
+                } catch (IOException ex) {
+                    badRecipient(to, ex);
+                }
             }
             e = bccList.elements();
             while (e.hasMoreElements()) {
-                mailMessage.bcc(e.nextElement().toString());
+                String to = e.nextElement().toString();
+                try {
+                    mailMessage.bcc(to);
+                    atLeastOneRcptReached = true;
+                } catch (IOException ex) {
+                    badRecipient(to, ex);
+                }
+            }
+            if (!atLeastOneRcptReached) {
+                throw new BuildException("Couldn't reach any recipient");
             }
             if (subject != null) {
                 mailMessage.setSubject(subject);
@@ -133,6 +156,20 @@ class PlainMailer extends Mailer {
             }
         } finally {
             finstr.close();
+        }
+    }
+
+    private void badRecipient(String rcpt, IOException reason) {
+        String msg = "Failed to send mail to " + rcpt;
+        if (shouldIgnoreInvalidRecipients()) {
+            msg += " because of :" + reason.getMessage();
+            if (task != null) {
+                task.log(msg, Project.MSG_WARN);
+            } else {
+                System.err.println(msg);
+            }
+        } else {
+            throw new BuildException(msg, reason);
         }
     }
 }

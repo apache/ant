@@ -425,6 +425,10 @@ Other changes:
    used by MailLogger.
    Bugzilla Report 27211.
 
+ * a new attribute of <mail> allows the task to succeed if it can
+   reach at least one given recipient.
+   Bugzilla Report 36446.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
