@@ -976,7 +976,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // even in the JUnit 3 adapter.
                     // So we need to help it a bit to retain compatibility for JUnit 3 tests.
                     testListener.addFailure(test, (AssertionFailedError) t);
-                } else if (junit4 && t.getClass().getName().equals("java.lang.AssertionError")) {
+                } else if (junit4 && isAssertionError(t.getClass())) {
                     // Not strictly necessary but probably desirable.
                     // JUnit 4-specific test GUIs will show just "failures".
                     // But Ant's output shows "failures" vs. "errors".
@@ -1035,13 +1035,23 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         while (e.hasMoreElements()) {
             Throwable t = ((TestFailure) e.nextElement()).thrownException();
             if (t instanceof AssertionFailedError
-                || t.getClass().getName().equals("java.lang.AssertionError")) {
+                || isAssertionError(t.getClass())) {
                 failures++;
             } else {
                 errors++;
             }
         }
         return new int[] {failures, errors};
+    }
+
+    private static boolean isAssertionError(Class clazz) {
+        while (clazz != null) {
+            if (clazz.getName().equals("java.lang.AssertionError")) {
+                return true;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return false;
     }
 
 } // JUnitTestRunner

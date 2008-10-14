@@ -247,6 +247,12 @@ Fixed bugs:
  * MailLogger could cause a NullPointerException.
    Bugzilla Report 44009.
 
+ * <junit> didn't recognize failed assertions as failures if they
+   caused subclasses of AssertionError to be thrown (like
+   org.junit.ComparisonFailure that is thrown when assertEquals
+   fails).
+   Bugzilla Report 45028.
+
 Other changes:
 --------------
 
