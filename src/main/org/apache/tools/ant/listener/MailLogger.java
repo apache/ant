@@ -67,6 +67,10 @@ import org.apache.tools.mail.MailMessage;
  *    failed build</li>
  *    <li> MailLogger.success.subject [default: "Build Success"] - Subject of
  *    successful build</li>
+ *    <li> MailLogger.failure.body [default: none] - fixed text of
+ *    mail body for a failed build, default is to send the logfile</li>
+ *    <li> MailLogger.success.body [default: none] - fixed text of
+ *    mail body for a successful build, default is to send the logfile</li>
  *    <li> MailLogger.mimeType [default: text/plain] - MIME-Type of email</li>
  *    <li> MailLogger.charset [no default] - character set of email</li>
  *    <li> MailLogger.properties.file [no default] - Filename of
@@ -143,6 +147,7 @@ public class MailLogger extends DefaultLogger {
                 .toList(getValue(properties, prefix + ".to", null))
                 .mimeType(getValue(properties, "mimeType", DEFAULT_MIME_TYPE))
                 .charset(getValue(properties, "charset", ""))
+                .body(getValue(properties, prefix + ".body", ""))
                 .subject(getValue(
                              properties, prefix + ".subject",
                              (success) ? "Build Success" : "Build Failure"));
@@ -249,6 +254,14 @@ public class MailLogger extends DefaultLogger {
             this.mimeType = mimeType;
             return this;
         }
+        private String body;
+        public String body() {
+            return body;
+        }
+        public Values body(String body) {
+            this.body = body;
+            return this;
+        }
     }
 
     /**
@@ -324,7 +337,7 @@ public class MailLogger extends DefaultLogger {
         }
 
         PrintStream ps = mailMessage.getPrintStream();
-        ps.println(message);
+        ps.println(values.body().length() > 0 ? values.body() : message);
 
         mailMessage.sendAndClose();
     }
@@ -352,7 +365,8 @@ public class MailLogger extends DefaultLogger {
         mailer.setUser(values.user());
         mailer.setPassword(values.password());
         mailer.setSSL(values.ssl());
-        Message mymessage = new Message(message);
+        Message mymessage =
+            new Message(values.body().length() > 0 ? values.body() : message);
         mymessage.setProject(project);
         mymessage.setMimeType(values.mimeType());
         if (values.charset().length() > 0) {

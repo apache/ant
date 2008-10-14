@@ -224,9 +224,16 @@ control for turning off success or failure messages individually.</p>
     <td width="63%">No, default &quot;Build Success&quot;</td>
   </tr>
   <tr>
-    <td width="337">MailLogger.properties.file </td>
-    <td width="63%">Filename of properties file that will override other values.</td>
-    <td width="63%">No</td>
+    <td width="337">MailLogger.failure.body</td>
+    <td width="63%">Fixed body of the email for a failed
+      build.  <em>Since Ant 1.8.0</em></td>
+    <td width="63%">No, default is to send the full log output.</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.success.body</td>
+    <td width="63%">Fixed body of the email for a successful
+      build.  <em>Since Ant 1.8.0</em></td>
+    <td width="63%">No, default is to send the full log output.</td>
   </tr>
   <tr>
     <td width="337">MailLogger.mimeType</td>
@@ -236,6 +243,11 @@ control for turning off success or failure messages individually.</p>
   <tr>
     <td width="337">MailLogger.charset</td>
     <td width="63%">Character set of the message.  <em>Since Ant 1.8.0</em></td>
+    <td width="63%">No</td>
+  </tr>
+  <tr>
+    <td width="337">MailLogger.properties.file </td>
+    <td width="63%">Filename of properties file that will override other values.</td>
     <td width="63%">No</td>
   </tr>
 </table>
