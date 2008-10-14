@@ -414,6 +414,10 @@ Other changes:
    to really close the file.
    Bugzilla Report 45960.
 
+ * two new properties can be used to set the MIME-Type and charset
+   used by MailLogger.
+   Bugzilla Report 27211.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

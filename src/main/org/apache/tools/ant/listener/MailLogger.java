@@ -36,6 +36,7 @@ import org.apache.tools.ant.taskdefs.email.Message;
 import org.apache.tools.ant.taskdefs.email.Mailer;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.DateUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
 
@@ -70,6 +71,8 @@ public class MailLogger extends DefaultLogger {
     /** Buffer in which the message is constructed prior to sending */
     private StringBuffer buffer = new StringBuffer();
 
+    private static final String DEFAULT_MIME_TYPE = "text/plain";
+
     /**
      *  Sends an e-mail with the log results.
      *
@@ -93,13 +96,7 @@ public class MailLogger extends DefaultLogger {
             } catch (IOException ioe) {
                 // ignore because properties file is not required
             } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
+                FileUtils.close(is);
             }
         }
 
@@ -132,6 +129,8 @@ public class MailLogger extends DefaultLogger {
                 .from(getValue(properties, "from", null))
                 .replytoList(getValue(properties, "replyto", ""))
                 .toList(getValue(properties, prefix + ".to", null))
+                .mimeType(getValue(properties, "mimeType", DEFAULT_MIME_TYPE))
+                .charset(getValue(properties, "charset", ""))
                 .subject(getValue(
                              properties, prefix + ".subject",
                              (success) ? "Build Success" : "Build Failure"));
@@ -222,6 +221,22 @@ public class MailLogger extends DefaultLogger {
             this.subject = subject;
             return this;
         }
+        private String charset;
+        public String charset() {
+            return charset;
+        }
+        public Values charset(String charset) {
+            this.charset = charset;
+            return this;
+        }
+        private String mimeType;
+        public String mimeType() {
+            return mimeType;
+        }
+        public Values mimeType(String mimeType) {
+            this.mimeType = mimeType;
+            return this;
+        }
     }
 
     /**
@@ -289,6 +304,13 @@ public class MailLogger extends DefaultLogger {
 
         mailMessage.setSubject(values.subject());
 
+        if (values.charset().length() > 0) {
+            mailMessage.setHeader("Content-Type", values.mimeType()
+                                  + "; charset=\"" + values.charset() + "\"");
+        } else {
+            mailMessage.setHeader("Content-Type", values.mimeType());
+        }
+
         PrintStream ps = mailMessage.getPrintStream();
         ps.println(message);
 
@@ -301,7 +323,6 @@ public class MailLogger extends DefaultLogger {
      * @param  message          mail body
      */
     private void sendMimeMail(Project project, Values values, String message) {
-        // convert the replyTo string into a vector of emailaddresses
         Mailer mailer = null;
         try {
             mailer = (Mailer) ClasspathUtils.newInstance(
@@ -312,6 +333,7 @@ public class MailLogger extends DefaultLogger {
             log("Failed to initialise MIME mail: " + t.getMessage());
             return;
         }
+        // convert the replyTo string into a vector of emailaddresses
         Vector replyToList = vectorizeEmailAddresses(values.replytoList());
         mailer.setHost(values.mailhost());
         mailer.setPort(values.port());
@@ -320,6 +342,10 @@ public class MailLogger extends DefaultLogger {
         mailer.setSSL(values.ssl());
         Message mymessage = new Message(message);
         mymessage.setProject(project);
+        mymessage.setMimeType(values.mimeType());
+        if (values.charset().length() > 0) {
+            mymessage.setCharset(values.charset());
+        }
         mailer.setMessage(mymessage);
         mailer.setFrom(new EmailAddress(values.from()));
         mailer.setReplyToList(replyToList);
