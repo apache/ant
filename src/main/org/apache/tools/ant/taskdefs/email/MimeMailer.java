@@ -203,10 +203,10 @@ public class MimeMailer extends Mailer {
             msg.addHeader("Date", getDate());
 
             if (headers != null) {
-            for (Iterator iter = headers.iterator(); iter.hasNext();) {
-                Header h = (Header) iter.next();
-                msg.addHeader(h.getName(), h.getValue());
-            }
+                for (Iterator iter = headers.iterator(); iter.hasNext();) {
+                    Header h = (Header) iter.next();
+                    msg.addHeader(h.getName(), h.getValue());
+                }
             }
             PrintStream out = new PrintStream(sds.getOutputStream());
             message.print(out);

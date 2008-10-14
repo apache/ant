@@ -72,11 +72,11 @@ class PlainMailer extends Mailer {
                 mailMessage.setHeader("Content-Type", message.getMimeType());
             }
             if (headers != null) {
-            e = headers.elements();
-            while (e.hasMoreElements()) {
-                Header h = (Header) e.nextElement();
-                mailMessage.setHeader(h.getName(), h.getValue());
-            }
+                e = headers.elements();
+                while (e.hasMoreElements()) {
+                    Header h = (Header) e.nextElement();
+                    mailMessage.setHeader(h.getName(), h.getValue());
+                }
             }
             PrintStream out = mailMessage.getPrintStream();
             message.print(out);
