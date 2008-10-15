@@ -253,6 +253,10 @@ Fixed bugs:
    fails).
    Bugzilla Report 45028.
 
+ * the Unix "ant" wrapper script failed to protect wildcards in
+   command line arguments in some cases.
+   Bugzilla Report 31601.
+
 Other changes:
 --------------
 
