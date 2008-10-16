@@ -451,6 +451,8 @@ Other changes:
    CVS_CLIENT_PORT.
    Bugzilla Report 30124.
 
+ * <cvsversion> now works for local repositories as well.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

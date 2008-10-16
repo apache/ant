@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 
 import java.io.ByteArrayOutputStream;
@@ -115,12 +116,17 @@ public class CvsVersion extends AbstractCvsTask {
         setCommand("version");
         super.execute();
         String output = bos.toString();
+        log("Received version response \"" + output + "\"",
+            Project.MSG_DEBUG);
         StringTokenizer st = new StringTokenizer(output);
         boolean client = false;
         boolean server = false;
         String cvs = null;
-        while (st.hasMoreTokens()) {
-            String currentToken = st.nextToken();
+        String cachedVersion = null;
+        boolean haveReadAhead = false;
+        while (haveReadAhead || st.hasMoreTokens()) {
+            String currentToken = haveReadAhead ? cachedVersion : st.nextToken();
+            haveReadAhead = false;
             if (currentToken.equals("Client:")) {
                 client = true;
             } else if (currentToken.equals("Server:")) {
@@ -129,7 +135,11 @@ public class CvsVersion extends AbstractCvsTask {
                        && currentToken.endsWith(")")) {
                 cvs = currentToken.length() == 5 ? "" : " " + currentToken;
             }
-            if (client && cvs != null) {
+            if (!client && !server && cvs != null
+                && cachedVersion == null && st.hasMoreTokens()) {
+                cachedVersion = st.nextToken();
+                haveReadAhead = true;
+            } else if (client && cvs != null) {
                 if (st.hasMoreTokens()) {
                     clientVersion = st.nextToken() + cvs;
                 }
@@ -141,8 +151,13 @@ public class CvsVersion extends AbstractCvsTask {
                 }
                 server = false;
                 cvs = null;
+            } else if (currentToken.equals("(client/server)")
+                       && cvs != null && cachedVersion != null
+                       && !client && !server) {
+                client = server = true;
+                clientVersion = serverVersion = cachedVersion + cvs;
+                cachedVersion = cvs = null;
             }
-
         }
         if (clientVersionProperty != null) {
             getProject().setNewProperty(clientVersionProperty, clientVersion);
