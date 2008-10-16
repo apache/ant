@@ -1,0 +1,42 @@
+head     1.1;
+branch   1.1.1;
+access   ;
+symbols  start:1.1.1.1 ant:1.1.1;
+locks    ; strict;
+comment  @# @;
+
+
+1.1
+date     2008.10.16.12.56.07;  author stefan;  state Exp;
+branches 1.1.1.1;
+next     ;
+commitid        17ca48f739e74567;
+
+1.1.1.1
+date     2008.10.16.12.56.07;  author stefan;  state Exp;
+branches ;
+next     ;
+commitid        17ca48f739e74567;
+
+
+desc
+@@
+
+
+
+1.1
+log
+@Initial revision
+@
+text
+@This is a text.
+
+@
+
+
+1.1.1.1
+log
+@Initial import
+@
+text
+@@
