@@ -137,6 +137,11 @@ public class CvsTagDiff extends AbstractCvsTask {
     private File mydestfile;
 
     /**
+     * Used to skip over removed files 
+     */
+    private boolean ignoreRemoved = false;
+
+    /**
      * The package/module to analyze.
      * @param p the name of the package to analyse
      */
@@ -188,6 +193,18 @@ public class CvsTagDiff extends AbstractCvsTask {
     public void setDestFile(File f) {
         mydestfile = f;
     }
+
+    /**
+     * Set the ignore removed indicator.
+     *
+     * @param b the ignore removed indicator.
+     *
+     * @since Ant 1.8.0
+     */ 
+    public void setIgnoreRemoved(boolean b) {
+        ignoreRemoved = b;
+    }
+
 
     /**
      * Execute task.
@@ -353,6 +370,9 @@ public class CvsTagDiff extends AbstractCvsTask {
     }
 
     private boolean doFileWasRemoved(Vector entries, String line) {
+        if (ignoreRemoved) {
+            return false;
+        }
         int index = line.indexOf(FILE_WAS_REMOVED);
         if (index == -1) {
             return false;

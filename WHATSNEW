@@ -453,6 +453,9 @@ Other changes:
 
  * <cvsversion> now works for local repositories as well.
 
+ * <cvstagdiff> has an option to ignore removed files now.
+   Bugzilla Report 26257.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
