@@ -456,6 +456,9 @@ Other changes:
  * <cvstagdiff> has an option to ignore removed files now.
    Bugzilla Report 26257.
 
+ * <cvs> and friends now support modules with spaces in their names
+   via nested <module> elements.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

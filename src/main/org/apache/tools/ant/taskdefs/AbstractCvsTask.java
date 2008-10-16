@@ -24,6 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -51,6 +54,8 @@ public abstract class AbstractCvsTask extends Task {
     private static final int MAXIMUM_COMRESSION_LEVEL = 9;
 
     private Commandline cmd = new Commandline();
+
+    private ArrayList modules = new ArrayList();
 
     /** list of Commandline children */
     private Vector vecCommandlines = new Vector();
@@ -763,6 +768,10 @@ public abstract class AbstractCvsTask extends Task {
         if (cvsPackage != null) {
             c.createArgument().setLine(cvsPackage);
         }
+        for (Iterator iter = modules.iterator(); iter.hasNext(); ) {
+            Module m = (Module) iter.next();
+            c.createArgument().setValue(m.getName());
+        }
         if (this.compression > 0
             && this.compression <= MAXIMUM_COMRESSION_LEVEL) {
             c.createArgument(true).setValue("-z" + this.compression);
@@ -834,6 +843,29 @@ public abstract class AbstractCvsTask extends Task {
     public void setCompression(boolean usecomp) {
         setCompressionLevel(usecomp
             ? AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0);
+    }
+
+    /**
+     * add a named module/package.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addModule(Module m) {
+        modules.add(m);
+    }
+
+    protected List getModules() {
+        return (List) modules.clone();
+    }
+
+    public static final class Module {
+        private String name;
+        public void setName(String s) {
+            name = s;
+        }
+        public String getName() {
+            return name;
+        }
     }
 
 }

@@ -90,7 +90,10 @@ report 21657</a> for recommended workarounds.</p>
   </tr>
   <tr>
     <td valign="top">package</td>
-    <td valign="top">the package/module to check out.</td>
+    <td valign="top">the package/module to check out.  <b>Note:</b>
+      multiple attributes can be split using spaces.  Use a nested
+      &lt;module&gt; element if you want to specify a module with
+      spaces in its name.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -151,6 +154,28 @@ report 21657</a> for recommended workarounds.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>module</h4>
+
+<p>Specifies a package/module to work on, unlike the package attribute
+  modules specified using this attribute can contain spaces in their
+  name.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The module's/package's name.</td>
+    <td align="center" valign="top">Yes.</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>  &lt;cvs cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
        package=&quot;ant&quot;

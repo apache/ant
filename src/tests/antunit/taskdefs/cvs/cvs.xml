@@ -37,4 +37,15 @@
                   destfile="${output}/report.xml"/>
     <au:assertFileExists file="${output}/report.xml"/>
   </target>
+
+  <target name="testCvsWithSpaceInModule">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" dest="${output}">
+      <module name="ant module 2"/>
+    </cvs>
+    <au:assertFileExists file="${output}/ant module 2/test.txt"/>
+    <cvschangelog dir="${output}/ant module 2"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+  </target>
 </project>

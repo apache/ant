@@ -103,7 +103,11 @@ operation may fail when using such an incompatible client.
     <td valign="top">the package/module to analyze.<br>
     Since ant 1.6
     multiple packages separated by spaces are possible.
-    aliases corresponding to different modules are also possible</td>
+    aliases corresponding to different modules are also possible
+    Use a nested &lt;module&gt; element if you want to specify a module with
+    spaces in its name.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -126,6 +130,27 @@ operation may fail when using such an incompatible client.
     <td valign="top">Stop the buildprocess if the command exits with a
       returncode other than 0. Defaults to false</td>
     <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+
+<h4>module</h4>
+
+<p>Specifies a package/module to work on, unlike the package attribute
+  modules specified using this attribute can contain spaces in their
+  name.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The module's/package's name.</td>
+    <td align="center" valign="top">Yes.</td>
   </tr>
 </table>
 
