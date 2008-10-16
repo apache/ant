@@ -48,4 +48,31 @@
                   destfile="${output}/report.xml"/>
     <au:assertFileExists file="${output}/report.xml"/>
   </target>
+
+  <target name="testCvsTagDiffWithSpaceInModule">
+    <mkdir dir="${output}"/>
+    <cvstagdiff cvsroot="${cvsroot}"
+                startDate="2008-01-01"
+                endDate="2009-01-01"
+                destfile="${output}/tagdiff.xml">
+      <module name="ant module 2"/>
+    </cvstagdiff>
+    <au:assertFileExists file="${output}/tagdiff.xml"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[test.txt]"/>
+  </target>
+
+  <target name="testCvsTagDiffWithMultipleModules">
+    <mkdir dir="${output}"/>
+    <cvstagdiff cvsroot="${cvsroot}"
+                startDate="2008-01-01"
+                endDate="2009-01-01"
+                destfile="${output}/tagdiff.xml"
+                package="antmodule1 antmodule3"/>
+    <au:assertFileExists file="${output}/tagdiff.xml"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[foo.txt]"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[yet another test.txt]"/>
+  </target>
 </project>

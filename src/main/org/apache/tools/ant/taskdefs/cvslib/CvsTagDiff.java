@@ -25,14 +25,18 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DOMUtils;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 import org.w3c.dom.Document;
@@ -142,6 +146,11 @@ public class CvsTagDiff extends AbstractCvsTask {
     private boolean ignoreRemoved = false;
 
     /**
+     * temporary list of package names.
+     */
+    private List packageNames = new ArrayList();
+
+    /**
      * The package/module to analyze.
      * @param p the name of the package to analyse
      */
@@ -232,16 +241,28 @@ public class CvsTagDiff extends AbstractCvsTask {
             addCommandArgument("-D");
             addCommandArgument(myendDate);
         }
-        // support multiple packages
-        StringTokenizer myTokenizer = new StringTokenizer(mypackage);
-        while (myTokenizer.hasMoreTokens()) {
-            addCommandArgument(myTokenizer.nextToken());
-        }
+
         // force command not to be null
         setCommand("");
         File tmpFile = null;
         try {
-            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null, true, true);
+            if (mypackage != null) {
+                // support multiple packages
+                StringTokenizer myTokenizer = new StringTokenizer(mypackage);
+                while (myTokenizer.hasMoreTokens()) {
+                    String pack = myTokenizer.nextToken();
+                    packageNames.add(pack);
+                    addCommandArgument(pack);
+                }
+            }
+            for (Iterator iter = getModules().iterator(); iter.hasNext();) {
+                AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
+                packageNames.add(m.getName());
+                // will be added to command line in super.execute()
+            }
+
+            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null,
+                                                true, true);
             setOutput(tmpFile);
 
             // run the cvs command
@@ -254,6 +275,7 @@ public class CvsTagDiff extends AbstractCvsTask {
             writeTagDiff(entries);
 
         } finally {
+            packageNames.clear();
             if (tmpFile != null) {
                 tmpFile.delete();
             }
@@ -289,20 +311,13 @@ public class CvsTagDiff extends AbstractCvsTask {
             // File testantoine/antoine.bat is removed; TESTANTOINE_1 revision 1.1.1.1
             //
             // get rid of 'File module/"
-            String toBeRemoved = FILE_STRING + mypackage + "/";
-            int headerLength = toBeRemoved.length();
             Vector entries = new Vector();
 
             String line = reader.readLine();
 
             while (null != line) {
-                if (line.length() > headerLength) {
-                    if (line.startsWith(toBeRemoved)) {
-                        line = line.substring(headerLength);
-                    } else {
-                        line = line.substring(FILE_STRING.length());
-                    }
-
+                line = removePackageName(line, packageNames);
+                if (line != null) {
                     // use || in a perl like fashion
                     boolean processed
                         =  doFileIsNew(entries, line)
@@ -417,7 +432,8 @@ public class CvsTagDiff extends AbstractCvsTask {
             }
 
             root.setAttribute("cvsroot", getCvsRoot());
-            root.setAttribute("package", mypackage);
+            root.setAttribute("package",
+                              CollectionUtils.flattenToString(packageNames));
             DOM_WRITER.openElement(root, writer, 0, "\t");
             writer.println();
             for (int i = 0, c = entries.length; i < c; i++) {
@@ -470,7 +486,7 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @exception BuildException if a parameter is not correctly set
      */
     private void validate() throws BuildException {
-        if (null == mypackage) {
+        if (null == mypackage && getModules().size() == 0) {
             throw new BuildException("Package/module must be set.");
         }
 
@@ -495,5 +511,30 @@ public class CvsTagDiff extends AbstractCvsTask {
             throw new BuildException("Only one of end tag and end date must "
                                      + "be set.");
         }
+    }
+
+    /**
+     * removes a "File: module/" prefix if present.
+     *
+     * @return null if the line was shorter than expected.
+     */
+    private static String removePackageName(String line, List packageNames) {
+        boolean matched = false;
+        for (Iterator iter = packageNames.iterator(); iter.hasNext(); ) {
+            String toBeRemoved = FILE_STRING + iter.next() + "/";
+            int len = toBeRemoved.length();
+            if (line.length() > len) {
+                if (line.startsWith(toBeRemoved)) {
+                    matched = true;
+                    line = line.substring(len);
+                    break;
+                }
+            }
+        }
+        if (!matched && line.length() > FILE_STRING.length()) {
+            line = line.substring(FILE_STRING.length());
+            matched = true;
+        }
+        return !matched ? null : line;
     }
 }

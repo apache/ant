@@ -257,6 +257,10 @@ Fixed bugs:
    command line arguments in some cases.
    Bugzilla Report 31601.
 
+ * <cvstagdiff> crippled file names and could miss some entries if
+   multiple modules have been specified.
+   Bugzilla Report 35301.
+
 Other changes:
 --------------
 
