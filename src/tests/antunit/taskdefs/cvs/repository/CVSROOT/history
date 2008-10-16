@@ -1,1 +1,10 @@
 O48f739fd|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1||antmodule1
+O48f747b5|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1||antmodule1
+M48f747fb|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1|1.2|foo.txt
+M48f7480b|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1|1.3|foo.txt
+O48f748cb|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f74940|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f749a9|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f74a02|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+M48f74a39|stefan|/tmp/testoutput/*0|antmodule1|1.4|foo.txt
+O48f74a62|stefan|/tmp/testoutput/*0|antmodule1||antmodule1

@@ -29,4 +29,12 @@
     <cvsversion clientversionproperty="client" cvsroot="${cvsroot}"/>
     <au:assertPropertySet name="client"/>
   </target>
+
+  <target name="testBug38583">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" package="antmodule1" dest="${output}"/>
+    <cvschangelog dir="${output}/antmodule1"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+  </target>
 </project>
