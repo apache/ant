@@ -118,28 +118,29 @@ public class CvsVersion extends AbstractCvsTask {
         StringTokenizer st = new StringTokenizer(output);
         boolean client = false;
         boolean server = false;
-        boolean cvs = false;
+        String cvs = null;
         while (st.hasMoreTokens()) {
             String currentToken = st.nextToken();
             if (currentToken.equals("Client:")) {
                 client = true;
             } else if (currentToken.equals("Server:")) {
                 server = true;
-            } else if (currentToken.equals("(CVS)")) {
-                cvs = true;
+            } else if (currentToken.startsWith("(CVS")
+                       && currentToken.endsWith(")")) {
+                cvs = currentToken.length() == 5 ? "" : " " + currentToken;
             }
-            if (client && cvs) {
+            if (client && cvs != null) {
                 if (st.hasMoreTokens()) {
-                    clientVersion = st.nextToken();
+                    clientVersion = st.nextToken() + cvs;
                 }
                 client = false;
-                cvs = false;
-            } else if (server && cvs) {
+                cvs = null;
+            } else if (server && cvs != null) {
                 if (st.hasMoreTokens()) {
-                    serverVersion = st.nextToken();
+                    serverVersion = st.nextToken() + cvs;
                 }
                 server = false;
-                cvs = false;
+                cvs = null;
             }
 
         }

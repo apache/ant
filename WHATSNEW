@@ -443,6 +443,9 @@ Other changes:
    the log file.
    Bugzilla Report 38029.
 
+ * <cvsversion> is supposed to support CVSNT now.
+   Bugzilla Report 31409.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
