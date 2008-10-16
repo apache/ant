@@ -260,13 +260,20 @@ public abstract class AbstractCvsTask extends Task {
         // native CVS stuff around (SM)
 
         // We can't do it ourselves as jCVS is GPLed, a third party task
-        // outside of jakarta repositories would be possible though (SB).
+        // outside of Apache repositories would be possible though (SB).
 
         Environment env = new Environment();
 
         if (port > 0) {
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_CLIENT_PORT");
+            var.setValue(String.valueOf(port));
+            env.addVariable(var);
+
+            // non-standard environment variable used by CVSNT, WinCVS
+            // and others
+            var = new Environment.Variable();
+            var.setKey("CVS_PSERVER_PORT");
             var.setValue(String.valueOf(port));
             env.addVariable(var);
         }

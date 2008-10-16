@@ -446,6 +446,11 @@ Other changes:
  * <cvsversion> is supposed to support CVSNT now.
    Bugzilla Report 31409.
 
+ * <cvs>' port attribute should now work for all clients that use the
+   environment variable CVS_PSERVER_PORT instead of the "official"
+   CVS_CLIENT_PORT.
+   Bugzilla Report 30124.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
