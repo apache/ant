@@ -248,21 +248,21 @@ public class ChangeLogTask extends AbstractCvsTask {
             }
 
             if (!remote) {
-            setCommand("log");
+                setCommand("log");
 
-            if (getTag() != null) {
-                CvsVersion myCvsVersion = new CvsVersion();
-                myCvsVersion.setProject(getProject());
-                myCvsVersion.setTaskName("cvsversion");
-                myCvsVersion.setCvsRoot(getCvsRoot());
-                myCvsVersion.setCvsRsh(getCvsRsh());
-                myCvsVersion.setPassfile(getPassFile());
-                myCvsVersion.setDest(inputDir);
-                myCvsVersion.execute();
-                if (myCvsVersion.supportsCvsLogWithSOption()) {
-                    addCommandArgument("-S");
+                if (getTag() != null) {
+                    CvsVersion myCvsVersion = new CvsVersion();
+                    myCvsVersion.setProject(getProject());
+                    myCvsVersion.setTaskName("cvsversion");
+                    myCvsVersion.setCvsRoot(getCvsRoot());
+                    myCvsVersion.setCvsRsh(getCvsRsh());
+                    myCvsVersion.setPassfile(getPassFile());
+                    myCvsVersion.setDest(inputDir);
+                    myCvsVersion.execute();
+                    if (myCvsVersion.supportsCvsLogWithSOption()) {
+                        addCommandArgument("-S");
+                    }
                 }
-            }
             } else {
                 // supply 'rlog' as argument instead of command
                 setCommand("");
