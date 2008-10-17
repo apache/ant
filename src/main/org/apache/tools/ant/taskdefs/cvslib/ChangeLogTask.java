@@ -95,6 +95,10 @@ public class ChangeLogTask extends AbstractCvsTask {
     /** The latest date at which to stop processing entries.  */
     private Date endDate;
 
+    /** Determines whether log (false) or rlog (true) is used */
+    private boolean remote = false;
+
+
     /**
      * Filesets containing list of files against which the cvs log will be
      * performed. If empty then all files in the working directory will
@@ -177,6 +181,15 @@ public class ChangeLogTask extends AbstractCvsTask {
         setStart(new Date(time));
     }
 
+    /**
+     * Whether to use rlog against a remote repository instead of log
+     * in a working copy's directory.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setRemote(final boolean remote) {
+        this.remote = remote;
+    }
 
     /**
      * Adds a set of files about which cvs logs will be generated.
@@ -210,6 +223,7 @@ public class ChangeLogTask extends AbstractCvsTask {
                 userList.put(user.getUserID(), user.getDisplayname());
             }
 
+            if (!remote) {
             setCommand("log");
 
             if (getTag() != null) {
@@ -224,6 +238,17 @@ public class ChangeLogTask extends AbstractCvsTask {
                 if (myCvsVersion.supportsCvsLogWithSOption()) {
                     addCommandArgument("-S");
                 }
+            }
+            } else {
+                // supply 'rlog' as argument instead of command
+                setCommand("");
+                addCommandArgument("rlog");
+                // Do not print name/header if no revisions
+                // selected. This is quicker: less output to parse.
+                addCommandArgument("-S");
+                // Do not list tags. This is quicker: less output to
+                // parse.
+                addCommandArgument("-N");
             }
             if (null != startDate) {
                 final SimpleDateFormat outputDate =
@@ -253,7 +278,9 @@ public class ChangeLogTask extends AbstractCvsTask {
                 }
             }
 
-            final ChangeLogParser parser = new ChangeLogParser();
+            final ChangeLogParser parser = new ChangeLogParser(remote,
+                                                               getPackage(),
+                                                               getModules());
             final RedirectingStreamHandler handler =
                 new RedirectingStreamHandler(parser);
 

@@ -22,8 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import org.apache.tools.ant.taskdefs.AbstractCvsTask;
+import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * A class used to parse the output of the CVS log command.
@@ -66,6 +70,30 @@ class ChangeLogParser {
 
     /** rcs entries */
     private final Hashtable entries = new Hashtable();
+
+    private final boolean remote;
+    private final String[] moduleNames;
+    private final int[] moduleNameLengths;
+
+    public ChangeLogParser() {
+        this(false, "", CollectionUtils.EMPTY_LIST);
+    }
+
+    public ChangeLogParser(boolean remote, String packageName, List modules) {
+        this.remote = remote;
+        moduleNames = new String[modules.size() + (packageName == null ? 0 : 1)];
+        moduleNameLengths = new int[moduleNames.length];
+        int i = 0;
+        if (packageName != null) {
+            moduleNames[i] = packageName;
+            moduleNameLengths[i++] = packageName.length();
+        }
+        for (Iterator iter = modules.iterator(); iter.hasNext(); i++) {
+            AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
+            moduleNames[i] = m.getName();
+            moduleNameLengths[i] = moduleNames[i].length();
+        }
+    }
 
     /**
      * Get a list of rcs entries as an array.
@@ -148,10 +176,28 @@ class ChangeLogParser {
      * @param line the line to process
      */
     private void processFile(final String line) {
-        if (line.startsWith("Working file:")) {
+        if (!remote && line.startsWith("Working file:")) {
             // CheckStyle:MagicNumber OFF
             file = line.substring(14, line.length());
             // CheckStyle:MagicNumber ON
+            status = GET_REVISION;
+        } else if (remote && line.startsWith("RCS file:")) {
+            // exclude the part of the RCS filename up to and
+            // including the module name (and the path separator)
+            int startOfFileName = 0;
+            for (int i = 0; i < moduleNames.length; i++) {
+                int index = line.indexOf(moduleNames[i]);
+                if (index >= 0) {
+                    startOfFileName = index + moduleNameLengths[i] + 1;
+                    break;
+                }
+            }
+            int endOfFileName = line.indexOf(",v");
+            if (endOfFileName == -1) {
+                file = line.substring(startOfFileName);
+            } else {
+                file = line.substring(startOfFileName, endOfFileName);
+            }
             status = GET_REVISION;
         }
     }

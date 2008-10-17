@@ -38,6 +38,28 @@
     <au:assertFileExists file="${output}/report.xml"/>
   </target>
 
+  <target name="testRemoteChangelog">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}" package="antmodule3"
+                  remote="true"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testRemoteChangelogNestedModule">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}"
+                  remote="true"
+                  destfile="${output}/report.xml">
+      <module name="antmodule3"/>
+    </cvschangelog>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
   <target name="testCvsWithSpaceInModule">
     <mkdir dir="${output}"/>
     <cvs cvsroot="${cvsroot}" dest="${output}">
