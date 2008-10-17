@@ -88,6 +88,10 @@ public class CvsTagDiff extends AbstractCvsTask {
      */
     static final String FILE_STRING = "File ";
     /**
+     * Length of token to identify the word file in the rdiff log
+     */
+    static final int FILE_STRING_LENGTH = FILE_STRING.length();
+    /**
      * Token to identify the word file in the rdiff log
      */
     static final String TO_STRING = " to ";
@@ -149,6 +153,16 @@ public class CvsTagDiff extends AbstractCvsTask {
      * temporary list of package names.
      */
     private List packageNames = new ArrayList();
+
+    /**
+     * temporary list of "File:" + package name + "/" for all packages.
+     */
+    private String[] packageNamePrefixes = null;
+
+    /**
+     * temporary list of length values for prefixes.
+     */
+    private int[] packageNamePrefixLengths = null;
 
     /**
      * The package/module to analyze.
@@ -246,20 +260,7 @@ public class CvsTagDiff extends AbstractCvsTask {
         setCommand("");
         File tmpFile = null;
         try {
-            if (mypackage != null) {
-                // support multiple packages
-                StringTokenizer myTokenizer = new StringTokenizer(mypackage);
-                while (myTokenizer.hasMoreTokens()) {
-                    String pack = myTokenizer.nextToken();
-                    packageNames.add(pack);
-                    addCommandArgument(pack);
-                }
-            }
-            for (Iterator iter = getModules().iterator(); iter.hasNext();) {
-                AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
-                packageNames.add(m.getName());
-                // will be added to command line in super.execute()
-            }
+            handlePackageNames();
 
             tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null,
                                                 true, true);
@@ -275,6 +276,8 @@ public class CvsTagDiff extends AbstractCvsTask {
             writeTagDiff(entries);
 
         } finally {
+            packageNamePrefixes = null;
+            packageNamePrefixLengths = null;
             packageNames.clear();
             if (tmpFile != null) {
                 tmpFile.delete();
@@ -316,7 +319,8 @@ public class CvsTagDiff extends AbstractCvsTask {
             String line = reader.readLine();
 
             while (null != line) {
-                line = removePackageName(line, packageNames);
+                line = removePackageName(line, packageNamePrefixes,
+                                         packageNamePrefixLengths);
                 if (line != null) {
                     // use || in a perl like fashion
                     boolean processed
@@ -514,27 +518,55 @@ public class CvsTagDiff extends AbstractCvsTask {
     }
 
     /**
+     * collects package names from the package attribute and nested
+     * module elements.
+     */
+    private void handlePackageNames() {
+        if (mypackage != null) {
+            // support multiple packages
+            StringTokenizer myTokenizer = new StringTokenizer(mypackage);
+            while (myTokenizer.hasMoreTokens()) {
+                String pack = myTokenizer.nextToken();
+                packageNames.add(pack);
+                addCommandArgument(pack);
+            }
+        }
+        for (Iterator iter = getModules().iterator(); iter.hasNext();) {
+            AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
+            packageNames.add(m.getName());
+            // will be added to command line in super.execute()
+        }
+        packageNamePrefixes = new String[packageNames.size()];
+        packageNamePrefixLengths = new int[packageNames.size()];
+        for (int i = 0; i < packageNamePrefixes.length; i++) {
+            packageNamePrefixes[i] = FILE_STRING + packageNames.get(i) + "/";
+            packageNamePrefixLengths[i] = packageNamePrefixes[i].length();
+        }
+    }
+
+
+    /**
      * removes a "File: module/" prefix if present.
      *
      * @return null if the line was shorter than expected.
      */
-    private static String removePackageName(String line, List packageNames) {
+    private static String removePackageName(String line,
+                                            String[] packagePrefixes,
+                                            int[] prefixLengths) {
+        if (line.length() < FILE_STRING_LENGTH) {
+            return null;
+        }
         boolean matched = false;
-        for (Iterator iter = packageNames.iterator(); iter.hasNext(); ) {
-            String toBeRemoved = FILE_STRING + iter.next() + "/";
-            int len = toBeRemoved.length();
-            if (line.length() > len) {
-                if (line.startsWith(toBeRemoved)) {
-                    matched = true;
-                    line = line.substring(len);
-                    break;
-                }
+        for (int i = 0; i < packagePrefixes.length; i++) {
+            if (line.startsWith(packagePrefixes[i])) {
+                matched = true;
+                line = line.substring(prefixLengths[i]);
+                break;
             }
         }
-        if (!matched && line.length() > FILE_STRING.length()) {
-            line = line.substring(FILE_STRING.length());
-            matched = true;
+        if (!matched) {
+            line = line.substring(FILE_STRING_LENGTH);
         }
-        return !matched ? null : line;
+        return line;
     }
 }
