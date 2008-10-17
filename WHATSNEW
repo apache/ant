@@ -473,6 +473,10 @@ Other changes:
    work against a remote repository without any working copy.
    Bugzilla Report 27419.
 
+ * start and end tags can now be used instead of dates in
+   <cvschangelog>.
+   Bugzilla Report 27419.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

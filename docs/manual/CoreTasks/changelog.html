@@ -132,6 +132,23 @@ operation may fail when using such an incompatible client.
       false.  <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">startTag</td>
+    <td valign="top">The start of a tag range. If endTag is also
+      specified, they must both be on the same branch. If endTag is not
+      specified, the end of the range will be the latest on the same
+      branch on which startTag lives.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">endTag</td>
+    <td valign="top">The end of a tag range. If startTag is also
+     specified, they must both be on the same branch. If startTag is
+     not specified, the start of the range will be the top of the
+     branch on which endTag lives.</td>  included in the report.
+    <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>

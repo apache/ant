@@ -98,6 +98,11 @@ public class ChangeLogTask extends AbstractCvsTask {
     /** Determines whether log (false) or rlog (true) is used */
     private boolean remote = false;
 
+    /** Start tag when doing tag ranges. */
+    private String startTag;
+
+    /** End tag when doing tag ranges. */
+    private String endTag;
 
     /**
      * Filesets containing list of files against which the cvs log will be
@@ -192,6 +197,25 @@ public class ChangeLogTask extends AbstractCvsTask {
     }
 
     /**
+     * Set the tag at which the changelog should start.
+     *
+     * @param start The date at which the changelog should start.
+     */
+    public void setStartTag(final String start) {
+        this.startTag = start;
+    }
+
+
+    /**
+     * Set the tag at which the changelog should stop.
+     *
+     * @param end The date at which the changelog should stop.
+     */
+    public void setEndTag(final String end) {
+        this.endTag = end;
+    }
+
+    /**
      * Adds a set of files about which cvs logs will be generated.
      *
      * @param fileSet a set of files about which cvs logs will be generated.
@@ -250,7 +274,12 @@ public class ChangeLogTask extends AbstractCvsTask {
                 // parse.
                 addCommandArgument("-N");
             }
-            if (null != startDate) {
+            if (null != startTag || null != endTag) {
+                // man, do I get spoiled by C#'s ?? operator
+                String startValue = startTag == null ? "" : startTag;
+                String endValue = endTag == null ? "" : endTag;
+                addCommandArgument("-r" + startValue + "::" + endValue);
+            } else if (null != startDate) {
                 final SimpleDateFormat outputDate =
                     new SimpleDateFormat("yyyy-MM-dd");
 
@@ -334,6 +363,12 @@ public class ChangeLogTask extends AbstractCvsTask {
             final String message = "Cannot find user lookup list "
                  + usersFile.getAbsolutePath();
 
+            throw new BuildException(message);
+        }
+        if ((null != startTag || null != endTag)
+            && (null != startDate || null != endDate)) {
+            final String message = "Specify either a tag or date range,"
+                + " not both";
             throw new BuildException(message);
         }
     }
