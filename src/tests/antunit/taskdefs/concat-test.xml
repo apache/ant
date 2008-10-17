@@ -74,4 +74,45 @@
     </au:assertTrue>
   </target>
 
+  <target name="testIgnoreEmptyFalseFileIsCreated">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST"/>
+  </target>
+	
+  <target name="testIgnoreEmptyTrueFileIsNotCreated">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="true">
+      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+    </concat>
+    <au:assertFileDoesntExist file="${output}/TESTDEST"/>
+  </target>
+	
+  <target name="testIgnoreEmptyFalseFileIsCreatedIncludesHeader">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <header filtering="false" trim="yes">
+	header
+      </header>
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST"/>
+    <au:assertResourceContains resource="${output}/TESTDEST" value="header"/>
+  </target>
+	
+  <target name="testIgnoreEmptyFalseFileIsCreatedIncludesFooter">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <footer filtering="no">footer</footer>
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST"/>
+    <au:assertResourceContains resource="${output}/TESTDEST" value="footer"/>
+  </target>
 </project>

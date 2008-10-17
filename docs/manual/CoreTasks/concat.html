@@ -32,7 +32,8 @@
         Concatenates one or more 
         <a href="../CoreTypes/resources.html">resource</a>s
         to a single file or to the console. The destination
-        file will be created if it does not exist.
+        file will be created if it does not exist unless the resource
+        list is empty and ignoreempty is true.
       </p>
 
       <p><strong>Since Ant 1.7.1</strong>, this task can be used as a
@@ -158,7 +159,17 @@ Resource Collection</a>s are used to
             set, and the task cannot used nested text.
             Also the attributes encoding, outputencoding, filelastline
             cannot be used.
-            The default is false.
+            The default is &quot;false&quot;.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
+        <tr>
+          <td valign="top">ignoreempty</td>
+          <td valign="top">
+          <em>Since Ant 1.8.0</em>
+            Specifies whether or not the file specified by 'destfile'
+            should be created if the source resource list is
+            empty. Defaults to &quot;true&quot;.
           </td>
           <td valign="top" align="center">No</td>
         </tr>

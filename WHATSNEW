@@ -463,6 +463,12 @@ Other changes:
  * <cvs> and friends now support modules with spaces in their names
    via nested <module> elements.
 
+ * A new attribute "ignoreEmpty" controls how <concat> deals when
+   there are no resources to concatenate.  If it is set to false, the
+   destination file will be created regardless, which reinstates the
+   behavior of Ant 1.7.0.
+   Bugzilla Report 46010.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

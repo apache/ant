@@ -479,6 +479,9 @@ public class Concat extends Task implements ResourceCollection {
     private String eolString;
     /** outputwriter */
     private Writer outputWriter = null;
+    /** whether to not create destinationfile if no source files are
+     * available */
+    private boolean ignoreEmpty = true;
 
     private ReaderFactory resourceReaderFactory  = new ReaderFactory() {
         public Reader getReader(Object o) throws IOException {
@@ -520,6 +523,7 @@ public class Concat extends Task implements ResourceCollection {
         textBuffer = null;
         eolString = StringUtils.LINE_SEP;
         rc = null;
+        ignoreEmpty = true;
     }
 
     // Attribute setters.
@@ -572,6 +576,17 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void setForce(boolean force) {
         this.forceOverwrite = force;
+    }
+
+    /**
+     * Sets the behavior when no source resource files are available. If set to
+     * <code>false</code> the destination file will always be created.
+     * Defaults to <code>true</code>.
+     * @param ignoreEmpty if false honour destinationfile creation.
+     * @since Ant 1.8.0
+     */
+    public void setIgnoreEmpty(boolean ignoreEmpty) {
+        this.ignoreEmpty = ignoreEmpty;
     }
 
     // Nested element creators.
@@ -733,7 +748,7 @@ public class Concat extends Task implements ResourceCollection {
             log(destinationFile + " is up-to-date.", Project.MSG_VERBOSE);
             return;
         }
-        if (c.size() == 0) {
+        if (c.size() == 0 && ignoreEmpty) {
             return;
         }
         OutputStream out;
