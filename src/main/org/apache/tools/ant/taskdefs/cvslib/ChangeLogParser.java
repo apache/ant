@@ -20,11 +20,13 @@ package org.apache.tools.ant.taskdefs.cvslib;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 import org.apache.tools.ant.util.CollectionUtils;
@@ -81,16 +83,22 @@ class ChangeLogParser {
 
     public ChangeLogParser(boolean remote, String packageName, List modules) {
         this.remote = remote;
-        moduleNames = new String[modules.size() + (packageName == null ? 0 : 1)];
-        moduleNameLengths = new int[moduleNames.length];
-        int i = 0;
+
+        ArrayList names = new ArrayList();
         if (packageName != null) {
-            moduleNames[i] = packageName;
-            moduleNameLengths[i++] = packageName.length();
+            for (StringTokenizer tok = new StringTokenizer(packageName);
+                 tok.hasMoreTokens(); ) {
+                names.add(tok.nextToken());
+            }
         }
-        for (Iterator iter = modules.iterator(); iter.hasNext(); i++) {
+        for (Iterator iter = modules.iterator(); iter.hasNext(); ) {
             AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
-            moduleNames[i] = m.getName();
+            names.add(m.getName());
+        }
+
+        moduleNames = (String[]) names.toArray(new String[names.size()]);
+        moduleNameLengths = new int[moduleNames.length];
+        for (int i = 0; i < moduleNames.length; i++) {
             moduleNameLengths[i] = moduleNames[i].length();
         }
     }
