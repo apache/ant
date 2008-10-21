@@ -314,8 +314,6 @@
     <!-- an unless-attribute on each exclude-element.                      -->
     <exclude unless="run.failing.tests" name="${optional.package}/BeanShellScriptTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
-    <exclude unless="run.failing.tests" name="${optional.package}/DotnetTest.java"/>
-    <exclude unless="run.failing.tests" name="${optional.package}/WsdlToDotnetTest.java"/>
   </patternset>
 
   <!--tests that need an XML Schema-supporting parser to work-->
@@ -509,31 +507,6 @@
         <isset property="commons.logging.present"/>
       </and>
     </condition>
-
-    <condition property="wsdl.found">
-      <or>
-        <available file="wsdl" filepath="${env.PATH}"/>
-        <available file="wsdl.exe" filepath="${env.PATH}"/>
-        <available file="wsdl.exe" filepath="${env.Path}"/>
-      </or>
-    </condition>
-    <echo level="verbose"> wsdl.found=${wsdl.found}</echo>
-    <condition property="csc.found">
-      <or>
-        <available file="mcs" filepath="${env.PATH}"/>
-        <available file="csc" filepath="${env.PATH}"/>
-        <available file="csc.exe" filepath="${env.PATH}"/>
-        <available file="csc.exe" filepath="${env.Path}"/>
-      </or>
-    </condition>
-    <echo level="verbose"> csc.found=${csc.found}</echo>
-    <condition property="dotnetapps.found">
-      <and>
-        <isset property="csc.found"/>
-        <isset property="wsdl.found"/>
-      </and>
-    </condition>
-    <echo level="verbose"> dotnetapps.found=${dotnetapps.found}</echo>
 
     <available property="rhino.present"
       classname="org.mozilla.javascript.Scriptable"
@@ -1843,12 +1816,6 @@ see ${build.junit.reports} / ${antunit.reports}
           <!-- needs jasperc -->
           <exclude name="${optional.package}/JspcTest.java"
             unless="jasper.present"/>
-
-          <!-- misc oneoff tests -->
-          <exclude name="${optional.package}/WsdlToDotnetTest.java"
-            unless="dotnetapps.found"/>
-          <exclude name="${optional.package}/DotnetTest.java"
-            unless="dotnetapps.found"/>
 
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
