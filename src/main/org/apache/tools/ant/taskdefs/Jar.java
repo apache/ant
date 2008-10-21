@@ -431,11 +431,21 @@ public class Jar extends Zip {
         serviceIterator = serviceList.iterator();
         while (serviceIterator.hasNext()) {
            service = (Service) serviceIterator.next();
-           //stolen from writeManifest
-           super.zipFile(service.getAsStream(), zOut,
-                         "META-INF/services/" + service.getType(),
-                         System.currentTimeMillis(), null,
-                         ZipFileSet.DEFAULT_FILE_MODE);
+
+           InputStream is = null;
+           try {
+               is = service.getAsStream();
+               //stolen from writeManifest
+               super.zipFile(is, zOut,
+                             "META-INF/services/" + service.getType(),
+                             System.currentTimeMillis(), null,
+                             ZipFileSet.DEFAULT_FILE_MODE);
+           } finally {
+               // technically this is unnecessary since
+               // Service.getAsStream returns a ByteArrayInputStream
+               // and not closing it wouldn't do any harm.
+               FileUtils.close(is);
+           }
         }
     }
 
@@ -511,9 +521,14 @@ public class Jar extends Zip {
 
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
-        super.zipFile(bais, zOut, MANIFEST_NAME,
-                      System.currentTimeMillis(), null,
-                      ZipFileSet.DEFAULT_FILE_MODE);
+        try {
+            super.zipFile(bais, zOut, MANIFEST_NAME,
+                          System.currentTimeMillis(), null,
+                          ZipFileSet.DEFAULT_FILE_MODE);
+        } finally {
+            // not really required
+            FileUtils.close(bais);
+        }
         super.initZipOutputStream(zOut);
     }
 
@@ -592,13 +607,19 @@ public class Jar extends Zip {
         writer.close();
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
-        super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(), null,
-                      ZipFileSet.DEFAULT_FILE_MODE);
+        try {
+            super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(),
+                          null, ZipFileSet.DEFAULT_FILE_MODE);
+        } finally {
+            // not really required
+            FileUtils.close(bais);
+        }
     }
 
     /**
      * Overridden from Zip class to deal with manifests and index lists.
-     * @param is the input stream
+     * @param in the stream to read data for the entry from.  The
+     * caller of the method is responsible for closing the stream.
      * @param zOut the zip output stream
      * @param vPath the name this entry shall have in the archive
      * @param lastModified last modification time for the entry.

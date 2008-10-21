@@ -1465,7 +1465,8 @@ public class Zip extends MatchingTask {
     /**
      * Adds a new entry to the archive, takes care of duplicates as well.
      *
-     * @param in the stream to read data for the entry from.
+     * @param in the stream to read data for the entry from.  The
+     * caller of the method is responsible for closing the stream.
      * @param zOut the stream to write to.
      * @param vPath the name this entry shall have in the archive.
      * @param lastModified last modification time for the entry.
