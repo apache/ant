@@ -161,6 +161,9 @@ public class MimeMailer extends Mailer {
                 props.put("mail.smtp.auth", "true");
                 auth = new SimpleAuthenticator(user, password);
             }
+            if (isStartTLSEnabled()) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
             sesh = Session.getInstance(props, auth);
 
             //create the message

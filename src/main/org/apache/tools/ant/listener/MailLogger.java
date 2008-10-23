@@ -73,6 +73,8 @@ import org.apache.tools.mail.MailMessage;
  *    mail body for a successful build, default is to send the logfile</li>
  *    <li> MailLogger.mimeType [default: text/plain] - MIME-Type of email</li>
  *    <li> MailLogger.charset [no default] - character set of email</li>
+ *    <li> Maillogger.starttls.enable [default: false] - on or true if
+ *    STARTTLS should be supported (requires JavaMail)</li>
  *    <li> MailLogger.properties.file [no default] - Filename of
  *    properties file that will override other values.</li>
  *  </ul>
@@ -142,6 +144,8 @@ public class MailLogger extends DefaultLogger {
                 .password(getValue(properties, "password", ""))
                 .ssl(Project.toBoolean(getValue(properties,
                                                 "ssl", "off")))
+                .starttls(Project.toBoolean(getValue(properties,
+                                                     "starttls.enable", "off")))
                 .from(getValue(properties, "from", null))
                 .replytoList(getValue(properties, "replyto", ""))
                 .toList(getValue(properties, prefix + ".to", null))
@@ -153,7 +157,7 @@ public class MailLogger extends DefaultLogger {
                              (success) ? "Build Success" : "Build Failure"));
             if (values.user().equals("")
                 && values.password().equals("")
-                && !values.ssl()) {
+                && !values.ssl() && !values.starttls()) {
                 sendMail(values, buffer.substring(0));
             } else {
                 sendMimeMail(
@@ -262,6 +266,14 @@ public class MailLogger extends DefaultLogger {
             this.body = body;
             return this;
         }
+        private boolean starttls;
+        public boolean starttls() {
+            return starttls;
+        }
+        public Values starttls(boolean starttls) {
+            this.starttls = starttls;
+            return this;
+        }
     }
 
     /**
@@ -365,6 +377,7 @@ public class MailLogger extends DefaultLogger {
         mailer.setUser(values.user());
         mailer.setPassword(values.password());
         mailer.setSSL(values.ssl());
+        mailer.setEnableStartTLS(values.ssl());
         Message mymessage =
             new Message(values.body().length() > 0 ? values.body() : message);
         mymessage.setProject(project);

@@ -49,6 +49,7 @@ public abstract class Mailer {
     protected Vector headers = null;
     // CheckStyle:VisibilityModifier ON
     private boolean ignoreInvalidRecipients = false;
+    private boolean starttls = false;
 
     /**
      * Set the mail server.
@@ -96,6 +97,20 @@ public abstract class Mailer {
      */
     public void setSSL(boolean ssl) {
         this.SSL = ssl;
+    }
+
+    /**
+     * Set whether to allow authentication to switch to a TLS
+     * connection via STARTTLS.
+     * @param b boolean; if true STARTTLS will be supported.
+     * @since Ant 1.8.0
+     */
+    public void setEnableStartTLS(boolean b) {
+        this.starttls = b;
+    }
+
+    protected boolean isStartTLSEnabled() {
+        return starttls;
     }
 
     /**

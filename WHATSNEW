@@ -482,6 +482,10 @@ Other changes:
    <cvschangelog>.
    Bugzilla Report 27419.
 
+ * MailLogger and <mail> can now optionally enable support for
+   STARTTLS.
+   Bugzilla Report 46063.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

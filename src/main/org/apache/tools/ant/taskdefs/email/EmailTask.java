@@ -102,6 +102,8 @@ public class EmailTask extends Task {
     private String password = null;
     /** indicate if the user wishes SSL-TLS */
     private boolean ssl = false;
+    /** indicate if the user wishes support for STARTTLS */
+    private boolean starttls = false;
 
     /** ignore invalid recipients? */
     private boolean ignoreInvalidRecipients = false;
@@ -131,6 +133,16 @@ public class EmailTask extends Task {
      */
     public void setSSL(boolean ssl) {
         this.ssl = ssl;
+    }
+
+    /**
+     * Set whether to allow authentication to switch to a TLS
+     * connection via STARTTLS.
+     * @param b boolean; if true STARTTLS will be supported.
+     * @since Ant 1.8.0
+     */
+    public void setEnableStartTLS(boolean b) {
+        this.starttls = b;
     }
 
     /**
@@ -454,9 +466,10 @@ public class EmailTask extends Task {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
             // SSL only allowed with MIME mail
-            if (!autoFound  && (ssl)
+            if (!autoFound  && (ssl || starttls)
                 && (encoding.equals(UU) || encoding.equals(PLAIN))) {
-                throw new BuildException("SSL only possible with MIME mail");
+                throw new BuildException("SSL and STARTTLS only possible with"
+                                         + " MIME mail");
             }
             // try UU format
             if (encoding.equals(UU)
@@ -537,6 +550,7 @@ public class EmailTask extends Task {
             mailer.setUser(user);
             mailer.setPassword(password);
             mailer.setSSL(ssl);
+            mailer.setEnableStartTLS(starttls);
             mailer.setMessage(message);
             mailer.setFrom(from);
             mailer.setReplyToList(replyToList);
