@@ -32,9 +32,12 @@ import java.io.IOException;
 /**
  * Copy the contents of a path to a destination, using the mapper of choice
  *
- * @since Ant 1.7
+ * @since Ant 1.7.0
  *
  * @ant.task category="filesystem"
+ * @deprecated this task should have never been released and was
+ * obsoleted by ResourceCollection support in Copy available since Ant
+ * 1.7.0.  Don't use it.
  */
 
 public class CopyPath extends Task {
@@ -162,6 +165,11 @@ public class CopyPath extends Task {
      *             if something goes wrong with the build.
      */
     public void execute() throws BuildException {
+        log("This task should have never been released and was"
+            + " obsoleted by ResourceCollection support in <copy> available"
+            + " since Ant 1.7.0.  Don't use it.",
+            Project.MSG_ERR);
+
         validateAttributes();
         String[] sourceFiles = path.list();
         if (sourceFiles.length == 0) {
