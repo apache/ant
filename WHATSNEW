@@ -266,6 +266,10 @@ Fixed bugs:
    multiple modules have been specified.
    Bugzilla Report 35301.
 
+ * Tasks with a "public void add(SomeType)" method failed to work as
+   TaskContainers at the same time.
+   Bugzilla Report 41647.
+
 Other changes:
 --------------
 

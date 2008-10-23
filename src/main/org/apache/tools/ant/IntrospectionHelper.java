@@ -518,22 +518,15 @@ public final class IntrospectionHelper {
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
-        if (nc == null && parent instanceof DynamicElementNS) {
-            DynamicElementNS dc = (DynamicElementNS) parent;
+        if (nc == null &&
+            (parent instanceof DynamicElementNS
+             || parent instanceof DynamicElement)
+            ) {
             String qName = child == null ? name : child.getQName();
-            final Object nestedElement = dc.createDynamicElement(
-                    child == null ? "" : child.getNamespace(), name, qName);
-            if (nestedElement != null) {
-                nc = new NestedCreator(null) {
-                    Object create(Project project, Object parent, Object ignore) {
-                        return nestedElement;
-                    }
-                };
-            }
-        }
-        if (nc == null && parent instanceof DynamicElement) {
-            DynamicElement dc = (DynamicElement) parent;
-            final Object nestedElement = dc.createDynamicElement(name.toLowerCase(Locale.US));
+            final Object nestedElement =
+                createDynamicElement(parent,
+                                     child == null ? "" : child.getNamespace(),
+                                     name, qName);
             if (nestedElement != null) {
                 nc = new NestedCreator(null) {
                     Object create(Project project, Object parent, Object ignore) {
@@ -546,6 +539,27 @@ public final class IntrospectionHelper {
             throwNotSupported(project, parent, elementName);
         }
         return nc;
+    }
+
+    /**
+     * Invokes the "correct" createDynamicElement method on parent in
+     * order to obtain a child element by name.
+     *
+     * @since Ant 1.8.0.
+     */
+    private Object createDynamicElement(Object parent, String ns,
+                                        String localName, String qName) {
+        Object nestedElement = null;
+        if (parent instanceof DynamicElementNS) {
+            DynamicElementNS dc = (DynamicElementNS) parent;
+            nestedElement = dc.createDynamicElement(ns, localName, qName);
+        }
+        if (nestedElement == null && parent instanceof DynamicElement) {
+            DynamicElement dc = (DynamicElement) parent;
+            nestedElement =
+                dc.createDynamicElement(localName.toLowerCase(Locale.US));
+        }
+        return nestedElement;
     }
 
     /**
@@ -654,6 +668,12 @@ public final class IntrospectionHelper {
      * Indicate if this element supports a nested element of the
      * given name.
      *
+     * <p>Note that this method will always return true if the
+     * introspected class is {@link #isDynamic dynamic} or contains a
+     * method named "add" with void return type and a single argument.
+     * To ge a more thorough answer, use the four-arg version of this
+     * method instead.</p>
+     *
      * @param parentUri   the uri of the parent
      * @param elementName the name of the nested element being checked
      *
@@ -661,6 +681,48 @@ public final class IntrospectionHelper {
      */
     public boolean supportsNestedElement(String parentUri, String elementName) {
         if (isDynamic() || addTypeMethods.size() > 0) {
+            return true;
+        }
+        return supportsReflectElement(parentUri, elementName);
+    }
+
+    /**
+     * Indicate if this element supports a nested element of the
+     * given name.
+     *
+     * @param parentUri   the uri of the parent
+     * @param elementName the name of the nested element being checked
+     * @param project currently executing project instance
+     * @param parent  the parent element (an instance of the introspected class)
+     * @param childQName QName of the child element, may be null
+     *
+     * @return true if the given nested element is supported
+     * @since Ant 1.8.0.
+     */
+    public boolean supportsNestedElement(String parentUri, String elementName,
+                                         Project project, Object parent,
+                                         String childQName) {
+        if (addTypeMethods.size() > 0
+            && createAddTypeCreator(project, parent, elementName) != null) {
+            return true;
+        }
+        if (isDynamic()) {
+            /*
+              breaks several tests, in particular EchoXML because it
+              creates additional empty child elements in XMLFragment
+
+            String localName =
+                ProjectHelper.extractNameFromComponentName(elementName);
+            String uri = ProjectHelper.extractUriFromComponentName(elementName);
+            if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
+                uri = "";
+            }
+            if (createDynamicElement(parent, uri, localName,
+                                     childQName == null ? localName : childQName)
+                != null) {
+                return true;
+            }
+            */
             return true;
         }
         return supportsReflectElement(parentUri, elementName);

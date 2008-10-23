@@ -542,7 +542,8 @@ public class UnknownElement extends Task {
         RuntimeConfigurable childWrapper) {
         String childName = ProjectHelper.genComponentName(
             child.getNamespace(), child.getTag());
-        if (ih.supportsNestedElement(parentUri, childName)) {
+        if (ih.supportsNestedElement(parentUri, childName,
+                                     getProject(), parent, child.getQName())) {
             IntrospectionHelper.Creator creator =
                 ih.getElementCreator(
                     getProject(), parentUri, parent, childName, child);
