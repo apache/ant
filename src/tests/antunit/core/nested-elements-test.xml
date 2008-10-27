@@ -19,7 +19,7 @@
 
   <import file="../antunit-base.xml"/>
 
-  <target name="testConditionBaseAndTasContainer">
+  <target name="testConditionBaseAndTaskContainer">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
     <echo file="${input}/ConditionRun.java">
@@ -49,6 +49,77 @@ public class ConditionRun extends ConditionBase implements TaskContainer {
     <conditionrun>
       <echo>Hello</echo>
     </conditionrun>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testDynamicElementAndTaskContainer">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/Dynamic.java">
+import org.apache.tools.ant.*;
+import java.util.*;
+
+public class Dynamic implements TaskContainer, DynamicElement {
+    private List tasks = new ArrayList();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void execute() {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
+            Task t = (Task) iter.next();
+            t.perform();
+        }
+    }
+    public Object createDynamicElement(String name) {
+        return null;
+    }
+}
+    </echo>
+    <javac destdir="${output}"
+           srcdir="${input}"/>
+    <taskdef name="dyn" classpath="${output}"
+             classname="Dynamic"/>
+    <dyn>
+      <echo>Hello</echo>
+    </dyn>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testDynamicElementNSAndTaskContainer">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/Dynamic.java">
+import org.apache.tools.ant.*;
+import java.util.*;
+
+public class Dynamic implements TaskContainer, DynamicElementNS {
+    private List tasks = new ArrayList();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void execute() {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
+            Task t = (Task) iter.next();
+            t.perform();
+        }
+    }
+    public Object createDynamicElement(String uri, String localName,
+                                       String qName) {
+        return null;
+    }
+}
+    </echo>
+    <javac destdir="${output}"
+           srcdir="${input}"/>
+    <taskdef name="dyn" classpath="${output}"
+             classname="Dynamic"/>
+    <dyn>
+      <echo>Hello</echo>
+    </dyn>
     <au:assertLogContains text="Hello"/>
   </target>
 </project>

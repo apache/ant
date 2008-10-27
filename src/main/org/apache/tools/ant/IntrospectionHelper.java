@@ -475,6 +475,21 @@ public final class IntrospectionHelper {
     }
 
     /**
+     * part of the error message created by {@link #throwNotSupported
+     * throwNotSupported}.
+     * @since Ant 1.8.0
+     */
+    protected static final String NOT_SUPPORTED_CHILD_PREFIX =
+        " doesn't support the nested \"";
+
+    /**
+     * part of the error message created by {@link #throwNotSupported
+     * throwNotSupported}.
+     * @since Ant 1.8.0
+     */
+    protected static final String NOT_SUPPORTED_CHILD_POSTFIX = "\" element.";
+
+    /**
      * Utility method to throw a NotSupported exception
      *
      * @param project the Project instance.
@@ -483,7 +498,8 @@ public final class IntrospectionHelper {
      */
     public void throwNotSupported(Project project, Object parent, String elementName) {
         String msg = project.getElementName(parent)
-                + " doesn't support the nested \"" + elementName + "\" element.";
+            + NOT_SUPPORTED_CHILD_PREFIX + elementName
+            + NOT_SUPPORTED_CHILD_POSTFIX;
         throw new UnsupportedElementException(msg, elementName);
     }
 
@@ -690,42 +706,26 @@ public final class IntrospectionHelper {
      * Indicate if this element supports a nested element of the
      * given name.
      *
+     * <p>Note that this method will always return true if the
+     * introspected class is {@link #isDynamic dynamic}, so be
+     * prepared to catch an exception about unsupported children when
+     * calling {@link #getElementCreator getElementCreator}.</p>
+     *
      * @param parentUri   the uri of the parent
      * @param elementName the name of the nested element being checked
      * @param project currently executing project instance
-     * @param parent  the parent element (an instance of the introspected class)
-     * @param childQName QName of the child element, may be null
+     * @param parent the parent element
      *
      * @return true if the given nested element is supported
      * @since Ant 1.8.0.
      */
     public boolean supportsNestedElement(String parentUri, String elementName,
-                                         Project project, Object parent,
-                                         String childQName) {
+                                         Project project, Object parent) {
         if (addTypeMethods.size() > 0
             && createAddTypeCreator(project, parent, elementName) != null) {
             return true;
         }
-        if (isDynamic()) {
-            /*
-              breaks several tests, in particular EchoXML because it
-              creates additional empty child elements in XMLFragment
-
-            String localName =
-                ProjectHelper.extractNameFromComponentName(elementName);
-            String uri = ProjectHelper.extractUriFromComponentName(elementName);
-            if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-                uri = "";
-            }
-            if (createDynamicElement(parent, uri, localName,
-                                     childQName == null ? localName : childQName)
-                != null) {
-                return true;
-            }
-            */
-            return true;
-        }
-        return supportsReflectElement(parentUri, elementName);
+        return isDynamic() || supportsReflectElement(parentUri, elementName);
     }
 
     /**

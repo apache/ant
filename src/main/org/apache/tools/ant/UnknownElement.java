@@ -542,11 +542,19 @@ public class UnknownElement extends Task {
         RuntimeConfigurable childWrapper) {
         String childName = ProjectHelper.genComponentName(
             child.getNamespace(), child.getTag());
-        if (ih.supportsNestedElement(parentUri, childName,
-                                     getProject(), parent, child.getQName())) {
-            IntrospectionHelper.Creator creator =
-                ih.getElementCreator(
-                    getProject(), parentUri, parent, childName, child);
+        if (ih.supportsNestedElement(parentUri, childName, getProject(),
+                                     parent)) {
+            IntrospectionHelper.Creator creator = null;
+            try {
+                creator = ih.getElementCreator(getProject(), parentUri,
+                                               parent, childName, child);
+            } catch (UnsupportedElementException use) {
+                if (!ih.isDynamic()) {
+                    throw use;
+                }
+                // can't trust supportsNestedElement for dynamic elements
+                return false;
+            }
             creator.setPolyType(childWrapper.getPolyType());
             Object realChild = creator.create();
             if (realChild instanceof PreSetDef.PreSetDefinition) {

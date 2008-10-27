@@ -270,6 +270,10 @@ Fixed bugs:
    TaskContainers at the same time.
    Bugzilla Report 41647.
 
+ * Tasks that implementes DynamicElemen or DynamicElementNS failed to
+   work as TaskContainers at the same time.
+   Bugzilla Report 41647.
+
 Other changes:
 --------------
 
