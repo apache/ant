@@ -274,6 +274,10 @@ Fixed bugs:
    work as TaskContainers at the same time.
    Bugzilla Report 41647.
 
+ * combining SSL and authentication in <mail> and MailLogger failed in
+   some setups.
+   Bugzilla Report 46063.
+
 Other changes:
 --------------
 

@@ -247,7 +247,10 @@ public class MimeMailer extends Mailer {
             }
             msg.setContent(attachments);
             try {
-                Transport.send(msg);
+                // Send the message using SMTP, or SMTPS if the host uses SSL
+                Transport transport = sesh.getTransport(SSL ? "smtps" : "smtp");
+                transport.connect(host, user, password);
+                transport.sendMessage(msg, msg.getAllRecipients());
             } catch (SendFailedException sfe) {
                 if (!shouldIgnoreInvalidRecipients()) {
                     throw new BuildException(GENERIC_ERROR, sfe);
