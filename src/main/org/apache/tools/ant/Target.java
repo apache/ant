@@ -29,7 +29,6 @@ import org.apache.tools.ant.property.LocalProperties;
 
 /**
  * Class to implement a target object with required parameters.
- *
  */
 public class Target implements TaskContainer {
 
