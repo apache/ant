@@ -1950,6 +1950,58 @@ mv /tmp/foo $ANT_HOME/bin/antRun
 
       </answer>
     </faq>
+
+    <faq id="oom-on-mac">
+      <question>
+        Ant runs into an infinite loop/throws an OutOufMemoryError
+        when I compile my project under Mac OS X.
+      </question>
+
+      <answer>
+        <p>Apple's Java VMs reside
+        in <code>/System/Library/Frameworks/JavaVM.framework/Versions/X.Y.Z</code>
+          and <code>JAVA_HOME</code> will usually be something
+        like <code>/System/Library/Frameworks/JavaVM.framework/Versions/X.Y.Z/Home</code>.</p>
+
+        <p>Inside this home directory there is a symbolic link
+        named <code>shared_bundle</code> that links three levels up,
+        i.e. to <code>/System/Library/Frameworks/JavaVM.framework</code>.</p>
+
+        <p>If your build file contains a <code>fileset</code> like</p>
+        <source><![CDATA[
+<fileset dir="${java.home}" includes="**/*.jar"/>
+]]></source>
+        <p>Ant is going to follow the <code>shared_bundle</code>
+        symlink and ends up recursing into all your installed VMs.
+        Even worse, it will
+        enter <code>/System/Library/Frameworks/JavaVM.framework/Versions/X.Y.Z/Home</code>
+          and will once again follow the same symlink.</p>
+
+        <p>Ant versions after Ant 1.7.1 will detect the infinite loop
+        they are in, but the resulting fileset may still be too big to
+        deal with, in particular if you have many different VM
+        versions installed.  The problem is amplified by the fact that
+        each installed version has a <code>shared_bundle</code>
+        symlink in it.</p>
+
+        <p>One solution is to not allow the fileset to follow symbolic
+          links at all, like in</p>
+        <source><![CDATA[
+<fileset dir="${java.home}" includes="**/*.jar" followsymlinks="false"/>
+]]></source>
+        <p>another one excludes the <code>shared_bundle</code>
+        directories:</p>
+        <source><![CDATA[
+<fileset dir="${java.home}" includes="**/*.jar" excludes="**/shared_bundle/**"/>
+]]></source>
+
+        <p>For Ant 1.7.1 and earlier
+        excluding <code>shared_bundle</code> may not be enough since
+        there is another symlink <code>bundle</code> that points to
+        the <code>Home</code> directory and will cause infite
+        recursions as well.</p>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>
