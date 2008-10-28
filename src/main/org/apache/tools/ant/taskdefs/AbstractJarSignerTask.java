@@ -24,10 +24,12 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.filters.LineContainsRegExp;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.RedirectorElement;
+import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -244,6 +246,14 @@ public abstract class AbstractJarSignerTask extends Task {
             }
             result.setInputString(input.toString());
             result.setLogInputString(false);
+            // Try to avoid showing password prompts on log output, as they would be confusing.
+            LineContainsRegExp filter = new LineContainsRegExp();
+            RegularExpression rx = new RegularExpression();
+            // XXX only handles English locale, not ja or zh_CN
+            rx.setPattern("^(Enter Passphrase for keystore: |Enter key password for .+: )$");
+            filter.addConfiguredRegexp(rx);
+            filter.setNegate(true);
+            result.createErrorFilterChain().addLineContainsRegExp(filter);
         }
         return result;
     }
