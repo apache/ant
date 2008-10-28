@@ -278,6 +278,10 @@ Fixed bugs:
    some setups.
    Bugzilla Report 46063.
 
+ * if an error occurs while logging the buildFinished event, the
+   original error is now logged to System.err.
+   Bugzilla Report 25086.
+
 Other changes:
 --------------
 

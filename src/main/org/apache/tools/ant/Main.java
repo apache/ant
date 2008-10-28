@@ -792,7 +792,21 @@ public class Main implements AntMain {
             throw e;
         } finally {
             if (!projectHelp) {
-                project.fireBuildFinished(error);
+                try {
+                    project.fireBuildFinished(error);
+                } catch (Throwable t) {
+                    // yes, I know it is bad style to catch Throwable,
+                    // but if we don't, we lose valuable information
+                    System.err.println("Caught an exception while logging the"
+                                       + " end of the build.  Exception was:");
+                    t.printStackTrace();
+                    if (error != null) {
+                        System.err.println("There has been an error prior to"
+                                           + " that:");
+                        error.printStackTrace();
+                    }
+                    throw new BuildException(t);
+                }
             } else if (error != null) {
                 project.log(error.toString(), Project.MSG_ERR);
             }
