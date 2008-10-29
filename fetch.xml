@@ -115,9 +115,10 @@ Set -Ddest=LOCATION on the command line
         </artifact:dependencies>
         <!-- now we are left with the problem of getting the files
              into our directory -->
-        <copypath destdir="${dest.dir}" pathref="@{archive}.path">
+        <copy todir="${dest.dir}">
+          <path refid="@{archive}.path" />
           <flattenmapper/>
-        </copypath>
+        </copy>
       </sequential>
     </macrodef>
   </target>
