@@ -347,30 +347,32 @@ public class Target implements TaskContainer {
      * @see #setUnless(String)
      */
     public void execute() throws BuildException {
-        if (testIfCondition() && testUnlessCondition()) {
-            LocalProperties localProperties
-                = LocalProperties.get(getProject());
-            localProperties.enterScope();
-            try {
-                for (int taskPosition = 0; taskPosition < children.size();
-                     ++taskPosition) {
-                    Object o = children.get(taskPosition);
-                    if (o instanceof Task) {
-                        Task task = (Task) o;
-                        task.perform();
-                    } else {
-                        ((RuntimeConfigurable) o).maybeConfigure(project);
-                    }
-                }
-            } finally {
-                localProperties.exitScope();
-            }
-        } else if (!testIfCondition()) {
+        if (!testIfAllows()) {
             project.log(this, "Skipped because property '" + project.replaceProperties(ifCondition)
                     + "' not set.", Project.MSG_VERBOSE);
-        } else {
+            return;
+        }
+        if (!testUnlessAllows()) {
             project.log(this, "Skipped because property '"
                     + project.replaceProperties(unlessCondition) + "' set.", Project.MSG_VERBOSE);
+            return;
+        }
+        LocalProperties localProperties = LocalProperties.get(getProject());
+        localProperties.enterScope();
+        try {
+            // use index-based approach to avoid ConcurrentModificationExceptions;
+            // also account for growing target children
+            for (int i = 0; i < children.size(); i++) {
+                Object o = children.get(i);
+                if (o instanceof Task) {
+                    Task task = (Task) o;
+                    task.perform();
+                } else {
+                    ((RuntimeConfigurable) o).maybeConfigure(project);
+                }
+            }
+        } finally {
+            localProperties.exitScope();
         }
     }
 
@@ -425,7 +427,7 @@ public class Target implements TaskContainer {
     }
 
     /**
-     * Tests whether or not the "if" condition is satisfied.
+     * Tests whether or not the "if" condition allows the execution of this target.
      *
      * @return whether or not the "if" condition is satisfied. If no
      *         condition (or an empty condition) has been set,
@@ -433,16 +435,20 @@ public class Target implements TaskContainer {
      *
      * @see #setIf(String)
      */
-    private boolean testIfCondition() {
+    private boolean testIfAllows() {
         if ("".equals(ifCondition)) {
             return true;
         }
-        String test = project.replaceProperties(ifCondition);
-        return project.getProperty(test) != null;
+        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
+        Object o = propertyHelper.parseProperties(ifCondition);
+        if (o instanceof Boolean) {
+            return ((Boolean) o).booleanValue();
+        }
+        return propertyHelper.getProperty(String.valueOf(o)) != null;
     }
 
     /**
-     * Tests whether or not the "unless" condition is satisfied.
+     * Tests whether or not the "unless" condition allows the execution of this target.
      *
      * @return whether or not the "unless" condition is satisfied. If no
      *         condition (or an empty condition) has been set,
@@ -450,11 +456,15 @@ public class Target implements TaskContainer {
      *
      * @see #setUnless(String)
      */
-    private boolean testUnlessCondition() {
+    private boolean testUnlessAllows() {
         if ("".equals(unlessCondition)) {
             return true;
         }
-        String test = project.replaceProperties(unlessCondition);
-        return project.getProperty(test) == null;
+        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
+        Object o = propertyHelper.parseProperties(unlessCondition);
+        if (o instanceof Boolean) {
+            return !((Boolean) o).booleanValue();
+        }
+        return propertyHelper.getProperty(String.valueOf(o)) == null;
     }
 }
