@@ -282,6 +282,10 @@ Fixed bugs:
    original error is now logged to System.err.
    Bugzilla Report 25086.
 
+ * <copy> failed with a NullPointerException when copying a resource
+   without a name.  It will now fail with a meaningful error message.
+   Bugzilla Report 39960.
+
 Other changes:
 --------------
 

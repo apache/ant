@@ -155,6 +155,11 @@ public class ResourceUtils {
                       Project.MSG_VERBOSE);
                 continue;
             }
+            for (int i = 0; i < targetnames.length; i++) {
+                if (targetnames[i] == null) {
+                    targetnames[i] = "(no name)";
+                }
+            }
             Union targetColl = new Union();
             for (int i = 0; i < targetnames.length; i++) {
                 targetColl.add(targets.getResource(

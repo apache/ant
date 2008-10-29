@@ -42,4 +42,62 @@
     <au:assertFileExists file="${output}/file.txt"/>
   </target>
 
+  <target name="-setupNullByteStreamResource">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/NullByteStreamResource.java"><![CDATA[
+import org.apache.tools.ant.types.Resource;
+import java.io.*;
+public class NullByteStreamResource extends Resource {
+    private long length = 1024;
+
+    public boolean isExists() {
+        return true;
+    }
+
+    public long getLastModified() {
+        return UNKNOWN_DATETIME;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
+
+    public InputStream getInputStream() {
+        return new InputStream() {
+            int readSoFar = 0;
+
+            public int read() {
+                return readSoFar++ > length ? -1 : 0;
+            }
+        };
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <typedef name="nullstream" classname="NullByteStreamResource">
+      <classpath>
+        <pathelement location="${output}"/>
+      </classpath>
+    </typedef>
+  </target>
+
+  <target name="testResourceWithoutName"
+          depends="-setupNullByteStreamResource">
+    <au:expectfailure>
+      <copy todir="${output}">
+        <nullstream/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testResourceWithoutNameWithMergeMapper"
+          depends="-setupNullByteStreamResource">
+    <copy todir="${output}">
+      <nullstream/>
+      <mergemapper to="foo"/>
+    </copy>
+    <au:assertFileExists file="${output}/foo"/>
+  </target>
+
 </project>

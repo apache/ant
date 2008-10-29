@@ -757,6 +757,13 @@ public class Copy extends Task {
         }
         for (int i = 0; i < toCopy.length; i++) {
             String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
+            for (int j = 0; j < mappedFiles.length; j++) {
+                if (mappedFiles[j] == null) {
+                    throw new BuildException("Can't copy a resource without a"
+                                             + " name if the mapper doesn't"
+                                             + " provide one.");
+                }
+            }
 
             if (!enableMultipleMappings) {
                 map.put(toCopy[i],
