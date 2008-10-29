@@ -15,9 +15,7 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.tools.ant;
-
 
 /**
  * Base class for components of a project, including tasks and data types.
@@ -155,6 +153,7 @@ public abstract class ProjectComponent implements Cloneable {
             }
         }
     }
+
     /**
      * @since Ant 1.7
      * @return a shallow copy of this projectcomponent.
