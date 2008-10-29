@@ -18,6 +18,10 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
+  <target name="tearDown">
+    <delete file="concat.resources" />
+  </target>
+
   <property name="encodeStringDest" location="${output}/encodeStringDest"/>
 
   <target name="testBinaryAppend">
@@ -115,4 +119,34 @@
     <au:assertFileExists file="${output}/TESTDEST"/>
     <au:assertResourceContains resource="${output}/TESTDEST" value="footer"/>
   </target>
+
+  <target name="testResources">
+    <string id="s1">The Quick Brown Fox</string>
+    <string id="s2">Jumped Over The Lazy Dog.</string>
+
+    <concat destfile="concat.resources" binary="true">
+      <resource refid="s1" />
+      <resource refid="s2" />
+    </concat>
+    <length property="expected">
+      <resources>
+        <resource refid="s1" />
+        <resource refid="s2" />
+      </resources>
+    </length>
+    <length property="actual">
+      <file file="concat.resources" />
+    </length>
+    <fail>
+      <condition>
+        <or>
+          <equals arg1="${actual}" arg2="0" />
+          <not>
+            <equals arg1="${actual}" arg2="${expected}" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
 </project>

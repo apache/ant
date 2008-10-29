@@ -278,8 +278,4 @@ public class ConcatTest
                 FILE_UTILS.contentEquals(f1, f2));
     }
 
-    public void testResources() {
-        executeTarget("testResources");
-    }
-
 }
