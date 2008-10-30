@@ -728,6 +728,23 @@ platforms.
      from the Classpath (already used while compiling).
   </p>
 
+  <pre>
+  &lt;project&gt;
+      &lt;filelist id=&quot;allfiles&quot; dir=&quot;${ant.home}/bin&quot; files=&quot;ant.cmd,foo.txt,ant.bat,bar.txt,ant&quot;/&gt;
+      &lt;restrict id=&quot;missingfiles&quot;&gt;
+          &lt;filelist refid=&quot;allfiles&quot;/&gt;
+          &lt;rsel:not xmlns:rsel=&quot;antlib:org.apache.tools.ant.types.resources.selectors&quot;&gt;
+              &lt;rsel:exists/&gt;
+          &lt;/rsel:not&gt;
+      &lt;/restrict&gt;
+      &lt;echo&gt;These files are missed: ${toString:missingfiles}&lt;/echo&gt;
+  &lt;/project&gt;
+  </pre>
+  <p>The resource collection <i>allfiles</i> defines a list of files which are expected. The restrict
+  <i>missingfiles</i> uses the <tt>&lt;not&gt;&lt;exists&gt;</tt> selector for getting all files
+  which are not present. Finally we use the <i>toString:</i> <a href="../using.html#pathshortcut">pathshortcut</a> for
+  getting them in a readable form: <tt>[echo] These files are missed: ....foo.txt;....bar.txt</tt></p>
+
 </blockquote>
 
 <h4><a name="sort">sort</a></h4>
