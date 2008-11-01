@@ -22,10 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -614,14 +614,16 @@ public abstract class Definer extends DefBase {
                     def.checkClass(getProject());
                 }
                 ComponentHelper.getComponentHelper(getProject())
-                    .addDataTypeDefinition(def);
+                        .addDataTypeDefinition(def);
             } catch (ClassNotFoundException cnfe) {
                 String msg = getTaskName() + " class " + classname
-                    + " cannot be found";
+                        + " cannot be found"
+                        + "\n using the classloader " + al;
                 throw new BuildException(msg, cnfe, getLocation());
             } catch (NoClassDefFoundError ncdfe) {
                 String msg = getTaskName() + " A class needed by class "
-                    + classname + " cannot be found: " + ncdfe.getMessage();
+                        + classname + " cannot be found: " + ncdfe.getMessage()
+                        + "\n using the classloader " + al;
                 throw new BuildException(msg, ncdfe, getLocation());
             }
         } catch (BuildException ex) {
