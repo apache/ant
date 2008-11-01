@@ -23,6 +23,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.zip.UnixStat;
 
 /**
@@ -64,6 +65,8 @@ public abstract class ArchiveFileSet extends FileSet {
 
     private boolean fileModeHasBeenSet = false;
     private boolean dirModeHasBeenSet  = false;
+    private static final String ERROR_DIR_AND_SRC_ATTRIBUTES = "Cannot set both dir and src attributes";
+    private static final String ERROR_PATH_AND_PREFIX = "Cannot set both fullpath and prefix attributes";
 
     /** Constructor for ArchiveFileSet */
     public ArchiveFileSet() {
@@ -102,7 +105,7 @@ public abstract class ArchiveFileSet extends FileSet {
     public void setDir(File dir) throws BuildException {
         checkAttributesAllowed();
         if (src != null) {
-            throw new BuildException("Cannot set both dir and src attributes");
+            throw new BuildException(ERROR_DIR_AND_SRC_ATTRIBUTES);
         }
         super.setDir(dir);
         hasDir = true;
@@ -141,7 +144,7 @@ public abstract class ArchiveFileSet extends FileSet {
     public void setSrcResource(Resource src) {
         checkArchiveAttributesAllowed();
         if (hasDir) {
-            throw new BuildException("Cannot set both dir and src attributes");
+            throw new BuildException(ERROR_DIR_AND_SRC_ATTRIBUTES);
         }
         this.src = src;
     }
@@ -163,8 +166,8 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the archive in case the archive is a file, null otherwise.
      */
     public File getSrc() {
-        if (src instanceof FileResource) {
-            return ((FileResource) src).getFile();
+        if (src instanceof FileProvider) {
+            return ((FileProvider) src).getFile();
         }
         return null;
     }
@@ -178,7 +181,7 @@ public abstract class ArchiveFileSet extends FileSet {
     public void setPrefix(String prefix) {
         checkArchiveAttributesAllowed();
         if (!"".equals(prefix) && !"".equals(fullpath)) {
-            throw new BuildException("Cannot set both fullpath and prefix attributes");
+            throw new BuildException(ERROR_PATH_AND_PREFIX);
         }
         this.prefix = prefix;
     }
@@ -204,7 +207,7 @@ public abstract class ArchiveFileSet extends FileSet {
     public void setFullpath(String fullpath) {
         checkArchiveAttributesAllowed();
         if (!"".equals(prefix) && !"".equals(fullpath)) {
-            throw new BuildException("Cannot set both fullpath and prefix attributes");
+            throw new BuildException(ERROR_PATH_AND_PREFIX);
         }
         this.fullpath = fullpath;
     }
@@ -243,10 +246,10 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         if (!src.isExists()) {
             throw new BuildException(
-                "the archive " + src.getName() + " doesn't exist");
+                "The archive " + src.getName() + " doesn't exist");
         }
         if (src.isDirectory()) {
-            throw new BuildException("the archive " + src.getName()
+            throw new BuildException("The archive " + src.getName()
                                      + " can't be a directory");
         }
         ArchiveScanner as = newArchiveScanner();
