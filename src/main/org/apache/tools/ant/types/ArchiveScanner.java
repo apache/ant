@@ -28,6 +28,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
+import org.apache.tools.ant.types.resources.FileProvider;
 
 /**
  * ArchiveScanner accesses the pattern matching algorithm in DirectoryScanner,
@@ -114,8 +115,8 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      */
     public void setSrc(Resource src) {
         this.src = src;
-        if (src instanceof FileResource) {
-            srcFile = ((FileResource) src).getFile();
+        if (src instanceof FileProvider) {
+            srcFile = ((FileProvider) src).getFile();
         }
     }
 
