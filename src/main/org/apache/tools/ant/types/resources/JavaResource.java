@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -53,8 +54,21 @@ public class JavaResource extends AbstractClasspathResource {
      * @throws IOException if an error occurs.
      */
     protected InputStream openInputStream(ClassLoader cl) throws IOException {
-        return cl == null ? ClassLoader.getSystemResourceAsStream(getName())
-            : cl.getResourceAsStream(getName());
+        InputStream inputStream;
+        if (cl == null) {
+            inputStream = ClassLoader.getSystemResourceAsStream(getName());
+            if (inputStream == null) {
+                throw new FileNotFoundException("No resource " + getName()
+                        + " on Ant's classpath");
+            }
+        } else {
+            inputStream = cl.getResourceAsStream(getName());
+            if (inputStream == null) {
+                throw new FileNotFoundException("No resource " + getName()
+                        + " on the classpath " + cl);
+            }
+        }
+        return inputStream;
     }
 
     /**
