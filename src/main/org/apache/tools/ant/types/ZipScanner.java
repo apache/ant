@@ -27,6 +27,7 @@ import java.util.zip.ZipException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.ZipResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
@@ -59,19 +60,19 @@ public class ZipScanner extends ArchiveScanner {
         ZipFile zf = null;
 
         File srcFile = null;
-        if (src instanceof FileResource) {
-            srcFile = ((FileResource) src).getFile();
+        if (src instanceof FileProvider) {
+            srcFile = ((FileProvider) src).getFile();
         } else {
-            throw new BuildException("only file resources are supported");
+            throw new BuildException("Only file provider resources are supported");
         }
 
         try {
             try {
                 zf = new ZipFile(srcFile, encoding);
             } catch (ZipException ex) {
-                throw new BuildException("problem reading " + srcFile, ex);
+                throw new BuildException("Problem reading " + srcFile, ex);
             } catch (IOException ex) {
-                throw new BuildException("problem opening " + srcFile, ex);
+                throw new BuildException("Problem opening " + srcFile, ex);
             }
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
