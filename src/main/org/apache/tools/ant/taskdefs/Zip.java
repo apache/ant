@@ -93,8 +93,36 @@ public class Zip extends MatchingTask {
     protected Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
 
+    /**
+     * If this flag is true, execute() will run most operations twice,
+     * the first time with {@link #skipWriting skipWriting} set to
+     * true and the second time with setting it to false.
+     *
+     * <p>The only situation in Ant's current code base where this is
+     * ever going to be true is if the jar task has been configured
+     * with a filesetmanifest other than "skip".</p>
+     */
     protected boolean doubleFilePass = false;
+    /**
+     * whether the methods should just perform some sort of dry-run.
+     *
+     * <p>Will only ever be true in the first pass if the task
+     * performs two passes because {@link #doubleFilePass
+     * doubleFilePass} is true.</p>
+     */
     protected boolean skipWriting = false;
+
+    /**
+     * Whether this is the first time the archive building methods are invoked.
+     *
+     * @return true if either {@link #doubleFilePass doubleFilePass}
+     * is false or {@link #skipWriting skipWriting} is true.
+     *
+     * @since Ant 1.8.0
+     */
+    protected final boolean isFirstPass() {
+        return !doubleFilePass || skipWriting;
+    }
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -502,7 +530,9 @@ public class Zip extends MatchingTask {
 
             String action = doUpdate ? "Updating " : "Building ";
 
-            log(action + archiveType + ": " + zipFile.getAbsolutePath());
+            if (!skipWriting) {
+                log(action + archiveType + ": " + zipFile.getAbsolutePath());
+            }
 
             ZipOutputStream zOut = null;
             try {
@@ -673,7 +703,7 @@ public class Zip extends MatchingTask {
         // we don't need to update if the original file doesn't exist
         if (doUpdate && !zipFile.exists()) {
             doUpdate = false;
-            log("ignoring update attribute as " + archiveType
+            logOnFirstPass("ignoring update attribute as " + archiveType
                 + " doesn't exist.", Project.MSG_DEBUG);
         }
     }
@@ -683,14 +713,14 @@ public class Zip extends MatchingTask {
         // Add the files found in groupfileset to fileset
         for (int i = 0; i < groupfilesets.size(); i++) {
 
-            log("Processing groupfileset ", Project.MSG_VERBOSE);
+            logOnFirstPass("Processing groupfileset ", Project.MSG_VERBOSE);
             FileSet fs = (FileSet) groupfilesets.elementAt(i);
             FileScanner scanner = fs.getDirectoryScanner(getProject());
             String[] files = scanner.getIncludedFiles();
             File basedir = scanner.getBasedir();
             for (int j = 0; j < files.length; j++) {
 
-                log("Adding file " + files[j] + " to fileset",
+                logOnFirstPass("Adding file " + files[j] + " to fileset",
                     Project.MSG_VERBOSE);
                 ZipFileSet zf = new ZipFileSet();
                 zf.setProject(getProject());
@@ -958,8 +988,10 @@ public class Zip extends MatchingTask {
         // In this case using java.util.zip will not work
         // because it does not permit a zero-entry archive.
         // Must create it manually.
-        log("Note: creating empty " + archiveType + " archive " + zipFile,
-            Project.MSG_INFO);
+        if (!skipWriting) {
+            log("Note: creating empty " + archiveType + " archive " + zipFile,
+                Project.MSG_INFO);
+        }
         OutputStream os = null;
         try {
             os = new FileOutputStream(zipFile);
@@ -1120,11 +1152,11 @@ public class Zip extends MatchingTask {
 
             if (emptyBehavior.equals("skip")) {
                 if (doUpdate) {
-                    log(archiveType + " archive " + zipFile
+                    logOnFirstPass(archiveType + " archive " + zipFile
                         + " not updated because no new files were included.",
                         Project.MSG_VERBOSE);
                 } else {
-                    log("Warning: skipping " + archiveType + " archive "
+                    logOnFirstPass("Warning: skipping " + archiveType + " archive "
                         + zipFile + " because no files were included.",
                         Project.MSG_WARN);
                 }
@@ -1425,7 +1457,7 @@ public class Zip extends MatchingTask {
                           int mode, ZipExtraField[] extra)
         throws IOException {
         if (doFilesonly) {
-            log("skipping directory " + vPath + " for file-only archive",
+            logOnFirstPass("skipping directory " + vPath + " for file-only archive",
                     Project.MSG_VERBOSE);
             return;
         }
@@ -1435,7 +1467,7 @@ public class Zip extends MatchingTask {
             return;
         }
 
-        log("adding directory " + vPath, Project.MSG_VERBOSE);
+        logOnFirstPass("adding directory " + vPath, Project.MSG_VERBOSE);
         addedDirs.put(vPath, vPath);
 
         if (!skipWriting) {
@@ -1483,7 +1515,7 @@ public class Zip extends MatchingTask {
         if (entries.contains(vPath)) {
 
             if (duplicate.equals("preserve")) {
-                log(vPath + " already added, skipping", Project.MSG_INFO);
+                logOnFirstPass(vPath + " already added, skipping", Project.MSG_INFO);
                 return;
             } else if (duplicate.equals("fail")) {
                 throw new BuildException("Duplicate file " + vPath
@@ -1491,11 +1523,11 @@ public class Zip extends MatchingTask {
                                          + "attribute is 'fail'.");
             } else {
                 // duplicate equal to add, so we continue
-                log("duplicate file " + vPath
+                logOnFirstPass("duplicate file " + vPath
                     + " found, adding.", Project.MSG_VERBOSE);
             }
         } else {
-            log("adding entry " + vPath, Project.MSG_VERBOSE);
+            logOnFirstPass("adding entry " + vPath, Project.MSG_VERBOSE);
         }
 
         entries.put(vPath, vPath);
@@ -1712,7 +1744,7 @@ public class Zip extends MatchingTask {
             if (!orig[i].isDirectory()) {
                 v.addElement(orig[i]);
             } else {
-                log("Ignoring directory " + orig[i].getName()
+                logOnFirstPass("Ignoring directory " + orig[i].getName()
                     + " as only files will be added.", Project.MSG_VERBOSE);
             }
         }
@@ -1723,6 +1755,18 @@ public class Zip extends MatchingTask {
             return r;
         }
         return orig;
+    }
+
+    /**
+     * Logs a message at the given output level, but only if this is
+     * the {@link #isFirstPass first pass}.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void logOnFirstPass(String msg, int level) {
+        if (isFirstPass()) {
+            log(msg, level);
+        }
     }
 
     /**
