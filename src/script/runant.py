@@ -64,7 +64,7 @@ if not JAVACMD:
 
 launcher_jar = os.path.join(ANT_LIB, 'ant-launcher.jar')
 if not os.path.exists(launcher_jar):
-    print 'Unable to locate ant-launcher.jar. Expected to find it in %s' % \
+    print 'Warning: Unable to locate ant-launcher.jar. Expected to find it in %s' % \
         ANT_LIB
 
 # Build up standard classpath (LOCALCLASSPATH)
