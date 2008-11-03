@@ -1963,6 +1963,15 @@ public class Project implements ResourceFactory {
     }
 
     /**
+     * Does the project know this reference?
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean hasReference(String key) {
+        return references.containsKey(key);
+    }
+
+    /**
      * Look up a reference by its key (ID).
      *
      * @param key The key for the desired reference.

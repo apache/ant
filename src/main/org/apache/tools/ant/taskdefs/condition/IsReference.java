@@ -62,13 +62,13 @@ public class IsReference extends ProjectComponent implements Condition {
                                      + "condition");
         }
 
-        Object o = getProject().getReference(ref.getRefId());
-
-        if (o == null) {
+        String key = ref.getRefId();
+        if (!getProject().hasReference(key)) {
             return false;
         } else if (type == null) {
             return true;
         } else {
+            Object o = getProject().getReference(key);
             Class typeClass =
                 (Class) getProject().getDataTypeDefinitions().get(type);
 
