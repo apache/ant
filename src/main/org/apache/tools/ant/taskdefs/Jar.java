@@ -637,8 +637,9 @@ public class Jar extends Zip {
             }
         } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
             logOnFirstPass("Warning: selected " + archiveType
-                + " files include a " + INDEX_NAME + " which will"
-                + " be replaced by a newly generated one.", Project.MSG_WARN);
+                           + " files include a " + INDEX_NAME + " which will"
+                           + " be replaced by a newly generated one.",
+                           Project.MSG_WARN);
         } else {
             if (index && vPath.indexOf("/") == -1) {
                 rootEntries.addElement(vPath);
@@ -672,7 +673,7 @@ public class Jar extends Zip {
                     && !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
             logOnFirstPass("Found manifest to merge in file " + file,
-                Project.MSG_VERBOSE);
+                           Project.MSG_VERBOSE);
 
             try {
                 Manifest newManifest = null;
@@ -754,14 +755,14 @@ public class Jar extends Zip {
             try {
                 originalManifest = getManifestFromJar(zipFile);
                 if (originalManifest == null) {
-                    logOnFirstPass("Updating jar since the current jar has no manifest",
-                        Project.MSG_VERBOSE);
+                    logOnFirstPass("Updating jar since the current jar has"
+                                   + " no manifest", Project.MSG_VERBOSE);
                     needsUpdate = true;
                 } else {
                     Manifest mf = createManifest();
                     if (!mf.equals(originalManifest)) {
-                        logOnFirstPass("Updating jar since jar manifest has changed",
-                            Project.MSG_VERBOSE);
+                        logOnFirstPass("Updating jar since jar manifest has"
+                                       + " changed", Project.MSG_VERBOSE);
                         needsUpdate = true;
                     }
                 }
@@ -806,7 +807,7 @@ public class Jar extends Zip {
                     + zipFile + " because no files were included.",
                     Project.MSG_WARN);
             }
-                return true;
+            return true;
         } else if (emptyBehavior.equals("fail")) {
             throw new BuildException("Cannot create " + archiveType
                                      + " archive " + zipFile
@@ -817,8 +818,8 @@ public class Jar extends Zip {
         ZipOutputStream zOut = null;
         try {
             if (!skipWriting) {
-            log("Building MANIFEST-only jar: "
-                + getDestFile().getAbsolutePath());
+                log("Building MANIFEST-only jar: "
+                    + getDestFile().getAbsolutePath());
             }
             zOut = new ZipOutputStream(new FileOutputStream(getDestFile()));
 

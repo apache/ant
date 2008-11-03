@@ -189,12 +189,13 @@ public class War extends Jar {
                 //check to see if we warn or not
                 if (!FILE_UTILS.fileNameEquals(addedWebXmlFile, file)) {
                     logOnFirstPass("Warning: selected " + archiveType
-                            + " files include a second " + XML_DESCRIPTOR_PATH
-                            + " which will be ignored.\n"
-                            + "The duplicate entry is at " + file + '\n'
-                            + "The file that will be used is "
-                            + addedWebXmlFile,
-                            Project.MSG_WARN);
+                                   + " files include a second "
+                                   + XML_DESCRIPTOR_PATH
+                                   + " which will be ignored.\n"
+                                   + "The duplicate entry is at " + file + '\n'
+                                   + "The file that will be used is "
+                                   + addedWebXmlFile,
+                                   Project.MSG_WARN);
                 }
             } else {
                 //no added file, yet

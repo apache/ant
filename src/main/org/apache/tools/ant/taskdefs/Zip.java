@@ -704,7 +704,7 @@ public class Zip extends MatchingTask {
         if (doUpdate && !zipFile.exists()) {
             doUpdate = false;
             logOnFirstPass("ignoring update attribute as " + archiveType
-                + " doesn't exist.", Project.MSG_DEBUG);
+                           + " doesn't exist.", Project.MSG_DEBUG);
         }
     }
 
@@ -721,7 +721,7 @@ public class Zip extends MatchingTask {
             for (int j = 0; j < files.length; j++) {
 
                 logOnFirstPass("Adding file " + files[j] + " to fileset",
-                    Project.MSG_VERBOSE);
+                               Project.MSG_VERBOSE);
                 ZipFileSet zf = new ZipFileSet();
                 zf.setProject(getProject());
                 zf.setSrc(new File(basedir, files[j]));
@@ -1153,12 +1153,13 @@ public class Zip extends MatchingTask {
             if (emptyBehavior.equals("skip")) {
                 if (doUpdate) {
                     logOnFirstPass(archiveType + " archive " + zipFile
-                        + " not updated because no new files were included.",
-                        Project.MSG_VERBOSE);
+                                   + " not updated because no new files were"
+                                   + " included.", Project.MSG_VERBOSE);
                 } else {
-                    logOnFirstPass("Warning: skipping " + archiveType + " archive "
-                        + zipFile + " because no files were included.",
-                        Project.MSG_WARN);
+                    logOnFirstPass("Warning: skipping " + archiveType
+                                   + " archive " + zipFile
+                                   + " because no files were included.",
+                                   Project.MSG_WARN);
                 }
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
@@ -1457,8 +1458,9 @@ public class Zip extends MatchingTask {
                           int mode, ZipExtraField[] extra)
         throws IOException {
         if (doFilesonly) {
-            logOnFirstPass("skipping directory " + vPath + " for file-only archive",
-                    Project.MSG_VERBOSE);
+            logOnFirstPass("skipping directory " + vPath
+                           + " for file-only archive",
+                           Project.MSG_VERBOSE);
             return;
         }
         if (addedDirs.get(vPath) != null) {
@@ -1515,7 +1517,8 @@ public class Zip extends MatchingTask {
         if (entries.contains(vPath)) {
 
             if (duplicate.equals("preserve")) {
-                logOnFirstPass(vPath + " already added, skipping", Project.MSG_INFO);
+                logOnFirstPass(vPath + " already added, skipping",
+                               Project.MSG_INFO);
                 return;
             } else if (duplicate.equals("fail")) {
                 throw new BuildException("Duplicate file " + vPath
@@ -1524,7 +1527,7 @@ public class Zip extends MatchingTask {
             } else {
                 // duplicate equal to add, so we continue
                 logOnFirstPass("duplicate file " + vPath
-                    + " found, adding.", Project.MSG_VERBOSE);
+                               + " found, adding.", Project.MSG_VERBOSE);
             }
         } else {
             logOnFirstPass("adding entry " + vPath, Project.MSG_VERBOSE);
@@ -1745,7 +1748,8 @@ public class Zip extends MatchingTask {
                 v.addElement(orig[i]);
             } else {
                 logOnFirstPass("Ignoring directory " + orig[i].getName()
-                    + " as only files will be added.", Project.MSG_VERBOSE);
+                               + " as only files will be added.",
+                               Project.MSG_VERBOSE);
             }
         }
 
