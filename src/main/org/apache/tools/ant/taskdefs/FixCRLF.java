@@ -221,7 +221,9 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         try {
             filter.setTablength(tlength);
         } catch (IOException e) {
-            throw new BuildException(e);
+            // filter.setTablength throws IOException that would better be
+            // a BuildException
+            throw new BuildException(e.getMessage(), e);
         }
     }
 
@@ -361,7 +363,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             boolean destIsWrong = true;
             if (destFile.exists()) {
                 // Compare the destination with the temp file
-                log("destFile exists", Project.MSG_DEBUG);
+                log("destFile " + destFile + " exists", Project.MSG_DEBUG);
                 destIsWrong = !FILE_UTILS.contentEquals(destFile, tmpFile);
                 log(destFile + (destIsWrong ? " is being written"
                     : " is not written, as the contents are identical"),
@@ -370,13 +372,14 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             if (destIsWrong) {
                 FILE_UTILS.rename(tmpFile, destFile);
                 if (preserveLastModified) {
-                    log("preserved lastModified", Project.MSG_DEBUG);
+                    log("preserved lastModified for " + destFile,
+                        Project.MSG_DEBUG);
                     FILE_UTILS.setFileLastModified(destFile, lastModified);
                 }
                 tmpFile = null;
             }
         } catch (IOException e) {
-            throw new BuildException(e);
+            throw new BuildException("error running fixcrlf on file " + srcFile, e);
         }
     }
 
