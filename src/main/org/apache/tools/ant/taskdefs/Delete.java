@@ -698,7 +698,7 @@ public class Delete extends MatchingTask {
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!delete(d)) {
-            handle("Unable to delete directory " + dir.getAbsolutePath());
+            handle("Unable to delete directory " + d.getAbsolutePath());
         }
     }
 
