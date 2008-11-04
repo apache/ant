@@ -198,6 +198,31 @@
         </table>
       </subsection>
 
+     <subsection name="Antiplate">
+        <p>Antiplate is an ant-script that seeds a project-structure for typical java-projects,
+        including an ant-buildscript with typical targets like compiling, create distributions,
+        execute tests etc.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antiplate.origo.ethz.ch/">Homepage</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:antiplate@mnementh.de">antiplate@mnementh.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
+
       <subsection name="Antlion">
 
         <p>The Antlion Project adds value to Ant build scripts by providing
