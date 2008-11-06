@@ -4,6 +4,8 @@ Changes from Ant 1.7.x TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+* Ant now requires Java 1.4 or later.
+
 * Improved handling of InterruptException (lets suppose someone/thing is
   trying to kill the thread when we receive an InterruptException),
   when an InterruptException is received, we do not wait anymore in a while
