@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1116,46 +1117,7 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String toURI(String path) {
-        // #8031: first try Java 1.4.
-        Class uriClazz = null;
-        try {
-            uriClazz = Class.forName("java.net.URI");
-        } catch (ClassNotFoundException e) {
-            // OK, Java 1.3.
-        }
-        if (uriClazz != null) {
-            try {
-                File f = new File(path).getAbsoluteFile();
-                java.lang.reflect.Method toURIMethod = File.class.getMethod("toURI", new Class[0]);
-                Object uriObj = toURIMethod.invoke(f, new Object[] {});
-                java.lang.reflect.Method toASCIIStringMethod
-                        = uriClazz.getMethod("toASCIIString", new Class[0]);
-                return (String) toASCIIStringMethod.invoke(uriObj, new Object[] {});
-            } catch (Exception e) {
-                // Reflection problems? Should not happen, debug.
-                e.printStackTrace();
-            }
-        }
-        boolean isDir = new File(path).isDirectory();
-
-        StringBuffer sb = new StringBuffer("file:");
-
-        path = resolveFile(null, path).getPath();
-        sb.append("//");
-        // add an extra slash for filesystems with drive-specifiers
-        if (!path.startsWith(File.separator)) {
-            sb.append("/");
-        }
-        path = path.replace('\\', '/');
-        try {
-            sb.append(Locator.encodeURI(path));
-        } catch (UnsupportedEncodingException exc) {
-            throw new BuildException(exc);
-        }
-        if (isDir && !path.endsWith("/")) {
-            sb.append('/');
-        }
-        return sb.toString();
+        return new File(path).getAbsoluteFile().toURI().toASCIIString();
     }
 
     /**
@@ -1419,6 +1381,23 @@ public class FileUtils {
      * @param device stream, can be null.
      */
     public static void close(InputStream device) {
+        if (null != device) {
+            try {
+                device.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
+    }
+
+    /**
+     * Close a Channel without throwing any exception if something went wrong.
+     * Do not attempt to close it if the argument is null.
+     *
+     * @param device channel, can be null.
+     * @since Ant 1.8.0
+     */
+    public static void close(Channel device) {
         if (null != device) {
             try {
                 device.close();
