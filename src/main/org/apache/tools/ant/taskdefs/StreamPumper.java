@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Copies all data from an input stream to an output stream.
@@ -30,15 +31,16 @@ public class StreamPumper implements Runnable {
 
     private static final int SMALL_BUFFER_SIZE = 128;
 
-    private InputStream is;
-    private OutputStream os;
+    private final InputStream is;
+    private final OutputStream os;
     private volatile boolean finish;
     private volatile boolean finished;
-    private boolean closeWhenExhausted;
+    private final boolean closeWhenExhausted;
     private boolean autoflush = false;
     private Exception exception = null;
     private int bufferSize = SMALL_BUFFER_SIZE;
     private boolean started = false;
+    private final boolean useAvailable;
 
     /**
      * Create a new StreamPumper.
@@ -49,9 +51,40 @@ public class StreamPumper implements Runnable {
      *        the input is exhausted.
      */
     public StreamPumper(InputStream is, OutputStream os, boolean closeWhenExhausted) {
+        this(is, os, closeWhenExhausted, false);
+    }
+
+
+    /**
+     * Create a new StreamPumper.
+     *
+     * <p><b>Note:</b> If you set useAvailable to true, you must
+     * explicitly invoke {@link #stop stop} or interrupt the
+     * corresponding Thread when you are done or the run method will
+     * never finish on some JVMs (namely those where available returns
+     * 0 on a closed stream).  Setting it to true may also impact
+     * performance negatively.  This flag should only be set to true
+     * if you intend to stop the pumper before the input stream gets
+     * closed.</p>
+     *
+     * @param is input stream to read data from
+     * @param os output stream to write data to.
+     * @param closeWhenExhausted if true, the output stream will be closed when
+     *        the input is exhausted.
+     * @param useAvailable whether the pumper should use {@link
+     *        java.io.InputStream#available available} to determine
+     *        whether input is ready, thus trying to emulate
+     *        non-blocking behavior.
+     *
+     * @since Ant 1.8.0
+     */
+    public StreamPumper(InputStream is, OutputStream os,
+                        boolean closeWhenExhausted,
+                        boolean useAvailable) {
         this.is = is;
         this.os = os;
         this.closeWhenExhausted = closeWhenExhausted;
+        this.useAvailable = useAvailable;
     }
 
     /**
@@ -90,8 +123,14 @@ public class StreamPumper implements Runnable {
         int length;
         try {
             while (true) {
+                waitForInput(is);
+
+                if (finish || Thread.interrupted()) {
+                    break;
+                }
+
                 length = is.read(buf);
-                if ((length <= 0) || finish) {
+                if (length <= 0 || finish || Thread.interrupted()) {
                     break;
                 }
                 os.write(buf, 0, length);
@@ -100,17 +139,15 @@ public class StreamPumper implements Runnable {
                 }
             }
             os.flush();
+        } catch (InterruptedException ie) {
+            // likely PumpStreamHandler trying to stop us
         } catch (Exception e) {
             synchronized (this) {
                 exception = e;
             }
         } finally {
             if (closeWhenExhausted) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    // ignore
-                }
+                FileUtils.close(os);
             }
             finished = true;
             synchronized (this) {
@@ -177,4 +214,22 @@ public class StreamPumper implements Runnable {
         finish = true;
         notifyAll();
     }
+
+    private static final long POLL_INTERVAL = 100;
+
+    private void waitForInput(InputStream is)
+        throws IOException, InterruptedException {
+        if (useAvailable) {
+            while (!finish && is.available() == 0) {
+                if (Thread.interrupted()) {
+                    throw new InterruptedException();
+                }
+
+                synchronized (this) {
+                    this.wait(POLL_INTERVAL);
+                }
+            }
+        }
+    }
+
 }

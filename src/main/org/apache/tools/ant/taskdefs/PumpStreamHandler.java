@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Copies standard output and error of subprocesses to standard output and
@@ -129,16 +130,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Stop pumping the streams.
      */
     public void stop() {
-        try {
-            outputThread.join();
-        } catch (InterruptedException e) {
-            // ignore
-        }
-        try {
-            errorThread.join();
-        } catch (InterruptedException e) {
-            // ignore
-        }
+        finish(outputThread);
+        finish(errorThread);
 
         if (inputPump != null) {
             inputPump.stop();
@@ -152,6 +145,35 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         try {
             out.flush();
         } catch (IOException e) {
+            // ignore
+        }
+    }
+
+    private static final long JOIN_TIMEOUT = 500;
+
+    /**
+     * Waits for a thread to finish while trying to make it finish
+     * quicker by stopping the pumper (if the thread is a {@link
+     * ThreadWithPumper ThreadWithPumper} instance) or interrupting
+     * the thread.
+     *
+     * @since Ant 1.8.0
+     */
+    protected final void finish(Thread t) {
+        try {
+            t.join(JOIN_TIMEOUT);
+            StreamPumper s = null;
+            if (t instanceof ThreadWithPumper) {
+                s = ((ThreadWithPumper) t).getPumper();
+            }
+            if (s != null && !s.isFinished()) {
+                s.stop();
+            }
+            while ((s == null || !s.isFinished()) && t.isAlive()) {
+                t.interrupt();
+                t.join(JOIN_TIMEOUT);
+            }
+        } catch (InterruptedException e) {
             // ignore
         }
     }
@@ -207,12 +229,16 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param is the input stream to copy from.
      * @param os the output stream to copy to.
      * @param closeWhenExhausted if true close the inputstream.
-     * @return a thread object that does the pumping.
+     * @return a thread object that does the pumping, subclasses
+     * should return an instance of {@link ThreadWithPumper
+     * ThreadWithPumper}.
      */
     protected Thread createPump(InputStream is, OutputStream os,
                                 boolean closeWhenExhausted) {
         final Thread result
-            = new Thread(new StreamPumper(is, os, closeWhenExhausted));
+            = new ThreadWithPumper(new StreamPumper(is, os,
+                                                    closeWhenExhausted,
+                                                    Os.isFamily("windows")));
         result.setDaemon(true);
         return result;
     }
@@ -224,9 +250,25 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      */
     /*protected*/ StreamPumper createInputPump(InputStream is, OutputStream os,
                                 boolean closeWhenExhausted) {
-        StreamPumper pumper = new StreamPumper(is, os, closeWhenExhausted);
+        StreamPumper pumper = new StreamPumper(is, os, closeWhenExhausted,
+                                               false);
         pumper.setAutoflush(true);
         return pumper;
     }
 
+    /**
+     * Specialized subclass that allows access to the running StreamPumper.
+     *
+     * @since Ant 1.8.0
+     */
+    protected static class ThreadWithPumper extends Thread {
+        private final StreamPumper pumper;
+        public ThreadWithPumper(StreamPumper p) {
+            super(p);
+            pumper = p;
+        }
+        protected StreamPumper getPumper() {
+            return pumper;
+        }
+    }
 }

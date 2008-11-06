@@ -113,6 +113,14 @@ Changes that could break older environments:
    http://ant.apache.org/antlibs/dotnet/index.html
    instead.
 
+ * the logic of closing streams connected to forked processes (read
+   the input and output of <exec> and friends) has been changed to
+   deal with cases where child processes of the forked processes live
+   longer than their parents and keep Ant from exiting.
+   It is unlikely but possible that the changed logic breaks stream
+   handling on certain Java VMs.
+   Bugzilla issue 5003.
+
 Fixed bugs:
 -----------
 
