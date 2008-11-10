@@ -70,7 +70,7 @@ public class UnknownElement extends Task {
      * @param elementName The name of the unknown element.
      *                    Must not be <code>null</code>.
      */
-    public UnknownElement (String elementName) {
+    public UnknownElement(String elementName) {
         this.elementName = elementName;
     }
 
@@ -92,7 +92,8 @@ public class UnknownElement extends Task {
         return elementName;
     }
 
-    /** Return the namespace of the XML element associated with this component.
+    /**
+     * Return the namespace of the XML element associated with this component.
      *
      * @return Namespace URI used in the xmlns declaration.
      */
@@ -117,7 +118,8 @@ public class UnknownElement extends Task {
         this.namespace = namespace == null ? "" : namespace;
     }
 
-    /** Return the qname of the XML element associated with this component.
+    /**
+     * Return the qname of the XML element associated with this component.
      *
      * @return namespace Qname used in the element declaration.
      */
@@ -125,7 +127,8 @@ public class UnknownElement extends Task {
         return qname;
     }
 
-    /** Set the namespace qname of the XML element.
+    /**
+     * Set the namespace qname of the XML element.
      * This method is typically called by the XML processor.
      *
      * @param qname the qualified name of the element
@@ -232,6 +235,7 @@ public class UnknownElement extends Task {
         }
 
     }
+
     /**
      * Handles output sent to System.out by this task or its real task.
      *
@@ -257,7 +261,6 @@ public class UnknownElement extends Task {
             super.handleErrorOutput(output);
         }
     }
-
 
     /**
      * Handles error output sent to System.err by this task or its real task.
