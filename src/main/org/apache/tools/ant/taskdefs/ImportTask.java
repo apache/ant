@@ -152,6 +152,9 @@ public class ImportTask extends Task {
             return;
         }
 
+        // nested invokations are possible like an imported file
+        // importing another one
+        String oldPrefix = ProjectHelper.getCurrentTargetPrefix();
         try {
             ProjectHelper.setCurrentTargetPrefix(targetPrefix);
             helper.parse(getProject(), importedFile);
@@ -159,8 +162,7 @@ public class ImportTask extends Task {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
         } finally {
-            ProjectHelper.setCurrentTargetPrefix(null);
+            ProjectHelper.setCurrentTargetPrefix(oldPrefix);
         }
     }
-
 }
