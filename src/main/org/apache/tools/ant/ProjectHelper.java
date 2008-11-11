@@ -128,7 +128,7 @@ public class ProjectHelper {
      *
      * @return the configured prefix or null
      *
-     * @since ant 1.8.0
+     * @since Ant 1.8.0
      */
     public static String getCurrentTargetPrefix() {
         return (String) targetPrefix.get();
@@ -137,10 +137,45 @@ public class ProjectHelper {
     /**
      * Sets the prefix to prepend to imported target names.
      *
-     * @since ant 1.8.0
+     * @since Ant 1.8.0
      */
     public static void setCurrentTargetPrefix(String prefix) {
         targetPrefix.set(prefix);
+    }
+
+    private final static ThreadLocal inIncludeMode = new ThreadLocal() {
+            protected Object initialValue() {
+                return Boolean.FALSE;
+            }
+        };
+
+    /**
+     * Whether the current file should be read in include as opposed
+     * to import mode.
+     *
+     * <p>In include mode included targets are only known by their
+     * prefixed names and their depends lists get rewritten so that
+     * all dependencies get the prefix as well.</p>
+     *
+     * <p>In import mode imported targets are known by an adorned as
+     * well as a prefixed name and the unadorned target may be
+     * overwritten in the importing build file.  The depends list of
+     * the imported targets is not modified at all.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public static boolean isInIncludeMode() {
+        return inIncludeMode.get() == Boolean.TRUE;
+    }
+
+    /**
+     * Sets whether the current file should be read in include as
+     * opposed to import mode.
+     *
+     * @since Ant 1.8.0
+     */
+    public static void setInIncludeMode(boolean includeMode) {
+        inIncludeMode.set(includeMode ? Boolean.TRUE : Boolean.FALSE);
     }
 
     // --------------------  Parse method  --------------------

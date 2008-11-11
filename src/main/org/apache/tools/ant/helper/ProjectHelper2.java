@@ -45,6 +45,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
@@ -845,9 +846,25 @@ public class ProjectHelper2 extends ProjectHelper {
                         context.getLocator());
             }
 
+            String prefix = null;
+            boolean isInIncludeMode =
+                context.isIgnoringProjectTag() && isInIncludeMode();
+            if (isInIncludeMode) {
+                prefix = getTargetPrefix(context);
+                if (prefix == null) {
+                    throw new BuildException("can't include build file "
+                                             + context.getBuildFile()
+                                             + ", no as attribute has been given"
+                                             + " and the project tag doesn't"
+                                             + " specify a name attribute");
+                }
+                name = prefix + "." + name;
+            }
+
             // Check if this target is in the current build file
             if (context.getCurrentTargets().get(name) != null) {
-                throw new BuildException("Duplicate target '" + name + "'", target.getLocation());
+                throw new BuildException("Duplicate target '" + name + "'",
+                                         target.getLocation());
             }
             Hashtable projectTargets = project.getTargets();
             boolean   usedTarget = false;
@@ -862,12 +879,19 @@ public class ProjectHelper2 extends ProjectHelper {
                 usedTarget = true;
             }
             if (depends.length() > 0) {
-                target.setDepends(depends);
+                if (!isInIncludeMode) {
+                    target.setDepends(depends);
+                } else {
+                    for (Iterator iter =
+                             Target.parseDepends(depends, name).iterator();
+                         iter.hasNext(); ) {
+                        target.addDependency(prefix + "." + iter.next());
+                    }
+                }
             }
-            String prefix = null;
-            if (context.isIgnoringProjectTag()
+            if (!isInIncludeMode && context.isIgnoringProjectTag()
                 && (prefix = getTargetPrefix(context)) != null) {
-                // In an impored file (and not completely
+                // In an imported file (and not completely
                 // ignoring the project tag or having a preconfigured prefix)
                 String newName = prefix + "." + name;
                 Target newTarget = usedTarget ? new Target(target) : target;

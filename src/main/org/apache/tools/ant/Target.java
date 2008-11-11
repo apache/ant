@@ -125,19 +125,31 @@ public class Target implements TaskContainer {
      *             depends on. Must not be <code>null</code>.
      */
     public void setDepends(String depS) {
-        if (depS.length() > 0) {
+        for (Iterator iter = parseDepends(depS, getName()).iterator();
+             iter.hasNext(); ) {
+            addDependency((String) iter.next());
+        }
+    }
+
+    public static List/*<String>*/ parseDepends(String depends,
+                                                String targetName) {
+        ArrayList list = new ArrayList();
+        if (depends.length() > 0) {
             StringTokenizer tok =
-                new StringTokenizer(depS, ",", true);
+                new StringTokenizer(depends, ",", true);
             while (tok.hasMoreTokens()) {
                 String token = tok.nextToken().trim();
 
                 // Make sure the dependency is not empty string
                 if ("".equals(token) || ",".equals(token)) {
-                    throw new BuildException("Syntax Error: depends " + "attribute of target \""
-                            + getName() + "\" has an empty string as dependency.");
+                    throw new BuildException("Syntax Error: depends "
+                                             + "attribute of target \""
+                                             + targetName
+                                             + "\" has an empty string as "
+                                             + "dependency.");
                 }
 
-                addDependency(token);
+                list.add(token);
 
                 // Make sure that depends attribute does not
                 // end in a ,
@@ -145,12 +157,15 @@ public class Target implements TaskContainer {
                     token = tok.nextToken();
                     if (!tok.hasMoreTokens() || !",".equals(token)) {
                         throw new BuildException("Syntax Error: Depend "
-                                + "attribute for target \"" + getName()
-                                + "\" ends with a , character");
+                                                 + "attribute for target \""
+                                                 + targetName
+                                                 + "\" ends with a \",\" "
+                                                 + "character");
                     }
                 }
             }
         }
+        return list;
     }
 
     /**

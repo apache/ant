@@ -145,7 +145,7 @@ public class ImportTask extends Task {
             }
         }
 
-        if (importStack.contains(importedFile)) {
+        if (!isInIncludeMode() && importStack.contains(importedFile)) {
             getProject().log(
                 "Skipped already imported file:\n   "
                 + importedFile + "\n", Project.MSG_VERBOSE);
@@ -155,14 +155,36 @@ public class ImportTask extends Task {
         // nested invokations are possible like an imported file
         // importing another one
         String oldPrefix = ProjectHelper.getCurrentTargetPrefix();
+        boolean oldIncludeMode = ProjectHelper.isInIncludeMode();
         try {
             ProjectHelper.setCurrentTargetPrefix(targetPrefix);
+            ProjectHelper.setInIncludeMode(isInIncludeMode());
             helper.parse(getProject(), importedFile);
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
         } finally {
             ProjectHelper.setCurrentTargetPrefix(oldPrefix);
+            ProjectHelper.setInIncludeMode(oldIncludeMode);
         }
     }
+
+    /**
+     * Whether the task is in include (as opposed to import) mode.
+     *
+     * <p>In include mode included targets are only known by their
+     * prefixed names and their depends lists get rewritten so that
+     * all dependencies get the prefix as well.</p>
+     *
+     * <p>In import mode imported targets are known by an adorned as
+     * well as a prefixed name and the unadorned target may be
+     * overwritten in the importing build file.  The depends list of
+     * the imported targets is not modified at all.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    protected final boolean isInIncludeMode() {
+        return "include".equals(getTaskType());
+    }
+
 }

@@ -519,6 +519,9 @@ Other changes:
  * <import> has a new attribute "as" that can be used to control the
    prefix prepended to the imported target's names.
 
+ * a new task <include> provides an alternative to <import> that
+   should be preferred when you don't want to override any targets.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

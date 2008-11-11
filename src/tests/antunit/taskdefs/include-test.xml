@@ -18,8 +18,8 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <import file="importtests/a.xml"/>
-  <import file="importtests/b.xml" as="c"/>
+  <include file="importtests/a.xml"/>
+  <include file="importtests/b.xml" as="c"/>
 
   <target name="testNoExplicitPrefix" depends="a.a">
     <au:assertEquals expected="bar" actual="${foo}"/>
@@ -29,21 +29,13 @@
     <au:assertEquals expected="baz" actual="${foo}"/>
   </target>
 
-  <target name="testNoExplicitPrefixUsedWithoutPrefix" depends="a">
-    <au:assertEquals expected="bar" actual="${foo}"/>
-  </target>
-
-  <target name="testExplicitPrefixUsedWithoutPrefix" depends="b">
-    <au:assertEquals expected="baz" actual="${foo}"/>
-  </target>
-
-  <import file="importtests/override.xml"/>
+  <include file="importtests/override.xml"/>
 
   <target name="setProperty">
     <property name="prop" value="in including/importing"/>
   </target>
 
-  <target name="testOverride" depends="override.dummy">
-    <au:assertEquals expected="in including/importing" actual="${prop}"/>
+  <target name="testNoOverride" depends="override.dummy">
+    <au:assertEquals expected="in included/imported" actual="${prop}"/>
   </target>
 </project>
