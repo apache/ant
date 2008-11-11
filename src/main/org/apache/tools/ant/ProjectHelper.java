@@ -102,24 +102,9 @@ public class ProjectHelper {
     // The following properties are required by import ( and other tasks
     // that read build files using ProjectHelper ).
 
-    // A project helper may process multiple files. We'll keep track
-    // of them - to avoid loops and to allow caching. The caching will
-    // probably accelerate things like <antCall>.
-    // The key is the absolute file, the value is a processed tree.
-    // Since the tree is composed of UE and RC - it can be reused !
-    // protected Hashtable processedFiles=new Hashtable();
-
     private Vector importStack = new Vector();
 
-    // Temporary - until we figure a better API
-    /** EXPERIMENTAL WILL_CHANGE
-     *
-     */
-//    public Hashtable getProcessedFiles() {
-//        return processedFiles;
-//    }
-
-    /** EXPERIMENTAL WILL_CHANGE
+    /**
      *  Import stack.
      *  Used to keep track of imported files. Error reporting should
      *  display the import path.
