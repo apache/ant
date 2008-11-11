@@ -62,6 +62,13 @@ any VM of at least version 1.2 is acceptable. JDK 1.1 is no longer supported.
 If you specify the <code>executable</code> attribute it is up to you
 to ensure that this command supports the attributes you wish to use.</p>
 
+<p><b>Note:</b><br>When generating the JavaDocs for classes which contains annotations
+you maybe get a <tt>java.lang.ClassCastException: com.sun.tools.javadoc.ClassDocImpl</tt>.
+This is due <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6442982" target="_blank">bug-6442982</a>. The cause is that JavaDoc cannot find the implementations of used annotations.
+The workaround is providing the jars with these implementations (like JAXBs <tt>@XmlType</tt>, ...)
+to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or nested
+&lt;classpath&gt; element.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
