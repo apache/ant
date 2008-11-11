@@ -516,6 +516,9 @@ Other changes:
    STARTTLS.
    Bugzilla Report 46063.
 
+ * <import> has a new attribute "as" that can be used to control the
+   prefix prepended to the imported target's names.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

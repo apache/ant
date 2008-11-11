@@ -115,6 +115,34 @@ public class ProjectHelper {
         return importStack;
     }
 
+    private final static ThreadLocal targetPrefix = new ThreadLocal() {
+            protected Object initialValue() {
+                return (String) null;
+            }
+        };
+
+    /**
+     * The prefix to prepend to imported target names.
+     *
+     * <p>May be set by &lt;import&gt;'s as attribute.</p>
+     *
+     * @return the configured prefix or null
+     *
+     * @since ant 1.8.0
+     */
+    public static String getCurrentTargetPrefix() {
+        return (String) targetPrefix.get();
+    }
+
+    /**
+     * Sets the prefix to prepend to imported target names.
+     *
+     * @since ant 1.8.0
+     */
+    public static void setCurrentTargetPrefix(String prefix) {
+        targetPrefix.set(prefix);
+    }
+
     // --------------------  Parse method  --------------------
     /**
      * Parses the project file, configuring the project as it goes.

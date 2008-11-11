@@ -34,9 +34,9 @@ import java.util.Vector;
  * into the same Project.
  * </p>
  * <p>
- * <b>Important</b>: we have not finalized how relative file references
- * will be resolved in deep/complex build hierarchies - such as what happens
- * when an imported file imports another file. Use absolute references for
+ * <b>Important</b>: Trying to understand how relative file references
+ * resolved in deep/complex build hierarchies - such as what happens
+ * when an imported file imports another file can be difficult. Use absolute references for
  * enhanced build file stability, especially in the imported files.
  * </p>
  * <p>Examples:</p>
@@ -55,6 +55,7 @@ import java.util.Vector;
 public class ImportTask extends Task {
     private String file;
     private boolean optional;
+    private String targetPrefix;
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
@@ -76,6 +77,15 @@ public class ImportTask extends Task {
         // I don't think we can use File - different rules
         // for relative paths.
         this.file = file;
+    }
+
+    /**
+     * The prefix to use when prefixing the imported target names.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setAs(String prefix) {
+        targetPrefix = prefix;
     }
 
     /**
@@ -143,10 +153,13 @@ public class ImportTask extends Task {
         }
 
         try {
+            ProjectHelper.setCurrentTargetPrefix(targetPrefix);
             helper.parse(getProject(), importedFile);
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
+        } finally {
+            ProjectHelper.setCurrentTargetPrefix(null);
         }
     }
 

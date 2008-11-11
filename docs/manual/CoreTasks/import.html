@@ -62,6 +62,10 @@ made available by the name &quot;<b>builddocs</b><b>.docs</b>&quot;.
 This enables the new implementation to call the old target, thus
 <i>enhancing</i> it with tasks called before or after it.</p>
 
+<p>If you use the <i>as</i> attribute of the task, its value will be
+  used to prefix the overriden target's name instead of the name
+  attribute of the project tag.</p>
+
 <h4>Special Properties</h4>
 
 <p>Imported files are treated as they are present in the main
@@ -149,6 +153,17 @@ project).</p>
       <td valign="top">
         If true, do not stop the build if the file does not exist,
         default is false.
+      </td>
+      <td valign="top" align="center">No</td>
+    </tr>
+    <tr>
+      <td valign="top">
+        as
+      </td>
+      <td valign="top">
+        Specifies the prefix prepended to the target names.  If
+        ommitted, the name attribute of the project tag of the
+        imported file will be used.
       </td>
       <td valign="top" align="center">No</td>
     </tr>

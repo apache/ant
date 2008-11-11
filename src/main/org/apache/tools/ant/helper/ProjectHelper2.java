@@ -612,11 +612,6 @@ public class ProjectHelper2 extends ProjectHelper {
                 && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.projectHandler;
             }
-//            if (context.importlevel > 0) {
-//                // we are in an imported file. Allow top-level <target>.
-//                if (qname.equals( "target" ) )
-//                    return ProjectHelper2.targetHandler;
-//            }
             if (name.equals(qname)) {
                 throw new SAXParseException("Unexpected element \"{" + uri
                     + "}" + name + "\" {" + ANT_CORE_URI + "}" + name, context.getLocator());
@@ -869,16 +864,32 @@ public class ProjectHelper2 extends ProjectHelper {
             if (depends.length() > 0) {
                 target.setDepends(depends);
             }
-            if (context.isIgnoringProjectTag() && context.getCurrentProjectName() != null
-                    && context.getCurrentProjectName().length() != 0) {
+            String prefix = null;
+            if (context.isIgnoringProjectTag()
+                && (prefix = getTargetPrefix(context)) != null) {
                 // In an impored file (and not completely
-                // ignoring the project tag)
-                String newName = context.getCurrentProjectName() + "." + name;
+                // ignoring the project tag or having a preconfigured prefix)
+                String newName = prefix + "." + name;
                 Target newTarget = usedTarget ? new Target(target) : target;
                 newTarget.setName(newName);
                 context.getCurrentTargets().put(newName, newTarget);
                 project.addOrReplaceTarget(newName, newTarget);
             }
+        }
+
+        private String getTargetPrefix(AntXMLContext context) {
+            String configuredValue = getCurrentTargetPrefix();
+            if (configuredValue != null && configuredValue.length() == 0) {
+                configuredValue = null;
+            }
+            if (configuredValue != null) {
+                return configuredValue;
+            }
+            String projectName = context.getCurrentProjectName();
+            if (projectName != null && projectName.length() == 0) {
+                projectName = null;
+            }
+            return projectName;
         }
 
         /**
