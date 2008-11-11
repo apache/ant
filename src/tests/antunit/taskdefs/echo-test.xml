@@ -86,6 +86,9 @@
   <target name="testAppend">
     <echo file="${output}/echo.txt">Simple text</echo>
     <echo file="${output}/echo.txt" append="true">Appended</echo>
+    <concat>
+      <file file="${output}/echo.txt" />
+    </concat>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>

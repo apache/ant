@@ -36,7 +36,7 @@ import org.apache.tools.ant.types.ResourceFactory;
  * @since Ant 1.7
  */
 public class FileResource extends Resource implements Touchable, FileProvider,
-        ResourceFactory {
+        ResourceFactory, Appendable {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NULL_FILE
@@ -209,11 +209,25 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+            return ((FileResource) getCheckedRef()).getOutputStream();
         }
+        return getOutputStream(false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public OutputStream getAppendOutputStream() throws IOException {
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).getAppendOutputStream();
+        }
+        return getOutputStream(true);
+    }
+
+    private OutputStream getOutputStream(boolean append) throws IOException {
         File f = getNotNullFile();
         if (f.exists()) {
-            if (f.isFile()) {
+            if (f.isFile() && !append) {
                 f.delete();
             }
         } else {
@@ -222,7 +236,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
                 p.mkdirs();
             }
         }
-        return new FileOutputStream(f);
+        return append ? new FileOutputStream(f.getAbsolutePath(), true) : new FileOutputStream(f);
     }
 
     /**

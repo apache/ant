@@ -39,6 +39,7 @@ import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.resources.Appendable;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
@@ -265,12 +266,46 @@ public class ResourceUtils {
                              String inputEncoding, String outputEncoding,
                              Project project)
         throws IOException {
-        if (!overwrite) {
-            long slm = source.getLastModified();
-            if (dest.isExists() && slm != 0
-                && dest.getLastModified() > slm) {
-                return;
-            }
+        copyResource(source, dest, filters, filterChains, overwrite, preserveLastModified, false, inputEncoding, outputEncoding, project);
+    }
+
+    // CheckStyle:ParameterNumberCheck OFF - bc
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param append Whether to append to an Appendable Resource.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.8
+     */
+    public static void copyResource(Resource source, Resource dest,
+                            FilterSetCollection filters, Vector filterChains,
+                            boolean overwrite, boolean preserveLastModified, boolean append,
+                            String inputEncoding, String outputEncoding,
+                            Project project)
+        throws IOException {
+        if (!(overwrite || SelectorUtils.isOutOfDate(source, dest, FileUtils.getFileUtils()
+                .getFileTimestampGranularity()))) {
+            return;
         }
         final boolean filterSetsAvailable = (filters != null
                                              && filters.hasFilters());
@@ -288,12 +323,12 @@ public class ResourceUtils {
                                                 inputEncoding);
                 }
                 in = new BufferedReader(isr);
-                OutputStreamWriter osw = null;
+                OutputStream os = getOutputStream(dest, append, project);
+                OutputStreamWriter osw;
                 if (outputEncoding == null) {
-                    osw = new OutputStreamWriter(dest.getOutputStream());
+                    osw = new OutputStreamWriter(os);
                 } else {
-                    osw = new OutputStreamWriter(dest.getOutputStream(),
-                                                 outputEncoding);
+                    osw = new OutputStreamWriter(os, outputEncoding);
                 }
                 out = new BufferedWriter(osw);
                 if (filterChainsAvailable) {
@@ -339,12 +374,12 @@ public class ResourceUtils {
                                                 inputEncoding);
                 }
                 in = new BufferedReader(isr);
-                OutputStreamWriter osw = null;
+                OutputStream os = getOutputStream(dest, append, project);
+                OutputStreamWriter osw;
                 if (outputEncoding == null) {
-                    osw = new OutputStreamWriter(dest.getOutputStream());
+                    osw = new OutputStreamWriter(os);
                 } else {
-                    osw = new OutputStreamWriter(dest.getOutputStream(),
-                                                 outputEncoding);
+                    osw = new OutputStreamWriter(os, outputEncoding);
                 }
                 out = new BufferedWriter(osw);
                 if (filterChainsAvailable) {
@@ -373,7 +408,7 @@ public class ResourceUtils {
             OutputStream out = null;
             try {
                 in = source.getInputStream();
-                out = dest.getOutputStream();
+                out = getOutputStream(dest, append, project);
 
                 byte[] buffer = new byte[FileUtils.BUF_SIZE];
                 int count = 0;
@@ -587,4 +622,15 @@ public class ResourceUtils {
         }
     }
 
+    private static OutputStream getOutputStream(Resource resource, boolean append, Project project)
+            throws IOException {
+        if (append) {
+            if (resource instanceof Appendable) {
+                return ((Appendable) resource).getAppendOutputStream();
+            }
+            project.log("Appendable OutputStream not available for non-appendable resource "
+                    + resource + "; using plain OutputStream", Project.MSG_VERBOSE);
+        }
+        return resource.getOutputStream();
+    }
 }

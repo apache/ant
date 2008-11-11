@@ -20,20 +20,18 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.LogLevel;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.LogOutputResource;
+import org.apache.tools.ant.types.resources.StringResource;
 
 /**
  * Writes a message to the Ant logging facilities.
@@ -62,23 +60,14 @@ public class Echo extends Task {
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
-        if (output == null) {
-            log(message, logLevel);
-        } else {
-            Writer out = null;
-            try {
-                OutputStream os = output instanceof FileProvider ? os = new FileOutputStream(
-                        ((FileProvider) output).getFile(), append) : output.getOutputStream();
-                OutputStreamWriter osw = (encoding == null || "".equals(encoding)) ? new OutputStreamWriter(
-                        os)
-                        : new OutputStreamWriter(os, encoding);
-                out = new BufferedWriter(osw);
-                out.write(message, 0, message.length());
-            } catch (IOException ioe) {
-                throw new BuildException(ioe, getLocation());
-            } finally {
-                FileUtils.close(out);
-            }
+        final String msg = "".equals(message) ? StringUtils.LINE_SEP : message;
+        try {
+            ResourceUtils
+                    .copyResource(new StringResource(msg), output == null ? new LogOutputResource(
+                            this, logLevel) : output, null, null, false, false, append, null, ""
+                            .equals(encoding) ? null : encoding, getProject());
+        } catch (IOException ioe) {
+            throw new BuildException(ioe, getLocation());
         }
     }
 
@@ -88,7 +77,7 @@ public class Echo extends Task {
      * @param msg Sets the value for the message variable.
      */
     public void setMessage(String msg) {
-        this.message = msg;
+        this.message = msg == null ? "" : msg;
     }
 
     /**
@@ -97,7 +86,6 @@ public class Echo extends Task {
      *             standard output
      */
     public void setFile(File file) {
-        this.file = file;
         setOutput(new FileResource(getProject(), file));
     }
 
