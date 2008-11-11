@@ -23,11 +23,9 @@ import java.io.Writer;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,16 +43,20 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Intersect;
+import org.apache.tools.ant.types.resources.LogOutputResource;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.ConcatResourceInputStream;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ReaderInputStream;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -432,7 +434,7 @@ public class Concat extends Task implements ResourceCollection {
      * The destination of the stream. If <code>null</code>, the system
      * console is used.
      */
-    private File destinationFile;
+    private Resource dest;
 
     /**
      * Whether or not the stream should be appended if the destination file
@@ -479,7 +481,7 @@ public class Concat extends Task implements ResourceCollection {
     private String eolString;
     /** outputwriter */
     private Writer outputWriter = null;
-    /** whether to not create destinationfile if no source files are
+    /** whether to not create dest if no source files are
      * available */
     private boolean ignoreEmpty = true;
 
@@ -511,7 +513,7 @@ public class Concat extends Task implements ResourceCollection {
     public void reset() {
         append = false;
         forceOverwrite = true;
-        destinationFile = null;
+        dest = null;
         encoding = null;
         outputEncoding = null;
         fixLastLine = false;
@@ -533,15 +535,24 @@ public class Concat extends Task implements ResourceCollection {
      * @param destinationFile the destination file
      */
     public void setDestfile(File destinationFile) {
-        this.destinationFile = destinationFile;
+        setDest(new FileResource(destinationFile));
     }
 
     /**
-     * Sets the behavior when the destination file exists. If set to
-     * <code>true</code> the stream data will be appended to the
-     * existing file, otherwise the existing file will be
+     * Set the resource to write to.
+     * @param dest the Resource to write to.
+     * @since Ant 1.8
+     */
+    public void setDest(Resource dest) {
+        this.dest = dest;
+    }
+
+    /**
+     * Sets the behavior when the destination exists. If set to
+     * <code>true</code> the task will append the stream data an
+     * {@link Appendable} resource; otherwise existing content will be
      * overwritten. Defaults to <code>false</code>.
-     * @param append if true append to the file.
+     * @param append if true append output.
      */
     public void setAppend(boolean append) {
         this.append = append;
@@ -739,43 +750,26 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void execute() {
         validate();
-        if (binary && destinationFile == null) {
+        if (binary && dest == null) {
             throw new BuildException(
-                "destfile attribute is required for binary concatenation");
+                "dest|destfile attribute is required for binary concatenation");
         }
         ResourceCollection c = getResources();
         if (isUpToDate(c)) {
-            log(destinationFile + " is up-to-date.", Project.MSG_VERBOSE);
+            log(dest + " is up-to-date.", Project.MSG_VERBOSE);
             return;
         }
         if (c.size() == 0 && ignoreEmpty) {
             return;
         }
-        OutputStream out;
-        if (destinationFile == null) {
-            // Log using WARN so it displays in 'quiet' mode.
-            out = new LogOutputStream(this, Project.MSG_WARN);
-        } else {
-            try {
-                // ensure that the parent dir of dest file exists
-                File parent = destinationFile.getParentFile();
-                if (!parent.exists()) {
-                    parent.mkdirs();
-                }
-                // use getPath() for pre-JDK 1.4 compatibility:
-                out = new FileOutputStream(destinationFile.getPath(), append);
-            } catch (Throwable t) {
-                throw new BuildException("Unable to open "
-                    + destinationFile + " for writing", t);
-            }
-        }
-        InputStream catStream;
         try {
-            catStream = new ConcatResource(c).getInputStream();
+            //most of these are defaulted because the concat-as-a-resource code hijacks a lot:
+            ResourceUtils.copyResource(new ConcatResource(c), dest == null ? new LogOutputResource(
+                    this, Project.MSG_WARN) : dest, null, null, true, false, append, null, null,
+                    getProject());
         } catch (IOException e) {
-            throw new BuildException("error getting concatenated resource content", e);
+            throw new BuildException("error concatenating content to " + dest, e);
         }
-        pump(catStream, out);
     }
 
     /**
@@ -835,9 +829,9 @@ public class Concat extends Task implements ResourceCollection {
                     "Nested header or footer is incompatible with binary concatenation");
             }
         }
-        if (destinationFile != null && outputWriter != null) {
+        if (dest != null && outputWriter != null) {
             throw new BuildException(
-                "Cannot specify both a destination file and an output writer");
+                "Cannot specify both a destination resource and an output writer");
         }
         // Sanity check our inputs.
         if (rc == null && textBuffer == null) {
@@ -860,23 +854,21 @@ public class Concat extends Task implements ResourceCollection {
         if (rc == null) {
             return new StringResource(getProject(), textBuffer.toString());
         }
+        if (dest != null) {
+            Intersect checkDestNotInSources = new Intersect();
+            checkDestNotInSources.setProject(getProject());
+            checkDestNotInSources.add(rc);
+            checkDestNotInSources.add(dest);
+            if (checkDestNotInSources.size() > 0) {
+                throw new BuildException("Destination resource " + dest
+                        + " was specified as an input resource.");
+            }
+        }
         Restrict noexistRc = new Restrict();
         noexistRc.add(NOT_EXISTS);
         noexistRc.add(rc);
         for (Iterator i = noexistRc.iterator(); i.hasNext();) {
             log(i.next() + " does not exist.", Project.MSG_ERR);
-        }
-        if (destinationFile != null) {
-            for (Iterator i = rc.iterator(); i.hasNext();) {
-                Object o = i.next();
-                if (o instanceof FileProvider) {
-                    File f = ((FileProvider) o).getFile();
-                    if (FILE_UTILS.fileNameEquals(f, destinationFile)) {
-                        throw new BuildException("Input file \""
-                            + f + "\" is the same as the output file.");
-                    }
-                }
-            }
         }
         Restrict result = new Restrict();
         result.add(EXISTS);
@@ -885,13 +877,12 @@ public class Concat extends Task implements ResourceCollection {
     }
 
     private boolean isUpToDate(ResourceCollection c) {
-        if (destinationFile == null || forceOverwrite) {
+        if (dest == null || forceOverwrite) {
             return false;
         }
         for (Iterator i = c.iterator(); i.hasNext();) {
             Resource r = (Resource) i.next();
-            if (r.getLastModified() == 0L
-                 || r.getLastModified() > destinationFile.lastModified()) {
+            if (SelectorUtils.isOutOfDate(r, dest, FILE_UTILS.getFileTimestampGranularity())) {
                 return false;
             }
         }
@@ -907,28 +898,6 @@ public class Concat extends Task implements ResourceCollection {
     private void sanitizeText() {
         if (textBuffer != null && "".equals(textBuffer.toString().trim())) {
             textBuffer = null;
-        }
-    }
-
-    /**
-     * Transfer the contents of <code>in</code> to <code>out</code>.
-     * @param in InputStream
-     * @param out OutputStream
-     */
-    private void pump(InputStream in, OutputStream out) {
-        Thread t = new Thread(new StreamPumper(in, out));
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            try {
-                t.join();
-            } catch (InterruptedException ee) {
-                // Empty
-            }
-        } finally {
-            FileUtils.close(in);
-            FileUtils.close(out);
         }
     }
 
