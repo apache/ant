@@ -193,6 +193,9 @@ directory.</p>
 <h3>How is &lt;import&gt; different
   from <a href="include.html">&lt;include&gt;</a>?</h3>
 
+<p>The short version: Use import if you intend to override a target,
+  otherwise use include.</p>
+
 <p>When using import the imported targets are available by up to two
   names.  Their "normal" name without any prefix and potentially with
   a prefixed name (the value of the as attribute or the imported
@@ -205,16 +208,16 @@ directory.</p>
   remains unchanged, i.e. it uses "normal" names and allows you to
   override targets in the dependency list.</p>
 
-<p>When using include, the included target's depends attribute is
-  rewritten so that prefixed names are used.  This allows writers of
-  the included file to control which target is invoked as part of the
-  dependencies.</p>
+<p>When using include, the included targets cannot be overridden and
+  their depends attributes are rewritten so that prefixed names are
+  used.  This allows writers of the included file to control which
+  target is invoked as part of the dependencies.</p>
 
 <p>It is possible to include the same file more than once by using
   different prefixes, it is not possible to import the same file more
   than once.</p>
 
-<p>Use import if you intend to override a target, otherwise use include.</p>
+<h4>Examples</h4>
 
 <p><i>nested.xml</i> shall be:</p>
 
@@ -233,43 +236,53 @@ directory.</p>
 <p>When using import like in</p>
 
 <pre>
-&lt;project&gt;
+&lt;project default="test"&gt;
   &lt;target name="setUp"&gt;
     &lt;property name="prop" value="in importing"/&gt;
   &lt;/target&gt;
 
   &lt;import file="nested.xml" as="nested"/&gt;
+
+  &lt;target name="test" depends="nested.echo"/&gt;
 &lt;/project&gt;
 </pre>
 
-<p>Running the target <i>nested.echo</i> will emit:
+<p>Running the build file will emit:
 
 <pre>
 setUp:
 
 nested.echo:
      [echo] prop has the value in importing
+
+test:
+
 </pre>
 
 <p>When using include like in</p>
 
 <pre>
-&lt;project&gt;
+&lt;project default="test"&gt;
   &lt;target name="setUp"&gt;
     &lt;property name="prop" value="in importing"/&gt;
   &lt;/target&gt;
 
   &lt;include file="nested.xml" as="nested"/&gt;
+
+  &lt;target name="test" depends="nested.echo"/&gt;
 &lt;/project&gt;
 </pre>
 
-<p>Running the target <i>nested.echo</i> will emit:
+<p>Running the target build file will emit:
 
 <pre>
 nested.setUp:
 
 nested.echo:
      [echo] prop has the value in nested
+
+test:
+
 </pre>
 
 <p>and there won't be any target named "echo" on the including build file.</p>
