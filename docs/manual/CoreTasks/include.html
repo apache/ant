@@ -69,6 +69,11 @@ that are not possible with entity includes:
   all target names are prefixed as well.  This makes the included file
   self-contained.</p>
 
+<p>Note that prefixes nest, so if a build file includes a file with
+  prefix "a" and the included file includes another file with prefix
+  "b", then the targets of that last build file will be prefixed by
+  "a.b.".</p>
+
 <h4>Special Properties</h4>
 
 <p>Included files are treated as they are present in the main
@@ -170,6 +175,16 @@ project).</p>
       </td>
       <td valign="top" align="center">Yes, if the included file's
         project tag doesn't specify a name attribute.</td>
+    </tr>
+    <tr>
+      <td valign="top">
+        prefixSeparator
+      </td>
+      <td valign="top">
+        Specifies the separator to be used between the prefix and the
+        target name.  Defaults to ".".
+      </td>
+      <td valign="top" align="center">No</td>
     </tr>
   </tbody>
 </table>

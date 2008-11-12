@@ -143,6 +143,32 @@ public class ProjectHelper {
         targetPrefix.set(prefix);
     }
 
+    private final static ThreadLocal prefixSeparator = new ThreadLocal() {
+            protected Object initialValue() {
+                return ".";
+            }
+        };
+
+    /**
+     * The separator between the prefix and the target name.
+     *
+     * <p>May be set by &lt;import&gt;'s prefixSeperator attribute.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public static String getCurrentPrefixSeparator() {
+        return (String) prefixSeparator.get();
+    }
+
+    /**
+     * Sets the separator between the prefix and the target name.
+     *
+     * @since Ant 1.8.0
+     */
+    public static void setCurrentPrefixSeparator(String sep) {
+        prefixSeparator.set(sep);
+    }
+
     private final static ThreadLocal inIncludeMode = new ThreadLocal() {
             protected Object initialValue() {
                 return Boolean.FALSE;

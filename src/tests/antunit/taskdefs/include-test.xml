@@ -38,4 +38,10 @@
   <target name="testNoOverride" depends="override.dummy">
     <au:assertEquals expected="in included/imported" actual="${prop}"/>
   </target>
+
+  <include file="importtests/nested.xml" as="nested"/>
+
+  <!-- really only tests that the targets have the expected names by
+       forcing an exception if the dependencies don't exist -->
+  <target name="testNesting" depends="nested.b::b, nested.aa"/>
 </project>

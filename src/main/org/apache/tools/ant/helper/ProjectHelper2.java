@@ -849,6 +849,8 @@ public class ProjectHelper2 extends ProjectHelper {
             String prefix = null;
             boolean isInIncludeMode =
                 context.isIgnoringProjectTag() && isInIncludeMode();
+            String sep = getCurrentPrefixSeparator();
+
             if (isInIncludeMode) {
                 prefix = getTargetPrefix(context);
                 if (prefix == null) {
@@ -858,7 +860,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                              + " and the project tag doesn't"
                                              + " specify a name attribute");
                 }
-                name = prefix + "." + name;
+                name = prefix + sep + name;
             }
 
             // Check if this target is in the current build file
@@ -878,6 +880,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 project.addOrReplaceTarget(name, target);
                 usedTarget = true;
             }
+
             if (depends.length() > 0) {
                 if (!isInIncludeMode) {
                     target.setDepends(depends);
@@ -885,7 +888,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     for (Iterator iter =
                              Target.parseDepends(depends, name).iterator();
                          iter.hasNext(); ) {
-                        target.addDependency(prefix + "." + iter.next());
+                        target.addDependency(prefix + sep + iter.next());
                     }
                 }
             }
@@ -893,7 +896,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 && (prefix = getTargetPrefix(context)) != null) {
                 // In an imported file (and not completely
                 // ignoring the project tag or having a preconfigured prefix)
-                String newName = prefix + "." + name;
+                String newName = prefix + sep + name;
                 Target newTarget = usedTarget ? new Target(target) : target;
                 newTarget.setName(newName);
                 context.getCurrentTargets().put(newName, newTarget);
@@ -909,10 +912,17 @@ public class ProjectHelper2 extends ProjectHelper {
             if (configuredValue != null) {
                 return configuredValue;
             }
+
             String projectName = context.getCurrentProjectName();
-            if (projectName != null && projectName.length() == 0) {
+            if ("".equals(projectName)) {
                 projectName = null;
             }
+
+            // help nested include tasks
+            if (projectName != null) {
+                setCurrentTargetPrefix(projectName);
+            }
+
             return projectName;
         }
 

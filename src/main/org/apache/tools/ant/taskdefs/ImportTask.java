@@ -56,6 +56,7 @@ public class ImportTask extends Task {
     private String file;
     private boolean optional;
     private String targetPrefix;
+    private String prefixSeparator = ".";
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
@@ -89,9 +90,15 @@ public class ImportTask extends Task {
     }
 
     /**
-     *  This relies on the task order model.
+     * The separator to use between prefix and target name, default is
+     * ".".
      *
+     * @since Ant 1.8.0
      */
+    public void setPrefixSeparator(String s) {
+        prefixSeparator = s;
+    }
+
     public void execute() {
         if (file == null) {
             throw new BuildException("import requires file attribute");
@@ -156,16 +163,22 @@ public class ImportTask extends Task {
         // importing another one
         String oldPrefix = ProjectHelper.getCurrentTargetPrefix();
         boolean oldIncludeMode = ProjectHelper.isInIncludeMode();
+        String oldSep = ProjectHelper.getCurrentPrefixSeparator();
         try {
-            ProjectHelper.setCurrentTargetPrefix(targetPrefix);
-            ProjectHelper.setInIncludeMode(isInIncludeMode());
+            String prefix = targetPrefix;
+            if (isInIncludeMode() && oldPrefix != null
+                && targetPrefix != null) {
+                prefix = oldPrefix + oldSep + targetPrefix;
+            }
+            setProjectHelperProps(prefix, prefixSeparator,
+                                  isInIncludeMode());
+
             helper.parse(getProject(), importedFile);
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
         } finally {
-            ProjectHelper.setCurrentTargetPrefix(oldPrefix);
-            ProjectHelper.setInIncludeMode(oldIncludeMode);
+            setProjectHelperProps(oldPrefix, oldSep, oldIncludeMode);
         }
     }
 
@@ -187,4 +200,16 @@ public class ImportTask extends Task {
         return "include".equals(getTaskType());
     }
 
+    /**
+     * Sets a bunch of Thread-local ProjectHelper properties.
+     * 
+     * @since Ant 1.8.0
+     */
+    private static void setProjectHelperProps(String prefix,
+                                              String prefixSep,
+                                              boolean inIncludeMode) {
+        ProjectHelper.setCurrentTargetPrefix(prefix);
+        ProjectHelper.setCurrentPrefixSeparator(prefixSep);
+        ProjectHelper.setInIncludeMode(inIncludeMode);
+    }
 }
