@@ -45,6 +45,13 @@ and it doesn't seem to work, read up on the
 in <strong>Directory-based Tasks</strong>, and see the
 <code>defaultexcludes</code> attribute below.
 
+<p>For historical reasons <code>&lt;delete dir="x"/&gt;</code> is
+  different from <code>&lt;delete&gt;&lt;fileset
+  dir="x"/&gt;&lt;/delete&gt;</code>, it will try to remove everything
+  inside "x" including "x" itself, not taking default excludes into
+  account, blindly following all symbolic links.  If you need more
+  control, use a nested <code>&lt;fileset&gt;</code>.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

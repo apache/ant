@@ -31,13 +31,6 @@
     <symlink action="delete" link="${link}"/>
   </target>
 
-  <target name="xtestLinkCycle" if="unix">
-    <mkdir dir="${input}/A/B"/>
-    <property name="link" location="${input}/A/B/C"/>
-    <symlink link="${link}" resource="${input}/A"/>
-    <delete dir="${input}"/>
-  </target>
-
   <target name="testNotFollowedLink" if="unix">
     <mkdir dir="${input}/A/B"/>
     <mkdir dir="${input}/C"/>
