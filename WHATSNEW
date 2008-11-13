@@ -523,6 +523,11 @@ Other changes:
  * a new task <include> provides an alternative to <import> that
    should be preferred when you don't want to override any targets.
 
+ * delete has a new attribute removeNotFollowedSymlink.  If set to
+   true, symbolic links not followed (because followSymlinks was false
+   or the number of symlinks was too big) will be removed.
+   Bugzilla Report 36658.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

@@ -37,4 +37,27 @@
     <symlink link="${link}" resource="${input}/A"/>
     <delete dir="${input}"/>
   </target>
+
+  <target name="testNotFollowedLink" if="unix">
+    <mkdir dir="${input}/A/B"/>
+    <mkdir dir="${input}/C"/>
+    <property name="link" location="${input}/A/B/C"/>
+    <symlink link="${link}" resource="${input}/C"/>
+    <delete>
+      <fileset dir="${input}" followSymlinks="false"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLink" if="unix">
+    <mkdir dir="${input}/A/B"/>
+    <mkdir dir="${input}/C"/>
+    <property name="link" location="${input}/A/B/C"/>
+    <symlink link="${link}" resource="${input}/C"/>
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false"/>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/A/B/C"/>
+    <au:assertFileExists file="${input}/C"/>
+  </target>
 </project>

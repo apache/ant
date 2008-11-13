@@ -26,6 +26,7 @@ import java.util.Comparator;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
@@ -113,6 +114,7 @@ public class Delete extends MatchingTask {
     private boolean quiet = false;
     private boolean failonerror = true;
     private boolean deleteOnExit = false;
+    private boolean removeNotFollowedSymlinks = false;
     private Resources rcs = null;
     private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static SymbolicLinkUtils SYMLINK_UTILS =
@@ -335,6 +337,16 @@ public class Delete extends MatchingTask {
     public void setFollowSymlinks(boolean followSymlinks) {
         usedMatchingTask = true;
         super.setFollowSymlinks(followSymlinks);
+    }
+
+    /**
+     * Sets whether the symbolic links that have not been followed
+     * shall be removed (the links, not the locations they point at).
+     *
+     * @since Ant 1.8.0
+     */
+    public void setRemoveNotFollowedSymlinks(boolean b) {
+        removeNotFollowedSymlinks = b;
     }
 
     /**
@@ -592,9 +604,29 @@ public class Delete extends MatchingTask {
                 handle("Directory does not exist:" + fsDir);
             } else {
                 resourcesToDelete.add(fs);
+                DirectoryScanner ds = fs.getDirectoryScanner();
                 if (includeEmpty) {
-                    filesetDirs.add(new ReverseDirs(getProject(), fsDir, fs
-                            .getDirectoryScanner().getIncludedDirectories()));
+                    filesetDirs.add(new ReverseDirs(getProject(), fsDir,
+                                                    ds
+                                                    .getIncludedDirectories()));
+                }
+
+                if (removeNotFollowedSymlinks) {
+                    String[] n = ds.getNotFollowedSymlinks();
+                    if (n.length > 0) {
+                        String[] links = new String[n.length];
+                        System.arraycopy(n, 0, links, 0, n.length);
+                        Arrays.sort(links, ReverseDirs.REVERSE);
+                        for (int l = 0; l < links.length; l++) {
+                            try {
+                                SYMLINK_UTILS
+                                    .deleteSymbolicLink(new File(links[l]),
+                                                        this);
+                            } catch (java.io.IOException ex) {
+                                handle(ex);
+                            }
+                        }
+                    }
                 }
             }
         }
