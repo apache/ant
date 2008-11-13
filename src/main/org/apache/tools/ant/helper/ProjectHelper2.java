@@ -687,6 +687,14 @@ public class ProjectHelper2 extends ProjectHelper {
                         if (!context.isIgnoringProjectTag()) {
                             project.setName(value);
                             project.addReference(value, project);
+                        } else if (isInIncludeMode()) {
+                            if (!"".equals(value)
+                                && (getCurrentTargetPrefix() == null
+                                    || getCurrentTargetPrefix().length() == 0)
+                                ) {
+                                // help nested include tasks
+                                setCurrentTargetPrefix(value);
+                            }
                         }
                     }
                 } else if (key.equals("id")) {
@@ -916,11 +924,6 @@ public class ProjectHelper2 extends ProjectHelper {
             String projectName = context.getCurrentProjectName();
             if ("".equals(projectName)) {
                 projectName = null;
-            }
-
-            // help nested include tasks
-            if (projectName != null) {
-                setCurrentTargetPrefix(projectName);
             }
 
             return projectName;
