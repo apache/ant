@@ -395,6 +395,16 @@ public class DirectoryScanner
      */
     private int maxLevelsOfSymlinks = MAX_LEVELS_OF_SYMLINKS;
 
+
+    /**
+     * Absolute paths of all symlinks that haven't been followed but
+     * would have been if followsymlinks had been true or
+     * maxLevelsOfSymlinks had been higher.
+     *
+     * @since Ant 1.8.0
+     */
+    private Set/*<String>*/ notFollowedSymlinks = new HashSet();
+
     /**
      * Sole constructor.
      */
@@ -827,6 +837,7 @@ public class DirectoryScanner
 
                 if (basedir != null && !followSymlinks
                     && SYMLINK_UTILS.isSymbolicLink(basedir)) {
+                    notFollowedSymlinks.add(basedir.getAbsolutePath());
                     basedir = null;
                 }
 
@@ -979,6 +990,9 @@ public class DirectoryScanner
 
                 if (myfile != null && myfile.exists()) {
                     if (!followSymlinks && currentPath.isSymlink(basedir)) {
+                        if (!isExcluded(currentPath)) {
+                            notFollowedSymlinks.add(myfile.getAbsolutePath());
+                        }
                         continue;
                     }
                     if (myfile.isDirectory()) {
@@ -1038,6 +1052,7 @@ public class DirectoryScanner
         dirsDeselected   = new VectorSet();
         everythingIncluded = (basedir != null);
         scannedDirs.clear();
+        notFollowedSymlinks.clear();
     }
 
     /**
@@ -1187,6 +1202,9 @@ public class DirectoryScanner
                         File file = new File(dir, newfiles[i]);
                         (file.isDirectory()
                             ? dirsExcluded : filesExcluded).addElement(name);
+                        if (!isExcluded(name)) {
+                            notFollowedSymlinks.add(file.getAbsolutePath());
+                        }
                     } else {
                         noLinks.add(newfiles[i]);
                     }
@@ -1225,6 +1243,7 @@ public class DirectoryScanner
                                        + file.getAbsolutePath()
                                        + " -- too many levels of symbolic"
                                        + " links.");
+                    notFollowedSymlinks.add(file.getAbsolutePath());
                     continue;
                 }
 
@@ -1673,6 +1692,23 @@ public class DirectoryScanner
         String[] directories = new String[dirsDeselected.size()];
         dirsDeselected.copyInto(directories);
         return directories;
+    }
+
+    /**
+     * Absolute paths of all symbolic links that haven't been followed
+     * but would have been followed had followsymlinks been true or
+     * maxLevelsOfSymlinks been bigger.
+     *
+     * @since Ant 1.8.0
+     */
+    public synchronized String[] getNotFollowedSymlinks() {
+        String[] links;
+        synchronized (this) {
+            links = (String[]) notFollowedSymlinks
+                .toArray(new String[notFollowedSymlinks.size()]);
+        }
+        Arrays.sort(links);
+        return links;
     }
 
     /**
