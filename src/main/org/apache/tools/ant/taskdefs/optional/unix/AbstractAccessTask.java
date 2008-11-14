@@ -104,6 +104,7 @@ public abstract class AbstractAccessTask
      *              use the superclasses' test (user set).
      */
     protected boolean isValidOs() {
-        return Os.isFamily("unix") && super.isValidOs();
+        return getOs() == null && getOsFamily() == null
+            ? Os.isFamily(Os.FAMILY_UNIX) : super.isValidOs();
     }
 }

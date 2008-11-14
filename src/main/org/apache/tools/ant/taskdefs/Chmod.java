@@ -254,6 +254,7 @@ public class Chmod extends ExecuteOn {
      * @return true if the os is valid.
      */
     protected boolean isValidOs() {
-        return Os.isFamily(Os.FAMILY_UNIX) && super.isValidOs();
+        return getOs() == null && getOsFamily() == null
+            ? Os.isFamily(Os.FAMILY_UNIX) : super.isValidOs();
     }
 }

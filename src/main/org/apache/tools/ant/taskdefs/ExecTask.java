@@ -155,6 +155,14 @@ public class ExecTask extends Task {
     }
 
     /**
+     * List of operating systems on which the command may be executed.
+     * @since Ant 1.8.0
+     */
+    public final String getOs() {
+        return os;
+    }
+
+    /**
      * Sets a command line.
      * @param cmdl command line.
      * @ant.attribute ignore="true"
@@ -396,6 +404,13 @@ public class ExecTask extends Task {
         this.osFamily = osFamily.toLowerCase(Locale.US);
     }
 
+    /**
+     * Restrict this execution to a single OS Family
+     * @since Ant 1.8.0
+     */
+    public final String getOsFamily() {
+        return osFamily;
+    }
 
     /**
      * The method attempts to figure out where the executable is so that we can feed
@@ -545,7 +560,7 @@ public class ExecTask extends Task {
      */
     protected boolean isValidOs() {
         //hand osfamily off to Os class, if set
-        if (osFamily != null && !Os.isOs(osFamily, null, null, null)) {
+        if (osFamily != null && !Os.isFamily(osFamily)) {
             return false;
         }
         //the Exec OS check is different from Os.isOs(), which

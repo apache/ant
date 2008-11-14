@@ -528,6 +528,12 @@ Other changes:
    or the number of symlinks was too big) will be removed.
    Bugzilla Report 36658.
 
+ * the os and osfamily attributes of <chown>, <chgrp>, <chmod> and
+   <attrib> can now be used to run the commands on operating systems
+   other than their "native" environment, i.e. non-Unix or non-Windows
+   operating systems repsectively.
+   Bugzilla Report 7624.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

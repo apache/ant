@@ -57,6 +57,12 @@ little.  POSIX recommends command line length limits of at least 4096
 characters, this may give you an approximation for the number you
 could use as initial value for these experiments.</p>
 
+<p>By default this task won't do anything unless it detects it is
+  running on a Unix system.  If you know for sure that you have a
+  "chmod" executable on your PATH that is command line compatible with
+  the Unix command, you can use the task's os attribute and set its
+  value to your current os.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -131,6 +137,18 @@ could use as initial value for these experiments.</p>
     <td valign="top">Whether to print a summary after execution or not.
       Defaults to <code>false</code>.  <em>Since Ant 1.6.</em></td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">os</td>
+    <td valign="top">list of Operating Systems on which the command may be
+      executed.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">osfamily</td>
+    <td valign="top">OS family as used in
+      the <a href="conditions.html#os">&lt;os&gt;</a> condition.</td>
+    <td align="center" valign="top">No - defaults to "unix"</td>
   </tr>
 </table>
 <h3>Examples</h3>

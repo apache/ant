@@ -51,6 +51,12 @@ maxparallel attribute of this task to a non-zero value.  The number to
 use highly depends on the length of your file names (the depth of your
 directory tree), so you'll have to experiment a little.</p>
 
+<p>By default this task won't do anything unless it detects it is
+  running on a Windows system.  If you know for sure that you have a
+  "attrib" executable on your PATH that is command line compatible with
+  the Windows command, you can use the task's os attribute and set its
+  value to your current os.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -110,6 +116,19 @@ directory tree), so you'll have to experiment a little.</p>
       most this many sourcefiles at once.  Set it to &lt;= 0 for
       unlimited.  Defaults to unlimited.  <em>Since Ant 1.6.</em></td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">os</td>
+    <td valign="top">list of Operating Systems on which the command may be
+      executed.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">osfamily</td>
+    <td valign="top">OS family as used in
+      the <a href="../CoreTasks/conditions.html#os">&lt;os&gt;</a>
+      condition.</td>
+    <td align="center" valign="top">No - defaults to "windows"</td>
   </tr>
 </table>
 
