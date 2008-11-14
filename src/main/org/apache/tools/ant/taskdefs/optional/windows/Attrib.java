@@ -177,7 +177,7 @@ public class Attrib extends ExecuteOn {
      */
     protected boolean isValidOs() {
         return getOs() == null && getOsFamily() == null ?
-            Os.isFamily(Os.WINDOWS) : super.isValidOs();
+            Os.isFamily(Os.FAMILY_WINDOWS) : super.isValidOs();
     }
 
     private static String getSignString(boolean attr) {
