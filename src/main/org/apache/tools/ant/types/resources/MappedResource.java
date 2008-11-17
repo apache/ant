@@ -64,7 +64,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setName(String name) {
-        throw new UnsupportedOperationException();
+        throw new ImmutableResourceException();
     }
 
     /**
@@ -78,7 +78,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setExists(boolean exists) {
-        throw new UnsupportedOperationException();
+        throw new ImmutableResourceException();
     }
 
     /**
@@ -92,7 +92,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setLastModified(long lastmodified) {
-        throw new UnsupportedOperationException();
+        throw new ImmutableResourceException();
     }
 
     /**
@@ -106,7 +106,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setDirectory(boolean directory) {
-        throw new UnsupportedOperationException();
+        throw new ImmutableResourceException();
     }
 
     /**
@@ -120,7 +120,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setSize(long size) {
-        throw new UnsupportedOperationException();
+        throw new ImmutableResourceException();
     }
 
     /**
