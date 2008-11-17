@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.Resource;
 public class MappedResource extends Resource {
     private final Resource wrapped;
     private final boolean isAppendable;
+    private final boolean isTouchable;
 
     // should only be instantiated via factory, this also means we
     // don't have to think about being a reference to a different
@@ -49,6 +50,7 @@ public class MappedResource extends Resource {
     protected MappedResource(Resource r) {
         wrapped = r;
         isAppendable = wrapped.as(Appendable.class) != null;
+        isTouchable = wrapped.as(Touchable.class) != null;
     }
 
     /**
@@ -162,21 +164,19 @@ public class MappedResource extends Resource {
                 }
             };
         }
+        if (clazz == Touchable.class && isTouchable) {
+            return new Touchable() {
+                public void touch(long modTime) {
+                    ((Touchable) wrapped.as(Touchable.class)).touch(modTime);
+                }
+            };
+        }
         return super.as(clazz);
     }
 
     public static MappedResource map(Resource r) {
-        if (r instanceof FileProvider) {
-            if (r instanceof Touchable) {
-                return new TouchableFileProviderMR(r);
-            }
-            return new FileProviderMR(r);
-        }
-        if (r instanceof Touchable) {
-            return new TouchableMR(r);
-        }
-        // no special interface
-        return new MappedResource(r);
+        return r instanceof FileProvider
+            ? new FileProviderMR(r) : new MappedResource(r);
     }
 
     private static class FileProviderMR extends MappedResource
@@ -198,50 +198,6 @@ public class MappedResource extends Resource {
          */
         public File getFile() {
             return p.getFile();
-        }
-    }
-
-    private static class TouchableMR extends MappedResource
-        implements Touchable {
-        private final Touchable t;
-
-        protected TouchableMR(Resource r) {
-            super(r);
-            if (!(r instanceof Touchable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Touchable");
-            }
-            t = (Touchable) r;
-        }
-
-        /**
-         * delegated to the wrapped resource.
-         */
-        public void touch(long m) {
-            t.touch(m);
-        }
-    }
-
-    private static class TouchableFileProviderMR extends FileProviderMR
-        implements Touchable {
-        private final Touchable t;
-
-        protected TouchableFileProviderMR(Resource r) {
-            super(r);
-            if (!(r instanceof Touchable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Touchable");
-            }
-            t = (Touchable) r;
-        }
-
-        /**
-         * delegated to the wrapped resource.
-         */
-        public void touch(long m) {
-            t.touch(m);
         }
     }
 

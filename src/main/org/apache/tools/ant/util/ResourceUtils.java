@@ -421,8 +421,11 @@ public class ResourceUtils {
                 FileUtils.close(in);
             }
         }
-        if (preserveLastModified && dest instanceof Touchable) {
-            setLastModified((Touchable) dest, source.getLastModified());
+        if (preserveLastModified) {
+            Touchable t = (Touchable) dest.as(Touchable.class);
+            if (t != null) {
+                setLastModified(t, source.getLastModified());
+            }
         }
     }
     // CheckStyle:ParameterNumberCheck ON
