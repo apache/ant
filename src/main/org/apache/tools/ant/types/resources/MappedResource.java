@@ -156,22 +156,7 @@ public class MappedResource extends Resource {
     }
 
     public Object as(Class clazz) {
-        if (clazz == Appendable.class && isAppendable) {
-            return new Appendable() {
-                public OutputStream getAppendOutputStream() throws IOException {
-                    return ((Appendable) wrapped.as(Appendable.class))
-                        .getAppendOutputStream();
-                }
-            };
-        }
-        if (clazz == Touchable.class && isTouchable) {
-            return new Touchable() {
-                public void touch(long modTime) {
-                    ((Touchable) wrapped.as(Touchable.class)).touch(modTime);
-                }
-            };
-        }
-        return super.as(clazz);
+        return wrapped.as(clazz);
     }
 
     public static MappedResource map(Resource r) {
