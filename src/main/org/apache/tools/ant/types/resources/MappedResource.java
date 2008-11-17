@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * dynamically remap the resource's name.
  *
  * <p>Strips the FileProvider interface from decorated resources since
- * it may be used to circomvent name mapping.</p>
+ * it may be used to circumvent name mapping.</p>
  *
  * <p>Overwrites all setters to throw exceptions.</p>
  *

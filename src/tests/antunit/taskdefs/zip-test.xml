@@ -27,4 +27,37 @@
     <unzip src="${output}/test.zip" dest="${output}/bar"/>
     <au:assertFileExists file="${output}/bar/foo"/>
   </target>
+
+  <target name="testMappedResources">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <zip destfile="${output}/test.zip">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="foo.*" to="bar.*"/>
+      </mappedresources>
+    </zip>
+    <unzip src="${output}/test.zip" dest="${output}/out"/>
+    <au:assertFileDoesntExist file="${output}/out/foo.txt"/>
+    <au:assertFileExists file="${output}/out/bar.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/out/bar.txt"/>
+  </target>
+
+  <target name="testMappedClasspath">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <zip destfile="${output}/test.zip">
+      <mappedresources>
+        <path path="${java.class.path}"/>
+        <chainedmapper>
+          <flattenmapper/>
+          <globmapper from="*" to="WEB-INF/lib/*"/>
+        </chainedmapper>
+      </mappedresources>
+    </zip>
+    <unzip src="${output}/test.zip" dest="${output}/out"/>
+    <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
+  </target>
 </project>
