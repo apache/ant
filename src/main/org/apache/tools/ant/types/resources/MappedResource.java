@@ -17,20 +17,20 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * A decorator around a different resource that uses a mapper to
  * dynamically remap the resource's name.
  *
- * <p>Does not change any of the other methods, in particular
- * getFile() does not map the file name.</p>
+ * <p>Strips the FileProvider interface from decorated resources since
+ * it may be used to circomvent name mapping.</p>
  *
  * <p>Overwrites all setters to throw exceptions.</p>
  *
@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.Resource;
  */
 public class MappedResource extends Resource {
     private final Resource wrapped;
+    private final FileNameMapper mapper;
     private final boolean isAppendable;
     private final boolean isTouchable;
 
@@ -48,8 +49,9 @@ public class MappedResource extends Resource {
     /**
      * Wraps an existing resource.
      */
-    protected MappedResource(Resource r) {
+    public MappedResource(Resource r, FileNameMapper m) {
         wrapped = r;
+        mapper = m;
         isAppendable = wrapped.as(Appendable.class) != null;
         isTouchable = wrapped.as(Touchable.class) != null;
     }
@@ -58,7 +60,8 @@ public class MappedResource extends Resource {
      * Maps the name.
      */
     public String getName() {
-        return wrapped.getName();
+        String[] mapped = mapper.mapFileName(wrapped.getName());
+        return mapped != null && mapped.length > 0 ? mapped[0] : null;
     }
 
     /**
@@ -157,34 +160,8 @@ public class MappedResource extends Resource {
     }
 
     public Object as(Class clazz) {
-        return wrapped.as(clazz);
-    }
-
-    public static MappedResource map(Resource r) {
-        return r.as(FileProvider.class) != null
-            ? new FileProviderMR(r) : new MappedResource(r);
-    }
-
-    private static class FileProviderMR extends MappedResource
-        implements FileProvider {
-        private final FileProvider p;
-
-        protected FileProviderMR(Resource r) {
-            super(r);
-            p = (FileProvider) r.as(FileProvider.class);
-            if (p == null) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not adaptable to "
-                                                   + " FileProvider");
-            }
-        }
-
-        /**
-         * delegated to the wrapped resource.
-         */
-        public File getFile() {
-            return p.getFile();
-        }
+        return FileProvider.class.isAssignableFrom(clazz) 
+            ? null : wrapped.as(clazz);
     }
 
 }
