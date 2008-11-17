@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 
@@ -64,7 +65,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setName(String name) {
-        throw new ImmutableResourceException();
+        throw new BuildException(new ImmutableResourceException());
     }
 
     /**
@@ -78,7 +79,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setExists(boolean exists) {
-        throw new ImmutableResourceException();
+        throw new BuildException(new ImmutableResourceException());
     }
 
     /**
@@ -92,7 +93,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setLastModified(long lastmodified) {
-        throw new ImmutableResourceException();
+        throw new BuildException(new ImmutableResourceException());
     }
 
     /**
@@ -106,7 +107,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setDirectory(boolean directory) {
-        throw new ImmutableResourceException();
+        throw new BuildException(new ImmutableResourceException());
     }
 
     /**
@@ -120,7 +121,7 @@ public class MappedResource extends Resource {
      * Not supported.
      */
     public void setSize(long size) {
-        throw new ImmutableResourceException();
+        throw new BuildException(new ImmutableResourceException());
     }
 
     /**
