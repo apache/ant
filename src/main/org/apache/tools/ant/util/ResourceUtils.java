@@ -625,8 +625,9 @@ public class ResourceUtils {
     private static OutputStream getOutputStream(Resource resource, boolean append, Project project)
             throws IOException {
         if (append) {
-            if (resource instanceof Appendable) {
-                return ((Appendable) resource).getAppendOutputStream();
+            Appendable a = (Appendable) resource.as(Appendable.class);
+            if (a != null) {
+                return a.getAppendOutputStream();
             }
             project.log("Appendable OutputStream not available for non-appendable resource "
                     + resource + "; using plain OutputStream", Project.MSG_VERBOSE);

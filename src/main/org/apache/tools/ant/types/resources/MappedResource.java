@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.Resource;
  */
 public class MappedResource extends Resource {
     private final Resource wrapped;
+    private final boolean isAppendable;
 
     // should only be instantiated via factory, this also means we
     // don't have to think about being a reference to a different
@@ -47,6 +48,7 @@ public class MappedResource extends Resource {
      */
     protected MappedResource(Resource r) {
         wrapped = r;
+        isAppendable = wrapped.as(Appendable.class) != null;
     }
 
     /**
@@ -151,28 +153,27 @@ public class MappedResource extends Resource {
         throw new UnsupportedOperationException();
     }
 
+    public Object as(Class clazz) {
+        if (clazz == Appendable.class && isAppendable) {
+            return new Appendable() {
+                public OutputStream getAppendOutputStream() throws IOException {
+                    return ((Appendable) wrapped.as(Appendable.class))
+                        .getAppendOutputStream();
+                }
+            };
+        }
+        return super.as(clazz);
+    }
+
     public static MappedResource map(Resource r) {
         if (r instanceof FileProvider) {
             if (r instanceof Touchable) {
-                if (r instanceof Appendable) {
-                    // most probably FileResource
-                    return new AppendableTouchableFileProviderMR(r);
-                }
                 return new TouchableFileProviderMR(r);
-            }
-            if (r instanceof Appendable) {
-                return new AppendableFileProviderMR(r);
             }
             return new FileProviderMR(r);
         }
         if (r instanceof Touchable) {
-            if (r instanceof Appendable) {
-                return new AppendableTouchableMR(r);
-            }
             return new TouchableMR(r);
-        }
-        if (r instanceof Appendable) {
-            return new AppendableMR(r);
         }
         // no special interface
         return new MappedResource(r);
@@ -222,25 +223,6 @@ public class MappedResource extends Resource {
         }
     }
 
-    private static class AppendableMR extends MappedResource
-        implements Appendable {
-        private final Appendable a;
-
-        protected AppendableMR(Resource r) {
-            super(r);
-            if (!(r instanceof Appendable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Appendable");
-            }
-            a = (Appendable) r;
-        }
-
-        public OutputStream getAppendOutputStream() throws IOException {
-            return a.getAppendOutputStream();
-        }
-    }
-
     private static class TouchableFileProviderMR extends FileProviderMR
         implements Touchable {
         private final Touchable t;
@@ -260,64 +242,6 @@ public class MappedResource extends Resource {
          */
         public void touch(long m) {
             t.touch(m);
-        }
-    }
-
-    private static class AppendableFileProviderMR extends FileProviderMR
-        implements Appendable {
-        private final Appendable a;
-
-        protected AppendableFileProviderMR(Resource r) {
-            super(r);
-            if (!(r instanceof Appendable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Appendable");
-            }
-            a = (Appendable) r;
-        }
-
-        public OutputStream getAppendOutputStream() throws IOException {
-            return a.getAppendOutputStream();
-        }
-    }
-
-    private static class AppendableTouchableMR extends TouchableMR
-        implements Appendable {
-        private final Appendable a;
-
-        protected AppendableTouchableMR(Resource r) {
-            super(r);
-            if (!(r instanceof Appendable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Appendable");
-            }
-            a = (Appendable) r;
-        }
-
-        public OutputStream getAppendOutputStream() throws IOException {
-            return a.getAppendOutputStream();
-        }
-    }
-
-    private static class AppendableTouchableFileProviderMR
-        extends TouchableFileProviderMR
-        implements Appendable {
-        private final Appendable a;
-
-        protected AppendableTouchableFileProviderMR(Resource r) {
-            super(r);
-            if (!(r instanceof Appendable)) {
-                throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
-                                                   + " Appendable");
-            }
-            a = (Appendable) r;
-        }
-
-        public OutputStream getAppendOutputStream() throws IOException {
-            return a.getAppendOutputStream();
         }
     }
 
