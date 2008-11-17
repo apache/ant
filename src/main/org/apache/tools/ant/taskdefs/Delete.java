@@ -30,6 +30,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Sort;
@@ -646,7 +647,9 @@ public class Delete extends MatchingTask {
                 for (Iterator iter = resourcesToDelete.iterator(); iter.hasNext();) {
                     // nonexistent resources could only occur if we already
                     // deleted something from a fileset:
-                    File f = ((FileProvider) iter.next()).getFile();
+                    Resource r = (Resource) iter.next();
+                    File f = ((FileProvider) r.as(FileProvider.class))
+                              .getFile();
                     if (!f.exists()) {
                         continue;
                     }

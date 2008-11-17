@@ -521,10 +521,12 @@ public class ResourceUtils {
     }
 
     /**
-     * Convenience method to turn any fileProvider into a basic FileResource with the
-     * file's immediate parent as the basedir, for tasks that need one.
+     * Convenience method to turn any fileProvider into a basic
+     * FileResource with the file's immediate parent as the basedir,
+     * for tasks that need one.
      * @param fileProvider input
-     * @return fileProvider if it is a FileResource instance, or a new FileResource with fileProvider's file.
+     * @return fileProvider if it is a FileResource instance, or a new
+     * FileResource with fileProvider's file.
      * @since Ant 1.8
      */
     public static FileResource asFileResource(FileProvider fileProvider) {

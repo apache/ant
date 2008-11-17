@@ -28,6 +28,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.ClasspathUtils;
@@ -533,7 +534,9 @@ public class EmailTask extends Task {
                 Iterator iter = attachments.iterator();
 
                 while (iter.hasNext()) {
-                    files.addElement(((FileProvider) iter.next()).getFile());
+                    Resource r = (Resource) iter.next();
+                    files.addElement(((FileProvider) r.as(FileProvider.class))
+                                     .getFile());
                 }
             }
             // let the user know what's going to happen

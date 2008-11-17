@@ -38,8 +38,8 @@ public class FileSystem extends ResourceComparator {
      * @throws ClassCastException if either resource is not an instance of FileResource.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        File foofile = ((FileProvider) foo).getFile();
-        File barfile = ((FileProvider) bar).getFile();
+        File foofile = ((FileProvider) foo.as(FileProvider.class)).getFile();
+        File barfile = ((FileProvider) bar.as(FileProvider.class)).getFile();
         return foofile.equals(barfile) ? 0
             : FILE_UTILS.isLeadingPath(foofile, barfile) ? -1
             : FILE_UTILS.normalize(foofile.getAbsolutePath()).compareTo(

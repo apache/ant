@@ -252,16 +252,20 @@ public class FileResource extends Resource implements Touchable, FileProvider,
         if (this.equals(another)) {
             return 0;
         }
-        if (another instanceof FileProvider) {
-            File f = getFile();
-            if (f == null) {
-                return -1;
+        if (another instanceof Resource) {
+            Resource r = (Resource) another;
+            FileProvider otherFP = (FileProvider) r.as(FileProvider.class);
+            if (otherFP != null) {
+                File f = getFile();
+                if (f == null) {
+                    return -1;
+                }
+                File of = otherFP.getFile();
+                if (of == null) {
+                    return 1;
+                }
+                return f.compareTo(of);
             }
-            File of = ((FileProvider) another).getFile();
-            if (of == null) {
-                return 1;
-            }
-            return f.compareTo(of);
         }
         return super.compareTo(another);
     }

@@ -592,8 +592,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
             File base = baseDir;
             String name = r.getName();
-            if (r instanceof FileProvider) {
-                FileResource f = ResourceUtils.asFileResource((FileProvider) r);
+            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            if (fp != null) {
+                FileResource f = ResourceUtils.asFileResource(fp);
                 base = f.getBaseDir();
                 if (base == null) {
                     name = f.getFile().getAbsolutePath();
@@ -989,8 +990,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 // If we are here we cannot set the stylesheet as
                 // a resource, but we can set it as a file. So,
                 // we make an attempt to get it as a file
-                if (stylesheet instanceof FileProvider) {
-                    liaison.setStylesheet(((FileProvider) stylesheet).getFile());
+                FileProvider fp =
+                    (FileProvider) stylesheet.as(FileProvider.class);
+                if (fp != null) {
+                    liaison.setStylesheet(fp.getFile());
                 } else {
                     throw new BuildException(liaison.getClass().toString()
                             + " accepts the stylesheet only as a file", getLocation());

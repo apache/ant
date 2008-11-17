@@ -45,6 +45,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
@@ -2313,7 +2314,8 @@ public class Javadoc extends Task {
             }
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                sf.addElement(new SourceFile(((FileProvider) iter.next())
+                Resource r = (Resource) iter.next();
+                sf.addElement(new SourceFile(((FileProvider) r.as(FileProvider.class))
                                              .getFile()));
             }
         }

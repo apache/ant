@@ -60,8 +60,9 @@ public class ZipScanner extends ArchiveScanner {
         ZipFile zf = null;
 
         File srcFile = null;
-        if (src instanceof FileProvider) {
-            srcFile = ((FileProvider) src).getFile();
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        if (fp != null) {
+            srcFile = fp.getFile();
         } else {
             throw new BuildException("Only file provider resources are supported");
         }

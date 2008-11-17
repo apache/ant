@@ -394,7 +394,8 @@ public class Checksum extends MatchingTask implements Condition {
             if (resources != null) {
                 for (Iterator i = resources.iterator(); i.hasNext();) {
                     Resource r = (Resource) i.next();
-                    File src = ((FileProvider) r).getFile();
+                    File src = ((FileProvider) r.as(FileProvider.class))
+                        .getFile();
                     if (totalproperty != null || todir != null) {
                         // Use '/' to calculate digest based on file name.
                         // This is required in order to get the same result

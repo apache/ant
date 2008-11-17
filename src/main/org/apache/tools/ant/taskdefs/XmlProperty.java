@@ -244,8 +244,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               DocumentBuilder builder = factory.newDocumentBuilder();
               builder.setEntityResolver(getEntityResolver());
               Document document = null;
-              if (src instanceof FileProvider) {
-                  document = builder.parse(((FileProvider) src).getFile());
+              FileProvider fp = (FileProvider) src.as(FileProvider.class);
+              if (fp != null) {
+                  document = builder.parse(fp.getFile());
               } else {
                   document = builder.parse(src.getInputStream());
               }
@@ -574,7 +575,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (src.isDirectory()) {
             throw new BuildException("the source can't be a directory");
         }
-        if (src instanceof FileProvider || supportsNonFileResources()) {
+        if (src.as(FileProvider.class) != null || supportsNonFileResources()) {
             this.src = src;
         } else {
             throw new BuildException("Only FileSystem resources are supported.");
@@ -669,7 +670,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * @return the file attribute.
      */
     protected File getFile () {
-        return src instanceof FileProvider ? ((FileProvider) src).getFile() : null;
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        return fp != null ? fp.getFile() : null;
     }
 
     /**
@@ -679,8 +681,9 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         // delegate this way around to support subclasses that
         // overwrite getFile
         File f = getFile();
-        return f == null ? src : src instanceof FileProvider
-                && ((FileProvider) src).getFile().equals(f) ? src : new FileResource(f);
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        return f == null ? src : fp != null
+                && fp.getFile().equals(f) ? src : new FileResource(f);
     }
 
     /**

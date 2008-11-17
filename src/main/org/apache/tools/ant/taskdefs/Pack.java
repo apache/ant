@@ -75,8 +75,9 @@ public abstract class Pack extends Task {
         if (src.isDirectory()) {
             throw new BuildException("the source can't be a directory");
         }
-        if (src instanceof FileProvider) {
-            source = ((FileProvider) src).getFile();
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        if (fp != null) {
+            source = fp.getFile();
         } else if (!supportsNonFileResources()) {
             throw new BuildException("Only FileSystem resources are supported.");
         }

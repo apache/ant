@@ -139,8 +139,9 @@ public class Expand extends Task {
                 continue;
             }
 
-            if (r instanceof FileProvider) {
-                expandFile(FILE_UTILS, ((FileProvider) r).getFile(), dest);
+            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            if (fp != null) {
+                expandFile(FILE_UTILS, fp.getFile(), dest);
             } else {
                 expandResource(r, dest);
             }

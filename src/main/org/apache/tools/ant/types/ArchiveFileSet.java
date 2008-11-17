@@ -166,8 +166,11 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the archive in case the archive is a file, null otherwise.
      */
     public File getSrc() {
-        if (src instanceof FileProvider) {
-            return ((FileProvider) src).getFile();
+        if (src != null) {
+            FileProvider fp = (FileProvider) src.as(FileProvider.class);
+            if (fp != null) {
+                return fp.getFile();
+            }
         }
         return null;
     }

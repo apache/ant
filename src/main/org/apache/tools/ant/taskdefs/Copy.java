@@ -469,8 +469,9 @@ public class Copy extends Task {
 
                         File baseDir = NULL_FILE_PLACEHOLDER;
                         String name = r.getName();
-                        if (r instanceof FileProvider) {
-                            FileResource fr = ResourceUtils.asFileResource((FileProvider) r);
+                        FileProvider fp = (FileProvider) r.as(FileProvider.class);
+                        if (fp != null) {
+                            FileResource fr = ResourceUtils.asFileResource(fp);
                             baseDir = getKeyFile(fr.getBaseDir());
                             if (fr.getBaseDir() == null) {
                                 name = fr.getFile().getAbsolutePath();
@@ -480,7 +481,7 @@ public class Copy extends Task {
                         // copying of dirs is trivial and can be done
                         // for non-file resources as well as for real
                         // files.
-                        if (r.isDirectory() || r instanceof FileProvider) {
+                        if (r.isDirectory() || fp != null) {
                             add(baseDir, name,
                                 r.isDirectory() ? dirsByBasedir
                                                 : filesByBasedir);
@@ -626,7 +627,8 @@ public class Copy extends Task {
                     throw new BuildException(
                         "Cannot perform operation from directory to file.");
                 } else if (rc.size() == 1) {
-                    FileProvider r = (FileProvider) rc.iterator().next();
+                    Resource res = (Resource) rc.iterator().next();
+                    FileProvider r = (FileProvider) res.as(FileProvider.class);
                     if (file == null) {
                         file = r.getFile();
                         rcs.removeElementAt(0);

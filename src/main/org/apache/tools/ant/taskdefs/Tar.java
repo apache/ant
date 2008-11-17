@@ -561,7 +561,9 @@ public class Tar extends MatchingTask {
             HashMap basedirToFilesMap = new HashMap();
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = ResourceUtils.asFileResource((FileProvider) iter.next());
+                Resource res = (Resource) iter.next();
+                FileResource r = ResourceUtils
+                    .asFileResource((FileProvider) res.as(FileProvider.class));
                 File base = r.getBaseDir();
                 if (base == null) {
                     base = Copy.NULL_FILE_PLACEHOLDER;
@@ -654,7 +656,8 @@ public class Tar extends MatchingTask {
         } else if (rc.isFilesystemOnly()) {
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                File f = ((FileProvider) iter.next()).getFile();
+                Resource r = (Resource) iter.next();
+                File f = ((FileProvider) r.as(FileProvider.class)).getFile();
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources

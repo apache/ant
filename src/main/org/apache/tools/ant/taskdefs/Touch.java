@@ -340,9 +340,10 @@ public class Touch extends Task {
 
     private void touch(Resource r, long defaultTimestamp) {
         if (fileNameMapper == null) {
-            if (r instanceof FileProvider) {
+            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            if (fp != null) {
                 // use this to create file and deal with non-writable files
-                touch(((FileProvider) r).getFile(), defaultTimestamp);
+                touch(fp.getFile(), defaultTimestamp);
             } else {
                 ((Touchable) r.as(Touchable.class)).touch(defaultTimestamp);
             }

@@ -115,8 +115,9 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      */
     public void setSrc(Resource src) {
         this.src = src;
-        if (src instanceof FileProvider) {
-            srcFile = ((FileProvider) src).getFile();
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        if (fp != null) {
+            srcFile = fp.getFile();
         }
     }
 

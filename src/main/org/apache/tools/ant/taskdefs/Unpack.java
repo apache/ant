@@ -91,8 +91,9 @@ public abstract class Unpack extends Task {
             throw new BuildException(
                 "the archive " + src.getName() + " can't be a directory");
         }
-        if (src instanceof FileProvider) {
-            source = ((FileProvider) src).getFile();
+        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        if (fp != null) {
+            source = fp.getFile();
         } else if (!supportsNonFileResources()) {
             throw new BuildException(
                 "The source " + src.getName()

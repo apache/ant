@@ -272,9 +272,10 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     }
 
     private String resourceToURI(Resource resource) {
-        if (resource instanceof FileProvider) {
-            File f = ((FileProvider) resource).getFile();
-            return FILE_UTILS.toURI(f.getAbsolutePath());
+        // TODO turn URLResource into Provider
+        FileProvider fp = (FileProvider) resource.as(FileProvider.class);
+        if (fp != null) {
+            return FILE_UTILS.toURI(fp.getFile().getAbsolutePath());
         }
         if (resource instanceof URLResource) {
             URL u = ((URLResource) resource).getURL();

@@ -570,9 +570,12 @@ public class SQLExec extends JDBCTask {
                     if (output != null) {
                         log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);
                         OutputStream os;
-                        if (output instanceof FileProvider) {
-                            os = new FileOutputStream(((FileProvider) output).getFile(), append);
+                        FileProvider fp =
+                            (FileProvider) output.as(FileProvider.class);
+                        if (fp != null) {
+                            os = new FileOutputStream(fp.getFile(), append);
                         } else {
+                            // TODO use Appendable
                             os = output.getOutputStream();
                             if (append) {
                                 log("Ignoring append=true for non-file resource " + output, Project.MSG_WARN);

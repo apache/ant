@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.IsSigned;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
@@ -322,7 +323,9 @@ public class SignJar extends AbstractJarSignerTask {
             // deal with the paths
             Iterator iter = sources.iterator();
             while (iter.hasNext()) {
-                FileResource fr = ResourceUtils.asFileResource((FileProvider) iter.next());
+                Resource r = (Resource) iter.next();
+                FileResource fr = ResourceUtils
+                    .asFileResource((FileProvider) r.as(FileProvider.class));
 
                 //calculate our destination directory; it is either the destDir
                 //attribute, or the base dir of the fileset (for in situ updates)

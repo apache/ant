@@ -24,6 +24,7 @@ import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 
@@ -91,7 +92,8 @@ public class VerifyJar extends AbstractJarSignerTask {
             Path sources = createUnifiedSourcePath();
             Iterator iter = sources.iterator();
             while (iter.hasNext()) {
-                FileProvider fr = (FileProvider) iter.next();
+                Resource r = (Resource) iter.next();
+                FileProvider fr = (FileProvider) r.as(FileProvider.class);
                 verifyOneJar(fr.getFile());
             }
 

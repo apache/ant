@@ -426,8 +426,9 @@ public class ExecuteOn extends ExecTask {
 
                     File base = null;
                     String name = res.getName();
-                    if (res instanceof FileProvider) {
-                        FileResource fr = ResourceUtils.asFileResource((FileProvider) res);
+                    FileProvider fp = (FileProvider) res.as(FileProvider.class);
+                    if (fp != null) {
+                        FileResource fr = ResourceUtils.asFileResource(fp);
                         base = fr.getBaseDir();
                         if (base == null) {
                             name = fr.getFile().getAbsolutePath();

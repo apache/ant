@@ -28,6 +28,7 @@ import java.util.Collections;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**
@@ -158,7 +159,8 @@ public abstract class BaseResourceCollectionContainer
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
         for (Iterator i = cacheCollection().iterator(); i.hasNext();) {
-            if (!(i.next() instanceof FileProvider)) {
+            Resource r = (Resource) i.next();
+            if (r.as(FileProvider.class) == null) {
                 return false;
             }
         }

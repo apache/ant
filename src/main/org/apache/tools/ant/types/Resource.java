@@ -380,7 +380,7 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
      */
     public boolean isFilesystemOnly() {
         return (isReference() && ((Resource) getCheckedRef()).isFilesystemOnly())
-                || this instanceof FileProvider;
+            || this.as(FileProvider.class) != null;
     }
 
     /**

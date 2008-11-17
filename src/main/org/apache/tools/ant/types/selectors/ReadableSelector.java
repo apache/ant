@@ -39,8 +39,9 @@ public class ReadableSelector implements FileSelector, ResourceSelector {
     }
 
     public boolean isSelected(Resource r) {
-        if (r instanceof FileProvider) {
-            return isSelected(null, null, ((FileProvider) r).getFile());
+        FileProvider fp = (FileProvider) r.as(FileProvider.class);
+        if (fp != null) {
+            return isSelected(null, null, fp.getFile());
         }
         return false;
     }
