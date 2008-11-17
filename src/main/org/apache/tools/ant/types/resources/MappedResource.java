@@ -175,7 +175,7 @@ public class MappedResource extends Resource {
     }
 
     public static MappedResource map(Resource r) {
-        return r instanceof FileProvider
+        return r.as(FileProvider.class) != null
             ? new FileProviderMR(r) : new MappedResource(r);
     }
 
@@ -185,12 +185,12 @@ public class MappedResource extends Resource {
 
         protected FileProviderMR(Resource r) {
             super(r);
-            if (!(r instanceof FileProvider)) {
+            p = (FileProvider) r.as(FileProvider.class);
+            if (p == null) {
                 throw new IllegalArgumentException("trying to wrap something "
-                                                   + "that is not a "
+                                                   + "that is not adaptable to "
                                                    + " FileProvider");
             }
-            p = (FileProvider) r;
         }
 
         /**
