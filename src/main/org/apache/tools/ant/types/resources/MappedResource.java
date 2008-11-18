@@ -17,10 +17,6 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -32,131 +28,40 @@ import org.apache.tools.ant.util.FileNameMapper;
  * <p>Strips the FileProvider interface from decorated resources since
  * it may be used to circumvent name mapping.</p>
  *
- * <p>Overwrites all setters to throw exceptions.</p>
- *
  * @since Ant 1.8.0
  */
-public class MappedResource extends Resource {
-    private final Resource wrapped;
+public class MappedResource extends ResourceDecorator {
     private final FileNameMapper mapper;
-    private final boolean isAppendable;
-    private final boolean isTouchable;
-
-    // should only be instantiated via factory, this also means we
-    // don't have to think about being a reference to a different
-    // resource
 
     /**
      * Wraps an existing resource.
      */
     public MappedResource(Resource r, FileNameMapper m) {
-        wrapped = r;
+        super(r);
         mapper = m;
-        isAppendable = wrapped.as(Appendable.class) != null;
-        isTouchable = wrapped.as(Touchable.class) != null;
     }
 
     /**
      * Maps the name.
      */
     public String getName() {
-        String[] mapped = mapper.mapFileName(wrapped.getName());
-        return mapped != null && mapped.length > 0 ? mapped[0] : null;
+        String name = getResource().getName();
+        if (isReference()) {
+            return name;
+        } else {
+            String[] mapped = mapper.mapFileName(name);
+            return mapped != null && mapped.length > 0 ? mapped[0] : null;
+        }
     }
 
     /**
-     * Not supported.
-     */
-    public void setName(String name) {
-        throw new BuildException(new ImmutableResourceException());
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public boolean isExists() {
-        return wrapped.isExists();
-    }
-
-    /**
-     * Not supported.
-     */
-    public void setExists(boolean exists) {
-        throw new BuildException(new ImmutableResourceException());
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public long getLastModified() {
-        return wrapped.getLastModified();
-    }
-
-    /**
-     * Not supported.
-     */
-    public void setLastModified(long lastmodified) {
-        throw new BuildException(new ImmutableResourceException());
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public boolean isDirectory() {
-        return wrapped.isDirectory();
-    }
-
-    /**
-     * Not supported.
-     */
-    public void setDirectory(boolean directory) {
-        throw new BuildException(new ImmutableResourceException());
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public long getSize() {
-        return wrapped.getSize();
-    }
-
-    /**
-     * Not supported.
-     */
-    public void setSize(long size) {
-        throw new BuildException(new ImmutableResourceException());
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public InputStream getInputStream() throws IOException {
-        return wrapped.getInputStream();
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public OutputStream getOutputStream() throws IOException {
-        return wrapped.getOutputStream();
-    }
-
-    /**
-     * delegated to the wrapped resource.
-     */
-    public boolean isFilesystemOnly() {
-        return wrapped.isFilesystemOnly();
-    }
-
-    public String toString() {
-        return "mapped " + wrapped.toString();
-    }
-
-    /**
-     * Not supported.
+     * Not really supported since mapper is never null.
      */
     public void setRefid(Reference r) {
-        throw new UnsupportedOperationException();
+        if (mapper != null) {
+            throw noChildrenAllowed();
+        }
+        super.setRefid(r);
     }
 
     /**
@@ -164,7 +69,7 @@ public class MappedResource extends Resource {
      */
     public Object as(Class clazz) {
         return FileProvider.class.isAssignableFrom(clazz) 
-            ? null : wrapped.as(clazz);
+            ? null : getResource().as(clazz);
     }
 
 }

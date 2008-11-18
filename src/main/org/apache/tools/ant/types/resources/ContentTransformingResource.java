@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -36,11 +34,9 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @since Ant 1.8
  */
-public abstract class ContentTransformingResource extends Resource {
+public abstract class ContentTransformingResource extends ResourceDecorator {
 
     private static final int BUFFER_SIZE = 8192;
-
-    private Resource resource;
 
     /** no arg constructor */
     public ContentTransformingResource() {
@@ -51,91 +47,7 @@ public abstract class ContentTransformingResource extends Resource {
      * @param other the resource to wrap.
      */
     public ContentTransformingResource(ResourceCollection other) {
-        addConfigured(other);
-    }
-
-    /**
-     * Sets the resource to wrap using a single-element collection.
-     * @param a the resource to wrap as a single element Resource collection.
-     */
-    public void addConfigured(ResourceCollection a) {
-        checkChildrenAllowed();
-        if (resource != null) {
-            throw new BuildException("you must not specify more than one resource");
-        }
-        if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections are supported");
-        }
-        resource = (Resource) a.iterator().next();
-    }
-
-    /**
-     * Get the name of the resource.
-     * @return the name of the wrapped resource.
-     */
-    public String getName() {
-        return getResource().getName();
-    }
-
-    /**
-     * Overridden, not allowed to set the name of the resource.
-     * @param name not used.
-     * @throws BuildException always.
-     */
-    public void setName(String name) throws BuildException {
-        throw new BuildException("you can't change the name of a " + getDataTypeName());
-    }
-
-    /**
-     * The exists attribute tells whether a file exists.
-     * @return true if this resource exists.
-     */
-    public boolean isExists() {
-        return getResource().isExists();
-    }
-
-    /**
-     * Set the exists attribute.
-     * @param exists if true, this resource exists.
-     */
-    public void setExists(boolean exists) {
-        throw new BuildException("you can't change the exists state of a " + getDataTypeName());
-    }
-
-    /**
-     * Tells the modification time in milliseconds since 01.01.1970 .
-     *
-     * @return 0 if the resource does not exist to mirror the behavior
-     * of {@link java.io.File File}.
-     */
-    public long getLastModified() {
-        return getResource().getLastModified();
-    }
-
-    /**
-     * Override setLastModified.
-     * @param lastmodified not used.
-     * @throws BuildException always.
-     */
-    public void setLastModified(long lastmodified) throws BuildException {
-        throw new BuildException("you can't change the timestamp of a " + getDataTypeName());
-    }
-
-    /**
-     * Tells if the resource is a directory.
-     * @return boolean flag indicating if the resource is a directory.
-     */
-    public boolean isDirectory() {
-        return getResource().isDirectory();
-    }
-
-    /**
-     * Override setDirectory.
-     * @param directory not used.
-     * @throws BuildException always.
-     */
-    public void setDirectory(boolean directory) throws BuildException {
-        throw new BuildException("you can't change the directory state of a " + getDataTypeName());
+        super(other);
     }
 
     /**
@@ -164,40 +76,6 @@ public abstract class ContentTransformingResource extends Resource {
         } else {
             return 0;
         }
-    }
-
-    /**
-     * Override setSize.
-     * @param size not used.
-     * @throws BuildException always.
-     */
-    public void setSize(long size) throws BuildException {
-        throw new BuildException("you can't change the size of a " + getDataTypeName());
-    }
-
-    /**
-     * Delegates to a comparison of names.
-     * @param other the object to compare to.
-     * @return a negative integer, zero, or a positive integer as this Resource
-     *         is less than, equal to, or greater than the specified Resource.
-     */
-    public int compareTo(Object other) {
-        if (other == this) {
-            return 0;
-        }
-        if (other instanceof ContentTransformingResource) {
-            return getResource().compareTo(
-                ((ContentTransformingResource) other).getResource());
-        }
-        return getResource().compareTo(other);
-    }
-
-    /**
-     * Get the hash code for this Resource.
-     * @return hash code as int.
-     */
-    public int hashCode() {
-        return (getClass().hashCode() << 4) | getResource().hashCode();
     }
 
     /**
@@ -230,25 +108,6 @@ public abstract class ContentTransformingResource extends Resource {
             out = wrapStream(out);
         }
         return out;
-    }
-
-    /**
-     * Fulfill the ResourceCollection contract.
-     * @return whether this Resource is a FileProvider.
-     */
-    public boolean isFilesystemOnly() {
-        return false;
-    }
-
-    /**
-     * Overrides the base version.
-     * @param r the Reference to set.
-     */
-    public void setRefid(Reference r) {
-        if (resource != null) {
-            throw noChildrenAllowed();
-        }
-        super.setRefid(r);
     }
 
     /**
@@ -296,15 +155,5 @@ public abstract class ContentTransformingResource extends Resource {
      */
     protected abstract OutputStream wrapStream(OutputStream out)
         throws IOException;
-
-    private Resource getResource() {
-        if (isReference()) {
-            return (Resource) getCheckedRef();
-        }
-        if (resource == null) {
-            throw new BuildException("no resource specified");
-        }
-        return resource;
-    }
 
 }
