@@ -534,6 +534,11 @@ Other changes:
    operating systems repsectively.
    Bugzilla Report 7624.
 
+ * a new resource collection <mappedresources> generalizes the prefix
+   and fullpath attributes of <zipfileset> to arbitrary mappers that
+   can be applied to arbitrary resource collections.
+   Bugzilla Report 4240.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

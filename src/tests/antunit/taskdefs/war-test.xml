@@ -168,4 +168,22 @@
     <au:assertFileExists file="${working.dir}/WEB-INF/lib/web.xml" />
   </target>
 
+  <target name="testMappedClasspathFromManual">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <war destfile="${output}/test.war" webxml="${ant.file}">
+      <mappedresources>
+        <restrict>
+          <path path="${java.class.path}"/>
+          <type type="file"/>
+        </restrict>
+        <chainedmapper>
+          <flattenmapper/>
+          <globmapper from="*" to="WEB-INF/lib/*"/>
+        </chainedmapper>
+      </mappedresources>
+    </war>
+    <unzip src="${output}/test.war" dest="${output}/out"/>
+    <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
+  </target>
 </project>

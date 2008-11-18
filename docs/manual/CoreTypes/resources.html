@@ -346,6 +346,9 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
     of nested resource collections</li>
   <li><a href="#difference">difference</a> - set difference
     of nested resource collections</li>
+  <li><a href="#mappedresources">mappedresources</a> - generic
+    resource collection wrapper that maps the names of the nested
+    resources using a <a href="mapper.html">mapper</a>.</li>
 </ul>
 <h4><a name="resources">resources</a></h4>
 <p>A generic resource collection, designed for use with
@@ -1017,7 +1020,60 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
   </pre>
 </blockquote>
 
+<h4><a name="mappedresources">mappedresources</a></h4>
 
+<p>Wraps another resource collection and maps the names of the nested
+  resources using a <a href="mapper.html">mapper</a>.</p>
+
+<p>Even if <em>mappedresources</em> wraps a resource collection that
+  consists of file-system based resources, <em>mappedresources</em>
+  will not appear to be file-system based.  This means you can't
+  use <em>mappedresources</em> with tasks that only allow file-system
+  based resources.</p>
+
+<p><em>mappedresources</em> doesn't support any attributes.</p>
+
+<blockquote>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+  <p>A single <a href="mapper.html">mapper</a> can be used to map
+    names.  If no mapper has been given (which doesn't make any sense,
+    honestly), an identity mapper will be used.</p>
+
+  <h4>Examples</h4>
+
+  <p>Copies all files from a given directory to a target directory
+    adding ".bak" as an extension.  Note this could be done with a
+    <em>mapper</em> nested into <em>copy</em> directly as well.</p>
+
+  <pre>
+    &lt;copy todir="${target}"&gt;
+      &lt;mapperesources&gt;
+        &lt;fileset dir="${src}"/&gt;
+        &lt;globmapper from="*" to="*.bak"/&gt;
+      &lt;/mapperesources&gt;
+    &lt;/copy&gt;
+  </pre>
+
+  <p>Creates a WAR archive adding all CLASSPATH entries that are files
+    to the <code>WEB-INF/lib</code> directory without keeping their
+    files-system structure.</p>
+
+  <pre>
+    &lt;war destfile="${output}"&gt;
+      &lt;mappedresources&gt;
+        &lt;restrict&gt;
+          &lt;path path="${java.class.path}"/&gt;
+          &lt;type type="file"/&gt;
+        &lt;/restrict&gt;
+        &lt;chainedmapper&gt;
+          &lt;flattenmapper/&gt;
+          &lt;globmapper from="*" to="WEB-INF/lib/*"/&gt;
+        &lt;/chainedmapper&gt;
+      &lt;/mappedresources&gt;
+    &lt;/war&gt;
+  </pre>    
+</blockquote>
 
 </body>
 </html>
