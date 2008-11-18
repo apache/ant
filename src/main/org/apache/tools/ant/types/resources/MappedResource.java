@@ -159,6 +159,9 @@ public class MappedResource extends Resource {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Suppress FileProvider
+     */
     public Object as(Class clazz) {
         return FileProvider.class.isAssignableFrom(clazz) 
             ? null : wrapped.as(clazz);

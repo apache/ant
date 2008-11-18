@@ -252,6 +252,32 @@ public abstract class ContentTransformingResource extends Resource {
     }
 
     /**
+     * Suppress FileProvider, re-implement Appendable
+     */
+    public Object as(Class clazz) {
+        if (Appendable.class.isAssignableFrom(clazz)) {
+            final Appendable a =
+                (Appendable) getResource().as(Appendable.class);
+            if (a != null) {
+                return new Appendable() {
+                    public OutputStream getAppendOutputStream()
+                        throws IOException {
+                        OutputStream out = a.getAppendOutputStream();
+                        if (out != null) {
+                            out = wrapStream(out);
+                        }
+                        return out;
+                    }
+                };
+            }
+            return null;
+        }
+
+        return FileProvider.class.isAssignableFrom(clazz) 
+            ? null : getResource().as(clazz);
+    }
+
+    /**
      * Is supposed to wrap the stream.
      *
      * @param in InputStream to wrap, will never be null.

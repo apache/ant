@@ -25,6 +25,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Appendable;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
@@ -569,16 +570,26 @@ public class SQLExec extends JDBCTask {
                 try {
                     if (output != null) {
                         log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);
-                        OutputStream os;
+                        OutputStream os = null;
                         FileProvider fp =
                             (FileProvider) output.as(FileProvider.class);
                         if (fp != null) {
                             os = new FileOutputStream(fp.getFile(), append);
                         } else {
-                            // TODO use Appendable
-                            os = output.getOutputStream();
                             if (append) {
-                                log("Ignoring append=true for non-file resource " + output, Project.MSG_WARN);
+                                Appendable a =
+                                    (Appendable) output.as(Appendable.class);
+                                if (a != null) {
+                                    os = a.getAppendOutputStream();
+                                }
+                            }
+                            if (os == null) {
+                                os = output.getOutputStream();
+                                if (append) {
+                                    log("Ignoring append=true for non-appendable"
+                                        + " resource " + output,
+                                        Project.MSG_WARN);
+                                }
                             }
                         }
                         out = new PrintStream(new BufferedOutputStream(os));
