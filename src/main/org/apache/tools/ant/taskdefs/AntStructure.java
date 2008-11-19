@@ -225,7 +225,7 @@ public class AntStructure extends Task {
 
             out.println("");
 
-            out.print("<!ELEMENT project (target | ");
+            out.print("<!ELEMENT project (target | target-group | ");
             out.print(TASKS);
             out.print(" | ");
             out.print(TYPES);
@@ -247,13 +247,24 @@ public class AntStructure extends Task {
             out.print(TYPES);
             out.println(")*>");
             out.println("");
+            printTargetAttrs(out, "target");
+            out.println("<!ELEMENT target-group EMPTY>");
+            out.println("");
+            printTargetAttrs(out, "target-group");
+        }
 
-            out.println("<!ATTLIST target");
+        /**
+         * Prints the definition for the target element.
+         */
+        private void printTargetAttrs(PrintWriter out, String tag) {
+            out.print("<!ATTLIST ");
+            out.println(tag);
             out.println("          id          ID    #IMPLIED");
             out.println("          name        CDATA #REQUIRED");
             out.println("          if          CDATA #IMPLIED");
             out.println("          unless      CDATA #IMPLIED");
             out.println("          depends     CDATA #IMPLIED");
+            out.println("          target-group CDATA #IMPLIED");
             out.println("          description CDATA #IMPLIED>");
             out.println("");
         }

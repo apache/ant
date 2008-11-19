@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
+import org.apache.tools.ant.TargetGroup;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.util.FileUtils;
@@ -772,18 +773,20 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *            <code>"taskdef"</code>, <code>"typedef"</code>,
-         *            <code>"property"</code>, <code>"target"</code>
+         *            <code>"property"</code>, <code>"target"</code>,
+         *            <code>"target-group"</code>
          *            or a data type definition
          */
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
-            return name.equals("target") && (uri.equals("") || uri.equals(ANT_CORE_URI))
-                    ? ProjectHelper2.targetHandler : ProjectHelper2.elementHandler;
+            return (name.equals("target") || name.equals("target-group"))
+                && (uri.equals("") || uri.equals(ANT_CORE_URI))
+                ? ProjectHelper2.targetHandler : ProjectHelper2.elementHandler;
         }
     }
 
     /**
-     * Handler for "target" elements.
+     * Handler for "target" and "target-group" elements.
      */
     public static class TargetHandler extends AntHandler {
 
@@ -811,9 +814,11 @@ public class ProjectHelper2 extends ProjectHelper {
                                    AntXMLContext context) throws SAXParseException {
             String name = null;
             String depends = "";
+            String targetGroup = null;
 
             Project project = context.getProject();
-            Target target = new Target();
+            Target target = "target".equals(tag)
+                ? new Target() : new TargetGroup();
             target.setProject(project);
             target.setLocation(new Location(context.getLocator()));
             context.addTarget(target);
@@ -843,6 +848,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     }
                 } else if (key.equals("description")) {
                     target.setDescription(value);
+                } else if (key.equals("target-group")) {
+                    targetGroup = value;
                 } else {
                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context
                             .getLocator());
@@ -869,6 +876,9 @@ public class ProjectHelper2 extends ProjectHelper {
                                              + " specify a name attribute");
                 }
                 name = prefix + sep + name;
+                if (targetGroup != null) {
+                    targetGroup = prefix + sep + targetGroup;
+                }
             }
 
             // Check if this target is in the current build file
@@ -909,6 +919,22 @@ public class ProjectHelper2 extends ProjectHelper {
                 newTarget.setName(newName);
                 context.getCurrentTargets().put(newName, newTarget);
                 project.addOrReplaceTarget(newName, newTarget);
+            }
+            if (targetGroup != null) {
+                if (!projectTargets.containsKey(targetGroup)) {
+                    throw new BuildException("can't add target "
+                                             + name + " to target-group "
+                                             + targetGroup
+                                             + " because the target-group"
+                                             + " is unknown.");
+                }
+                Target t = (Target) projectTargets.get(targetGroup);
+                if (!(t instanceof TargetGroup)) {
+                    throw new BuildException("referenced target "
+                                             + targetGroup
+                                             + " is not a target-group");
+                }
+                t.addDependency(name);
             }
         }
 
