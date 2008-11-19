@@ -115,19 +115,21 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      */
     public Object as(Class clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
-            final Appendable a =
-                (Appendable) getResource().as(Appendable.class);
-            if (a != null) {
-                return new Appendable() {
-                    public OutputStream getAppendOutputStream()
-                        throws IOException {
-                        OutputStream out = a.getAppendOutputStream();
-                        if (out != null) {
-                            out = wrapStream(out);
+            if (isAppendSupported()) {
+                final Appendable a =
+                    (Appendable) getResource().as(Appendable.class);
+                if (a != null) {
+                    return new Appendable() {
+                        public OutputStream getAppendOutputStream()
+                            throws IOException {
+                            OutputStream out = a.getAppendOutputStream();
+                            if (out != null) {
+                                out = wrapStream(out);
+                            }
+                            return out;
                         }
-                        return out;
-                    }
-                };
+                    };
+                }
             }
             return null;
         }
@@ -135,6 +137,18 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
         return FileProvider.class.isAssignableFrom(clazz) 
             ? null : getResource().as(clazz);
     }
+
+    /**
+     * whether the transformation performed allows appends.
+     *
+     * <p>In general compressed outputs will become invalid if they
+     * are appended to, for example.</p>
+     *
+     * <p>This implementations returns false.</p>
+     */
+    protected boolean isAppendSupported() {
+        return false;
+    }    
 
     /**
      * Is supposed to wrap the stream.
