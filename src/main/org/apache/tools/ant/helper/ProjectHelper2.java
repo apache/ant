@@ -876,9 +876,6 @@ public class ProjectHelper2 extends ProjectHelper {
                                              + " specify a name attribute");
                 }
                 name = prefix + sep + name;
-                if (targetGroup != null) {
-                    targetGroup = prefix + sep + targetGroup;
-                }
             }
 
             // Check if this target is in the current build file
@@ -904,7 +901,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     target.setDepends(depends);
                 } else {
                     for (Iterator iter =
-                             Target.parseDepends(depends, name).iterator();
+                             Target.parseDepends(depends, name, "depends")
+                             .iterator();
                          iter.hasNext(); ) {
                         target.addDependency(prefix + sep + iter.next());
                     }
@@ -921,20 +919,29 @@ public class ProjectHelper2 extends ProjectHelper {
                 project.addOrReplaceTarget(newName, newTarget);
             }
             if (targetGroup != null) {
-                if (!projectTargets.containsKey(targetGroup)) {
-                    throw new BuildException("can't add target "
-                                             + name + " to target-group "
-                                             + targetGroup
-                                             + " because the target-group"
-                                             + " is unknown.");
+                for (Iterator iter =
+                         Target.parseDepends(targetGroup, name, "target-group")
+                         .iterator();
+                     iter.hasNext(); ) {
+                    String tgName = (String) iter.next();
+                    if (isInIncludeMode()) {
+                        tgName = prefix + sep + tgName;
+                    }
+                    if (!projectTargets.containsKey(tgName)) {
+                        throw new BuildException("can't add target "
+                                                 + name + " to target-group "
+                                                 + tgName
+                                                 + " because the target-group"
+                                                 + " is unknown.");
+                    }
+                    Target t = (Target) projectTargets.get(tgName);
+                    if (!(t instanceof TargetGroup)) {
+                        throw new BuildException("referenced target "
+                                                 + tgName
+                                                 + " is not a target-group");
+                    }
+                    t.addDependency(name);
                 }
-                Target t = (Target) projectTargets.get(targetGroup);
-                if (!(t instanceof TargetGroup)) {
-                    throw new BuildException("referenced target "
-                                             + targetGroup
-                                             + " is not a target-group");
-                }
-                t.addDependency(name);
             }
         }
 

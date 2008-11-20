@@ -125,14 +125,15 @@ public class Target implements TaskContainer {
      *             depends on. Must not be <code>null</code>.
      */
     public void setDepends(String depS) {
-        for (Iterator iter = parseDepends(depS, getName()).iterator();
+        for (Iterator iter = parseDepends(depS, getName(), "depends").iterator();
              iter.hasNext(); ) {
             addDependency((String) iter.next());
         }
     }
 
     public static List/*<String>*/ parseDepends(String depends,
-                                                String targetName) {
+                                                String targetName,
+                                                String attributeName) {
         ArrayList list = new ArrayList();
         if (depends.length() > 0) {
             StringTokenizer tok =
@@ -142,11 +143,11 @@ public class Target implements TaskContainer {
 
                 // Make sure the dependency is not empty string
                 if ("".equals(token) || ",".equals(token)) {
-                    throw new BuildException("Syntax Error: depends "
-                                             + "attribute of target \""
+                    throw new BuildException("Syntax Error: "
+                                             + attributeName
+                                             + " attribute of target \""
                                              + targetName
-                                             + "\" has an empty string as "
-                                             + "dependency.");
+                                             + "\" contains an empty string.");
                 }
 
                 list.add(token);
@@ -156,8 +157,9 @@ public class Target implements TaskContainer {
                 if (tok.hasMoreTokens()) {
                     token = tok.nextToken();
                     if (!tok.hasMoreTokens() || !",".equals(token)) {
-                        throw new BuildException("Syntax Error: Depend "
-                                                 + "attribute for target \""
+                        throw new BuildException("Syntax Error: "
+                                                 + attributeName
+                                                 + " attribute for target \""
                                                  + targetName
                                                  + "\" ends with a \",\" "
                                                  + "character");
