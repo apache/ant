@@ -15,10 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit" default="all">
-  <property name="top.build.dir" location="../../../../build"/>
-  <property name="build.dir"
-            location="${top.build.dir}/ant-unit/zipfileset-dir"/>
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+  <import file="../antunit-base.xml"/>
 
   <target name="test-refid-modify">
     <fileset id="modify-refid-1"
@@ -29,14 +27,14 @@
                 refid="modify-refid-1"
                 prefix="WEB-INF/lib/"/>
     <delete quiet="yes" dir="${build.dir}"/>
-    <mkdir dir="${build.dir}"/>
-    <jar jarfile="${build.dir}/jar.jar">
+    <mkdir dir="${output}"/>
+    <jar jarfile="${output}/jar.jar">
       <zipfileset refid="modify-refid-2"/>
     </jar>
-    <unjar src="${build.dir}/jar.jar"
-           dest="${build.dir}"/>
+    <unjar src="${output}/jar.jar"
+           dest="${output}"/>
     <au:assertTrue>
-      <available file="${build.dir}/WEB-INF/lib/zipfileset-test.xml"/>
+      <available file="${output}/WEB-INF/lib/zipfileset-test.xml"/>
     </au:assertTrue>
   </target>
 
@@ -66,10 +64,4 @@
     </au:expectfailure>
   </target>
 
-  <target name="all">
-    <au:antunit>
-      <fileset dir="${basedir}" includes="zipfileset-test.xml"/>
-      <au:plainlistener/>
-    </au:antunit>
-  </target>
 </project>
