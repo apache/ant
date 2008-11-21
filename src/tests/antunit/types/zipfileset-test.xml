@@ -64,4 +64,20 @@
     </au:expectfailure>
   </target>
 
+  <target name="testMissingArchive">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedMessage="The archive foo.zip doesn't exist">
+      <copy todir="${output}">
+        <zipfileset src="foo.zip"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMissingArchiveDoesntMatter">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <zipfileset src="foo.zip" errorOnMissingArchive="false"/>
+    </copy>
+  </target>
+
 </project>

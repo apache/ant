@@ -117,6 +117,17 @@ directories.  Default is 755.</td>
       </td>
       <td align="center" valign="top">No</td>
     </tr>
+    <tr>
+      <td valign="top">erroronmissingarchive</td>
+      <td valign="top">
+        Specify what happens if the archive does not exist.
+        If true, a build error will happen; if false, the fileset
+        will be ignored/empty.
+        Defaults to true.
+        <em>Since Ant 1.8.0</em>
+      </td>
+      <td valign="top" align="center">No</td>
+    </tr>
   </tbody>
 </table>
 <p>The <i>fullpath</i> attribute can only be set for filesets that

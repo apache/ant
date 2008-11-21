@@ -68,6 +68,8 @@ public abstract class ArchiveFileSet extends FileSet {
     private static final String ERROR_DIR_AND_SRC_ATTRIBUTES = "Cannot set both dir and src attributes";
     private static final String ERROR_PATH_AND_PREFIX = "Cannot set both fullpath and prefix attributes";
 
+    private boolean errorOnMissingArchive = true;
+
     /** Constructor for ArchiveFileSet */
     public ArchiveFileSet() {
         super();
@@ -95,6 +97,7 @@ public abstract class ArchiveFileSet extends FileSet {
         dirMode = fileset.dirMode;
         fileModeHasBeenSet = fileset.fileModeHasBeenSet;
         dirModeHasBeenSet = fileset.dirModeHasBeenSet;
+        errorOnMissingArchive = fileset.errorOnMissingArchive;
     }
 
     /**
@@ -159,6 +162,18 @@ public abstract class ArchiveFileSet extends FileSet {
             return ((ArchiveFileSet) getRef(p)).getSrc(p);
         }
         return getSrc();
+    }
+
+    /**
+     * Sets whether an error is thrown if an archive does not exist.
+     *
+     * @param errorOnMissingArchive true if missing archives cause errors,
+     *                        false if not.
+     * @since Ant 1.8.0
+     */
+    public void setErrorOnMissingArchive(boolean errorOnMissingArchive) {
+        checkAttributesAllowed();
+        this.errorOnMissingArchive = errorOnMissingArchive;
     }
 
     /**
@@ -247,7 +262,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (src == null) {
             return super.getDirectoryScanner(p);
         }
-        if (!src.isExists()) {
+        if (!src.isExists() && errorOnMissingArchive) {
             throw new BuildException(
                 "The archive " + src.getName() + " doesn't exist");
         }
@@ -256,6 +271,7 @@ public abstract class ArchiveFileSet extends FileSet {
                                      + " can't be a directory");
         }
         ArchiveScanner as = newArchiveScanner();
+        as.setErrorOnMissingArchive(errorOnMissingArchive);
         as.setSrc(src);
         super.setDir(p.getBaseDir());
         setupDirectoryScanner(as, p);

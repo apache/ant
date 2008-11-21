@@ -87,11 +87,27 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     private String encoding;
 
     /**
+     * @since Ant 1.8.0
+     */
+    private boolean errorOnMissingArchive = true;
+
+    /**
+     * Sets whether an error is thrown if an archive does not exist.
+     *
+     * @param errorOnMissingArchive true if missing archives cause errors,
+     *                        false if not.
+     * @since Ant 1.8.0
+     */
+    public void setErrorOnMissingArchive(boolean errorOnMissingArchive) {
+        this.errorOnMissingArchive = errorOnMissingArchive;
+    }
+
+    /**
      * Don't scan when we have no zipfile.
      * @since Ant 1.7
      */
     public void scan() {
-        if (src == null) {
+        if (src == null || (!src.isExists() && !errorOnMissingArchive)) {
             return;
         }
         super.scan();
@@ -304,6 +320,10 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      * are put into the appropriate tables.
      */
     private void scanme() {
+        if (!src.isExists() && !errorOnMissingArchive) {
+            return;
+        }
+
         //do not use a FileResource b/c it pulls File info from the filesystem:
         Resource thisresource = new Resource(src.getName(),
                                              src.isExists(),

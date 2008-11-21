@@ -539,6 +539,11 @@ Other changes:
    can be applied to arbitrary resource collections.
    Bugzilla Report 4240.
 
+ * <tarfileset> and <zipfileset> have a new attribute
+   errorOnMissingArchive that allows "optional" filesets that don't
+   break the build if the archive doesn't exist.
+   Bugzilla Report 46091.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
