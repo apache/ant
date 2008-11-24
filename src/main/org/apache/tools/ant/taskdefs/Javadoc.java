@@ -77,12 +77,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 public class Javadoc extends Task {
     // Whether *this VM* is 1.4+ (but also check executable != null).
 
-    private static final boolean JAVADOC_4 =
-        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
-        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
-
-    private static final boolean JAVADOC_5 = JAVADOC_4
-        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
+    private static final boolean JAVADOC_5 = 
+        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
 
     /**
      * Inner class used to manage doclet parameters.
@@ -452,7 +448,6 @@ public class Javadoc extends Task {
     private boolean breakiterator = false;
     private String noqualifier;
     private boolean includeNoSourcePackages = false;
-    private boolean old = false;
     private String executable = null;
 
     private ResourceCollectionContainer nestedSourceFiles
@@ -766,7 +761,8 @@ public class Javadoc extends Task {
      * @param b if true attempt to generate old style documentation.
      */
     public void setOld(boolean b) {
-        old = b;
+        log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
+            Project.MSG_WARN);
     }
 
     /**
@@ -1678,28 +1674,12 @@ public class Javadoc extends Task {
         doGroup(toExecute);    // group attribute
         doGroups(toExecute);  // groups attribute
 
-        // Javadoc 1.4 parameters
-        if (JAVADOC_4 || executable != null) {
-            doJava14(toExecute);
-            if (breakiterator && (doclet == null || JAVADOC_5)) {
-                toExecute.createArgument().setValue("-breakiterator");
-            }
-        } else {
-            doNotJava14();
-        }
-        // Javadoc 1.2/1.3 parameters:
-        if (!JAVADOC_4 || executable != null) {
-            if (old) {
-                toExecute.createArgument().setValue("-1.1");
-            }
-        } else {
-            if (old) {
-                log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
-                    Project.MSG_WARN);
-            }
+        doJava14(toExecute);
+        if (breakiterator && (doclet == null || JAVADOC_5)) {
+            toExecute.createArgument().setValue("-breakiterator");
         }
         // If using an external file, write the command line options to it
-        if (useExternalFile && JAVADOC_4) {
+        if (useExternalFile) {
             writeExternalArgs(toExecute);
         }
 
@@ -2151,30 +2131,6 @@ public class Javadoc extends Task {
         }
     }
 
-    private void doNotJava14() {
-        // Not 1.4+.
-        if (!tags.isEmpty()) {
-            log("-tag and -taglet options not supported on Javadoc < 1.4",
-                Project.MSG_VERBOSE);
-        }
-        if (source != null) {
-            log("-source option not supported on Javadoc < 1.4",
-                Project.MSG_VERBOSE);
-        }
-        if (linksource) {
-            log("-linksource option not supported on Javadoc < 1.4",
-                Project.MSG_VERBOSE);
-        }
-        if (breakiterator) {
-            log("-breakiterator option not supported on Javadoc < 1.4",
-                Project.MSG_VERBOSE);
-        }
-        if (noqualifier != null) {
-            log("-noqualifier option not supported on Javadoc < 1.4",
-                Project.MSG_VERBOSE);
-        }
-    }
-
     private void doSourceAndPackageNames(
         Commandline toExecute,
         Vector packagesToDoc,
@@ -2200,7 +2156,7 @@ public class Javadoc extends Task {
             if (useExternalFile) {
                 // XXX what is the following doing?
                 //     should it run if !javadoc4 && executable != null?
-                if (JAVADOC_4 && sourceFileName.indexOf(" ") > -1) {
+                if (sourceFileName.indexOf(" ") > -1) {
                     String name = sourceFileName;
                     if (File.separatorChar == '\\') {
                         name = sourceFileName.replace(File.separatorChar, '/');
