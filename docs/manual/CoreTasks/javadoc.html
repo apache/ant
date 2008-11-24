@@ -69,6 +69,13 @@ The workaround is providing the jars with these implementations (like JAXBs <tt>
 to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or nested
 &lt;classpath&gt; element.</p>
 
+<p><b>Note:</b> many problems with running javadoc stem from command
+  lines that have become too long - even though the error message
+  doesn't give the slightest hint this may be the problem.  If you
+  encounter problems with the task, try to set
+  the <code>useexternalfile</code> attribute to <code>true</code>
+  first.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
