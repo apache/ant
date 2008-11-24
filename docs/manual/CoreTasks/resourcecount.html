@@ -25,6 +25,7 @@
 <body>
 
 <h2>ResourceCount</h2>
+
 <h3>Description</h3>
 <p>Display or set a property containing the size of a nested
    <a href="../CoreTypes/resources.html#collection">Resource Collection</a>.
@@ -63,12 +64,14 @@
     <td valign="top" align="center">No; default is "equal"</td>
   </tr>
 </table>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>Resource Collection</h4>
 <p>A single
   <a href="../CoreTypes/resources.html#collection">Resource Collection</a>
 should be specified via a nested element or the <code>refid</code> attribute.
 </p>
+
 <h3>Examples</h3>
 <pre>&lt;resourcecount property=&quot;count.foo&quot;&gt;
   &lt;filelist dir=&quot;.&quot; files=&quot;foo,bar&quot; /&gt;
@@ -76,6 +79,28 @@ should be specified via a nested element or the <code>refid</code> attribute.
 </pre>
 <p>Stores the number of resources in the specified filelist (two)
 in the property named <i>count.foo</i>.</p>
+
+<pre>
+&lt;project&gt;
+  &lt;property name=&quot;file&quot; value=&quot;${ant.file}&quot;/&gt;
+  &lt;resourcecount property=&quot;file.lines&quot;&gt;
+    &lt;tokens&gt;
+      &lt;concat&gt;
+        &lt;filterchain&gt;
+          &lt;tokenfilter&gt;
+            &lt;linetokenizer/&gt;
+          &lt;/tokenfilter&gt;
+        &lt;/filterchain&gt;
+        &lt;fileset file=&quot;${file}&quot;/&gt;
+      &lt;/concat&gt;
+    &lt;/tokens&gt;
+  &lt;/resourcecount&gt;
+  &lt;echo&gt;The file '${file}' has ${file.lines} lines.&lt;/echo&gt;
+&lt;/project&gt;
+</pre>
+<p>Stores the number of lines of the current buildfile in the property <tt>file.lines</tt>.
+Requires Ant 1.7.1+ as &lt;concat&gt; has to be resource.</p>
+
 
 </body>
 </html>
