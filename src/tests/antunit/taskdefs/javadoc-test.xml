@@ -18,7 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testBottomWithLineBreaksWithFile">
+  <target name="-makeTestClass">
     <mkdir dir="${input}/test"/>
     <echo file="${input}/test/A.java"><![CDATA[
 package test;
@@ -33,6 +33,9 @@ public class A {
     public void foo(String bar) {}
 }
 ]]></echo>
+  </target>
+
+  <target name="testBottomWithLineBreaksWithFile" depends="-makeTestClass">
     <javadoc destdir="${output}" useexternalfile="true">
       <fileset dir="${input}"/>
       <bottom><![CDATA[
@@ -42,4 +45,46 @@ Hello World
     </javadoc>
     <au:assertFileExists file="${output}/test/A.html"/>
   </target>
+
+  <target name="-setUpDocFilesTests" depends="-makeTestClass">
+    <mkdir dir="${input}/test/doc-files/a"/>
+    <mkdir dir="${input}/test/doc-files/b"/>
+    <macrodef name="mkfoo">
+      <attribute name="file"/>
+      <sequential>
+        <echo file="@{file}"><![CDATA[<p>Hello, world!</p>]]></echo>
+      </sequential>
+    </macrodef>
+    <mkfoo file="${input}/test/doc-files/foo.html"/>
+    <mkfoo file="${input}/test/doc-files/a/foo.html"/>
+    <mkfoo file="${input}/test/doc-files/b/foo.html"/>
+  </target>
+
+  <target name="XtestNoDocFiles" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileDoesntExist file="${output}/test/doc-files/a/foo.html"/>
+  </target>
+
+  <target name="XtestDocFiles" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}" docfilessubdirs="true">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/a/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/b/foo.html"/>
+  </target>
+
+  <target name="XtestDocFilesWithExclude" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}" docfilessubdirs="true"
+             excludedocfilessubdir="a">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileDoesntExist file="${output}/test/doc-files/a/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/b/foo.html"/>
+  </target>
+
 </project>

@@ -544,6 +544,10 @@ Other changes:
    break the build if the archive doesn't exist.
    Bugzilla Report 46091.
 
+ * <javadoc> has new attributes that correspond to the
+   -docfilessubdirs and -excludedocfilessubdir command line arguments.
+   Bugzilla Report 34455.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

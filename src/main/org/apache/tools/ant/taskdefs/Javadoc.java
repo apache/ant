@@ -449,6 +449,8 @@ public class Javadoc extends Task {
     private String noqualifier;
     private boolean includeNoSourcePackages = false;
     private String executable = null;
+    private boolean docFilesSubDirs = false;
+    private String excludeDocFilesSubDir = null;
 
     private ResourceCollectionContainer nestedSourceFiles
         = new ResourceCollectionContainer();
@@ -1633,6 +1635,25 @@ public class Javadoc extends Task {
     }
 
     /**
+     * Enables deep-copying of <code>doc-files</code> directories.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setDocFilesSubDirs(boolean b) {
+        docFilesSubDirs = b;
+    }
+
+    /**
+     * Colon-separated list of <code>doc-files</code> subdirectories
+     * to skip if {@link #setDocFilesSubDirs docFilesSubDirs is true}.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setExcludeDocFilesSubDir(String s) {
+        excludeDocFilesSubDir = s;
+    }
+
+    /**
      * Execute the task.
      * @throws BuildException on error
      */
@@ -1673,6 +1694,7 @@ public class Javadoc extends Task {
         doLinks(toExecute);    // links arguments
         doGroup(toExecute);    // group attribute
         doGroups(toExecute);  // groups attribute
+        doDocFilesSubDirs(toExecute); // docfilessubdir attribute
 
         doJava14(toExecute);
         if (breakiterator && (doclet == null || JAVADOC_5)) {
@@ -2128,6 +2150,17 @@ public class Javadoc extends Task {
         if (noqualifier != null && doclet == null) {
             toExecute.createArgument().setValue("-noqualifier");
             toExecute.createArgument().setValue(noqualifier);
+        }
+    }
+
+    private void doDocFilesSubDirs(Commandline toExecute) {
+        if (docFilesSubDirs) {
+            toExecute.createArgument().setValue("-docfilessubdirs");
+            if (excludeDocFilesSubDir != null
+                && excludeDocFilesSubDir.trim().length() > 0) {
+                toExecute.createArgument().setValue("-excludedocfilessubdir");
+                toExecute.createArgument().setValue(excludeDocFilesSubDir);
+            }
         }
     }
 
