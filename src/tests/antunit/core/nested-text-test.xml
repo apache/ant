@@ -15,7 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml"/>
 
   <target name="testAcceptNested">
     <echo>foo</echo>
@@ -27,4 +29,11 @@
       <object>foo</object>
     </au:expectfailure>
   </target>
+
+  <!-- https://issues.apache.org/bugzilla/show_bug.cgi?id=46285 -->
+  <target name="testNumericEntities">
+    <echo>&#xe4;&#169;</echo>
+    <au:assertLogContains text="ä©"/>
+  </target>
+
 </project>
