@@ -170,6 +170,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public static final String PROCESSOR_TRAX = "trax";
 
     /**
+     * whether to suppress warnings.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean suppressWarnings = false;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -512,6 +519,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void setFileDirParameter(String fileDirParameter) {
         this.fileDirParameter = fileDirParameter;
     }
+
+    /**
+     * Whether to suppress warning messages of the processor.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setSuppressWarnings(boolean b) {
+        suppressWarnings = b;
+    }
+
+    /**
+     * Whether to suppress warning messages of the processor.
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean getSuppressWarnings() {
+        return suppressWarnings;
+    }    
 
     /**
      * Load processor here instead of in setProcessor - this will be

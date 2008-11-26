@@ -122,6 +122,9 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     /** factory attributes */
     private Vector attributes = new Vector();
 
+    /** whether to suppress warnings */
+    private boolean suppressWarnings = false;
+
     /**
      * Constructor for TraXLiaison.
      * @throws Exception never
@@ -497,7 +500,9 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
      * @param e the exception to log.
      */
     public void warning(TransformerException e) {
-        logError(e, "Warning");
+        if (!suppressWarnings) {
+            logError(e, "Warning");
+        }
     }
 
     private void logError(TransformerException e, String type) {
@@ -588,5 +593,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
                 = (XSLTProcess.OutputProperty) props.nextElement();
             setOutputProperty(prop.getName(), prop.getValue());
         }
+
+        suppressWarnings = xsltTask.getSuppressWarnings();
     }
 }

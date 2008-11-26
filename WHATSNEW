@@ -555,6 +555,11 @@ Other changes:
  * <xslt> now fails early if a specified stylesheet doesn't exist.
    Bugzilla Report 34525.
 
+ * <xslt> now has an option to supress transformer warnings.  This
+   option only has an effect for processors that support this feature;
+   the "trax" processor included with Ant does support it.
+   Bugzilla Report 18897.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
