@@ -296,6 +296,10 @@ Fixed bugs:
    without a name.  It will now fail with a meaningful error message.
    Bugzilla Report 39960.
 
+ * <xslt> now uses the configured classpath to load the factory (when
+   using TraX) before falling back to Ant's own classpath.
+   Bugzilla Report 46172.
+
 Other changes:
 --------------
 

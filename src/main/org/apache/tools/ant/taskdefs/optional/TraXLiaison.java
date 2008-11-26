@@ -364,7 +364,28 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
             tfactory = TransformerFactory.newInstance();
         } else {
             try {
-                Class clazz = Class.forName(factoryName);
+                Class clazz = null;
+                try {
+                    clazz =
+                        Class.forName(factoryName, true,
+                                      Thread.currentThread()
+                                      .getContextClassLoader());
+                } catch (ClassNotFoundException cnfe) {
+                    String msg = "Failed to load " + factoryName
+                        + " via the configured classpath, will try"
+                        + " Ant's classpath instead.";
+                    if (logger != null) {
+                        logger.log(msg);
+                    } else if (project != null) {
+                        project.log(msg, Project.MSG_WARN);
+                    } else {
+                        System.err.println(msg);
+                    }
+                }
+
+                if (clazz == null) {
+                    clazz = Class.forName(factoryName);
+                }
                 tfactory = (TransformerFactory) clazz.newInstance();
             } catch (Exception e) {
                 throw new BuildException(e);
