@@ -565,6 +565,11 @@ Other changes:
    process proceed if an error occurs.
    Bugzilla Report 36260.
 
+ * <xslt> has a new attribute failOnNoResources that can be used to 
+   make the build fail/continue if the collection of resources to
+   transform is empty.
+   Bugzilla Report 46274.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

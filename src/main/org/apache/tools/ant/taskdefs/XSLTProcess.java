@@ -191,6 +191,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean failOnError = true;
 
     /**
+     * Whether the build should fail if the nested resource collection
+     * is empty.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean failOnNoResources = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -389,7 +397,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             } else { // only resource collections, there better be some
                 if (resources.size() == 0) {
-                    handleError("no resources specified");
+                    if (failOnNoResources) {
+                        handleError("no resources specified");
+                    }
                     return;
                 }
             }
@@ -574,6 +584,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setFailOnError(boolean b) {
         failOnError = b;
+    }
+
+    /**
+     * Whether the build should fail if the nested resource collection is empty.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnNoResources(boolean b) {
+        failOnNoResources = b;
     }
 
     /**

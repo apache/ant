@@ -91,7 +91,7 @@ undefined='<xsl:value-of select="$undefined"/>'
     </au:expectfailure>
   </target>
 
-  <target name="testTransformationError">
+  <target name="testTransformationError" depends="setUp">
     <au:expectfailure expectedmessage="Fatal error during transformation">
       <xslt in="${legacy.dir}/../input.stdin"
             out="${output}/out.xml"
@@ -100,7 +100,7 @@ undefined='<xsl:value-of select="$undefined"/>'
     </au:expectfailure>
   </target>
 
-  <target name="testTransformationErrorNoFail">
+  <target name="testTransformationErrorNoFail" depends="setUp">
     <xslt in="${legacy.dir}/../input.stdin"
           out="${output}/out.xml"
           style="${legacy.dir}/printParams.xsl"
@@ -108,7 +108,7 @@ undefined='<xsl:value-of select="$undefined"/>'
     <au:assertFileDoesntExist file="${output}/out.xml"/>
   </target>
 
-  <target name="testTransformationErrorNoFailOnTransformation">
+  <target name="testTransformationErrorNoFailOnTransformation" depends="setUp">
     <xslt in="${legacy.dir}/../input.stdin"
           out="${output}/out.xml"
           style="${legacy.dir}/printParams.xsl"
@@ -116,4 +116,34 @@ undefined='<xsl:value-of select="$undefined"/>'
     <au:assertFileDoesntExist file="${output}/out.xml"/>
   </target>
 
+  <target name="testNoResources" depends="setUp">
+    <au:expectfailure expectedmessage="no resources specified">
+      <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+            useImplicitFileset="false">
+        <fileset dir=".">
+          <include name="I don't exist"/>
+        </fileset>
+      </xslt>
+    </au:expectfailure>
+  </target>
+
+  <target name="testNoResourcesNoFail" depends="setUp">
+    <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+          useImplicitFileset="false"
+          failOnNoResources="false">
+      <fileset dir=".">
+        <include name="I don't exist"/>
+      </fileset>
+    </xslt>
+  </target>
+
+  <target name="testNoResourcesNoError" depends="setUp">
+    <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+          useImplicitFileset="false"
+          failOnError="false">
+      <fileset dir=".">
+        <include name="I don't exist"/>
+      </fileset>
+    </xslt>
+  </target>
 </project>
