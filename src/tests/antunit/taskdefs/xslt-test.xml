@@ -73,4 +73,47 @@ undefined='<xsl:value-of select="$undefined"/>'
             style="i-m-not-there.xslt"/>
     </au:expectfailure>
   </target>
+
+  <target name="testStyleDoesntExistNoError" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml"
+          style="i-m-not-there.xslt"
+          failOnError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
+  <target name="testStyleDoesntExistNoTransformationError" depends="setUp">
+    <au:expectfailure expectedmessage="i-m-not-there.xslt doesn't exist.">
+      <xslt in="${legacy.dir}/data.xml"
+            out="${output}/out.xml"
+            style="i-m-not-there.xslt"
+            failOnTransformationError="false"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="testTransformationError">
+    <au:expectfailure expectedmessage="Fatal error during transformation">
+      <xslt in="${legacy.dir}/../input.stdin"
+            out="${output}/out.xml"
+            style="${legacy.dir}/printParams.xsl"
+            />
+    </au:expectfailure>
+  </target>
+
+  <target name="testTransformationErrorNoFail">
+    <xslt in="${legacy.dir}/../input.stdin"
+          out="${output}/out.xml"
+          style="${legacy.dir}/printParams.xsl"
+          failOnError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
+  <target name="testTransformationErrorNoFailOnTransformation">
+    <xslt in="${legacy.dir}/../input.stdin"
+          out="${output}/out.xml"
+          style="${legacy.dir}/printParams.xsl"
+          failOnTransformationError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
 </project>

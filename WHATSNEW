@@ -560,6 +560,11 @@ Other changes:
    the "trax" processor included with Ant does support it.
    Bugzilla Report 18897.
 
+ * <xslt> has two new attributes failOnError and
+   failOnTransformationError that can be used to not make the build
+   process proceed if an error occurs.
+   Bugzilla Report 36260.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

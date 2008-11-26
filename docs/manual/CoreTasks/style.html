@@ -230,6 +230,23 @@ element which is used to perform Entity and URI resolution.</p>
     <em>Since Ant 1.8.0</em>.</td>
     <td valign="top" align="center">No, default is false.</td>
   </tr>
+  <tr>
+    <td valign="top">failOnError</td>
+    <td valign="top">Whether the build should fail if any error
+    occurs.  Note that transformation errors can still be surpressed by
+    setting failOnTransformationError to false even if this attribute
+    is true.
+    <em>Since Ant 1.8.0</em>.</td>
+    <td valign="top" align="center">No, default is true.</td>
+  </tr>
+  <tr>
+    <td valign="top">failOnTransformationError</td>
+    <td valign="top">Whether the build should fail if an error occurs
+    while transforming the document.  Note that this attribute has no
+    effect of <code>failOnError</code> is false.
+    <em>Since Ant 1.8.0</em>.</td>
+    <td valign="top" align="center">No, default is true.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 

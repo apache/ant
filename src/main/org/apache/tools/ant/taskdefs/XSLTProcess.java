@@ -177,6 +177,20 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean suppressWarnings = false;
 
     /**
+     * whether to fail the build if an error occurs during transformation.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean failOnTransformationError = true;
+
+    /**
+     * whether to fail the build if an error occurs.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean failOnError = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -213,9 +227,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void addMapper(Mapper mapper) {
         if (mapperElement != null) {
-            throw new BuildException("Cannot define more than one mapper", getLocation());
+            handleError("Cannot define more than one mapper");
+        } else {
+            mapperElement = mapper;
         }
-        mapperElement = mapper;
     }
 
     /**
@@ -236,10 +251,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void addConfiguredStyle(Resources rc) {
         if (rc.size() != 1) {
-            throw new BuildException(
-                    "The style element must be specified with exactly one nested resource.");
+            handleError("The style element must be specified with exactly one"
+                        + " nested resource.");
+        } else {
+            setXslResource((Resource) rc.iterator().next());
         }
-        setXslResource((Resource) rc.iterator().next());
     }
 
     /**
@@ -285,13 +301,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             + "or as a nested resource";
 
         if (xslResource == null && xslFile == null) {
-            throw new BuildException(baseMessage, getLocation());
+            handleError(baseMessage);
+            return;
         }
         if (xslResource != null && xslFile != null) {
-            throw new BuildException(baseMessage + " but not as both", getLocation());
+            handleError(baseMessage + " but not as both");
+            return;
         }
         if (inFile != null && !inFile.exists()) {
-            throw new BuildException("input file " + inFile + " does not exist", getLocation());
+            handleError("input file " + inFile + " does not exist");
+            return;
         }
         try {
             Resource styleResource;
@@ -331,8 +350,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
 
             if (!styleResource.isExists()) {
-                throw new BuildException("stylesheet " + styleResource
-                                         + " doesn't exist.");
+                handleError("stylesheet " + styleResource + " doesn't exist.");
+                return;
             }
 
             // if we have an in file and out then process them
@@ -370,7 +389,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             } else { // only resource collections, there better be some
                 if (resources.size() == 0) {
-                    throw new BuildException("no resources specified");
+                    handleError("no resources specified");
+                    return;
                 }
             }
             processResources(styleResource);
@@ -539,6 +559,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }    
 
     /**
+     * Whether transformation errors should make the build fail.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnTransformationError(boolean b) {
+        failOnTransformationError = b;
+    }
+
+    /**
+     * Whether any errors should make the build fail.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnError(boolean b) {
+        failOnError = b;
+    }
+
+    /**
      * Load processor here instead of in setProcessor - this will be
      * called from within execute, so we have access to the latest
      * classpath.
@@ -603,8 +641,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void checkDest() {
         if (destDir == null) {
-            String msg = "destdir attributes must be set!";
-            throw new BuildException(msg);
+            handleError("destdir attributes must be set!");
         }
     }
 
@@ -691,8 +728,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (outF != null) {
                 outF.delete();
             }
-
-            throw new BuildException(ex);
+            handleTransformationError(ex);
         }
 
     } //-- processXML
@@ -727,7 +763,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (outFile != null) {
                 outFile.delete();
             }
-            throw new BuildException(ex);
+            handleTransformationError(ex);
         }
     }
 
@@ -741,8 +777,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         File directory = targetFile.getParentFile();
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
-                throw new BuildException("Unable to create directory: "
-                        + directory.getAbsolutePath());
+                handleError("Unable to create directory: "
+                            + directory.getAbsolutePath());
             }
         }
     }
@@ -787,14 +823,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 try {
                     resolveProcessor(processor);
                 } catch (Exception e) {
-                    throw new BuildException(e);
+                    handleError(e);
                 }
             } else {
                 try {
                     resolveProcessor(PROCESSOR_TRAX);
                 } catch (Throwable e1) {
                     e1.printStackTrace();
-                    throw new BuildException(e1);
+                    handleError(e1);
                 }
             }
         }
@@ -1026,8 +1062,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 if (fp != null) {
                     liaison.setStylesheet(fp.getFile());
                 } else {
-                    throw new BuildException(liaison.getClass().toString()
-                            + " accepts the stylesheet only as a file", getLocation());
+                    handleError(liaison.getClass().toString()
+                                + " accepts the stylesheet only as a file");
+                    return;
                 }
             }
             for (Enumeration e = params.elements(); e.hasMoreElements();) {
@@ -1038,7 +1075,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
         } catch (Exception ex) {
             log("Failed to transform using stylesheet " + stylesheet, Project.MSG_INFO);
-            throw new BuildException(ex);
+            handleTransformationError(ex);
         }
     }
 
@@ -1074,10 +1111,56 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public Factory createFactory() throws BuildException {
         if (factory != null) {
-            throw new BuildException("'factory' element must be unique");
+            handleError("'factory' element must be unique");
+        } else {
+            factory = new Factory();
         }
-        factory = new Factory();
         return factory;
+    }
+
+    /**
+     * Throws an exception with the given message if failOnError is
+     * true, otherwise logs the message using the WARN level.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void handleError(String msg) {
+        if (failOnError) {
+            throw new BuildException(msg, getLocation());
+        }
+        log(msg, Project.MSG_WARN);
+    }
+
+
+    /**
+     * Throws an exception with the given nested exception if
+     * failOnError is true, otherwise logs the message using the WARN
+     * level.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void handleError(Throwable ex) {
+        if (failOnError) {
+            throw new BuildException(ex);
+        } else {
+            log("Caught an exception: " + ex, Project.MSG_WARN);
+        }
+    }
+
+    /**
+     * Throws an exception with the given nested exception if
+     * failOnError and failOnTransformationError are true, otherwise
+     * logs the message using the WARN level.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void handleTransformationError(Exception ex) {
+        if (failOnError && failOnTransformationError) {
+            throw new BuildException(ex);
+        } else {
+            log("Caught an error during transformation: " + ex,
+                Project.MSG_WARN);
+        }
     }
 
     /**
