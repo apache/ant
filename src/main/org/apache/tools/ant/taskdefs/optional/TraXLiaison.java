@@ -193,20 +193,8 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
             // make sure to close all handles, otherwise the garbage
             // collector will close them...whenever possible and
             // Windows may complain about not being able to delete files.
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ignored) {
-                // ignore
-            }
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException ignored) {
-                // ignore
-            }
+            FileUtils.close(fis);
+            FileUtils.close(fos);
         }
     }
 
