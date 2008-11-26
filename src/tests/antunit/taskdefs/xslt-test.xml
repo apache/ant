@@ -66,4 +66,11 @@ undefined='<xsl:value-of select="$undefined"/>'
        value="set='somevalue'"/>
   </target>
 
+  <target name="testStyleDoesntExist" depends="setUp">
+    <au:expectfailure expectedmessage="i-m-not-there.xslt doesn't exist.">
+      <xslt in="${legacy.dir}/data.xml"
+            out="${output}/out.xml"
+            style="i-m-not-there.xslt"/>
+    </au:expectfailure>
+  </target>
 </project>

@@ -322,6 +322,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             } else {
                 styleResource = xslResource;
             }
+
+            if (!styleResource.isExists()) {
+                throw new BuildException("stylesheet " + styleResource
+                                         + " doesn't exist.");
+            }
+
             // if we have an in file and out then process them
             if (inFile != null && outFile != null) {
                 process(inFile, outFile, styleResource);

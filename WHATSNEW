@@ -548,6 +548,9 @@ Other changes:
    -docfilessubdirs and -excludedocfilessubdir command line arguments.
    Bugzilla Report 34455.
 
+ * <xslt> now fails early if a specified stylesheet doesn't exist.
+   Bugzilla Report 34525.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
