@@ -26,8 +26,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -199,6 +202,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean failOnNoResources = true;
 
     /**
+     * System properties to set during transformation.
+     *
+     * @since Ant 1.8.0
+     */
+    private CommandlineJava.SysProperties sysProperties =
+        new CommandlineJava.SysProperties();
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -321,6 +332,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             return;
         }
         try {
+            if (sysProperties.size() > 0) {
+                sysProperties.setSystem();
+            }
+
             Resource styleResource;
             if (baseDir == null) {
                 baseDir = getProject().getBaseDir();
@@ -409,6 +424,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 loader.resetThreadContextLoader();
                 loader.cleanup();
                 loader = null;
+            }
+            if (sysProperties.size() > 0) {
+                sysProperties.restoreSystem();
             }
             liaison = null;
             stylesheetLoaded = false;
@@ -593,6 +611,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setFailOnNoResources(boolean b) {
         failOnNoResources = b;
+    }
+
+    /**
+     * A system property to set during transformation.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addSysproperty(Environment.Variable sysp) {
+        sysProperties.addVariable(sysp);
+    }
+
+    /**
+     * A set of system properties to set during transformation.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addSyspropertyset(PropertySet sysp) {
+        sysProperties.addSyspropertyset(sysp);
     }
 
     /**

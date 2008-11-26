@@ -419,6 +419,22 @@ this element, the stylesheet should be specified as a nested resource or
 single-element collection.  Alternatively, use the <code>refid</code> to
 specify the resource or collection as a reference.</p>
 
+<h4>sysproperty</h4>
+<p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify
+system properties required by the factory or transformation.  These
+properties will be made available to the VM during the execution of
+the class. The attributes for this element are the same as
+for <a href="exec.html#env">environment variables</a>.</p>
+
+<p><em>since Ant 1.8.0</em>.</p>
+
+<h4>syspropertyset</h4>
+
+<p>You can specify a set of properties to be used as system properties
+with <a href="../CoreTypes/propertyset.html">syspropertyset</a>s.</p>
+
+<p><em>since Ant 1.8.0</em>.</p>
+
 <h3>Examples</h3>
 <blockquote>
   <pre>
@@ -511,6 +527,15 @@ specify the resource or collection as a reference.</p>
 &lt;/xsl:stylesheet&gt;
 </pre>
 
+<h4>Use an XInclude-aware version of Xerces while transforming</h4>
+
+<pre>
+&lt;xslt ...&gt;
+    &lt;sysproperty key="org.apache.xerces.xni.parser.XMLParserConfiguration"
+                 value="org.apache.xerces.parsers.XIncludeParserConfiguration"
+     /&gt;
+&lt;xslt&gt;
+</pre>
 </blockquote>
 
 
