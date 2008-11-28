@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.ArchiveFileSet;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -65,13 +66,17 @@ public class Archives extends DataType
     }
 
     /**
-     * Iterates through the collections and counts.
+     * Sums the sizes of nested archives.
      */
     public int size() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).size();
         }
-        return grabResources().size();
+        int total = 0;
+        for (Iterator i = grabArchives(); i.hasNext(); ) {
+            total += ((ResourceCollection) i.next()).size();
+        }
+        return total;
     }
 
     /**
@@ -81,7 +86,12 @@ public class Archives extends DataType
         if (isReference()) {
             return ((Archives) getCheckedRef()).iterator();
         }
-        return grabResources().iterator();
+        List l = new LinkedList();
+        for (Iterator i = grabArchives(); i.hasNext(); ) {
+            l.addAll(CollectionUtils
+                     .asCollection(((ResourceCollection) i.next()).iterator()));
+        }
+        return l.iterator();
     }
 
     /**
@@ -111,28 +121,34 @@ public class Archives extends DataType
         }
     }
 
-    // TODO this is a pretty expensive operation and so the result is
-    // cached.
+    // TODO this is a pretty expensive operation and so the result
+    // should be cached.
     /**
-     * Performs the job by iterating over all archives, turning them
-     * into the correct type of ArchiveFileSet and iterating through
-     * their contents.
+     * Turns all nested resources into corresponding ArchiveFileSets
+     * and returns an iterator over the collected archives.
      */
-    protected List grabResources() {
+    protected Iterator/*<ArchiveFileset>*/ grabArchives() {
         List l = new LinkedList();
         for (Iterator iter = zips.iterator(); iter.hasNext(); ) {
-            ZipFileSet zfs = new ZipFileSet();
-            zfs.setProject(getProject());
-            zfs.setSrcResource((Resource) iter.next());
-            l.addAll(CollectionUtils.asCollection(zfs.iterator()));
+            l.add(configureArchive(new ZipFileSet(),
+                                   (Resource) iter.next()));
         }
         for (Iterator iter = tars.iterator(); iter.hasNext(); ) {
-            TarFileSet tfs = new TarFileSet();
-            tfs.setProject(getProject());
-            tfs.setSrcResource((Resource) iter.next());
-            l.addAll(CollectionUtils.asCollection(tfs.iterator()));
+            l.add(configureArchive(new TarFileSet(),
+                                   (Resource) iter.next()));
         }
-        return l;
+        return l.iterator();
+    }
+
+    /**
+     * Configures the archivefileset based on this type's settings,
+     * set the source.
+     */
+    protected ArchiveFileSet configureArchive(ArchiveFileSet afs,
+                                              Resource src) {
+        afs.setProject(getProject());
+        afs.setSrcResource(src);
+        return afs;
     }
 
     /**
@@ -150,13 +166,15 @@ public class Archives extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            stk.push(zips);
-            invokeCircularReferenceCheck(zips, stk, p);
-            stk.pop();
-            stk.push(tars);
-            invokeCircularReferenceCheck(tars, stk, p);
-            stk.pop();
+            checkForCircularReference(zips, stk, p);
+            checkForCircularReference(tars, stk, p);
             setChecked(true);
         }
+    }
+
+    protected void checkForCircularReference(DataType t, Stack stk, Project p) {
+        stk.push(t);
+        invokeCircularReferenceCheck(t, stk, p);
+        stk.pop();
     }
 }
