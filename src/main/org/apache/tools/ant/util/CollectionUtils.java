@@ -208,6 +208,19 @@ public class CollectionUtils {
         };
     }
 
+    /**
+     * Returns a collection containg all elements of the iterator.
+     *
+     * @since Ant 1.8.0
+     */
+    public static Collection asCollection(final Iterator iter) {
+        List l = new ArrayList();
+        while (iter.hasNext()) {
+            l.add(iter.next());
+        }
+        return l;
+    }
+
     private static final class CompoundEnumeration implements Enumeration {
 
         private final Enumeration e1, e2;
