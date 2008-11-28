@@ -314,6 +314,22 @@ The code
 </pre>
 <p>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
+The same can be achieved with
+<pre>
+  &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;mappedresources&gt;
+      &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
+      &lt;globmapper from="*" to="docs/user-guide/*"/&gt;
+    &lt;/mappedresources&gt;
+    &lt;archives&gt;
+      &lt;zips&gt;
+        &lt;fileset dir=&quot;.&quot; includes=&quot;examples*.zip&quot;/&gt;
+      &lt;/zips&gt;
+    &lt;/archives&gt;
+  &lt;/zip&gt;
+</pre>
+
+The next example
 
 <pre>
 &lt;zip dest="release.zip"&gt;
@@ -321,7 +337,7 @@ The code
 &lt;/zip&gt;
 </pre>
 
-<p>Re-packages a TAR archive as a ZIP archive.  If Unix file
+<p>re-packages a TAR archive as a ZIP archive.  If Unix file
 permissions have been stored as part of the TAR file, they will be
 retained in the resulting ZIP archive.</p>
 

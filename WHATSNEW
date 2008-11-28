@@ -575,6 +575,12 @@ Other changes:
    processing in Xerces, for example.
    Bugzilla Report 36653.
 
+ * a new resource collection <archives> can be used to specify
+   collections of ZIP and TAR archives as source and extracts them on
+   the fly.  This is a generalization of the <zipgroupfileset> found
+   as nested element of <zip> and friends.
+   Bugzilla Report 46257.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

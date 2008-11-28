@@ -349,6 +349,9 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
   <li><a href="#mappedresources">mappedresources</a> - generic
     resource collection wrapper that maps the names of the nested
     resources using a <a href="mapper.html">mapper</a>.</li>
+  <li><a href="#archives">archives</a> - wraps around different
+    resource collections and treats the nested resources as ZIP or TAR
+    archives that will be extracted on the fly.</li>
 </ul>
 <h4><a name="resources">resources</a></h4>
 <p>A generic resource collection, designed for use with
@@ -1073,6 +1076,51 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
       &lt;/mappedresources&gt;
     &lt;/war&gt;
   </pre>    
+</blockquote>
+
+<h4><a name="archives">archives</a></h4>
+
+<p>This resource collection accepts an arbitrary number of nested
+  resources and assumes that all those resources must be either ZIP or
+  TAR archives.  The resources returned
+  by <code>&lt;archives&gt;</code> are the contents of the nested
+  archives.</p>
+
+<p>This resource collection is a generalization
+  of <a href="../CoreTasks/zip.html#zipgroupfileset">zipgroupfileset</a>
+  which is only supported by the zip family of tasks.</p>
+
+<p><em>archives</em> doesn't support any attributes.</p>
+
+<blockquote>
+  <h4>Parameters specified as nested elements</h4>
+
+  <p><code>&lt;archives&gt;</code> has two nested
+    elements <code>&lt;zips&gt;</code> and
+    <code>&ls;tars&gt;</code> that are <a href="#union">unions</a>
+    themselves, i.e. they accept arbitrary many resource(collection)s
+    as nested elements.</p>
+
+  <p>The nested resources of &lt;zips&gt; are treated as ZIP archives,
+    the nested resources of &lt;tars&gt; as TAR archives.</p>
+
+  <h4>Examples</h4>
+
+  <p>Copies all files from all jars that are on the classpath
+    to <code>${target}</code>.</p>
+
+  <pre>
+    &lt;copy todir="${target}"&gt;
+      &lt;archives&gt;
+        &lt;zips&gt;
+          &lt;restrict&gt;
+            &lt;path path="${java.class.path}"/&gt;
+            &lt;name name="*.jar"/&gt;
+          &lt;/restrict&gt;
+        &lt;/zips&gt;
+      &lt;/archives&gt;
+    &lt;/copy&gt;
+  </pre>
 </blockquote>
 
 </body>

@@ -93,4 +93,44 @@
     </au:expectfailure>
   </target>    
 
+  <!-- works but takes a veeeeeery long time -->
+  <target name="XtestResourcesManualExample">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <archives>
+        <zips>
+          <restrict>
+            <path path="${java.class.path}"/>
+            <name name="*.jar"/>
+          </restrict>
+        </zips>
+      </archives>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+  </target>
+
+  <target name="testZipManualExample">
+    <mkdir dir="${output}/control"/>
+    <mkdir dir="${input}/htdocs/manual"/>
+    <touch file="${input}/htdocs/manual/foo.txt"/>
+    <zip destfile="${input}/examples-a.zip">
+      <fileset dir="." includes="*.xml"/>
+    </zip>
+    <zip destfile="${output}/manual.zip">
+      <mappedresources>
+        <fileset dir="${input}/htdocs/manual"/>
+        <globmapper from="*" to="docs/user-guide/*"/>
+      </mappedresources>
+      <archives>
+        <zips>
+          <fileset dir="${input}" includes="examples*.zip"/>
+        </zips>
+      </archives>
+    </zip>
+    <unzip src="${output}/manual.zip" dest="${output}/control"/>
+    <au:assertFileExists file="${output}/control/archives-test.xml"/>
+    <au:assertFileExists file="${output}/control/docs/user-guide/foo.txt"/>
+  </target>
+
 </project>
