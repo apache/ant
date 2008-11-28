@@ -92,6 +92,7 @@ public class Mapper extends DataType implements Cloneable {
             }
         }
         container.add(fileNameMapper);
+        setChecked(false);
     }
 
     /**
@@ -139,6 +140,7 @@ public class Mapper extends DataType implements Cloneable {
         if (this.classpath == null) {
             this.classpath = new Path(getProject());
         }
+        setChecked(false);
         return this.classpath.createPath();
     }
 

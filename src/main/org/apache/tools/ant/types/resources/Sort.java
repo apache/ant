@@ -126,6 +126,7 @@ public class Sort extends BaseResourceCollectionWrapper {
         }
         comp.add(c);
         FailFast.invalidate(this);
+        setChecked(false);
     }
 
     /**
@@ -143,7 +144,9 @@ public class Sort extends BaseResourceCollectionWrapper {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
+            stk.push(comp);
             DataType.invokeCircularReferenceCheck(comp, stk, p);
+            stk.pop();
             setChecked(true);
         }
     }

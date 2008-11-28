@@ -17,10 +17,12 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Stack;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
@@ -67,6 +69,7 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
             return;
         }
         w.add(c);
+        setChecked(false);
     }
 
     /**
@@ -145,4 +148,19 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
         return w.toString();
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+        if (isChecked()) {
+            return;
+        }
+
+        // takes care of Selectors
+        super.dieOnCircularReference(stk, p);
+
+        if (!isReference()) {
+            stk.push(w);
+            invokeCircularReferenceCheck(w, stk, p);
+            stk.pop();
+            setChecked(true);
+        }
+    }
 }

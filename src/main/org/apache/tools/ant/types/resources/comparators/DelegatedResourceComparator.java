@@ -48,6 +48,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
         }
         v = (v == null) ? new Vector() : v;
         v.add(c);
+        setChecked(false);
     }
 
     /**
@@ -115,6 +116,7 @@ s.
                     if (o instanceof DataType) {
                         stk.push(o);
                         invokeCircularReferenceCheck((DataType) o, stk, p);
+                        stk.pop();
                     }
                 }
             }

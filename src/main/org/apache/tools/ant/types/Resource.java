@@ -434,7 +434,7 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
      * <p>This implementation of the method will return the current
      * instance itself if it can be assigned to the given class.</p>
      *
-     * @since ant 1.8.0
+     * @since Ant 1.8.0
      */
     public Object as(Class clazz) {
         return clazz.isAssignableFrom(getClass()) ? this : null;

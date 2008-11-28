@@ -66,6 +66,7 @@ public abstract class ResourceDecorator extends Resource {
             throw new BuildException("only single argument resource collections"
                                      + " are supported");
         }
+        setChecked(false);
         resource = (Resource) a.iterator().next();
     }
 
@@ -195,6 +196,7 @@ public abstract class ResourceDecorator extends Resource {
         if (resource == null) {
             throw new BuildException("no resource specified");
         }
+        dieOnCircularReference();
         return resource;
     }
 

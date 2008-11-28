@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Stack;
 import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -449,6 +450,28 @@ public class XMLCatalog extends DataType
 
         setEntityResolver(source);
         return source;
+    }
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (classpath != null) {
+                stk.push(classpath);
+                invokeCircularReferenceCheck(classpath, stk, p);
+                stk.pop();
+            }
+            if (catalogPath != null) {
+                stk.push(catalogPath);
+                invokeCircularReferenceCheck(catalogPath, stk, p);
+                stk.pop();
+            }
+            setChecked(true);
+        }
     }
 
     /**

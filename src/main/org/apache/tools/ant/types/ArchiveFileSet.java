@@ -19,6 +19,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -150,6 +151,7 @@ public abstract class ArchiveFileSet extends FileSet {
             throw new BuildException(ERROR_DIR_AND_SRC_ATTRIBUTES);
         }
         this.src = src;
+        setChecked(false);
     }
 
     /**
@@ -256,6 +258,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return a directory scanner
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
+        dieOnCircularReference();
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
@@ -510,6 +513,23 @@ public abstract class ArchiveFileSet extends FileSet {
                         getProject())
                     instanceof ArchiveFileSet))) {
             checkAttributesAllowed();
+        }
+    }
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (src != null) {
+                stk.push(src);
+                invokeCircularReferenceCheck(src, stk, p);
+                stk.pop();
+            }
+            setChecked(true);
         }
     }
 }

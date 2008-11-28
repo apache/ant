@@ -23,6 +23,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -53,6 +54,7 @@ public class MappedResourceCollection
                                      + " nested into mappedresources",
                                      getLocation());
         }
+        setChecked(false);
         nested = c;
     }
 
@@ -69,6 +71,7 @@ public class MappedResourceCollection
             throw new BuildException("Cannot define more than one mapper",
                                      getLocation());
         }
+        setChecked(false);
         mapper = new Mapper(getProject());
         return mapper;
     }
@@ -111,6 +114,17 @@ public class MappedResourceCollection
         }
         checkInitialized();
         return new MappedIterator(nested.iterator(), mapper);
+    }
+
+    /**
+     * Overrides the base version.
+     * @param r the Reference to set.
+     */
+    public void setRefid(Reference r) {
+        if (nested != null || mapper != null) {
+            throw tooManyAttributes();
+        }
+        super.setRefid(r);
     }
 
     /**
@@ -165,6 +179,7 @@ public class MappedResourceCollection
             throw new BuildException("A nested resource collection element is"
                                      + " required", getLocation());
         }
+        dieOnCircularReference();
     }
 
     private static class MappedIterator implements Iterator {

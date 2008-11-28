@@ -120,6 +120,7 @@ public class ResourceSelectorContainer extends DataType {
                 if (o instanceof DataType) {
                     stk.push(o);
                     invokeCircularReferenceCheck((DataType) o, stk, p);
+                    stk.pop();
                 }
             }
             setChecked(true);

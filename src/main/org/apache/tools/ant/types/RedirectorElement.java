@@ -119,6 +119,7 @@ public class RedirectorElement extends DataType {
                 throw new BuildException("Cannot have > 1 <inputmapper>");
             }
         }
+        setChecked(false);
         this.inputMapper = inputMapper;
     }
 
@@ -138,6 +139,7 @@ public class RedirectorElement extends DataType {
                 throw new BuildException("Cannot have > 1 <outputmapper>");
             }
         }
+        setChecked(false);
         this.outputMapper = outputMapper;
     }
 
@@ -157,6 +159,7 @@ public class RedirectorElement extends DataType {
                 throw new BuildException("Cannot have > 1 <errormapper>");
             }
         }
+        setChecked(false);
         this.errorMapper = errorMapper;
     }
 
@@ -388,6 +391,7 @@ public class RedirectorElement extends DataType {
         FilterChain result = new FilterChain();
         result.setProject(getProject());
         inputFilterChains.add(result);
+        setChecked(false);
         return result;
     }
 
@@ -402,6 +406,7 @@ public class RedirectorElement extends DataType {
         FilterChain result = new FilterChain();
         result.setProject(getProject());
         outputFilterChains.add(result);
+        setChecked(false);
         return result;
     }
 
@@ -416,6 +421,7 @@ public class RedirectorElement extends DataType {
         FilterChain result = new FilterChain();
         result.setProject(getProject());
         errorFilterChains.add(result);
+        setChecked(false);
         return result;
     }
 
@@ -438,6 +444,7 @@ public class RedirectorElement extends DataType {
             getRef().configure(redirector, sourcefile);
             return;
         }
+        dieOnCircularReference();
         if (alwaysLog != null) {
             redirector.setAlwaysLog(alwaysLog.booleanValue());
         }

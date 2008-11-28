@@ -58,6 +58,7 @@ public class Compare extends DataType implements ResourceSelector {
             throw noChildrenAllowed();
         }
         comp.add(c);
+        setChecked(false);
     }
 
     /**
@@ -95,6 +96,7 @@ public class Compare extends DataType implements ResourceSelector {
             throw oneControl();
         }
         control = new Union();
+        setChecked(false);
         return control;
     }
 
@@ -107,6 +109,7 @@ public class Compare extends DataType implements ResourceSelector {
         if (control == null) {
             throw oneControl();
         }
+        dieOnCircularReference();
         int t = 0, f = 0;
         for (Iterator it = control.iterator(); it.hasNext();) {
             if (when.evaluate(comp.compare(r, (Resource) it.next()))) {
@@ -134,9 +137,13 @@ public class Compare extends DataType implements ResourceSelector {
             super.dieOnCircularReference(stk, p);
         } else {
             if (control != null) {
+                stk.push(control);
                 DataType.invokeCircularReferenceCheck(control, stk, p);
+                stk.pop();
             }
+            stk.push(comp);
             DataType.invokeCircularReferenceCheck(comp, stk, p);
+            stk.pop();
             setChecked(true);
         }
     }
