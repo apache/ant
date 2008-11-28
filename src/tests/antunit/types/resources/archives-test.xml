@@ -34,4 +34,63 @@
     <au:assertFileExists
        file="${output}/org/apache/tools/ant/BuildFileTest.class"/>
   </target>
+
+  <target name="testMixingZipsAndTars">
+    <mkdir dir="${output}"/>
+    <tar destfile="${output}/test.tar.gz" compression="gzip">
+      <fileset file="${ant.file}"/>
+    </tar>
+    <copy todir="${output}">
+      <archives>
+        <zips>
+          <fileset dir="../../../../../build/lib"
+                   includes="ant-launcher.jar"/>
+        </zips>
+        <tars>
+          <gzipresource>
+            <file file="${output}/test.tar.gz"/>
+          </gzipresource>
+        </tars>
+      </archives>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+    <basename property="filename" file="${ant.file}"/>
+    <au:assertFileExists file="${output}/${filename}"/>
+  </target>
+
+  <target name="testReference">
+    <mkdir dir="${output}"/>
+    <archives id="ref">
+      <zips>
+        <fileset dir="../../../../../build/lib"
+                 includes="ant-launcher.jar"/>
+      </zips>
+    </archives>
+    <copy todir="${output}">
+      <archives refid="ref"/>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+  </target>
+
+  <target name="testCircularReference">
+    <au:expectfailure
+       message="This data type contains a circular reference.">
+      <copy todir="${output}">
+        <archives id="ref">
+          <zips>
+            <archives refid="ref"/>
+          </zips>
+        </archives>
+      </copy>
+    </au:expectfailure>
+    <au:expectfailure
+       message="This data type contains a circular reference.">
+      <copy todir="${output}">
+        <archives refid="ref"/>
+      </copy>
+    </au:expectfailure>
+  </target>    
+
 </project>

@@ -25,6 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ArchiveFileSet;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.TarFileSet;
@@ -51,6 +52,7 @@ public class Archives extends DataType
         if (isReference()) {
             throw noChildrenAllowed();
         }
+        setChecked(false);
         return zips;
     }
 
@@ -62,6 +64,7 @@ public class Archives extends DataType
         if (isReference()) {
             throw noChildrenAllowed();
         }
+        setChecked(false);
         return tars;
     }
 
@@ -72,6 +75,7 @@ public class Archives extends DataType
         if (isReference()) {
             return ((Archives) getCheckedRef()).size();
         }
+        dieOnCircularReference();
         int total = 0;
         for (Iterator i = grabArchives(); i.hasNext(); ) {
             total += ((ResourceCollection) i.next()).size();
@@ -86,6 +90,7 @@ public class Archives extends DataType
         if (isReference()) {
             return ((Archives) getCheckedRef()).iterator();
         }
+        dieOnCircularReference();
         List l = new LinkedList();
         for (Iterator i = grabArchives(); i.hasNext(); ) {
             l.addAll(CollectionUtils
@@ -99,10 +104,22 @@ public class Archives extends DataType
      */
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((MappedResourceCollection) getCheckedRef())
-                .isFilesystemOnly();
+            return ((Archives) getCheckedRef()).isFilesystemOnly();
         }
+        dieOnCircularReference();
         return false;
+    }
+
+    /**
+     * Overrides the base version.
+     * @param r the Reference to set.
+     */
+    public void setRefid(Reference r) {
+        if (zips.getResourceCollections().size() > 0
+            || tars.getResourceCollections().size() > 0) {
+            throw tooManyAttributes();
+        }
+        super.setRefid(r);
     }
 
     /**
