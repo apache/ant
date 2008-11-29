@@ -209,9 +209,7 @@ public abstract class ResourceDecorator extends Resource {
         if (isReference()) {
             super.dieOnCircularReference(stack, project);
         } else {
-            stack.push(resource);
-            invokeCircularReferenceCheck(resource, stack, project);
-            stack.pop();
+            pushAndInvokeCircularReferenceCheck(resource, stack, project);
             setChecked(true);
         }
     }

@@ -478,9 +478,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             super.dieOnCircularReference(stk, p);
         } else {
             if (union != null) {
-                stk.push(union);
-                invokeCircularReferenceCheck(union, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck(union, stk, p);
             }
             setChecked(true);
         }

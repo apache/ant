@@ -161,14 +161,10 @@ public class MappedResourceCollection
         } else {
             checkInitialized();
             if (mapper != null) {
-                stk.push(mapper);
-                invokeCircularReferenceCheck(mapper, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck(mapper, stk, p);
             }
             if (nested instanceof DataType) {
-                stk.push(nested);
-                invokeCircularReferenceCheck((DataType) nested, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck((DataType) nested, stk, p);
             }
             setChecked(true);
         }

@@ -183,15 +183,10 @@ public class Archives extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            checkForCircularReference(zips, stk, p);
-            checkForCircularReference(tars, stk, p);
+            pushAndInvokeCircularReferenceCheck(zips, stk, p);
+            pushAndInvokeCircularReferenceCheck(tars, stk, p);
             setChecked(true);
         }
     }
 
-    protected void checkForCircularReference(DataType t, Stack stk, Project p) {
-        stk.push(t);
-        invokeCircularReferenceCheck(t, stk, p);
-        stk.pop();
-    }
 }

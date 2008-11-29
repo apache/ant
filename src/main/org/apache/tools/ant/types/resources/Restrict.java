@@ -157,9 +157,7 @@ outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext(
         super.dieOnCircularReference(stk, p);
 
         if (!isReference()) {
-            stk.push(w);
-            invokeCircularReferenceCheck(w, stk, p);
-            stk.pop();
+            pushAndInvokeCircularReferenceCheck(w, stk, p);
             setChecked(true);
         }
     }

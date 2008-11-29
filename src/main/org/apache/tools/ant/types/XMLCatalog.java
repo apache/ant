@@ -461,14 +461,10 @@ public class XMLCatalog extends DataType
             super.dieOnCircularReference(stk, p);
         } else {
             if (classpath != null) {
-                stk.push(classpath);
-                invokeCircularReferenceCheck(classpath, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck(classpath, stk, p);
             }
             if (catalogPath != null) {
-                stk.push(catalogPath);
-                invokeCircularReferenceCheck(catalogPath, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck(catalogPath, stk, p);
             }
             setChecked(true);
         }

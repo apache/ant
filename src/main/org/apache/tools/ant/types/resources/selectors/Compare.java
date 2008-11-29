@@ -137,13 +137,9 @@ public class Compare extends DataType implements ResourceSelector {
             super.dieOnCircularReference(stk, p);
         } else {
             if (control != null) {
-                stk.push(control);
-                DataType.invokeCircularReferenceCheck(control, stk, p);
-                stk.pop();
+                DataType.pushAndInvokeCircularReferenceCheck(control, stk, p);
             }
-            stk.push(comp);
-            DataType.invokeCircularReferenceCheck(comp, stk, p);
-            stk.pop();
+            DataType.pushAndInvokeCircularReferenceCheck(comp, stk, p);
             setChecked(true);
         }
     }

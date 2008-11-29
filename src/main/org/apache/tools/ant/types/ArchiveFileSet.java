@@ -525,9 +525,7 @@ public abstract class ArchiveFileSet extends FileSet {
             super.dieOnCircularReference(stk, p);
         } else {
             if (src != null) {
-                stk.push(src);
-                invokeCircularReferenceCheck(src, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck(src, stk, p);
             }
             setChecked(true);
         }

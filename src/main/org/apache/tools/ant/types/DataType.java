@@ -172,6 +172,26 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     }
 
     /**
+     * Allow DataTypes outside org.apache.tools.ant.types to indirectly call
+     * dieOnCircularReference on nested DataTypes.
+     *
+     * <p>Pushes dt on the stack, runs dieOnCircularReference and pops
+     * it again.</p>
+     * @param dt the DataType to check.
+     * @param stk the stack of references to check.
+     * @param p the project to use to dereference the references.
+     * @throws BuildException on error.
+     * @since Ant 1.8.0
+     */
+    public static void pushAndInvokeCircularReferenceCheck(DataType dt,
+                                                           Stack stk,
+                                                           Project p) {
+        stk.push(dt);
+        dt.dieOnCircularReference(stk, p);
+        stk.pop();
+    }
+
+    /**
      * Performs the check for circular references and returns the
      * referenced object.
      * @return the dereferenced object.

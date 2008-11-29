@@ -147,9 +147,7 @@ public abstract class BaseResourceCollectionWrapper
             super.dieOnCircularReference(stk, p);
         } else {
             if (rc instanceof DataType) {
-                stk.push(rc);
-                invokeCircularReferenceCheck((DataType) rc, stk, p);
-                stk.pop();
+                pushAndInvokeCircularReferenceCheck((DataType) rc, stk, p);
             }
             setChecked(true);
         }

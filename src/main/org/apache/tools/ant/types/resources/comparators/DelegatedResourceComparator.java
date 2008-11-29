@@ -114,9 +114,8 @@ s.
                 for (Iterator i = v.iterator(); i.hasNext();) {
                     Object o = i.next();
                     if (o instanceof DataType) {
-                        stk.push(o);
-                        invokeCircularReferenceCheck((DataType) o, stk, p);
-                        stk.pop();
+                        pushAndInvokeCircularReferenceCheck((DataType) o, stk,
+                                                            p);
                     }
                 }
             }

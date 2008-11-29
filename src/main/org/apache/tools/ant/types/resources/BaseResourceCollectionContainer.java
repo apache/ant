@@ -185,9 +185,7 @@ public abstract class BaseResourceCollectionContainer
             for (Iterator i = rc.iterator(); i.hasNext();) {
                 Object o = i.next();
                 if (o instanceof DataType) {
-                    stk.push(o);
-                    invokeCircularReferenceCheck((DataType) o, stk, p);
-                    stk.pop();
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
                 }
             }
             setChecked(true);

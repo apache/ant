@@ -208,7 +208,7 @@ public class Resources extends DataType implements ResourceCollection {
             for (Iterator i = getNested().iterator(); i.hasNext();) {
                 Object o = i.next();
                 if (o instanceof DataType) {
-                    invokeCircularReferenceCheck((DataType) o, stk, p);
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
                 }
             }
             setChecked(true);

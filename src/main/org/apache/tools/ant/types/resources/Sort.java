@@ -144,9 +144,7 @@ public class Sort extends BaseResourceCollectionWrapper {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            stk.push(comp);
-            DataType.invokeCircularReferenceCheck(comp, stk, p);
-            stk.pop();
+            DataType.pushAndInvokeCircularReferenceCheck(comp, stk, p);
             setChecked(true);
         }
     }
