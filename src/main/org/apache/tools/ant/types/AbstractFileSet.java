@@ -18,8 +18,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Stack;
+import java.util.Vector;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.FileScanner;
@@ -147,7 +149,11 @@ public abstract class AbstractFileSet extends DataType
      * @return <code>File</code>.
      */
     public synchronized File getDir(Project p) {
-        return (isReference()) ? getRef(p).getDir(p) : dir;
+        if (isReference()) {
+            return getRef(p).getDir(p);
+        }
+        dieOnCircularReference();
+        return dir;
     }
 
     /**
@@ -342,8 +348,11 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.6.3
      */
     public synchronized boolean getDefaultexcludes() {
-        return (isReference())
-            ? getRef(getProject()).getDefaultexcludes() : useDefaultExcludes;
+        if (isReference()) {
+            return getRef(getProject()).getDefaultexcludes();
+        }
+        dieOnCircularReference();
+        return useDefaultExcludes;
     }
 
     /**
@@ -368,8 +377,11 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.7
      */
     public synchronized boolean isCaseSensitive() {
-        return (isReference())
-            ? getRef(getProject()).isCaseSensitive() : caseSensitive;
+        if (isReference()) {
+            return getRef(getProject()).isCaseSensitive();
+        }
+        dieOnCircularReference();
+        return caseSensitive;
     }
 
     /**
@@ -394,8 +406,11 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.6
      */
     public synchronized boolean isFollowSymlinks() {
-        return (isReference())
-            ? getRef(getProject()).isFollowSymlinks() : followSymlinks;
+        if (isReference()) {
+            return getRef(getProject()).isCaseSensitive();
+        }
+        dieOnCircularReference();
+        return followSymlinks;
     }
 
     /**
@@ -435,6 +450,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
+        dieOnCircularReference();
         DirectoryScanner ds = null;
         synchronized (this) {
             if (directoryScanner != null && p == getProject()) {
@@ -484,6 +500,7 @@ public abstract class AbstractFileSet extends DataType
             getRef(p).setupDirectoryScanner(ds, p);
             return;
         }
+        dieOnCircularReference(p);
         if (ds == null) {
             throw new IllegalArgumentException("ds cannot be null");
         }
@@ -523,8 +540,11 @@ public abstract class AbstractFileSet extends DataType
      * @return whether any selectors are in this container.
      */
     public synchronized boolean hasSelectors() {
-        return (isReference() && getProject() != null)
-            ? getRef(getProject()).hasSelectors() : !(selectors.isEmpty());
+        if (isReference()) {
+            return getRef(getProject()).hasSelectors();
+        }
+        dieOnCircularReference();
+        return !(selectors.isEmpty());
     }
 
     /**
@@ -536,6 +556,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference() && getProject() != null) {
             return getRef(getProject()).hasPatterns();
         }
+        dieOnCircularReference();
         if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
@@ -555,8 +576,11 @@ public abstract class AbstractFileSet extends DataType
      * @return the number of selectors in this container as an <code>int</code>.
      */
     public synchronized int selectorCount() {
-        return (isReference() && getProject() != null)
-            ? getRef(getProject()).selectorCount() : selectors.size();
+        if (isReference()) {
+            return getRef(getProject()).selectorCount();
+        }
+        dieOnCircularReference();
+        return selectors.size();
     }
 
     /**
@@ -565,8 +589,11 @@ public abstract class AbstractFileSet extends DataType
      * @return a <code>FileSelector[]</code> of the selectors in this container.
      */
     public synchronized FileSelector[] getSelectors(Project p) {
-        return (isReference())
-            ? getRef(p).getSelectors(p) : (FileSelector[]) (selectors.toArray(
+        if (isReference()) {
+            return getRef(getProject()).getSelectors(p);
+        }
+        dieOnCircularReference(p);
+        return (FileSelector[]) (selectors.toArray(
             new FileSelector[selectors.size()]));
     }
 
@@ -576,8 +603,11 @@ public abstract class AbstractFileSet extends DataType
      * @return an <code>Enumeration</code> of selectors.
      */
     public synchronized Enumeration selectorElements() {
-        return (isReference() && getProject() != null)
-            ? getRef(getProject()).selectorElements() : selectors.elements();
+        if (isReference()) {
+            return getRef(getProject()).selectorElements();
+        }
+        dieOnCircularReference();
+        return selectors.elements();
     }
 
     /**
@@ -591,6 +621,7 @@ public abstract class AbstractFileSet extends DataType
         }
         selectors.addElement(selector);
         directoryScanner = null;
+        setChecked(false);
     }
 
     /* Methods below all add specific selectors */
@@ -763,6 +794,10 @@ public abstract class AbstractFileSet extends DataType
      * @return a <code>String</code> of included filenames.
      */
     public String toString() {
+        if (isReference()) {
+            return getRef(getProject()).toString();
+        }
+        dieOnCircularReference();
         DirectoryScanner ds = getDirectoryScanner(getProject());
         String[] files = ds.getIncludedFiles();
         StringBuffer sb = new StringBuffer();
@@ -840,6 +875,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             return getRef(p).mergePatterns(p);
         }
+        dieOnCircularReference();
         PatternSet ps = (PatternSet) defaultPatterns.clone();
         final int count = additionalPatterns.size();
         for (int i = 0; i < count; i++) {
@@ -849,4 +885,21 @@ public abstract class AbstractFileSet extends DataType
         return ps;
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = selectors.iterator(); i.hasNext(); ) {
+                Object o = i.next();
+                if (o instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
+            setChecked(true);
+        }
+    }
 }

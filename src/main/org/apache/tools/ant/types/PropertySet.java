@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -181,6 +182,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      */
     public void addPropertyref(PropertyRef ref) {
         assertNotReference();
+        setChecked(false);
         ptyRefs.addElement(ref);
     }
 
@@ -190,6 +192,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      */
     public void addPropertyset(PropertySet ref) {
         assertNotReference();
+        setChecked(false);
         setRefs.addElement(ref);
     }
 
@@ -203,6 +206,7 @@ public class PropertySet extends DataType implements ResourceCollection {
             throw new BuildException("Too many <mapper>s!");
         }
         mapper = new Mapper(getProject());
+        setChecked(false);
         return mapper;
     }
 
@@ -245,7 +249,11 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return true if the property set is to be evalulated each time it is used.
      */
     public boolean getDynamic() {
-        return isReference() ? getRef().dynamic : dynamic;
+        if (isReference()) {
+            return getRef().dynamic;
+        }
+        dieOnCircularReference();
+        return dynamic;
     }
 
     /**
@@ -253,7 +261,11 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return the mapper attribute.
      */
     public Mapper getMapper() {
-        return isReference() ? getRef().mapper : mapper;
+        if (isReference()) {
+            return getRef().mapper;
+        }
+        dieOnCircularReference();
+        return mapper;
     }
 
     /**
@@ -279,6 +291,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         if (isReference()) {
             return getRef().getProperties();
         }
+        dieOnCircularReference();
         Set names = null;
         Project prj = getProject();
         Hashtable props =
@@ -343,6 +356,10 @@ public class PropertySet extends DataType implements ResourceCollection {
      *         avoid needless duplication of the Hashtable during recursion.
      */
     private void addPropertyNames(Set names, Hashtable properties) {
+        if (isReference()) {
+            getRef().addPropertyNames(names, properties);
+        }
+        dieOnCircularReference();
         // Add this PropertySet's property names.
         for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
             PropertyRef r = (PropertyRef) e.nextElement();
@@ -453,6 +470,10 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return a string rep of this object.
      */
     public String toString() {
+        if (isReference()) {
+            return getRef().toString();
+        }
+        dieOnCircularReference();
         StringBuffer b = new StringBuffer();
         TreeMap sorted = new TreeMap(getProperties());
         for (Iterator i = sorted.entrySet().iterator(); i.hasNext();) {
@@ -473,6 +494,10 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @since Ant 1.7
      */
     public Iterator iterator() {
+        if (isReference()) {
+            return getRef().iterator();
+        }
+        dieOnCircularReference();
         final Enumeration e = getProperties().propertyNames();
         return new Iterator() {
             public boolean hasNext() {
@@ -500,7 +525,30 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return whether this is a filesystem-only resource collection.
      */
     public boolean isFilesystemOnly() {
-        return isReference() && getRef().isFilesystemOnly();
+        if (isReference()) {
+            return getRef().isFilesystemOnly();
+        }
+        dieOnCircularReference();
+        return false;
+    }
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (mapper != null) {
+                pushAndInvokeCircularReferenceCheck(mapper, stk, p);
+            }
+            for (Iterator i = setRefs.iterator(); i.hasNext(); ) {
+                pushAndInvokeCircularReferenceCheck((PropertySet) i.next(), stk,
+                                                    p);
+            }
+            setChecked(true);
+        }
     }
 
 }

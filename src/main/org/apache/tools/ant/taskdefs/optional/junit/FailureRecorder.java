@@ -36,7 +36,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -67,7 +67,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @since Ant 1.8.0
  */
-public class FailureRecorder extends DataType implements JUnitResultFormatter, BuildListener {
+public class FailureRecorder extends ProjectComponent implements JUnitResultFormatter, BuildListener {
 
     /**
      * This is the name of a magic System property ({@value}). The value of this

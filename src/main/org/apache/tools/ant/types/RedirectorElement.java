@@ -592,9 +592,7 @@ public class RedirectorElement extends DataType {
                 if (v[i] != null) {
                     for (Iterator fci = v[i].iterator(); fci.hasNext();) {
                         FilterChain fc = (FilterChain) fci.next();
-                        stk.push(fc);
-                        fc.dieOnCircularReference(stk, p);
-                        stk.pop();
+                        pushAndInvokeCircularReferenceCheck(fc, stk, p);
                     }
                 }
             }

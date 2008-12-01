@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
@@ -49,6 +51,10 @@ public class ExtensionSet
      * @param extensionAdapter an extension that this library requires.
      */
     public void addExtension(final ExtensionAdapter extensionAdapter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         extensions.add(extensionAdapter);
     }
 
@@ -58,6 +64,10 @@ public class ExtensionSet
      * @param fileSet a set of files about which extensions data will be extracted.
      */
     public void addLibfileset(final LibFileSet fileSet) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         extensionsFilesets.add(fileSet);
     }
 
@@ -67,6 +77,10 @@ public class ExtensionSet
      * @param fileSet a set of files about which extensions data will be extracted.
      */
     public void addFileset(final FileSet fileSet) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         extensionsFilesets.add(fileSet);
     }
 
@@ -79,6 +93,10 @@ public class ExtensionSet
      */
     public Extension[] toExtensions(final Project proj)
         throws BuildException {
+        if (isReference()) {
+            return ((ExtensionSet) getCheckedRef()).toExtensions(proj);
+        }
+        dieOnCircularReference();
         final ArrayList extensionsList = ExtensionUtil.toExtensions(extensions);
         ExtensionUtil.extractExtensions(proj, extensionsList, extensionsFilesets);
         return (Extension[]) extensionsList.toArray(new Extension[extensionsList.size()]);
@@ -99,20 +117,26 @@ public class ExtensionSet
         if (!extensions.isEmpty() || !extensionsFilesets.isEmpty()) {
             throw tooManyAttributes();
         }
-        // change this to get the objects from the other reference
-        final Object object =
-            reference.getReferencedObject(getProject());
-        if (object instanceof ExtensionSet) {
-            final ExtensionSet other = (ExtensionSet) object;
-            extensions.addAll(other.extensions);
-            extensionsFilesets.addAll(other.extensionsFilesets);
-        } else {
-            final String message =
-                reference.getRefId() + " doesn\'t refer to a ExtensionSet";
-            throw new BuildException(message);
-        }
-
         super.setRefid(reference);
+    }
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = extensions.iterator(); i.hasNext(); ) {
+                pushAndInvokeCircularReferenceCheck((ExtensionAdapter) i.next(),
+                                                    stk, p);
+            }
+            for (Iterator i = extensionsFilesets.iterator(); i.hasNext(); ) {
+                pushAndInvokeCircularReferenceCheck((FileSet) i.next(), stk, p);
+            }
+            setChecked(true);
+        }
     }
 
     /**

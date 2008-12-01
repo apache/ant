@@ -218,6 +218,7 @@ public class FilterSet extends DataType implements Cloneable {
         if (isReference()) {
             return getRef().getFilters();
         }
+        dieOnCircularReference();
         //silly hack to avoid stack overflow...
         if (!readingFiles) {
             readingFiles = true;
@@ -245,6 +246,10 @@ public class FilterSet extends DataType implements Cloneable {
      * @return   The hash of the tokens and values for quick lookup.
      */
     public synchronized Hashtable getFilterHash() {
+        if (isReference()) {
+            return getRef().getFilterHash();
+        }
+        dieOnCircularReference();
         if (filterHash == null) {
             filterHash = new Hashtable(getFilters().size());
             for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {

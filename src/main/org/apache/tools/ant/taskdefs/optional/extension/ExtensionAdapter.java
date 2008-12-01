@@ -160,23 +160,6 @@ public class ExtensionAdapter extends DataType {
             || null != implementationURL) {
             throw tooManyAttributes();
         }
-        // change this to get the objects from the other reference
-        Object o = reference.getReferencedObject(getProject());
-        if (o instanceof ExtensionAdapter) {
-            final ExtensionAdapter other = (ExtensionAdapter) o;
-            extensionName = other.extensionName;
-            specificationVersion = other.specificationVersion;
-            specificationVendor = other.specificationVendor;
-            implementationVersion = other.implementationVersion;
-            implementationVendorID = other.implementationVendorID;
-            implementationVendor = other.implementationVendor;
-            implementationURL = other.implementationURL;
-        } else {
-            final String message =
-                reference.getRefId() + " doesn\'t refer to a Extension";
-            throw new BuildException(message);
-        }
-
         super.setRefid(reference);
     }
 
@@ -194,6 +177,10 @@ public class ExtensionAdapter extends DataType {
      */
     Extension toExtension()
         throws BuildException {
+        if (isReference()) {
+            return ((ExtensionAdapter) getCheckedRef()).toExtension();
+        }
+        dieOnCircularReference();
         if (null == extensionName) {
             final String message = "Extension is missing name.";
             throw new BuildException(message);

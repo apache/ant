@@ -17,9 +17,12 @@
  */
 package org.apache.tools.ant.types;
 
+import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.EscapeUnicode;
@@ -52,6 +55,10 @@ public class FilterChain extends DataType
      * @param filterReader an <code>AntFilterReader</code> value
      */
     public void addFilterReader(final AntFilterReader filterReader) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filterReader);
     }
 
@@ -61,6 +68,10 @@ public class FilterChain extends DataType
      * @return a <code>Vector</code> value containing the filters
      */
     public Vector getFilterReaders() {
+        if (isReference()) {
+            return ((FilterChain) getCheckedRef()).getFilterReaders();
+        }
+        dieOnCircularReference();
         return filterReaders;
     }
 
@@ -70,6 +81,10 @@ public class FilterChain extends DataType
      * @param classConstants a <code>ClassConstants</code> value
      */
     public void addClassConstants(final ClassConstants classConstants) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(classConstants);
     }
 
@@ -79,6 +94,10 @@ public class FilterChain extends DataType
      * @param expandProperties an <code>ExpandProperties</code> value
      */
     public void addExpandProperties(final ExpandProperties expandProperties) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(expandProperties);
     }
 
@@ -88,6 +107,10 @@ public class FilterChain extends DataType
      * @param headFilter a <code>HeadFilter</code> value
      */
     public void addHeadFilter(final HeadFilter headFilter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(headFilter);
     }
 
@@ -97,6 +120,10 @@ public class FilterChain extends DataType
      * @param lineContains a <code>LineContains</code> value
      */
     public void addLineContains(final LineContains lineContains) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(lineContains);
     }
 
@@ -107,6 +134,10 @@ public class FilterChain extends DataType
      */
     public void addLineContainsRegExp(final LineContainsRegExp
                                                 lineContainsRegExp) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(lineContainsRegExp);
     }
 
@@ -116,6 +147,10 @@ public class FilterChain extends DataType
      * @param prefixLines a <code>PrefixLines</code> value
      */
     public void addPrefixLines(final PrefixLines prefixLines) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(prefixLines);
     }
 
@@ -125,6 +160,10 @@ public class FilterChain extends DataType
      * @param replaceTokens a <code>ReplaceTokens</code> value
      */
     public void addReplaceTokens(final ReplaceTokens replaceTokens) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(replaceTokens);
     }
 
@@ -135,6 +174,10 @@ public class FilterChain extends DataType
      */
     public void addStripJavaComments(final StripJavaComments
                                                 stripJavaComments) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(stripJavaComments);
     }
 
@@ -145,6 +188,10 @@ public class FilterChain extends DataType
      */
     public void addStripLineBreaks(final StripLineBreaks
                                                 stripLineBreaks) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(stripLineBreaks);
     }
 
@@ -155,6 +202,10 @@ public class FilterChain extends DataType
      */
     public void addStripLineComments(final StripLineComments
                                                 stripLineComments) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(stripLineComments);
     }
 
@@ -164,6 +215,10 @@ public class FilterChain extends DataType
      * @param tabsToSpaces a <code>TabsToSpaces</code> value
      */
     public void addTabsToSpaces(final TabsToSpaces tabsToSpaces) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(tabsToSpaces);
     }
 
@@ -173,6 +228,10 @@ public class FilterChain extends DataType
      * @param tailFilter a <code>TailFilter</code> value
      */
     public void addTailFilter(final TailFilter tailFilter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(tailFilter);
     }
 
@@ -183,6 +242,10 @@ public class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addEscapeUnicode(final EscapeUnicode escapeUnicode) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(escapeUnicode);
     }
 
@@ -193,6 +256,10 @@ public class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addTokenFilter(final TokenFilter tokenFilter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(tokenFilter);
     }
 
@@ -203,6 +270,10 @@ public class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addDeleteCharacters(TokenFilter.DeleteCharacters filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -213,6 +284,10 @@ public class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addContainsRegex(TokenFilter.ContainsRegex filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -222,6 +297,10 @@ public class FilterChain extends DataType
      * @param filter a <code>TokenFilter.ReplaceRegex</code> value
      */
     public void addReplaceRegex(TokenFilter.ReplaceRegex filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -232,6 +311,10 @@ public class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addTrim(TokenFilter.Trim filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -243,6 +326,10 @@ public class FilterChain extends DataType
      */
     public void addReplaceString(
         TokenFilter.ReplaceString filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -254,6 +341,10 @@ public class FilterChain extends DataType
      */
     public void addIgnoreBlank(
         TokenFilter.IgnoreBlank filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
@@ -272,16 +363,6 @@ public class FilterChain extends DataType
         if (!filterReaders.isEmpty()) {
             throw tooManyAttributes();
         }
-        // change this to get the objects from the other reference
-        Object o = r.getReferencedObject(getProject());
-        if (o instanceof FilterChain) {
-            FilterChain fc = (FilterChain) o;
-            filterReaders = fc.getFilterReaders();
-        } else {
-            String msg = r.getRefId() + " doesn\'t refer to a FilterChain";
-            throw new BuildException(msg);
-        }
-
         super.setRefid(r);
     }
 
@@ -293,7 +374,28 @@ public class FilterChain extends DataType
      */
 
     public void add(ChainableReader filter) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
         filterReaders.addElement(filter);
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = filterReaders.iterator(); i.hasNext(); ) {
+                Object o = i.next();
+                if (o instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
+            setChecked(true);
+        }
+    }
 }
