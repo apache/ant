@@ -89,6 +89,9 @@ public abstract class BaseSelector extends DataType implements FileSelector {
         if (getError() != null) {
             throw new BuildException(errmsg);
         }
+        if (!isReference()) {
+            dieOnCircularReference();
+        }
     }
 
     /**

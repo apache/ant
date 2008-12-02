@@ -141,9 +141,11 @@ public class Sort extends BaseResourceCollectionWrapper {
         if (isChecked()) {
             return;
         }
-        if (isReference()) {
-            super.dieOnCircularReference(stk, p);
-        } else {
+        
+        // check nested collection
+        super.dieOnCircularReference(stk, p);
+
+        if (!isReference()) {
             DataType.pushAndInvokeCircularReferenceCheck(comp, stk, p);
             setChecked(true);
         }

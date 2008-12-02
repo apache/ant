@@ -20,10 +20,13 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
@@ -47,6 +50,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return true if there are selectors
      */
     public boolean hasSelectors() {
+        dieOnCircularReference();
         return !(selectorsList.isEmpty());
     }
 
@@ -55,6 +59,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return the number of selectors
      */
     public int selectorCount() {
+        dieOnCircularReference();
         return selectorsList.size();
     }
 
@@ -64,6 +69,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return an array of selectors
      */
     public FileSelector[] getSelectors(Project p) {
+        dieOnCircularReference();
         FileSelector[] result = new FileSelector[selectorsList.size()];
         selectorsList.copyInto(result);
         return result;
@@ -74,6 +80,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return an enumerator for the selectors
      */
     public Enumeration selectorElements() {
+        dieOnCircularReference();
         return selectorsList.elements();
     }
 
@@ -85,6 +92,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return comma separated list of Selectors contained in this one
      */
     public String toString() {
+        dieOnCircularReference();
         StringBuffer buf = new StringBuffer();
         Enumeration e = selectorElements();
         if (e.hasMoreElements()) {
@@ -106,6 +114,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public void appendSelector(FileSelector selector) {
         selectorsList.addElement(selector);
+        setChecked(false);
     }
 
     /**
@@ -126,6 +135,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public void validate() {
         verifySettings();
+        dieOnCircularReference();
         String errmsg = getError();
         if (errmsg != null) {
             throw new BuildException(errmsg);
@@ -318,4 +328,21 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+        throws BuildException {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = selectorsList.iterator(); i.hasNext();) {
+                Object o = i.next();
+                if (o instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
+            setChecked(true);
+        }
+    }
 }

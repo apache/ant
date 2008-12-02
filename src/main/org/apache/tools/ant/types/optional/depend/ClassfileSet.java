@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Stack;
+import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -86,6 +87,7 @@ public class ClassfileSet extends FileSet {
      */
     public void addRootFileset(FileSet rootFileSet) {
         rootFileSets.addElement(rootFileSet);
+        setChecked(false);
     }
 
     /**
@@ -118,6 +120,7 @@ public class ClassfileSet extends FileSet {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
+        dieOnCircularReference(p);
         Vector allRootClasses = (Vector) rootClasses.clone();
         for (Enumeration e = rootFileSets.elements(); e.hasMoreElements();) {
             FileSet additionalRootSet = (FileSet) e.nextElement();
@@ -160,4 +163,21 @@ public class ClassfileSet extends FileSet {
             ? (ClassfileSet) (getRef(getProject())) : this);
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+        if (isChecked()) {
+            return;
+        }
+
+        // takes care of nested selectors
+        super.dieOnCircularReference(stk, p);
+
+        if (!isReference()) {
+            for (Enumeration e = rootFileSets.elements();
+                 e.hasMoreElements();) {
+                FileSet additionalRootSet = (FileSet) e.nextElement();
+                pushAndInvokeCircularReferenceCheck(additionalRootSet, stk, p);
+            }
+            setChecked(true);
+        }
+    }
 }

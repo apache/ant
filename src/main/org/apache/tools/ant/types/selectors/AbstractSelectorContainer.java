@@ -19,8 +19,11 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
@@ -32,7 +35,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  * @since 1.7
  */
 public abstract class AbstractSelectorContainer extends DataType
-        implements SelectorContainer {
+    implements Cloneable, SelectorContainer {
 
     private Vector selectorsList = new Vector();
 
@@ -41,6 +44,10 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return true if there are selectors
      */
     public boolean hasSelectors() {
+        if (isReference()) {
+            return ((AbstractSelectorContainer) getCheckedRef()).hasSelectors();
+        }
+        dieOnCircularReference();
         return !(selectorsList.isEmpty());
     }
 
@@ -49,6 +56,10 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return the number of selectors
      */
     public int selectorCount() {
+        if (isReference()) {
+            return ((AbstractSelectorContainer) getCheckedRef()).selectorCount();
+        }
+        dieOnCircularReference();
         return selectorsList.size();
     }
 
@@ -58,6 +69,11 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return an array of selectors
      */
     public FileSelector[] getSelectors(Project p) {
+        if (isReference()) {
+            return ((AbstractSelectorContainer) getCheckedRef(p))
+                .getSelectors(p);
+        }
+        dieOnCircularReference(p);
         FileSelector[] result = new FileSelector[selectorsList.size()];
         selectorsList.copyInto(result);
         return result;
@@ -68,6 +84,11 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return an enumerator for the selectors
      */
     public Enumeration selectorElements() {
+        if (isReference()) {
+            return ((AbstractSelectorContainer) getCheckedRef())
+                .selectorElements();
+        }
+        dieOnCircularReference();
         return selectorsList.elements();
     }
 
@@ -99,7 +120,11 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param selector the new selector to add
      */
     public void appendSelector(FileSelector selector) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         selectorsList.addElement(selector);
+        setChecked(false);
     }
 
     /**
@@ -119,6 +144,10 @@ public abstract class AbstractSelectorContainer extends DataType
      * </ul>
      */
     public void validate() {
+        if (isReference()) {
+            ((AbstractSelectorContainer) getCheckedRef()).validate();
+        }
+        dieOnCircularReference();
         Enumeration e = selectorElements();
         while (e.hasMoreElements()) {
             Object o = e.nextElement();
@@ -293,4 +322,34 @@ public abstract class AbstractSelectorContainer extends DataType
         appendSelector(selector);
     }
 
+    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            for (Iterator i = selectorsList.iterator(); i.hasNext(); ) {
+                Object o = i.next();
+                if (o instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
+            setChecked(true);
+        }
+    }
+
+    public synchronized Object clone() {
+        if (isReference()) {
+            return ((AbstractSelectorContainer) getCheckedRef()).clone();
+        }
+        try {
+            AbstractSelectorContainer sc =
+                (AbstractSelectorContainer) super.clone();
+            sc.selectorsList = new Vector(selectorsList);
+            return sc;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
+        }
+    }
 }

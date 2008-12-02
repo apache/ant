@@ -34,6 +34,7 @@ public abstract class SizeLimitCollection extends BaseResourceCollectionWrapper 
      * @param i the count as <code>int</count>.
      */
     public synchronized void setCount(int i) {
+        checkAttributesAllowed();
         count = i;
     }
 

@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -24,6 +25,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.Stack;
 
 /**
  *
@@ -48,6 +50,7 @@ public abstract class AbstractClasspathResource extends Resource {
         } else {
             this.classpath.append(classpath);
         }
+        setChecked(false);
     }
 
     /**
@@ -59,6 +62,7 @@ public abstract class AbstractClasspathResource extends Resource {
         if (classpath == null) {
             classpath = new Path(getProject());
         }
+        setChecked(false);
         return classpath.createPath();
     }
 
@@ -77,8 +81,11 @@ public abstract class AbstractClasspathResource extends Resource {
      * @return The classpath
      */
     public Path getClasspath() {
-        return isReference()
-            ? ((JavaResource) getCheckedRef()).getClasspath() : classpath;
+        if (isReference()) {
+            return ((AbstractClasspathResource) getCheckedRef()).getClasspath();
+        }
+        dieOnCircularReference();
+        return classpath;
     }
 
     /**
@@ -86,6 +93,10 @@ public abstract class AbstractClasspathResource extends Resource {
      * @return the loader.
      */
     public Reference getLoader() {
+        if (isReference()) {
+            return ((AbstractClasspathResource) getCheckedRef()).getLoader();
+        }
+        dieOnCircularReference();
         return loader;
     }
 
@@ -125,6 +136,7 @@ public abstract class AbstractClasspathResource extends Resource {
         if (isReference()) {
             return  ((Resource) getCheckedRef()).isExists();
         }
+        dieOnCircularReference();
         InputStream is = null;
         try {
             is = getInputStream();
@@ -145,6 +157,7 @@ public abstract class AbstractClasspathResource extends Resource {
         if (isReference()) {
             return ((Resource) getCheckedRef()).getInputStream();
         }
+        dieOnCircularReference();
         ClassLoader cl = null;
         if (loader != null) {
             cl = (ClassLoader) loader.getReferencedObject();
@@ -170,4 +183,19 @@ public abstract class AbstractClasspathResource extends Resource {
      * @throws IOException if an error occurs.
      */
     protected abstract InputStream openInputStream(ClassLoader cl) throws IOException;
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (classpath != null) {
+                pushAndInvokeCircularReferenceCheck(classpath, stk, p);
+            }
+            setChecked(true);
+        }
+    }
+
 }

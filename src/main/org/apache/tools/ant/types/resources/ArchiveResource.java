@@ -18,8 +18,10 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
+import java.util.Stack;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.Reference;
@@ -241,6 +243,7 @@ public abstract class ArchiveResource extends Resource {
     }
 
     private synchronized void checkEntry() throws BuildException {
+        dieOnCircularReference();
         if (haveEntry) {
             return;
         }
@@ -266,4 +269,18 @@ public abstract class ArchiveResource extends Resource {
      * fetches information from the named entry inside the archive.
      */
     protected abstract void fetchEntry();
+
+    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+        if (isChecked()) {
+            return;
+        }
+        if (isReference()) {
+            super.dieOnCircularReference(stk, p);
+        } else {
+            if (archive != null) {
+                pushAndInvokeCircularReferenceCheck(archive, stk, p);
+            }
+            setChecked(true);
+        }
+    }
 }

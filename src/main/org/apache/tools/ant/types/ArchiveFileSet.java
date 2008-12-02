@@ -183,6 +183,10 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the archive in case the archive is a file, null otherwise.
      */
     public File getSrc() {
+        if (isReference()) {
+            return ((ArchiveFileSet) getCheckedRef()).getSrc();
+        }
+        dieOnCircularReference();
         if (src != null) {
             FileProvider fp = (FileProvider) src.as(FileProvider.class);
             if (fp != null) {
@@ -215,6 +219,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(p)).getPrefix(p);
         }
+        dieOnCircularReference(p);
         return prefix;
     }
 
@@ -241,6 +246,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(p)).getFullpath(p);
         }
+        dieOnCircularReference(p);
         return fullpath;
     }
 
@@ -258,10 +264,10 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return a directory scanner
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
-        dieOnCircularReference();
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
+        dieOnCircularReference();
         if (src == null) {
             return super.getDirectoryScanner(p);
         }
@@ -323,6 +329,10 @@ public abstract class ArchiveFileSet extends FileSet {
      * @since Ant 1.7
      */
     public boolean isFilesystemOnly() {
+        if (isReference()) {
+            return ((ArchiveFileSet) getCheckedRef()).isFilesystemOnly();
+        }
+        dieOnCircularReference();
         return src == null;
     }
 
@@ -361,6 +371,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(p)).getFileMode(p);
         }
+        dieOnCircularReference();
         return fileMode;
     }
 
@@ -372,6 +383,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(getProject())).hasFileModeBeenSet();
         }
+        dieOnCircularReference();
         return fileModeHasBeenSet;
     }
 
@@ -409,6 +421,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(p)).getDirMode(p);
         }
+        dieOnCircularReference();
         return dirMode;
     }
 
@@ -421,6 +434,7 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isReference()) {
             return ((ArchiveFileSet) getRef(getProject())).hasDirModeBeenSet();
         }
+        dieOnCircularReference();
         return dirModeHasBeenSet;
     }
 
@@ -521,9 +535,11 @@ public abstract class ArchiveFileSet extends FileSet {
         if (isChecked()) {
             return;
         }
-        if (isReference()) {
-            super.dieOnCircularReference(stk, p);
-        } else {
+
+        // takes care of nested selectors
+        super.dieOnCircularReference(stk, p);
+
+        if (!isReference()) {
             if (src != null) {
                 pushAndInvokeCircularReferenceCheck(src, stk, p);
             }

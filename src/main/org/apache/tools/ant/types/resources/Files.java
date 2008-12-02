@@ -36,14 +36,13 @@ import org.apache.tools.ant.types.selectors.AbstractSelectorContainer;
  * @since Ant 1.7
  */
 public class Files extends AbstractSelectorContainer
-    implements Cloneable, ResourceCollection {
+    implements ResourceCollection {
 
     private static final Iterator EMPTY_ITERATOR
         = Collections.EMPTY_SET.iterator();
 
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
-    private Vector selectors = new Vector();
 
     private boolean useDefaultExcludes = true;
     private boolean caseSensitive = true;
@@ -67,7 +66,6 @@ public class Files extends AbstractSelectorContainer
     protected Files(Files f) {
         this.defaultPatterns = f.defaultPatterns;
         this.additionalPatterns = f.additionalPatterns;
-        this.selectors = f.selectors;
         this.useDefaultExcludes = f.useDefaultExcludes;
         this.caseSensitive = f.caseSensitive;
         this.followSymlinks = f.followSymlinks;
@@ -90,7 +88,7 @@ public class Files extends AbstractSelectorContainer
         if (!additionalPatterns.isEmpty()) {
             throw noChildrenAllowed();
         }
-        if (!selectors.isEmpty()) {
+        if (hasSelectors()) {
             throw noChildrenAllowed();
         }
         super.setRefid(r);
@@ -107,6 +105,7 @@ public class Files extends AbstractSelectorContainer
         PatternSet patterns = new PatternSet();
         additionalPatterns.addElement(patterns);
         ds = null;
+        setChecked(false);
         return patterns;
     }
 
@@ -353,6 +352,7 @@ public class Files extends AbstractSelectorContainer
         if (isReference()) {
             return getRef().hasPatterns();
         }
+        dieOnCircularReference();
         if (hasPatterns(defaultPatterns)) {
             return true;
         }
@@ -408,19 +408,14 @@ public class Files extends AbstractSelectorContainer
         if (isReference()) {
             return getRef().clone();
         }
-        try {
-            Files f = (Files) super.clone();
-            f.defaultPatterns = (PatternSet) defaultPatterns.clone();
-            f.additionalPatterns = new Vector(additionalPatterns.size());
-            for (Iterator iter = additionalPatterns.iterator(); iter.hasNext();) {
-                PatternSet ps = (PatternSet) iter.next();
-                f.additionalPatterns.add(ps.clone());
-            }
-            f.selectors = new Vector(selectors);
-            return f;
-        } catch (CloneNotSupportedException e) {
-            throw new BuildException(e);
+        Files f = (Files) super.clone();
+        f.defaultPatterns = (PatternSet) defaultPatterns.clone();
+        f.additionalPatterns = new Vector(additionalPatterns.size());
+        for (Iterator iter = additionalPatterns.iterator(); iter.hasNext();) {
+            PatternSet ps = (PatternSet) iter.next();
+            f.additionalPatterns.add(ps.clone());
         }
+        return f;
     }
 
     /**
@@ -453,6 +448,7 @@ public class Files extends AbstractSelectorContainer
         if (isReference()) {
             return getRef().mergePatterns(p);
         }
+        dieOnCircularReference();
         PatternSet ps = new PatternSet();
         ps.append(defaultPatterns, p);
         final int count = additionalPatterns.size();
@@ -482,6 +478,7 @@ public class Files extends AbstractSelectorContainer
     }
 
     private synchronized void ensureDirectoryScannerSetup() {
+        dieOnCircularReference();
         if (ds == null) {
             ds = new DirectoryScanner();
             PatternSet ps = mergePatterns(getProject());

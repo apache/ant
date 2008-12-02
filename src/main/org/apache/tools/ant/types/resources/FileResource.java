@@ -104,7 +104,11 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return the File.
      */
     public File getFile() {
-        return isReference() ? ((FileResource) getCheckedRef()).getFile() : file;
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).getFile();
+        }
+        dieOnCircularReference();
+        return file;
     }
 
     /**
@@ -121,8 +125,11 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return the basedir as File.
      */
     public File getBaseDir() {
-        return isReference()
-            ? ((FileResource) getCheckedRef()).getBaseDir() : baseDir;
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).getBaseDir();
+        }
+        dieOnCircularReference();
+        return baseDir;
     }
 
     /**
@@ -322,8 +329,11 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return whether this Resource is a FileResource.
      */
     public boolean isFilesystemOnly() {
-        return !isReference()
-            || ((FileResource) getCheckedRef()).isFilesystemOnly();
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).isFilesystemOnly();
+        }
+        dieOnCircularReference();
+        return true;
     }
 
     /**
@@ -347,6 +357,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
         if (getFile() == null) {
             throw new BuildException("file attribute is null!");
         }
+        dieOnCircularReference();
         return getFile();
     }
 

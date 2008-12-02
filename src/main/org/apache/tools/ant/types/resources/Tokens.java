@@ -117,9 +117,11 @@ public class Tokens extends BaseResourceCollectionWrapper {
         if (isChecked()) {
             return;
         }
-        if (isReference()) {
-            super.dieOnCircularReference(stk, p);
-        } else {
+
+        // check nested collection
+        super.dieOnCircularReference(stk, p);
+
+        if (!isReference()) {
             if (tokenizer instanceof DataType) {
                 pushAndInvokeCircularReferenceCheck((DataType) tokenizer, stk,
                                                     p);

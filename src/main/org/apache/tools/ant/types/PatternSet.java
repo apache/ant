@@ -357,6 +357,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             throw new BuildException("Cannot append to a reference");
         }
+        dieOnCircularReference(p);
         String[] incl = other.getIncludePatterns(p);
         if (incl != null) {
             for (int i = 0; i < incl.length; i++) {
@@ -380,6 +381,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             return getRef(p).getIncludePatterns(p);
         }
+        dieOnCircularReference(p);
         readFiles(p);
         return makeArray(includeList, p);
     }
@@ -393,6 +395,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             return getRef(p).getExcludePatterns(p);
         }
+        dieOnCircularReference(p);
         readFiles(p);
         return makeArray(excludeList, p);
     }
@@ -407,6 +410,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             return getRef(p).hasPatterns(p);
         }
+        dieOnCircularReference(p);
         return includesFileList.size() > 0 || excludesFileList.size() > 0
                 || includeList.size() > 0 || excludeList.size() > 0;
     }

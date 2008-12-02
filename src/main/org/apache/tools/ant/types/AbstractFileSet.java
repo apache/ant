@@ -899,6 +899,10 @@ public abstract class AbstractFileSet extends DataType
                     pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
                 }
             }
+            for (Iterator i = additionalPatterns.iterator(); i.hasNext(); ) {
+                PatternSet ps = (PatternSet) i.next();
+                pushAndInvokeCircularReferenceCheck(ps, stk, p);
+            }
             setChecked(true);
         }
     }

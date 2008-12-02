@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
 
 public class JavaConstantResource extends AbstractClasspathResource {
     /**
-     * open the inpout stream from a specific classloader
+     * open the input stream from a specific classloader
      *
      * @param cl the classloader to use. Will be null if the system classloader is used
      * @return an open input stream for the resource
