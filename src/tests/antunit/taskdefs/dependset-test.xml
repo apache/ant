@@ -16,7 +16,15 @@
   limitations under the License.
 -->
 
-<project name="dependset-test" xmlns:au="antlib:org.apache.ant.antunit">
+<project name="dependset-test" xmlns:au="antlib:org.apache.ant.antunit"
+         default="antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+  </target>
 
   <target name="test1">
     <au:expectfailure expectedMessage="At least one set of source resources must be specified">
@@ -40,101 +48,80 @@
     </au:expectfailure>
   </target>
 
-  <target name="test4">
-    <touch file="test4.tmp" />
+  <target name="test4" depends="setUp">
+    <touch file="${input}/test4.tmp" />
     <dependset>
-      <srcfilelist dir="." files="test4.tmp" />
-      <targetfileset id="targetfs" dir="." includes="i-do-not-exist" />
+      <srcfilelist dir="${input}" files="test4.tmp" />
+      <targetfileset id="targetfs" dir="${output}" includes="i-do-not-exist" />
     </dependset>
   </target>
 
-  <target name="test5">
-    <touch file="older.tmp" />
+  <target name="test5" depends="setUp">
+    <touch file="${output}/older.tmp" />
     <sleep seconds="3" />
-    <touch file="newer.tmp" />
+    <touch file="${input}/newer.tmp" />
     <dependset>
-      <srcfilelist dir="." files="newer.tmp" />
-      <targetfilelist dir="." files="older.tmp" />
+      <srcfilelist dir="${input}" files="newer.tmp" />
+      <targetfilelist dir="${output}" files="older.tmp" />
     </dependset>
-    <au:assertFalse>
-      <available file="older.tmp" />
-    </au:assertFalse>
+    <au:assertFileDoesntExist file="${output}/older.tmp"/>
   </target>
 
-  <target name="test6">
-    <touch file="sourceset_1.tmp" />
-  	<touch file="targetset_1.tmp" />
+  <target name="test6" depends="setUp">
+    <touch file="${input}/sourceset_1.tmp" />
+    <touch file="${output}/targetset_1.tmp" />
     <sleep seconds="3" />
-  	<touch file="sourceset_2.tmp" />
-  	<touch file="targetset_2.tmp" />
-  	<sleep seconds="2" />	
+    <touch file="${input}/sourceset_2.tmp" />
+    <touch file="${output}/targetset_2.tmp" />
+    <sleep seconds="2" />	
     <dependset>
       <sources>
-        <filelist dir="." files="sourceset_1.tmp,sourceset_2.tmp" />
+        <filelist dir="${input}" files="sourceset_1.tmp,sourceset_2.tmp" />
       </sources>
       <targets>
-        <filelist dir="." files="targetset_1.tmp,targetset_2.tmp" />
+        <filelist dir="${output}/" files="targetset_1.tmp,targetset_2.tmp" />
       </targets>
     </dependset>
-    <au:assertFalse>
-      <available file="targetset_1.tmp" />
-    </au:assertFalse>
-    <au:assertFalse>
-      <available file="targetset_2.tmp" />
-    </au:assertFalse>
+    <au:assertFileDoesntExist file="${output}/targetset_1.tmp" />
+    <au:assertFileDoesntExist file="${output}/targetset_2.tmp" />
   </target>
 
-  <target name="test7">
-    <touch file="older.tmp" />
+  <target name="test7" depends="setUp">
+    <touch file="${output}/older.tmp" />
     <dependset>
       <sources>
         <propertyresource name="thereisnosuchproperty" />
       </sources>
       <targets>
-        <filelist dir="." files="older.tmp" />
+        <filelist dir="${output}" files="older.tmp" />
       </targets>
     </dependset>
-    <au:assertFalse>
-      <available file="older.tmp" />
-    </au:assertFalse>
+    <au:assertFileDoesntExist file="${output}/older.tmp" />
   </target>
 
-  <target name="test8">
-    <touch file="older.tmp" />
+  <target name="test8" depends="setUp">
+    <touch file="${output}/older.tmp" />
     <property name="foo" value="bar" />
     <dependset>
       <sources>
         <propertyresource name="foo" />
       </sources>
       <targets>
-        <filelist dir="." files="older.tmp" />
+        <filelist dir="${output}" files="older.tmp" />
       </targets>
     </dependset>
-    <au:assertTrue>
-      <available file="older.tmp" />
-    </au:assertTrue>
+    <au:assertFileExists file="${output}/older.tmp" />
   </target>
 
-  <target name="test9">
+  <target name="test9" depends="setUp">
     <au:assertFalse>
-      <available file="test9dir" type="dir" />
+      <available file="${output}/test9dir" type="dir" />
     </au:assertFalse>
-    <touch file="test9.tmp" />
+    <touch file="${input}/test9.tmp" />
     <dependset>
       <srcfileset dir="." includes="test9.tmp" />
-      <targetfileset dir="test9dir" />
+      <targetfileset dir="${output}/test9dir" />
     </dependset>
   </target>
 
-  <target name="tearDown"> 
-    <delete file="test4.tmp" />
-    <delete file="test9.tmp" />
-    <delete file="older.tmp" />
-    <delete file="newer.tmp" />
-  	<delete file="sourceset_1.tmp" />
-   	<delete file="sourceset_2.tmp" />
-  	<delete file="targetset_1.tmp" />
-  	<delete file="targetset_2.tmp" />
-  	
-  </target>
 </project>
