@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -119,6 +120,8 @@ public class DependSet extends MatchingTask {
     private Union sources = null;
     private Path targets = null;
 
+    private boolean verbose;
+
     /**
      * Create a nested sources element.
      * @return a Union instance.
@@ -170,6 +173,19 @@ public class DependSet extends MatchingTask {
     }
 
     /**
+     * In verbose mode missing targets and sources as well as the
+     * modification times of the newest source and latest target will
+     * be logged as info.
+     *
+     * <p>All deleted files will be logged as well.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setVerbose(boolean b) {
+        verbose = b;
+    }
+
+    /**
      * Execute the task.
      * @throws BuildException if errors occur.
      */
@@ -185,6 +201,12 @@ public class DependSet extends MatchingTask {
         //no sources = nothing to compare; no targets = nothing to delete:
         if (sources.size() > 0 && targets.size() > 0 && !uptodate(sources, targets)) {
            log("Deleting all target files.", Project.MSG_VERBOSE);
+           if (verbose) {
+               String[] t = targets.list();
+               for (int i = 0; i < t.length; i++) {
+                   log("Deleting " + t[i]);
+               }
+           }
            Delete delete = new Delete();
            delete.bindToOwner(this);
            delete.add(targets);
@@ -202,23 +224,27 @@ public class DependSet extends MatchingTask {
         datesel.setGranularity(0);
         logFuture(targets, datesel);
 
-        int neTargets = new NonExistent(targets).size();
+        NonExistent missingTargets = new NonExistent(targets);
+        int neTargets = missingTargets.size();
         if (neTargets > 0) {
             log(neTargets + " nonexistent targets", Project.MSG_VERBOSE);
+            logMissing(missingTargets, "target");
             return false;
         }
         Resource oldestTarget = getOldest(targets);
-        log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
+        logWithModificationTime(oldestTarget, "oldest target file");
 
         logFuture(sources, datesel);
 
-        int neSources = new NonExistent(sources).size();
+        NonExistent missingSources = new NonExistent(sources);
+        int neSources = missingSources.size();
         if (neSources > 0) {
             log(neSources + " nonexistent sources", Project.MSG_VERBOSE);
+            logMissing(missingSources, "source");
             return false;
         }
         Resource newestSource = (Resource) getNewest(sources);
-        log(newestSource.toLongString() + " is newest source", Project.MSG_VERBOSE);
+        logWithModificationTime(newestSource, "newest source");
         return oldestTarget.getLastModified() >= newestSource.getLastModified();
     }
 
@@ -255,4 +281,18 @@ public class DependSet extends MatchingTask {
         return getXest(rc, DATE);
     }
 
+    private void logWithModificationTime(Resource r, String what) {
+        log(r.toLongString() + " is " + what + ", modified at "
+            + new Date(r.getLastModified()),
+            verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
+    }
+
+    private void logMissing(ResourceCollection missing, String what) {
+        if (verbose) {
+            for (Iterator i = missing.iterator(); i.hasNext(); ) {
+                Resource r = (Resource) i.next();
+                log("Expected " + what + " " + r.toLongString() + " is missing.");
+            }
+        }
+    }
 }

@@ -586,6 +586,10 @@ Other changes:
    as nested element of <zip> and friends.
    Bugzilla Report 46257.
 
+ * <dependset> has a new verbose attribute that makes the task list
+   all deleted targets and give a hint as to why it deleted them.
+   Bugzilla Report 13681.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
