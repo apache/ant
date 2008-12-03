@@ -125,6 +125,9 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     /** whether to suppress warnings */
     private boolean suppressWarnings = false;
 
+    /** optional trace configuration. */
+    private XSLTProcess.TraceConfiguration traceConfiguration = null;
+
     /**
      * Constructor for TraXLiaison.
      * @throws Exception never
@@ -323,6 +326,37 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         for (int i = 0; i < outputProperties.size(); i++) {
             final String[] pair = (String[]) outputProperties.elementAt(i);
             transformer.setOutputProperty(pair[0], pair[1]);
+        }
+
+        if (traceConfiguration != null) {
+            if ("org.apache.xalan.transformer.TransformerImpl"
+                .equals(transformer.getClass().getName())) {
+                try {
+                    Class traceSupport =
+                        Class.forName("org.apache.tools.ant.taskdefs.optional."
+                                      + "Xalan2TraceSupport", true,
+                                      Thread.currentThread()
+                                      .getContextClassLoader());
+                    XSLTTraceSupport ts =
+                        (XSLTTraceSupport) traceSupport.newInstance();
+                    ts.configureTrace(transformer, traceConfiguration);
+                } catch (Exception e) {
+                    String msg = "Failed to enable tracing because of " + e;
+                    if (project != null) {
+                        project.log(msg, Project.MSG_WARN);
+                    } else {
+                        System.err.println(msg);
+                    }
+                }
+            } else {
+                String msg = "Not enabling trace support for transformer"
+                    + " implementation" + transformer.getClass().getName();
+                if (project != null) {
+                    project.log(msg, Project.MSG_WARN);
+                } else {
+                    System.err.println(msg);
+                }
+            }
         }
     }
 
@@ -583,5 +617,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         }
 
         suppressWarnings = xsltTask.getSuppressWarnings();
+
+        traceConfiguration = xsltTask.getTraceConfiguration();
     }
 }

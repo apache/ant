@@ -210,6 +210,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         new CommandlineJava.SysProperties();
 
     /**
+     * Trace configuration for Xalan2.
+     *
+     * @since Ant 1.8.0
+     */
+    private TraceConfiguration traceConfiguration;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -629,6 +636,33 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void addSyspropertyset(PropertySet sysp) {
         sysProperties.addSyspropertyset(sysp);
+    }
+
+    /**
+     * Enables Xalan2 traces and uses the given configuration.
+     *
+     * <p>Note that this element doesn't have any effect with a
+     * processor other than trax or if the Transformer is not Xalan2's
+     * transformer implementation.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public TraceConfiguration createTrace() {
+        if (traceConfiguration != null) {
+            throw new BuildException("can't have more than one trace"
+                                     + " configuration");
+        }
+        traceConfiguration = new TraceConfiguration();
+        return traceConfiguration;
+    }
+
+    /**
+     * Configuration for Xalan2 traces.
+     *
+     * @since Ant 1.8.0
+     */
+    public TraceConfiguration getTraceConfiguration() {
+        return traceConfiguration;
     }
 
     /**
@@ -1355,6 +1389,102 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 xmlFile = xmlFile.substring(0, dotPos);
             }
             return new String[] {xmlFile + targetExtension};
+        }
+    }
+
+    /**
+     * Configuration for Xalan2 traces.
+     *
+     * @since Ant 1.8.0
+     */
+    public final class TraceConfiguration {
+        private boolean elements, extension, generation, selection, templates;
+
+        /**
+         * Set to true if the listener is to print events that occur
+         * as each node is 'executed' in the stylesheet.
+         */
+        public void setElements(boolean b) {
+            elements = b;
+        }
+
+        /**
+         * True if the listener is to print events that occur as each
+         * node is 'executed' in the stylesheet.
+         */
+        public boolean getElements() {
+            return elements;
+        }
+
+        /**
+         * Set to true if the listener is to print information after
+         * each extension event.
+         */
+        public void setExtension(boolean b) {
+            extension = b;
+        }
+
+        /**
+         * True if the listener is to print information after each
+         * extension event.
+         */
+        public boolean getExtension() {
+            return extension;
+        }
+
+        /**
+         * Set to true if the listener is to print information after
+         * each result-tree generation event.
+         */
+        public void setGeneration(boolean b) {
+            generation = b;
+        }
+
+        /**
+         * True if the listener is to print information after each
+         * result-tree generation event.
+         */
+        public boolean getGeneration() {
+            return generation;
+        }
+
+        /**
+         * Set to true if the listener is to print information after
+         * each selection event.
+         */
+        public void setSelection(boolean b) {
+            selection = b;
+        }
+
+        /**
+         * True if the listener is to print information after each
+         * selection event.
+         */
+        public boolean getSelection() {
+            return selection;
+        }
+
+        /**
+         * Set to true if the listener is to print an event whenever a
+         * template is invoked.
+         */
+        public void setTemplates(boolean b) {
+            templates = b;
+        }
+
+        /**
+         * True if the listener is to print an event whenever a
+         * template is invoked.
+         */
+        public boolean getTemplates() {
+            return templates;
+        }
+
+        /**
+         * The stream to write traces to.
+         */
+        public java.io.OutputStream getOutputStream() {
+            return new LogOutputStream(XSLTProcess.this);
         }
     }
 
