@@ -291,7 +291,8 @@ public class DependSet extends MatchingTask {
         if (verbose) {
             for (Iterator i = missing.iterator(); i.hasNext(); ) {
                 Resource r = (Resource) i.next();
-                log("Expected " + what + " " + r.toLongString() + " is missing.");
+                log("Expected " + what + " " + r.toLongString()
+                    + " is missing.");
             }
         }
     }
