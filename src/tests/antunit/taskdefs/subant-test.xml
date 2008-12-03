@@ -60,4 +60,52 @@
          useNativeBaseDir="true"/>
   </target>
 
+  <target name="testLastPropertyWins">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="b" value="1"/>
+      <property name="b" value="2"/>
+      <property name="expected" value="2"/>
+    </subant>
+  </target>
+
+  <target name="makePropertiesFile">
+    <ant antfile="antcall-test.xml" target="makePropertiesFile"/>
+  </target>
+
+  <target name="testPropertiesLoadedFromFile" depends="makePropertiesFile">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="2"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileDoesntSeeExternalProperty" depends="makePropertiesFile">
+    <property name="a" value="x"/>
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="2"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileSeesExternalPropertyWhenInheritAll"
+          depends="makePropertiesFile">
+    <property name="a" value="x"/>
+    <subant target="checkB" inheritall="true">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="x"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileSeesInternalProperty" depends="makePropertiesFile">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="a" value="y"/>
+      <property name="expected" value="y"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
 </project>
