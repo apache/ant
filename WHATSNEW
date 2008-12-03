@@ -300,6 +300,11 @@ Fixed bugs:
    using TraX) before falling back to Ant's own classpath.
    Bugzilla Report 46172.
 
+ * <dependset> complained about files being modified in the future if
+   they had been just very recently (within Ant's assumed granularity
+   of the file system).
+   Bugzilla Report 43665.
+
 Other changes:
 --------------
 

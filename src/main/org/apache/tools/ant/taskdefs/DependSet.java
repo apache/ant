@@ -197,6 +197,9 @@ public class DependSet extends MatchingTask {
             = new org.apache.tools.ant.types.resources.selectors.Date();
         datesel.setMillis(System.currentTimeMillis());
         datesel.setWhen(TimeComparison.AFTER);
+        // don't whine because a file has changed during the last
+        // second (or whathever our current granularity may be)
+        datesel.setGranularity(0);
         logFuture(targets, datesel);
 
         int neTargets = new NonExistent(targets).size();
