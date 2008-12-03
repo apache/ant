@@ -56,3 +56,6 @@ O48fc5e01|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
 O48fc5e03|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
 O48fc5e05|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
 O48fc5e06|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O4936994c|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+M493699c6|stefan|/tmp/testoutput/*0|antmodule1|1.5|foo.txt
+O49369a09|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
