@@ -26,13 +26,13 @@
     <mkdir dir="${output}"/>
   </target>
 
-  <target name="test1">
+  <target name="testNoSourcesOrTargets">
     <au:expectfailure expectedMessage="At least one set of source resources must be specified">
       <dependset />
     </au:expectfailure>
   </target>
 
-  <target name="test2">
+  <target name="testNoTargets">
     <au:expectfailure expectedMessage="At least one set of target files must be specified">
       <dependset>
         <srcfilelist dir="." files="test2.tmp" />
@@ -40,7 +40,7 @@
     </au:expectfailure>
   </target>
 
-  <target name="test3">
+  <target name="testNoSources">
     <au:expectfailure expectedMessage="At least one set of source resources must be specified">
       <dependset>
         <targetfileset dir="." includes="test3.tmp" />
@@ -48,7 +48,7 @@
     </au:expectfailure>
   </target>
 
-  <target name="test4" depends="setUp">
+  <target name="testMissingTargets" depends="setUp">
     <touch file="${input}/test4.tmp" />
     <dependset>
       <srcfilelist dir="${input}" files="test4.tmp" />
@@ -56,7 +56,7 @@
     </dependset>
   </target>
 
-  <target name="test5" depends="setUp">
+  <target name="testMoreRecentSourceFile" depends="setUp">
     <touch file="${output}/older.tmp" />
     <sleep seconds="3" />
     <touch file="${input}/newer.tmp" />
@@ -67,7 +67,7 @@
     <au:assertFileDoesntExist file="${output}/older.tmp"/>
   </target>
 
-  <target name="test6" depends="setUp">
+  <target name="testMultipleFiles" depends="setUp">
     <touch file="${input}/sourceset_1.tmp" />
     <touch file="${output}/targetset_1.tmp" />
     <sleep seconds="3" />
@@ -86,7 +86,7 @@
     <au:assertFileDoesntExist file="${output}/targetset_2.tmp" />
   </target>
 
-  <target name="test7" depends="setUp">
+  <target name="testMissingSourceResource" depends="setUp">
     <touch file="${output}/older.tmp" />
     <dependset>
       <sources>
@@ -99,7 +99,7 @@
     <au:assertFileDoesntExist file="${output}/older.tmp" />
   </target>
 
-  <target name="test8" depends="setUp">
+  <target name="testExistingSourceResource" depends="setUp">
     <touch file="${output}/older.tmp" />
     <property name="foo" value="bar" />
     <dependset>
@@ -113,7 +113,7 @@
     <au:assertFileExists file="${output}/older.tmp" />
   </target>
 
-  <target name="test9" depends="setUp">
+  <target name="testMissingTargetDirectory" depends="setUp">
     <au:assertFalse>
       <available file="${output}/test9dir" type="dir" />
     </au:assertFalse>
