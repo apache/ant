@@ -28,9 +28,15 @@
     <echo file="${src1}/a/B.java"><![CDATA[
 package a;
 public class B {
+    public static String hello() {
+        return "Hello";
+    }
 }
 ]]></echo>
     <mkdir dir="${src2}/b"/>
+  </target>
+
+  <target name="testBug45916" depends="setUp">
     <echo file="${src2}/b/Main.java"><![CDATA[
 package b;
 
@@ -41,16 +47,13 @@ public class Main {
     public static void main(String[] args) {
         new Runnable() {
             public void run() {
-                System.err.println(B.class.getName());
+                System.err.println(B.hello());
             }
         }.run();
     }
 
 }
 ]]></echo>
-  </target>
-
-  <target name="testBug45916" depends="setUp">
     <javac srcdir="${src1}:${src2}"
            destdir="${output}"/>
 
@@ -68,4 +71,62 @@ public class Main {
     <au:assertFileExists file="${output}/b/Main$1.class"/>
   </target>
 
+  <target name="classpathTestSetUp" depends="setUp">
+    <echo file="${src2}/b/Main.java"><![CDATA[
+package b;
+
+import a.B;
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.err.println(B.hello());
+    }
+
+}
+]]></echo>
+
+    <property name="dest1" location="${output}/dest1"/>
+    <property name="dest2" location="${output}/dest2"/>
+
+    <mkdir dir="${dest1}"/>
+    <mkdir dir="${dest2}"/>
+
+    <javac srcdir="${src1}" destdir="${dest1}"/>
+    <javac srcdir="${src2}" destdir="${dest2}" classpath="${dest1}"/>
+    <sleep seconds="3" />
+    <touch file="${src1}/a/B.java" />
+    <javac srcdir="${src1}" destdir="${dest1}"/>
+    <au:assertFileExists file="${dest2}/b/Main.class"/>
+  </target>
+
+  <target name="testClasspathJar" depends="classpathTestSetUp">
+
+    <jar destfile="${output}/dest1.jar" basedir="${dest1}"/>
+    <delete dir="${dest1}"/>
+    <path id="dest1-id">
+      <pathelement location="${output}/dest1.jar"/>
+    </path>
+
+    <depend srcDir="${src2}"
+            destDir="${dest2}" cache="${output}"
+            classpathref="dest1-id"
+            />
+    <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
+
+  </target>
+
+  <target name="testClasspathDir" depends="classpathTestSetUp">
+
+    <path id="dest1-id">
+      <pathelement location="${dest1}"/>
+    </path>
+
+    <depend srcDir="${src2}"
+            destDir="${dest2}" cache="${output}"
+            classpathref="dest1-id"
+            />
+    <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
+
+  </target>
 </project>
