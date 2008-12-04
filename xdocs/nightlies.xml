@@ -36,7 +36,7 @@ href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
 
 <section name="Continuous Builds">
 
-<p>JetBrains is offering Ant the service of a Continuous Build on there TeamCity
+<p>JetBrains is offering Ant the service of a Continuous Build on their TeamCity
 system. You can directly access the builds of Ant and Ivy:</p>
 
 <teamcity viewlog="http://teamcity.jetbrains.com/viewLog.html">
