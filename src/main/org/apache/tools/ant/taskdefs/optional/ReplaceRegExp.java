@@ -30,14 +30,18 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Vector;
+import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RegularExpression;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.Substitution;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
 
@@ -117,7 +121,7 @@ public class ReplaceRegExp extends Task {
     private File file;
     private String flags;
     private boolean byline;
-    private Vector filesets; // Keep jdk 1.1 compliant so others can use this
+    private Union resources;
     private RegularExpression regex;
     private Substitution subs;
 
@@ -132,7 +136,6 @@ public class ReplaceRegExp extends Task {
     public ReplaceRegExp() {
         super();
         this.file = null;
-        this.filesets = new Vector();
         this.flags = "";
         this.byline = false;
 
@@ -251,9 +254,23 @@ public class ReplaceRegExp extends Task {
      * @param set the fileset element
      */
     public void addFileset(FileSet set) {
-        filesets.addElement(set);
+        addConfigured(set);
     }
 
+    /**
+     * Support arbitrary file system based resource collections.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addConfigured(ResourceCollection rc) {
+        if (!rc.isFilesystemOnly()) {
+            throw new BuildException("only filesystem resources are supported");
+        }
+        if (resources == null) {
+            resources = new Union();
+        }
+        resources.add(rc);
+    }
 
     /**
      * A regular expression.
@@ -475,9 +492,10 @@ public class ReplaceRegExp extends Task {
             throw new BuildException("Nothing to replace expression with.");
         }
 
-        if (file != null && filesets.size() > 0) {
+        if (file != null && resources != null) {
             throw new BuildException("You cannot supply the 'file' attribute "
-                                     + "and filesets at the same time.");
+                                     + "and resource collections at the same "
+                                     + "time.");
         }
 
         int options = 0;
@@ -511,16 +529,11 @@ public class ReplaceRegExp extends Task {
                 + file.getAbsolutePath() + "'", Project.MSG_ERR);
         }
 
-        int sz = filesets.size();
-
-        for (int i = 0; i < sz; i++) {
-            FileSet fs = (FileSet) (filesets.elementAt(i));
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-
-            String[] files = ds.getIncludedFiles();
-
-            for (int j = 0; j < files.length; j++) {
-                File f = new File(fs.getDir(getProject()), files[j]);
+        if (resources != null) {
+            for (Iterator i = resources.iterator(); i.hasNext(); ) {
+                FileProvider fp =
+                    (FileProvider) ((Resource) i.next()).as(FileProvider.class);
+                File f = fp.getFile();
 
                 if (f.exists()) {
                     try {

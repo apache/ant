@@ -594,6 +594,10 @@ Other changes:
    all deleted targets and give a hint as to why it deleted them.
    Bugzilla Report 13681.
 
+ * <replaceregexp> now supports arbitrary filesystem based resource
+   collections.
+   Bugzilla Report 46341.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
