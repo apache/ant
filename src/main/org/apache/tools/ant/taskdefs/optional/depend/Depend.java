@@ -269,11 +269,13 @@ public class Depend extends MatchingTask {
             }
         }
 
-        if (checkPath.length() == 0) {
-            return null;
+        Path p = null;
+        if (checkPath.length() > 0) {
+            p = new Path(getProject(), checkPath);
         }
 
-        return new Path(getProject(), checkPath);
+        log("Classpath without dest dir is " + p, Project.MSG_DEBUG);
+        return p;
     }
 
     /**
@@ -341,7 +343,10 @@ public class Depend extends MatchingTask {
                 dependencyList = new Vector();
                 Enumeration depEnum = analyzer.getClassDependencies();
                 while (depEnum.hasMoreElements()) {
-                    dependencyList.addElement(depEnum.nextElement());
+                    Object o = depEnum.nextElement();
+                    dependencyList.addElement(o);
+                    log("Class " + info.className + " depends on " + o,
+                        Project.MSG_DEBUG);
                 }
                 cacheDirty = true;
                 dependencyMap.put(info.className, dependencyList);
@@ -361,6 +366,8 @@ public class Depend extends MatchingTask {
                 }
 
                 affectedClasses.put(info.className, info);
+                log(dependentClass + " affects " + info.className,
+                    Project.MSG_DEBUG);
             }
         }
 
@@ -377,12 +384,15 @@ public class Depend extends MatchingTask {
                 Object nullFileMarker = new Object();
                 for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
                     String className = (String) e.nextElement();
+                    log("Determining classpath dependencies for " + className,
+                        Project.MSG_DEBUG);
                     Vector dependencyList = (Vector) dependencyMap.get(className);
                     Hashtable dependencies = new Hashtable();
                     classpathDependencies.put(className, dependencies);
                     Enumeration e2 = dependencyList.elements();
                     while (e2.hasMoreElements()) {
                         String dependency = (String) e2.nextElement();
+                        log("Looking for " + dependency, Project.MSG_DEBUG);
                         Object classpathFileObject
                             = classpathFileCache.get(dependency);
                         if (classpathFileObject == null) {
@@ -392,6 +402,7 @@ public class Depend extends MatchingTask {
                                 && !dependency.startsWith("javax.")) {
                                 URL classURL
                                     = loader.getResource(dependency.replace('.', '/') + ".class");
+                                log("URL is " + classURL, Project.MSG_DEBUG);
                                 if (classURL != null) {
                                     if (classURL.getProtocol().equals("jar")) {
                                         String jarFilePath = classURL.getFile();
@@ -414,12 +425,17 @@ public class Depend extends MatchingTask {
                                         + " depends on " + classpathFileObject
                                         + " due to " + dependency, Project.MSG_DEBUG);
                                 }
+                            } else {
+                                log("Ignoring base classlib dependency "
+                                    + dependency, Project.MSG_DEBUG);
                             }
                             classpathFileCache.put(dependency, classpathFileObject);
                         }
                         if (classpathFileObject != nullFileMarker) {
                             // we need to add this jar to the list for this class.
                             File jarFile = (File) classpathFileObject;
+                            log("Adding a classpath dependency on " + jarFile,
+                                Project.MSG_DEBUG);
                             dependencies.put(jarFile, jarFile);
                         }
                     }
@@ -429,6 +445,8 @@ public class Depend extends MatchingTask {
                     loader.cleanup();
                 }
             }
+        } else {
+            log("No classpath to check", Project.MSG_DEBUG);
         }
 
         // write the dependency cache to the disk
