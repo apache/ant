@@ -185,31 +185,24 @@ public class SSHExec extends SSHBase {
         }
 
         Session session = null;
-
+        StringBuffer output = new StringBuffer();
         try {
             session = openSession();
             /* called once */
             if (command != null) {
                 log("cmd : " + command, Project.MSG_INFO);
-                ByteArrayOutputStream out = executeCommand(session, command);
-                if (outputProperty != null) {
-                    //#bugzilla 43437
-                    getProject().setNewProperty(outputProperty, command + " : " + out);
-                }
+                output.append(command).append(" : ");
+                executeCommand(session, command, output);
             } else { // read command resource and execute for each command
                 try {
                     BufferedReader br = new BufferedReader(
                             new InputStreamReader(commandResource.getInputStream()));
                     String cmd;
-                    String output = "";
                     while ((cmd = br.readLine()) != null) {
                         log("cmd : " + cmd, Project.MSG_INFO);
-                        ByteArrayOutputStream out = executeCommand(session, cmd);
-                        output += cmd + " : " + out + "\n";
-                    }
-                    if (outputProperty != null) {
-                        //#bugzilla 43437
-                        getProject().setNewProperty(outputProperty, output);
+                        output.append(cmd).append(" : ");
+                        executeCommand(session, cmd, output);
+                        output.append("\n");
                     }
                     FileUtils.close(br);
                 } catch (IOException e) {
@@ -219,13 +212,16 @@ public class SSHExec extends SSHBase {
         } catch (JSchException e) {
             throw new BuildException(e);
         } finally {
+            if (outputProperty != null) {
+                getProject().setNewProperty(outputProperty, output.toString());
+            }
             if (session != null && session.isConnected()) {
                 session.disconnect();
             }
         }
     }
 
-    private ByteArrayOutputStream executeCommand(Session session, String cmd)
+    private void executeCommand(Session session, String cmd, StringBuffer sb)
         throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
@@ -331,10 +327,9 @@ public class SSHExec extends SSHBase {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
         } finally {
+            sb.append(out.toString());
             FileUtils.close(istream);
         }
-
-        return out;
     }
 
     /**

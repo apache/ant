@@ -305,6 +305,10 @@ Fixed bugs:
    of the file system).
    Bugzilla Report 43665.
 
+ * <sshexec> didn't store the ouput in outputproperty if the remote
+   command failed.
+   Bugzilla Report 46340.
+
 Other changes:
 --------------
 
