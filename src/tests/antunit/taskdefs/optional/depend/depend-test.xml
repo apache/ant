@@ -18,13 +18,10 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../../antunit-base.xml" />
 
-  <property name="src1" location="${java.io.tmpdir}/src1"/>
+  <property name="src1" location="${input}/src1"/>
+  <property name="src2" location="${input}/src2"/>
 
-  <target name="tearDown" depends="antunit-base.tearDown">
-    <delete dir="${src1}"/>
-  </target>
-
-  <target name="testBug45916">
+  <target name="setUp">
     <mkdir dir="${src1}"/>
     <mkdir dir="${output}"/>
     <mkdir dir="${src1}/a"/>
@@ -33,8 +30,8 @@ package a;
 public class B {
 }
 ]]></echo>
-    <mkdir dir="${input}/b"/>
-    <echo file="${input}/b/Main.java"><![CDATA[
+    <mkdir dir="${src2}/b"/>
+    <echo file="${src2}/b/Main.java"><![CDATA[
 package b;
 
 import a.B;
@@ -51,8 +48,10 @@ public class Main {
 
 }
 ]]></echo>
+  </target>
 
-    <javac srcdir="${src1}:${input}"
+  <target name="testBug45916" depends="setUp">
+    <javac srcdir="${src1}:${src2}"
            destdir="${output}"/>
 
     <!--to ensure that the classfiles generated in the previous step
@@ -68,4 +67,5 @@ public class Main {
             classpath="${output}/A.jar"/>
     <au:assertFileExists file="${output}/b/Main$1.class"/>
   </target>
+
 </project>
