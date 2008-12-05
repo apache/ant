@@ -18,13 +18,28 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testRCSupport">
+  <target name="setUp">
     <mkdir dir="${output}"/>
     <echo file="${output}/text.txt"><![CDATA[
 Hello, world!
 ]]></echo>
+  </target>
+
+  <target name="testRCSupport" depends="setUp">
     <replace token="world" value="Ant">
       <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testNestedElementsOfFilter" depends="setUp">
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacefilter>
+        <replacetoken>world</replacetoken>
+        <replacevalue>Ant</replacevalue>
+      </replacefilter>
     </replace>
     <au:assertResourceContains
        resource="${output}/text.txt" value="Hello, Ant!"/>

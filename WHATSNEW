@@ -602,6 +602,11 @@ Other changes:
    collections.
    Bugzilla Report 24062.
 
+ * token and value of <replace>'s nested <replacefilter> can now also
+   be specified as nested elements to allow multiline content more
+   easily.
+   Bugzilla Report 39568.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

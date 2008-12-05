@@ -168,7 +168,8 @@ token]]&gt;&lt;/replacevalue&gt;
   <tr>
     <td valign="top">token</td>
     <td valign="top">The string to search for.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes unless a nested replacetoken
+      is specified</td>
   </tr>
   <tr>
     <td valign="top">value</td>
@@ -180,6 +181,8 @@ token]]&gt;&lt;/replacevalue&gt;
     <td valign="top">Name of the property whose value is to serve as the replacement value.</td>
   </tr>
 </table>
+<p>Since Ant 1.8.0 token and value can be specified as nested elements
+  just like in the task itself.</p>
 <p>If neither <i>value</i> nor <i>property</i> is used, the value provided using the <code>&lt;replace&gt;</code> attribute <i>value</i> and/or the <code>&lt;replacevalue&gt;</code> element is used. If no value was specified using either of these options, the token is replaced with an empty string.
 </p>
 <h3>Examples</h3>
@@ -196,6 +199,10 @@ token]]&gt;&lt;/replacevalue&gt;
   &lt;replacefilter 
     token=&quot;@token3@&quot; 
     property=&quot;property.key&quot;/&gt;
+  &lt;replacefilter&gt;
+    &lt;replacetoken&gt;@token4@&lt;/replacetoken&gt; 
+    &lt;replacevalue&gt;value4&lt;/replacevalue&gt;
+  &lt;/replacefilter&gt;
 &lt;/replace&gt;
 </pre></blockquote>
 <p>In file <code>configure.sh</code>, replace all instances of &quot;@token1@&quot; with &quot;defaultvalue&quot;, all instances of &quot;@token2@&quot; with &quot;value2&quot;, and all instances of &quot;@token3@&quot; with the value of the property &quot;property.key&quot;, as it appears in property file <code>src/name.properties</code>.</p>

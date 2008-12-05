@@ -107,8 +107,8 @@ public class Replace extends MatchingTask {
      * A filter to apply.
      */
     public class Replacefilter {
-        private String token;
-        private String value;
+        private NestedString token;
+        private NestedString value;
         private String replaceValue;
         private String property;
 
@@ -122,13 +122,12 @@ public class Replace extends MatchingTask {
         public void validate() throws BuildException {
             //Validate mandatory attributes
             if (token == null) {
-                String message = "token is a mandatory attribute "
-                    + "of replacefilter.";
+                String message = "token is a mandatory for replacefilter.";
                 throw new BuildException(message);
             }
 
-            if ("".equals(token)) {
-                String message = "The token attribute must not be an empty "
+            if ("".equals(token.getText())) {
+                String message = "The token must not be an empty "
                     + "string.";
                 throw new BuildException(message);
             }
@@ -170,7 +169,7 @@ public class Replace extends MatchingTask {
             if (property != null) {
                 return properties.getProperty(property);
             } else if (value != null) {
-                return value;
+                return value.getText();
             } else if (Replace.this.value != null) {
                 return Replace.this.value.getText();
             } else {
@@ -183,8 +182,8 @@ public class Replace extends MatchingTask {
          * Set the token to replace.
          * @param token <code>String</code> token.
          */
-        public void setToken(String token) {
-            this.token = token;
+        public void setToken(String t) {
+            createReplaceToken().addText(t);
         }
 
         /**
@@ -192,7 +191,7 @@ public class Replace extends MatchingTask {
          * @return current <code>String</code> token.
          */
         public String getToken() {
-            return token;
+            return token.getText();
         }
 
         /**
@@ -201,7 +200,7 @@ public class Replace extends MatchingTask {
          * @param value <code>String</code> value to replace.
          */
         public void setValue(String value) {
-            this.value = value;
+            createReplaceValue().addText(value);
         }
 
         /**
@@ -209,7 +208,7 @@ public class Replace extends MatchingTask {
          * @return replacement or null.
          */
         public String getValue() {
-            return value;
+            return value.getText();
         }
 
         /**
@@ -228,6 +227,30 @@ public class Replace extends MatchingTask {
          */
         public String getProperty() {
             return property;
+        }
+
+        /**
+         * Create a token to filter as the text of a nested element.
+         * @return nested token <code>NestedString</code> to configure.
+         * @since Ant 1.8.0
+         */
+        public NestedString createReplaceToken() {
+            if (token == null) {
+                token = new NestedString();
+            }
+            return token;
+        }
+
+        /**
+         * Create a string to replace the token as the text of a nested element.
+         * @return replacement value <code>NestedString</code> to configure.
+         * @since Ant 1.8.0
+         */
+        public NestedString createReplaceValue() {
+            if (value == null) {
+                value = new NestedString();
+            }
+            return value;
         }
 
         /**
@@ -260,9 +283,10 @@ public class Replace extends MatchingTask {
          *         output buffer.
          */
         boolean process() {
-            if (inputBuffer.length() > token.length()) {
+            String t = getToken();
+            if (inputBuffer.length() > t.length()) {
                 int pos = replace();
-                pos = Math.max((inputBuffer.length() - token.length()), pos);
+                pos = Math.max((inputBuffer.length() - t.length()), pos);
                 outputBuffer.append(inputBuffer.substring(0, pos));
                 inputBuffer.delete(0, pos);
                 return true;
@@ -287,14 +311,15 @@ public class Replace extends MatchingTask {
          *         replacement.
          */
         private int replace() {
-            int found = inputBuffer.indexOf(token);
+            String t = getToken();
+            int found = inputBuffer.indexOf(t);
             int pos = -1;
-            final int tokenLength = token.length();
+            final int tokenLength = t.length();
             final int replaceValueLength = replaceValue.length();
             while (found >= 0) {
                 inputBuffer.replace(found, found + tokenLength, replaceValue);
                 pos = found + replaceValueLength;
-                found = inputBuffer.indexOf(token, pos);
+                found = inputBuffer.indexOf(t, pos);
                 ++replaceCount;
             }
             return pos;
