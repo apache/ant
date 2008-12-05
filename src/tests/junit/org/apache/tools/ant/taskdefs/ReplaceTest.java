@@ -68,12 +68,31 @@ public class ReplaceTest extends BuildFileTest {
         executeTarget("test8");
     }
 
-    public void test9() throws IOException{
+    public void test9() throws IOException {
         executeTarget("test9");
         String tmpdir = project.getProperty("tmp.dir");
         assertEqualContent(new File(tmpdir, "result.txt"),
                     new File(tmpdir, "output.txt"));
     }
+
+    public void testNoPreserveLastModified() throws Exception {
+        executeTarget("lastModifiedSetup");
+        String tmpdir = project.getProperty("tmp.dir");
+        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        Thread.sleep(2);
+        executeTarget("testNoPreserve");
+        assertTrue(ts1 < new File(tmpdir, "test.txt").lastModified());
+    }
+
+    public void testPreserveLastModified() throws Exception {
+        executeTarget("lastModifiedSetup");
+        String tmpdir = project.getProperty("tmp.dir");
+        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        Thread.sleep(2);
+        executeTarget("testPreserve");
+        assertTrue(ts1 == new File(tmpdir, "test.txt").lastModified());
+    }
+
     public void tearDown() {
         executeTarget("cleanup");
     }

@@ -74,6 +74,18 @@
     <replace file="${tmp.dir}/output.txt" token="@@@Replace this@@@" value="${content}"/>
   </target>
 
+  <target name="lastModifiedSetup">
+    <mkdir dir="${tmp.dir}"/>
+    <echo file="${tmp.dir}/test.txt">Hello, world!</echo>
+  </target>
+  <target name="testNoPreserve">
+    <replace token="world" value="Ant" file="${tmp.dir}/test.txt"/>
+  </target>
+  <target name="testPreserve">
+    <replace token="world" value="Ant" file="${tmp.dir}/test.txt"
+             preserveLastModified="true"/>
+  </target>
+
   <target name="cleanup">
       <delete dir="${tmp.dir}" quiet="true"/>
   </target>

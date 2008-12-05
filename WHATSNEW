@@ -607,6 +607,10 @@ Other changes:
    easily.
    Bugzilla Report 39568.
 
+ * <replace> and <replaceregexp> can now optionally preserve the file
+   timestamp even if the file is modified.
+   Bugzilla Report 39002.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

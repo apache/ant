@@ -127,6 +127,8 @@ public class ReplaceRegExp extends Task {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    private boolean preserveLastModified = false;
+
     /**
      * Encoding to assume for the files
      */
@@ -303,6 +305,15 @@ public class ReplaceRegExp extends Task {
         return subs;
     }
 
+    /**
+     * Whether the file timestamp shall be preserved even if the file
+     * is modified.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setPreserveLastModified(boolean b) {
+        preserveLastModified = b;
+    }
 
     /**
      * Invoke a regular expression (r) on a string (input) using
@@ -460,7 +471,11 @@ public class ReplaceRegExp extends Task {
             if (changes) {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
+                    long origLastModified = f.lastModified();
                     FILE_UTILS.rename(temp, f);
+                    if (preserveLastModified) {
+                        FILE_UTILS.setFileLastModified(f, origLastModified);
+                    }
                     temp = null;
                 } catch (IOException e) {
                     throw new BuildException("Couldn't rename temporary file "

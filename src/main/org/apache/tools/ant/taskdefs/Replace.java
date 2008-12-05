@@ -79,6 +79,8 @@ public class Replace extends MatchingTask {
 
     private Union resources;
 
+    private boolean preserveLastModified = false;
+
     /**
      * An inline string to use as the replacement text.
      */
@@ -666,7 +668,11 @@ public class Replace extends MatchingTask {
             boolean changes = (replaceCount != repCountStart);
             if (changes) {
                 fileCount++;
+                long origLastModified = src.lastModified();
                 FILE_UTILS.rename(temp, src);
+                if (preserveLastModified) {
+                    FILE_UTILS.setFileLastModified(src, origLastModified);
+                }
                 temp = null;
             }
         } catch (IOException ioe) {
@@ -860,6 +866,16 @@ public class Replace extends MatchingTask {
             resources = new Union();
         }
         resources.add(rc);
+    }
+
+    /**
+     * Whether the file timestamp shall be preserved even if the file
+     * is modified.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setPreserveLastModified(boolean b) {
+        preserveLastModified = b;
     }
 
     /**

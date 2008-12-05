@@ -102,4 +102,22 @@ public class ReplaceRegExpTest extends BuildFileTest {
                                   new File(System.getProperty("root"), PROJECT_PATH + "/replaceregexp2.result.properties")));
     }
 
+    public void testNoPreserveLastModified() throws Exception {
+        executeTarget("lastModifiedSetup");
+        String tmpdir = project.getProperty("tmpregexp");
+        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        Thread.sleep(2);
+        executeTarget("testNoPreserve");
+        assertTrue(ts1 < new File(tmpdir, "test.txt").lastModified());
+    }
+
+    public void testPreserveLastModified() throws Exception {
+        executeTarget("lastModifiedSetup");
+        String tmpdir = project.getProperty("tmpregexp");
+        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        Thread.sleep(2);
+        executeTarget("testPreserve");
+        assertTrue(ts1 == new File(tmpdir, "test.txt").lastModified());
+    }
+
 }// ReplaceRegExpTest

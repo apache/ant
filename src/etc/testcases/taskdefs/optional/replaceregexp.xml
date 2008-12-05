@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project name="test" default="def" basedir=".">
-  <property name="tmpregexp" value="tmpregexp"/>
+  <property name="tmpregexp" location="tmpregexp"/>
   <target name="def">
     <fail>This build file should only be run from within the testcase</fail>
   </target>
@@ -60,6 +60,18 @@
       <regexp pattern="Old(.*)=(.*)" />
       <substitution expression="NewProp=\1\2" />
     </replaceregexp>
+  </target>
+
+  <target name="lastModifiedSetup">
+    <mkdir dir="${tmpregexp}"/>
+    <echo file="${tmpregexp}/test.txt">Hello, world!</echo>
+  </target>
+  <target name="testNoPreserve">
+    <replaceregexp match="world" replace="Ant" file="${tmpregexp}/test.txt"/>
+  </target>
+  <target name="testPreserve">
+    <replaceregexp match="world" replace="Ant" file="${tmpregexp}/test.txt"
+                   preserveLastModified="true"/>
   </target>
 
   <target name="cleanup">
