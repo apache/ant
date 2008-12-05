@@ -56,7 +56,13 @@ dir, it will get removed from the target.</p>
   </tr>
   <tr>
     <td valign="top">includeEmptyDirs</td>
-     <td valign="top">Copy any empty directories included in the resource collection(s).
+     <td valign="top">Copy any empty directories included in the
+       resource collection(s).<br/>
+       <b>Note</b> this attribute also controls the behavior for any
+       nested &lt;preserveintarget&gt; element.  If this attribute is
+       false (the default) empty directories that only exist in the
+       target directory will be removed even if they are matched by
+       the patterns of &lt;preserveintarget&gt;.
      </td>
      <td valign="top" align="center">No; defaults to false.</td>
   </tr>
