@@ -31,9 +31,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -62,7 +62,7 @@ public class Replace extends MatchingTask {
     private File propertyFile = null;
     private File replaceFilterFile = null;
     private Properties properties = null;
-    private Vector replacefilters = new Vector();
+    private ArrayList replacefilters = new ArrayList();
 
     private File dir = null;
 
@@ -271,8 +271,7 @@ public class Replace extends MatchingTask {
          */
         void flush() {
             replace();
-            // Avoid runtime problem on pre 1.4 when compiling post 1.4
-            outputBuffer.append(inputBuffer.toString());
+            outputBuffer.append(inputBuffer);
             inputBuffer.delete(0, inputBuffer.length());
         }
 
@@ -282,13 +281,14 @@ public class Replace extends MatchingTask {
          *         replacement.
          */
         private int replace() {
-            int found = inputBuffer.toString().indexOf(token);
+            int found = inputBuffer.indexOf(token);
             int pos = -1;
+            final int tokenLength = token.length();
+            final int replaceValueLength = replaceValue.length();
             while (found >= 0) {
-                inputBuffer.replace(found, found + token.length(),
-                        replaceValue);
-                pos = found + replaceValue.length();
-                found = inputBuffer.toString().indexOf(token, pos);
+                inputBuffer.replace(found, found + tokenLength, replaceValue);
+                pos = found + replaceValueLength;
+                found = inputBuffer.indexOf(token, pos);
                 ++replaceCount;
             }
             return pos;
@@ -442,7 +442,7 @@ public class Replace extends MatchingTask {
      */
     public void execute() throws BuildException {
 
-        Vector savedFilters = (Vector) replacefilters.clone();
+        ArrayList savedFilters = (ArrayList) replacefilters.clone();
         Properties savedProperties =
             properties == null ? null : (Properties) properties.clone();
 
@@ -546,7 +546,7 @@ public class Replace extends MatchingTask {
             throws BuildException {
         for (int i = 0; i < replacefilters.size(); i++) {
             Replacefilter element =
-                (Replacefilter) replacefilters.elementAt(i);
+                (Replacefilter) replacefilters.get(i);
             element.validate();
         }
     }
@@ -653,7 +653,7 @@ public class Replace extends MatchingTask {
      */
     private void flushFilterChain() {
         for (int i = 0; i < replacefilters.size(); i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            Replacefilter filter = (Replacefilter) replacefilters.get(i);
             filter.flush();
         }
     }
@@ -664,7 +664,7 @@ public class Replace extends MatchingTask {
      */
     private boolean processFilterChain() {
         for (int i = 0; i < replacefilters.size(); i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            Replacefilter filter = (Replacefilter) replacefilters.get(i);
             if (!filter.process()) {
                 return false;
             }
@@ -681,7 +681,7 @@ public class Replace extends MatchingTask {
     private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
         StringBuffer buf = inputBuffer;
         for (int i = 0; i < replacefilters.size(); i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            Replacefilter filter = (Replacefilter) replacefilters.get(i);
             filter.setInputBuffer(buf);
             buf = filter.getOutputBuffer();
         }
@@ -694,7 +694,7 @@ public class Replace extends MatchingTask {
      */
     private void logFilterChain(String filename) {
         for (int i = 0; i < replacefilters.size(); i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            Replacefilter filter = (Replacefilter) replacefilters.get(i);
             log("Replacing in " + filename + ": " + filter.getToken()
                     + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);
         }
@@ -803,7 +803,7 @@ public class Replace extends MatchingTask {
      */
     public Replacefilter createReplacefilter() {
         Replacefilter filter = new Replacefilter();
-        replacefilters.addElement(filter);
+        replacefilters.add(filter);
         return filter;
     }
 
@@ -814,7 +814,7 @@ public class Replace extends MatchingTask {
      */
     private Replacefilter createPrimaryfilter() {
         Replacefilter filter = new Replacefilter();
-        replacefilters.insertElementAt(filter, 0);
+        replacefilters.add(0, filter);
         return filter;
     }
 
@@ -822,10 +822,12 @@ public class Replace extends MatchingTask {
      * Replace occurrences of str1 in StringBuffer str with str2.
      */
     private void stringReplace(StringBuffer str, String str1, String str2) {
-        int found = str.toString().indexOf(str1);
+        int found = str.indexOf(str1);
+        final int str1Length = str1.length();
+        final int str2Length = str2.length();
         while (found >= 0) {
-            str.replace(found, found + str1.length(), str2);
-            found = str.toString().indexOf(str1, found + str2.length());
+            str.replace(found, found + str1Length, str2);
+            found = str.indexOf(str1, found + str2Length);
         }
     }
 
