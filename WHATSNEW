@@ -598,6 +598,10 @@ Other changes:
    collections.
    Bugzilla Report 46341.
 
+ * <replace> now supports arbitrary filesystem based resource
+   collections.
+   Bugzilla Report 24062.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

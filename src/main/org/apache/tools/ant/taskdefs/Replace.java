@@ -32,11 +32,15 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
@@ -55,7 +59,7 @@ public class Replace extends MatchingTask {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    private File src = null;
+    private File sourceFile = null;
     private NestedString token = null;
     private NestedString value = new NestedString();
 
@@ -72,6 +76,8 @@ public class Replace extends MatchingTask {
 
     /** The encoding used to read and write files - if null, uses default */
     private String encoding = null;
+
+    private Union resources;
 
     /**
      * An inline string to use as the replacement text.
@@ -464,9 +470,9 @@ public class Replace extends MatchingTask {
         try {
             if (replaceFilterFile != null) {
                 Properties props = getProperties(replaceFilterFile);
-                Enumeration e = props.keys();
-                while (e.hasMoreElements()) {
-                    String tok =  e.nextElement().toString();
+                Iterator e = props.keySet().iterator();
+                while (e.hasNext()) {
+                    String tok =  e.next().toString();
                     Replacefilter replaceFilter = createReplacefilter();
                     replaceFilter.setToken(tok);
                     replaceFilter.setValue(props.getProperty(tok));
@@ -483,8 +489,8 @@ public class Replace extends MatchingTask {
             fileCount = 0;
             replaceCount = 0;
 
-            if (src != null) {
-                processFile(src);
+            if (sourceFile != null) {
+                processFile(sourceFile);
             }
 
             if (dir != null) {
@@ -494,6 +500,15 @@ public class Replace extends MatchingTask {
                 for (int i = 0; i < srcs.length; i++) {
                     File file = new File(dir, srcs[i]);
                     processFile(file);
+                }
+            }
+
+            if (resources != null) {
+                for (Iterator i = resources.iterator(); i.hasNext(); ) {
+                    FileProvider fp =
+                        (FileProvider) ((Resource) i.next())
+                        .as(FileProvider.class);
+                    processFile(fp.getFile());
                 }
             }
 
@@ -515,9 +530,9 @@ public class Replace extends MatchingTask {
      * mandatory attribute is missing.
      */
     public void validateAttributes() throws BuildException {
-        if (src == null && dir == null) {
+        if (sourceFile == null && dir == null && resources == null) {
             String message = "Either the file or the dir attribute "
-                + "must be specified";
+                + "or nested resources must be specified";
             throw new BuildException(message, getLocation());
         }
         if (propertyFile != null && !propertyFile.exists()) {
@@ -704,7 +719,7 @@ public class Replace extends MatchingTask {
      * @param file source <code>File</code>.
      */
     public void setFile(File file) {
-        this.src = file;
+        this.sourceFile = file;
     }
 
     /**
@@ -805,6 +820,21 @@ public class Replace extends MatchingTask {
         Replacefilter filter = new Replacefilter();
         replacefilters.add(filter);
         return filter;
+    }
+
+    /**
+     * Support arbitrary file system based resource collections.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addConfigured(ResourceCollection rc) {
+        if (!rc.isFilesystemOnly()) {
+            throw new BuildException("only filesystem resources are supported");
+        }
+        if (resources == null) {
+            resources = new Union();
+        }
+        resources.add(rc);
     }
 
     /**
