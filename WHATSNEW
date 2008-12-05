@@ -611,6 +611,11 @@ Other changes:
    timestamp even if the file is modified.
    Bugzilla Report 39002.
 
+ * The <replace> child-elements <replacetoken> and <replacevalue> have
+   a new attribute that controls whether properties in nested text get
+   expanded.
+   Bugzilla Report 11585.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

@@ -44,4 +44,27 @@ Hello, world!
     <au:assertResourceContains
        resource="${output}/text.txt" value="Hello, Ant!"/>
   </target>
+
+  <target name="testNoPropertyExpansion" depends="setUp">
+    <property name="ant" value="Ant"/>
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacetoken>world</replacetoken>
+      <replacevalue>${ant}</replacevalue>
+    </replace>
+    <au:assertResourceDoesntContain
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testPropertyExpansion" depends="setUp">
+    <property name="ant" value="Ant"/>
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacetoken>world</replacetoken>
+      <replacevalue expandproperties="true">${ant}</replacevalue>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
 </project>

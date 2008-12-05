@@ -86,7 +86,22 @@ public class Replace extends MatchingTask {
      */
     public class NestedString {
 
+        private boolean expandProperties = false;
         private StringBuffer buf = new StringBuffer();
+
+        /**
+         * Whether properties should be expanded in nested test.
+         *
+         * <p>If you use this class via its Java interface the text
+         * you add via {@link #addText addText} has most likely been
+         * expanded already so you do <b>not</b> want to set this to
+         * true.</p>
+         *
+         * @since Ant 1.8.0
+         */
+        public void setExpandProperties(boolean b) {
+            expandProperties = b;
+        }
 
         /**
          * The text of the element.
@@ -101,7 +116,8 @@ public class Replace extends MatchingTask {
          * @return the text
          */
         public String getText() {
-            return buf.toString();
+            String s = buf.toString();
+            return expandProperties ? getProject().replaceProperties(s) : s;
         }
     }
 
