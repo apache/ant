@@ -80,6 +80,7 @@ public class Replace extends MatchingTask {
     private Union resources;
 
     private boolean preserveLastModified = false;
+    private boolean failOnNoReplacements = false;
 
     /**
      * An inline string to use as the replacement text.
@@ -559,6 +560,9 @@ public class Replace extends MatchingTask {
                 log("Replaced " + replaceCount + " occurrences in "
                     + fileCount + " files.", Project.MSG_INFO);
             }
+            if (failOnNoReplacements && replaceCount == 0) {
+                throw new BuildException("didn't replace anything");
+            }
         } finally {
             replacefilters = savedFilters;
             properties = savedProperties;
@@ -892,6 +896,15 @@ public class Replace extends MatchingTask {
      */
     public void setPreserveLastModified(boolean b) {
         preserveLastModified = b;
+    }
+
+    /**
+     * Whether the build should fail if nothing has been replaced.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnNoReplacements(boolean b) {
+        failOnNoReplacements = b;
     }
 
     /**

@@ -67,4 +67,19 @@ Hello, world!
        resource="${output}/text.txt" value="Hello, Ant!"/>
   </target>
 
+  <target name="testNoReplace" depends="setUp">
+    <replace token="ant" value="ant" summary="true">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertLogContains text="Replaced 0 occurrences in 0 files."/>
+  </target>
+
+  <target name="testFailOnNoReplace" depends="setUp">
+    <au:expectfailure expectedMessage="didn't replace anything">
+      <replace token="ant" value="ant" failOnNoReplacements="true">
+        <file file="${output}/text.txt"/>
+      </replace>
+    </au:expectfailure>
+  </target>
+
 </project>

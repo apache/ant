@@ -616,6 +616,10 @@ Other changes:
    expanded.
    Bugzilla Report 11585.
 
+ * <replace> has a new attribute failOnNoReplacements that makes the
+   build fail if the task didn't do anything.
+   Bugzilla Report 21064.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
