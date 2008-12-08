@@ -18,6 +18,12 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
+  <import file="../propertyhelpers.xml" as="ph"/>
+
+  <target name="tearDown" depends="antunit-base.tearDown,ph.tearDown">
+    <delete dir="foo"/>
+  </target>
+
   <target name="setUp">
     <mkdir dir="${output}"/>
     <echo file="${output}/text.txt"><![CDATA[
@@ -80,6 +86,18 @@ Hello, world!
         <file file="${output}/text.txt"/>
       </replace>
     </au:expectfailure>
+  </target>
+
+  <target name="testPropertyFilterResource" depends="setUp,ph.defineHelpers">
+    <mkdir dir="foo"/>
+    <echo file="foo/foo.properties"><![CDATA[
+world=Ant
+]]></echo>
+    <replace replacefilterresource="${java:foo!foo.properties}">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
   </target>
 
 </project>

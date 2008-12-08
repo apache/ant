@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -40,6 +41,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -63,8 +65,8 @@ public class Replace extends MatchingTask {
     private NestedString token = null;
     private NestedString value = new NestedString();
 
-    private File propertyFile = null;
-    private File replaceFilterFile = null;
+    private Resource propertyResource = null;
+    private Resource replaceFilterResource = null;
     private Properties properties = null;
     private ArrayList replacefilters = new ArrayList();
 
@@ -161,10 +163,10 @@ public class Replace extends MatchingTask {
 
             if ((property != null)) {
                 //the property attribute must have access to a property file
-                if (propertyFile == null) {
+                if (propertyResource == null) {
                     String message = "The replacefilter's property attribute "
                         + "can only be used with the replacetask's "
-                        + "propertyFile attribute.";
+                        + "propertyFile/Resource attribute.";
                     throw new BuildException(message);
                 }
 
@@ -172,7 +174,7 @@ public class Replace extends MatchingTask {
                 if (properties == null
                     || properties.getProperty(property) == null) {
                     String message = "property \"" + property
-                        + "\" was not found in " + propertyFile.getPath();
+                        + "\" was not found in " + propertyResource.getName();
                     throw new BuildException(message);
                 }
             }
@@ -512,8 +514,8 @@ public class Replace extends MatchingTask {
         }
 
         try {
-            if (replaceFilterFile != null) {
-                Properties props = getProperties(replaceFilterFile);
+            if (replaceFilterResource != null) {
+                Properties props = getProperties(replaceFilterResource);
                 Iterator e = props.keySet().iterator();
                 while (e.hasNext()) {
                     String tok =  e.next().toString();
@@ -525,8 +527,8 @@ public class Replace extends MatchingTask {
 
             validateAttributes();
 
-            if (propertyFile != null) {
-                properties = getProperties(propertyFile);
+            if (propertyResource != null) {
+                properties = getProperties(propertyResource);
             }
 
             validateReplacefilters();
@@ -582,8 +584,8 @@ public class Replace extends MatchingTask {
                 + "or nested resources must be specified";
             throw new BuildException(message, getLocation());
         }
-        if (propertyFile != null && !propertyFile.exists()) {
-            String message = "Property file " + propertyFile.getPath()
+        if (propertyResource != null && !propertyResource.isExists()) {
+            String message = "Property file " + propertyResource.getName()
                 + " does not exist.";
             throw new BuildException(message, getLocation());
         }
@@ -620,18 +622,26 @@ public class Replace extends MatchingTask {
      * @throws BuildException if the file could not be found or read.
      */
     public Properties getProperties(File propertyFile) throws BuildException {
+        return getProperties(new FileResource(getProject(), propertyFile));
+    }
+
+    /**
+     * Load a properties resource.
+     * @param propertyResource the resource to load the properties from.
+     * @return loaded <code>Properties</code> object.
+     * @throws BuildException if the resource could not be found or read.
+     * @since Ant 1.8.0
+     */
+    public Properties getProperties(Resource propertyResource)
+        throws BuildException {
         Properties props = new Properties();
 
-        FileInputStream in = null;
+        InputStream in = null;
         try {
-            in = new FileInputStream(propertyFile);
+            in = propertyResource.getInputStream();
             props.load(in);
-        } catch (FileNotFoundException e) {
-            String message = "Property file (" + propertyFile.getPath()
-                + ") not found.";
-            throw new BuildException(message);
         } catch (IOException e) {
-            String message = "Property file (" + propertyFile.getPath()
+            String message = "Property resource (" + propertyResource.getName()
                 + ") cannot be loaded.";
             throw new BuildException(message);
         } finally {
@@ -793,7 +803,19 @@ public class Replace extends MatchingTask {
      * @param replaceFilterFile <code>File</code> to load.
      */
     public void setReplaceFilterFile(File replaceFilterFile) {
-        this.replaceFilterFile = replaceFilterFile;
+        setReplaceFilterResource(new FileResource(getProject(),
+                                                  replaceFilterFile));
+    }
+
+    /**
+     * Sets the name of a resource containing filters; optional.
+     * Each property will be treated as a replacefilter where token is the name
+     * of the property and value is the value of the property.
+     * @param replaceFilterFile <code>File</code> to load.
+     * @since Ant 1.8.0
+     */
+    public void setReplaceFilterResource(Resource replaceFilter) {
+        this.replaceFilterResource = replaceFilter;
     }
 
     /**
@@ -807,8 +829,8 @@ public class Replace extends MatchingTask {
 
     /**
      * Set the string token to replace; required unless a nested
-     * <code>replacetoken</code> element or the <code>replacefilterfile</code>
-     * attribute is used.
+     * <code>replacetoken</code> element or the
+     * <code>replacefilterresource</code> attribute is used.
      * @param token token <code>String</code>.
      */
     public void setToken(String token) {
@@ -860,7 +882,20 @@ public class Replace extends MatchingTask {
      * @param propertyFile <code>File</code> to load.
      */
     public void setPropertyFile(File propertyFile) {
-        this.propertyFile = propertyFile;
+        setPropertyResource(new FileResource(propertyFile));
+    }
+
+    /**
+     * A resource from which properties specified using nested
+     * <code>&lt;replacefilter&gt;</code> elements are drawn; required
+     * only if the <i>property</i> attribute of
+     * <code>&lt;replacefilter&gt;</code> is used.
+     * @param propertyResource <code>Resource</code> to load.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setPropertyResource(Resource propertyResource) {
+        this.propertyResource = propertyResource;
     }
 
     /**
