@@ -17,7 +17,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FileInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Enumeration;
@@ -25,6 +26,8 @@ import java.util.Hashtable;
 import java.util.Properties;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -214,6 +217,16 @@ public final class ReplaceTokens
     }
 
     /**
+     * A resource containing properties, each of which is interpreted
+     * as a token/value pair.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setPropertiesResource(Resource r) {
+        makeTokensFromProperties(r);
+    }
+
+    /**
      * Adds a token element to the map of tokens to replace.
      *
      * @param token The token to add to the map of replacements.
@@ -228,11 +241,11 @@ public final class ReplaceTokens
      *
      * @param fileName The file to load properties from.
      */
-    private Properties getPropertiesFromFile (String fileName) {
-        FileInputStream in = null;
+    private Properties getProperties(Resource r) {
+        InputStream in = null;
         Properties props = new Properties();
         try {
-            in = new FileInputStream(fileName);
+            in = r.getInputStream();
             props.load(in);
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -312,15 +325,20 @@ public final class ReplaceTokens
                         final String value = params[i].getValue();
                         hash.put(name, value);
                     } else if ("propertiesfile".equals(type)) {
-                        Properties props = getPropertiesFromFile(params[i].getValue());
-                        for (Enumeration e = props.keys(); e.hasMoreElements();) {
-                            String key = (String) e.nextElement();
-                            String value = props.getProperty(key);
-                            hash.put(key, value);
-                        }
+                        makeTokensFromProperties(
+                            new FileResource(new File(params[i].getValue())));
                     }
                 }
             }
+        }
+    }
+
+    private void makeTokensFromProperties(Resource r) {
+        Properties props = getProperties(r);
+        for (Enumeration e = props.keys(); e.hasMoreElements();) {
+            String key = (String) e.nextElement();
+            String value = props.getProperty(key);
+            hash.put(key, value);
         }
     }
 
