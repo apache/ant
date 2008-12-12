@@ -93,7 +93,7 @@ instead.
 <p>The classpath can be specified via a nested
 <code>&lt;classpath&gt;</code>, as well - that is,
 a <a href="../using.html#path">path</a>-like structure.</p>
-<p><b>Since Ant 1.6.2,</b> nested File Mappers can
+<p><b>Since Ant 1.7.0,</b> nested File Mappers can
 be supplied via either <CODE>&lt;mapper&gt;</CODE> elements or
 <a href="../CoreTasks/typedef.html"><code>&lt;typedef&gt;</code></a>'d
 implementations of <CODE>org.apache.tools.ant.util.FileNameMapper</CODE>.
@@ -103,7 +103,7 @@ implicitly configured as a <a href="#composite-mapper">composite mapper</a>.
 <hr>
 <h3>The built-in mapper types are:</h3>
 <p>All built-in mappers are case-sensitive.</p>
-<p><b>As of Ant 1.6.2,</b> each of the built-in mapper implementation
+<p><b>As of Ant 1.7.0,</b> each of the built-in mapper implementation
   types is directly accessible using a specific tagname. This makes it
   possible for filename mappers to support attributes in addition to
   the generally available <i>to</i> and <i>from</i>.<br>
@@ -624,7 +624,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <!--           Composite Mapper             -->
     <!--                                        -->
 
-<h4><a name="composite-mapper">composite (since Ant 1.6.2)</a></h4>
+<h4><a name="composite-mapper">composite (since Ant 1.7.0)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to each nested
     <code>&lt;mapper&gt;</code> in turn, returning all results.
@@ -660,7 +660,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
     <!--            Chained Mapper              -->
     <!--                                        -->
 
-<h4><a name="chained-mapper">chained (since Ant 1.6.2)</a></h4>
+<h4><a name="chained-mapper">chained (since Ant 1.7.0)</a></h4>
   <p>This mapper implementation can contain multiple nested mappers.
     File mapping is performed by passing the source filename to the first
     nested mapper, its results to the second, and so on.  The target filenames
