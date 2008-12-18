@@ -87,4 +87,34 @@
     <au:assertFileDoesntExist file="${output}/b/c"/>
   </target>
 
+  <target name="testPreserveEmptyAndIncludeEmptyFalse" depends="setUp">
+
+    <sync todir="${output}" includeEmptyDirs="false">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="false">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
+  </target>
+
+  <target name="testPreserveEmptyAndIncludeEmptyTrue" depends="setUp">
+
+    <sync todir="${output}" includeEmptyDirs="true">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="true">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileExists file="${output}/b/c"/>
+  </target>
+
 </project>

@@ -135,6 +135,11 @@ public class Sync extends Task {
 
             int removedDirCount = 0;
             if (!myCopy.getIncludeEmptyDirs()) {
+                if (syncTarget != null
+                    && syncTarget.getPreserveEmptyDirs() != Boolean.TRUE) {
+                    preservedDirectories.clear();
+                }
+
                 removedDirCount =
                     removeEmptyDirectories(toDir, false, preservedDirectories);
             } else { // must be syncTarget.preserveEmptydirs == FALSE
