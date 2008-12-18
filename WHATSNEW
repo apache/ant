@@ -620,6 +620,10 @@ Other changes:
    build fail if the task didn't do anything.
    Bugzilla Report 21064.
 
+ * <sync>'s <preserveInTarget> has a new attribute that conrols
+   whether empty directories should be kept.
+   Bugzilla Report 43159.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
