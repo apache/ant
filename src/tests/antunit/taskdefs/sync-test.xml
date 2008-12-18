@@ -18,13 +18,16 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testPreserveEmptyDirs">
+  <target name="setUp">
     <mkdir dir="${input}/a"/>
     <mkdir dir="${output}/a"/>
     <mkdir dir="${output}/b/c"/>
     <touch file="${input}/a/foo.txt"/>
     <touch file="${output}/a/bar.txt"/>
     <touch file="${output}/b/baz.txt"/>
+  </target>
+
+  <target name="testIncludeEmptyPreservesEmptyDirs" depends="setUp">
 
     <sync todir="${output}" includeemptydirs="true">
       <fileset dir="${input}"/>
@@ -37,5 +40,20 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileExists file="${output}/b/c"/>
+  </target>
+
+  <target name="testDefaultDoesntPreserveEmptyDirs" depends="setUp">
+
+    <sync todir="${output}">
+      <fileset dir="${input}"/>
+      <preserveintarget>
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
   </target>
 </project>
