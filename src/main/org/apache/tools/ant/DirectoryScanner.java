@@ -1096,6 +1096,8 @@ public class DirectoryScanner
                 String[] notIncl = new String[dirsNotIncluded.size()];
                 dirsNotIncluded.copyInto(notIncl);
 
+                ensureNonPatternSetsReady();
+
                 processSlowScan(excl);
                 processSlowScan(notIncl);
                 clearCaches();
