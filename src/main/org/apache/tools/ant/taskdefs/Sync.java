@@ -275,13 +275,12 @@ public class Sync extends Task {
     private int removeEmptyDirectories(File dir, boolean removeIfEmpty,
                                        Set preservedEmptyDirectories) {
         int removedCount = 0;
-        if (!preservedEmptyDirectories.contains(dir) && dir.isDirectory()) {
+        if (dir.isDirectory()) {
             File[] children = dir.listFiles();
             for (int i = 0; i < children.length; ++i) {
                 File file = children[i];
                 // Test here again to avoid method call for non-directories!
-                if (!preservedEmptyDirectories.contains(file)
-                    && file.isDirectory()) {
+                if (file.isDirectory()) {
                     removedCount +=
                         removeEmptyDirectories(file, true,
                                                preservedEmptyDirectories);
@@ -292,7 +291,8 @@ public class Sync extends Task {
                 // We need to re-query its children list!
                 children = dir.listFiles();
             }
-            if (children.length < 1 && removeIfEmpty) {
+            if (children.length < 1 && removeIfEmpty
+                && !preservedEmptyDirectories.contains(dir)) {
                 log("Removing empty directory: " + dir, Project.MSG_DEBUG);
                 dir.delete();
                 ++removedCount;

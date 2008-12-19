@@ -57,7 +57,7 @@
     <au:assertFileDoesntExist file="${output}/b/c"/>
   </target>
 
-  <target name="testPreserveEmptyOverridesDefault" depends="setUp">
+  <target name="xtestPreserveEmptyOverridesDefault" depends="setUp">
 
     <sync todir="${output}">
       <fileset dir="${input}"/>
@@ -115,6 +115,22 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileExists file="${output}/b/c"/>
+  </target>
+
+  <target name="testPreserveEmptyDirsWithNonRecursiveExclude" depends="setUp">
+
+    <sync todir="${output}">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="true">
+        <include name="**/b"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b"/>
+    <au:assertFileDoesntExist file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
   </target>
 
 </project>
