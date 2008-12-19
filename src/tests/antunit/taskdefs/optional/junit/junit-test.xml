@@ -129,4 +129,62 @@ public class ATest extends TestSuite {
     </junit>
     <au:assertPropertySet name="testsuite.failed"/>
   </target>
+
+  <target name="testTimeoutAndFormattersForkPerTest">
+    <antcall target="runTimeoutAndFormattersTest">
+      <param name="forkMode" value="perTest"/>
+    </antcall>
+    <au:assertFileExists file="${output}/TEST-test.CTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.CTest.xml"/>
+    <au:assertFileExists file="${output}/TEST-test.DTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.DTest.xml"/>
+  </target>
+
+  <target name="testTimeoutAndFormattersForkOnce">
+    <antcall target="runTimeoutAndFormattersTest">
+      <param name="forkMode" value="once"/>
+    </antcall>
+    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.txt"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.xml"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.txt"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.xml"/>
+  </target>
+
+  <target name="runTimeoutAndFormattersTest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=35634">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <empty-test classname="ATest"/>
+    <echo file="${input}/BTest.java"><![CDATA[
+package test;
+import junit.framework.TestCase;
+
+public class BTest extends TestCase {
+    public void testEmpty() throws Exception {
+        Thread.sleep(20 * 1000);
+    }
+}
+]]></echo>
+    <empty-test classname="CTest"/>
+    <empty-test classname="DTest"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true" timeout="5000" forkmode="${forkMode}">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/*Test.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="brief"/>
+      <formatter type="xml"/>
+    </junit>
+    <au:assertFileExists file="${output}/TEST-test.ATest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.ATest.xml"/>
+    <au:assertFileExists file="${output}/TEST-test.BTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.BTest.xml"/>
+  </target>
+
 </project>
