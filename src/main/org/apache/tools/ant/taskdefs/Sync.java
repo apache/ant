@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -189,10 +190,8 @@ public class Sync extends Task {
 
         DirectoryScanner ds = null;
         if (syncTarget != null) {
-            FileSet fs = new FileSet();
+            FileSet fs = syncTarget.toFileSet(false);
             fs.setDir(toDir);
-            fs.setCaseSensitive(syncTarget.isCaseSensitive());
-            fs.setFollowSymlinks(syncTarget.isFollowSymlinks());
 
             // preserveInTarget would find all files we want to keep,
             // but we need to find all that we want to delete - so the
@@ -245,7 +244,10 @@ public class Sync extends Task {
 
         Boolean ped = getExplicitPreserveEmptyDirs();
         if (ped != null && ped.booleanValue() != myCopy.getIncludeEmptyDirs()) {
-            String[] preservedDirs = ds.getExcludedDirectories();
+            FileSet fs = syncTarget.toFileSet(true);
+            fs.setDir(toDir);
+            String[] preservedDirs =
+                fs.getDirectoryScanner(getProject()).getIncludedDirectories();
             for (int i = preservedDirs.length - 1; i >= 0; --i) {
                 preservedDirectories.add(new File(toDir, preservedDirs[i]));
             }
@@ -551,6 +553,25 @@ public class Sync extends Task {
          */
         public Boolean getPreserveEmptyDirs() {
             return preserveEmptyDirs;
+        }
+
+        private FileSet toFileSet(boolean withPatterns) {
+            FileSet fs = new FileSet();
+            fs.setCaseSensitive(isCaseSensitive());
+            fs.setFollowSymlinks(isFollowSymlinks());
+            fs.setMaxLevelsOfSymlinks(getMaxLevelsOfSymlinks());
+            fs.setProject(getProject());
+
+            if (withPatterns) {
+                PatternSet ps = mergePatterns(getProject());
+                fs.appendIncludes(ps.getIncludePatterns(getProject()));
+                fs.appendExcludes(ps.getExcludePatterns(getProject()));
+                for (Enumeration e = selectorElements(); e.hasMoreElements(); ) {
+                    fs.appendSelector((FileSelector) e.nextElement());
+                }
+                fs.setDefaultexcludes(getDefaultexcludes());
+            }
+            return fs;
         }
     }
 

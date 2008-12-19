@@ -424,6 +424,16 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * The maximum number of times a symbolic link may be followed
+     * during a scan.
+     *
+     * @since Ant 1.8.0
+     */
+    public int getMaxLevelsOfSymlinks() {
+        return maxLevelsOfSymlinks;
+    }
+
+    /**
      * Sets whether an error is thrown if a directory does not exist.
      *
      * @param errorOnMissingDir true if missing directories cause errors,

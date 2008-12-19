@@ -20,7 +20,9 @@
 
   <target name="setUp">
     <mkdir dir="${input}/a"/>
+    <mkdir dir="${input}/d"/>
     <mkdir dir="${output}/a"/>
+    <mkdir dir="${output}/d"/>
     <mkdir dir="${output}/b/c"/>
     <touch file="${input}/a/foo.txt"/>
     <touch file="${output}/a/bar.txt"/>
@@ -40,6 +42,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
   </target>
 
   <target name="testDefaultDoesntPreserveEmptyDirs" depends="setUp">
@@ -55,6 +58,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
   </target>
 
   <target name="testPreserveEmptyOverridesDefault" depends="setUp">
@@ -70,6 +74,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
   </target>
 
   <target name="testPreserveEmptyOverrulesIncludeEmpty" depends="setUp">
@@ -85,6 +90,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
   </target>
 
   <target name="testPreserveEmptyAndIncludeEmptyFalse" depends="setUp">
@@ -100,6 +106,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
   </target>
 
   <target name="testPreserveEmptyAndIncludeEmptyTrue" depends="setUp">
@@ -115,6 +122,7 @@
     <au:assertFileExists file="${output}/a/foo.txt"/>
     <au:assertFileExists file="${output}/b/baz.txt"/>
     <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
   </target>
 
   <target name="testPreserveEmptyDirsWithNonRecursiveExclude" depends="setUp">
@@ -131,6 +139,7 @@
     <au:assertFileExists file="${output}/b"/>
     <au:assertFileDoesntExist file="${output}/b/baz.txt"/>
     <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
   </target>
 
 </project>
