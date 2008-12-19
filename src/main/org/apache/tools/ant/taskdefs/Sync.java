@@ -128,18 +128,12 @@ public class Sync extends Task {
 
         // Get rid of empty directories on the destination side
         if (!myCopy.getIncludeEmptyDirs()
-            || (syncTarget != null
-                && syncTarget.getPreserveEmptyDirs() == Boolean.FALSE)) {
+            || getExplicitPreserveEmptyDirs() == Boolean.FALSE) {
             log("PASS#3: Removing empty directories from " + toDir,
                 Project.MSG_DEBUG);
 
             int removedDirCount = 0;
             if (!myCopy.getIncludeEmptyDirs()) {
-                if (syncTarget != null
-                    && syncTarget.getPreserveEmptyDirs() != Boolean.TRUE) {
-                    preservedDirectories.clear();
-                }
-
                 removedDirCount =
                     removeEmptyDirectories(toDir, false, preservedDirectories);
             } else { // must be syncTarget.preserveEmptydirs == FALSE
@@ -179,8 +173,8 @@ public class Sync extends Task {
      * @param  file the initial file or directory to scan or test.
      * @param  preservedDirectories will be filled with the directories
      *         matched by preserveInTarget - if any.  Will not be
-     *         filled unless either preserveEmptyDirs is set or
-     *         includeEmptyDirs is true.
+     *         filled unless preserveEmptyDirs and includeEmptyDirs
+     *         conflict.
      * @return the number of orphaned files and directories actually removed.
      * Position 0 of the array is the number of orphaned directories.
      * Position 1 of the array is the number or orphaned files.
@@ -249,13 +243,11 @@ public class Sync extends Task {
             }
         }
 
-        if (syncTarget != null) {
-            if (syncTarget.getPreserveEmptyDirs() != null
-                || myCopy.getIncludeEmptyDirs()) {
-                String[] preservedDirs = ds.getExcludedDirectories();
-                for (int i = preservedDirs.length - 1; i >= 0; --i) {
-                    preservedDirectories.add(new File(toDir, preservedDirs[i]));
-                }
+        Boolean ped = getExplicitPreserveEmptyDirs();
+        if (ped != null && ped.booleanValue() != myCopy.getIncludeEmptyDirs()) {
+            String[] preservedDirs = ds.getExcludedDirectories();
+            for (int i = preservedDirs.length - 1; i >= 0; --i) {
+                preservedDirectories.add(new File(toDir, preservedDirs[i]));
             }
         }
 
@@ -425,6 +417,16 @@ public class Sync extends Task {
                                      + "preserveintarget elements.");
         }
         syncTarget = s;
+    }
+
+    /**
+     * The value of preserveTarget's preserveEmptyDirs attribute if
+     * specified and preserveTarget has been used in the first place.
+     *
+     * @since Ant 1.8.0.
+     */
+    private Boolean getExplicitPreserveEmptyDirs() {
+        return syncTarget == null ? null : syncTarget.getPreserveEmptyDirs();
     }
 
     /**
