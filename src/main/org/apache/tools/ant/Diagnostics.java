@@ -32,6 +32,7 @@ import java.io.FilenameFilter;
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -534,6 +535,7 @@ public final class Diagnostics {
         long now = System.currentTimeMillis();
         File tempFile = null;
         FileOutputStream fileout = null;
+        FileInputStream filein = null;
         try {
             tempFile = File.createTempFile("diag", "txt", tempDirectory);
             //do some writing to it
@@ -544,10 +546,31 @@ public final class Diagnostics {
             }
             fileout.close();
             fileout = null;
+
+            // read to make sure the file has been written completely
+            Thread.sleep(1000);
+            filein = new FileInputStream(tempFile);
+            int total = 0;
+            int read = 0;
+            while ((read = filein.read(buffer, 0, KILOBYTE)) > 0) {
+                total += read;
+            }
+            filein.close();
+            filein = null;
+
             long filetime = tempFile.lastModified();
-            tempFile.delete();
-            out.println("Temp dir is writeable");
             long drift = filetime - now;
+            tempFile.delete();
+
+            out.print("Temp dir is writeable");
+            if (total != TEST_FILE_SIZE * KILOBYTE) {
+                out.println(", but seems to be full.  Wrote "
+                            + (TEST_FILE_SIZE * KILOBYTE)
+                            + "but could only read " + total + " bytes.");
+            } else {
+                out.println();
+            }
+
             out.println("Temp dir alignment with system clock is " + drift + " ms");
             if (Math.abs(drift) > BIG_DRIFT_LIMIT) {
                 out.println("Warning: big clock drift -maybe a network filesystem");
@@ -556,8 +579,12 @@ public final class Diagnostics {
             ignoreThrowable(e);
             out.println("Failed to create a temporary file in the temp dir " + tempdir);
             out.println("File  " + tempFile + " could not be created/written to");
+        } catch (InterruptedException e) {
+            ignoreThrowable(e);
+            out.println("Failed to check whether tempdir is writable");
         } finally {
             FileUtils.close(fileout);
+            FileUtils.close(filein);
             if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }

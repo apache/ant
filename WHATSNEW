@@ -629,6 +629,11 @@ Other changes:
    whether empty directories should be kept.
    Bugzilla Report 43159.
 
+ * ant -diagnostics now checks that it can read as much from the
+   temporary directory as it has written.  This may help detecting a
+   full filesystem.
+   Bugzilla Report 32676.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
