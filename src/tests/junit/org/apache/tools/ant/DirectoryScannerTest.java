@@ -25,9 +25,11 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
@@ -532,4 +534,25 @@ public class DirectoryScannerTest extends BuildFileTest {
         }
     }
 
+    public void testRecursiveExcludes() throws Exception {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {"**/beta/**"});
+        ds.scan();
+        List dirs = Arrays.asList(ds.getExcludedDirectories());
+        assertEquals(2, dirs.size());
+        assertTrue("beta is excluded",
+                   dirs.contains("alpha/beta".replace('/', File.separatorChar)));
+        assertTrue("gamma is excluded",
+                   dirs.contains("alpha/beta/gamma".replace('/',
+                                                            File.separatorChar)));
+        List files = Arrays.asList(ds.getExcludedFiles());
+        assertEquals(2, files.size());
+        assertTrue("beta.xml is excluded",
+                   files.contains("alpha/beta/beta.xml"
+                                  .replace('/', File.separatorChar)));
+        assertTrue("gamma.xml is excluded",
+                   files.contains("alpha/beta/gamma/gamma.xml"
+                                  .replace('/', File.separatorChar)));
+    }
 }

@@ -57,7 +57,7 @@
     <au:assertFileDoesntExist file="${output}/b/c"/>
   </target>
 
-  <target name="xtestPreserveEmptyOverridesDefault" depends="setUp">
+  <target name="testPreserveEmptyOverridesDefault" depends="setUp">
 
     <sync todir="${output}">
       <fileset dir="${input}"/>
@@ -72,7 +72,7 @@
     <au:assertFileExists file="${output}/b/c"/>
   </target>
 
-  <target name="xtestPreserveEmptyOverrulesIncludeEmpty" depends="setUp">
+  <target name="testPreserveEmptyOverrulesIncludeEmpty" depends="setUp">
 
     <sync todir="${output}" includeEmptyDirs="true">
       <fileset dir="${input}"/>

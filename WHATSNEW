@@ -309,6 +309,11 @@ Fixed bugs:
    command failed.
    Bugzilla Report 46340.
 
+ * DirectoryScanner's slow-scanning algorithm that is used when you
+   ask for excluded or not-included files and/or directories could
+   miss some files and directories in the presence of recursive
+   exclude patterns.
+
 Other changes:
 --------------
 
