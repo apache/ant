@@ -121,6 +121,14 @@ Changes that could break older environments:
    handling on certain Java VMs.
    Bugzilla issue 5003.
 
+ * <checksum>'s totalproperty was platform dependent because it relied
+   on java.io.File#compareTo.  It has now been made platform
+   independent, which means that totalPropery values obtained on
+   Windows (and other systems where the sort order of File is not case
+   sensitive) can be different from the values obtained with earlier
+   versions of Ant.
+   Bugzilla Report 36748.
+
 Fixed bugs:
 -----------
 

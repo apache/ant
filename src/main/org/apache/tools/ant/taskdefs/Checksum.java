@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -550,8 +551,18 @@ public class Checksum extends MatchingTask implements Condition {
                 // Convert the keys (source files) into a sorted array.
                 Set keys = allDigests.keySet();
                 Object[] keyArray = keys.toArray();
-                // File is Comparable, so sorting is trivial
-                Arrays.sort(keyArray);
+                // File is Comparable, but sort-order is platform
+                // dependent (case-insensitive on Windows)
+                Arrays.sort(keyArray, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            File f1 = (File) o1;
+                            File f2 = (File) o2;
+                            return f1 == null ? (f2 == null ? 0 : -1)
+                                : (f2 == null ? 1
+                                   : f1.getName().compareTo(f2.getName())
+                                   );
+                        }
+                    });
                 // Loop over the checksums and generate a total hash.
                 messageDigest.reset();
                 for (int i = 0; i < keyArray.length; i++) {

@@ -31,7 +31,7 @@
     <au:assertPropertySet name="checksumsMatch"/>
   </target>
 
-  <target name="xtestTotalPropertyAcrossPlatforms"
+  <target name="testTotalPropertyAcrossPlatforms"
           description="testcase for
           https://issues.apache.org/bugzilla/show_bug.cgi?id=36748">
     <mkdir dir="${input}"/>
