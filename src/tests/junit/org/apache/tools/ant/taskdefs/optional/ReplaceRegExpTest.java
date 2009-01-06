@@ -106,7 +106,7 @@ public class ReplaceRegExpTest extends BuildFileTest {
         executeTarget("lastModifiedSetup");
         String tmpdir = project.getProperty("tmpregexp");
         long ts1 = new File(tmpdir, "test.txt").lastModified();
-        Thread.sleep(2);
+        Thread.sleep(3000);
         executeTarget("testNoPreserve");
         assertTrue(ts1 < new File(tmpdir, "test.txt").lastModified());
     }
@@ -115,7 +115,7 @@ public class ReplaceRegExpTest extends BuildFileTest {
         executeTarget("lastModifiedSetup");
         String tmpdir = project.getProperty("tmpregexp");
         long ts1 = new File(tmpdir, "test.txt").lastModified();
-        Thread.sleep(2);
+        Thread.sleep(3000);
         executeTarget("testPreserve");
         assertTrue(ts1 == new File(tmpdir, "test.txt").lastModified());
     }
