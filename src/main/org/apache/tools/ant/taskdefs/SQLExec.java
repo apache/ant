@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -566,7 +567,8 @@ public class SQLExec extends JDBCTask {
             }
 
             try {
-                PrintStream out = System.out;
+                PrintStream out =
+                    new PrintStream(new KeepAliveOutputStream(System.out));
                 try {
                     if (output != null) {
                         log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);
