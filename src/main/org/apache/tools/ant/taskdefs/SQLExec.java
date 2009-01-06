@@ -567,8 +567,7 @@ public class SQLExec extends JDBCTask {
             }
 
             try {
-                PrintStream out =
-                    new PrintStream(new KeepAliveOutputStream(System.out));
+                PrintStream out = KeepAliveOutputStream.wrapSystemOut();
                 try {
                     if (output != null) {
                         log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);

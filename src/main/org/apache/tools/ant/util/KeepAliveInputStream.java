@@ -54,4 +54,14 @@ public class KeepAliveInputStream extends FilterInputStream {
     public void close() throws IOException {
         // do not close the stream
     }
+
+    /**
+     * Convenience factory method that returns a non-closing
+     * InputStream around System.in.
+     *
+     * @since Ant 1.8.0
+     */
+    public static InputStream wrapSystemIn() {
+        return new KeepAliveInputStream(System.in);
+    }
 }

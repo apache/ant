@@ -224,7 +224,9 @@ public class SSHExec extends SSHBase {
     private void executeCommand(Session session, String cmd, StringBuffer sb)
         throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        TeeOutputStream tee = new TeeOutputStream(out, new KeepAliveOutputStream(System.out));
+        TeeOutputStream tee =
+            new TeeOutputStream(out,
+                                KeepAliveOutputStream.wrapSystemOut());
 
         InputStream istream = null ;
         if (inputFile != null) {

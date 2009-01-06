@@ -29,6 +29,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
 
 /**
  * <p> A wrapper for the implementations of <code>JUnitResultFormatter</code>.
@@ -57,7 +58,7 @@ public class FormatterElement {
 
     private String classname;
     private String extension;
-    private OutputStream out = System.out;
+    private OutputStream out = new KeepAliveOutputStream(System.out);
     private File outFile;
     private boolean useFile = true;
     private String ifProperty;
@@ -170,6 +171,9 @@ public class FormatterElement {
      * @param out the output stream to use.
      */
     public void setOutput(OutputStream out) {
+        if (out == System.out || out == System.err) {
+            out = new KeepAliveOutputStream(out);
+        }
         this.out = out;
     }
 

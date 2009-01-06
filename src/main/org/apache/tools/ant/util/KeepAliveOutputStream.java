@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  * Class that can be used to wrap <tt>System.out</tt> and <tt>System.err</tt>
@@ -52,5 +53,32 @@ public class KeepAliveOutputStream extends FilterOutputStream {
      */
     public void close() throws IOException {
         // do not close the stream
+    }
+
+    /**
+     * Convenience factory method that returns a non-closing
+     * PrintStream around System.out.
+     *
+     * @since Ant 1.8.0
+     */
+    public static PrintStream wrapSystemOut() {
+        return wrap(System.out);
+    }
+
+    /**
+     * Convenience factory method that returns a non-closing
+     * PrintStream around System.err.
+     *
+     * @since Ant 1.8.0
+     */
+    public static PrintStream wrapSystemErr() {
+        return wrap(System.err);
+    }
+
+    /**
+     * @since Ant 1.8.0
+     */
+    private static PrintStream wrap(PrintStream ps) {
+        return new PrintStream(new KeepAliveOutputStream(ps));
     }
 }
