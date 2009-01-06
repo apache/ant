@@ -31,4 +31,17 @@
     <au:assertPropertySet name="checksumsMatch"/>
   </target>
 
+  <target name="xtestTotalPropertyAcrossPlatforms"
+          description="testcase for
+          https://issues.apache.org/bugzilla/show_bug.cgi?id=36748">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/a.txt">abc</echo>
+    <echo file="${input}/B.txt">xyz</echo>
+    <checksum totalproperty="total">
+      <fileset dir="${input}"/>
+    </checksum>
+    <au:assertPropertyEquals name="total"
+                             value="709a9cf15c8834c59c7eeb07522cdf56"/>
+  </target>
+
 </project>
