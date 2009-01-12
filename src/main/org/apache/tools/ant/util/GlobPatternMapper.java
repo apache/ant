@@ -68,6 +68,7 @@ public class GlobPatternMapper implements FileNameMapper {
 
     // CheckStyle:VisibilityModifier ON
 
+    private boolean toContainsStar = false;
     private boolean handleDirSep = false;
     private boolean caseSensitive = true;
 
@@ -126,6 +127,7 @@ public class GlobPatternMapper implements FileNameMapper {
             } else {
                 toPrefix = to.substring(0, index);
                 toPostfix = to.substring(index + 1);
+                toContainsStar = true;
             }
         } else {
             throw new BuildException("this mapper requires a 'to' attribute");
@@ -148,8 +150,10 @@ public class GlobPatternMapper implements FileNameMapper {
             return null;
         }
         return new String[] {toPrefix
-                                 + extractVariablePart(sourceFileName)
-                                 + toPostfix};
+                             + (toContainsStar
+                                ? extractVariablePart(sourceFileName)
+                                  + toPostfix
+                                : "")};
     }
 
     /**

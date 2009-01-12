@@ -47,7 +47,7 @@
     <au:assertFileExists file="${output}/x.jar"/>
   </target>
 
-  <target name="xtest-no-*-in-to" depends="setUp"
+  <target name="test-no-*-in-to" depends="setUp"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46506">
     <touch file="${input}/a-b.jar"/>
     <copy todir="${output}">
@@ -58,7 +58,7 @@
     <au:assertFileExists file="${output}/c.jar"/>
   </target>
 
-  <target name="test-*-at-end-of" depends="setUp">
+  <target name="test-*-at-end-of-to" depends="setUp">
     <touch file="${input}/a-b.jar"/>
     <copy todir="${output}">
       <fileset dir="${input}"/>

@@ -322,6 +322,10 @@ Fixed bugs:
    miss some files and directories in the presence of recursive
    exclude patterns.
 
+ * globmapper didn't work properly if the "to" pattern didn't contain
+   a *.
+   Bugzilla Report 46506.
+
 Other changes:
 --------------
 
