@@ -22,17 +22,13 @@
 
   <import file="../antunit-base.xml" />
 
-  <target name="test-move">
-    <property 
-      name="glob-test-out-dir"
-      location="${glob-test.dir}/../../../../../build/antunit/glob-test"/>
-    <echo>${glob-test-out-dir}</echo>
-    <!-- the following should work -->
-    <delete dir="${input}"/>
-    <delete dir="${output}"/>
+  <target name="test-overlapping-patterns">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
+    <!-- shouldn't be moved because pre- and postfix of from pattern
+         overlap -->
     <touch file="${input}/foobar-1.2.3.jar"/>
+
     <touch file="${input}/foobar-janfu-1.2.3.jar"/>
     <touch file="${input}/foobar--1.2.3.jar"/>
     <touch file="${input}/foobar-x-1.2.3.jar"/>
@@ -42,5 +38,10 @@
       </fileset>
       <mapper type="glob" from="foobar-*-1.2.3.jar" to="*.jar"/>
     </move>
+    <au:assertFileExists file="${input}/foobar-1.2.3.jar"/>
+    <au:assertFileExists file="${output}/janfu.jar"/>
+    <au:assertFileExists file="${output}/.jar"/>
+    <au:assertFileExists file="${output}/x.jar"/>
   </target>
+
 </project>
