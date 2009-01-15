@@ -15,8 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project default="sort"
+<project default="antunit"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
+
+  <import file="../../../antunit-base.xml" />
 
   <property name="dirname" value="work" />
   <property name="dir" location="${dirname}" />
@@ -29,7 +31,7 @@
     <delete file="${file}" />
   </target>
 
-  <target name="sortsetup" unless="sortsetup.done">
+  <target name="setUp">
     <mkdir dir="${dir}" />
 
     <echo file="${dir}/b" message="yyy" />
@@ -60,11 +62,9 @@
         <echo level="${echolevel}">@{property}=${@{property}}</echo>
       </sequential>
     </macrodef>
-
-    <property name="sortsetup.done" value="true" />
   </target>
 
-  <target name="testsortdefault" depends="sortsetup">
+  <target name="testsortdefault" depends="setUp">
     <mysort property="sortdf" />
     <fail>
       <condition>
@@ -75,7 +75,7 @@
     </fail>
   </target>
 
-  <target name="testrvdefault" depends="sortsetup">
+  <target name="testrvdefault" depends="setUp">
     <mysort property="sortdf-rev">
       <rcmp:reverse />
     </mysort>
@@ -88,7 +88,7 @@
     </fail>
   </target>
 
-  <target name="testname" depends="sortsetup">
+  <target name="testname" depends="setUp">
     <mysort property="sortnm">
       <rcmp:name />
     </mysort>
@@ -101,7 +101,7 @@
     </fail>
   </target>
 
-  <target name="testrvname" depends="sortsetup">
+  <target name="testrvname" depends="setUp">
     <mysort property="sortnm-rev">
       <rcmp:reverse>
         <rcmp:name />
@@ -116,7 +116,7 @@
     </fail>
   </target>
 
-  <target name="testdate" depends="sortsetup">
+  <target name="testdate" depends="setUp">
     <mysort property="sortlm">
       <rcmp:date />
     </mysort>
@@ -129,7 +129,7 @@
     </fail>
   </target>
 
-  <target name="testrvdate" depends="sortsetup">
+  <target name="testrvdate" depends="setUp">
     <mysort property="sortlm-rev">
       <rcmp:reverse>
         <rcmp:date />
@@ -144,7 +144,7 @@
     </fail>
   </target>
 
-  <target name="testsize" depends="sortsetup">
+  <target name="testsize" depends="setUp">
     <mysort property="sortsz">
       <rcmp:size />
     </mysort>
@@ -157,7 +157,7 @@
     </fail>
   </target>
 
-  <target name="testrvsize" depends="sortsetup">
+  <target name="testrvsize" depends="setUp">
     <mysort property="sortsz-rev">
       <rcmp:reverse>
         <rcmp:size />
@@ -172,7 +172,7 @@
     </fail>
   </target>
 
-  <target name="testcontent" depends="sortsetup">
+  <target name="testcontent" depends="setUp">
     <mysort property="sortct">
       <rcmp:content />
     </mysort>
@@ -185,7 +185,7 @@
     </fail>
   </target>
 
-  <target name="testrvcontent" depends="sortsetup">
+  <target name="testrvcontent" depends="setUp">
     <mysort property="sortct-rev">
       <rcmp:reverse>
         <rcmp:content />
@@ -200,7 +200,7 @@
     </fail>
   </target>
 
-  <target name="testexists" depends="sortsetup">
+  <target name="testexists" depends="setUp">
     <pathconvert property="sortex" pathsep=",">
       <sort>
         <resources>
@@ -220,7 +220,7 @@
     </fail>
   </target>
 
-  <target name="testrvexists" depends="sortsetup">
+  <target name="testrvexists" depends="setUp">
     <pathconvert property="sortex-rev" pathsep=",">
       <sort>
         <resources>
@@ -242,7 +242,7 @@
     </fail>
   </target>
 
-  <target name="testtype" depends="sortsetup">
+  <target name="testtype" depends="setUp">
     <pathconvert property="sorttp" pathsep=",">
       <sort>
         <resources>
@@ -262,7 +262,7 @@
     </fail>
   </target>
 
-  <target name="testrvtype" depends="sortsetup">
+  <target name="testrvtype" depends="setUp">
     <pathconvert property="sorttp-rev" pathsep=",">
       <sort>
         <resources>
@@ -290,7 +290,7 @@
   <target name="reversesort"
     depends="testrvdefault,testrvname,testrvdate,testrvsize,testrvcontent,testrvexists,testrvtype" />
 
-  <target name="testcompoundsort1" depends="sortsetup">
+  <target name="testcompoundsort1" depends="setUp">
     <pathconvert property="sortcmp1" pathsep=",">
       <sort>
         <resources>
@@ -317,7 +317,7 @@
     </fail>
   </target>
 
-  <target name="testcompoundsort2" depends="sortsetup">
+  <target name="testcompoundsort2" depends="setUp">
     <pathconvert property="sortcmp2" pathsep=",">
       <sort>
         <files includes="${dir}/?" />
