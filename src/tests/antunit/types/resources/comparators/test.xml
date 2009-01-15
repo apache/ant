@@ -279,4 +279,27 @@
 
   <target name="sort" depends="forwardsort,reversesort,compoundsort" />
 
+  <target name="testEquals">
+    <!-- test for PR 46527 -->
+    <sort id="testEquals">
+      <resources>
+        <string>foo</string>
+        <string>foo</string>
+        <string>foo</string>
+      </resources>
+    </sort>
+
+    <au:assertTrue>
+      <resourcecount refid="testEquals" count="3" />
+    </au:assertTrue>
+
+    <pathconvert refid="testEquals" property="testEquals" pathsep="">
+      <mergemapper to="X" />
+    </pathconvert>
+
+    <au:assertTrue>
+      <length string="${testEquals}" length="3" />
+    </au:assertTrue>
+  </target>
+
 </project>
