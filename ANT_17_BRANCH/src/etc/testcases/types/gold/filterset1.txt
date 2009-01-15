@@ -1,2 +1,0 @@
-This is a test file for filters 1111
-It has two lines 2222

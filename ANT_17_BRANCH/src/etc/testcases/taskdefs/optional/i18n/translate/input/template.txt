@@ -1,1 +1,0 @@
-@This@ @is@ @a@ @demo@ @file@ @for@ @the@ translate@_task@ @missing_token@.

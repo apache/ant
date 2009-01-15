@@ -1,5 +1,0 @@
-This is a test file for filters with non default markers
-@cccc@ - should not change
-3333 - should change
-^dddd% - should not change
-4444 - should change
