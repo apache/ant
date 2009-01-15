@@ -16,6 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
 
   <import file="../../../antunit-base.xml" />
@@ -66,39 +67,27 @@
 
   <target name="testsortdefault" depends="setUp">
     <mysort property="sortdf" />
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortdf}" arg2="a,b,c" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortdf}" arg2="a,b,c" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvdefault" depends="setUp">
     <mysort property="sortdf-rev">
       <rcmp:reverse />
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortdf-rev}" arg2="c,b,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortdf-rev}" arg2="c,b,a" />
+    </au:assertTrue>
   </target>
 
   <target name="testname" depends="setUp">
     <mysort property="sortnm">
       <rcmp:name />
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortnm}" arg2="a,b,c" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortnm}" arg2="a,b,c" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvname" depends="setUp">
@@ -107,26 +96,18 @@
         <rcmp:name />
       </rcmp:reverse>
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortnm-rev}" arg2="c,b,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortnm-rev}" arg2="c,b,a" />
+    </au:assertTrue>
   </target>
 
   <target name="testdate" depends="setUp">
     <mysort property="sortlm">
       <rcmp:date />
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortlm}" arg2="b,c,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortlm}" arg2="b,c,a" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvdate" depends="setUp">
@@ -135,26 +116,18 @@
         <rcmp:date />
       </rcmp:reverse>
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortlm-rev}" arg2="a,c,b" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortlm-rev}" arg2="a,c,b" />
+    </au:assertTrue>
   </target>
 
   <target name="testsize" depends="setUp">
     <mysort property="sortsz">
       <rcmp:size />
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortsz}" arg2="c,a,b" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortsz}" arg2="c,a,b" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvsize" depends="setUp">
@@ -163,26 +136,18 @@
         <rcmp:size />
       </rcmp:reverse>
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortsz-rev}" arg2="b,a,c" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortsz-rev}" arg2="b,a,c" />
+    </au:assertTrue>
   </target>
 
   <target name="testcontent" depends="setUp">
     <mysort property="sortct">
       <rcmp:content />
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortct}" arg2="c,b,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortct}" arg2="c,b,a" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvcontent" depends="setUp">
@@ -191,13 +156,9 @@
         <rcmp:content />
       </rcmp:reverse>
     </mysort>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortct-rev}" arg2="a,b,c" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortct-rev}" arg2="a,b,c" />
+    </au:assertTrue>
   </target>
 
   <target name="testexists" depends="setUp">
@@ -211,13 +172,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortex}" arg2="redherring,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortex}" arg2="redherring,a" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvexists" depends="setUp">
@@ -233,13 +190,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortex-rev}" arg2="a,redherring" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortex-rev}" arg2="a,redherring" />
+    </au:assertTrue>
   </target>
 
   <target name="testtype" depends="setUp">
@@ -253,13 +206,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sorttp}" arg2="a,a.dir" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sorttp}" arg2="a,a.dir" />
+    </au:assertTrue>
   </target>
 
   <target name="testrvtype" depends="setUp">
@@ -275,13 +224,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sorttp-rev}" arg2="a.dir,a" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sorttp-rev}" arg2="a.dir,a" />
+    </au:assertTrue>
   </target>
 
   <target name="forwardsort"
@@ -308,13 +253,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortcmp1}" arg2="a.dir,b.dir,c.dir,a,b,c" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortcmp1}" arg2="a.dir,b.dir,c.dir,a,b,c" />
+    </au:assertTrue>
   </target>
 
   <target name="testcompoundsort2" depends="setUp">
@@ -329,13 +270,9 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <fail>
-      <condition>
-        <not>
-          <equals arg1="${sortcmp2}" arg2="d,c,f,a,e,b" />
-        </not>
-      </condition>
-    </fail>
+    <au:assertTrue>
+      <equals arg1="${sortcmp2}" arg2="d,c,f,a,e,b" />
+    </au:assertTrue>
   </target>
 
   <target name="compoundsort" depends="testcompoundsort1,testcompoundsort2" />
