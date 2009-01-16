@@ -646,6 +646,10 @@ Other changes:
    full filesystem.
    Bugzilla Report 32676.
 
+ * <pathconvert> has a new preserveduplicates attribute--historically
+   these were eliminated in the interest of behaving in the manner
+   of a "path."
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
