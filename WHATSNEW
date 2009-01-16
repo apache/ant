@@ -326,6 +326,9 @@ Fixed bugs:
    a *.
    Bugzilla Report 46506.
 
+ * <sort> resource collection kept only one of entries deemed equal by
+   the chosen Comparator.  Bugzilla report 46527.
+
 Other changes:
 --------------
 

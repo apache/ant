@@ -17,14 +17,11 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.util.List;
 import java.util.Stack;
-import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Collections;
-import java.util.AbstractCollection;
-import java.util.NoSuchElementException;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -32,6 +29,7 @@ import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
+import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * ResourceCollection that sorts another ResourceCollection.
@@ -42,59 +40,6 @@ import org.apache.tools.ant.types.resources.comparators.DelegatedResourceCompara
  * @since Ant 1.7
  */
 public class Sort extends BaseResourceCollectionWrapper {
-
-    //sorted bag impl. borrowed from commons-collections TreeBag:
-    private static class SortedBag extends AbstractCollection {
-        private class MutableInt {
-            private int value = 0;
-        }
-        private class MyIterator implements Iterator {
-            private Iterator keyIter = t.keySet().iterator();
-            private Object current;
-            private int occurrence;
-            public synchronized boolean hasNext() {
-                return occurrence > 0 || keyIter.hasNext();
-            }
-            public synchronized Object next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                if (occurrence == 0) {
-                    current = keyIter.next();
-                    occurrence = ((MutableInt) t.get(current)).value;
-                }
-                --occurrence;
-                return current;
-            }
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        }
-        private TreeMap t;
-        private int size;
-
-        SortedBag(Comparator c) {
-            t = new TreeMap(c);
-        }
-        public synchronized Iterator iterator() {
-            return new MyIterator();
-        }
-        public synchronized boolean add(Object o) {
-            if (size < Integer.MAX_VALUE) {
-                ++size;
-            }
-            MutableInt m = (MutableInt) (t.get(o));
-            if (m == null) {
-                m = new MutableInt();
-                t.put(o, m);
-            }
-            m.value++;
-            return true;
-        }
-        public synchronized int size() {
-            return size;
-        }
-    }
 
     private DelegatedResourceComparator comp = new DelegatedResourceComparator();
 
@@ -108,11 +53,9 @@ public class Sort extends BaseResourceCollectionWrapper {
         if (!(iter.hasNext())) {
             return Collections.EMPTY_SET;
         }
-        SortedBag b = new SortedBag(comp);
-        while (iter.hasNext()) {
-            b.add(iter.next());
-        }
-        return b;
+        List result = (List) CollectionUtils.asCollection(iter);
+        Collections.sort(result, comp);
+        return result;
     }
 
     /**
