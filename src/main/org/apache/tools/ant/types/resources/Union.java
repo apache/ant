@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
@@ -48,10 +49,28 @@ public class Union extends BaseResourceCollectionContainer {
     }
 
     /**
+     * Create a new Union.
+     * @param project owning Project
+     */
+    public Union(Project project) {
+        super(project);
+    }
+
+    /**
      * Convenience constructor.
      * @param rc the ResourceCollection to add.
      */
     public Union(ResourceCollection rc) {
+        this(Project.getProject(rc), rc);
+    }
+    
+    /**
+     * Convenience constructor.
+     * @param project owning Project
+     * @param rc the ResourceCollection to add.
+     */
+    public Union(Project project, ResourceCollection rc) {
+        super(project);
         add(rc);
     }
 

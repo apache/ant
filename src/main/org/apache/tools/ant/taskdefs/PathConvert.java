@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.ArrayList;
@@ -31,8 +32,10 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.IdentityMapper;
 
 /**
  * Converts path and classpath information to a specific target OS
@@ -52,7 +55,7 @@ public class PathConvert extends Task {
     /**
      * Path to be converted
      */
-    private Union path = null;
+    private Resources path = null;
     /**
      * Reference to path/fileset to convert
      */
@@ -88,6 +91,8 @@ public class PathConvert extends Task {
 
     /** Filename mapper */
     private Mapper mapper = null;
+
+    private boolean preserveDuplicates;
 
     /**
      * Construct a new instance of the PathConvert task.
@@ -191,10 +196,9 @@ public class PathConvert extends Task {
         getPath().add(rc);
     }
 
-    private synchronized Union getPath() {
+    private synchronized Resources getPath() {
         if (path == null) {
-            path = new Union();
-            path.setProject(getProject());
+            path = new Resources(getProject());
         }
         return path;
     }
@@ -295,6 +299,24 @@ public class PathConvert extends Task {
     }
 
     /**
+     * Set the preserveDuplicates.
+     * @param preserveDuplicates the boolean to set
+     * @since Ant 1.8
+     */
+    public void setPreserveDuplicates(boolean preserveDuplicates) {
+        this.preserveDuplicates = preserveDuplicates;
+    }
+
+    /**
+     * Get the preserveDuplicates.
+     * @return boolean
+     * @since Ant 1.8
+     */
+    public boolean isPreserveDuplicates() {
+        return preserveDuplicates;
+    }
+
+    /**
      * Learn whether the refid attribute of this element been set.
      * @return true if refid is valid.
      */
@@ -307,7 +329,7 @@ public class PathConvert extends Task {
      * @throws BuildException if something is invalid.
      */
     public void execute() throws BuildException {
-        Union savedPath = path;
+        Resources savedPath = path;
         String savedPathSep = pathSep; // may be altered in validateSetup
         String savedDirSep = dirSep; // may be altered in validateSetup
 
@@ -335,31 +357,27 @@ public class PathConvert extends Task {
 
             StringBuffer rslt = new StringBuffer();
 
-            // Get the list of path components in canonical form
-            String[] elems = path.list();
-
-            if (mapper != null) {
-                FileNameMapper impl = mapper.getImplementation();
-                List ret = new ArrayList();
-                for (int i = 0; i < elems.length; ++i) {
-                    String[] mapped = impl.mapFileName(elems[i]);
-                    for (int m = 0; mapped != null && m < mapped.length; ++m) {
-                        ret.add(mapped[m]);
-                    }
+            ResourceCollection resources = isPreserveDuplicates() ? (ResourceCollection) path : new Union(path);
+            List ret = new ArrayList();
+            FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
+            for (Iterator iter = resources.iterator(); iter.hasNext(); ) {
+                String[] mapped = mapperImpl.mapFileName(String.valueOf(iter.next()));
+                for (int m = 0; mapped != null && m < mapped.length; ++m) {
+                    ret.add(mapped[m]);
                 }
-                elems = (String[]) ret.toArray(new String[ret.size()]);
             }
-            for (int i = 0; i < elems.length; i++) {
-                String elem = mapElement(elems[i]); // Apply the path prefix map
+            boolean first = true;
+            for (Iterator mappedIter = ret.iterator(); mappedIter.hasNext(); ) {
+                String elem = mapElement((String) mappedIter.next()); // Apply the path prefix map
 
                 // Now convert the path and file separator characters from the
                 // current os to the target os.
 
-                if (i != 0) {
+                if (first) {
                     rslt.append(pathSep);
+                    first = false;
                 }
-                StringTokenizer stDirectory =
-                    new StringTokenizer(elem, fromDirSep, true);
+                StringTokenizer stDirectory = new StringTokenizer(elem, fromDirSep, true);
 
                 while (stDirectory.hasMoreTokens()) {
                     String token = stDirectory.nextToken();
@@ -373,8 +391,7 @@ public class PathConvert extends Task {
                 if (property == null) {
                     log(value);
                 } else {
-                    log("Set property " + property + " = " + value,
-                        Project.MSG_VERBOSE);
+                    log("Set property " + property + " = " + value, Project.MSG_VERBOSE);
                     getProject().setNewProperty(property, value);
                 }
             }

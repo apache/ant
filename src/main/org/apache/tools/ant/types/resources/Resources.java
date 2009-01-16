@@ -108,6 +108,19 @@ public class Resources extends DataType implements ResourceCollection {
     private Collection coll;
 
     /**
+     * Create a new Resources.
+     */
+    public Resources() {
+    }
+
+    /**
+     * Create a new Resources.
+     */
+    public Resources(Project project) {
+        setProject(project);
+    }
+
+    /**
      * Add a ResourceCollection.
      * @param c the ResourceCollection to add.
      */
@@ -208,7 +221,7 @@ public class Resources extends DataType implements ResourceCollection {
             for (Iterator i = getNested().iterator(); i.hasNext();) {
                 Object o = i.next();
                 if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                    invokeCircularReferenceCheck((DataType) o, stk, p);
                 }
             }
             setChecked(true);

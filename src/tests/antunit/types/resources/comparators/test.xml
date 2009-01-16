@@ -293,7 +293,7 @@
       <resourcecount refid="testEquals" count="3" />
     </au:assertTrue>
 
-    <pathconvert refid="testEquals" property="testEquals" pathsep="">
+    <pathconvert refid="testEquals" property="testEquals" pathsep="" preserveduplicates="true">
       <mergemapper to="X" />
     </pathconvert>
 

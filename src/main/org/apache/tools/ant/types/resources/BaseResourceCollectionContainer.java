@@ -28,7 +28,6 @@ import java.util.Collections;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**
@@ -40,6 +39,21 @@ public abstract class BaseResourceCollectionContainer
     private List rc = new ArrayList();
     private Collection coll = null;
     private boolean cache = true;
+
+    /**
+     * Create a new BaseResourceCollectionContainer.
+     */
+    public BaseResourceCollectionContainer() {
+        // TODO Auto-generated constructor stub
+    }
+    
+    /**
+     * Create a new BaseResourceCollectionContainer.
+     * @since Ant 1.8
+     */
+    public BaseResourceCollectionContainer(Project project) {
+        setProject(project);
+    }
 
     /**
      * Set whether to cache collections.
@@ -159,8 +173,7 @@ public abstract class BaseResourceCollectionContainer
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
         for (Iterator i = cacheCollection().iterator(); i.hasNext();) {
-            Resource r = (Resource) i.next();
-            if (r.as(FileProvider.class) == null) {
+            if (!(i.next() instanceof FileProvider)) {
                 return false;
             }
         }
@@ -185,7 +198,9 @@ public abstract class BaseResourceCollectionContainer
             for (Iterator i = rc.iterator(); i.hasNext();) {
                 Object o = i.next();
                 if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                    stk.push(o);
+                    invokeCircularReferenceCheck((DataType) o, stk, p);
+                    stk.pop();
                 }
             }
             setChecked(true);
