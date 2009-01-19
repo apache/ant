@@ -363,6 +363,23 @@
 
     <section name="Articles">
 
+       <subsection name="Ant + DocBook HOWTO">
+         <p>Pure Java DocBook Systems, including Ant Integration</p>
+         <p>The DocBook team documents how to use "make" for DocBook.
+         This HOWTO document is an attempt to cover the neglected case of using
+         DocBook for pure Java projects.</p>
+         <table class="externals">
+           <tr>
+             <th>Author:</th>
+             <td>Blaine Simpson </td>
+           </tr>
+           <tr>
+             <th>URL:</th>
+             <td><a href="http://pub.admc.com/howtos/ant-docbook-howto/">http://pub.admc.com/howtos/ant-docbook-howto/</a></td>
+           </tr>
+         </table>
+       </subsection>
+
        <subsection name="Extending Ant Input Abilities">
          <p>The contents of this document is the following:<ul>
            <li>Section 2 provides a simple example how InputHandlers are created,</li>
