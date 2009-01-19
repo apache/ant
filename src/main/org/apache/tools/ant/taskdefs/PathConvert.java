@@ -373,10 +373,11 @@ public class PathConvert extends Task {
                 // Now convert the path and file separator characters from the
                 // current os to the target os.
 
-                if (first) {
+                if (!first) {
                     rslt.append(pathSep);
-                    first = false;
                 }
+                first = false;
+
                 StringTokenizer stDirectory = new StringTokenizer(elem, fromDirSep, true);
 
                 while (stDirectory.hasMoreTokens()) {
