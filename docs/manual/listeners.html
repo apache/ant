@@ -122,31 +122,30 @@ listeners and loggers.</p>
     <td width="34%">BuildLogger</td>
   </tr>
 </table>
+
+
+
 <h3><a name="DefaultLogger">DefaultLogger</a></h3>
-
 <p>Simply run Ant normally, or:</p>
-
 <blockquote>
-
 <p><code>ant -logger org.apache.tools.ant.DefaultLogger</code></p>
-
 </blockquote>
+
+
 
 <h3><a name="NoBannerLogger">NoBannerLogger</a></h3>
-
 <p>Removes output of empty target output.</p>
-
 <blockquote>
-
 <p><code>ant -logger org.apache.tools.ant.NoBannerLogger</code></p>
-
 </blockquote>
 
-<h3><a name="MailLogger">MailLogger</a></h3>
 
+
+<h3><a name="MailLogger">MailLogger</a></h3>
 <p>The MailLogger captures all output logged through DefaultLogger (standard Ant
 output) and will send success and failure messages to unique e-mail lists, with
 control for turning off success or failure messages individually.</p>
+
 <p>Properties controlling the operation of MailLogger:</p>
 <table border="1" cellspacing="1" width="100%" id="AutoNumber2">
   <tr>
@@ -257,11 +256,12 @@ control for turning off success or failure messages individually.</p>
     <td width="63%">No</td>
   </tr>
 </table>
+
 <blockquote>
-
 <p><code>ant -logger org.apache.tools.ant.listener.MailLogger</code></p>
-
 </blockquote>
+
+
 
 <h3><a name="AnsiColorLogger">AnsiColorLogger</a></h3>
 
@@ -333,16 +333,14 @@ Background is one of the following:
 47 -&gt; White</pre>
 
 <blockquote>
-
 <p><code>ant -logger org.apache.tools.ant.listener.AnsiColorLogger</code></p>
-
 </blockquote>
 
-<h3><a name="Log4jListener">Log4jListener</a></h3>
 
+
+<h3><a name="Log4jListener">Log4jListener</a></h3>
 <p>Passes build events to Log4j, using the full classname's of the generator of
 each build event as the category:</p>
-
 <ul>
   <li>build started / build finished - org.apache.tools.ant.Project</li>
   <li>target started / target finished - org.apache.tools.ant.Target</li>
@@ -350,16 +348,13 @@ each build event as the category:</p>
   <li>message logged - the classname of one of the above, so if a task logs a
   message, its classname is the category used, and so on.</li>
 </ul>
-
 <p>All start events are logged as INFO.&nbsp; Finish events are either logged as
 INFO or ERROR depending on whether the build failed during that stage. Message
 events are logged according to their Ant logging level, mapping directly to a
 corresponding Log4j level.</p>
 
 <blockquote>
-
 <p><code>ant -listener org.apache.tools.ant.listener.Log4jListener</code></p>
-
 </blockquote>
 
 <p>To use Log4j you will need the Log4j JAR file and a 'log4j.properties'
@@ -376,7 +371,6 @@ console by the DefaultLogger and send it to a file named 'build.log', you
 could use the following configuration:</p>
 
 <blockquote>
-
 <pre><code>log4j.rootLogger=ERROR, LogFile
 log4j.logger.org.apache.tools.ant.Project=INFO
 log4j.logger.org.apache.tools.ant.Target=INFO
@@ -388,41 +382,37 @@ log4j.appender.LogFile.layout=org.apache.log4j.PatternLayout
 log4j.appender.LogFile.layout.ConversionPattern=[%6r] %8c{1} : %m%n
 log4j.appender.LogFile.file=build.log
 </code></pre>
-
 </blockquote>
 
 <p>For more information about configuring Log4J see <a href="http://logging.apache.org/log4j/docs/documentation.html">its
 documentation page</a>.</p>
 
-<h3><a name="XmlLogger">XmlLogger</a></h3>
 
+
+<h3><a name="XmlLogger">XmlLogger</a></h3>
 <p>Writes all build information out to an XML file named log.xml, or the value
 of the <code>XmlLogger.file</code> property if present, when used as a
 listener. When used as a logger, it writes all output to either the
 console or to the value of <code>-logfile</code>. Whether used as a listener
 or logger, the output is not generated until the build is complete, as it
 buffers the information in order to provide timing information for task,
-targets, and the project.
-<p>
-By default the XML file creates
-a reference to an XSLT file "log.xsl" in the current directory; look in
-ANT_HOME/etc for one of these. You can set the property
+targets, and the project.</p>
+<p>By default the XML file creates a reference to an XSLT file "log.xsl" in the current directory;
+look in ANT_HOME/etc for one of these. You can set the property
 <code>ant.XmlLogger.stylesheet.uri</code> to provide a uri to a style sheet.
 this can be a relative or absolute file path, or an http URL.
 If you set the property to the empty string, "", no XSLT transform
-is declared at all.
-</p>
+is declared at all.</p>
 
 <blockquote>
-
 <p><code>ant -listener org.apache.tools.ant.XmlLogger</code><br>
 <code>ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</code></p>
-
 </blockquote>
 
 
-<h3><a name="TimestampedLogger">TimestampedLogger</a></h3>
 
+
+<h3><a name="TimestampedLogger">TimestampedLogger</a></h3>
 <p>
   Acts like the default logger, except that the final success/failure message also includes
   the time that the build completed. For example:
@@ -433,13 +423,12 @@ is declared at all.
 <p>To use this listener, use the command:</p>
 
 <blockquote>
-
 <code>ant  -logger org.apache.tools.ant.listener.TimestampedLogger</code>
-
 </blockquote>
 
-<h3><a name="BigProjectLogger">BigProjectLogger</a></h3>
 
+
+<h3><a name="BigProjectLogger">BigProjectLogger</a></h3>
 <p>
   This logger is designed to make examining the logs of a big build easier,
   especially those run under continuous integration tools. It
@@ -488,13 +477,66 @@ Exiting project "junit"
   are reduced to becoming clear delimiters of where different projects
   are in charge -or more importantly, which project is failing.
 </p>
-
 <p>To use this listener, use the command:</p>
 <blockquote>
-
 <code>ant  -logger org.apache.tools.ant.listener.BigProjectLogger</code>
-
 </blockquote>
+
+
+
+<h3><a name="ProfileLogger">ProfileLogger</a></h3>
+<p>This logger stores the time needed for executing a task, target and the whole build and prints
+these information. The output contains a timestamp when entering the build, target or task and a timestamp and the needed time when exiting.
+</p>
+<!-- This is the 'since' as described in the Loggers JavaDoc -->
+<p><b>since Ant 1.8.0</b></p>
+<h4>Example</h4>
+Having that buildfile
+<pre>
+&lt;project&gt;
+    &lt;target name=&quot;aTarget&quot;&gt;
+        &lt;echo&gt;echo-task&lt;/echo&gt;
+        &lt;zip destfile=&quot;my.zip&quot;&gt;
+            &lt;fileset dir=&quot;${ant.home}&quot;/&gt;
+        &lt;/zip&gt;
+    &lt;/target&gt;
+    &lt;target name=&quot;anotherTarget&quot; depends=&quot;aTarget&quot;&gt;
+        &lt;echo&gt;another-echo-task&lt;/echo&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+and executing with <tt>ant -logger org.apache.tools.ant.listener.ProfileLogger anotherTarget</tt> gives that output (with other timestamps and duration of course ;) :
+<pre>
+Buildfile: ...\build.xml
+
+Target aTarget: started Thu Jan 22 09:01:00 CET 2009
+
+echo: started Thu Jan 22 09:01:00 CET 2009
+     [echo] echo-task
+
+echo: finishedThu Jan 22 09:01:00 CET 2009 (250ms)
+
+zip: started Thu Jan 22 09:01:00 CET 2009
+      [zip] Building zip: ...\my.zip
+
+zip: finishedThu Jan 22 09:01:01 CET 2009 (1313ms)
+
+Target aTarget: finishedThu Jan 22 09:01:01 CET 2009 (1719ms)
+
+Target anotherTarget: started Thu Jan 22 09:01:01 CET 2009
+
+echo: started Thu Jan 22 09:01:01 CET 2009
+     [echo] another-echo-task
+
+echo: finishedThu Jan 22 09:01:01 CET 2009 (0ms)
+
+Target anotherTarget: finishedThu Jan 22 09:01:01 CET 2009 (0ms)
+
+BUILD SUCCESSFUL
+Total time: 2 seconds
+</pre>
+
+
 
 <h2><a name="dev">Writing your own</a></h2>
 
@@ -522,10 +564,7 @@ developers.</p>
     Classes that implement <code>org.apache.tools.ant.SubBuildListener</code> receive notifications when child projects
     start and stop.
   </li>
-
 </ul>
-
-
 
 </body>
 </html>
