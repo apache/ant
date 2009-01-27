@@ -40,8 +40,10 @@
         <path id="anakia.classpath">
             <fileset dir="${velocity.dir}">
                 <include name="velocity-dep-*.jar"/>
+                <include name="velocity-*-dep.jar"/>
                 <!-- XXX why is this needed separately? -->
                 <include name="build/lib/jdom-*.jar"/>
+                <include name="lib/jdom-*.jar"/>
             </fileset>
         </path>
     </target>
