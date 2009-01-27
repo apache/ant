@@ -25,10 +25,16 @@
 
 <body>
   <section name="Ivy 2.0.0">
-    <h3>January 23, 2009 - Apache Ivy 2.0.0 Released</h3>
+    <h3>January 20, 2009 - Apache Ivy 2.0.0 Released</h3>
     <p>Apache Ivy 2.0.0 (final) is now available for download as source or binary (with and without
       dependencies) from
       <a href="http://ant.apache.org/ivy/download.cgi">http://ant.apache.org/ivy/download.cgi</a>.</p>
+      
+    <p>This is the first non-beta release of Ivy under Apache and includes some major new features
+      like: enhanced Maven2 compatibility, improved cache management, improved concurrency support
+      and numerous bug fixes and other improvements.</p>
+      
+    <p>For more information see the <a href="http://ant.apache.org/ivy/">Ivy home page</a>.</p>
   </section>
 
 
