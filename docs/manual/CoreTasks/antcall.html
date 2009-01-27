@@ -67,6 +67,10 @@ Of course, any properties defined in the antcall task or inherited from the call
 will be fixed and not overridable in the init task--or indeed in the &quot;doSomethingElse&quot; task.
 </p>
 
+<p>The called target(s) are run in a new project; be aware that this
+means properties, references, etc.  set by called targets will not
+persist back to the calling project.</p>
+
 <p>If the build file changes after you've started the build, the
 behavior of this task is undefined.</p>
 
