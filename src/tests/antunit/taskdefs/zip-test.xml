@@ -60,4 +60,48 @@
     <unzip src="${output}/test.zip" dest="${output}/out"/>
     <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
   </target>
+
+    <target name="testIssue45902"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45902">
+      <mkdir dir="${input}/src/p"/>
+      <mkdir dir="${output}"/>
+      <touch file="${input}/src/p/X.java"/>
+      <touch file="${input}/src/p/x.properties"/>
+      <mkdir dir="${input}/build"/>
+      <copy todir="${input}/build">
+        <fileset dir="${input}/src" includes="**/*.java"/>
+      </copy>
+
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
+
+      <sleep seconds="1"/>
+      <touch file="${input}/src/p/y.properties"/>
+      <sleep seconds="1"/>
+      <delete file="${input}/src/p/y.properties"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+
+      <sleep seconds="1"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+    </target>
 </project>
