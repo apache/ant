@@ -758,6 +758,40 @@ must match. <b>Since Ant 1.7</b>
   </tr>
 </table>
 
+<h4>resourcecontains</h4>
+<p>Tests whether a resource contains a given (sub)string.</p>
+<p>The resources to check are specified via references or - in the
+  case of file resources via the resource attribute.  <b>Since Ant 1.7.1</b>
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">resource</td>
+    <td valign="top">Name of a file that is the resource to test.
+    </td>
+    <td align="center" rowspan="2">One of the two</td>
+  </tr>
+  <tr>
+    <td valign="top">refid</td>
+    <td valign="top">Reference to a resource defined inside the project.</td>
+  </tr>
+  <tr>
+    <td valign="top">substring</td>
+    <td valign="top">The string to search for.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">casesensitive</td>
+    <td valign="top">Perform a case sensitive comparision.  Default is
+        true.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
 <h4>hasmethod</h4>
 
 <p> Tests for a class having a method or field. If the class is not found 
