@@ -132,6 +132,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * <zip> would sometimes recreate JARs unnecessarily. Bugzilla report 45902.
+
  * <symlink> task couldn't overwrite existing symlinks that pointed to nonexistent files
    Bugzilla report 38199.
 
