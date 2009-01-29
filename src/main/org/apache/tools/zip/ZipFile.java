@@ -150,16 +150,19 @@ public class ZipFile {
     public ZipFile(File f, String encoding) throws IOException {
         this.encoding = encoding;
         archive = new RandomAccessFile(f, "r");
+        boolean success = false;
         try {
             populateFromCentralDirectory();
             resolveLocalFileHeaderData();
-        } catch (IOException e) {
-            try {
-                archive.close();
-            } catch (IOException e2) {
-                // swallow, throw the original exception instead
+            success = true;
+        } finally {
+            if (!success) {
+                try {
+                    archive.close();
+                } catch (IOException e2) {
+                    // swallow, throw the original exception instead
+                }
             }
-            throw e;
         }
     }
 

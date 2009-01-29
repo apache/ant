@@ -43,4 +43,18 @@
            dest="${output}"/>
     <au:assertFileExists file="${output}/foo/file"/>
   </target>
+
+  <target name="testArchiveIsClosedForInvalidZips"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46559"
+          >
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <copy file="zip/Bugzilla-46559.zip" tofile="${input}/test.zip"/>
+    <au:expectfailure>
+      <unzip src="${input}/test.zip" dest="${output}"/>
+    </au:expectfailure>
+    <delete file="${input}/test.zip" quiet="true"/>
+    <!-- failed on Windows and other OSes with implicit file locking -->
+    <au:assertFileDoesntExist file="${input}/test.zip"/>
+  </target>
 </project>
