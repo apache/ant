@@ -358,9 +358,11 @@ invoking the compiler.</p>
     <td valign="top">Value of the <code>-source</code> command-line
     switch; will be ignored by all implementations prior to
     <code>javac1.4</code> (or <code>modern</code> when Ant is not
-    running in a 1.3 VM) and <code>jikes</code>.<br> If you use this
-    attribute together with <code>jikes</code>, you must make sure
-    that your version of jikes supports the <code>-source</code>
+    running in a 1.3 VM), <code>gcj</code> and <code>jikes</code>.<br>
+    If you use this attribute together with <code>gcj</code>
+    or <code>jikes</code>, you must make sure that your version
+    supports the <code>-source</code> (or <code>-fsource</code> for
+    gcj)
     switch.  By default, no <code>-source</code> argument will be used
     at all.<br>
     <b>Note that the default value depends on the JVM that is running

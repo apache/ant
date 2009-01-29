@@ -114,6 +114,16 @@ public class Gcj extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-C");
         }
 
+        if (attributes.getSource() != null) {
+            String source = attributes.getSource();
+            cmd.createArgument().setValue("-fsource=" + source);
+        }
+
+        if (attributes.getTarget() != null) {
+            String target = attributes.getTarget();
+            cmd.createArgument().setValue("-ftarget=" + target);
+        }
+
         addCurrentCompilerArgs(cmd);
 
         return cmd;

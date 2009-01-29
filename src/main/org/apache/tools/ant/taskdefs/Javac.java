@@ -186,13 +186,16 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Value of the -source command-line switch; will be ignored
-     * by all implementations except modern and jikes.
+     * Value of the -source command-line switch; will be ignored by
+     * all implementations except modern, jikes and gcj (gcj uses
+     * -fsource).
      *
-     * If you use this attribute together with jikes, you must make
-     * sure that your version of jikes supports the -source switch.
-     * Legal values are 1.3, 1.4, 1.5, and 5 - by default, no
-     * -source argument will be used at all.
+     * <p>If you use this attribute together with jikes or gcj, you
+     * must make sure that your version of jikes supports the -source
+     * switch.</p>
+     *
+     * <p>Legal values are 1.3, 1.4, 1.5, and 5 - by default, no
+     * -source argument will be used at all.</p>
      *
      * @param v  Value to assign to source.
      */

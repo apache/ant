@@ -655,6 +655,10 @@ Other changes:
    these were eliminated in the interest of behaving in the manner
    of a "path."
 
+ * <javac>'s source and target attributes are no longer ignored when
+   using gcj.
+   Bugzilla Issue 46617.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
