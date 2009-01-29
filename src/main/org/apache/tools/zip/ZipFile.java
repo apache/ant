@@ -24,9 +24,11 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipException;
@@ -73,12 +75,12 @@ public class ZipFile {
      * Maps ZipEntrys to Longs, recording the offsets of the local
      * file headers.
      */
-    private Hashtable entries = new Hashtable(HASH_SIZE);
+    private final Map entries = new HashMap(HASH_SIZE);
 
     /**
      * Maps String to ZipEntrys, name -> actual entry.
      */
-    private Hashtable nameMap = new Hashtable(HASH_SIZE);
+    private final Map nameMap = new HashMap(HASH_SIZE);
 
     private static final class OffsetEntry {
         private long headerOffset = -1;
@@ -198,7 +200,7 @@ public class ZipFile {
      * @return all entries as {@link ZipEntry} instances
      */
     public Enumeration getEntries() {
-        return entries.keys();
+        return Collections.enumeration(entries.keySet());
     }
 
     /**

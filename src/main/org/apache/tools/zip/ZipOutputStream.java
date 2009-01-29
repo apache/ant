@@ -26,8 +26,11 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.ZipException;
@@ -129,14 +132,14 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private Vector entries = new Vector();
+    private final List entries = new LinkedList();
 
     /**
      * CRC instance to avoid parsing DEFLATED data twice.
      *
      * @since 1.1
      */
-    private CRC32 crc = new CRC32();
+    private final CRC32 crc = new CRC32();
 
     /**
      * Count the bytes written to out.
@@ -193,7 +196,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private Hashtable offsets = new Hashtable();
+    private final Map offsets = new HashMap();
 
     /**
      * The encoding to use for filenames and the file comment.
@@ -324,13 +327,13 @@ public class ZipOutputStream extends FilterOutputStream {
     public void finish() throws IOException {
         closeEntry();
         cdOffset = written;
-        for (int i = 0, entriesSize = entries.size(); i < entriesSize; i++) {
-            writeCentralFileHeader((ZipEntry) entries.elementAt(i));
+        for (Iterator i = entries.iterator(); i.hasNext(); ) {
+            writeCentralFileHeader((ZipEntry) i.next());
         }
         cdLength = written - cdOffset;
         writeCentralDirectoryEnd();
         offsets.clear();
-        entries.removeAllElements();
+        entries.clear();
     }
 
     /**
@@ -410,7 +413,7 @@ public class ZipOutputStream extends FilterOutputStream {
         closeEntry();
 
         entry = ze;
-        entries.addElement(entry);
+        entries.add(entry);
 
         if (entry.getMethod() == -1) { // not specified
             entry.setMethod(method);

@@ -18,8 +18,10 @@
 
 package org.apache.tools.zip;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipException;
 
 /**
@@ -36,10 +38,10 @@ public class ExtraFieldUtils {
      *
      * @since 1.1
      */
-    private static Hashtable implementations;
+    private static final Map implementations;
 
     static {
-        implementations = new Hashtable();
+        implementations = new HashMap();
         register(AsiExtraField.class);
         register(JarMarker.class);
     }
@@ -95,7 +97,7 @@ public class ExtraFieldUtils {
      * @throws ZipException on error
      */
     public static ZipExtraField[] parse(byte[] data) throws ZipException {
-        Vector v = new Vector();
+        List v = new ArrayList();
         int start = 0;
         while (start <= data.length - WORD) {
             ZipShort headerId = new ZipShort(data, start);
@@ -107,7 +109,7 @@ public class ExtraFieldUtils {
             try {
                 ZipExtraField ze = createExtraField(headerId);
                 ze.parseFromLocalFileData(data, start + WORD, length);
-                v.addElement(ze);
+                v.add(ze);
             } catch (InstantiationException ie) {
                 throw new ZipException(ie.getMessage());
             } catch (IllegalAccessException iae) {
@@ -121,8 +123,7 @@ public class ExtraFieldUtils {
         }
 
         ZipExtraField[] result = new ZipExtraField[v.size()];
-        v.copyInto(result);
-        return result;
+        return (ZipExtraField[]) v.toArray(result);
     }
 
     /**
