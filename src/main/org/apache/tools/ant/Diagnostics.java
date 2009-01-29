@@ -27,6 +27,8 @@ import org.xml.sax.XMLReader;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.PrintStream;
@@ -172,7 +174,7 @@ public final class Diagnostics {
      * what parser are we using.
      * @return the classname of the parser
      */
-    private static String getXmlParserName() {
+    private static String getXMLParserName() {
         SAXParser saxParser = getSAXParser();
         if (saxParser == null) {
             return "Could not create an XML Parser";
@@ -180,6 +182,20 @@ public final class Diagnostics {
         // check to what is in the classname
         String saxParserName = saxParser.getClass().getName();
         return saxParserName;
+    }
+
+    /**
+     * what parser are we using.
+     * @return the classname of the parser
+     */
+    private static String getXSLTProcessorName() {
+        Transformer transformer = getXSLTProcessor();
+        if (transformer == null) {
+            return "Could not create an XSLT Processor";
+        }
+        // check to what is in the classname
+        String processorName = transformer.getClass().getName();
+        return processorName;
     }
 
     /**
@@ -202,10 +218,28 @@ public final class Diagnostics {
     }
 
     /**
+     * Create a JAXP XSLT Transformer
+     * @return parser or null for trouble
+     */
+    private static Transformer getXSLTProcessor() {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        if (transformerFactory == null) {
+            return null;
+        }
+        Transformer transformer = null;
+        try {
+            transformer = transformerFactory.newTransformer();
+        } catch (Exception e) {
+            // ignore
+            ignoreThrowable(e);
+        }
+        return transformer;
+    }
+
+    /**
      * get the location of the parser
      * @return path or null for trouble in tracking it down
      */
-
     private static String getXMLParserLocation() {
         SAXParser saxParser = getSAXParser();
         if (saxParser == null) {
@@ -235,6 +269,19 @@ public final class Diagnostics {
             ignoreThrowable(e);
             return null;
         }
+    }
+
+    /**
+     * get the location of the parser
+     * @return path or null for trouble in tracking it down
+     */
+    private static String getXSLTProcessorLocation() {
+        Transformer transformer = getXSLTProcessor();
+        if (transformer == null) {
+            return null;
+        }
+        String location = getClassLocation(transformer.getClass());
+        return location;
     }
 
     /**
@@ -304,6 +351,9 @@ public final class Diagnostics {
 
         header(out, "XML Parser information");
         doReportParserInfo(out);
+
+        header(out, "XSLT Processor information");
+        doReportXSLTProcessorInfo(out);
 
         header(out, "System properties");
         doReportSystemProperties(out);
@@ -494,11 +544,21 @@ public final class Diagnostics {
      * @param out
      */
     private static void doReportParserInfo(PrintStream out) {
-        String parserName = getXmlParserName();
+        String parserName = getXMLParserName();
         String parserLocation = getXMLParserLocation();
         printParserInfo(out, "XML Parser", parserName, parserLocation);
         printParserInfo(out, "Namespace-aware parser", getNamespaceParserName(),
                 getNamespaceParserLocation());
+    }
+
+    /**
+     * tell the user about the XSLT processor
+     * @param out
+     */
+    private static void doReportXSLTProcessorInfo(PrintStream out) {
+        String processorName = getXSLTProcessorName();
+        String processorLocation = getXSLTProcessorLocation();
+        printParserInfo(out, "XSLT Processor", processorName, processorLocation);
     }
 
     private static void printParserInfo(PrintStream out, String parserType, String parserName,

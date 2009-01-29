@@ -664,6 +664,10 @@ Other changes:
    using gcj.
    Bugzilla Issue 46617.
 
+ * ant -diagnostics now outputs information about the default XSLT
+   processor.
+   Bugzilla Issue 46612.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
