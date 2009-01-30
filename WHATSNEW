@@ -129,6 +129,12 @@ Changes that could break older environments:
    versions of Ant.
    Bugzilla Report 36748.
 
+ * globmapper didn't work properly if the "to" pattern didn't contain
+   a "*".  In particular it implicitly added a * to the end of the
+   pattern.  This is no longer the case.  If you relied on this
+   behavior you will now need to explicitly specify the trailing *.
+   Bugzilla Report 46506.
+
 Fixed bugs:
 -----------
 
@@ -323,10 +329,6 @@ Fixed bugs:
    ask for excluded or not-included files and/or directories could
    miss some files and directories in the presence of recursive
    exclude patterns.
-
- * globmapper didn't work properly if the "to" pattern didn't contain
-   a *.
-   Bugzilla Report 46506.
 
  * <sort> resource collection kept only one of entries deemed equal by
    the chosen Comparator.  Bugzilla report 46527.
