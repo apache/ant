@@ -670,6 +670,10 @@ Other changes:
    processor.
    Bugzilla Issue 46612.
 
+ * the ZIP library will now ignore ZIP extra fields that don't specify
+   a size.
+   Bugzilla Report 42940.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

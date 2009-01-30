@@ -44,6 +44,16 @@
     <au:assertFileExists file="${output}/foo/file"/>
   </target>
 
+  <target name="testTwoByteExtraFieldInLFH"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=42940"
+          >
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <copy file="zip/Bugzilla-42940.zip" tofile="${input}/test.zip"/>
+    <unzip src="${input}/test.zip" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
   <target name="testArchiveIsClosedForInvalidZips"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46559"
           >

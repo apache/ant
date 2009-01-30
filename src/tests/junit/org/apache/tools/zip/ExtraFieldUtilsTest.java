@@ -40,7 +40,7 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
         a.setDirectory(true);
         dummy = new UnrecognizedExtraField();
         dummy.setHeaderId(new ZipShort(1));
-        dummy.setLocalFileDataData(new byte[0]);
+        dummy.setLocalFileDataData(new byte[] {0});
         dummy.setCentralDirectoryData(new byte[] {0});
 
         aLocal = a.getLocalFileDataData();
@@ -68,7 +68,7 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
         assertEquals("mode field 1", 040755,
                      ((AsiExtraField) ze[0]).getMode());
         assertTrue("type field 2", ze[1] instanceof UnrecognizedExtraField);
-        assertEquals("data length field 2", 0,
+        assertEquals("data length field 2", 1,
                      ze[1].getLocalFileDataLength().getValue());
 
         byte[] data2 = new byte[data.length-1];

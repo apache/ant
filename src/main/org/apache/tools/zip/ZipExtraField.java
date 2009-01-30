@@ -64,7 +64,7 @@ public interface ZipExtraField {
     byte[] getLocalFileDataData();
 
     /**
-     * The actual data to put central directory - without Header-ID or
+     * The actual data to put into central directory - without Header-ID or
      * length specifier.
      * @return the data
      * @since 1.1

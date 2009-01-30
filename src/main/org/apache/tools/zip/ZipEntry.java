@@ -252,7 +252,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         try {
             setExtraFields(ExtraFieldUtils.parse(extra));
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
