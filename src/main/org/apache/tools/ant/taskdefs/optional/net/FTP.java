@@ -93,6 +93,10 @@ public class FTP
      * are HH:mm:ss */
     private static final long GRANULARITY_MINUTE = 60000L;
 
+    /** Date formatter used in logging, note not thread safe! */
+    private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF =
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /** Default port for FTP */
     public static final int DEFAULT_FTP_PORT = 21;
 
@@ -1486,7 +1490,7 @@ public class FTP
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(LanguageCode serverLanguageCode) {
-        if (serverLanguageCode != null && !serverLanguageCode.equals("")) {
+        if (serverLanguageCode != null && !"".equals(serverLanguageCode.getValue())) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }
@@ -1598,7 +1602,7 @@ public class FTP
      * @param timestampGranularity The timestampGranularity to set.
      */
     public void setTimestampGranularity(Granularity timestampGranularity) {
-        if (null == timestampGranularity || "".equals(timestampGranularity)) {
+        if (null == timestampGranularity || "".equals(timestampGranularity.getValue())) {
             return;
         }
         this.timestampGranularity = timestampGranularity;
@@ -1993,9 +1997,6 @@ public class FTP
         return null;
     }
 
-    private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF =
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     /**
      * Checks to see if the remote file is current as compared with the local
      * file. Returns true if the target file is up to date.
@@ -2035,18 +2036,25 @@ public class FTP
         long adjustedRemoteTimestamp =
             remoteTimestamp + this.timeDiffMillis + this.granularityMillis;
 
-        StringBuffer msg = new StringBuffer("   [")
-            .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
-            .append("] local");
+        StringBuffer msg;
+        synchronized(TIMESTAMP_LOGGING_SDF) {
+            msg = new StringBuffer("   [")
+                .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
+                .append("] local");
+        }
         log(msg.toString(), Project.MSG_VERBOSE);
 
-        msg = new StringBuffer("   [")
-            .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
-            .append("] remote");
+        synchronized(TIMESTAMP_LOGGING_SDF) {
+            msg = new StringBuffer("   [")
+                .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
+                .append("] remote");
+        }
         if (remoteTimestamp != adjustedRemoteTimestamp) {
-            msg.append(" - (raw: ")
-                .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
-                .append(")");
+            synchronized(TIMESTAMP_LOGGING_SDF) {
+                msg.append(" - (raw: ")
+                    .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
+                    .append(")");
+            }
         }
         log(msg.toString(), Project.MSG_VERBOSE);
 
@@ -2620,7 +2628,6 @@ public class FTP
          * @return the list of valid Granularity values
          */
         public String[] getValues() {
-            // TODO Auto-generated method stub
             return VALID_GRANULARITIES;
         }
         /**
