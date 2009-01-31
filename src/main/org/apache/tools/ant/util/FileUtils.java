@@ -891,7 +891,7 @@ public class FileUtils {
             synchronized (rand) {
                 do {
                     result = new File(parent, prefix
-                            + fmt.format(Math.abs(rand.nextInt())) + suffix);
+                            + fmt.format(rand.nextInt(Integer.MAX_VALUE)) + suffix);
                 } while (result.exists());
             }
         }
