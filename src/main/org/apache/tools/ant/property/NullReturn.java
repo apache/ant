@@ -33,6 +33,6 @@ public final class NullReturn {
      * {@inheritDoc}
      */
     public String toString() {
-        return String.valueOf(null);
+        return "null";
     }
 }
