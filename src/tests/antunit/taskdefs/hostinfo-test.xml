@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="hostinfo-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <property name="undef-name" value="nonexistenthost.nonexistentdomain" />
+  <property name="undef-hostname" value="nonexistenthost" />
+  <property name="undef-domainname" value="nonexistentdomain" />
+        
+  <property name="undef-ip4" value="0.0.0.0" />
+  <property name="undef-ip6" value="::" />
+      
+  <property name="apache-hostname" value="www.apache.org" />
+  <property name="apache-domain" value="apache.org" />
+  <property name="apache-realhost" value="eos" />
+  <property name="apache-ip4" value="140.211.11.130" />
+    
+  <property name="xs4all-hostname" value="www.xs4all.nl" />
+  <property name="xs4all-domain" value="xs4all.nl" />
+  <property name="xs4all-realhost" value="www" />
+  <property name="xs4all-ip4" value="194.109.6.92" />
+    
+  <target name="setUp">
+  </target>
+
+  <target name="testLocal" depends="setUp">
+    <hostinfo prefix="local" />
+      <!-- Do not know what to expect here, machine dependent -->
+  </target>
+
+    <target name="testApache" depends="setUp">
+      <hostinfo prefix="apache" host="${apache-hostname}"/>
+      <au:assertTrue>
+        <and>
+          <equals arg1="${apache.NAME}" arg2="${apache-realhost}" />
+          <equals arg1="${apache.DOMAIN}" arg2="${apache-domain}" />
+          <equals arg1="${apache.ADDR4}" arg2="${apache-ip4}" />
+        </and>
+      </au:assertTrue>
+    </target>
+
+    <target name="testApacheNoPrefix" depends="setUp">
+      <hostinfo host="${apache-hostname}"/>
+      <au:assertTrue>
+        <and>
+          <equals arg1="${NAME}" arg2="${apache-realhost}" />
+          <equals arg1="${DOMAIN}" arg2="${apache-domain}" />
+          <equals arg1="${ADDR4}" arg2="${apache-ip4}" />
+        </and>
+      </au:assertTrue>
+    </target>
+
+    <target name="testReverse" depends="setUp">
+      <hostinfo prefix="reverse" host="${xs4all-ip4}"/>
+      <au:assertTrue>
+        <and>
+          <equals arg1="${reverse.NAME}" arg2="${xs4all-realhost}" />
+          <equals arg1="${reverse.DOMAIN}" arg2="${xs4all-domain}" />
+          <equals arg1="${reverse.ADDR4}" arg2="${xs4all-ip4}" />
+        </and>
+      </au:assertTrue>
+    </target>
+    
+    
+    <target name="testUndef" depends="setUp">
+      <hostinfo prefix="undef" host="${undef-name}"/>
+      <au:assertTrue>
+        <and>
+          <equals arg1="${undef.NAME}" arg2="${undef-hostname}" />
+          <equals arg1="${undef.DOMAIN}" arg2="${undef-domainname}" />
+          <equals arg1="${undef.ADDR4}" arg2="${undef-ip4}" />
+          <equals arg1="${undef.ADDR6}" arg2="${undef-ip6}" />
+        </and>
+      </au:assertTrue>
+    </target>
+    
+</project>

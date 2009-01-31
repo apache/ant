@@ -340,6 +340,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+ * A HostInfo task was added performing information on hosts, including info on 
+   the host ant is running on. 
+   Bugzilla reports 45861 and 31164.
 
  * There is now a FileProvider interface for resources that act as a source
    of filenames. This should be used by tasks that require resources
