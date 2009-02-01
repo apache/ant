@@ -111,8 +111,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 // JUnit 4 support:
                 "org.junit.",
                 "junit.framework.JUnit4TestAdapter",
-                // See wrapListener for reason:
-                "Caused by: java.lang.AssertionError",
                 " more",
         };
 
@@ -643,7 +641,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /** {@inheritDoc}. */
     public void addFormatter(JUnitTaskMirror.JUnitResultFormatterMirror f) {
-        formatters.addElement((JUnitResultFormatter) f);
+        formatters.addElement(f);
     }
 
     /**
@@ -976,25 +974,16 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // even in the JUnit 3 adapter.
                     // So we need to help it a bit to retain compatibility for JUnit 3 tests.
                     testListener.addFailure(test, (AssertionFailedError) t);
-                } else if (junit4 && isAssertionError(t.getClass())) {
+                } else if (junit4 && t instanceof  AssertionError) {
                     // Not strictly necessary but probably desirable.
                     // JUnit 4-specific test GUIs will show just "failures".
                     // But Ant's output shows "failures" vs. "errors".
                     // We would prefer to show "failure" for things that logically are.
-                    try {
-                        String msg = t.getMessage();
-                        AssertionFailedError failure = msg != null
-                            ? new AssertionFailedError(msg) : new AssertionFailedError();
-                        // To compile on pre-JDK 4 (even though this should always succeed):
-                        Method initCause = Throwable.class.getMethod(
-                            "initCause", new Class[] {Throwable.class});
-                        initCause.invoke(failure, new Object[] {t});
-                        testListener.addFailure(test, failure);
-                    } catch (Exception e) {
-                        // Rats.
-                        e.printStackTrace(); // should not happen
-                        testListener.addError(test, t);
-                    }
+                    String msg = t.getMessage();
+                    AssertionFailedError failure = msg != null
+                        ? new AssertionFailedError(msg) : new AssertionFailedError();
+                    failure.setStackTrace(t.getStackTrace());
+                    testListener.addFailure(test, failure);
                 } else {
                     testListener.addError(test, t);
                 }
@@ -1023,35 +1012,25 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * since the adapter claims that all failures are errors.
      * @since Ant 1.7
      */
-    private int[] findJUnit4FailureErrorCount(TestResult res) {
+    private int[] findJUnit4FailureErrorCount(TestResult result) {
         int failures = 0;
         int errors = 0;
-        Enumeration e = res.failures();
+        Enumeration e = result.failures();
         while (e.hasMoreElements()) {
             e.nextElement();
             failures++;
         }
-        e = res.errors();
+        e = result.errors();
         while (e.hasMoreElements()) {
             Throwable t = ((TestFailure) e.nextElement()).thrownException();
             if (t instanceof AssertionFailedError
-                || isAssertionError(t.getClass())) {
+                || t instanceof AssertionError) {
                 failures++;
             } else {
                 errors++;
             }
         }
         return new int[] {failures, errors};
-    }
-
-    private static boolean isAssertionError(Class clazz) {
-        while (clazz != null) {
-            if (clazz.getName().equals("java.lang.AssertionError")) {
-                return true;
-            }
-            clazz = clazz.getSuperclass();
-        }
-        return false;
     }
 
 } // JUnitTestRunner
