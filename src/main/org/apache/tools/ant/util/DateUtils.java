@@ -221,7 +221,9 @@ public final class DateUtils {
             tzMarker.append("0");
         }
         tzMarker.append(minutes);
-        return DATE_HEADER_FORMAT.format(cal.getTime()) + tzMarker.toString();
+        synchronized (DATE_HEADER_FORMAT) {
+            return DATE_HEADER_FORMAT.format(cal.getTime()) + tzMarker.toString();
+        }
     }
 
     /**
