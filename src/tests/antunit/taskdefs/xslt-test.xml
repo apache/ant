@@ -93,17 +93,17 @@ undefined='<xsl:value-of select="$undefined"/>'
 
   <target name="testTransformationError" depends="setUp">
     <au:expectfailure expectedmessage="Fatal error during transformation">
-      <xslt in="${legacy.dir}/../input.stdin"
+      <xslt in="${legacy.dir}/data.xml"
             out="${output}/out.xml"
-            style="${legacy.dir}/printParams.xsl"
+            style="xslt/printParams-invalid.xsl"
             />
     </au:expectfailure>
   </target>
 
   <target name="testTransformationErrorNoFail" depends="setUp">
-    <xslt in="${legacy.dir}/../input.stdin"
+    <xslt in="${legacy.dir}/data.xml"
           out="${output}/out.xml"
-          style="${legacy.dir}/printParams.xsl"
+          style="xslt/printParams-invalid.xsl"
           failOnError="false"/>
     <au:assertFileDoesntExist file="${output}/out.xml"/>
   </target>
