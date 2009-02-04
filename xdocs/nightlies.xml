@@ -36,12 +36,36 @@ href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
 
 <section name="Continuous Builds">
 
-<p>JetBrains is offering Ant the service of a Continuous Build on
-their TeamCity system.  Note that these are no official builds and
-they are not endorsed or even supported by the Ant team.  You can
-directly access the builds of Ant and Ivy:</p>
+<p>Ant and Ivy are using Continous Integrations systems to improve the development process.
+Note that these are no official builds and they are not endorsed or even supported by the Ant team.
+But if you have problems with <i>testing</i> the latest (successful) build, you are welcome to post
+that on the <a href="mail.html#Developer%20List:%20dev@ant.apache.org">developer mailinglist</a>.
+You can directly access the builds of Ant and Ivy on these CI installations:</p>
 
-<teamcity viewlog="http://teamcity.jetbrains.com/viewLog.html">
+<p>The Apache Software Foundation <a href="http://hudson.zones.apache.org/hudson/">hosts</a> an
+installation of the <a href="http://hudson.dev.java.net/">Hudson</a> CI-system which Ant + Ivy
+<a href="http://hudson.zones.apache.org/hudson/view/Ant/">use</a>.</p>
+
+<!-- TODO: insert the job commands  //job/@command  -->
+<hudson base="http://hudson.zones.apache.org/hudson/view/Ant/">
+    <project name="Apache Ant">
+    </project>
+    <project name="Apache Ivy">
+        <job id="Ivy" title="Ivy Core Trunk" command="">
+            <description>current development</description>
+        </job>
+        <job id="IvyDE" title="IvyDE Trunk" command="">
+            <description>current development</description>
+        </job>
+        <job id="IvyDE-updatesite" title="Eclipse Updatesite" command="">
+            <description>Update your Eclipse installation with the latest Ivy/IvyDE</description>
+        </job>
+    </project>
+</hudson>
+
+<p>JetBrains is offering Ant the service of a Continuous Build on their TeamCity system.</p>
+
+<teamcity viewlog="http://teamcity.jetbrains.com/guestAuth/viewLog.html">
     <project name="Apache Ant">
         <configuration id="bt133" title="Core Trunk (Windows)" command="clean test">
             <description>current development (Windows platform)</description>
