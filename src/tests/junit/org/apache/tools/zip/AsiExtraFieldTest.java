@@ -138,4 +138,20 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
                          e.getMessage());
         }
     }
+
+    public void testClone() {
+        AsiExtraField s1 = new AsiExtraField();
+        s1.setUserId(42);
+        s1.setGroupId(12);
+        s1.setLinkedFile("foo");
+        s1.setMode(0644);
+        s1.setDirectory(true);
+        AsiExtraField s2 = (AsiExtraField) s1.clone();
+        assertNotSame(s1, s2);
+        assertEquals(s1.getUserId(), s2.getUserId());
+        assertEquals(s1.getGroupId(), s2.getGroupId());
+        assertEquals(s1.getLinkedFile(), s2.getLinkedFile());
+        assertEquals(s1.getMode(), s2.getMode());
+        assertEquals(s1.isDirectory(), s2.isDirectory());
+    }
 }

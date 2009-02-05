@@ -345,7 +345,15 @@ public class ZipFile {
 
             nameMap.put(ze.getName(), ze);
 
-            archive.skipBytes(extraLen);
+            int lenToSkip = extraLen;
+            while (lenToSkip > 0) {
+                int skipped = archive.skipBytes(lenToSkip);
+                if (skipped <= 0) {
+                    throw new RuntimeException("failed to skip extra data in"
+                                               + " central directory");
+                }
+                lenToSkip -= skipped;
+            }            
 
             byte[] comment = new byte[commentLen];
             archive.readFully(comment);
@@ -461,7 +469,15 @@ public class ZipFile {
             int fileNameLen = ZipShort.getValue(b);
             archive.readFully(b);
             int extraFieldLen = ZipShort.getValue(b);
-            archive.skipBytes(fileNameLen);
+            int lenToSkip = fileNameLen;
+            while (lenToSkip > 0) {
+                int skipped = archive.skipBytes(lenToSkip);
+                if (skipped <= 0) {
+                    throw new RuntimeException("failed to skip file name in"
+                                               + " local file header");
+                }
+                lenToSkip -= skipped;
+            }            
             byte[] localExtraData = new byte[extraFieldLen];
             archive.readFully(localExtraData);
             ze.setExtra(localExtraData);

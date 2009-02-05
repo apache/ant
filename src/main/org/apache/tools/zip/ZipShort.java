@@ -133,4 +133,13 @@ public final class ZipShort implements Cloneable {
     public int hashCode() {
         return value;
     }
+
+    public Object clone() {
+        try {
+            return (ZipShort) super.clone();
+        } catch (CloneNotSupportedException cnfe) {
+            // impossible
+            throw new RuntimeException(cnfe);
+        }
+    }
 }

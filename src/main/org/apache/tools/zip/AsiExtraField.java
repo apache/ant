@@ -334,4 +334,14 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         return type | (mode & PERM_MASK);
     }
 
+    public Object clone() {
+        try {
+            AsiExtraField cloned = (AsiExtraField) super.clone();
+            cloned.crc = new CRC32();
+            return cloned;
+        } catch (CloneNotSupportedException cnfe) {
+            // impossible
+            throw new RuntimeException(cnfe);
+        }
+    }
 }

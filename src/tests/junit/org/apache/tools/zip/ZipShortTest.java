@@ -77,4 +77,11 @@ public class ZipShortTest extends TestCase {
         assertEquals(0x0000FFFF, zs.getValue());
     }
 
+    public void testClone() {
+        ZipShort s1 = new ZipShort(42);
+        ZipShort s2 = (ZipShort) s1.clone();
+        assertNotSame(s1, s2);
+        assertEquals(s1, s2);
+        assertEquals(s1.getValue(), s2.getValue());
+    }
 }

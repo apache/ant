@@ -310,7 +310,7 @@ public class TarOutputStream extends FilterOutputStream {
 
                 wOffset += numToWrite;
                 assemLen += numToWrite;
-                numToWrite -= numToWrite;
+                numToWrite = 0;
             }
         }
 

@@ -79,4 +79,11 @@ public class ZipLongTest extends TestCase {
         assertEquals(0x00000000FFFFFFFFl, zl.getValue());
     }
 
+    public void testClone() {
+        ZipLong s1 = new ZipLong(42);
+        ZipLong s2 = (ZipLong) s1.clone();
+        assertNotSame(s1, s2);
+        assertEquals(s1, s2);
+        assertEquals(s1.getValue(), s2.getValue());
+    }
 }

@@ -65,7 +65,7 @@ public class UnrecognizedExtraField implements ZipExtraField {
      * @param data the field data to use
      */
     public void setLocalFileDataData(byte[] data) {
-        localData = data;
+        localData = copy(data);
     }
 
     /**
@@ -81,7 +81,7 @@ public class UnrecognizedExtraField implements ZipExtraField {
      * @return the local data
      */
     public byte[] getLocalFileDataData() {
-        return localData;
+        return copy(localData);
     }
 
     /**
@@ -97,7 +97,7 @@ public class UnrecognizedExtraField implements ZipExtraField {
      * @param data the data to use
      */
     public void setCentralDirectoryData(byte[] data) {
-        centralData = data;
+        centralData = copy(data);
     }
 
     /**
@@ -118,7 +118,7 @@ public class UnrecognizedExtraField implements ZipExtraField {
      */
     public byte[] getCentralDirectoryData() {
         if (centralData != null) {
-            return centralData;
+            return copy(centralData);
         }
         return getLocalFileDataData();
     }
@@ -133,5 +133,14 @@ public class UnrecognizedExtraField implements ZipExtraField {
         byte[] tmp = new byte[length];
         System.arraycopy(data, offset, tmp, 0, length);
         setLocalFileDataData(tmp);
+    }
+
+    private static byte[] copy(byte[] from) {
+        if (from != null) {
+            byte[] to = new byte[from.length];
+            System.arraycopy(from, 0, to, 0, to.length);
+            return to;
+        }
+        return null;
     }
 }

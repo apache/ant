@@ -218,8 +218,13 @@ public class TarInputStream extends FilterInputStream {
                         + numToSkip + " bytes");
             }
 
-            if (numToSkip > 0) {
-                skip(numToSkip);
+            while (numToSkip > 0) {
+                long skipped = skip(numToSkip);
+                if (skipped <= 0) {
+                    throw new RuntimeException("failed to skip current tar"
+                                               + " entry");
+                }
+                numToSkip -= skipped;
             }
 
             readBuf = null;
