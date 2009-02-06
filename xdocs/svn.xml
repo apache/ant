@@ -36,16 +36,23 @@ svn co http://svn.apache.org/repos/asf/ant/[project]/trunk/ ant-[project]</sourc
       <p>Modules available for access are:</p>
 
       <ul>
-        <li><a href="http://svn.apache.org/viewcvs.cgi/ant/core/trunk/">ant</a> - The &quot;main&quot; Ant module.<br/>
+        <li><a href="http://svn.apache.org/viewvc/ant/core/trunk/">ant</a> - The &quot;main&quot; Ant module.<br/>
          http://svn.apache.org/repos/asf/ant/core/trunk/
         </li>
-        <li><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/">antunit</a> Test framework for Ant.<br/>
+        <li><a href="http://svn.apache.org/viewvc/ant/ivy/core/trunk/">Ivy</a> - The &quot;main&quot; Ivy module.<br/>
+         http://svn.apache.org/repos/asf/ant/ivy/core/trunk/
+        </li>
+        <li><a href="http://svn.apache.org/viewvc/ant/ivy/ivyde/trunk/">IvyDE</a>
+         - Eclipse Plugin for Ivy.<br/>
+         http://svn.apache.org/repos/asf/ant/ivy/ivyde/trunk/
+        </li>
+        <li><a href="http://svn.apache.org/viewvc/ant/antlibs/antunit/trunk/">antunit</a> Test framework for Ant.<br/>
             http://svn.apache.org/repos/asf/ant/antlibs/antunit/trunk/</li>
-        <li><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/">Dotnet antlib</a> Contains Nant, Nunit, ...<br/>
+        <li><a href="http://svn.apache.org/viewvc/ant/antlibs/dotnet/trunk/">Dotnet antlib</a> Contains Nant, Nunit, ...<br/>
             http://svn.apache.org/repos/asf/ant/antlibs/dotnet/trunk/</li>
-        <li><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/svn/trunk/">svn antlib</a> Contains tasks to interact with Subversion repositories.<br/>
+        <li><a href="http://svn.apache.org/viewvc/ant/antlibs/svn/trunk/">svn antlib</a> Contains tasks to interact with Subversion repositories.<br/>
             http://svn.apache.org/repos/asf/ant/antlibs/svn/trunk/</li>
-        <li><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/">sandbox</a> - New developments. Contains currently gendoc.<br/>
+        <li><a href="http://svn.apache.org/viewvc/ant/sandbox/">sandbox</a> - New developments. Contains currently gendoc.<br/>
             http://svn.apache.org/repos/asf/ant/sandbox/
         </li>
       </ul>
