@@ -62,11 +62,17 @@ public final class DateUtils {
 
     /**
      * Format used for SMTP (and probably other) Date headers.
+     * @deprecated DateFormat is not thread safe, and we cannot guarantee that
+     * some other code is using the format in parallel.
+     * Deprecated since ant 1.8
      */
     public static final DateFormat DATE_HEADER_FORMAT
         = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
-
+    private static final DateFormat DATE_HEADER_FORMAT_INT
+    = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
+    
+    
 // code from Magesh moved from DefaultLogger and slightly modified
     private static final MessageFormat MINUTE_SECONDS
             = new MessageFormat("{0}{1}");
@@ -221,8 +227,8 @@ public final class DateUtils {
             tzMarker.append("0");
         }
         tzMarker.append(minutes);
-        synchronized (DATE_HEADER_FORMAT) {
-            return DATE_HEADER_FORMAT.format(cal.getTime()) + tzMarker.toString();
+        synchronized (DATE_HEADER_FORMAT_INT) {
+            return DATE_HEADER_FORMAT_INT.format(cal.getTime()) + tzMarker.toString();
         }
     }
 
