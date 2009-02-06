@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -86,9 +85,8 @@ public class Jikes {
                 && args.length > MAX_FILES_ON_COMMAND_LINE) {
                 PrintWriter out = null;
                 try {
-                    String tempFileName = "jikes"
-                        + (new Random(System.currentTimeMillis())).nextLong();
-                    tmpFile = new File(tempFileName);
+                    tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
+                            "tmp", null, false, true);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = 0; i < args.length; i++) {
                         out.println(args[i]);
@@ -123,7 +121,9 @@ public class Jikes {
             }
         } finally {
             if (tmpFile != null) {
-                tmpFile.delete();
+                if (!tmpFile.delete()) {
+                    tmpFile.deleteOnExit();
+                }
             }
         }
     }
