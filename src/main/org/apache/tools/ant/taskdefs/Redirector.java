@@ -232,7 +232,7 @@ public class Redirector {
             if (input == null) {
                 this.input = null;
             } else {
-                this.input = input.clone();
+                this.input = (File[]) input.clone();
             }
         }
     }
@@ -297,7 +297,7 @@ public class Redirector {
             if (out == null) {
                 this.out = null;
             } else {
-                this.out = out.clone();
+                this.out = (File[]) out.clone();
             }
         }
     }
@@ -397,7 +397,7 @@ public class Redirector {
             if (error == null) {
                 this.error = null;
             } else {
-                this.error = error.clone();
+                this.error = (File[]) error.clone();
             }
         }
     }
