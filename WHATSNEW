@@ -681,6 +681,9 @@ Other changes:
    a size.
    Bugzilla Report 42940.
 
+ * CBZip2OutputStream now has a finish method separate from close.
+   Bugzilla Report 42713.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
