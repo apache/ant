@@ -24,6 +24,7 @@ import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.apache.tools.ant.util.DeweyDecimal;
 import org.apache.tools.ant.util.StringUtils;
 
 /**

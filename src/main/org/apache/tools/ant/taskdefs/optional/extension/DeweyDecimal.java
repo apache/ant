@@ -27,6 +27,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  * must begin with a number.
  *
  * Original Implementation moved to org.apache.tools.ant.util.DeweyDecimal
+ * @deprecated use org.apache.tools.ant.util.DeweyDecimal instead.
  */
 public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
 

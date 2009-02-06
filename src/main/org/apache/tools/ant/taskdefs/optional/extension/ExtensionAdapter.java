@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.DeweyDecimal;
 
 /**
  * Simple class that represents an Extension and conforms to Ants
