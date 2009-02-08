@@ -137,6 +137,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+ * RPM task needed an inserted space between the define and the value.
+   bugzilla Report 46659.
+
  * Got rid of deadlock between in in, out and err in the Redirector. 
    Bugzilla Report 44544.
 

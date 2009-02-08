@@ -120,7 +120,7 @@ public class Rpm extends Task {
                                 : rpmBuildCommand);
         if (topDir != null) {
             toExecute.createArgument().setValue("--define");
-            toExecute.createArgument().setValue("_topdir" + topDir);
+            toExecute.createArgument().setValue("_topdir " + topDir);
         }
 
         toExecute.createArgument().setLine(command);
@@ -187,9 +187,8 @@ public class Rpm extends Task {
                     + "' failed with exit code " + returncode;
                 if (failOnError) {
                     throw new BuildException(msg);
-                } else {
-                    log(msg, Project.MSG_ERR);
                 }
+                log(msg, Project.MSG_ERR);
             }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
