@@ -19,10 +19,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -87,9 +89,6 @@ public class Javac extends MatchingTask {
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
 
-    private static final String PACKAGE_INFO_JAVA = "package-info.java";
-    private static final String PACKAGE_INFO_CLASS = "package-info.class";
-
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private Path src;
@@ -118,6 +117,7 @@ public class Javac extends MatchingTask {
     protected boolean failOnError = true;
     protected boolean listFiles = false;
     protected File[] compileList = new File[0];
+    private Map/*<String,Long>*/ packageInfos = new HashMap();
     // CheckStyle:VisibilityModifier ON
 
     private String source;
@@ -127,7 +127,6 @@ public class Javac extends MatchingTask {
     private String errorProperty;
     private boolean taskSuccess = true; // assume the best
     private boolean includeDestClasses = true;
-    private List    updateDirList = new ArrayList();
 
     /**
      * Javac task for compilation of Java files.
@@ -898,6 +897,7 @@ public class Javac extends MatchingTask {
      */
     protected void resetFileLists() {
         compileList = new File[0];
+        packageInfos = new HashMap();
     }
 
     /**
@@ -915,8 +915,8 @@ public class Javac extends MatchingTask {
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
 
-        newFiles = removePackageInfoFiles(newFiles, srcDir, destDir);
         if (newFiles.length > 0) {
+            lookForPackageInfos(srcDir, newFiles);
             File[] newCompileList
                 = new File[compileList.length + newFiles.length];
             System.arraycopy(compileList, 0, newCompileList, 0,
@@ -1069,10 +1069,12 @@ public class Javac extends MatchingTask {
 
             // finally, lets execute the compiler!!
             if (adapter.execute()) {
-                // Success - check
-                for (Iterator i = updateDirList.iterator(); i.hasNext();) {
-                    File file = (File) i.next();
-                    file.setLastModified(System.currentTimeMillis());
+                // Success
+                try {
+                    generateMissingPackageInfoClasses();
+                } catch (IOException x) {
+                    // Should this be made a nonfatal warning?
+                    throw new BuildException(x, getLocation());
                 }
             } else {
                 // Fail path
@@ -1106,71 +1108,68 @@ public class Javac extends MatchingTask {
         }
     }
 
-    // ----------------------------------------------------------------
-    //  Code to remove package-info.java files from compilation
-    //  Since Ant 1.7.1.
-    //
-    //    package-info.java are files that contain package level
-    //    annotations. They may or may not have corresponding .class
-    //    files.
-    //
-    //    The following code uses the algorithm:
-    //     * on entry we have the files that need to be compiled
-    //     * if the filename is not package-info.java compile it
-    //     * if a corresponding .class file exists compile it
-    //     * if the corresponding class directory does not exist compile it
-    //     * if the corresponding directory lastmodifed time is
-    //       older than the java file, compile the java file and
-    //       touch the corresponding class directory (on successful
-    //       compilation).
-    //
-    // ----------------------------------------------------------------
-    private File[] removePackageInfoFiles(
-        File[] newFiles, File srcDir, File destDir) {
-        if (!hasPackageInfo(newFiles)) {
-            return newFiles;
-        }
-        List ret = new ArrayList();
-        for (int i = 0; i < newFiles.length; ++i) {
-            if (needsCompilePackageFile(newFiles[i], srcDir, destDir)) {
-                ret.add(newFiles[i]);
+    private void lookForPackageInfos(File srcDir, File[] newFiles) {
+        for (int i = 0; i < newFiles.length; i++) {
+            File f = newFiles[i];
+            if (!f.getName().equals("package-info.java")) {
+                continue;
             }
+            String path = FILE_UTILS.removeLeadingPath(srcDir, f).
+                    replace(File.separatorChar, '/');
+            String suffix = "/package-info.java";
+            if (!path.endsWith(suffix)) {
+                log("anomalous package-info.java path: " + path, Project.MSG_WARN);
+                continue;
+            }
+            String pkg = path.substring(0, path.length() - suffix.length());
+            packageInfos.put(pkg, Long.valueOf(f.lastModified()));
         }
-        return (File[]) ret.toArray(new File[0]);
     }
 
-    private boolean hasPackageInfo(File[] newFiles) {
-        for (int i = 0; i < newFiles.length; ++i) {
-            if (newFiles[i].getName().equals(PACKAGE_INFO_JAVA)) {
-                return true;
+    /**
+     * Ensure that every {@code package-info.java} produced a {@code package-info.class}.
+     * Otherwise this task's up-to-date tracking mechanisms do not work.
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
+     */
+    private void generateMissingPackageInfoClasses() throws IOException {
+        for (Iterator i = packageInfos.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String pkg = (String) entry.getKey();
+            Long sourceLastMod = (Long) entry.getValue();
+            File pkgBinDir = new File(destDir, pkg.replace('/', File.separatorChar));
+            pkgBinDir.mkdirs();
+            File pkgInfoClass = new File(pkgBinDir, "package-info.class");
+            if (pkgInfoClass.isFile() && pkgInfoClass.lastModified() >= sourceLastMod.longValue()) {
+                continue;
+            }
+            log("Creating empty " + pkgInfoClass);
+            OutputStream os = new FileOutputStream(pkgInfoClass);
+            try {
+                os.write(PACKAGE_INFO_CLASS_HEADER);
+                byte[] name = pkg.getBytes("UTF-8");
+                int length = name.length + /* "/package-info" */ 13;
+                os.write((byte) length / 256);
+                os.write((byte) length % 256);
+                os.write(name);
+                os.write(PACKAGE_INFO_CLASS_FOOTER);
+            } finally {
+                os.close();
             }
         }
-        return false;
     }
-
-    private boolean needsCompilePackageFile(
-        File file, File srcDir, File destDir) {
-        if (!file.getName().equals(PACKAGE_INFO_JAVA)) {
-            return true;
-        }
-        // return true if destDir contains the file
-        String rel = FILE_UTILS.removeLeadingPath(srcDir, file);
-        File destFile = new File(destDir, rel);
-        File parent = destFile.getParentFile();
-        destFile = new File(parent, PACKAGE_INFO_CLASS);
-        File sourceFile = new File(srcDir, rel);
-        if (destFile.exists()) {
-            return true;
-        }
-        // Dest file does not exist
-        // Compile Source file if sourceFile is newer that destDir
-        // TODO - use fs
-        if (sourceFile.lastModified()
-            > destFile.getParentFile().lastModified()) {
-            updateDirList.add(destFile.getParentFile());
-            return true;
-        }
-        return false;
-    }
+    private static final byte[] PACKAGE_INFO_CLASS_HEADER = {
+        (byte) 0xca, (byte) 0xfe, (byte) 0xba, (byte) 0xbe, 0x00, 0x00, 0x00,
+        0x31, 0x00, 0x07, 0x07, 0x00, 0x05, 0x07, 0x00, 0x06, 0x01, 0x00, 0x0a,
+        0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x01, 0x00,
+        0x11, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x2d, 0x69, 0x6e, 0x66,
+        0x6f, 0x2e, 0x6a, 0x61, 0x76, 0x61, 0x01
+    };
+    private static final byte[] PACKAGE_INFO_CLASS_FOOTER = {
+        0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x2d, 0x69, 0x6e, 0x66,
+        0x6f, 0x01, 0x00, 0x10, 0x6a, 0x61, 0x76, 0x61, 0x2f, 0x6c, 0x61, 0x6e,
+        0x67, 0x2f, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x02, 0x00, 0x00, 0x01,
+        0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03,
+        0x00, 0x00, 0x00, 0x02, 0x00, 0x04
+    };
 
 }

@@ -137,6 +137,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+ * Better handling of package-info.class. Bugzilla Report 43114.
+
  * RPM task needed an inserted space between the define and the value.
    bugzilla Report 46659.
 
