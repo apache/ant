@@ -1122,7 +1122,7 @@ public class Javac extends MatchingTask {
                 continue;
             }
             String pkg = path.substring(0, path.length() - suffix.length());
-            packageInfos.put(pkg, Long.valueOf(f.lastModified()));
+            packageInfos.put(pkg, new Long(f.lastModified()));
         }
     }
 
