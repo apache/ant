@@ -24,6 +24,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.TaskAdapter;
 import org.apache.tools.ant.util.WorkerAnt;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.taskdefs.Parallel;
 import org.apache.tools.ant.taskdefs.Sequential;
 import org.apache.tools.ant.taskdefs.WaitFor;
@@ -63,7 +64,8 @@ public class Funtest extends Task {
      * easier to define complex tests that only
      * run if certain conditions are met, such as OS or network state.
      */
-    private Condition condition;
+
+    private NestedCondition condition;
 
 
     /**
@@ -165,9 +167,9 @@ public class Funtest extends Task {
     /** {@value} */
     public static final String SKIPPING_TESTS
         = "Condition failed -skipping tests";
-    /** Application exception */
+    /** Application exception : {@value} */
     public static final String APPLICATION_EXCEPTION = "Application Exception";
-    /** Teardown exception */
+    /** Teardown exception : {@value} */
     public static final String TEARDOWN_EXCEPTION = "Teardown Exception";
 
     /**
@@ -178,17 +180,19 @@ public class Funtest extends Task {
      */
     private void logOverride(String name, Object definition) {
         if (definition != null) {
-            log(WARN_OVERRIDING + '<' + name + '>', Project.MSG_WARN);
+            log(WARN_OVERRIDING + '<' + name + '>', Project.MSG_INFO);
         }
     }
 
     /**
-     * Add a condition.
-     * @param newCondition the condition to add.
-     */
-    public void addCondition(Condition newCondition) {
+      * Add a condition element.
+      * @return <code>ConditionBase</code>.
+      * @since Ant 1.6.2
+      */
+     public ConditionBase createCondition() {
         logOverride("condition", condition);
-        condition = newCondition;
+        condition = new NestedCondition();
+        return condition;
     }
 
     /**
@@ -369,6 +373,17 @@ public class Funtest extends Task {
     }
 
     /**
+     * Add any task validation needed to ensure internal code quality
+     * @param task task
+     * @param role role of the task
+     */
+    private void validateTask(Task task, String role) {
+        if (task!=null && task.getProject() == null) {
+            throw new BuildException(role + " task is not bound to the project" + task);
+        }
+    }
+
+    /**
      * Run the functional test sequence.
      * <p/>
      * This is a fairly complex workflow -what is going on is that we try to clean up
@@ -379,7 +394,14 @@ public class Funtest extends Task {
      */
     public void execute() throws BuildException {
 
-        //before anything else, check the condition
+        //validation
+        validateTask(setup, "setup");
+        validateTask(application, "application");
+        validateTask(tests, "tests");
+        validateTask(reporting, "reporting");
+        validateTask(teardown, "teardown");
+
+        //check the condition
         //and bail out if it is defined but not true
         if (condition != null && !condition.eval()) {
             //we are skipping the test
@@ -403,7 +425,10 @@ public class Funtest extends Task {
         bind(testRun);
         if (block != null) {
             //waitfor is not a task, it needs to be adapted
-            testRun.addTask(new TaskAdapter(block));
+            TaskAdapter ta = new TaskAdapter(block);
+            ta.bindToOwner(this);
+            validateTask(ta, "block");
+            testRun.addTask(ta);
             //add the block time to the total test run timeout
             testRunTimeout = block.calculateMaxWaitMillis();
         }
@@ -538,5 +563,15 @@ public class Funtest extends Task {
         log(type + ": " + thrown.toString(),
                 thrown,
                 Project.MSG_WARN);
+    }
+
+    private static class NestedCondition extends ConditionBase implements Condition {
+        public boolean eval() {
+            if (countConditions() != 1) {
+                throw new BuildException(
+                    "A single nested condition is required.");
+            }
+            return ((Condition) (getConditions().nextElement())).eval();
+        }
     }
 }
