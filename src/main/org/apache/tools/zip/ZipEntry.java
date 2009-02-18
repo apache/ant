@@ -215,6 +215,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Adds an extra fields - replacing an already present extra field
      * of the same type.
+     *
+     * <p>If no extra field of the same type exists, the field will be
+     * added as last field.</p>
      * @param ze an extra field
      * @since 1.1
      */
@@ -223,6 +226,25 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             extraFields = new LinkedHashMap();
         }
         extraFields.put(ze.getHeaderId(), ze);
+        setExtra();
+    }
+
+    /**
+     * Adds an extra fields - replacing an already present extra field
+     * of the same type.
+     *
+     * <p>The new extra field will be the first one.</p>
+     * @param ze an extra field
+     * @since 1.1
+     */
+    public void addAsFirstExtraField(ZipExtraField ze) {
+        LinkedHashMap copy = extraFields;
+        extraFields = new LinkedHashMap();
+        extraFields.put(ze.getHeaderId(), ze);
+        if (copy != null) {
+            copy.remove(ze.getHeaderId());
+            extraFields.putAll(copy);
+        }
         setExtra();
     }
 
