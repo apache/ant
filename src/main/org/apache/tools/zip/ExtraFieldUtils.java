@@ -44,6 +44,8 @@ public class ExtraFieldUtils {
         implementations = new HashMap();
         register(AsiExtraField.class);
         register(JarMarker.class);
+        register(UnicodePathExtraField.class);
+        register(UnicodeCommentExtraField.class);
     }
 
     /**

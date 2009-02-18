@@ -348,6 +348,9 @@ Fixed bugs:
    VM was running) for files with an unexpected internal structure.
    Bugzilla Report 46559.
 
+ * The zip package now supports the extra fields invented by InfoZIP
+   in order to store Unicode file names and comments.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 
