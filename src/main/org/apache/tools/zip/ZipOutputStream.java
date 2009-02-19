@@ -889,13 +889,13 @@ public class ZipOutputStream extends FilterOutputStream {
             try {
                 return ZipEncodingHelper.encodeName(name, encoding);
             } catch (java.nio.charset.UnsupportedCharsetException ex) {
-            // Java 1.4's NIO doesn't recognize a few names that
-            // String.getBytes does
-            try {
-                return name.getBytes(encoding);
-            } catch (UnsupportedEncodingException uee) {
-                throw new ZipException(uee.getMessage());
-            }
+                // Java 1.4's NIO doesn't recognize a few names that
+                // String.getBytes does
+                try {
+                    return name.getBytes(encoding);
+                } catch (UnsupportedEncodingException uee) {
+                    throw new ZipException(uee.getMessage());
+                }
             }
         }
     }
