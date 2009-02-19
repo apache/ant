@@ -351,6 +351,11 @@ Fixed bugs:
  * The zip package now supports the extra fields invented by InfoZIP
    in order to store Unicode file names and comments.
 
+ * The zip package detects the encoding bit set by more modern
+   archivers when they write UTF-8 filenames and optionally sets it
+   when writing zips or jars.
+   Bugzilla Report 45548
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 

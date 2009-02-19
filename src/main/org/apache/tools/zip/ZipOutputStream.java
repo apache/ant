@@ -92,6 +92,17 @@ public class ZipOutputStream extends FilterOutputStream {
     public static final int STORED = java.util.zip.ZipEntry.STORED;
 
     /**
+     * name of the encoding UTF-8
+     */
+    static final String UTF8 = "UTF8";
+
+     /**
+     * General purpose flag, which indicates that filenames are
+     * written in utf-8.
+     */
+    public static final int EFS_FLAG = 1 << 11;
+
+    /**
      * Current entry.
      *
      * @since 1.1
@@ -245,6 +256,11 @@ public class ZipOutputStream extends FilterOutputStream {
     private RandomAccessFile raf = null;
 
     /**
+     * whether to use the EFS flag when writing UTF-8 filenames or not.
+     */
+    private boolean useEFS = true; 
+
+    /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
      * @param out the outputstream to zip
      * @since 1.1
@@ -302,8 +318,9 @@ public class ZipOutputStream extends FilterOutputStream {
      * @param encoding the encoding value
      * @since 1.3
      */
-    public void setEncoding(String encoding) {
+    public void setEncoding(final String encoding) {
         this.encoding = encoding;
+        useEFS &= isUTF8(encoding);
     }
 
     /**
@@ -315,6 +332,15 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     public String getEncoding() {
         return encoding;
+    }
+
+    /**
+     * Whether to set the EFS flag if the file name encoding is UTF-8.
+     *
+     * <p>Defaults to true.</p>
+     */
+    public void setUseEFS(boolean b) {
+        useEFS = b && isUTF8(encoding);
     }
 
     /**
@@ -620,21 +646,7 @@ public class ZipOutputStream extends FilterOutputStream {
         //store method in local variable to prevent multiple method calls
         final int zipMethod = ze.getMethod();
 
-        // version needed to extract
-        // general purpose bit flag
-        // CheckStyle:MagicNumber OFF
-        if (zipMethod == DEFLATED && raf == null) {
-            // requires version 2 as we are going to store length info
-            // in the data descriptor
-            writeOut(ZipShort.getBytes(20));
-
-            // bit3 set to signal, we use a data descriptor
-            writeOut(ZipShort.getBytes(8));
-        } else {
-            writeOut(ZipShort.getBytes(10));
-            writeOut(ZERO);
-        }
-        // CheckStyle:MagicNumber ON
+        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod);
         written += WORD;
 
         // compression method
@@ -719,24 +731,12 @@ public class ZipOutputStream extends FilterOutputStream {
         writeOut(ZipShort.getBytes((ze.getPlatform() << 8) | 20));
         written += SHORT;
 
-        // version needed to extract
-        // general purpose bit flag
-        if (ze.getMethod() == DEFLATED && raf == null) {
-            // requires version 2 as we are going to store length info
-            // in the data descriptor
-            writeOut(ZipShort.getBytes(20));
-
-            // bit3 set to signal, we use a data descriptor
-            writeOut(ZipShort.getBytes(8));
-        } else {
-            writeOut(ZipShort.getBytes(10));
-            writeOut(ZERO);
-        }
-        // CheckStyle:MagicNumber ON
+        final int zipMethod = ze.getMethod();
+        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod);
         written += WORD;
 
         // compression method
-        writeOut(ZipShort.getBytes(ze.getMethod()));
+        writeOut(ZipShort.getBytes(zipMethod));
         written += SHORT;
 
         // last mod. time and date
@@ -887,9 +887,15 @@ public class ZipOutputStream extends FilterOutputStream {
             return name.getBytes();
         } else {
             try {
+                return ZipEncodingHelper.encodeName(name, encoding);
+            } catch (java.nio.charset.UnsupportedCharsetException ex) {
+            // Java 1.4's NIO doesn't recognize a few names that
+            // String.getBytes does
+            try {
                 return name.getBytes(encoding);
             } catch (UnsupportedEncodingException uee) {
                 throw new ZipException(uee.getMessage());
+            }
             }
         }
     }
@@ -944,4 +950,38 @@ public class ZipOutputStream extends FilterOutputStream {
         }
     }
 
+    /**
+     * Whether a given encoding - or the platform's default encoding
+     * if the parameter is null - is UTF-8.
+     */
+    static boolean isUTF8(String encoding) {
+        if (encoding == null) {
+            // check platform's default encoding
+            encoding = System.getProperty("file.encoding");
+        }
+        return UTF8.equalsIgnoreCase(encoding)
+            || "utf-8".equalsIgnoreCase(encoding);
+    }
+
+    private void writeVersionNeededToExtractAndGeneralPurposeBits(final int
+                                                                  zipMethod)
+        throws IOException {
+
+        // CheckStyle:MagicNumber OFF
+        int versionNeededToExtract = 10;
+        int generalPurposeFlag = useEFS ? EFS_FLAG : 0;
+        if (zipMethod == DEFLATED && raf == null) {
+            // requires version 2 as we are going to store length info
+            // in the data descriptor
+            versionNeededToExtract =  20;
+            // bit3 set to signal, we use a data descriptor
+            generalPurposeFlag |= 8;
+        }
+        // CheckStyle:MagicNumber ON
+
+        // version needed to extract
+        writeOut(ZipShort.getBytes(versionNeededToExtract));
+        // general purpose bit flag
+        writeOut(ZipShort.getBytes(generalPurposeFlag));
+    }
 }
