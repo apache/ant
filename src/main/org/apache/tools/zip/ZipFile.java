@@ -551,9 +551,15 @@ public class ZipFile {
             return new String(bytes);
         } else {
             try {
-                return new String(bytes, enc);
-            } catch (UnsupportedEncodingException uee) {
-                throw new ZipException(uee.getMessage());
+                return ZipEncodingHelper.decodeName(bytes, encoding);
+            } catch (java.nio.charset.UnsupportedCharsetException ex) {
+                // Java 1.4's NIO doesn't recognize a few names that
+                // String.getBytes does
+                try {
+                    return new String(bytes, enc);
+                } catch (UnsupportedEncodingException uee) {
+                    throw new ZipException(uee.getMessage());
+                }
             }
         }
     }

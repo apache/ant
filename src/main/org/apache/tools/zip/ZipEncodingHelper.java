@@ -168,4 +168,18 @@ abstract class ZipEncodingHelper {
 
         return enc.canEncode(name);
     }
+
+    /**
+     * Decode a filename or a comment from a byte array.
+     * 
+     * @param name The filename or comment.
+     * @param encoding A valid encoding name. The standard zip
+     *                 encoding is <code>"CP437"</code>,
+     *                 <code>"UTF-8"</code> is supported in ZIP file
+     *                 version <code>6.3</code> or later.
+     */
+    static final String decodeName(byte[] name, String encoding) {
+        Charset cs = Charset.forName(encoding);
+        return cs.decode(ByteBuffer.wrap(name)).toString();
+    }
 }
