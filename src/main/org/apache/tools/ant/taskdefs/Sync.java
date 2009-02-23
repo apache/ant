@@ -235,7 +235,8 @@ public class Sync extends Task {
         // delete them.
         for (int i = dirs.length - 1; i >= 0; --i) {
             File f = new File(toDir, dirs[i]);
-            if (f.list().length < 1) {
+            String[] children = f.list();
+            if (children == null || children.length < 1) {
                 log("Removing orphan directory: " + f, Project.MSG_DEBUG);
                 f.delete();
                 ++removedCount[0];

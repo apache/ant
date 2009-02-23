@@ -356,6 +356,10 @@ Fixed bugs:
    when writing zips or jars.
    Bugzilla Report 45548
 
+ * <sync> could into a NullPointerException when faced with broken
+   symbolic links.
+   Bugzilla Report 46747.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 
