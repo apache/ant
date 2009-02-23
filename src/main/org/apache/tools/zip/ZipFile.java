@@ -551,7 +551,7 @@ public class ZipFile {
             return new String(bytes);
         } else {
             try {
-                return ZipEncodingHelper.decodeName(bytes, encoding);
+                return ZipEncodingHelper.decodeName(bytes, enc);
             } catch (java.nio.charset.UnsupportedCharsetException ex) {
                 // Java 1.4's NIO doesn't recognize a few names that
                 // String.getBytes does
