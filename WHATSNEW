@@ -356,7 +356,7 @@ Fixed bugs:
    when writing zips or jars.
    Bugzilla Report 45548
 
- * <sync> could into a NullPointerException when faced with broken
+ * <sync> could run into a NullPointerException when faced with broken
    symbolic links.
    Bugzilla Report 46747.
 
