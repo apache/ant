@@ -256,6 +256,35 @@
         </table>
       </subsection>
 
+      <subsection name="Ant Script Library">
+
+        <p>The Ant Script Library (ASL) is a collection of re-usable
+        Ant scripts that can be imported into your own projects. The ASL
+        provides a number of pre-defined targets that simplify setting up build
+        scripts for a new project, bringing re-use and consistency to your own
+        Ant scripts.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.exubero.com/asl/">http://www.exubero.com/asl/</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='mailto:joe@exubero.com'>Joe Schmetzer</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Apache Software License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntShellExt (Ant Shell Extension)">
 
         <p>Ant Shell Extension is a Windows Explorer enhancement that adds a contextual 
