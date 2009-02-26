@@ -42,7 +42,7 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
     }
 
     /**
-     * Assemble as unicode path extension form the name and encoding
+     * Assemble as unicode path extension from the name and encoding
      * of the orginal zip entry.
      * 
      * @param name The file name
@@ -51,6 +51,17 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
      */
     public UnicodePathExtraField(String name, String zipEncoding) {
         super(name, zipEncoding);
+    }
+
+    /**
+     * Assemble as unicode path extension from the name given as
+     * text as well as the bytes actually written to the archive.
+     * 
+     * @param name The file name
+     * @param bytes the bytes actually written to the archive
+     */
+    public UnicodePathExtraField(String name, byte[] bytes) {
+        super(name, bytes);
     }
 
     public ZipShort getHeaderId() {

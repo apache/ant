@@ -42,15 +42,26 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
     }
 
     /**
-     * Assemble as unicode comment extension form the comment and
+     * Assemble as unicode comment extension from the comment and
      * encoding of the orginal zip entry.
      * 
-     * @param name The file name
+     * @param comment The file comment
      * @param zipEncoding The encoding of the comment in the zip file,
      * usually <code>"CP437"</code>.
      */
-    public UnicodeCommentExtraField(String name, String zipEncoding) {
-        super(name, zipEncoding);
+    public UnicodeCommentExtraField(String comment, String zipEncoding) {
+        super(comment, zipEncoding);
+    }
+
+    /**
+     * Assemble as unicode comment extension from the comment given as
+     * text as well as the bytes actually written to the archive.
+     * 
+     * @param comment The file comment
+     * @param bytes the bytes actually written to the archive
+     */
+    public UnicodeCommentExtraField(String comment, byte[] bytes) {
+        super(comment, bytes);
     }
 
     public ZipShort getHeaderId() {

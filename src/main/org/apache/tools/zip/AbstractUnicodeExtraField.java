@@ -34,23 +34,32 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     }
 
     /**
-     * Assemble as unicode path extension form the name and encoding
-     * of the orginal zip entry.
+     * Assemble as unicode extension from the name/comment and
+     * encoding of the orginal zip entry.
      * 
-     * @param name The file name or comment.
+     * @param text The file name or comment.
      * @param zipEncoding The encoding of the filenames in the zip
      * file, usually <code>"CP437"</code>.
      */
-    protected AbstractUnicodeExtraField(String name, String zipEncoding) {
+    protected AbstractUnicodeExtraField(String text, String zipEncoding) {
+        this(text, ZipEncodingHelper.encodeName(text, zipEncoding));
+    }
 
-        byte[] filename = ZipEncodingHelper.encodeName(name, zipEncoding);
-
+    /**
+     * Assemble as unicode extension from the name/comment and
+     * encoding of the orginal zip entry.
+     * 
+     * @param text The file name or comment.
+     * @param zipEncoding The encoding of the filenames in the zip
+     * file, usually <code>"CP437"</code>.
+     */
+    protected AbstractUnicodeExtraField(String text, byte[] bytes) {
         CRC32 crc32 = new CRC32();
-        crc32.update(filename);
+        crc32.update(bytes);
         nameCRC32 = crc32.getValue();
 
         try {
-            unicodeName = name.getBytes("UTF-8");
+            unicodeName = text.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("FATAL: UTF-8 encoding not supported.",
                                        e);

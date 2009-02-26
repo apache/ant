@@ -261,6 +261,11 @@ public class ZipOutputStream extends FilterOutputStream {
     private boolean useEFS = true; 
 
     /**
+     * whether to create UnicodePathExtraField-s for each entry.
+     */
+    private boolean createUnicodeExtraFields = false;
+
+    /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
      * @param out the outputstream to zip
      * @since 1.1
@@ -335,12 +340,22 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Whether to set the EFS flag if the file name encoding is UTF-8.
+     * Whether to set the language encoding flag if the file name
+     * encoding is UTF-8.
      *
      * <p>Defaults to true.</p>
      */
-    public void setUseEFS(boolean b) {
+    public void setUseLanguageEncodingFlag(boolean b) {
         useEFS = b && isUTF8(encoding);
+    }
+
+    /**
+     * Whether to create Unicode Extra Fields for all entries.
+     *
+     * <p>Defaults to false.</p>
+     */
+    public void setCreateUnicodeExtraFields(boolean b) {
+        createUnicodeExtraFields = b;
     }
 
     /**
@@ -638,6 +653,17 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      */
     protected void writeLocalFileHeader(ZipEntry ze) throws IOException {
+
+        byte[] name = getBytes(ze.getName());
+        if (createUnicodeExtraFields) {
+            ze.addExtraField(new UnicodePathExtraField(ze.getName(), name));
+            String comm = ze.getComment();
+            if (comm != null && !"".equals(comm)) {
+                byte[] commentB = getBytes(comm);
+                ze.addExtraField(new UnicodeCommentExtraField(comm, commentB));
+            }
+        }
+
         offsets.put(ze, ZipLong.getBytes(written));
 
         writeOut(LFH_SIG);
@@ -675,7 +701,6 @@ public class ZipOutputStream extends FilterOutputStream {
         // CheckStyle:MagicNumber ON
 
         // file name length
-        byte[] name = getBytes(ze.getName());
         writeOut(ZipShort.getBytes(name.length));
         written += SHORT;
 
