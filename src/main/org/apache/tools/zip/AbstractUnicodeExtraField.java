@@ -91,7 +91,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
      *         in the central directory of the zip file to set.
      */
     public void setNameCRC32(long nameCRC32) {
-        nameCRC32 = nameCRC32;
+        this.nameCRC32 = nameCRC32;
         data = null;
     }
 
@@ -106,7 +106,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
      * @param unicodeName The utf-8 encoded name to set.
      */
     public void setUnicodeName(byte[] unicodeName) {
-        unicodeName = unicodeName;
+        this.unicodeName = unicodeName;
         data = null;
     }
 
