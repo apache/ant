@@ -702,6 +702,10 @@ Other changes:
  * CBZip2OutputStream now has a finish method separate from close.
    Bugzilla Report 42713.
 
+ * the <zip> and <unzip> family of tasks has new option to deal with
+   file name and comment encoding.  Please see the zip tasks'
+   documentation for details.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

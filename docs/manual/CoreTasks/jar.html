@@ -125,8 +125,10 @@ to a value other than its default, <code>"add"</code>.</b></p>
     <td valign="top">encoding</td>
     <td valign="top">The character encoding to use for filenames
       inside the archive.  Defaults to UTF8. <strong>It is not
-      recommended to change this value as the created archive will most
-      likely be unreadable for Java otherwise.</strong></td>
+      recommended to change this value as the created archive will
+      most likely be unreadable for Java otherwise.</strong>
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -249,6 +251,25 @@ to a value other than its default, <code>"add"</code>.</b></p>
     Set this attribute to true if you really want to preserve the
       original permission field.<em>since Ant 1.8.0</em>
     </td>
+    <td valign="top" align="center">No, default is false</td>
+  </tr>
+  <tr>
+    <td valign="top">useLanguageEncodingFlag</td>
+    <td valign="top">Whether to set the language encoding flag if the
+      encoding is UTF-8.  This setting doesn't have any effect if the
+      encoding is not UTF-8.
+      <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
+    <td valign="top" align="center">No, default is true</td>
+  </tr>
+  <tr>
+    <td valign="top">createUnicodeExtraFields</td>
+    <td valign="top">Whether to create unicode extra fields to store
+      the file names a second time inside the entry's metadata.
+      <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
     <td valign="top" align="center">No, default is false</td>
   </tr>
 </table>

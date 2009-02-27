@@ -134,7 +134,7 @@ public class ZipFile {
 
     /**
      * Opens the given file for reading, assuming the specified
-     * encoding for file names and ignoring unicode extra fields.
+     * encoding for file names, scanning unicode extra fields.
      *
      * @param name name of the archive.
      * @param encoding the encoding to use for file names
@@ -142,12 +142,12 @@ public class ZipFile {
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(String name, String encoding) throws IOException {
-        this(new File(name), encoding, false);
+        this(new File(name), encoding, true);
     }
 
     /**
      * Opens the given file for reading, assuming the specified
-     * encoding for file names and ignoring unicode extra fields.
+     * encoding for file names and scanning for unicode extra fields.
      *
      * @param f the archive.
      * @param encoding the encoding to use for file names, use null
@@ -156,7 +156,7 @@ public class ZipFile {
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(File f, String encoding) throws IOException {
-        this(f, encoding, false);
+        this(f, encoding, true);
     }
 
     /**

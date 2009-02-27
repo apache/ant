@@ -107,7 +107,9 @@ archive.</p>
     href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.<br>
     Defaults to &quot;UTF8&quot;, use the magic value
     <code>native-encoding</code> for the platform's default character
-    encoding.</td>
+    encoding.
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -124,6 +126,16 @@ archive.</p>
       include/exclude patterns and before using the nested mappers (if
       any).  <em>since Ant 1.8.0</em></td>
     <td valign="top" align="center">No, defaults to false</td>
+  </tr>
+  <tr>
+    <td valign="top">scanForUnicodeExtraFields</td>
+    <td valign="top"><b>Note:</b> This attribute is not available for
+    the <code>untar</code> task.<br>
+      If the archive contains uncode extra fields then use them to set
+      the file names, ignoring the specified encoding.
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
+    <td align="center" valign="top">No, defaults to true</td>
   </tr>
 </table>
 <h3>Examples</h3>

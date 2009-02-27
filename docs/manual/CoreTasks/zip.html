@@ -74,7 +74,8 @@ for filenames - this is consistent with the command line ZIP tools,
 but causes problems if you try to open them from within Java and your
 filenames contain non US-ASCII characters. Use the encoding attribute
 and set it to UTF8 to create zip files that can safely be read by
-Java.</p>
+Java.  For a more complete discussion,
+see <a href="#encoding">below</a></p>
 
 <p>Starting with Ant 1.5.2, <code>&lt;zip&gt;</code> can store Unix permissions
 inside the archive (see description of the filemode and dirmode
@@ -149,7 +150,8 @@ archive.</p>
     <td valign="top">The character encoding to use for filenames
     inside the zip file.  For a list of possible values see <a
     href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.
-    Defaults to the platform's default character encoding.</td>
+    Defaults to the platform's default character encoding.
+      <br/>See also the <a href="#encoding">discussion below</a></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -241,7 +243,127 @@ archive.</p>
     </td>
     <td valign="top" align="center">No, default is false</td>
   </tr>
+  <tr>
+    <td valign="top">useLanguageEncodingFlag</td>
+    <td valign="top">Whether to set the language encoding flag if the
+      encoding is UTF-8.  This setting doesn't have any effect if the
+      encoding is not UTF-8.
+      <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="#encoding">discussion below</a></td>
+    <td align="center" valign="top">No, default is true</td>
+  </tr>
+  <tr>
+    <td valign="top">createUnicodeExtraFields</td>
+    <td valign="top">Whether to create unicode extra fields to store
+      the file names a second time inside the entry's metadata.
+      Defaults to false.  <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="#encoding">discussion below</a></td>
+    <td align="center" valign="top">No, default is false</td>
+  </tr>
 </table>
+
+<h3><a name="encoding">Encoding of File Names</a></h3>
+
+<p>Traditionally the ZIP archive format uses CodePage 437 as encoding
+  for file name, which is not sufficient for many international
+  character sets.</p>
+
+<p>Over time different archivers have chosen different ways to work
+  around the limitation - the <code>java.util.zip</code> packages
+  simply uses UTF-8 as its encoding for example.</p>
+
+<p>Ant has been offering the encoding attribute of the zip and unzip
+  task as a way to explicitly specify the encoding to use (or expect)
+  since Ant 1.4.  It defaults to the platform's default encoding for
+  zip and UTF-8 for jar and other jar-like tasks (war, ear, ...) as
+  well as the unzip family of tasks.</p>
+
+<p>More recent versions of the ZIP specification introduce something
+  called the &quot;language encoding flag&quot; which can be used to
+  signal that a file name has been encoded using UTF-8.  Starting with
+  Ant 1.8.0 all zip-/jar- and similar archives written by Ant will set
+  this flag, if the encoding has been set to UTF-8.  Our
+  interoperabilty tests with existing archivers didn't show any ill
+  effects (in fact, most archivers ignore the flag to date), but you
+  can turn off the "language encoding flag" by setting the attribute
+  <code>useLanguageEncodingFlag</code> to <code>false</code> on the
+  zip-task if you should encounter problems.</p>
+
+<p>The unzip (and similar tasks) -task will recognize the language
+  encoding flag and ignore the encoding set on the task if it has been
+  found.</p>
+
+<p>The InfoZIP developers have introduced new ZIP extra fields that
+  can be used to add an additional UTF-8 encoded file name to the
+  entry's metadata.  Most archivers ignore these extra fields.  The
+  zip family of tasks support an
+  option <code>createUnicodeExtraFields</code> since Ant 1.8.0 which
+  makes Ant write these extra fields, it defaults to false since it
+  creates a bigger archive.</p>
+
+<p>The unzip-task will recognize the unicode extra fields by default
+  and read the file name information from them, unless you set the
+  optional attribute <code>scanForUnicodeExtraFields</code> to
+  false.</p>
+
+<h4>Recommendations for Interoperability</h4>
+
+<p>The optimal setting of flags depends on the archivers you expect as
+  consumers/producers of the ZIP archives.  Below are some test
+  results which may be superseeded with later versions of each
+  tool.</p>
+
+<ul>
+  <li>The java.util.zip package used by the jar executable or to read
+    jars from your CLASSPATH reads and writes UTF-8 names, it doesn't
+    set or recognize any flags or unicode extra fields.</li>
+
+  <li>7Zip writes CodePage 437 by default but uses UTF-8 and the
+    language encoding flag when writing entries that cannot be encoded
+    as CodePage 437.  It recognizes the language encoding flag when
+    reading and ignores the unicode extra fields.</li>
+
+  <li>WinZIP writes CodePage 437 and uses unicode extra fields by
+    default.  It recognizes the unicode extra field when reading and
+    ignores the language encoding flag.</li>
+
+  <li>Windows' "compressed folder" feature doesn't recognize any flag
+    or extra field and creates archives using the platforms default
+    encoding - and expects archives to be in that encoding when reading
+    them.</li>
+
+  <li>InfoZIP based tools can recognize and write both, it is a
+    compile time option and depends on the platform so your mileage
+    may vary.</li>
+
+  <li>PKWARE zip tools recognize both and prefer the language encoding
+    flag.  They create archives using CodePage 437 if possible and UTF-8
+    plus the language encoding flag for file names that cannot be
+    encoded as CodePage 437.</li>
+</ul>
+
+<p>So, what to do?</p>
+
+<p>If you are creating jars, then java.util.zip is your main
+  consumer.  We recommend you set the encoding to UTF-8 and keep the
+  language encoding flag enabled.  The flag won't help or hurt
+  java.util.zip but archivers that support it will show the correct
+  file names.</p>
+
+<p>For maximum interop it is probably best to set the encoding to
+  UTF-8, enable the language encoding flag and create unicode extra
+  fields when writing ZIPs.  Such archives should be extracted
+  correctly by java.util.zip, 7Zip, WinZIP, PKWARE tools and most
+  likely InfoZIP tools.  They will be unusable with Windows'
+  "compressed folders" feature and bigger than archives without the
+  unicode extra fields, though.</p>
+
+<p>If Windows' "compressed folders" is your primary consumer, then
+  your best option is to explicitly set the encoding to the target
+  platform.  You may want to enable creation of unicode extra fields
+  so the tools that support them will extract the file names
+  correctly.</p>
+
 <h3>Parameters specified as nested elements</h3>
 
 <h4>any resource collection</h4>

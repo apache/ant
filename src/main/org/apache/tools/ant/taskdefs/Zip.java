@@ -175,6 +175,20 @@ public class Zip extends MatchingTask {
     private boolean preserve0Permissions = false;
 
     /**
+     * Whether to set the language encoding flag when creating the archive.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean useLanguageEncodingFlag = true;
+
+    /**
+     * Whether to set the language encoding flag when creating the archive.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean createUnicodeExtraFields = false;
+
+    /**
      * This is the name/location of where to
      * create the .zip file.
      * @param zipFile the path of the zipFile
@@ -453,6 +467,38 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Whether to set the language encoding flag.
+     * @since Ant 1.8.0
+     */
+    public void setUseLanguageEncodingFlag(boolean b) {
+        useLanguageEncodingFlag = b;
+    }
+
+    /**
+     * Whether the language encoding flag will be used.
+     * @since Ant 1.8.0
+     */
+    public boolean getUseLanguageEnodingFlag() {
+        return useLanguageEncodingFlag;
+    }
+
+    /**
+     * Whether Unicode extra fields will be created.
+     * @since Ant 1.8.0
+     */
+    public void setCreateUnicodeExtraFields(boolean b) {
+        createUnicodeExtraFields = b;
+    }
+
+    /**
+     * Whether Unicode extra fields will be created.
+     * @since Ant 1.8.0
+     */
+    public boolean getCreateUnicodeExtraFields() {
+        return createUnicodeExtraFields;
+    }
+
+    /**
      * validate and build
      * @throws BuildException on error
      */
@@ -540,6 +586,8 @@ public class Zip extends MatchingTask {
                     zOut = new ZipOutputStream(zipFile);
 
                     zOut.setEncoding(encoding);
+                    zOut.setUseLanguageEncodingFlag(useLanguageEncodingFlag);
+                    zOut.setCreateUnicodeExtraFields(createUnicodeExtraFields);
                     zOut.setMethod(doCompress
                         ? ZipOutputStream.DEFLATED : ZipOutputStream.STORED);
                     zOut.setLevel(level);
