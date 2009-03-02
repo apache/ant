@@ -19,12 +19,14 @@
 package org.apache.tools.zip;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.Enumeration;
+import java.util.zip.CRC32;
 import junit.framework.TestCase;
 
 public class UTF8ZipFilesTest extends TestCase {
@@ -36,33 +38,70 @@ public class UTF8ZipFilesTest extends TestCase {
     private static final String EURO_FOR_DOLLAR_TXT = "\u20AC_for_Dollar.txt";
     private static final String OIL_BARREL_TXT = "\u00D6lf\u00E4sser.txt";
 
-    public void testUtf8FileRoundtrip() throws IOException {
-        testFileRoundtrip(UTF_8);
-    }
-
-
-    public void testCP437FileRoundtrip() throws IOException {
-        testFileRoundtrip(CP437);
-    }
-
-    public void testASCIIFileRoundtrip() throws IOException {
-        testFileRoundtrip(US_ASCII);
-    }
-
-    private static void testFileRoundtrip(String encoding)
+    public void testUtf8FileRoundtripExplicitUnicodeExtra()
         throws IOException {
+        testFileRoundtrip(UTF_8, true, true);
+    }
 
+    public void testUtf8FileRoundtripNoEFSExplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(UTF_8, false, true);
+    }
+
+    public void testCP437FileRoundtripExplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(CP437, false, true);
+    }
+
+    public void testASCIIFileRoundtripExplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(US_ASCII, false, true);
+    }
+
+    public void testUtf8FileRoundtripImplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(UTF_8, true, false);
+    }
+
+    public void testUtf8FileRoundtripNoEFSImplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(UTF_8, false, false);
+    }
+
+    public void testCP437FileRoundtripImplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(CP437, false, false);
+    }
+
+    public void testASCIIFileRoundtripImplicitUnicodeExtra()
+        throws IOException {
+        testFileRoundtrip(US_ASCII, false, false);
+    }
+
+    public void testZipFileReadsUnicodeFields() throws IOException {
+        File file = File.createTempFile("unicode-test", ".zip");
+        ZipFile zf = null;
         try {
-            Charset.forName(encoding);
-        } catch (UnsupportedCharsetException use) {
-            System.err.println("Skipping testFileRoundtrip for unsupported "
-                               + " encoding " + encoding);
-            return;
+            createTestFile(file, US_ASCII, false, true);
+            zf = new ZipFile(file, US_ASCII, true);
+            assertNotNull(zf.getEntry(ASCII_TXT));
+            assertNotNull(zf.getEntry(EURO_FOR_DOLLAR_TXT));
+            assertNotNull(zf.getEntry(OIL_BARREL_TXT));
+        } finally {
+            ZipFile.closeQuietly(zf);
+            if (file.exists()) {
+                file.delete();
+            }
         }
+    }
+
+    private static void testFileRoundtrip(String encoding, boolean withEFS,
+                                          boolean withExplicitUnicodeExtra)
+        throws IOException {
 
         File file = File.createTempFile(encoding + "-test", ".zip");
         try {
-            createTestFile(file, encoding);
+            createTestFile(file, encoding, withEFS, withExplicitUnicodeExtra);
             testFile(file, encoding);
         } finally {
             if (file.exists()) {
@@ -71,19 +110,30 @@ public class UTF8ZipFilesTest extends TestCase {
         }
     }
 
-    private static void createTestFile(File file, String encoding)
+    private static void createTestFile(File file, String encoding,
+                                       boolean withEFS,
+                                       boolean withExplicitUnicodeExtra)
         throws UnsupportedEncodingException, IOException {
+
+        ZipEncoding zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
 
         ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(file);
             zos.setEncoding(encoding);
+            zos.setUseLanguageEncodingFlag(withEFS);
+            zos.setCreateUnicodeExtraFields(!withExplicitUnicodeExtra);
 
             ZipEntry ze = new ZipEntry(OIL_BARREL_TXT);
-            if (!ZipEncodingHelper.canEncodeName(ze.getName(),
-                                                 zos.getEncoding())) {
+            if (withExplicitUnicodeExtra
+                && !zipEncoding.canEncode(ze.getName())) {
+
+                ByteBuffer en = zipEncoding.encode(ze.getName());
+
                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
-                                                           zos.getEncoding()));
+                                                           en.array(),
+                                                           en.arrayOffset(),
+                                                           en.limit()));
             }
 
             zos.putNextEntry(ze);
@@ -91,10 +141,15 @@ public class UTF8ZipFilesTest extends TestCase {
             zos.closeEntry();
 
             ze = new ZipEntry(EURO_FOR_DOLLAR_TXT);
-            if (!ZipEncodingHelper.canEncodeName(ze.getName(),
-                                                 zos.getEncoding())) {
+            if (withExplicitUnicodeExtra
+                && !zipEncoding.canEncode(ze.getName())) {
+
+                ByteBuffer en = zipEncoding.encode(ze.getName());
+
                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
-                                                           zos.getEncoding()));
+                                                           en.array(),
+                                                           en.arrayOffset(),
+                                                           en.limit()));
             }
 
             zos.putNextEntry(ze);
@@ -103,10 +158,15 @@ public class UTF8ZipFilesTest extends TestCase {
 
             ze = new ZipEntry(ASCII_TXT);
 
-            if (!ZipEncodingHelper.canEncodeName(ze.getName(),
-                                                 zos.getEncoding())) {
+            if (withExplicitUnicodeExtra
+                && !zipEncoding.canEncode(ze.getName())) {
+
+                ByteBuffer en = zipEncoding.encode(ze.getName());
+
                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
-                                                           zos.getEncoding()));
+                                                           en.array(),
+                                                           en.arrayOffset(),
+                                                           en.limit()));
             }
 
             zos.putNextEntry(ze);
@@ -125,7 +185,7 @@ public class UTF8ZipFilesTest extends TestCase {
         throws IOException {
         ZipFile zf = null;
         try {
-            zf = new ZipFile(file, encoding);
+            zf = new ZipFile(file, encoding, false);
 
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
@@ -147,14 +207,8 @@ public class UTF8ZipFilesTest extends TestCase {
     }
 
     private static UnicodePathExtraField findUniCodePath(ZipEntry ze) {
-
-        ZipExtraField[] efs = ze.getExtraFields();
-        for (int i = 0; i < efs.length; ++i) {
-            if (efs[i].getHeaderId().equals(UnicodePathExtraField.UPATH_ID)) {
-                return (UnicodePathExtraField) efs[i];
-            }
-        }
-        return null;
+        return (UnicodePathExtraField)
+            ze.getExtraField(UnicodePathExtraField.UPATH_ID);
     }
 
     private static void assertUnicodeName(ZipEntry ze,
@@ -165,23 +219,17 @@ public class UTF8ZipFilesTest extends TestCase {
             UnicodePathExtraField ucpf = findUniCodePath(ze);
             assertNotNull(ucpf);
 
-            UnicodePathExtraField ucpe = new UnicodePathExtraField(expectedName,
-                                                                   encoding);
-            assertEquals(ucpe.getNameCRC32(), ucpf.getNameCRC32());
+            ZipEncoding enc = ZipEncodingHelper.getZipEncoding(encoding);
+            ByteBuffer ne = enc.encode(ze.getName());
+
+            CRC32 crc = new CRC32();
+            crc.update(ne.array(),ne.arrayOffset(),ne.limit());
+
+            assertEquals(crc.getValue(), ucpf.getNameCRC32());
             assertEquals(expectedName, new String(ucpf.getUnicodeName(),
                                                   UTF_8));
         }
     }
 
-    /*
-    public void testUtf8Interoperability() throws IOException {
-        File file1 = super.getFile("utf8-7zip-test.zip");
-        File file2 = super.getFile("utf8-winzip-test.zip");
-
-        testFile(file1,CP437);
-        testFile(file2,CP437);
-
-    }
-    */
 }
 

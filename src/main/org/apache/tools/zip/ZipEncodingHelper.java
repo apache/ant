@@ -19,16 +19,118 @@
 package org.apache.tools.zip;
 
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CoderResult;
-import java.nio.charset.CodingErrorAction;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Static helper functions for robustly encoding filenames in zip files. 
  */
 abstract class ZipEncodingHelper {
+
+    /**
+     * A class, which holds the high characters of a simple encoding
+     * and lazily instantiates a Simple8BitZipEncoding instance in a
+     * thread-safe manner.
+     */
+    private static class SimpleEncodingHolder {
+
+        private final char [] highChars;
+        private Simple8BitZipEncoding encoding;
+
+        /**
+         * Instantiate a simple encoding holder.
+         * 
+         * @param highChars The characters for byte codes 128 to 255.
+         * 
+         * @see Simple8BitZipEncoding#Simple8BitZipEncoding(char[])
+         */
+        SimpleEncodingHolder(char [] highChars) {
+            this.highChars = highChars;
+        }
+
+        /**
+         * @return The associated {@see Simple8BitZipEncoding}, which
+         *         is instantiated if not done so far.
+         */
+        public synchronized Simple8BitZipEncoding getEncoding() {
+            if (this.encoding == null) {
+                this.encoding = new Simple8BitZipEncoding(this.highChars);
+            }
+            return this.encoding;
+        }
+    }
+
+    private static final Map simpleEncodings;
+
+    static {
+        simpleEncodings = new HashMap();
+
+        char[] cp437_high_chars =
+            new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
+                         0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
+                         0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
+                         0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
+                         0x00ff, 0x00d6, 0x00dc, 0x00a2, 0x00a3, 0x00a5,
+                         0x20a7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
+                         0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x2310,
+                         0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
+                         0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561,
+                         0x2562, 0x2556, 0x2555, 0x2563, 0x2551, 0x2557,
+                         0x255d, 0x255c, 0x255b, 0x2510, 0x2514, 0x2534,
+                         0x252c, 0x251c, 0x2500, 0x253c, 0x255e, 0x255f,
+                         0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
+                         0x256c, 0x2567, 0x2568, 0x2564, 0x2565, 0x2559,
+                         0x2558, 0x2552, 0x2553, 0x256b, 0x256a, 0x2518,
+                         0x250c, 0x2588, 0x2584, 0x258c, 0x2590, 0x2580,
+                         0x03b1, 0x00df, 0x0393, 0x03c0, 0x03a3, 0x03c3,
+                         0x00b5, 0x03c4, 0x03a6, 0x0398, 0x03a9, 0x03b4,
+                         0x221e, 0x03c6, 0x03b5, 0x2229, 0x2261, 0x00b1,
+                         0x2265, 0x2264, 0x2320, 0x2321, 0x00f7, 0x2248,
+                         0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2,
+                         0x25a0, 0x00a0 };
+
+        SimpleEncodingHolder cp437 = new SimpleEncodingHolder(cp437_high_chars);
+
+        simpleEncodings.put("CP437",cp437);
+        simpleEncodings.put("Cp437",cp437);
+        simpleEncodings.put("cp437",cp437);
+        simpleEncodings.put("IBM437",cp437);
+        simpleEncodings.put("ibm437",cp437);
+
+        char[] cp850_high_chars =
+            new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
+                         0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
+                         0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
+                         0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
+                         0x00ff, 0x00d6, 0x00dc, 0x00f8, 0x00a3, 0x00d8,
+                         0x00d7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
+                         0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x00ae,
+                         0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
+                         0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x00c1,
+                         0x00c2, 0x00c0, 0x00a9, 0x2563, 0x2551, 0x2557,
+                         0x255d, 0x00a2, 0x00a5, 0x2510, 0x2514, 0x2534,
+                         0x252c, 0x251c, 0x2500, 0x253c, 0x00e3, 0x00c3,
+                         0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
+                         0x256c, 0x00a4, 0x00f0, 0x00d0, 0x00ca, 0x00cb,
+                         0x00c8, 0x0131, 0x00cd, 0x00ce, 0x00cf, 0x2518,
+                         0x250c, 0x2588, 0x2584, 0x00a6, 0x00cc, 0x2580,
+                         0x00d3, 0x00df, 0x00d4, 0x00d2, 0x00f5, 0x00d5,
+                         0x00b5, 0x00fe, 0x00de, 0x00da, 0x00db, 0x00d9,
+                         0x00fd, 0x00dd, 0x00af, 0x00b4, 0x00ad, 0x00b1,
+                         0x2017, 0x00be, 0x00b6, 0x00a7, 0x00f7, 0x00b8,
+                         0x00b0, 0x00a8, 0x00b7, 0x00b9, 0x00b3, 0x00b2,
+                         0x25a0, 0x00a0 };
+
+        SimpleEncodingHolder cp850 = new SimpleEncodingHolder(cp850_high_chars);
+
+        simpleEncodings.put("CP850",cp850);
+        simpleEncodings.put("Cp850",cp850);
+        simpleEncodings.put("cp850",cp850);
+        simpleEncodings.put("IBM850",cp850);
+        simpleEncodings.put("ibm850",cp850);
+    }
 
     /**
      * Grow a byte buffer, so it has a minimal capacity or at least
@@ -53,7 +155,7 @@ abstract class ZipEncodingHelper {
         return on;
     }
 
-
+ 
     /**
      * The hexadecimal digits <code>0,...,9,A,...,F</code> encoded as
      * ASCII bytes.
@@ -65,131 +167,79 @@ abstract class ZipEncodingHelper {
     };
 
     /**
-     * Encode a filename or a comment to a byte array suitable for
-     * storing it to a serialized zip entry.
+     * Append <code>%Uxxxx</code> to the given byte buffer.
+     * The caller must assure, that <code>bb.remaining()&gt;=6</code>.
      * 
-     * Examples (in pseudo-notation, right hand side is C-style notation):
-     * <pre>
-     *  encodeName("\u20AC_for_Dollar.txt","CP437") = "%U20AC_for_Dollar.txt"
-     *  encodeName("\u00D6lf\u00E4sser.txt","CP437") = "\231lf\204sser.txt"
-     * </pre>
-     * 
-     * @param name The filename or comment with possible non-ASCII
-     * unicode characters.  Must not be null.
-     * @param encoding A valid encoding name. The standard zip
-     *                 encoding is <code>"CP437"</code>,
-     *                 <code>"UTF-8"</code> is supported in ZIP file
-     *                 version <code>6.3</code> or later.  If null,
-     *                 will use the platform's {@link
-     *                 java.lang.String#getBytes default encoding}.
-     * @return A byte array containing the mapped file
-     *         name. Unmappable characters or malformed character
-     *         sequences are mapped to a sequence of utf-16 words
-     *         encoded in the format <code>%Uxxxx</code>.
+     * @param bb The byte buffer to write to.
+     * @param c The character to write.
      */
-    static final byte[] encodeName(String name, String encoding) {
+    static void appendSurrogate(ByteBuffer bb, char c) {
+
+        bb.put((byte) '%');
+        bb.put((byte) 'U');
+
+        bb.put(HEX_DIGITS[(c >> 12)&0x0f]);
+        bb.put(HEX_DIGITS[(c >> 8)&0x0f]);
+        bb.put(HEX_DIGITS[(c >> 4)&0x0f]);
+        bb.put(HEX_DIGITS[c & 0x0f]);
+    }
+
+
+    /**
+     * name of the encoding UTF-8
+     */
+    static final String UTF8 = "UTF8";
+
+    /**
+     * name of the encoding UTF-8
+     */
+    static final ZipEncoding UTF8_ZIP_ENCODING = new FallbackZipEncoding(UTF8);
+
+    /**
+     * Instantiates a zip encoding.
+     * 
+     * @param name The name of the zip encoding. Specify <code>null</code> for
+     *             the platform's default encoding.
+     * @return A zip encoding for the given encoding name.
+     */
+    static ZipEncoding getZipEncoding(String name) {
+ 
+        // fallback encoding is good enough for utf-8.
+        if (isUTF8(name)) {
+            return UTF8_ZIP_ENCODING;
+        }
+
+        if (name == null) {
+            return new FallbackZipEncoding();
+        }
+
+        SimpleEncodingHolder h =
+            (SimpleEncodingHolder) simpleEncodings.get(name);
+
+        if (h!=null) {
+            return h.getEncoding();
+        }
+
+        try {
+
+            Charset cs = Charset.forName(name);
+            return new NioZipEncoding(cs);
+
+        } catch (UnsupportedCharsetException e) {
+            return new FallbackZipEncoding(name);
+        }
+    }
+
+    /**
+     * Whether a given encoding - or the platform's default encoding
+     * if the parameter is null - is UTF-8.
+     */
+    static boolean isUTF8(String encoding) {
         if (encoding == null) {
-            return name.getBytes();
+            // check platform's default encoding
+            encoding = System.getProperty("file.encoding");
         }
-
-        Charset cs = Charset.forName(encoding);
-        CharsetEncoder enc = cs.newEncoder();
-
-        enc.onMalformedInput(CodingErrorAction.REPORT);
-        enc.onUnmappableCharacter(CodingErrorAction.REPORT);
-
-        CharBuffer cb = CharBuffer.wrap(name);
-        ByteBuffer out = ByteBuffer.allocate(name.length()
-                                             + (name.length() + 1) / 2);
-
-        while (cb.remaining() > 0) {
-            CoderResult res = enc.encode(cb, out,true);
-
-            if (res.isUnmappable() || res.isMalformed()) {
-
-                // write the unmappable characters in utf-16
-                // pseudo-URL encoding style to ByteBuffer.
-                if (res.length() * 6 > out.remaining()) {
-                    out = growBuffer(out,out.position() + res.length() * 6);
-                }
-
-                for (int i=0; i<res.length(); ++i) {
-                    out.put((byte) '%');
-                    out.put((byte) 'U');
-
-                    char c = cb.get();
-
-                    out.put(HEX_DIGITS[(c >> 12)&0x0f]);
-                    out.put(HEX_DIGITS[(c >> 8)&0x0f]);
-                    out.put(HEX_DIGITS[(c >> 4)&0x0f]);
-                    out.put(HEX_DIGITS[c & 0x0f]);
-                }
-
-            } else if (res.isOverflow()) {
-
-                out = growBuffer(out, 0);
-
-            } else if (res.isUnderflow()) {
-
-                enc.flush(out);
-                break;
-
-            }
-        }
-
-        byte [] ret = new byte[out.position()];
-        out.rewind();
-        out.get(ret);
-
-        return ret;
-    }
-
-    /**
-     * Return, whether a filename or a comment may be encoded to a
-     * byte array suitable for storing it to a serialized zip entry
-     * without any losses.
-     * 
-     * Examples (in pseudo-notation, right hand side is C-style notation):
-     * <pre>
-     *  canEncodeName("\u20AC_for_Dollar.txt","CP437") = false
-     *  canEncodeName("\u20AC_for_Dollar.txt","UTF-8") = true
-     *  canEncodeName("\u00D6lf\u00E4sser.txt","CP437") = true
-     * </pre>
-     * 
-     * @param name The filename or comment with possible non-ASCII
-     * unicode characters.
-     * @param encoding A valid encoding name. The standard zip
-     *                 encoding is <code>"CP437"</code>,
-     *                 <code>"UTF-8"</code> is supported in ZIP file
-     *                 version <code>6.3</code> or later.
-     * @return Whether the given encoding may encode the given name.
-     */
-    static final boolean canEncodeName(String name, String encoding) {
-
-        Charset cs = Charset.forName(encoding);
-
-        CharsetEncoder enc = cs.newEncoder();
-        enc.onMalformedInput(CodingErrorAction.REPORT);
-        enc.onUnmappableCharacter(CodingErrorAction.REPORT);
-
-        return enc.canEncode(name);
-    }
-
-    /**
-     * Decode a filename or a comment from a byte array.
-     * 
-     * @param name The filename or comment.
-     * @param encoding A valid encoding name. The standard zip
-     *                 encoding is <code>"CP437"</code>,
-     *                 <code>"UTF-8"</code> is supported in ZIP file
-     *                 version <code>6.3</code> or later.
-     */
-    static final String decodeName(byte[] name, String encoding)
-        throws java.nio.charset.CharacterCodingException {
-        Charset cs = Charset.forName(encoding);
-        return cs.newDecoder()
-            .onMalformedInput(CodingErrorAction.REPORT)
-            .onUnmappableCharacter(CodingErrorAction.REPORT)
-            .decode(ByteBuffer.wrap(name)).toString();
+        return UTF8.equalsIgnoreCase(encoding)
+            || "utf-8".equalsIgnoreCase(encoding);
     }
 }

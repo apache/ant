@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.CharacterCodingException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -99,6 +97,11 @@ public class ZipFile {
     private String encoding = null;
 
     /**
+     * The zip encoding to use for filenames and the file comment.
+     */
+    private final ZipEncoding zipEncoding;
+
+    /**
      * The actual data source.
      */
     private RandomAccessFile archive;
@@ -164,15 +167,17 @@ public class ZipFile {
      * encoding for file names.
      *
      * @param f the archive.
-     * @param encoding the encoding to use for file names
-     * @param whether to use InfoZIP Unicode Extra Fields (if present)
-     * to set the file names.
+     * @param encoding the encoding to use for file names, use null
+     * for the platform's default encoding
+     * @param useUnicodeExtraFields whether to use InfoZIP Unicode
+     * Extra Fields (if present) to set the file names.
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(File f, String encoding, boolean useUnicodeExtraFields)
         throws IOException {
         this.encoding = encoding;
+        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
         this.useUnicodeExtraFields = useUnicodeExtraFields;
         archive = new RandomAccessFile(f, "r");
         boolean success = false;
@@ -247,7 +252,8 @@ public class ZipFile {
      * @param ze the entry to get the stream for.
      * @return a stream to read the entry from.
      * @throws IOException if unable to create an input stream from the zipenty
-     * @throws ZipException if the zipentry has an unsupported compression method
+     * @throws ZipException if the zipentry has an unsupported
+     * compression method
      */
     public InputStream getInputStream(ZipEntry ze)
         throws IOException, ZipException {
@@ -330,8 +336,8 @@ public class ZipFile {
             final int generalPurposeFlag = ZipShort.getValue(cfh, off);
             final boolean hasEFS = 
                 (generalPurposeFlag & ZipOutputStream.EFS_FLAG) != 0;
-            final String entryEncoding =
-                hasEFS ? ZipOutputStream.UTF8 : encoding;
+            final ZipEncoding entryEncoding =
+                hasEFS ? ZipEncodingHelper.UTF8_ZIP_ENCODING : zipEncoding;
 
             off += SHORT;
 
@@ -373,7 +379,7 @@ public class ZipFile {
 
             byte[] fileName = new byte[fileNameLen];
             archive.readFully(fileName);
-            ze.setName(getString(fileName, entryEncoding));
+            ze.setName(entryEncoding.decode(fileName));
 
             // LFH offset,
             OffsetEntry offset = new OffsetEntry();
@@ -395,7 +401,7 @@ public class ZipFile {
 
             byte[] comment = new byte[commentLen];
             archive.readFully(comment);
-            ze.setComment(getString(comment, entryEncoding));
+            ze.setComment(entryEncoding.decode(comment));
 
             archive.readFully(signatureBytes);
             sig = ZipLong.getValue(signatureBytes);
@@ -529,7 +535,7 @@ public class ZipFile {
                                      + SHORT + SHORT + fileNameLen + extraFieldLen));
             */
             offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
-                                     + SHORT + SHORT + fileNameLen + extraFieldLen;
+                + SHORT + SHORT + fileNameLen + extraFieldLen;
 
             if (entriesWithoutEFS.containsKey(ze)) {
                 setNameAndCommentFromExtraFields(ze,
@@ -576,37 +582,10 @@ public class ZipFile {
      * @throws ZipException if the encoding cannot be recognized.
      */
     protected String getString(byte[] bytes) throws ZipException {
-        return getString(bytes, encoding);
-    }
-
-    /**
-     * Retrieve a String from the given bytes using the encoding set
-     * for this ZipFile.
-     *
-     * @param bytes the byte array to transform
-     * @return String obtained by using the given encoding
-     * @throws ZipException if the encoding cannot be recognized.
-     */
-    protected String getString(byte[] bytes, String enc)
-        throws ZipException {
-        if (enc == null) {
-            return new String(bytes);
-        } else {
-            try {
-                try {
-                    return ZipEncodingHelper.decodeName(bytes, enc);
-                } catch (CharacterCodingException ex) {
-                    throw new ZipException(ex.getMessage());
-                }
-            } catch (java.nio.charset.UnsupportedCharsetException ex) {
-                // Java 1.4's NIO doesn't recognize a few names that
-                // String.getBytes does
-                try {
-                    return new String(bytes, enc);
-                } catch (UnsupportedEncodingException uee) {
-                    throw new ZipException(uee.getMessage());
-                }
-            }
+        try {
+            return ZipEncodingHelper.getZipEncoding(encoding).decode(bytes);
+        } catch (IOException ex) {
+            throw new ZipException("Failed to decode name: " + ex.getMessage());
         }
     }
 
@@ -671,8 +650,8 @@ public class ZipFile {
             if (origCRC32 == f.getNameCRC32()) {
                 try {
                     return ZipEncodingHelper
-                        .decodeName(f.getUnicodeName(), ZipOutputStream.UTF8);
-                } catch (CharacterCodingException ex) {
+                        .UTF8_ZIP_ENCODING.decode(f.getUnicodeName());
+                } catch (IOException ex) {
                     // UTF-8 unsupported?  should be impossible the
                     // Unicode*ExtraField must contain some bad bytes
 

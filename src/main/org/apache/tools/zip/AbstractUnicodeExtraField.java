@@ -38,24 +38,17 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
      * encoding of the orginal zip entry.
      * 
      * @param text The file name or comment.
-     * @param zipEncoding The encoding of the filenames in the zip
-     * file, usually <code>"CP437"</code>.
+     * @param bytes The encoded of the filename or comment in the zip
+     * file.
+     * @param off The offset of the encoded filename or comment in
+     * <code>bytes</code>.
+     * @param len The length of the encoded filename or commentin
+     * <code>bytes</code>.
      */
-    protected AbstractUnicodeExtraField(String text, String zipEncoding) {
-        this(text, ZipEncodingHelper.encodeName(text, zipEncoding));
-    }
-
-    /**
-     * Assemble as unicode extension from the name/comment and
-     * encoding of the orginal zip entry.
-     * 
-     * @param text The file name or comment.
-     * @param zipEncoding The encoding of the filenames in the zip
-     * file, usually <code>"CP437"</code>.
-     */
-    protected AbstractUnicodeExtraField(String text, byte[] bytes) {
+    protected AbstractUnicodeExtraField(String text, byte[] bytes, int off,
+                                        int len) {
         CRC32 crc32 = new CRC32();
-        crc32.update(bytes);
+        crc32.update(bytes, off, len);
         nameCRC32 = crc32.getValue();
 
         try {
@@ -64,6 +57,19 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
             throw new RuntimeException("FATAL: UTF-8 encoding not supported.",
                                        e);
         }
+    }
+
+    /**
+     * Assemble as unicode extension from the name/comment and
+     * encoding of the orginal zip entry.
+     * 
+     * @param text The file name or comment.
+     * @param bytes The encoded of the filename or comment in the zip
+     * file.
+     */
+    protected AbstractUnicodeExtraField(String text, byte[] bytes) {
+
+        this(text, bytes, 0, bytes.length);
     }
 
     private void assembleData() {

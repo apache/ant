@@ -42,20 +42,22 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
     }
 
     /**
-     * Assemble as unicode path extension from the name and encoding
-     * of the orginal zip entry.
+     * Assemble as unicode path extension from the name given as
+     * text as well as the encoded bytes actually written to the archive.
      * 
      * @param name The file name
-     * @param zipEncoding The encoding of the filename in the zip
-     * file, usually <code>"CP437"</code>.
+     * @param bytes the bytes actually written to the archive
+     * @param off The offset of the encoded filename in <code>bytes</code>.
+     * @param len The length of the encoded filename or comment in
+     * <code>bytes</code>.
      */
-    public UnicodePathExtraField(String name, String zipEncoding) {
-        super(name, zipEncoding);
+    public UnicodePathExtraField(String text, byte[] bytes, int off, int len) {
+        super(text, bytes, off, len);
     }
 
     /**
      * Assemble as unicode path extension from the name given as
-     * text as well as the bytes actually written to the archive.
+     * text as well as the encoded bytes actually written to the archive.
      * 
      * @param name The file name
      * @param bytes the bytes actually written to the archive
