@@ -57,6 +57,10 @@ properties. These references are resolved at the time these properties are set.
 This also holds for properties loaded from a property file.</p>
 <p>A list of predefined properties can be found <a
 href="../using.html#built-in-props">here</a>.</p>
+<p>Since Ant 1.7.1 it is possible to load properties defined in xml
+according to <a href="http://java.sun.com/dtd/properties.dtd">Suns DTD</a>,
+if Java5+ is present. For this the name of the file, resource or url has 
+to end with <tt>.xml</tt>.</p>
 
 <h4>OpenVMS Users</h4>
 <p>With the <code>environment</code> attribute this task will load all defined
@@ -150,22 +154,28 @@ SYSTEM).
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
 <p><code>Property</code>'s <i>classpath</i> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
 <i>classpath</i> element.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</pre>
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
+
 <pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
+
 <pre>  &lt;property url=&quot;http://www.mysite.com/bla/props/foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from the address &quot;http://www.mysite.com/bla/props/foo.properties&quot;.</p>
+
 <pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <p>Note that you can reference a global properties file for all of your Ant
 builds using the following:</p>
+
 <pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
 <p>since the &quot;user.home&quot; property is defined by the Java virtual machine
 to be your home directory.  Where the &quot;user.home&quot; property resolves to in
@@ -184,6 +194,18 @@ predictable, as are other operating system/JVM combinations.</p>
 Note that this only works on <em>select</em> operating systems.
 Two of the values are shown being echoed.
 </p>
+
+<pre>
+  &lt;property environment=&quot;env&quot;/&gt;
+  &lt;property file=&quot;${user.name}.properties&quot;/&gt;
+  &lt;property file=&quot;${env.STAGE}.properties&quot;/&gt;
+  &lt;property file=&quot;build.properties&quot;/&gt;
+</pre>
+<p>This buildfile uses the properties defined in <tt>build.properties</tt>. Regarding to the
+environment variable <tt>STAGE</tt> some or all values could be overwritten, e.g. having
+<tt>STAGE=test</tt> and a <tt>test.properties</tt> you have special values for that (like another
+name for the test server). Finally all these values could be overwritten by personal settings with
+a file per user.</p>
 
 <h3>Property Files</h3>
 
