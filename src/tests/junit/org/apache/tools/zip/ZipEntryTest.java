@@ -32,8 +32,6 @@ public class ZipEntryTest extends TestCase {
 
     /**
      * test handling of extra fields
-     *
-     * @since 1.1
      */
     public void testExtraFields() {
         AsiExtraField a = new AsiExtraField();
@@ -86,9 +84,51 @@ public class ZipEntryTest extends TestCase {
     }
 
     /**
+     * test handling of extra fields via central directory
+     */
+    public void testExtraFieldMerging() {
+        AsiExtraField a = new AsiExtraField();
+        a.setDirectory(true);
+        a.setMode(0755);
+        UnrecognizedExtraField u = new UnrecognizedExtraField();
+        u.setHeaderId(new ZipShort(1));
+        u.setLocalFileDataData(new byte[0]);
+
+        ZipEntry ze = new ZipEntry("test/");
+        ze.setExtraFields(new ZipExtraField[] {a, u});
+
+        // merge
+        // Header-ID 1 + length 1 + one byte of data
+        ze.setCentralDirectoryExtra(new byte[] {1, 0, 1, 0, 127});
+
+        ZipExtraField[] result = ze.getExtraFields();
+        assertEquals("first pass", 2, result.length);
+        assertSame(a, result[0]);
+        assertEquals(new ZipShort(1), result[1].getHeaderId());
+        assertEquals(new ZipShort(0), result[1].getLocalFileDataLength());
+        assertEquals(new ZipShort(1), result[1].getCentralDirectoryLength());
+
+        // add new
+        // Header-ID 2 + length 0
+        ze.setCentralDirectoryExtra(new byte[] {2, 0, 0, 0});
+
+        result = ze.getExtraFields();
+        assertEquals("second pass", 3, result.length);
+
+        // merge
+        // Header-ID 2 + length 1 + one byte of data
+        ze.setExtra(new byte[] {2, 0, 1, 0, 127});
+
+        result = ze.getExtraFields();
+        assertEquals("third pass", 3, result.length);
+        assertSame(a, result[0]);
+        assertEquals(new ZipShort(2), result[2].getHeaderId());
+        assertEquals(new ZipShort(1), result[2].getLocalFileDataLength());
+        assertEquals(new ZipShort(0), result[2].getCentralDirectoryLength());
+    }
+
+    /**
      * test handling of extra fields
-     *
-     * @since 1.1
      */
     public void testAddAsFirstExtraField() {
         AsiExtraField a = new AsiExtraField();

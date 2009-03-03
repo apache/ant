@@ -26,7 +26,8 @@ package org.apache.tools.zip;
  * identical - unless told the opposite.</p>
  *
  */
-public class UnrecognizedExtraField implements ZipExtraField {
+public class UnrecognizedExtraField
+    implements CentralDirectoryParsingZipExtraField {
 
     /**
      * The Header-ID.
@@ -133,6 +134,22 @@ public class UnrecognizedExtraField implements ZipExtraField {
         byte[] tmp = new byte[length];
         System.arraycopy(data, offset, tmp, 0, length);
         setLocalFileDataData(tmp);
+    }
+
+    /**
+     * @param data the array of bytes.
+     * @param offset the source location in the data array.
+     * @param length the number of bytes to use in the data array.
+     * @see ZipExtraField#parseFromCentralDirectoryData(byte[], int, int)
+     */
+    public void parseFromCentralDirectoryData(byte[] data, int offset,
+                                              int length) {
+        byte[] tmp = new byte[length];
+        System.arraycopy(data, offset, tmp, 0, length);
+        setCentralDirectoryData(tmp);
+        if (localData == null) {
+            setLocalFileDataData(tmp);
+        }
     }
 
     private static byte[] copy(byte[] from) {

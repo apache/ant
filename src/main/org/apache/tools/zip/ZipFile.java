@@ -389,15 +389,9 @@ public class ZipFile {
 
             nameMap.put(ze.getName(), ze);
 
-            int lenToSkip = extraLen;
-            while (lenToSkip > 0) {
-                int skipped = archive.skipBytes(lenToSkip);
-                if (skipped <= 0) {
-                    throw new RuntimeException("failed to skip extra data in"
-                                               + " central directory");
-                }
-                lenToSkip -= skipped;
-            }            
+            byte[] cdExtraData = new byte[extraLen];
+            archive.readFully(cdExtraData);
+            ze.setCentralDirectoryExtra(cdExtraData);
 
             byte[] comment = new byte[commentLen];
             archive.readFully(comment);

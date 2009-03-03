@@ -92,13 +92,27 @@ public class ExtraFieldUtils {
 
     /**
      * Split the array into ExtraFields and populate them with the
-     * give data.
+     * given data as local file data.
+     * @param data an array of bytes as it appears in local file data
+     * @return an array of ExtraFields
+     * @throws ZipException on error
+     */
+    public static ZipExtraField[] parse(byte[] data) throws ZipException {
+        return parse(data, true);
+    }
+
+    /**
+     * Split the array into ExtraFields and populate them with the
+     * given data.
      * @param data an array of bytes
+     * @param local whether data originates from the local file data
+     * or the central directory
      * @return an array of ExtraFields
      * @since 1.1
      * @throws ZipException on error
      */
-    public static ZipExtraField[] parse(byte[] data) throws ZipException {
+    public static ZipExtraField[] parse(byte[] data, boolean local)
+        throws ZipException {
         List v = new ArrayList();
         int start = 0;
         while (start <= data.length - WORD) {
@@ -110,7 +124,14 @@ public class ExtraFieldUtils {
             }
             try {
                 ZipExtraField ze = createExtraField(headerId);
-                ze.parseFromLocalFileData(data, start + WORD, length);
+                if (local
+                    || !(ze instanceof CentralDirectoryParsingZipExtraField)) {
+                    ze.parseFromLocalFileData(data, start + WORD, length);
+                } else {
+                    ((CentralDirectoryParsingZipExtraField) ze)
+                        .parseFromCentralDirectoryData(data, start + WORD,
+                                                       length);
+                }
                 v.add(ze);
             } catch (InstantiationException ie) {
                 throw new ZipException(ie.getMessage());

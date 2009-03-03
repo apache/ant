@@ -284,7 +284,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void setExtra(byte[] extra) throws RuntimeException {
         try {
-            setExtraFields(ExtraFieldUtils.parse(extra));
+            ZipExtraField[] local = ExtraFieldUtils.parse(extra, true);
+            mergeExtraFields(local, true);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -300,6 +301,18 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     protected void setExtra() {
         super.setExtra(ExtraFieldUtils.mergeLocalFileDataData(getExtraFields()));
+    }
+
+    /**
+     * Sets the central directory part of extra fields.
+     */
+    public void setCentralDirectoryExtra(byte[] b) {
+        try {
+            ZipExtraField[] central = ExtraFieldUtils.parse(b, false);
+            mergeExtraFields(central, false);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -386,4 +399,37 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         return (this == o);
     }
 
+    /**
+     * If there are no extra fields, use the given fields as new extra
+     * data - otherwise merge the fields assuming the existing fields
+     * and the new fields stem from different locations inside the
+     * archive.
+     * @param f the extra fields to merge
+     * @param local whether the new fields originate from local data
+     */
+    private void mergeExtraFields(ZipExtraField[] f, boolean local)
+        throws ZipException {
+        if (extraFields == null) {
+            setExtraFields(f);
+        } else {
+            for (int i = 0; i < f.length; i++) {
+                ZipExtraField existing = getExtraField(f[i].getHeaderId());
+                if (existing == null) {
+                    addExtraField(f[i]);
+                } else {
+                    if (local
+                        || !(existing
+                             instanceof CentralDirectoryParsingZipExtraField)) {
+                        byte[] b = f[i].getLocalFileDataData();
+                        existing.parseFromLocalFileData(b, 0, b.length);
+                    } else {
+                        byte[] b = f[i].getCentralDirectoryData();
+                        ((CentralDirectoryParsingZipExtraField) existing)
+                            .parseFromCentralDirectoryData(b, 0, b.length);
+                    }
+                }
+            }
+            setExtra();
+        }
+    }
 }
