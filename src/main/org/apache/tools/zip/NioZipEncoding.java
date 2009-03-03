@@ -32,7 +32,7 @@ import java.nio.charset.CodingErrorAction;
  * java.nio.charset.Charset Charset} to encode names.
  *
  * <p>This implementation works for all cases under java-1.5 or
- * later. However, in java-1.4, some charsets don't have a java-nio
+ * later. However, in java-1.4, some charsets don't have a java.nio
  * implementation, most notably the default ZIP encoding Cp437.</p>
  * 
  * <p>The methods of this class are reentrant.</p>

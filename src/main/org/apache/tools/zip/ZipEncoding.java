@@ -21,7 +21,6 @@ package org.apache.tools.zip;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 /**
  * An interface for encoders that do a pretty encoding of ZIP
@@ -35,12 +34,12 @@ import java.nio.charset.Charset;
  * <p>The main reason for defining an own encoding layer comes from
  * the problems with {@link java.lang.String#getBytes(String)
  * String.getBytes}, which encodes unknown characters as ASCII
- * quotation marks ('?'), which is per definition an invalid filename
- * character under some operating systems (Windows, e.g.) leading to
- * ignored ZIP entries.</p>
+ * quotation marks ('?'). Quotation marks are per definition an
+ * invalid filename on some operating systems  like Windows, which
+ * leads to ignored ZIP entries.</p>
  * 
  * <p>All implementations should implement this interface in a
- * reentrant way.<(p>
+ * reentrant way.</p>
  */
 interface ZipEncoding {
     /**
