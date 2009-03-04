@@ -77,7 +77,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
     private final char[] highChars;
 
     /**
-     * A list of {@see Simple8BitChar} objects sorted by the unicode
+     * A list of {@link Simple8BitChar} objects sorted by the unicode
      * field.  This list is used to binary search reverse mapping of
      * unicode characters with a character code greater than 127.
      */

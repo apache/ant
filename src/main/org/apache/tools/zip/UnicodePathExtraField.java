@@ -45,7 +45,7 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
      * Assemble as unicode path extension from the name given as
      * text as well as the encoded bytes actually written to the archive.
      * 
-     * @param name The file name
+     * @param text The file name
      * @param bytes the bytes actually written to the archive
      * @param off The offset of the encoded filename in <code>bytes</code>.
      * @param len The length of the encoded filename or comment in

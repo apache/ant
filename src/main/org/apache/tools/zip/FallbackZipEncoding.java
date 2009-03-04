@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
  * given name can be safely encoded or not.</p>
  * 
  * <p>This implementation acts as a last resort implementation, when
- * neither {@see Simple8BitZipEnoding} nor {@see NioZipEncoding} is
+ * neither {@link Simple8BitZipEnoding} nor {@link NioZipEncoding} is
  * available.</p>
  * 
  * <p>The methods of this class are reentrant.</p>

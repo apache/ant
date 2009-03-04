@@ -45,7 +45,7 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
      * Assemble as unicode comment extension from the name given as
      * text as well as the encoded bytes actually written to the archive.
      * 
-     * @param name The file name
+     * @param text The file name
      * @param bytes the bytes actually written to the archive
      * @param off The offset of the encoded comment in <code>bytes</code>.
      * @param len The length of the encoded comment or comment in

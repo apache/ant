@@ -230,10 +230,22 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top">createUnicodeExtraFields</td>
     <td valign="top">Whether to create unicode extra fields to store
       the file names a second time inside the entry's metadata.
+      <br>Possible values are "never", "always" and "not-encodable"
+      which will only add Unicode extra fields if the file name cannot
+      be encoded using the specified encoding.
       <em>Since Ant 1.8.0</em>.
       <br/>See also the <a href="zip.html#encoding">discussion in the
       zip task page</a></td>
-    <td valign="top" align="center">No, default is false</td>
+  </tr>
+  <tr>
+    <td valign="top">fallbacktoUTF8</td>
+    <td valign="top">Whether to use UTF-8 and the language encoding
+      flag instead of the specified encoding if a file name cannot be
+      encoded using the specified encoding.
+      <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="zip.html#encoding">discussion in the
+      zip task page</a></td>
+    <td align="center" valign="top">No, default is false</td>
   </tr>
 </table>
 

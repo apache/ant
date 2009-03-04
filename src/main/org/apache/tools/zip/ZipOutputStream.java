@@ -270,9 +270,15 @@ public class ZipOutputStream extends FilterOutputStream {
     private boolean useEFS = true; 
 
     /**
+     * Whether to encode non-encodable file names as UTF-8.
+     */
+    private boolean fallbackToUTF8 = false;
+
+    /**
      * whether to create UnicodePathExtraField-s for each entry.
      */
-    private boolean createUnicodeExtraFields = false;
+    private UnicodeExtraFieldPolicy createUnicodeExtraFields =
+        UnicodeExtraFieldPolicy.NEVER;
 
     /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
@@ -360,12 +366,22 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Whether to create Unicode Extra Fields for all entries.
+     * Whether to create Unicode Extra Fields.
+     *
+     * <p>Defaults to NEVER.</p>
+     */
+    public void setCreateUnicodeExtraFields(UnicodeExtraFieldPolicy b) {
+        createUnicodeExtraFields = b;
+    }
+
+    /**
+     * Whether to fall back to UTF and the language encoding flag if
+     * the file name cannot be encoded using the specified encoding.
      *
      * <p>Defaults to false.</p>
      */
-    public void setCreateUnicodeExtraFields(boolean b) {
-        createUnicodeExtraFields = b;
+    public void setFallbackToUTF8(boolean b) {
+        fallbackToUTF8 = b;
     }
 
     /**
@@ -665,31 +681,38 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     protected void writeLocalFileHeader(ZipEntry ze) throws IOException {
 
-        boolean encodable = this.zipEncoding.canEncode(ze.getName());
-        ByteBuffer name = this.zipEncoding.encode(ze.getName());
+        boolean encodable = zipEncoding.canEncode(ze.getName());
+        ByteBuffer name;
+        if (!encodable && fallbackToUTF8) {
+            name = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(ze.getName());
+        } else {
+            name = zipEncoding.encode(ze.getName());
+        }
 
-        if (createUnicodeExtraFields) {
+        if (createUnicodeExtraFields != UnicodeExtraFieldPolicy.NEVER) {
 
-            /*            if (!encodable) { -- FIXME decide what to*/
+            if (createUnicodeExtraFields == UnicodeExtraFieldPolicy.ALWAYS
+                || !encodable) {
                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
                                                            name.array(),
                                                            name.arrayOffset(),
                                                            name.limit()));
-            /* } */
+            }
 
             String comm = ze.getComment();
             if (comm != null && !"".equals(comm)) {
 
                 boolean commentEncodable = this.zipEncoding.canEncode(comm);
 
-                /*            if (!commentEncodable) { -- FIXME decide what to*/
+                if (createUnicodeExtraFields == UnicodeExtraFieldPolicy.ALWAYS
+                    || !commentEncodable) {
                     ByteBuffer commentB = this.zipEncoding.encode(comm);
                     ze.addExtraField(new UnicodeCommentExtraField(comm,
                                                                   commentB.array(),
                                                                   commentB.arrayOffset(),
                                                                   commentB.limit())
                                      );
-                /* } */
+                }
             }
         }
 
@@ -701,7 +724,9 @@ public class ZipOutputStream extends FilterOutputStream {
         //store method in local variable to prevent multiple method calls
         final int zipMethod = ze.getMethod();
 
-        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod);
+        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod,
+                                                         !encodable
+                                                         && fallbackToUTF8);
         written += WORD;
 
         // compression method
@@ -786,7 +811,10 @@ public class ZipOutputStream extends FilterOutputStream {
         written += SHORT;
 
         final int zipMethod = ze.getMethod();
-        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod);
+        final boolean encodable = zipEncoding.canEncode(ze.getName());
+        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod,
+                                                         !encodable
+                                                         && fallbackToUTF8);
         written += WORD;
 
         // compression method
@@ -808,7 +836,12 @@ public class ZipOutputStream extends FilterOutputStream {
         // CheckStyle:MagicNumber ON
 
         // file name length
-        ByteBuffer name = this.zipEncoding.encode(ze.getName());
+        ByteBuffer name;
+        if (!encodable && fallbackToUTF8) {
+            name = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(ze.getName());
+        } else {
+            name = zipEncoding.encode(ze.getName());
+        }
         writeOut(ZipShort.getBytes(name.limit()));
         written += SHORT;
 
@@ -822,7 +855,12 @@ public class ZipOutputStream extends FilterOutputStream {
         if (comm == null) {
             comm = "";
         }
-        ByteBuffer commentB = this.zipEncoding.encode(comm);
+        ByteBuffer commentB;
+        if (!encodable && fallbackToUTF8) {
+            commentB = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(comm);
+        } else {
+            commentB = zipEncoding.encode(comm);
+        }
         writeOut(ZipShort.getBytes(commentB.limit()));
         written += SHORT;
 
@@ -1000,12 +1038,14 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     private void writeVersionNeededToExtractAndGeneralPurposeBits(final int
-                                                                  zipMethod)
+                                                                  zipMethod,
+                                                                  final boolean
+                                                                  utfFallback)
         throws IOException {
 
         // CheckStyle:MagicNumber OFF
         int versionNeededToExtract = 10;
-        int generalPurposeFlag = useEFS ? EFS_FLAG : 0;
+        int generalPurposeFlag = (useEFS || utfFallback) ? EFS_FLAG : 0;
         if (zipMethod == DEFLATED && raf == null) {
             // requires version 2 as we are going to store length info
             // in the data descriptor
@@ -1019,5 +1059,36 @@ public class ZipOutputStream extends FilterOutputStream {
         writeOut(ZipShort.getBytes(versionNeededToExtract));
         // general purpose bit flag
         writeOut(ZipShort.getBytes(generalPurposeFlag));
+    }
+
+    /**
+     * enum that represents the possible policies for creating Unicode
+     * extra fields.
+     */
+    public static final class UnicodeExtraFieldPolicy {
+        /**
+         * Always create Unicode extra fields.
+         */
+        public static final UnicodeExtraFieldPolicy ALWAYS =
+            new UnicodeExtraFieldPolicy("always");
+        /**
+         * Never create Unicode extra fields.
+         */
+        public static final UnicodeExtraFieldPolicy NEVER =
+            new UnicodeExtraFieldPolicy("never");
+        /**
+         * Create Unicode extra fields for filenames that cannot be
+         * encoded using the specified encoding.
+         */
+        public static final UnicodeExtraFieldPolicy NOT_ENCODEABLE =
+            new UnicodeExtraFieldPolicy("not encodeable");
+
+        private final String name;
+        private UnicodeExtraFieldPolicy(String n) {
+            name = n;
+        }
+        public String toString() {
+            return name;
+        }
     }
 }

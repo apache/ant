@@ -27,8 +27,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.zip.CRC32;
@@ -182,11 +184,20 @@ public class Zip extends MatchingTask {
     private boolean useLanguageEncodingFlag = true;
 
     /**
-     * Whether to set the language encoding flag when creating the archive.
+     * Whether to add unicode extra fields.
      *
      * @since Ant 1.8.0
      */
-    private boolean createUnicodeExtraFields = false;
+    private UnicodeExtraField createUnicodeExtraFields =
+        UnicodeExtraField.NEVER;
+
+    /**
+     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * the specified encoding.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean fallBackToUTF8 = false;
 
     /**
      * This is the name/location of where to
@@ -486,7 +497,7 @@ public class Zip extends MatchingTask {
      * Whether Unicode extra fields will be created.
      * @since Ant 1.8.0
      */
-    public void setCreateUnicodeExtraFields(boolean b) {
+    public void setCreateUnicodeExtraFields(UnicodeExtraField b) {
         createUnicodeExtraFields = b;
     }
 
@@ -494,8 +505,30 @@ public class Zip extends MatchingTask {
      * Whether Unicode extra fields will be created.
      * @since Ant 1.8.0
      */
-    public boolean getCreateUnicodeExtraFields() {
+    public UnicodeExtraField getCreateUnicodeExtraFields() {
         return createUnicodeExtraFields;
+    }
+
+    /**
+     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * the specified encoding.
+     *
+     * <p>Defaults to false.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFallBackToUTF8(boolean b) {
+        fallBackToUTF8 = b;
+    }
+
+    /**
+     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * the specified encoding.
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean getFallBackToUTF8() {
+        return fallBackToUTF8;
     }
 
     /**
@@ -587,7 +620,9 @@ public class Zip extends MatchingTask {
 
                     zOut.setEncoding(encoding);
                     zOut.setUseLanguageEncodingFlag(useLanguageEncodingFlag);
-                    zOut.setCreateUnicodeExtraFields(createUnicodeExtraFields);
+                    zOut.setCreateUnicodeExtraFields(createUnicodeExtraFields.
+                                                     getPolicy());
+                    zOut.setFallbackToUTF8(fallBackToUTF8);
                     zOut.setMethod(doCompress
                         ? ZipOutputStream.DEFLATED : ZipOutputStream.STORED);
                     zOut.setLevel(level);
@@ -1879,6 +1914,47 @@ public class Zip extends MatchingTask {
                 }
             }
             return true;
+        }
+    }
+
+    /**
+     * Policiy for creation of Unicode extra fields: never, always or
+     * not-encodeable.
+     *
+     * @since Ant 1.8.0
+     */
+    public static final class UnicodeExtraField extends EnumeratedAttribute {
+        private static final Map POLICIES = new HashMap();
+        private static final String NEVER_KEY = "never";
+        private static final String ALWAYS_KEY = "always";
+        private static final String N_E_KEY = "not-encodeable";
+        static {
+            POLICIES.put(NEVER_KEY,
+                         ZipOutputStream.UnicodeExtraFieldPolicy.NEVER);
+            POLICIES.put(ALWAYS_KEY,
+                         ZipOutputStream.UnicodeExtraFieldPolicy.ALWAYS);
+            POLICIES.put(N_E_KEY,
+                         ZipOutputStream.UnicodeExtraFieldPolicy
+                         .NOT_ENCODEABLE);
+        }
+
+        public String[] getValues() {
+            return new String[] {NEVER_KEY, ALWAYS_KEY, N_E_KEY};
+        }
+
+        public static final UnicodeExtraField NEVER =
+            new UnicodeExtraField(NEVER_KEY);
+
+        private UnicodeExtraField(String name) {
+            setValue(name);
+        }
+
+        public UnicodeExtraField() {
+        }
+
+        public ZipOutputStream.UnicodeExtraFieldPolicy getPolicy() {
+            return (ZipOutputStream.UnicodeExtraFieldPolicy)
+                POLICIES.get(getValue());
         }
     }
 }

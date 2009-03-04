@@ -150,7 +150,7 @@ public final class ZipLong implements Cloneable {
 
     public Object clone() {
         try {
-            return (ZipLong) super.clone();
+            return super.clone();
         } catch (CloneNotSupportedException cnfe) {
             // impossible
             throw new RuntimeException(cnfe);

@@ -256,7 +256,19 @@ archive.</p>
     <td valign="top">createUnicodeExtraFields</td>
     <td valign="top">Whether to create unicode extra fields to store
       the file names a second time inside the entry's metadata.
-      Defaults to false.  <em>Since Ant 1.8.0</em>.
+      <br>Possible values are "never", "always" and "not-encodable"
+      which will only add Unicode extra fields if the file name cannot
+      be encoded using the specified encoding.
+      <em>Since Ant 1.8.0</em>.
+      <br/>See also the <a href="#encoding">discussion below</a></td>
+    <td align="center" valign="top">No, default is "never"</td>
+  </tr>
+  <tr>
+    <td valign="top">fallbacktoUTF8</td>
+    <td valign="top">Whether to use UTF-8 and the language encoding
+      flag instead of the specified encoding if a file name cannot be
+      encoded using the specified encoding.
+      <em>Since Ant 1.8.0</em>.
       <br/>See also the <a href="#encoding">discussion below</a></td>
     <td align="center" valign="top">No, default is false</td>
   </tr>
@@ -298,8 +310,15 @@ archive.</p>
   entry's metadata.  Most archivers ignore these extra fields.  The
   zip family of tasks support an
   option <code>createUnicodeExtraFields</code> since Ant 1.8.0 which
-  makes Ant write these extra fields, it defaults to false since it
-  creates a bigger archive.</p>
+  makes Ant write these extra fields either for all entries ("always")
+  or only those whose name cannot be encoded using the spcified
+  encoding (not-encodeable), it defaults to "never" since the extra
+  fields create bigger archives.</p>
+
+<p>The fallbackToUTF8 attribute of zip can be used to create archives
+  that use the specified encoding in the majority of cases but UTF and
+  the language encoding flag for filenames that cannot be encoded
+  using the specified encoding.</p>
 
 <p>The unzip-task will recognize the unicode extra fields by default
   and read the file name information from them, unless you set the
@@ -320,12 +339,13 @@ archive.</p>
 
   <li>7Zip writes CodePage 437 by default but uses UTF-8 and the
     language encoding flag when writing entries that cannot be encoded
-    as CodePage 437.  It recognizes the language encoding flag when
-    reading and ignores the unicode extra fields.</li>
+    as CodePage 437 (similar to the zip task with fallbacktoUTF8 set
+    to true).  It recognizes the language encoding flag when reading
+    and ignores the unicode extra fields.</li>
 
   <li>WinZIP writes CodePage 437 and uses unicode extra fields by
-    default.  It recognizes the unicode extra field when reading and
-    ignores the language encoding flag.</li>
+    default.  It recognizes the unicode extra field and the language
+    encoding flag when reading.</li>
 
   <li>Windows' "compressed folder" feature doesn't recognize any flag
     or extra field and creates archives using the platforms default

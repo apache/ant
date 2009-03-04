@@ -122,7 +122,11 @@ public class UTF8ZipFilesTest extends TestCase {
             zos = new ZipOutputStream(file);
             zos.setEncoding(encoding);
             zos.setUseLanguageEncodingFlag(withEFS);
-            zos.setCreateUnicodeExtraFields(!withExplicitUnicodeExtra);
+            zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra ? 
+                                            ZipOutputStream
+                                            .UnicodeExtraFieldPolicy.NEVER
+                                            : ZipOutputStream
+                                            .UnicodeExtraFieldPolicy.ALWAYS);
 
             ZipEntry ze = new ZipEntry(OIL_BARREL_TXT);
             if (withExplicitUnicodeExtra

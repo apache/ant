@@ -51,7 +51,7 @@ abstract class ZipEncodingHelper {
         }
 
         /**
-         * @return The associated {@see Simple8BitZipEncoding}, which
+         * @return The associated {@link Simple8BitZipEncoding}, which
          *         is instantiated if not done so far.
          */
         public synchronized Simple8BitZipEncoding getEncoding() {

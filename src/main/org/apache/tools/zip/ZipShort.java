@@ -136,7 +136,7 @@ public final class ZipShort implements Cloneable {
 
     public Object clone() {
         try {
-            return (ZipShort) super.clone();
+            return super.clone();
         } catch (CloneNotSupportedException cnfe) {
             // impossible
             throw new RuntimeException(cnfe);
