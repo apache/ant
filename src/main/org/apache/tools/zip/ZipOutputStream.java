@@ -682,12 +682,16 @@ public class ZipOutputStream extends FilterOutputStream {
     protected void writeLocalFileHeader(ZipEntry ze) throws IOException {
 
         boolean encodable = zipEncoding.canEncode(ze.getName());
-        ByteBuffer name;
+        
+        final ZipEncoding entryEncoding;
+        
         if (!encodable && fallbackToUTF8) {
-            name = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(ze.getName());
+            entryEncoding = ZipEncodingHelper.UTF8_ZIP_ENCODING;
         } else {
-            name = zipEncoding.encode(ze.getName());
+            entryEncoding = zipEncoding;
         }
+        
+        ByteBuffer name = entryEncoding.encode(ze.getName());        
 
         if (createUnicodeExtraFields != UnicodeExtraFieldPolicy.NEVER) {
 
@@ -706,7 +710,7 @@ public class ZipOutputStream extends FilterOutputStream {
 
                 if (createUnicodeExtraFields == UnicodeExtraFieldPolicy.ALWAYS
                     || !commentEncodable) {
-                    ByteBuffer commentB = this.zipEncoding.encode(comm);
+                    ByteBuffer commentB = entryEncoding.encode(comm);
                     ze.addExtraField(new UnicodeCommentExtraField(comm,
                                                                   commentB.array(),
                                                                   commentB.arrayOffset(),
@@ -836,12 +840,16 @@ public class ZipOutputStream extends FilterOutputStream {
         // CheckStyle:MagicNumber ON
 
         // file name length
-        ByteBuffer name;
+        final ZipEncoding entryEncoding;
+        
         if (!encodable && fallbackToUTF8) {
-            name = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(ze.getName());
+            entryEncoding = ZipEncodingHelper.UTF8_ZIP_ENCODING;
         } else {
-            name = zipEncoding.encode(ze.getName());
+            entryEncoding = zipEncoding;
         }
+        
+        ByteBuffer name = entryEncoding.encode(ze.getName());        
+
         writeOut(ZipShort.getBytes(name.limit()));
         written += SHORT;
 
@@ -855,12 +863,9 @@ public class ZipOutputStream extends FilterOutputStream {
         if (comm == null) {
             comm = "";
         }
-        ByteBuffer commentB;
-        if (!encodable && fallbackToUTF8) {
-            commentB = ZipEncodingHelper.UTF8_ZIP_ENCODING.encode(comm);
-        } else {
-            commentB = zipEncoding.encode(comm);
-        }
+        
+        ByteBuffer commentB = entryEncoding.encode(comm);
+        
         writeOut(ZipShort.getBytes(commentB.limit()));
         written += SHORT;
 
