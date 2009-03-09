@@ -197,6 +197,21 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
+     * Performs the check for circular references and returns the
+     * referenced object.
+     * This is an override which does not delegate to the superclass; instead it invokes
+     * {@link #getRef(Project)}, because that conains the special support for fileset
+     * references, which can be handled by all ArchiveFileSets.
+     * @param p the Ant Project instance against which to resolve references.
+     * @return the dereferenced object.
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
+     * @since Ant 1.8
+     */
+    protected Object getCheckedRef(Project p) {
+        return getRef(p);
+    }
+
+    /**
      * Prepend this prefix to the path for each archive entry.
      * Prevents both prefix and fullpath from being specified
      *

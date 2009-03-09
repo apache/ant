@@ -676,7 +676,7 @@ public class Tar extends MatchingTask {
      * @return true if the collection is a fileset.
      * @since Ant 1.7
      */
-    protected static final boolean isFileFileSet(ResourceCollection rc) {
+    protected static boolean isFileFileSet(ResourceCollection rc) {
         return rc instanceof FileSet && rc.isFilesystemOnly();
     }
 
@@ -687,7 +687,7 @@ public class Tar extends MatchingTask {
      * @return a list of the filenames.
      * @since Ant 1.7
      */
-    protected static final String[] getFileNames(FileSet fs) {
+    protected static String[] getFileNames(FileSet fs) {
         DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
         String[] directories = ds.getIncludedDirectories();
         String[] filesPerSe = ds.getIncludedFiles();
