@@ -161,6 +161,7 @@ public class TarEntry implements TarConstants {
     public TarEntry(String name) {
         this();
 
+        name = normalizeFileName(name);
         boolean isDir = name.endsWith("/");
 
         this.devMajor = 0;
@@ -202,42 +203,7 @@ public class TarEntry implements TarConstants {
 
         this.file = file;
 
-        String fileName = file.getPath();
-        String osname = System.getProperty("os.name").toLowerCase(Locale.US);
-
-        if (osname != null) {
-
-            // Strip off drive letters!
-            // REVIEW Would a better check be "(File.separator == '\')"?
-
-            if (osname.startsWith("windows")) {
-                if (fileName.length() > 2) {
-                    char ch1 = fileName.charAt(0);
-                    char ch2 = fileName.charAt(1);
-
-                    if (ch2 == ':'
-                            && ((ch1 >= 'a' && ch1 <= 'z')
-                                || (ch1 >= 'A' && ch1 <= 'Z'))) {
-                        fileName = fileName.substring(2);
-                    }
-                }
-            } else if (osname.indexOf("netware") > -1) {
-                int colon = fileName.indexOf(':');
-                if (colon != -1) {
-                    fileName = fileName.substring(colon + 1);
-                }
-            }
-        }
-
-        fileName = fileName.replace(File.separatorChar, '/');
-
-        // No absolute pathnames
-        // Windows (and Posix?) paths can start with "\\NetworkDrive\",
-        // so we loop on starting /'s.
-        while (fileName.startsWith("/")) {
-            fileName = fileName.substring(1);
-        }
-
+        String fileName = normalizeFileName(file.getPath());
         this.linkName = new StringBuffer("");
         this.name = new StringBuffer(fileName);
 
@@ -245,7 +211,8 @@ public class TarEntry implements TarConstants {
             this.mode = DEFAULT_DIR_MODE;
             this.linkFlag = LF_DIR;
 
-            if (this.name.charAt(this.name.length() - 1) != '/') {
+            int nameLength = name.length();
+            if (nameLength == 0 || name.charAt(nameLength - 1) != '/') {
                 this.name.append("/");
             }
         } else {
@@ -331,7 +298,7 @@ public class TarEntry implements TarConstants {
      * @param name This entry's new name.
      */
     public void setName(String name) {
-        this.name = new StringBuffer(name);
+        this.name = new StringBuffer(normalizeFileName(name));
     }
 
     /**
@@ -634,5 +601,47 @@ public class TarEntry implements TarConstants {
         devMajor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
         offset += DEVLEN;
         devMinor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
+    }
+
+    /**
+     * Strips Windows' drive letter as well as any leading slashes,
+     * turns path separators into forward slahes.
+     */
+    private static String normalizeFileName(String fileName) {
+        String osname = System.getProperty("os.name").toLowerCase(Locale.US);
+
+        if (osname != null) {
+
+            // Strip off drive letters!
+            // REVIEW Would a better check be "(File.separator == '\')"?
+
+            if (osname.startsWith("windows")) {
+                if (fileName.length() > 2) {
+                    char ch1 = fileName.charAt(0);
+                    char ch2 = fileName.charAt(1);
+
+                    if (ch2 == ':'
+                        && ((ch1 >= 'a' && ch1 <= 'z')
+                            || (ch1 >= 'A' && ch1 <= 'Z'))) {
+                        fileName = fileName.substring(2);
+                    }
+                }
+            } else if (osname.indexOf("netware") > -1) {
+                int colon = fileName.indexOf(':');
+                if (colon != -1) {
+                    fileName = fileName.substring(colon + 1);
+                }
+            }
+        }
+
+        fileName = fileName.replace(File.separatorChar, '/');
+
+        // No absolute pathnames
+        // Windows (and Posix?) paths can start with "\\NetworkDrive\",
+        // so we loop on starting /'s.
+        while (fileName.startsWith("/")) {
+            fileName = fileName.substring(1);
+        }
+        return fileName;
     }
 }
