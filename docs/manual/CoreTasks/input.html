@@ -46,10 +46,13 @@ Since Ant 1.6, <code>&lt;input&gt;</code> will not prompt for input if
 a property should be set by the task that has already been set in the
 project (and the task wouldn't have any effect).</p>
 
-<p>A regular complaint about this task is that it echoes characters to the
-console, this is a critical security defect, we must fix it immediately, etc, etc.
-We know it leaves something to be desired, but the problem is Java, not Ant.
-There is nothing we can do to stop the console echoing. </p>
+<p>Historically, a regular complaint about this task has been that it echoes
+characters to the console, this is a critical security defect, we must fix it
+immediately, etc, etc.  This problem was due to the lack in early versions of
+Java of a (fully functional) facility for handling secure console input.
+In Java 1.6 that shortcoming in Java's API was addressed and Ant versions 1.7.1
+and 1.8 have added support for Java 1.6's secure console input feature
+(see <a href="#handler.type">handler type</a>).</p>
 
 <p>
 IDE behaviour depends upon the IDE: some hang waiting for input, some let you
@@ -107,8 +110,8 @@ among different Input tasks.
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">type</td>
-    <td valign="top">one of "default","propertyfile", or "greedy".
+    <td valign="top"><a name="handler.type" />type</td>
+    <td valign="top">one of "default","propertyfile", "greedy", or "secure" (since Ant 1.8).
     </td>
     <td align="center" valign="top" rowspan="3">One of these</td>
   </tr>

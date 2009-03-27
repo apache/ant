@@ -706,6 +706,9 @@ Other changes:
    file name and comment encoding.  Please see the zip tasks'
    documentation for details.
 
+ * <input ...><handler type="secure" /></input> now uses previously undocumented
+   SecureInputHandler shipped with Ant 1.7.1.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
@@ -931,6 +934,9 @@ Other changes:
 
 * <javac> handles package-info.java files, there were repeatedly compiled.
   Bugzilla 43114.
+
+* SecureInputHandler added to use Java 6 System.console().readPassword()
+  when available.
 
 Changes from Ant 1.6.5 to Ant 1.7.0
 ===================================

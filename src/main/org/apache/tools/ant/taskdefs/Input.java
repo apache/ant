@@ -28,6 +28,7 @@ import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.InputRequest;
 import org.apache.tools.ant.input.MultipleChoiceInputRequest;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
+import org.apache.tools.ant.input.SecureInputHandler;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -116,16 +117,16 @@ public class Input extends Task {
 
     /**
      * EnumeratedAttribute representing the built-in input handler types:
-     * "default", "propertyfile", "greedy".
+     * "default", "propertyfile", "greedy", "secure" (since Ant 1.8).
      */
     public static class HandlerType extends EnumeratedAttribute {
-        private static final String[] VALUES
-            = {"default", "propertyfile", "greedy"};
+        private static final String[] VALUES = { "default", "propertyfile", "greedy", "secure" };
 
         private static final InputHandler[] HANDLERS
-            = {new DefaultInputHandler(),
+            = { new DefaultInputHandler(),
                new PropertyFileInputHandler(),
-               new GreedyInputHandler()};
+               new GreedyInputHandler(),
+               new SecureInputHandler() };
 
         /** {@inheritDoc} */
         public String[] getValues() {
