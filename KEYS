@@ -995,3 +995,55 @@ uAYCrpuxAJ9NYy3kPGHYAZuFSeygBt3aV1acGACeP9bIj81YOQn45Dvgmb7zqYBU
 g7o=
 =jpcP
 -----END PGP PUBLIC KEY BLOCK-----
+
+pub   1024D/3B7C75B1 2007-05-29
+uid                  Gilles Scokart (at apache) <gscokart@apache.org>
+sig 3        3B7C75B1 2007-05-29  Gilles Scokart (at apache) <gscokart@apache.org>
+sig          51047D66 2009-03-25  Tony Stevenson <pctony@apache.org>
+sig          01530235 2009-03-26  Luc Maisonobe (general purpose) <Luc.Maisonobe@free.fr>
+sig          6A017B17 2009-03-29  H.-Dirk Schmitt <dirk@computer42.org>
+sig          5F6B8B72 2009-03-30  Stefan Bodewig <bodewig@apache.org>
+sig          B1313DE2 2009-03-30  Robert Burrell Donkin (CODE SIGNING KEY) <rdonkin@apache.org>
+sig          40581837 2009-03-31  Nick Kew <nicholas.kew@sun.com>
+sub   2048g/82AE20EE 2007-05-29
+sig          3B7C75B1 2007-05-29  Gilles Scokart (at apache) <gscokart@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.9 (Cygwin)
+
+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
+PEZ4/iF5mYiEb2kEZmS6aRhVxuA=
+=w8bP
+-----END PGP PUBLIC KEY BLOCK-----
