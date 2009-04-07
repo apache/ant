@@ -243,6 +243,9 @@
             </ul>
                 <h4 class="toc">How do I ...</h4>
         <ul>
+                <li><a href="#precompile-jsps">
+  How to I precompile Java Server Pages (JSPs)?
+      </a></li>
                 <li><a href="#implement-os-specific-configuration">
   How do I realize os--specific configurations?
       </a></li>
@@ -841,6 +844,19 @@ $ ant -version
 Apache Ant version 1.6.2 compiled on July 16 2004
 </pre>
                                 <p class="faq">
+      <a name="precompile-jsps"></a>
+      How to I precompile Java Server Pages (JSPs)?
+    </p>
+                  <p>Ant has a built in optional task <a href="/manual/OptionalTasks/jspc.html">&lt;jspc&gt;</a>
+        which was intended for that. <b>But this task is deprecated.</b>
+        Here the alternative suggested by the manual:</p>
+                        <p><i>Instead of relying on container specific JSP-compilers we suggest deploying
+        the raw files (*.jsp) and use the container build-in functions: after deploying
+        run a test suite (e.g. with
+        <a href="http://jakarta.apache.org/cactus/">Cactus</a> or
+        <a href="http://httpunit.sourceforge.net/">HttpUnit</a>) against the deployed web
+        application. So you'll get then test result and the compiled JSPs.</i></p>
+                    <p class="faq">
       <a name="implement-os-specific-configuration"></a>
       How do I realize os--specific configurations?
     </p>
