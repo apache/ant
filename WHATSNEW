@@ -360,6 +360,9 @@ Fixed bugs:
    symbolic links.
    Bugzilla Report 46747.
 
+ * The ant shell script should now support MSYS/MinGW as well.
+   Bugzilla Report 46936.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 
