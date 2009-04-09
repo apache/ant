@@ -363,6 +363,10 @@ Fixed bugs:
  * The ant shell script should now support MSYS/MinGW as well.
    Bugzilla Report 46936.
 
+ * <signjar> has a new force attribute that allows re-signing of jars
+   that are already signed.
+   Bugzilla Report 46891.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 

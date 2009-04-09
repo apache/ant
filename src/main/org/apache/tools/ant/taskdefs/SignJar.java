@@ -105,6 +105,11 @@ public class SignJar extends AbstractJarSignerTask {
     protected String tsacert;
 
     /**
+     * force signing even if the jar is already signed.
+     */
+    private boolean force = false;
+
+    /**
      * error string for unit test verification: {@value}
      */
     public static final String ERROR_TODIR_AND_SIGNEDJAR
@@ -251,6 +256,23 @@ public class SignJar extends AbstractJarSignerTask {
      */
     public void setTsacert(String tsacert) {
         this.tsacert = tsacert;
+    }
+
+    /**
+     * Whether to force signing of a jar even it is already signed.
+     * @since Ant 1.8.0
+     */
+    public void setForce(boolean b) {
+        force = b;
+    }
+
+    /**
+     * Should the task force signing of a jar even it is already
+     * signed?
+     * @since Ant 1.8.0
+     */
+    public boolean isForce() {
+        return force;
     }
 
     /**
@@ -448,7 +470,7 @@ public class SignJar extends AbstractJarSignerTask {
      * @return true if the signedjarFile is considered up to date
      */
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
-        if (null == jarFile || !jarFile.exists()) {
+        if (isForce() || null == jarFile || !jarFile.exists()) {
             //these are pathological cases, but retained in case somebody
             //subclassed us.
             return false;
