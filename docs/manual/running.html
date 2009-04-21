@@ -193,16 +193,19 @@ JVM documentation for more details.
 </blockquote>
 <p>runs Ant using the <code>build.xml</code> file in the current directory, on
 the default target.</p>
+
 <blockquote>
   <pre>ant -buildfile test.xml</pre>
 </blockquote>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the default target.</p>
+
 <blockquote>
   <pre>ant -buildfile test.xml dist</pre>
 </blockquote>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the target called <code>dist</code>.</p>
+
 <blockquote>
   <pre>ant -buildfile test.xml -Dbuild=build/classes dist</pre>
 </blockquote>
@@ -214,8 +217,15 @@ to the value <code>build/classes</code>.</p>
   <pre>ant -lib /home/ant/extras</pre>
 </blockquote>
 <p>runs Ant picking up additional task and support jars from the
-/home/ant/extras location
-</p>
+/home/ant/extras location</p>
+
+<blockquote>
+  <pre>ant -lib one.jar;another.jar</pre>
+  <pre>ant -lib one.jar -lib another.jar</pre>
+</blockquote>
+<p>adds two jars to Ants classpath.</p>
+
+
 
 <h3><a name="files">Files</a></h3>
 
