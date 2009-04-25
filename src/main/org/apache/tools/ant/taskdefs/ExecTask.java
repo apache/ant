@@ -607,7 +607,6 @@ public class ExecTask extends Task {
         exe.setAntRun(getProject());
         exe.setWorkingDirectory(dir);
         exe.setVMLauncher(vmLauncher);
-        exe.setSpawn(spawn);
         String[] environment = env.getVariables();
         if (environment != null) {
             for (int i = 0; i < environment.length; i++) {
