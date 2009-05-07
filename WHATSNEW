@@ -367,6 +367,10 @@ Fixed bugs:
    that are already signed.
    Bugzilla Report 46891.
 
+ * <sshexec> now again honors failonerror in the face of connection
+   errors.
+   Bugzilla Report 46829.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 

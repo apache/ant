@@ -206,11 +206,20 @@ public class SSHExec extends SSHBase {
                     }
                     FileUtils.close(br);
                 } catch (IOException e) {
-                    throw new BuildException(e);
+                    if (getFailonerror()) {
+                        throw new BuildException(e);
+                    } else {
+                        log("Caught exception: " + e.getMessage(),
+                            Project.MSG_ERR);
+                    }
                 }
             }
         } catch (JSchException e) {
-            throw new BuildException(e);
+            if (getFailonerror()) {
+                throw new BuildException(e);
+            } else {
+                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
+            }
         } finally {
             if (outputProperty != null) {
                 getProject().setNewProperty(outputProperty, output.toString());
