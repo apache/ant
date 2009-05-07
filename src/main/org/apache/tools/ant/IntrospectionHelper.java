@@ -1139,6 +1139,10 @@ public final class IntrospectionHelper {
                     try {
                         m.invoke(parent, new Object[] {
                                 new Long(StringUtils.parseHumanSizes(value)) });
+                    } catch (NumberFormatException e) {
+                        throw new BuildException("Can't assign non-numeric"
+                                                 + " value '" + value + "' to"
+                                                 + " attribute " + attrName);
                     } catch (InvocationTargetException e) {
                         throw e;
                     } catch (IllegalAccessException e) {
@@ -1184,6 +1188,17 @@ public final class IntrospectionHelper {
                         p.setProjectReference(attribute);
                     }
                     m.invoke(parent, new Object[] {attribute});
+                } catch (InvocationTargetException e) {
+                    Throwable cause = e.getCause();
+                    if (cause instanceof IllegalArgumentException) {
+                        throw new BuildException("Can't assign value '" + value
+                                                 + "' to attribute " + attrName
+                                                 + ", reason: "
+                                                 + cause.getClass()
+                                                 + " with message '"
+                                                 + cause.getMessage() + "'");
+                    }
+                    throw e;
                 } catch (InstantiationException ie) {
                     throw new BuildException(ie);
                 }
