@@ -551,9 +551,9 @@ form you do that depends on your favourite. But inside Ant there is a common for
 it has advantages if you use that: all task users know that form, this form is requested if
 you decide to contribute your task. So we will doc our task in that form.</p>
 
-<p>If you have a look at the manual page of the <a href="CoreTasks/java.html">java [5]</a>
-   task you will see<ul>
-<li>it is plain html</li>
+<p>If you have a look at the manual page of the <a href="CoreTasks/java.html">Java task [5]</a>
+   you will see that it:<ul>
+<li>is plain html</li>
 <li>starts with the name</li>
 <li>has sections: description, parameters, nested elements, (maybe return codes) and (most
 important :-) examples</li>
@@ -561,7 +561,7 @@ important :-) examples</li>
   it's required (if you add a feature after an Ant release, provide a <tt>since Ant xx</tt>
   statement when it's introduced)</li>
 <li>describe the nested elements (since-statement if necessary)</li>
-<li>provide one or more useful examples; first code then description</li>
+<li>provide one or more useful examples; first code, then description.</li>
 </ul>
 As a template we have:
 
@@ -570,12 +570,12 @@ As a template we have:
 
 &lt;head&gt;
 &lt;meta http-equiv="Content-Language" content="en-us"&gt;
-&lt;title&gt; <b>Taskname</b> Task&lt;/title&gt;
+&lt;title&gt;<b>Taskname</b> Task&lt;/title&gt;
 &lt;/head&gt;
 
 &lt;body&gt;
 
-&lt;h2&gt;&lt;a name="<i>taskname</i>"&gt;<b>Taskname</b>&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a name="<b>taskname</b>"&gt;<b>Taskname</b>&lt;/a&gt;&lt;/h2&gt;
 &lt;h3&gt;Description&lt;/h3&gt;
 &lt;p&gt; <b>Describe the task.</b>&lt;/p&gt;
 
@@ -599,27 +599,27 @@ As a template we have:
 &lt;h3&gt;Parameters specified as nested elements&lt;/h3&gt;
 
 <b>Describe each nested element (including inherited)</b>
-&lt;h4&gt;your nested element</b>&lt;/h4&gt;
-&lt;p&gt; <b>description</b> &lt;/p&gt;
+&lt;h4&gt;<b>your nested element</b>&lt;/h4&gt;
+&lt;p&gt;<b>description</b>&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;since Ant 1.6&lt;/em&gt;.&lt;/p&gt;
 
 &lt;h3&gt;Examples&lt;/h3&gt;
 &lt;pre&gt;
     <b>A code sample; don't forget to escape the &lt; of the tags with &amp;lt;</b>
 &lt;/pre&gt;
-<b>what should that example do?</b>
+<b>What should that example do?</b>
 
 &lt;/body&gt;
 &lt;/html&gt;
 </pre>
 
-<p>For our task we have:</p>
+<p>Here is an example documentation page for our task:</p>
 <pre class="code">
 &lt;html&gt;
 
 &lt;head&gt;
 &lt;meta http-equiv="Content-Language" content="en-us"&gt;
-&lt;title&gt; Find Task&lt;/title&gt;
+&lt;title&gt;Find Task&lt;/title&gt;
 &lt;/head&gt;
 
 &lt;body&gt;
@@ -697,7 +697,7 @@ If we decide to contribute our task, we should do some things:<ul>
 <li>create a patch file</li>
 <li>publishing that patch file</li>
 </ul>
-The <a href="../ant_task_guidelines.html">Ant Task Guidelines [7]</a> support additional
+The <a href="../ant_task_guidelines.html">Ant Task Guidelines [6]</a> support additional
 information on that.</p>
 
 <p>Now we will check the "Checklist before submitting a new task" described in that guideline.
@@ -734,7 +734,7 @@ tests in <tt>src/etc/testcases</tt>.</p>
 <p>Now we integrate our work into Ants distribution. So first we do an update of our
 cvs tree. If not done yet, you have to checkout the ant module from Apaches cvs server
 as described in <a href="http://ant.apache.org/cvs.html">Access the Source Tree (AnonCVS)
-[8]</a> (password is <i>anoncvs</i>):<pre class="output">
+[7]</a> (password is <i>anoncvs</i>):<pre class="output">
 cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login                 //1
 cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout ant          //2
 </pre>
@@ -837,7 +837,7 @@ is the same as directly after the cvs update (without our modifications).</p>
 <h3>Test on JDK 1.2</h3>
 <p>Until version 1.5 Ant must be able to run on a JDK 1.1. With version 1.6 this is not a
 requisite any more. But JDK 1.2 is a must-to-work-with. So we have to test that. You can download older
-JDKs from <a href="http://java.sun.com/products/archive/index.html">Sun [9]</a>.</p>
+JDKs from <a href="http://java.sun.com/products/archive/index.html">Sun [8]</a>.</p>
 
 <p>Clean the ANT_HOME variable, delete the <i>build, bootstrap</i> and <i>dist</i> directory
 and point JAVA_HOME to the JDK 1.2 home directory. Then do the <tt>build</tt>, set ANT_HOME
@@ -849,11 +849,11 @@ and run <tt>ant test</tt> (like above).</p>
 
 <h3>Checkstyle</h3>
 <p>There are many things we have to ensure. Indentation with 4 spaces, blanks here and there, ...
-(all described in the <a href="../ant_task_guidelines.html">Ant Task Guidelines [7]</a> which
+(all described in the <a href="../ant_task_guidelines.html">Ant Task Guidelines [6]</a> which
 includes the <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Sun code style
-[10]</a>). Because there are so many things we would be happy to have a tool for do the checks.
+[9]</a>). Because there are so many things we would be happy to have a tool for do the checks.
 There is one: checkstyle. Checkstyle is available at <a href="http://checkstyle.sourceforge.net/">
-Sourceforge [11]</a> and Ant provides with the <tt>check.xml</tt> a buildfile which will do the job
+Sourceforge [10]</a> and Ant provides with the <tt>check.xml</tt> a buildfile which will do the job
 for us.</p>
 
 <p>Download it and put the checkstyle-*-all.jar into your %USERPROFILE%\.ant\lib directory.
@@ -917,13 +917,13 @@ The other way - BugZilla - is slightly more difficult. But it has the advantage 
 will not be forgotten (once per week a report is generated). So I will show this way.</p>
 
 <p>You must have a BugZilla account for that. So open the <a href="http://issues.apache.org/bugzilla/">
-BugZilla Main Page [12]</a> and follow the link
-<a href="http://issues.apache.org/bugzilla/createaccount.cgi">Open a new Bugzilla account [13]</a>
+BugZilla Main Page [11]</a> and follow the link
+<a href="http://issues.apache.org/bugzilla/createaccount.cgi">Open a new Bugzilla account [12]</a>
 and the steps described there if you haven't one.</p>
 
 <ol>
 <li>From the BugZilla main page choose <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">Enter
-    a new bug report [14]</a></li>
+    a new bug report [13]</a></li>
 <li>Choose "Ant" as product </li>
 <li>Version is the last "Alpha (nightly)" (at this time 1.7)</li>
 <li>Component is "Core tasks"</li>
@@ -955,14 +955,14 @@ Now the new task is uploaded into the bug database.
 &nbsp;&nbsp;[3] <a href="using.html#built-in-props">using.html#built-in-props</a><br>
 &nbsp;&nbsp;[4] <a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a><br>
 &nbsp;&nbsp;[5] <a href="CoreTasks/java.html">CoreTasks/java.html</a><br>
-&nbsp;&nbsp;[7] <a href="../ant_task_guidelines.html">../ant_task_guidelines.html</a><br>
-&nbsp;&nbsp;[8] <a href="http://ant.apache.org/cvs.html">http://ant.apache.org/cvs.html</a><br>
-&nbsp;&nbsp;[9] <a href="http://java.sun.com/products/archive/index.html">http://java.sun.com/products/archive/index.html</a><br>
-&nbsp;&nbsp;[10] <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</a><br>
-&nbsp;&nbsp;[11] <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a><br>
-&nbsp;&nbsp;[12] <a href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a><br>
-&nbsp;&nbsp;[13] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br>
-&nbsp;&nbsp;[14] <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">http://issues.apache.org/bugzilla/enter_bug.cgi</a><br>
+&nbsp;&nbsp;[6] <a href="http://ant.apache.org/ant_task_guidelines.html">http://ant.apache.org/ant_task_guidelines.html</a><br>
+&nbsp;&nbsp;[7] <a href="http://ant.apache.org/cvs.html">http://ant.apache.org/cvs.html</a><br>
+&nbsp;&nbsp;[8] <a href="http://java.sun.com/products/archive/index.html">http://java.sun.com/products/archive/index.html</a><br>
+&nbsp;&nbsp;[9] <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</a><br>
+&nbsp;&nbsp;[10] <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a><br>
+&nbsp;&nbsp;[11] <a href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a><br>
+&nbsp;&nbsp;[12] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br>
+&nbsp;&nbsp;[13] <a href="http://issues.apache.org/bugzilla/enter_bug.cgi">http://issues.apache.org/bugzilla/enter_bug.cgi</a><br>
 
 
 <!--
