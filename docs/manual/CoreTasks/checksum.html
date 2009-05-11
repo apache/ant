@@ -76,7 +76,7 @@ or set the <tt>fileext</tt> attribute.
     <td valign="top">algorithm</td>
     <td valign="top">Specifies the algorithm to be used to
       compute the checksum. Defaults to &quot;MD5&quot;.
-      Other popular algorithms like &quot;SHA&quot; may be used
+      Other popular algorithms like &quot;SHA&quot; or &quot;SHA-512&quot; may be used
       as well.
     </td>
     <td valign="top" align="center">No</td>
@@ -214,8 +214,8 @@ Generates a MD5 checksum for foo.bar, compares it against foo.bar.MD5 and sets
 isMD5ok to either true or false, depending upon the result.
 
 <p><b>Example 5</b></p>
-<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA&quot; fileext=&quot;asc&quot;/&gt;</pre></blockquote>
-Generates a SHA checksum for foo.bar and stores the checksum in the destination file
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA-512&quot; fileext=&quot;asc&quot;/&gt;</pre></blockquote>
+Generates a SHA-512 checksum for foo.bar and stores the checksum in the destination file
 foo.bar.asc.  foo.bar.asc is overwritten only if foo.bar is newer than itself.
 
 <p><b>Example 6</b></p>
