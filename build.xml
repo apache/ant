@@ -894,6 +894,21 @@
   </target>
 
 
+  <macrodef name="checksums">
+    <element name="resources" implicit="true"/>
+    <sequential>
+      <checksum algorithm="md5">
+        <resources/>
+      </checksum>
+      <checksum algorithm="sha1">
+        <resources/>
+      </checksum>
+      <checksum fileext=".sha512" algorithm="sha-512">
+        <resources/>
+      </checksum>
+    </sequential>
+  </macrodef>
+
   <target name="internal_dist" depends="dist-lite,dist_javadocs">
     <mkdir dir="${dist.docs}"/>
     <mkdir dir="${dist.etc}"/>
@@ -923,16 +938,11 @@
             </tokenfilter>
         </filterchain>
     </copy>
-    <checksum algorithm="md5">
+    <checksums>
         <fileset dir="${dist.lib}">
             <include name="*.pom"/>
         </fileset>
-    </checksum>
-    <checksum algorithm="sha1">
-        <fileset dir="${dist.lib}">
-            <include name="*.pom"/>
-        </fileset>
-    </checksum>
+    </checksums>
 
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}" includes="${expandproperty.files}">
@@ -1162,35 +1172,29 @@
       <fileset dir="${dist.name}/lib">
         <include name="*.pom"/>
         <include name="*.sha1"/>
+        <include name="*.sha512"/>
         <include name="*.md5"/>
       </fileset>
       <mapper>
         <mapper type="glob" from="*.pom" to="*.pom"/>
         <mapper type="glob" from="*.pom.sha1" to="*.pom.sha1"/>
+        <mapper type="glob" from="*.pom.sha512" to="*.pom.sha512"/>
         <mapper type="glob" from="*.pom.md5" to="*.pom.md5"/>
       </mapper>
     </copy>
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${java-repository.jars.dir}" includes="*${project.version}.jar"/>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${java-repository.jars.dir}" includes="*${project.version}.jar"/>
-    </checksum>
+    </checksums>
     <delete dir="${dist.name}"/>
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${dist.base.binaries}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
       </fileset>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base.binaries}/">
-        <include name="**/*"/>
-        <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-      </fileset>
-    </checksum>
+    </checksums>
 
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}"/>
@@ -1227,20 +1231,15 @@
       src="${dist.base.source}/${dist.name}-src.tar"/>
     <delete file="${dist.base.source}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}"/>
-    <checksum fileext=".md5">
+    <checksums>
       <fileset dir="${dist.base.source}/">
         <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
       </fileset>
-    </checksum>
-    <checksum fileext=".sha1" algorithm="SHA">
-      <fileset dir="${dist.base.source}/">
-        <include name="**/*"/>
-        <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
-      </fileset>
-    </checksum>
+    </checksums>
   </target>
 
   <target name="distribution" depends="main_distribution"
