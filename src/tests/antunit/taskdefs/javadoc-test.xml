@@ -23,8 +23,8 @@
       <attribute name="package"/>
       <attribute name="class"/>
       <sequential>
-    <mkdir dir="${input}/@{package}"/>
-    <echo file="${input}/@{package}/@{class}.java"><![CDATA[
+        <mkdir dir="${input}/@{package}"/>
+        <echo file="${input}/@{package}/@{class}.java"><![CDATA[
 package @{package};
 
 /**
