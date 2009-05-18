@@ -143,22 +143,22 @@ public final class MagicNames {
     /**
      * property that provides the default value for javac's and
      * javadoc's source attribute.
-     * @since Ant 1.7
      * Value: {@value}
+     * @since Ant 1.7
      */
     public static final String BUILD_JAVAC_SOURCE = "ant.build.javac.source";
 
     /**
      * property that provides the default value for javac's target attribute.
-     * @since Ant 1.7
      * Value: {@value}
+     * @since Ant 1.7
      */
     public static final String BUILD_JAVAC_TARGET = "ant.build.javac.target";
 
     /**
      * Name of the magic property that controls classloader reuse.
-     * @since Ant 1.4.
      * Value: {@value}
+     * @since Ant 1.4.
      */
     public static final String REFID_CLASSPATH_REUSE_LOADER = "ant.reuse.loader";
 

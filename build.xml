@@ -1386,6 +1386,7 @@
       locale="en"
       windowtitle="${Name} API"
       doctitle="${Name}"
+      failonerror="true"
       verbose="${javadoc.verbose}">
 
       <packageset dir="${java.dir}"/>
@@ -1413,6 +1414,7 @@
     <mkdir dir="${build.tests.javadocs}"/>
     <javadoc useexternalfile="yes"
       destdir="${build.tests.javadocs}"
+      failonerror="true"
       author="true"
       version="true"
       locale="en"
