@@ -371,6 +371,10 @@ Fixed bugs:
    errors.
    Bugzilla Report 46829.
 
+ * The <replacetokens> filter threw an exception if the stream to
+   filter ended with a begin token.
+   Bugzilla Report 47306.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 

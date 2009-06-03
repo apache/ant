@@ -153,7 +153,11 @@ public final class ReplaceTokens
                     queuedData
                         = key.toString() + queuedData.substring(queueIndex);
                 }
-                queueIndex = 0;
+                if (queuedData.length() > 0) {
+                    queueIndex = 0;
+                } else {
+                    queueIndex = -1;
+                }
                 return beginToken;
             } else {
                 key.setLength(key.length() - 1);

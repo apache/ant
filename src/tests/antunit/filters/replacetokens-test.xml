@@ -47,4 +47,22 @@ world=Ant
        resource="${output}/text.txt" value="Hello, Ant!"/>
   </target>
 
+  <target name="testFileEndsWithToken"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47306"
+          depends="setUp">
+    <mkdir dir="${output}"/>
+    <echo file="${input}/test47306.txt">Hello@</echo>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <filterchain>
+        <replacetokens>
+          <token key="foo" value="bar"/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="${input}/test47306.txt"
+       actual="${output}/test47306.txt"/>
+  </target>
+
 </project>
