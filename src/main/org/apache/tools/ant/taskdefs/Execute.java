@@ -825,6 +825,8 @@ public class Execute {
                         + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
                 }
                 return Runtime.getRuntime().exec(cmd, env, workingDir);
+            } catch (IOException ioex) {
+                throw ioex;
             } catch (Exception exc) {
                 // IllegalAccess, IllegalArgument, ClassCast
                 throw new BuildException("Unable to execute command", exc);
