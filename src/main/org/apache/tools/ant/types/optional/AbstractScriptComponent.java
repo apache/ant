@@ -141,4 +141,19 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
     protected void executeScript(String execName) {
         getRunner().executeScript(execName);
     }
+
+    /**
+     * Set the setbeans attribute.
+     * If this is true, &lt;script&gt; will create variables in the
+     * script instance for all
+     * properties, targets and references of the current project.
+     * It this is false, only the project and self variables will
+     * be set.
+     * The default is true.
+     * @param setBeans the value to set.
+     * @since Ant 1.8.0
+     */
+    public void setSetBeans(boolean setBeans) {
+        helper.setSetBeans(setBeans);
+    }
 }
