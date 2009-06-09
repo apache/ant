@@ -65,20 +65,20 @@ public class DirSetTest extends AbstractFileSetTest {
     public void testToString() throws Exception {
         File tmp = File.createTempFile("DirSetTest", "");
         try {
-        tmp.delete();
-        File a = new File(tmp, "a");
-        a.mkdirs();
-        File b = new File(tmp, "b");
-        File bc = new File(b, "c");
-        bc.mkdirs();
-        new FileOutputStream(new File(a, "x")).close();
-        new FileOutputStream(new File(b, "x")).close();
-        new FileOutputStream(new File(bc, "x")).close();
-        DirSet ds = new DirSet();
-        ds.setProject(getProject());
-        ds.setDir(tmp);
-        ds.setIncludes("b/");
-        assertEquals("b;b" + File.separator + "c", ds.toString());
+            tmp.delete();
+            File a = new File(tmp, "a");
+            a.mkdirs();
+            File b = new File(tmp, "b");
+            File bc = new File(b, "c");
+            bc.mkdirs();
+            new FileOutputStream(new File(a, "x")).close();
+            new FileOutputStream(new File(b, "x")).close();
+            new FileOutputStream(new File(bc, "x")).close();
+            DirSet ds = new DirSet();
+            ds.setProject(getProject());
+            ds.setDir(tmp);
+            ds.setIncludes("b/");
+            assertEquals("b;b" + File.separator + "c", ds.toString());
         } finally {
             new File(tmp, "a/x").delete();
             new File(tmp, "a").delete();
