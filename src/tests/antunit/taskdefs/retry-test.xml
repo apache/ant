@@ -18,9 +18,13 @@
 <project name="retry-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml"/>
 
-  <target name="test-fail-and-retry">
+  <target name="setUp">
     <property name="i" value="3"/>
-    <property name="dest" value="${java.io.tmpdir}/dest"/>
+    <mkdir dir="${output}"/>
+    <property name="dest" value="${output}/dest"/>
+  </target>
+
+  <target name="test-fail-and-retry" depends="setUp">
     <!-- just in case this ever becomes a legit url... -->
     <property name="src" value="http://iojasodjojaosdj"/>
     <au:expectfailure expectedmessage="Task [get] failed after [${i}] attempts; giving up">
@@ -31,9 +35,7 @@
     <au:assertLogContains text="Attempt [1]: error occurred; retrying..."/>
   </target>
 
-  <target name="test-success">
-    <property name="i" value="3"/>
-    <property name="dest" value="${java.io.tmpdir}/dest"/>
+  <target name="test-success" depends="setUp">
     <retry retrycount="${i}">
       <touch file="${dest}"/>
     </retry>

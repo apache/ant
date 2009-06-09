@@ -64,6 +64,7 @@ public class DirSetTest extends AbstractFileSetTest {
 
     public void testToString() throws Exception {
         File tmp = File.createTempFile("DirSetTest", "");
+        try {
         tmp.delete();
         File a = new File(tmp, "a");
         a.mkdirs();
@@ -78,6 +79,15 @@ public class DirSetTest extends AbstractFileSetTest {
         ds.setDir(tmp);
         ds.setIncludes("b/");
         assertEquals("b;b" + File.separator + "c", ds.toString());
+        } finally {
+            new File(tmp, "a/x").delete();
+            new File(tmp, "a").delete();
+            new File(tmp, "b/c/x").delete();
+            new File(tmp, "b/c").delete();
+            new File(tmp, "b/x").delete();
+            new File(tmp, "b").delete();
+            tmp.delete();
+        }
     }
 
 }

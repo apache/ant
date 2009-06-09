@@ -20,11 +20,12 @@
 
   <import file="../antunit-base.xml" />
 
-  <property name="file" location="${output}test.mf"/>
+  <property name="file" location="${output}/test.mf"/>
 
   <target name="test8IsAllowed"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45675"
           >
+    <mkdir dir="${output}"/>
     <manifest file="${file}">
       <attribute name="attrib8" value="test attribute"/>
     </manifest>
