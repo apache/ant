@@ -20,9 +20,11 @@
 
   <target name="setUp">
     <mkdir dir="${output}"/>
+    <available property="in working copy" file=".svn"/>
   </target>
 
-  <target name="testCopyNoExplictExcludes" depends="setUp">
+  <target name="testCopyNoExplictExcludes" depends="setUp"
+          if="in working copy">
     <copy todir="${output}">
       <fileset dir="."/>
     </copy>
@@ -30,7 +32,8 @@
     <au:assertFileDoesntExist file="${output}/.svn/entries"/>
   </target>
 
-  <target name="testCopyExplictExcludes" depends="setUp">
+  <target name="testCopyExplictExcludes" depends="setUp"
+          if="in working copy">
     <copy todir="${output}">
       <fileset dir="." defaultexcludes="true"/>
     </copy>
@@ -38,7 +41,8 @@
     <au:assertFileDoesntExist file="${output}/.svn/entries"/>
   </target>
 
-  <target name="testCopyExplictNoExcludes" depends="setUp">
+  <target name="testCopyExplictNoExcludes" depends="setUp"
+          if="in working copy">
     <copy todir="${output}">
       <fileset dir="." defaultexcludes="false"/>
     </copy>
