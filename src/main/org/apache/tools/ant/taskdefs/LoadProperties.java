@@ -168,11 +168,7 @@ public class LoadProperties extends Task {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
-                if (encoding == null) {
-                    tis = new ByteArrayInputStream(text.getBytes());
-                } else {
-                    tis = new ByteArrayInputStream(text.getBytes(encoding));
-                }
+                tis = new ByteArrayInputStream(text.getBytes());
                 final Properties props = new Properties();
                 props.load(tis);
 

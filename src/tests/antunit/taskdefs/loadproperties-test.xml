@@ -58,4 +58,14 @@ xref-complex.f=$${xref-complex.e}</string>
     <au:assertPropertyEquals name="xref-complex.f" value="$${xref-complex.d}" />
   </target>
 
+  <target name="testEncoding"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47382">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/ebcdic.properties" encoding="Cp1047">
+a=Hello world in EBCDIC
+    </echo>
+    <loadproperties srcfile="${input}/ebcdic.properties" encoding="Cp1047"/>
+    <au:assertPropertyEquals name="a" value="Hello world in EBCDIC"/>
+  </target>
+
 </project>

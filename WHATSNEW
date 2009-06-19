@@ -385,6 +385,9 @@ Fixed bugs:
    the setbeans attribute.
    Bugzilla Report 47336.
 
+ * <loadproperties>' encoding attribute didn't work.
+   Bugzilla Report 47382.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 
