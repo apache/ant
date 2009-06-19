@@ -73,6 +73,13 @@ to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or
   the <code>useexternalfile</code> attribute to <code>true</code>
   first.</p>
 
+<p>If you use multiple ways to specify where javadoc should be looking
+  for sources your result will be the union of all specified
+  documentations.  If you, e.g., specify a sourcepath attribute and
+  also a nested packageset both pointing at the same directory your
+  excludepackagenames attribute won't have any effect unless it agrees
+  with the exclude patterns of the packageset (and vice versa).</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
