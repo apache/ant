@@ -135,6 +135,12 @@ Changes that could break older environments:
    behavior you will now need to explicitly specify the trailing *.
    Bugzilla Report 46506.
 
+ * <copy> silently ignored missing resources even with
+   failOnError="true".  If your build tries to copy non-existant
+   resources and you relied on this behavior you must now explicitly
+   set failOnError to false.
+   Bugzilla Report 47362.
+
 Fixed bugs:
 -----------
 
@@ -721,7 +727,7 @@ Other changes:
  * CBZip2OutputStream now has a finish method separate from close.
    Bugzilla Report 42713.
 
- * the <zip> and <unzip> family of tasks has new option to deal with
+ * the <zip> and <unzip> family of tasks has new options to deal with
    file name and comment encoding.  Please see the zip tasks'
    documentation for details.
 

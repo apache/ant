@@ -138,4 +138,16 @@ public class NullByteStreamResource extends Resource {
     </copy>
     <au:assertFileExists file="${output}/final/foo"/>
   </target>
+
+  <target name="testFailOnURLConnectionError"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47362">
+    <mkdir dir="${output}"/>
+    <au:expectfailure>
+      <copy todir="${output}" failonerror="true" flatten="true">
+        <resources>
+          <url url="http://i-do-not-exist/"/>
+        </resources>
+      </copy>
+    </au:expectfailure>
+  </target>
 </project>

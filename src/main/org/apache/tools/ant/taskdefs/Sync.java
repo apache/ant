@@ -36,6 +36,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
 
@@ -61,6 +63,8 @@ public class Sync extends Task {
 
     // Similar to a fileset, but doesn't allow dir attribute to be set
     private SyncTarget syncTarget;
+
+    private Restrict resources = null;
 
     // Override Task#init
     /**
@@ -390,7 +394,17 @@ public class Sync extends Task {
      * @since Ant 1.7
      */
     public void add(ResourceCollection rc) {
-        myCopy.add(rc);
+        if (rc instanceof FileSet && rc.isFilesystemOnly()) {
+            // receives special treatment in copy that this task relies on
+            myCopy.add(rc);
+        } else {
+            if (resources == null) {
+                resources = new Restrict();
+                resources.add(new Exists());
+                myCopy.add(resources);
+            }
+            resources.add(rc);
+        }
     }
 
     /**

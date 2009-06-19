@@ -464,6 +464,13 @@ public class Copy extends Task {
                     while (resources.hasNext()) {
                         Resource r = (Resource) resources.next();
                         if (!r.isExists()) {
+                            String message = "Warning: Could not find resource "
+                                + r.toLongString() + " to copy.";
+                            if (!failonerror) {
+                                log(message, Project.MSG_ERR);
+                            } else {
+                                throw new BuildException(message);
+                            }
                             continue;
                         }
 
