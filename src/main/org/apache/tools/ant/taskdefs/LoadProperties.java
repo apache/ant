@@ -168,7 +168,7 @@ public class LoadProperties extends Task {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
-                tis = new ByteArrayInputStream(text.getBytes());
+                tis = new ByteArrayInputStream(text.getBytes("ISO8859_1"));
                 final Properties props = new Properties();
                 props.load(tis);
 
