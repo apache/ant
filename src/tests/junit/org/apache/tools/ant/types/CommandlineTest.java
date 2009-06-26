@@ -130,7 +130,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("1 \'2\"3\'", Commandline.toString(new String[] {"1", "2\"3"}));
     }
 
-    public void testAwkCommand(){
+    public void testAwkCommand() {
         Commandline c = new Commandline();
         c.setExecutable("awk");
         c.createArgument().setValue("'NR == 2 { print $NF }'");
@@ -139,5 +139,25 @@ public class CommandlineTest extends TestCase {
         assertEquals(2, s.length);
         assertEquals("awk", s[0]);
         assertEquals("'NR == 2 { print $NF }'", s[1]);
+    }
+
+    public void testPrefix() {
+        Commandline c = new Commandline();
+        Commandline.Argument a = c.createArgument();
+        a.setValue("foo");
+        a.setPrefix("-f=");
+        String[] s = c.getCommandline();
+        assertEquals(1, s.length);
+        assertEquals("-f=foo", s[0]);
+    }
+
+    public void testSuffix() {
+        Commandline c = new Commandline();
+        Commandline.Argument a = c.createArgument();
+        a.setValue("foo");
+        a.setSuffix(",1");
+        String[] s = c.getCommandline();
+        assertEquals(1, s.length);
+        assertEquals("foo,1", s[0]);
     }
 }

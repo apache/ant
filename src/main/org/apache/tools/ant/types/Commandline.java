@@ -103,6 +103,9 @@ public class Commandline implements Cloneable {
 
         private String[] parts;
 
+        private String prefix = "";
+        private String suffix = "";
+
         /**
          * Set a single commandline argument.
          *
@@ -159,11 +162,41 @@ public class Commandline implements Cloneable {
         }
 
         /**
+         * Set the prefix to be placed in front of every part of the
+         * argument.
+         *
+         * @param prefix fixed prefix string.
+         * @since Ant 1.8.0
+         */
+        public void setPrefix(String prefix) {
+            this.prefix = prefix != null ? prefix : "";
+        }
+
+        /**
+         * Set the suffix to be placed at the end of every part of the
+         * argument.
+         *
+         * @param suffix fixed suffix string.
+         * @since Ant 1.8.0
+         */
+        public void setSuffix(String suffix) {
+            this.suffix = suffix != null ? suffix : "";
+        }
+
+        /**
          * Return the constituent parts of this Argument.
          * @return an array of strings.
          */
         public String[] getParts() {
-            return parts;
+            if (parts == null || parts.length == 0
+                || (prefix.length() == 0 && suffix.length() == 0)) {
+                return parts;
+            }
+            String[] fullParts = new String[parts.length];
+            for (int i = 0; i < fullParts.length; ++i) {
+                fullParts[i] = prefix + parts[i] + suffix;
+            }
+            return fullParts;
         }
     }
 

@@ -737,6 +737,10 @@ Other changes:
  * <input ...><handler type="secure" /></input> now uses previously undocumented
    SecureInputHandler shipped with Ant 1.7.1.
 
+ * Command line arguments for <exec> and similar tasks can now have
+   optional prefix and suffix attributes.
+   Bugzilla Report 47365
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
