@@ -26,33 +26,34 @@
 
 <h2><a name="sysclasspath">build.sysclasspath</a></h2>
 <p>The value of the build.sysclasspath property
-control how the system classpath, ie. the classpath in effect when
-Ant is run, affects the behaviour of classpaths in Ant.
-The default behavior varies from Ant to Ant task.</p>
+controls how the system classpath, i.e. the classpath in effect when
+Ant is run, affects the behavior of classpaths in Ant.
+The default behavior varies from task to task.</p>
 
 The values and their meanings are:
 
 <table cellspacing="20">
+<tr><th>value</th><th>meaning</th></tr>
 <tr>
-<th align="left" valign="top">only</th>
+<td align="left" valign="top">only</td>
 <td>Only the system classpath is used and classpaths specified in build files,
 etc are ignored. This situation could be considered as the person running
 the build file knows more about the environment than the person writing the
-build file
+build file.
 </td>
 </tr>
 
 <tr>
-<th align="left" valign="top">ignore</th>
+<td align="left" valign="top">ignore</td>
 <td>
 The system classpath is ignored. This situation is the reverse of the
 above. The person running the build trusts the build file writer to get the
-build file right
+build file right. This mode is recommended for portable scripts.
 </td>
 </tr>
 
 <tr>
-<th align="left" valign="top">last</th>
+<td align="left" valign="top">last</td>
 <td>
 The classpath is concatenated to any specified classpaths at the end. This
 is a compromise, where the build file writer has priority.
@@ -60,7 +61,7 @@ is a compromise, where the build file writer has priority.
 </tr>
 
 <tr>
-<th align="left" valign="top">first</th>
+<td align="left" valign="top">first</td>
 <td>
 Any specified classpaths are concatenated to the system classpath. This is
 the other form of compromise where the build runner has priority.
@@ -74,7 +75,5 @@ specified for a task with the bootclasspath of the Java VM running
 Ant.  If the property has not been set, it defaults to "ignore" in
 this case.</p>
 
-
 </body>
 </html>
-

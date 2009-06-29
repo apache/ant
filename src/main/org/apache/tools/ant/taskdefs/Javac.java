@@ -104,7 +104,7 @@ public class Javac extends MatchingTask {
     private String targetAttribute;
     private Path bootclasspath;
     private Path extdirs;
-    private boolean includeAntRuntime = true;
+    private Boolean includeAntRuntime;
     private boolean includeJavaRuntime = false;
     private boolean fork = false;
     private String forkedExecutable = null;
@@ -619,7 +619,7 @@ public class Javac extends MatchingTask {
      * @param include if true, includes Ant's own classpath in the classpath
      */
     public void setIncludeantruntime(boolean include) {
-        includeAntRuntime = include;
+        includeAntRuntime = Boolean.valueOf(include);
     }
 
     /**
@@ -627,7 +627,7 @@ public class Javac extends MatchingTask {
      * @return whether or not the ant classpath is to be included in the classpath
      */
     public boolean getIncludeantruntime() {
-        return includeAntRuntime;
+        return includeAntRuntime != null ? includeAntRuntime.booleanValue() : true;
     }
 
     /**
@@ -1038,6 +1038,11 @@ public class Javac extends MatchingTask {
                                      + destDir
                                      + "\" does not exist "
                                      + "or is not a directory", getLocation());
+        }
+        if (includeAntRuntime == null && getProject().getProperty("build.sysclasspath") == null) {
+            log(getLocation() + "warning: 'includeantruntime' was not set, " +
+                    "defaulting to build.sysclasspath=last; set to false for repeatable builds",
+                    Project.MSG_WARN);
         }
     }
 

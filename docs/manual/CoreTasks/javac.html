@@ -290,7 +290,10 @@ invoking the compiler.</p>
   <tr>
     <td valign="top">includeAntRuntime</td>
     <td valign="top">Whether to include the Ant run-time libraries in the
-      classpath; defaults to <code>yes</code>.</td>
+      classpath; defaults to <code>yes</code>, unless
+      <a href="../sysclasspath.html"><code>build.sysclasspath</code></a> is set.
+      <em>It is usually best to set this to false</em> so the script's behavior is not
+      sensitive to the environment in which it is run.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
