@@ -202,14 +202,16 @@ public class Commandline implements Cloneable {
 
     /**
      * Class to keep track of the position of an Argument.
-     <p>This class is there to support the srcfile and targetfile
-     elements of &lt;execon&gt; and &lt;transform&gt; - don't know
-     whether there might be additional use cases.</p> --SB
+     *
+     * <p>This class is there to support the srcfile and targetfile
+     * elements of &lt;apply&gt;.</p>
      */
     public class Marker {
 
         private int position;
         private int realPos = -1;
+        private String prefix = "";
+        private String suffix = "";
 
         /**
          * Construct a marker for the specified position.
@@ -236,6 +238,45 @@ public class Commandline implements Cloneable {
             }
             return realPos;
         }
+
+        /**
+         * Set the prefix to be placed in front of the inserted argument.
+         *
+         * @param prefix fixed prefix string.
+         * @since Ant 1.8.0
+         */
+        public void setPrefix(String prefix) {
+            this.prefix = prefix != null ? prefix : "";
+        }
+
+        /**
+         * Get the prefix to be placed in front of the inserted argument.
+         *
+         * @since Ant 1.8.0
+         */
+        public String getPrefix() {
+            return prefix;
+        }
+
+        /**
+         * Set the suffix to be placed at the end of the inserted argument.
+         *
+         * @param suffix fixed suffix string.
+         * @since Ant 1.8.0
+         */
+        public void setSuffix(String suffix) {
+            this.suffix = suffix != null ? suffix : "";
+        }
+
+        /**
+         * Get the suffix to be placed at the end of the inserted argument.
+         *
+         * @since Ant 1.8.0
+         */
+        public String getSuffix() {
+            return suffix;
+        }
+
     }
 
     /**

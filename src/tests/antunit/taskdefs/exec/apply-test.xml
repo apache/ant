@@ -731,6 +731,29 @@
     </au:assertTrue>
   </target>
 
+  <target name="testSrcfilePrefix" if="test.can.run" depends="xyz">
+    <apply executable="sh" force="true">
+      <arg value="parrot.sh" />
+      <srcfile prefix="-Dfoo="/>
+      <fileset refid="xyz" />
+    </apply>
+    <au:assertLogContains text="-Dfoo=${x} out" />
+    <au:assertLogContains text="-Dfoo=${y} out" />
+    <au:assertLogContains text="-Dfoo=${z} out" />
+  </target>
+
+  <target name="testTargetfileSuffix" if="test.can.run" depends="xyz">
+    <apply executable="sh" addsourcefile="false" dest="${basedir}">
+      <arg value="parrot.sh" />
+      <targetfile suffix=",x"/>
+      <fileset refid="xyz" />
+      <globmapper from="*" to="*.bar"/>
+    </apply>
+    <au:assertLogContains text="${x}.bar,x out" />
+    <au:assertLogContains text="${y}.bar,x out" />
+    <au:assertLogContains text="${z}.bar,x out" />
+  </target>
+
   <target name="tearDown">
     <delete>
       <fileset refid="xyz" />

@@ -333,12 +333,50 @@ end of the command line (unless you set addsourcefile to
 <code>false</code>). If you need to place it somewhere different,
 use a nested <code>&lt;srcfile&gt;</code> element between your
 <code>&lt;arg&gt;</code> elements to mark the insertion point.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">a prefix to place in front of the file name when
+    building the command line argument.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No.</td>
+  </tr>
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">a suffix to append to the file name when
+    building the command line argument.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No.</td>
+  </tr>
+</table>
 <h4>targetfile</h4>
 <p><code>&lt;targetfile&gt;</code> is similar to
 <code>&lt;srcfile&gt;</code> and marks the position of the target
 filename on the command line. If omitted, the target filenames will
 not be added to the command line at all. This element can only be
 specified if you also define a nested mapper.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">a prefix to place in front of the file name when
+    building the command line argument.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No.</td>
+  </tr>
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">a suffix to append to the file name when
+    building the command line argument.  <em>Since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No.</td>
+  </tr>
+</table>
 <h4>env</h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the

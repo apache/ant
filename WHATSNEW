@@ -741,6 +741,10 @@ Other changes:
    optional prefix and suffix attributes.
    Bugzilla Report 47365
 
+ * <apply>'s srcfile and targetfile child elements can now have
+   optional prefix and suffix attributes.
+   Bugzilla Report 45625
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

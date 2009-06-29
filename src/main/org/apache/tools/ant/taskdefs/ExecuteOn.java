@@ -576,10 +576,10 @@ public class ExecuteOn extends ExecTask {
                                  srcIndex + srcFiles.length,
                                  targetIndex - srcIndex);
 
-                // targets are already absolute file names
-                System.arraycopy(targetFiles, 0, result,
-                                 targetIndex + srcFiles.length,
-                                 targetFiles.length);
+                insertTargetFiles(targetFiles, result,
+                                  targetIndex + srcFiles.length,
+                                  targetFilePos.getPrefix(),
+                                  targetFilePos.getSuffix());
 
                 // targetIndex --> end
                 System.arraycopy(orig, targetIndex, result,
@@ -589,10 +589,9 @@ public class ExecuteOn extends ExecTask {
                 // 0 --> targetIndex
                 System.arraycopy(orig, 0, result, 0, targetIndex);
 
-                // targets are already absolute file names
-                System.arraycopy(targetFiles, 0, result,
-                                 targetIndex,
-                                 targetFiles.length);
+                insertTargetFiles(targetFiles, result, targetIndex,
+                                  targetFilePos.getPrefix(),
+                                  targetFilePos.getSuffix());
 
                 // targetIndex --> srcIndex
                 System.arraycopy(orig, targetIndex, result,
@@ -625,6 +624,11 @@ public class ExecuteOn extends ExecTask {
             }
             if (forwardSlash && fileSeparator != '/') {
                 src = src.replace(fileSeparator, '/');
+            }
+            if (srcFilePos != null &&
+                (srcFilePos.getPrefix().length() > 0
+                 || srcFilePos.getSuffix().length() > 0)) {
+                src = srcFilePos.getPrefix() + src + srcFilePos.getSuffix();
             }
             result[srcIndex + i] = src;
         }
@@ -731,6 +735,26 @@ public class ExecuteOn extends ExecTask {
 
                 stillToDo -= currentAmount;
                 currentOffset += currentAmount;
+            }
+        }
+    }
+
+    /**
+     * Inserts target file names (which are already absolute paths)
+     * into the list of arguments, taking prefix and postfix into
+     * account.
+     */
+    private static void insertTargetFiles(String[] targetFiles,
+                                          String[] arguments,
+                                          int insertPosition,
+                                          String prefix, String suffix) {
+        if (prefix.length() == 0 && suffix.length() == 0) {
+            System.arraycopy(targetFiles, 0, arguments, insertPosition,
+                             targetFiles.length);
+        } else {
+            for (int i = 0; i < targetFiles.length; i++) {
+                arguments[insertPosition + i] =
+                    prefix + targetFiles[i] + suffix;
             }
         }
     }
