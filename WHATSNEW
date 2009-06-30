@@ -388,6 +388,10 @@ Fixed bugs:
  * <loadproperties>' encoding attribute didn't work.
    Bugzilla Report 47382.
 
+ * Ant created tar archives could contain random bytes at the end
+   which confused some untar implementations.
+   Bugzilla Report 47421.
+
 Other changes:
 --------------
  * A HostInfo task was added performing information on hosts, including info on 

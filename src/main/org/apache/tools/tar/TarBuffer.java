@@ -412,6 +412,7 @@ public class TarBuffer {
 
         currRecIdx = 0;
         currBlkIdx++;
+        Arrays.fill(blockBuffer, (byte) 0);
     }
 
     /**
