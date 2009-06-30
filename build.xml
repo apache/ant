@@ -119,7 +119,7 @@
        ===================================================================
   -->
   <path id="classpath">
-    <fileset dir="lib/optional" includes="junit*.jar"/>
+    <fileset dir="lib/optional" includes="*.jar"/>
   </path>
 
   <path id="tests-classpath">
@@ -547,6 +547,7 @@
     <mkdir dir="${build.lib}"/>
 
     <javac srcdir="${java.dir}"
+      includeantruntime="false"
       destdir="${build.classes}"
       debug="${debug}"
       deprecation="${deprecation}"
@@ -1440,6 +1441,7 @@
     <mkdir dir="${build.tests}"/>
 
     <javac srcdir="${src.junit}"
+      includeantruntime="false"
       destdir="${build.tests}"
       debug="${debug}"
       target="${javac.target}"
