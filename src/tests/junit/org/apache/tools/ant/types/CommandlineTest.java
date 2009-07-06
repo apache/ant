@@ -160,4 +160,16 @@ public class CommandlineTest extends TestCase {
         assertEquals(1, s.length);
         assertEquals("foo,1", s[0]);
     }
+
+    public void testPrefixSuffixLine() {
+        Commandline c = new Commandline();
+        Commandline.Argument a = c.createArgument();
+        a.setLine("one two");
+        a.setPrefix("number ");
+        a.setSuffix(".");
+        String[] s = c.getCommandline();
+        assertEquals(2, s.length);
+        assertEquals("number one.", s[0]);
+        assertEquals("number two.", s[1]);
+    }
 }
