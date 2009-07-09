@@ -3893,6 +3893,30 @@
       <a href="manual/tasksoverview.html#scm">built in</a>. But some are available as
       external libraries. Here a list of task libraries we are aware of:</p>
 
+      <subsection name="ANT4HG">
+
+         <p>These are tasks that allow users to access Mercurial
+         functionality from within Ant build scripts.</p>
+
+         <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant4hg.free.fr">http://ant4hg.free.fr</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:ant4hg@free.fr">ant4hg@free.fr</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="clearAntLib">
 
