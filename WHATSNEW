@@ -753,6 +753,10 @@ Other changes:
    directories which is desabled for backwards compatibility reasons.
    Bugzilla Report 47457
 
+ * <apt>'s executable attribute can be used to specify a different
+   executable.
+   Bugzilla Report 46230.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

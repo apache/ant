@@ -119,7 +119,9 @@ public class Apt
      * @return the name of the executable.
      */
     public String getAptExecutable() {
-        return JavaEnvUtils.getJdkExecutable(EXECUTABLE_NAME);
+        String exe = getExecutable();
+        return exe != null ? exe :
+            JavaEnvUtils.getJdkExecutable(EXECUTABLE_NAME);
     }
 
     /**
