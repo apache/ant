@@ -46,4 +46,18 @@
     </au:assertTrue>
   </target>
 
+  <target name="testResourcesOnly"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47470">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/foo"/>
+    <touch file="${output}/bar"/>
+    <jar destfile="${output}/foo.jar">
+      <union>
+        <fileset dir="${input}"/>
+        <fileset dir="${output}" excludes="foo.jar"/>
+      </union>
+    </jar>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+  </target>
 </project>
