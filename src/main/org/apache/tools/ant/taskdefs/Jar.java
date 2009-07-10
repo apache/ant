@@ -119,6 +119,9 @@ public class Jar extends Zip {
     /** jar index is JDK 1.3+ only */
     private boolean index = false;
 
+    /** Whether to index META-INF/ and its children */
+    private boolean indexMetaInf = false;
+
     /**
      * whether to really create the archive in createEmptyZip, will
      * get set in getResourcesToAdd.
@@ -221,6 +224,25 @@ public class Jar extends Zip {
      */
     public void setIndex(boolean flag) {
         index = flag;
+    }
+
+    /**
+     * Set whether or not to add META-INF and its children to the index.
+     *
+     * <p>Doesn't have any effect if index is false.</p>
+     *
+     * <p>Sun's jar implementation used to skip the META-INF directory
+     * and Ant followed that example.  The behavior has been changed
+     * with Java 5.  In order to avoid problems with Ant generated
+     * jars on Java 1.4 or earlier Ant will not include META-INF
+     * unless explicitly asked to.</p>
+     *
+     * @see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+     * @since Ant 1.8.0
+     * @param flag a <code>boolean</code> value, defaults to false
+     */
+    public void setIndexMetaInf(boolean flag) {
+        indexMetaInf = flag;
     }
 
     /**
@@ -972,7 +994,9 @@ public class Jar extends Zip {
             // looks like nothing from META-INF should be added
             // and the check is not case insensitive.
             // see sun.misc.JarIndex
-            if (dir.startsWith("META-INF")) {
+            // see also 
+            // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+            if (!indexMetaInf && dir.startsWith("META-INF")) {
                 continue;
             }
             // name newline
@@ -1064,9 +1088,6 @@ public class Jar extends Zip {
                 org.apache.tools.zip.ZipEntry ze =
                     (org.apache.tools.zip.ZipEntry) entries.nextElement();
                 String name = ze.getName();
-                // META-INF would be skipped anyway, avoid index for
-                // manifest-only jars.
-                if (!name.startsWith("META-INF/")) {
                     if (ze.isDirectory()) {
                         dirSet.add(name);
                     } else if (name.indexOf("/") == -1) {
@@ -1079,7 +1100,6 @@ public class Jar extends Zip {
                         dirSet.add(name.substring(0,
                                                   name.lastIndexOf("/") + 1));
                     }
-                }
             }
             dirs.addAll(dirSet);
         } finally {

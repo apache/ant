@@ -156,6 +156,20 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">indexMetaInf</td>
+    <td valign="top">whether to include META-INF and its children in
+      the index.  Doesn't have any effect if <em>index</em> is
+      false.<br/>
+      Sun's jar implementation used to skip the META-INF directory and
+      Ant followed that example.  The behavior has been changed with
+      <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">Java
+      5</a>.  In order to avoid problems with Ant generated jars on
+      Java 1.4 or earlier Ant will not include META-INF unless
+      explicitly asked to.<br/>
+      <em>Ant 1.8.0</em> - Defaults to false.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">update</td>
     <td valign="top">indicates whether to update or overwrite
       the destination file if it already exists.  Default is &quot;false&quot;.</td>

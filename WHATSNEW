@@ -749,6 +749,10 @@ Other changes:
    optional prefix and suffix attributes.
    Bugzilla Report 45625
 
+ * <jar> has a new attribute to enable indexing of META-INF
+   directories which is desabled for backwards compatibility reasons.
+   Bugzilla Report 47457
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

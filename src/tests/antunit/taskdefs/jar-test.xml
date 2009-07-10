@@ -60,4 +60,30 @@
     </jar>
     <au:assertLogDoesntContain text="skipping jar archive"/>
   </target>
+
+  <target name="-metainf-setup">
+    <mkdir dir="${input}/services"/>
+    <touch file="${input}/services/foo"/>
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="testIndexNoMetaInf" depends="-metainf-setup">
+    <jar index="true" destfile="${output}/test.jar">
+      <metainf dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/INDEX.LIST"/>
+    <au:assertResourceDoesntContain value="META-INF"
+                                    resource="${output}/META-INF/INDEX.LIST"/>
+  </target>
+
+  <target name="testIndexMetaInf" depends="-metainf-setup">
+    <jar index="true" destfile="${output}/test.jar" indexMetaInf="true">
+      <metainf dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/INDEX.LIST"/>
+    <au:assertResourceContains value="META-INF"
+                               resource="${output}/META-INF/INDEX.LIST"/>
+  </target>
 </project>
