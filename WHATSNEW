@@ -394,6 +394,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+ * The get task now also follows redirects from http to https
+   Bugzilla report 47433
+
  * A HostInfo task was added performing information on hosts, including info on 
    the host ant is running on. 
    Bugzilla reports 45861 and 31164.

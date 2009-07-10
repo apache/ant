@@ -18,12 +18,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +29,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Gets a particular file from a URL source.
@@ -49,6 +52,10 @@ public class Get extends Task {
     private static final int DOTS_PER_LINE = 50;
     private static final int BIG_BUFFER_SIZE = 100 * 1024;
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final int REDIRECT_LIMIT = 25;
+    
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
 
     private URL source; // required
     private File dest; // required
@@ -361,6 +368,7 @@ public class Get extends Task {
     }
 
     private class GetThread extends Thread {
+
         private final boolean hasTimestamp;
         private final long timestamp;
         private final DownloadProgress progress;
@@ -371,6 +379,8 @@ public class Get extends Task {
         private BuildException exception = null;
         private InputStream is = null;
         private OutputStream os = null;
+        private URLConnection connection;
+        private int redirections = 0;
 
         GetThread(boolean h, long t, DownloadProgress p, int l) {
             hasTimestamp = h;
@@ -390,10 +400,64 @@ public class Get extends Task {
         }
 
         private boolean get() throws IOException, BuildException {
-            //set up the URL connection
-            URLConnection connection = source.openConnection();
-            //modify the headers
-            //NB: things like user authentication could go in here too.
+            
+            connection = openConnection(source);
+
+            if (connection == null)
+            {
+                return false;
+            }
+
+            boolean downloadSucceeded = downloadFile();
+
+            //if (and only if) the use file time option is set, then
+            //the saved file now has its timestamp set to that of the
+            //downloaded file
+            if (downloadSucceeded && useTimestamp)  {
+                updateTimeStamp();
+            }
+            
+            return downloadSucceeded;
+        }
+
+
+        private boolean redirectionAllowed(URL aSource, URL aDest) {
+            if (!(aSource.getProtocol().equals(aDest.getProtocol()) || (HTTP
+                    .equals(aSource.getProtocol()) && HTTPS.equals(aDest
+                    .getProtocol())))) {
+                String message = "Redirection detected from "
+                        + aSource.getProtocol() + " to " + aDest.getProtocol()
+                        + ". Protocol switch unsafe, not allowed.";
+                if (ignoreErrors) {
+                    log(message, logLevel);
+                    return false;
+                } else {
+                    throw new BuildException(message);
+                }
+            }
+
+            redirections++;
+            if (redirections > REDIRECT_LIMIT) {
+                String message = "More than " + REDIRECT_LIMIT
+                        + " times redirected, giving up";
+                if (ignoreErrors) {
+                    log(message, logLevel);
+                    return false;
+                } else {
+                    throw new BuildException(message);
+                }
+            }
+
+            
+            return true;
+        }
+
+        private URLConnection openConnection(URL aSource) throws IOException {
+
+            // set up the URL connection
+            URLConnection connection = aSource.openConnection();
+            // modify the headers
+            // NB: things like user authentication could go in here too.
             if (hasTimestamp) {
                 connection.setIfModifiedSince(timestamp);
             }
@@ -401,45 +465,65 @@ public class Get extends Task {
             if (uname != null || pword != null) {
                 String up = uname + ":" + pword;
                 String encoding;
-                //we do not use the sun impl for portability,
-                //and always use our own implementation for consistent
-                //testing
+                // we do not use the sun impl for portability,
+                // and always use our own implementation for consistent
+                // testing
                 Base64Converter encoder = new Base64Converter();
                 encoding = encoder.encode(up.getBytes());
-                connection.setRequestProperty ("Authorization",
-                                               "Basic " + encoding);
+                connection.setRequestProperty("Authorization", "Basic "
+                        + encoding);
             }
 
-            //connect to the remote site (may take some time)
-            connection.connect();
-            //next test for a 304 result (HTTP only)
             if (connection instanceof HttpURLConnection) {
-                HttpURLConnection httpConnection
-                    = (HttpURLConnection) connection;
+                ((HttpURLConnection) connection)
+                        .setInstanceFollowRedirects(false);
+            }
+            // connect to the remote site (may take some time)
+            connection.connect();
+
+            // First check on a 301 / 302 (moved) response (HTTP only)
+            if (connection instanceof HttpURLConnection) {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+              //  httpConnection.setInstanceFollowRedirects(false);
+              //  httpConnection.setUseCaches(false);
+                int responseCode = httpConnection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
+                        responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                        responseCode == HttpURLConnection.HTTP_SEE_OTHER)
+                {
+                    String newLocation = httpConnection.getHeaderField("Location");
+                    String message = aSource
+                            + (responseCode == HttpURLConnection.HTTP_MOVED_PERM ? " permanently"
+                                    : "") + " moved to " + newLocation;
+                    log(message, logLevel);
+                    URL newURL = new URL(newLocation);
+                    if (!redirectionAllowed(aSource, newURL))
+                    {
+                        return null;
+                    }
+                    return openConnection(newURL);
+                }
+                // next test for a 304 result (HTTP only)
                 long lastModified = httpConnection.getLastModified();
-                if (httpConnection.getResponseCode()
-                    == HttpURLConnection.HTTP_NOT_MODIFIED
-                    || (lastModified != 0 && hasTimestamp
-                        && timestamp >= lastModified)) {
-                    //not modified so no file download. just return
-                    //instead and trace out something so the user
-                    //doesn't think that the download happened when it
-                    //didn't
+                if (responseCode == HttpURLConnection.HTTP_NOT_MODIFIED
+                        || (lastModified != 0 && hasTimestamp && timestamp >= lastModified)) {
+                    // not modified so no file download. just return
+                    // instead and trace out something so the user
+                    // doesn't think that the download happened when it
+                    // didn't
                     log("Not modified - so not downloaded", logLevel);
-                    return false;
+                    return null;
                 }
                 // test for 401 result (HTTP only)
-                if (httpConnection.getResponseCode()
-                    == HttpURLConnection.HTTP_UNAUTHORIZED)  {
+                if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     String message = "HTTP Authorization failure";
                     if (ignoreErrors) {
                         log(message, logLevel);
-                        return false;
+                        return null;
                     } else {
                         throw new BuildException(message);
                     }
                 }
-
             }
 
             //REVISIT: at this point even non HTTP connections may
@@ -447,11 +531,15 @@ public class Get extends Task {
             //the date of the content and skip the write if it is not
             //newer. Some protocols (FTP) don't include dates, of
             //course.
+            return connection;
+        }
 
+        private boolean downloadFile()
+                throws FileNotFoundException, IOException {
             for (int i = 0; i < NUMBER_RETRIES; i++) {
-                //this three attempt trick is to get round quirks in different
-                //Java implementations. Some of them take a few goes to bind
-                //property; we ignore the first couple of such failures.
+                // this three attempt trick is to get round quirks in different
+                // Java implementations. Some of them take a few goes to bind
+                // property; we ignore the first couple of such failures.
                 try {
                     is = connection.getInputStream();
                     break;
@@ -464,8 +552,8 @@ public class Get extends Task {
                 if (ignoreErrors) {
                     return false;
                 }
-                throw new BuildException("Can't get " + source + " to "
-                                         + dest, getLocation());
+                throw new BuildException("Can't get " + source + " to " + dest,
+                        getLocation());
             }
 
             os = new FileOutputStream(dest);
@@ -491,26 +579,23 @@ public class Get extends Task {
                 }
             }
             progress.endDownload();
-
-            //if (and only if) the use file time option is set, then
-            //the saved file now has its timestamp set to that of the
-            //downloaded file
-            if (useTimestamp)  {
-                long remoteTimestamp = connection.getLastModified();
-                if (verbose)  {
-                    Date t = new Date(remoteTimestamp);
-                    log("last modified = " + t.toString()
-                        + ((remoteTimestamp == 0)
-                           ? " - using current time instead"
-                           : ""), logLevel);
-                }
-                if (remoteTimestamp != 0) {
-                    FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
-                }
-            }
             return true;
         }
 
+        private void updateTimeStamp() {
+            long remoteTimestamp = connection.getLastModified();
+            if (verbose)  {
+                Date t = new Date(remoteTimestamp);
+                log("last modified = " + t.toString()
+                    + ((remoteTimestamp == 0)
+                       ? " - using current time instead"
+                       : ""), logLevel);
+            }
+            if (remoteTimestamp != 0) {
+                FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
+            }
+        }
+        
         /**
          * Has the download completed successfully?
          *
