@@ -1088,18 +1088,17 @@ public class Jar extends Zip {
                 org.apache.tools.zip.ZipEntry ze =
                     (org.apache.tools.zip.ZipEntry) entries.nextElement();
                 String name = ze.getName();
-                    if (ze.isDirectory()) {
-                        dirSet.add(name);
-                    } else if (name.indexOf("/") == -1) {
-                        files.add(name);
-                    } else {
-                        // a file, not in the root
-                        // since the jar may be one without directory
-                        // entries, add the parent dir of this file as
-                        // well.
-                        dirSet.add(name.substring(0,
-                                                  name.lastIndexOf("/") + 1));
-                    }
+                if (ze.isDirectory()) {
+                    dirSet.add(name);
+                } else if (name.indexOf("/") == -1) {
+                    files.add(name);
+                } else {
+                    // a file, not in the root
+                    // since the jar may be one without directory
+                    // entries, add the parent dir of this file as
+                    // well.
+                    dirSet.add(name.substring(0, name.lastIndexOf("/") + 1));
+                }
             }
             dirs.addAll(dirSet);
         } finally {
