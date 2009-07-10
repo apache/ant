@@ -86,6 +86,7 @@
   <property name="build.junit.xml" location="${build.tests}/xml"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
+  <property name="antunit.loglevel" value="none"/>
   <property name="build.junit.reports" location="${build.tests}/reports"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
@@ -1870,7 +1871,7 @@ see ${build.junit.reports} / ${antunit.reports}
                 failonerror="false" errorproperty="antunit.failed">
       <fileset dir="${src.antunit}" includes="${antunit.includes}"
                excludes="${antunit.excludes}" />
-      <au:plainlistener />
+      <au:plainlistener logLevel="${antunit.loglevel}"/>
       <au:xmllistener todir="${antunit.xml}" />
     </au:antunit>
   </target>
