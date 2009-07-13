@@ -54,8 +54,13 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
         Rmic owner = getRmic();
         Commandline cmd = setupRmicCommand();
         Project project = owner.getProject();
-        //rely on RMIC being on the path
-        cmd.setExecutable(JavaEnvUtils.getJdkExecutable(getExecutableName()));
+        String executable = owner.getExecutable();
+        if (executable == null) {
+            // no explicitly specified executable
+            // rely on RMIC being on the path
+            executable = JavaEnvUtils.getJdkExecutable(getExecutableName());
+        }
+        cmd.setExecutable(executable);
 
         //set up the args
         String[] args = cmd.getCommandline();

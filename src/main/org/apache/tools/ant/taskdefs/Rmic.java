@@ -123,6 +123,8 @@ public class Rmic extends MatchingTask {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    private String executable = null;
+
     /**
      * Constructor for Rmic.
      */
@@ -486,6 +488,25 @@ public class Rmic extends MatchingTask {
     public String[] getCurrentCompilerArgs() {
         getCompiler();
         return facade.getArgs();
+    }
+
+    /**
+     * Name of the executable to use when forking.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setExecutable(String ex) {
+        executable = ex;
+    }
+
+    /**
+     * Explicitly specified name of the executable to use when forking
+     * - if any.
+     *
+     * @since Ant 1.8.0
+     */
+    public String getExecutable() {
+        return executable;
     }
 
     /**

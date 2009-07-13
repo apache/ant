@@ -765,6 +765,10 @@ Other changes:
    executable.
    Bugzilla Report 46230.
 
+ * <rmic>'s new executable attribute can be used to specify a
+   different executable.
+   Bugzilla Report 42132.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
