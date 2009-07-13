@@ -850,8 +850,7 @@ public class JUnitTask extends Task {
         File casesFile = createTempPropertiesFile("junittestcases");
         BufferedWriter writer = null;
         try {
-            writer =
-                new BufferedWriter(new BufferedWriter(new FileWriter(casesFile)));
+            writer = new BufferedWriter(new FileWriter(casesFile));
 
             log("Creating casesfile '" + casesFile.getAbsolutePath()
                 + "' with content: ", Project.MSG_VERBOSE);
