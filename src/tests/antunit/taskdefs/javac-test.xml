@@ -86,4 +86,37 @@
       <equals arg1="${compile-failed}" arg2="true"/>
     </au:assertTrue>
   </target>
+
+  <target name="testPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">
+    <mkdir dir="${javac-dir}/src/a"/>
+    <mkdir dir="${build-dir}"/>
+    <echo file="${javac-dir}/src/a/package-info.java"><![CDATA[
+/**
+ * Some test javadocs at the package level.
+ */
+]]></echo>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}"
+           updatedProperty="first-pass"/>
+    <au:assertPropertyEquals name="first-pass" value="true"/>
+
+    <!-- no changes, shouldn't recompile, the initial bug -->
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}"
+           updatedProperty="second-pass"/>
+    <au:assertFalse>
+      <isset property="second-pass"/>
+    </au:assertFalse>
+    <sleep seconds="2"/>
+
+    <!-- change package-info.java but make containing target dir even
+         more recent - the regression in Ant 1.7.1 -->
+    <touch file="${javac-dir}/src/a/package-info.java"/>
+    <sleep seconds="2"/>
+    <touch>
+      <file file="${build-dir}/a"/>
+    </touch>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}"
+           updatedProperty="third-pass"/>
+    <au:assertPropertyEquals name="third-pass" value="true"/>
+  </target>
 </project>
