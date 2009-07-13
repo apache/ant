@@ -247,7 +247,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             try {
                 wri.write(type);
                 wri.newLine();
-                wri.write(t.getMessage());
+                wri.write(String.valueOf(t.getMessage()));
                 wri.newLine();
                 String strace = JUnitTestRunner.getFilteredTrace(t);
                 wri.write(strace);

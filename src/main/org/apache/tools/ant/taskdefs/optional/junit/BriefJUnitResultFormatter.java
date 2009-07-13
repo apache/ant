@@ -253,7 +253,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         try {
             resultWriter.write(formatTest(test) + type);
             resultWriter.newLine();
-            resultWriter.write(error.getMessage());
+            resultWriter.write(String.valueOf(error.getMessage()));
             resultWriter.newLine();
             String strace = JUnitTestRunner.getFilteredTrace(error);
             resultWriter.write(strace);

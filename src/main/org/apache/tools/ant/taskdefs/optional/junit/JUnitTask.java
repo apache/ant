@@ -1969,13 +1969,13 @@ public class JUnitTask extends Task {
 
     private static void printDual(BufferedWriter w, PrintStream s, String text)
         throws IOException {
-        w.write(text);
+        w.write(String.valueOf(text));
         s.print(text);
     }
 
     private static void printlnDual(BufferedWriter w, PrintStream s, String text)
         throws IOException {
-        w.write(text);
+        w.write(String.valueOf(text));
         w.newLine();
         s.println(text);
     }
