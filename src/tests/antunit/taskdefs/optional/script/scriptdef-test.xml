@@ -109,4 +109,17 @@
     <scripttest/>
     <assertPropSet name="property2" />
   </target>
+
+  <target name="testExceptionNesting"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47509"
+          if="prereqs-ok">
+    <scriptdef name="quickfail" language="javascript">
+      <![CDATA[
+            self.fail("I failed!");
+      ]]>
+    </scriptdef>
+    <au:expectfailure message="I failed!">
+      <quickfail/>
+    </au:expectfailure>
+  </target>
 </project>

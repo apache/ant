@@ -105,11 +105,16 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             return engine.invoke("eval", String.class, getScript());
         } catch (BuildException be) {
             //catch and rethrow build exceptions
-            throw be;
+
+            // this may be a BuildException wrapping a ScriptException
+            // deeply wrapping yet another BuildException - for
+            // example because of self.fail() - see
+            // https://issues.apache.org/bugzilla/show_bug.cgi?id=47509
+            throw unwrap(be);
         } catch (Exception be) {
             //any other exception? Get its cause
             Throwable t = be;
-            Throwable te = (Throwable) ReflectUtil.invoke(be, "getCause");
+            Throwable te = be.getCause();
             if (te != null) {
                 if  (te instanceof BuildException) {
                     throw (BuildException) te;
@@ -139,5 +144,22 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             this.engine = ret;
         }
         return ret;
+    }
+
+    /**
+     * Traverse a Throwable's cause(s) and return the BuildException
+     * most deeply nested into it - if any.
+     */
+    private static BuildException unwrap(Throwable t) {
+        BuildException deepest =
+            t instanceof BuildException ? (BuildException) t : null;
+        Throwable current = t;
+        while (current.getCause() != null) {
+            current = current.getCause();
+            if (current instanceof BuildException) {
+                deepest = (BuildException) current;
+            }
+        }
+        return deepest;
     }
 }
