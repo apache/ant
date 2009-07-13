@@ -18,11 +18,11 @@
 package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -216,23 +216,25 @@ public class Depend extends MatchingTask {
     private void writeCachedDependencies(Hashtable dependencyMap)
         throws IOException {
         if (cache != null) {
-            PrintWriter pw = null;
+            BufferedWriter pw = null;
             try {
                 cache.mkdirs();
                 File depFile = new File(cache, CACHE_FILE_NAME);
 
-                pw = new PrintWriter(new FileWriter(depFile));
+                pw = new BufferedWriter(new FileWriter(depFile));
                 Enumeration e = dependencyMap.keys();
                 while (e.hasMoreElements()) {
                     String className = (String) e.nextElement();
 
-                    pw.println(CLASSNAME_PREPEND + className);
+                    pw.write(CLASSNAME_PREPEND + className);
+                    pw.newLine();
 
                     Vector dependencyList
                         = (Vector) dependencyMap.get(className);
                     int size = dependencyList.size();
                     for (int x = 0; x < size; x++) {
-                        pw.println(dependencyList.elementAt(x));
+                        pw.write(String.valueOf(dependencyList.elementAt(x)));
+                        pw.newLine();
                     }
                 }
             } finally {

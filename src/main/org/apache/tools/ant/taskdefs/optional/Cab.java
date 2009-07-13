@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -179,11 +179,12 @@ public class Cab extends MatchingTask {
         throws IOException {
         File listFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
 
-        PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(listFile));
 
         int size = files.size();
         for (int i = 0; i < size; i++) {
-            writer.println('\"' + files.elementAt(i).toString() + '\"');
+            writer.write('\"' + files.elementAt(i).toString() + '\"');
+            writer.newLine();
         }
         writer.close();
 

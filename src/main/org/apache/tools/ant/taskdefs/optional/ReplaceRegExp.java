@@ -27,7 +27,6 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
@@ -368,7 +367,6 @@ public class ReplaceRegExp extends Task {
 
             BufferedReader br = new BufferedReader(r);
             BufferedWriter bw = new BufferedWriter(w);
-            PrintWriter pw = new PrintWriter(bw);
 
             boolean changes = false;
 
@@ -398,8 +396,8 @@ public class ReplaceRegExp extends Task {
                                 changes = true;
                             }
 
-                            pw.print(res);
-                            pw.print('\r');
+                            bw.write(res);
+                            bw.write('\r');
 
                             linebuf = new StringBuffer();
                             // hasCR is still true (for the second one)
@@ -416,12 +414,12 @@ public class ReplaceRegExp extends Task {
                             changes = true;
                         }
 
-                        pw.print(res);
+                        bw.write(res);
                         if (hasCR) {
-                            pw.print('\r');
+                            bw.write('\r');
                             hasCR = false;
                         }
-                        pw.print('\n');
+                        bw.write('\n');
 
                         linebuf = new StringBuffer();
                     } else { // any other char
@@ -434,9 +432,9 @@ public class ReplaceRegExp extends Task {
                                 changes = true;
                             }
 
-                            pw.print(res);
+                            bw.write(res);
                             if (hasCR) {
-                                pw.print('\r');
+                                bw.write('\r');
                                 hasCR = false;
                             }
 
@@ -449,7 +447,7 @@ public class ReplaceRegExp extends Task {
                     }
                 } while (c >= 0);
 
-                pw.flush();
+                bw.flush();
             } else {
                 String buf = FileUtils.safeReadFully(br);
 
@@ -459,8 +457,8 @@ public class ReplaceRegExp extends Task {
                     changes = true;
                 }
 
-                pw.print(res);
-                pw.flush();
+                bw.write(res);
+                bw.flush();
             }
 
             r.close();

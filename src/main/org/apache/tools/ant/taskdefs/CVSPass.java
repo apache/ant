@@ -19,14 +19,15 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -93,7 +94,7 @@ public class CVSPass extends Task {
         log("passFile: " + passFile, Project.MSG_DEBUG);
 
         BufferedReader reader = null;
-        PrintWriter writer = null;
+        BufferedWriter writer = null;
         try {
             StringBuffer buf = new StringBuffer();
 
@@ -114,9 +115,10 @@ public class CVSPass extends Task {
 
             log("Writing -> " + pwdfile , Project.MSG_DEBUG);
 
-            writer = new PrintWriter(new FileWriter(passFile));
+            writer = new BufferedWriter(new FileWriter(passFile));
 
-            writer.println(pwdfile);
+            writer.write(pwdfile);
+            writer.newLine();
         } catch (IOException e) {
             throw new BuildException(e);
         } finally {
@@ -127,9 +129,7 @@ public class CVSPass extends Task {
                     // ignore
                 }
             }
-            if (writer != null) {
-                writer.close();
-            }
+            FileUtils.close(writer);
         }
     }
 

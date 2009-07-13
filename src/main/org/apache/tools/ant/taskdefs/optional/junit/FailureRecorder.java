@@ -17,11 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -90,7 +90,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     private static SortedSet/*<TestInfos>*/ failedTests = new TreeSet();
 
     /** A writer for writing the generated source to. */
-    private PrintWriter writer;
+    private BufferedWriter writer;
 
     /**
      * Location and name of the generated JUnit class.
@@ -249,54 +249,66 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             verbose("Write collector class to '" + sourceFile.getAbsolutePath() + "'");
 
             sourceFile.delete();
-            writer = new PrintWriter(new FileOutputStream(sourceFile));
+            writer = new BufferedWriter(new FileWriter(sourceFile));
 
             createClassHeader();
             createSuiteMethod();
             createClassFooter();
 
             FileUtils.close(writer);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createClassHeader() {
+    private void createClassHeader() throws IOException {
         String className = getLocationName().replace('\\', '/');
         if (className.indexOf('/') > -1) {
             className = className.substring(className.lastIndexOf('/') + 1);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
-        writer.print("// generated on: ");
-        writer.println(sdf.format(new Date()));
-        writer.println("import junit.framework.*;");
-        writer.print("public class ");
-        writer.print(className);
+        writer.write("// generated on: ");
+        writer.write(sdf.format(new Date()));
+        writer.newLine();
+        writer.write("import junit.framework.*;");
+        writer.newLine();
+        writer.write("public class ");
+        writer.write(className);
         // If this class does not extend TC, Ant doesnt run these
-        writer.println(" extends TestCase {");
+        writer.write(" extends TestCase {");
+        writer.newLine();
         // standard String-constructor
-        writer.print("    public ");
-        writer.print(className);
-        writer.println("(String testname) {");
-        writer.println("        super(testname);");
-        writer.println("    }");
+        writer.write("    public ");
+        writer.write(className);
+        writer.write("(String testname) {");
+        writer.newLine();
+        writer.write("        super(testname);");
+        writer.newLine();
+        writer.write("    }");
+        writer.newLine();
     }
 
-    private void createSuiteMethod() {
-        writer.println("    public static Test suite() {");
-        writer.println("        TestSuite suite = new TestSuite();");
+    private void createSuiteMethod() throws IOException {
+        writer.write("    public static Test suite() {");
+        writer.newLine();
+        writer.write("        TestSuite suite = new TestSuite();");
+        writer.newLine();
         for (Iterator iter = failedTests.iterator(); iter.hasNext();) {
             TestInfos testInfos = (TestInfos) iter.next();
-            writer.print("        suite.addTest(");
-            writer.print(testInfos);
-            writer.println(");");
+            writer.write("        suite.addTest(");
+            writer.write(String.valueOf(testInfos));
+            writer.write(");");
+            writer.newLine();
         }
-        writer.println("        return suite;");
-        writer.println("    }");
+        writer.write("        return suite;");
+        writer.newLine();
+        writer.write("    }");
+        writer.newLine();
     }
 
-    private void createClassFooter() {
-        writer.println("}");
+    private void createClassFooter() throws IOException {
+        writer.write("}");
+        writer.newLine();
     }
 
     // ===== Helper classes and methods =====

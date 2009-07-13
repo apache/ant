@@ -18,12 +18,12 @@
 package org.apache.tools.ant.taskdefs.email;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 
 import org.apache.tools.ant.ProjectComponent;
 
@@ -114,10 +114,10 @@ public class Message extends ProjectComponent {
     public void print(PrintStream ps)
          throws IOException {
         // We need character encoding aware printing here.
-        // So, using PrintWriter over OutputStreamWriter instead of PrintStream
-        PrintWriter out
-            = charset != null ? new PrintWriter(new OutputStreamWriter(ps, charset))
-                              : new PrintWriter(ps);
+        // So, using BufferedWriter over OutputStreamWriter instead of PrintStream
+        BufferedWriter out
+            = charset != null ? new BufferedWriter(new OutputStreamWriter(ps, charset))
+                              : new BufferedWriter(new OutputStreamWriter(ps));
         if (messageSource != null) {
             // Read message from a file
             FileReader freader = new FileReader(messageSource);
@@ -126,13 +126,15 @@ public class Message extends ProjectComponent {
                 BufferedReader in = new BufferedReader(freader);
                 String line = null;
                 while ((line = in.readLine()) != null) {
-                    out.println(getProject().replaceProperties(line));
+                    out.write(getProject().replaceProperties(line));
+                    out.newLine();
                 }
             } finally {
                 freader.close();
             }
         } else {
-            out.println(getProject().replaceProperties(buffer.substring(0)));
+            out.write(getProject().replaceProperties(buffer.substring(0)));
+            out.newLine();
         }
         out.flush();
     }

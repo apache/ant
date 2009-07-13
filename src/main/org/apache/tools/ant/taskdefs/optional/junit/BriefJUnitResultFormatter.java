@@ -18,14 +18,16 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
@@ -48,7 +50,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Used for writing the results.
      */
-    private PrintWriter output;
+    private BufferedWriter output;
 
     /**
      * Used as part of formatting the results.
@@ -58,7 +60,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Used for writing formatted results to.
      */
-    private PrintWriter resultWriter;
+    private BufferedWriter resultWriter;
 
     /**
      * Formatter for timings.
@@ -80,7 +82,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      */
     public BriefJUnitResultFormatter() {
         results = new StringWriter();
-        resultWriter = new PrintWriter(results);
+        resultWriter = new BufferedWriter(results);
     }
 
     /**
@@ -89,7 +91,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
      */
     public void setOutput(OutputStream out) {
         this.out = out;
-        output = new PrintWriter(out);
+        output = new BufferedWriter(new java.io.OutputStreamWriter(out));
     }
 
     /**
@@ -120,8 +122,12 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         StringBuffer sb = new StringBuffer("Testsuite: ");
         sb.append(suite.getName());
         sb.append(StringUtils.LINE_SEP);
-        output.write(sb.toString());
-        output.flush();
+        try {
+            output.write(sb.toString());
+            output.flush();
+        } catch (IOException ex) {
+            throw new BuildException(ex);
+        }
     }
 
     /**
@@ -164,6 +170,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
                 resultWriter.close();
                 output.write(results.toString());
                 output.flush();
+            } catch (IOException ex) {
+                throw new BuildException(ex);
             } finally {
                 if (out != System.out && out != System.err) {
                     FileUtils.close(out);
@@ -242,10 +250,17 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
             endTest(test);
         }
 
-        resultWriter.println(formatTest(test) + type);
-        resultWriter.println(error.getMessage());
-        String strace = JUnitTestRunner.getFilteredTrace(error);
-        resultWriter.println(strace);
-        resultWriter.println();
+        try {
+            resultWriter.write(formatTest(test) + type);
+            resultWriter.newLine();
+            resultWriter.write(error.getMessage());
+            resultWriter.newLine();
+            String strace = JUnitTestRunner.getFilteredTrace(error);
+            resultWriter.write(strace);
+            resultWriter.newLine();
+            resultWriter.newLine();
+        } catch (IOException ex) {
+            throw new BuildException(ex);
+        }
     }
 }

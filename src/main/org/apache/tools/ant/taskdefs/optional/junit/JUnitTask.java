@@ -27,7 +27,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
@@ -849,10 +848,10 @@ public class JUnitTask extends Task {
         // Create a temporary file to pass the test cases to run to
         // the runner (one test case per line)
         File casesFile = createTempPropertiesFile("junittestcases");
-        PrintWriter writer = null;
+        BufferedWriter writer = null;
         try {
             writer =
-                new PrintWriter(new BufferedWriter(new FileWriter(casesFile)));
+                new BufferedWriter(new BufferedWriter(new FileWriter(casesFile)));
 
             log("Creating casesfile '" + casesFile.getAbsolutePath()
                 + "' with content: ", Project.MSG_VERBOSE);
@@ -1969,15 +1968,16 @@ public class JUnitTask extends Task {
         return t;
     }
 
-    private static void printDual(PrintWriter w, PrintStream s, String text)
+    private static void printDual(BufferedWriter w, PrintStream s, String text)
         throws IOException {
-        w.print(text);
+        w.write(text);
         s.print(text);
     }
 
-    private static void printlnDual(PrintWriter w, PrintStream s, String text)
+    private static void printlnDual(BufferedWriter w, PrintStream s, String text)
         throws IOException {
-        w.println(text);
+        w.write(text);
+        w.newLine();
         s.println(text);
     }
 }

@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +27,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -878,7 +878,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             return stack;
         }
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
+        BufferedWriter pw = new BufferedWriter(sw);
         StringReader sr = new StringReader(stack);
         BufferedReader br = new BufferedReader(sr);
 
@@ -886,7 +886,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         try {
             while ((line = br.readLine()) != null) {
                 if (!filterLine(line)) {
-                    pw.println(line);
+                    pw.write(line);
+                    pw.newLine();
                 }
             }
         } catch (Exception e) {

@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.Vector;
@@ -441,11 +441,12 @@ public final class JavaEnvUtils {
     public static File createVmsJavaOptionFile(String[] cmd)
             throws IOException {
         File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null, false, true);
-        PrintWriter out = null;
+        BufferedWriter out = null;
         try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter(script)));
+            out = new BufferedWriter(new FileWriter(script));
             for (int i = 0; i < cmd.length; i++) {
-                out.println(cmd[i]);
+                out.write(cmd[i]);
+                out.newLine();
             }
         } finally {
             FileUtils.close(out);

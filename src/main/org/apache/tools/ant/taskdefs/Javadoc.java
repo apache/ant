@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.MalformedURLException;
@@ -1706,7 +1706,7 @@ public class Javadoc extends Task {
         }
 
         File tmpList = null;
-        PrintWriter srcListWriter = null;
+        BufferedWriter srcListWriter = null;
 
         try {
             /**
@@ -1717,7 +1717,7 @@ public class Javadoc extends Task {
                 tmpList = FILE_UTILS.createTempFile("javadoc", "", null, true, true);
                 toExecute.createArgument()
                     .setValue("@" + tmpList.getAbsolutePath());
-                srcListWriter = new PrintWriter(
+                srcListWriter = new BufferedWriter(
                     new FileWriter(tmpList.getAbsolutePath(),
                                    true));
             }
@@ -1730,9 +1730,7 @@ public class Javadoc extends Task {
             throw new BuildException("Error creating temporary file",
                                      e, getLocation());
         } finally {
-            if (srcListWriter != null) {
-                srcListWriter.close();
-            }
+            FileUtils.close(srcListWriter);
         }
 
         if (packageList != null) {
@@ -1898,7 +1896,7 @@ public class Javadoc extends Task {
     private void writeExternalArgs(Commandline toExecute) {
         // If using an external file, write the command line options to it
         File optionsTmpFile = null;
-        PrintWriter optionsListWriter = null;
+        BufferedWriter optionsListWriter = null;
         try {
             optionsTmpFile = FILE_UTILS.createTempFile(
                 "javadocOptions", "", null, true, true);
@@ -1906,7 +1904,7 @@ public class Javadoc extends Task {
             toExecute.clearArgs();
             toExecute.createArgument().setValue(
                 "@" + optionsTmpFile.getAbsolutePath());
-            optionsListWriter = new PrintWriter(
+            optionsListWriter = new BufferedWriter(
                 new FileWriter(optionsTmpFile.getAbsolutePath(), true));
             for (int i = 0; i < listOpt.length; i++) {
                 String string = listOpt[i];
@@ -1914,10 +1912,11 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue(string);
                 } else  {
                     if (string.startsWith("-")) {
-                        optionsListWriter.print(string);
-                        optionsListWriter.print(" ");
+                        optionsListWriter.write(string);
+                        optionsListWriter.write(" ");
                     } else {
-                        optionsListWriter.println(quoteString(string));
+                        optionsListWriter.write(quoteString(string));
+                        optionsListWriter.newLine();
                     }
                 }
             }
@@ -2170,13 +2169,14 @@ public class Javadoc extends Task {
         Vector sourceFilesToDoc,
         boolean useExternalFile,
         File    tmpList,
-        PrintWriter srcListWriter)
+        BufferedWriter srcListWriter)
         throws IOException {
         Enumeration e = packagesToDoc.elements();
         while (e.hasMoreElements()) {
             String packageName = (String) e.nextElement();
             if (useExternalFile) {
-                srcListWriter.println(packageName);
+                srcListWriter.write(packageName);
+                srcListWriter.newLine();
             } else {
                 toExecute.createArgument().setValue(packageName);
             }
@@ -2194,10 +2194,11 @@ public class Javadoc extends Task {
                     if (File.separatorChar == '\\') {
                         name = sourceFileName.replace(File.separatorChar, '/');
                     }
-                    srcListWriter.println("\"" + name + "\"");
+                    srcListWriter.write("\"" + name + "\"");
                 } else {
-                    srcListWriter.println(sourceFileName);
+                    srcListWriter.write(sourceFileName);
                 }
+                srcListWriter.newLine();
             } else {
                 toExecute.createArgument().setValue(sourceFileName);
             }

@@ -21,10 +21,10 @@ package org.apache.tools.ant.taskdefs.compilers;
 //Java5 style
 //import static org.apache.tools.ant.util.StringUtils.LINE_SEP;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
@@ -467,18 +467,19 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              */
             if (Commandline.toString(args).length() > COMMAND_LINE_LIMIT
                 && firstFileName >= 0) {
-                PrintWriter out = null;
+                BufferedWriter out = null;
                 try {
                     tmpFile = FILE_UTILS.createTempFile(
                         "files", "", getJavac().getTempdir(), true, true);
-                    out = new PrintWriter(new FileWriter(tmpFile));
+                    out = new BufferedWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {
                             args[i] = args[i].replace(File.separatorChar, '/');
-                            out.println("\"" + args[i] + "\"");
+                            out.write("\"" + args[i] + "\"");
                         } else {
-                            out.println(args[i]);
+                            out.write(args[i]);
                         }
+                        out.newLine();
                     }
                     out.flush();
                     commandArray = new String[firstFileName + 1];

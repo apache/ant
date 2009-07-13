@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.Hashtable;
@@ -61,7 +61,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Convenience layer on top of {@link #inner inner}.
      */
-    private PrintWriter wri;
+    private BufferedWriter wri;
     /**
      * Suppress endTest if testcase failed.
      */
@@ -73,7 +73,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     /** No arg constructor */
     public PlainJUnitResultFormatter() {
         inner = new StringWriter();
-        wri = new PrintWriter(inner);
+        wri = new BufferedWriter(inner);
     }
 
     /** {@inheritDoc}. */
@@ -185,7 +185,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             return;
         }
         synchronized (wri) {
-            wri.print("Testcase: "
+            try {
+            wri.write("Testcase: "
                       + JUnitVersionHelper.getTestCaseName(test));
             Long l = (Long) testStarts.get(test);
             double seconds = 0;
@@ -195,7 +196,11 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                     (System.currentTimeMillis() - l.longValue()) / ONE_SECOND;
             }
 
-            wri.println(" took " + nf.format(seconds) + " sec");
+            wri.write(" took " + nf.format(seconds) + " sec");
+            wri.newLine();
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            }
         }
     }
 
@@ -239,11 +244,17 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                 failed.put(test, Boolean.TRUE);
             }
 
-            wri.println(type);
-            wri.println(t.getMessage());
+            try {
+            wri.write(type);
+            wri.newLine();
+            wri.write(t.getMessage());
+            wri.newLine();
             String strace = JUnitTestRunner.getFilteredTrace(t);
-            wri.print(strace);
-            wri.println("");
+            wri.write(strace);
+            wri.newLine();
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            }
         }
     }
 
