@@ -539,6 +539,9 @@ public class Jar extends Zip {
         OutputStreamWriter osw = new OutputStreamWriter(baos, Manifest.JAR_ENCODING);
         PrintWriter writer = new PrintWriter(osw);
         manifest.write(writer);
+        if (writer.checkError()) {
+            throw new IOException("Encountered an error writing the manifest");
+        }
         writer.close();
 
         ByteArrayInputStream bais =
@@ -626,6 +629,9 @@ public class Jar extends Zip {
             }
         }
 
+        if (writer.checkError()) {
+            throw new IOException("Encountered an error writing jar index");
+        }
         writer.close();
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());

@@ -117,6 +117,10 @@ public class AntStructure extends Task {
 
             printer.printTail(out);
 
+            if (out.checkError()) {
+                throw new IOException("Encountered an error writing Ant"
+                                      + " structure");
+            }
         } catch (IOException ioe) {
             throw new BuildException("Error writing "
                                      + output.getAbsolutePath(), ioe, getLocation());

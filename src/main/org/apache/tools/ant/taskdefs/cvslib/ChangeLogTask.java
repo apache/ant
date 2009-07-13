@@ -471,6 +471,10 @@ public class ChangeLogTask extends AbstractCvsTask {
             final ChangeLogWriter serializer = new ChangeLogWriter();
 
             serializer.printChangeLog(writer, entrySet);
+
+            if (writer.checkError()) {
+                throw new IOException("Encountered an error writing changelog");
+            }
         } catch (final UnsupportedEncodingException uee) {
             getProject().log(uee.toString(), Project.MSG_ERR);
         } catch (final IOException ioe) {

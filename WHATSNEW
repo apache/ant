@@ -392,6 +392,11 @@ Fixed bugs:
    which confused some untar implementations.
    Bugzilla Report 47421.
 
+ * various places where unchecked PrintWriters could hide exceptions
+   have been revisited to now check the error status or not use a
+   PrintWriter at all.
+   Bugzilla Report 43537.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

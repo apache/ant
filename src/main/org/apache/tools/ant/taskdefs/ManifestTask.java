@@ -251,6 +251,9 @@ public class ManifestTask extends Task {
             OutputStreamWriter osw = new OutputStreamWriter(fos, Manifest.JAR_ENCODING);
             w = new PrintWriter(osw);
             toWrite.write(w);
+            if (w.checkError()) {
+                throw new IOException("Encountered an error writing manifest");
+            }
         } catch (IOException e) {
             throw new BuildException("Failed to write " + manifestFile,
                                      e, getLocation());

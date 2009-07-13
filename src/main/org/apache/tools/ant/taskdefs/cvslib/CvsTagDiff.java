@@ -445,6 +445,9 @@ public class CvsTagDiff extends AbstractCvsTask {
             }
             DOM_WRITER.closeElement(root, writer, 0, "\t", true);
             writer.flush();
+            if (writer.checkError()) {
+                throw new IOException("Encountered an error writing tagdiff");
+            }
             writer.close();
         } catch (UnsupportedEncodingException uee) {
             log(uee.toString(), Project.MSG_ERR);

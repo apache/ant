@@ -791,8 +791,10 @@ public class NetRexxC extends MatchingTask {
 
         try {
             StringWriter out = new StringWriter();
+            PrintWriter w = null;
             int rc =
-                COM.ibm.netrexx.process.NetRexxC.main(new Rexx(compileArgs), new PrintWriter(out));
+                COM.ibm.netrexx.process.NetRexxC.main(new Rexx(compileArgs),
+                                                      w = new PrintWriter(out));
             String sdir = srcDir.getAbsolutePath();
             String ddir = destDir.getAbsolutePath();
             boolean doReplace = !(sdir.equals(ddir));
@@ -838,6 +840,9 @@ public class NetRexxC extends MatchingTask {
             if (rc > 1) {
                 throw new BuildException("Compile failed, messages should "
                     + "have been provided.");
+            }
+            if (w.checkError()) {
+                throw new IOException("Encountered an error");
             }
         } catch (IOException ioe) {
             throw new BuildException("Unexpected IOException while "

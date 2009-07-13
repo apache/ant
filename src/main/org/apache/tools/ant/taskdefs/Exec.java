@@ -232,7 +232,7 @@ public class Exec extends Task {
      */
     protected void logFlush() {
         if (fos != null) {
-          fos.close();
+            fos.close();
         }
     }
 

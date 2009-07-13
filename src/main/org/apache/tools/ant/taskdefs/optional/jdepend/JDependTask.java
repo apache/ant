@@ -455,6 +455,7 @@ public class JDependTask extends Task {
         }
 
         FileWriter fw = null;
+        PrintWriter pw = null;
         if (getOutputFile() != null) {
             try {
                 fw = new FileWriter(getOutputFile().getPath());
@@ -464,7 +465,8 @@ public class JDependTask extends Task {
                 log(msg);
                 throw new BuildException(msg);
             }
-            jdepend.setWriter(new PrintWriter(fw));
+            pw = new PrintWriter(fw);
+            jdepend.setWriter(pw);
             log("Output to be stored in " + getOutputFile().getPath());
         }
 
@@ -550,7 +552,14 @@ public class JDependTask extends Task {
             }
 
             jdepend.analyze();
+            if (pw.checkError()) {
+                throw new IOException("Encountered an error writing JDepend"
+                                      + " output");
+            }
+        } catch (IOException ex) {
+            throw new BuildException(ex);
         } finally {
+            FileUtils.close(pw);
             FileUtils.close(fw);
         }
         return SUCCESS;
