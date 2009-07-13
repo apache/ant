@@ -87,7 +87,13 @@
                 <item name="Introduction"         href="/projects/ivy.html"/>
                 <item name="Homepage"             href="http://ant.apache.org/ivy/"/>
                 <item name="Distributions"        href="http://ant.apache.org/ivy/download.cgi"/>
-                <item name="Wiki"                 href="http://wiki.apache.org/ivy/"/>
+                <item name="Wiki"                 href="http://cwiki.apache.org/IVY/"/>
+            </menu>
+            <menu name="IvyDE">
+                <item name="Introduction"         href="/projects/ivyde.html"/>
+                <item name="Homepage"             href="http://ant.apache.org/ivy/ivyde"/>
+                <item name="Screenshots"          href="http://ant.apache.org/ivy/ivyde/screenshots.html"/>
+                <item name="Distributions"        href="http://ant.apache.org/ivy/ivyde/download.cgi"/>
             </menu>
         </menusection>
     </body>
