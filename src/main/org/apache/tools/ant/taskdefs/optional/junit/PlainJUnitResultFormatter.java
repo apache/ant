@@ -186,18 +186,18 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         }
         synchronized (wri) {
             try {
-            wri.write("Testcase: "
-                      + JUnitVersionHelper.getTestCaseName(test));
-            Long l = (Long) testStarts.get(test);
-            double seconds = 0;
-            // can be null if an error occurred in setUp
-            if (l != null) {
-                seconds =
-                    (System.currentTimeMillis() - l.longValue()) / ONE_SECOND;
-            }
+                wri.write("Testcase: "
+                          + JUnitVersionHelper.getTestCaseName(test));
+                Long l = (Long) testStarts.get(test);
+                double seconds = 0;
+                // can be null if an error occurred in setUp
+                if (l != null) {
+                    seconds =
+                        (System.currentTimeMillis() - l.longValue()) / ONE_SECOND;
+                }
 
-            wri.write(" took " + nf.format(seconds) + " sec");
-            wri.newLine();
+                wri.write(" took " + nf.format(seconds) + " sec");
+                wri.newLine();
             } catch (IOException ex) {
                 throw new BuildException(ex);
             }
@@ -245,13 +245,13 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
             }
 
             try {
-            wri.write(type);
-            wri.newLine();
-            wri.write(t.getMessage());
-            wri.newLine();
-            String strace = JUnitTestRunner.getFilteredTrace(t);
-            wri.write(strace);
-            wri.newLine();
+                wri.write(type);
+                wri.newLine();
+                wri.write(t.getMessage());
+                wri.newLine();
+                String strace = JUnitTestRunner.getFilteredTrace(t);
+                wri.write(strace);
+                wri.newLine();
             } catch (IOException ex) {
                 throw new BuildException(ex);
             }
