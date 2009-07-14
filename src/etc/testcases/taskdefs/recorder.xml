@@ -61,6 +61,13 @@
         <record name="${recdir}/rectest4.log" action="stop"/>
     </target>
 
+    <target name="subbuild">
+        <record name="${recdir}/rectest5.log" action="start"/>
+        <echo message="some message5"/>
+        <ant antfile="recorder2.xml"/>
+        <record name="${recdir}/rectest5.log" action="stop"/>
+    </target>
+
 
     <target name="cleanup">
        <delete dir="${recdir}"/>

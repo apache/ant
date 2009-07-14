@@ -82,4 +82,19 @@ public class RecorderTest extends BuildFileTest {
                                                       + "rectest4.log"), true));
     }
 
+    public void testSubBuild() throws IOException {
+        executeTarget("subbuild");
+        assertTrue(FILE_UTILS
+                   .contentEquals(project.resolveFile(REC_IN
+                                                      + "rectest5.result"),
+                                  project.resolveFile(REC_DIR
+                                                      + "rectest5.log"), true));
+        assertTrue(FILE_UTILS
+                   .contentEquals(project.resolveFile(REC_IN
+                                                      + "rectest6.result"),
+                                  project.resolveFile(REC_DIR
+                                                      + "rectest6.log"), true));
+                                                      
+    }
+
 }

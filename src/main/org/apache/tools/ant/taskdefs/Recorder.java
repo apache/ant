@@ -64,7 +64,7 @@ public class Recorder extends Task implements SubBuildListener {
     private int loglevel = -1;
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
-    /** The list of recorder entries. */
+    /** The recorder entries keyed by Project. Each value is another Hashtable of filename to RecorderEntry. */
     private static Hashtable recorderEntries = new Hashtable();
 
     //////////////////////////////////////////////////////////////////////
@@ -203,7 +203,12 @@ public class Recorder extends Task implements SubBuildListener {
      */
     protected RecorderEntry getRecorder(String name, Project proj)
          throws BuildException {
-        Object o = recorderEntries.get(name);
+        Hashtable entries = (Hashtable) recorderEntries.get(proj);
+        if (null == entries) {
+            entries = new Hashtable();
+            recorderEntries.put(proj, entries);
+        }
+        Object o = entries.get(name);
         RecorderEntry entry;
 
         if (o == null) {
@@ -216,7 +221,7 @@ public class Recorder extends Task implements SubBuildListener {
                 entry.openFile(append.booleanValue());
             }
             entry.setProject(proj);
-            recorderEntries.put(name, entry);
+            entries.put(name, entry);
         } else {
             entry = (RecorderEntry) o;
         }
@@ -306,7 +311,11 @@ public class Recorder extends Task implements SubBuildListener {
      * @since Ant 1.7
      */
     private void cleanup() {
-        recorderEntries.clear();
+        Hashtable entries = (Hashtable) recorderEntries.get(getProject());
+        if (null != entries) {
+            entries.clear();
+            recorderEntries.remove(entries);
+        }
         getProject().removeBuildListener(this);
     }
 }

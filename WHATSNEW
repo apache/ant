@@ -399,7 +399,10 @@ Fixed bugs:
 
  * filesetmanifest="mergewithoutmain" in <jar> didn't treat inline
    manifests as expected.
-   Bugzilla Report 29731. 
+   Bugzilla Report 29731.
+
+ * <record> didn't work properly with nested builds.
+   Bugzilla Report 41368. 
 
 Other changes:
 --------------
