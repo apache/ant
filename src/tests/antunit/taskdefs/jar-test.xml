@@ -120,4 +120,30 @@
     <au:assertResourceContains value="Second: Main Section"
                                resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
+
+  <target name="testWhenManifestOnly"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43946">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${output}/first.jar">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileExists file="${output}/first.jar"/>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+    <jar destfile="${output}/second.jar" whenmanifestonly="create">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileExists file="${output}/second.jar"/>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+    <jar destfile="${output}/third.jar" whenmanifestonly="skip">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileDoesntExist file="${output}/third.jar"/>
+    <au:assertLogContains text="skipping jar archive"/>
+    <au:expectfailure>
+      <jar destfile="${output}/forth.jar" whenmanifestonly="fail">
+        <fileset dir="${input}"/>
+      </jar>
+    </au:expectfailure>
+  </target>
 </project>
