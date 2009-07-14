@@ -397,6 +397,10 @@ Fixed bugs:
    PrintWriter at all.
    Bugzilla Report 43537.
 
+ * filesetmanifest="mergewithoutmain" in <jar> didn't treat inline
+   manifests as expected.
+   Bugzilla Report 29731. 
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

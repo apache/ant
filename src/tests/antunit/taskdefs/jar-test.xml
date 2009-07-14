@@ -86,4 +86,38 @@
     <au:assertResourceContains value="META-INF"
                                resource="${output}/META-INF/INDEX.LIST"/>
   </target>
+
+  <target name="testMergeWithouMain"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=29731">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/first.jar">
+      <manifest>
+        <attribute name="First" value="Main Section"/>
+        <section name="Nested">
+          <attribute name="First" value="Nested Section"/>
+        </section>
+      </manifest>
+    </jar>
+    <jar destfile="${output}/second.jar" filesetmanifest="mergewithoutmain">
+      <manifest>
+        <attribute name="Second" value="Main Section"/>
+        <section name="Nested">
+          <attribute name="Second" value="Nested Section"/>
+        </section>
+      </manifest>
+      <zipgroupfileset dir="${input}" includes="first.jar"/>
+    </jar>
+    <unjar src="${output}/second.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="First: Nested Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second: Nested Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceDoesntContain
+       value="First: Main Section"
+       resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second: Main Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
 </project>

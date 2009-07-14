@@ -513,7 +513,7 @@ public class Jar extends Zip {
                 finalManifest.merge(originalManifest);
             }
             finalManifest.merge(filesetManifest);
-            finalManifest.merge(configuredManifest);
+            finalManifest.merge(configuredManifest, !mergeManifestsMain);
             finalManifest.merge(manifest, !mergeManifestsMain);
 
             return finalManifest;
