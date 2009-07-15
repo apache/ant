@@ -1371,29 +1371,8 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            Resource[] resources = selectFileResources(initialResources[i]);
-            newerResources[i] =
-                ResourceUtils.selectOutOfDateSources(this,
-                                                     resources,
-                                                     myMapper,
-                                                     getZipScanner());
-            if (!doFilesonly) {
-                Union u = new Union();
-                u.addAll(Arrays
-                         .asList(selectDirectoryResources(initialResources[i])));
-                ResourceCollection rc =
-                    ResourceUtils.selectSources(this, u,
-                                                myMapper,
-                                                getZipScanner(),
-                                                MISSING_DIR_PROVIDER);
-                if (rc.size() > 0) {
-                    ArrayList newer = new ArrayList();
-                    newer.addAll(Arrays.asList(((Union) rc).listResources()));
-                    newer.addAll(Arrays.asList(newerResources[i]));
-                    newerResources[i] =
-                        (Resource[]) newer.toArray(newerResources[i]);
-                }
-            }
+            newerResources[i] = selectOutOfDateResources(initialResources[i],
+                                                         myMapper);
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -1477,29 +1456,8 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            Resource[] rs = selectFileResources(initialResources[i]);
-            newerResources[i] =
-                ResourceUtils.selectOutOfDateSources(this,
-                                                     rs,
-                                                     new IdentityMapper(),
-                                                     getZipScanner());
-            if (!doFilesonly) {
-                Union u = new Union();
-                u.addAll(Arrays
-                         .asList(selectDirectoryResources(initialResources[i])));
-                ResourceCollection rc =
-                    ResourceUtils.selectSources(this, u,
-                                                new IdentityMapper(),
-                                                getZipScanner(),
-                                                MISSING_DIR_PROVIDER);
-                if (rc.size() > 0) {
-                    ArrayList newer = new ArrayList();
-                    newer.addAll(Arrays.asList(((Union) rc).listResources()));
-                    newer.addAll(Arrays.asList(newerResources[i]));
-                    newerResources[i] =
-                        (Resource[]) newer.toArray(newerResources[i]);
-                }
-            }
+            newerResources[i] = selectOutOfDateResources(initialResources[i],
+                                                         new IdentityMapper());
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -1515,6 +1473,29 @@ public class Zip extends MatchingTask {
         }
 
         return new ArchiveState(needsUpdate, newerResources);
+    }
+
+    private Resource[] selectOutOfDateResources(Resource[] initial,
+                                                FileNameMapper mapper) {
+        Resource[] rs = selectFileResources(initial);
+        Resource[] result =
+            ResourceUtils.selectOutOfDateSources(this, rs, mapper,
+                                                 getZipScanner());
+        if (!doFilesonly) {
+            Union u = new Union();
+            u.addAll(Arrays.asList(selectDirectoryResources(initial)));
+            ResourceCollection rc =
+                ResourceUtils.selectSources(this, u, mapper,
+                                            getZipScanner(),
+                                            MISSING_DIR_PROVIDER);
+            if (rc.size() > 0) {
+                ArrayList newer = new ArrayList();
+                newer.addAll(Arrays.asList(((Union) rc).listResources()));
+                newer.addAll(Arrays.asList(result));
+                result = (Resource[]) newer.toArray(result);
+            }
+        }
+        return result;
     }
 
     /**
