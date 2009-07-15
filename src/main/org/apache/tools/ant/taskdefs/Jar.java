@@ -48,6 +48,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.spi.Service;
@@ -532,7 +533,7 @@ public class Jar extends Zip {
                 Project.MSG_WARN);
         }
 
-        zipDir(null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE,
+        zipDir((Resource) null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE,
                JAR_MARKER);
         // time to write the manifest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

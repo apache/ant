@@ -31,6 +31,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipExtraField;
 
 /**
  * A Resource representation of an entry in a zipfile.
@@ -39,6 +40,7 @@ import org.apache.tools.zip.ZipEntry;
 public class ZipResource extends ArchiveResource {
 
     private String encoding;
+    private ZipExtraField[] extras;
 
     /**
      * Default constructor.
@@ -166,6 +168,18 @@ public class ZipResource extends ArchiveResource {
     }
 
     /**
+     * Retrieves extra fields.
+     * @return an array of the extra fields
+     * @since Ant 1.8.0
+     */
+    public ZipExtraField[] getExtraFields() {
+        if (extras == null) {
+            return new ZipExtraField[0];
+        }
+        return extras;
+    }
+
+    /**
      * fetches information from the named entry inside the archive.
      */
     protected void fetchEntry() {
@@ -198,6 +212,7 @@ public class ZipResource extends ArchiveResource {
         setDirectory(e.isDirectory());
         setSize(e.getSize());
         setMode(e.getUnixMode());
+        extras = e.getExtraFields();
     }
 
 }

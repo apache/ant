@@ -49,6 +49,8 @@ import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.types.resources.ArchiveResource;
 import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
@@ -950,7 +952,9 @@ public class Zip extends MatchingTask {
             addParentDirs(base, name.substring(0, nextToLastSlash + 1),
                           zOut, prefix, defaultDirMode);
         }
-        addParentDirs(base, name, zOut, prefix, thisDirMode);
+        zipDir(r, zOut, prefix + name, thisDirMode,
+               r instanceof ZipResource
+               ? ((ZipResource) r).getExtraFields() : null);
     }
 
     /**
@@ -1551,7 +1555,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Add a directory to the zip stream.
-     * @param dir  the directort to add to the archive
+     * @param dir  the directory to add to the archive
      * @param zOut the stream to write to
      * @param vPath the name this entry shall have in the archive
      * @param mode the Unix permissions to set.
@@ -1560,6 +1564,23 @@ public class Zip extends MatchingTask {
      * @since Ant 1.6.3
      */
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
+                          int mode, ZipExtraField[] extra)
+        throws IOException {
+        zipDir(dir == null ? (Resource) null : new FileResource(dir),
+               zOut, vPath, mode, extra);
+    }
+
+    /**
+     * Add a directory to the zip stream.
+     * @param dir  the directory to add to the archive
+     * @param zOut the stream to write to
+     * @param vPath the name this entry shall have in the archive
+     * @param mode the Unix permissions to set.
+     * @param extra ZipExtraFields to add
+     * @throws IOException on error
+     * @since Ant 1.8.0
+     */
+    protected void zipDir(Resource dir, ZipOutputStream zOut, String vPath,
                           int mode, ZipExtraField[] extra)
         throws IOException {
         if (doFilesonly) {
@@ -1579,13 +1600,14 @@ public class Zip extends MatchingTask {
 
         if (!skipWriting) {
             ZipEntry ze = new ZipEntry (vPath);
-            if (dir != null && dir.exists()) {
-                // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(dir.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0));
+
+            // ZIPs store time with a granularity of 2 seconds, round up
+            int millisToAdd = roundUp ? ROUNDUP_MILLIS : 0;
+
+            if (dir != null && dir.isExists()) {
+                ze.setTime(dir.getLastModified() + millisToAdd);
             } else {
-                // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(System.currentTimeMillis()
-                           + (roundUp ? ROUNDUP_MILLIS : 0));
+                ze.setTime(System.currentTimeMillis() + millisToAdd);
             }
             ze.setSize (0);
             ze.setMethod (ZipEntry.STORED);

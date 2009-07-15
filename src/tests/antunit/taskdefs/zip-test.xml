@@ -86,8 +86,9 @@
         <fileset dir="${input}/build"/>
         <fileset dir="${input}/src" excludes="**/*.java"/>
       </jar>
-      <au:assertDestIsUptodate src="${output}/jar.jar"
+      <au:assertDestIsOutofdate src="${output}/jar.jar"
                                dest="${output}/reference.jar"/>
+      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
 
       <sleep seconds="1"/>
       <jar jarfile="${output}/jar.jar">
@@ -102,6 +103,23 @@
         <fileset dir="${input}/src" excludes="**/*.java"/>
       </jar>
       <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+    </target>
+
+    <target name="testNewEmptyDirUpdatesArchive">
+      <mkdir dir="${input}"/>
+      <touch file="${input}/x"/>
+      <mkdir dir="${output}"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}"/>
+      </jar>
+      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
+
+      <mkdir dir="${input}/y"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}"/>
+      </jar>
+      <au:assertDestIsOutofdate src="${output}/jar.jar"
                                dest="${output}/reference.jar"/>
     </target>
 </project>
