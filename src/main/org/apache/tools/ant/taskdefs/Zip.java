@@ -1354,8 +1354,9 @@ public class Zip extends MatchingTask {
             }
 
             Resource[] resources = initialResources[i];
-            resources = selectFileResources(resources);
-
+            if (doFilesonly) {
+                resources = selectFileResources(resources);
+            }
             newerResources[i] =
                 ResourceUtils.selectOutOfDateSources(this,
                                                      resources,
@@ -1445,8 +1446,9 @@ public class Zip extends MatchingTask {
             }
 
             Resource[] rs = initialResources[i];
-            rs = selectFileResources(rs);
-
+            if (doFilesonly) {
+                rs = selectFileResources(rs);
+            }
             newerResources[i] =
                 ResourceUtils.selectOutOfDateSources(this,
                                                      rs,
