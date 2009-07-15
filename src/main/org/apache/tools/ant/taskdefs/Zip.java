@@ -921,8 +921,7 @@ public class Zip extends MatchingTask {
                             ? fileMode : getUnixMode(resources[i], zf,
                                                      fileMode);
                         addResource(resources[i], name, prefix,
-                                    zOut, thisFileMode,
-                                    zf, zfs.getSrc(getProject()));
+                                    zOut, thisFileMode, zf);
                     }
                 }
             }
@@ -983,7 +982,7 @@ public class Zip extends MatchingTask {
      */
     private void addResource(Resource r, String name, String prefix,
                              ZipOutputStream zOut, int mode,
-                             ZipFile zf, File sourceArchive)
+                             ZipFile zf)
         throws IOException {
 
         if (zf != null) {
@@ -998,7 +997,7 @@ public class Zip extends MatchingTask {
                 try {
                     is = zf.getInputStream(ze);
                     zipFile(is, zOut, prefix + name, ze.getTime(),
-                            sourceArchive, mode);
+                            mode, ze.getExtraFields());
                 } finally {
                     doCompress = oldCompress;
                     FileUtils.close(is);
@@ -1009,7 +1008,8 @@ public class Zip extends MatchingTask {
             try {
                 is = r.getInputStream();
                 zipFile(is, zOut, prefix + name, r.getLastModified(),
-                        sourceArchive, mode);
+                        mode, r instanceof ZipResource
+                        ? ((ZipResource) r).getExtraFields() : null);
             } finally {
                 FileUtils.close(is);
             }
@@ -1065,7 +1065,7 @@ public class Zip extends MatchingTask {
                 } else {
                     addResource(resources[i], name, "", zOut,
                                 ArchiveFileSet.DEFAULT_FILE_MODE,
-                                null, null);
+                                null);
                 }
             }
         }
@@ -1639,7 +1639,31 @@ public class Zip extends MatchingTask {
      * @throws IOException on error
      */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified, File fromArchive, int mode)
+                           long lastModified,
+                           /* unused, BWC */ File fromArchive,
+                           int mode)
+        throws IOException {
+        zipFile(in, zOut, vPath, lastModified, mode, null);
+    }
+
+    /**
+     * Adds a new entry to the archive, takes care of duplicates as well.
+     *
+     * @param in the stream to read data for the entry from.  The
+     * caller of the method is responsible for closing the stream.
+     * @param zOut the stream to write to.
+     * @param vPath the name this entry shall have in the archive.
+     * @param lastModified last modification time for the entry.
+     * @param fromArchive the original archive we are copying this
+     * entry from, will be null if we are not copying from an archive.
+     * @param mode the Unix permissions to set.
+     * @param extra ZipExtraFields to add
+     *
+     * @since Ant 1.8.0
+     * @throws IOException on error
+     */
+    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
+                           long lastModified, int mode, ZipExtraField[] extra)
         throws IOException {
         if (entries.contains(vPath)) {
 
@@ -1708,6 +1732,10 @@ public class Zip extends MatchingTask {
 
             ze.setUnixMode(mode);
             zOut.putNextEntry(ze);
+
+            if (extra != null) {
+                ze.setExtraFields(extra);
+            }
 
             byte[] buffer = new byte[BUFFER_SIZE];
             int count = 0;
