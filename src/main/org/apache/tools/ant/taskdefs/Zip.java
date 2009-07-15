@@ -921,7 +921,9 @@ public class Zip extends MatchingTask {
                             ? fileMode : getUnixMode(resources[i], zf,
                                                      fileMode);
                         addResource(resources[i], name, prefix,
-                                    zOut, thisFileMode, zf);
+                                    zOut, thisFileMode, zf,
+                                    zfs == null
+                                    ? null : zfs.getSrc(getProject()));
                     }
                 }
             }
@@ -982,7 +984,7 @@ public class Zip extends MatchingTask {
      */
     private void addResource(Resource r, String name, String prefix,
                              ZipOutputStream zOut, int mode,
-                             ZipFile zf)
+                             ZipFile zf, File fromArchive)
         throws IOException {
 
         if (zf != null) {
@@ -997,7 +999,7 @@ public class Zip extends MatchingTask {
                 try {
                     is = zf.getInputStream(ze);
                     zipFile(is, zOut, prefix + name, ze.getTime(),
-                            mode, ze.getExtraFields());
+                            fromArchive, mode, ze.getExtraFields());
                 } finally {
                     doCompress = oldCompress;
                     FileUtils.close(is);
@@ -1008,7 +1010,7 @@ public class Zip extends MatchingTask {
             try {
                 is = r.getInputStream();
                 zipFile(is, zOut, prefix + name, r.getLastModified(),
-                        mode, r instanceof ZipResource
+                        fromArchive, mode, r instanceof ZipResource
                         ? ((ZipResource) r).getExtraFields() : null);
             } finally {
                 FileUtils.close(is);
@@ -1065,7 +1067,7 @@ public class Zip extends MatchingTask {
                 } else {
                     addResource(resources[i], name, "", zOut,
                                 ArchiveFileSet.DEFAULT_FILE_MODE,
-                                null);
+                                null, null);
                 }
             }
         }
@@ -1639,11 +1641,9 @@ public class Zip extends MatchingTask {
      * @throws IOException on error
      */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified,
-                           /* unused, BWC */ File fromArchive,
-                           int mode)
+                           long lastModified, File fromArchive, int mode)
         throws IOException {
-        zipFile(in, zOut, vPath, lastModified, mode, null);
+        zipFile(in, zOut, vPath, lastModified, fromArchive, mode, null);
     }
 
     /**
@@ -1663,8 +1663,12 @@ public class Zip extends MatchingTask {
      * @throws IOException on error
      */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified, int mode, ZipExtraField[] extra)
+                           long lastModified, File fromArchive,
+                           int mode, ZipExtraField[] extra)
         throws IOException {
+
+        // fromArchive is used in subclasses overriding this method
+
         if (entries.contains(vPath)) {
 
             if (duplicate.equals("preserve")) {

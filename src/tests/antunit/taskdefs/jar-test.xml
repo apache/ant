@@ -87,7 +87,7 @@
                                resource="${output}/META-INF/INDEX.LIST"/>
   </target>
 
-  <target name="testMergeWithouMain"
+  <target name="testMergeWithoutMain"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=29731">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
