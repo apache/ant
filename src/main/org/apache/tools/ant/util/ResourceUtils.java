@@ -130,12 +130,51 @@ public class ResourceUtils {
                                                             FileNameMapper mapper,
                                                             ResourceFactory targets,
                                                             final long granularity) {
+        logFuture(logTo, source, granularity);
+        ResourceSelectorProvider p = 
+            new ResourceSelectorProvider() {
+                public ResourceSelector
+                    getTargetSelectorForSource(final Resource sr) {
+                    return new ResourceSelector() {
+                        public boolean isSelected(Resource target) {
+                            /* Extra I/O, probably wasted:
+                               if (target.isDirectory()) {
+                               return false;
+                               }
+                            */
+                            return SelectorUtils.isOutOfDate(sr, target,
+                                                             granularity);
+                        }
+                    };
+                }
+            };
+        return selectSources(logTo, source, mapper, targets, p);
+    }
+
+    /**
+     * Tells which sources should be reprocessed because the given
+     * selector selects at least one target.
+     * 
+     * @param logTo where to send (more or less) interesting output.
+     * @param source ResourceCollection.
+     * @param mapper filename mapper indicating how to find the target Resources.
+     * @param targets object able to map a relative path as a Resource.
+     * @param selector returns a selector that is applied to target
+     * files.  If it selects at least one target the source will be
+     * added to the returned collection.
+     * @return ResourceCollection.
+     * @since Ant 1.8.0
+     */
+    public static ResourceCollection selectSources(ProjectComponent logTo,
+                                                   ResourceCollection source,
+                                                   FileNameMapper mapper,
+                                                   ResourceFactory targets,
+                                                   ResourceSelectorProvider selector) {
         if (source.size() == 0) {
             logTo.log("No sources found.", Project.MSG_VERBOSE);
             return Resources.NONE;
         }
         source = Union.getInstance(source);
-        logFuture(logTo, source, granularity);
 
         Union result = new Union();
         for (Iterator iter = source.iterator(); iter.hasNext();) {
@@ -168,16 +207,7 @@ public class ResourceUtils {
             }
             //find the out-of-date targets:
             Restrict r = new Restrict();
-            r.add(new ResourceSelector() {
-                public boolean isSelected(Resource target) {
-                    /* Extra I/O, probably wasted:
-                    if (target.isDirectory()) {
-                        return false;
-                    }
-                     */
-                    return SelectorUtils.isOutOfDate(sr, target, granularity);
-                }
-            });
+            r.add(selector.getTargetSelectorForSource(sr));
             r.add(targetColl);
             if (r.size() > 0) {
                 result.add(sr);
@@ -638,5 +668,9 @@ public class ResourceUtils {
                     + resource + "; using plain OutputStream", Project.MSG_VERBOSE);
         }
         return resource.getOutputStream();
+    }
+
+    public static interface ResourceSelectorProvider {
+        ResourceSelector getTargetSelectorForSource(Resource source);
     }
 }

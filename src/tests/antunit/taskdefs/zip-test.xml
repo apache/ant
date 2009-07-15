@@ -86,9 +86,8 @@
         <fileset dir="${input}/build"/>
         <fileset dir="${input}/src" excludes="**/*.java"/>
       </jar>
-      <au:assertDestIsOutofdate src="${output}/jar.jar"
+      <au:assertDestIsUptodate src="${output}/jar.jar"
                                dest="${output}/reference.jar"/>
-      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
 
       <sleep seconds="1"/>
       <jar jarfile="${output}/jar.jar">

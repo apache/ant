@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -52,7 +53,9 @@ import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.types.resources.ArchiveResource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.ZipResource;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
@@ -98,6 +101,21 @@ public class Zip extends MatchingTask {
     private Vector resources = new Vector();
     protected Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
+
+    private static final ResourceSelector MISSING_SELECTOR =
+        new ResourceSelector() {
+            public boolean isSelected(Resource target) {
+                return !target.isExists();
+            }
+        };
+
+    private static final ResourceUtils.ResourceSelectorProvider
+        MISSING_DIR_PROVIDER = new ResourceUtils.ResourceSelectorProvider() {
+                public ResourceSelector
+                    getTargetSelectorForSource(Resource sr) {
+                    return MISSING_SELECTOR;
+                }
+            };
 
     /**
      * If this flag is true, execute() will run most operations twice,
@@ -1353,15 +1371,29 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            Resource[] resources = initialResources[i];
-            if (doFilesonly) {
-                resources = selectFileResources(resources);
-            }
+            Resource[] resources = selectFileResources(initialResources[i]);
             newerResources[i] =
                 ResourceUtils.selectOutOfDateSources(this,
                                                      resources,
                                                      myMapper,
                                                      getZipScanner());
+            if (!doFilesonly) {
+                Union u = new Union();
+                u.addAll(Arrays
+                         .asList(selectDirectoryResources(initialResources[i])));
+                ResourceCollection rc =
+                    ResourceUtils.selectSources(this, u,
+                                                myMapper,
+                                                getZipScanner(),
+                                                MISSING_DIR_PROVIDER);
+                if (rc.size() > 0) {
+                    ArrayList newer = new ArrayList();
+                    newer.addAll(Arrays.asList(((Union) rc).listResources()));
+                    newer.addAll(Arrays.asList(newerResources[i]));
+                    newerResources[i] =
+                        (Resource[]) newer.toArray(newerResources[i]);
+                }
+            }
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -1445,15 +1477,29 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            Resource[] rs = initialResources[i];
-            if (doFilesonly) {
-                rs = selectFileResources(rs);
-            }
+            Resource[] rs = selectFileResources(initialResources[i]);
             newerResources[i] =
                 ResourceUtils.selectOutOfDateSources(this,
                                                      rs,
                                                      new IdentityMapper(),
                                                      getZipScanner());
+            if (!doFilesonly) {
+                Union u = new Union();
+                u.addAll(Arrays
+                         .asList(selectDirectoryResources(initialResources[i])));
+                ResourceCollection rc =
+                    ResourceUtils.selectSources(this, u,
+                                                new IdentityMapper(),
+                                                getZipScanner(),
+                                                MISSING_DIR_PROVIDER);
+                if (rc.size() > 0) {
+                    ArrayList newer = new ArrayList();
+                    newer.addAll(Arrays.asList(((Union) rc).listResources()));
+                    newer.addAll(Arrays.asList(newerResources[i]));
+                    newerResources[i] =
+                        (Resource[]) newer.toArray(newerResources[i]);
+                }
+            }
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -1912,25 +1958,60 @@ public class Zip extends MatchingTask {
      * @since Ant 1.6
      */
     protected Resource[] selectFileResources(Resource[] orig) {
+        return selectResources(orig,
+                               new ResourceSelector() {
+                                   public boolean isSelected(Resource r) {
+                                       if (!r.isDirectory()) {
+                                           return true;
+                                       } else if (doFilesonly) {
+                                           logOnFirstPass("Ignoring directory "
+                                                          + r.getName()
+                                                          + " as only files will"
+                                                          + " be added.",
+                                                          Project.MSG_VERBOSE);
+                                       }
+                                       return false;
+                                   }
+                               });
+    }
+
+    /**
+     * Drops all non-directory resources from the given array.
+     * @param orig the resources to filter
+     * @return the filters resources
+     * @since Ant 1.8.0
+     */
+    protected Resource[] selectDirectoryResources(Resource[] orig) {
+        return selectResources(orig,
+                               new ResourceSelector() {
+                                   public boolean isSelected(Resource r) {
+                                       return r.isDirectory();
+                                   }
+                               });
+    }
+
+    /**
+     * Drops all resources from the given array that are not selected
+     * @param orig the resources to filter
+     * @return the filters resources
+     * @since Ant 1.8.0
+     */
+    protected Resource[] selectResources(Resource[] orig,
+                                         ResourceSelector selector) {
         if (orig.length == 0) {
             return orig;
         }
 
-        Vector v = new Vector(orig.length);
+        ArrayList v = new ArrayList(orig.length);
         for (int i = 0; i < orig.length; i++) {
-            if (!orig[i].isDirectory()) {
-                v.addElement(orig[i]);
-            } else {
-                logOnFirstPass("Ignoring directory " + orig[i].getName()
-                               + " as only files will be added.",
-                               Project.MSG_VERBOSE);
+            if (selector.isSelected(orig[i])) {
+                v.add(orig[i]);
             }
         }
 
         if (v.size() != orig.length) {
             Resource[] r = new Resource[v.size()];
-            v.copyInto(r);
-            return r;
+            return (Resource[]) v.toArray(r);
         }
         return orig;
     }
