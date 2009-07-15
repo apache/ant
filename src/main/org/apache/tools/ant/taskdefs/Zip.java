@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -1523,18 +1525,29 @@ public class Zip extends MatchingTask {
         Resource[][] result = new Resource[rcs.length][];
         for (int i = 0; i < rcs.length; i++) {
             Iterator iter = rcs[i].iterator();
-            ArrayList rs = new ArrayList();
-            int lastDir = 0;
+            ArrayList dirs = new ArrayList();
+            ArrayList files = new ArrayList();
             while (iter.hasNext()) {
                 Resource r = (Resource) iter.next();
                 if (r.isExists()) {
                     if (r.isDirectory()) {
-                        rs.add(lastDir++, r);
+                        dirs.add(r);
                     } else {
-                        rs.add(r);
+                        files.add(r);
                     }
                 }
             }
+            // make sure directories are in alpha-order - this also
+            // ensures parents come before their children
+            Collections.sort(dirs, new Comparator() {
+                    public int compare(Object o1, Object o2) {
+                        Resource r1 = (Resource) o1;
+                        Resource r2 = (Resource) o2;
+                        return r1.getName().compareTo(r2.getName());
+                    }
+                });
+            ArrayList rs = new ArrayList(dirs);
+            rs.addAll(files);
             result[i] = (Resource[]) rs.toArray(new Resource[rs.size()]);
         }
         return result;
