@@ -894,89 +894,120 @@ public class Zip extends MatchingTask {
                 if ("".equals(name)) {
                     continue;
                 }
-                if (resources[i].isDirectory() && !name.endsWith("/")) {
-                    name = name + "/";
-                }
 
-                if (!doFilesonly && !dealingWithFiles
-                    && resources[i].isDirectory()
-                    && !zfs.hasDirModeBeenSet()) {
-                    int nextToLastSlash = name.lastIndexOf("/",
-                                                           name.length() - 2);
-                    if (nextToLastSlash != -1) {
-                        addParentDirs(base, name.substring(0,
-                                                           nextToLastSlash + 1),
-                                      zOut, prefix, dirMode);
+                if (resources[i].isDirectory()) {
+                    if (doFilesonly) {
+                        continue;
                     }
-                    if (zf != null) {
-                        ZipEntry ze = zf.getEntry(resources[i].getName());
-                        int unixMode = ze.getUnixMode();
-                        if ((unixMode == 0 || unixMode == UnixStat.DIR_FLAG)
-                            && !preserve0Permissions) {
-                            unixMode = dirMode;
-                        }
-                        addParentDirs(base, name, zOut, prefix,
-                                      unixMode);
-                    } else {
-                        ArchiveResource tr = (ArchiveResource) resources[i];
-                        addParentDirs(base, name, zOut, prefix,
-                                      tr.getMode());
-                    }
+                    int thisDirMode = zfs != null && zfs.hasDirModeBeenSet()
+                        ? dirMode : getUnixMode(resources[i], zf, dirMode);
+                    addDirectoryResource(resources[i], name, prefix,
+                                         base, zOut,
+                                         dirMode, thisDirMode);
 
-                } else {
+                } else { // !isDirectory
+
                     addParentDirs(base, name, zOut, prefix, dirMode);
-                }
 
-                if (!resources[i].isDirectory() && dealingWithFiles) {
-                    File f = FILE_UTILS.resolveFile(base,
-                                                   resources[i].getName());
-                    zipFile(f, zOut, prefix + name, fileMode);
-                } else if (!resources[i].isDirectory()) {
-                    if (zf != null) {
-                    ZipEntry ze = zf.getEntry(resources[i].getName());
-
-                    if (ze != null) {
-                        boolean oldCompress = doCompress;
-                        if (keepCompression) {
-                            doCompress = (ze.getMethod() == ZipEntry.DEFLATED);
-                        }
-                        InputStream is = null;
-                        try {
-                            is = zf.getInputStream(ze);
-                            int unixMode = ze.getUnixMode();
-                            if (zfs.hasFileModeBeenSet()
-                                || ((unixMode == 0
-                                     || unixMode == UnixStat.FILE_FLAG)
-                                    && !preserve0Permissions)) {
-                                unixMode = fileMode;
-                            }
-                            zipFile(is, zOut, prefix + name,
-                                    ze.getTime(), zfs.getSrc(getProject()),
-                                    unixMode);
-                        } finally {
-                            doCompress = oldCompress;
-                            FileUtils.close(is);
-                        }
-                    }
+                    if (dealingWithFiles) {
+                        File f = FILE_UTILS.resolveFile(base,
+                                                        resources[i].getName());
+                        zipFile(f, zOut, prefix + name, fileMode);
                     } else {
-                        ArchiveResource tr = (ArchiveResource) resources[i];
-                        InputStream is = null;
-                        try {
-                            is = tr.getInputStream();
-                            zipFile(is, zOut, prefix + name,
-                                    resources[i].getLastModified(),
-                                    zfs.getSrc(getProject()),
-                                    zfs.hasFileModeBeenSet() ? fileMode
-                                    : tr.getMode());
-                        } finally {
-                            FileUtils.close(is);
-                        }
+                        int thisFileMode =
+                            zfs != null && zfs.hasFileModeBeenSet()
+                            ? fileMode : getUnixMode(resources[i], zf,
+                                                     fileMode);
+                        addResource(resources[i], name, prefix,
+                                    zOut, thisFileMode,
+                                    zf, zfs.getSrc(getProject()));
                     }
                 }
             }
         } finally {
             if (zf != null) {
                 zf.close();
+            }
+        }
+    }
+
+    /**
+     * Add a directory entry to the archive using a specified
+     * Unix-mode and the default mode for its parent directories (if
+     * necessary).
+     */
+    private void addDirectoryResource(Resource r, String name, String prefix,
+                                      File base, ZipOutputStream zOut,
+                                      int defaultDirMode, int thisDirMode)
+        throws IOException {
+
+        if (!name.endsWith("/")) {
+            name = name + "/";
+        }
+
+        int nextToLastSlash = name.lastIndexOf("/", name.length() - 2);
+        if (nextToLastSlash != -1) {
+            addParentDirs(base, name.substring(0, nextToLastSlash + 1),
+                          zOut, prefix, defaultDirMode);
+        }
+        addParentDirs(base, name, zOut, prefix, thisDirMode);
+    }
+
+    /**
+     * Determine a Resource's Unix mode or return the given default
+     * value if not available.
+     */
+    private int getUnixMode(Resource r, ZipFile zf, int defaultMode)
+        throws IOException {
+
+        int unixMode = defaultMode;
+        if (zf != null) {
+            ZipEntry ze = zf.getEntry(r.getName());
+            unixMode = ze.getUnixMode();
+            if ((unixMode == 0 || unixMode == UnixStat.DIR_FLAG)
+                && !preserve0Permissions) {
+                unixMode = defaultMode;
+            }
+        } else if (r instanceof ArchiveResource) {
+            unixMode = ((ArchiveResource) r).getMode();
+        }
+        return unixMode;
+    }
+
+    /**
+     * Add a file entry.
+     */
+    private void addResource(Resource r, String name, String prefix,
+                             ZipOutputStream zOut, int mode,
+                             ZipFile zf, File sourceArchive)
+        throws IOException {
+
+        if (zf != null) {
+            ZipEntry ze = zf.getEntry(r.getName());
+
+            if (ze != null) {
+                boolean oldCompress = doCompress;
+                if (keepCompression) {
+                    doCompress = (ze.getMethod() == ZipEntry.DEFLATED);
+                }
+                InputStream is = null;
+                try {
+                    is = zf.getInputStream(ze);
+                    zipFile(is, zOut, prefix + name, ze.getTime(),
+                            sourceArchive, mode);
+                } finally {
+                    doCompress = oldCompress;
+                    FileUtils.close(is);
+                }
+            }
+        } else {
+            InputStream is = null;
+            try {
+                is = r.getInputStream();
+                zipFile(is, zOut, prefix + name, r.getLastModified(),
+                        sourceArchive, mode);
+            } finally {
+                FileUtils.close(is);
             }
         }
     }
@@ -1014,29 +1045,23 @@ public class Zip extends MatchingTask {
             if (fp != null) {
                 base = ResourceUtils.asFileResource(fp).getBaseDir();
             }
+
             if (resources[i].isDirectory()) {
-                if (!name.endsWith("/")) {
-                    name = name + "/";
-                }
-            }
+                addDirectoryResource(resources[i], name, "", base, zOut,
+                                     ArchiveFileSet.DEFAULT_DIR_MODE,
+                                     ArchiveFileSet.DEFAULT_DIR_MODE);
 
-            addParentDirs(base, name, zOut, "",
-                          ArchiveFileSet.DEFAULT_DIR_MODE);
+            } else {
+                addParentDirs(base, name, zOut, "",
+                              ArchiveFileSet.DEFAULT_DIR_MODE);
 
-            if (!resources[i].isDirectory()) {
                 if (fp != null) {
                     File f = (fp).getFile();
                     zipFile(f, zOut, name, ArchiveFileSet.DEFAULT_FILE_MODE);
                 } else {
-                    InputStream is = null;
-                    try {
-                        is = resources[i].getInputStream();
-                        zipFile(is, zOut, name,
-                                resources[i].getLastModified(),
-                                null, ArchiveFileSet.DEFAULT_FILE_MODE);
-                    } finally {
-                        FileUtils.close(is);
-                    }
+                    addResource(resources[i], name, "", zOut,
+                                ArchiveFileSet.DEFAULT_FILE_MODE,
+                                null, null);
                 }
             }
         }
