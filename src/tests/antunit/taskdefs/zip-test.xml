@@ -115,6 +115,7 @@
       <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
 
       <mkdir dir="${input}/y"/>
+      <sleep seconds="2"/>
       <jar jarfile="${output}/jar.jar">
         <fileset dir="${input}"/>
       </jar>
