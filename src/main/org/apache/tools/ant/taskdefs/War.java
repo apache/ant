@@ -188,7 +188,7 @@ public class War extends Jar {
                 addFile = false;
                 //check to see if we warn or not
                 if (!FILE_UTILS.fileNameEquals(addedWebXmlFile, file)) {
-                    logOnFirstPass("Warning: selected " + archiveType
+                    logWhenWriting("Warning: selected " + archiveType
                                    + " files include a second "
                                    + XML_DESCRIPTOR_PATH
                                    + " which will be ignored.\n"

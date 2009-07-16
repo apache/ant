@@ -130,7 +130,7 @@ public class Ear extends Jar {
             if (deploymentDescriptor != null
                 || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
-                logOnFirstPass("Warning: selected " + archiveType
+                logWhenWriting("Warning: selected " + archiveType
                                + " files include a " + XML_DESCRIPTOR_PATH
                                + " which will"
                                + " be ignored (please use appxml attribute to "

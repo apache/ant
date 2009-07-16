@@ -667,7 +667,7 @@ public class Jar extends Zip {
                 filesetManifest(fromArchive, is);
             }
         } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
-            logOnFirstPass("Warning: selected " + archiveType
+            logWhenWriting("Warning: selected " + archiveType
                            + " files include a " + INDEX_NAME + " which will"
                            + " be replaced by a newly generated one.",
                            Project.MSG_WARN);
@@ -704,7 +704,7 @@ public class Jar extends Zip {
         } else if (filesetManifestConfig != null
                     && !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
-            logOnFirstPass("Found manifest to merge in file " + file,
+            logWhenWriting("Found manifest to merge in file " + file,
                            Project.MSG_VERBOSE);
 
             try {
@@ -939,7 +939,7 @@ public class Jar extends Zip {
             if (strict.getValue().equalsIgnoreCase("fail")) {
                 throw new BuildException(message.toString(), getLocation());
             } else {
-                logOnFirstPass(message.toString(), strict.getLogLevel());
+                logWhenWriting(message.toString(), strict.getLogLevel());
             }
         }
     }
