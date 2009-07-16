@@ -146,4 +146,37 @@
       </jar>
     </au:expectfailure>
   </target>
+
+  <target name="test-update-and-filesetmanifest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=30751">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/manifest.jar">
+      <manifest>
+        <attribute name="Origin" value="manifest.jar"/>
+      </manifest>
+    </jar>
+
+    <touch file="${input}/foo"/>
+    <jar destfile="${output}/test.jar">
+      <fileset dir="${input}" excludes="*.jar"/>
+      <manifest>
+        <attribute name="Second-Origin" value="test.jar"/>
+      </manifest>
+    </jar>
+
+    <touch file="${input}/bar"/>
+    <jar destfile="${output}/test.jar" update="true" filesetmanifest="merge">
+      <fileset dir="${input}" excludes="*.jar"/>
+      <zipgroupfileset dir="${input}" includes="*.jar"/>
+    </jar>
+
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/foo"/>
+    <au:assertFileExists file="${output}/bar"/>
+    <au:assertResourceContains value="Origin: manifest.jar"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second-Origin: test.jar"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
 </project>

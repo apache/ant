@@ -404,6 +404,10 @@ Fixed bugs:
  * <record> didn't work properly with nested builds.
    Bugzilla Report 41368. 
 
+ * <jar> with filesetmanifest different from skip didn't work if the
+   update attribute has been set to true.
+   Bugzilla Report 30751.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

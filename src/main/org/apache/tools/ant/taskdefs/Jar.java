@@ -47,6 +47,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -778,6 +779,14 @@ public class Jar extends Zip {
                                              boolean needsUpdate)
         throws BuildException {
 
+        if (skipWriting) {
+            // this pass is only there to construct the merged
+            // manifest this means we claim an update was needed and
+            // only include the manifests, skipping any uptodate
+            // checks here defering them for the second run
+            return new ArchiveState(true, grabManifests(rcs));
+        }
+
         // need to handle manifest as a special check
         if (zipFile.exists()) {
             // if it doesn't exist, it will get created anyway, don't
@@ -786,13 +795,13 @@ public class Jar extends Zip {
             try {
                 originalManifest = getManifestFromJar(zipFile);
                 if (originalManifest == null) {
-                    logOnFirstPass("Updating jar since the current jar has"
+                    log("Updating jar since the current jar has"
                                    + " no manifest", Project.MSG_VERBOSE);
                     needsUpdate = true;
                 } else {
                     Manifest mf = createManifest();
                     if (!mf.equals(originalManifest)) {
-                        logOnFirstPass("Updating jar since jar manifest has"
+                        log("Updating jar since jar manifest has"
                                        + " changed", Project.MSG_VERBOSE);
                         needsUpdate = true;
                     }
@@ -1115,6 +1124,30 @@ public class Jar extends Zip {
                 zf.close();
             }
         }
+    }
+
+    private Resource[][] grabManifests(ResourceCollection[] rcs) {
+        Resource[][] manifests = new Resource[rcs.length][];
+        for (int i = 0; i < rcs.length; i++) {
+            Resource[][] resources = null;
+            if (rcs[i] instanceof FileSet) {
+                resources = grabResources(new FileSet[] {(FileSet) rcs[i]});
+            } else {
+                resources = grabNonFileSetResources(new ResourceCollection[] {
+                        rcs[i]
+                    });
+            }
+            for (int j = 0; j < resources[0].length; j++) {
+                if (resources[0][j].getName().equalsIgnoreCase(MANIFEST_NAME)) {
+                    manifests[i] = new Resource[] {resources[0][j]};
+                    break;
+                }
+            }
+            if (manifests[i] == null) {
+                manifests[i] = new Resource[0];
+            }
+        }
+        return manifests;
     }
 
     /** The strict enumerated type. */
