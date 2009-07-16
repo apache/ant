@@ -15,8 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <description/>
+
+  <import file="../antunit-base.xml" />
+
   <target name="test-empty">
     <xmlproperty file="xmlproperty-test.xml"/>
     <au:assertTrue>
@@ -63,6 +66,79 @@
         </not>
       </condition>
     </fail>
+  </target>
+
+  <target name="createDocExample">
+    <mkdir dir="${input}"/>
+    <echoxml file="${input}/example.xml">
+      <root-tag>
+        <version value="0.0.1"/>
+        <build folder="build">
+          <classes id="build.classes" location="${build.folder}/classes"/>
+          <reference refid="build.classes"/>
+        </build>
+        <compile>
+          <classpath pathid="compile.classpath">
+            <pathelement location="${build.classes}"/>
+          </classpath>
+        </compile>
+        <run-time>
+          <jars>*.jar</jars>
+          <classpath pathid="run-time.classpath">
+            <path refid="compile.classpath"/>
+            <pathelement path="${run-time.jars}"/>
+          </classpath>
+        </run-time>
+      </root-tag>
+    </echoxml>
+  </target>
+
+  <target name="testSemanticLoadingDocExample" depends="createDocExample">
+    <xmlproperty file="${input}/example.xml" semanticAttributes="true"
+                 keepRoot="false"/>
+
+    <au:assertPropertyEquals name="version" value="0.0.1"/>
+    <au:assertPropertyEquals name="build.folder" value="build"/>
+    <property name="b.c" location="${build.folder}/classes"/>
+    <au:assertPropertyEquals name="build.classes" value="${b.c}"/>
+    <au:assertReferenceSet refid="build.classes"/>
+    <property name="b.c.r" refid="build.classes"/>
+    <au:assertPropertyEquals name="b.c.r" value="${b.c}"/>
+    <au:assertPropertyEquals name="build.reference" value="${b.c}"/>
+    <au:assertPropertyEquals name="run-time.jars" value="*.jar"/>
+    <au:assertReferenceIsType refid="compile.classpath" type="path"/>
+    <au:assertReferenceIsType refid="run-time.classpath" type="path"/>
+    <property name="c.c" refid="compile.classpath"/>
+    <au:assertPropertyEquals name="c.c" value="${b.c}"/>
+    <property name="rt.c" refid="run-time.classpath"/>
+    <property name="glob.dot.jar" location="*.jar"/>
+    <au:assertPropertyEquals name="rt.c"
+                             value="${b.c}${path.separator}${glob.dot.jar}"/>
+  </target>
+
+  <target name="testIncludeSemanticDocExample" depends="createDocExample">
+    <xmlproperty file="${input}/example.xml" semanticAttributes="true"
+                 keepRoot="false" includeSemanticAttribute="true"/>
+
+    <au:assertPropertyEquals name="version.value" value="0.0.1"/>
+    <au:assertPropertyEquals name="build.folder" value="build"/>
+    <property name="b.c" location="${build.folder}/classes"/>
+    <au:assertPropertyEquals name="build.classes.location" value="${b.c}"/>
+    <au:assertReferenceSet refid="build.classes"/>
+    <property name="b.c.r" refid="build.classes"/>
+    <au:assertPropertyEquals name="b.c.r" value="${b.c}"/>
+    <au:assertPropertyEquals name="build.reference" value="${b.c}"/>
+    <au:assertPropertyEquals name="run-time.jars" value="*.jar"/>
+    <au:assertReferenceIsType refid="compile.classpath" type="path"/>
+    <au:assertReferenceIsType refid="run-time.classpath" type="path"/>
+    <property name="c.c" refid="compile.classpath"/>
+    <!-- not set at all because property's name is build.classes.refid now -->
+    <property name="b.c.loc" location="${build.classes}"/>
+    <au:assertPropertyEquals name="c.c" value="${b.c.loc}"/>
+    <property name="rt.c" refid="run-time.classpath"/>
+    <property name="glob.dot.jar" location="*.jar"/>
+    <au:assertPropertyEquals name="rt.c"
+                             value="${b.c.loc}${path.separator}${glob.dot.jar}"/>
   </target>
 </project>
 

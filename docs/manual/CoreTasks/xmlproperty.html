@@ -237,7 +237,7 @@ is equivalent to the following properties:
 
 <h5>default loading (semanticAttributes=true)</h5>
 <p>This entry in a build file:
-<pre>   &lt;xmlproperty file="somefile.xml"
+<pre>   &lt;xmlproperty file="somefile.xml" keepRoot="false"
                 semanticAttributes="true"/&gt;</pre>
 is equivalent to the following entries in a build file:
 <pre>
@@ -246,22 +246,22 @@ is equivalent to the following entries in a build file:
   &lt;property name="build.classes" location="${build.folder}/classes" id="build.classes"/&gt;
   &lt;property name="build.reference" refid="build.classes"/&gt;
 
-  &lt;property name="run-time.jars" value="*.jar/&gt;
+  &lt;property name="run-time.jars" value="*.jar"/&gt;
 
-  &lt;classpath id="compile.classpath"&gt;
+  &lt;path id="compile.classpath"&gt;
     &lt;pathelement location="${build.classes}"/&gt;
-  &lt;/classpath&gt;
+  &lt;/path&gt;
 
-  &lt;classpath id="run-time.classpath"&gt;
+  &lt;path id="run-time.classpath"&gt;
     &lt;path refid="compile.classpath"/&gt;
     &lt;pathelement path="${run-time.jars}"/&gt;
-  &lt;/classpath&gt;
+  &lt;/path&gt;
 </pre>
 
 <h5>includeSemanticAttribute="true"</h5>
 <p>This entry in a build file:
 <pre>   &lt;xmlproperty file="somefile.xml"
-                semanticAttributes="true"
+                semanticAttributes="true" keepRoot="false"
                 includeSemanticAttribute="true"/&gt;
 </pre>
 is equivalent to the following entries in a build file:
@@ -269,18 +269,18 @@ is equivalent to the following entries in a build file:
   &lt;property name="version.value" value="0.0.1"/&gt;
   &lt;property name="build.folder" value="build"/&gt;
   &lt;property name="build.classes.location" location="${build.folder}/classes"/&gt;
-  &lt;property name="build.reference.refid" refid="build.location"/&gt;
+  &lt;property name="build.reference.refid" refid="build.classes"/&gt;
 
-  &lt;property name="run-time.jars" value="*.jar/&gt;
+  &lt;property name="run-time.jars" value="*.jar"/&gt;
 
-  &lt;classpath id="compile.classpath"&gt;
+  &lt;path id="compile.classpath"&gt;
     &lt;pathelement location="${build.classes}"/&gt;
-  &lt;/classpath&gt;
+  &lt;/path&gt;
 
-  &lt;classpath id="run-time.classpath"&gt;
+  &lt;path id="run-time.classpath"&gt;
     &lt;path refid="compile.classpath"/&gt;
     &lt;pathelement path="${run-time.jars}"/&gt;
-  &lt;/classpath&gt;
+  &lt;/path&gt;
 </pre>
 
 
