@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <target name="-create-native2ascii-adapter">
+    <property name="adapter.dir" location="${output}/adapter"/>
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/Adapter.java"><![CDATA[
+package org.example;
+import java.io.File;
+import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapter;
+import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
+
+public class Adapter implements Native2AsciiAdapter {
+    public boolean convert(Native2Ascii native2ascii, File f1, File f2) {
+        System.err.println("adapter called");
+        return true;
+    }
+}]]></echo>
+    <mkdir dir="${adapter.dir}"/>
+    <javac srcdir="${input}" destdir="${adapter.dir}"/>
+  </target>
+
+  <target name="testAdapterNotFound" depends="-create-native2ascii-adapter">
+    <au:expectfailure>
+      <native2ascii src="${input}" dest="${output}" includes="**/*.java"
+                    implementation="org.example.Adapter"/>
+    </au:expectfailure>
+    <au:assertLogDoesntContain text="adapter called"/>
+  </target>
+
+  <target name="testImplementationClasspath" depends="-create-native2ascii-adapter"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <native2ascii src="${input}" dest="${output}" includes="**/*.java"
+                  implementation="org.example.Adapter">
+      <implementationclasspath location="${adapter.dir}"/>
+    </native2ascii>
+    <au:assertLogContains text="adapter called"/>
+  </target>
+</project>

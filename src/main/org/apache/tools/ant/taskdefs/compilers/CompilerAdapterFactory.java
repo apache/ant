@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -62,6 +63,40 @@ public final class CompilerAdapterFactory {
      * a compiler adapter.
      */
     public static CompilerAdapter getCompiler(String compilerType, Task task)
+        throws BuildException {
+        return getCompiler(compilerType, task, null);
+    }
+
+    /**
+     * Based on the parameter passed in, this method creates the necessary
+     * factory desired.
+     *
+     * The current mapping for compiler names are as follows:
+     * <ul><li>jikes = jikes compiler
+     * <li>classic, javac1.1, javac1.2 = the standard compiler from JDK
+     * 1.1/1.2
+     * <li>modern, javac1.3, javac1.4, javac1.5 = the compiler of JDK 1.3+
+     * <li>jvc, microsoft = the command line compiler from Microsoft's SDK
+     * for Java / Visual J++
+     * <li>kjc = the kopi compiler</li>
+     * <li>gcj = the gcj compiler from gcc</li>
+     * <li>sj, symantec = the Symantec Java compiler</li>
+     * <li><i>a fully qualified classname</i> = the name of a compiler
+     * adapter
+     * </ul>
+     *
+     * @param compilerType either the name of the desired compiler, or the
+     * full classname of the compiler's adapter.
+     * @param task a task to log through.
+     * @param classpath the classpath to use when looking up an
+     * adapter class
+     * @return the compiler adapter
+     * @throws BuildException if the compiler type could not be resolved into
+     * a compiler adapter.
+     * @since Ant 1.8.0
+     */
+    public static CompilerAdapter getCompiler(String compilerType, Task task,
+                                              Path classpath)
         throws BuildException {
             boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
@@ -133,7 +168,8 @@ public final class CompilerAdapterFactory {
                 || compilerType.equalsIgnoreCase("symantec")) {
                 return new Sj();
             }
-            return resolveClassName(compilerType);
+            return resolveClassName(compilerType,
+                                task.getProject().createClassLoader(classpath));
         }
 
     /**
@@ -163,12 +199,15 @@ public final class CompilerAdapterFactory {
      * Throws a fit if it can't.
      *
      * @param className The fully qualified classname to be created.
+     * @param loader the classloader to use
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of CompilerAdapter.
      */
-    private static CompilerAdapter resolveClassName(String className)
+    private static CompilerAdapter resolveClassName(String className,
+                                                    ClassLoader loader)
         throws BuildException {
         return (CompilerAdapter) ClasspathUtils.newInstance(className,
+                loader != null ? loader :
                 CompilerAdapterFactory.class.getClassLoader(),
                 CompilerAdapter.class);
     }

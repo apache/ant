@@ -21,6 +21,8 @@ package org.apache.tools.ant.util.facade;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Helper class for facade implementations - encapsulates treatment of
@@ -51,6 +53,11 @@ public class FacadeTaskHelper {
      * The default value.
      */
     private String defaultValue;
+
+    /**
+     * User specified path used as classpath when loading the implementation.
+     */
+    private Path implementationClasspath;
 
     /**
      * @param defaultValue The default value for the implementation.
@@ -140,5 +147,19 @@ public class FacadeTaskHelper {
      */
     public boolean hasBeenSet() {
         return userChoice != null || magicValue != null;
+    }
+
+    /**
+     * The classpath to use when loading the implementation.
+     *
+     * @param project the current project
+     * @return a Path instance that may be appended to
+     * @since Ant 1.8.0
+     */
+    public Path getImplementationClasspath(Project project) {
+        if (implementationClasspath == null) {
+            implementationClasspath = new Path(project);
+        }
+        return implementationClasspath;
     }
 }

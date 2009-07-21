@@ -170,6 +170,13 @@ only if a given compiler implementation will be used.</p>
   </tr>
 </table>
 
+<h4>implementationclasspath <em>since Ant 1.8.0</em></h4>
+
+<p>A <a href="../using.html#path">PATH like structure</a> holding the
+  classpath to use when loading the compiler implementation if a
+  custom class has been specified.  Doesn't have any effect when
+  using one of the built-in compilers.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
 <p>makes a JNI header of the named class, using the JDK1.2 JNI model. Assuming

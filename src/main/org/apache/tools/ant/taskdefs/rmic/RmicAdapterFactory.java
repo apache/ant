@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 import java.util.Locale;
@@ -66,6 +67,35 @@ public final class RmicAdapterFactory {
      */
     public static RmicAdapter getRmic(String rmicType, Task task)
         throws BuildException {
+        return getRmic(rmicType, task, null);
+    }
+
+    /**
+     * Based on the parameter passed in, this method creates the necessary
+     * factory desired.
+     *
+     * <p>The current mapping for rmic names are as follows:</p>
+     * <ul><li>sun = SUN's rmic
+     * <li>kaffe = Kaffe's rmic
+     * <li><i>a fully qualified classname</i> = the name of a rmic
+     * adapter
+     * <li>weblogic = weblogic compiler
+     * <li>forking = Sun's RMIC by forking a new JVM
+     * </ul>
+     *
+     * @param rmicType either the name of the desired rmic, or the
+     * full classname of the rmic's adapter.
+     * @param task a task to log through.
+     * @param classpath the classpath to use when looking up an
+     * adapter class
+     * @return the compiler adapter
+     * @throws BuildException if the rmic type could not be resolved into
+     * a rmic adapter.
+     * @since Ant 1.8.0
+     */
+    public static RmicAdapter getRmic(String rmicType, Task task,
+                                      Path classpath)
+        throws BuildException {
         //convert to lower case in the English locale,
         String compiler = rmicType.toLowerCase(Locale.ENGLISH);
 
@@ -87,7 +117,8 @@ public final class RmicAdapterFactory {
             return new XNewRmic();
         }
         //no match? ask for the non-lower-cased type
-        return resolveClassName(rmicType);
+        return resolveClassName(rmicType,
+                                task.getProject().createClassLoader(classpath));
     }
 
     /**
@@ -95,12 +126,15 @@ public final class RmicAdapterFactory {
      * Throws a fit if it can't.
      *
      * @param className The fully qualified classname to be created.
+     * @param loader the classloader to use
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of RmicAdapter.
      */
-    private static RmicAdapter resolveClassName(String className)
+    private static RmicAdapter resolveClassName(String className,
+                                                ClassLoader loader)
             throws BuildException {
         return (RmicAdapter) ClasspathUtils.newInstance(className,
+                loader != null ? loader :
                 RmicAdapterFactory.class.getClassLoader(), RmicAdapter.class);
     }
 }

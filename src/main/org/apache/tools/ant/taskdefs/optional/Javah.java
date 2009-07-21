@@ -407,6 +407,16 @@ public class Javah extends Task {
     }
 
     /**
+     * The classpath to use when loading the javah implementation
+     * if it is not a built-in one.
+     *
+     * @since Ant 1.8.0
+     */
+    public Path createImplementationClasspath() {
+        return facade.getImplementationClasspath(getProject());
+    }
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
@@ -443,7 +453,8 @@ public class Javah extends Task {
 
         JavahAdapter ad =
             JavahAdapterFactory.getAdapter(facade.getImplementation(),
-                                           this);
+                                           this,
+                                           createImplementationClasspath());
         if (!ad.compile(this)) {
             throw new BuildException("compilation failed");
         }

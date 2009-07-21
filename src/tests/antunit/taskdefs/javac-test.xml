@@ -119,4 +119,40 @@
            updatedProperty="third-pass"/>
     <au:assertPropertyEquals name="third-pass" value="true"/>
   </target>
+
+  <target name="-create-javac-adapter">
+    <property name="adapter.dir" location="${output}/adapter"/>
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/Adapter.java"><![CDATA[
+package org.example;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
+import org.apache.tools.ant.taskdefs.Javac;
+
+public class Adapter implements CompilerAdapter {
+    public void setJavac(Javac attributes) {}
+    public boolean execute() {
+        System.err.println("adapter called");
+        return true;
+    }
+}]]></echo>
+    <mkdir dir="${adapter.dir}"/>
+    <javac srcdir="${input}" destdir="${adapter.dir}"/>
+  </target>
+
+  <target name="testCompilerNotFound" depends="-create-javac-adapter">
+    <au:expectfailure>
+      <javac srcdir="${input}" destdir="${output}"
+             compiler="org.example.Adapter"/>
+    </au:expectfailure>
+    <au:assertLogDoesntContain text="adapter called"/>
+  </target>
+
+  <target name="testCompilerClasspath" depends="-create-javac-adapter"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <javac srcdir="${input}" destdir="${output}"
+           compiler="org.example.Adapter">
+      <compilerclasspath location="${adapter.dir}"/>
+    </javac>
+    <au:assertLogContains text="adapter called"/>
+  </target>
 </project>

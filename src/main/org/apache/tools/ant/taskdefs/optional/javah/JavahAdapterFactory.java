@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.javah;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -58,13 +59,35 @@ public class JavahAdapterFactory {
     public static JavahAdapter getAdapter(String choice,
                                           ProjectComponent log)
         throws BuildException {
+        return getAdapter(choice, log, null);
+    }
+
+    /**
+     * Creates the JavahAdapter based on the user choice and
+     * potentially the VM vendor.
+     *
+     * @param choice the user choice (if any).
+     * @param log a ProjectComponent instance used to access Ant's
+     * logging system.
+     * @param classpath the classpath to use when looking up an
+     * adapter class
+     * @return The adapter to use.
+     * @throws BuildException if there is an error.
+     * @since Ant 1.8.0
+     */
+    public static JavahAdapter getAdapter(String choice,
+                                          ProjectComponent log,
+                                          Path classpath)
+        throws BuildException {
         if ((JavaEnvUtils.isKaffe() && choice == null)
             || Kaffeh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Kaffeh();
         } else if (SunJavah.IMPLEMENTATION_NAME.equals(choice)) {
             return new SunJavah();
         } else if (choice != null) {
-            return resolveClassName(choice);
+            return resolveClassName(choice,
+                                    log.getProject()
+                                    .createClassLoader(classpath));
         }
 
         // This default has been good enough until Ant 1.6.3, so stick
@@ -77,12 +100,15 @@ public class JavahAdapterFactory {
      * Throws a fit if it can't.
      *
      * @param className The fully qualified classname to be created.
+     * @param loader the classloader to use
      * @throws BuildException This is the fit that is thrown if className
      * isn't an instance of JavahAdapter.
      */
-    private static JavahAdapter resolveClassName(String className)
+    private static JavahAdapter resolveClassName(String className,
+                                                 ClassLoader loader)
             throws BuildException {
         return (JavahAdapter) ClasspathUtils.newInstance(className,
+                loader != null ? loader :
                 JavahAdapterFactory.class.getClassLoader(), JavahAdapter.class);
     }
 }

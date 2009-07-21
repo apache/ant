@@ -510,6 +510,16 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * The classpath to use when loading the compiler implementation
+     * if it is not a built-in one.
+     *
+     * @since Ant 1.8.0
+     */
+    public Path createCompilerClasspath() {
+        return facade.getImplementationClasspath(getProject());
+    }
+
+    /**
      * execute by creating an instance of an implementation
      * class and getting to do the work
      * @throws org.apache.tools.ant.BuildException
@@ -528,7 +538,8 @@ public class Rmic extends MatchingTask {
         if (verify) {
             log("Verify has been turned on.", Project.MSG_VERBOSE);
         }
-        RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this);
+        RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this,
+                                                         createCompilerClasspath());
 
         // now we need to populate the compiler adapter
         adapter.setRmic(this);

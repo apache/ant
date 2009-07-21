@@ -26,6 +26,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapter;
 import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapterFactory;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
@@ -174,6 +175,16 @@ public class Native2Ascii extends MatchingTask {
     }
 
     /**
+     * The classpath to use when loading the native2ascii
+     * implementation if it is not a built-in one.
+     *
+     * @since Ant 1.8.0
+     */
+    public Path createImplementationClasspath() {
+        return facade.getImplementationClasspath(getProject());
+    }
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
@@ -264,7 +275,8 @@ public class Native2Ascii extends MatchingTask {
         log("converting " + srcName, Project.MSG_VERBOSE);
         Native2AsciiAdapter ad =
             Native2AsciiAdapterFactory.getAdapter(facade.getImplementation(),
-                                                  this);
+                                                  this,
+                                                  createImplementationClasspath());
         if (!ad.convert(this, srcFile, destFile)) {
             throw new BuildException("conversion failed");
         }

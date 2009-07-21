@@ -860,6 +860,16 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * The classpath to use when loading the compiler implementation
+     * if it is not a built-in one.
+     *
+     * @since Ant 1.8.0
+     */
+    public Path createCompilerClasspath() {
+        return facade.getImplementationClasspath(getProject());
+    }
+
+    /**
      * Executes the task.
      * @exception BuildException if an error occurs
      */
@@ -1067,7 +1077,8 @@ public class Javac extends MatchingTask {
             }
 
             CompilerAdapter adapter =
-                CompilerAdapterFactory.getCompiler(compilerImpl, this);
+                CompilerAdapterFactory.getCompiler(compilerImpl, this,
+                                                   createCompilerClasspath());
 
             // now we need to populate the compiler adapter
             adapter.setJavac(this);

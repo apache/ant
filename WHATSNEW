@@ -784,6 +784,11 @@ Other changes:
    different executable.
    Bugzilla Report 42132.
 
+ * <javac>, <rmic>, <javah> and <native2ascci> now provide a nested
+   element to specify a classpath that will be used when loading the
+   task's (compiler) adapter class.
+   Bugzilla Issue 11143.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
