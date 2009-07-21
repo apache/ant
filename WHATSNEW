@@ -408,6 +408,10 @@ Fixed bugs:
    update attribute has been set to true.
    Bugzilla Report 30751.
 
+ * The default stylesheets for <junitreport> failed to properly escape
+   XML content in exception stack traces.
+   Bugzilla Report 39492
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

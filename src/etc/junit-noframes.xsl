@@ -451,7 +451,18 @@
 -->
 <xsl:template name="br-replace">
     <xsl:param name="word"/>
-    <xsl:value-of disable-output-escaping="yes" select='stringutils:replace(string($word),"&#xA;","&lt;br/>")'/>
+    <xsl:choose>
+      <xsl:when test="contains($word, '&#xa;')">
+        <xsl:value-of select="substring-before($word, '&#xa;')"/>
+        <br/>
+        <xsl:call-template name="br-replace">
+          <xsl:with-param name="word" select="substring-after($word, '&#xa;')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$word"/>
+      </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template name="display-time">
