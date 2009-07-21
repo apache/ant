@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.util.facade;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Helper class for facade implementations - encapsulates treatment of
@@ -34,7 +35,7 @@ public class FacadeTaskHelper {
     /**
      * Command line arguments.
      */
-    private Vector args = new Vector();
+    private List args = new ArrayList();
 
     /**
      * The explicitly chosen implementation.
@@ -109,7 +110,7 @@ public class FacadeTaskHelper {
      * @param arg an argument to add.
      */
     public void addImplementationArgument(ImplementationSpecificArgument arg) {
-        args.addElement(arg);
+        args.add(arg);
     }
 
     /**
@@ -118,18 +119,17 @@ public class FacadeTaskHelper {
      * @return an array of command line arguements.
      */
     public String[] getArgs() {
-        Vector tmp = new Vector(args.size());
-        for (Enumeration e = args.elements(); e.hasMoreElements();) {
+        List tmp = new ArrayList(args.size());
+        for (Iterator e = args.iterator(); e.hasNext();) {
             ImplementationSpecificArgument arg =
-                ((ImplementationSpecificArgument) e.nextElement());
+                ((ImplementationSpecificArgument) e.next());
             String[] curr = arg.getParts(getImplementation());
             for (int i = 0; i < curr.length; i++) {
-                tmp.addElement(curr[i]);
+                tmp.add(curr[i]);
             }
         }
         String[] res = new String[tmp.size()];
-        tmp.copyInto(res);
-        return res;
+        return (String[]) tmp.toArray(res);
     }
 
     /**
