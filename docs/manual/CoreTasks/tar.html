@@ -196,7 +196,7 @@ or files with the name <code>todo.html</code> are excluded.</p>
 <pre>
 &lt;tar longfile=&quot;gnu&quot;
      destfile=&quot;${dist.base}/${dist.name}-src.tar&quot;&gt;
-  &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
+  &lt;tarfileset dir=&quot;${dist.name}/..&quot; filemode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
   &lt;/tarfileset&gt;
