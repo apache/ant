@@ -210,7 +210,7 @@ public class Classloader extends Task {
                     + parent + " " + parentFirst, Project.MSG_DEBUG);
 
                 // The param is "parentFirst"
-                acl = new AntClassLoader((ClassLoader) parent,
+                acl = AntClassLoader.newAntClassLoader((ClassLoader) parent,
                          getProject(), classpath, parentFirst);
 
                 getProject().addReference(loaderName, acl);

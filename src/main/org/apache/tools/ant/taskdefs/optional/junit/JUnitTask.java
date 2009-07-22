@@ -1131,8 +1131,9 @@ public class JUnitTask extends Task {
         if (!cmd.haveClasspath()) {
             return;
         }
-        AntClassLoader loader = new AntClassLoader(
-            getProject(), cmd.createClasspath(getProject()));
+        AntClassLoader loader = AntClassLoader.newAntClassLoader(null,
+            getProject(), cmd.createClasspath(getProject()),
+            true);
         String projectResourceName = LoaderUtils.classNameToResource(
             Project.class.getName());
         URL previous = null;

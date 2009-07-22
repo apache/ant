@@ -411,8 +411,11 @@ public class JavaCC extends Task {
         String packagePrefix = null;
         String mainClass = null;
 
-        AntClassLoader l = new AntClassLoader();
-        l.setClassPath(path.concatSystemClasspath("ignore"));
+        AntClassLoader l =
+            AntClassLoader.newAntClassLoader(null, null,
+                                             path
+                                             .concatSystemClasspath("ignore"),
+                                             true);
         String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
         InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
                                                + ".class");

@@ -1456,4 +1456,14 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         return "AntClassLoader[" + getClasspath() + "]";
     }
 
+    /**
+     * Factory method
+     */
+    public static AntClassLoader newAntClassLoader(ClassLoader parent,
+                                                   Project project,
+                                                   Path path,
+                                                   boolean parentFirst) {
+        return new AntClassLoader(parent, project, path, parentFirst);
+    }
+
 }

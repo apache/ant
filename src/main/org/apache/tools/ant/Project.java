@@ -335,8 +335,8 @@ public class Project implements ResourceFactory {
      * @return an appropriate classloader.
      */
     public AntClassLoader createClassLoader(Path path) {
-        return new AntClassLoader(
-            getClass().getClassLoader(), this, path);
+        return AntClassLoader
+            .newAntClassLoader(getClass().getClassLoader(), this, path, true);
     }
 
     /**
@@ -350,7 +350,7 @@ public class Project implements ResourceFactory {
      */
     public AntClassLoader createClassLoader(
         ClassLoader parent, Path path) {
-        return new AntClassLoader(parent, this, path);
+        return AntClassLoader.newAntClassLoader(parent, this, path, true);
     }
 
     /**

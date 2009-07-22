@@ -135,7 +135,7 @@ public class WhichResource extends Task {
             getProject().log("using system classpath: " + classpath, Project.MSG_DEBUG);
         }
         AntClassLoader loader;
-        loader = new AntClassLoader(getProject().getCoreLoader(),
+        loader = AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
                     getProject(),
                     classpath, false);
         String loc = null;
