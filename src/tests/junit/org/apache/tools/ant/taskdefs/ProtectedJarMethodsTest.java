@@ -47,6 +47,7 @@ public class ProtectedJarMethodsTest extends BuildFileTest {
         ArrayList dirs = new ArrayList();
         ArrayList files = new ArrayList();
         String[] expectedDirs = new String[] {
+            "META-INF/",
             "sub/",
         };
         String[] expectedFiles = new String[] {
