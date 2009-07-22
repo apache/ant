@@ -918,6 +918,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * <p>Would override getResources if that wasn't final in Java
      * 1.4.</p>
+     *
+     * @since Ant 1.8.0
      */
     public Enumeration/*<URL>*/ getNamedResources(String name)
         throws IOException {
@@ -1377,6 +1379,16 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             project.removeBuildListener(this);
         }
         project = null;
+    }
+
+    /**
+     * Gets the parent as has been specified in the constructor or via
+     * setParent.
+     *
+     * @since Ant 1.8.0
+     */
+    public ClassLoader getConfiguredParent() {
+        return parent;
     }
 
     /**
