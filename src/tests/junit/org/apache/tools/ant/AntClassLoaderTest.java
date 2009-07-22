@@ -98,4 +98,25 @@ public class AntClassLoaderTest extends BuildFileTest {
             fail("loader should not fail even if project finished");
         }
     }
+
+    public void testGetPackage() throws Exception {
+        executeTarget("prepareGetPackageTest");
+        Path myPath = new Path(getProject());
+        myPath.setLocation(new File(getProject().getProperty("tmp.dir")
+                                    + "/test.jar"));
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        AntClassLoader loader = getProject().createClassLoader(myPath);
+        assertNotNull("should find class", loader.findClass("org.example.Foo"));
+        assertNotNull("should find package",
+                      new GetPackageWrapper(loader).getPackage("org.example"));
+    }
+
+    private static class GetPackageWrapper extends ClassLoader {
+        GetPackageWrapper(ClassLoader parent) {
+            super(parent);
+        }
+        public Package getPackage(String s) {
+            return super.getPackage(s);
+        }
+    }
 }

@@ -17,9 +17,9 @@
 -->
 <project name="antclassloader-test" basedir=".">
 
-    <property name="tmp.dir" location="tmp space"/>
+    <property name="tmp.dir" location="${java.io.tmpdir}/tmp space"/>
     <!-- ant for germans -->
-    <property name="tmp.dir.nonascii" value="&#0227;nt"/>
+    <property name="tmp.dir.nonascii" value="${java.io.tmpdir}/&#0227;nt"/>
     <property name="ext.dir.relative" value="ext"/>
     <property name="main.jar" location="${tmp.dir}/main.jar"/>
     <property name="ext.jar.relative" value="${ext.dir.relative}/ext.jar"/>
@@ -54,5 +54,17 @@
         <delete dir="${tmp.dir.nonascii}" quiet="true"/>
     </target>
 
+    <target name="prepareGetPackageTest" depends="setup">
+      <mkdir dir="${tmp.dir.nonascii}/org/example"/>
+      <echo file="${tmp.dir.nonascii}/org/example/Foo.java"><![CDATA[
+package org.example;
+public class Foo {}
+]]></echo>
+      <javac srcdir="${tmp.dir.nonascii}"
+             destdir="${tmp.dir.nonascii}"/>
+      <jar destfile="${tmp.dir}/test.jar">
+        <fileset dir="${tmp.dir.nonascii}" includes="**/*.class"/>
+      </jar>
+    </target>
 
 </project>
