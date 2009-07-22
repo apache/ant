@@ -299,6 +299,7 @@
 
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
+    <exclude name="**/HttpTest.java" if="offline"/>
   </patternset>
 
   <patternset id="teststhatfail">

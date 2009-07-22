@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.util.Locale;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,11 +31,16 @@ import org.apache.tools.ant.ProjectComponent;
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
  *   url - the URL of the request.
  *   errorsBeginAt - number at which errors begin at; default=400.
+ *   requestMethod - HTTP request method to use; GET, HEAD, etc. default=GET
  * @since Ant 1.5
  */
 public class Http extends ProjectComponent implements Condition {
     private static final int ERROR_BEGINS = 400;
+    private static final String DEFAULT_REQUEST_METHOD = "GET";
+
     private String spec = null;
+    private String requestMethod = DEFAULT_REQUEST_METHOD;
+
 
     /**
      * Set the url attribute
@@ -56,6 +62,23 @@ public class Http extends ProjectComponent implements Condition {
     }
 
     /**
+     * Sets the method to be used when issuing the HTTP request.
+     *
+     * @param method The HTTP request method to use. Valid values are
+     *               the same as those accepted by the
+     *               HttpURLConnection.setRequestMetho d() method,
+     *               such as "GET", "HEAD", "TRACE", etc. The default
+     *               if not specified is "GET".
+     *
+     * @see java.net.HttpURLConnection.setRequestMethod()
+     * @since Ant 1.8.0
+     */
+    public void setRequestMethod(String method) {
+        this.requestMethod = method == null ? DEFAULT_REQUEST_METHOD
+            : method.toUpperCase(Locale.US);
+    }
+
+    /**
      * @return true if the HTTP request succeeds
      * @exception BuildException if an error occurs
      */
@@ -70,6 +93,7 @@ public class Http extends ProjectComponent implements Condition {
                 URLConnection conn = url.openConnection();
                 if (conn instanceof HttpURLConnection) {
                     HttpURLConnection http = (HttpURLConnection) conn;
+                    http.setRequestMethod(requestMethod);
                     int code = http.getResponseCode();
                     log("Result code for " + spec + " was " + code,
                         Project.MSG_VERBOSE);
@@ -78,6 +102,9 @@ public class Http extends ProjectComponent implements Condition {
                     }
                     return false;
                 }
+            } catch (java.net.ProtocolException pe) {
+                throw new BuildException("Invalid HTTP protocol: "
+                                         + requestMethod, pe);
             } catch (java.io.IOException e) {
                 return false;
             }

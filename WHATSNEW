@@ -800,6 +800,10 @@ Other changes:
    and Ant is running on Java5 or more recent.
    Bugzilla Issue 46752.
 
+ * a new attributes can chose a different request method than GET for
+   the http condition.
+   Bugzilla Report 30244
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
