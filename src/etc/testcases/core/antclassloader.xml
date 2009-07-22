@@ -67,4 +67,9 @@ public class Foo {}
       </jar>
     </target>
 
+    <target name="signTestJar" depends="prepareGetPackageTest">
+      <signjar alias="testonly" keystore="../testkeystore"
+               storepass="apacheant" jar="${tmp.dir}/test.jar"/>
+    </target>
+
 </project>

@@ -28,6 +28,7 @@ import org.apache.tools.ant.types.Path;
 public class AntClassLoaderTest extends BuildFileTest {
 
     private Project p;
+    private AntClassLoader loader;
 
     public AntClassLoaderTest(String name) {
         super(name);
@@ -41,6 +42,9 @@ public class AntClassLoaderTest extends BuildFileTest {
     }
 
     public void tearDown() {
+        if (loader != null) {
+            loader.cleanup();
+        }
         getProject().executeTarget("cleanup");
     }
     //test inspired by bug report 37085
@@ -50,8 +54,8 @@ public class AntClassLoaderTest extends BuildFileTest {
         Path myPath = new Path(getProject());
         myPath.setLocation(new File(mainjarstring));
         getProject().setUserProperty("build.sysclasspath","ignore");
-        AntClassLoader myLoader = getProject().createClassLoader(myPath);
-        String path = myLoader.getClasspath();
+        loader = getProject().createClassLoader(myPath);
+        String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
     public void testJarWithManifestInNonAsciiDir() {
@@ -60,13 +64,13 @@ public class AntClassLoaderTest extends BuildFileTest {
         Path myPath = new Path(getProject());
         myPath.setLocation(new File(mainjarstring));
         getProject().setUserProperty("build.sysclasspath","ignore");
-        AntClassLoader myLoader = getProject().createClassLoader(myPath);
-        String path = myLoader.getClasspath();
+        loader = getProject().createClassLoader(myPath);
+        String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
     public void testCleanup() throws BuildException {
         Path path = new Path(p, ".");
-        AntClassLoader loader = p.createClassLoader(path);
+        loader = p.createClassLoader(path);
         try {
             // we don't expect to find this
             loader.findClass("fubar");
@@ -105,10 +109,42 @@ public class AntClassLoaderTest extends BuildFileTest {
         myPath.setLocation(new File(getProject().getProperty("tmp.dir")
                                     + "/test.jar"));
         getProject().setUserProperty("build.sysclasspath","ignore");
-        AntClassLoader loader = getProject().createClassLoader(myPath);
+        loader = getProject().createClassLoader(myPath);
         assertNotNull("should find class", loader.findClass("org.example.Foo"));
         assertNotNull("should find package",
                       new GetPackageWrapper(loader).getPackage("org.example"));
+    }
+
+    public void testCodeSource() throws Exception {
+        executeTarget("prepareGetPackageTest");
+        Path myPath = new Path(getProject());
+        myPath.setLocation(new File(getProject().getProperty("tmp.dir")
+                                    + "/test.jar"));
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        loader = getProject().createClassLoader(myPath);
+        Class foo = loader.findClass("org.example.Foo");
+        String codeSourceLocation =
+            foo.getProtectionDomain().getCodeSource().getLocation().toString();
+        assertTrue(codeSourceLocation + " should point to test.jar",
+                   codeSourceLocation.endsWith("test.jar"));
+    }
+
+    public void testSignedJar() throws Exception {
+        executeTarget("signTestJar");
+        File jar = new File(getProject().getProperty("tmp.dir")
+                            + "/test.jar");
+
+        Path myPath = new Path(getProject());
+        myPath.setLocation(jar);
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        loader = getProject().createClassLoader(myPath);
+        Class foo = loader.findClass("org.example.Foo");
+
+        assertNotNull("should find class", foo);
+        assertNotNull("should have certificates",
+                      foo.getProtectionDomain().getCodeSource()
+                      .getCertificates());
+        assertNotNull("should be signed", foo.getSigners());
     }
 
     private static class GetPackageWrapper extends ClassLoader {

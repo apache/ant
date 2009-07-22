@@ -27,6 +27,9 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import java.util.Vector;
 import java.util.Locale;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -1116,11 +1120,17 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     protected Class defineClassFromData(File container, byte[] classData, String classname)
             throws IOException {
         definePackage(container, classname);
-        // XXX should instead make a new ProtectionDomain with a CodeSource
-        // corresponding to container.toURI().toURL() and the same
-        // PermissionCollection as Project.class.protectionDomain had
-        return defineClass(classname, classData, 0, classData.length, Project.class
-                .getProtectionDomain());
+        ProtectionDomain currentPd = Project.class.getProtectionDomain();
+        String classResource = getClassFilename(classname);
+        CodeSource src = new CodeSource(FILE_UTILS.getFileURL(container),
+                                        getCertificates(container,
+                                                        classResource));
+        ProtectionDomain classesPd =
+            new ProtectionDomain(src, currentPd.getPermissions(),
+                                 this,
+                                 currentPd.getPrincipals());
+        return defineClass(classname, classData, 0, classData.length,
+                           classesPd);
     }
 
     /**
@@ -1173,6 +1183,41 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             jarFile = new JarFile(container);
             return jarFile.getManifest();
         } finally {
+            if (jarFile != null) {
+                jarFile.close();
+            }
+        }
+    }
+
+    /**
+     * Get the certificates for a given jar entry, if it is indeed a jar.
+     *
+     * @param container the File from which to read the entry
+     * @param entry the entry of which the certificates are requested
+     *
+     * @return the entry's certificates or null is the container is
+     *         not a jar or it has no certificates.
+     *
+     * @exception IOException if the manifest cannot be read.
+     */
+    private Certificate[] getCertificates(File container, String entry)
+        throws IOException {
+        if (container.isDirectory()) {
+            return null;
+        }
+        JarFile jarFile = null;
+        InputStream is = null;
+        try {
+            jarFile = new JarFile(container);
+            JarEntry ent = jarFile.getJarEntry(entry);
+            if (ent != null) {
+                // must read the input in order to obtain certificates
+                is = jarFile.getInputStream(ent);
+                while (is.read() >= 0);
+            }
+            return ent == null ? null : ent.getCertificates();
+        } finally {
+            FileUtils.close(is);
             if (jarFile != null) {
                 jarFile.close();
             }

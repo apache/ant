@@ -410,7 +410,10 @@ Fixed bugs:
 
  * The default stylesheets for <junitreport> failed to properly escape
    XML content in exception stack traces.
-   Bugzilla Report 39492
+   Bugzilla Report 39492.
+
+ * AntClassLoader didn't set the proper CodeSource for loaded classes.
+   Bugzilla Report 20174.
 
 Other changes:
 --------------
