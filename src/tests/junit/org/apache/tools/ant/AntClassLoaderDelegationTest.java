@@ -99,12 +99,7 @@ public class AntClassLoaderDelegationTest extends TestCase {
     }
     
     private static List enum2List(Enumeration e) {
-        // JDK 1.4: return Collections.list(e);
-        List l = new ArrayList();
-        while (e.hasMoreElements()) {
-            l.add(e.nextElement());
-        }
-        return l;
+        return Collections.list(e);
     }
     
     /** Special loader that just knows how to find TEST_RESOURCE. */

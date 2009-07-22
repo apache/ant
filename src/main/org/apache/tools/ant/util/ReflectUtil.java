@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
@@ -33,6 +34,23 @@ public class ReflectUtil {
 
     /**  private constructor */
     private ReflectUtil() {
+    }
+
+    /**
+     * Create an instance of a class using the constructor matching
+     * the given arguments.
+     * @since Ant 1.8.0
+     */
+    public static Object newInstance(Class ofClass,
+                                     Class[] argTypes,
+                                     Object[] args) {
+        try {
+            Constructor con = ofClass.getConstructor(argTypes);
+            return con.newInstance(args);
+        } catch (Exception t) {
+            throwBuildException(t);
+            return null; // NotReached
+        }
     }
 
     /**

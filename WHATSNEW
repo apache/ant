@@ -789,6 +789,14 @@ Other changes:
    task's (compiler) adapter class.
    Bugzilla Issue 11143.
 
+ * A new subclass org.apache.tools.ant.loader.AntClassLoader5 of
+   AntClassLoader has been added which overrides getResources
+   which became non-final in ClassLoader with Java5+ so
+   this method now behaves as expected.
+   The new subclass will be used by Ant internally if it is available
+   and Ant is running on Java5 or more recent.
+   Bugzilla Issue 46752.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

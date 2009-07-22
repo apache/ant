@@ -175,6 +175,7 @@
     <or>
       <filename name="${taskdefs.package}/AptTest*"/>
       <filename name="${util.package}/java15/*"/>
+      <filename name="${ant.package}/loader/*5*"/>
     </or>
   </selector>
 

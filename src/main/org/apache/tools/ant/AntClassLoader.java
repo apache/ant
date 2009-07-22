@@ -46,6 +46,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.VectorSet;
 import org.apache.tools.ant.launch.Locator;
 
@@ -911,6 +912,19 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     /**
+     * Finds all the resources with the given name. A resource is some
+     * data (images, audio, text, etc) that can be accessed by class
+     * code in a way that is independent of the location of the code.
+     *
+     * <p>Would override getResources if that wasn't final in Java
+     * 1.4.</p>
+     */
+    public Enumeration/*<URL>*/ getNamedResources(String name)
+        throws IOException {
+        return findResources(name, false);
+    }
+
+    /**
      * Returns an enumeration of URLs representing all the resources with the
      * given name by searching the class loader's classpath.
      *
@@ -920,14 +934,34 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @exception IOException if I/O errors occurs (can't happen)
      */
     protected Enumeration/*<URL>*/ findResources(String name) throws IOException {
+        return findResources(name, true);
+    }
+
+    /**
+     * Returns an enumeration of URLs representing all the resources with the
+     * given name by searching the class loader's classpath.
+     *
+     * @param name The resource name to search for.
+     *             Must not be <code>null</code>.
+     * @param parentHasBeenSearched whether ClassLoader.this.parent
+     * has been searched - will be true if the method is (indirectly)
+     * called from ClassLoader.getResources
+     * @return an enumeration of URLs for the resources
+     * @exception IOException if I/O errors occurs (can't happen)
+     */
+    protected Enumeration/*<URL>*/ findResources(String name,
+                                                 boolean parentHasBeenSearched)
+        throws IOException {
         Enumeration/*<URL>*/ mine = new ResourceEnumeration(name);
         Enumeration/*<URL>*/ base;
-        if (parent != null && parent != getParent()) {
+        if (parent != null && (!parentHasBeenSearched || parent != getParent())) {
             // Delegate to the parent:
             base = parent.getResources(name);
-            // Note: could cause overlaps in case ClassLoader.this.parent has matches.
+            // Note: could cause overlaps in case
+            // ClassLoader.this.parent has matches and
+            // parentHasBeenSearched is true
         } else {
-            // ClassLoader.this.parent is already delegated to from
+            // ClassLoader.this.parent is already delegated to for example from
             // ClassLoader.getResources, no need:
             base = new CollectionUtils.EmptyEnumeration();
         }
@@ -1456,6 +1490,22 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         return "AntClassLoader[" + getClasspath() + "]";
     }
 
+    private static Class subClassToLoad = null;
+    private static final Class[] CONSTRUCTOR_ARGS = new Class[] {
+        ClassLoader.class, Project.class, Path.class, Boolean.TYPE
+    };
+
+    static {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            try {
+                subClassToLoad =
+                    Class.forName("org.apache.tools.ant.loader.AntClassLoader5");
+            } catch (ClassNotFoundException e) {
+                // this is Java5 but the installation is lacking our subclass
+            }
+        }
+    }
+
     /**
      * Factory method
      */
@@ -1463,6 +1513,15 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                                                    Project project,
                                                    Path path,
                                                    boolean parentFirst) {
+        if (subClassToLoad != null) {
+            return (AntClassLoader)
+                ReflectUtil.newInstance(subClassToLoad,
+                                        CONSTRUCTOR_ARGS,
+                                        new Object[] {
+                                            parent, project, path,
+                                            Boolean.valueOf(parentFirst)
+                                        });
+        }
         return new AntClassLoader(parent, project, path, parentFirst);
     }
 
