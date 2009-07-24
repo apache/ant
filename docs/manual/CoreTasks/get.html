@@ -103,6 +103,18 @@ plain text' authentication is used. This is only secure over an HTTPS link.
     <td align="center" valign="top">No: default 0 which means no
       maximum time</td>
   </tr>  
+  <tr>
+    <td valign="top">retries</td>
+    <td valign="top">the number of retries on error<br/>
+      <em>since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No; default "3"</td>
+  </tr>
+  <tr>
+    <td valign="top">skipexisting</td>
+    <td valign="top">skip files that already exist on the local filesystem<br/>
+      <em>since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No; default "false"</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>

@@ -808,6 +808,10 @@ Other changes:
    expression based way to determine progress based on logged messages.
    Bugzilla Report 39957.
 
+ * the number of retries on error in <get> is now configurable.  <get>
+   can be told to not download files that already exist locally.
+   Bugzilla Report 40058.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

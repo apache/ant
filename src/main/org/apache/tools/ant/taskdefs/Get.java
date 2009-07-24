@@ -65,6 +65,8 @@ public class Get extends Task {
     private String uname = null;
     private String pword = null;
     private long maxTime = 0;
+    private int numberRetries = NUMBER_RETRIES;
+    private boolean skipExisting = false;
 
     /**
      * Does the work.
@@ -107,6 +109,12 @@ public class Get extends Task {
     public boolean doGet(int logLevel, DownloadProgress progress)
             throws IOException {
         checkAttributes();
+
+        if (dest.exists() && skipExisting) {
+            log("Destination already exists (skipping): "
+                + dest.getAbsolutePath(), logLevel);
+            return true;
+        }
 
         //dont do any progress, unless asked
         if (progress == null) {
@@ -267,10 +275,32 @@ public class Get extends Task {
      * The time in seconds the download is allowed to take before
      * being terminated.
      *
-     * @since ant 1.8.0
+     * @since Ant 1.8.0
      */
     public void setMaxTime(long maxTime) {
         this.maxTime = maxTime;
+    }
+
+    /**
+     * The number of retries to attempt upon error, defaults to 3.
+     *
+     * @param r retry count
+     *
+     * @since Ant 1.8.0
+     */
+    public void setRetries(int r) {
+        this.numberRetries = r;
+    }
+
+    /**
+     * Skip files that already exist locally.
+     *
+     * @param s "true" to skip existing destination files
+     *
+     * @since Ant 1.8.0
+     */
+    public void setSkipExisting(boolean s) {
+        this.skipExisting = s;
     }
 
     /**
@@ -536,7 +566,7 @@ public class Get extends Task {
 
         private boolean downloadFile()
                 throws FileNotFoundException, IOException {
-            for (int i = 0; i < NUMBER_RETRIES; i++) {
+            for (int i = 0; i < numberRetries; i++) {
                 // this three attempt trick is to get round quirks in different
                 // Java implementations. Some of them take a few goes to bind
                 // property; we ignore the first couple of such failures.
