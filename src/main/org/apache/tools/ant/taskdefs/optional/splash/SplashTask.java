@@ -47,6 +47,8 @@ public class SplashTask extends Task {
     private String port = "80";
     private int showDuration = DEFAULT_SHOW_DURATION;
     private boolean useProxy = false;
+    private String progressRegExp = null;
+    private String displayText = null;
 
     private static SplashScreen splash = null;
 
@@ -111,6 +113,29 @@ public class SplashTask extends Task {
         this.showDuration = duration;
     }
 
+
+    /**
+     * Progress regular expression which is used to parse the output
+     * and dig out current progress optional; if not provided,
+     * progress is increased every action and log output line
+     * @param progressRegExp Progress regular expression, exactly one
+     * group pattern must exists, and it represents the progress
+     * number (0-100) (i.e "Progress: (.*)%")
+     * @since Ant 1.8.0
+     */
+    public void setProgressRegExp(String progressRegExp) {
+        this.progressRegExp = progressRegExp;
+    }
+
+    /**
+     * Sets the display text presented in the splash window.
+     * optional; defaults to "Building ..." 
+     * @param displayText the display text presented the splash window
+     * @since Ant 1.8.0
+     */
+    public void setDisplayText(String displayText) {
+        this.displayText = displayText;
+    }
 
     /**
      * Execute the task.
@@ -201,7 +226,7 @@ public class SplashTask extends Task {
 
                 try {
                     ImageIcon img = new ImageIcon(bout.toByteArray());
-                    splash = new SplashScreen(img);
+                    splash = new SplashScreen(img, progressRegExp, displayText);
                     success = true;
                 } catch (Throwable e) {
                     logHeadless(e);
@@ -221,7 +246,8 @@ public class SplashTask extends Task {
             }
         } else {
             try {
-                splash = new SplashScreen("Image Unavailable.");
+                splash = new SplashScreen("Image Unavailable.", progressRegExp,
+                                          displayText);
                 success = true;
             } catch (Throwable e) {
                 logHeadless(e);
@@ -245,4 +271,5 @@ public class SplashTask extends Task {
             + e.getClass().getName() + " with message: " + e.getMessage(),
             Project.MSG_WARN);
     }
+
 }

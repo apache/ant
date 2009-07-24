@@ -25,6 +25,9 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -41,17 +44,35 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
     private int total;
     private static final int MIN = 0;
     private static final int MAX = 200;
+    private Pattern progressRegExpPattern;
 
     public SplashScreen(String msg) {
-        init(null);
-        setText(msg);
+        this(msg, null, null);
     }
 
     public SplashScreen(ImageIcon img) {
-        init(img);
+        this(img, null, null);
+    }
+
+    public SplashScreen(String msg, String progressRegExp, String displayText) {
+        init(null, progressRegExp, displayText);
+        setText(msg);
+    }
+
+    public SplashScreen(ImageIcon img, String progressRegExp,
+                        String displayText) {
+        init(img, progressRegExp, displayText);
     }
 
     protected void init(ImageIcon img) {
+        init(img, null, null);
+    }
+
+    protected void init(ImageIcon img, String progressRegExp,
+                        String displayText) {
+        if (progressRegExp != null) {
+            progressRegExpPattern = Pattern.compile(progressRegExp);
+        }
 
         JPanel pan = (JPanel) getContentPane();
         JLabel piccy;
@@ -62,7 +83,10 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         }
 
         piccy.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-        text = new JLabel("Building....", JLabel.CENTER);
+        if (displayText == null) {
+            displayText = "Building....";
+        }
+        text = new JLabel(displayText, JLabel.CENTER);
         text.setFont(new Font("Sans-Serif", Font.BOLD, FONT_SIZE));
         text.setBorder(BorderFactory.createEtchedBorder());
 
@@ -94,12 +118,14 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
     }
 
     public void actionPerformed(ActionEvent a) {
-        if (total < MAX) {
-            total++;
-        } else {
-            total = MIN;
+        if (!hasProgressPattern()) {
+            if (total < MAX) {
+                total++;
+            } else {
+                total = MIN;
+            }
+            pb.setValue(total);
         }
-        pb.setValue(total);
     }
 
     public void buildStarted(BuildEvent event) {
@@ -129,6 +155,26 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
 
     public void messageLogged(BuildEvent event) {
         actionPerformed(null);
+        if (hasProgressPattern()) {
+            String message = event.getMessage();
+            Matcher matcher = progressRegExpPattern.matcher(message);
+            if (matcher != null && matcher.matches()) {
+                String gr = matcher.group(1);
+                try {
+                    int i = Math.min(new Integer(gr).intValue() * 2, MAX);
+                    pb.setValue(i);
+                } catch (NumberFormatException e) {
+                    //TODO: how to reach logger?!?
+                    //log("Number parsing error in progressRegExp", Project.MSG_VERBOSE);
+
+                }
+            }
+        }
     }
+
+    protected boolean hasProgressPattern() {
+        return progressRegExpPattern != null;
+    }
+
 }
 

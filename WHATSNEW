@@ -804,6 +804,10 @@ Other changes:
    the http condition.
    Bugzilla Report 30244
 
+ * <splash> now supports a configurable display text and a regular
+   expression based way to determine progress based on logged messages.
+   Bugzilla Report 39957.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

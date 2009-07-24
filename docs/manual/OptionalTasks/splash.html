@@ -52,10 +52,28 @@ whilst waiting for your builds to complete...</p>
     splash in milliseconds.</td>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">5000 ms</td>
-  </tr>  
+  </tr>
+  <tr>
+    <td valign="top">progressregexp</td>
+    <td valign="top">Progress regular expression which is used to
+      parse the output and dig out current progress. Exactly one group
+      pattern must exists, and it represents the progress number (0-100)
+      (i.e "Progress: (.*)%")<br/>
+      <em>since Ant 1.8.0</em></td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">progress is increased every action
+      and log output line</td>
+  </tr>
+  <tr>
+    <td valign="top">displaytext</td>
+    <td valign="top">display text presented in the splash window<br/>
+      <em>since Ant 1.8.0</em></td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">Building ...</td>
+  </tr>
 </table>
 <h3>Deprecated properties</h3>
-  
+
 The following properties can be used to configure the proxy settings to retrieve
 an image from behind a firewall. However, the settings apply not just to this
 task, but to all following tasks. Therefore they are now mostly deprecated in 
@@ -63,7 +81,7 @@ preference to the <code>&lt;setproxy&gt;</code> task, that makes it clear to rea
 the build exactly what is going on. We say mostly as this task's support
 includes proxy authentication, so you may still need to use its
 proxy attributes.
-  
+
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top">useproxy</td>
@@ -110,8 +128,27 @@ proxy attributes.
            showduration=&quot;5000&quot;/&gt;
 
 </pre></blockquote>
-<p>Splashes the jakarta logo, for
-an initial period of 5 seconds.</p>
+<p>Splashes the jakarta logo, for an initial period of 5 seconds.</p>
+
+<p>Splash with controlled progress and nondefault text</p>
+<blockquote><pre>
+        &lt;target name="test_new_features"&gt;
+                &lt;echo&gt;New features&lt;/echo&gt;
+                &lt;splash progressRegExp="Progress: (.*)%" showduration="0" displayText="Test text"/&gt;
+                &lt;sleep seconds="1"/&gt;
+                &lt;echo&gt;Progress: 10%&lt;/echo&gt;
+                &lt;sleep seconds="1"/&gt;
+                &lt;echo&gt;Progress: 20%&lt;/echo&gt;
+                &lt;sleep seconds="1"/&gt;
+                &lt;echo&gt;Progress: 50%&lt;/echo&gt;
+                &lt;sleep seconds="1"/&gt;
+                &lt;echo&gt;Progress: 70%&lt;/echo&gt;
+                &lt;sleep seconds="1"/&gt;
+                &lt;echo&gt;Progress: 100%&lt;/echo&gt;
+                &lt;sleep seconds="3"/&gt;
+        &lt;/target&gt;
+</pre></blockquote>
+
 
 
 </body>
