@@ -267,11 +267,9 @@ public abstract class BuildFileTest extends TestCase {
         StringBuffer cleanedBuffer = new StringBuffer();
         for (int i = 0; i < buffer.length(); i++) {
             char ch = buffer.charAt(i);
-            if (ch == '\r') {
-                continue;
+            if (ch != '\r') {
+                cleanedBuffer.append(ch);
             }
-
-            cleanedBuffer.append(ch);
         }
         return cleanedBuffer.toString();
     }
