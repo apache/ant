@@ -265,11 +265,9 @@ public abstract class BuildFileTest extends TestCase {
 
     private String cleanBuffer(StringBuffer buffer) {
         StringBuffer cleanedBuffer = new StringBuffer();
-        boolean cr = false;
         for (int i = 0; i < buffer.length(); i++) {
             char ch = buffer.charAt(i);
             if (ch == '\r') {
-                cr = true;
                 continue;
             }
 
