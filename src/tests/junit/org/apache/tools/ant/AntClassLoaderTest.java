@@ -19,6 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.File;
+import java.io.IOException;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -145,6 +146,26 @@ public class AntClassLoaderTest extends BuildFileTest {
                       foo.getProtectionDomain().getCodeSource()
                       .getCertificates());
         assertNotNull("should be signed", foo.getSigners());
+    }
+
+    /**
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=47593
+     */
+    public void testInvalidZipException() throws Exception {
+        executeTarget("createNonJar");
+        File jar = new File(getProject().getProperty("tmp.dir")
+                            + "/foo.jar");
+
+        Path myPath = new Path(getProject());
+        myPath.setLocation(jar);
+        getProject().setUserProperty("build.sysclasspath","ignore");
+        loader = getProject().createClassLoader(myPath);
+        loader.getResource("foo.txt");
+        String log = getLog();
+        int startMessage = log.indexOf("Unable to obtain resource from ");
+        assertTrue(startMessage >= 0);
+        assertTrue(log.indexOf("foo.jar", startMessage) > 0);
+
     }
 
     private static class GetPackageWrapper extends ClassLoader {

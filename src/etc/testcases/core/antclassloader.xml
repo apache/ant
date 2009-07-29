@@ -72,4 +72,7 @@ public class Foo {}
                storepass="apacheant" jar="${tmp.dir}/test.jar"/>
     </target>
 
+    <target name="createNonJar">
+      <touch file="${tmp.dir}/foo.jar"/>
+    </target>
 </project>
