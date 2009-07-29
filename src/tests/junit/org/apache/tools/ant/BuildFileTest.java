@@ -477,7 +477,7 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * an output stream which saves stuff to our buffer.
      */
-    private static class AntOutputStream extends java.io.OutputStream {
+    protected static class AntOutputStream extends java.io.OutputStream {
         private StringBuffer buffer;
 
         public AntOutputStream( StringBuffer buffer ) {

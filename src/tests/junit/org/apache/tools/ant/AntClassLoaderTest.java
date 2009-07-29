@@ -19,7 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.PrintStream;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -160,12 +160,24 @@ public class AntClassLoaderTest extends BuildFileTest {
         myPath.setLocation(jar);
         getProject().setUserProperty("build.sysclasspath","ignore");
         loader = getProject().createClassLoader(myPath);
-        loader.getResource("foo.txt");
-        String log = getLog();
-        int startMessage = log.indexOf("Unable to obtain resource from ");
-        assertTrue(startMessage >= 0);
-        assertTrue(log.indexOf("foo.jar", startMessage) > 0);
-
+        PrintStream sysErr = System.err;
+        try {
+            StringBuffer errBuffer = new StringBuffer();
+            PrintStream err =
+                new PrintStream(new BuildFileTest.AntOutputStream(errBuffer));
+            System.setErr(err);
+            loader.getResource("foo.txt");
+            String log = getLog();
+            int startMessage = log.indexOf("Unable to obtain resource from ");
+            assertTrue(startMessage >= 0);
+            assertTrue(log.indexOf("foo.jar", startMessage) > 0);
+            log = errBuffer.toString();
+            startMessage = log.indexOf("Unable to obtain resource from ");
+            assertTrue(startMessage >= 0);
+            assertTrue(log.indexOf("foo.jar", startMessage) > 0);
+        } finally {
+            System.setErr(sysErr);
+        }
     }
 
     private static class GetPackageWrapper extends ClassLoader {
