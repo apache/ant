@@ -808,7 +808,7 @@ public class Jar extends Zip {
                 }
             } catch (Throwable t) {
                 log("error while reading original manifest in file: "
-                    + zipFile.toString() + t.getMessage(),
+                    + zipFile.toString() + " due to " + t.getMessage(),
                     Project.MSG_WARN);
                 needsUpdate = true;
             }
