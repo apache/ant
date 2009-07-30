@@ -152,7 +152,10 @@ elements</a>).</p>
   <tr>
     <td valign="top">maxmemory</td>
     <td valign="top">Maximum amount of memory to allocate to the forked VM.
-      Ignored if <code>fork</code> is disabled.</td>
+      Ignored if <code>fork</code> is disabled. <strong>Note</strong>: 
+      If you get <code>java.lang.OutOfMemoryError: Java heap space</code>
+      in some of your tests then you need to raise the size like
+      <code>maxmemory="128m"</code></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
