@@ -31,4 +31,32 @@
     <au:assertPropertySet name="myproperty" message="abc was not renamed aBc"/>
   </target>
 
+  <target name="test-regex-mapper"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=18656">
+    <mkdir dir="${input}/AAA/foo"/>
+    <touch file="${input}/AAA/foo/bar.txt"/>
+    <mkdir dir="${input}/foo/AAA"/>
+    <touch file="${input}/foo/bar.txt"/>
+    <touch file="${input}/foo/AAA/bar.txt"/>
+    <mkdir dir="${input}/foo/bar"/>
+    <touch file="${input}/foo/bar/AAA.txt"/>
+    <touch file="${input}/foo/bar/baz.txt"/>
+
+    <mkdir dir="${output}"/>
+
+    <move todir="${output}">
+      <fileset dir="${input}"/>
+      <firstmatchmapper>
+        <regexpmapper from="(.*)AAA(.*)" to="\1BBB\2"/>
+        <identitymapper/>
+      </firstmatchmapper>
+    </move>
+
+    <au:assertFileExists file="${output}/BBB/foo/bar.txt"/>
+    <au:assertFileExists file="${output}/foo/bar.txt"/>
+    <au:assertFileExists file="${output}/foo/BBB/bar.txt"/>
+    <au:assertFileExists file="${output}/foo/bar/BBB.txt"/>
+    <au:assertFileExists file="${output}/foo/bar/baz.txt"/>
+  </target>
+
 </project>
