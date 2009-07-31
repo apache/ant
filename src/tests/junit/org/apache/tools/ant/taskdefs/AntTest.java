@@ -313,7 +313,13 @@ public class AntTest extends BuildFileTest {
 
     public void testAntCoreLib() {
         // Cf. #42263
-        expectLogContaining("sub-show-ant.core.lib", "ant.jar");
+        executeTarget("sub-show-ant.core.lib");
+        String realLog = getLog();
+        assertTrue("found ant.core.lib in: " + realLog,
+                // String.matches would be simpler... can we assume JDK 1.4+ yet?
+                realLog.indexOf("ant.jar") != -1 ||
+                realLog.indexOf("build/classes") != 1 ||
+                realLog.indexOf("build\\classes") != -1);
     }
 
     private class BasedirChecker implements BuildListener {
