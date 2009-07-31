@@ -706,26 +706,26 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (isParentFirst(name)) {
             resourceStream = loadBaseResource(name);
         }
+        if (resourceStream != null) {
+            log("ResourceStream for " + name
+                + " loaded from parent loader", Project.MSG_DEBUG);
+        } else {
+            resourceStream = loadResource(name);
             if (resourceStream != null) {
                 log("ResourceStream for " + name
-                    + " loaded from parent loader", Project.MSG_DEBUG);
-            } else {
-                resourceStream = loadResource(name);
-                if (resourceStream != null) {
-                    log("ResourceStream for " + name
-                        + " loaded from ant loader", Project.MSG_DEBUG);
-                }
+                    + " loaded from ant loader", Project.MSG_DEBUG);
             }
+        }
         if (resourceStream == null && !isParentFirst(name)) {
             if (ignoreBase) {
                 resourceStream = getRootLoader() == null ? null : getRootLoader().getResourceAsStream(name);
             } else {
                 resourceStream = loadBaseResource(name);
             }
-                if (resourceStream != null) {
-                    log("ResourceStream for " + name + " loaded from parent loader",
-                            Project.MSG_DEBUG);
-                }
+            if (resourceStream != null) {
+                log("ResourceStream for " + name + " loaded from parent loader",
+                    Project.MSG_DEBUG);
+            }
         }
         if (resourceStream == null) {
             log("Couldn't load ResourceStream for " + name, Project.MSG_DEBUG);
