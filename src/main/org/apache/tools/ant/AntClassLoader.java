@@ -705,6 +705,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         InputStream resourceStream = null;
         if (isParentFirst(name)) {
             resourceStream = loadBaseResource(name);
+        }
             if (resourceStream != null) {
                 log("ResourceStream for " + name
                     + " loaded from parent loader", Project.MSG_DEBUG);
@@ -715,17 +716,16 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                         + " loaded from ant loader", Project.MSG_DEBUG);
                 }
             }
-        } else {
-            resourceStream = loadResource(name);
-            if (resourceStream != null) {
-                log("ResourceStream for " + name + " loaded from ant loader", Project.MSG_DEBUG);
+        if (resourceStream == null && !isParentFirst(name)) {
+            if (ignoreBase) {
+                resourceStream = getRootLoader() == null ? null : getRootLoader().getResourceAsStream(name);
             } else {
                 resourceStream = loadBaseResource(name);
+            }
                 if (resourceStream != null) {
                     log("ResourceStream for " + name + " loaded from parent loader",
                             Project.MSG_DEBUG);
                 }
-            }
         }
         if (resourceStream == null) {
             log("Couldn't load ResourceStream for " + name, Project.MSG_DEBUG);
@@ -766,7 +766,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *         the resource cannot be found.
      */
     private InputStream loadBaseResource(String name) {
-        return parent == null ? getSystemResourceAsStream(name) : parent.getResourceAsStream(name);
+        return parent == null ? super.getResourceAsStream(name) : parent.getResourceAsStream(name);
     }
 
     /**

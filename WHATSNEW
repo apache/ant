@@ -415,6 +415,11 @@ Fixed bugs:
  * AntClassLoader didn't set the proper CodeSource for loaded classes.
    Bugzilla Report 20174.
 
+ * AntClassLoader.getResourceAsStream would return streams to
+   resources it didn't return with getResource and to classes it
+   failed to load.
+   Bugzilla Report 44103.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https
