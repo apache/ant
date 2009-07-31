@@ -439,10 +439,28 @@ public class Expand extends Task {
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
+        internalSetEncoding(encoding);
+    }
+
+    /**
+     * Supports grand-children that want to support the attribute
+     * where the child-class doesn't (i.e. Unzip in the compress
+     * Antlib).
+     *
+     * @since Ant 1.8.0
+     */
+    protected void internalSetEncoding(String encoding) {
         if (NATIVE_ENCODING.equals(encoding)) {
             encoding = null;
         }
         this.encoding = encoding;
+    }
+
+    /**
+     * @since Ant 1.8.0
+     */
+    public String getEncoding() {
+        return encoding;
     }
 
     /**
@@ -460,6 +478,25 @@ public class Expand extends Task {
      * @since Ant 1.8.0
      */
     public void setScanForUnicodeExtraFields(boolean b) {
+        internalSetScanForUnicodeExtraFields(b);
+    }
+
+    /**
+     * Supports grand-children that want to support the attribute
+     * where the child-class doesn't (i.e. Unzip in the compress
+     * Antlib).
+     *
+     * @since Ant 1.8.0
+     */
+    protected void internalSetScanForUnicodeExtraFields(boolean b) {
         scanForUnicodeExtraFields = b;
     }
+
+    /**
+     * @since Ant 1.8.0
+     */
+    public boolean getScanForUnicodeExtraFields() {
+        return scanForUnicodeExtraFields;
+    }
+
 }
