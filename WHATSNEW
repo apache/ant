@@ -420,6 +420,10 @@ Fixed bugs:
    failed to load.
    Bugzilla Report 44103.
 
+ * Logging exceptions without a message would cause a
+   NullPointerException.
+   Bugzilla Report 47623.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

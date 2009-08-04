@@ -2171,6 +2171,9 @@ public class Project implements ResourceFactory {
     private void fireMessageLoggedEvent(BuildEvent event, String message,
                                         int priority) {
 
+        if (message == null) {
+            message = String.valueOf(message);
+        }
         if (message.endsWith(StringUtils.LINE_SEP)) {
             int endIndex = message.length() - StringUtils.LINE_SEP.length();
             event.setMessage(message.substring(0, endIndex), priority);

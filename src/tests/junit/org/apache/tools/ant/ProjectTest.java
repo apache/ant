@@ -276,6 +276,14 @@ public class ProjectTest extends TestCase {
         assertTrue("Expected logging thread to finish successfully", done[0]);
     }
 
+    /**
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=47623
+     */
+    public void testNullThrowableMessageLog() {
+        p.log(new Task() {}, null, new Throwable(), Project.MSG_ERR);
+        // be content if no exception has been thrown
+    }
+
     private class DummyTaskPrivate extends Task {
         public DummyTaskPrivate() {}
         public void execute() {}
