@@ -602,7 +602,7 @@ public class Delete extends MatchingTask {
                 throw new BuildException(
                         "File or Resource without directory or file specified");
             } else if (!fsDir.isDirectory()) {
-                handle("Directory does not exist:" + fsDir);
+                handle("Directory does not exist: " + fsDir);
             } else {
                 resourcesToDelete.add(fs);
                 DirectoryScanner ds = fs.getDirectoryScanner();
