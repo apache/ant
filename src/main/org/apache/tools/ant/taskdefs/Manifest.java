@@ -747,7 +747,7 @@ public class Manifest {
                 Manifest defaultManifest = new Manifest(insr);
                 Attribute createdBy = new Attribute("Created-By",
                     System.getProperty("java.runtime.version") + " ("
-                    + System.getProperty("java.runtime.vendor") + ")");
+                    + System.getProperty("java.vm.vendor") + ")");
                 defaultManifest.getMainSection().storeAttribute(createdBy);
                 return defaultManifest;
             } catch (UnsupportedEncodingException e) {
