@@ -74,8 +74,8 @@ public class ZipResource extends ArchiveResource {
      * @return the zipfile as a File.
      */
     public File getZipfile() {
-        FileResource r = (FileResource) getArchive();
-        return r.getFile();
+        FileProvider fp = (FileProvider) getArchive().as(FileProvider.class);
+        return fp.getFile();
     }
 
     /**
@@ -191,13 +191,7 @@ public class ZipResource extends ArchiveResource {
             log(e.getMessage(), Project.MSG_DEBUG);
             throw new BuildException(e);
         } finally {
-            if (z != null) {
-                try {
-                    z.close();
-                } catch (IOException e) {
-                    //?
-                }
-            }
+            ZipFile.closeQuietly(z);
         }
     }
 
