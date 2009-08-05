@@ -746,8 +746,8 @@ public class Manifest {
                 insr = new InputStreamReader(in, "UTF-8");
                 Manifest defaultManifest = new Manifest(insr);
                 Attribute createdBy = new Attribute("Created-By",
-                    System.getProperty("java.vm.version") + " ("
-                    + System.getProperty("java.vm.vendor") + ")");
+                    System.getProperty("java.runtime.version") + " ("
+                    + System.getProperty("java.runtime.vendor") + ")");
                 defaultManifest.getMainSection().storeAttribute(createdBy);
                 return defaultManifest;
             } catch (UnsupportedEncodingException e) {
