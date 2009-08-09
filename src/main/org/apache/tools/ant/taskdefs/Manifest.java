@@ -745,8 +745,12 @@ public class Manifest {
             try {
                 insr = new InputStreamReader(in, "UTF-8");
                 Manifest defaultManifest = new Manifest(insr);
+                String version = System.getProperty("java.runtime.version");
+                if (version == null) {
+                    version = System.getProperty("java.vm.version");
+                }
                 Attribute createdBy = new Attribute("Created-By",
-                    System.getProperty("java.runtime.version") + " ("
+                    version + " ("
                     + System.getProperty("java.vm.vendor") + ")");
                 defaultManifest.getMainSection().storeAttribute(createdBy);
                 return defaultManifest;

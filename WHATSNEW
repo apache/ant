@@ -141,8 +141,8 @@ Changes that could break older environments:
    set failOnError to false.
    Bugzilla Report 47362.
 
- * Ant now uses the java.runtime.version instead of java.vm.version
-   system property for the Created-By Manifest attribute.
+ * Ant now prefers the java.runtime.version system property over
+   java.vm.version for the Created-By Manifest attribute.
    Bugzilla Report 47632.
 
 Fixed bugs:
