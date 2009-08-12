@@ -56,19 +56,21 @@ public class DefaultLoggerTest extends TestCase {
                 w.println("  at p.C.m");
             }
         };
-        be = new BuildException(x);
         assertEquals(
                 "problem\n" +
                 "  at p.C.m\n",
-                msg(be, false));
-        /* XXX still broken:
-        be = ProjectHelper.addLocationToBuildException(be, new Location("build.xml", 1, 0));
+                msg(x, false));
+        be = new BuildException(x, new Location("build.xml", 1, 0));
         assertEquals(
-                "The following error occurred while executing this line:\n" +
                 "build.xml:1: problem\n" +
                 "  at p.C.m\n",
                 msg(be, false));
-         */
+        be = ProjectHelper.addLocationToBuildException(be, new Location("build.xml", 2, 0));
+        assertEquals(
+                "build.xml:2: The following error occurred while executing this line:\n" +
+                "build.xml:1: problem\n" +
+                "  at p.C.m\n",
+                msg(be, false));
     }
 
 }

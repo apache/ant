@@ -148,6 +148,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* The default logger was failing to print complete stack traces for exceptions
+  other than BuildException when inside <ant> or <antcall>, thus omitting often
+  important diagnostic information. Bugzilla 43398 (continued).
+
  * Better handling of package-info.class. Bugzilla Report 43114.
 
  * RPM task needed an inserted space between the define and the value.

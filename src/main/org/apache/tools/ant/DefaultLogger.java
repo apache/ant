@@ -133,7 +133,13 @@ public class DefaultLogger implements BuildLogger {
     static void throwableMessage(StringBuffer m, Throwable error, boolean verbose) {
         while (error instanceof BuildException) { // #43398
             Throwable cause = ((BuildException) error).getCause();
-            if (cause != null && cause.toString().equals(error.getMessage())) {
+            if (cause == null) {
+                break;
+            }
+            String msg1 = error.toString();
+            String msg2 = cause.toString();
+            if (msg1.endsWith(msg2)) {
+                m.append(msg1.substring(0, msg1.length() - msg2.length()));
                 error = cause;
             } else {
                 break;
