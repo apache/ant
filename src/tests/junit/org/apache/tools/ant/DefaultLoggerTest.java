@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 
 import java.io.PrintWriter;
 import junit.framework.TestCase;
+import org.apache.tools.ant.util.StringUtils;
 
 public class DefaultLoggerTest extends TestCase {
 
@@ -30,7 +31,7 @@ public class DefaultLoggerTest extends TestCase {
     private static String msg(Throwable error, boolean verbose) {
         StringBuffer m = new StringBuffer();
         DefaultLogger.throwableMessage(m, error, verbose);
-        return m.toString();
+        return m.toString().replace(StringUtils.LINE_SEP.charAt(0), '\n');
     }
 
     public void testThrowableMessage() throws Exception { // #43398
