@@ -829,6 +829,9 @@ Other changes:
    can be told to not download files that already exist locally.
    Bugzilla Report 40058.
 
+ * Ant now builds against commons-net 2.0 as well.
+   Bugzilla Report 47669.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

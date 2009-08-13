@@ -2447,7 +2447,7 @@ public class FTP
             log("login succeeded", Project.MSG_VERBOSE);
 
             if (binary) {
-                ftp.setFileType(org.apache.commons.net.ftp.FTP.IMAGE_FILE_TYPE);
+                ftp.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                     throw new BuildException("could not set transfer type: "
                                              + ftp.getReplyString());
