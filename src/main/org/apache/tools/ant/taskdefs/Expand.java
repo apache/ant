@@ -70,7 +70,7 @@ public class Expand extends Task {
     private boolean stripAbsolutePathSpec = false;
     private boolean scanForUnicodeExtraFields = true;
 
-    private static final String NATIVE_ENCODING = "native-encoding";
+    public static final String NATIVE_ENCODING = "native-encoding";
 
     private String encoding = "UTF8";
     /** Error message when more that one mapper is defined */
