@@ -296,6 +296,29 @@ of transactions. </p>
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
 <em>classpath</em> element. It is used to load the JDBC classes.</p>
 
+<h4>connectionProperty</h4>
+<p><em>Since Ant 1.8.0</em></p>
+<p>Use nested <code>&lt;connectionProperty&gt;</code> elements to
+  specify additional JDBC properties that need to be set when
+  connecting to the database.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">Name of the property</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">Value of the property</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;
@@ -309,6 +332,21 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 <p>Connects to the database given in <i>url</i> as the sa user using the 
 org.database.jdbcDriver and executes the SQL statements contained within 
 the file data.sql</p>
+
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot;
+    src=&quot;data.sql&quot;&gt;
+  &lt;connectionProperty name=&quot;internal_logon&quot; value=&quot;SYSDBA&quot;&gt;
+&lt;/sql&gt;
+</pre></blockquote>
+
+<p>Connects to the database given in <i>url</i> as the sa user using
+the org.database.jdbcDriver and executes the SQL statements contained
+within the file data.sql.  Also sets the
+property <i>internal_logon</i> to the value <i>SYSDBA</i>.</p>
 
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;

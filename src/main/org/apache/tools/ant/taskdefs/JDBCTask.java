@@ -22,9 +22,12 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Properties;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -147,6 +150,13 @@ public abstract class JDBCTask extends Task {
      * @since Ant 1.8.0
      */
     private boolean failOnConnectionError = true;
+
+    /**
+     * Additional properties to put into the JDBC connection string.
+     *
+     * @since Ant 1.8.0
+     */
+    private List/*<Property>*/ connectionProperties = new ArrayList();
 
     /**
      * Sets the classpath for loading the driver.
@@ -306,6 +316,15 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
+     * Additional properties to put into the JDBC connection string.
+     *
+     * @since Ant 1.8.0
+     */
+    public void addConnectionProperty(Property var) {
+        connectionProperties.add(var);
+    }
+
+    /**
      * Creates a new Connection as using the driver, url, userid and password
      * specified.
      *
@@ -332,6 +351,22 @@ public abstract class JDBCTask extends Task {
             Properties info = new Properties();
             info.put("user", getUserId());
             info.put("password", getPassword());
+
+            for (Iterator props = connectionProperties.iterator();
+                 props.hasNext(); ) {
+                Property p = (Property) props.next();
+                String name = p.getName();
+                String value = p.getValue();
+                if (name == null || value == null) {
+                    log("Only name/value pairs are supported as connection"
+                        + " properties.", Project.MSG_WARN);
+                } else {
+                    log("Setting connection property " + name + " to " + value,
+                        Project.MSG_VERBOSE);
+                    info.put(name, value);
+                }
+            }
+
             Connection conn = getDriver().connect(getUrl(), info);
 
             if (conn == null) {

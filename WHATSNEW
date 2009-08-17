@@ -832,6 +832,10 @@ Other changes:
  * Ant now builds against commons-net 2.0 as well.
    Bugzilla Report 47669.
 
+ * A new nested element connectionProperty of <sql> allows setting of
+   arbitrary JDBC connection properties.
+   Bugzilla Report 33452.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
