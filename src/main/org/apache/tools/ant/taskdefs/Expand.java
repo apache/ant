@@ -296,6 +296,9 @@ public class Expand extends Task {
 
             if (!included) {
                 //Do not process this file
+                log("skipping " + entryName
+                    + " as it is excluded or not included.",
+                    Project.MSG_VERBOSE);
                 return;
             }
         }
