@@ -21,8 +21,10 @@ package org.apache.tools.ant.taskdefs.condition;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Touch;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -147,6 +149,9 @@ public class IsLastModified extends ProjectComponent implements Condition {
         validate();
         long expected = getMillis();
         long actual = resource.getLastModified();
+        log("expected timestamp: " + expected + " (" + new Date(expected) + ")"
+            + ", actual timestamp: " + actual + " (" + new Date(actual) + ")" ,
+            Project.MSG_VERBOSE);
         if (CompareMode.EQUALS_TEXT.equals(mode.getValue())) {
             return expected == actual;
         }
