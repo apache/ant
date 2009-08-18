@@ -228,6 +228,16 @@ elements</a>).</p>
       <em>since Ant 1.7</em></td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">logfailedtests</td>
+    <td valign="top">When Ant executes multiple tests and doesn't stop
+      on errors or failures it will log a "FAILED" message for each
+      failing test to its logging system.  If you set this option to
+      false, the message will not be logged and you have to rely on the
+      formatter output to find the failing tests.
+      <em>since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>    
 </table>
 
 <p>By using the <code>errorproperty</code> and <code>failureproperty</code>

@@ -155,6 +155,8 @@ public class JUnitTask extends Task {
     // Do we send output to the formatters ?
     private boolean outputToFormatters = true;
 
+    private boolean logFailedTests = true;
+
     private File tmpDir;
     private AntClassLoader classLoader = null;
     private Permissions perm = null;
@@ -597,6 +599,16 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * If true, write a single "FAILED" line for failed tests to Ant's
+     * log system.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setLogFailedTests(boolean logFailedTests) {
+        this.logFailedTests = logFailedTests;
+    }
+
+    /**
      * Assertions to enable in this program (if fork=true)
      * @since Ant 1.6
      * @param asserts assertion set
@@ -949,6 +961,8 @@ public class JUnitTask extends Task {
                                       + String.valueOf(showOutput));
         cmd.createArgument().setValue(Constants.OUTPUT_TO_FORMATTERS
                                       + String.valueOf(outputToFormatters));
+        cmd.createArgument().setValue(Constants.LOG_FAILED_TESTS
+                                      + String.valueOf(logFailedTests));
 
         cmd.createArgument().setValue(
             Constants.LOGTESTLISTENEREVENTS + "true"); // #31885
@@ -1865,9 +1879,12 @@ public class JUnitTask extends Task {
                     + (result.timedOut ? " (timeout)" : "")
                     + (result.crashed ? " (crashed)" : ""), getLocation());
             } else {
-                log(name + " FAILED"
-                    + (result.timedOut ? " (timeout)" : "")
-                    + (result.crashed ? " (crashed)" : ""), Project.MSG_ERR);
+                if (logFailedTests) {
+                    log(name + " FAILED"
+                        + (result.timedOut ? " (timeout)" : "")
+                        + (result.crashed ? " (crashed)" : ""),
+                        Project.MSG_ERR);
+                }
                 if (errorOccurredHere && test.getErrorProperty() != null) {
                     getProject().setNewProperty(test.getErrorProperty(), "true");
                 }

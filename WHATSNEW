@@ -847,6 +847,10 @@ Other changes:
    <javac>.
    Bugzilla Report 24359.
 
+ * It is now possible to suppress the "FAILED" lines sent to Ant's
+   logging system via <junit>'s new logFailedTests attribute.
+   Bugzilla Report 35073.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

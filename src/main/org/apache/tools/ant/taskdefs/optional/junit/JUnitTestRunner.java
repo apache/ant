@@ -680,6 +680,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         Properties props = new Properties();
         boolean showOut = false;
         boolean outputToFormat = true;
+        boolean logFailedTests = true;
         boolean logTestListenerEvents = false;
 
 
@@ -723,6 +724,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             } else if (args[i].startsWith(Constants.OUTPUT_TO_FORMATTERS)) {
                 outputToFormat = Project.toBoolean(
                     args[i].substring(Constants.OUTPUT_TO_FORMATTERS.length()));
+            } else if (args[i].startsWith(Constants.LOG_FAILED_TESTS)) {
+                logFailedTests = Project.toBoolean(
+                    args[i].substring(Constants.LOG_FAILED_TESTS.length()));
             }
         }
 
@@ -764,8 +768,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             if (code > returnCode) {
                                 returnCode = code;
                             }
-                            System.out.println("TEST " + t.getName()
-                                               + " FAILED");
+                            if (logFailedTests) {
+                                System.out.println("TEST " + t.getName()
+                                                   + " FAILED");
+                            }
                         }
                     }
                 }
