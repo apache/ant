@@ -21,7 +21,7 @@
 
   -->
   <!-- Ant 1.6+ antlib declaration for conditions:
-  Use with the declaration xmlns:cond="antlib:org.apache.tools.ant.condition"
+  Use with the declaration xmlns:cond="antlib:org.apache.tools.ant.types.conditions"
   to
   trigger Ant's autoload of this file into namespace 'cond' (or whatever name
   suits).
@@ -54,6 +54,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
   <typedef name="isfileselected" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.IsFileSelected"/>
+  <typedef name="islastmodified" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.IsLastModified"/>
   <typedef name="isreachable" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
   <typedef name="isreference" onerror="ignore"

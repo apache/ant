@@ -1007,5 +1007,55 @@ is redundant and will be ignored.</p>
 <blockquote><pre>
 &lt;hasfreespace partition="c:" needed="100M"/&gt;
 </pre></blockquote>
+
+<h4>islastmodified</h4>
+
+<p>Tests the last modified date of a resource.  <em>Since Ant
+1.8.0</em></p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">millis</td>
+    <td valign="top">Specifies the expected modification time of the resource
+      in milliseconds since midnight Jan 1 1970.</td>
+    <td valign="center" align="center" rowspan="2">Exactly one of the
+      two.</td>
+  </tr>
+  <tr>
+    <td valign="top">datetime</td>
+    <td valign="top">Specifies the expected modification time of the
+       resource. The special value &quot;now&quot; indicates the
+       current time.</td>
+  </tr>
+  <tr>
+    <td valign="top">pattern</td>
+    <td valign="top">SimpleDateFormat-compatible pattern string.
+       Defaults to MM/DD/YYYY HH:MM AM_or_PM or MM/DD/YYYY HH:MM:SS AM_or_PM.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">mode</td>
+    <td valign="top">How to compare the timestamp.  Accepted values
+      are "equals", "before", "not-before", "after" and "not-after".
+    <td valign="top">No, defaults to "equals".</td>
+  </tr>
+</table>
+
+<p>The actual resource to test is specified as a nested element.</p>
+
+  <p>
+    An example:
+  </p>
+<blockquote><pre>
+&lt;islastmodified dateTime="08/18/2009 04:41:19 AM" mode="not-before"&gt;
+  &lt;file file="${file}"/&gt;
+&lt;/islastmodified&gt;
+</pre></blockquote>
 </body>
 </html>

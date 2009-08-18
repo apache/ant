@@ -836,6 +836,9 @@ Other changes:
    arbitrary JDBC connection properties.
    Bugzilla Report 33452.
 
+ * A new islastmodified condition can check the last modified date of
+   resources.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

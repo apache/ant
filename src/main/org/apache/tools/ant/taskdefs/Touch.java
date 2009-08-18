@@ -54,12 +54,12 @@ import org.apache.tools.ant.util.FileNameMapper;
  */
 public class Touch extends Task {
 
-    private interface DateFormatFactory {
+    public interface DateFormatFactory {
         DateFormat getPrimaryFormat();
         DateFormat getFallbackFormat();
     }
 
-    private static final DateFormatFactory DEFAULT_DF_FACTORY
+    public static final DateFormatFactory DEFAULT_DF_FACTORY
         = new DateFormatFactory() {
         /*
          * The initial version used DateFormat.SHORT for the
