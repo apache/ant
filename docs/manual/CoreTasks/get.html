@@ -136,8 +136,10 @@ for progress information.
     password="secret"/&gt;</pre>
 <p>
 Fetches some file from a server with access control. Because https is being used the
-fact that basic auth sends passwords in plaintext is moot.
-
+fact that basic auth sends passwords in plaintext is moot if you
+ignore the fact that it is part of your build file which may be
+readable by third parties.  If you need more security, consider using
+the <a href="input.html">input task</a> to query for a password.</p>
 
 </body>
 </html>
