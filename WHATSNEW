@@ -436,6 +436,9 @@ Fixed bugs:
    separator other than "/".
    Bugzilla Report 35649.
 
+ * The update attribute of the modified selector was ignored.
+   Bugzilla Report 32597.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

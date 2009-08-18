@@ -298,8 +298,6 @@ public class ModifiedSelector extends BaseExtendSelector
         Cache      defaultCache      = new PropertiesfileCache(cachefile);
         Algorithm  defaultAlgorithm  = new DigestAlgorithm();
         Comparator defaultComparator = new EqualComparator();
-        update = true;
-        selectDirectories = true;
 
         //
         // -----  Set the main attributes, pattern '*'  -----
