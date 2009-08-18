@@ -839,6 +839,10 @@ Other changes:
  * A new islastmodified condition can check the last modified date of
    resources.
 
+ * <rmic> has a new destDir attribute that allows generated files to
+   be written to a different location than the original classes.
+   Bugzilla Report 20699.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

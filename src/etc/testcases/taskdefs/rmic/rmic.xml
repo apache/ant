@@ -19,15 +19,18 @@
 
   <property name="rmic.dir" location="." />
   <property name="src.dir" location="${rmic.dir}/src"/>
-  <property name="build.dir" location="${rmic.dir}/build"/>
+  <property name="build.dir" location="${java.io.tmpdir}/build"/>
+  <property name="dest.dir" location="${java.io.tmpdir}/dest"/>
 
   <target name="teardown">
     <delete dir="${build.dir}"/>
+    <delete dir="${dest.dir}"/>
   </target>
 
   <!-- init builds the java source -->
   <target name="init" depends="probe-rmic">
     <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dest.dir}"/>
 
     <javac
       destdir="${build.dir}"
@@ -50,12 +53,31 @@
         />
     </presetdef>
 
+    <presetdef name="dest-rmic">
+      <rmic
+        base="${build.dir}"
+        destdir="${dest.dir}"
+        verify="true"
+        includes="**/*.class"/>
+    </presetdef>
+
     <macrodef name="assertFileCreated">
       <attribute name="file" />
       <sequential>
         <fail>Not found : ${build.dir}/@{file}
           <condition>
             <not><available file="${build.dir}/@{file}"/></not>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertFileCreatedInDest">
+      <attribute name="file" />
+      <sequential>
+        <fail>Not found : ${dest.dir}/@{file}
+          <condition>
+            <not><available file="${dest.dir}/@{file}"/></not>
           </condition>
         </fail>
       </sequential>
@@ -72,10 +94,26 @@
       </sequential>
     </macrodef>
 
+    <macrodef name="assertFileAbsentInDest">
+      <attribute name="file" />
+      <sequential>
+        <fail>Expected to be missing : ${dest.dir}/@{file}
+          <condition>
+            <available file="${dest.dir}/@{file}"/>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
     
     <macrodef name="assertStubCompiled">
       <sequential>
         <assertFileCreated file="RemoteTimestampImpl_Stub.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertStubCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="RemoteTimestampImpl_Stub.class"  />
       </sequential>
     </macrodef>
 
@@ -85,12 +123,24 @@
       </sequential>
     </macrodef>
 
+    <macrodef name="assertSkelCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
     <macrodef name="assertSkelAbsent">
       <sequential>
         <assertFileAbsent file="RemoteTimestampImpl_Skel.class"  />
       </sequential>
     </macrodef>
     
+    <macrodef name="assertSkelAbsentInDest">
+      <sequential>
+        <assertFileAbsentInDest file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
     <macrodef name="assertBaseCompiled">
       <sequential>
         <assertStubCompiled />
@@ -98,10 +148,22 @@
       </sequential>
     </macrodef>
 
+    <macrodef name="assertBaseCompiledInDest">
+      <sequential>
+        <assertStubCompiledInDest />
+        <assertSkelCompiledInDest />
+      </sequential>
+    </macrodef>
     
     <macrodef name="assertAntStubCompiled">
       <sequential>
         <assertFileCreated file="AntTimestamp_Stub.class"/>
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertAntStubCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="AntTimestamp_Stub.class"/>
       </sequential>
     </macrodef>
     
@@ -111,10 +173,23 @@
       </sequential>
     </macrodef>
 
+    <macrodef name="assertAntSkelCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="AntTimestamp_Skel.class"/>
+      </sequential>
+    </macrodef>
+
     <macrodef name="assertAntCompiled">
       <sequential>
         <assertAntStubCompiled />
         <assertAntSkelCompiled />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertAntCompiledInDest">
+      <sequential>
+        <assertAntStubCompiledInDest />
+        <assertAntSkelCompiledInDest />
       </sequential>
     </macrodef>
 
@@ -143,14 +218,29 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testDefaultDest" depends="init">
+    <dest-rmic compiler="default"/>
+    <assertBaseCompiledInDest/>
+  </target>
+
   <target name="testEmpty" depends="init">
     <base-rmic compiler=""/>
     <assertBaseCompiled/>
   </target>
 
+  <target name="testEmptyDest" depends="init">
+    <dest-rmic compiler=""/>
+    <assertBaseCompiledInDest/>
+  </target>
+
   <target name="testVersion11" depends="init">
     <base-rmic compiler="default" stubversion="1.1" />
     <assertBaseCompiled/>
+  </target>
+
+  <target name="testVersion11Dest" depends="init">
+    <dest-rmic compiler="default" stubversion="1.1" />
+    <assertBaseCompiledInDest/>
   </target>
 
   <target name="testVersion12" depends="init">
@@ -159,9 +249,20 @@
     <assertSkelAbsent/>
   </target>
   
+  <target name="testVersion12Dest" depends="init">
+    <dest-rmic compiler="default" stubversion="1.2" />
+    <assertStubCompiledInDest/>
+    <assertSkelAbsentInDest/>
+  </target>
+  
   <target name="testVersionCompat" depends="init">
     <base-rmic compiler="default" stubversion="compat" />
     <assertBaseCompiled/>
+  </target>
+  
+  <target name="testVersionCompatDest" depends="init">
+    <dest-rmic compiler="default" stubversion="compat" />
+    <assertBaseCompiledInDest/>
   </target>
   
   <target name="testRmic" if="rmic.present" depends="init">
@@ -169,6 +270,10 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testRmicDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="sun"/>
+    <assertBaseCompiledInDest/>
+  </target>
 
   <target name="testRmicJArg" if="rmic.present" depends="init">
     <base-rmic compiler="sun">
@@ -177,11 +282,25 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testRmicJArgDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="sun">
+      <compilerarg value="-J-mx256m" />
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
   <target name="testKaffe" if="kaffe.present" depends="init">
     <base-rmic
       compiler="kaffe"
       />
     <assertBaseCompiled/>
+  </target>
+
+  <target name="testKaffeDest" if="kaffe.present" depends="init">
+    <dest-rmic
+      compiler="kaffe"
+      />
+    <assertBaseCompiledInDest/>
   </target>
 	
 <!-- weblogic.rmic doesn't work without a global CLASSPATH
@@ -266,11 +385,25 @@
     <assertAntCompiled/>
   </target>
 
+  <target name="testAntClasspathDest" depends="compileAntTimestamp">
+    <dest-rmic
+      compiler="default"
+      />
+    <assertAntCompiledInDest/>
+  </target>
+
   <target name="testForkingAntClasspath" if="rmic.present" depends="compileAntTimestamp">
     <base-rmic
       compiler="forking"
       />
     <assertAntCompiled />
+  </target>
+
+  <target name="testForkingAntClasspathDest" if="rmic.present" depends="compileAntTimestamp">
+    <dest-rmic
+      compiler="forking"
+      />
+    <assertAntCompiledInDest />
   </target>
 
   <target name="testDefaultBadClass" depends="init">
@@ -305,11 +438,25 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testXnewDest" if="rmic5.present" unless="rmic6.present" depends="init">
+    <dest-rmic compiler="sun">
+      <compilerarg value="-Xnew"/>
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
   <target name="testXnewForked" if="rmic5.present" depends="init">
     <base-rmic compiler="forking">
       <compilerarg value="-Xnew"/>
     </base-rmic>
     <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewForkedDest" if="rmic5.present" depends="init">
+    <dest-rmic compiler="forking">
+      <compilerarg value="-Xnew"/>
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
   </target>
 
   <target name="testXnewCompiler" if="rmic5.present" depends="init">
@@ -318,15 +465,32 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testXnewCompilerDest" if="rmic5.present" depends="init">
+    <dest-rmic compiler="xnew">
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
   <target name="testIDL" depends="init">
     <base-rmic compiler="default" idl="true"/>
     <assertFileCreated file="RemoteTimestamp.idl"/>
+  </target>
+
+  <target name="testIDLDest" depends="init">
+    <dest-rmic compiler="default" idl="true"/>
+    <assertFileCreatedInDest file="RemoteTimestamp.idl"/>
   </target>
 
   <target name="testIIOP" depends="init">
     <base-rmic compiler="default" iiop="true"/>
     <assertFileCreated file="_RemoteTimestamp_Stub.class"/>
     <assertFileCreated file="_RemoteTimestampImpl_Tie.class"/>
+  </target>
+
+  <target name="testIIOPDest" depends="init">
+    <dest-rmic compiler="default" iiop="true"/>
+    <assertFileCreatedInDest file="_RemoteTimestamp_Stub.class"/>
+    <assertFileCreatedInDest file="_RemoteTimestampImpl_Tie.class"/>
   </target>
 
 </project>

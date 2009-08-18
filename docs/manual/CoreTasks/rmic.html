@@ -79,8 +79,14 @@ please consult miniRMI's documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td valign="top">base</td>
+    <td valign="top">the location to store the compiled files.
+      Also serves as the parent directory for any non-Fileset includes, etc.
+      (This functionality has remained unchanged.)</td>
+    <td valign="top" align="center" rowspan="2"><a href="#footnote-1">*1</a></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
     <td valign="top">the location to store the compiled files.</td>
-    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">classname</td>
@@ -219,6 +225,21 @@ please consult miniRMI's documentation to learn how to use it.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<p><a name="footnote-1">*1</a>:
+<ul>
+  <li>Maintaining compatibility, <code>base</code>, when specified by
+    itself, serves as both the parent directory for any source files
+    AND the output directory.</li>
+  <li><code>destdir</code> can be used to specify the output
+    directory, allowing for <code>base</code> to be used as the parent
+    directory for any source files.</li>
+  <li>At least one of either <code>base</code> or <code>destdir</code>
+    must be specified and exist, or a runtime error will
+    occur.</li>
+</ul>
+</p>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath and extdirs</h4>
 <p><code>Rmic</code>'s <i>classpath</i> and <i>extdirs</i> attributes are <a

@@ -59,16 +59,38 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * verify that "default" binds us to the default compiler
+     */
+    public void testDefaultDest() throws Exception {
+        executeTarget("testDefaultDest");
+    }
+
+    /**
      * verify that "" binds us to the default compiler
      */
     public void testEmpty() throws Exception {
         executeTarget("testEmpty");
     }
+
+    /**
+     * verify that "" binds us to the default compiler
+     */
+    public void testEmptyDest() throws Exception {
+        executeTarget("testEmptyDest");
+    }
+
     /**
      * test sun's rmic compiler
      */
     public void testRmic() throws Exception {
         executeTarget("testRmic");
+    }
+
+    /**
+     * test sun's rmic compiler
+     */
+    public void testRmicDest() throws Exception {
+        executeTarget("testRmicDest");
     }
 
     /**
@@ -80,11 +102,27 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test sun's rmic compiler strips
+     * out -J arguments when not forking
+     */
+    public void testRmicJArgDest() throws Exception {
+        executeTarget("testRmicJArgDest");
+    }
+
+    /**
      * A unit test for JUnit
      */
     public void testKaffe() throws Exception {
         executeTarget("testKaffe");
     }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testKaffeDest() throws Exception {
+        executeTarget("testKaffeDest");
+    }
+
     // WLrmic tests don't work
     /**
      * test weblogic
@@ -117,8 +155,22 @@ public class RmicAdvancedTest extends BuildFileTest {
     /**
      * test the forking compiler
      */
+    public void testForkingAntClasspathDest() throws Exception {
+        executeTarget("testForkingAntClasspathDest");
+    }
+
+    /**
+     * test the forking compiler
+     */
     public void testAntClasspath() throws Exception {
         executeTarget("testAntClasspath");
+    }
+
+    /**
+     * test the forking compiler
+     */
+    public void testAntClasspathDest() throws Exception {
+        executeTarget("testAntClasspathDest");
     }
 
     /**
@@ -202,12 +254,29 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test that version 1.1 stubs are good
+     * @throws Exception
+     */
+    public void testVersion11Dest() throws Exception {
+        executeTarget("testVersion11Dest");
+    }
+
+    /**
      * test that version 1.2 stubs are good
      *
      * @throws Exception
      */
     public void testVersion12() throws Exception {
         executeTarget("testVersion12");
+    }
+
+    /**
+     * test that version 1.2 stubs are good
+     *
+     * @throws Exception
+     */
+    public void testVersion12Dest() throws Exception {
+        executeTarget("testVersion12Dest");
     }
 
     /**
@@ -220,12 +289,30 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test that version compat stubs are good
+     *
+     * @throws Exception
+     */
+    public void testVersionCompatDest() throws Exception {
+        executeTarget("testVersionCompatDest");
+    }
+
+    /**
      * test that passes -Xnew to sun's rmic.
      *
      * @throws Exception
      */
     public void testXnew() throws Exception {
         executeTarget("testXnew");
+    }
+
+    /**
+     * test that passes -Xnew to sun's rmic.
+     *
+     * @throws Exception
+     */
+    public void testXnewDest() throws Exception {
+        executeTarget("testXnewDest");
     }
 
     /**
@@ -238,12 +325,30 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test that passes -Xnew to sun's rmic running in a different VM.
+     *
+     * @throws Exception
+     */
+    public void testXnewForkedDest() throws Exception {
+        executeTarget("testXnewForkedDest");
+    }
+
+    /**
      * test that runs the new xnew compiler adapter.
      *
      * @throws Exception
      */
     public void testXnewCompiler() throws Exception {
         executeTarget("testXnewCompiler");
+    }
+
+    /**
+     * test that runs the new xnew compiler adapter.
+     *
+     * @throws Exception
+     */
+    public void testXnewCompilerDest() throws Exception {
+        executeTarget("testXnewCompilerDest");
     }
 
     /**
@@ -256,12 +361,30 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
+     * test that verifies that IDL compiles.
+     *
+     * @throws Exception
+     */
+    public void testIDLDest() throws Exception {
+        executeTarget("testIDLDest");
+    }
+
+    /**
      * test that verifies that IIOP compiles.
      *
      * @throws Exception
      */
     public void testIIOP() throws Exception {
         executeTarget("testIIOP");
+    }
+
+    /**
+     * test that verifies that IIOP compiles.
+     *
+     * @throws Exception
+     */
+    public void testIIOPDest() throws Exception {
+        executeTarget("testIIOPDest");
     }
 
     /**

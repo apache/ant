@@ -200,7 +200,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         Path classpath = getCompileClasspath();
 
         cmd.createArgument().setValue("-d");
-        cmd.createArgument().setFile(attributes.getBase());
+        cmd.createArgument().setFile(attributes.getOutputDir());
 
         if (attributes.getExtdirs() != null) {
             cmd.createArgument().setValue("-extdirs");

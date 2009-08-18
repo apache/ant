@@ -85,6 +85,7 @@ public class Rmic extends MatchingTask {
             = "Rmic failed; see the compiler error output for details.";
 
     private File baseDir;
+    private File destDir;
     private String classname;
     private File sourceBase;
     private String stubVersion;
@@ -115,11 +116,11 @@ public class Rmic extends MatchingTask {
     /** loaded error message */
     public static final String ERROR_LOADING_CAUSED_EXCEPTION = ". Loading caused Exception: ";
     /** base not exists message */
-    public static final String ERROR_NO_BASE_EXISTS = "base does not exist: ";
+    public static final String ERROR_NO_BASE_EXISTS = "base or destdir does not exist: ";
     /** base not a directory message */
-    public static final String ERROR_NOT_A_DIR = "base is not a directory:";
+    public static final String ERROR_NOT_A_DIR = "base or destdir is not a directory:";
     /** base attribute not set message */
-    public static final String ERROR_BASE_NOT_SET = "base attribute must be set!";
+    public static final String ERROR_BASE_NOT_SET = "base or destdir attribute must be set!";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -141,10 +142,40 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * Sets the base directory to output the generated files.
+     * @param destdir the base directory to output the generated files.
+     * @since Ant 1.8.0
+     */
+    public void setDestdir(File destdir) {
+        this.destDir = destdir;
+    }
+
+    /**
+     * Gets the base directory to output the generated files.
+     * @return the base directory to output the generated files.
+     * @since Ant 1.8.0
+     */
+    public File getDestdir() {
+        return this.destDir;
+    }
+
+    /**
+     * Gets the base directory to output the generated files,
+     * favoring destdir if set, otherwise defaulting to basedir.
+     * @return the actual directory to output to (either destdir or basedir)
+     * @since Ant 1.8.0
+     */
+    public File getOutputDir() {
+        if (getDestdir() != null) {
+            return getDestdir();
+        }
+        return getBase();
+    }
+
+    /**
      * Gets the base directory to output generated class.
      * @return the location of the compiled files
      */
-
     public File getBase() {
         return this.baseDir;
     }
@@ -526,14 +557,15 @@ public class Rmic extends MatchingTask {
      * if there's a problem with baseDir or RMIC
      */
     public void execute() throws BuildException {
-        if (baseDir == null) {
+        File outputDir = getOutputDir();
+        if (outputDir == null) {
             throw new BuildException(ERROR_BASE_NOT_SET, getLocation());
         }
-        if (!baseDir.exists()) {
-            throw new BuildException(ERROR_NO_BASE_EXISTS + baseDir, getLocation());
+        if (!outputDir.exists()) {
+            throw new BuildException(ERROR_NO_BASE_EXISTS + outputDir, getLocation());
         }
-        if (!baseDir.isDirectory()) {
-            throw new BuildException(ERROR_NOT_A_DIR + baseDir, getLocation());
+        if (!outputDir.isDirectory()) {
+            throw new BuildException(ERROR_NOT_A_DIR + outputDir, getLocation());
         }
         if (verify) {
             log("Verify has been turned on.", Project.MSG_VERBOSE);
@@ -569,7 +601,7 @@ public class Rmic extends MatchingTask {
             int fileCount = compileList.size();
             if (fileCount > 0) {
                 log("RMI Compiling " + fileCount + " class" + (fileCount > 1 ? "es" : "") + " to "
-                        + baseDir, Project.MSG_INFO);
+                        + outputDir, Project.MSG_INFO);
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
                     throw new BuildException(ERROR_RMIC_FAILED, getLocation());
@@ -580,14 +612,14 @@ public class Rmic extends MatchingTask {
              * base directory and sourcebase are the same, the generated
              * sources are already in place.
              */
-            if (null != sourceBase && !baseDir.equals(sourceBase)
+            if (null != sourceBase && !outputDir.equals(sourceBase)
                 && fileCount > 0) {
                 if (idl) {
                     log("Cannot determine sourcefiles in idl mode, ", Project.MSG_WARN);
                     log("sourcebase attribute will be ignored.", Project.MSG_WARN);
                 } else {
                     for (int j = 0; j < fileCount; j++) {
-                        moveGeneratedFile(baseDir, sourceBase, (String) compileList.elementAt(j),
+                        moveGeneratedFile(outputDir, sourceBase, (String) compileList.elementAt(j),
                                 adapter);
                     }
                 }
@@ -656,7 +688,7 @@ public class Rmic extends MatchingTask {
             log("no uptodate test as -always option has been specified", Project.MSG_VERBOSE);
         } else {
             SourceFileScanner sfs = new SourceFileScanner(this);
-            newFiles = sfs.restrict(files, baseDir, baseDir, mapper);
+            newFiles = sfs.restrict(files, baseDir, getOutputDir(), mapper);
         }
         for (int i = 0; i < newFiles.length; i++) {
             String name = newFiles[i].replace(File.separatorChar, '.');
