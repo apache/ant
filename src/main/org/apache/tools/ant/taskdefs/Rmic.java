@@ -126,6 +126,8 @@ public class Rmic extends MatchingTask {
 
     private String executable = null;
 
+    private boolean listFiles = false;
+
     /**
      * Constructor for Rmic.
      */
@@ -551,6 +553,14 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * If true, list the source files being handed off to the compiler.
+     * @param list if true list the source files
+     * @since Ant 1.8.0
+     */
+    public void setListfiles(boolean list) {
+        listFiles = list;
+    }
+    /**
      * execute by creating an instance of an implementation
      * class and getting to do the work
      * @throws org.apache.tools.ant.BuildException
@@ -600,8 +610,16 @@ public class Rmic extends MatchingTask {
             }
             int fileCount = compileList.size();
             if (fileCount > 0) {
-                log("RMI Compiling " + fileCount + " class" + (fileCount > 1 ? "es" : "") + " to "
-                        + outputDir, Project.MSG_INFO);
+                log("RMI Compiling " + fileCount + " class"
+                    + (fileCount > 1 ? "es" : "") + " to "
+                    + outputDir, Project.MSG_INFO);
+
+                if (listFiles) {
+                    for (int i = 0; i < fileCount; i++) {
+                        log(compileList.get(i).toString());
+                    }
+                }
+
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
                     throw new BuildException(ERROR_RMIC_FAILED, getLocation());

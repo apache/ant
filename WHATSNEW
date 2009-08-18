@@ -843,6 +843,10 @@ Other changes:
    be written to a different location than the original classes.
    Bugzilla Report 20699.
 
+ * <rmic> has a new listfiles attribute similar to the existing one of
+   <javac>.
+   Bugzilla Report 24359.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

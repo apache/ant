@@ -214,7 +214,7 @@
   </target>
 
   <target name="testDefault" depends="init">
-    <base-rmic compiler="default"/>
+    <base-rmic compiler="default" listfiles="true"/>
     <assertBaseCompiled/>
   </target>
 
