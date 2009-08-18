@@ -82,7 +82,7 @@ public class Rmic extends MatchingTask {
 
     /** rmic failed message */
     public static final String ERROR_RMIC_FAILED
-            = "Rmic failed; see the compiler error output for details.";
+        = "Rmic failed; see the compiler error output for details.";
 
     private File baseDir;
     private File destDir;
@@ -591,58 +591,58 @@ public class Rmic extends MatchingTask {
         Path classpath = adapter.getClasspath();
         loader = getProject().createClassLoader(classpath);
 
-            // scan base dirs to build up compile lists only if a
-            // specific classname is not given
-            if (classname == null) {
-                DirectoryScanner ds = this.getDirectoryScanner(baseDir);
-                String[] files = ds.getIncludedFiles();
-                scanDir(baseDir, files, adapter.getMapper());
+        // scan base dirs to build up compile lists only if a
+        // specific classname is not given
+        if (classname == null) {
+            DirectoryScanner ds = this.getDirectoryScanner(baseDir);
+            String[] files = ds.getIncludedFiles();
+            scanDir(baseDir, files, adapter.getMapper());
+        } else {
+            // otherwise perform a timestamp comparison - at least
+            String path = classname.replace('.', File.separatorChar) + ".class";
+            File f = new File(baseDir, path);
+            if (f.isFile()) {
+                scanDir(baseDir, new String[] {path}, adapter.getMapper());
             } else {
-                // otherwise perform a timestamp comparison - at least
-                String path = classname.replace('.', File.separatorChar) + ".class";
-                File f = new File(baseDir, path);
-                if (f.isFile()) {
-                    scanDir(baseDir, new String[] {path}, adapter.getMapper());
-                } else {
-                    // Does not exist, so checking whether it is up to date makes no sense.
-                    // Compilation will fail later anyway, but tests expect a certain output.
-                    compileList.add(classname);
-                }
+                // Does not exist, so checking whether it is up to date makes no sense.
+                // Compilation will fail later anyway, but tests expect a certain output.
+                compileList.add(classname);
             }
-            int fileCount = compileList.size();
-            if (fileCount > 0) {
-                log("RMI Compiling " + fileCount + " class"
-                    + (fileCount > 1 ? "es" : "") + " to "
-                    + outputDir, Project.MSG_INFO);
+        }
+        int fileCount = compileList.size();
+        if (fileCount > 0) {
+            log("RMI Compiling " + fileCount + " class"
+                + (fileCount > 1 ? "es" : "") + " to "
+                + outputDir, Project.MSG_INFO);
 
-                if (listFiles) {
-                    for (int i = 0; i < fileCount; i++) {
-                        log(compileList.get(i).toString());
-                    }
+            if (listFiles) {
+                for (int i = 0; i < fileCount; i++) {
+                    log(compileList.get(i).toString());
                 }
+            }
 
-                // finally, lets execute the compiler!!
-                if (!adapter.execute()) {
-                    throw new BuildException(ERROR_RMIC_FAILED, getLocation());
+            // finally, lets execute the compiler!!
+            if (!adapter.execute()) {
+                throw new BuildException(ERROR_RMIC_FAILED, getLocation());
+            }
+        }
+        /*
+         * Move the generated source file to the base directory.  If
+         * base directory and sourcebase are the same, the generated
+         * sources are already in place.
+         */
+        if (null != sourceBase && !outputDir.equals(sourceBase)
+            && fileCount > 0) {
+            if (idl) {
+                log("Cannot determine sourcefiles in idl mode, ", Project.MSG_WARN);
+                log("sourcebase attribute will be ignored.", Project.MSG_WARN);
+            } else {
+                for (int j = 0; j < fileCount; j++) {
+                    moveGeneratedFile(outputDir, sourceBase, (String) compileList.elementAt(j),
+                                      adapter);
                 }
             }
-            /*
-             * Move the generated source file to the base directory.  If
-             * base directory and sourcebase are the same, the generated
-             * sources are already in place.
-             */
-            if (null != sourceBase && !outputDir.equals(sourceBase)
-                && fileCount > 0) {
-                if (idl) {
-                    log("Cannot determine sourcefiles in idl mode, ", Project.MSG_WARN);
-                    log("sourcebase attribute will be ignored.", Project.MSG_WARN);
-                } else {
-                    for (int j = 0; j < fileCount; j++) {
-                        moveGeneratedFile(outputDir, sourceBase, (String) compileList.elementAt(j),
-                                adapter);
-                    }
-                }
-            }
+        }
     }
 
     /**
@@ -652,7 +652,7 @@ public class Rmic extends MatchingTask {
      * copying/removing files.
      */
     private void moveGeneratedFile(File baseDir, File sourceBaseFile, String classname,
-            RmicAdapter adapter) throws BuildException {
+                                   RmicAdapter adapter) throws BuildException {
         String classFileName = classname.replace('.', File.separatorChar) + ".class";
         String[] generatedFiles = adapter.getMapper().mapFileName(classFileName);
 
@@ -675,14 +675,14 @@ public class Rmic extends MatchingTask {
             try {
                 if (filtering) {
                     FILE_UTILS.copyFile(oldFile, newFile, new FilterSetCollection(getProject()
-                            .getGlobalFilterSet()));
+                                                                                  .getGlobalFilterSet()));
                 } else {
                     FILE_UTILS.copyFile(oldFile, newFile);
                 }
                 oldFile.delete();
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldFile + " to " + newFile + " due to "
-                        + ioe.getMessage();
+                    + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
             }
         }
@@ -732,7 +732,7 @@ public class Rmic extends MatchingTask {
             log(ERROR_UNABLE_TO_VERIFY_CLASS + classname + ERROR_NOT_DEFINED, Project.MSG_WARN);
         } catch (Throwable t) {
             log(ERROR_UNABLE_TO_VERIFY_CLASS + classname + ERROR_LOADING_CAUSED_EXCEPTION
-                    + t.getMessage(), Project.MSG_WARN);
+                + t.getMessage(), Project.MSG_WARN);
         }
         // we only get here if an exception has been thrown
         return false;
@@ -781,7 +781,7 @@ public class Rmic extends MatchingTask {
      * implementation.
      */
     public class ImplementationSpecificArgument extends
-            org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
+                                                    org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
         /**
          * Only pass the specified argument if the
          * chosen compiler implementation matches the
