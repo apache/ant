@@ -18,6 +18,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -64,7 +66,7 @@ public class Recorder extends Task implements SubBuildListener {
     private int loglevel = -1;
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
-    /** The recorder entries keyed by Project. Each value is another Hashtable of filename to RecorderEntry. */
+    /** The list of recorder entries. */
     private static Hashtable recorderEntries = new Hashtable();
 
     //////////////////////////////////////////////////////////////////////
@@ -203,12 +205,7 @@ public class Recorder extends Task implements SubBuildListener {
      */
     protected RecorderEntry getRecorder(String name, Project proj)
          throws BuildException {
-        Hashtable entries = (Hashtable) recorderEntries.get(proj);
-        if (null == entries) {
-            entries = new Hashtable();
-            recorderEntries.put(proj, entries);
-        }
-        Object o = entries.get(name);
+        Object o = recorderEntries.get(name);
         RecorderEntry entry;
 
         if (o == null) {
@@ -221,7 +218,7 @@ public class Recorder extends Task implements SubBuildListener {
                 entry.openFile(append.booleanValue());
             }
             entry.setProject(proj);
-            entries.put(name, entry);
+            recorderEntries.put(name, entry);
         } else {
             entry = (RecorderEntry) o;
         }
@@ -311,10 +308,14 @@ public class Recorder extends Task implements SubBuildListener {
      * @since Ant 1.7
      */
     private void cleanup() {
-        Hashtable entries = (Hashtable) recorderEntries.get(getProject());
-        if (null != entries) {
-            entries.clear();
-            recorderEntries.remove(entries);
+        Hashtable entries = (Hashtable) recorderEntries.clone();
+        Iterator itEntries = entries.entrySet().iterator();
+        while (itEntries.hasNext()) {
+            Map.Entry entry = (Map.Entry) itEntries.next();
+            RecorderEntry re = (RecorderEntry) entry.getValue();
+            if (re.getProject() == getProject()) {
+                recorderEntries.remove(entry.getKey());
+            }
         }
         getProject().removeBuildListener(this);
     }

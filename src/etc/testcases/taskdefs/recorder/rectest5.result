@@ -2,3 +2,4 @@
 
 test6:
      [echo] some message6
+     [echo] some message8

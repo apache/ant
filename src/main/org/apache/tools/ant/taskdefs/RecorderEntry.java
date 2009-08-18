@@ -299,6 +299,15 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     }
 
     /**
+     * Get the project associated with this recorder entry.
+     *
+     * @since 1.8.0
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
      * @since 1.6.2
      */
     public void cleanup() {
