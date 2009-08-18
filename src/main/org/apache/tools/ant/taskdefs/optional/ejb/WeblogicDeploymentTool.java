@@ -762,7 +762,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface
                                 String classname
-                                    = genericEntry.getName().replace(File.separatorChar, '.');
+                                    = genericEntry.getName()
+                                    .replace(File.separatorChar, '.')
+                                    .replace('/', '.');
 
                                 classname = classname.substring(0, classname.lastIndexOf(".class"));
 

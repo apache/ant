@@ -432,6 +432,10 @@ Fixed bugs:
    NullPointerException.
    Bugzilla Report 47623.
 
+ * WeblogicDeploymentTool could fail on platforms with a file
+   separator other than "/".
+   Bugzilla Report 35649.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https
