@@ -679,6 +679,17 @@ This will only install the <code>bin</code> and <code>lib</code> directories.
 <code>install-lite</code> targets will overwrite
 the current Ant version in <code>ANT_HOME</code>.</p>
 
+<p>Ant's build script will try to set executable flags for its shell
+  scripts on Unix-like systems.  There are various reasons why the
+  chmod-task might fail (like when you are running the build script as
+  a different user than the one who installed Ant initially).  In this
+  case you can set the Ant property <code>chmod.fail</code> to false
+  when starting the build like in
+<blockquote>
+  <p><code>sh build.sh install -Dchmod.fail=false</code></p>
+</blockquote>
+and any error to change permission will not result in a build failure.</p>
+
 <hr>
 <h2><a name="librarydependencies">Library Dependencies</a></h2>
 <p>The following libraries are needed in Ant's classpath
