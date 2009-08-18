@@ -567,6 +567,8 @@ public class Rmic extends MatchingTask {
      * if there's a problem with baseDir or RMIC
      */
     public void execute() throws BuildException {
+        compileList.clear();
+
         File outputDir = getOutputDir();
         if (outputDir == null) {
             throw new BuildException(ERROR_BASE_NOT_SET, getLocation());
@@ -589,7 +591,6 @@ public class Rmic extends MatchingTask {
         Path classpath = adapter.getClasspath();
         loader = getProject().createClassLoader(classpath);
 
-        try {
             // scan base dirs to build up compile lists only if a
             // specific classname is not given
             if (classname == null) {
@@ -642,9 +643,6 @@ public class Rmic extends MatchingTask {
                     }
                 }
             }
-        } finally {
-            compileList.removeAllElements();
-        }
     }
 
     /**
