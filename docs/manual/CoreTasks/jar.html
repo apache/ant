@@ -289,6 +289,7 @@ to a value other than its default, <code>"add"</code>.</b></p>
       <em>Since Ant 1.8.0</em>.
       <br/>See also the <a href="zip.html#encoding">discussion in the
       zip task page</a></td>
+    <td align="center" valign="top">No, default is "never"</td>
   </tr>
   <tr>
     <td valign="top">fallbacktoUTF8</td>
@@ -352,7 +353,10 @@ depend on your manifest:</p>
 </ul>
 
 <p>This task will not create any index entries for archives that are
-empty or only contain files inside the META-INF directory.</p>
+  empty or only contain files inside the META-INF directory unless
+  the <code>indexmetainf</code> attribute has been set
+  to <code>true</code>.</p>
+
 <a name="service"><h4>service</h4></a>
 
 <p><em>since ant 1.7.0</em></p>
@@ -450,7 +454,7 @@ by Java).</p>
       &lt;attribute name=&quot;Implementation-Title&quot; value=&quot;GreatProduct&quot;/&gt;
       &lt;attribute name=&quot;Implementation-Version&quot; value=&quot;1.0.0beta2&quot;/&gt;
       &lt;!-- details --&gt;
-      &lt;section name=&quot;common/class1.class&quot;&gt;
+      &lt;section name=&quot;common/MyClass.class&quot;&gt;
         &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
       &lt;/section&gt;
     &lt;/manifest&gt;
