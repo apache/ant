@@ -142,14 +142,14 @@ public class TarResource extends ArchiveResource {
     }
 
     /**
-     * @return the uid for the tar entry
+     * @return the gid for the tar entry
      */
     public int getGid() {
         if (isReference()) {
             return ((TarResource) getCheckedRef()).getGid();
         }
         checkEntry();
-        return uid;
+        return gid;
     }
 
     /**
