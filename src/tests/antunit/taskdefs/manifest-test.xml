@@ -20,14 +20,75 @@
 
   <import file="../antunit-base.xml" />
 
-  <property name="file" location="${output}/test.mf"/>
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="file" location="${output}/test.mf"/>
+  </target>
 
   <target name="test8IsAllowed"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45675"
-          >
-    <mkdir dir="${output}"/>
+          depends="setUp">
     <manifest file="${file}">
       <attribute name="attrib8" value="test attribute"/>
     </manifest>
+  </target>
+
+  <target name="testMergeOverrides" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="foo" value="value1"/>
+      <attribute name="bar" value="value1"/>
+      <section name="bar">
+        <attribute name="foo" value="value2"/>
+      </section>
+    </manifest>
+    <manifest file="${file}" mode="update">
+      <attribute name="foo" value="value3"/>
+      <section name="bar">
+        <attribute name="foo" value="value5"/>
+      </section>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="foo: value3&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="bar: value1&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="foo: value5&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="foo: value1&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="foo: value2&#13;&#10;"/>
+  </target>
+
+  <target name="testMergeOverridesClassPath" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+    </manifest>
+    <manifest file="${file}" mode="update">
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+  </target>
+
+  <target name="testMultipleClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
   </target>
 </project>
