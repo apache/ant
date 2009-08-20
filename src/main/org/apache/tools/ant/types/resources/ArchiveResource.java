@@ -242,7 +242,7 @@ public abstract class ArchiveResource extends Resource {
             : getArchive().toString() + ':' + getName();
     }
 
-    private synchronized void checkEntry() throws BuildException {
+    protected final synchronized void checkEntry() throws BuildException {
         dieOnCircularReference();
         if (haveEntry) {
             return;

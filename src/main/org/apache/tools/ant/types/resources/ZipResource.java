@@ -173,6 +173,10 @@ public class ZipResource extends ArchiveResource {
      * @since Ant 1.8.0
      */
     public ZipExtraField[] getExtraFields() {
+        if (isReference()) {
+            return ((ZipResource) getCheckedRef()).getExtraFields();
+        }
+        checkEntry();
         if (extras == null) {
             return new ZipExtraField[0];
         }

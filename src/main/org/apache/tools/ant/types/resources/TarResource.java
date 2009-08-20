@@ -115,6 +115,7 @@ public class TarResource extends ArchiveResource {
         if (isReference()) {
             return ((TarResource) getCheckedRef()).getUserName();
         }
+        checkEntry();
         return userName;
     }
 
@@ -125,6 +126,7 @@ public class TarResource extends ArchiveResource {
         if (isReference()) {
             return ((TarResource) getCheckedRef()).getGroup();
         }
+        checkEntry();
         return groupName;
     }
 
@@ -135,6 +137,7 @@ public class TarResource extends ArchiveResource {
         if (isReference()) {
             return ((TarResource) getCheckedRef()).getUid();
         }
+        checkEntry();
         return uid;
     }
 
@@ -145,6 +148,7 @@ public class TarResource extends ArchiveResource {
         if (isReference()) {
             return ((TarResource) getCheckedRef()).getGid();
         }
+        checkEntry();
         return uid;
     }
 
