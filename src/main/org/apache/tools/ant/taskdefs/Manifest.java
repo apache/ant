@@ -304,15 +304,36 @@ public class Manifest {
         }
 
         /**
-         * Write the attribute out to a print writer.
+         * Write the attribute out to a print writer without
+         * flattening multi-values attributes (i.e. Class-Path).
          *
          * @param writer the Writer to which the attribute is written
          *
          * @throws IOException if the attribute value cannot be written
          */
         public void write(PrintWriter writer) throws IOException {
+            write(writer, false);
+        }
+
+        /**
+         * Write the attribute out to a print writer.
+         *
+         * @param writer the Writer to which the attribute is written
+         * @param flatten whether to collapse multi-valued attributes
+         *        (i.e. potentially Class-Path) Class-Path into a
+         *        single attribute.
+         *
+         * @throws IOException if the attribute value cannot be written
+         * @since Ant 1.8.0
+         */
+        public void write(PrintWriter writer, boolean flatten)
+            throws IOException {
+            if (!flatten) {
             for (Enumeration e = getValues(); e.hasMoreElements();) {
                 writeValue(writer, (String) e.nextElement());
+            }
+            } else {
+                writeValue(writer, getValue());
             }
         }
 
@@ -448,13 +469,27 @@ public class Manifest {
         }
 
         /**
-         * Merge in another section
+         * Merge in another section without merging Class-Path attributes.
          *
          * @param section the section to be merged with this one.
          *
          * @throws ManifestException if the sections cannot be merged.
          */
         public void merge(Section section) throws ManifestException {
+            merge(section, false);
+        }
+
+        /**
+         * Merge in another section
+         *
+         * @param section the section to be merged with this one.
+         * @param mergeClassPaths whether Class-Path attributes should
+         *        be merged.
+         *
+         * @throws ManifestException if the sections cannot be merged.
+         */
+        public void merge(Section section, boolean mergeClassPaths)
+            throws ManifestException {
             if (name == null && section.getName() != null
                 || name != null
                 && !(name.equalsIgnoreCase(section.getName()))) {
@@ -484,7 +519,16 @@ public class Manifest {
             }
 
             if (classpathAttribute != null) {
-                // the merge file *always* wins, even for Class-Path
+                if (mergeClassPaths) {
+                    Attribute currentCp = getAttribute(ATTRIBUTE_CLASSPATH);
+                    if (currentCp != null) {
+                        for (Enumeration attribEnum = currentCp.getValues();
+                             attribEnum.hasMoreElements(); ) {
+                            String value = (String) attribEnum.nextElement();
+                            classpathAttribute.addValue(value);
+                        }
+                    }
+                }
                 storeAttribute(classpathAttribute);
             }
 
@@ -496,13 +540,30 @@ public class Manifest {
         }
 
         /**
-         * Write the section out to a print writer.
+         * Write the section out to a print writer without flattening
+         * multi-values attributes (i.e. Class-Path).
          *
          * @param writer the Writer to which the section is written
          *
          * @throws IOException if the section cannot be written
          */
         public void write(PrintWriter writer) throws IOException {
+            write(writer, false);
+        }
+
+        /**
+         * Write the section out to a print writer.
+         *
+         * @param writer the Writer to which the section is written
+         * @param flatten whether to collapse multi-valued attributes
+         *        (i.e. potentially Class-Path) Class-Path into a
+         *        single attribute.
+         *
+         * @throws IOException if the section cannot be written
+         * @since Ant 1.8.0
+         */
+        public void write(PrintWriter writer, boolean flatten)
+            throws IOException {
             if (name != null) {
                 Attribute nameAttr = new Attribute(ATTRIBUTE_NAME, name);
                 nameAttr.write(writer);
@@ -511,7 +572,7 @@ public class Manifest {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 Attribute attribute = getAttribute(key);
-                attribute.write(writer);
+                attribute.write(writer, flatten);
             }
             writer.print(EOL);
         }
@@ -863,6 +924,7 @@ public class Manifest {
 
     /**
      * Merge the contents of the given manifest into this manifest
+     * without merging Class-Path attributes.
      *
      * @param other the Manifest to be merged with this one.
      *
@@ -875,6 +937,7 @@ public class Manifest {
 
     /**
      * Merge the contents of the given manifest into this manifest
+     * without merging Class-Path attributes.
      *
      * @param other the Manifest to be merged with this one.
      * @param overwriteMain whether to overwrite the main section
@@ -885,11 +948,31 @@ public class Manifest {
      */
     public void merge(Manifest other, boolean overwriteMain)
          throws ManifestException {
+        merge(other, overwriteMain, false);
+    }
+
+    /**
+     * Merge the contents of the given manifest into this manifest
+     *
+     * @param other the Manifest to be merged with this one.
+     * @param overwriteMain whether to overwrite the main section
+     *        of the current manifest
+     * @param mergeClassPaths whether Class-Path attributes should be
+     *        merged.
+     *
+     * @throws ManifestException if there is a problem merging the
+     *         manifest according to the Manifest spec.
+     *
+     * @since Ant 1.8.0
+     */
+    public void merge(Manifest other, boolean overwriteMain,
+                      boolean mergeClassPaths)
+         throws ManifestException {
         if (other != null) {
              if (overwriteMain) {
                  mainSection = (Section) other.mainSection.clone();
              } else {
-                 mainSection.merge(other.mainSection);
+                 mainSection.merge(other.mainSection, mergeClassPaths);
              }
 
              if (other.manifestVersion != null) {
@@ -907,20 +990,36 @@ public class Manifest {
                          addConfiguredSection((Section) otherSection.clone());
                      }
                  } else {
-                     ourSection.merge(otherSection);
+                     ourSection.merge(otherSection, mergeClassPaths);
                  }
              }
          }
     }
 
     /**
+     * Write the manifest out to a print writer without flattening
+     * multi-values attributes (i.e. Class-Path).
+     *
+     * @param writer the Writer to which the manifest is written
+     *
+     * @throws IOException if the manifest cannot be written
+     */
+    public void write(PrintWriter writer) throws IOException {
+        write(writer, false);
+    }
+
+    /**
     * Write the manifest out to a print writer.
     *
     * @param writer the Writer to which the manifest is written
+    * @param flatten whether to collapse multi-valued attributes
+    *        (i.e. potentially Class-Path) Class-Path into a single
+    *        attribute.
     *
     * @throws IOException if the manifest cannot be written
+    * @since Ant 1.8.0
     */
-    public void write(PrintWriter writer) throws IOException {
+    public void write(PrintWriter writer, boolean flatten) throws IOException {
         writer.print(ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion + EOL);
         String signatureVersion
             = mainSection.getAttributeValue(ATTRIBUTE_SIGNATURE_VERSION);
@@ -929,7 +1028,7 @@ public class Manifest {
                 + signatureVersion + EOL);
             mainSection.removeAttribute(ATTRIBUTE_SIGNATURE_VERSION);
         }
-        mainSection.write(writer);
+        mainSection.write(writer, flatten);
 
         // add it back
         if (signatureVersion != null) {
@@ -946,7 +1045,7 @@ public class Manifest {
         while (e.hasMoreElements()) {
             String sectionName = (String) e.nextElement();
             Section section = getSection(sectionName);
-            section.write(writer);
+            section.write(writer, flatten);
         }
     }
 

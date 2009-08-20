@@ -91,4 +91,49 @@
        resource="${file}"
        value="Class-Path: bar&#13;&#10;"/>
   </target>
+
+  <target name="testMergeClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <manifest file="${file}" mergeClassPathAttributes="true" mode="update">
+      <attribute name="Class-Path" value="baz"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: baz&#13;&#10;"/>
+  </target>
+
+  <target name="testFlattenMultipleClassPathAttributes" depends="setUp">
+    <manifest file="${file}" flattenAttributes="true">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo bar&#13;&#10;"/>
+  </target>
+
+  <target name="testMergeAndFlattenClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <manifest file="${file}"
+              mergeClassPathAttributes="true"
+              flattenAttributes="true"
+              mode="update">
+      <attribute name="Class-Path" value="baz"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: baz foo bar&#13;&#10;"/>
+  </target>
 </project>

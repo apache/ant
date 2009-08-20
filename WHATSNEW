@@ -439,6 +439,14 @@ Fixed bugs:
  * The update attribute of the modified selector was ignored.
    Bugzilla Report 32597.
 
+ * <manifest> and <jar> can now merge Class-Path attributes from
+   multiple sources and optionally flatten them into a single
+   attribute.
+   The default behaviour still is to keep multiple Class-Path
+   attributes if they have been specified and to only include the
+   attributes of the last merged manifest.
+   Bugzilla Report 39655.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https

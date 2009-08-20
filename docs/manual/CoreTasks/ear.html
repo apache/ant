@@ -245,6 +245,25 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
       zip task page</a></td>
     <td align="center" valign="top">No, default is false</td>
   </tr>
+  <tr>
+    <td valign="top">mergeClassPathAttributes</td>
+    <td valign="top">Whether to merge the Class-Path attributes found
+      in different manifests (if merging manifests).  If false, only
+      the attribute of the last merged manifest will be preserved.
+      <em>Since Ant 1.8.0</em>.
+      <br/>unless you also set flattenAttributes to true this may
+      result in manifests containing multiple Class-Path attributes
+      which violates the manifest specification.</td>
+    <td align="center" valign="top">No, default is false</td>
+  </tr>
+  <tr>
+    <td valign="top">flattenAttributes</td>
+    <td valign="top">Whether to merge attributes occuring more than
+      once in a section (this can only happen for the Class-Path
+      attribute) into a single attribute.
+      <em>Since Ant 1.8.0</em>.</td>
+    <td align="center" valign="top">No, default is false</td>
+  </tr>
 </table>
 
 <h3>Nested elements</h3>

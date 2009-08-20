@@ -158,6 +158,16 @@ public class Jar extends Zip {
     // CheckStyle:LineLength ON
 
     /**
+     * whether to merge Class-Path attributes.
+     */
+    private boolean mergeClassPaths = false;
+
+    /**
+     * whether to flatten Class-Path attributes into a single one.
+     */
+    private boolean flattenClassPaths = false;
+
+    /**
      * Extra fields needed to make Solaris recognize the archive as a jar file.
      *
      * @since Ant 1.6.3
@@ -268,7 +278,7 @@ public class Jar extends Zip {
         if (configuredManifest == null) {
             configuredManifest = newManifest;
         } else {
-            configuredManifest.merge(newManifest);
+            configuredManifest.merge(newManifest, false, mergeClassPaths);
         }
         savedConfiguredManifest = configuredManifest;
     }
@@ -473,6 +483,24 @@ public class Jar extends Zip {
         }
     }
 
+    /**
+     * Whether to merge Class-Path attributes.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setMergeClassPathAttributes(boolean b) {
+        mergeClassPaths = b;
+    }
+
+    /**
+     * Whether to flatten multi-valued attributes (i.e. Class-Path)
+     * into a single one.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFlattenAttributes(boolean b) {
+        flattenClassPaths = b;
+    }
 
     /**
      * Initialize the zip output stream.
@@ -512,11 +540,13 @@ public class Jar extends Zip {
              */
 
             if (isInUpdateMode()) {
-                finalManifest.merge(originalManifest);
+                finalManifest.merge(originalManifest, false, mergeClassPaths);
             }
-            finalManifest.merge(filesetManifest);
-            finalManifest.merge(configuredManifest, !mergeManifestsMain);
-            finalManifest.merge(manifest, !mergeManifestsMain);
+            finalManifest.merge(filesetManifest, false, mergeClassPaths);
+            finalManifest.merge(configuredManifest, !mergeManifestsMain,
+                                mergeClassPaths);
+            finalManifest.merge(manifest, !mergeManifestsMain,
+                                mergeClassPaths);
 
             return finalManifest;
 
@@ -540,7 +570,7 @@ public class Jar extends Zip {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OutputStreamWriter osw = new OutputStreamWriter(baos, Manifest.JAR_ENCODING);
         PrintWriter writer = new PrintWriter(osw);
-        manifest.write(writer);
+        manifest.write(writer, flattenClassPaths);
         if (writer.checkError()) {
             throw new IOException("Encountered an error writing the manifest");
         }
@@ -724,7 +754,7 @@ public class Jar extends Zip {
                 if (filesetManifest == null) {
                     filesetManifest = newManifest;
                 } else {
-                    filesetManifest.merge(newManifest);
+                    filesetManifest.merge(newManifest, false, mergeClassPaths);
                 }
             } catch (UnsupportedEncodingException e) {
                 throw new BuildException("Unsupported encoding while reading "
