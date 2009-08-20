@@ -93,6 +93,22 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals(NEW_AGE, afterUpdate.getProperty(AGE_KEY));
         assertEquals(NEW_DATE, afterUpdate.getProperty(DATE_KEY));
     }
+    
+    public void testDeleteProperties() throws Exception {
+        Properties beforeUpdate = getTestProperties();
+        assertEquals("Property '" + FNAME_KEY + "' should exist before deleting",
+            FNAME, beforeUpdate.getProperty(FNAME_KEY));
+        assertEquals("Property '" + LNAME_KEY + "' should exist before deleting",
+            LNAME, beforeUpdate.getProperty(LNAME_KEY));
+        
+        executeTarget("delete-properties");
+        Properties afterUpdate = getTestProperties();
+
+        assertEquals("Property '" + LNAME_KEY + "' should exist after deleting",
+            LNAME, afterUpdate.getProperty(LNAME_KEY));
+        assertNull("Property '" + FNAME_KEY + "' should be deleted",
+            afterUpdate.getProperty(FNAME_KEY));
+    }
 
     public void testExerciseDefaultAndIncrement() throws Exception {
         executeTarget("exercise");

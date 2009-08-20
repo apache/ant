@@ -347,6 +347,11 @@ public class PropertyFile extends Task {
          */
         protected void executeOn(Properties props) throws BuildException {
             checkParameters();
+            
+            if (operation == Operation.DELETE_OPER) {
+                props.remove(key);
+                return;
+            }
 
             // type may be null because it wasn't set
             String oldValue = (String) props.get(key);
@@ -508,7 +513,7 @@ public class PropertyFile extends Task {
                 throw new BuildException("- is not supported for string "
                                          + "properties (key:" + key + ")");
             }
-            if (value == null && defaultValue == null) {
+            if (value == null && defaultValue == null  && operation != Operation.DELETE_OPER) {
                 throw new BuildException("\"value\" and/or \"default\" "
                                          + "attribute must be specified (key:" + key + ")");
             }
@@ -574,10 +579,12 @@ public class PropertyFile extends Task {
             public static final int DECREMENT_OPER =   1;
             /** = */
             public static final int EQUALS_OPER =      2;
+            /** del */
+            public static final int DELETE_OPER =      3;
 
             /** {@inheritDoc}. */
             public String[] getValues() {
-                return new String[] {"+", "-", "="};
+                return new String[] {"+", "-", "=", "del"};
             }
 
             /**
@@ -590,6 +597,8 @@ public class PropertyFile extends Task {
                     return INCREMENT_OPER;
                 } else if ("-".equals(oper)) {
                     return DECREMENT_OPER;
+                } else if ("del".equals(oper)) {
+                    return DELETE_OPER;
                 }
                 return EQUALS_OPER;
             }

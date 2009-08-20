@@ -24,26 +24,12 @@
 <body>
 
 <h1>PropertyFile</h1>
-<p>by</p>
-<!-- Names are in alphabetical order, on last name -->
-<ul>
-  <li>Thomas Christen (<a href="mailto:chr@active.ch">chr@active.ch</a>)</li>
-  <li>Jeremy Mawson (<a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com/au</a>)</li>
-</ul>
-
-<hr>
-<h2>Table of Contents</h2>
-<ul>
-  <li><a href="#introduction">Introduction</a></li>
-  <li><a href="#proptask">PropertyFile Task</a></li>
-  <li><a href="#entryElement">Entry Task</a></li>
-</ul>
 
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
-<p>Ant provides an optional task for editing property files.  This is very useful
+<p>Ant provides an optional task for editing property files. This is very useful
 when wanting to make unattended modifications to configuration files for application
-servers and applications.  Currently, the task maintains a working property file with
+servers and applications. Currently, the task maintains a working property file with
 the ability to add properties or make changes to existing ones. Comments and layout
 of the original properties file are preserved.</p>
 
@@ -93,7 +79,7 @@ elements to specify actual modifications to the property file itself.</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">Value to set (=), to add (+) or subtract (-)</td>
-    <td valign="top" align="center" rowspan="2">At least one must be specified</td>
+    <td valign="top" align="center" rowspan="2">At least one must be specified, if <i>operation</i> is not <i>delete</i></td>
   </tr>
   <tr>
     <td valign="top">default</td>
@@ -108,7 +94,14 @@ elements to specify actual modifications to the property file itself.</p>
   </tr>
   <tr>
     <td valign="top">operation</td>
-    <td valign="top">&quot;+&quot; or &quot;=&quot; (default) for all datatypes<br>&quot;-&quot; (for date and int only).<br>
+    <td valign="top">One of the following operations:<br><br>
+    <b>for all datatypes:</b><ul>
+      <li>&quot;del&quot; : deletes an entry</li>
+      <li>&quot;+&quot; : adds a value to the existing value</li>
+      <li>&quot;=&quot; : sets a value instead of the existing value (default)</li>
+    </ul><br><b>for date and int only:</b><ul>
+      <li>&quot;-&quot; : subtracts a value from the existing value</li>
+    </ul>
     </td>
     <td valign="top" align="center">No</td>
   </tr>

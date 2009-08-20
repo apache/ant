@@ -857,6 +857,8 @@ Other changes:
  * It is now possible to suppress the "FAILED" lines sent to Ant's
    logging system via <junit>'s new logFailedTests attribute.
    Bugzilla Report 35073.
+   
+ * <propertyfile> now can delete entries.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
