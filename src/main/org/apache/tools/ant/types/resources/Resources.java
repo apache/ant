@@ -32,6 +32,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * Generic ResourceCollection: Either stores nested ResourceCollections,
@@ -66,19 +67,21 @@ public class Resources extends DataType implements ResourceCollection {
     };
 
     private class MyCollection extends AbstractCollection {
-        private int size;
+        private Collection cache;
 
         MyCollection() {
-            size = 0;
-            for (Iterator rci = getNested().iterator(); rci.hasNext();) {
-                size += ((ResourceCollection) rci.next()).size();
-            }
         }
         public int size() {
-            return size;
+            return getCache().size();
         }
-        public Iterator iterator() {
-            return new MyIterator();
+        public synchronized Iterator iterator() {
+            return cache != null ? cache.iterator() : new MyIterator();
+        }
+        private synchronized Collection getCache() {
+            if (cache == null) {
+                cache = CollectionUtils.asCollection(new MyIterator());
+            }
+            return cache;
         }
         private class MyIterator implements Iterator {
             private Iterator rci = getNested().iterator();
