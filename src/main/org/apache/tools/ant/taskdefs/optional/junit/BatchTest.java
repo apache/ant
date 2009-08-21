@@ -54,6 +54,7 @@ public final class BatchTest extends BaseTest {
      */
     public BatchTest(Project project) {
         this.project = project;
+        resources.setCache(true);
     }
 
     /**

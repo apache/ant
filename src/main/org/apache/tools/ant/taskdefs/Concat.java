@@ -642,6 +642,7 @@ public class Concat extends Task implements ResourceCollection {
         if (!(rc instanceof Resources)) {
             Resources newRc = new Resources();
             newRc.setProject(getProject());
+            newRc.setCache(true);
             newRc.add(rc);
             rc = newRc;
         }
