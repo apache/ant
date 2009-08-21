@@ -132,6 +132,7 @@ public class Resources extends DataType implements ResourceCollection {
     /**
      * Set whether to cache collections.
      * @param b boolean cache flag.
+     * @since Ant 1.8.0
      */
     public synchronized void setCache(boolean b) {
         cache = b;
