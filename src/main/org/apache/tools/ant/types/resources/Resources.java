@@ -67,21 +67,25 @@ public class Resources extends DataType implements ResourceCollection {
     };
 
     private class MyCollection extends AbstractCollection {
-        private Collection cache;
+        private Collection cached;
 
         MyCollection() {
         }
         public int size() {
             return getCache().size();
         }
-        public synchronized Iterator iterator() {
-            return cache != null ? cache.iterator() : new MyIterator();
+        public Iterator iterator() {
+            return getCache().iterator();
         }
         private synchronized Collection getCache() {
-            if (cache == null) {
-                cache = CollectionUtils.asCollection(new MyIterator());
+            Collection coll = cached;
+            if (coll == null) {
+                coll = CollectionUtils.asCollection(new MyIterator());
+                if (cache) {
+                    cached = coll;
+                }
             }
-            return cache;
+            return coll;
         }
         private class MyIterator implements Iterator {
             private Iterator rci = getNested().iterator();
@@ -109,6 +113,7 @@ public class Resources extends DataType implements ResourceCollection {
 
     private Vector rc;
     private Collection coll;
+    private boolean cache = false;
 
     /**
      * Create a new Resources.
@@ -122,6 +127,14 @@ public class Resources extends DataType implements ResourceCollection {
      */
     public Resources(Project project) {
         setProject(project);
+    }
+
+    /**
+     * Set whether to cache collections.
+     * @param b boolean cache flag.
+     */
+    public synchronized void setCache(boolean b) {
+        cache = b;
     }
 
     /**

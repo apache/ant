@@ -872,6 +872,9 @@ Other changes:
    
  * <propertyfile> now can delete entries.
 
+ * The <resources> resource collection can now optionally cache its
+   contents.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

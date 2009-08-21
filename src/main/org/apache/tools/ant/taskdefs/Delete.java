@@ -214,7 +214,10 @@ public class Delete extends MatchingTask {
         if (rc == null) {
             return;
         }
-        rcs = (rcs == null) ? new Resources() : rcs;
+        if (rcs == null) {
+            rcs = new Resources();
+            rcs.setCache(true);
+        }
         rcs.add(rc);
     }
 
@@ -579,8 +582,10 @@ public class Delete extends MatchingTask {
         }
         Resources resourcesToDelete = new Resources();
         resourcesToDelete.setProject(getProject());
+        resourcesToDelete.setCache(true);
         Resources filesetDirs = new Resources();
         filesetDirs.setProject(getProject());
+        filesetDirs.setCache(true);
         FileSet implicit = null;
         if (usedMatchingTask && dir != null && dir.isDirectory()) {
             //add the files from the default fileset:
