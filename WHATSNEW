@@ -447,6 +447,10 @@ Fixed bugs:
    attributes of the last merged manifest.
    Bugzilla Report 39655.
 
+ * <delete> didn't work correctly with a <modified> selector because
+   it was scanning the same filesets more than once.
+   Bugzilla Report 43574.
+
 Other changes:
 --------------
  * The get task now also follows redirects from http to https
