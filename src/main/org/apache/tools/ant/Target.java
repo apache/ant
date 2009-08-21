@@ -29,6 +29,10 @@ import org.apache.tools.ant.property.LocalProperties;
 
 /**
  * Class to implement a target object with required parameters.
+ *
+ * <p>If you are creating Targets programmatically, make sure you set
+ * the Location to a useful value.  In particular all targets should
+ * have different location values.</p>
  */
 public class Target implements TaskContainer {
 
