@@ -84,6 +84,11 @@ set of files to check against the target file(s).</p>
 <p><strong>Note:</strong> You can specify either the <code>srcfile</code>
 attribute or nested <code>&lt;srcfiles&gt;</code> elements, but not both.
 
+<p>Note that the task will completely ignore any directories that seem
+  to be matched by the srcfiles fileset, it will only consider normal
+  files.  If you need logic that applies to directories as well, use a
+  nested srcresource and a dirset (for example).</p>
+
 <h4><a name="srcresources">srcresources</a></h4>
 <p>The nested <code>&lt;srcresources&gt;</code> element is a <a
 href="../CoreTypes/resources.html#union">union</a> and allows you to
