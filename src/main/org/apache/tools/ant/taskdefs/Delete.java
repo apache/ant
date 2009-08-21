@@ -597,15 +597,30 @@ public class Delete extends MatchingTask {
                 fs = (FileSet) fs.clone();
                 fs.setProject(getProject());
             }
-            File fsDir = fs.getDir();
+            final File fsDir = fs.getDir();
             if (fsDir == null) {
                 throw new BuildException(
                         "File or Resource without directory or file specified");
             } else if (!fsDir.isDirectory()) {
                 handle("Directory does not exist: " + fsDir);
             } else {
-                resourcesToDelete.add(fs);
                 DirectoryScanner ds = fs.getDirectoryScanner();
+                // the previous line has already scanned the
+                // filesystem, in order to avoid a rescan when later
+                // iterating, capture the results now and store them
+                final String[] files = ds.getIncludedFiles();
+                resourcesToDelete.add(new ResourceCollection() {
+                        public boolean isFilesystemOnly() {
+                            return true;
+                        }
+                        public int size() {
+                            return files.length;
+                        }
+                        public Iterator iterator() {
+                            return new FileResourceIterator(getProject(),
+                                                            fsDir, files);
+                        }
+                    });
                 if (includeEmpty) {
                     filesetDirs.add(new ReverseDirs(getProject(), fsDir,
                                                     ds

@@ -59,4 +59,43 @@
     <au:assertFileExists file="${output}/foo/bar/baz.txt"/>
   </target>
 
+  <target name="testNotModifiedSelector"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
+    <mkdir dir="${input}/images"/>
+    <mkdir dir="${input}/cache"/>
+    <touch file="${input}/images/foo.jpg"/>
+    <mkdir dir="${output}"/>
+    <selector id="cache.selector">
+      <not>
+        <modified update="true"
+                  seldirs="false"
+                  cache="propertyfile"
+                  algorithm="digest"
+                  comparator="equal">
+          <param name="cache.cachefile"
+                 value="${input}/cache/cache.properties"/>
+          <param name="algorithm.algorithm" value="MD5"/>
+        </modified>
+      </not>
+    </selector>
+    <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
+    <move todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </move>
+    <au:assertFileExists file="${input}/cache/cache.properties"/>
+    <au:assertFileExists file="${input}/images/foo.jpg"/>
+    <au:assertFileDoesntExist file="${output}/foo.jpg"/>
+    <move todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </move>
+    <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>
+    <au:assertFileExists file="${output}/foo.jpg"/>
+  </target>
 </project>

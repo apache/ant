@@ -94,4 +94,41 @@
     <touch file="${output}/foo"/>
     <au:assertFileDoesntExist file="${output}/link" />
   </target>
+
+  <target name="testNotModifiedSelector"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
+    <mkdir dir="${input}/images"/>
+    <mkdir dir="${input}/cache"/>
+    <touch file="${input}/images/foo.jpg"/>
+    <selector id="cache.selector">
+      <not>
+        <modified update="true"
+                  seldirs="false"
+                  cache="propertyfile"
+                  algorithm="digest"
+                  comparator="equal">
+          <param name="cache.cachefile"
+                 value="${input}/cache/cache.properties"/>
+          <param name="algorithm.algorithm" value="MD5"/>
+        </modified>
+      </not>
+    </selector>
+    <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
+    <delete>
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </delete>
+    <au:assertFileExists file="${input}/cache/cache.properties"/>
+    <au:assertFileExists file="${input}/images/foo.jpg"/>
+    <delete>
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>
+  </target>
 </project>

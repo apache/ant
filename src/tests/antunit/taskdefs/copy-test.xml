@@ -150,4 +150,42 @@ public class NullByteStreamResource extends Resource {
       </copy>
     </au:expectfailure>
   </target>
+
+  <target name="testNotModifiedSelector"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
+    <mkdir dir="${input}/images"/>
+    <mkdir dir="${input}/cache"/>
+    <touch file="${input}/images/foo.jpg"/>
+    <mkdir dir="${output}"/>
+    <selector id="cache.selector">
+      <not>
+        <modified update="true"
+                  seldirs="false"
+                  cache="propertyfile"
+                  algorithm="digest"
+                  comparator="equal">
+          <param name="cache.cachefile"
+                 value="${input}/cache/cache.properties"/>
+          <param name="algorithm.algorithm" value="MD5"/>
+        </modified>
+      </not>
+    </selector>
+    <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
+    <copy todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </copy>
+    <au:assertFileExists file="${input}/cache/cache.properties"/>
+    <au:assertFileDoesntExist file="${output}/foo.jpg"/>
+    <copy todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </copy>
+    <au:assertFileExists file="${output}/foo.jpg"/>
+  </target>
 </project>
