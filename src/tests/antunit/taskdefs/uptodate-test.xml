@@ -21,7 +21,7 @@
   <target name="testModifiedDirectories"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=39122
                        and
-                       https://issues.apache.org/bugzilla/show_bug.cgi?id=44300">
+                       https://issues.apache.org/bugzilla/show_bug.cgi?id=44430">
     <mkdir dir="${input}/source"/>
     <mkdir dir="${output}"/>
     <sleep seconds="2"/>
