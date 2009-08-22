@@ -875,6 +875,8 @@ Other changes:
  * The <resources> resource collection can now optionally cache its
    contents.
 
+ * A new <resourceexists> condition can check whether resources exists.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
