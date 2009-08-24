@@ -251,6 +251,18 @@ public class SQLExec extends JDBCTask {
     private boolean treatWarningsAsErrors = false;
 
     /**
+     * The name of the property to set in the event of an error
+     * @since Ant 1.8.0
+     */
+    private String errorProperty = null;
+
+    /**
+     * The name of the property to set in the event of a warning
+     * @since Ant 1.8.0
+     */
+    private String warningProperty = null;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      * @param srcFile the file containing the SQL command.
@@ -522,6 +534,28 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Property to set to "true" if a statement throws an error.
+     *
+     * @param errorProperty the name of the property to set in the
+     * event of an error.
+     * @since Ant 1.8.0
+     */
+    public void setErrorProperty(String errorProperty) {
+        this.errorProperty = errorProperty;
+    }
+
+    /**
+     * Property to set to "true" if a statement produces a warning.
+     *
+     * @param warningProperty the name of the property to set in the
+     * event of a warning.
+     * @since Ant 1.8.0
+     */
+    public void setWarningProperty(String warningProperty) {
+        this.warningProperty = warningProperty;
+    }
+
+    /**
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
@@ -614,11 +648,13 @@ public class SQLExec extends JDBCTask {
                 if (onError.equals("abort")) {
                     throw new BuildException(e, getLocation());
                 }
+                setErrorProperty();
             } catch (SQLException e) {
                 closeQuietly();
                 if (onError.equals("abort")) {
                     throw new BuildException(e, getLocation());
                 }
+                setErrorProperty();
             } finally {
                 try {
                     if (getStatement() != null) {
@@ -758,6 +794,7 @@ public class SQLExec extends JDBCTask {
             if (!onError.equals("continue")) {
                 throw e;
             }
+            setErrorProperty();
         } finally {
             if (resultSet != null) {
                 try {
@@ -1058,6 +1095,23 @@ public class SQLExec extends JDBCTask {
         }
         if (treatWarningsAsErrors && initialWarning != null) {
             throw initialWarning;
+        }
+        if (initialWarning != null) {
+            setWarningProperty();
+        }
+    }
+
+    protected final void setErrorProperty() {
+        setProperty(errorProperty);
+    }
+
+    protected final void setWarningProperty() {
+        setProperty(warningProperty);
+    }
+
+    private void setProperty(String name) {
+        if (name != null) {
+            getProject().setNewProperty(name, "true");
         }
     }
 }

@@ -897,6 +897,10 @@ Other changes:
 
  * A new <resourceexists> condition can check whether resources exists.
 
+ * <sql> has two new attributes errorproperty and warningproperty that
+   can be set if an error/warning occurs.
+   Bugzilla Report 38807.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
