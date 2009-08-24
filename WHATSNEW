@@ -4,47 +4,52 @@ Changes from Ant 1.7.x TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
-* Ant now requires Java 1.4 or later.
+ * Ant now requires Java 1.4 or later.
 
-* Improved handling of InterruptException (lets suppose someone/thing is
-  trying to kill the thread when we receive an InterruptException),
-  when an InterruptException is received, we do not wait anymore in a while
-  loop till the end time has been reached. Bugzilla report 42924.
+ * Improved handling of InterruptException (lets suppose someone/thing
+   is trying to kill the thread when we receive an
+   InterruptException), when an InterruptException is received, we do
+   not wait anymore in a while loop till the end time has been
+   reached.
+   Bugzilla Report 42924.
 
-* Refactor PropertyHelper and introspection APIs to make extension more
-  granular and support setting task/type attribute values to objects
-  decoded by custom PropertyEvaluator delegates. Also add <propertyhelper>
-  task for registering delegates and/or replacing the registered PropertyHelper
-  instance.  Bugzilla report 42736.
+ * Refactor PropertyHelper and introspection APIs to make extension
+   more granular and support setting task/type attribute values to
+   objects decoded by custom PropertyEvaluator delegates. Also add
+   <propertyhelper> task for registering delegates and/or replacing
+   the registered PropertyHelper instance.
+   Bugzilla Report 42736.
 
-* Added a restricted form of typedef called <componentdef>. This allows
-  definition of elements that can only be within tasks or types. This
-  method is now used to define conditions, selectors and selectors. This
-  means that tasks may now have nested conditions just by implementing
-  the Condition interface, rather than extending ConditionBase. It also
-  means that the use of namespaces for some of the selectors introduced
-  in Ant 1.7.0 is no longer necessary.
-  Implementing this means that the DynamicElement work-around introduced
-  in Ant 1.7.0 has been removed.
-  Bugzilla report 40511.
+ * Added a restricted form of typedef called <componentdef>. This
+   allows definition of elements that can only be within tasks or
+   types. This method is now used to define conditions, selectors and
+   selectors. This means that tasks may now have nested conditions
+   just by implementing the Condition interface, rather than extending
+   ConditionBase. It also means that the use of namespaces for some of
+   the selectors introduced in Ant 1.7.0 is no longer necessary.
+   Implementing this means that the DynamicElement work-around
+   introduced in Ant 1.7.0 has been removed.
+   Bugzilla Report 40511.
 
-* In the <touch> task when a <mapper> is used, the millis and datetime
-  attributes now override the time of the source resource if provisioned. 
-  Bugzilla report 43235.
+ * In the <touch> task when a <mapper> is used, the millis and
+   datetime attributes now override the time of the source resource if
+   provisioned.
+   Bugzilla Report 43235.
 
-* Remove fall-back mechanism for references that are not resolved
-  during normal runtime execution.
+ * Remove fall-back mechanism for references that are not resolved
+   during normal runtime execution.
 
-* FileUtils.createTempFile now actually creates the file.
-  The TempFile task still does not create the file by default, can be instructed
-  to do so however using a new parameter.
-  Bugzilla report 33969.
+ * FileUtils.createTempFile now actually creates the file.
+   The TempFile task still does not create the file by default, can be
+   instructed to do so however using a new parameter.
+   Bugzilla Report 33969.
   
-* A lock in Project ensured that a BuildListener's messageLogged
-  method was only ever executed by a single thread at a time, while
-  all other methods could be invoked by multiple threads
-  simultaniously (while within <parallel>, for example).  This lock is
-  no longer in place, messageLogged should be made thread-safe now.
+ * A lock in Project ensured that a BuildListener's messageLogged
+   method was only ever executed by a single thread at a time, while
+   all other methods could be invoked by multiple threads
+   simultaniously (while within <parallel>, for example).  This lock
+   is no longer in place, messageLogged should be made thread-safe
+   now.
 
  * <sql>'s onError="stop" no longer fails the build if an error
    occurs,  this is the main difference between stop and error and
@@ -62,7 +67,7 @@ Changes that could break older environments:
 
  * <unzip> will now fail when trying to extract certain broken
    archives that would have been silently ignored in earlier version.
-   Bugzilla report 35000.
+   Bugzilla Report 35000.
 
  * Ant's <zip> family of tasks tries to preserve the existing Unix
    permissions when updating archives or copying entries from one
@@ -103,7 +108,7 @@ Changes that could break older environments:
    The task will now try to delete them in both cases.
    Bugzilla Report 41285.
 
- * if the dir attribute of a <fileset> point to a symbolic link and
+ * if the dir attribute of a <fileset> points to a symbolic link and
    followsymlinks is set to false, the fileset will no longer be
    scanned and always seem empty.
    Bugzilla Report 45741.
@@ -148,53 +153,64 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* The default logger was failing to print complete stack traces for exceptions
-  other than BuildException when inside <ant> or <antcall>, thus omitting often
-  important diagnostic information. Bugzilla 43398 (continued).
+ * The default logger was failing to print complete stack traces for
+   exceptions other than BuildException when inside <ant> or
+   <antcall>, thus omitting often important diagnostic
+   information.
+   Bugzilla 43398 (continued).
 
- * Better handling of package-info.class. Bugzilla Report 43114.
+ * Better handling of package-info.class.
+   Bugzilla Report 43114.
 
  * RPM task needed an inserted space between the define and the value.
-   bugzilla Report 46659.
+   Bugzilla Report 46659.
 
- * Got rid of deadlock between in in, out and err in the Redirector. 
+ * Got rid of deadlock between in, out and err in the Redirector. 
    Bugzilla Report 44544.
 
- * Caused by AssertionError no longer filtered. Bugzilla report 45631.
+ * Caused by AssertionError no longer filtered.
+   Bugzilla Report 45631.
  
- * <zip> would sometimes recreate JARs unnecessarily. Bugzilla report 45902.
+ * <zip> would sometimes recreate JARs unnecessarily.
+   Bugzilla Report 45902.
 
- * <symlink> task couldn't overwrite existing symlinks that pointed to nonexistent files
-   Bugzilla report 38199.
+ * <symlink> task couldn't overwrite existing symlinks that pointed to
+   nonexistent files
+   Bugzilla Report 38199.
 
  * <symlink> task couldn't overwrite files that were in the way of the symlink.
-   Bugzilla report 43426.
+   Bugzilla Report 43426.
    
- * <symlink> task failonerror="false" does not stop build from failing when 'ln' 
-   command returns non-zero. Bugzilla report 43624  
+ * <symlink> task failonerror="false" does not stop build from failing
+   when 'ln' command returns non-zero.
+   Bugzilla Report 43624  
 
- * <touch> task couldn't differentiate between "no resources specified" and "no resources
-   matched."  Bugzilla report 43799.
+ * <touch> task couldn't differentiate between "no resources
+   specified" and "no resources matched."
+   Bugzilla Report 43799.
 
- * ManifestClassPath throws when a relative path would traverse the file system root. Bugzilla
-   report 44499.
+ * ManifestClassPath failed when a relative path would traverse the
+   file system root.
+   Bugzilla Report 44499.
 
- * <globmapper> had an indexoutofbounds when the prefix and postfix overlapped. Bugzilla report
-   44731.
+ * <globmapper> had an indexoutofbounds when the prefix and postfix
+   overlapped.
+   Bugzilla Report 44731.
    
  * <typedef> and <taskdef> failed to accept file names with #
    characters in them.
-   Bugzilla report 45190
+   Bugzilla Report 45190
 
  * A deadlock could occur if a BuildListener tried to access an Ant property
    within messageLogged while a different thread also accessed one.
-   Bugzilla report 45194
+   Bugzilla Report 45194
 
  * Handle null result of system getProperty() in CommandlineJava.
-   Similar to Bugzilla report 42334.
+   Similar to Bugzilla Report 42334.
 
  * Length task did not process nonexistent Resources even though these might
-   conceivably still carry file length information.  Bugzilla report 45271.
+   conceivably still carry file length information.
+   Bugzilla Report 45271.
 
  * <javac>'s includeJavaRuntime="false" should work for gcj now.  Note
    that you may need to set includeAntRuntime to false in order to
@@ -204,7 +220,7 @@ Fixed bugs:
  * <sql> would fail if the executed statment didn't return a result
    set with some JDBC driver that dissalow Statement.getResultSet to
    be called in such a situation.
-   Bugzilla report 36265 
+   Bugzilla Report 36265 
 
  * if the executed statement in <sql> returned a result set and an
    update count, the count would be lost.
@@ -226,7 +242,7 @@ Fixed bugs:
  * The IPlanetDeploymentTool didn't use the configured DTD locations.
    Bugzilla Report 31876.
 
- * The ant shell script printed a warning unser Cygwin if JAVA_HOME
+ * The ant shell script printed a warning under Cygwin if JAVA_HOME
    was not set.
    Bugzilla Report 45245.
 
@@ -355,7 +371,8 @@ Fixed bugs:
    exclude patterns.
 
  * <sort> resource collection kept only one of entries deemed equal by
-   the chosen Comparator.  Bugzilla report 46527.
+   the chosen Comparator.
+   Bugzilla Report 46527.
 
  * the ZipFile class used by <unzip> and others could leave the
    archive open (making it undeletable on Windows as long as the java
@@ -453,21 +470,22 @@ Fixed bugs:
 
 Other changes:
 --------------
+
  * The get task now also follows redirects from http to https
-   Bugzilla report 47433
+   Bugzilla Report 47433
 
  * A HostInfo task was added performing information on hosts, including info on 
    the host ant is running on. 
-   Bugzilla reports 45861 and 31164.
+   Bugzilla Reports 45861 and 31164.
 
  * There is now a FileProvider interface for resources that act as a source
    of filenames. This should be used by tasks that require resources
    to provide filenames, rather than require that all resources
    are instances or subclasses of FileResource.
-   Bugzilla report 43348
+   Bugzilla Report 43348
    
  * Fixcrlf now gives better error messages on bad directory attributes.
-   Bugzilla report 43936
+   Bugzilla Report 43936
    
  * a new property ant.project.default-target holds the value of the
    current <project>'s default attribute.
@@ -506,32 +524,33 @@ Other changes:
    a build if a warning occurs.
    Bugzilla Report 41836.
 
- * Ant now supports scoped properties (see Local task). Bugzilla report 23942.
+ * Ant now supports scoped properties (see Local task).
+   Bugzilla Report 23942.
 
  * <sql>'s CSV output can be controlled via the new attributes
    csvColumnSeparator and csvQuoteCharacter.
-   Bugzilla report 35627.
+   Bugzilla Report 35627.
 
  * <ftp>'s logging has been improved.
-   Bugzilla reports 30932, 31743.
+   Bugzilla Reports 30932, 31743.
 
  * It is now possible to disable <ftp>'s remote verification.
-   Bugzilla report 35471.
+   Bugzilla Report 35471.
 
  * <sshexec> now supports input in a way similar to <exec>
-   Bugzilla report 39197.
+   Bugzilla Report 39197.
 
  * <scp> can now preserve the file modification time when downloading
    files.
-   Bugzilla Issue 33939.
+   Bugzilla Report 33939.
 
  * the new task sshsession can run multiple tasks in the presence of
    an SSH session providing (local and remote) tunnels.
-   Bugzilla Issue 43083.
+   Bugzilla Report 43083.
 
  * ZipOutputStream has been sped up for certain usage scenarios that
    are not used by Ant's family of zip tasks.
-   Bugzilla report 45396.
+   Bugzilla Report 45396.
 
  * <echo> supports an "output" Resource attribute as an alternative to "file".
 
@@ -539,7 +558,7 @@ Other changes:
 
  * <scp> no longer requires a passphrase when using key based
    authentication.
-   Bugzilla report 33718.
+   Bugzilla Report 33718.
 
  * a new failOnEmptyArchive attribute on <unzip> and <untar> can now
    make the task fail the build if it tries to extract an empty
@@ -571,7 +590,7 @@ Other changes:
    Bugzilla Report 45284
 
  * Enhanced performance of Project.fireMessageLoggedEvent and DirectoryScanner 
-   Bugzilla Report 45651 & 45665
+   Bugzilla Reports 45651 and 45665
 
  * The package list location for offline links can now be specified as
    an URL.
@@ -588,7 +607,8 @@ Other changes:
 
  * The Jar task now supports the addition of a jar index file in update mode.
    Previously the absence of the index was not enough to trigger the rebuild;
-   some other update was necessary.  Bugzilla report 45098.
+   some other update was necessary.
+   Bugzilla report 45098.
 
  * <ant> has a new attribute "useNativeBasedir" that makes the child
    build use the same basedir it would have used if invoked from the
@@ -603,7 +623,7 @@ Other changes:
    ProjectHelper if the implementation overrides the new
    canParseAntlibDescriptor and parseAntlibDescriptor methods.  If the
    configured helper doesn't override the methods, a new instance of
-   ProjectHelper2 will be used just like in ant 1.7.1.
+   ProjectHelper2 will be used just like in Ant 1.7.1.
    Bugzilla Report 42208.
 
  * It is now possible to explicitly set the executable used by
@@ -678,7 +698,7 @@ Other changes:
    Bugzilla Report 46063.
 
  * <import> has new attributes "as" and "prefixSeparator" that can be
-   used to control the prefix prepended to the imported target's
+   used to control the prefix prepended to the imported targets'
    names.
 
  * a new task <include> provides an alternative to <import> that
@@ -692,7 +712,7 @@ Other changes:
  * the os and osfamily attributes of <chown>, <chgrp>, <chmod> and
    <attrib> can now be used to run the commands on operating systems
    other than their "native" environment, i.e. non-Unix or non-Windows
-   operating systems repsectively.
+   operating systems respectively.
    Bugzilla Report 7624.
 
  * a new resource collection <mappedresources> generalizes the prefix
@@ -733,7 +753,7 @@ Other changes:
    Bugzilla Report 36653.
 
  * a new resource collection <archives> can be used to specify
-   collections of ZIP and TAR archives as source and extracts them on
+   collections of ZIP and TAR archives as sources.  It extracts them on
    the fly.  This is a generalization of the <zipgroupfileset> found
    as nested element of <zip> and friends.
    Bugzilla Report 46257.
@@ -768,7 +788,7 @@ Other changes:
    build fail if the task didn't do anything.
    Bugzilla Report 21064.
 
- * <sync>'s <preserveInTarget> has a new attribute that conrols
+ * <sync>'s <preserveInTarget> has a new attribute that controls
    whether empty directories should be kept.
    Bugzilla Report 43159.
 
@@ -800,8 +820,8 @@ Other changes:
    file name and comment encoding.  Please see the zip tasks'
    documentation for details.
 
- * <input ...><handler type="secure" /></input> now uses previously undocumented
-   SecureInputHandler shipped with Ant 1.7.1.
+ * <input ...><handler type="secure" /></input> now uses previously
+   undocumented SecureInputHandler shipped with Ant 1.7.1.
 
  * Command line arguments for <exec> and similar tasks can now have
    optional prefix and suffix attributes.
@@ -812,7 +832,7 @@ Other changes:
    Bugzilla Report 45625
 
  * <jar> has a new attribute to enable indexing of META-INF
-   directories which is desabled for backwards compatibility reasons.
+   directories which is disabled for backwards compatibility reasons.
    Bugzilla Report 47457
 
  * <apt>'s executable attribute can be used to specify a different
@@ -826,7 +846,7 @@ Other changes:
  * <javac>, <rmic>, <javah> and <native2ascii> now provide a nested
    element to specify a classpath that will be used when loading the
    task's (compiler) adapter class.
-   Bugzilla Issue 11143.
+   Bugzilla Report 11143.
 
  * A new subclass org.apache.tools.ant.loader.AntClassLoader5 of
    AntClassLoader has been added which overrides getResources
@@ -834,7 +854,7 @@ Other changes:
    this method now behaves as expected.
    The new subclass will be used by Ant internally if it is available
    and Ant is running on Java5 or more recent.
-   Bugzilla Issue 46752.
+   Bugzilla Report 46752.
 
  * a new attributes can chose a different request method than GET for
    the http condition.
