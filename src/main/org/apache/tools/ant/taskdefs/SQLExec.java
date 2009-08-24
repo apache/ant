@@ -645,16 +645,16 @@ public class SQLExec extends JDBCTask {
                 }
             } catch (IOException e) {
                 closeQuietly();
+                setErrorProperty();
                 if (onError.equals("abort")) {
                     throw new BuildException(e, getLocation());
                 }
-                setErrorProperty();
             } catch (SQLException e) {
                 closeQuietly();
+                setErrorProperty();
                 if (onError.equals("abort")) {
                     throw new BuildException(e, getLocation());
                 }
-                setErrorProperty();
             } finally {
                 try {
                     if (getStatement() != null) {
@@ -788,13 +788,13 @@ public class SQLExec extends JDBCTask {
             goodSql++;
         } catch (SQLException e) {
             log("Failed to execute: " + sql, Project.MSG_ERR);
+            setErrorProperty();
             if (!onError.equals("abort")) {
                 log(e.toString(), Project.MSG_ERR);
             }
             if (!onError.equals("continue")) {
                 throw e;
             }
-            setErrorProperty();
         } finally {
             if (resultSet != null) {
                 try {
@@ -1093,11 +1093,11 @@ public class SQLExec extends JDBCTask {
                 warning = warning.getNextWarning();
             }
         }
-        if (treatWarningsAsErrors && initialWarning != null) {
-            throw initialWarning;
-        }
         if (initialWarning != null) {
             setWarningProperty();
+        }
+        if (treatWarningsAsErrors && initialWarning != null) {
+            throw initialWarning;
         }
     }
 
