@@ -23,7 +23,7 @@
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
     <condition property="gump">
-      <equals arg1="${build.sysclasspath}" arg2="only"/>
+      <available classname="org/apache/xerces/jaxp/DocumentBuilderFactoryImpl.class"/>
     </condition>
   </target>
 
