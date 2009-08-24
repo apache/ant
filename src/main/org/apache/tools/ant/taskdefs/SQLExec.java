@@ -263,6 +263,13 @@ public class SQLExec extends JDBCTask {
     private String warningProperty = null;
 
     /**
+     * The name of the property that receives the number of rows
+     * returned
+     * @since Ant 1.8.0
+     */
+    private String rowCountProperty = null;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      * @param srcFile the file containing the SQL command.
@@ -556,6 +563,15 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Sets a given property to the number of rows in the first
+     * statement that returned a row count.
+     * @since Ant 1.8.0
+     */
+    public void setRowCountProperty(String rowCountProperty) {
+        this.rowCountProperty = rowCountProperty;
+    }
+
+    /**
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
@@ -778,6 +794,9 @@ public class SQLExec extends JDBCTask {
             getStatement().clearWarnings();
 
             log(updateCountTotal + " rows affected", Project.MSG_VERBOSE);
+            if (updateCountTotal != -1) {
+                setRowCountProperty(updateCountTotal);
+            }
 
             if (print && showtrailers) {
                 out.println(updateCountTotal + " rows affected");
@@ -1102,16 +1121,20 @@ public class SQLExec extends JDBCTask {
     }
 
     protected final void setErrorProperty() {
-        setProperty(errorProperty);
+        setProperty(errorProperty, "true");
     }
 
     protected final void setWarningProperty() {
-        setProperty(warningProperty);
+        setProperty(warningProperty, "true");
     }
 
-    private void setProperty(String name) {
+    protected final void setRowCountProperty(int rowCount) {
+        setProperty(rowCountProperty, Integer.toString(rowCount));
+    }
+
+    private void setProperty(String name, String value) {
         if (name != null) {
-            getProject().setNewProperty(name, "true");
+            getProject().setNewProperty(name, value);
         }
     }
 }

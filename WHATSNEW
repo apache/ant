@@ -901,6 +901,10 @@ Other changes:
    can be set if an error/warning occurs.
    Bugzilla Report 38807.
 
+ * <sql> has a new attribute rowcountproperty that can be used to set
+   a property to the number of rows affected by a task execution.
+   Bugzilla Report 40923.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
