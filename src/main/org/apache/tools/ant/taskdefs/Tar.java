@@ -361,6 +361,8 @@ public class Tar extends MatchingTask {
             return;
         }
 
+        boolean preserveLeadingSlashes = false;
+
         if (tarFileSet != null) {
             String fullpath = tarFileSet.getFullpath(this.getProject());
             if (fullpath.length() > 0) {
@@ -379,8 +381,9 @@ public class Tar extends MatchingTask {
                 vPath = prefix + vPath;
             }
 
-            if (vPath.startsWith("/")
-                && !tarFileSet.getPreserveLeadingSlashes()) {
+            preserveLeadingSlashes = tarFileSet.getPreserveLeadingSlashes();
+
+            if (vPath.startsWith("/") && !preserveLeadingSlashes) {
                 int l = vPath.length();
                 if (l <= 1) {
                     // we would end up adding "" to the archive
@@ -415,7 +418,7 @@ public class Tar extends MatchingTask {
             }
         }
 
-        TarEntry te = new TarEntry(vPath);
+        TarEntry te = new TarEntry(vPath, preserveLeadingSlashes);
         te.setModTime(r.getLastModified());
         // preserve permissions
         if (r instanceof ArchiveResource) {

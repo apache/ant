@@ -17,6 +17,7 @@
 -->
 
 <project name="tar-test" default="antunit"
+         xmlns:cond="antlib:org.apache.tools.ant.types.conditions"
          xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
@@ -29,5 +30,46 @@
     <tar  destfile="${output}/testtar.tar">
       <tarfileset  prefix="pre" refid="xml.fileset" />
     </tar>
+  </target>
+
+  <target name="testRemoveLeadingSlashes" depends="setUp">
+    <tar destfile="${output}/testtar.tar">
+      <tarfileset file="${ant.file}" fullpath="/foo.xml"/>
+    </tar>
+    <au:assertTrue>
+      <cond:resourceexists>
+        <tarentry name="foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertTrue>
+    <au:assertFalse>
+      <cond:resourceexists>
+        <tarentry name="/foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertFalse>
+  </target>
+
+  <target name="testPreserveLeadingSlashes" depends="setUp">
+    <tar destfile="${output}/testtar.tar">
+      <tarfileset file="${ant.file}" fullpath="/foo.xml"
+                  preserveleadingslashes="true"/>
+    </tar>
+    <au:assertTrue>
+      <cond:resourceexists>
+        <tarentry name="/foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertTrue>
+    <au:assertFalse>
+      <cond:resourceexists>
+        <tarentry name="foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertFalse>
   </target>
 </project>
