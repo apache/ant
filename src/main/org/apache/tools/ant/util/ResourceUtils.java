@@ -17,19 +17,22 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.File;
-import java.io.Reader;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.BufferedInputStream;
+import java.io.Reader;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
-import java.util.Vector;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
@@ -430,6 +433,45 @@ public class ResourceUtils {
                     out.write(buffer, 0, nRead);
                 }
             } finally {
+                FileUtils.close(out);
+                FileUtils.close(in);
+            }
+        } else if (source.as(FileProvider.class) != null
+                   && dest.as(FileProvider.class) != null) {
+            File sourceFile =
+                ((FileProvider) source.as(FileProvider.class)).getFile();
+            File destFile =
+                ((FileProvider) dest.as(FileProvider.class)).getFile();
+
+            File parent = destFile.getParentFile();
+            if (parent != null && !parent.isDirectory()
+                && !destFile.getParentFile().mkdirs()) {
+                throw new IOException("failed to create the parent directory"
+                                      + " for " + destFile);
+            }
+
+            FileInputStream in = null;
+            FileOutputStream out = null;
+            FileChannel srcChannel = null;
+            FileChannel destChannel = null;
+
+            try {
+                in = new FileInputStream(sourceFile);
+                out = new FileOutputStream(destFile);
+                    
+                srcChannel = in.getChannel();
+                destChannel = out.getChannel();
+                
+                long position = 0;
+                long count = srcChannel.size();
+                while (position < count) {
+                    position +=
+                        srcChannel.transferTo(position, FileUtils.BUF_SIZE,
+                                              destChannel);
+                }
+            } finally {
+                FileUtils.close(srcChannel);
+                FileUtils.close(destChannel);
                 FileUtils.close(out);
                 FileUtils.close(in);
             }

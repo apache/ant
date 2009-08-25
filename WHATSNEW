@@ -905,6 +905,10 @@ Other changes:
    a property to the number of rows affected by a task execution.
    Bugzilla Report 40923.
 
+ * when Ant copies files without filtering, it will now use NIO
+   channels.
+   Bugzilla Report 30094.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
