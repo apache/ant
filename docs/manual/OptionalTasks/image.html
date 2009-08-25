@@ -200,6 +200,19 @@ nested inside the Draw object.</p>
   </tr>
 </table>
 
+<h4>mapper</h4>
+<p><em>Since Ant 1.8.0</em></p>
+
+<p>You can define filename transformations by using a
+  nested <a href="../CoreTypes/mapper.html">mapper</a> element. The
+  default mapper used by
+  <code>&lt;image&gt;</code> is
+  the <a href="../CoreTypes/mapper.html#identity-mapper">identity
+  mapper</a>.</p>
+
+<p>You can also use a filenamemapper type in place of the mapper
+  element.</p>
+
 <h3>Examples</h3>
 
 <blockquote><pre>
@@ -227,6 +240,15 @@ and stores the <i>src</i>.</p>
 &lt;/image&gt;
 </pre></blockquote>
 <p>Same as above but stores the result in <i>dest</i>.</p>
+
+<blockquote><pre>
+&lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
+    &lt;scale proportions="width" width="40"/&gt;
+    &lt;globmapper from="*" to="scaled-*"/&gt;
+&lt;/image&gt;
+</pre></blockquote>
+<p>Same as above but stores the resulting file names will be prefixed
+  by "scaled-".</p>
 
 <blockquote><pre>
 </pre></blockquote>

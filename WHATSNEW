@@ -150,6 +150,12 @@ Changes that could break older environments:
    java.vm.version for the Created-By Manifest attribute.
    Bugzilla Report 47632.
 
+ * The <image> task now supports a nested mapper.  In order to
+   implement this, the Java API of the task had to change so any
+   custom subclass overriding the processFile method will need to
+   adapt (by overriding the new two-arg processFile method).
+   Bugzilla Report 23243.
+
 Fixed bugs:
 -----------
 

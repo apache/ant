@@ -66,4 +66,11 @@
 			</image>   
 		</target>   
    
+  <target name="testSimpleScaleWithMapper" depends="init">
+    <image includes="*.jpg" srcdir="${src.dir}"
+           destdir="${dest.dir}" overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+      <globmapper from="*" to="scaled-*"/>
+    </image>   
+  </target>   
 </project>

@@ -91,6 +91,14 @@ public class ImageTest extends BuildFileTest {
                    lastModified == overwrittenLastModified);
     }
 
+    public void testSimpleScaleWithMapper() {
+        expectLogContaining("testSimpleScaleWithMapper", "Processing File");
+        File f = createRelativeFile("/dest/scaled-" + LARGEIMAGE);
+        assertTrue(
+                   "Did not create "+f.getAbsolutePath(),
+                   f.exists());
+
+    }
 
     public void off_testFailOnError() {
         try {

@@ -20,13 +20,18 @@ package org.apache.tools.ant.taskdefs.optional.image;
 import com.sun.media.jai.codec.FileSeekableStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.optional.image.Draw;
 import org.apache.tools.ant.types.optional.image.ImageOperation;
 import org.apache.tools.ant.types.optional.image.Rotate;
 import org.apache.tools.ant.types.optional.image.Scale;
 import org.apache.tools.ant.types.optional.image.TransformOperation;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.IdentityMapper;
 
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
@@ -69,6 +74,8 @@ public class Image extends MatchingTask {
     // CheckStyle:MemberNameCheck ON
 
     // CheckStyle:VisibilityModifier ON
+
+    private Mapper mapperElement = null;
 
     /**
      * Add a set of files to be deleted.
@@ -177,52 +184,157 @@ public class Image extends MatchingTask {
     }
 
     /**
+     * Defines the mapper to map source to destination files.
+     * @return a mapper to be configured
+     * @exception BuildException if more than one mapper is defined
+     * @since Ant 1.8.0
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper",
+                                     getLocation());
+        }
+        mapperElement = new Mapper(getProject());
+        return mapperElement;
+    }
+
+    /**
+     * Add a nested filenamemapper.
+     * @param fileNameMapper the mapper to add.
+     * @since Ant 1.8.0
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+    /**
+     * Executes all the chained ImageOperations on the files inside
+     * the directory.
+     * @since Ant 1.8.0
+     */
+    public int processDir(final File srcDir, final String srcNames[],
+                          final File dstDir, final FileNameMapper mapper) {
+        int writeCount = 0;
+
+        for (int i = 0; i < srcNames.length; ++i) {
+            final String srcName = srcNames[i];
+            final File srcFile = new File(srcDir, srcName).getAbsoluteFile();
+
+            final String[] dstNames = mapper.mapFileName(srcName);
+            if (dstNames == null) {
+                log(srcFile + " skipped, don't know how to handle it",
+                    Project.MSG_VERBOSE);
+                continue;
+            }
+
+            for (int j = 0; j < dstNames.length; ++j){
+
+                final String dstName = dstNames[j];
+                final File dstFile = new File(dstDir, dstName).getAbsoluteFile();
+
+                if (dstFile.exists()){
+                    // avoid overwriting unless necessary
+                    if(!overwrite
+                       && srcFile.lastModified() <= dstFile.lastModified()) {
+
+                        log(srcFile + " omitted as " + dstFile
+                            + " is up to date.", Project.MSG_VERBOSE);
+
+                        // don't overwrite the file
+                        continue;
+                    }
+
+                    // avoid extra work while overwriting
+                    if (!srcFile.equals(dstFile)){
+                        dstFile.delete();
+                    }
+                }
+                processFile(srcFile, dstFile);
+                ++writeCount;
+            }
+        }
+
+        // run the garbage collector if wanted
+        if (garbage_collect) {
+            System.gc();
+        }
+
+        return writeCount;
+    }
+
+    /**
      * Executes all the chained ImageOperations on the file
      * specified.
      * @param file The file to be processed.
+     * @deprecated this method isn't used anymore
      */
     public void processFile(File file) {
+        processFile(file, new File(destDir == null
+                                   ? srcDir : destDir, file.getName()));
+    }
+
+    /**
+     * Executes all the chained ImageOperations on the file
+     * specified.
+     * @param file The file to be processed.
+     * @param newFile The file to write to.
+     * @since Ant 1.8.0
+     */
+    public void processFile(File file, File newFile) {
         try {
             log("Processing File: " + file.getAbsolutePath());
-            FileSeekableStream input = new FileSeekableStream(file);
-            PlanarImage image = JAI.create("stream", input);
-            for (int i = 0; i < instructions.size(); i++) {
-                Object instr = instructions.elementAt(i);
-                if (instr instanceof TransformOperation) {
-                    image = ((TransformOperation) instr)
-                        .executeTransformOperation(image);
-                } else {
-                    log("Not a TransformOperation: " + instr);
-                }
-            }
-            input.close();
 
-            if (str_encoding.toLowerCase().equals("jpg")) {
-                str_encoding = "JPEG";
-            } else if (str_encoding.toLowerCase().equals("tif")) {
-                str_encoding = "TIFF";
+            FileSeekableStream input = null;
+            PlanarImage image = null;
+            try {
+                input = new FileSeekableStream(file);
+                image = JAI.create("stream", input);
+                for (int i = 0; i < instructions.size(); i++) {
+                    Object instr = instructions.elementAt(i);
+                    if (instr instanceof TransformOperation) {
+                        image = ((TransformOperation) instr)
+                            .executeTransformOperation(image);
+                    } else {
+                        log("Not a TransformOperation: " + instr);
+                    }
+                }
+            } finally {
+                FileUtils.close(input);
             }
-            if (destDir == null) {
-                destDir = srcDir;
+
+            File dstParent = newFile.getParentFile();
+            if (!dstParent.isDirectory() && !dstParent.mkdirs()){
+                throw new BuildException("Failed to create parent directory "
+                                         + dstParent);
             }
-            File newFile = new File(destDir, file.getName());
 
             if ((overwrite && newFile.exists()) && (!newFile.equals(file))) {
                 newFile.delete();
             }
-            FileOutputStream stream = new FileOutputStream(newFile);
 
-            JAI.create("encode", image, stream, str_encoding.toUpperCase(),
-                       null);
-            stream.flush();
-            stream.close();
+            FileOutputStream stream = null;
+            try {
+                stream = new FileOutputStream(newFile);
+
+                JAI.create("encode", image, stream, str_encoding.toUpperCase(),
+                           null);
+                stream.flush();
+            } finally {
+                FileUtils.close(stream);
+            }
         } catch (IOException err) {
+            if (!file.equals(newFile)){
+                newFile.delete();
+            }
             if (!failonerror) {
                 log("Error processing file:  " + err);
             } else {
                 throw new BuildException(err);
             }
         } catch (java.lang.RuntimeException rerr) {
+            if (!file.equals(newFile)){
+                newFile.delete();
+            }
             if (!failonerror) {
                 log("Error processing file:  " + rerr);
             } else {
@@ -240,50 +352,40 @@ public class Image extends MatchingTask {
         validateAttributes();
 
         try {
-            DirectoryScanner ds = null;
-            String[] files = null;
-            ArrayList filesList = new ArrayList();
+            File dest = destDir != null ? destDir : srcDir;
+
+            int writeCount = 0;
+
+            // build mapper
+            final FileNameMapper mapper;
+            if (mapperElement==null){
+                mapper = new IdentityMapper();
+            } else {
+                mapper = mapperElement.getImplementation();
+            }
 
             // deal with specified srcDir
             if (srcDir != null) {
-                ds = super.getDirectoryScanner(srcDir);
+                final DirectoryScanner ds = super.getDirectoryScanner(srcDir);
 
-                files = ds.getIncludedFiles();
-                for (int i = 0; i < files.length; i++) {
-                    filesList.add(new File(srcDir, files[i]));
-                }
+                final String[] files = ds.getIncludedFiles();
+                writeCount += processDir(srcDir, files, dest, mapper);
             }
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
-                ds = fs.getDirectoryScanner(getProject());
-                files = ds.getIncludedFiles();
-                File fromDir = fs.getDir(getProject());
-                for (int j = 0; j < files.length; j++) {
-                    filesList.add(new File(fromDir, files[j]));
-                }
+                final FileSet fs = (FileSet) filesets.elementAt(i);
+                final DirectoryScanner ds =
+                    fs.getDirectoryScanner(getProject());
+                final String[] files = ds.getIncludedFiles();
+                final File fromDir = fs.getDir(getProject());
+                writeCount += processDir(fromDir, files, dest, mapper);
             }
-            if (!overwrite) {
-                // remove any files that shouldn't be overwritten.
-                ArrayList filesToRemove = new ArrayList();
-                for (Iterator i = filesList.iterator(); i.hasNext();) {
-                    File f = (File) i.next();
-                    File newFile = new File(destDir, f.getName());
-                    if (newFile.exists()) {
-                        filesToRemove.add(f);
-                    }
-                }
-                filesList.removeAll(filesToRemove);
-            }
-            // iterator through all the files and process them.
-            for (Iterator i = filesList.iterator(); i.hasNext();) {
-                File file = (File) i.next();
 
-                processFile(file);
-                if (garbage_collect) {
-                    System.gc();
-                }
+            if (writeCount>0){
+                log("Processed " + writeCount +
+                    (writeCount == 1 ? " image." : " images."));
             }
+
         } catch (Exception err) {
             err.printStackTrace();
             throw new BuildException(err.getMessage());
@@ -303,6 +405,11 @@ public class Image extends MatchingTask {
         }
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
+        }
+        if (str_encoding.toLowerCase().equals("jpg")) {
+            str_encoding = "JPEG";
+        } else if (str_encoding.toLowerCase().equals("tif")) {
+            str_encoding = "TIFF";
         }
     }
 }
