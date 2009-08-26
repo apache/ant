@@ -31,16 +31,16 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * that will be used.
  *
  * <pre>
- * For jdk  &lt;= 1.3, there are two available implementations:
- *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
+ * Available implementations:
+ *
+ *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default if available)
  *        Based on the jakarta-oro package
  *
  *   org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
  *        Based on the jakarta-regexp package
  *
- * For jdk &gt;= 1.4 an additional implementation is available:
- *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp
- *        Based on the jdk 1.4 built in regular expression package.
+ *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp (fallback default)
+ *        Based on the JDK's built-in regular expression package
  * </pre>
  *
  * <pre>

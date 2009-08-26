@@ -470,15 +470,6 @@ public class FileUtilsTest extends TestCase {
         if (Os.isFamily("dos") || Os.isFamily("netware")) {
             dosRoot = System.getProperty("user.dir")
                 .substring(0, 3).replace(File.separatorChar, '/');
-
-            //preserve case on Cygwin when using 1.4 toURI:
-            Class uriClazz = null;
-            try {
-                uriClazz = Class.forName("java.net.URI");
-            } catch (ClassNotFoundException e) {
-                // OK, Java 1.3.
-                dosRoot = dosRoot.toUpperCase();
-            }
         }
         else
         {

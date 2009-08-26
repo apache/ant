@@ -141,19 +141,11 @@ public class ManifestClassPathTest
                                               "../../resources/dsp-void/");
     }
     public void testInternationalGerman() {
-        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_4)) {
-            System.out.println("Test with international characters skipped under pre 1.4 jvm.");
-            return;
-        }
         executeTarget("international-german");
         expectLogContaining("run-two-jars", "beta alpha");
             
     }
     public void testInternationalHebrew() {
-        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_4)) {
-            System.out.println("Test with international characters skipped under pre 1.4 jvm.");
-            return;
-        }
         if (!Os.isFamily("windows")) {
             executeTarget("international-hebrew");
             expectLogContaining("run-two-jars", "beta alpha");

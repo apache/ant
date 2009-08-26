@@ -46,7 +46,7 @@ import java.net.UnknownHostException;
  * on the floor. Similarly, a host may be detected as reachable with ICMP, but not
  * reachable on other ports (i.e. port 80), because of firewalls.
  * <p/>
- * Requires Java1.5+ to work properly. On Java1.4 and earlier, if a hostname
+ * Requires Java 5+ to work properly. On Java 1.4, if a hostname
  * can be resolved, the destination is assumed to be reachable.
  *
  * @since Ant 1.7
@@ -194,7 +194,7 @@ public class IsReachable extends ProjectComponent implements Condition {
                 reachable = false;
             }
         } catch (NoSuchMethodException e) {
-            //java1.4 or earlier
+            //java1.4
             log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
             log(MSG_NO_REACHABLE_TEST);
             reachable = true;

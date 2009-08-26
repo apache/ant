@@ -54,14 +54,6 @@ public class LocatorTest extends TestCase {
         unix = Os.isFamily(Os.FAMILY_UNIX);
     }
 
-    private String resolve(String uri) {
-        String j14 = Locator.fromURI(uri);
-        String j13 = Locator.fromURIJava13(uri);
-        assertEquals("Different fromURI conversion.\nJava1.4=" + j14 + "\nJava1.3=" + j13 + "\n",
-                j14, j13);
-        return j14;
-    }
-
     /**
      * expect a uri to resolve to strings on different platforms
      * @param uri uri to parse
@@ -70,7 +62,7 @@ public class LocatorTest extends TestCase {
      * @return the resolved string
      */
     private String resolveTo(String uri, String expectedUnix, String expectedDos) {
-        String result = resolve(uri);
+        String result = Locator.fromURI(uri);
         assertResolved(uri, expectedUnix, result, unix);
         assertResolved(uri, expectedDos, result, windows);
         return result;

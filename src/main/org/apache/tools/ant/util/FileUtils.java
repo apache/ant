@@ -1550,14 +1550,7 @@ public class FileUtils {
     public static String[] getPathStack(String path) {
         String normalizedPath = path.replace(File.separatorChar, '/');
 
-        // since Java 1.4
-        //return normalizedPath.split("/");
-        // workaround for Java 1.2-1.3
-        Object[] tokens = StringUtils.split(normalizedPath, '/').toArray();
-        String[] rv = new String[tokens.length];
-        System.arraycopy(tokens, 0, rv, 0, tokens.length);
-
-        return rv;
+        return normalizedPath.split("/");
     }
 
     /**

@@ -153,10 +153,8 @@ public class Parallel extends Task
     /**
      * Dynamically generates the number of threads to execute based on the
      * number of available processors (via
-     * <code>java.lang.Runtime.availableProcessors()</code>). Requires a J2SE
-     * 1.4 VM, and it will overwrite the value set in threadCount.
-     * If used in a 1.1, 1.2, or 1.3 VM then the task will defer to
-     * <code>threadCount</code>.; optional
+     * <code>java.lang.Runtime.availableProcessors()</code>).
+     * Will overwrite the value set in threadCount; optional
      * @param numThreadsPerProcessor Number of threads to create per available
      *        processor.
      *
@@ -170,7 +168,7 @@ public class Parallel extends Task
      * simultaneously.  If there are less tasks than threads then all will be
      * executed at once, if there are more then only <code>threadCount</code>
      * tasks will be executed at one time.  If <code>threadsPerProcessor</code>
-     * is set and the JVM is at least a 1.4 VM then this value is
+     * is set then this value is
      * ignored.; optional
      *
      * @param numThreads total number of threads.
@@ -213,10 +211,8 @@ public class Parallel extends Task
      */
     private void updateThreadCounts() {
         if (numThreadsPerProcessor != 0) {
-            int numProcessors = getNumProcessors();
-            if (numProcessors != 0) {
-                numThreads = numProcessors * numThreadsPerProcessor;
-            }
+            numThreads = Runtime.getRuntime().availableProcessors() *
+                    numThreadsPerProcessor;
         }
     }
 
@@ -406,26 +402,6 @@ public class Parallel extends Task
                 Thread.yield();
             }
         } while (oneAlive && tries < NUMBER_TRIES);
-    }
-
-    /**
-     * Determine the number of processors. Only effective on Java 1.4+
-     *
-     * @return the number of processors available or 0 if not determinable.
-     */
-    private int getNumProcessors() {
-        try {
-            Class[] paramTypes = {};
-            Method availableProcessors =
-                Runtime.class.getMethod("availableProcessors", paramTypes);
-
-            Object[] args = {};
-            Integer ret = (Integer) availableProcessors.invoke(Runtime.getRuntime(), args);
-            return ret.intValue();
-        } catch (Exception e) {
-            // return a bogus number
-            return 0;
-        }
     }
 
     /**

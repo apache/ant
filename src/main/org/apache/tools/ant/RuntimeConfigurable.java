@@ -69,13 +69,14 @@ public class RuntimeConfigurable implements Serializable {
      *  exact order. The following code is copied from AttributeImpl.
      *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
      *  attribute Nodes can also be stored in SAX2 Attributes )
-     *  XXX under JDK 1.4 you can just use a LinkedHashMap for this purpose -jglick
      * The only exception to this order is the treatment of
      * refid. A number of datatypes check if refid is set
      * when other attributes are set. This check will not
      * work if the build script has the other attribute before
      * the "refid" attribute, so now (ANT 1.7) the refid
      * attribute will be processed first.
+     * (Other than treatment of refid, could just use a LinkedHashMap,
+     * but peterreilly's rev 452635 includes no regression test.)
      */
     private List/*<String>*/ attributeNames = null;
 

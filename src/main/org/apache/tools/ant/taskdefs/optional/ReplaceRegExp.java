@@ -56,16 +56,16 @@ import org.apache.tools.ant.util.regexp.Regexp;
  * requires the Jakarta Oro Package).
  *
  * <pre>
- * For jdk  &lt;= 1.3, there are two available implementations:
- *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
+ * Available implementations:
+ *
+ *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default if available)
  *        Requires  the jakarta-oro package
  *
  *   org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
  *        Requires the jakarta-regexp package
  *
- * For jdk &gt;= 1.4 an additional implementation is available:
- *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp
- *        Requires the jdk 1.4 built in regular expression package.
+ *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp (fallback default)
+ *        Uses Java's built-in regular expression package
  *
  * Usage:
  *

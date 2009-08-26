@@ -165,7 +165,7 @@ public final class Locator {
      *
      * <p>Will be an absolute path if the given URI is absolute.</p>
      *
-     * <p>Prior to Java 1.4,
+     * <p>Prior to Java 1.4,<!-- XXX is JDK version actually relevant? -->
      * swallows '%' that are not followed by two characters.</p>
      *
      * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
@@ -178,76 +178,55 @@ public final class Locator {
      * @since Ant 1.6
      */
     public static String fromURI(String uri) {
+        return fromURIJava13(uri);
         // #buzilla8031: first try Java 1.4.
-        String result = null;
-        //result = fromUriJava14(uri);
-        if (result == null) {
-            result = fromURIJava13(uri);
-        }
-        return result;
+        // XXX should use java.net.URI now that we can rely on 1.4...
+        // but check for UNC-related regressions, e.g. #42275
+        // (and remember that \\server\share\file -> file:////server/share/file
+        // rather than -> file://server/share/file as it should;
+        // fixed only in JDK 7's java.nio.file.Path.toUri)
+        // return fromUriJava14(uri);
     }
-
 
     /**
      * Java1.4+ code to extract the path from the URI.
      * @param uri
      * @return null if a conversion was not possible
      */
+    /* currently unused:
     private static String fromUriJava14(String uri) {
-        Class uriClazz = null;
-        try {
-            uriClazz = Class.forName("java.net.URI");
-        } catch (ClassNotFoundException cnfe) {
-            // Fine, Java 1.3 or earlier, do it by hand.
-            return null;
-        }
         // Also check for properly formed URIs. Ant formerly recommended using
         // nonsense URIs such as "file:./foo.xml" in XML includes. You shouldn't
         // do that (just "foo.xml" is correct) but for compatibility we special-case
         // things when the path is not absolute, and fall back to the old parsing behavior.
-        if (uriClazz != null && uri.startsWith("file:/")) {
+        if (uri.startsWith("file:/")) {
             try {
-                java.lang.reflect.Method createMethod
-                        = uriClazz.getMethod("create", new Class[]{String.class});
-                Object uriObj = createMethod.invoke(null, new Object[]{encodeURI(uri)});
-                java.lang.reflect.Constructor fileConst
-                        = File.class.getConstructor(new Class[]{uriClazz});
-                File f = (File) fileConst.newInstance(new Object[]{uriObj});
+                File f = new File(URI.create(encodeURI(uri)));
                 //bug #42227 forgot to decode before returning
                 return decodeUri(f.getAbsolutePath());
-            } catch (java.lang.reflect.InvocationTargetException e) {
-                Throwable e2 = e.getTargetException();
-                if (e2 instanceof IllegalArgumentException) {
-                    // Bad URI, pass this on.
-                    // no, this is downgraded to a warning after various
-                    // JRE bugs surfaced. Hand off
-                    // to our built in code on a failure
-                    //throw new IllegalArgumentException(
-                    //   "Bad URI " + uri + ":" + e2.getMessage(), e2);
-                    e2.printStackTrace();
-
-                } else {
-                    // Unexpected target exception? Should not happen.
-                    e2.printStackTrace();
-                }
+            } catch (IllegalArgumentException e) {
+                // Bad URI, pass this on.
+                // no, this is downgraded to a warning after various
+                // JRE bugs surfaced. Hand off
+                // to our built in code on a failure
+                //throw new IllegalArgumentException(
+                //   "Bad URI " + uri + ":" + e.getMessage(), e);
+                e.printStackTrace();
             } catch (Exception e) {
-                // Reflection problems? Should not happen, debug.
+                // Unexpected exception? Should not happen.
                 e.printStackTrace();
             }
         }
         return null;
     }
-
-
-
+     */
 
     /**
-     * This method is public for testing; we may delete it without any warning -it is not part of Ant's stable API.
      * @param uri uri to expand
      * @return the decoded URI
      * @since Ant1.7.1
      */
-    public static String fromURIJava13(String uri) {
+    private static String fromURIJava13(String uri) {
         // Fallback method for Java 1.3 or earlier.
 
         URL url = null;
@@ -409,7 +388,7 @@ public final class Locator {
      * Convert a File to a URL.
      * File.toURL() does not encode characters like #.
      * File.toURI() has been introduced in java 1.4, so
-     * ANT cannot use it (except by reflection)
+     * Ant cannot use it (except by reflection) <!-- XXX no longer true -->
      * FileUtils.toURI() cannot be used by Locator.java
      * Implemented this way.
      * File.toURL() adds file: and changes '\' to '/' for dos OSes
