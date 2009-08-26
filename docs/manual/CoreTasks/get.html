@@ -115,6 +115,15 @@ plain text' authentication is used. This is only secure over an HTTPS link.
       <em>since Ant 1.8.0</em></td>
     <td align="center" valign="top">No; default "false"</td>
   </tr>
+   <tr>
+    <td valign="top">httpusecaches</td>
+    <td valign="top">HTTP only - if true, allow caching at the
+      HttpUrlConnection level.  if false, turn caching off.<br/>
+      <b>Note</b> this is only a hint to the underlying UrlConnection
+      class, implementations and proxies are free to ignore the
+      setting.</td>
+    <td align="center" valign="top">No; default "true"</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>

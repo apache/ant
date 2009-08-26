@@ -915,6 +915,10 @@ Other changes:
    channels.
    Bugzilla Report 30094.
 
+ * <get> has a new attribute that can be used to disable caching on
+   HTTP connections at the HttpUrlConnection level.
+   Bugzilla Report 41891.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

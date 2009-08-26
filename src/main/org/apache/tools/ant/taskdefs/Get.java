@@ -67,6 +67,7 @@ public class Get extends Task {
     private long maxTime = 0;
     private int numberRetries = NUMBER_RETRIES;
     private boolean skipExisting = false;
+    private boolean httpUseCaches = true; // on by default
 
     /**
      * Does the work.
@@ -304,6 +305,20 @@ public class Get extends Task {
     }
 
     /**
+     * HTTP connections only - control caching on the
+     * HttpUrlConnection: httpConnection.setUseCaches(); if false, do
+     * not allow caching on the HttpUrlConnection.
+     *
+     * <p>Defaults to true (allow caching, which is also the
+     * HttpUrlConnection default value.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setHttpUseCaches(boolean httpUseCache) {
+        this.httpUseCaches = httpUseCache;
+    }
+
+    /**
      * Interface implemented for reporting
      * progess of downloading.
      */
@@ -507,6 +522,8 @@ public class Get extends Task {
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)
                         .setInstanceFollowRedirects(false);
+                ((HttpURLConnection) connection)
+                        .setUseCaches(httpUseCaches);
             }
             // connect to the remote site (may take some time)
             connection.connect();
@@ -514,8 +531,6 @@ public class Get extends Task {
             // First check on a 301 / 302 (moved) response (HTTP only)
             if (connection instanceof HttpURLConnection) {
                 HttpURLConnection httpConnection = (HttpURLConnection) connection;
-              //  httpConnection.setInstanceFollowRedirects(false);
-              //  httpConnection.setUseCaches(false);
                 int responseCode = httpConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
                         responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
