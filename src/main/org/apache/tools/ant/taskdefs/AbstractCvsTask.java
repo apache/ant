@@ -368,7 +368,7 @@ public abstract class AbstractCvsTask extends Task {
             if (failOnError) {
                 throw(e);
             }
-            Throwable t = e.getException();
+            Throwable t = e.getCause();
             if (t == null) {
                 t = e;
             }

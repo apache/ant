@@ -70,7 +70,7 @@ public class SQLExecTest extends TestCase {
         try {
             sql.execute();
         } catch (BuildException e){
-            assertTrue(e.getException().getMessage().indexOf("No suitable Driver") != -1);
+            assertTrue(e.getCause().getMessage().indexOf("No suitable Driver") != -1);
         }
         assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
@@ -83,7 +83,7 @@ public class SQLExecTest extends TestCase {
         try {
             sql.execute();
         } catch (BuildException e){
-            assertTrue(e.getException().getMessage().indexOf("No suitable Driver") != -1);
+            assertTrue(e.getCause().getMessage().indexOf("No suitable Driver") != -1);
         }
         assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));

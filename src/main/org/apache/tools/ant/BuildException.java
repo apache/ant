@@ -17,18 +17,12 @@
  */
 package org.apache.tools.ant;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
  * Signals an error condition during a build
  */
 public class BuildException extends RuntimeException {
 
     private static final long serialVersionUID = -5419014565354664240L;
-
-    /** Exception that might have caused this one. */
-    private Throwable cause;
 
     /** Location in the build file where the exception occurred */
     private Location location = Location.UNKNOWN_LOCATION;
@@ -61,7 +55,7 @@ public class BuildException extends RuntimeException {
      */
     public BuildException(String message, Throwable cause) {
         super(message);
-        this.cause = cause;
+        initCause(cause);
     }
 
     /**
@@ -87,8 +81,7 @@ public class BuildException extends RuntimeException {
      *              Should not be <code>null</code>.
      */
     public BuildException(Throwable cause) {
-        super(cause.toString());
-        this.cause = cause;
+        super(cause);
     }
 
     /**
@@ -124,19 +117,10 @@ public class BuildException extends RuntimeException {
      *
      * @return the nested exception, or <code>null</code> if no
      *         exception is associated with this one
+     * @deprecated Use {@link #getCause} instead.
      */
     public Throwable getException() {
-        return cause;
-    }
-
-    /**
-     * Returns the nested exception, if any.
-     *
-     * @return the nested exception, or <code>null</code> if no
-     *         exception is associated with this one
-     */
-    public Throwable getCause() {
-        return getException();
+        return getCause();
     }
 
     /**
@@ -167,45 +151,4 @@ public class BuildException extends RuntimeException {
         return location;
     }
 
-    /**
-     * Prints the stack trace for this exception and any
-     * nested exception to <code>System.err</code>.
-     */
-    public void printStackTrace() {
-        printStackTrace(System.err);
-    }
-
-    /**
-     * Prints the stack trace of this exception and any nested
-     * exception to the specified PrintStream.
-     *
-     * @param ps The PrintStream to print the stack trace to.
-     *           Must not be <code>null</code>.
-     */
-    public void printStackTrace(PrintStream ps) {
-        synchronized (ps) {
-            super.printStackTrace(ps);
-            if (cause != null) {
-                ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
-            }
-        }
-    }
-
-    /**
-     * Prints the stack trace of this exception and any nested
-     * exception to the specified PrintWriter.
-     *
-     * @param pw The PrintWriter to print the stack trace to.
-     *           Must not be <code>null</code>.
-     */
-    public void printStackTrace(PrintWriter pw) {
-        synchronized (pw) {
-            super.printStackTrace(pw);
-            if (cause != null) {
-                pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
-            }
-        }
-    }
 }
