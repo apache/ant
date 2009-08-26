@@ -923,6 +923,10 @@ Other changes:
    parent directory of the destination archive if it doesn't exist.
    Bugzilla Report 45377.
 
+ * A new filterreader <sortfilter> that sorts input lines has been
+   added.
+   Bugzilla Report 40504.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

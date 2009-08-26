@@ -51,6 +51,8 @@
        classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
   <componentdef name="isfalse" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
+  <componentdef name="islastmodified" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsLastModified"/>
   <componentdef name="isreachable" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
   <componentdef name="isreference" onerror="ignore"
@@ -73,6 +75,8 @@
        classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
   <componentdef name="resourcecontains" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.ResourceContains"/>
+  <componentdef name="resourceexists" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.ResourceExists"/>
   <componentdef name="resourcesmatch" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
   <componentdef name="socket" onerror="ignore"
@@ -131,5 +135,8 @@
   <componentdef name="reverse" onerror="ignore"
     classname="org.apache.tools.ant.types.resources.comparators.Reverse" />
 
+  <!-- filters -->
+  <componentdef name="sortfilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.SortFilter"/>
 </antlib>
 
