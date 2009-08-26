@@ -49,7 +49,7 @@ import org.apache.tools.ant.types.Parameter;
  * <p>
  * Sort all files <code>*.txt</code> from <i>src</i> location in descendant
  * order and copy them into <i>build</i> location. The lines of each file are
- * sorted in ascendant order comparing the lines vía
+ * sorted in ascendant order comparing the lines via the
  * <code>String.compareTo(Object o)</code> method.
  * </p>
  * 
