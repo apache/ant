@@ -141,6 +141,31 @@ ignore the fact that it is part of your build file which may be
 readable by third parties.  If you need more security, consider using
 the <a href="input.html">input task</a> to query for a password.</p>
 
+<p>Using a macro like the following</p>
+
+<pre>
+  &lt;macrodef name="get-and-checksum">
+    &lt;attribute name="url"/>
+    &lt;attribute name="dest"/>
+    &lt;sequential>
+      &lt;get src="@{url}" dest="@{dest}"/>
+      &lt;get src="@{url}.sha1" dest="@{dest}.sha"/>
+      &lt;local name="checksum.matches"/>
+      &lt;local name="checksum.matches.fail"/>
+      &lt;checksum file="@{dest}" algorithm="sha" fileext=".sha"
+                verifyproperty="checksum.matches"/>
+      &lt;condition property="checksum.matches.fail">
+        &lt;equals arg1="${checksum.matches}" arg2="false"/>
+      &lt;/condition>
+      &lt;fail if="checksum.matches.fail">Checksum error&lt;/fail>
+    &lt;/sequential>
+  &lt;/macrodef>
+</pre>
+
+<p>it is possible to download an artifacts together with its SHA1
+  checksum (assuming a certain naming convention for the checksum
+  file, of course) and validate the checksum on the fly.</p>
+
 </body>
 </html>
 
