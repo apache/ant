@@ -618,6 +618,13 @@ public class Zip extends MatchingTask {
             if (!state.isOutOfDate()) {
                 return;
             }
+
+            File parent = zipFile.getParentFile();
+            if (parent != null && !parent.isDirectory() && !parent.mkdirs()) {
+                throw new BuildException("Failed to create missing parent"
+                                         + " directory for " + zipFile);
+            }
+
             updatedFile = true;
             if (!zipFile.exists() && state.isWithoutAnyResources()) {
                 createEmptyZip(zipFile);

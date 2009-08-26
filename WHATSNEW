@@ -919,6 +919,10 @@ Other changes:
    HTTP connections at the HttpUrlConnection level.
    Bugzilla Report 41891.
 
+ * <tar> and <zip> (and tasks derived from <zip>) will now create the
+   parent directory of the destination archive if it doesn't exist.
+   Bugzilla Report 45377.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

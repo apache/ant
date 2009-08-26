@@ -279,6 +279,12 @@ public class Tar extends MatchingTask {
                 return;
             }
 
+            File parent = tarFile.getParentFile();
+            if (parent != null && !parent.isDirectory() && !parent.mkdirs()) {
+                throw new BuildException("Failed to create missing parent"
+                                         + " directory for " + tarFile);
+            }
+
             log("Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO);
 
             TarOutputStream tOut = null;
