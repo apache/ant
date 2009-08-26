@@ -136,11 +136,7 @@ public class Javac extends MatchingTask {
     }
 
     private String assumedJavaVersion() {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
-            return JAVAC12;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
-            return JAVAC13;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
             return JAVAC14;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             return JAVAC15;

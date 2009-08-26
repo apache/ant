@@ -33,14 +33,14 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * <pre>
  * Available implementations:
  *
- *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default if available)
+ *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp (default)
+ *        Based on the JDK's built-in regular expression package
+ *
+ *   org.apache.tools.ant.util.regexp.JakartaOroRegexp
  *        Based on the jakarta-oro package
  *
  *   org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
  *        Based on the jakarta-regexp package
- *
- *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp (fallback default)
- *        Based on the JDK's built-in regular expression package
  * </pre>
  *
  * <pre>

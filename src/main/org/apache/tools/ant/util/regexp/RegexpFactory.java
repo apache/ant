@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.ClasspathUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /***
  * Regular expression factory, which will create Regexp objects.  The
@@ -41,7 +40,7 @@ public class RegexpFactory extends RegexpMatcherFactory {
      * @throws BuildException on error
      */
     public Regexp newRegexp() throws BuildException {
-        return (Regexp) newRegexp(null);
+        return newRegexp(null);
     }
 
     /***
@@ -65,32 +64,7 @@ public class RegexpFactory extends RegexpMatcherFactory {
             //         load a different implementation?
         }
 
-        Throwable cause = null;
-
-        try {
-            testAvailability("java.util.regex.Matcher");
-            return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
-        } catch (BuildException be) {
-            cause = orCause(
-                cause, be,
-                JavaEnvUtils.getJavaVersionNumber() < JavaEnvUtils.VERSION_1_4);
-        }
-
-        try {
-            testAvailability("org.apache.oro.text.regex.Pattern");
-            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
-        } catch (BuildException be) {
-            cause = orCause(cause, be, true);
-        }
-
-        try {
-            testAvailability("org.apache.regexp.RE");
-            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
-        } catch (BuildException be) {
-            cause = orCause(cause, be, true);
-        }
-        throw new BuildException("No supported regular expression matcher found"
-                + (cause != null ? ": " + cause : ""), cause);
+        return new Jdk14RegexpRegexp();
     }
 
     /**

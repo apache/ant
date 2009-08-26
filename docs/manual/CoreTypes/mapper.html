@@ -373,8 +373,8 @@ href="http://www.cacas.org/~wes/java/" target="_top">gnu.regexp</a> or <a
 href="http://www.crocodile.org/~sts/Rex/" target="_top">gnu.rex</a> with Ant, see <a
 href="http://marc.theaimsgroup.com/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
 article.</p>
-<p>This means, you need one of the supported regular expression
-  libraries <strong>and</strong>
+<p>If you want to use one of the supported regular expression
+  libraries you need to also use
   the corresponding <code>ant-[jakarta-oro, jakarta-regexp, apache-oro, apache-regexp}.jar</code>
 from the Ant release you are using.
 Make sure, both will be loaded from the same
@@ -392,8 +392,7 @@ following algorithm:</p>
 name of the class implementing
 <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
 should be used.</li>
-<li>If it has not been set, first try the JDK 1.4 classes, then
-jakarta-ORO and finally try jakarta-regexp.</li>
+<li>If it has not been set, uses the JDK 1.4 classes.</li>
 </ul>
 
 <b>Examples:</b>

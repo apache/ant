@@ -23,7 +23,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
 
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
 
@@ -40,10 +39,6 @@ public class ProcessDestroyerTest extends TestCase {
     }
 
     public void testProcessDestroyer(){
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
-            return;
-        }
-
         try {
             ProcessDestroyer processDestroyer = new ProcessDestroyer();
             Process process =

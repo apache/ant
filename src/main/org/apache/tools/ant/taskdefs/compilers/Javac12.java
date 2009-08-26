@@ -34,6 +34,7 @@ import org.apache.tools.ant.types.Commandline;
  * was refactored.
  *
  * @since Ant 1.3
+ * @deprecated Use {@link Javac13} instead.
  */
 public class Javac12 extends DefaultCompilerAdapter {
     protected static final String CLASSIC_COMPILER_CLASSNAME = "sun.tools.javac.Main";

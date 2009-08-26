@@ -918,9 +918,8 @@ public class Project implements ResourceFactory {
         setPropertyInternal(MagicNames.ANT_JAVA_VERSION, javaVersion);
 
         // sanity check
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
-                || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1))  {
-            throw new BuildException("Ant cannot work on Java 1.0 / 1.1");
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_4))  {
+            throw new BuildException("Ant cannot work on Java prior to 1.4");
         }
         log("Detected Java version: " + javaVersion + " in: "
             + System.getProperty("java.home"), MSG_VERBOSE);

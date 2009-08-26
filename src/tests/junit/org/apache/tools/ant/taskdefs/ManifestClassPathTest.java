@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
 /**

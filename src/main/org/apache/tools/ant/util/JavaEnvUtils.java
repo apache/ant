@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
@@ -143,7 +142,7 @@ public final class JavaEnvUtils {
 
     /**
      * Returns the version of Java this class is running under.
-     * @return the version of Java as a String, e.g. "1.1"
+     * @return the version of Java as a String, e.g. "1.6"
      */
     public static String getJavaVersion() {
         return javaVersion;
@@ -164,8 +163,8 @@ public final class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * Note that Ant now requires JDK 1.2+ so {@link #JAVA_1_0} and
-     * {@link #JAVA_1_1} need no longer be tested for.
+     * Note that Ant now requires JDK 1.4+ so {@link #JAVA_1_0} through
+     * {@link #JAVA_1_3} need no longer be tested for.
      * @param version the version to check against the current version.
      * @return true if the version of Java is the same as the given version.
      * @since Ant 1.5
@@ -178,8 +177,8 @@ public final class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * Note that Ant now requires JDK 1.2+ so {@link #JAVA_1_0} and
-     * {@link #JAVA_1_1} need no longer be tested for.
+     * Note that Ant now requires JDK 1.4+ so {@link #JAVA_1_0} through
+     * {@link #JAVA_1_3} need no longer be tested for.
      * @param version the version to check against the current version.
      * @return true if the version of Java is the same or higher than the
      * given version.
