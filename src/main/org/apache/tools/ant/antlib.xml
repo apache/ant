@@ -138,5 +138,7 @@
   <!-- filters -->
   <componentdef name="sortfilter" onerror="ignore"
                 classname="org.apache.tools.ant.filters.SortFilter"/>
+  <componentdef name="uniqfilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.UniqFilter"/>
 </antlib>
 
