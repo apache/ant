@@ -936,6 +936,9 @@ Other changes:
 
  * <path> can now optionally cache its contents.
 
+ * <property> can now specify values as nested text.
+   Bugzilla Report 32917.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

@@ -44,13 +44,17 @@ import org.apache.tools.ant.property.ResolvePropertyMap;
  * resource) in the project.  </p>
  * Properties are immutable: whoever sets a property first freezes it for the
  * rest of the build; they are most definitely not variable.
- * <p>There are five ways to set properties:</p>
+ * <p>There are seven ways to set properties:</p>
  * <ul>
  *   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+ *   <li>By supplying the <i>name</i> and nested text.</li>
  *   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
  *   <li>By setting the <i>file</i> attribute with the filename of the property
  *     file to load. This property file has the format as defined by the file used
  *     in the class java.util.Properties.</li>
+ *   <li>By setting the <i>url</i> attribute with the url from which to load the
+ *     properties. This url must be directed to a file that has the format as defined
+ *     by the file used in the class java.util.Properties.</li>
  *   <li>By setting the <i>resource</i> attribute with the resource name of the
  *     property file to load. This property file has the format as defined by the
  *     file used in the class java.util.Properties.</li>
@@ -170,6 +174,20 @@ public class Property extends Task {
      */
     public void setValue(String value) {
         setValue((Object) value);
+    }
+
+    /**
+     * Set a (multiline) property as nested text.
+     * @param msg the text to append to the output text
+     * @since Ant 1.8.0
+     */
+    public void addText(String msg) {
+        msg = getProject().replaceProperties(msg);
+        String currentValue = getValue();
+        if (currentValue != null) {
+            msg = currentValue + msg;
+        }
+        setValue(msg);
     }
 
     /**

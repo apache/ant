@@ -31,9 +31,10 @@
 resource) in the project.  Properties are case sensitive.</p>
  Properties are immutable: whoever sets a property first freezes it for the
  rest of the build; they are most definitely not variables.
-<p>There are six ways to set properties:</p>
+<p>There are seven ways to set properties:</p>
 <ul>
   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+  <li>By supplying the <i>name</i> and nested text.</li>
   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
   <li>By setting the <i>file</i> attribute with the filename of the property
     file to load. This property file has the format as defined by the file used
@@ -86,8 +87,8 @@ SYSTEM).
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="middle" align="center" rowspan="3">One of these, when using the
-       name attribute</td>
+    <td valign="middle" align="center" rowspan="3">One of these or
+       nested text, when using the name attribute</td>
   </tr>
   <tr>
     <td valign="top">location</td>
@@ -163,6 +164,9 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 
 <h3>Examples</h3>
 <pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</pre>
+<p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
+
+<pre>  &lt;property name=&quot;foo.dist&quot;&gt;dist&lt;/property&gt;</pre>
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
 
 <pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
