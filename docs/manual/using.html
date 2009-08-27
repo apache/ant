@@ -345,6 +345,62 @@ parsing, etc. This makes Ant's property handling highly extensible; also of inte
 new <a href="CoreTasks/propertyhelper.html">propertyhelper</a> task used to manipulate the
 PropertyHelper and its delegates from the context of the Ant buildfile.
 
+<p>There are three sub-interfaces of <code>Delegate</code> that may be
+  useful to
+  implement.  <code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code>
+  is used to expand <code>${some-string}</code> into
+  an <code>Object</code>
+  while <code>org.apache.tools.ant.PropertyHelper$PropertySetter</code>
+  is responsible for setting properties.
+  Finally <code>org.apache.tools.ant.property.PropertyExpander</code>
+  is responsible for finding the property name inside a string in the
+  first place (the default extracts <code>foo</code>
+  from <code>${foo}</code>).</p>
+
+<p>The logic that replaces <code>${toString:some-id}</code> with the
+  stringified representation of the object with
+  id <code>some-id</code> inside the current build is contained in a
+  PropertyEvaluator similar to the following code:</p>
+
+<pre>
+public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
+    private static final String prefix = "toString:";
+    public Object evaluate(String property, PropertyHelper propertyHelper) {
+        Object o = null;
+        if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
+            o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
+        }
+        return o == null ? null : o.toString();
+    }
+}
+</pre>
+
+<p>An example of a <code>PropertySetter</code> can be found
+  in <code>org.apache.tools.ant.property.LocalProperties</code> which
+  implements storage for <a href="CoreTasks/local.html">local
+  properties</a>.</p>
+
+<p>The default <code>PropertyExpander</code> looks similar to:</p>
+
+<pre>
+public class DefaultExpander implements PropertyExpander {
+    public String parsePropertyName(String s, ParsePosition pos,
+                                    ParseNextProperty notUsed) {
+        int index = pos.getIndex();
+        if (s.indexOf("${", index) == index) {
+            int end = s.indexOf('}', index);
+            if (end < 0) {
+                throw new BuildException("Syntax error in property: " + s);
+            }
+            int start = index + 2;
+            pos.setIndex(end + 1);
+            return s.substring(start, end);
+        }
+        return null;
+    }
+}
+</pre>
+
 <a name="example"><h3>Example Buildfile</h3></a>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
