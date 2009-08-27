@@ -356,6 +356,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
 
     /**
      * Whether to cache the current path.
+     * @since Ant 1.8.0
      */
     public void setCache(boolean b) {
         checkAttributesAllowed();
