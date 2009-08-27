@@ -41,6 +41,7 @@ public class ZipResource extends ArchiveResource {
 
     private String encoding;
     private ZipExtraField[] extras;
+    private int method;
 
     /**
      * Default constructor.
@@ -184,6 +185,14 @@ public class ZipResource extends ArchiveResource {
     }
 
     /**
+     * The compression method that has been used.
+     * @since Ant 1.8.0
+     */
+    public int getMethod() {
+        return method;
+    }
+
+    /**
      * fetches information from the named entry inside the archive.
      */
     protected void fetchEntry() {
@@ -211,6 +220,7 @@ public class ZipResource extends ArchiveResource {
         setSize(e.getSize());
         setMode(e.getUnixMode());
         extras = e.getExtraFields();
+        method = e.getMethod();
     }
 
 }
