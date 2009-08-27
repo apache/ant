@@ -55,14 +55,14 @@ import org.apache.tools.ant.util.SplitClassLoader;
  * @since Ant 1.3
  */
 public class FTPTask extends Task implements FTPTaskConfig {
-    static final int SEND_FILES = 0;
-    static final int GET_FILES = 1;
-    static final int DEL_FILES = 2;
-    static final int LIST_FILES = 3;
-    static final int MK_DIR = 4;
-    static final int CHMOD = 5;
-    static final int RM_DIR = 6;
-    static final int SITE_CMD = 7;
+    public static final int SEND_FILES = 0;
+    public static final int GET_FILES = 1;
+    public static final int DEL_FILES = 2;
+    public static final int LIST_FILES = 3;
+    public static final int MK_DIR = 4;
+    public static final int CHMOD = 5;
+    public static final int RM_DIR = 6;
+    public static final int SITE_CMD = 7;
 
     /** adjust uptodate calculations where server timestamps are HH:mm and client's
      * are HH:mm:ss */
@@ -110,7 +110,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
     private ClassLoader mirrorLoader;
     private FTPTaskMirror delegate = null;
 
-    static final String[] ACTION_STRS = {
+    public static final String[] ACTION_STRS = {
         "sending",
         "getting",
         "deleting",
@@ -121,7 +121,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         "site"
     };
 
-    static final String[] COMPLETED_ACTION_STRS = {
+    public static final String[] COMPLETED_ACTION_STRS = {
         "sent",
         "retrieved",
         "deleted",
@@ -132,7 +132,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         "site command executed"
     };
 
-    static final String[] ACTION_TARGET_STRS = {
+    public static final String[] ACTION_TARGET_STRS = {
         "files",
         "files",
         "files",
@@ -653,7 +653,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
     /**
      * @return Returns the timestampGranularity.
      */
-    Granularity getTimestampGranularity() {
+    public Granularity getTimestampGranularity() {
         return timestampGranularity;
     }
     /**
