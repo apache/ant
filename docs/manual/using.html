@@ -551,6 +551,18 @@ you can define them with a <code>&lt;path&gt;</code> element at the
 same level as <i>target</i>s, and reference them via their
 <i>id</i> attribute--see <a href="#references">References</a> for an
 example.</p>
+
+<p>By default a path like structure will re-evaluate all nested
+  resource collections whenever it is used, which may lead to
+  unnecessary re-scanning of the filesystem.  Since Ant 1.8.0 path has
+  an optional <i>cache</i> attribute, if it is set to true, the path
+  instance will only scan its nested resource collections once and
+  assume it doesn't change during the build anymore (the default
+  for <i>cache</i> still is <i>false</i>).  Even if you are using the
+  path only in a single task it may improve overall performance to set
+  <i>cache</i> to <i>true</i> if you are using complex nested
+  constructs.</p>
+
 <p>A path-like structure can include a reference to another path-like
 structure (a path being itself a resource collection)
 via nested <code>&lt;path&gt;</code> elements:</p>
@@ -563,7 +575,7 @@ via nested <code>&lt;path&gt;</code> elements:</p>
       &lt;pathelement location=&quot;classes&quot;/&gt;
     &lt;/path&gt;
 
-    &lt;path id=&quot;tests.path&quot;&gt;
+    &lt;path id=&quot;tests.path&quot; cache=&quot;true&quot;&gt;
       &lt;path refid=&quot;base.path&quot;/&gt;
       &lt;pathelement location=&quot;testclasses&quot;/&gt;
     &lt;/path&gt;

@@ -78,6 +78,11 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
+    static {
+        systemClasspath.setCache(true);
+        systemBootClasspath.setCache(true);
+    }
+
     private static final Iterator EMPTY_ITERATOR
         = Collections.EMPTY_SET.iterator();
 
@@ -145,6 +150,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     private Boolean preserveBC;
 
     private Union union = null;
+    private boolean cache = false;
 
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
@@ -280,7 +286,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (union == null) {
             union = new Union();
             union.setProject(getProject());
-            union.setCache(false);
+            union.setCache(cache);
         }
         union.add(c);
         setChecked(false);
@@ -345,6 +351,17 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
                 log("dropping " + f + " from path as it doesn't exist",
                     Project.MSG_VERBOSE);
             }
+        }
+    }
+
+    /**
+     * Whether to cache the current path.
+     */
+    public void setCache(boolean b) {
+        checkAttributesAllowed();
+        cache = b;
+        if (union != null) {
+            union.setCache(b);
         }
     }
 
