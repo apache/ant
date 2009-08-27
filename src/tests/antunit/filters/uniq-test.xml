@@ -26,6 +26,18 @@
     <copy file="input/uniq.txt"
           tofile="${output}/uniq.txt">
       <filterchain>
+        <uniqfilter/>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/uniq.txt"
+       actual="${output}/uniq.txt"/>
+  </target>
+
+  <target name="testUniqTokenFilter" depends="setUp">
+    <copy file="input/uniq.txt"
+          tofile="${output}/uniq.txt">
+      <filterchain>
         <tokenfilter>
           <uniqfilter/>
         </tokenfilter>

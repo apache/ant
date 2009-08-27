@@ -26,11 +26,9 @@ package org.apache.tools.ant.filters;
  *
  * @since Ant 1.8.0
  */
-public class UniqFilter implements TokenFilter.Filter {
+public class UniqFilter extends TokenFilter.ChainableReaderFilter {
 
     private String lastLine = null;
-
-    public UniqFilter() { }
 
     public String filter(String string) {
         return lastLine == null || !lastLine.equals(string)
