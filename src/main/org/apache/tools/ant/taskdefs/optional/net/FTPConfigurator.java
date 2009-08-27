@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -38,7 +39,7 @@ class FTPConfigurator {
      * configure the client
      * @return the client as configured.
      */
-    static FTPClient configure(FTPClient client, FTP task) {
+    static FTPClient configure(FTPClient client, FTPTaskConfig task) {
         task.log("custom configuration", Project.MSG_VERBOSE);
         FTPClientConfig config;
         String systemTypeKey = task.getSystemTypeKey();
@@ -68,6 +69,12 @@ class FTPConfigurator {
 
         String serverLanguageCodeConfig = task.getServerLanguageCodeConfig();
         if (serverLanguageCodeConfig != null) {
+            if (!"".equals(serverLanguageCodeConfig)
+                && !FTPClientConfig.getSupportedLanguageCodes()
+                .contains(serverLanguageCodeConfig)) {
+                throw new BuildException("unsupported language code" +
+                                         serverLanguageCodeConfig);
+            }
             config.setServerLanguageCode(serverLanguageCodeConfig);
             task.log("custom config: server language code = "
                     + serverLanguageCodeConfig, Project.MSG_VERBOSE);

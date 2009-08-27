@@ -59,6 +59,7 @@ import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.SplitClassLoader;
 
 /**
  * Runs JUnit tests.
@@ -708,57 +709,6 @@ public class JUnitTask extends Task {
         }
     }
 
-    private final class SplitLoader extends AntClassLoader {
-
-        public SplitLoader(ClassLoader parent, Path path) {
-            super(parent, getProject(), path, true);
-        }
-
-        // forceLoadClass is not convenient here since it would not
-        // properly deal with inner classes of these classes.
-        protected synchronized Class loadClass(String classname, boolean resolve)
-        throws ClassNotFoundException {
-            Class theClass = findLoadedClass(classname);
-            if (theClass != null) {
-                return theClass;
-            }
-            if (isSplit(classname)) {
-                theClass = findClass(classname);
-                if (resolve) {
-                    resolveClass(theClass);
-                }
-                return theClass;
-            } else {
-                return super.loadClass(classname, resolve);
-            }
-        }
-
-        private final String[] splitClasses = {
-            "BriefJUnitResultFormatter",
-            "JUnitResultFormatter",
-            "JUnitTaskMirrorImpl",
-            "JUnitTestRunner",
-            "JUnitVersionHelper",
-            "OutErrSummaryJUnitResultFormatter",
-            "PlainJUnitResultFormatter",
-            "SummaryJUnitResultFormatter",
-            "TearDownOnVmCrash",
-            "XMLJUnitResultFormatter",
-        };
-
-        private boolean isSplit(String classname) {
-            String simplename = classname.substring(classname.lastIndexOf('.') + 1);
-            for (int i = 0; i < splitClasses.length; i++) {
-                if (simplename.equals(splitClasses[i])
-                        || simplename.startsWith(splitClasses[i] + '$')) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-    }
-
     /**
      * Sets up the delegate that will actually run the tests.
      *
@@ -775,7 +725,20 @@ public class JUnitTask extends Task {
             if (extra != null) {
                 path.add(extra);
             }
-            mirrorLoader = new SplitLoader(myLoader, path);
+            mirrorLoader =
+                new SplitClassLoader(myLoader, path, getProject(),
+                                     new String[] {
+                                         "BriefJUnitResultFormatter",
+                                         "JUnitResultFormatter",
+                                         "JUnitTaskMirrorImpl",
+                                         "JUnitTestRunner",
+                                         "JUnitVersionHelper",
+                                         "OutErrSummaryJUnitResultFormatter",
+                                         "PlainJUnitResultFormatter",
+                                         "SummaryJUnitResultFormatter",
+                                         "TearDownOnVmCrash",
+                                         "XMLJUnitResultFormatter",
+                                     });
         } else {
             mirrorLoader = myLoader;
         }
@@ -1667,8 +1630,8 @@ public class JUnitTask extends Task {
             classLoader.cleanup();
             classLoader = null;
         }
-        if (mirrorLoader instanceof SplitLoader) {
-            ((SplitLoader) mirrorLoader).cleanup();
+        if (mirrorLoader instanceof SplitClassLoader) {
+            ((SplitClassLoader) mirrorLoader).cleanup();
         }
         mirrorLoader = null;
     }
