@@ -121,6 +121,8 @@ public class ClassfileSet extends FileSet {
             return getRef(p).getDirectoryScanner(p);
         }
         dieOnCircularReference(p);
+        DirectoryScanner parentScanner = super.getDirectoryScanner(p);
+        DependScanner scanner = new DependScanner(parentScanner);
         Vector allRootClasses = (Vector) rootClasses.clone();
         for (Enumeration e = rootFileSets.elements(); e.hasMoreElements();) {
             FileSet additionalRootSet = (FileSet) e.nextElement();
@@ -135,9 +137,8 @@ public class ClassfileSet extends FileSet {
                     allRootClasses.addElement(className);
                 }
             }
+            scanner.addBasedir(additionalRootSet.getDir(p));
         }
-        DirectoryScanner parentScanner = super.getDirectoryScanner(p);
-        DependScanner scanner = new DependScanner(parentScanner);
         scanner.setBasedir(getDir(p));
         scanner.setRootClasses(allRootClasses);
         scanner.scan();

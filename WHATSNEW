@@ -930,6 +930,10 @@ Other changes:
  * A new token filter <uniqfilter> that suppresses tokens that match
    their ancestor token has been added.
 
+ * <rootfileset>s nested into <classfileset>s can now use a dir
+   attribute different from the <classfileset>.
+   Bugzilla Report 37763.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

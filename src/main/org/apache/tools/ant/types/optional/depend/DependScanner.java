@@ -47,6 +47,8 @@ public class DependScanner extends DirectoryScanner {
      */
     private Vector included;
 
+    private Vector additionalBaseDirs = new Vector();
+
     /**
      * The parent scanner which gives the basic set of files. Only files which
      * are in this set and which can be reached from a root class will end
@@ -109,9 +111,13 @@ public class DependScanner extends DirectoryScanner {
             analyzer = (DependencyAnalyzer) analyzerClass.newInstance();
         } catch (Exception e) {
             throw new BuildException("Unable to load dependency analyzer: "
-                + analyzerClassName, e);
+                                     + analyzerClassName, e);
         }
         analyzer.addClassPath(new Path(null, basedir.getPath()));
+        for (Enumeration e = additionalBaseDirs.elements(); e.hasMoreElements();) {
+            File additionalBaseDir = (File) e.nextElement();
+            analyzer.addClassPath(new Path(null, additionalBaseDir.getPath()));
+        }
 
         for (Enumeration e = rootClasses.elements(); e.hasMoreElements();) {
             String rootClass = (String) e.nextElement();
@@ -209,5 +215,9 @@ public class DependScanner extends DirectoryScanner {
      */
     /** {@inheritDoc}. */
     public void setCaseSensitive(boolean isCaseSensitive) {
+    }
+
+    public void addBasedir(File baseDir) {
+        additionalBaseDirs.addElement(baseDir);
     }
 }
