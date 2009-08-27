@@ -927,8 +927,8 @@ Other changes:
    added.
    Bugzilla Report 40504.
 
- * A new filterreader <uniqfilter> that suppresses lines that match
-   their ancestor line has been added.
+ * A new token filter <uniqfilter> that suppresses tokens that match
+   their ancestor token has been added.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================

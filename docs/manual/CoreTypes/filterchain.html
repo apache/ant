@@ -125,7 +125,6 @@ nested elements.<br>
 <a href="#tokenfilter">TokenFilter</a><br>
 <a href="../CoreTasks/fixcrlf.html">FixCRLF</a><br>
 <a href="#sortfilter">SortFilter</a><br>
-<a href="#uniqfilter">UniqFilter</a><br>
 
 <h3><a name="filterreader">FilterReader</a></h3>
 
@@ -1032,6 +1031,7 @@ and \\.
         <a href="#trim">Trim</a><br>
         <a href="#ignoreblank">IgnoreBlank</a><br>
         <a href="#filterdeletecharacters">DeleteCharacters</a><br>
+        <a href="#uniqfilter">UniqFilter</a><br>
     </p>
 
     The following string filters are provided by the optional distribution.
@@ -1360,6 +1360,20 @@ Delete tabs from lines, trim the lines and removes empty lines.
 
 </pre></blockquote>
 
+<p><b><em><a name="uniqfilter">UniqFilter</a></em></b></p>
+
+<p>Suppresses all tokens that match their ancestor token.  It is most
+  useful if combined with a sort filter.</p>
+
+<h4>Example:</h4>
+
+This suppresses duplicate lines.
+<blockquote><pre>
+&lt;tokenfilter&gt;
+  &lt;uniqfilter/&gt;
+&lt;/tokenfilter&gt;
+</pre></blockquote>
+
 <p><b><em><a name="scriptfilter">ScriptFilter</a></em></b></p>
 This is an optional filter that executes a script in a
 <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
@@ -1493,23 +1507,6 @@ This may be used as follows:
       &lt;/tokenfilter&gt;
     &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
-
-<h3><a name="uniqfilter">UniqFilter</a></h3>
-
-<p>Suppresses all lines that match their ancestor line.  It is most
-  useful if combined with a sort filter.</p>
-
-<h4>Example:</h4>
-
-This suppresses duplicate lines.
-<blockquote><pre>
-&lt;filterreader classname=&quot;org.apache.tools.ant.filters.UniqFilter&quot;/&gt;
-</pre></blockquote>
-
-Convenience method:
-<blockquote><pre>
-&lt;uniqfilter/&gt;
 </pre></blockquote>
 
 </body></html>

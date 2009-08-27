@@ -17,53 +17,23 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.IOException;
-import java.io.Reader;
-
 /**
- * Like the Unix uniq(1) command, only returns lines that are
- * different from their ancestor line.
+ * Like the Unix uniq(1) command, only returns tokens that are
+ * different from their ancestor token.
  *
- * <p>This filter is probably most useful if used together with a sortfilter.</p>
+ * <p>This filter is probably most useful if used together with a
+ * sortfilter.</p>
  *
  * @since Ant 1.8.0
  */
-public class UniqFilter extends BaseFilterReader implements ChainableReader {
+public class UniqFilter implements TokenFilter.Filter {
 
     private String lastLine = null;
-    private String currentLine = null;
 
     public UniqFilter() { }
 
-    public UniqFilter(Reader rdr) {
-        super(rdr);
-    }
-
-    public int read() throws IOException {
-        int ch = -1;
-        if (currentLine != null) {
-            ch = currentLine.charAt(0);
-            if (currentLine.length() == 1) {
-                currentLine = null;
-            } else {
-                currentLine = currentLine.substring(1);
-            }
-        } else {
-            do {
-                currentLine = readLine();
-            } while (lastLine != null && currentLine != null
-                     && lastLine.equals(currentLine));
-            lastLine = currentLine;
-            if (currentLine != null) {
-                return read();
-            }
-        }
-        return ch;
-    }
-
-    public Reader chain(final Reader rdr) {
-        UniqFilter newFilter = new UniqFilter(rdr);
-        newFilter.setInitialized(true);
-        return newFilter;
+    public String filter(String string) {
+        return lastLine == null || !lastLine.equals(string)
+            ? (lastLine = string) : null;
     }
 }
