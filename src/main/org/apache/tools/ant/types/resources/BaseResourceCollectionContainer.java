@@ -211,7 +211,7 @@ public abstract class BaseResourceCollectionContainer
      * Get the nested ResourceCollections.
      * @return List.
      */
-    protected final synchronized List getResourceCollections() {
+    public final synchronized List getResourceCollections() {
         dieOnCircularReference();
         return Collections.unmodifiableList(rc);
     }
