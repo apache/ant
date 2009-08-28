@@ -78,11 +78,6 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
-    static {
-        systemClasspath.setCache(true);
-        systemBootClasspath.setCache(true);
-    }
-
     private static final Iterator EMPTY_ITERATOR
         = Collections.EMPTY_SET.iterator();
 
