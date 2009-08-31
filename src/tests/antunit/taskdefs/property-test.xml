@@ -23,4 +23,18 @@
     <property name="foo">bar</property>
     <au:assertPropertyEquals name="foo" value="bar"/>
   </target>
+
+  <target name="testNoNestedTextButValueAttribute">
+    <property name="foo" value="bar">
+    </property>
+    <au:assertPropertyEquals name="foo" value="bar"/>
+  </target>
+
+  <target name="testNestedTextAndValueAttribute">
+    <au:expectfailure>
+      <property name="foo" value="bar">
+        hello
+      </property>
+    </au:expectfailure>
+  </target>
 </project>

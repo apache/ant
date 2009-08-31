@@ -90,6 +90,7 @@ public class Property extends Task {
     protected String prefix;
     private Project fallback;
     private Object untypedValue;
+    private boolean valueAttributeUsed = false;
 
     protected boolean userProperty; // set read-only properties
     // CheckStyle:VisibilityModifier ON
@@ -161,6 +162,11 @@ public class Property extends Task {
      * @param value the value to use.
      */
     public void setValue(Object value) {
+        valueAttributeUsed = true;
+        internalSetValue(value);
+    }
+
+    private void internalSetValue(Object value) {
         this.untypedValue = value;
         //preserve protected string value for subclasses :(
         this.value = value == null ? null : value.toString();
@@ -182,12 +188,17 @@ public class Property extends Task {
      * @since Ant 1.8.0
      */
     public void addText(String msg) {
+        if (!valueAttributeUsed) {
         msg = getProject().replaceProperties(msg);
         String currentValue = getValue();
         if (currentValue != null) {
             msg = currentValue + msg;
         }
-        setValue(msg);
+        internalSetValue(msg);
+        } else if (msg.trim().length() > 0) {
+            throw new BuildException("can't combine nested text with value"
+                                     + " attribute");
+        }
     }
 
     /**
