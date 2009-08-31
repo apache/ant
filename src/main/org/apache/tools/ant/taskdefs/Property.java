@@ -189,12 +189,12 @@ public class Property extends Task {
      */
     public void addText(String msg) {
         if (!valueAttributeUsed) {
-        msg = getProject().replaceProperties(msg);
-        String currentValue = getValue();
-        if (currentValue != null) {
-            msg = currentValue + msg;
-        }
-        internalSetValue(msg);
+            msg = getProject().replaceProperties(msg);
+            String currentValue = getValue();
+            if (currentValue != null) {
+                msg = currentValue + msg;
+            }
+            internalSetValue(msg);
         } else if (msg.trim().length() > 0) {
             throw new BuildException("can't combine nested text with value"
                                      + " attribute");
@@ -502,13 +502,13 @@ public class Property extends Task {
      * @see java.util.Properties#loadFromXML(InputStream)
      */
     private void loadProperties(
-        Properties props, InputStream is, boolean isXml) throws IOException {
+                                Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
             // load the xml based property definition
             // use reflection because of bwc to Java 1.3
             try {
                 Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
-                        new Class[] {InputStream.class});
+                                                                  new Class[] {InputStream.class});
                 loadXmlMethod.invoke(props, new Object[] {is});
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -543,7 +543,7 @@ public class Property extends Task {
                 addProperties(props);
             } else {
                 log("Unable to find property file: " + file.getAbsolutePath(),
-                        Project.MSG_VERBOSE);
+                    Project.MSG_VERBOSE);
             }
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
@@ -610,7 +610,7 @@ public class Property extends Task {
                 log("Ignoring: " + entry, Project.MSG_WARN);
             } else {
                 props.put(prefix + entry.substring(0, pos),
-                entry.substring(pos + 1));
+                          entry.substring(pos + 1));
             }
         }
         addProperties(props);
@@ -672,9 +672,9 @@ public class Property extends Task {
         PropertyHelper propertyHelper
             = (PropertyHelper) PropertyHelper.getPropertyHelper(getProject());
         new ResolvePropertyMap(
-            getProject(),
-            propertyHelper,
-            propertyHelper.getExpanders()).resolveAllProperties(props);
+                               getProject(),
+                               propertyHelper,
+                               propertyHelper.getExpanders()).resolveAllProperties(props);
     }
 
 }
