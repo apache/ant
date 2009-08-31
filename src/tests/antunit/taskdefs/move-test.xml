@@ -98,4 +98,30 @@
     <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>
     <au:assertFileExists file="${output}/foo.jpg"/>
   </target>
+
+  <target name="testOverwriteIsTrueByDefault">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/x.txt">X</echo>
+    <sleep seconds="2"/>
+    <echo file="${output}/y.txt">Y</echo>
+    <move file="${input}/x.txt" tofile="${output}/y.txt"/>
+    <au:assertFileDoesntExist file="${input}/x.txt"/>
+    <au:assertResourceContains resource="${output}/y.txt"
+                               value="X"/>
+  </target>
+
+  <target name="testOverwriteIsHonored"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47755">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/x.txt">X</echo>
+    <sleep seconds="2"/>
+    <echo file="${output}/y.txt">Y</echo>
+    <move file="${input}/x.txt" tofile="${output}/y.txt" overwrite="false"/>
+    <au:assertFileExists file="${input}/x.txt"/>
+    <au:assertResourceContains resource="${output}/y.txt"
+                               value="Y"/>
+  </target>
+
 </project>
