@@ -54,37 +54,24 @@
 
     <target name="testApacheNoPrefix" depends="setUp">
       <hostinfo host="${apache-hostname}"/>
-      <au:assertTrue>
-        <and>
-          <equals arg1="${NAME}" arg2="${apache-realhost}" />
-          <equals arg1="${DOMAIN}" arg2="${apache-domain}" />
-          <equals arg1="${ADDR4}" arg2="${apache-ip4}" />
-        </and>
-      </au:assertTrue>
+      <au:assertEquals expected="${apache-realhost}" actual="${NAME}"/>
+      <au:assertEquals expected="${apache-domain}" actual="${DOMAIN}"/>
+      <au:assertEquals expected="${apache-ip4}" actual="${ADDR4}"/>
     </target>
 
     <target name="testReverse" depends="setUp">
       <hostinfo prefix="reverse" host="${xs4all-ip4}"/>
-      <au:assertTrue>
-        <and>
-          <equals arg1="${reverse.NAME}" arg2="${xs4all-realhost}" />
-          <equals arg1="${reverse.DOMAIN}" arg2="${xs4all-domain}" />
-          <equals arg1="${reverse.ADDR4}" arg2="${xs4all-ip4}" />
-        </and>
-      </au:assertTrue>
+      <au:assertEquals expected="${xs4all-realhost}" actual="${reverse.NAME}"/>
+      <au:assertEquals expected="${xs4all-domain}" actual="${reverse.DOMAIN}"/>
+      <au:assertEquals expected="${xs4all-ip4}" actual="${reverse.ADDR4}"/>
     </target>
     
     
     <target name="testUndef" depends="setUp">
       <hostinfo prefix="undef" host="${undef-name}"/>
-      <au:assertTrue>
-        <and>
-          <equals arg1="${undef.NAME}" arg2="${undef-hostname}" />
-          <equals arg1="${undef.DOMAIN}" arg2="${undef-domainname}" />
-          <equals arg1="${undef.ADDR4}" arg2="${undef-ip4}" />
-          <equals arg1="${undef.ADDR6}" arg2="${undef-ip6}" />
-        </and>
-      </au:assertTrue>
+      <au:assertEquals expected="${undef-hostname}" actual="${undef.NAME}"/>
+      <au:assertEquals expected="${undef-domainname}" actual="${undef.DOMAIN}"/>
+      <au:assertEquals expected="${undef-ip4}" actual="${undef.ADDR4}"/>
     </target>
     
 </project>
