@@ -72,6 +72,15 @@ types listed in the environment variable PATHEXT. That is only used by the shell
 &lt;/target&gt;
 </pre></blockquote>
 
+<p>A common problem is not having the executable on the PATH. In case you get an error
+message <tt>Cannot run program "...":CreateProcess error=2. The system cannot find
+the path specified.</tt> have a look at your PATH variable. Just type the command directly on
+the command line and if Windows find it, Ant should do it too. (Otherwise ask on the user mailinglist for help.) If Windows can not execute the program add the directory of the programm
+to the PATH (<tt>set PATH=%PATH%;dirOfProgram</tt>) or specify the absolute path in the
+<tt>executable</tt> attribute in your buildfile.
+</p>
+
+
 <h4>Cygwin Users</h4>
 <p>The <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh
 for the executable parameter.  This is because the Java VM in which Ant is
