@@ -73,19 +73,17 @@ public class JavaHelper extends ProjectComponent
   </target>
 
   <target name="defineHelpers" depends="compileHelpers">
-    <typedef name="urlhelper"
+    <componentdef name="urlhelper"
              classname="org.apache.ant.propertyhelper.URLHelper">
       <classpath location="${propout}"/>
-    </typedef>
-    <urlhelper id="url"/>
-    <typedef name="javahelper"
+    </componentdef>
+    <componentdef name="javahelper"
              classname="org.apache.ant.propertyhelper.JavaHelper">
       <classpath location="${propout}"/>
-    </typedef>
-    <javahelper id="java"/>
+    </componentdef>
     <propertyhelper>
-      <delegate refid="url"/>
-      <delegate refid="java"/>
+      <urlhelper/>
+      <javahelper/>
     </propertyhelper>
   </target>
 
