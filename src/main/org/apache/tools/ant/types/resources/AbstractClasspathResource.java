@@ -177,7 +177,7 @@ public abstract class AbstractClasspathResource extends Resource {
         }
         if (cl == null) {
             if (getClasspath() != null) {
-                Path p = getClasspath().concatSystemClasspath();
+                Path p = getClasspath().concatSystemClasspath("ignore");
                 if (parentFirst) {
                     cl = getProject().createClassLoader(p);
                 } else {
