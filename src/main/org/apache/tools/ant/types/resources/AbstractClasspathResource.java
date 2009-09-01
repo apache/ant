@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 
+import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Stack;
@@ -172,6 +173,7 @@ public abstract class AbstractClasspathResource extends Resource {
         }
         dieOnCircularReference();
         ClassLoader cl = null;
+        boolean clNeedsCleanup = false;
         if (loader != null) {
             cl = (ClassLoader) loader.getReferencedObject();
         }
@@ -186,6 +188,7 @@ public abstract class AbstractClasspathResource extends Resource {
                                                           getProject(),
                                                           p, false);
                 }
+                clNeedsCleanup = loader != null;
             } else {
                 cl = JavaResource.class.getClassLoader();
             }
@@ -194,7 +197,22 @@ public abstract class AbstractClasspathResource extends Resource {
             }
         }
 
-        return openInputStream(cl);
+        final ClassLoader classLoader = cl;
+        return !clNeedsCleanup
+            ? openInputStream(cl)
+            : new FilterInputStream(openInputStream(cl)) {
+                    public void close() throws IOException {
+                        FileUtils.close(in);
+                        ((AntClassLoader) classLoader).cleanup();
+                    }
+                    protected void finalize() throws Throwable {
+                        try {
+                            close();
+                        } finally {
+                            super.finalize();
+                        }
+                    }
+                };
     }
 
     /**
