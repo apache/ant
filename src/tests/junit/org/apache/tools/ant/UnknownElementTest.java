@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class UnknownElementTest extends BuildFileTest {
     public void setUp() {
         configureProject("src/etc/testcases/core/unknownelement.xml");
@@ -30,6 +29,36 @@ public class UnknownElementTest extends BuildFileTest {
     public void testMaybeConfigure() {
         // make sure we do not get a NPE
         executeTarget("testMaybeConfigure");
+    }
+
+    /**
+     * Not really a UnknownElement test but rather one of "what
+     * information is available in taskFinished".
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=26197
+     */
+    public void XtestTaskFinishedEvent() {
+        getProject().addBuildListener(new BuildListener() {
+                public void buildStarted(BuildEvent event) {}
+                public void buildFinished(BuildEvent event) {}
+                public void targetStarted(BuildEvent event) {}
+                public void targetFinished(BuildEvent event) {}
+                public void taskStarted(BuildEvent event) {
+                    assertTaskProperties(event.getTask());
+                }
+                public void taskFinished(BuildEvent event) {
+                    assertTaskProperties(event.getTask());
+                }
+                public void messageLogged(BuildEvent event) {}
+                private void assertTaskProperties(Task ue) {
+                    assertNotNull(ue);
+                    assertTrue(ue instanceof UnknownElement);
+                    Task t = ((UnknownElement) ue).getTask();
+                    assertNotNull(t);
+                    assertEquals("org.apache.tools.ant.taskdefs.Echo",
+                                 t.getClass().getName());
+                }
+            });
+        executeTarget("echo");
     }
 
     public static class Child extends Task {
@@ -51,7 +80,7 @@ public class UnknownElementTest extends BuildFileTest {
         public void fromChild() {
             log("fromchild");
         }
-        
+
         public void execute() {
             for (Iterator i = children.iterator(); i.hasNext();) {
                 UnknownElement el = (UnknownElement) i.next();

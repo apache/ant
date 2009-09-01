@@ -33,4 +33,7 @@
       <child/>
     </parent>
   </target>
+  <target name="echo">
+    <echo message="Hello, world!"/>
+  </target>
 </project>
