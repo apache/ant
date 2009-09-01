@@ -474,6 +474,12 @@ Fixed bugs:
    it was scanning the same filesets more than once.
    Bugzilla Report 43574.
 
+ * when using custom filterreaders with the <filterreader classname="">
+   syntax Ant could leak memory.
+   The problem didn't occur when using <typedef> or <componentdef> to
+   define the filterreader which is the recommended approach.
+   Bugzilla Report 45439.
+
 Other changes:
 --------------
 

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -120,6 +122,8 @@ public final class ChainReaderHelper {
         Reader instream = primaryReader;
         final int filterReadersCount = filterChains.size();
         final Vector finalFilters = new Vector();
+        final ArrayList/*<AntClassLoader>*/ classLoadersToCleanUp =
+            new ArrayList/*<AntClassLoader>*/();
 
         for (int i = 0; i < filterReadersCount; i++) {
             final FilterChain filterchain =
@@ -152,6 +156,7 @@ public final class ChainReaderHelper {
                                 AntClassLoader al
                                     = pro.createClassLoader(classpath);
                                 clazz = Class.forName(className, true, al);
+                                classLoadersToCleanUp.add(al);
                             }
                             if (clazz != null) {
                                 if (!FilterReader.class.isAssignableFrom(clazz)) {
@@ -204,7 +209,24 @@ public final class ChainReaderHelper {
                 }
             }
         }
-        return instream;
+        final Reader finalReader = instream;
+        return classLoadersToCleanUp.size() == 0 ? finalReader
+            : new FilterReader(finalReader) {
+                    public void close() throws IOException {
+                        FileUtils.close(in);
+                        for (Iterator it = classLoadersToCleanUp.iterator();
+                             it.hasNext(); ) {
+                            ((AntClassLoader) it.next()).cleanup();
+                        }
+                    }
+                    protected void finalize() throws Throwable {
+                        try {
+                            close();
+                        } finally {
+                            super.finalize();
+                        }
+                    }
+                };
     }
 
     /**
