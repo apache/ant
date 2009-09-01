@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Path;
@@ -31,13 +32,14 @@ import java.util.Stack;
  *
  * A Resource representation of anything that is accessed via a Java classloader.
  * The core methods to set/resolve the classpath are provided.
- * @since Ant 1.8
+ * @since Ant 1.8.0
  *
  */
 
 public abstract class AbstractClasspathResource extends Resource {
     private Path classpath;
     private Reference loader;
+    private boolean parentFirst = true;
 
     /**
      * Set the classpath to use when looking up a resource.
@@ -117,6 +119,17 @@ public abstract class AbstractClasspathResource extends Resource {
     }
 
     /**
+     * Whether to consult the parent classloader first.
+     *
+     * <p>Only relevant if a classpath has been specified.</p>
+     *
+     * @since Ant 1.8.0
+     */
+    public void setParentFirst(boolean b) {
+        parentFirst = b;
+    }
+
+    /**
      * Overrides the super version.
      * @param r the Reference to set.
      */
@@ -165,7 +178,14 @@ public abstract class AbstractClasspathResource extends Resource {
         if (cl == null) {
             if (getClasspath() != null) {
                 Path p = getClasspath().concatSystemClasspath();
-                cl = getProject().createClassLoader(p);
+                if (parentFirst) {
+                    cl = getProject().createClassLoader(p);
+                } else {
+                    cl = AntClassLoader.newAntClassLoader(getProject()
+                                                          .getCoreLoader(),
+                                                          getProject(),
+                                                          p, false);
+                }
             } else {
                 cl = JavaResource.class.getClassLoader();
             }

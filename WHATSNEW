@@ -939,6 +939,11 @@ Other changes:
  * <property> can now specify values as nested text.
    Bugzilla Report 32917.
 
+ * a new parentFirst attribute on <javaresource> allows resources to
+   be loaded from the specified classpath rather than the system
+   classloader.
+   Bugzilla Report 41369.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
