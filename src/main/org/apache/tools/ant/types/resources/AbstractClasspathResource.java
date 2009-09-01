@@ -188,7 +188,7 @@ public abstract class AbstractClasspathResource extends Resource {
                                                           getProject(),
                                                           p, false);
                 }
-                clNeedsCleanup = loader != null;
+                clNeedsCleanup = loader == null;
             } else {
                 cl = JavaResource.class.getClassLoader();
             }
