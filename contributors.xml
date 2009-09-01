@@ -47,6 +47,10 @@
     <last>Ishutin</last>
   </name>
   <name>
+    <first>Alex</first>
+    <last>Rosen</last>
+  </name>
+  <name>
     <first>Alexei</first>
     <last>Yudichev</last>
   </name>
@@ -131,6 +135,10 @@
   <name>
     <first>Balazs</first>
     <last>Fejes 2</last>
+  </name>
+  <name>
+    <first>Bart</first>
+    <last>Vanhaute</last>
   </name>
   <name>
     <first>Benjamin</first>
@@ -244,6 +252,10 @@
     <last>Sandvik</last>
   </name>
   <name>
+    <first>Curt</first>
+    <last>Arnold</last>
+  </name>
+  <name>
     <first>Curtis</first>
     <last>White</last>
   </name>
@@ -258,6 +270,10 @@
   <name>
     <first>Dale</first>
     <last>Anson</last>
+  </name>
+  <name>
+    <first>Dale</first>
+    <last>Sherwood</last>
   </name>
   <name>
     <first>Dan</first>
@@ -511,6 +527,10 @@
     <last>Engels</last>
   </name>
   <name>
+    <first>Holger</first>
+    <last>Joest</last>
+  </name>
+  <name>
     <first>Ignacio</first>
     <last>Coloma</last>
   </name>
@@ -656,6 +676,10 @@
   <name>
     <first>Jon</first>
     <last>Dickinson</last>
+  </name>
+  <name>
+    <first>Jon</first>
+    <last>Skeet</last>
   </name>
   <name>
     <first>Jon</first>
@@ -978,6 +1002,10 @@
     <last>Gaspar</last>
   </name>
   <name>
+    <first>Pavan</first>
+    <last>Bayyapu</last>
+  </name>
+  <name>
     <first>Pavel</first>
     <last>Jisl</last>
   </name>
@@ -1004,7 +1032,15 @@
   </name>
   <name>
     <first>Peter</first>
+    <last>Janes</last>
+  </name>
+  <name>
+    <first>Peter</first>
     <last>Reilly</last>
+  </name>
+  <name>
+    <first>Phil</first>
+    <last>Hanna</last>
   </name>
   <name>
     <first>Philip</first>
@@ -1169,8 +1205,16 @@
       <last>Law</last>
   </name>
   <name>
+    <first>Simone</first>
+    <last>Bordet</last>
+  </name>
+  <name>
     <first>Stefan</first>
     <last>Bodewig</last>
+  </name>
+  <name>
+    <first>Stefan</first>
+    <last>Heimann</last>
   </name>
   <name>
     <first>Stefano</first>
@@ -1198,6 +1242,10 @@
   <name>
     <first>Steve</first>
     <last>Cohen</last>
+  </name>
+  <name>
+    <first>Steve</first>
+    <last>Langley</last>
   </name>
   <name>
     <first>Steve</first>
@@ -1320,6 +1368,10 @@
   <name>
     <first>William</first>
     <last>Ferguson</last>
+  </name>
+  <name>
+    <first>William</first>
+    <last>Webber</last>
   </name>
   <name>
     <first>Wolf</first>
