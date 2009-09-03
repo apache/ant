@@ -24,6 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -138,6 +139,8 @@ public final class ChainReaderHelper {
         final int filtersCount = finalFilters.size();
 
         if (filtersCount > 0) {
+            boolean success = false;
+            try {
             for (int i = 0; i < filtersCount; i++) {
                 Object o = finalFilters.elementAt(i);
 
@@ -155,8 +158,8 @@ public final class ChainReaderHelper {
                             } else {
                                 AntClassLoader al
                                     = pro.createClassLoader(classpath);
-                                clazz = Class.forName(className, true, al);
                                 classLoadersToCleanUp.add(al);
+                                clazz = Class.forName(className, true, al);
                             }
                             if (clazz != null) {
                                 if (!FilterReader.class.isAssignableFrom(clazz)) {
@@ -208,16 +211,19 @@ public final class ChainReaderHelper {
                     setProjectOnObject(instream);
                 }
             }
+            success = true;
+            } finally {
+                if (!success && classLoadersToCleanUp.size() > 0) {
+                    cleanUpClassLoaders(classLoadersToCleanUp);
+                }
+            }
         }
         final Reader finalReader = instream;
         return classLoadersToCleanUp.size() == 0 ? finalReader
             : new FilterReader(finalReader) {
                     public void close() throws IOException {
                         FileUtils.close(in);
-                        for (Iterator it = classLoadersToCleanUp.iterator();
-                             it.hasNext(); ) {
-                            ((AntClassLoader) it.next()).cleanup();
-                        }
+                        cleanUpClassLoaders(classLoadersToCleanUp);
                     }
                     protected void finalize() throws Throwable {
                         try {
@@ -243,6 +249,15 @@ public final class ChainReaderHelper {
             return;
         }
         project.setProjectReference(obj);
+    }
+
+    /**
+     * Deregisters Classloaders from the project so GC can remove them later.
+     */
+    private static void cleanUpClassLoaders(List/*<AntClassLoader>*/ loaders) {
+        for (Iterator it = loaders.iterator(); it.hasNext(); ) {
+            ((AntClassLoader) it.next()).cleanup();
+        }
     }
 
     /**
