@@ -141,20 +141,20 @@ public final class ChainReaderHelper {
         if (filtersCount > 0) {
             boolean success = false;
             try {
-            for (int i = 0; i < filtersCount; i++) {
-                Object o = finalFilters.elementAt(i);
+                for (int i = 0; i < filtersCount; i++) {
+                    Object o = finalFilters.elementAt(i);
 
-                if (o instanceof AntFilterReader) {
-                    instream =
-                        expandReader((AntFilterReader) finalFilters.elementAt(i),
-                                     instream, classLoadersToCleanUp);
-                } else if (o instanceof ChainableReader) {
-                    setProjectOnObject(o);
-                    instream = ((ChainableReader) o).chain(instream);
-                    setProjectOnObject(instream);
+                    if (o instanceof AntFilterReader) {
+                        instream =
+                            expandReader((AntFilterReader) finalFilters.elementAt(i),
+                                         instream, classLoadersToCleanUp);
+                    } else if (o instanceof ChainableReader) {
+                        setProjectOnObject(o);
+                        instream = ((ChainableReader) o).chain(instream);
+                        setProjectOnObject(instream);
+                    }
                 }
-            }
-            success = true;
+                success = true;
             } finally {
                 if (!success && classLoadersToCleanUp.size() > 0) {
                     cleanUpClassLoaders(classLoadersToCleanUp);
@@ -221,8 +221,9 @@ public final class ChainReaderHelper {
      *
      * @since Ant 1.8.0
      */
-    private Reader expandReader(AntFilterReader filter, Reader ancestor,
-                                List/*<AntClassLoader>*/ classLoadersToCleanUp) {
+    private Reader expandReader(final AntFilterReader filter,
+                                final Reader ancestor,
+                                final List/*<AntClassLoader>*/ classLoadersToCleanUp) {
         final String className = filter.getClassName();
         final Path classpath = filter.getClasspath();
         final Project pro = filter.getProject();
