@@ -1574,7 +1574,7 @@
         <p>The resulting diff file can be use as a patch for a
         previous installation (just ensure that the generated
         patch.zip file is located on the CLASSPATH before the patched
-        oldJar jar file)</p>
+        oldJar jar file).</p>
 
         <table class="externals">
           <tr>
@@ -1584,11 +1584,11 @@
           <tr>
             <th>URL:</th>
             <td><a
-                href="http://perso.club-internet.fr/sjobic/ant/">http://perso.club-internet.fr/sjobic/ant/</a></td>
+                href="http://norb.dnsalias.org/ant/">http://norb.dnsalias.org/ant/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:norbert.barbosa@laposte.net">Norbert Barbosa</a></td>
+            <td><a href="mailto:norbert.barbosa@gmail.com">Norbert Barbosa</a></td>
           </tr>
           <tr>
             <th>License:</th>
