@@ -145,66 +145,9 @@ public final class ChainReaderHelper {
                 Object o = finalFilters.elementAt(i);
 
                 if (o instanceof AntFilterReader) {
-                    final AntFilterReader filter
-                        = (AntFilterReader) finalFilters.elementAt(i);
-                    final String className = filter.getClassName();
-                    final Path classpath = filter.getClasspath();
-                    final Project pro = filter.getProject();
-                    if (className != null) {
-                        try {
-                            Class clazz = null;
-                            if (classpath == null) {
-                                clazz = Class.forName(className);
-                            } else {
-                                AntClassLoader al
-                                    = pro.createClassLoader(classpath);
-                                classLoadersToCleanUp.add(al);
-                                clazz = Class.forName(className, true, al);
-                            }
-                            if (clazz != null) {
-                                if (!FilterReader.class.isAssignableFrom(clazz)) {
-                                    throw new BuildException(className
-                                        + " does not extend java.io.FilterReader");
-                                }
-                                final Constructor[] constructors =
-                                    clazz.getConstructors();
-                                int j = 0;
-                                boolean consPresent = false;
-                                for (; j < constructors.length; j++) {
-                                    Class[] types = constructors[j]
-                                                      .getParameterTypes();
-                                    if (types.length == 1
-                                        && types[0].isAssignableFrom(Reader.class)) {
-                                        consPresent = true;
-                                        break;
-                                    }
-                                }
-                                if (!consPresent) {
-                                    throw new BuildException(className
-                                        + " does not define a public constructor"
-                                        + " that takes in a Reader as its "
-                                        + "single argument.");
-                                }
-                                final Reader[] rdr = {instream};
-                                instream =
-                                    (Reader) constructors[j].newInstance((Object[]) rdr);
-                                setProjectOnObject(instream);
-                                if (Parameterizable.class.isAssignableFrom(clazz)) {
-                                    final Parameter[] params = filter.getParams();
-                                    ((Parameterizable)
-                                        instream).setParameters(params);
-                                }
-                            }
-                        } catch (final ClassNotFoundException cnfe) {
-                            throw new BuildException(cnfe);
-                        } catch (final InstantiationException ie) {
-                            throw new BuildException(ie);
-                        } catch (final IllegalAccessException iae) {
-                            throw new BuildException(iae);
-                        } catch (final InvocationTargetException ite) {
-                            throw new BuildException(ite);
-                        }
-                    }
+                    instream =
+                        expandReader((AntFilterReader) finalFilters.elementAt(i),
+                                     instream, classLoadersToCleanUp);
                 } else if (o instanceof ChainableReader) {
                     setProjectOnObject(o);
                     instream = ((ChainableReader) o).chain(instream);
@@ -270,5 +213,74 @@ public final class ChainReaderHelper {
     public String readFully(Reader rdr)
         throws IOException {
         return FileUtils.readFully(rdr, bufferSize);
+    }
+
+    /**
+     * Creates and parameterizes a new FilterReader from a
+     * &lt;filterreader&gt; element.
+     *
+     * @since Ant 1.8.0
+     */
+    private Reader expandReader(AntFilterReader filter, Reader ancestor,
+                                List/*<AntClassLoader>*/ classLoadersToCleanUp) {
+        final String className = filter.getClassName();
+        final Path classpath = filter.getClasspath();
+        final Project pro = filter.getProject();
+        if (className != null) {
+            try {
+                Class clazz = null;
+                if (classpath == null) {
+                    clazz = Class.forName(className);
+                } else {
+                    AntClassLoader al = pro.createClassLoader(classpath);
+                    classLoadersToCleanUp.add(al);
+                    clazz = Class.forName(className, true, al);
+                }
+                if (clazz != null) {
+                    if (!FilterReader.class.isAssignableFrom(clazz)) {
+                        throw new BuildException(className + " does not extend"
+                                                 + " java.io.FilterReader");
+                    }
+                    final Constructor[] constructors = clazz.getConstructors();
+                    int j = 0;
+                    boolean consPresent = false;
+                    for (; j < constructors.length; j++) {
+                        Class[] types = constructors[j].getParameterTypes();
+                        if (types.length == 1
+                            && types[0].isAssignableFrom(Reader.class)) {
+                            consPresent = true;
+                            break;
+                        }
+                    }
+                    if (!consPresent) {
+                        throw new BuildException(className + " does not define"
+                                                 + " a public constructor"
+                                                 + " that takes in a Reader"
+                                                 + " as its single argument.");
+                    }
+                    final Reader[] rdr = {ancestor};
+                    Reader instream =
+                        (Reader) constructors[j].newInstance((Object[]) rdr);
+                    setProjectOnObject(instream);
+                    if (Parameterizable.class.isAssignableFrom(clazz)) {
+                        final Parameter[] params = filter.getParams();
+                        ((Parameterizable) instream).setParameters(params);
+                    }
+                    return instream;
+                }
+            } catch (final ClassNotFoundException cnfe) {
+                throw new BuildException(cnfe);
+            } catch (final InstantiationException ie) {
+                throw new BuildException(ie);
+            } catch (final IllegalAccessException iae) {
+                throw new BuildException(iae);
+            } catch (final InvocationTargetException ite) {
+                throw new BuildException(ite);
+            }
+        }
+        // Ant 1.7.1 and earlier ignore <filterreader> without a
+        // classname attribute, not sure this is a good idea -
+        // backwards compatibility makes it hard to change, though.
+        return ancestor;
     }
 }
