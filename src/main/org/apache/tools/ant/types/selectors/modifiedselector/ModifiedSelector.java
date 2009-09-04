@@ -646,6 +646,7 @@ public class ModifiedSelector extends BaseExtendSelector
                 // the usual classloader
                 ? getClass().getClassLoader()
                 // additional use the provided classpath
+                // Memory leak in line below
                 : getProject().createClassLoader(classpath);
         }
         return myClassLoader;

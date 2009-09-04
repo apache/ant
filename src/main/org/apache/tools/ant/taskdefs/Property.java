@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
@@ -558,10 +559,11 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         InputStream is = null;
+        ClassLoader cL = null;
+        boolean cleanup = false;
         try {
-            ClassLoader cL = null;
-
             if (classpath != null) {
+                cleanup = true;
                 cL = getProject().createClassLoader(classpath);
             } else {
                 cL = this.getClass().getClassLoader();
@@ -588,6 +590,9 @@ public class Property extends Task {
                 } catch (IOException e) {
                     // ignore
                 }
+            }
+            if (cleanup && cL != null) {
+                ((AntClassLoader) cL).cleanup();
             }
         }
     }

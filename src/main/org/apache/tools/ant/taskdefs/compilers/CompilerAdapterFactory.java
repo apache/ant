@@ -152,6 +152,7 @@ public final class CompilerAdapterFactory {
                 return new Sj();
             }
             return resolveClassName(compilerType,
+                                    // Memory-Leak in line below
                                 task.getProject().createClassLoader(classpath));
         }
 

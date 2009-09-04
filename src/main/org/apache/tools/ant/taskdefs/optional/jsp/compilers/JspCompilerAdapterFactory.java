@@ -54,6 +54,7 @@ public final class JspCompilerAdapterFactory {
     public static JspCompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
         return getCompiler(compilerType, task,
+                           // Memory-Leak in line below
                            task.getProject().createClassLoader(null));
     }
 

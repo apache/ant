@@ -929,6 +929,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         if (combinedClasspath == null) {
             classpathLoader = getClass().getClassLoader();
         } else {
+            // Memory leak in line below
             classpathLoader
                 = getTask().getProject().createClassLoader(combinedClasspath);
         }

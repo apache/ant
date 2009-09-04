@@ -261,6 +261,7 @@ public class Mapper extends DataType implements Cloneable {
 
         ClassLoader loader = (classpath == null)
             ? getClass().getClassLoader()
+            // Memory leak in line below
             : getProject().createClassLoader(classpath);
 
         return Class.forName(cName, true, loader);

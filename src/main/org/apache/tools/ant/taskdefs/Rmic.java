@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.util.Vector;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -104,7 +105,7 @@ public class Rmic extends MatchingTask {
 
     private Vector compileList = new Vector();
 
-    private ClassLoader loader = null;
+    private AntClassLoader loader = null;
 
     private FacadeTaskHelper facade;
     /** unable to verify message */
@@ -581,6 +582,7 @@ public class Rmic extends MatchingTask {
      * if there's a problem with baseDir or RMIC
      */
     public void execute() throws BuildException {
+        try {
         compileList.clear();
 
         File outputDir = getOutputDir();
@@ -658,6 +660,21 @@ public class Rmic extends MatchingTask {
                                       adapter);
                 }
             }
+        }
+        } finally {
+            cleanup();
+        }
+    }
+
+    /**
+     * Cleans up resources.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void cleanup() {
+        if (loader != null) {
+            loader.cleanup();
+            loader = null;
         }
     }
 

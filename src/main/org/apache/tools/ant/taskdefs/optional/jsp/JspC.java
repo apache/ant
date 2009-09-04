@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -436,10 +437,12 @@ public class JspC extends MatchingTask {
 
         File dest = getActualDestDir();
 
+        AntClassLoader al = null;
+        try {
         //bind to a compiler
         JspCompilerAdapter compiler =
             JspCompilerAdapterFactory.getCompiler(compilerName, this,
-                getProject().createClassLoader(compilerClasspath));
+                al = getProject().createClassLoader(compilerClasspath));
 
         //if we are a webapp, hand off to the compiler, which had better handle it
         if (webApp != null) {
@@ -501,6 +504,11 @@ public class JspC extends MatchingTask {
                 log("there were no files to compile", Project.MSG_INFO);
             } else {
                 log("all files are up to date", Project.MSG_VERBOSE);
+            }
+        }
+        } finally {
+            if (al != null) {
+                al.cleanup();
             }
         }
     }

@@ -126,15 +126,16 @@ public class WhichResource extends Task {
     public void execute() throws BuildException {
         validate();
         if (classpath != null) {
+            classpath = classpath.concatSystemClasspath("ignore");
             getProject().log("using user supplied classpath: " + classpath,
                     Project.MSG_DEBUG);
-            classpath = classpath.concatSystemClasspath("ignore");
         } else {
             classpath = new Path(getProject());
             classpath = classpath.concatSystemClasspath("only");
             getProject().log("using system classpath: " + classpath, Project.MSG_DEBUG);
         }
-        AntClassLoader loader;
+        AntClassLoader loader = null;
+        try {
         loader = AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
                     getProject(),
                     classpath, false);
@@ -159,6 +160,11 @@ public class WhichResource extends Task {
             //set the property
             loc = url.toExternalForm();
             getProject().setNewProperty(property, loc);
+        }
+        } finally {
+            if (loader != null) {
+                loader.cleanup();
+            }
         }
     }
 

@@ -110,7 +110,6 @@ public class HasMethod extends ProjectComponent implements Condition {
                 loader = getProject().createClassLoader(classpath);
                 loader.setParentFirst(false);
                 loader.addJavaLibraries();
-                if (loader != null) {
                     try {
                         return loader.findClass(classname);
                     } catch (SecurityException se) {
@@ -118,11 +117,9 @@ public class HasMethod extends ProjectComponent implements Condition {
                         // actually the case we're looking for in JDK 1.3+,
                         // so catch the exception and return
                         return null;
-                    }
-                } else {
-                    return null;
                 }
             } else if (loader != null) {
+                // How do we ever get here?
                 return loader.loadClass(classname);
             } else {
                 ClassLoader l = this.getClass().getClassLoader();
@@ -148,6 +145,8 @@ public class HasMethod extends ProjectComponent implements Condition {
         if (classname == null) {
             throw new BuildException("No classname defined");
         }
+        ClassLoader preLoadClass = loader;
+        try {
         Class clazz = loadClass(classname);
         if (method != null) {
             return isMethodFound(clazz);
@@ -156,6 +155,12 @@ public class HasMethod extends ProjectComponent implements Condition {
             return isFieldFound(clazz);
         }
         throw new BuildException("Neither method nor field defined");
+        } finally {
+            if (preLoadClass != loader && loader != null) {
+                loader.cleanup();
+                loader = null;
+            }
+        }
     }
 
     private boolean isFieldFound(Class clazz) {

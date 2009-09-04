@@ -500,7 +500,7 @@ public class XMLCatalog extends DataType
         if (catalogResolver == null) {
 
             AntClassLoader loader = null;
-
+            // Memory-Leak in line below
             loader = getProject().createClassLoader(Path.systemClasspath);
 
             try {

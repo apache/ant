@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
@@ -589,11 +590,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     classpath = getCombinedClasspath();
                 }
 
+                javaTask.setFork(true);
                 if (classpath != null) {
                     javaTask.setClasspath(classpath);
-                    javaTask.setFork(true);
-                } else {
-                    javaTask.setFork(true);
                 }
 
                 log("Calling websphere.ejbdeploy for " + sourceJar.toString(),
@@ -684,6 +683,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         JarFile wasJar = null;
         File newwasJarFile = null;
         JarOutputStream newJarStream = null;
+        ClassLoader genericLoader = null;
 
         try {
             log("Checking if websphere Jar needs to be rebuilt for jar "
@@ -713,7 +713,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
 
                 //Cycle Through generic and make sure its in websphere
-                ClassLoader genericLoader = getClassLoaderFromJar(genericJarFile);
+                genericLoader = getClassLoaderFromJar(genericJarFile);
 
                 for (Enumeration e = genericEntries.keys(); e.hasMoreElements();) {
                     String filepath = (String) e.nextElement();
@@ -861,6 +861,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     rebuild = true;
                 }
             }
+            if (genericLoader != null
+                && genericLoader instanceof AntClassLoader) {
+                AntClassLoader loader = (AntClassLoader) genericLoader;
+                loader.cleanup();
+            }
         }
 
         return rebuild;
@@ -889,4 +894,3 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         return getTask().getProject().createClassLoader(lookupPath);
     }
 }
-

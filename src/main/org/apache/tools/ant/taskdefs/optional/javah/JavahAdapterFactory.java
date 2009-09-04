@@ -86,6 +86,7 @@ public class JavahAdapterFactory {
             return new SunJavah();
         } else if (choice != null) {
             return resolveClassName(choice,
+                                    // Memory leak in line below
                                     log.getProject()
                                     .createClassLoader(classpath));
         }

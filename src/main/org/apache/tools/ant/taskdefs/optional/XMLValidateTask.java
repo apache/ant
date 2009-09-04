@@ -103,6 +103,8 @@ public class XMLValidateTask extends Task {
     public static final String MESSAGE_FILES_VALIDATED
         = " file(s) have been successfully validated.";
 
+    private AntClassLoader readerLoader = null;
+
     /**
      * Specify how parser error are to be handled.
      * Optional, default is <code>true</code>.
@@ -285,7 +287,7 @@ public class XMLValidateTask extends Task {
      * @throws BuildException if <code>failonerror</code> is true and an error happens
      */
     public void execute() throws BuildException {
-
+        try {
         int fileProcessed = 0;
         if (file == null && (filesets.size() == 0)) {
             throw new BuildException(
@@ -321,6 +323,9 @@ public class XMLValidateTask extends Task {
             }
         }
         onSuccessfulValidation(fileProcessed);
+        } finally {
+            cleanup();
+        }
     }
 
     /**
@@ -389,9 +394,9 @@ public class XMLValidateTask extends Task {
             try {
                 // load the parser class
                 if (classpath != null) {
-                    AntClassLoader loader =
-                        getProject().createClassLoader(classpath);
-                    readerClass = Class.forName(readerClassName, true, loader);
+                    readerLoader = getProject().createClassLoader(classpath);
+                    readerClass = Class.forName(readerClassName, true,
+                                                readerLoader);
                 } else {
                     readerClass = Class.forName(readerClassName);
                 }
@@ -429,6 +434,18 @@ public class XMLValidateTask extends Task {
             }
         }
         return newReader;
+    }
+
+    /**
+     * Cleans up resources.
+     *
+     * @since Ant 1.8.0
+     */
+    protected void cleanup() {
+        if (readerLoader != null) {
+            readerLoader.cleanup();
+            readerLoader = null;
+        }
     }
 
     /**

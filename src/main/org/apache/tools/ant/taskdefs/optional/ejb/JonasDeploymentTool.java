@@ -679,7 +679,10 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         log("Looking for GenIC class in classpath: "
             + classpath.toString(), Project.MSG_VERBOSE);
 
-        AntClassLoader cl = classpath.getProject().createClassLoader(classpath);
+        AntClassLoader cl = null;
+
+        try {
+            cl = classpath.getProject().createClassLoader(classpath);
 
         try {
             cl.loadClass(JonasDeploymentTool.GENIC_CLASS);
@@ -715,6 +718,11 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2
                 + "' not found in classpath.",
             Project.MSG_VERBOSE);
+        }
+        } finally {
+            if (cl != null) {
+                cl.cleanup();
+            }
         }
         return null;
     }

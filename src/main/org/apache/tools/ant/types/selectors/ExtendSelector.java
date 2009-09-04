@@ -65,6 +65,7 @@ public class ExtendSelector extends BaseSelector {
                 if (classpath == null) {
                     c = Class.forName(classname);
                 } else {
+                    // Memory-Leak in line below
                     AntClassLoader al
                             = getProject().createClassLoader(classpath);
                     c = Class.forName(classname, true, al);

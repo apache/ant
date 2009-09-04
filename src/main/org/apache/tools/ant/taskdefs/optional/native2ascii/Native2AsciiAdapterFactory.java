@@ -86,6 +86,7 @@ public class Native2AsciiAdapterFactory {
             return new SunNative2Ascii();
         } else if (choice != null) {
             return resolveClassName(choice,
+                                    // Memory leak in line below
                                     log.getProject()
                                     .createClassLoader(classpath));
         }

@@ -118,6 +118,7 @@ public final class RmicAdapterFactory {
         }
         //no match? ask for the non-lower-cased type
         return resolveClassName(rmicType,
+                                // Memory leak in line below
                                 task.getProject().createClassLoader(classpath));
     }
 
