@@ -32,7 +32,7 @@
 PropertyHelper active on the current Project. This is somewhat advanced Ant usage and
 assumes a working familiarity with the modern Ant APIs. See the description of Ant's
 <a href="../using.html#propertyHelper">Property Helper</a> for more information.
-<b>Since Ant 1.8</b></p>
+<b>Since Ant 1.8.0</b></p>
 
 <h3>Parameters specified as nested elements</h3>
 
@@ -47,7 +47,8 @@ is a marker interface only: the nested arguments must implement a <code>Delegate
 subinterface in order to do anything meaningful.
 
 <h4>delegate</h4>
-A generic &lt;delegate&gt; element is also provided:
+<p>A generic &lt;delegate&gt; element which can use project references
+is also provided:</p>
 
 <h5>Parameters</h5>
 <table border="1" cellpadding="2" cellspacing="0"> 
@@ -62,6 +63,45 @@ A generic &lt;delegate&gt; element is also provided:
     <td valign="top" align="center">Yes</td>
   </tr>
 </table>
+
+<h3>Examples</h3>
+
+<p>Install a completely different PropertyHelper implementation
+  (assuming <code>MyPropertyHelper extends PropertyHelper</code>):</p>
+
+<pre>
+&lt;componentdef classname="org.example.MyPropertyHelper"
+              name="mypropertyhelper"/>
+&lt;propertyhelper>
+  &lt;mypropertyhelper/>
+&lt;/propertyhelper>
+</pre>
+
+<p>Add a new PropertyEvaluator delegate
+  (assuming <code>MyPropertyEvaluator implements
+  PropertyHelper.PropertyEvaluator</code>).  Note that PropertyHelper
+  uses the configured delegates in LIFO order.  I.e. the delegate
+  added by this task will be consulted before any previously defined
+  delegate and in particular before the built-in ones.</p>
+
+<pre>
+&lt;componentdef classname="org.example.MyPropertyEvaluator"
+              name="mypropertyevaluator"/>
+&lt;propertyhelper>
+  &lt;mypropertyevaluator/>
+&lt;/propertyhelper>
+</pre>
+
+<p>Add a new PropertyEvaluator delegate using the refid syntax:</p>
+
+<pre>
+&lt;typedef classname="org.example.MyPropertyEvaluator"
+         name="mypropertyevaluator"/>
+&lt;mypropertyevaluator id="evaluator"/>
+&lt;propertyhelper>
+  &lt;delegate refid="evaluator"/>
+&lt;/propertyhelper>
+</pre>
 
 </body>
 </html>

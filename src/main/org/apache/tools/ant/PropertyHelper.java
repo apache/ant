@@ -48,7 +48,7 @@ import org.apache.tools.ant.property.ParseProperties;
  Need to discuss this and find if we need more.
  */
 
-/* update for impending Ant 1.8:
+/* update for impending Ant 1.8.0:
 
    - I can't see any reason for ns and would like to deprecate it.
    - Replacing chaining with delegates for certain behavioral aspects.
@@ -56,12 +56,35 @@ import org.apache.tools.ant.property.ParseProperties;
 
  */
 
-/** NOT FINAL. API MAY CHANGE
- *
+/**
  * Deals with properties - substitution, dynamic properties, etc.
  *
- * This is the same code as in Ant1.5. The main addition is the ability
- * to chain multiple PropertyHelpers and to replace the default.
+ * <p>This code has been heavily restructured for Ant 1.8.0.  It is
+ * expected that custom PropertyHelper implementation that used the
+ * older chaining mechanism of Ant 1.6 won't work in all cases, and
+ * its usage is deprecated.  The preferred way to customize Ant's
+ * property handling is by {@link #add adding} {@link
+ * PropertyHelper.Delegate delegates} of the appropriate subinterface
+ * and have this implementation use them.</p>
+ *
+ * <p>When {@link #parseProperties expanding a string that may contain
+ * properties} this class will delegate the actual parsing to {@link
+ * org.apache.tools.ant.property.ParseProperties#parseProperties
+ * parseProperties} inside the ParseProperties class which in turn
+ * uses the {@link org.apache.tools.ant.property.PropertyExpander
+ * PropertyExpander delegates} to find properties inside the string
+ * and this class to expand the propertiy names found into the
+ * corresponding values.</p>
+ *
+ * <p>When {@link #getProperty looking up a property value} this class
+ * will first consult all {@link PropertyHelper.PropertyEvaluator
+ * PropertyEvaluator} delegates and fall back to an internal map of
+ * "project properties" if no evaluator matched the property name.</p>
+ *
+ * <p>When {@link #setProperty setting a property value} this class
+ * will first consult all {@link PropertyHelper.PropertySetter
+ * PropertySetter} delegates and fall back to an internal map of
+ * "project properties" if no setter matched the property name.</p>
  *
  * @since Ant 1.6
  */
@@ -75,32 +98,50 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Marker interface for a PropertyHelper delegate.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public interface Delegate {
     }
 
     /**
-     * Describes an entity capable of evaluating a property name for value.
-     * @since Ant 1.8
+     * Looks up a property's value based on its name.
+     *
+     * <p>Can be used to look up properties in a different storage
+     * than the project instance (like local properties for example)
+     * or to implement custom "protocols" like Ant's
+     * <code>${toString:refid}</code> syntax.</p>
+     *
+     * @since Ant 1.8.0
      */
     public interface PropertyEvaluator extends Delegate {
         /**
          * Evaluate a property.
+         *
          * @param property the property's String "identifier".
          * @param propertyHelper the invoking PropertyHelper.
-         * @return Object value.
+         * @return null if the property name could not be found, an
+         * instance of {@link org.apache.tools.ant.property.NullReturn
+         * NullReturn} to indicate a property with a name that can be
+         * matched but a value of <code>null</code> and the property's
+         * value otherwise.
          */
         Object evaluate(String property, PropertyHelper propertyHelper);
     }
 
     /**
-     * Describes an entity capable of setting a property to a value.
-     * @since Ant 1.8
+     * Sets or overrides a property.
+     *
+     * <p>Can be used to store properties in a different storage than
+     * the project instance (like local properties for example).</p>
+     *
+     * @since Ant 1.8.0
      */
     public interface PropertySetter extends Delegate {
         /**
          * Set a *new" property.
+         *
+         * <p>Should not replace the value of an existing property.</p>
+         *
          * @param property the property's String "identifier".
          * @param value    the value to set.
          * @param propertyHelper the invoking PropertyHelper.
@@ -111,6 +152,9 @@ public class PropertyHelper implements GetProperty {
 
         /**
          * Set a property.
+         *
+         * <p>May replace the value of an existing property.</p>
+         *
          * @param property the property's String "identifier".
          * @param value    the value to set.
          * @param propertyHelper the invoking PropertyHelper.
@@ -217,7 +261,7 @@ public class PropertyHelper implements GetProperty {
      * @param project the project in question.
      * @param name the property name
      * @return the value of the property if present, null otherwise.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public static Object getProperty(Project project, String name) {
         return PropertyHelper.getPropertyHelper(project)
@@ -230,7 +274,7 @@ public class PropertyHelper implements GetProperty {
      * @param project the project in question.
      * @param name the property name
      * @param value the value to use.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public static void setProperty(Project project, String name, Object value) {
         PropertyHelper.getPropertyHelper(project)
@@ -243,7 +287,7 @@ public class PropertyHelper implements GetProperty {
      * @param project the project in question.
      * @param name the property name
      * @param value the value to use.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public static void setNewProperty(
         Project project, String name, Object value) {
@@ -580,7 +624,7 @@ public class PropertyHelper implements GetProperty {
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public void setNewProperty(String name, Object value) {
         for (Iterator iter = getDelegates(PropertySetter.class).iterator();
@@ -932,7 +976,7 @@ public class PropertyHelper implements GetProperty {
      * Add the specified delegate object to this PropertyHelper.
      * Delegates are processed in LIFO order.
      * @param delegate the delegate to add.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     public void add(Delegate delegate) {
         synchronized (delegates) {
@@ -957,7 +1001,7 @@ public class PropertyHelper implements GetProperty {
      * @param type
      *            delegate type.
      * @return Collection.
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     protected List getDelegates(Class type) {
         List r = (List) delegates.get(type);
@@ -968,7 +1012,7 @@ public class PropertyHelper implements GetProperty {
      * Get all Delegate interfaces (excluding Delegate itself) from the specified Delegate.
      * @param d the Delegate to inspect.
      * @return Set<Class>
-     * @since Ant 1.8
+     * @since Ant 1.8.0
      */
     protected static Set getDelegateInterfaces(Delegate d) {
         HashSet result = new HashSet();

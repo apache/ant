@@ -346,39 +346,52 @@ new <a href="CoreTasks/propertyhelper.html">propertyhelper</a> task used to mani
 PropertyHelper and its delegates from the context of the Ant buildfile.
 
 <p>There are three sub-interfaces of <code>Delegate</code> that may be
-  useful to
-  implement.  <code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code>
-  is used to expand <code>${some-string}</code> into
-  an <code>Object</code>
-  while <code>org.apache.tools.ant.PropertyHelper$PropertySetter</code>
-  is responsible for setting properties.
-  Finally <code>org.apache.tools.ant.property.PropertyExpander</code>
-  is responsible for finding the property name inside a string in the
-  first place (the default extracts <code>foo</code>
-  from <code>${foo}</code>).</p>
+  useful to implement.</p>
 
-<p>The logic that replaces <code>${toString:some-id}</code> with the
-  stringified representation of the object with
-  id <code>some-id</code> inside the current build is contained in a
-  PropertyEvaluator similar to the following code:</p>
+<ul>
+  <li><code>org.apache.tools.ant.property.PropertyExpander</code> is
+    responsible for finding the property name inside a string in the
+    first place (the default extracts <code>foo</code>
+    from <code>${foo}</code>).
 
-<pre>
-public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
-    private static final String prefix = "toString:";
-    public Object evaluate(String property, PropertyHelper propertyHelper) {
-        Object o = null;
-        if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
-            o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
-        }
-        return o == null ? null : o.toString();
-    }
-}
-</pre>
+    <p>This is the interface you'd implement if you wanted to invent
+      your own property syntax - or allow nested property expansions
+      since the default implementation doesn't balance braces
+      (see <a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/props/trunk/src/main/org/apache/ant/props/NestedPropertyExpander.java?view=log"><code>NestedPropertyExpander</code>
+        in the "props" Antlib in Ant's sandbox</a> for an
+      example).</p>
+  </li>
 
-<p>An example of a <code>PropertySetter</code> can be found
-  in <code>org.apache.tools.ant.property.LocalProperties</code> which
-  implements storage for <a href="CoreTasks/local.html">local
-  properties</a>.</p>
+  <li><code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code>
+    is used to expand <code>${some-string}</code> into
+    an <code>Object</code>.
+
+    <p>This is the interface you'd implement if you want to provide
+      your own storage independent of Ant's project instance - the
+      interface represents the reading end.  An example for this would
+      be <code>org.apache.tools.ant.property.LocalProperties</code>
+      which implements storage
+      for <a href="CoreTasks/local.html">local properties</a>.</p>
+
+    <p>Another reason to implement this interface is if you wanted to
+      provide your own "property protocol" like
+      expanding <code>toString:foo</code> by looking up the project
+      reference foo and invoking <code>toString()</code> on it (which
+      is already implemented in Ant, see below).</p>
+  </li>
+
+  <li><code>org.apache.tools.ant.PropertyHelper$PropertySetter</code>
+    is responsible for setting properties.
+
+    <p>This is the interface you'd implement if you want to provide
+      your own storage independent of Ant's project instance - the
+      interface represents the reading end.  An example for this would
+      be <code>org.apache.tools.ant.property.LocalProperties</code>
+      which implements storage
+      for <a href="CoreTasks/local.html">local properties</a>.</p>
+  </li>
+
+</ul>
 
 <p>The default <code>PropertyExpander</code> looks similar to:</p>
 
@@ -397,6 +410,24 @@ public class DefaultExpander implements PropertyExpander {
             return s.substring(start, end);
         }
         return null;
+    }
+}
+</pre>
+
+<p>The logic that replaces <code>${toString:some-id}</code> with the
+  stringified representation of the object with
+  id <code>some-id</code> inside the current build is contained in a
+  PropertyEvaluator similar to the following code:</p>
+
+<pre>
+public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
+    private static final String prefix = "toString:";
+    public Object evaluate(String property, PropertyHelper propertyHelper) {
+        Object o = null;
+        if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
+            o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
+        }
+        return o == null ? null : o.toString();
     }
 }
 </pre>
