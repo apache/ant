@@ -59,9 +59,12 @@ for information on how the
 inclusion/exclusion of files works, and how to write wildcard patterns.</p>
 <p>It is possible to use different compilers. This can be specified by
 either setting the global <code>build.compiler</code> property, which will
-affect all <code>&lt;javac&gt;</code> tasks throughout the build, or by
+affect all <code>&lt;javac&gt;</code> tasks throughout the build, by
 setting the <code>compiler</code> attribute, specific to the current
-<code>&lt;javac&gt;</code> task.
+<code>&lt;javac&gt;</code> task or by using a nested element of any
+<a href="typedef.html">typedef</a>fed or
+<a href="componentdef.html">componentdef</a>fed type that implements
+<code>org.apache.tools.ant.taskdefs.compilers.CompilerAdapter</code>.
 <a name="compilervalues">Valid values for either the
 <code>build.compiler</code> property or the <code>compiler</code>
 attribute are:</a></p>
@@ -516,6 +519,12 @@ used.</p>
   custom class has been specified.  Doesn't have any effect when
   using one of the built-in compilers.</p>
 
+<h4>Any nested element of a type that implements CompilerAdapter
+  <em>since Ant 1.8.0</em></h4>
+
+<p>If a defined type implements the <code>CompilerAdapter</code>
+  interface a nested element of that type can be used as an
+  alternative to the <code>compiler</code> attribute.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -662,6 +671,25 @@ the <tt>&lt;compilerarg&gt;</tt> element:
   &lt;/javac&gt; </pre>
 </p>  
 
+<p>If you want to use a custom
+  CompilerAdapter <code>org.example.MyAdapter</code> you can either
+  use the compiler attribute:</p>
+<pre>
+&lt;javac srcdir="${src.dir}"
+       destdir="${classes.dir}"
+       compiler="org.example.MyAdapter"/&gt;
+</pre>
+<p>or a define a type and nest this into the task like in:</p>
+<pre>
+&lt;componentdef classname="org.example.MyAdapter"
+              name="myadapter"/&gt;
+&lt;javac srcdir="${src.dir}"
+       destdir="${classes.dir}"&gt;
+  &lt;myadapter/&gt;
+&lt;/javac&gt;
+</pre>
+<p>in which case your compiler adapter can support attributes and
+  nested elements of its own.</p>
 
 <h3>Jikes Notes</h3>
 
@@ -800,27 +828,14 @@ while all others are <code>false</code>.</p>
     task is run again, the
     task will try to compile the package-info java files again.
   </p>
-  <p>
-    In <b>Ant 1.7.1</b> the package-info.java will only be compiled if:
-    <ol>
-      <li>
-        If a <code>package-info.class</code> file exists and is older than
-        the <code>package-info.java</code> file.
-      </li>
-      <li>
-        If the directory for the 
-        <code>package-info.class</code> file does not exist.
-      </li>
-      <li>
-        If the directory for the
-        <code>package-info.class</code> file exists, and has an older
-        modification time than the
-        the <code>package-info.java</code> file. In this case
-        &lt;javac&gt; will touch the corresponding .class directory
-        on successful compilation.
-      </li>
-    </ol>
-  </p>
-
+  <p>With Ant 1.7.1 a different kind of logic was introduced that
+    involved the timestamp of the directory that would normally
+    contain the .class file.  This logic turned out to lead to Ant not
+    recompiling <code>package-info.java</code> in certain setup.</p>
+  <p>Starting with Ant 1.8.0 Ant will create
+    "empty" <code>package-info.class</code> files if it compiles
+    a <code>package-info.java</code> and
+    no <code>package-info.class</code> file has been created by the
+    compiler itself.</p>
 </body>
 </html>

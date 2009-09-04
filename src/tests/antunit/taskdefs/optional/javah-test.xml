@@ -52,4 +52,15 @@ public class Adapter implements JavahAdapter {
     </javah>
     <au:assertLogContains text="adapter called"/>
   </target>
+
+  <target name="testImplementationAsNestedElement"
+          depends="-create-javah-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${adapter.dir}"/>
+    </componentdef>
+    <javah class="org.example.Adapter" destdir="${output}">
+      <myjavac/>
+    </javah>
+    <au:assertLogContains text="adapter called"/>
+  </target>
 </project>

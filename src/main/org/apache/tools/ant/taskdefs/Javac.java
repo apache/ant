@@ -127,6 +127,7 @@ public class Javac extends MatchingTask {
     private String errorProperty;
     private boolean taskSuccess = true; // assume the best
     private boolean includeDestClasses = true;
+    private CompilerAdapter nestedAdapter = null;
 
     /**
      * Javac task for compilation of Java files.
@@ -866,6 +867,18 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Set the compiler adapter explicitly.
+     * @since Ant 1.8.0
+     */
+    public void add(CompilerAdapter adapter) {
+        if (nestedAdapter != null) {
+            throw new BuildException("Can't have more than one compiler"
+                                     + " adapter");
+        }
+        nestedAdapter = adapter;
+    }
+
+    /**
      * Executes the task.
      * @exception BuildException if an error occurs
      */
@@ -1073,6 +1086,7 @@ public class Javac extends MatchingTask {
             }
 
             CompilerAdapter adapter =
+                nestedAdapter != null ? nestedAdapter :
                 CompilerAdapterFactory.getCompiler(compilerImpl, this,
                                                    createCompilerClasspath());
 

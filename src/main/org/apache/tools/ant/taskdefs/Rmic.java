@@ -128,6 +128,8 @@ public class Rmic extends MatchingTask {
 
     private boolean listFiles = false;
 
+    private RmicAdapter nestedAdapter = null;
+
     /**
      * Constructor for Rmic.
      */
@@ -560,6 +562,18 @@ public class Rmic extends MatchingTask {
     public void setListfiles(boolean list) {
         listFiles = list;
     }
+
+    /**
+     * Set the compiler adapter explicitly.
+     * @since Ant 1.8.0
+     */
+    public void add(RmicAdapter adapter) {
+        if (nestedAdapter != null) {
+            throw new BuildException("Can't have more than one rmic adapter");
+        }
+        nestedAdapter = adapter;
+    }
+
     /**
      * execute by creating an instance of an implementation
      * class and getting to do the work
@@ -582,8 +596,10 @@ public class Rmic extends MatchingTask {
         if (verify) {
             log("Verify has been turned on.", Project.MSG_VERBOSE);
         }
-        RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this,
-                                                         createCompilerClasspath());
+        RmicAdapter adapter =
+            nestedAdapter != null ? nestedAdapter :
+            RmicAdapterFactory.getRmic(getCompiler(), this,
+                                       createCompilerClasspath());
 
         // now we need to populate the compiler adapter
         adapter.setRmic(this);

@@ -34,8 +34,8 @@ whether <a href="http://java.sun.com/j2se/1.3/docs/tooldocs/win32/javah.html">JD
 systems are used.</p>
 
 <p>It is possible to use different compilers. This can be selected
-with the <code>implementation</code> attribute.  <a
-name="implementationvalues">Here are the choices</a>:</p>
+with the <code>implementation</code> attribute or a nested element.  <a
+name="implementationvalues">Here are the choices of the attribute</a>:</p>
 <ul>
   <li>default - the default compiler (kaffeh or sun) for the platform.</li>
   <li>sun (the standard compiler of the JDK)</li>
@@ -177,6 +177,13 @@ only if a given compiler implementation will be used.</p>
   custom class has been specified.  Doesn't have any effect when
   using one of the built-in compilers.</p>
 
+<h4>Any nested element of a type that implements JavahAdapter
+  <em>since Ant 1.8.0</em></h4>
+
+<p>If a defined type implements the <code>JavahAdapter</code>
+  interface a nested element of that type can be used as an
+  alternative to the <code>implementation</code> attribute.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
 <p>makes a JNI header of the named class, using the JDK1.2 JNI model. Assuming
@@ -210,6 +217,23 @@ is invoked, even if they already exist.</p>
 writes the corresponding .c stubs. The verbose option will cause Javah to
 describe its progress.</p>
 
+<p>If you want to use a custom
+  JavahAdapter <code>org.example.MyAdapter</code> you can either
+  use the implementation attribute:</p>
+<pre>
+&lt;javah destdir="c" class="org.foo.bar.Wibble"
+       implementation="org.example.MyAdapter"/&gt;
+</pre>
+<p>or a define a type and nest this into the task like in:</p>
+<pre>
+&lt;componentdef classname="org.example.MyAdapter"
+              name="myadapter"/&gt;
+&lt;javah destdir="c" class="org.foo.bar.Wibble"&gt;
+  &lt;myadapter/&gt;
+&lt;/javah&gt;
+</pre>
+<p>in which case your javah adapter can support attributes and
+  nested elements of its own.</p>
 
 </body>
 

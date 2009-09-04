@@ -155,4 +155,14 @@ public class Adapter implements CompilerAdapter {
     </javac>
     <au:assertLogContains text="adapter called"/>
   </target>
+
+  <target name="testCompilerAsNestedElement" depends="-create-javac-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${adapter.dir}"/>
+    </componentdef>
+    <javac srcdir="${input}" destdir="${output}">
+      <myjavac/>
+    </javac>
+    <au:assertLogContains text="adapter called"/>
+  </target>
 </project>

@@ -860,6 +860,12 @@ Other changes:
    task's (compiler) adapter class.
    Bugzilla Report 11143.
 
+ * <javac>, <rmic>, <javah> and <native2ascii> now provide a nested
+   element to specify the task's (compiler) adapter as an instance of
+   a class that has been defined via typedef/componentdef.  This
+   allows more control over the classpath and allows adapters to be
+   defined in Antlibs easily.
+
  * A new subclass org.apache.tools.ant.loader.AntClassLoader5 of
    AntClassLoader has been added which overrides getResources
    which became non-final in ClassLoader with Java5+ so

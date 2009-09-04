@@ -83,6 +83,7 @@ public class Javah extends Task {
     //private Path extdirs;
     private FacadeTaskHelper facade = null;
     private Vector files = new Vector();
+    private JavahAdapter nestedAdapter = null;
 
     /**
      * No arg constructor.
@@ -417,6 +418,18 @@ public class Javah extends Task {
     }
 
     /**
+     * Set the adapter explicitly.
+     * @since Ant 1.8.0
+     */
+    public void add(JavahAdapter adapter) {
+        if (nestedAdapter != null) {
+            throw new BuildException("Can't have more than one javah"
+                                     + " adapter");
+        }
+        nestedAdapter = adapter;
+    }
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
@@ -452,6 +465,7 @@ public class Javah extends Task {
         }
 
         JavahAdapter ad =
+            nestedAdapter != null ? nestedAdapter :
             JavahAdapterFactory.getAdapter(facade.getImplementation(),
                                            this,
                                            createImplementationClasspath());

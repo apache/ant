@@ -58,8 +58,8 @@
     </p>
 
     <p>It is possible to use different converters. This can be selected
-      with the <code>implementation</code> attribute.
-      <a name="implementationvalues">Here are the choices</a>:</p>
+      with the <code>implementation</code> attribute or a nested element.
+      <a name="implementationvalues">Here are the choices of the attribute</a>:</p>
     <ul>
       <li>default - the default converter (kaffe or sun) for the platform.</li>
       <li>sun (the standard converter of the JDK)</li>
@@ -190,6 +190,13 @@ only if a given converter implementation will be used.</p>
   custom class has been specified.  Doesn't have any effect when
   using one of the built-in converters.</p>
 
+<h4>Any nested element of a type that implements Native2AsciiAdapter
+  <em>since Ant 1.8.0</em></h4>
+
+<p>If a defined type implements the <code>Native2AsciiAdapter</code>
+  interface a nested element of that type can be used as an
+  alternative to the <code>implementation</code> attribute.</p>
+
     <h3>Examples</h3>
 
     <pre>
@@ -214,6 +221,26 @@ only if a given converter implementation will be used.</p>
       placing the results in the directory <em>src</em>.
       The names of the files remain the same.
     </p>
+
+<p>If you want to use a custom
+  Native2AsciiAdapter <code>org.example.MyAdapter</code> you can either
+  use the implementation attribute:</p>
+<pre>
+&lt;native2ascii encoding="EUCJIS" src="srcdir" dest="srcdir"
+       includes="**/*.eucjis" ext=".java"
+       implementation="org.example.MyAdapter"/&gt;
+</pre>
+<p>or a define a type and nest this into the task like in:</p>
+<pre>
+&lt;componentdef classname="org.example.MyAdapter"
+              name="myadapter"/&gt;
+&lt;native2ascii encoding="EUCJIS" src="srcdir" dest="srcdir"
+       includes="**/*.eucjis" ext=".java"&gt;
+  &lt;myadapter/&gt;
+&lt;/native2ascii&gt;
+</pre>
+<p>in which case your native2ascii adapter can support attributes and
+  nested elements of its own.</p>
   </body>
 
 </html>

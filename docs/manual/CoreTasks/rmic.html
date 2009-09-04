@@ -48,8 +48,8 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <p>It is possible to use different compilers. This can be selected
-with the &quot;build.rmic&quot; property or the <code>compiler</code>
-attribute.
+with the &quot;build.rmic&quot; property, the <code>compiler</code>
+attribute. or a nested element.
 <a name="compilervalues">Here are the choices</a>:</p>
 <ul>
   <li>default -the default compiler (kaffe or sun) for the platform.
@@ -311,6 +311,13 @@ used.</p>
   custom class has been specified.  Doesn't have any effect when
   using one of the built-in compilers.</p>
 
+<h4>Any nested element of a type that implements RmicAdapter
+  <em>since Ant 1.8.0</em></h4>
+
+<p>If a defined type implements the <code>RmicAdapter</code>
+  interface a nested element of that type can be used as an
+  alternative to the <code>compiler</code> attribute.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
@@ -321,7 +328,25 @@ files below <code>${build}/classes</code> whose classname starts with
 <i>Remote</i>. The compiled files will be stored in the directory
 <code>${build}/classes</code>.</p>
 
-
+<p>If you want to use a custom
+  RmicAdapter <code>org.example.MyAdapter</code> you can either
+  use the compiler attribute:</p>
+<pre>
+&lt;rmic classname=&quot;com.xyz.FooBar&quot;
+      base=&quot;${build}/classes&quot;
+      compiler="org.example.MyAdapter"/&gt;
+</pre>
+<p>or a define a type and nest this into the task like in:</p>
+<pre>
+&lt;componentdef classname="org.example.MyAdapter"
+              name="myadapter"/&gt;
+&lt;rmic classname=&quot;com.xyz.FooBar&quot;
+      base=&quot;${build}/classes&quot;&gt;
+  &lt;myadapter/&gt;
+&lt;/rmic&gt;
+</pre>
+<p>in which case your compiler adapter can support attributes and
+  nested elements of its own.</p>
 
 </body>
 </html>

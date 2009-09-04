@@ -66,4 +66,14 @@ public class Adapter implements RmicAdapter {
     </rmic>
     <au:assertLogContains text="adapter called"/>
   </target>
+
+  <target name="testCompilerAsNestedElement" depends="-create-rmic-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${adapter.dir}"/>
+    </componentdef>
+    <rmic base="${adapter.dir}" includes="**/*.class">
+      <myjavac/>
+    </rmic>
+    <au:assertLogContains text="adapter called"/>
+  </target>
 </project>
