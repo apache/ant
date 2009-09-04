@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 
 /**
  * Parse properties using a collection of expanders.
+ *
  * @since Ant 1.8.0
  */
 public class ParseProperties implements ParseNextProperty {
@@ -53,9 +54,33 @@ public class ParseProperties implements ParseNextProperty {
     }
 
     /**
-     * Decode properties from a String representation.  If the entire
-     * contents of the String resolve to a single property, that value
-     * is returned.  Otherwise a String is returned.
+     * Decode properties from a String representation.
+     *
+     * <ul>
+     *
+     *  <li>This implementation starts parsing the <code>value</code>
+     *  parameter (unsurprisingly) at the beginning and asks each
+     *  {@link org.apache.tools.ant.PropertyHelper.PropertyExpander
+     *  PropertyExpander} whether there is a property reference at
+     *  that point.  PropertyExpanders return the name of a property
+     *  they may find and may advance the parse position.</li>
+     *
+     *  <li>If the PropertyExpander returns <code>null</code> the
+     *  method continues with the next PropertyExpander, otherwise it
+     *  tries to look up the property's value using the configured
+     *  {@link GetProperty GetProperty} instance.</li>
+     *
+     *  <li>Once all PropertyExpanders have been consulted, the parse
+     *  position is advanced by one character and the process repeated
+     *  until <code>value</code> is exhausted.</li>
+     *
+     * </ul>
+     *
+     * <p>If the entire contents of <code>value</code> resolves to a
+     * single property, the looked up property value is returned.
+     * Otherwise a String is returned that concatenates the
+     * non-property parts of <code>value</code> and the expanded
+     * values of the properties that have been found.</p>
      *
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>, in which case this
@@ -68,19 +93,20 @@ public class ParseProperties implements ParseNextProperty {
         if (value == null || "".equals(value)) {
             return value;
         }
+        final int len = value.length();
         ParsePosition pos = new ParsePosition(0);
         Object o = parseNextProperty(value, pos);
-        if (o != null && pos.getIndex() == value.length()) {
+        if (o != null && pos.getIndex() >= len) {
             return o;
         }
-        StringBuffer sb = new StringBuffer(value.length() * 2);
+        StringBuffer sb = new StringBuffer(len * 2);
         if (o == null) {
             sb.append(value.charAt(pos.getIndex()));
             pos.setIndex(pos.getIndex() + 1);
         } else {
             sb.append(o);
         }
-        while (pos.getIndex() < value.length()) {
+        while (pos.getIndex() < len) {
             o = parseNextProperty(value, pos);
             if (o == null) {
                 sb.append(value.charAt(pos.getIndex()));
@@ -94,6 +120,12 @@ public class ParseProperties implements ParseNextProperty {
 
     /**
      * Learn whether a String contains replaceable properties.
+     *
+     * <p>Uses the configured {@link
+     *  org.apache.tools.ant.PropertyHelper.PropertyExpander
+     *  PropertyExpanders} and scans through the string.  Returns true
+     *  as soon as any expander finds a property.</p>
+     *
      * @param value the String to check.
      * @return <code>true</code> if <code>value</code> contains property notation.
      */
@@ -101,7 +133,8 @@ public class ParseProperties implements ParseNextProperty {
         if (value == null) {
             return false;
         }
-        for (ParsePosition pos = new ParsePosition(0); pos.getIndex() < value.length();) {
+        final int len = value.length();
+        for (ParsePosition pos = new ParsePosition(0); pos.getIndex() < len;) {
             if (parsePropertyName(value, pos) != null) {
                 return true;
             }
@@ -113,12 +146,28 @@ public class ParseProperties implements ParseNextProperty {
     /**
      * Return any property that can be parsed from the specified position
      * in the specified String.
+     *
+     * <p>Uses the configured {@link
+     *  org.apache.tools.ant.PropertyHelper.PropertyExpander
+     *  PropertyExpanders} and {@link GetProperty GetProperty}
+     *  instance .</p>
+     *
      * @param value String to parse
      * @param pos ParsePosition
-     * @return Object or null if no property is at the current location.
+     * @return Object or null if no property is at the current
+     * location.  If a property reference has been found but the
+     * property doesn't expand to a value, the property's name is
+     * returned.
      */
     public Object parseNextProperty(String value, ParsePosition pos) {
-        int start = pos.getIndex();
+        final int start = pos.getIndex();
+
+        if (start > value.length()) {
+            // early exit, can't find any property here, no need to
+            // consult all the delegates.
+            return null;
+        }
+
         String propertyName = parsePropertyName(value, pos);
         if (propertyName != null) {
             Object result = getProperty(propertyName);

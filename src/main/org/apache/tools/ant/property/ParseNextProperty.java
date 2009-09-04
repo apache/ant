@@ -22,7 +22,8 @@ import java.text.ParsePosition;
 import org.apache.tools.ant.Project;
 
 /**
- * Interface to parse a property.
+ * Helper for {@link PropertyExpander PropertyExpander} that can be
+ * used to expand property references to values.
  * @since Ant 1.8.0
  */
 public interface ParseNextProperty {

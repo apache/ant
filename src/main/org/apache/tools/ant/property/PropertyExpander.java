@@ -22,17 +22,30 @@ import org.apache.tools.ant.PropertyHelper;
 import java.text.ParsePosition;
 
 /**
- * Interface to a class (normally PropertyHelper) to get a property.
+ * Responsible for locating a property reference inside a String.
  * @since Ant 1.8.0
  */
 public interface PropertyExpander extends PropertyHelper.Delegate {
+
     /**
-     * Parse the next property name.
+     * Determine whether there is a property reference at the current
+     * ParsePosition and return its name (or null if there is none).
+     *
+     * <p>Implementations should advance the ParsePosition to the last
+     * character that makes up the property reference.  E.g. the
+     * default implementation would return <code>"foo"</code> for
+     * <code>${foo}</code> and advance the ParsePosition to the
+     * <code>}</code> character.</p>
+     *
      * @param s the String to parse.
-     * @param pos the ParsePosition in use.
-     * @param parseNextProperty parse next property
-     * @return parsed String if any, else <code>null</code>.
+     * @param pos the ParsePosition in use, the location is expected
+     * to be modified if a property reference has been found (and may
+     * even be modified if no reference has been found).
+     * @param parseNextProperty provides access to the Project and may
+     * be used to look up property values.
+     * @return property name if any, else <code>null</code>.
      */
-    String parsePropertyName(String s, ParsePosition pos, ParseNextProperty parseNextProperty);
+    String parsePropertyName(String s, ParsePosition pos,
+                             ParseNextProperty parseNextProperty);
 }
 
