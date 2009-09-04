@@ -495,6 +495,9 @@ public class ProjectHelper {
      * <code>null</code> entries in the first list indicate a property
      * reference from the second list.
      *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself.</p>
+     *
      * @param value     Text to parse. Must not be <code>null</code>.
      * @param fragments List to add text fragments to.
      *                  Must not be <code>null</code>.

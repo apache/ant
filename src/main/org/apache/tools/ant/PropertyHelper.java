@@ -172,11 +172,13 @@ public class PropertyHelper implements GetProperty {
     //  --------------------------------------------------------
 
     private static final PropertyEvaluator TO_STRING = new PropertyEvaluator() {
-        private String prefix = "toString:";
+        private final String PREFIX = "toString:";
+        private final int PREFIX_LEN = PREFIX.length();
+
         public Object evaluate(String property, PropertyHelper propertyHelper) {
             Object o = null;
-            if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
-                o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
+            if (property.startsWith(PREFIX) && propertyHelper.getProject() != null) {
+                o = propertyHelper.getProject().getReference(property.substring(PREFIX_LEN));
             }
             return o == null ? null : o.toString();
         }
@@ -210,7 +212,6 @@ public class PropertyHelper implements GetProperty {
             // CheckStyle:LineLengthCheck ON
             public String parsePropertyName(
                 String s, ParsePosition pos, ParseNextProperty notUsed) {
-                //System.out.println("parseproperty " + s);
                 int index = pos.getIndex();
                 if (s.indexOf("$$", index) == index) {
                     pos.setIndex(++index);
@@ -317,7 +318,8 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
-     *  There are 2 ways to hook into property handling:
+     * Prior to Ant 1.8.0 there have been 2 ways to hook into property handling:
+     *
      *  - you can replace the main PropertyHelper. The replacement is required
      * to support the same semantics (of course :-)
      *
@@ -325,8 +327,11 @@ public class PropertyHelper implements GetProperty {
      *  Again, you are required to respect the immutability semantics (at
      *  least for non-dynamic properties)
      *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself.</p>
+     *
      * @param next the next property helper in the chain.
-     * @deprecated
+     * @deprecated use the delegate mechanism instead
      */
     public void setNext(PropertyHelper next) {
         this.next = next;
@@ -335,8 +340,13 @@ public class PropertyHelper implements GetProperty {
     /**
      * Get the next property helper in the chain.
      *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself except the {@link #setPropertyHook
+     * setPropertyHook} and {@link #getPropertyHook getPropertyHook}
+     * methods in this class.</p>
+     *
      * @return the next property helper.
-     * @deprecated
+     * @deprecated use the delegate mechanism instead
      */
     public PropertyHelper getNext() {
         return next;
@@ -366,7 +376,8 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
-     * Get the expanders.
+     * Get the {@link PropertyExpander expanders}.
+     * @since Ant 1.8.0
      * @return the expanders.
      */
     public Collection getExpanders() {
@@ -378,11 +389,13 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Sets a property. Any existing property of the same name
-     * is overwritten, unless it is a user property. Will be called
-     * from setProperty().
+     * is overwritten, unless it is a user property.
      *
      * If all helpers return false, the property will be saved in
      * the default properties table by setProperty.
+     *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself.</p>
      *
      * @param ns   The namespace that the property is in (currently
      *             not used.
@@ -415,6 +428,9 @@ public class PropertyHelper implements GetProperty {
     /**
      * Get a property. If all hooks return null, the default
      * tables will be used.
+     *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself.</p>
      *
      * @param ns namespace of the sought property.
      * @param name name of the sought property.
@@ -451,7 +467,12 @@ public class PropertyHelper implements GetProperty {
      * <code>null</code> entries in the first list indicate a property
      * reference from the second list.
      *
-     * It can be overridden with a more efficient or customized version.
+     * <p>Delegates to {@link #parsePropertyStringDefault
+     * parsePropertyStringDefault}.</p>
+     *
+     * <p>As of Ant 1.8.0 this method is never invoked by any code
+     * inside of Ant itself except {ProjectHelper#parsePropertyString
+     * ProjectHelper.parsePropertyString}.</p>
      *
      * @param value     Text to parse. Must not be <code>null</code>.
      * @param fragments List to add text fragments to.
@@ -462,7 +483,7 @@ public class PropertyHelper implements GetProperty {
      * @exception BuildException if the string contains an opening
      *                           <code>${</code> without a closing
      *                           <code>}</code>
-     * @deprecated We can do better than this.
+     * @deprecated use the other mechanisms of this class instead
      */
     public void parsePropertyString(String value, Vector fragments,
                                     Vector propertyRefs) throws BuildException {
@@ -472,6 +493,9 @@ public class PropertyHelper implements GetProperty {
     /**
      * Replaces <code>${xxx}</code> style constructions in the given value
      * with the string value of the corresponding data types.
+     *
+     * <p>Delegates to the one-arg version, completely ignoring the ns
+     * and keys parameters.</p>
      *
      * @param ns    The namespace for the property.
      * @param value The string to be scanned for property references.
@@ -548,6 +572,10 @@ public class PropertyHelper implements GetProperty {
      * Default implementation of setProperty. Will be called from Project.
      * This is the original 1.5 implementation, with calls to the hook
      * added.
+     *
+     * <p>Delegates to the three-arg version, completely ignoring the
+     * ns parameter.</p>
+     *
      * @param ns      The namespace for the property (currently not used).
      * @param name    The name of the property.
      * @param value   The value to set the property to.
@@ -561,8 +589,6 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Default implementation of setProperty. Will be called from Project.
-     *  This is the original 1.5 implementation, with calls to the hook
-     *  added.
      *  @param name    The name of the property.
      *  @param value   The value to set the property to.
      *  @param verbose If this is true output extra log messages.
@@ -602,6 +628,9 @@ public class PropertyHelper implements GetProperty {
      * Sets a property if no value currently exists. If the property
      * exists already, a message is logged and the method returns with
      * no other effect.
+     *
+     * <p>Delegates to the two-arg version, completely ignoring the
+     * ns parameter.</p>
      *
      * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
@@ -649,6 +678,10 @@ public class PropertyHelper implements GetProperty {
     /**
      * Sets a user property, which cannot be overwritten by
      * set/unset property calls. Any previous value is overwritten.
+     *
+     * <p>Delegates to the two-arg version, completely ignoring the
+     * ns parameter.</p>
+     *
      * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
@@ -663,6 +696,9 @@ public class PropertyHelper implements GetProperty {
     /**
      * Sets a user property, which cannot be overwritten by
      * set/unset property calls. Any previous value is overwritten.
+     *
+     * <p>Does <code>not</code> consult any delegates.</p>
+     *
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
@@ -682,6 +718,9 @@ public class PropertyHelper implements GetProperty {
      * these properties as properties that have not come from the
      * command line.
      *
+     * <p>Delegates to the two-arg version, completely ignoring the
+     * ns parameter.</p>
+     *
      * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
@@ -698,6 +737,8 @@ public class PropertyHelper implements GetProperty {
      * property calls. Any previous value is overwritten. Also marks
      * these properties as properties that have not come from the
      * command line.
+     *
+     * <p>Does <code>not</code> consult any delegates.</p>
      *
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
@@ -720,6 +761,8 @@ public class PropertyHelper implements GetProperty {
      * Returns the value of a property, if it is set.  You can override
      * this method in order to plug your own storage.
      *
+     * <p>Delegates to the one-arg version ignoring the ns parameter.</p>
+     *
      * @param ns   The namespace for the property (currently not used).
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
@@ -733,8 +776,15 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
-     * Returns the value of a property, if it is set.  You can override
-     * this method in order to plug your own storage.
+     * Returns the value of a property, if it is set.
+     *
+     * <p>This is the method that is invoked by {Project#getProperty
+     * Project.getProperty}.</p>
+     *
+     * <p>You can override this method in order to plug your own
+     * storage but the recommended approach is to add your own
+     * implementation of {@link PropertyEvaluator PropertyEvaluator}
+     * instead.</p>
      *
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
@@ -761,6 +811,8 @@ public class PropertyHelper implements GetProperty {
     /**
      * Returns the value of a user property, if it is set.
      *
+     * <p>Delegates to the one-arg version ignoring the ns parameter.</p>
+     *
      * @param ns   The namespace for the property (currently not used).
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
@@ -775,6 +827,8 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Returns the value of a user property, if it is set.
+     *
+     * <p>Does <code>not</code> consult any delegates.</p>
      *
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
@@ -796,6 +850,10 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Returns a copy of the properties table.
+     *
+     * <p>Does not contain properties held by implementations of
+     * delegates (like local properties).</p>
+     *
      * @return a hashtable containing all properties (including user properties).
      */
     public Hashtable getProperties() {
@@ -809,6 +867,10 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Returns a copy of the user property hashtable
+     *
+     * <p>Does not contain properties held by implementations of
+     * delegates (like local properties).</p>
+     *
      * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
@@ -820,6 +882,10 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Returns a copy of the inherited property hashtable
+     *
+     * <p>Does not contain properties held by implementations of
+     * delegates (like local properties).</p>
+     *
      * @return a hashtable containing just the inherited properties
      */
     public Hashtable getInheritedProperties() {
@@ -863,6 +929,9 @@ public class PropertyHelper implements GetProperty {
      * <p>To copy all "user" properties, you will also have to call
      * {@link #copyUserProperties copyUserProperties}.</p>
      *
+     * <p>Does not copy properties held by implementations of
+     * delegates (like local properties).</p>
+     *
      * @param other the project to copy the properties to.  Must not be null.
      *
      * @since Ant 1.6
@@ -889,6 +958,9 @@ public class PropertyHelper implements GetProperty {
      *
      * <p>To copy all "user" properties, you will also have to call
      * {@link #copyInheritedProperties copyInheritedProperties}.</p>
+     *
+     * <p>Does not copy properties held by implementations of
+     * delegates (like local properties).</p>
      *
      * @param other the project to copy the properties to.  Must not be null.
      *
