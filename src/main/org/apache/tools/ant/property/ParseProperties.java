@@ -60,10 +60,10 @@ public class ParseProperties implements ParseNextProperty {
      *
      *  <li>This implementation starts parsing the <code>value</code>
      *  parameter (unsurprisingly) at the beginning and asks each
-     *  {@link org.apache.tools.ant.PropertyHelper.PropertyExpander
-     *  PropertyExpander} whether there is a property reference at
-     *  that point.  PropertyExpanders return the name of a property
-     *  they may find and may advance the parse position.</li>
+     *  {@link PropertyExpander PropertyExpander} whether there is a
+     *  property reference at that point.  PropertyExpanders return
+     *  the name of a property they may find and may advance the parse
+     *  position.</li>
      *
      *  <li>If the PropertyExpander returns <code>null</code> the
      *  method continues with the next PropertyExpander, otherwise it
@@ -121,8 +121,7 @@ public class ParseProperties implements ParseNextProperty {
     /**
      * Learn whether a String contains replaceable properties.
      *
-     * <p>Uses the configured {@link
-     *  org.apache.tools.ant.PropertyHelper.PropertyExpander
+     * <p>Uses the configured {@link PropertyExpander
      *  PropertyExpanders} and scans through the string.  Returns true
      *  as soon as any expander finds a property.</p>
      *
@@ -147,8 +146,7 @@ public class ParseProperties implements ParseNextProperty {
      * Return any property that can be parsed from the specified position
      * in the specified String.
      *
-     * <p>Uses the configured {@link
-     *  org.apache.tools.ant.PropertyHelper.PropertyExpander
+     * <p>Uses the configured {@link PropertyExpander
      *  PropertyExpanders} and {@link GetProperty GetProperty}
      *  instance .</p>
      *

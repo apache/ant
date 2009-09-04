@@ -80,7 +80,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
      * @param aRemoteFile the remote file name
      * @param aLocalFile  the local file
      * @param recursive   if true use recursion
-     * @param preservceLastModified whether to preserve file
+     * @param preserveLastModified whether to preserve file
      * modification times
      * @since Ant 1.8.0
      */

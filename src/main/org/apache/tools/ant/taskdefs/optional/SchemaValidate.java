@@ -239,7 +239,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * Create a reader if the use of the class did not specify another one.
-     * The reason to not use {@link JAXPUtils#getXMLReader()} was to
+     * The reason to not use {@link org.apache.tools.ant.util.JAXPUtils#getXMLReader()} was to
      * create our own factory with our own options.
      * @return a default XML parser
      */

@@ -173,9 +173,9 @@ public final class SelectorUtils {
      * Tests whether or not a given path matches a given pattern.
      *
      * If you need to call this method multiple times with the same 
-     * pattern you should rather use PathPattern
+     * pattern you should rather use TokenizedPath
      *
-     * @see PathPattern
+     * @see TokenizedPath
      * 
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
@@ -194,9 +194,9 @@ public final class SelectorUtils {
      * Tests whether or not a given path matches a given pattern.
      * 
      * If you need to call this method multiple times with the same 
-     * pattern you should rather use PathPattern
+     * pattern you should rather use TokenizedPattern
      *
-     * @see PathPattern
+     * @see TokenizedPattern
      * 
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.

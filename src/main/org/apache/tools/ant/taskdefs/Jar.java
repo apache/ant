@@ -678,7 +678,7 @@ public class Jar extends Zip {
 
     /**
      * Overridden from Zip class to deal with manifests and index lists.
-     * @param in the stream to read data for the entry from.  The
+     * @param is the stream to read data for the entry from.  The
      * caller of the method is responsible for closing the stream.
      * @param zOut the zip output stream
      * @param vPath the name this entry shall have in the archive

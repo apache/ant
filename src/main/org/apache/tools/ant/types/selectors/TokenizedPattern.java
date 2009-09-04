@@ -57,7 +57,7 @@ public class TokenizedPattern {
     /**
      * Tests whether or not a given path matches a given pattern.
      *
-     * @param str     The path to match, as a String. Must not be
+     * @param path    The path to match, as a String. Must not be
      *                <code>null</code>.
      * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.

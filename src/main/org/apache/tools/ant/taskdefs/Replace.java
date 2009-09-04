@@ -201,7 +201,7 @@ public class Replace extends MatchingTask {
 
         /**
          * Set the token to replace.
-         * @param token <code>String</code> token.
+         * @param t <code>String</code> token.
          */
         public void setToken(String t) {
             createReplaceToken().addText(t);
@@ -811,7 +811,7 @@ public class Replace extends MatchingTask {
      * Sets the name of a resource containing filters; optional.
      * Each property will be treated as a replacefilter where token is the name
      * of the property and value is the value of the property.
-     * @param replaceFilterFile <code>File</code> to load.
+     * @param replaceFilter <code>Resource</code> to load.
      * @since Ant 1.8.0
      */
     public void setReplaceFilterResource(Resource replaceFilter) {
