@@ -110,13 +110,13 @@ public class HasMethod extends ProjectComponent implements Condition {
                 loader = getProject().createClassLoader(classpath);
                 loader.setParentFirst(false);
                 loader.addJavaLibraries();
-                    try {
-                        return loader.findClass(classname);
-                    } catch (SecurityException se) {
-                        // class found but restricted name; this is
-                        // actually the case we're looking for in JDK 1.3+,
-                        // so catch the exception and return
-                        return null;
+                try {
+                    return loader.findClass(classname);
+                } catch (SecurityException se) {
+                    // class found but restricted name; this is
+                    // actually the case we're looking for in JDK 1.3+,
+                    // so catch the exception and return
+                    return null;
                 }
             } else if (loader != null) {
                 // How do we ever get here?
@@ -132,10 +132,12 @@ public class HasMethod extends ProjectComponent implements Condition {
                 }
             }
         } catch (ClassNotFoundException e) {
-            throw new BuildException("class \"" + classname + "\" was not found");
+            throw new BuildException("class \"" + classname
+                                     + "\" was not found");
         } catch (NoClassDefFoundError e) {
-            throw new BuildException("Could not load dependent class \"" + e.getMessage()
-                    + "\" for class \"" + classname + "\"");
+            throw new BuildException("Could not load dependent class \""
+                                     + e.getMessage()
+                                     + "\" for class \"" + classname + "\"");
         }
     }
 
@@ -147,14 +149,14 @@ public class HasMethod extends ProjectComponent implements Condition {
         }
         ClassLoader preLoadClass = loader;
         try {
-        Class clazz = loadClass(classname);
-        if (method != null) {
-            return isMethodFound(clazz);
-        }
-        if (field != null) {
-            return isFieldFound(clazz);
-        }
-        throw new BuildException("Neither method nor field defined");
+            Class clazz = loadClass(classname);
+            if (method != null) {
+                return isMethodFound(clazz);
+            }
+            if (field != null) {
+                return isFieldFound(clazz);
+            }
+            throw new BuildException("Neither method nor field defined");
         } finally {
             if (preLoadClass != loader && loader != null) {
                 loader.cleanup();

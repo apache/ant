@@ -79,19 +79,19 @@ public class JavaCC extends Task {
 
     protected static final String[] ARCHIVE_LOCATIONS =
         new String[] {
-            "JavaCC.zip",
-            "bin/lib/JavaCC.zip",
-            "bin/lib/javacc.jar",
-            "javacc.jar", // used by jpackage for JavaCC 3.x
-        };
+        "JavaCC.zip",
+        "bin/lib/JavaCC.zip",
+        "bin/lib/javacc.jar",
+        "javacc.jar", // used by jpackage for JavaCC 3.x
+    };
 
     protected static final int[] ARCHIVE_LOCATIONS_VS_MAJOR_VERSION =
         new int[] {
-            1,
-            2,
-            3,
-            3,
-        };
+        1,
+        2,
+        3,
+        3,
+    };
 
     protected static final String COM_PACKAGE = "COM.sun.labs.";
     protected static final String COM_JAVACC_CLASS = "javacc.Main";
@@ -345,8 +345,10 @@ public class JavaCC extends Task {
 
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile(outputDirectory, targetFile);
-        if (javaFile.exists() && targetFile.lastModified() < javaFile.lastModified()) {
-            log("Target is already built - skipping (" + targetFile + ")", Project.MSG_VERBOSE);
+        if (javaFile.exists()
+            && targetFile.lastModified() < javaFile.lastModified()) {
+            log("Target is already built - skipping (" + targetFile + ")",
+                Project.MSG_VERBOSE);
             return;
         }
         cmdl.createArgument().setValue(targetFile.getAbsolutePath());
@@ -413,78 +415,77 @@ public class JavaCC extends Task {
 
         AntClassLoader l = null;
         try {
-            l =
-            AntClassLoader.newAntClassLoader(null, null,
-                                             path
-                                             .concatSystemClasspath("ignore"),
-                                             true);
-        String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
-        InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
-                                               + ".class");
-        if (is != null) {
-            packagePrefix = COM_PACKAGE;
-            switch (type) {
-            case TASKDEF_TYPE_JAVACC:
-                mainClass = COM_JAVACC_CLASS;
-
-                break;
-
-            case TASKDEF_TYPE_JJTREE:
-                mainClass = COM_JJTREE_CLASS;
-
-                break;
-
-            case TASKDEF_TYPE_JJDOC:
-                mainClass = COM_JJDOC_CLASS;
-
-                break;
-            default:
-                // Fall Through
-            }
-        } else {
-            javaccClass = ORG_PACKAGE_3_1 + ORG_JAVACC_CLASS;
-            is = l.getResourceAsStream(javaccClass.replace('.', '/')
-                                       + ".class");
+            l = AntClassLoader.newAntClassLoader(null, null,
+                                                 path
+                                                 .concatSystemClasspath("ignore"),
+                                                 true);
+            String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
+            InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                                   + ".class");
             if (is != null) {
-                packagePrefix = ORG_PACKAGE_3_1;
-            } else {
-                javaccClass = ORG_PACKAGE_3_0 + ORG_JAVACC_CLASS;
-                is = l.getResourceAsStream(javaccClass.replace('.', '/')
-                                           + ".class");
-                if (is != null) {
-                    packagePrefix = ORG_PACKAGE_3_0;
-                }
-            }
-
-            if (is != null) {
+                packagePrefix = COM_PACKAGE;
                 switch (type) {
                 case TASKDEF_TYPE_JAVACC:
-                    mainClass = ORG_JAVACC_CLASS;
+                    mainClass = COM_JAVACC_CLASS;
 
-                break;
+                    break;
 
                 case TASKDEF_TYPE_JJTREE:
-                    mainClass = ORG_JJTREE_CLASS;
+                    mainClass = COM_JJTREE_CLASS;
 
                     break;
 
                 case TASKDEF_TYPE_JJDOC:
-                    mainClass = ORG_JJDOC_CLASS;
+                    mainClass = COM_JJDOC_CLASS;
 
                     break;
                 default:
                     // Fall Through
                 }
-            }
-        }
+            } else {
+                javaccClass = ORG_PACKAGE_3_1 + ORG_JAVACC_CLASS;
+                is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                           + ".class");
+                if (is != null) {
+                    packagePrefix = ORG_PACKAGE_3_1;
+                } else {
+                    javaccClass = ORG_PACKAGE_3_0 + ORG_JAVACC_CLASS;
+                    is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                               + ".class");
+                    if (is != null) {
+                        packagePrefix = ORG_PACKAGE_3_0;
+                    }
+                }
 
-        if (packagePrefix == null) {
-            throw new BuildException("failed to load JavaCC");
-        }
-        if (mainClass == null) {
-            throw new BuildException("unknown task type " + type);
-        }
-        return packagePrefix + mainClass;
+                if (is != null) {
+                    switch (type) {
+                    case TASKDEF_TYPE_JAVACC:
+                        mainClass = ORG_JAVACC_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJTREE:
+                        mainClass = ORG_JJTREE_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJDOC:
+                        mainClass = ORG_JJDOC_CLASS;
+
+                        break;
+                    default:
+                        // Fall Through
+                    }
+                }
+            }
+
+            if (packagePrefix == null) {
+                throw new BuildException("failed to load JavaCC");
+            }
+            if (mainClass == null) {
+                throw new BuildException("unknown task type " + type);
+            }
+            return packagePrefix + mainClass;
         } finally {
             if (l != null) {
                 l.cleanup();

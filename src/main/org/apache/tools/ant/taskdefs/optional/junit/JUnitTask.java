@@ -1110,29 +1110,30 @@ public class JUnitTask extends Task {
         }
         AntClassLoader loader = null;
         try {
-            loader = AntClassLoader.newAntClassLoader(null,
-            getProject(), cmd.createClasspath(getProject()),
-            true);
-        String projectResourceName = LoaderUtils.classNameToResource(
-            Project.class.getName());
-        URL previous = null;
-        try {
-            for (Enumeration e = loader.getResources(projectResourceName);
-                 e.hasMoreElements();) {
-                URL current = (URL) e.nextElement();
-                if (previous != null && !current.equals(previous)) {
-                    log("WARNING: multiple versions of ant detected "
-                        + "in path for junit "
-                        + LINE_SEP + "         " + previous
-                        + LINE_SEP + "     and " + current,
-                        Project.MSG_WARN);
-                    return;
+            loader =
+                AntClassLoader.newAntClassLoader(null, getProject(),
+                                                 cmd.createClasspath(getProject()),
+                                                 true);
+            String projectResourceName =
+                LoaderUtils.classNameToResource(Project.class.getName());
+            URL previous = null;
+            try {
+                for (Enumeration e = loader.getResources(projectResourceName);
+                     e.hasMoreElements();) {
+                    URL current = (URL) e.nextElement();
+                    if (previous != null && !current.equals(previous)) {
+                        log("WARNING: multiple versions of ant detected "
+                            + "in path for junit "
+                            + LINE_SEP + "         " + previous
+                            + LINE_SEP + "     and " + current,
+                            Project.MSG_WARN);
+                        return;
+                    }
+                    previous = current;
                 }
-                previous = current;
+            } catch (Exception ex) {
+                // Ignore exception
             }
-        } catch (Exception ex) {
-            // Ignore exception
-        }
         } finally {
             if (loader != null) {
                 loader.cleanup();

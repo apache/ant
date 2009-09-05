@@ -684,41 +684,43 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         try {
             cl = classpath.getProject().createClassLoader(classpath);
 
-        try {
-            cl.loadClass(JonasDeploymentTool.GENIC_CLASS);
-            log("Found GenIC class '" + JonasDeploymentTool.GENIC_CLASS
-                + "' in classpath.", Project.MSG_VERBOSE);
-            return JonasDeploymentTool.GENIC_CLASS;
+            try {
+                cl.loadClass(JonasDeploymentTool.GENIC_CLASS);
+                log("Found GenIC class '" + JonasDeploymentTool.GENIC_CLASS
+                    + "' in classpath.", Project.MSG_VERBOSE);
+                return JonasDeploymentTool.GENIC_CLASS;
 
-        } catch (ClassNotFoundException cnf1) {
-            log("GenIC class '" + JonasDeploymentTool.GENIC_CLASS
-                + "' not found in classpath.",
-            Project.MSG_VERBOSE);
-        }
+            } catch (ClassNotFoundException cnf1) {
+                log("GenIC class '" + JonasDeploymentTool.GENIC_CLASS
+                    + "' not found in classpath.",
+                    Project.MSG_VERBOSE);
+            }
 
-        try {
-            cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_1);
-            log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1
-                + "' in classpath.", Project.MSG_VERBOSE);
-            return JonasDeploymentTool.OLD_GENIC_CLASS_1;
+            try {
+                cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_1);
+                log("Found GenIC class '"
+                    + JonasDeploymentTool.OLD_GENIC_CLASS_1
+                    + "' in classpath.", Project.MSG_VERBOSE);
+                return JonasDeploymentTool.OLD_GENIC_CLASS_1;
 
-        } catch (ClassNotFoundException cnf2) {
-            log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1
-                + "' not found in classpath.",
-            Project.MSG_VERBOSE);
-        }
+            } catch (ClassNotFoundException cnf2) {
+                log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1
+                    + "' not found in classpath.",
+                    Project.MSG_VERBOSE);
+            }
 
-        try {
-            cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_2);
-            log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2
-                + "' in classpath.", Project.MSG_VERBOSE);
-            return JonasDeploymentTool.OLD_GENIC_CLASS_2;
+            try {
+                cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_2);
+                log("Found GenIC class '"
+                    + JonasDeploymentTool.OLD_GENIC_CLASS_2
+                    + "' in classpath.", Project.MSG_VERBOSE);
+                return JonasDeploymentTool.OLD_GENIC_CLASS_2;
 
-        } catch (ClassNotFoundException cnf3) {
-            log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2
-                + "' not found in classpath.",
-            Project.MSG_VERBOSE);
-        }
+            } catch (ClassNotFoundException cnf3) {
+                log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2
+                    + "' not found in classpath.",
+                    Project.MSG_VERBOSE);
+            }
         } finally {
             if (cl != null) {
                 cl.cleanup();

@@ -107,12 +107,12 @@ public class WhichResource extends Task {
 
 
         if (setcount == 0) {
-            throw new BuildException(
-                    "One of classname or resource must be specified");
+            throw new BuildException("One of classname or resource must"
+                                     + " be specified");
         }
         if (setcount > 1) {
-            throw new BuildException(
-                    "Only one of classname or resource can be specified");
+            throw new BuildException("Only one of classname or resource can"
+                                     + " be specified");
         }
         if (property == null) {
             throw new BuildException("No property defined");
@@ -128,39 +128,40 @@ public class WhichResource extends Task {
         if (classpath != null) {
             classpath = classpath.concatSystemClasspath("ignore");
             getProject().log("using user supplied classpath: " + classpath,
-                    Project.MSG_DEBUG);
+                             Project.MSG_DEBUG);
         } else {
             classpath = new Path(getProject());
             classpath = classpath.concatSystemClasspath("only");
-            getProject().log("using system classpath: " + classpath, Project.MSG_DEBUG);
+            getProject().log("using system classpath: " + classpath,
+                             Project.MSG_DEBUG);
         }
         AntClassLoader loader = null;
         try {
-        loader = AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
-                    getProject(),
-                    classpath, false);
-        String loc = null;
-        if (classname != null) {
-            //convert a class name into a resource
-            resource = classname.replace('.', '/') + ".class";
-        }
+            loader = AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
+                                                      getProject(),
+                                                      classpath, false);
+            String loc = null;
+            if (classname != null) {
+                //convert a class name into a resource
+                resource = classname.replace('.', '/') + ".class";
+            }
 
-        if (resource == null) {
-            throw new BuildException("One of class or resource is required");
-        }
+            if (resource == null) {
+                throw new BuildException("One of class or resource is required");
+            }
 
-        if (resource.startsWith("/")) {
-            resource = resource.substring(1);
-        }
+            if (resource.startsWith("/")) {
+                resource = resource.substring(1);
+            }
 
-        log("Searching for " + resource, Project.MSG_VERBOSE);
-        URL url;
-        url = loader.getResource(resource);
-        if (url != null) {
-            //set the property
-            loc = url.toExternalForm();
-            getProject().setNewProperty(property, loc);
-        }
+            log("Searching for " + resource, Project.MSG_VERBOSE);
+            URL url;
+            url = loader.getResource(resource);
+            if (url != null) {
+                //set the property
+                loc = url.toExternalForm();
+                getProject().setNewProperty(property, loc);
+            }
         } finally {
             if (loader != null) {
                 loader.cleanup();

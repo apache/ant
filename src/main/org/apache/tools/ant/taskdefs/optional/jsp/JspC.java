@@ -409,9 +409,9 @@ public class JspC extends MatchingTask {
     }
 
     /**
-    * get the list of files to compile
-    * @return the list of files.
-    */
+     * get the list of files to compile
+     * @return the list of files.
+     */
     public Vector getCompileList() {
         return compileList;
     }
@@ -432,80 +432,87 @@ public class JspC extends MatchingTask {
 
         if (!destDir.isDirectory()) {
             throw new BuildException("destination directory \"" + destDir
-                    + "\" does not exist or is not a directory", getLocation());
+                                     + "\" does not exist or is not a directory",
+                                     getLocation());
         }
 
         File dest = getActualDestDir();
 
         AntClassLoader al = null;
         try {
-        //bind to a compiler
-        JspCompilerAdapter compiler =
-            JspCompilerAdapterFactory.getCompiler(compilerName, this,
-                al = getProject().createClassLoader(compilerClasspath));
+            //bind to a compiler
+            JspCompilerAdapter compiler =
+                JspCompilerAdapterFactory
+                .getCompiler(compilerName, this,
+                             al = getProject().createClassLoader(compilerClasspath));
 
-        //if we are a webapp, hand off to the compiler, which had better handle it
-        if (webApp != null) {
-            doCompilation(compiler);
-            return;
-        }
-
-        // make sure that we've got a srcdir
-        if (src == null) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     getLocation());
-        }
-        String [] list = src.list();
-        if (list.length == 0) {
-            throw new BuildException("srcdir attribute must be set!",
-                    getLocation());
-        }
-
-
-        // if the compiler does its own dependency stuff, we just call it right now
-        if (compiler.implementsOwnDependencyChecking()) {
-            doCompilation(compiler);
-            return;
-        }
-
-        //the remainder of this method is only for compilers that need their dependency work done
-        JspMangler mangler = compiler.createMangler();
-
-        // scan source directories and dest directory to build up both copy
-        // lists and compile lists
-        resetFileLists();
-        int filecount = 0;
-        for (int i = 0; i < list.length; i++) {
-            File srcDir = getProject().resolveFile(list[i]);
-            if (!srcDir.exists()) {
-                throw new BuildException("srcdir \"" + srcDir.getPath()
-                    + "\" does not exist!", getLocation());
+            //if we are a webapp, hand off to the compiler, which had
+            //better handle it
+            if (webApp != null) {
+                doCompilation(compiler);
+                return;
             }
-            DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-            String[] files = ds.getIncludedFiles();
-            filecount = files.length;
-            scanDir(srcDir, dest, mangler, files);
-        }
 
-        // compile the source files
+            // make sure that we've got a srcdir
+            if (src == null) {
+                throw new BuildException("srcdir attribute must be set!",
+                                         getLocation());
+            }
+            String [] list = src.list();
+            if (list.length == 0) {
+                throw new BuildException("srcdir attribute must be set!",
+                                         getLocation());
+            }
 
-        log("compiling " + compileList.size() + " files", Project.MSG_VERBOSE);
 
-        if (compileList.size() > 0) {
+            // if the compiler does its own dependency stuff, we just
+            // call it right now
+            if (compiler.implementsOwnDependencyChecking()) {
+                doCompilation(compiler);
+                return;
+            }
 
-            log("Compiling " + compileList.size() + " source file"
-                + (compileList.size() == 1 ? "" : "s")
-                + " to "
-                + dest);
-            doCompilation(compiler);
+            //the remainder of this method is only for compilers that
+            //need their dependency work done
+            JspMangler mangler = compiler.createMangler();
 
-        } else {
-            if (filecount == 0) {
-                log("there were no files to compile", Project.MSG_INFO);
+            // scan source directories and dest directory to build up both copy
+            // lists and compile lists
+            resetFileLists();
+            int filecount = 0;
+            for (int i = 0; i < list.length; i++) {
+                File srcDir = getProject().resolveFile(list[i]);
+                if (!srcDir.exists()) {
+                    throw new BuildException("srcdir \"" + srcDir.getPath()
+                                             + "\" does not exist!",
+                                             getLocation());
+                }
+                DirectoryScanner ds = this.getDirectoryScanner(srcDir);
+                String[] files = ds.getIncludedFiles();
+                filecount = files.length;
+                scanDir(srcDir, dest, mangler, files);
+            }
+
+            // compile the source files
+
+            log("compiling " + compileList.size() + " files",
+                Project.MSG_VERBOSE);
+
+            if (compileList.size() > 0) {
+
+                log("Compiling " + compileList.size() + " source file"
+                    + (compileList.size() == 1 ? "" : "s")
+                    + " to "
+                    + dest);
+                doCompilation(compiler);
+
             } else {
-                log("all files are up to date", Project.MSG_VERBOSE);
+                if (filecount == 0) {
+                    log("there were no files to compile", Project.MSG_INFO);
+                } else {
+                    log("all files are up to date", Project.MSG_VERBOSE);
+                }
             }
-        }
         } finally {
             if (al != null) {
                 al.cleanup();
@@ -533,7 +540,7 @@ public class JspC extends MatchingTask {
      * do the compile
      */
     private void doCompilation(JspCompilerAdapter compiler)
-            throws BuildException {
+        throws BuildException {
         // now we need to populate the compiler adapter
         compiler.setJspc(this);
 
@@ -562,8 +569,8 @@ public class JspC extends MatchingTask {
      * @param mangler the jsp filename mangler.
      * @param files   the file names to mangle.
      */
-    protected void scanDir(
-        File srcDir, File dest, JspMangler mangler, String[] files) {
+    protected void scanDir(File srcDir, File dest, JspMangler mangler,
+                           String[] files) {
 
         long now = (new Date()).getTime();
 
@@ -577,13 +584,13 @@ public class JspC extends MatchingTask {
 
             if (srcFile.lastModified() > now) {
                 log("Warning: file modified in the future: " + filename,
-                        Project.MSG_WARN);
+                    Project.MSG_WARN);
             }
             boolean shouldCompile = false;
             shouldCompile = isCompileNeeded(srcFile, javaFile);
             if (shouldCompile) {
-               compileList.addElement(srcFile.getAbsolutePath());
-               javaFiles.addElement(javaFile);
+                compileList.addElement(srcFile.getAbsolutePath());
+                javaFiles.addElement(javaFile);
             }
         }
     }
@@ -611,21 +618,21 @@ public class JspC extends MatchingTask {
             log("Compiling " + srcFile.getPath()
                 + " because java file " + javaFile.getPath()
                 + " does not exist", Project.MSG_VERBOSE);
+        } else {
+            if (srcFile.lastModified() > javaFile.lastModified()) {
+                shouldCompile = true;
+                log("Compiling " + srcFile.getPath()
+                    + " because it is out of date with respect to "
+                    + javaFile.getPath(),
+                    Project.MSG_VERBOSE);
             } else {
-                if (srcFile.lastModified() > javaFile.lastModified()) {
+                if (javaFile.length() == 0) {
                     shouldCompile = true;
                     log("Compiling " + srcFile.getPath()
-                        + " because it is out of date with respect to "
-                        + javaFile.getPath(),
-                        Project.MSG_VERBOSE);
-                } else {
-                    if (javaFile.length() == 0) {
-                        shouldCompile = true;
-                        log("Compiling " + srcFile.getPath()
-                            + " because java file " + javaFile.getPath()
-                            + " is empty", Project.MSG_VERBOSE);
-                    }
+                        + " because java file " + javaFile.getPath()
+                        + " is empty", Project.MSG_VERBOSE);
                 }
+            }
         }
         return shouldCompile;
     }
@@ -640,12 +647,13 @@ public class JspC extends MatchingTask {
      * @return the filename.
      * @todo support packages and subdirs
      */
-    protected File mapToJavaFile(JspMangler mangler, File srcFile, File srcDir, File dest) {
+    protected File mapToJavaFile(JspMangler mangler, File srcFile, File srcDir,
+                                 File dest) {
         if (!srcFile.getName().endsWith(".jsp")) {
             return null;
         }
         String javaFileName = mangler.mapJspToJavaName(srcFile);
-//        String srcFileDir=srcFile.getParent();
+        //        String srcFileDir=srcFile.getParent();
         return new File(dest, javaFileName);
     }
 
@@ -692,9 +700,9 @@ public class JspC extends MatchingTask {
         public void setBaseDir(File directory) {
             this.directory = directory;
         }
-    //end inner class
+        //end inner class
     }
 
 
-//end class
+    //end class
 }
