@@ -142,7 +142,7 @@ public class ManifestClassPathTest
     public void testInternationalGerman() {
         executeTarget("international-german");
         expectLogContaining("run-two-jars", "beta alpha");
-            
+
     }
     public void testInternationalHebrew() {
         if (!Os.isFamily("windows")) {
@@ -154,5 +154,32 @@ public class ManifestClassPathTest
 
     }
 
+    public void testSameWindowsDrive() {
+        if (!Os.isFamily("windows")) {
+            System.out.println("Test with drive letters only run on windows");
+        } else {
+            executeTarget("testSameDrive");
+        }
+        assertPropertyEquals("cp", "../a/b/x.jar");
+    }
+
+    public void testDifferentWindowsDrive() {
+        if (!Os.isFamily("windows")) {
+            System.out.println("Test with drive letters only run on windows");
+        } else {
+            try {
+                new java.io.File("D:/").getCanonicalPath();
+            } catch (java.io.IOException e) {
+                System.out.println("drive d: doesn't exist or is not ready,"
+                                   + " skipping test");
+                return;
+            }
+
+            expectBuildExceptionContaining("testDifferentDrive",
+                                           "different drive",
+                                           "No suitable relative path from ");
+            assertPropertyUnset("cp");
+        }
+    }
 } // END class ManifestClassPathTest
 

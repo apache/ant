@@ -66,25 +66,15 @@ public class ManifestClassPath extends Task {
             throw new BuildException("Missing nested <classpath>!");
         }
 
+        StringBuffer tooLongSb = new StringBuffer();
+        for (int i = 0; i < maxParentLevels + 1; i++) {
+            tooLongSb.append("../");
+        }
+        final String tooLongPrefix = tooLongSb.toString();
+
         // Normalize the reference directory (containing the jar)
         final FileUtils fileUtils = FileUtils.getFileUtils();
         dir = fileUtils.normalize(dir.getAbsolutePath());
-
-        // Create as many directory prefixes as parent levels to traverse,
-        // in addition to the reference directory itself
-        File currDir = dir;
-        String[] dirs = new String[maxParentLevels + 1];
-        for (int i = 0; i < maxParentLevels + 1; ++i) {
-            dirs[i] = currDir.getAbsolutePath();
-            if (!dirs[i].equals("" + File.separatorChar)) {
-                dirs[i] = dirs[i] + File.separatorChar;
-            }
-            currDir = currDir.getParentFile();
-            if (currDir == null) {
-                maxParentLevels = i + 1;
-                break;
-            }
-        }
 
         String[] elements = path.list();
         StringBuffer buffer = new StringBuffer();
@@ -92,44 +82,35 @@ public class ManifestClassPath extends Task {
         for (int i = 0; i < elements.length; ++i) {
             // Normalize the current file
             File pathEntry = new File(elements[i]);
-            pathEntry = fileUtils.normalize(pathEntry.getAbsolutePath());
             String fullPath = pathEntry.getAbsolutePath();
+            pathEntry = fileUtils.normalize(fullPath);
 
-            // Find the longest prefix shared by the current file
-            // and the reference directory.
             String relPath = null;
-            for (int j = 0; j <= maxParentLevels && j < dirs.length; ++j) {
-                String dir = dirs[j];
-                if (!fullPath.startsWith(dir)) {
-                    continue;
-                }
+            String canonicalPath = null;
+            try {
+                relPath = FileUtils.getRelativePath(dir, pathEntry);
 
-                // We have a match! Add as many ../ as parent
-                // directory traversed to get the relative path
-                element.setLength(0);
-                for (int k = 0; k < j; ++k) {
-                    element.append("..");
-                    element.append(File.separatorChar);
+                canonicalPath = pathEntry.getCanonicalPath();
+                // getRelativePath always uses '/' as separator, adapt
+                if (File.separatorChar != '/') {
+                    canonicalPath =
+                        canonicalPath.replace(File.separatorChar, '/');
                 }
-                element.append(fullPath.substring(dir.length()));
-                relPath = element.toString();
-                break;
+            } catch (Exception e) {
+                throw new BuildException("error trying to get the relative path"
+                                         + " from " + dir + " to " + fullPath,
+                                         e);
             }
 
             // No match, so bail out!
-            if (relPath == null) {
+            if (relPath.equals(canonicalPath)
+                || relPath.startsWith(tooLongPrefix)) {
                 throw new BuildException(
                     "No suitable relative path from "
                     + dir + " to " + fullPath);
             }
 
-            // Manifest's ClassPath: attribute always uses forward
-            // slashes '/', and is space-separated. Ant will properly
-            // format it on 72 columns with proper line continuation
-            if (File.separatorChar != '/') {
-                relPath = relPath.replace(File.separatorChar, '/');
-            }
-            if (pathEntry.isDirectory()) {
+            if (pathEntry.isDirectory() && !relPath.endsWith("/")) {
                 relPath = relPath + '/';
             }
             try {
@@ -137,6 +118,9 @@ public class ManifestClassPath extends Task {
             } catch (UnsupportedEncodingException exc) {
                 throw new BuildException(exc);
             }
+            // Manifest's ClassPath: attribute always uses forward
+            // slashes '/', and is space-separated. Ant will properly
+            // format it on 72 columns with proper line continuation
             buffer.append(relPath);
             buffer.append(' ');
         }
@@ -175,6 +159,10 @@ public class ManifestClassPath extends Task {
      * @param  levels the max level. Defaults to 2.
      */
     public void setMaxParentLevels(int levels) {
+        if (levels < 0) {
+            throw new BuildException("maxParentLevels must not be a negative"
+                                     + " number");
+        }
         this.maxParentLevels = levels;
     }
 

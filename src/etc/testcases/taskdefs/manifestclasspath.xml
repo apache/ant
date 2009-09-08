@@ -216,4 +216,22 @@
       </jar>
       <java fork="true" jar="${tmp}/beta.jar"/>
     </target>
+
+  <target name="testSameDrive">
+    <manifestclasspath jarfile="C:/Temp/e.jar"
+                       maxParentLevels="99" property="cp">
+      <classpath>
+        <pathelement location="C:/a/b/x.jar"/>
+      </classpath>
+    </manifestclasspath>
+  </target>
+
+  <target name="testDifferentDrive">
+    <manifestclasspath jarfile="C:/Temp/e.jar"
+                       maxParentLevels="99" property="cp">
+      <classpath>
+        <pathelement location="D:/a/b/x.jar"/>
+      </classpath>
+    </manifestclasspath>
+  </target>
 </project>
