@@ -159,8 +159,8 @@ public class ManifestClassPathTest
             System.out.println("Test with drive letters only run on windows");
         } else {
             executeTarget("testSameDrive");
+            assertPropertyEquals("cp", "../a/b/x.jar");
         }
-        assertPropertyEquals("cp", "../a/b/x.jar");
     }
 
     public void testDifferentWindowsDrive() {
