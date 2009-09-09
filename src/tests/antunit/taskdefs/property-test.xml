@@ -37,4 +37,14 @@
       </property>
     </au:expectfailure>
   </target>
+  
+  <!-- Ensure we have platform dependent path separator -->
+  <property name="base" location="${basedir}"/>
+  <!-- an existing file as anchor for calculating paths -->
+  <property name="testfile" value="condition${file.separator}antversion-test.xml"/>
+
+  <target name="testLocation">
+    <property name="foo" location="${testfile}"/>
+    <au:assertPropertyEquals name="foo" value="${base}${file.separator}${testfile}"/>
+  </target>
 </project>
