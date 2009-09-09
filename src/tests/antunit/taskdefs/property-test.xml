@@ -47,4 +47,34 @@
     <property name="foo" location="${testfile}"/>
     <au:assertPropertyEquals name="foo" value="${base}${file.separator}${testfile}"/>
   </target>
+  
+  <target name="testLocationWithRecursive">
+    <property name="foo" location="${testfile}" relative="false"/>
+    <au:assertPropertyEquals name="foo" value="${base}${file.separator}${testfile}"/>
+  </target>
+
+  <target name="testRelative">
+    <property name="foo" location="${testfile}" relative="true"/>
+    <au:assertPropertyEquals name="foo" value="${testfile}"/>
+  </target>
+
+  <target name="testRelativeBase">
+    <property name="foo" location="${testfile}" relative="true" basedir="${base}"/>
+    <au:assertPropertyEquals name="foo" value="${testfile}"/>
+  </target>
+  
+  <target name="testRelativeUnderBase">
+    <property name="foo" location="${testfile}" relative="true" basedir="condition"/>
+    <au:assertPropertyEquals name="foo" value="antversion-test.xml"/>
+  </target>
+
+  <target name="testRelativeUnderBase2">
+    <property name="foo" location="${testfile}" relative="true" basedir="cvs"/>
+    <au:assertPropertyEquals name="foo" value="..${file.separator}condition${file.separator}antversion-test.xml"/>
+  </target>
+
+  <target name="testRelativeOverBase">
+    <property name="foo" location="${testfile}" relative="true" basedir=".."/>
+    <au:assertPropertyEquals name="foo" value="taskdefs${file.separator}${testfile}"/>
+  </target>
 </project>

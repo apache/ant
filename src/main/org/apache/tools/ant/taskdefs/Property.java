@@ -92,6 +92,8 @@ public class Property extends Task {
     private Project fallback;
     private Object untypedValue;
     private boolean valueAttributeUsed = false;
+    private boolean relative = false;
+    private File basedir;
 
     protected boolean userProperty; // set read-only properties
     // CheckStyle:VisibilityModifier ON
@@ -125,6 +127,24 @@ public class Property extends Task {
     }
 
     /**
+     * Sets 'relative' attribute.
+     * @param relative new value
+     * @since Ant 1.8.0
+     */
+    public void setRelative(boolean relative) {
+        this.relative = relative;
+    }
+
+    /**
+     * Sets 'basedir' attribute.
+     * @param basedir new value
+     * @since Ant 1.8.0
+     */
+    public void setBasedir(File basedir) {
+        this.basedir = basedir;
+    }
+
+    /**
      * The name of the property to set.
      * @param name property name
      */
@@ -151,7 +171,11 @@ public class Property extends Task {
      * @ant.attribute group="name"
      */
     public void setLocation(File location) {
-        setValue(location.getAbsolutePath());
+        if (relative) {
+            internalSetValue(location);
+        } else {
+            setValue(location.getAbsolutePath());
+        }
     }
 
     /* the following method is first in source so IH will pick it up first:
@@ -433,7 +457,19 @@ public class Property extends Task {
         }
 
         if (name != null && untypedValue != null) {
-            addProperty(name, untypedValue);
+            if (relative) {
+                try {
+                    File from = untypedValue instanceof File ? (File)untypedValue : new File(untypedValue.toString());
+                    File to = basedir != null ? basedir : getProject().getBaseDir();
+                    String relPath = FileUtils.getFileUtils().getRelativePath(to, from);
+                    relPath = relPath.replace('/', File.separatorChar);
+                    addProperty(name, relPath);
+                } catch (Exception e) {
+                    throw new BuildException(e, getLocation());
+                }
+            } else {
+                addProperty(name, untypedValue);
+            }
         }
 
         if (file != null) {
@@ -466,7 +502,7 @@ public class Property extends Task {
             }
         }
     }
-
+    
     /**
      * load properties from a url
      * @param url url to load from
