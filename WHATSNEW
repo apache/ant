@@ -955,6 +955,9 @@ Other changes:
    be loaded from the specified classpath rather than the system
    classloader.
    Bugzilla Report 41369.
+   
+ * <property location="from" basedir="to" relative="true"/> can now
+   calculate relative paths.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
