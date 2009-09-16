@@ -18,8 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testOutputProperty"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47602">
+  <target name="-setUpWriterClass">
     <mkdir dir="${input}"/>
     <echo file="${input}/A.java"><![CDATA[
 public class A {
@@ -30,6 +29,11 @@ public class A {
 }]]></echo>
     <mkdir dir="${output}"/>
     <javac srcdir="${input}" destdir="${output}"/>
+  </target>
+
+  <target name="testOutputProperty"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47602"
+          depends="-setUpWriterClass">
     <java fork="false" classname="A" outputproperty="out"
           errorproperty="err">
       <classpath location="${output}"/>
@@ -37,5 +41,35 @@ public class A {
     <au:assertPropertyEquals name="out" value="to System.out"/>
     <au:assertPropertyEquals name="err" value="to System.err"/>
   </target>
+
+  <target name="testLogErrorNoInput"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47844"
+          depends="-setUpWriterClass">
+    <property name="stdout" location="${output}/standard.txt"/>
+    <java fork="false" classname="A" output="${stdout}" logError="true">
+      <classpath location="${output}"/>
+    </java>
+    <au:assertResourceContains resource="${stdout}"
+                               value="to System.out"/>
+    <au:assertResourceDoesntContain resource="${stdout}"
+                                    value="to System.err"/>
+    <au:assertLogContains text="to System.err"/>
+  </target>
+
+  <target name="testLogErrorWithInput"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47844"
+          depends="-setUpWriterClass">
+    <property name="stdout" location="${output}/standard.txt"/>
+    <java fork="false" classname="A" output="${stdout}"
+          logError="true" inputstring="">
+      <classpath location="${output}"/>
+    </java>
+    <au:assertResourceContains resource="${stdout}"
+                               value="to System.out"/>
+    <au:assertResourceDoesntContain resource="${stdout}"
+                                    value="to System.err"/>
+    <au:assertLogContains text="to System.err"/>
+  </target>
+
 </project>
 
