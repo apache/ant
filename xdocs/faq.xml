@@ -1051,6 +1051,27 @@ shell-prompt> m4 foo.m4 > foo
       </answer>
     </faq>
 
+    <faq id="CreateProcess_error_2">
+      <question><code>&lt;exec&gt;</code> fails with <code>"Cannot run
+          program "...":CreateProcess error=2"</code> on
+        Windows.</question>
+      <answer>
+
+        <p>A common problem is not having the executable on the
+          PATH. In case you get an error message <code>Cannot run
+          program "...":CreateProcess error=2. The system cannot find
+            the path specified.</code> have a look at your PATH
+          variable.</p>
+
+        <p>Just type the command directly on the command line and if
+          Windows finds it, Ant should do it too. (Otherwise ask on
+          the user mailinglist for help.) If Windows can not execute
+          the program add the directory of the programm to the PATH
+          (<code>set PATH=%PATH%;dirOfProgram</code>) or specify the
+          absolute path in the <code>executable</code> attribute in
+          your buildfile.</p>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">
