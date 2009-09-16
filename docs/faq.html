@@ -355,6 +355,11 @@
         not work in my application server. Why does Ant do this?
       
       </a></li>
+                <li><a href="#CreateProcess_error_2">
+  <code>&lt;exec&gt;</code> fails with <code>"Cannot run
+          program "...":CreateProcess error=2"</code> on
+        Windows.
+      </a></li>
             </ul>
                 <h4 class="toc">Ant and IDEs/Editors</h4>
         <ul>
@@ -1478,6 +1483,24 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
           Do not raise a bug about this issue until you have checked to ensure
           that the problem is not due to your classpath specification.
         </p>
+                    <p class="faq">
+      <a name="CreateProcess_error_2"></a>
+      <code>&lt;exec&gt;</code> fails with <code>"Cannot run
+          program "...":CreateProcess error=2"</code> on
+        Windows.
+    </p>
+                  <p>A common problem is not having the executable on the
+          PATH. In case you get an error message <code>Cannot run
+          program "...":CreateProcess error=2. The system cannot find
+            the path specified.</code> have a look at your PATH
+          variable.</p>
+                        <p>Just type the command directly on the command line and if
+          Windows finds it, Ant should do it too. (Otherwise ask on
+          the user mailinglist for help.) If Windows can not execute
+          the program add the directory of the programm to the PATH
+          (<code>set PATH=%PATH%;dirOfProgram</code>) or specify the
+          absolute path in the <code>executable</code> attribute in
+          your buildfile.</p>
                                 <p class="faq">
       <a name="integration"></a>
       Is Ant supported by my IDE/Editor?
