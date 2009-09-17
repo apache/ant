@@ -15,7 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+  <import file="../antunit-base.xml"/>
+
   <target name="testIt">
     <au:expectfailure>
       <pathconvert refid="${foo}" />
