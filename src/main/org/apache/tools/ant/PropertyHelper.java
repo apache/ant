@@ -220,6 +220,20 @@ public class PropertyHelper implements GetProperty {
             }
         };
 
+    /**
+     * @since Ant 1.8.0
+     */
+    private static final PropertyEvaluator FROM_REF = new PropertyEvaluator() {
+        private final String PREFIX = "ant.refid:";
+        private final int PREFIX_LEN = PREFIX.length();
+
+        public Object evaluate(String prop, PropertyHelper helper) {
+            return prop.startsWith(PREFIX) && helper.getProject() != null
+                ? helper.getProject().getReference(prop.substring(PREFIX_LEN))
+                : null;
+        }
+    };
+
     private Project project;
     private PropertyHelper next;
     private Hashtable delegates = new Hashtable();
@@ -245,6 +259,7 @@ public class PropertyHelper implements GetProperty {
      * Default constructor.
      */
     protected PropertyHelper() {
+        add(FROM_REF);
         add(TO_STRING);
         add(SKIP_DOUBLE_DOLLAR);
         add(DEFAULT_EXPANDER);

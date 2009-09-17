@@ -804,6 +804,31 @@ For example, here is how to get a listing of the files in a fileset,
 There is no guarantee that external types provide meaningful information in such
 a situation</p>
 
+<h3><a name="ant.refid">Getting the value of a Reference with
+    ${ant.refid:}</a></h3>
+
+<p>Any Ant type which has been declared with a reference can also be
+  used as a property by using the <code>${ant.refid:}</code>
+  operation, with the name of the reference listed after
+  the <code>ant.refid:</code> text.  The difference between this
+  operation and <a href="#toString"><code>${toString:}</code></a> is
+  that <code>${ant.refid:}</code> will expand to the referenced object
+  itself.  In most circumstances the toString method will be invoked
+  anyway, for example if the <code>${ant.refid:}</code> is surrounded
+  by other text.</p>
+
+<p>This syntax is most useful when using a task with attribute setters
+  that accept objects other than String.  For example if the setter
+  accepts a Resource object as in</p>
+<pre>
+public void setAttr(Resource r) { ... }
+</pre>
+<p>then the syntax can be used to pass in resource subclasses
+  preciously defined as references like</p>
+<pre>
+  &lt;url url="http://ant.apache.org/" id="anturl"/&gt;
+  &lt;my:task attr="${ant.refid:anturl}"/&gt;
+</pre>
 
 <h3><a name="external-tasks">Use of external tasks</a></h3> 
 Ant supports a plugin mechanism for using third party tasks. For using them you 

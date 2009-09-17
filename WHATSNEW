@@ -156,6 +156,23 @@ Changes that could break older environments:
    adapt (by overriding the new two-arg processFile method).
    Bugzilla Report 23243.
 
+ * A new property syntax can be used to set attributes from
+   references: ${ant.ref:some-reference}
+
+   In most cases this will yield the exact same result as 
+   ${toString:some-reference} - only when an attribute setter method
+   accepts an object type other than string and the project's
+   reference is an Object of matching type the new syntax will pass in
+   that object.
+
+   If your build file already contains properties whose name starts
+   with "ant.ref:" there is a potential for collision.  If your
+   property has been set, normal property expansion will take
+   precedence over the new syntax.  If the property has not been set
+   and a reference with the postfix of your property name exists
+   (i.e. in a very unlikely event) then the new syntax would yield a
+   different result (an expanded property) than Ant 1.7.1 did.
+
 Fixed bugs:
 -----------
 
