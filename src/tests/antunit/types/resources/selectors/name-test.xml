@@ -15,8 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit"
-         xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
   <import file="../../../antunit-base.xml" />
 
@@ -32,7 +31,7 @@
       <resourcecount when="equal" count="1">
         <restrict>
           <fileset dir="${output}"/>
-          <rsel:name name="*"/>
+          <name name="*"/>
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -40,7 +39,7 @@
       <resourcecount when="equal" count="0">
         <restrict>
           <fileset dir="${output}"/>
-          <rsel:name name=".*"/>
+          <name name=".*"/>
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -51,8 +50,40 @@
       <resourcecount when="equal" count="1">
         <restrict>
           <fileset dir="${output}"/>
-          <rsel:name regex=".*"/>
+          <name regex=".*"/>
         </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testHandledirSep" depends="createTestdir">
+    <au:assertTrue>
+      <!-- only one should match the current platform -->
+      <resourcecount when="equal" count="1">
+        <resources>
+          <restrict>
+            <fileset dir="${output}"/>
+            <name name="**/${file}"/>
+          </restrict>
+          <restrict>
+            <fileset dir="${output}"/>
+            <name name="**\${file}"/>
+          </restrict>
+        </resources>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertTrue>
+      <resourcecount when="equal" count="2">
+        <resources>
+          <restrict>
+            <fileset dir="${output}"/>
+            <name name="**/${file}" handleDirSep="true"/>
+          </restrict>
+          <restrict>
+            <fileset dir="${output}"/>
+            <name name="**\${file}" handleDirSep="true"/>
+          </restrict>
+        </resources>
       </resourcecount>
     </au:assertTrue>
   </target>

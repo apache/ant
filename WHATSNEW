@@ -976,6 +976,10 @@ Other changes:
  * <property location="from" basedir="to" relative="true"/> can now
    calculate relative paths.
 
+ * The <name> selector supports a new handleDirSep attribute that
+   makes it ignore differences between / and \ separators.
+   Bugzilla Report 47858.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
