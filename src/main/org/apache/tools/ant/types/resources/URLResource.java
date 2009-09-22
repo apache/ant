@@ -39,7 +39,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Exposes a URL as a Resource.
  * @since Ant 1.7
  */
-public class URLResource extends Resource {
+public class URLResource extends Resource implements URLProvider {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NULL_URL
         = Resource.getMagicNumber("null URL".getBytes());
@@ -59,6 +59,14 @@ public class URLResource extends Resource {
      */
     public URLResource(URL u) {
         setURL(u);
+    }
+
+    /**
+     * Convenience constructor.
+     * @param u holds the URL to expose.
+     */
+    public URLResource(URLProvider u) {
+        setURL(u.getURL());
     }
 
     /**

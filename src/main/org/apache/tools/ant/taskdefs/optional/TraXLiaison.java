@@ -54,7 +54,7 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.types.resources.URLResource;
+import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
@@ -266,13 +266,13 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     }
 
     private String resourceToURI(Resource resource) {
-        // TODO turn URLResource into Provider
         FileProvider fp = (FileProvider) resource.as(FileProvider.class);
         if (fp != null) {
             return FILE_UTILS.toURI(fp.getFile().getAbsolutePath());
         }
-        if (resource instanceof URLResource) {
-            URL u = ((URLResource) resource).getURL();
+        URLProvider up = (URLProvider) resource.as(URLProvider.class);
+        if (up != null) {
+            URL u = up.getURL();
             return String.valueOf(u);
         } else {
             return resource.getName();

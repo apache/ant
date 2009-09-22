@@ -513,6 +513,11 @@ Other changes:
    are instances or subclasses of FileResource.
    Bugzilla Report 43348
    
+ * There is now a URLProvider interface for resources that act as a
+   source of URLs. This should be used by tasks that require resources
+   to provide URLs, rather than require that all resources are
+   instances or subclasses of URLResource.
+   
  * Fixcrlf now gives better error messages on bad directory attributes.
    Bugzilla Report 43936
    
