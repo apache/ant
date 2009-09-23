@@ -93,7 +93,7 @@ public class Get extends Task {
 
             File dest = destination;
             if (destination.isDirectory()) {
-                if (mapperElement != null) {
+                if (mapperElement == null) {
                     String path = source.getPath();
                     if (path.endsWith("/")) {
                         path = path.substring(0, path.length() - 1);
