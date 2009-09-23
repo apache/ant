@@ -87,4 +87,13 @@
         </au:expectfailure>
     </target>
 
+
+    <target name="testNestedResources">
+      <get dest="${output}/downloads">
+        <url url="http://ant.apache.org/index.html"/> 
+        <url url="http://ant.apache.org/faq.html"/>
+      </get>
+      <au:assertFileExists file="${output}/downloads/index.html"/>
+      <au:assertFileExists file="${output}/downloads/faq.html"/>
+    </target>
 </project>
