@@ -26,31 +26,27 @@
 
 <h2><a name="get">Get</a></h2>
 <h3>Description</h3>
-<p>Gets a file from a URL. When the verbose option is &quot;on&quot;, this task
+<p>Gets files from URLs.  When the verbose option is &quot;on&quot;, this task
 displays a '.' for every 100 Kb retrieved. Any URL schema supported by
 the runtime is valid here, including http:, ftp: and jar:; 
-https: is only valid if the appropriate support is added to the pre-1.4 Java
-runtimes. 
- 
 </p>
 The <i>usetimestamp</i> option enables you to control downloads so that the remote file is
 only fetched if newer than the local copy. If there is no local copy, the download always takes 
-place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp,
-if  the JVM is Java1.2 or later. 
+place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp. 
 NB: This timestamp facility only works on downloads using the HTTP protocol. 
 <p>
 A username and password can be specified, in which case basic 'slightly encoded
 plain text' authentication is used. This is only secure over an HTTPS link.
 </p>
-<p>
-<b>Proxies</b>. Since Ant1.7, Ant running on Java1.5 or later defaults to 
-    <a href="../proxy.html">using
-    the proxy settings of the operating system</a>. There is also the  
- <a href="../OptionalTasks/setproxy.html">&lt;setproxy&gt;</a> task for
-    earlier Java versions. With proxies turned on, <code>&lt;get&gt;</code> requests against
-    localhost may not work as expected, if the request is relayed to the proxy.
-    The <code>-noproxy</code> option can be used to turn this feature off.
-</p>
+
+<p><b>Proxies</b>. Since Ant 1.7.0, Ant running on Java1.5 or later can
+  <a href="../proxy.html">use the proxy settings of the operating
+    system</a> if enabled with the
+  <code>-autoproxy</code> option. There is also the
+  <a href="../OptionalTasks/setproxy.html">&lt;setproxy&gt;</a> task
+  for earlier Java versions. With proxies turned
+  on, <code>&lt;get&gt;</code> requests against localhost may not work
+  as expected, if the request is relayed to the proxy.</p>
  
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -62,11 +58,12 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   <tr>
     <td valign="top">src</td>
     <td valign="top">the URL from which to retrieve a file.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">Yes or a nested resource collection</td>
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">the file where to store the retrieved file.</td>
+    <td valign="top">the file or directory where to store the
+      retrieved file(s).</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -97,15 +94,15 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   </tr>  
   <tr>
     <td valign="top">maxtime</td>
-    <td valign="top">Maximum time in seconds the download may take,
-    otherwise it will be interrupted and treated like a download
+    <td valign="top">Maximum time in seconds a single download may take,
+      otherwise it will be interrupted and treated like a download
       error.  <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No: default 0 which means no
       maximum time</td>
   </tr>  
   <tr>
     <td valign="top">retries</td>
-    <td valign="top">the number of retries on error<br/>
+    <td valign="top">the per download number of retries on error<br/>
       <em>since Ant 1.8.0</em></td>
     <td align="center" valign="top">No; default "3"</td>
   </tr>
@@ -125,6 +122,29 @@ plain text' authentication is used. This is only secure over an HTTPS link.
     <td align="center" valign="top">No; default "true"</td>
   </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>any resource collection</h4>
+
+<p><a href="../CoreTypes/resources.html#collection">Resource
+    Collection</a>s are used to select groups of URLs to download.  If
+    the collection contains more than one resource, the dest attribute
+    must point to a directory if it exists or a directory will be
+    created if it doesn't exist.  The destination file name use the
+    last part of the path of the source URL unless you also specify a
+    mapper.</p>
+
+<h4>mapper</h4>
+
+<p>You can define name transformations by using a
+  nested <a href="../CoreTypes/mapper.html">mapper</a> element.  You
+  can also use any filenamemapper type in place of the mapper
+  element.</p>
+
+<p>The mapper will receive the resource's name as argument.  Any
+  resource for which the mapper returns no or more than one mapped
+  name will be skipped.  If the returned name is a relative path, it
+  will be considered relative to the <em>dest</em> attribute.</p>
+
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 <p>Gets the index page of http://ant.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
@@ -175,6 +195,15 @@ the <a href="input.html">input task</a> to query for a password.</p>
   checksum (assuming a certain naming convention for the checksum
   file, of course) and validate the checksum on the fly.</p>
 
+<pre>
+&lt;get dest=&quot;downloads&quot;&gt;
+  &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt; 
+  &lt;url url=&quot;http://ant.apache.org/faq.html&quot;/&gt;
+&lt;/get&gt;
+</pre>
+<p>Gets the index and FAQ pages of http://ant.apache.org/, and stores
+  them in the directory <code>downloads</code> which will be created if
+  necessary.</p>
 </body>
 </html>
 

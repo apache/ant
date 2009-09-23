@@ -985,6 +985,10 @@ Other changes:
    makes it ignore differences between / and \ separators.
    Bugzilla Report 47858.
 
+ * <get> now supports resource collections (as long as the resources
+   contained provide URLs) and can get multiple resources in a single
+   task.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
