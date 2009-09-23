@@ -105,10 +105,18 @@ public class Get extends Task {
                     dest = new File(destination, path);
                 } else {
                     FileNameMapper mapper = mapperElement.getImplementation();
-                    String[] d = mapper.mapFileName(r.getName());
-                    if (d == null || d.length != 1) {
+                    String[] d = mapper.mapFileName(source.toString());
+                    if (d == null) {
                         log("skipping " + r + " - mapper can't handle it",
                             Project.MSG_WARN);
+                        continue;
+                    } else if (d.length == 0) {
+                        log("skipping " + r + " - mapper returns no file name",
+                            Project.MSG_WARN);
+                        continue;
+                    } else if (d.length > 1) {
+                        log("skipping " + r + " - mapper returns multiple file"
+                            + " names", Project.MSG_WARN);
                         continue;
                     }
                     dest = new File(destination, d[0]);
