@@ -176,9 +176,17 @@ the <a href="input.html">input task</a> to query for a password.</p>
   &lt;macrodef name="get-and-checksum">
     &lt;attribute name="url"/>
     &lt;attribute name="dest"/>
-    &lt;sequential>
-      &lt;get src="@{url}" dest="@{dest}"/>
-      &lt;get src="@{url}.sha1" dest="@{dest}.sha"/>
+    &lt;sequential&gt;
+      &lt;local name="destdir"/&gt;
+      &lt;dirname property="destdir" file="@{dest}"/&gt;
+      &lt;get dest="${destdir}"&gt;
+        &lt;url url="@{url}"/&gt;
+        &lt;url url="@{url}.sha1"/&gt;
+        &lt;firstmatchmapper&gt;
+          &lt;globmapper from="@{url}.sha1" to="@{dest}.sha"/&gt;
+          &lt;globmapper from="@{url}" to="@{dest}"/&gt;
+        &lt;/firstmatchmapper&gt;
+      &lt;/get&gt;
       &lt;local name="checksum.matches"/>
       &lt;local name="checksum.matches.fail"/>
       &lt;checksum file="@{dest}" algorithm="sha" fileext=".sha"
