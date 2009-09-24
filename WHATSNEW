@@ -134,10 +134,11 @@ Changes that could break older environments:
    versions of Ant.
    Bugzilla Report 36748.
 
- * globmapper didn't work properly if the "to" pattern didn't contain
-   a "*".  In particular it implicitly added a * to the end of the
-   pattern.  This is no longer the case.  If you relied on this
-   behavior you will now need to explicitly specify the trailing *.
+ * globmapper didn't work properly if the "to" or "from" patterns
+   didn't contain a "*".  In particular it implicitly added a * to the
+   end of the pattern(s).  This is no longer the case.  If you relied
+   on this behavior you will now need to explicitly specify the
+   trailing "*".
    Bugzilla Report 46506.
 
  * <copy> silently ignored missing resources even with

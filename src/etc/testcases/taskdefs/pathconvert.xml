@@ -31,7 +31,7 @@
     <target name="testmapper">
         <pathconvert property="result" dirsep="#">
             <path refid="testpath" />
-            <mapper type="glob" from="${basedir}" to="test*" />
+            <mapper type="glob" from="${basedir}*" to="test*" />
         </pathconvert>
     </target>
 

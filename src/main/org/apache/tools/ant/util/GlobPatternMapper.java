@@ -68,6 +68,7 @@ public class GlobPatternMapper implements FileNameMapper {
 
     // CheckStyle:VisibilityModifier ON
 
+    private boolean fromContainsStar = false;
     private boolean toContainsStar = false;
     private boolean handleDirSep = false;
     private boolean caseSensitive = true;
@@ -106,6 +107,7 @@ public class GlobPatternMapper implements FileNameMapper {
             } else {
                 fromPrefix = from.substring(0, index);
                 fromPostfix = from.substring(index + 1);
+                fromContainsStar = true;
             }
             prefixLength = fromPrefix.length();
             postfixLength = fromPostfix.length();
@@ -142,10 +144,16 @@ public class GlobPatternMapper implements FileNameMapper {
      * @return a list of converted filenames
      */
     public String[] mapFileName(String sourceFileName) {
+        String modName = modifyName(sourceFileName);
         if (fromPrefix == null
-            || !modifyName(sourceFileName).startsWith(modifyName(fromPrefix))
-            || !modifyName(sourceFileName).endsWith(modifyName(fromPostfix))
             || (sourceFileName.length() < (prefixLength + postfixLength))
+            || (!fromContainsStar
+                && !modName.equals(modifyName(fromPrefix))
+                )
+            || (fromContainsStar
+                && (!modName.startsWith(modifyName(fromPrefix))
+                    || !modName.endsWith(modifyName(fromPostfix)))
+                )
             ) {
             return null;
         }

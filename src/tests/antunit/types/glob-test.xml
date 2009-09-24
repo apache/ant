@@ -68,4 +68,13 @@
     <au:assertFileExists file="${output}/c.jar-b"/>
   </target>
 
+  <target name="test-no-*-in-from" depends="setUp">
+    <touch file="${input}/a-b.jar"/>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <mapper type="glob" from="a-b" to="c.jar"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/c.jar"/>
+  </target>
+
 </project>
