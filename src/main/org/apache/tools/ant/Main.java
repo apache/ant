@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,6 +302,7 @@ public class Main implements AntMain {
      */
     private void processArgs(String[] args) {
         String searchForThis = null;
+        boolean searchForFile = false;
         PrintStream logTo = null;
 
         // cycle through given args
@@ -359,11 +361,10 @@ public class Main implements AntMain {
                 // set the flag to display the targets and quit
                 projectHelp = true;
             } else if (arg.equals("-find") || arg.equals("-s")) {
+                searchForFile = true;
                 // eat up next arg if present, default to build.xml
                 if (i < args.length - 1) {
                     searchForThis = args[++i];
-                } else {
-                    searchForThis = DEFAULT_BUILD_FILENAME;
                 }
             } else if (arg.startsWith("-propertyfile")) {
                 i = handleArgPropertyFile(args, i);
@@ -411,11 +412,37 @@ public class Main implements AntMain {
         // if buildFile was not specified on the command line,
         if (buildFile == null) {
             // but -find then search for it
-            if (searchForThis != null) {
-                buildFile = findBuildFile(System.getProperty("user.dir"),
-                                          searchForThis);
+            if (searchForFile) {
+                if (searchForThis != null) {
+                    buildFile = findBuildFile(System.getProperty("user.dir"), searchForThis);
+                    if (buildFile == null) {
+                        throw new BuildException("Could not locate a build file!");
+                    }
+                } else {
+                    // no search file specified: so search an existing default file
+                    Iterator it = ProjectHelperRepository.getInstance().getHelpers();
+                    do {
+                        ProjectHelper helper = (ProjectHelper) it.next();
+                        searchForThis = helper.getDefaultBuildFile();
+                        if (msgOutputLevel >= Project.MSG_VERBOSE) {
+                            System.out.println("Searching the default build file: " + searchForThis);
+                        }
+                        buildFile = findBuildFile(System.getProperty("user.dir"), searchForThis);
+                    } while (buildFile == null && it.hasNext());
+                    if (buildFile == null) {
+                        throw new BuildException("Could not locate a build file!");
+                    }
+                }
             } else {
-                buildFile = new File(DEFAULT_BUILD_FILENAME);
+                // no build file specified: so search an existing default file
+                Iterator it = ProjectHelperRepository.getInstance().getHelpers();
+                do {
+                    ProjectHelper helper = (ProjectHelper) it.next();
+                    buildFile = new File(helper.getDefaultBuildFile());
+                    if (msgOutputLevel >= Project.MSG_VERBOSE) {
+                        System.out.println("Trying the default build file: " + buildFile);
+                    }
+                } while (!buildFile.exists() && it.hasNext());
             }
         }
 
@@ -633,20 +660,17 @@ public class Main implements AntMain {
      * <p>
      * Takes the given target as a suffix to append to each
      * parent directory in search of a build file.  Once the
-     * root of the file-system has been reached an exception
-     * is thrown.
+     * root of the file-system has been reached <code>null</code>
+     * is returned.
      *
      * @param start  Leaf directory of search.
      *               Must not be <code>null</code>.
      * @param suffix  Suffix filename to look for in parents.
      *                Must not be <code>null</code>.
      *
-     * @return A handle to the build file if one is found
-     *
-     * @exception BuildException if no build file is found
+     * @return A handle to the build file if one is found, <code>null</code> if not
      */
-    private File findBuildFile(String start, String suffix)
-         throws BuildException {
+    private File findBuildFile(String start, String suffix) {
         if (msgOutputLevel >= Project.MSG_INFO) {
             System.out.println("Searching for " + suffix + " ...");
         }
@@ -662,7 +686,7 @@ public class Main implements AntMain {
             // if parent is null, then we are at the root of the fs,
             // complain that we can't find the build file.
             if (parent == null) {
-                throw new BuildException("Could not locate a build file!");
+                return null;
             }
 
             // refresh our file handle

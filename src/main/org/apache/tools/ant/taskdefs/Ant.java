@@ -359,7 +359,7 @@ public class Ant extends Task {
             overrideProperties();
 
             if (antFile == null) {
-                antFile = Main.DEFAULT_BUILD_FILENAME;
+                antFile = getDefaultBuildFile();
             }
 
             File file = FILE_UTILS.resolveFile(dir, antFile);
@@ -467,6 +467,19 @@ public class Ant extends Task {
             dir = savedDir;
             antFile = savedAntFile;
         }
+    }
+
+    /**
+     * Get the default build file name to use when launching the task.
+     * <p>
+     * This function may be overrided by providers of custom ProjectHelper so they can implement easily their sub
+     * launcher.
+     * 
+     * @return the name of the default file
+     * @since Ant 1.8.0
+     */
+    protected String getDefaultBuildFile() {
+        return Main.DEFAULT_BUILD_FILENAME;
     }
 
     /**

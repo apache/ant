@@ -17,37 +17,21 @@
  */
 package org.apache.tools.ant;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 
-import org.xml.sax.AttributeList;
-
-import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.xml.sax.AttributeList;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
- * a XML build file. It'll rely on a plugin to do the actual processing
- * of the xml file.
- *
+ * a build file. It'll rely on a plugin to do the actual processing
+ * of the file.
+ * <p>
  * This class also provide static wrappers for common introspection.
- *
- * All helper plugins must provide backward compatibility with the
- * original ant patterns, unless a different behavior is explicitly
- * specified. For example, if namespace is used on the &lt;project&gt; tag
- * the helper can expect the entire build file to be namespace-enabled.
- * Namespaces or helper-specific tags can provide meta-information to
- * the helper, allowing it to use new ( or different policies ).
- *
- * However, if no namespace is used the behavior should be exactly
- * identical with the default helper.
- *
  */
 public class ProjectHelper {
     /** The URI for ant name space */
@@ -89,7 +73,7 @@ public class ProjectHelper {
      * @exception BuildException if the configuration is invalid or cannot be read
      */
     public static void configureProject(Project project, File buildFile) throws BuildException {
-        ProjectHelper helper = ProjectHelper.getProjectHelper();
+        ProjectHelper helper = ProjectHelperRepository.getInstance().getProjectHelper(buildFile);
         project.addReference(PROJECTHELPER_REFERENCE, helper);
         helper.parse(project, buildFile);
     }
@@ -224,103 +208,13 @@ public class ProjectHelper {
     }
 
     /**
-     * Discovers a project helper instance. Uses the same patterns
-     * as JAXP, commons-logging, etc: a system property, a JDK1.3
-     * service discovery, default.
-     *
-     * @return a ProjectHelper, either a custom implementation
-     * if one is available and configured, or the default implementation
-     * otherwise.
-     *
-     * @exception BuildException if a specified helper class cannot
-     * be loaded/instantiated.
+     * Get the first project helper found in the classpath
+     * 
+     * @return an project helper, never <code>null</code>
+     * @see #getHelpers()
      */
-    public static ProjectHelper getProjectHelper() throws BuildException {
-        // Identify the class loader we will be using. Ant may be
-        // in a webapp or embedded in a different app
-        ProjectHelper helper = null;
-
-        // First, try the system property
-        String helperClass = System.getProperty(HELPER_PROPERTY);
-        try {
-            if (helperClass != null) {
-                helper = newHelper(helperClass);
-            }
-        } catch (SecurityException e) {
-            System.out.println("Unable to load ProjectHelper class \""
-                + helperClass + " specified in system property "
-                + HELPER_PROPERTY);
-        }
-
-        // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
-        // automatically if in CLASSPATH, with the right META-INF/services.
-        if (helper == null) {
-            try {
-                ClassLoader classLoader = LoaderUtils.getContextClassLoader();
-                InputStream is = null;
-                if (classLoader != null) {
-                    is = classLoader.getResourceAsStream(SERVICE_ID);
-                }
-                if (is == null) {
-                    is = ClassLoader.getSystemResourceAsStream(SERVICE_ID);
-                }
-                if (is != null) {
-                    // This code is needed by EBCDIC and other strange systems.
-                    // It's a fix for bugs reported in xerces
-                    InputStreamReader isr;
-                    try {
-                        isr = new InputStreamReader(is, "UTF-8");
-                    } catch (java.io.UnsupportedEncodingException e) {
-                        isr = new InputStreamReader(is);
-                    }
-                    BufferedReader rd = new BufferedReader(isr);
-
-                    String helperClassName = rd.readLine();
-                    rd.close();
-
-                    if (helperClassName != null && !"".equals(helperClassName)) {
-                        helper = newHelper(helperClassName);
-                    }
-                }
-            } catch (Exception ex) {
-                System.out.println("Unable to load ProjectHelper from service " + SERVICE_ID);
-            }
-        }
-        return helper == null ? new ProjectHelper2() : helper;
-    }
-
-    /**
-     * Creates a new helper instance from the name of the class.
-     * It'll first try the thread class loader, then Class.forName()
-     * will load from the same loader that loaded this class.
-     *
-     * @param helperClass The name of the class to create an instance
-     *                    of. Must not be <code>null</code>.
-     *
-     * @return a new instance of the specified class.
-     *
-     * @exception BuildException if the class cannot be found or
-     * cannot be appropriate instantiated.
-     */
-    private static ProjectHelper newHelper(String helperClass)
-        throws BuildException {
-        ClassLoader classLoader = LoaderUtils.getContextClassLoader();
-        try {
-            Class clazz = null;
-            if (classLoader != null) {
-                try {
-                    clazz = classLoader.loadClass(helperClass);
-                } catch (ClassNotFoundException ex) {
-                    // try next method
-                }
-            }
-            if (clazz == null) {
-                clazz = Class.forName(helperClass);
-            }
-            return ((ProjectHelper) clazz.newInstance());
-        } catch (Exception e) {
-            throw new BuildException(e);
-        }
+    public static ProjectHelper getProjectHelper() {
+        return (ProjectHelper) ProjectHelperRepository.getInstance().getHelpers().next();
     }
 
     /**
@@ -617,5 +511,28 @@ public class ProjectHelper {
     public UnknownElement parseAntlibDescriptor(Project containingProject,
                                                 URL source) {
         throw new BuildException("can't parse antlib descriptors");
+    }
+
+    /**
+     * Check if the helper supports the kind of file. Some basic check on the
+     * extension's file should be done here.
+     * 
+     * @param buildFile
+     *            the file expected to be parsed (never <code>null</code>)
+     * @return true if the helper supports it
+     * @since Ant 1.8.0
+     */
+    public boolean supportsBuildFile(File buildFile) {
+        return true;
+    }
+
+    /**
+     * The file name of the build script to be parsed if none specified on the command line
+     * 
+     * @return the name of the default file (never <code>null</code>)
+     * @since Ant 1.8.0
+     */
+    public String getDefaultBuildFile() {
+        return Main.DEFAULT_BUILD_FILENAME;
     }
 }

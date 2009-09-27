@@ -50,7 +50,7 @@ public class Description extends DataType {
      */
     public void addText(String text) {
 
-        ProjectHelper ph = ProjectHelper.getProjectHelper();
+        ProjectHelper ph = (ProjectHelper) getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
         if (!(ph instanceof ProjectHelperImpl)) {
             // New behavior for delayed task creation. Description
             // will be evaluated in Project.getDescription()

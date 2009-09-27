@@ -67,7 +67,7 @@ public class SubAnt extends Task {
 
     private Ant ant = null;
     private String subTarget = null;
-    private String antfile = Main.DEFAULT_BUILD_FILENAME;
+    private String antfile = getDefaultBuildFile();
     private File genericantfile = null;
     private boolean verbose = false;
     private boolean inheritAll = false;
@@ -81,6 +81,19 @@ public class SubAnt extends Task {
 
     /** the targets to call on the new project */
     private Vector/*<TargetElement>*/ targets = new Vector();
+
+    /**
+     * Get the default build file name to use when launching the task.
+     * <p>
+     * This function may be overrided by providers of custom ProjectHelper so they can implement easily their sub
+     * launcher.
+     * 
+     * @return the name of the default file
+     * @since Ant 1.8.0
+     */
+    protected String getDefaultBuildFile() {
+        return Main.DEFAULT_BUILD_FILENAME;
+    }
 
     /**
      * Pass output sent to System.out to the new project.

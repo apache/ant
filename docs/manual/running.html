@@ -415,7 +415,6 @@ org.apache.tools.ant.Executor implementation specified here.
   <td>see <a href="sysclasspath.html">its dedicated page</a>, no
     default value</td>
   <td>see <a href="sysclasspath.html">its dedicated page</a></td>
-  </td>
 </tr>
 <tr>
   <td><code>file.encoding</code></td>
@@ -455,16 +454,23 @@ org.apache.tools.ant.Executor implementation specified here.
   </td>
 </tr>
 <tr>
-  <td><code>websphere.home
+  <td><code>websphere.home</code></td>
   <td>path</td>
   <td>Points to home directory of websphere.
       see <a href="OptionalTasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
   </td>
 </tr>
 <tr>
-  <td><code>XmlLogger.file
+  <td><code>XmlLogger.file</code></td>
   <td>filename (default 'log.xml')</td>
   <td>Name for the logfile for <a href="listeners.html#MailLogger">MailLogger</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.project-helper-repo.debug</code></td>
+  <td>boolean (default 'false')</td>
+  <td>Set it to true to enable debuging with Ant's
+  <a href="projecthelper.html#repository">ProjectHelper internal repository</a>.
   </td>
 </tr>
 </table>
@@ -529,7 +535,7 @@ have some documentation inside.</p>
     Unix(-like) systems</a></h2>
 
 <p>If you start Ant as a background process (like in <code>ant
-    &</code>) and the build process creates another process, Ant will
+    &amp;</code>) and the build process creates another process, Ant will
     immediately try to read from standard input, which in turn will
     most likely suspend the process.  In order to avoid this, you must
     redirect Ant's standard input or explicitly provide input to each
