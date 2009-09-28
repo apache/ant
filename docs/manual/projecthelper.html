@@ -110,6 +110,14 @@ capable of and what is is expecting:
     none provided</li>
     <li><code>supportsBuildFile(File buildFile)</code>: defines if your parser
     can parse the input file</li>
+
+    <li><code>canParseAntlibDescriptor(URL url)</code>: whether your
+      implementation is capable of parsing a given Antlib
+      descriptor.  The base class returns <code>false</code></li>
+    <li><code>parseAntlibDescriptor(Project containingProject, URL
+        source)</code>: invoked to actually parse the Antlib
+      descriptor if your implementation returned <code>true</code>
+      for the previous method.</li>
 </ul>
 </p>
 
