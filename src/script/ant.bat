@@ -80,7 +80,7 @@ rem and for NT handling to skip to.
 
 :doneStart
 
-if _USE_CLASSPATH==no goto findAntHome
+if "%_USE_CLASSPATH%"=="no" goto findAntHome
 
 :stripClasspath
 if not _%CLASSPATH:~-1%==_\ goto findAntHome
