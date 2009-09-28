@@ -23,12 +23,16 @@ import org.apache.tools.ant.util.LoaderUtils;
  */
 public class ProjectHelperRepository {
 
-    private static final String DEBUG_PROJECT_HELPER_REPOSITORY = "ant.project-helper-repo.debug";
+    private static final String DEBUG_PROJECT_HELPER_REPOSITORY =
+        "ant.project-helper-repo.debug";
 
-    // The message log level is not accessible here because everything is instanciated statically
-    private static final boolean DEBUG = "true".equals(System.getProperty(DEBUG_PROJECT_HELPER_REPOSITORY));
+    // The message log level is not accessible here because everything
+    // is instanciated statically
+    private static final boolean DEBUG =
+        "true".equals(System.getProperty(DEBUG_PROJECT_HELPER_REPOSITORY));
 
-    private static ProjectHelperRepository instance = new ProjectHelperRepository();
+    private static ProjectHelperRepository instance =
+        new ProjectHelperRepository();
 
     private List/* <ProjectHelper> */helpers = new ArrayList();
 
@@ -50,23 +54,27 @@ public class ProjectHelperRepository {
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
             if (classLoader != null) {
-                Enumeration resources = classLoader.getResources(ProjectHelper.SERVICE_ID);
+                Enumeration resources =
+                    classLoader.getResources(ProjectHelper.SERVICE_ID);
                 while (resources.hasMoreElements()) {
                     URL resource = (URL) resources.nextElement();
-                    projectHelper = getProjectHelperBySerice(resource.openStream());
+                    projectHelper =
+                        getProjectHelperByService(resource.openStream());
                     registerProjectHelper(projectHelper);
                 }
             }
 
-            InputStream systemResource = ClassLoader.getSystemResourceAsStream(ProjectHelper.SERVICE_ID);
+            InputStream systemResource =
+                ClassLoader.getSystemResourceAsStream(ProjectHelper.SERVICE_ID);
             if (systemResource != null) {
-                projectHelper = getProjectHelperBySerice(systemResource);
+                projectHelper = getProjectHelperByService(systemResource);
                 registerProjectHelper(projectHelper);
             }
         } catch (Exception e) {
             System.err.println("Unable to load ProjectHelper from service "
-                    + ProjectHelper.SERVICE_ID + " (" + e.getClass().getName() + ": "
-                    + e.getMessage() + ")");
+                               + ProjectHelper.SERVICE_ID + " ("
+                               + e.getClass().getName()
+                               + ": " + e.getMessage() + ")");
             if (DEBUG) {
                 e.printStackTrace(System.err);
             }
@@ -96,8 +104,9 @@ public class ProjectHelperRepository {
             }
         } catch (SecurityException e) {
             System.err.println("Unable to load ProjectHelper class \""
-                    + helperClass + " specified in system property "
-                    + ProjectHelper.HELPER_PROPERTY + " (" + e.getMessage() + ")");
+                               + helperClass + " specified in system property "
+                               + ProjectHelper.HELPER_PROPERTY + " ("
+                               + e.getMessage() + ")");
             if (DEBUG) {
                 e.printStackTrace(System.err);
             }
@@ -105,7 +114,7 @@ public class ProjectHelperRepository {
         return null;
     }
 
-    private ProjectHelper getProjectHelperBySerice(InputStream is) {
+    private ProjectHelper getProjectHelperByService(InputStream is) {
         try {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
@@ -134,9 +143,9 @@ public class ProjectHelperRepository {
     }
 
     /**
-     * Creates a new helper instance from the name of the class. It'll first try
-     * the thread class loader, then Class.forName() will load from the same
-     * loader that loaded this class.
+     * Creates a new helper instance from the name of the class. It'll
+     * first try the thread class loader, then Class.forName() will
+     * load from the same loader that loaded this class.
      * 
      * @param helperClass
      *            The name of the class to create an instance of. Must not be
@@ -181,13 +190,15 @@ public class ProjectHelperRepository {
             if (helper.supportsBuildFile(buildFile)) {
                 if (DEBUG) {
                     System.out.println("ProjectHelper "
-                            + helper.getClass().getName() + " selected for the file "
-                            + buildFile);
+                                       + helper.getClass().getName()
+                                       + " selected for the file "
+                                       + buildFile);
                 }
                 return helper;
             }
         }
-        throw new RuntimeException("BUG: at least the ProjectHelper2 should have supported the file " + buildFile);
+        throw new RuntimeException("BUG: at least the ProjectHelper2 should "
+                                   + "have supported the file " + buildFile);
     }
 
     /**
