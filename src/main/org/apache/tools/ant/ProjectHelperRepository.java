@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -14,10 +15,10 @@ import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
- * Repository of {@link ProjectHelper} found in the classpath or via some System
- * properties.
- * <p>
- * See the ProjectHelper documentation in the manual.
+ * Repository of {@link ProjectHelper} found in the classpath or via
+ * some System properties.
+
+ * <p>See the ProjectHelper documentation in the manual.</p>
  * 
  * @since Ant 1.8.0
  */
@@ -34,7 +35,10 @@ public class ProjectHelperRepository {
     private static ProjectHelperRepository instance =
         new ProjectHelperRepository();
 
-    private List/* <ProjectHelper> */helpers = new ArrayList();
+    private List/* <Constructor> */ helpers = new ArrayList();
+
+    private static final Class[] NO_CLASS = new Class[0];
+    private static final Object[] NO_OBJECT = new Object[0];
 
     public static ProjectHelperRepository getInstance() {
         return instance;
@@ -91,9 +95,16 @@ public class ProjectHelperRepository {
         }
         if (DEBUG) {
             System.out.println("ProjectHelper " +
-                    projectHelper.getClass().getName() + " registered.");
+                               projectHelper.getClass().getName()
+                               + " registered.");
         }
-        helpers.add(projectHelper);
+        try {
+            helpers.add(projectHelper.getClass().getConstructor(NO_CLASS));
+        } catch (NoSuchMethodException nse) {
+            // impossible to get here
+            throw new BuildException("Couldn't find no-arg constructor in "
+                                     + projectHelper.getClass().getName());
+        }
     }
 
     private ProjectHelper getProjectHelperBySystemProperty() {
@@ -184,7 +195,7 @@ public class ProjectHelperRepository {
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelper(File buildFile) throws BuildException {
-        Iterator it = helpers.iterator();
+        Iterator it = getHelpers();
         while (it.hasNext()) {
             ProjectHelper helper = (ProjectHelper) it.next();
             if (helper.supportsBuildFile(buildFile)) {
@@ -209,6 +220,32 @@ public class ProjectHelperRepository {
      * @return an iterator of {@link ProjectHelper}
      */
     public Iterator getHelpers() {
-        return helpers.iterator();
+        return new ConstructingIterator(helpers.iterator());
+    }
+
+    private static class ConstructingIterator implements Iterator {
+        private final Iterator nested;
+
+        ConstructingIterator(Iterator nested) {
+            this.nested = nested;
+        }
+
+        public boolean hasNext() {
+            return nested.hasNext();
+        }
+
+        public Object next() {
+            Constructor c = (Constructor) nested.next();
+            try {
+                return c.newInstance(NO_OBJECT);
+            } catch (Exception e) {
+                throw new BuildException("Failed to invoke no-arg constructor"
+                                         + " on " + c.getName());
+            }
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("remove is not supported");
+        }
     }
 }
