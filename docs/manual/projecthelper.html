@@ -28,20 +28,21 @@
 <h2><a name="definition">What is a ProjectHelper?</a></h2>
 
 <p>
-The <code>ProjectHelper</code> in Ant is responsible to parse the build file
-and create java instances representing the build workflow. It also declares which
+The <code>ProjectHelper</code> in Ant is responsible for parsing the build file
+and creating java instances representing the build workflow. It also signals which
 kind of file it can parse, and which file name it expects as default input file.
 </p>
+
 <p>
-So in Ant there is a default <code>ProjectHelper</code>
-(<code>org.apache.tools.ant.helper.ProjectHelper2</code>) which will parse the
+Ant' default <code>ProjectHelper</code>
+(<code>org.apache.tools.ant.helper.ProjectHelper2</code>) parses the
 usual build.xml files. And if no build file is specified on the command line, it
-will expect to find a build.xml file.
+will expect to find a file named <code>build.xml</code>.
 </p>
 
 <p>
 The immediate benefit of a such abstraction it that it is possible to make Ant
-understand other kind of descriptive language than XML. Some experiment have
+understand other kind of descriptive languages than XML. Some experiments have
 been done around a pure java frontend, and a groovy one too (ask the dev mailing
 list for further info about these).
 </p>
@@ -49,12 +50,12 @@ list for further info about these).
 <h2><a name="repository">How is Ant is selecting the proper ProjectHelper</a></h2>
 
 <p>
-Ant can now know about several implementations of <code>ProjectHelper</code>
-and have to decide which to use for each build file.
+Ant knows about several implementations of <code>ProjectHelper</code>
+and has to decide which to use for each build file.
 </p>
 
-<p>So Ant at startup will list the found implementations and will keep it
-ordered as it finds them in an internal 'repository':
+<p>At startup Ant lists the all implementations found and keeps them
+in the same order they've been found in an internal 'repository':
 <ul>
     <li>the first to be searched for is the one declared by the system property
         <code>org.apache.tools.ant.ProjectHelper</code> (see
@@ -69,24 +70,24 @@ ordered as it finds them in an internal 'repository':
     <li>last but not least it will add its default <code>ProjectHelper</code>
         that can parse classical build.xml files.</li>
 </ul>
-In case of error while trying to instanciate a <code>ProjectHelper</code>, Ant
-will log an error but still won't stop. If you want further debugging
-info about the <code>ProjectHelper</code> internal 'repository', use the system
+In case of an error while trying to instanciate a <code>ProjectHelper</code>, Ant
+will log an error but won't stop.  If you want further debugging
+info about the <code>ProjectHelper</code> internal 'repository', use the <b>system</b>
 property <code>ant.project-helper-repo.debug</code> and set it to
 <code>true</code>; the full stack trace will then also be printed.
 </p>
 
 <p>
-Then when Ant is expected to parse a file, it will ask the
-<code>ProjectHelper</code> repository to found an implementation that will be
-able to parse the input file. Actually it will just iterate on the ordered list
+When Ant is expected to parse a file, it will ask the
+<code>ProjectHelper</code> repository to find an implementation that will be
+able to parse the input file. Actually it will just iterate over the ordered list
 and the first implementation that returns <code>true</code> to
 <code>supportsBuildFile(File buildFile)</code> will be selected.
 </p>
 
 <p>
-And when Ant is launching and there is no input file specified, it will search for
-a default input file. It will iterate on the list of <code>ProjectHelper</code>
+When Ant is started and no input file has been specified, it will search for
+a default input file. It will iterate over list of <code>ProjectHelper</code>s
 and will select the first one that expects a default file that actually exist.
 </p>
 
@@ -102,7 +103,7 @@ constructor with no arguments.
 </p>
 
 <p>
-Then there are some functions that will help you define what your helper is
+There are some functions that will help you define what your helper is
 capable of and what is is expecting:
 <ul>
     <li><code>getDefaultBuildFile()</code>: defines which file name is expected if
