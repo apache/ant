@@ -33,7 +33,25 @@
     <echo>unless-false called</echo>
   </target>
 
+  <target name="if-string-true" if="${true}">
+    <echo>if-string-true called</echo>
+  </target>
+
+  <target name="unless-string-true" unless="${true}">
+    <echo>unless-string-true called</echo>
+  </target>
+
+  <target name="if-string-false" if="${false}">
+    <echo>if-string-false called</echo>
+  </target>
+
+  <target name="unless-string-false" unless="${false}">
+    <echo>unless-string-false called</echo>
+  </target>
+
   <target name="all"
-          depends="if-true,unless-true,if-false,unless-false"/>
+          depends="if-true,unless-true,if-false,unless-false,
+                   if-string-true,unless-string-true,
+                   if-string-false,unless-string-false"/>
 
 </project>

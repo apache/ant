@@ -46,6 +46,10 @@ public class CreateBoolean extends ProjectComponent {
     <au:assertLogContains text="unless-false called"/>
     <au:assertLogDoesntContain text="if-true called"/>
     <au:assertLogDoesntContain text="if-false called"/>
+    <au:assertLogContains text="unless-string-true called"/>
+    <au:assertLogContains text="unless-string-false called"/>
+    <au:assertLogDoesntContain text="if-string-true called"/>
+    <au:assertLogDoesntContain text="if-string-false called"/>
   </target>
 
   <target name="testReferencesSet" depends="setUp">
@@ -54,6 +58,25 @@ public class CreateBoolean extends ProjectComponent {
     <au:assertLogDoesntContain text="unless-true called"/>
     <au:assertLogContains text="unless-false called"/>
     <au:assertLogContains text="if-true called"/>
+    <au:assertLogDoesntContain text="if-false called"/>
+    <au:assertLogContains text="unless-string-true called"/>
+    <au:assertLogContains text="unless-string-false called"/>
+    <au:assertLogDoesntContain text="if-string-true called"/>
+    <au:assertLogDoesntContain text="if-string-false called"/>
+  </target>
+
+  <target name="testProperttiesSet">
+    <ant antfile="target-test-helper.xml" target="all">
+      <property name="true" value="true"/>
+      <property name="false" value="false"/>
+    </ant>
+    <au:assertLogDoesntContain text="unless-string-true called"/>
+    <au:assertLogContains text="unless-string-false called"/>
+    <au:assertLogContains text="if-string-true called"/>
+    <au:assertLogDoesntContain text="if-string-false called"/>
+    <au:assertLogContains text="unless-true called"/>
+    <au:assertLogContains text="unless-false called"/>
+    <au:assertLogDoesntContain text="if-true called"/>
     <au:assertLogDoesntContain text="if-false called"/>
   </target>
 </project>

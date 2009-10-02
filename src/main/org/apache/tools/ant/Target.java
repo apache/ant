@@ -462,10 +462,7 @@ public class Target implements TaskContainer {
         }
         PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
         Object o = propertyHelper.parseProperties(ifCondition);
-        if (o instanceof Boolean) {
-            return ((Boolean) o).booleanValue();
-        }
-        return propertyHelper.getProperty(String.valueOf(o)) != null;
+        return propertyHelper.testIfCondition(o);
     }
 
     /**
@@ -483,9 +480,6 @@ public class Target implements TaskContainer {
         }
         PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
         Object o = propertyHelper.parseProperties(unlessCondition);
-        if (o instanceof Boolean) {
-            return !((Boolean) o).booleanValue();
-        }
-        return propertyHelper.getProperty(String.valueOf(o)) == null;
+        return !propertyHelper.testIfCondition(o);
     }
 }

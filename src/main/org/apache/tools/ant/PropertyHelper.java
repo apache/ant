@@ -1117,4 +1117,43 @@ public class PropertyHelper implements GetProperty {
         return result;
     }
 
+    /**
+     * If the given object can be interpreted as a true/false value,
+     * turn it into a matching Boolean - otherwise return null.
+     * @since Ant 1.8.0
+     */
+    public static Boolean toBoolean(Object value) {
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        if (value instanceof String) {
+            String s = (String) value;
+            if (Project.toBoolean(s)) {
+                return Boolean.TRUE;
+            }
+            if ("off".equalsIgnoreCase(s)
+                || "false".equalsIgnoreCase(s)
+                || "no".equalsIgnoreCase(s)) {
+                return Boolean.FALSE;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns true if the value is not-null, can be interpreted as a
+     * true value or cannot be interpreted as a false value and a
+     * property of the value's name exists.
+     * @since Ant 1.8.0
+     */
+    public boolean testIfCondition(Object value) {
+        if (value == null) {
+            return false;
+        }
+        Boolean b = toBoolean(value);
+        if (b != null) {
+            return b.booleanValue();
+        }
+        return getProperty(String.valueOf(value)) != null;
+    }
 }
