@@ -2329,6 +2329,7 @@ public class Javadoc extends Task {
         // and nested excludepackage elements
         if (sourcePath != null) {
             PatternSet ps = new PatternSet();
+            ps.setProject(getProject());
             if (packageNames.size() > 0) {
                 Enumeration e = packageNames.elements();
                 while (e.hasMoreElements()) {
@@ -2359,6 +2360,7 @@ public class Javadoc extends Task {
                 File dir = new File(pathElements[i]);
                 if (dir.isDirectory()) {
                     DirSet ds = new DirSet();
+                    ds.setProject(getProject());
                     ds.setDefaultexcludes(useDefaultExcludes);
                     ds.setDir(dir);
                     ds.createPatternSet().addConfiguredPatternset(ps);
