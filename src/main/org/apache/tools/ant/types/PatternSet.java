@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -44,12 +45,13 @@ public class PatternSet extends DataType implements Cloneable {
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
      * may be used to invalidate the entry based on the existence of a
-     * property (typically set thru the use of the Available task).
+     * property (typically set thru the use of the Available task)
+     * or value of an expression.
      */
     public class NameEntry {
         private String name;
-        private String ifCond;
-        private String unlessCond;
+        private Object ifCond;
+        private Object unlessCond;
 
         /**
          * Sets the name pattern.
@@ -62,26 +64,61 @@ public class PatternSet extends DataType implements Cloneable {
 
         /**
          * Sets the if attribute. This attribute and the "unless"
-         * attribute are used to validate the name, based in the
-         * existence of the property.
+         * attribute are used to validate the name, based on the
+         * existence of the property or the value of the evaluated
+         * property expression.
          *
-         * @param cond A property name. If this property is not
-         *             present, the name is invalid.
+         * @param cond A property name or expression.  If the
+         *             expression evaluates to false or no property of
+         *             its value is present, the name is invalid.
+         * @since Ant 1.8.0
          */
-        public void setIf(String cond) {
+        public void setIf(Object cond) {
             ifCond = cond;
         }
 
         /**
-         * Sets the unless attribute. This attribute and the "if"
-         * attribute are used to validate the name, based in the
-         * existence of the property.
+         * Sets the if attribute. This attribute and the "unless"
+         * attribute are used to validate the name, based on the
+         * existence of the property or the value of the evaluated
+         * property expression.
          *
-         * @param cond A property name. If this property is
-         *             present, the name is invalid.
+         * @param cond A property name or expression.  If the
+         *             expression evaluates to false or no property of
+         *             its value is present, the name is invalid.
+         */
+        public void setIf(String cond) {
+            setIf((Object) cond);
+        }
+
+        /**
+         * Sets the unless attribute. This attribute and the "if"
+         * attribute are used to validate the name, based on the
+         * existence of the property or the value of the evaluated
+         * property expression.
+         *
+         * @param cond A property name or expression.  If the
+         *             expression evaluates to true or a property of
+         *             its value is present, the name is invalid.
+         * @param cond A property name or expression.
+         * @since Ant 1.8.0
+         */
+        public void setUnless(Object cond) {
+            unlessCond = cond;
+        }
+
+        /**
+         * Sets the unless attribute. This attribute and the "if"
+         * attribute are used to validate the name, based on the
+         * existence of the property or the value of the evaluated
+         * property expression.
+         *
+         * @param cond A property name or expression.  If the
+         *             expression evaluates to true or a property of
+         *             its value is present, the name is invalid.
          */
         public void setUnless(String cond) {
-            unlessCond = cond;
+            setUnless((Object) cond);
         }
 
         /**
@@ -105,13 +142,9 @@ public class PatternSet extends DataType implements Cloneable {
         }
 
         private boolean valid(Project p) {
-            if (ifCond != null && p.getProperty(ifCond) == null) {
-                return false;
-            }
-            if (unlessCond != null && p.getProperty(unlessCond) != null) {
-                return false;
-            }
-            return true;
+            PropertyHelper ph = PropertyHelper.getPropertyHelper(p);
+            return ph.testIfCondition(ifCond)
+                && ph.testUnlessCondition(unlessCond);
         }
 
         /**

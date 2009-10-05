@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.io.File;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 
 /**
  * This selector just holds one other selector and forwards all
@@ -35,8 +36,8 @@ import org.apache.tools.ant.Project;
  */
 public class SelectSelector extends BaseSelectorContainer {
 
-    private String ifProperty;
-    private String unlessProperty;
+    private Object ifCondition;
+    private Object unlessCondition;
 
     /**
      * Default constructor.
@@ -51,13 +52,13 @@ public class SelectSelector extends BaseSelectorContainer {
         StringBuffer buf = new StringBuffer();
         if (hasSelectors()) {
             buf.append("{select");
-            if (ifProperty != null) {
+            if (ifCondition != null) {
                 buf.append(" if: ");
-                buf.append(ifProperty);
+                buf.append(ifCondition);
             }
-            if (unlessProperty != null) {
+            if (unlessCondition != null) {
                 buf.append(" unless: ");
-                buf.append(unlessProperty);
+                buf.append(unlessCondition);
             }
             buf.append(" ");
             buf.append(super.toString());
@@ -151,32 +152,51 @@ public class SelectSelector extends BaseSelectorContainer {
      * @return true if conditions are passed
      */
     public boolean passesConditions() {
-        if (ifProperty != null
-            && getProject().getProperty(ifProperty) == null) {
-            return false;
-        } else if (unlessProperty != null
-            && getProject().getProperty(unlessProperty) != null) {
-            return false;
-        }
-        return true;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(getProject());
+        return ph.testIfCondition(ifCondition)
+            && ph.testUnlessCondition(unlessCondition);
     }
 
     /**
-     * Sets the if attribute to a property which must exist for the
+     * Sets the if attribute to an expression which must evaluate to
+     * true or the name of an existing property for the
      * selector to select any files.
-     * @param ifProperty the property to check
+     * @param ifProperty the expression to check
+     * @since Ant 1.8.0
+     */
+    public void setIf(Object ifProperty) {
+        this.ifCondition = ifProperty;
+    }
+
+    /**
+     * Sets the if attribute to an expression which must evaluate to
+     * true or the name of an existing property for the
+     * selector to select any files.
+     * @param ifProperty the expression to check
      */
     public void setIf(String ifProperty) {
-        this.ifProperty = ifProperty;
+        setIf((Object) ifProperty);
     }
 
     /**
-     * Sets the unless attribute to a property which cannot exist for the
+     * Sets the unless attribute to an expression which must evaluate to
+     * false or the name of a property which cannot exist for the
      * selector to select any files.
-     * @param unlessProperty the property to check
+     * @param unlessProperty the expression to check
+     * @since Ant 1.8.0
+     */
+    public void setUnless(Object unlessProperty) {
+        this.unlessCondition = unlessProperty;
+    }
+
+    /**
+     * Sets the unless attribute to an expression which must evaluate to
+     * false or the name of a property which cannot exist for the
+     * selector to select any files.
+     * @param unlessProperty the expression to check
      */
     public void setUnless(String unlessProperty) {
-        this.unlessProperty = unlessProperty;
+        setUnless((Object) unlessProperty);
     }
 
     /**
