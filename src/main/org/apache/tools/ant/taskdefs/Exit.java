@@ -139,10 +139,12 @@ public class Exit extends Task {
             if (message != null && message.trim().length() > 0) {
                 text = message.trim();
             } else {
-                if (!testIfCondition()) {
+                if (ifCondition != null && !"".equals(ifCondition)
+                    && testIfCondition()) {
                     text = "if=" + ifCondition;
                 }
-                if (!testUnlessCondition()) {
+                if (unlessCondition != null && !"".equals(unlessCondition)
+                    && testUnlessCondition()) {
                     if (text == null) {
                         text = "";
                     } else {
