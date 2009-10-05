@@ -457,9 +457,6 @@ public class Target implements TaskContainer {
      * @see #setIf(String)
      */
     private boolean testIfAllows() {
-        if ("".equals(ifCondition)) {
-            return true;
-        }
         PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
         Object o = propertyHelper.parseProperties(ifCondition);
         return propertyHelper.testIfCondition(o);
@@ -475,11 +472,8 @@ public class Target implements TaskContainer {
      * @see #setUnless(String)
      */
     private boolean testUnlessAllows() {
-        if ("".equals(unlessCondition)) {
-            return true;
-        }
         PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
         Object o = propertyHelper.parseProperties(unlessCondition);
-        return !propertyHelper.testIfCondition(o);
+        return propertyHelper.testUnlessCondition(o);
     }
 }

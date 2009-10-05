@@ -1141,19 +1141,46 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
-     * Returns true if the value is not-null, can be interpreted as a
-     * true value or cannot be interpreted as a false value and a
-     * property of the value's name exists.
+     * Returns true if the object is null or an empty string.
+     *
      * @since Ant 1.8.0
      */
-    public boolean testIfCondition(Object value) {
-        if (value == null) {
-            return false;
-        }
+    private static boolean nullOrEmpty(Object value) {
+        return value == null || "".equals(value);
+
+    }
+
+    /**
+     * Returns true if the value can be interpreted as a true value or
+     * cannot be interpreted as a false value and a property of the
+     * value's name exists.
+     * @since Ant 1.8.0
+     */
+    private boolean evalAsBooleanOrPropertyName(Object value) {
         Boolean b = toBoolean(value);
         if (b != null) {
             return b.booleanValue();
         }
         return getProperty(String.valueOf(value)) != null;
+    }
+
+    /**
+     * Returns true if the value is null or an empty string, can be
+     * interpreted as a true value or cannot be interpreted as a false
+     * value and a property of the value's name exists.
+     * @since Ant 1.8.0
+     */
+    public boolean testIfCondition(Object value) {
+        return nullOrEmpty(value) || evalAsBooleanOrPropertyName(value);
+    }
+
+    /**
+     * Returns true if the value is null or an empty string, can be
+     * interpreted as a false value or cannot be interpreted as a true
+     * value and a property of the value's name doesn't exist.
+     * @since Ant 1.8.0
+     */
+    public boolean testUnlessCondition(Object value) {
+        return nullOrEmpty(value) || !evalAsBooleanOrPropertyName(value);
     }
 }
