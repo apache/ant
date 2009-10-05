@@ -27,6 +27,19 @@
     <fail if="${if}"/>
   </target>
 
+  <target name="testIfSet">
+    <property name="if" value="whatever"/>
+    <au:expectfailure>
+      <fail unless="${if}"/>
+    </au:expectfailure>
+    <fail if="${if}"/>
+
+    <fail unless="if"/>
+    <au:expectfailure>
+      <fail if="if"/>
+    </au:expectfailure>
+  </target>
+
   <target name="testIfTrue">
     <property name="if" value="true"/>
     <fail unless="${if}"/>
