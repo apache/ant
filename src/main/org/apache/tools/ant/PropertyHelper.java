@@ -378,15 +378,22 @@ public class PropertyHelper implements GetProperty {
      * @return the project's property helper.
      */
     public static synchronized PropertyHelper getPropertyHelper(Project project) {
-        PropertyHelper helper
-                = (PropertyHelper) project.getReference(MagicNames.REFID_PROPERTY_HELPER);
+        PropertyHelper helper = null;
+        if (project != null) {
+            helper = (PropertyHelper) project.getReference(MagicNames
+                                                           .REFID_PROPERTY_HELPER);
+        }
         if (helper != null) {
             return helper;
         }
+
         helper = new PropertyHelper();
         helper.setProject(project);
 
-        project.addReference(MagicNames.REFID_PROPERTY_HELPER, helper);
+        if (project != null) {
+            project.addReference(MagicNames.REFID_PROPERTY_HELPER, helper);
+        }
+
         return helper;
     }
 
@@ -461,7 +468,7 @@ public class PropertyHelper implements GetProperty {
             }
         }
         // Experimental/Testing, will be removed
-        if (name.startsWith("toString:")) {
+        if (project != null && name.startsWith("toString:")) {
             name = name.substring("toString:".length());
             Object v = project.getReference(name);
             return (v == null) ? null : v.toString();
@@ -619,18 +626,19 @@ public class PropertyHelper implements GetProperty {
         synchronized (this) {
             // user (CLI) properties take precedence
             if (userProperties.containsKey(name)) {
-                if (verbose) {
-                    project.log("Override ignored for user property \"" + name + "\"",
-                            Project.MSG_VERBOSE);
+                if (project != null && verbose) {
+                    project.log("Override ignored for user property \""
+                                + name + "\"", Project.MSG_VERBOSE);
                 }
                 return false;
             }
-            if (verbose) {
+            if (project != null && verbose) {
                 if (properties.containsKey(name)) {
-                    project.log("Overriding previous definition of property \"" + name + "\"",
-                            Project.MSG_VERBOSE);
+                    project.log("Overriding previous definition of property \""
+                                + name + "\"", Project.MSG_VERBOSE);
                 }
-                project.log("Setting project property: " + name + " -> " + value, Project.MSG_DEBUG);
+                project.log("Setting project property: " + name + " -> "
+                            + value, Project.MSG_DEBUG);
             }
             if (name != null && value != null) {
                 properties.put(name, value);
@@ -679,11 +687,15 @@ public class PropertyHelper implements GetProperty {
             }
         }
         synchronized (this) {
-            if (properties.containsKey(name)) {
-                project.log("Override ignored for property \"" + name + "\"", Project.MSG_VERBOSE);
+            if (project != null && properties.containsKey(name)) {
+                project.log("Override ignored for property \"" + name
+                            + "\"", Project.MSG_VERBOSE);
                 return;
             }
-            project.log("Setting project property: " + name + " -> " + value, Project.MSG_DEBUG);
+            if (project != null) {
+                project.log("Setting project property: " + name
+                            + " -> " + value, Project.MSG_DEBUG);
+            }
             if (name != null && value != null) {
                 properties.put(name, value);
             }
@@ -720,7 +732,10 @@ public class PropertyHelper implements GetProperty {
      *              Must not be <code>null</code>.
      */
     public void setUserProperty(String name, Object value) {
-        project.log("Setting ro project property: " + name + " -> " + value, Project.MSG_DEBUG);
+        if (project != null) {
+            project.log("Setting ro project property: "
+                        + name + " -> " + value, Project.MSG_DEBUG);
+        }
         synchronized (this) {
             userProperties.put(name, value);
             properties.put(name, value);
@@ -761,7 +776,10 @@ public class PropertyHelper implements GetProperty {
      *              Must not be <code>null</code>.
      */
     public void setInheritedProperty(String name, Object value) {
-        project.log("Setting ro project property: " + name + " -> " + value, Project.MSG_DEBUG);
+        if (project != null) {
+            project.log("Setting ro project property: " + name + " -> "
+                        + value, Project.MSG_DEBUG);
+        }
 
         synchronized (this) {
             inheritedProperties.put(name, value);
