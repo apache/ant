@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitStatusException;
@@ -59,7 +60,7 @@ public class Exit extends Task {
     }
 
     private String message;
-    private String ifCondition, unlessCondition;
+    private Object ifCondition, unlessCondition;
     private NestedCondition nestedCondition;
     private Integer status;
 
@@ -73,20 +74,41 @@ public class Exit extends Task {
     }
 
     /**
-     * Only fail if a property of the given name exists in the current project.
-     * @param c property name
+     * Only fail if the given expression evaluates to true or the name
+     * of an existing property.
+     * @param c property name or evaluated expression
+     * @since Ant 1.8.0
      */
-    public void setIf(String c) {
+    public void setIf(Object c) {
         ifCondition = c;
     }
 
     /**
-     * Only fail if a property of the given name does not
-     * exist in the current project.
-     * @param c property name
+     * Only fail if the given expression evaluates to true or the name
+     * of an existing property.
+     * @param c property name or evaluated expression
+     */
+    public void setIf(String c) {
+        setIf((Object) c);
+    }
+
+    /**
+     * Only fail if the given expression evaluates to false or tno
+     * property of the given name exists.
+     * @param c property name or evaluated expression
+     * @since Ant 1.8.0
+     */
+    public void setUnless(Object c) {
+        unlessCondition = c;
+    }
+
+    /**
+     * Only fail if the given expression evaluates to false or tno
+     * property of the given name exists.
+     * @param c property name or evaluated expression
      */
     public void setUnless(String c) {
-        unlessCondition = c;
+        setUnless((Object) c);
     }
 
     /**
@@ -117,12 +139,10 @@ public class Exit extends Task {
             if (message != null && message.trim().length() > 0) {
                 text = message.trim();
             } else {
-                if (ifCondition != null && ifCondition.length() > 0
-                    && getProject().getProperty(ifCondition) != null) {
+                if (!testIfCondition()) {
                     text = "if=" + ifCondition;
                 }
-                if (unlessCondition != null && unlessCondition.length() > 0
-                    && getProject().getProperty(unlessCondition) == null) {
+                if (!testUnlessCondition()) {
                     if (text == null) {
                         text = "";
                     } else {
@@ -173,10 +193,8 @@ public class Exit extends Task {
      * @return true if there is no if condition, or the named property exists
      */
     private boolean testIfCondition() {
-        if (ifCondition == null || "".equals(ifCondition)) {
-            return true;
-        }
-        return getProject().getProperty(ifCondition) != null;
+        return PropertyHelper.getPropertyHelper(getProject())
+            .testIfCondition(ifCondition);
     }
 
     /**
@@ -185,10 +203,8 @@ public class Exit extends Task {
      *  or there is a named property but it doesn't exist
      */
     private boolean testUnlessCondition() {
-        if (unlessCondition == null || "".equals(unlessCondition)) {
-            return true;
-        }
-        return getProject().getProperty(unlessCondition) == null;
+        return PropertyHelper.getPropertyHelper(getProject())
+            .testUnlessCondition(unlessCondition);
     }
 
     /**
