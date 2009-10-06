@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Mapper;
@@ -947,8 +948,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /** The parameter's value */
         private String expression = null;
 
-        private String ifProperty;
-        private String unlessProperty;
+        private Object ifCond;
+        private Object unlessCond;
         private Project project;
 
         /**
@@ -1005,22 +1006,45 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         /**
-         * Set whether this param should be used.  It will be
-         * used if the property has been set, otherwise it won't.
-         * @param ifProperty name of property
+         * Set whether this param should be used.  It will be used if
+         * the expression evalutes to true or the name of a property
+         * which has been set, otherwise it won't.
+         * @param ifCond evaluated expression
+         * @since Ant 1.8.0
          */
-        public void setIf(String ifProperty) {
-            this.ifProperty = ifProperty;
+        public void setIf(Object ifCond) {
+            this.ifCond = ifCond;
         }
 
         /**
-         * Set whether this param should NOT be used. It
-         * will not be used if the property has been set, otherwise it
-         * will be used.
-         * @param unlessProperty name of property
+         * Set whether this param should be used.  It will be used if
+         * the expression evalutes to true or the name of a property
+         * which has been set, otherwise it won't.
+         * @param ifProperty evaluated expression
+         */
+        public void setIf(String ifProperty) {
+            setIf((Object) ifProperty);
+        }
+
+        /**
+         * Set whether this param should NOT be used. It will not be
+         * used if the expression evaluates to true or the name of a
+         * property which has been set, otherwise it will be used.
+         * @param unlessCond evaluated expression
+         * @since Ant 1.8.0
+         */
+        public void setUnless(Object unlessCond) {
+            this.unlessCond = unlessCond;
+        }
+
+        /**
+         * Set whether this param should NOT be used. It will not be
+         * used if the expression evaluates to true or the name of a
+         * property which has been set, otherwise it will be used.
+         * @param unlessProperty evaluated expression
          */
         public void setUnless(String unlessProperty) {
-            this.unlessProperty = unlessProperty;
+            setUnless((Object) unlessProperty);
         }
 
         /**
@@ -1029,13 +1053,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @return true if the task passes the "if" and "unless" parameters
          */
         public boolean shouldUse() {
-            if (ifProperty != null && project.getProperty(ifProperty) == null) {
-                return false;
-            }
-            if (unlessProperty != null && project.getProperty(unlessProperty) != null) {
-                return false;
-            }
-            return true;
+            PropertyHelper ph = PropertyHelper.getPropertyHelper(project);
+            return ph.testIfCondition(ifCond)
+                && ph.testUnlessCondition(unlessCond);
         }
     } // Param
 

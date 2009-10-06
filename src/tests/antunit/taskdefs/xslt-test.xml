@@ -170,4 +170,52 @@ undefined='<xsl:value-of select="$undefined"/>'
     <au:assertLogDoesntContain text="Failed to enable tracing"/>
   </target>
 
+  <target name="setUpIfUnlessTests" depends="setUp">
+    <macrodef name="xs">
+      <sequential>
+        <xslt in="${legacy.dir}/data.xml" out="${output}/out.xml"
+              style="${legacy.dir}/printParams.xsl">
+          <param name="set" expression="if-value" if="${if}"/>
+          <param name="set" expression="unless-value" unless="${if}"/>
+          <param name="empty" expression="if-value" if="if"/>
+          <param name="empty" expression="unless-value" unless="if"/>
+        </xslt>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="testPropertiesNotSet" depends="setUpIfUnlessTests">
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='unless-value'"/>
+  </target>
+
+  <target name="testPropertiesSet" depends="setUpIfUnlessTests">
+    <property name="if" value="whatever"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
+
+  <target name="testIfTrue" depends="setUpIfUnlessTests">
+    <property name="if" value="true"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='if-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
+
+  <target name="testIfFalse" depends="setUpIfUnlessTests">
+    <property name="if" value="false"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
 </project>
