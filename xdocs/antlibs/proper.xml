@@ -109,6 +109,40 @@
         </table>
       </subsection>
 
+      <a name="props"/>
+      <subsection name="Props - additional Property Resolver">
+
+        <p>This is a library of supplementary handlers for Ant
+          properties resolution.</p>
+
+        <table>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/props/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/props/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.8.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2007-07-25</td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2009-10-06</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
+
       <a name="svn"/>
       <subsection name="SVN - Subversion Support">
 
