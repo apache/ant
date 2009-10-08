@@ -51,6 +51,10 @@
     <au:assertPropertySet name="p5"/>
   </presetdef>
 
+  <target name="setUp">
+    <taskdef name="funtest"
+             classname="org.apache.tools.ant.taskdefs.optional.testing.Funtest"/>
+  </target>
 
   <target name="testPresets"
           description="test the presets behave">
