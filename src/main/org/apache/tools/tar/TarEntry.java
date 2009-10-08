@@ -202,6 +202,9 @@ public class TarEntry implements TarConstants {
     public TarEntry(String name, byte linkFlag) {
         this(name);
         this.linkFlag = linkFlag;
+        if (linkFlag == LF_GNUTYPE_LONGNAME) {
+            magic = new StringBuffer(GNU_TMAGIC);
+        }
     }
 
     /**

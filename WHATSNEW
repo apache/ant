@@ -503,6 +503,10 @@ Fixed bugs:
    define the filterreader which is the recommended approach.
    Bugzilla Report 45439.
 
+ * Ant didn't set the proper "magic" value for tar entries containing
+   long file names in GNU longfile mode.
+   Bugzilla Report 47653.
+
 Other changes:
 --------------
 
@@ -4110,7 +4114,7 @@ Other changes:
   included, before performing file-by-file moves.  This attempt will
   be done only if filtering is off and if mappers are not used.  This
   is a performance improvement and there is no change otherwise in
-  the funtionality of this task.
+  the functionality of this task.
 
 * Exec task has extra attribute "resultproperty" to get the return code
   into a property.
