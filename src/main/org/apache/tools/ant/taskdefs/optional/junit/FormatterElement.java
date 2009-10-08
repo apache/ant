@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
@@ -61,8 +62,8 @@ public class FormatterElement {
     private OutputStream out = new KeepAliveOutputStream(System.out);
     private File outFile;
     private boolean useFile = true;
-    private String ifProperty;
-    private String unlessProperty;
+    private Object ifCond;
+    private Object unlessCond;
 
     /**
      * Store the project reference for passing it to nested components.
@@ -194,22 +195,45 @@ public class FormatterElement {
     }
 
     /**
-     * Set whether this formatter should be used.  It will be
-     * used if the property has been set, otherwise it won't.
-     * @param ifProperty name of property
+     * Set whether this formatter should be used.  It will be used if
+     * the expression evaluates to true or the name of a property
+     * which has been set, otherwise it won't.
+     * @param ifCond name of property
+     * @since Ant 1.8.0
      */
-    public void setIf(String ifProperty) {
-        this.ifProperty = ifProperty;
+    public void setIf(Object ifCond) {
+        this.ifCond = ifCond;
     }
 
     /**
-     * Set whether this formatter should NOT be used. It
-     * will not be used if the property has been set, orthwise it
-     * will be used.
-     * @param unlessProperty name of property
+     * Set whether this formatter should be used.  It will be used if
+     * the expression evaluates to true or the name of a property
+     * which has been set, otherwise it won't.
+     * @param ifCond name of property
      */
-    public void setUnless(String unlessProperty) {
-        this.unlessProperty = unlessProperty;
+    public void setIf(String ifCond) {
+        setIf((Object) ifCond);
+    }
+
+    /**
+     * Set whether this formatter should NOT be used. It will be used
+     * if the expression evaluates to false or the name of a property
+     * which has not been set, orthwise it will not be used.
+     * @param unlessCond name of property
+     * @since Ant 1.8.0
+     */
+    public void setUnless(Object unlessCond) {
+        this.unlessCond = unlessCond;
+    }
+
+    /**
+     * Set whether this formatter should NOT be used. It will be used
+     * if the expression evaluates to false or the name of a property
+     * which has not been set, orthwise it will not be used.
+     * @param unlessCond name of property
+     */
+    public void setUnless(String unlessCond) {
+        setUnless((Object) unlessCond);
     }
 
     /**
@@ -219,13 +243,9 @@ public class FormatterElement {
      * @return true if the formatter should be used.
      */
     public boolean shouldUse(Task t) {
-        if (ifProperty != null && t.getProject().getProperty(ifProperty) == null) {
-            return false;
-        }
-        if (unlessProperty != null && t.getProject().getProperty(unlessProperty) != null) {
-            return false;
-        }
-        return true;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(t.getProject());
+        return ph.testIfCondition(ifCond)
+            && ph.testUnlessCondition(unlessCond);
     }
 
     /**
