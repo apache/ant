@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 
 /**
  * <p> Run a single JUnit test.
@@ -193,14 +194,9 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @return true if this test or testsuite should be run.
      */
     public boolean shouldRun(Project p) {
-        if (ifProperty != null && p.getProperty(ifProperty) == null) {
-            return false;
-        } else if (unlessProperty != null
-                    && p.getProperty(unlessProperty) != null) {
-            return false;
-        }
-
-        return true;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(p);
+        return ph.testIfCondition(getIfCondition())
+            && ph.testUnlessCondition(getUnlessCondition());
     }
 
     /**

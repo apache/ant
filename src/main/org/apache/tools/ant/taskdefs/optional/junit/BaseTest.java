@@ -41,6 +41,8 @@ public abstract class BaseTest {
     protected String errorProperty;
     // CheckStyle:VisibilityModifier ON
 
+    private Object ifCond, unlessCond;
+
     /**
      * Set the filtertrace attribute.
      * @param value a <code>boolean</code> value.
@@ -107,22 +109,63 @@ public abstract class BaseTest {
 
     /**
      * Set the if attribute.
-     * If this property is present in project,
-     * the test will be run.
-     * @param propertyName the name of the property to look for.
+     * If this expression evaluates to true or the name of a property
+     * which is present in project, the test will be run.
+     * @param ifCondition the expression to evaluate
+     * @since Ant 1.8.0
      */
-    public void setIf(String propertyName) {
-        ifProperty = propertyName;
+    public void setIf(Object ifCondition) {
+        ifCond = ifCondition;
+        ifProperty = ifCondition != null ? String.valueOf(ifCondition) : null;
     }
 
     /**
-     * Set the unless attribute.
-     * If this property is present in project,
-     * the test will *not* be run.
-     * @param propertyName the name of the property to look for.
+     * Set the if attribute.
+     * If this expression evaluates to true or the name of a property
+     * which is present in project, the test will be run.
+     * @param propertyName the expression to evaluate
+     */
+    public void setIf(String propertyName) {
+        setIf((Object) propertyName);
+    }
+
+    /**
+     * The if expression
+     * @since Ant 1.8.0
+     */
+    public Object getIfCondition() {
+        return ifCond;
+    }
+
+    /**
+     * Set the unless attribute.  If this expression evaluates to
+     * false or the name of a property which is not present in
+     * project, the test will be run.
+     * @param unlessCondition the expression to evaluate
+     * @since Ant 1.8.0
+     */
+    public void setUnless(Object unlessCondition) {
+        unlessCond = unlessCondition;
+        unlessProperty = unlessCondition != null
+            ? String.valueOf(unlessCondition) : null;
+    }
+
+    /**
+     * Set the unless attribute.  If this expression evaluates to
+     * false or the name of a property which is not present in
+     * project, the test will be run.
+     * @param propertyName the expression to evaluate
      */
     public void setUnless(String propertyName) {
-        unlessProperty = propertyName;
+        setUnless((Object) propertyName);
+    }
+
+    /**
+     * The unless expression
+     * @since Ant 1.8.0
+     */
+    public Object getUnlessCondition() {
+        return unlessCond;
     }
 
     /**

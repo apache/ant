@@ -188,8 +188,8 @@ public final class BatchTest extends BaseTest {
         test.setHaltonfailure(this.haltOnFail);
         test.setFiltertrace(this.filtertrace);
         test.setFork(this.fork);
-        test.setIf(this.ifProperty);
-        test.setUnless(this.unlessProperty);
+        test.setIf(getIfCondition());
+        test.setUnless(getUnlessCondition());
         test.setTodir(this.destDir);
         test.setFailureProperty(failureProperty);
         test.setErrorProperty(errorProperty);

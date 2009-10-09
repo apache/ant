@@ -36,6 +36,11 @@ public class @{classname} extends TestCase {
     </sequential>
   </macrodef>
 
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+  </target>
+
   <target name="testTimeoutLogOfBatchTests">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
@@ -185,6 +190,103 @@ public class BTest extends TestCase {
     <au:assertFileExists file="${output}/TEST-test.ATest.xml"/>
     <au:assertFileExists file="${output}/TEST-test.BTest.txt"/>
     <au:assertFileExists file="${output}/TEST-test.BTest.xml"/>
+  </target>
+
+  <target name="-ifUnlessSetup" depends="setUp">
+    <empty-test classname="ATest"/>
+    <empty-test classname="BTest"/>
+    <empty-test classname="CTest"/>
+    <empty-test classname="DTest"/>
+    <empty-test classname="ETest"/>
+    <empty-test classname="FTest"/>
+    <empty-test classname="GTest"/>
+    <empty-test classname="HTest"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <macrodef name="j">
+      <sequential>
+        <junit fork="true" forkMode="perBatch" printsummary="yes">
+          <classpath refid="junit"/>
+          <classpath location="${output}"/>
+          <test name="test.ATest" if="${if}"/>
+          <test name="test.BTest" if="if"/>
+          <test name="test.CTest" unless="${if}"/>
+          <test name="test.DTest" unless="if"/>
+          <batchtest if="${if}">
+            <fileset dir="${output}">
+              <include name="**/ETest.class" />
+            </fileset>
+          </batchtest>
+          <batchtest if="if">
+            <fileset dir="${output}">
+              <include name="**/FTest.class" />
+            </fileset>
+          </batchtest>
+          <batchtest unless="${if}">
+            <fileset dir="${output}">
+              <include name="**/GTest.class" />
+            </fileset>
+          </batchtest>
+          <batchtest unless="if">
+            <fileset dir="${output}">
+              <include name="**/HTest.class" />
+            </fileset>
+          </batchtest>
+        </junit>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="testPropertiesNotSet" depends="-ifUnlessSetup">
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogDoesntContain text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogContains text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogDoesntContain text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogContains text="Running test.HTest"/>
+  </target>
+
+  <target name="testPropertiesSet" depends="-ifUnlessSetup">
+    <property name="if" value="whatever"/>
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
+  </target>
+
+  <target name="testPropertiesTrue" depends="-ifUnlessSetup">
+    <property name="if" value="true"/>
+    <j/>
+    <au:assertLogContains text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogDoesntContain text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogContains text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogDoesntContain text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
+  </target>
+
+  <target name="testPropertiesFalse" depends="-ifUnlessSetup">
+    <property name="if" value="false"/>
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
   </target>
 
 </project>
