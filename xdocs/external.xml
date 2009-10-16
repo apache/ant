@@ -926,6 +926,31 @@
         </table>
       </subsection>
 
+      <subsection name="EPP Task">
+        <p>EPP Task is an easy preprocessor ant task.
+        The next directives are supported: #ifdef, #ifndef, #else,
+        #endif and #include.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/epptask/">
+            http://sourceforge.net/projects/epptask/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Dmitriy Rykov</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="FMPP">
         <p>FMPP is a general-purpose text file preprocessor tool that
         uses FreeMarker templates. It is particularly designed for
