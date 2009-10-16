@@ -66,6 +66,44 @@
         </table>
       </subsection>
 
+      <a name="compress"/>
+      <subsection name="Compress">
+        <p>The compress library offers tasks and types for additional
+        archive formats like CPIO and AR supported
+        by <a href="http://commons.apache.org/compress/">Apache
+        Commons Compress</a>.</p>
+        <table>
+          <tr>
+            <th>Homepage:</th>
+            <td><a href="./compress/index.html">http://ant.apache.org/antlibs/compress/</a></td>
+          </tr>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/compress/">https://svn.apache.org/repos/asf/ant/antlibs/compress/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.8.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2009-07-31</td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2009-10-16</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
+
       <a name="dotnet"/>
       <subsection name="DotNet - Improved Support for .NET projects">
 

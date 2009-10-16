@@ -38,35 +38,6 @@
 
     <section name="Current Sandbox Ant Libraries">
 
-      <subsection name="Compress">
-        <p>The compress library offers tasks and types for additional
-        archive formats like CPIO and AR supported
-        by <a href="http://commons.apache.org/compress/">Apache
-        Commons Compress</a>.</p>
-        <table>
-          <tr>
-            <th>SVN URL:</th>
-            <td><a href="https://svn.apache.org/repos/asf/ant/sandbox/antlibs/compress/">https://svn.apache.org/repos/asf/ant/sandbox/antlibs/compress/</a></td>
-          </tr>
-          <tr>
-            <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/compress/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/compress/</a></td>
-          </tr>
-          <tr>
-            <th>Ant compatibility:</th>
-            <td>Ant 1.8.x</td>
-          </tr>
-          <tr>
-            <th>Added to sandbox:</th>
-            <td>2009-07-31</td>
-          </tr>
-          <tr>
-            <th>Sponsoring Committers</th>
-            <td>Stefan Bodewig</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="DBPatch">
 
         <p>DBPatch library is intended to maintain versioning of a
