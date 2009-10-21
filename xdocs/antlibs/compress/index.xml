@@ -30,6 +30,31 @@
         Commons Compress</a>.  Using Apache Commons Compress 1.0 this
         Antlib supports gzip and bzip2 compression and ar, cpio, tar
         and zip archives.</p>
+
+      <p>The current code base is based on the 1.0 release of Commons
+        Compress but it is expected that this Antlib follows Commons
+        Compress' development and will add new compression or
+        archiving formats as they are provided by the underlying
+        library.</p>
+
+      <p>The gzip and bzip2 tasks and resources are similar to the
+        corresponding tasks and types in Ant's core and mainly just
+        use a different code base for the implementation of the
+        formats.</p>
+
+      <p>The same is mostly true for the zip and tar resources as well
+        as the unzip/tar task with the major difference being that
+        unzip and zipfileset can work with non-File resources.</p>
+
+      <p>The zip and tar tasks are completely new implementations and
+        offer a superset of the functionality of the core tasks.</p>
+
+      <p>Tasks and resources for the ar and cpio formats mirror those
+        available for tar and zip.</p>
+
+      <p>All tasks and types can be mixed with the core tasks and
+        types; it is possible to use the core zip task to create an
+        archive based on an cpiofileset for example.</p>
     </section>
   </body>
 </document>
