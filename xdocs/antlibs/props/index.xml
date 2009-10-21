@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <index value="1"/>
+    <title>Props Antlib</title>
+  </properties>
+
+  <body>
+
+    <section name="Props Antlib">
+
+      <p>This is a library of supplementary handlers for Ant
+        properties resolution.</p>
+
+      <p>The types provided are instances of
+        <code>org.apache.tools.ant.PropertyHelper.Delegate</code> and
+        can be invoked using the <code>&lt;propertyhelper&gt;</code>
+        task provided in Ant 1.8.0.</p>
+
+      <table border="1" cellspacing="0" cellpadding="2" width="100%">
+        <tr>
+          <th>Delegate</th>
+          <th>Delegate Type</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td align="center">nested</td>
+          <td align="center">PropertyExpander</td>
+          <td>Implements nested property expansion;
+            e.g. <code>${${double-expand-me}}</code>.</td>
+        </tr>
+        <tr>
+          <td align="center">stringops</td>
+          <td align="center">PropertyEvaluator</td>
+          <td>Implements *nix shell-inspired string operations.</td>
+        </tr>
+        <tr>
+          <td align="center">refs</td>
+          <td align="center">PropertyEvaluator</td>
+          <td>Given <code>ref:<em>refid</em></code>,
+            resolves reference <code><em>refid</em></code>.</td>
+        </tr>
+        <tr>
+          <td align="center">types</td>
+          <td align="center">PropertyEvaluator</td>
+          <td>Given <code><em>type</em>(<em>arg</em>)</code>, attempts
+          to invoke
+            <code><em>type</em></code> constructor <code>(<em>project, arg</em>)</code>,
+            then <code>(<em>arg</em>)</code>.</td>
+        </tr>
+      </table>
+    </section>
+  </body>
+</document>

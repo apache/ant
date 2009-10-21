@@ -155,6 +155,10 @@
 
         <table>
           <tr>
+            <th>Homepage:</th>
+            <td><a href="./props/index.html">http://ant.apache.org/antlibs/props/</a></td>
+          </tr>
+          <tr>
             <th>SVN URL:</th>
             <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/props/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/props/trunk/</a></td>
           </tr>
