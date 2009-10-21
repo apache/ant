@@ -581,9 +581,13 @@ public class Tar extends MatchingTask {
                 Vector files = (Vector) basedirToFilesMap.get(base);
                 if (files == null) {
                     files = new Vector();
-                    basedirToFilesMap.put(base, new Vector());
+                    basedirToFilesMap.put(base, files);
                 }
-                files.add(r.getName());
+                if (base == Copy.NULL_FILE_PLACEHOLDER) {
+                    files.add(r.getFile().getAbsolutePath());
+                } else {
+                    files.add(r.getName());
+                }
             }
             iter = basedirs.iterator();
             while (iter.hasNext()) {

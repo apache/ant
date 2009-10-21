@@ -22,6 +22,7 @@
   <import file="../antunit-base.xml" />
 
   <target name="setUp">
+    <mkdir dir="${input}" />
     <mkdir dir="${output}" />
   </target>
 
@@ -71,5 +72,22 @@
         </tarentry>
       </cond:resourceexists>
     </au:assertFalse>
+  </target>
+
+  <target name="testSingleFile" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48035">
+    <touch file="${input}/foo.txt"/>
+    <tar destfile="${output}/foo.tar">
+      <file file="${input}/foo.txt"/>
+    </tar>
+    <au:assertFileExists file="${output}/foo.tar"/>
+    <copy file="${output}/foo.tar" tofile="${output}/bar.tar"
+          preservelastmodified="true"/>
+    <sleep seconds="2"/>
+    <touch file="${input}/foo.txt"/>
+    <tar destfile="${output}/foo.tar">
+      <file file="${input}/foo.txt"/>
+    </tar>
+    <au:assertDestIsOutofdate src="${output}/foo.tar" dest="${output}/bar.tar"/>
   </target>
 </project>

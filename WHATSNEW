@@ -507,6 +507,11 @@ Fixed bugs:
    long file names in GNU longfile mode.
    Bugzilla Report 47653.
 
+ * The tar task failed to recognize that the archive had to be
+   (re-)created in some cases where the sources are filesystem based
+   resources but not filesets.
+   Bugzilla Report 48035. 
+
 Other changes:
 --------------
 
