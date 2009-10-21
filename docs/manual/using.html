@@ -267,170 +267,27 @@ task instances at all, only proxies.
 </p>
 
 <h3><a name="properties">Properties</a></h3>
-<p>A project can have a set of properties. These might be set in the buildfile
-by the <a href="CoreTasks/property.html">property</a> task, or might be set outside Ant. A
-property has a name and a value; the name is case-sensitive. Properties may be used in the value of
-task attributes. This is done by placing the property name between
-&quot;<code>${</code>&quot; and &quot;<code>}</code>&quot; in the
-attribute value. For example,
-if there is a &quot;builddir&quot; property with the value
-&quot;build&quot;, then this could be used in an attribute like this:
-<code>${builddir}/classes</code>.
-This is resolved at run-time as <code>build/classes</code>.</p>
-<p>In the event you should need to include this construct literally
-(i.e. without property substitutions), simply "escape" the '$' character
-by doubling it. To continue the previous example:
-<pre>  &lt;echo&gt;$${builddir}=${builddir}&lt;/echo&gt;</pre>
-will echo this message:
-<pre>  ${builddir}=build/classes</pre></p>
-<p>In order to maintain backward compatibility with older Ant releases,
-a single '$' character encountered apart from a property-like construct
-(including a matched pair of french braces) will be interpreted literally;
-that is, as '$'.  The "correct" way to specify this literal character,
-however, is by using the escaping mechanism unconditionally, so that "$$"
-is obtained by specifying "$$$$".  Mixing the two approaches yields
-unpredictable results, as "$$$" results in "$$".</p>
 
-<h3><a name="built-in-props">Built-in Properties</a></h3>
-<p>Ant provides access to all system properties as if they had been
-defined using a <code>&lt;property&gt;</code> task.
-For example, <code>${os.name}</code> expands to the
-name of the operating system.</p>
-<p>For a list of system properties see
-<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/System.html#getProperties()">the Javadoc of System.getProperties</a>.
-</p>
-<p>In addition, Ant has some built-in properties:</p>
-<pre>
-basedir             the absolute path of the project's basedir (as set
-                    with the basedir attribute of <a href="#projects">&lt;project&gt;)</a>.
-ant.file            the absolute path of the buildfile.
-ant.version         the version of Ant
-ant.project.name    the name of the project that is currently executing;
-                    it is set in the name attribute of &lt;project&gt;.
-ant.project.default-target
-                    the name of the currently executing project's
-                    default target;  it is set via the default
-                    attribute of &lt;project&gt;.
-ant.project.invoked-targets
-                    a comma separated list of the targets that have
-                    been specified on the command line (the IDE,
-                    an &lt;ant&gt; task ...) when invoking the current
-                    project.
-ant.java.version    the JVM version Ant detected; currently it can hold
-                    the values &quot;1.2&quot;, &quot;1.3&quot;,
-                    &quot;1.4&quot;,  &quot;1.5&quot; and &quot;1.6&quot;.
-ant.core.lib        the absolute path of the <code>ant.jar</code> file.
-</pre>
-<p>There is also another property, but this is set by the launcher script and therefore
-maybe not set inside IDEs:</p>
-<pre>
-ant.home            home directory of Ant
-</pre>
-<p>The following property is only set if Ant is started via the
-  Launcher class (which means it may not be set inside IDEs
-  either):</p>
-<pre>
-ant.library.dir     the directory that has been used to load Ant's
-                    jars from.  In most cases this is ANT_HOME/lib.
-</pre>
+<p>Properties are an important way to customize a build process or
+  to just provide shortcuts for strings that are used repeatedly
+  inside a build file.</p>
 
-<a name="propertyHelper"><h3>Property Helpers</h3></a>
-Ant's property handling is accomplished by an instance of
-<code>org.apache.tools.ant.PropertyHelper</code> associated with the current Project.
-You can learn more about this class by examining Ant's Java API. In Ant 1.8 the
-PropertyHelper class was much reworked and now itself employs a number of helper
-classes (actually instances of the <code>org.apache.tools.ant.PropertyHelper$Delegate</code>
-marker interface) to take care of discrete tasks such as property setting, retrieval,
-parsing, etc. This makes Ant's property handling highly extensible; also of interest is the
-new <a href="CoreTasks/propertyhelper.html">propertyhelper</a> task used to manipulate the
-PropertyHelper and its delegates from the context of the Ant buildfile.
+<p>In its most simple form properties are defined in the build file
+  (for example by the <a href="CoreTasks/property.html">property</a>
+  task) or might be set outside Ant.  A property has a name and a
+  value; the name is case-sensitive. Properties may be used in the
+  value of task attributes or in the nested text of tasks that support
+  them.  This is done by placing the property name between
+  &quot;<code>${</code>&quot; and &quot;<code>}</code>&quot; in the
+  attribute value. For example, if there is a &quot;builddir&quot;
+  property with the value &quot;build&quot;, then this could be used
+  in an attribute like this: <code>${builddir}/classes</code>.  This
+  is resolved at run-time as <code>build/classes</code>.</p>
 
-<p>There are three sub-interfaces of <code>Delegate</code> that may be
-  useful to implement.</p>
-
-<ul>
-  <li><code>org.apache.tools.ant.property.PropertyExpander</code> is
-    responsible for finding the property name inside a string in the
-    first place (the default extracts <code>foo</code>
-    from <code>${foo}</code>).
-
-    <p>This is the interface you'd implement if you wanted to invent
-      your own property syntax - or allow nested property expansions
-      since the default implementation doesn't balance braces
-      (see <a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/props/trunk/src/main/org/apache/ant/props/NestedPropertyExpander.java?view=log"><code>NestedPropertyExpander</code>
-        in the "props" Antlib in Ant's sandbox</a> for an
-      example).</p>
-  </li>
-
-  <li><code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code>
-    is used to expand <code>${some-string}</code> into
-    an <code>Object</code>.
-
-    <p>This is the interface you'd implement if you want to provide
-      your own storage independent of Ant's project instance - the
-      interface represents the reading end.  An example for this would
-      be <code>org.apache.tools.ant.property.LocalProperties</code>
-      which implements storage
-      for <a href="CoreTasks/local.html">local properties</a>.</p>
-
-    <p>Another reason to implement this interface is if you wanted to
-      provide your own "property protocol" like
-      expanding <code>toString:foo</code> by looking up the project
-      reference foo and invoking <code>toString()</code> on it (which
-      is already implemented in Ant, see below).</p>
-  </li>
-
-  <li><code>org.apache.tools.ant.PropertyHelper$PropertySetter</code>
-    is responsible for setting properties.
-
-    <p>This is the interface you'd implement if you want to provide
-      your own storage independent of Ant's project instance - the
-      interface represents the reading end.  An example for this would
-      be <code>org.apache.tools.ant.property.LocalProperties</code>
-      which implements storage
-      for <a href="CoreTasks/local.html">local properties</a>.</p>
-  </li>
-
-</ul>
-
-<p>The default <code>PropertyExpander</code> looks similar to:</p>
-
-<pre>
-public class DefaultExpander implements PropertyExpander {
-    public String parsePropertyName(String s, ParsePosition pos,
-                                    ParseNextProperty notUsed) {
-        int index = pos.getIndex();
-        if (s.indexOf("${", index) == index) {
-            int end = s.indexOf('}', index);
-            if (end < 0) {
-                throw new BuildException("Syntax error in property: " + s);
-            }
-            int start = index + 2;
-            pos.setIndex(end + 1);
-            return s.substring(start, end);
-        }
-        return null;
-    }
-}
-</pre>
-
-<p>The logic that replaces <code>${toString:some-id}</code> with the
-  stringified representation of the object with
-  id <code>some-id</code> inside the current build is contained in a
-  PropertyEvaluator similar to the following code:</p>
-
-<pre>
-public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
-    private static final String prefix = "toString:";
-    public Object evaluate(String property, PropertyHelper propertyHelper) {
-        Object o = null;
-        if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
-            o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
-        }
-        return o == null ? null : o.toString();
-    }
-}
-</pre>
+<p>With Ant 1.8.0 property expansion has become much more powerful
+  than simple key value pairs, more details can be
+  found <a href="properties.html">in the concepts section</a> of this
+  manual.</p>
 
 <a name="example"><h3>Example Buildfile</h3></a>
 <pre>
@@ -783,52 +640,6 @@ implementation of the element upon which it is specified. Some tasks (the
 <a href="CoreTasks/property.html">property</a> task is a handy example) 
 deliberately assign a different meaning to <code>refid</code>.</p>
 
-
-<h3><a name="toString">Getting the value of a Reference with ${toString:}</a></h3>
-<p>
-Any Ant type which has been declared with a reference can also its string
-value extracted by using the <code>${toString:}</code> operation,
-with the name of the reference listed after the  <code>toString:</code> text. 
-The  <code>toString()</code> method of the Java class instance that is
-referenced is invoked -all built in types strive to produce useful and relevant
-output in such an instance.
-</p>
-<p>
-For example, here is how to get a listing of the files in a fileset, 
-<p>
-<pre>
-&lt;fileset id=&quot;sourcefiles&quot; dir=&quot;src&quot; includes=&quot;**/*.java&quot; /&gt;
-&lt;echo&gt; sourcefiles = ${toString:sourcefiles} &lt;/echo&gt;
-</pre>
-<p>
-There is no guarantee that external types provide meaningful information in such
-a situation</p>
-
-<h3><a name="ant.refid">Getting the value of a Reference with
-    ${ant.refid:}</a></h3>
-
-<p>Any Ant type which has been declared with a reference can also be
-  used as a property by using the <code>${ant.refid:}</code>
-  operation, with the name of the reference listed after
-  the <code>ant.refid:</code> text.  The difference between this
-  operation and <a href="#toString"><code>${toString:}</code></a> is
-  that <code>${ant.refid:}</code> will expand to the referenced object
-  itself.  In most circumstances the toString method will be invoked
-  anyway, for example if the <code>${ant.refid:}</code> is surrounded
-  by other text.</p>
-
-<p>This syntax is most useful when using a task with attribute setters
-  that accept objects other than String.  For example if the setter
-  accepts a Resource object as in</p>
-<pre>
-public void setAttr(Resource r) { ... }
-</pre>
-<p>then the syntax can be used to pass in resource subclasses
-  preciously defined as references like</p>
-<pre>
-  &lt;url url="http://ant.apache.org/" id="anturl"/&gt;
-  &lt;my:task attr="${ant.refid:anturl}"/&gt;
-</pre>
 
 <h3><a name="external-tasks">Use of external tasks</a></h3> 
 Ant supports a plugin mechanism for using third party tasks. For using them you 
