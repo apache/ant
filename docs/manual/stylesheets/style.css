@@ -64,3 +64,9 @@ pre {
    background: #837A67; 
 }
 
+ul.inlinelist {
+   list-style-type: none;
+   margin-left: 0;
+   padding: 0;
+}
+
