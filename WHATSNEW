@@ -512,6 +512,11 @@ Fixed bugs:
    resources but not filesets.
    Bugzilla Report 48035. 
 
+ * <sshexec>'s outputproperty was prefixed by the executed command
+   when the command attribute has been used, breaking backwards
+   compatibility to Ant 1.7.0.
+   Bugzilla Report 48040.
+
 Other changes:
 --------------
 

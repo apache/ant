@@ -191,7 +191,6 @@ public class SSHExec extends SSHBase {
             /* called once */
             if (command != null) {
                 log("cmd : " + command, Project.MSG_INFO);
-                output.append(command).append(" : ");
                 executeCommand(session, command, output);
             } else { // read command resource and execute for each command
                 try {
