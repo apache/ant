@@ -24,6 +24,7 @@ import java.util.Vector;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.DescendingVisitor;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 
 /**
@@ -41,8 +42,13 @@ public class FullAnalyzer extends AbstractAnalyzer {
         // force BCEL classes to load now
         try {
             new ClassParser("force");
-        } catch (IOException e) {
-            // ignore
+        } catch (Exception e) {
+            // all released versions of BCEL may throw an IOException
+            // here, but BCEL's trunk does no longer declare to do so
+            if (!(e instanceof IOException)) {
+                throw new BuildException(e);
+            }
+            // ignore IOException like we've always done
         }
     }
 
