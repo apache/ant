@@ -27,6 +27,8 @@ import org.apache.tools.ant.Target;
 import org.apache.tools.ant.TargetGroup;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.Attributes;
@@ -83,7 +85,7 @@ public class ProjectHelper2 extends ProjectHelper {
      *
      * @since Ant 1.8.0
      */
-    public boolean canParseAntlibDescriptor(URL url) {
+    public boolean canParseAntlibDescriptor(Resource resource) {
         return true;
     }
 
@@ -97,8 +99,11 @@ public class ProjectHelper2 extends ProjectHelper {
      * @since ant 1.8.0
      */
     public UnknownElement parseAntlibDescriptor(Project containingProject,
-                                                URL source) {
-        return parseUnknownElement(containingProject, source);
+                                                Resource resource) {
+        if (!(resource instanceof URLResource)) {
+            throw new BuildException("Unsupported resource type: " + resource);
+        }
+        return parseUnknownElement(containingProject, ((URLResource)resource).getURL());
     }
 
     /**

@@ -18,7 +18,6 @@
 package org.apache.tools.ant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -29,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.helper.ProjectHelper2;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
@@ -206,20 +206,20 @@ public class ProjectHelperRepository {
     }
 
     /**
-     * Get the helper that will be able to parse the specified file. The helper
+     * Get the helper that will be able to parse the specified build file. The helper
      * will be chosen among the ones found in the classpath
      * 
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
-    public ProjectHelper getProjectHelper(File buildFile) throws BuildException {
+    public ProjectHelper getProjectHelperForBuildFile(Resource buildFile) throws BuildException {
         Iterator it = getHelpers();
         while (it.hasNext()) {
             ProjectHelper helper = (ProjectHelper) it.next();
-            if (helper.supportsBuildFile(buildFile)) {
+            if (helper.canParseBuildFile(buildFile)) {
                 if (DEBUG) {
                     System.out.println("ProjectHelper "
                                        + helper.getClass().getName()
-                                       + " selected for the file "
+                                       + " selected for the build file "
                                        + buildFile);
                 }
                 return helper;
@@ -227,6 +227,30 @@ public class ProjectHelperRepository {
         }
         throw new RuntimeException("BUG: at least the ProjectHelper2 should "
                                    + "have supported the file " + buildFile);
+    }
+
+    /**
+     * Get the helper that will be able to parse the specified antlib. The helper
+     * will be chosen among the ones found in the classpath
+     * 
+     * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
+     */
+    public ProjectHelper getProjectHelperForAntlib(Resource antlib) throws BuildException {
+        Iterator it = getHelpers();
+        while (it.hasNext()) {
+            ProjectHelper helper = (ProjectHelper) it.next();
+            if (helper.canParseAntlibDescriptor(antlib)) {
+                if (DEBUG) {
+                    System.out.println("ProjectHelper "
+                                       + helper.getClass().getName()
+                                       + " selected for the antlib "
+                                       + antlib);
+                }
+                return helper;
+            }
+        }
+        throw new RuntimeException("BUG: at least the ProjectHelper2 should "
+                                   + "have supported the file " + antlib);
     }
 
     /**

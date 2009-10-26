@@ -18,11 +18,12 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.xml.sax.AttributeList;
 
@@ -64,16 +65,17 @@ public class ProjectHelper {
     public static final String PROJECTHELPER_REFERENCE = MagicNames.REFID_PROJECT_HELPER;
 
     /**
-     * Configures the project with the contents of the specified XML file.
+     * Configures the project with the contents of the specified build file.
      *
      * @param project The project to configure. Must not be <code>null</code>.
-     * @param buildFile An XML file giving the project's configuration.
+     * @param buildFile A build file giving the project's configuration.
      *                  Must not be <code>null</code>.
      *
      * @exception BuildException if the configuration is invalid or cannot be read
      */
     public static void configureProject(Project project, File buildFile) throws BuildException {
-        ProjectHelper helper = ProjectHelperRepository.getInstance().getProjectHelper(buildFile);
+        FileResource resource = new FileResource(buildFile);
+        ProjectHelper helper = ProjectHelperRepository.getInstance().getProjectHelperForBuildFile(resource);
         project.addReference(PROJECTHELPER_REFERENCE, helper);
         helper.parse(project, buildFile);
     }
@@ -498,7 +500,7 @@ public class ProjectHelper {
      *
      * @since Ant 1.8.0
      */
-    public boolean canParseAntlibDescriptor(URL url) {
+    public boolean canParseAntlibDescriptor(Resource r) {
         return false;
     }
 
@@ -509,7 +511,7 @@ public class ProjectHelper {
      * @since ant 1.8.0
      */
     public UnknownElement parseAntlibDescriptor(Project containingProject,
-                                                URL source) {
+                                                Resource source) {
         throw new BuildException("can't parse antlib descriptors");
     }
 
@@ -522,7 +524,7 @@ public class ProjectHelper {
      * @return true if the helper supports it
      * @since Ant 1.8.0
      */
-    public boolean supportsBuildFile(File buildFile) {
+    public boolean canParseBuildFile(Resource buildFile) {
         return true;
     }
 
