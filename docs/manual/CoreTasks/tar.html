@@ -38,7 +38,9 @@ set of files to be included in the implicit fileset.</p>
       resource collections and a special form of filesets. These
 filesets are extended to allow control over the access mode, username and groupname
 to be applied to the tar entries. This is useful, for example, when preparing archives for
-Unix systems where some files need to have execute permission.</p>
+  Unix systems where some files need to have execute permission.  By
+  default this task will use Unix permissions of 644 for files and 755
+  for directories.</p>
 
 <p>Early versions of tar did not support path lengths greater than 100
 characters. Modern versions of tar do so, but in incompatible ways.
