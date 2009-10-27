@@ -28,7 +28,7 @@ import org.apache.tools.ant.TargetGroup;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.resources.URLResource;
+import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.Attributes;
@@ -94,16 +94,18 @@ public class ProjectHelper2 extends ProjectHelper {
      * content as something that can be turned into an Antlib task.
      *
      * <p>simply delegates to {@link #parseUnknownElement
-     * parseUnknownElement}.</p>
+     * parseUnknownElement} if the resource provides an URL and throws
+     * an exceptipn otherwise.</p>
      *
-     * @since ant 1.8.0
+     * @since Ant 1.8.0
      */
     public UnknownElement parseAntlibDescriptor(Project containingProject,
                                                 Resource resource) {
-        if (!(resource instanceof URLResource)) {
+        URLProvider up = (URLProvider) resource.as(URLProvider.class);
+        if (up == null) {
             throw new BuildException("Unsupported resource type: " + resource);
         }
-        return parseUnknownElement(containingProject, ((URLResource)resource).getURL());
+        return parseUnknownElement(containingProject, up.getURL());
     }
 
     /**
