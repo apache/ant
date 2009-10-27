@@ -122,10 +122,6 @@
         </table>
       </subsection>
 
-      <subsection name="Ant2Svg">
-        <p>The domain is sold and we did not found it any more.</p>
-      </subsection>
-
       <subsection name="ant4eclipse">
 
         <p>ant4eclipse provides a set of Ant tasks to make several
@@ -389,9 +385,33 @@
               </tr>
          </table>
       </subsection>
+      
+      <subsection name="AntRunner">
+        <p>AntRunner is an easy to use and free GUI application for running
+        Ant build files. It's written for .NET so it should run on any Windows
+        Platform.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 and newer</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://visualdrugs.net/antrunner/">http://visualdrugs.net/antrunner/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://visualdrugs.net/">Andre Fiedler</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
 
       <subsection name="AntSpaces">
-
         <p>AntSpaces provides Ant integration with JavaSpaces. This
         allows you to coordinate Ant tasks via JavaSpaces, pull out
         work units from a JavaSpace for distributed Ant tasks to work
@@ -3067,10 +3087,6 @@
         </table>
       </subsection>
 
-      <subsection name="Tidy Imports (Tim)">
-        <p>Note: While the domain is active (for .NET projects) the page itself is not longer available.</p>
-      </subsection>
-
       <subsection name="TiniAnt">
 
         <p>TiniAnt is an Ant task to support building applications for
@@ -3122,10 +3138,6 @@
             <td></td>
           </tr>
         </table>
-      </subsection>
-
-      <subsection name="Venus Application Publisher's (Vamp) Ant Task Suite">
-        <p>Note: The website is not longer available.</p>
       </subsection>
 
       <subsection name="Version_Tool">
