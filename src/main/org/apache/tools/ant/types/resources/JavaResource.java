@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.apache.tools.ant.types.Path;
 
@@ -27,7 +28,8 @@ import org.apache.tools.ant.types.Path;
  * A Resource representation of something loadable via a Java classloader.
  * @since Ant 1.7
  */
-public class JavaResource extends AbstractClasspathResource {
+public class JavaResource extends AbstractClasspathResource
+    implements URLProvider {
 
     /**
      * Default constructor.
@@ -48,8 +50,9 @@ public class JavaResource extends AbstractClasspathResource {
     }
 
     /**
-     * open the inpout stream from a specific classloader
-     * @param cl the classloader to use. Will be null if the system classloader is used
+     * open the input stream from a specific classloader
+     * @param cl the classloader to use. Will be null if the system
+     * classloader is used
      * @return an open input stream for the resource
      * @throws IOException if an error occurs.
      */
@@ -69,6 +72,27 @@ public class JavaResource extends AbstractClasspathResource {
             }
         }
         return inputStream;
+    }
+
+    /**
+     * Get the URL represented by this Resource.
+     * @since Ant 1.8.0
+     */
+    public URL getURL() {
+        if (isReference()) {
+            return ((JavaResource) getCheckedRef()).getURL();
+        }
+        AbstractClasspathResource.ClassLoaderWithFlag classLoader =
+            getClassLoader();
+        if (classLoader.getLoader() == null) {
+            return ClassLoader.getSystemResource(getName());
+        } else {
+            try {
+                return classLoader.getLoader().getResource(getName());
+            } finally {
+                classLoader.cleanup();
+            }
+        }
     }
 
     /**

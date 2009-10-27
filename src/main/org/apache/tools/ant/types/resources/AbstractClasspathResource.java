@@ -172,6 +172,31 @@ public abstract class AbstractClasspathResource extends Resource {
             return ((Resource) getCheckedRef()).getInputStream();
         }
         dieOnCircularReference();
+
+        final ClassLoaderWithFlag classLoader = getClassLoader();
+        return !classLoader.needsCleanup()
+            ? openInputStream(classLoader.getLoader())
+            : new FilterInputStream(openInputStream(classLoader.getLoader())) {
+                    public void close() throws IOException {
+                        FileUtils.close(in);
+                        classLoader.cleanup();
+                    }
+                    protected void finalize() throws Throwable {
+                        try {
+                            close();
+                        } finally {
+                            super.finalize();
+                        }
+                    }
+                };
+    }
+
+    /**
+     * combines the various ways that could specify a ClassLoader and
+     * potentially creates one that needs to be cleaned up when it is
+     * no longer needed so that classes can get garbage collected.
+     */
+    protected ClassLoaderWithFlag getClassLoader() {
         ClassLoader cl = null;
         boolean clNeedsCleanup = false;
         if (loader != null) {
@@ -196,23 +221,7 @@ public abstract class AbstractClasspathResource extends Resource {
                 getProject().addReference(loader.getRefId(), cl);
             }
         }
-
-        final ClassLoader classLoader = cl;
-        return !clNeedsCleanup
-            ? openInputStream(cl)
-            : new FilterInputStream(openInputStream(cl)) {
-                    public void close() throws IOException {
-                        FileUtils.close(in);
-                        ((AntClassLoader) classLoader).cleanup();
-                    }
-                    protected void finalize() throws Throwable {
-                        try {
-                            close();
-                        } finally {
-                            super.finalize();
-                        }
-                    }
-                };
+        return new ClassLoaderWithFlag(cl, clNeedsCleanup);
     }
 
     /**
@@ -237,4 +246,20 @@ public abstract class AbstractClasspathResource extends Resource {
         }
     }
 
+    public static class ClassLoaderWithFlag {
+        private final ClassLoader loader;
+        private final boolean cleanup;
+
+        ClassLoaderWithFlag(ClassLoader l, boolean needsCleanup) {
+            loader = l;
+            cleanup = needsCleanup && l instanceof AntClassLoader;
+        }
+        public ClassLoader getLoader() { return loader; }
+        public boolean needsCleanup() { return cleanup; }
+        public void cleanup() {
+            if (cleanup) {
+                ((AntClassLoader) loader).cleanup();
+            }
+        }
+    }
 }

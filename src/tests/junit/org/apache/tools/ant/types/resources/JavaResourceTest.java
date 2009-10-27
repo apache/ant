@@ -38,4 +38,15 @@ public class JavaResourceTest extends BuildFileTest {
         assertTrue(getProject().getProperty("manifest")
                    .startsWith("Manifest-Version:"));
     }
+
+    public void testIsURLProvider() {
+        JavaResource r = new JavaResource();
+        assertSame(r, r.as(URLProvider.class));
+    }
+
+    public void testGetURLOfManifest() {
+        JavaResource r = new JavaResource();
+        r.setName("META-INF/MANIFEST.MF");
+        assertNotNull(r.getURL());
+    }
 }
