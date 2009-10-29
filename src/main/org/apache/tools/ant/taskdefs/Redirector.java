@@ -176,7 +176,7 @@ public class Redirector {
     private boolean appendProperties = true;
 
     /** The thread group used for starting <code>StreamPumper</code> threads */
-    private ThreadGroup threadGroup = new ThreadGroup("redirector");
+    private final ThreadGroup threadGroup = new ThreadGroup("redirector");
 
     /** whether to log the inputstring */
     private boolean logInputString = true;
