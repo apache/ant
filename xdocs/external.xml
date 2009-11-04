@@ -3786,15 +3786,14 @@
 
       <subsection name="NetBeans">
 
-        <p>A module that integrates Ant into the NetBeans IDE, as well as derivative products such as Sun Java
-        Studio (formerly Forte for Java and Sun ONE Studio) and Sun Java Studio Creator.
-        This IDE uses Ant as its <i>sole</i> means of building applications,
+        <p>NetBeans IDE includes integrated Ant support.
+        This IDE uses Ant as its primary means of building applications,
         with custom tasks and an Ant-aware editor.</p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles 1.7.0 for NetBeans 6.0 and 6.1, 1.7.1 for 6.5</td>
+            <td>bundles 1.7.1 starting with NetBeans 6.5</td>
           </tr>
           <tr>
             <th>URL:</th>
