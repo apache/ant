@@ -61,7 +61,7 @@
   </p>
 
   <p>In addition, Ant has some built-in properties:</p>
-<pre>
+<pre><!-- XXX use <dl><dt><code>...</code></dt><dd>...</dd></dl> instead -->
 basedir             the absolute path of the project's basedir (as set
                     with the basedir attribute of <a href="using.html#projects">&lt;project&gt;</a>).
 ant.file            the absolute path of the buildfile.
@@ -194,7 +194,8 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
     public Object evaluate(String property, PropertyHelper propertyHelper) {
         Object o = null;
         if (property.startsWith(prefix) && propertyHelper.getProject() != null) {
-            o = propertyHelper.getProject().getReference(property.substring(prefix.length()));
+            o = propertyHelper.getProject().getReference(
+                    property.substring(prefix.length()));
         }
         return o == null ? null : o.toString();
     }
@@ -322,5 +323,74 @@ public void setAttr(Resource r) { ... }
   &lt;url url="http://ant.apache.org/" id="anturl"/&gt;
   &lt;my:task attr="${ant.refid:anturl}"/&gt;
 </pre>
+
+  <h2><a name="if+unless">If/Unless Attributes</a></h2>
+  <p>
+      The <code>&lt;target></code> element and various tasks (such as
+      <code>&lt;exit></code>) and task elements (such as <code>&lt;test></code>
+      in <code>&lt;junit></code>) support <code>if</code> and <code>unless</code>
+      attributes which can be used to control whether the item is run or otherwise
+      takes effect.
+  </p>
+  <p>
+      In Ant 1.7.1 and earlier, these attributes could only be property names.
+      The item was enabled if a property with that name was defined - even to be
+      the empty string or <tt>false</tt> - and disabled if the property was not
+      defined. For example, the following works but there is no way to override
+      the file existence check negatively (only positively):
+  </p>
+  <pre>
+&lt;target name="-check-use-file">
+    &lt;available property="file.exists" file="some-file"/>
+&lt;/target>
+&lt;target name="use-file" depends="-check-use-file" <b>if="file.exists"</b>>
+    &lt;!-- do something requiring that file... -->
+&lt;/target>
+&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/>
+  </pre>
+  <p>
+      As of Ant 1.8.0, you may instead use property expansion; a value of
+      <tt>true</tt> (or <tt>on</tt> or <tt>yes</tt>) will enable the
+      item, while <tt>false</tt> (or <tt>off</tt> or <tt>no</tt>) will
+      disable it. Other values are still assumed to be property
+      names and so the item is enabled only if the named property is defined.
+  </p>
+  <p>
+      Compared to the older style, this gives you additional flexibility, because
+      you can override the condition from the command line or parent scripts:
+  </p>
+  <pre>
+&lt;target name="-check-use-file" <b>unless="file.exists"</b>>
+    &lt;available property="file.exists" file="some-file"/>
+&lt;/target>
+&lt;target name="use-file" depends="-check-use-file" <b>if="${file.exists}"</b>>
+    &lt;!-- do something requiring that file... -->
+&lt;/target>
+&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/>
+  </pre>
+  <p>
+      Now <code>ant -Dfile.exists=false lots-of-stuff</code> will run
+      <code>other-unconditional-stuff</code> but not <code>use-file</code>,
+      as you might expect, and you can disable the condition from another script
+      too:
+  </p>
+  <pre>
+&lt;antcall target="lots-of-stuff">
+    &lt;param name="file.exists" value="false"/>
+&lt;/antcall>
+  </pre>
+  <p>
+      Similarly, an <code>unless</code> attribute disables the item if it is
+      either the name of property which is defined, or if it evaluates to a
+      <tt>true</tt>-like value. For example, the following allows you to define
+      <tt>skip.printing.message=true</tt> in <tt>my-prefs.properties</tt> with
+      the results you might expect:
+  </p>
+  <pre>
+&lt;property file="my-prefs.properties"/>
+&lt;target name="print-message" <b>unless="${skip.printing.message}"</b>>
+    &lt;echo>hello!&lt;/echo>
+&lt;/target>
+  </pre>
 
 </body>
