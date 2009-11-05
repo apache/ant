@@ -491,7 +491,7 @@ can be written as:
     &lt;fileset dir="lib" includes="*.jar"/&gt;
   &lt;/path&gt;
   &lt;javac srcdir="src" destdir="classes"&gt;
-    &lt;compilerarg arg="-Xbootstrap/p:${toString:lib.path.ref}"/&gt;
+    &lt;compilerarg arg="-Xbootclasspath/p:${toString:lib.path.ref}"/&gt;
   &lt;/javac&gt;
 </pre>
 
