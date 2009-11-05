@@ -4,6 +4,15 @@ Changes from Ant 1.7.x TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+ * if and unless attributes (on <target> as well as various tasks and other
+   elements) have long permitted ${property} interpolation. Now, if the result
+   evaluates to "true" or "false" (or "yes", "no", "on", "off"), that boolean
+   value will be used; otherwise the traditional behavior of treating the value
+   as a property name (defined ~ true, undefined ~ false) is used. Existing
+   scripts could be broken if they perversely defined a property named "false"
+   and expected if="false" to be true, or used if="true" expecting this to be
+   triggered only if a property named "true" were defined.
+
  * Ant now requires Java 1.4 or later.
 
  * Improved handling of InterruptException (lets suppose someone/thing
