@@ -154,10 +154,10 @@ In fact, they do not even get evaluated until the target is about to be executed
 and all its predecessors have already run.
 
 <p>The optional <code>description</code> attribute can be used to provide a one-line description of this target, which is printed by the
-<nobr><code>-projecthelp</code></nobr> command-line option. Targets
+<code>-projecthelp</code> command-line option. Targets
 without such a description are deemed internal and will not be listed,
-unless either the <nobr><code>-verbose</code></nobr> or
-<nobr><code>-debug</code></nobr> option is used.
+unless either the <code>-verbose</code> or
+<code>-debug</code> option is used.
 </p>
 <p>It is a good practice to place your <a
 href="CoreTasks/tstamp.html">tstamp</a> tasks in a so-called
@@ -203,7 +203,6 @@ executed first.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
-</p>
 
 <p>A target name can be any alphanumeric string valid in the encoding of the XML
 file. The empty string &quot;&quot; is in this set, as is
@@ -289,7 +288,7 @@ task instances at all, only proxies.
   found <a href="properties.html">in the concepts section</a> of this
   manual.</p>
 
-<a name="example"><h3>Example Buildfile</h3></a>
+<h3><a name="example">Example Buildfile</a></h3>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
     &lt;description&gt;
@@ -348,7 +347,7 @@ Finally, for this target to work the source in the <tt>src</tt> subdirectory
 should be stored in a directory tree which matches the package names. Check the
 <tt>&lt;javac&gt;</tt> task for details.
 
-<a name="filters"><h3>Token Filters</h3></a>
+<h3><a name="filters">Token Filters</a></h3>
 <p>A project can have a set of tokens that might be automatically expanded if
 found when a file is copied, when the filtering-copy behavior is selected in the
 tasks that support this. These might be set in the buildfile
