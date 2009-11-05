@@ -18,7 +18,9 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <include file="importtests/a.xml"/>
+  <include>
+    <file file="importtests/a.xml"/>
+  </include>
   <include file="importtests/b.xml" as="c"/>
 
   <target name="testNoExplicitPrefix" depends="a.a">
@@ -39,7 +41,11 @@
     <au:assertEquals expected="in included/imported" actual="${prop}"/>
   </target>
 
-  <include file="importtests/nested.xml" as="nested"/>
+  <include as="nested">
+    <javaresource name="nested.xml">
+      <classpath location="importtests"/>
+    </javaresource>
+  </include>
 
   <!-- really only tests that the targets have the expected names by
        forcing an exception if the dependencies don't exist -->

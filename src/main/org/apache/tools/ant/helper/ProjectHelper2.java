@@ -28,6 +28,7 @@ import org.apache.tools.ant.TargetGroup;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
@@ -197,14 +198,27 @@ public class ProjectHelper2 extends ProjectHelper {
 
         if (source instanceof File) {
             buildFile = (File) source;
+        } else if (source instanceof URL) {
+            url = (URL) source;
+        } else if (source instanceof Resource) {
+            FileProvider fp =
+                (FileProvider) ((Resource) source).as(FileProvider.class);
+            if (fp != null) {
+                buildFile = fp.getFile();
+            } else {
+                URLProvider up =
+                    (URLProvider) ((Resource) source).as(URLProvider.class);
+                if (up != null) {
+                    url = up.getURL();
+                }
+            }
+        }
+        if (buildFile != null) {
             buildFile = FILE_UTILS.normalize(buildFile.getAbsolutePath());
             context.setBuildFile(buildFile);
             buildFileName = buildFile.toString();
-//         } else if (source instanceof InputStream ) {
-        } else if (source instanceof URL) {
-            url = (URL) source;
+        } else if (url != null) {
             buildFileName = url.toString();
-//         } else if (source instanceof InputSource ) {
         } else {
             throw new BuildException("Source " + source.getClass().getName()
                     + " not supported by this plugin");

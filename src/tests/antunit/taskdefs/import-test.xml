@@ -18,7 +18,9 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <import file="importtests/a.xml"/>
+  <import>
+    <file file="importtests/a.xml"/>
+  </import>
   <import file="importtests/b.xml" as="c"/>
 
   <target name="testNoExplicitPrefix" depends="a.a">
@@ -37,7 +39,11 @@
     <au:assertEquals expected="baz" actual="${foo}"/>
   </target>
 
-  <import file="importtests/override.xml"/>
+  <import>
+    <javaresource name="override.xml">
+      <classpath location="importtests"/>
+    </javaresource>
+  </import>
 
   <target name="setProperty">
     <property name="prop" value="in including/importing"/>

@@ -22,6 +22,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
@@ -57,6 +59,7 @@ public class ImportTask extends Task {
     private boolean optional;
     private String targetPrefix;
     private String prefixSeparator = ".";
+    private Resource resource = null;
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
@@ -99,9 +102,19 @@ public class ImportTask extends Task {
         prefixSeparator = s;
     }
 
+    /**
+     * The resource to import.
+     *
+     * @since Ant 1.8.0
+     */
+    public void add(Resource r) {
+        resource = r;
+    }
+
     public void execute() {
-        if (file == null) {
-            throw new BuildException("import requires file attribute");
+        if (file == null && resource == null) {
+            throw new BuildException("import requires file attribute or"
+                                     + " nested resource");
         }
         if (getOwningTarget() == null
             || !"".equals(getOwningTarget().getName())) {
@@ -129,21 +142,27 @@ public class ImportTask extends Task {
             throw new BuildException("Unable to get location of import task");
         }
 
+        Resource importedResource = resource;
+        File importedFile = null;
+        if (resource == null) {
+
         File buildFile = new File(getLocation().getFileName()).getAbsoluteFile();
 
         // Paths are relative to the build file they're imported from,
         // *not* the current directory (same as entity includes).
 
         File buildFileParent = new File(buildFile.getParent());
-        File importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
+            importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
+            importedResource = new FileResource(importedFile);
+        }
 
-        getProject().log("Importing file " + importedFile + " from "
-                         + buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
+        getProject().log("Importing file " + importedResource + " from "
+                         + getLocation().getFileName(), Project.MSG_VERBOSE);
 
-        if (!importedFile.exists()) {
+        if (!importedResource.isExists()) {
             String message =
-                "Cannot find " + file + " imported from "
-                + buildFile.getAbsolutePath();
+                "Cannot find " + importedResource + " imported from "
+                + getLocation().getFileName();
             if (optional) {
                 getProject().log(message, Project.MSG_VERBOSE);
                 return;
@@ -152,10 +171,14 @@ public class ImportTask extends Task {
             }
         }
 
-        if (!isInIncludeMode() && importStack.contains(importedFile)) {
+        if (!isInIncludeMode() &&
+            (importStack.contains(importedResource)
+             || (importedFile != null && importStack.contains(importedFile))
+             )
+            ) {
             getProject().log(
                 "Skipped already imported file:\n   "
-                + importedFile + "\n", Project.MSG_VERBOSE);
+                + importedResource + "\n", Project.MSG_VERBOSE);
             return;
         }
 
@@ -173,7 +196,7 @@ public class ImportTask extends Task {
             setProjectHelperProps(prefix, prefixSeparator,
                                   isInIncludeMode());
 
-            helper.parse(getProject(), importedFile);
+            helper.parse(getProject(), importedResource);
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
