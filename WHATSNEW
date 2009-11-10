@@ -526,6 +526,10 @@ Fixed bugs:
    compatibility to Ant 1.7.0.
    Bugzilla Report 48040.
 
+ * different task instances of the same <scriptdef>ed tasks could
+   overwrite each others attributes/nested elements.
+   Bugzilla Report 41602.
+
 Other changes:
 --------------
 
