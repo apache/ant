@@ -23,10 +23,14 @@ import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -59,8 +63,12 @@ public class ImportTask extends Task {
     private boolean optional;
     private String targetPrefix;
     private String prefixSeparator = ".";
-    private Resource resource = null;
+    private final Union resources = new Union();
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    public ImportTask() {
+        resources.setCache(true);
+    }
 
     /**
      * sets the optional attribute
@@ -107,14 +115,14 @@ public class ImportTask extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void add(Resource r) {
-        resource = r;
+    public void add(ResourceCollection r) {
+        resources.add(r);
     }
 
     public void execute() {
-        if (file == null && resource == null) {
+        if (file == null && resources.size() == 0) {
             throw new BuildException("import requires file attribute or"
-                                     + " nested resource");
+                                     + " at least one nested resource");
         }
         if (getOwningTarget() == null
             || !"".equals(getOwningTarget().getName())) {
@@ -142,19 +150,27 @@ public class ImportTask extends Task {
             throw new BuildException("Unable to get location of import task");
         }
 
-        Resource importedResource = resource;
-        File importedFile = null;
-        if (resource == null) {
+        Union resourcesToImport = new Union(getProject(), resources);
+        if (file != null) {
 
-        File buildFile = new File(getLocation().getFileName()).getAbsoluteFile();
+            File buildFile =
+                new File(getLocation().getFileName()).getAbsoluteFile();
 
-        // Paths are relative to the build file they're imported from,
-        // *not* the current directory (same as entity includes).
+            // Paths are relative to the build file they're imported from,
+            // *not* the current directory (same as entity includes).
 
-        File buildFileParent = new File(buildFile.getParent());
-            importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
-            importedResource = new FileResource(importedFile);
+            File buildFileParent = new File(buildFile.getParent());
+            File importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
+            resources.add(new FileResource(importedFile));
         }
+        for (Iterator i = resourcesToImport.iterator(); i.hasNext(); ) {
+            importResource(helper, (Resource) i.next());
+        }
+    }
+
+    private void importResource(ProjectHelper helper,
+                                Resource importedResource) {
+        Vector importStack = helper.getImportStack();
 
         getProject().log("Importing file " + importedResource + " from "
                          + getLocation().getFileName(), Project.MSG_VERBOSE);
@@ -169,6 +185,12 @@ public class ImportTask extends Task {
             } else {
                 throw new BuildException(message);
             }
+        }
+
+        File importedFile = null;
+        FileProvider fp = (FileProvider) importedResource.as(FileProvider.class);
+        if (fp != null) {
+            importedFile = fp.getFile();
         }
 
         if (!isInIncludeMode() &&
