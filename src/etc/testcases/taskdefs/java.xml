@@ -23,7 +23,8 @@
   <property name="timeToWait" value="4"/>
   <!-- this property gets overridden programmatically-->
   <property name="logFile" value="spawn.log"/>
-  <property name="tmp" location="${java.io.tmpdir}"/>
+  <property name="tmp" location="${java.io.tmpdir}/ant.tmp.java-test"/>
+  <mkdir dir="${tmp}" description="The directory must exist"/>
   <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
 
