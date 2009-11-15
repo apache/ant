@@ -95,6 +95,14 @@ present in the imported project tag.</p>
     property will not be set.
   </p>
 
+<p>Since Ant 1.8.0 the task can also import resources from URLs or
+  classpath resources (which are URLs, really).  If you need to know
+  whether the current build file's source has been a file or an URL
+  you can consult the
+  property <b>ant.file.type.<em>projectname</em></b> (using the same
+  example as above <b>ant.file.type.builddocs</b>) which either have
+  the value "file" or "url".</p>
+
 <h4>Resolving files against the imported file</h4>
 
 <p>Suppose your main build file called <code>importing.xml</code>
@@ -135,6 +143,19 @@ directory. This technique also allows <code>imported.xml</code> to be
 used as a standalone file (without being imported in other
 project).</p>
 
+<p>The above description only works for imported files that actually
+  are imported from files and not from URLs.  For files imported from
+  URLs using resources relative to the imported file requires you to
+  use tasks that can work on non-file resources in the first place.
+  To create a relative resource you'd use something like:</p>
+
+<pre>
+  &lt;url id="imported.basedir" url="${ant.file.imported}/."/&gt;
+  &lt;loadproperties&gt;
+    &lt;url url="${toString:imported.basedir}/imported.properties"/&gt;
+  &lt;/loadproperties&gt;
+</pre>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
@@ -152,7 +173,7 @@ project).</p>
         relative to the <i>importing</i> file. <b>Note</b>, this is unlike most other
         ant file attributes, where relative files are resolved relative to ${basedir}.
       </td>
-      <td valign="top" align="center">Yes</td>
+      <td valign="top" align="center">Yes or a nested resource collection</td>
     </tr>
     <tr>
       <td valign="top">
@@ -188,6 +209,14 @@ project).</p>
   </tbody>
 </table>
 
+<h3>Parameters specified as nested elements</h3>
+
+<h4>any <a href="../CoreTypes/resources.html">resource</a> or resource
+collection</h4>
+
+<p>The specified resources will be imported.  <em>Since Ant
+    1.8.0</em></p>
+
 <h3>Examples</h3>
 <pre>&nbsp; &lt;import file=&quot;../common-targets.xml&quot;/&gt;
 </pre>
@@ -199,6 +228,17 @@ directory.</p>
 </pre>
 
 <p>Imports the project defined by the property deploy-platform</p>
+
+<pre>
+  &lt;import&gt;
+    &lt;javaresource name="common/targets.xml"&gt;
+      &lt;classpath location="common.jar"/&gt;
+    &lt;/javaresource&gt;
+  &lt;/import&gt;
+</pre>
+
+<p>Imports targets from the targets.xml file that is inside the
+  directory common inside the jar file common.jar.</p>
 
 <h3>How is &lt;import&gt; different
   from <a href="include.html">&lt;include&gt;</a>?</h3>

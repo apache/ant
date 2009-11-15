@@ -18,6 +18,8 @@
 package org.apache.tools.ant.helper;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +29,12 @@ import java.util.Vector;
 import org.xml.sax.Locator;
 import org.xml.sax.Attributes;
 
-
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Target;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.RuntimeConfigurable;
-
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Context information for the ant processing.
@@ -45,6 +47,9 @@ public class AntXMLContext {
     /** The configuration file to parse. */
     private File buildFile;
 
+    /** The configuration file to parse. */
+    private URL buildFileURL;
+
     /** Vector with all the targets, in the order they are
      * defined. Project maintains a Hashtable, which is not ordered.
      * This will allow description to know the original order.
@@ -56,6 +61,12 @@ public class AntXMLContext {
      * and setting the project's base directory.
      */
     private File buildFileParent;
+
+    /**
+     * Parent directory of the build file. Used for resolving entities
+     * and setting the project's base directory.
+     */
+    private URL buildFileParentURL;
 
     /** Name of the current project */
     private String currentProjectName;
@@ -115,6 +126,24 @@ public class AntXMLContext {
         this.buildFile = buildFile;
         this.buildFileParent = new File(buildFile.getParent());
         implicitTarget.setLocation(new Location(buildFile.getAbsolutePath()));
+        try {
+            setBuildFile(FileUtils.getFileUtils().getFileURL(buildFile));
+        } catch (MalformedURLException ex) {
+            throw new BuildException(ex);
+        }
+    }
+
+    /**
+     * sets the build file to which the XML context belongs
+     * @param buildFile  ant build file
+     * @since Ant 1.8.0
+     */
+    public void setBuildFile(URL buildFile) throws MalformedURLException {
+        this.buildFileURL = buildFile;
+        this.buildFileParentURL = new URL(buildFile, ".");
+        if (implicitTarget.getLocation() == null) {
+            implicitTarget.setLocation(new Location(buildFile.toString()));
+        }
     }
 
     /**
@@ -131,6 +160,24 @@ public class AntXMLContext {
      */
     public File getBuildFileParent() {
         return buildFileParent;
+    }
+
+    /**
+     * find out the build file
+     * @return  the build file to which the xml context belongs
+     * @since Ant 1.8.0
+     */
+    public URL getBuildFileURL() {
+        return buildFileURL;
+    }
+
+    /**
+     * find out the parent build file of this build file
+     * @return the parent build file of this build file
+     * @since Ant 1.8.0
+     */
+    public URL getBuildFileParentURL() {
+        return buildFileParentURL;
     }
 
     /**

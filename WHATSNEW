@@ -1022,6 +1022,15 @@ Other changes:
    contained provide URLs) and can get multiple resources in a single
    task.
 
+ * <import> can now import non-File resources if they provide an URL
+   - as the <url> and <javaresource> resources do.
+   Bugzilla Report 29251
+   
+ * <import> can now import multiple resources specified as resource
+   collections.
+   Bugzilla Report 22269.
+
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

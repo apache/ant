@@ -26,10 +26,13 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -151,17 +154,9 @@ public class ImportTask extends Task {
         }
 
         Union resourcesToImport = new Union(getProject(), resources);
-        if (file != null) {
-
-            File buildFile =
-                new File(getLocation().getFileName()).getAbsoluteFile();
-
-            // Paths are relative to the build file they're imported from,
-            // *not* the current directory (same as entity includes).
-
-            File buildFileParent = new File(buildFile.getParent());
-            File importedFile = FILE_UTILS.resolveFile(buildFileParent, file);
-            resources.add(new FileResource(importedFile));
+        Resource fromFileAttribute = getFileAttributeResource();
+        if (fromFileAttribute != null) {
+            resources.add(fromFileAttribute);
         }
         for (Iterator i = resourcesToImport.iterator(); i.hasNext(); ) {
             importResource(helper, (Resource) i.next());
@@ -225,6 +220,34 @@ public class ImportTask extends Task {
         } finally {
             setProjectHelperProps(oldPrefix, oldSep, oldIncludeMode);
         }
+    }
+
+    private Resource getFileAttributeResource() {
+        // Paths are relative to the build file they're imported from,
+        // *not* the current directory (same as entity includes).
+
+        if (file != null) {
+            File buildFile =
+                new File(getLocation().getFileName()).getAbsoluteFile();
+            if (buildFile.exists()) {
+                File buildFileParent = new File(buildFile.getParent());
+                File importedFile =
+                    FILE_UTILS.resolveFile(buildFileParent, file);
+                return new FileResource(importedFile);
+            }
+            // maybe this import tasks is inside an imported URL?
+            try {
+                URL buildFileURL = new URL(getLocation().getFileName());
+                URL importedFile = new URL(buildFileURL, file);
+                return new URLResource(importedFile);
+            } catch (MalformedURLException ex) {
+                log(ex.toString(), Project.MSG_VERBOSE);
+            }
+            throw new BuildException("failed to resolve " + file
+                                     + " relative to "
+                                     + getLocation().getFileName());
+        }
+        return null;
     }
 
     /**

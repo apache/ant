@@ -218,6 +218,11 @@ public class ProjectHelper2 extends ProjectHelper {
             context.setBuildFile(buildFile);
             buildFileName = buildFile.toString();
         } else if (url != null) {
+            try {
+                context.setBuildFile(url);
+            } catch (java.net.MalformedURLException ex) {
+                throw new BuildException(ex);
+            }
             buildFileName = url.toString();
         } else {
             throw new BuildException("Source " + source.getClass().getName()
@@ -738,7 +743,8 @@ public class ProjectHelper2 extends ProjectHelper {
             }
 
             // XXX Move to Project ( so it is shared by all helpers )
-            String antFileProp = "ant.file." + context.getCurrentProjectName();
+            String antFileProp =
+                MagicNames.ANT_FILE + "." + context.getCurrentProjectName();
             String dup = project.getProperty(antFileProp);
             if (dup != null && nameAttributeSet) {
                 File dupFile = new File(dup);
@@ -748,10 +754,20 @@ public class ProjectHelper2 extends ProjectHelper {
                             + " and again in " + context.getBuildFile(), Project.MSG_WARN);
                 }
             }
-            if (context.getBuildFile() != null && nameAttributeSet) {
-                project.setUserProperty(
-                        MagicNames.ANT_FILE + "." + context.getCurrentProjectName(), context
-                                .getBuildFile().toString());
+            if (nameAttributeSet) {
+                String typeProp = MagicNames.ANT_FILE_TYPE + "."
+                    + context.getCurrentProjectName();
+                if (context.getBuildFile() != null) {
+                    project.setUserProperty(antFileProp,
+                                            context.getBuildFile().toString());
+                    project.setUserProperty(typeProp,
+                                            MagicNames.ANT_FILE_TYPE_FILE);
+                } else if (context.getBuildFileURL() != null) {
+                    project.setUserProperty(antFileProp,
+                                            context.getBuildFileURL().toString());
+                    project.setUserProperty(typeProp,
+                                            MagicNames.ANT_FILE_TYPE_URL);
+                }
             }
             if (context.isIgnoringProjectTag()) {
                 // no further processing

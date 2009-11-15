@@ -773,6 +773,8 @@ public class Main implements AntMain {
 
                 project.setUserProperty(MagicNames.ANT_FILE,
                                         buildFile.getAbsolutePath());
+                project.setUserProperty(MagicNames.ANT_FILE_TYPE,
+                                        MagicNames.ANT_FILE_TYPE_FILE);
 
                 project.setKeepGoingMode(keepGoingMode);
                 if (proxy) {

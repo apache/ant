@@ -114,6 +114,27 @@ public final class MagicNames {
     public static final String ANT_FILE = "ant.file";
 
     /**
+     * property for type of ant build file (either file or url)
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String ANT_FILE_TYPE = "ant.file.type";
+
+    /**
+     * ant build file of type file
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String ANT_FILE_TYPE_FILE = "file";
+
+    /**
+     * ant build file of type url
+     * Value: {@value}
+     * @since Ant 1.8.0
+     */
+    public static final String ANT_FILE_TYPE_URL = "url";
+
+    /**
      * Property used to store the java version ant is running in.
      * Value: {@value}
      * @since Ant 1.7

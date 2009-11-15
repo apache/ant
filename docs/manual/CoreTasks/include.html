@@ -28,6 +28,8 @@
     Include another build file into the current project.
   </p>
 
+  <p><em>since Ant 1.8.0</em></p>
+
   <p>
     <b>Note</b> this task heavily relies on the ProjectHelper
     implementation and doesn't really perform any work of its own.  If
@@ -98,6 +100,12 @@ present in the included project tag.</p>
     property will not be set.
   </p>
 
+<p>If you need to know whether the current build file's source has
+  been a file or an URL you can consult the
+  property <b>ant.file.type.<em>projectname</em></b> (using the same
+  example as above <b>ant.file.type.builddocs</b>) which either have
+  the value "file" or "url".</p>
+
 <h4>Resolving files against the included file</h4>
 
 <p>Suppose your main build file called <code>including.xml</code>
@@ -138,6 +146,19 @@ directory. This technique also allows <code>included.xml</code> to be
 used as a standalone file (without being included in other
 project).</p>
 
+<p>The above description only works for included files that actually
+  are included from files and not from URLs.  For files included from
+  URLs using resources relative to the included file requires you to
+  use tasks that can work on non-file resources in the first place.
+  To create a relative resource you'd use something like:</p>
+
+<pre>
+  &lt;url id="included.basedir" url="${ant.file.included}/."/&gt;
+  &lt;loadproperties&gt;
+    &lt;url url="${toString:included.basedir}/included.properties"/&gt;
+  &lt;/loadproperties&gt;
+</pre>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
@@ -155,7 +176,7 @@ project).</p>
         relative to the <i>including</i> file. <b>Note</b>, this is unlike most other
         ant file attributes, where relative files are resolved relative to ${basedir}.
       </td>
-      <td valign="top" align="center">Yes</td>
+      <td valign="top" align="center">Yes or a nested resource collection</td>
     </tr>
     <tr>
       <td valign="top">
@@ -174,7 +195,7 @@ project).</p>
       <td valign="top">
         Specifies the prefix prepended to the target names.  If
         ommitted, the name attribute of the project tag of the
-        imported file will be used.
+        included file will be used.
       </td>
       <td valign="top" align="center">Yes, if the included file's
         project tag doesn't specify a name attribute.</td>
@@ -192,6 +213,13 @@ project).</p>
   </tbody>
 </table>
 
+<h3>Parameters specified as nested elements</h3>
+
+<h4>any <a href="../CoreTypes/resources.html">resource</a> or resource
+collection</h4>
+
+<p>The specified resources will be included.</p>
+
 <h3>Examples</h3>
 <pre>&nbsp; &lt;include file=&quot;../common-targets.xml&quot;/&gt;
 </pre>
@@ -203,6 +231,17 @@ directory.</p>
 </pre>
 
 <p>Includes the project defined by the property deploy-platform</p>
+
+<pre>
+  &lt;include&gt;
+    &lt;javaresource name="common/targets.xml"&gt;
+      &lt;classpath location="common.jar"/&gt;
+    &lt;/javaresource&gt;
+  &lt;/include&gt;
+</pre>
+
+<p>Includes targets from the targets.xml file that is inside the
+  directory common inside the jar file common.jar.</p>
 
 <h3>How is <a href="import.html">&lt;import&gt;</a> different
   from &lt;include&gt;?</h3>
