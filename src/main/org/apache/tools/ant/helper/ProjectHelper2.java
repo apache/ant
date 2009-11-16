@@ -219,6 +219,7 @@ public class ProjectHelper2 extends ProjectHelper {
             buildFileName = buildFile.toString();
         } else if (url != null) {
             try {
+                context.setBuildFile((File) null);
                 context.setBuildFile(url);
             } catch (java.net.MalformedURLException ex) {
                 throw new BuildException(ex);

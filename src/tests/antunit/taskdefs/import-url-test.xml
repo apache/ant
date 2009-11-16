@@ -21,16 +21,25 @@
   <mkdir dir="${input}/a/b"/>
   <mkdir dir="${input}/a/c"/>
   <echo file="${input}/a/b/outer.xml"><![CDATA[
-<project>
+<project name="outer">
   <import file="../c/inner.xml"/>
 </project>
 ]]></echo>
   <echo file="${input}/a/c/inner.xml"><![CDATA[
-<project>
+<project name="inner">
   <target name="foo">
     <echo>In inner</echo>
+    <echo>ant.file.inner is ${ant.file.inner}</echo>
+    <echo>type is ${ant.file.type.inner}</echo>
+    <loadproperties>
+      <url baseUrl="${ant.file.inner}" relativePath="test.properties"/>
+    </loadproperties>
+    <echo>foo is ${foo}</echo>
   </target>
 </project>]]></echo>
+  <echo file="${input}/a/c/test.properties"><![CDATA[
+foo=bar
+]]></echo>
   <mkdir dir="${output}"/>
   <jar destfile="${output}/test.jar">
     <fileset dir="${input}"/>
@@ -45,5 +54,7 @@
 
   <target name="testImportOfNestedFile" depends="foo">
     <au:assertLogContains text="In inner"/>
+    <au:assertLogContains text="type is url"/>
+    <au:assertLogContains text="foo is bar"/>
   </target>
 </project>

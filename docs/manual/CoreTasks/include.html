@@ -153,9 +153,9 @@ project).</p>
   To create a relative resource you'd use something like:</p>
 
 <pre>
-  &lt;url id="included.basedir" url="${ant.file.included}/."/&gt;
   &lt;loadproperties&gt;
-    &lt;url url="${toString:included.basedir}/included.properties"/&gt;
+    &lt;url baseUrl="${ant.file.included}"
+         relativePath="included.properties"/&gt;
   &lt;/loadproperties&gt;
 </pre>
 

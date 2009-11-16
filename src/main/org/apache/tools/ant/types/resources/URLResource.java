@@ -46,6 +46,8 @@ public class URLResource extends Resource implements URLProvider {
 
     private URL url;
     private URLConnection conn;
+    private URL baseURL;
+    private String relPath;
 
     /**
      * Default constructor.
@@ -108,12 +110,53 @@ public class URLResource extends Resource implements URLProvider {
     }
 
     /**
+     * Base URL which combined with the relativePath attribute defines
+     * the URL.
+     * @since Ant 1.8.0
+     */
+    public synchronized void setBaseURL(URL base) {
+        checkAttributesAllowed();
+        if (url != null) {
+            throw new BuildException("can't define URL and baseURL attribute");
+        }
+        baseURL = base;
+    }
+
+    /**
+     * Relative path which combined with the baseURL attribute defines
+     * the URL.
+     * @since Ant 1.8.0
+     */
+    public synchronized void setRelativePath(String r) {
+        checkAttributesAllowed();
+        if (url != null) {
+            throw new BuildException("can't define URL and relativePath"
+                                     + " attribute");
+        }
+        relPath = r;
+    }
+
+
+    /**
      * Get the URL used by this URLResource.
      * @return a URL object.
      */
     public synchronized URL getURL() {
         if (isReference()) {
             return ((URLResource) getCheckedRef()).getURL();
+        }
+        if (url == null) {
+            if (baseURL != null) {
+                if (relPath == null) {
+                    throw new BuildException("must provide relativePath"
+                                             + " attribute when using baseURL.");
+                }
+                try {
+                    url = new URL(baseURL, relPath);
+                } catch (MalformedURLException e) {
+                    throw new BuildException(e);
+                }
+            }
         }
         return url;
      }
@@ -124,7 +167,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized void setRefid(Reference r) {
         //not using the accessor in this case to avoid side effects
-        if (url != null) {
+        if (url != null || baseURL != null || relPath != null) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
