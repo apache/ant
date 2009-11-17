@@ -307,6 +307,10 @@ public class SubAnt extends Task {
             log("Failure for target '" + subTarget
                + "' of: " +  antfilename + "\n"
                + e.getMessage(), Project.MSG_WARN);
+        } catch (OutOfMemoryError e) {
+            throw e;
+        } catch (ThreadDeath e) {
+            throw e;
         } catch (Throwable e) {
             if (failOnError) {
                 throw new BuildException(e);

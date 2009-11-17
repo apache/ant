@@ -19,11 +19,12 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -37,7 +38,6 @@ import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LayoutPreservingProperties;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -233,14 +233,25 @@ public class PropertyFile extends Task {
     }
 
     private void writeFile() throws BuildException {
-        BufferedOutputStream bos = null;
+        // Write to RAM first, as an OOME could otherwise produce a truncated file:
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            bos = new BufferedOutputStream(new FileOutputStream(propertyfile));
-            properties.store(bos, comment);
-        } catch (IOException ioe) {
-            throw new BuildException(ioe, getLocation());
-        } finally {
-            FileUtils.close(bos);
+            properties.store(baos, comment);
+        } catch (IOException x) { // should not happen
+            throw new BuildException(x, getLocation());
+        }
+        try {
+            OutputStream os = new FileOutputStream(propertyfile);
+            try {
+                os.write(baos.toByteArray());
+            } catch (IOException x) {
+                propertyfile.delete(); // possibly corrupt
+                throw new BuildException(x, getLocation());
+            } finally {
+                os.close();
+            }
+        } catch (IOException x) {
+            throw new BuildException(x, getLocation());
         }
     }
 
