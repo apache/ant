@@ -301,18 +301,14 @@ public class SubAnt extends Task {
         try {
             ant.execute();
         } catch (BuildException e) {
-            if (failOnError) {
+            if (failOnError || isHardError(e)) {
                 throw e;
             }
             log("Failure for target '" + subTarget
                + "' of: " +  antfilename + "\n"
                + e.getMessage(), Project.MSG_WARN);
-        } catch (OutOfMemoryError e) {
-            throw e;
-        } catch (ThreadDeath e) {
-            throw e;
         } catch (Throwable e) {
-            if (failOnError) {
+            if (failOnError || isHardError(e)) {
                 throw new BuildException(e);
             }
             log("Failure for target '" + subTarget
@@ -321,6 +317,18 @@ public class SubAnt extends Task {
                 Project.MSG_WARN);
         } finally {
             ant = null;
+        }
+    }
+    /** whether we should even try to continue after this error */
+    private boolean isHardError(Throwable t) {
+        if (t instanceof BuildException) {
+            return isHardError(t.getCause());
+        } else if (t instanceof OutOfMemoryError) {
+            return true;
+        } else if (t instanceof ThreadDeath) {
+            return true;
+        } else { // incl. t == null
+            return false;
         }
     }
 
