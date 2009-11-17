@@ -19,12 +19,18 @@
 
     <description>
         Build documentation - XDocs and Javadoc.
+        
         For building XDocs, edit xdocs/**/*.xml first.
         If ../jakarta-site2 does not exist, set -Dsite.dir=... for it,
         or just use -Dvelocity.dir=.../velocity-1.4.x if you have downloaded Velocity somewhere.
 
         XXX for no apparent reason, your CWD must be the main Ant source dir, or this will fail:
         .../docs.xml:64: org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource './site.vsl'
+        
+        After this generation the pages in docs/ should be up-to-date and need to be committed.
+        Since I don't remember whether there is a cron job updating the site I
+        usually log in to people.apache.org and run 'svn up' in /www/ant.apache.org/
+        (make sure your umask is 002 before you do that so the pages remain group writable).
     </description>
 
     <!-- Initialization properties -->
