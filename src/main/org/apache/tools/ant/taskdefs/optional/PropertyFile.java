@@ -40,6 +40,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.LayoutPreservingProperties;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  *Modifies settings in a property file.
@@ -243,14 +244,16 @@ public class PropertyFile extends Task {
         try {
             OutputStream os = new FileOutputStream(propertyfile);
             try {
-                os.write(baos.toByteArray());
-            } catch (IOException x) {
-                propertyfile.delete(); // possibly corrupt
-                throw new BuildException(x, getLocation());
-            } finally {
-                os.close();
+                try {
+                    os.write(baos.toByteArray());
+                } finally {
+                    os.close();
+                }
+            } catch (IOException x) { // possibly corrupt
+                FileUtils.getFileUtils().tryHardToDelete(propertyfile);
+                throw x;
             }
-        } catch (IOException x) {
+        } catch (IOException x) { // opening, writing, or closing
             throw new BuildException(x, getLocation());
         }
     }
