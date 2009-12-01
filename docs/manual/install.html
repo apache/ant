@@ -331,10 +331,20 @@ Build failed
 So Ant works. This message is there because you need to write an individual buildfile for your 
 project. With a <tt>ant -version</tt> you should get an output like
 <pre>
-Apache Ant version 1.7.0 compiled on December 13 2006
+Apache Ant version 1.7.1 compiled on June 27 2008
 </pre> 
-
-
+</p>
+<p>If this does not work ensure your environment variables are set right. They must resolve to:
+<ul>
+  <li>required: %ANT_HOME%\bin\ant.bat</li>
+  <li>optional: %JAVA_HOME%\bin\java.exe</li>
+  <li>required: %PATH%=...<i>maybe-other-entries</i>...;%ANT_HOME%\bin;...<i>maybe-other-entries</i>...</li>
+</ul>
+<b>ANT_HOME</b> is used by the launcher script for finding the libraries.
+<b>JAVA_HOME</b> is used by the launcher for finding the JDK/JRE to use. (JDK is recommended as some tasks 
+require the java tools.) If not set, the launcher tries to find one via the %PATH% environment variable.
+<b>PATH</b> is set for user convinience. With that set you can just start <i>ant</i> instead of always typing
+<i>the/complete/path/to/your/ant/installation/bin/ant</i>.
 </p>
 
 <h3><a name="optionalTasks">Optional Tasks</a></h3>
