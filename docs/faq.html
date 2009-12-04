@@ -1237,6 +1237,17 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
   &lt;/sequential&gt;
 &lt;/macrodef&gt;
 </pre>
+                        <p>With the 'props' antlib (external, but also from Ant) you could
+         do the dereferencing with <code>${${anotherprop}</code> - not just
+         in the property task - instead everywhere in your buildfile (after
+         registering the required property helper).</p>
+                        <pre class="code">
+&lt;propertyhelper&gt;
+  &lt;props:nested /&gt;
+&lt;/propertyhelper&gt;
+&lt;property name=&quot;foo&quot; value=&quot;foo.value&quot; /&gt;
+&lt;property name=&quot;var&quot; value=&quot;foo&quot; /&gt;
+&lt;echo&gt; ${${var}} = foo.value &lt;/echo&gt;</pre>
                     <p class="faq">
       <a name="delete-directory-children-only"></a>
       How can I delete everything beneath a particular directory,

@@ -745,6 +745,17 @@ shell-prompt> m4 foo.m4 > foo
   </sequential>
 </macrodef>
 ]]></source>
+         <p>With the 'props' antlib (external, but also from Ant) you could
+         do the dereferencing with <code>${${anotherprop}</code> - not just
+         in the property task - instead everywhere in your buildfile (after
+         registering the required property helper).</p>
+         <source><![CDATA[
+<propertyhelper>
+  <props:nested />
+</propertyhelper>
+<property name="foo" value="foo.value" />
+<property name="var" value="foo" />
+<echo> ${${var}} = foo.value </echo>]]></source>
       </answer>
     </faq>
 
