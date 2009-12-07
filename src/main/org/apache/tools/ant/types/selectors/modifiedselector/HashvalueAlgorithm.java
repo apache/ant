@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.types.selectors.modifiedselector;
 
-
+import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
-
+import java.io.FileReader;
+import java.io.Reader;
 
 /**
  * Computes a 'hashvalue' for the content of file using String.hashValue().
@@ -51,22 +52,18 @@ public class HashvalueAlgorithm implements Algorithm {
      // Because the content is only read the file will not be damaged. I tested
      // with JPG, ZIP and PDF as binary files.
     public String getValue(File file) {
+        Reader r = null;
         try {
             if (!file.canRead()) {
                 return null;
             }
-            java.io.FileInputStream fis = new java.io.FileInputStream(file);
-            StringBuffer content = new StringBuffer();
-            byte[] buffer = new byte[256];            
-            int len = 0;
-            while ((len = fis.read(buffer, 0, len)) != -1) {
-                content.append(new String(buffer, 0, len));
-            }
-            fis.close();
-            int hash = content.toString().hashCode();
+            r = new FileReader(file);
+            int hash = FileUtils.readFully(r).hashCode();
             return Integer.toString(hash);
         } catch (Exception e) {
             return null;
+        } finally {
+            FileUtils.close(r);
         }
     }
 
