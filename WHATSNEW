@@ -530,6 +530,10 @@ Fixed bugs:
    overwrite each others attributes/nested elements.
    Bugzilla Report 41602.
 
+ * The Hashvalue algortihm implementation of the modified task could
+   fail to read the file(s) completely.
+   Bugzilla Report 48313.
+
 Other changes:
 --------------
 

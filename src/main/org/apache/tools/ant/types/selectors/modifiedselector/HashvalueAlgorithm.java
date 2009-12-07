@@ -56,11 +56,14 @@ public class HashvalueAlgorithm implements Algorithm {
                 return null;
             }
             java.io.FileInputStream fis = new java.io.FileInputStream(file);
-            byte[] content = new byte[fis.available()];
-            fis.read(content);
+            StringBuffer content = new StringBuffer();
+            byte[] buffer = new byte[256];            
+            int len = 0;
+            while ((len = fis.read(buffer, 0, len)) != -1) {
+                content.append(new String(buffer, 0, len));
+            }
             fis.close();
-            String s = new String(content);
-            int hash = s.hashCode();
+            int hash = content.toString().hashCode();
             return Integer.toString(hash);
         } catch (Exception e) {
             return null;
