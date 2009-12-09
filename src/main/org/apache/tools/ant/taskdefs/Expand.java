@@ -174,6 +174,7 @@ public class Expand extends Task {
                 empty = false;
                 ZipEntry ze = (ZipEntry) e.nextElement();
                 InputStream is = null;
+                log("extracting " + ze.getName(), Project.MSG_DEBUG);
                 try {
                     extractFile(fileUtils, srcF, dir,
                                 is = zf.getInputStream(ze),
