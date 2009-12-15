@@ -22,12 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
-import java.net.JarURLConnection;
-import java.util.jar.JarFile;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -392,21 +389,10 @@ public class URLResource extends Resource implements URLProvider {
      *
      */
     private synchronized void close() {
-        if (conn != null) {
-            try {
-                if (conn instanceof JarURLConnection) {
-                    JarURLConnection juc = (JarURLConnection) conn;
-                    JarFile jf = juc.getJarFile();
-                    jf.close();
-                    jf = null;
-                } else if (conn instanceof HttpURLConnection) {
-                    ((HttpURLConnection) conn).disconnect();
-                }
-            } catch (IOException exc) {
-                //ignore
-            } finally {
-                conn = null;
-            }
+        try {
+            FileUtils.close(conn);
+        } finally {
+            conn = null;
         }
     }
 

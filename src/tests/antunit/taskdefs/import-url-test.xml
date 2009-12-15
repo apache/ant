@@ -57,4 +57,16 @@ foo=bar
     <au:assertLogContains text="type is url"/>
     <au:assertLogContains text="foo is bar"/>
   </target>
+
+  <target name="tearDown" depends="close, antunit-base.tearDown"/>
+
+  <target name="close">
+    <taskdef name="close"
+             classname="org.apache.tools.ant.taskdefs.CloseResources"/>
+    <close>
+      <javaresource name="a/b/outer.xml">
+        <classpath location="${output}/test.jar"/>
+      </javaresource>
+    </close>
+  </target>
 </project>

@@ -27,7 +27,10 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.jar.JarFile;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
@@ -1439,6 +1443,30 @@ public class FileUtils {
             try {
                 device.close();
             } catch (IOException e) {
+                //ignore
+            }
+        }
+    }
+
+    /**
+     * Closes an URLConnection if its concrete implementation provides
+     * a way to close it that Ant knows of.
+     *
+     * @param conn connection, can be null
+     * @since Ant 1.8.0
+     */
+    public static void close(URLConnection conn) {
+        if (conn != null) {
+            try {
+                if (conn instanceof JarURLConnection) {
+                    JarURLConnection juc = (JarURLConnection) conn;
+                    JarFile jf = juc.getJarFile();
+                    jf.close();
+                    jf = null;
+                } else if (conn instanceof HttpURLConnection) {
+                    ((HttpURLConnection) conn).disconnect();
+                }
+            } catch (IOException exc) {
                 //ignore
             }
         }

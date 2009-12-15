@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.zip.ZipFile;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -231,6 +232,7 @@ public class ProjectHelper2 extends ProjectHelper {
         }
         InputStream inputStream = null;
         InputSource inputSource = null;
+        ZipFile zf = null;
 
         try {
             /**
@@ -243,16 +245,26 @@ public class ProjectHelper2 extends ProjectHelper {
                 uri = FILE_UTILS.toURI(buildFile.getAbsolutePath());
                 inputStream = new FileInputStream(buildFile);
             } else {
-                inputStream = url.openStream();
-                uri = url.toString(); // ?? OK ??
+                uri = url.toString();
+                int pling = -1;
+                if (uri.startsWith("jar:file")
+                    && (pling = uri.indexOf("!")) > -1) {
+                    zf = new ZipFile(org.apache.tools.ant.launch.Locator
+                                     .fromJarURI(uri), "UTF-8");
+                    inputStream =
+                        zf.getInputStream(zf.getEntry(uri.substring(pling + 1)));
+                } else {
+                    inputStream = url.openStream();
+                }
             }
 
             inputSource = new InputSource(inputStream);
             if (uri != null) {
                 inputSource.setSystemId(uri);
             }
-            project.log("parsing buildfile " + buildFileName + " with URI = " + uri,
-                    Project.MSG_VERBOSE);
+            project.log("parsing buildfile " + buildFileName + " with URI = "
+                        + uri + (zf != null ? " from a zip file" : ""),
+                        Project.MSG_VERBOSE);
 
             DefaultHandler hb = handler;
 
@@ -290,6 +302,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     + exc.getMessage(), exc);
         } finally {
             FileUtils.close(inputStream);
+            ZipFile.closeQuietly(zf);
         }
     }
 
