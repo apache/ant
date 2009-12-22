@@ -29,8 +29,8 @@
     desired state during the build process.</p>
 
   <p>Targets can depend on other targets and Ant ensures that these
-    other targets have been executed before the current target.  For
-    example you might have a target for compiling, for example, and a
+    other targets have been executed before the current target. For
+    example you might have a target for compiling and a
     target for creating a distributable. You can only build a
     distributable when you have compiled first, so the distribute
     target <i>depends on</i> the compile target.</p>
@@ -190,14 +190,19 @@
     encoding of the XML file. The empty string &quot;&quot; is in this
     set, as is comma &quot;,&quot; and space &quot; &quot;.  Please
     avoid using these, as they will not be supported in future Ant
-    versions because of all the confusion they cause. IDE support of
+    versions because of all the confusion they cause on command line and IDE. IDE support of
     unusual target names, or any target name containing spaces, varies
     with the IDE.</p>
 
   <p>Targets beginning with a hyphen such
     as <code>&quot;-restart&quot;</code> are valid, and can be used to
     name targets that should not be called directly from the command
-    line.</p>
+    line. <br>
+    For Ants main class every option starting with hyphen is an
+    option for Ant itself and not a target. For that reason calling these
+    target from command line is not possible. On the other hand IDEs usually
+    don't use Ants main class as entry point and calling them from the IDE
+    is usually possible.</p>
 
   <h1><a name="target-groups">Target-Groups</a></h1>
 
