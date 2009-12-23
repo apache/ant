@@ -23,7 +23,7 @@ import org.apache.tools.ant.util.ReflectUtil;
 /**
  * Prompts and requests input.  May loop until a valid input has
  * been entered. Doesn't echo input (requires Java6). If Java6 is not
- * available, fallsback to the DefaultHandler (insecure).
+ * available, falls back to the DefaultHandler (insecure).
  * @since Ant 1.7.1
  */
 public class SecureInputHandler extends DefaultInputHandler {
