@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.AppendToLines;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.EscapeUnicode;
@@ -152,6 +153,19 @@ public class FilterChain extends DataType
         }
         setChecked(false);
         filterReaders.addElement(prefixLines);
+    }
+
+    /**
+     * Add a PrefixLines filter.
+     *
+     * @param prefixLines a <code>AppendToLines</code> value
+     */
+    public void addAppendToLines(final AppendToLines appendToLines) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        setChecked(false);
+        filterReaders.addElement(appendToLines);
     }
 
     /**

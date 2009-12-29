@@ -1038,6 +1038,8 @@ Other changes:
    list of resources from non-file resources and may return resources
    that are not files.
 
+ * a new filterreader appendtolines complements prefixlines.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 
