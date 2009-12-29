@@ -1034,6 +1034,9 @@ Other changes:
    collections.
    Bugzilla Report 22269.
 
+ * a new <resourcelist> type is similar to <filelist> but can read the
+   list of resources from non-file resources and may return resources
+   that are not files.
 
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================

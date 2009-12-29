@@ -371,6 +371,8 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
   <li><a href="#archives">archives</a> - wraps around different
     resource collections and treats the nested resources as ZIP or TAR
     archives that will be extracted on the fly.</li>
+  <li><a href="#resourcelist">resourcelist</a> - a collection of
+    resources who's names have been read from another resource.</li>
 </ul>
 <h4><a name="resources">resources</a></h4>
 <p>A generic resource collection, designed for use with
@@ -1068,6 +1070,8 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
 
 <h4><a name="mappedresources">mappedresources</a></h4>
 
+<p><em>Since Ant 1.8.0</em></p>
+
 <p>Wraps another resource collection and maps the names of the nested
   resources using a <a href="mapper.html">mapper</a>.</p>
 
@@ -1123,6 +1127,8 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
 
 <h4><a name="archives">archives</a></h4>
 
+<p><em>Since Ant 1.8.0</em></p>
+
 <p>This resource collection accepts an arbitrary number of nested
   resources and assumes that all those resources must be either ZIP or
   TAR archives.  The resources returned
@@ -1162,6 +1168,81 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
           &lt;/restrict&gt;
         &lt;/zips&gt;
       &lt;/archives&gt;
+    &lt;/copy&gt;
+  </pre>
+</blockquote>
+
+<h4><a name="resourcelist">resourcelist</a></h4>
+
+<p><em>Since Ant 1.8.0</em></p>
+
+<p>This resource collection accepts an arbitrary number of nested
+  resources, reads those resources and returns a resource for each
+  line read.</p>
+
+<p>If the line contains a colon, Ant will try to use it as an URL and
+  if that fails (or the line doesn't contain a colon) will return a
+  file resource with the line's content as its name.</p>
+
+<p>Properties will be expanded for each line.  If the property
+  expansion yields a resource object rather than a string (for example
+  because of custom property helpers), the resources will be returned
+  directly.</p>
+
+<p><code>&lt;resourcelist&gt;</code> is a generalization
+  of <a href="filelist.html"><code>&lt;filelist&gt;</code></a>.</p>
+
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">encoding</td>
+      <td valign="top">The encoding of the nested resources</td>
+      <td valign="top" align="center">No, default is platform default</td>
+    </tr>
+  </table>
+</blockquote>
+
+<blockquote>
+  <h4>Parameters specified as nested elements</h4>
+
+  <p><code>&lt;resourcelist&gt;</code> accepts arbitrary many
+    resource(collection)s as nested elements.</p>
+
+  <p>In addition <code>&lt;resourcelist&gt;</code> supports
+    nested <code>&lt;filterchain&gt;</code> elements that can be used
+    to filter/modify the read resources before their lines get
+    expanded.  Such a nested element corresponds to
+    a <a href="filterchain.html">filterchain</a>.</p>
+
+  <h4>Examples</h4>
+
+  <p>The following example copies a file from the first URL of
+    several alternatives that can actually be reached.  It assumes
+    that the file mirrors.txt looks like</p>
+
+  <pre>
+    mirrors.txt:
+http://best.mirror.example.org/
+http://second.best.mirror.example.org/mirror/of/best/
+https://yet.another.mirror/
+http://the.original.site/
+  </pre>
+    
+  <pre>
+    &lt;copy todir="${target}"&gt;
+      &lt;first&gt;
+        &lt;restrict&gt;
+          &lt;resourcelist&gt;
+            &lt;file file="mirrors.txt"/&gt;
+          &lt;/resourcelist&gt;
+          &lt;exists/&gt;
+        &lt;/restrict&gt;
+      &lt;/first&gt;
     &lt;/copy&gt;
   </pre>
 </blockquote>

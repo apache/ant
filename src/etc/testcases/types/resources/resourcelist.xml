@@ -21,8 +21,6 @@
   </target>
 
   <target name="setUp">
-    <typedef name="resourcelist"
-             classname="org.apache.tools.ant.types.resources.ResourceList"/>
   </target>
 
 </project>

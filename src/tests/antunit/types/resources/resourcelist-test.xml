@@ -22,8 +22,6 @@
   <import file="../../antunit-base.xml" />
 
   <target name="setUp">
-    <typedef name="resourcelist"
-             classname="org.apache.tools.ant.types.resources.ResourceList"/>
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
     <touch file="${input}/b.txt"/>
