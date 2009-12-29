@@ -156,9 +156,10 @@ public class FilterChain extends DataType
     }
 
     /**
-     * Add a PrefixLines filter.
+     * Add a AppendToLines filter.
      *
      * @param prefixLines a <code>AppendToLines</code> value
+     * @since Ant 1.8.0
      */
     public void addAppendToLines(final AppendToLines appendToLines) {
         if (isReference()) {
