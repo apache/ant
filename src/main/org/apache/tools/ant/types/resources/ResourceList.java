@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
@@ -32,6 +33,7 @@ import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -43,13 +45,12 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ResourceList extends DataType implements ResourceCollection {
     private final Vector filterChains = new Vector();
-    private final Union textDocuments = new Union();
+    private final ArrayList textDocuments = new ArrayList();
     private final Union cachedResources = new Union();
     private volatile boolean cached = false;
     private String encoding = null;
 
     public ResourceList() {
-        textDocuments.setCache(true);
         cachedResources.setCache(true);
     }
 
@@ -61,6 +62,7 @@ public class ResourceList extends DataType implements ResourceCollection {
             throw noChildrenAllowed();
         }
         textDocuments.add(rc);
+        setChecked(false);
     }
 
     /**
@@ -71,6 +73,7 @@ public class ResourceList extends DataType implements ResourceCollection {
             throw noChildrenAllowed();
         }
         filterChains.add(filter);
+        setChecked(false);
     }
 
     /**
@@ -90,6 +93,20 @@ public class ResourceList extends DataType implements ResourceCollection {
     }
 
     /**
+     * Makes this instance in effect a reference to another ResourceList
+     * instance.
+     */
+    public void setRefid(Reference r) throws BuildException {
+        if (encoding != null) {
+            throw tooManyAttributes();
+        }
+        if (filterChains.size() > 0 || textDocuments.size() > 0) {
+            throw noChildrenAllowed();
+        }
+        super.setRefid(r);
+    }
+
+    /**
      * Fulfill the ResourceCollection contract. The Iterator returned
      * will throw ConcurrentModificationExceptions if ResourceCollections
      * are added to this container while the Iterator is in use.
@@ -99,7 +116,6 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             return ((ResourceList) getCheckedRef()).iterator();
         }
-        dieOnCircularReference();
         return cache().iterator();
     }
 
@@ -111,7 +127,6 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             return ((ResourceList) getCheckedRef()).size();
         }
-        dieOnCircularReference();
         return cache().size();
     }
 
@@ -123,7 +138,6 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             return ((ResourceList) getCheckedRef()).isFilesystemOnly();
         }
-        dieOnCircularReference();
         return cache().isFilesystemOnly();
     }
 
@@ -142,7 +156,12 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            pushAndInvokeCircularReferenceCheck(textDocuments, stk, p);
+            for (Iterator iter = textDocuments.iterator(); iter.hasNext(); ) {
+                Object o = (Object) iter.next();
+                if (o instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+                }
+            }
             for (Iterator iter = filterChains.iterator(); iter.hasNext(); ) {
                 FilterChain fc = (FilterChain) iter.next();
                 pushAndInvokeCircularReferenceCheck(fc, stk, p);
@@ -153,8 +172,12 @@ public class ResourceList extends DataType implements ResourceCollection {
     
     private synchronized ResourceCollection cache() {
         if (!cached) {
+            dieOnCircularReference();
             for (Iterator iter = textDocuments.iterator(); iter.hasNext(); ) {
-                cachedResources.add(read((Resource) iter.next()));
+                ResourceCollection rc = (ResourceCollection) iter.next();
+                for (Iterator r = rc.iterator(); r.hasNext(); ) {
+                    cachedResources.add(read((Resource) r.next()));
+                }
             }
             cached = true;
         }
