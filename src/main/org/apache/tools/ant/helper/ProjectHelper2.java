@@ -18,13 +18,13 @@
 package org.apache.tools.ant.helper;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExtensionPoint;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
-import org.apache.tools.ant.TargetGroup;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.types.Resource;
@@ -825,19 +825,19 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *            <code>"taskdef"</code>, <code>"typedef"</code>,
          *            <code>"property"</code>, <code>"target"</code>,
-         *            <code>"target-group"</code>
+         *            <code>"extension-point"</code>
          *            or a data type definition
          */
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
-            return (name.equals("target") || name.equals("target-group"))
+            return (name.equals("target") || name.equals("extension-point"))
                 && (uri.equals("") || uri.equals(ANT_CORE_URI))
                 ? ProjectHelper2.targetHandler : ProjectHelper2.elementHandler;
         }
     }
 
     /**
-     * Handler for "target" and "target-group" elements.
+     * Handler for "target" and "extension-point" elements.
      */
     public static class TargetHandler extends AntHandler {
 
@@ -865,11 +865,11 @@ public class ProjectHelper2 extends ProjectHelper {
                                    AntXMLContext context) throws SAXParseException {
             String name = null;
             String depends = "";
-            String targetGroup = null;
+            String extensionPoint = null;
 
             Project project = context.getProject();
             Target target = "target".equals(tag)
-                ? new Target() : new TargetGroup();
+                ? new Target() : new ExtensionPoint();
             target.setProject(project);
             target.setLocation(new Location(context.getLocator()));
             context.addTarget(target);
@@ -899,8 +899,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     }
                 } else if (key.equals("description")) {
                     target.setDescription(value);
-                } else if (key.equals("target-group")) {
-                    targetGroup = value;
+                } else if (key.equals("extensionOf")) {
+                    extensionPoint = value;
                 } else {
                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context
                             .getLocator());
@@ -969,9 +969,9 @@ public class ProjectHelper2 extends ProjectHelper {
                 context.getCurrentTargets().put(newName, newTarget);
                 project.addOrReplaceTarget(newName, newTarget);
             }
-            if (targetGroup != null) {
+            if (extensionPoint != null) {
                 for (Iterator iter =
-                         Target.parseDepends(targetGroup, name, "target-group")
+                         Target.parseDepends(extensionPoint, name, "extensionOf")
                          .iterator();
                      iter.hasNext(); ) {
                     String tgName = (String) iter.next();
@@ -980,16 +980,16 @@ public class ProjectHelper2 extends ProjectHelper {
                     }
                     if (!projectTargets.containsKey(tgName)) {
                         throw new BuildException("can't add target "
-                                                 + name + " to target-group "
+                                                 + name + " to extension-point "
                                                  + tgName
-                                                 + " because the target-group"
+                                                 + " because the extension-point"
                                                  + " is unknown.");
                     }
                     Target t = (Target) projectTargets.get(tgName);
-                    if (!(t instanceof TargetGroup)) {
+                    if (!(t instanceof ExtensionPoint)) {
                         throw new BuildException("referenced target "
                                                  + tgName
-                                                 + " is not a target-group");
+                                                 + " is not an extension-point");
                     }
                     t.addDependency(name);
                 }

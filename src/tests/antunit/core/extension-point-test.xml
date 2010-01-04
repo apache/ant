@@ -19,7 +19,7 @@
 
   <import file="../antunit-base.xml"/>
 
-  <target-group name="testTargetGroupWorksLikeTarget"
+  <extension-point name="testExtensionPointWorksLikeTarget"
                 depends="setProperty, assertProperty"/>
 
   <target name="setProperty">
@@ -30,26 +30,26 @@
     <au:assertPropertyEquals name="foo" value="bar"/>
   </target>
 
-  <target name="testTargetGroupMustBeEmpty">
+  <target name="testExtensionPointMustBeEmpty">
     <mkdir dir="${output}"/>
     <echo file="${output}/build.xml"><![CDATA[
 <project>
-  <target-group name="foo">
+  <extension-point name="foo">
     <echo>bar</echo>
-  </target-group>
+  </extension-point>
 </project>]]></echo>
     <au:expectfailure
-       expectedMessage="you must not nest child elements into a target-group">
+       expectedMessage="you must not nest child elements into an extension-point">
       <ant dir="${output}"/>
     </au:expectfailure>
   </target>
 
-  <target name="testAddToTargetGroup">
+  <target name="testAddToExtensionPoint">
     <mkdir dir="${output}"/>
     <echo file="${output}/build.xml"><![CDATA[
 <project default="foo">
-  <target-group name="foo"/>
-  <target name="bar" target-group="foo">
+  <extension-point name="foo"/>
+  <target name="bar" extensionOf="foo">
     <echo>In target bar</echo>
   </target>
 </project>]]></echo>
@@ -57,15 +57,15 @@
     <au:assertLogContains text="In target bar"/>
   </target>
 
-  <target name="testTargetGroupMustBeKnown">
+  <target name="testExtensionPointMustBeKnown">
     <mkdir dir="${output}"/>
     <echo file="${output}/build.xml"><![CDATA[
 <project default="foo">
-  <target-group name="bar" target-group="foo"/>
-  <target-group name="foo"/>
+  <extension-point name="bar" extensionOf="foo"/>
+  <extension-point name="foo"/>
 </project>]]></echo>
     <au:expectfailure
-       expectedMessage="can't add target bar to target-group foo because the target-group is unknown">
+       expectedMessage="can't add target bar to extension-point foo because the extension-point is unknown">
       <ant dir="${output}"/>
     </au:expectfailure>
   </target>
@@ -75,10 +75,10 @@
     <echo file="${output}/build.xml"><![CDATA[
 <project default="foo">
   <target name="foo"/>
-  <target name="bar" target-group="foo"/>
+  <target name="bar" extensionOf="foo"/>
 </project>]]></echo>
     <au:expectfailure
-       expectedMessage="referenced target foo is not a target-group">
+       expectedMessage="referenced target foo is not an extension-point">
       <ant dir="${output}"/>
     </au:expectfailure>
   </target>

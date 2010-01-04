@@ -1040,6 +1040,9 @@ Other changes:
 
  * a new filterreader appendtolines complements prefixlines.
 
+ * a new top level element extension-point allows build files to be
+   extended with custom targets more easily.
+
 Changes from Ant 1.7.0 TO Ant 1.7.1
 =============================================
 

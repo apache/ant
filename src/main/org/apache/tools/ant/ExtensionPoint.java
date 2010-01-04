@@ -18,17 +18,18 @@
 package org.apache.tools.ant;
 
 /**
- * A special kind of target that must be empty.
+ * An extension point build files can provide as a place where other
+ * build files can add new dependencies.
  *
  * @since Ant 1.8.0
  */
-public class TargetGroup extends Target {
+public class ExtensionPoint extends Target {
 
     // no "clone" constructor since I'm not really sure where it is
     // used
 
     private static final String NO_CHILDREN_ALLOWED
-        = "you must not nest child elements into a target-group";
+        = "you must not nest child elements into an extension-point";
 
     /**
      * Throws an exception.

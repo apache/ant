@@ -229,7 +229,7 @@ public class AntStructure extends Task {
 
             out.println("");
 
-            out.print("<!ELEMENT project (target | target-group | ");
+            out.print("<!ELEMENT project (target | extension-point | ");
             out.print(TASKS);
             out.print(" | ");
             out.print(TYPES);
@@ -252,9 +252,9 @@ public class AntStructure extends Task {
             out.println(")*>");
             out.println("");
             printTargetAttrs(out, "target");
-            out.println("<!ELEMENT target-group EMPTY>");
+            out.println("<!ELEMENT extension-point EMPTY>");
             out.println("");
-            printTargetAttrs(out, "target-group");
+            printTargetAttrs(out, "extension-point");
         }
 
         /**
@@ -268,7 +268,7 @@ public class AntStructure extends Task {
             out.println("          if          CDATA #IMPLIED");
             out.println("          unless      CDATA #IMPLIED");
             out.println("          depends     CDATA #IMPLIED");
-            out.println("          target-group CDATA #IMPLIED");
+            out.println("          extensionOf CDATA #IMPLIED");
             out.println("          description CDATA #IMPLIED>");
             out.println("");
         }

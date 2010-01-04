@@ -19,7 +19,7 @@
 <head>
   <meta http-equiv="Content-Language" content="en-us"/>
   <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
-  <title>Targets and Target-Groups</title>
+  <title>Targets and Extension-Points</title>
 </head>
 
 <body>
@@ -199,9 +199,9 @@
       <td align="center" valign="top">No</td>
     </tr>
     <tr>
-      <td valign="top">group</td>
+      <td valign="top">extensionOf</td>
       <td valign="top">Adds the current target to the depends list of
-        the named <a href="#target-groups">target-group</a>.
+        the named <a href="#extension-points">extension-point</a>.
         <em>since Ant 1.8.0.</em></td>
       <td align="center" valign="top">No</td>
     </tr>
@@ -225,11 +225,11 @@
     don't use Ants main class as entry point and calling them from the IDE
     is usually possible.</p>
 
-  <h1><a name="target-groups">Target-Groups</a></h1>
+  <h1><a name="extension-points">Extension-Points</a></h1>
 
   <p><em>since Ant 1.8.0.</em></p>
 
-  <p>Target-Groups are similar to targets in that they have a name and
+  <p>Extension-Points are similar to targets in that they have a name and
     a depends list and can be executed from the command line.  Just
     like targets they represent a state during the build process.</p>
 
@@ -237,18 +237,18 @@
     is to collect targets that contribute to the desired state in
     their depends list.</p>
 
-  <p>Targets can add themselves to a target-group's depends list via
-    their group attribute.  The targets that add themselves will be
+  <p>Targets can add themselves to an extension-points's depends list via
+    their extensionOf attribute.  The targets that add themselves will be
     added after the targets of the explicit depends-attribute of the
-    target-group, if multiple targets add themselves, their relative
+    extension-point, if multiple targets add themselves, their relative
     order is not defined.</p>
 
-  <p>The main purpose of a target-group is to act as an extension
+  <p>The main purpose of an extension-point is to act as an extension
     point for build files designed to
     be <a href="CoreTasks\import.html">imported</a>.  In the imported
-    file a target-groups defines a state that must be reached and
+    file an extension-point defines a state that must be reached and
     targets from other build files can join the depends list of said
-    target-group in order to contribute to that state.</p>
+    extension-point in order to contribute to that state.</p>
 
   <p>For example your imported build file may need to compile code, it
     might look like:</p>
@@ -256,7 +256,7 @@
 &lt;target name="create-directory-layout"&gt;
    ...
 &lt;/target&gt;
-&lt;target-group name="ready-to-compile"
+&lt;extension-point name="ready-to-compile"
               depends="create-directory-layout"/&gt;
 &lt;target name="compile" depends="ready-to-compile"&gt;
    ...
@@ -270,7 +270,7 @@
     your main build file you may use something like</p>
 <blockquote><pre>
 &lt;target name="generate-sources"
-        group="ready-to-compile"&gt;
+        extensionOf="ready-to-compile"&gt;
    ...
 &lt;/target&gt;
 </pre></blockquote>
