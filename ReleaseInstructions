@@ -127,8 +127,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
     website. See the previous release directories for examples of these files.
     Add instructions and warnings (GNU tar format issues, etc).
 
-    You may choose to use the text2html convertor present at
-    http://txt2html.sourceforge.net/#test
+    You may choose to use the text2html converter present at
+    http://www.ffnn.nl/pages/projects/wiki-text-to-html.php
 
     Name the generated file RELEASE-NOTES-x.y.z.html.
 
