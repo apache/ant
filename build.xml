@@ -1379,9 +1379,13 @@
     </uptodate>
   </target>
 
-  <target name="javadocs" depends="prepare, javadoc_check"
-    unless="javadoc.notrequired"
-    description="--> creates the API documentation">
+  <target name="javadocs" depends="prepare, javadoc_check, check_for_optional_packages, -javadocs.do, -javadocs.dont"
+    description="--> creates the API documentation"/>
+    
+  <target name="-javadocs.dont" unless="jdk1.5+">
+    <echo>Javadoc creation of Ant's API does not work with JDK 1.4. Please use a newer one.</echo>
+  </target>
+  <target name="-javadocs.do" if="jdk1.5+" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
       destdir="${build.javadocs}"
