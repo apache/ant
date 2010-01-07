@@ -69,7 +69,7 @@
     file="${findbugs.download.to}/${findbugs.download.name}/lib/findbugs.jar"
     description="Check if Findbugs is already installed."
   />
-  
+
   <!-- Findbugs: Running Findbugs -->
   <property name="findbugs.reportdir" 
             location="${build.dir}/reports/findbugs" 
@@ -83,6 +83,17 @@
   <property name="findbugs.jvmargs"   
             value="-Xms128m -Xmx512m" 
             description="JVMArgs for invoking Findbugs"/>
+
+  <!-- RAT Release Auditing Tool -->
+  <property name="rat.report.dir"
+            value="${build.dir}/reports/rat"
+            description="Where to store the RAT reports"/>
+  <property name="rat.report.file"
+            value="${rat.report.dir}/report.html"
+            description="RAT-Report file"/>
+  <property name="rat.version"
+            value="0.6"
+            description="Which Version of RAT to use"/>
 
 
 
@@ -204,6 +215,22 @@
         <javaresource name="${findbugs.xsl}" classpathref="findbugs.real.classpath"/>
       </style>  
     </xslt>
+  </target>
+  
+  
+  <target name="rat" description="Runs the ReleaseAuditingTool"  depends="init-ivy">
+    <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
+                   inline="true" conf="default" pathid="rat.classpath" transitive="true"/>
+    <typedef resource="org/apache/rat/anttasks/antlib.xml"
+             uri="antlib:org.apache.rat.anttasks"
+             classpathref="rat.classpath"/>
+    <mkdir dir="${rat.report.dir}"/>
+    <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="${build.dir}/reports/rat/report.txt">
+      <fileset dir="${java.dir}">
+        <exclude name="org/apache/tools/ant/defaultManifest.mf"/>
+        <exclude name="org/apache/tools/ant/version.txt"/>
+      </fileset>
+    </rat:report>
   </target>
 
 </project>
