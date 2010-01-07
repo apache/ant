@@ -1,8 +1,0 @@
-The input proposal has been accepted as part of main Ant and has been
-merged with the main code tree on 2002-04-22.
-
-The only part that didn't get moved over was SwingInputHandler that
-has never been more than a proof of concept - if you really want to
-see it, you can find it in CVS's Attic:
-
-<http://cvs.apache.org/viewcvs/jakarta-ant/proposal/sandbox/input/src/main/org/apache/tools/ant/input/Attic/SwingInputHandler.java>
