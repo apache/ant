@@ -10,7 +10,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-Changes from Ant 1.7.x TO Ant 1.8.0RC1
+Changes from Ant 1.7.1 TO Ant 1.8.0RC1
 ======================================
 
 Changes that could break older environments:
