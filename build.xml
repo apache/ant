@@ -1046,6 +1046,8 @@
       </fileset>
     </copy>
 
+    <mkdir dir="${src.dist.lib}/optional"/>
+
     <copy todir="${src.dist.src}">
       <fileset dir="${src.dir}"/>
     </copy>
