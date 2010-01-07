@@ -195,4 +195,14 @@ public class ZipEntryTest extends TestCase {
         assertEquals(0x11, ze.getExternalAttributes()  & 0xFFFF);
     }
 
+    /**
+     * Test case for
+     * <a href="https://issues.apache.org/jira/browse/COMPRESS-94"
+     * >COMPRESS-94</a>.
+     */
+    public void testNotEquals() {
+        ZipEntry entry1 = new ZipEntry("foo");
+        ZipEntry entry2 = new ZipEntry("bar");
+        assertFalse(entry1.equals(entry2));
+    }
 }
