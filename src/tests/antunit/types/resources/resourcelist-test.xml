@@ -30,7 +30,8 @@
   <target name="testBasicOperation" depends="setUp">
     <echo file="${input}/a.txt">${input}/b.txt
 ${input}/c.txt</echo>
-    <au:expectfailure expectedmessage="Could not find resource file &quot;${input}/c.txt&quot;">
+    <property name="c" location="${input}/c.txt"/>
+    <au:expectfailure expectedmessage="Could not find resource file &quot;${c}&quot;">
       <copy todir="${output}" flatten="true">
         <resourcelist>
           <file file="${input}/a.txt"/>
@@ -91,7 +92,8 @@ ${input}/c.txt</echo>
   </target>
 
   <target name="testReadsURLs" depends="setUp">
-    <echo file="${input}/a.txt">jar:file:${ant.home}/lib/ant.jar!/org/apache/tools/ant/antlib.xml</echo>
+    <makeurl file="${ant.core.lib}" property="ant.jar"/>
+    <echo file="${input}/a.txt">jar:${ant.jar}!/org/apache/tools/ant/antlib.xml</echo>
     <copy todir="${output}" flatten="true">
       <resourcelist>
         <file file="${input}/a.txt"/>
