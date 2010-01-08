@@ -43,13 +43,13 @@ Changes that could break older environments:
 
  * Added a restricted form of typedef called <componentdef>. This
    allows definition of elements that can only be within tasks or
-   types. This method is now used to define conditions, selectors and
-   selectors. This means that tasks may now have nested conditions
-   just by implementing the Condition interface, rather than extending
-   ConditionBase. It also means that the use of namespaces for some of
-   the selectors introduced in Ant 1.7.0 is no longer necessary.
-   Implementing this means that the DynamicElement work-around
-   introduced in Ant 1.7.0 has been removed.
+   types. This method is now used to define conditions, selectors,
+   comparators and filterreaders. This means that tasks may now have
+   nested conditions just by implementing the Condition interface,
+   rather than extending ConditionBase. It also means that the use of
+   namespaces for some of the selectors introduced in Ant 1.7.0 is no
+   longer necessary.  Implementing this means that the DynamicElement
+   work-around introduced in Ant 1.7.0 has been removed.
    Bugzilla Report 40511.
 
  * In the <touch> task when a <mapper> is used, the millis and
