@@ -117,5 +117,23 @@
     </target>
 
     <target name="all" depends="docs,javadocs" description="Create both XDocs and Javadoc."/>
+    
+    
+    <available property="jdk1.5+" classname="java.net.Proxy"/>
+    <target name="txt2html">
+        <fail unless="jdk1.5+" message="Tomcat BuildUtils requires Java5+"/>
+        <property name="build.dir" value="build"/>
+        <tempfile property="temp.dir"/>
+        <mkdir dir="${temp.dir}/org/apache/tomcat/buildutil"/>
+        <get src="http://svn.apache.org/repos/asf/tomcat/trunk/java/org/apache/tomcat/buildutil/Txt2Html.java"
+             dest="${temp.dir}/org/apache/tomcat/buildutil/Txt2Html.java"/>
+        <javac srcdir="${temp.dir}" destdir="${temp.dir}" includeAntRuntime="true"/>
+        <taskdef name="txt2html" classname="org.apache.tomcat.buildutil.Txt2Html" classpath="${temp.dir}"/>
+        <mkdir dir="${build.dir}/html"/>
+        <txt2html todir="${build.dir}/html">
+            <fileset file="WHATSNEW"/>
+        </txt2html>
+        <delete dir="${temp.dir}"/>
+    </target>
 
 </project>
