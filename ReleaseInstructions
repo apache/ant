@@ -127,15 +127,13 @@ Note: This document was updated in the context of releasing Ant 1.7.
     website. See the previous release directories for examples of these files.
     Add instructions and warnings (GNU tar format issues, etc).
 
-    You may choose to use the text2html converter present at
-    http://www.ffnn.nl/pages/projects/wiki-text-to-html.php
+    Use the target txt2html of docs.xml
 
     Name the generated file RELEASE-NOTES-x.y.z.html.
 
     Change the title to something like "Release Notes of Apache Ant
     1.7.0Beta2" (from the default txt2html)
 
-    [[ TODO: This must perhaps be an Ant task. ]]
 
 12. Once this is uploaded, unpack things in your home directory
     and call for a release vote on dev@ant.  The vote will only pass
