@@ -218,7 +218,7 @@
   </target>
   
   
-  <target name="rat" description="Runs the ReleaseAuditingTool"  depends="init-ivy">
+  <target name="rat" description="--> Runs the ReleaseAuditingTool"  depends="init-ivy">
     <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
                    inline="true" conf="default" pathid="rat.classpath" transitive="true"/>
     <typedef resource="org/apache/rat/anttasks/antlib.xml"
