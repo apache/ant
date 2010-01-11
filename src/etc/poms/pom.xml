@@ -76,6 +76,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <module>ant-apache-oro</module>
     <module>ant-apache-regexp</module>
     <module>ant-apache-resolver</module>
+    <module>ant-apache-xalan2</module>
     <module>ant-commons-logging</module>
     <module>ant-commons-net</module>
     <module>ant-jai</module>
@@ -87,12 +88,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <module>ant-launcher</module>
     <module>ant-netrexx</module>
     <module>ant-nodeps</module>
-    <module>ant-starteam</module>
-    <module>ant-stylebook</module>
     <module>ant-swing</module>
     <module>ant-testutil</module>
     <module>ant-trax</module>
-    <module>ant-weblogic</module>
   </modules>
   <dependencies>
      <dependency>

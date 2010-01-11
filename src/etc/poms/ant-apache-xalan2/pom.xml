@@ -20,9 +20,8 @@
   Please contact us if you are not satisfied with the data contained in this POM.
   URL : http://ant.apache.org
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-parent</artifactId>
@@ -31,9 +30,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
-  <artifactId>ant-stylebook</artifactId>
+  <artifactId>ant-apache-xalan2</artifactId>
   <version>1.8.0-SNAPSHOT</version>
-  <description>executes the Apache Stylebook document generator. Deprecated since Ant 1.7</description>
+  <description>contains the junit and junirreport tasks</description>
   <dependencies>
     <dependency>
       <groupId>org.apache.ant</groupId>
@@ -42,22 +41,52 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>stylebook</groupId>
-      <artifactId>stylebook</artifactId>
-      <version>1.0-b2</version>
-      <scope>provided</scope>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-nodeps</artifactId>
+      <version>1.8.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+      <version>2.7.1</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-timestamp-file</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="${project.build.outputDirectory}"/>
+                <copy todir="${project.build.outputDirectory}/org/apache/tools/ant/taskdefs/optional/junit/xsl">
+                  <fileset dir="${project.build.sourceDirectory}/../etc">
+                    <include name="junit-frames.xsl"/>
+                    <include name="junit-noframes.xsl"/>
+                  </fileset>
+                </copy>              
+              </tasks>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.2</source>
-          <target>1.2</target>
+          <source>1.4</source>
+          <target>1.4</target>
           <includes>
-            <include>org/apache/tools/ant//taskdefs/optional/StyleBook*</include>
+            <include>org/apache/tools/ant//taskdefs/optional/Xalan2TraceSupport*</include>
           </includes>
         </configuration>
       </plugin>
@@ -68,5 +97,4 @@
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>
   </build>
-  
 </project>

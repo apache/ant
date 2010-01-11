@@ -111,21 +111,20 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.2</source>
-          <target>1.2</target>
+          <source>1.4</source>
+          <target>1.4</target>
           <excludes>
             <exclude>org/apache/tools/ant/taskdefs/optional/**</exclude>
             <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
             <exclude>org/apache/tools/ant/types/optional/**</exclude>
             <exclude>org/apache/tools/ant/types/resolver/**</exclude>
+            <exclude>org/apache/tools/ant/util/ScriptRunner.java</exclude>
             <exclude>org/apache/tools/ant/util/depend/**</exclude>
             <exclude>org/apache/tools/ant/util/optional/**</exclude>
-            <exclude>org/apache/tools/ant/util/Script*</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
-            <exclude>org/apache/tools/ant/util/regexp/Jdk14Regexp*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
             <exclude>org/apache/tools/ant/launch/**</exclude>
           </excludes>

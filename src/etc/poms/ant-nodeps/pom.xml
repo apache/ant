@@ -70,8 +70,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.2</source>
-          <target>1.2</target>
+          <source>1.4</source>
+          <target>1.4</target>
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/**</include>
             <include>org/apache/tools/ant/types/optional/**</include>
@@ -82,23 +82,20 @@
           </includes>
           <excludes>
             <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/junit/**</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/perforce/**</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Script*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/script/**</exclude>
             <exclude>org/apache/tools/ant/util/optional/Script*</exclude>
             <exclude>org/apache/tools/ant/types/optional/*Script*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/StyleBook*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/ejb/Ejbc*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/ejb/DDCreator*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/WLRun*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/ejb/WLStop*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/Telnet*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/RExec*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/scm/AntStarTeam*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/starteam/*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/ANTLR*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/sound/*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/image/*</exclude>
