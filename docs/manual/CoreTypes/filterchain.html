@@ -107,7 +107,6 @@ The following built-in tasks support nested <code>&lt;filterchain&gt;</code> ele
 A FilterChain is formed by defining zero or more of the following
 nested elements.<br>
 <a href="#filterreader">FilterReader</a><br>
-<a href="#appendtolines">AppendToLines</a><br>
 <a href="#classconstants">ClassConstants</a><br>
 <a href="#escapeunicode">EscapeUnicode</a><br>
 <a href="#expandproperties">ExpandProperties</a><br>
@@ -119,6 +118,7 @@ nested elements.<br>
 <a href="#stripjavacomments">StripJavaComments</a><br>
 <a href="#striplinebreaks">StripLineBreaks</a><br>
 <a href="#striplinecomments">StripLineComments</a><br>
+<a href="#suffixlines">SuffixLines</a><br>
 <a href="#tabstospaces">TabsToSpaces</a><br>
 <a href="#tailfilter">TailFilter</a><br>
 <a href="#deletecharacters">DeleteCharacters</a><br>
@@ -479,9 +479,9 @@ Convenience method:
 &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
 </pre></blockquote>
 
-<h3><a name="appendtolines">AppendToLines</a></h3>
+<h3><a name="suffixlines">SuffixLines</a></h3>
 
-Attaches an appendix to every line.
+Attaches a suffix to every line.
 
 <p><em>since Ant 1.8.0</em></p>
 
@@ -492,24 +492,24 @@ Attaches an appendix to every line.
     <td vAlign=top align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td vAlign=top>append</td>
-    <td vAlign=top align="center">Appendix to be attached to lines.</td>
+    <td vAlign=top>suffix</td>
+    <td vAlign=top align="center">Suffix to be attached to lines.</td>
     <td vAlign=top align="center">Yes</td>
   </tr>
 </table>
 <p>
 <h4>Example:</h4>
 
-This will attach the appendix <code>Foo</code> to all lines.
+This will attach the suffix <code>Foo</code> to all lines.
 <blockquote><pre>
-&lt;filterreader classname=&quot;org.apache.tools.ant.filters.AppendToLines&quot;&gt;
-  &lt;param name=&quot;append&quot; value=&quot;Foo&quot;/&gt;
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.SuffixLines&quot;&gt;
+  &lt;param name=&quot;suffix&quot; value=&quot;Foo&quot;/&gt;
 &lt;/filterreader&gt;
 </pre></blockquote>
 
 Convenience method:
 <blockquote><pre>
-&lt;appendtolines append=&quot;Foo&quot;/&gt;
+&lt;suffixlines suffix=&quot;Foo&quot;/&gt;
 </pre></blockquote>
 
 <h3><a name="replacetokens">ReplaceTokens</a></h3>

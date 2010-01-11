@@ -23,7 +23,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.filters.AppendToLines;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.EscapeUnicode;
@@ -36,6 +35,7 @@ import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.StripJavaComments;
 import org.apache.tools.ant.filters.StripLineBreaks;
 import org.apache.tools.ant.filters.StripLineComments;
+import org.apache.tools.ant.filters.SuffixLines;
 import org.apache.tools.ant.filters.TabsToSpaces;
 import org.apache.tools.ant.filters.TailFilter;
 import org.apache.tools.ant.filters.TokenFilter;
@@ -156,17 +156,17 @@ public class FilterChain extends DataType
     }
 
     /**
-     * Add a AppendToLines filter.
+     * Add a SuffixLines filter.
      *
-     * @param prefixLines a <code>AppendToLines</code> value
+     * @param suffixLines a <code>SuffixLines</code> value
      * @since Ant 1.8.0
      */
-    public void addAppendToLines(final AppendToLines appendToLines) {
+    public void addSuffixLines(final SuffixLines suffixLines) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
         setChecked(false);
-        filterReaders.addElement(appendToLines);
+        filterReaders.addElement(suffixLines);
     }
 
     /**

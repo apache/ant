@@ -33,7 +33,7 @@ cFoo</echo>
     <copy todir="${output}">
       <fileset dir="${input}"/>
       <filterchain>
-        <appendtolines append="Foo"/>
+        <suffixlines suffix="Foo"/>
       </filterchain>
     </copy>
     <au:assertFilesMatch expected="${input}/b.txt"

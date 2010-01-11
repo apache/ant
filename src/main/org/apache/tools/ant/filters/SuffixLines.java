@@ -25,24 +25,24 @@ import org.apache.tools.ant.types.Parameter;
  * Attaches a suffix to every line.
  *
  * Example:
- * <pre>&lt;appendtolines append=&quot;Foo&quot;/&gt;</pre>
+ * <pre>&lt;suffixlines suffix=&quot;Foo&quot;/&gt;</pre>
  *
  * Or:
  *
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.AppendToLines&quot;&gt;
- *  &lt;param name=&quot;append&quot; value=&quot;Foo&quot;/&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.SuffixLines&quot;&gt;
+ *  &lt;param name=&quot;suffix&quot; value=&quot;Foo&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
  * @since Ant 1.8.0
  */
-public final class AppendToLines
+public final class SuffixLines
     extends BaseParamFilterReader
     implements ChainableReader {
     /** Parameter name for the prefix. */
-    private static final String APPEND_KEY = "append";
+    private static final String SUFFIX_KEY = "suffix";
 
-    /** The appendix to be used. */
-    private String append = null;
+    /** The suffix to be used. */
+    private String suffix = null;
 
     /** Data that must be read from, if not null. */
     private String queuedData = null;
@@ -52,7 +52,7 @@ public final class AppendToLines
      *
      * @see BaseFilterReader#BaseFilterReader()
      */
-    public AppendToLines() {
+    public SuffixLines() {
         super();
     }
 
@@ -62,13 +62,13 @@ public final class AppendToLines
      * @param in A Reader object providing the underlying stream.
      *           Must not be <code>null</code>.
      */
-    public AppendToLines(final Reader in) {
+    public SuffixLines(final Reader in) {
         super(in);
     }
 
     /**
      * Returns the next character in the filtered stream. One line is read
-     * from the original input, and the appendix added. The resulting
+     * from the original input, and the suffix added. The resulting
      * line is then used until it ends, at which point the next original line
      * is read, etc.
      *
@@ -101,7 +101,7 @@ public final class AppendToLines
             if (queuedData == null) {
                 ch = -1;
             } else {
-                if (append != null) {
+                if (suffix != null) {
                     String lf = "";
                     if (queuedData.endsWith("\r\n")) {
                         lf = "\r\n";
@@ -111,7 +111,7 @@ public final class AppendToLines
                     queuedData =
                         queuedData.substring(0,
                                              queuedData.length() - lf.length())
-                        + append + lf;
+                        + suffix + lf;
                 }
                 return read();
             }
@@ -120,27 +120,27 @@ public final class AppendToLines
     }
 
     /**
-     * Sets the appendix to add at the end of each input line.
+     * Sets the suffix to add at the end of each input line.
      *
-     * @param append The appendix to add at the end of each input line.
-     *               May be <code>null</code>, in which case no appendix
+     * @param suffix The suffix to add at the end of each input line.
+     *               May be <code>null</code>, in which case no suffix
      *               is added.
      */
-    public void setAppend(final String append) {
-        this.append = append;
+    public void setSuffix(final String append) {
+        this.suffix = append;
     }
 
     /**
-     * Returns the appendix which will be added at the end of each input line.
+     * Returns the suffix which will be added at the end of each input line.
      *
-     * @return the appendix which will be added at the end of each input line
+     * @return the suffix which will be added at the end of each input line
      */
-    private String getAppend() {
-        return append;
+    private String getSuffix() {
+        return suffix;
     }
 
     /**
-     * Creates a new AppendToLines filter using the passed in
+     * Creates a new SuffixLines filter using the passed in
      * Reader for instantiation.
      *
      * @param rdr A Reader object providing the underlying stream.
@@ -150,21 +150,21 @@ public final class AppendToLines
      *         the specified reader
      */
     public Reader chain(final Reader rdr) {
-        AppendToLines newFilter = new AppendToLines(rdr);
-        newFilter.setAppend(getAppend());
+        SuffixLines newFilter = new SuffixLines(rdr);
+        newFilter.setSuffix(getSuffix());
         newFilter.setInitialized(true);
         return newFilter;
     }
 
     /**
-     * Initializes the appendix if it is available from the parameters.
+     * Initializes the suffix if it is available from the parameters.
      */
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
-                if (APPEND_KEY.equals(params[i].getName())) {
-                    append = params[i].getValue();
+                if (SUFFIX_KEY.equals(params[i].getName())) {
+                    suffix = params[i].getValue();
                     break;
                 }
             }

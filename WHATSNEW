@@ -4,6 +4,8 @@ Changes from Ant 1.8.0RC1 TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+ * the appendtolines filter has been renamed to suffixlines.
+
 Fixed bugs:
 -----------
 
