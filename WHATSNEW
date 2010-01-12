@@ -9,6 +9,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * <fixcrlf> now tries earlier to delete the created temporary files.
+   Bugzilla Report 48506.
+
 Other changes:
 --------------
 

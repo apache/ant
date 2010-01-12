@@ -376,10 +376,13 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                         Project.MSG_DEBUG);
                     FILE_UTILS.setFileLastModified(destFile, lastModified);
                 }
-                tmpFile = null;
             }
         } catch (IOException e) {
             throw new BuildException("error running fixcrlf on file " + srcFile, e);
+        } finally {
+            if (tmpFile != null && tmpFile.exists()) {
+                FILE_UTILS.tryHardToDelete(tmpFile);
+            }
         }
     }
 
