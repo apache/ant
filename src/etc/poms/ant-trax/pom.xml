@@ -37,7 +37,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
+      <artifactId>ant-apache-xalan2</artifactId>
       <version>1.8.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
