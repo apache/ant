@@ -1784,11 +1784,11 @@ public class Zip extends MatchingTask {
             }
 
             ze.setUnixMode(mode);
-            zOut.putNextEntry(ze);
-
             if (extra != null) {
                 ze.setExtraFields(extra);
             }
+
+            zOut.putNextEntry(ze);
 
             byte[] buffer = new byte[BUFFER_SIZE];
             int count = 0;
