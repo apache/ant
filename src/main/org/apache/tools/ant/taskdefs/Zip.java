@@ -1674,6 +1674,35 @@ public class Zip extends MatchingTask {
         }
     }
 
+    /*
+     * This is a hacky construct to extend the zipFile method to
+     * support a new parameter (extra fields to preserve) without
+     * breaking subclasses that override the old method signature.
+     */
+    private static ThreadLocal currentZipExtra = new ThreadLocal() {
+            protected Object initialValue() {
+                return null;
+            }
+        };
+
+    /**
+     * Provides the extra fields for the zip entry currently being
+     * added to the archive - if any.
+     * @since Ant 1.8.0
+     */
+    protected final ZipExtraField[] getCurrentExtraFields() {
+        return (ZipExtraField[]) currentZipExtra.get();
+    }
+
+    /**
+     * Sets the extra fields for the zip entry currently being
+     * added to the archive - if any.
+     * @since Ant 1.8.0
+     */
+    protected final void setCurrentExtraFields(ZipExtraField[] extra) {
+        currentZipExtra.set(extra);
+    }
+
     /**
      * Adds a new entry to the archive, takes care of duplicates as well.
      *
@@ -1692,30 +1721,6 @@ public class Zip extends MatchingTask {
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
         throws IOException {
-        zipFile(in, zOut, vPath, lastModified, fromArchive, mode, null);
-    }
-
-    /**
-     * Adds a new entry to the archive, takes care of duplicates as well.
-     *
-     * @param in the stream to read data for the entry from.  The
-     * caller of the method is responsible for closing the stream.
-     * @param zOut the stream to write to.
-     * @param vPath the name this entry shall have in the archive.
-     * @param lastModified last modification time for the entry.
-     * @param fromArchive the original archive we are copying this
-     * entry from, will be null if we are not copying from an archive.
-     * @param mode the Unix permissions to set.
-     * @param extra ZipExtraFields to add
-     *
-     * @since Ant 1.8.0
-     * @throws IOException on error
-     */
-    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified, File fromArchive,
-                           int mode, ZipExtraField[] extra)
-        throws IOException {
-
         // fromArchive is used in subclasses overriding this method
 
         if (entries.contains(vPath)) {
@@ -1784,6 +1789,7 @@ public class Zip extends MatchingTask {
             }
 
             ze.setUnixMode(mode);
+            ZipExtraField[] extra = getCurrentExtraFields();
             if (extra != null) {
                 ze.setExtraFields(extra);
             }
@@ -1800,6 +1806,34 @@ public class Zip extends MatchingTask {
             } while (count != -1);
         }
         addedFiles.addElement(vPath);
+    }
+
+    /**
+     * Adds a new entry to the archive, takes care of duplicates as well.
+     *
+     * @param in the stream to read data for the entry from.  The
+     * caller of the method is responsible for closing the stream.
+     * @param zOut the stream to write to.
+     * @param vPath the name this entry shall have in the archive.
+     * @param lastModified last modification time for the entry.
+     * @param fromArchive the original archive we are copying this
+     * entry from, will be null if we are not copying from an archive.
+     * @param mode the Unix permissions to set.
+     * @param extra ZipExtraFields to add
+     *
+     * @since Ant 1.8.0
+     * @throws IOException on error
+     */
+    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
+                           long lastModified, File fromArchive,
+                           int mode, ZipExtraField[] extra)
+        throws IOException {
+        try {
+            setCurrentExtraFields(extra);
+            zipFile(in, zOut, vPath, lastModified, fromArchive, mode);
+        } finally {
+            setCurrentExtraFields(null);
+        }
     }
 
     /**

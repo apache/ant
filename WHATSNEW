@@ -9,8 +9,13 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
- * <fixcrlf> now tries earlier to delete the created temporary files.
+ * <fixcrlf> now tries to delete the created temporary files earlier.
    Bugzilla Report 48506.
+
+ * the implementation of <zip> had been changed in a way that broke
+   the jarjar links task and protentially other third-party subclasses
+   as well.
+   Bugzilla Report 48541.
 
 Other changes:
 --------------

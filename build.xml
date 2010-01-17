@@ -1825,6 +1825,8 @@ see ${build.junit.reports} / ${antunit.reports}
             unless="tests.and.ant.share.classloader"/>
           <exclude name="${ant.package}/DefaultLoggerTest.java"
             unless="tests.and.ant.share.classloader"/>
+          <exclude name="${taskdefs.package}/ZipExtraFieldTest.java"
+            unless="tests.and.ant.share.classloader"/>
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs

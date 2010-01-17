@@ -473,7 +473,7 @@ public class Jar extends Zip {
                super.zipFile(is, zOut,
                              "META-INF/services/" + service.getType(),
                              System.currentTimeMillis(), null,
-                             ZipFileSet.DEFAULT_FILE_MODE, null);
+                             ZipFileSet.DEFAULT_FILE_MODE);
            } finally {
                // technically this is unnecessary since
                // Service.getAsStream returns a ByteArrayInputStream
@@ -581,7 +581,7 @@ public class Jar extends Zip {
         try {
             super.zipFile(bais, zOut, MANIFEST_NAME,
                           System.currentTimeMillis(), null,
-                          ZipFileSet.DEFAULT_FILE_MODE, null);
+                          ZipFileSet.DEFAULT_FILE_MODE);
         } finally {
             // not really required
             FileUtils.close(bais);
@@ -669,7 +669,7 @@ public class Jar extends Zip {
             new ByteArrayInputStream(baos.toByteArray());
         try {
             super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(),
-                          null, ZipFileSet.DEFAULT_FILE_MODE, null);
+                          null, ZipFileSet.DEFAULT_FILE_MODE);
         } finally {
             // not really required
             FileUtils.close(bais);
@@ -689,8 +689,7 @@ public class Jar extends Zip {
      * @throws IOException on error
      */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
-                           long lastModified, File fromArchive, int mode,
-                           ZipExtraField[] extra)
+                           long lastModified, File fromArchive, int mode)
         throws IOException {
         if (MANIFEST_NAME.equalsIgnoreCase(vPath))  {
             if (isFirstPass()) {
@@ -705,8 +704,7 @@ public class Jar extends Zip {
             if (index && vPath.indexOf("/") == -1) {
                 rootEntries.addElement(vPath);
             }
-            super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode,
-                          extra);
+            super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);
         }
     }
 
