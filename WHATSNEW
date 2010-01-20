@@ -16,6 +16,9 @@ Fixed bugs:
    the jarjar links task and protentially other third-party subclasses
    as well.
    Bugzilla Report 48541.
+   
+ * <scp> task didn't report build file location when a remote operation failed
+   Bugzilla Report 48578.  
 
 Other changes:
 --------------

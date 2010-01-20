@@ -235,7 +235,15 @@ public class Scp extends SSHBase {
             }
         } catch (Exception e) {
             if (getFailonerror()) {
-                throw new BuildException(e);
+                if(e instanceof BuildException) {
+                    BuildException be = (BuildException) e;
+                    if(be.getLocation() == null) {
+                        be.setLocation(getLocation());
+                    }
+                    throw be;
+                } else {
+                    throw new BuildException(e);
+                }
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
