@@ -1824,9 +1824,10 @@ public class Zip extends MatchingTask {
      * @since Ant 1.8.0
      * @throws IOException on error
      */
-    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified, File fromArchive,
-                           int mode, ZipExtraField[] extra)
+    protected final void zipFile(InputStream in, ZipOutputStream zOut,
+                                 String vPath, long lastModified,
+                                 File fromArchive, int mode,
+                                 ZipExtraField[] extra)
         throws IOException {
         try {
             setCurrentExtraFields(extra);
