@@ -265,6 +265,7 @@ public class LayoutPreservingProperties extends Properties {
                 if (((Pair)line).isNew()) {
                     if (!writtenSep) {
                         osw.write(LS);
+                        writtenSep = true;
                     }
                 }
                 osw.write(line.toString() + LS);

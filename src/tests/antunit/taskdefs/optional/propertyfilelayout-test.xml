@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/initial.properties"><![CDATA[#my comment
+foo=bar
+#second comment
+x=1
+]]></echo>
+  </target>
+
+  <target name="testCreateWithoutComment" depends="setUp">
+    <propertyfile file="${output}/created.properties">
+      <entry key="foo" value="bar"/>
+      <entry key="x" value="1" type="int"/>
+    </propertyfile>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1" skip="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip date and blank line -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1" skip="2"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="testCreateWithComment" depends="setUp">
+    <propertyfile file="${output}/created.properties" comment="my comment">
+      <entry key="foo" value="bar"/>
+      <entry key="x" value="1" type="int"/>
+    </propertyfile>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="middle.in"/>
+    <local name="middle.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- just comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="middle.in">
+      <filterchain>
+        <headfilter lines="1" skip="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment, date and blank line -->
+    <loadfile srcfile="${output}/created.properties" property="middle.out">
+      <filterchain>
+        <headfilter lines="1" skip="3"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="middle.out" value="${middle.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+</project>
