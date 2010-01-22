@@ -259,8 +259,14 @@ public class LayoutPreservingProperties extends Properties {
         osw.write("#" + (new Date()).toString() + LS);
 
         boolean writtenSep = false;
-        for (Iterator i = logicalLines.iterator(); i.hasNext();) {
+        boolean maySkipComment = header != null;
+        for (Iterator i = logicalLines.iterator(); i.hasNext();
+             maySkipComment = false) {
             LogicalLine line = (LogicalLine) i.next();
+            if (maySkipComment && line instanceof Comment && 
+                header.equals(line.toString().substring(1))) {
+                continue;
+            }
             if (line instanceof Pair) {
                 if (((Pair)line).isNew()) {
                     if (!writtenSep) {

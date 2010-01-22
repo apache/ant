@@ -26,13 +26,16 @@ foo=bar
 #second comment
 x=1
 ]]></echo>
+    <presetdef name="pf">
+      <propertyfile file="${output}/created.properties">
+        <entry key="foo" value="bar"/>
+        <entry key="x" value="1" type="int"/>
+      </propertyfile>
+    </presetdef>
   </target>
 
   <target name="testCreateWithoutComment" depends="setUp">
-    <propertyfile file="${output}/created.properties">
-      <entry key="foo" value="bar"/>
-      <entry key="x" value="1" type="int"/>
-    </propertyfile>
+    <pf/>
     <local name="head.in"/>
     <local name="head.out"/>
     <local name="tail.in"/>
@@ -64,10 +67,7 @@ x=1
   </target>
 
   <target name="testCreateWithComment" depends="setUp">
-    <propertyfile file="${output}/created.properties" comment="my comment">
-      <entry key="foo" value="bar"/>
-      <entry key="x" value="1" type="int"/>
-    </propertyfile>
+    <pf comment="my comment"/>
     <local name="head.in"/>
     <local name="head.out"/>
     <local name="middle.in"/>
@@ -110,6 +110,83 @@ x=1
     </loadfile>
     <au:assertPropertyEquals name="head.out" value="${head.in}"/>
     <au:assertPropertyEquals name="middle.out" value="${middle.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="-updateSetUp" depends="setUp">
+    <copy file="${input}/initial.properties"
+          tofile="${output}/created.properties"/>
+  </target>
+
+  <target name="testUpdateWithoutComment" depends="-updateSetUp">
+    <pf/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <loadfile srcfile="${input}/initial.properties" property="head.in"/>
+    <!-- skip date -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+  </target>
+
+  <target name="testUpdateWithNewComment" depends="-updateSetUp">
+    <pf comment="new comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <property name="head.in" value="#new comment${line.separator}"/>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in"/>
+    <!-- skip new comment and date -->
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="testUpdateWithSameComment" depends="-updateSetUp">
+    <pf comment="my comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- just comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment and date -->
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
     <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
   </target>
 
