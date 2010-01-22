@@ -233,6 +233,22 @@ public final class DateUtils {
     }
 
     /**
+     * Parses the string in a format suitable for a SMTP date header.
+     *
+     * @param datestr string to be parsed
+     *
+     * @return a java.util.Date object as parsed by the format.
+     * @exception ParseException if the supplied string cannot be parsed by
+     * this pattern.
+     * @since Ant 1.8.0
+     */
+    public static Date parseDateFromHeader(String datestr) throws ParseException {
+        synchronized (DATE_HEADER_FORMAT_INT) {
+            return DATE_HEADER_FORMAT_INT.parse(datestr);
+        }
+    }
+
+    /**
      * Parse a string as a datetime using the ISO8601_DATETIME format which is
      * <code>yyyy-MM-dd'T'HH:mm:ss</code>
      *

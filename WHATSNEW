@@ -20,8 +20,8 @@ Fixed bugs:
  * <scp> task didn't report build file location when a remote operation failed
    Bugzilla Report 48578.  
 
- * <propertyfile> would add the same comment each time it updated an
-   existing property file.
+ * <propertyfile> would add the same comment and a date line each time
+   it updated an existing property file.
    Bugzilla Report 48558.
 
 Other changes:

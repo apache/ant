@@ -253,20 +253,38 @@ public class LayoutPreservingProperties extends Properties {
     public void store(OutputStream out, String header) throws IOException {
         OutputStreamWriter osw = new OutputStreamWriter(out, "ISO-8859-1");
 
+        int skipLines = 0;
+        int totalLines = logicalLines.size();
+
         if (header != null) {
             osw.write("#" + header + LS);
+            if (totalLines > 0
+                && logicalLines.get(0) instanceof Comment
+                && header.equals(logicalLines.get(0).toString().substring(1))) {
+                skipLines = 1;
+            }
         }
-        osw.write("#" + (new Date()).toString() + LS);
+
+        // we may be updatiung a file written by this class, replace
+        // the date comment instead of adding a new one and preserving
+        // the one written last time
+        if (totalLines > skipLines
+            && logicalLines.get(skipLines) instanceof Comment) {
+            try {
+                DateUtils.parseDateFromHeader(logicalLines
+                                              .get(skipLines)
+                                              .toString().substring(1));
+                skipLines++;
+            } catch (java.text.ParseException pe) {
+                // not an existing date comment
+            }
+        }
+        osw.write("#" + DateUtils.getDateForHeader() + LS);
 
         boolean writtenSep = false;
-        boolean maySkipComment = header != null;
-        for (Iterator i = logicalLines.iterator(); i.hasNext();
-             maySkipComment = false) {
+        for (Iterator i = logicalLines.subList(skipLines, totalLines).iterator();
+             i.hasNext(); ) {
             LogicalLine line = (LogicalLine) i.next();
-            if (maySkipComment && line instanceof Comment && 
-                header.equals(line.toString().substring(1))) {
-                continue;
-            }
             if (line instanceof Pair) {
                 if (((Pair)line).isNew()) {
                     if (!writtenSep) {
