@@ -9,6 +9,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * ant.bat can now also process the -noclasspath switch when it is 
+   the first switch on a command line.
+   Bugzilla Report 48186.
+
  * <fixcrlf> now tries to delete the created temporary files earlier.
    Bugzilla Report 48506.
 
