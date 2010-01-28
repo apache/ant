@@ -156,15 +156,15 @@ public abstract class ResourceDecorator extends Resource {
         super.setRefid(r);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object as(Class clazz) {
         return getResource().as(clazz);
     }
 
     /**
-     * Delegates to a comparison of names.
-     * @param other the object to compare to.
-     * @return a negative integer, zero, or a positive integer as this Resource
-     *         is less than, equal to, or greater than the specified Resource.
+     * {@inheritDoc}
      */
     public int compareTo(Object other) {
         if (other == this) {
@@ -200,6 +200,9 @@ public abstract class ResourceDecorator extends Resource {
         return resource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void dieOnCircularReference(final Stack stack,
                                           final Project project)
         throws BuildException {
