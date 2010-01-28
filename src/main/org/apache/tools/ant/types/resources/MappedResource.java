@@ -35,6 +35,8 @@ public class MappedResource extends ResourceDecorator {
 
     /**
      * Wraps an existing resource.
+     * @param r Resource to wrap
+     * @param m FileNameMapper that handles mapping
      */
     public MappedResource(Resource r, FileNameMapper m) {
         super(r);
@@ -48,14 +50,14 @@ public class MappedResource extends ResourceDecorator {
         String name = getResource().getName();
         if (isReference()) {
             return name;
-        } else {
-            String[] mapped = mapper.mapFileName(name);
-            return mapped != null && mapped.length > 0 ? mapped[0] : null;
         }
+        String[] mapped = mapper.mapFileName(name);
+        return mapped != null && mapped.length > 0 ? mapped[0] : null;
     }
 
     /**
      * Not really supported since mapper is never null.
+     * @param r reference to set
      */
     public void setRefid(Reference r) {
         if (mapper != null) {
@@ -66,10 +68,11 @@ public class MappedResource extends ResourceDecorator {
 
     /**
      * Suppress FileProvider
+     * @param clazz the type to implement
      */
     public Object as(Class clazz) {
         return FileProvider.class.isAssignableFrom(clazz) 
-            ? null : getResource().as(clazz);
+                ? null : getResource().as(clazz);
     }
 
 }

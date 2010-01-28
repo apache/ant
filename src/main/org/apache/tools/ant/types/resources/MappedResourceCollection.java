@@ -35,7 +35,7 @@ import org.apache.tools.ant.util.IdentityMapper;
  * @since Ant 1.8.0
  */
 public class MappedResourceCollection
-    extends DataType implements ResourceCollection, Cloneable {
+        extends DataType implements ResourceCollection, Cloneable {
 
     private ResourceCollection nested = null;
     private Mapper mapper = null;
@@ -86,7 +86,7 @@ public class MappedResourceCollection
     }
 
     /**
-     * @return false
+     * {@inheritDoc}
      */
     public boolean isFilesystemOnly() {
         if (isReference()) {
@@ -98,7 +98,7 @@ public class MappedResourceCollection
     }
 
     /**
-     * @return size of the nested resource collection.
+     * {@inheritDoc}
      */
     public int size() {
         if (isReference()) {
@@ -108,6 +108,9 @@ public class MappedResourceCollection
         return nested.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Iterator iterator() {
         if (isReference()) {
             return ((MappedResourceCollection) getCheckedRef()).iterator();
@@ -128,8 +131,7 @@ public class MappedResourceCollection
     }
 
     /**
-     * Implement clone.  The nested resource collection and mapper are
-     * copied.
+     * Implement clone.  The nested resource collection and mapper are copied.
      * @return a cloned instance.
      */
     public Object clone() {

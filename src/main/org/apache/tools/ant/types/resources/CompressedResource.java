@@ -31,14 +31,14 @@ import org.apache.tools.ant.types.ResourceCollection;
 public abstract class CompressedResource extends ContentTransformingResource {
 
     /** no arg constructor */
-    public CompressedResource() {
+    protected CompressedResource() {
     }
 
     /**
      * Constructor with another resource to wrap.
      * @param other the resource to wrap.
      */
-    public CompressedResource(ResourceCollection other) {
+    protected CompressedResource(ResourceCollection other) {
         addConfigured(other);
     }
 

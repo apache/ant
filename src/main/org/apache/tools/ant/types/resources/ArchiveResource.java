@@ -42,7 +42,7 @@ public abstract class ArchiveResource extends Resource {
     /**
      * Default constructor.
      */
-    public ArchiveResource() {
+    protected ArchiveResource() {
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class ArchiveResource extends Resource {
      * entry in the specified archive.
      * @param a the archive as File.
      */
-    public ArchiveResource(File a) {
+    protected ArchiveResource(File a) {
         this(a, false);
     }
 
@@ -60,7 +60,7 @@ public abstract class ArchiveResource extends Resource {
      * @param a the archive as File.
      * @param withEntry if the entry has been specified.
      */
-    public ArchiveResource(File a, boolean withEntry) {
+    protected ArchiveResource(File a, boolean withEntry) {
         setArchive(a);
         haveEntry = withEntry;
     }
@@ -71,7 +71,7 @@ public abstract class ArchiveResource extends Resource {
      * @param a the archive as Resource.
      * @param withEntry if the entry has been specified.
      */
-    public ArchiveResource(Resource a, boolean withEntry) {
+    protected ArchiveResource(Resource a, boolean withEntry) {
         addConfigured(a);
         haveEntry = withEntry;
     }
@@ -242,6 +242,10 @@ public abstract class ArchiveResource extends Resource {
             : getArchive().toString() + ':' + getName();
     }
 
+    /**
+     * Validate settings and ensure that the represented "archive entry"
+     * has been established.  
+     */
     protected final synchronized void checkEntry() throws BuildException {
         dieOnCircularReference();
         if (haveEntry) {
@@ -266,10 +270,13 @@ public abstract class ArchiveResource extends Resource {
     }
 
     /**
-     * fetches information from the named entry inside the archive.
+     * Fetch information from the named entry inside the archive.
      */
     protected abstract void fetchEntry();
 
+    /**
+     * {@inheritDoc}
+     */
     protected synchronized void dieOnCircularReference(Stack stk, Project p) {
         if (isChecked()) {
             return;
