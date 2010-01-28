@@ -31,7 +31,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-Changes from Ant 1.7.1 TO Ant 1.8.0RC1
+Changes from Ant 1.7.1 TO Ant 1.8.0RCx
 ======================================
 
 Changes that could break older environments:
@@ -220,6 +220,9 @@ Changes that could break older environments:
    name it is expecting, and can specify if they can support a specific build
    file. So Ant is now capable of supporting several ProjectHelper
    implementations, deciding on which to use depending of the input build file.
+
+ * Mapper-aware selectors (depends, different, present) now accept typedef'd
+   FileNameMappers.
 
 Fixed bugs:
 -----------

@@ -66,16 +66,29 @@ public abstract class MappingSelector extends BaseSelector {
     /**
      * Defines the FileNameMapper to use (nested mapper element).
      * @return a mapper to be configured
-     * @throws BuildException if more that one mapper defined
+     * @throws BuildException if more than one mapper defined
      */
     public Mapper createMapper() throws BuildException {
-        if (mapperElement != null) {
+        if (map != null || mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper");
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
+    /**
+     * Add a configured FileNameMapper instance.
+     * @param fileNameMapper the FileNameMapper to add
+     * @throws BuildException if more than one mapper defined
+     * @since Ant 1.8.0
+     */
+    public void addConfigured(FileNameMapper fileNameMapper) {
+        if (map != null || mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper");
+        }
+        this.map = fileNameMapper;
+    }
+ 
     /**
      * Checks to make sure all settings are kosher. In this case, it
      * means that the dest attribute has been set and we have a mapper.
@@ -84,13 +97,15 @@ public abstract class MappingSelector extends BaseSelector {
         if (targetdir == null) {
             setError("The targetdir attribute is required.");
         }
-        if (mapperElement == null) {
-            map = new IdentityMapper();
-        } else {
-            map = mapperElement.getImplementation();
-        }
         if (map == null) {
-            setError("Could not set <mapper> element.");
+            if (mapperElement == null) {
+                map = new IdentityMapper();
+            } else {
+                map = mapperElement.getImplementation();
+                if (map == null) {
+                    setError("Could not set <mapper> element.");
+                }
+            }
         }
     }
 
@@ -121,7 +136,7 @@ public abstract class MappingSelector extends BaseSelector {
                     + targetdir.getName() + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(targetdir, destname);
+        File destfile = FILE_UTILS.resolveFile(targetdir, destname);
 
         boolean selected = selectionTest(file, destfile);
         return selected;

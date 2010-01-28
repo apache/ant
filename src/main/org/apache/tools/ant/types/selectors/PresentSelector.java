@@ -24,6 +24,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.IdentityMapper;
 
 /**
@@ -35,7 +36,6 @@ import org.apache.tools.ant.util.IdentityMapper;
  * @since 1.5
  */
 public class PresentSelector extends BaseSelector {
-
     private File targetdir = null;
     private Mapper mapperElement = null;
     private FileNameMapper map = null;
@@ -86,17 +86,29 @@ public class PresentSelector extends BaseSelector {
     /**
      * Defines the FileNameMapper to use (nested mapper element).
      * @return a mapper to be configured
-     * @throws BuildException if more that one mapper defined
+     * @throws BuildException if more than one mapper defined
      */
     public Mapper createMapper() throws BuildException {
-        if (mapperElement != null) {
+        if (map != null || mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper");
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
     }
 
-
+    /**
+     * Add a configured FileNameMapper instance.
+     * @param fileNameMapper the FileNameMapper to add
+     * @throws BuildException if more than one mapper defined
+     * @since Ant 1.8.0
+     */
+    public void addConfigured(FileNameMapper fileNameMapper) {
+        if (map != null || mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper");
+        }
+        this.map = fileNameMapper;
+    }
+ 
     /**
      * This sets whether to select a file if its dest file is present.
      * It could be a <code>negate</code> boolean, but by doing things
@@ -123,13 +135,15 @@ public class PresentSelector extends BaseSelector {
         if (targetdir == null) {
             setError("The targetdir attribute is required.");
         }
-        if (mapperElement == null) {
-            map = new IdentityMapper();
-        } else {
-            map = mapperElement.getImplementation();
-        }
         if (map == null) {
-            setError("Could not set <mapper> element.");
+            if (mapperElement == null) {
+                map = new IdentityMapper();
+            } else {
+                map = mapperElement.getImplementation();
+                if (map == null) {
+                    setError("Could not set <mapper> element.");
+                }
+            }
         }
     }
 
@@ -160,7 +174,7 @@ public class PresentSelector extends BaseSelector {
                     + targetdir + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(targetdir, destname);
+        File destfile = FileUtils.getFileUtils().resolveFile(targetdir, destname);
         return destfile.exists() == destmustexist;
     }
 
@@ -173,9 +187,8 @@ public class PresentSelector extends BaseSelector {
          * @return the values as an array of strings
          */
         public String[] getValues() {
-            return new String[]{"srconly", "both"};
+            return new String[] { "srconly", "both" };
         }
     }
 
 }
-
