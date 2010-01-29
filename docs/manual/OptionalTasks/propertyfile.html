@@ -27,11 +27,13 @@
 
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
-<p>Ant provides an optional task for editing property files. This is very useful
-when wanting to make unattended modifications to configuration files for application
-servers and applications. Currently, the task maintains a working property file with
-the ability to add properties or make changes to existing ones. Comments and layout
-of the original properties file are preserved.</p>
+<p>Ant provides an optional task for editing property files. This is
+very useful when wanting to make unattended modifications to
+configuration files for application servers and
+applications. Currently, the task maintains a working property file
+with the ability to add properties or make changes to existing
+ones. Since Ant 1.8.0 comments and layout of the original properties
+file are preserved.</p>
 
 <hr>
 <h2><a name="proptask">PropertyFile Task</a></h2>
@@ -54,12 +56,16 @@ of the original properties file are preserved.</p>
 </tr>
 <tr>
   <td width="12%" valign="top">jdkproperties</td>
-  <td width="78%" valign="top">Use java.lang.Properties, which will loose comments and layout of file (default is 'false')</td>
+  <td width="78%" valign="top">Use java.lang.Properties, which will
+    loose comments and layout of file (default is 'false').  <em>since
+    Ant 1.8.0</em></td>
   <td width="10%" valign="top">no</td>
 </tr>
 </table>
 
-<p>The boolean attribute 'jdkproperties' is provided to recover the previous behaviour of the task, in which the layout and any comments in the properties file were lost by the task.</p>
+<p>The boolean attribute 'jdkproperties' is provided to recover the
+previous behaviour of the task, in which the layout and any comments
+in the properties file were lost by the task.</p>
 
 <h3>Parameters specified as nested elements</h3>
 <h4><a name="entryElement">Entry</a></h4>
