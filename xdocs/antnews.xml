@@ -26,18 +26,42 @@
   </properties>
 
 <body>
-  <section name="Ant1.8.0RC1">
-    <h3>January 12, 2010 - Ant 1.8.0RC1 Released</h3>
-    <p>Apache Ant 1.8.0RC1 is now available for download as source or binary (with and without
+  <section name="Ant1.8.0">
+    <h3>Februrary 5th, 2010 - Ant 1.8.0 Released</h3>
+    <p>Apache Ant 1.8.0 is now available for download as source or binary (with and without
       dependencies) from
       <a href="http://ant.apache.org/bindownload.cgi">http://ant.apache.org/bindownload.cgi</a>.</p>
       
-    <p>Key features of the 1.8.0RC1 release are</p>
+    <p>Key features of the 1.8.0 release are</p>
     <ul>
-      <li>a new top level element extension-point allows build files to be
-   extended with custom targets more easily</li>
-      <li>if and unless attributes will be evaluated according to the values of the properties entered
-      if these properties evaluate to true, false, on, off</li>
+      <li>Lexically scoped local properties, i.e. properties that are only defined inside a target, 
+      sequential block or similar environment. This is very useful inside 
+      of &lt;macrodef&gt;s where a macro can now define a temporary property 
+      that will disappear once the task has finished.</li>
+      <li>&lt;import&gt; can now import from any file- or URL-providing resource - 
+      this includes &lt;javaresource&gt;. 
+      This means &lt;import&gt; can read build file snippets from JARs or fixed server URLs. 
+      There are several other improvements in the area of import.</li>
+      <li>Various improvements to the directory scanning code that help with symbolic link 
+      cycles (as can be found on MacOS X Java installations for example) and improve 
+      scanning performance. For big directory trees the improvement is 
+      <a href="http://mail-archives.apache.org/mod_mbox/ant-dev/200809.mbox/%3Cy1u4p48li29.fsf@v30161.1blu.de%3E">dramatic</a>.</li>
+      <li>The way developers can extend Ant's property expansion algorithm has been rewritten 
+      (breaking the older API) to be easier to use and be more powerful. 
+      The whole local properties mechanism is implemented using that API and could be 
+      implemented in a separate library without changes in Ant's core. 
+      Things like the yet-to-be-released props Antlib can now provide often required 
+      "scripty" fuctions without touching Ant itself.
+      At the same time the if and unless attributes have been rewritten to do the expected 
+      thing if applied to a property expansion (i.e. if="${foo}" will mean "yes, do it" 
+      if ${foo} expands to true, in Ant 1.7.1 it would mean "no" unless a property named 
+      "true" existed). This adds "testing conditions" as a new use-case to property 
+      expansion.</li>
+      <li>A new top-level element &lt;extension-point&gt;  assists in writing re-usable 
+      build files that are meant to be imported. &lt;extension-point&gt; has a name 
+      and a dependency-list like &lt;target&gt; and can be used like a &lt;target&gt; 
+      from the command line or a dependency-list but the importing build file can add 
+      targets to the &lt;extension-point&gt;'s depends list. </li>
       <li>Ant now requires Java 1.4 or later</li>
       <li>new task include provides an alternative to &lt;import> that
    should be preferred when you don't want to override any targets</li>
