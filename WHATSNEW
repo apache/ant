@@ -28,6 +28,9 @@ Fixed bugs:
    it updated an existing property file.
    Bugzilla Report 48558.
 
+ * <sound> didn't work properly in recent Java VMs.
+   Bugzilla Report 48637.
+
 Other changes:
 --------------
 

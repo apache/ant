@@ -40,8 +40,9 @@ import org.apache.tools.ant.Project;
 /**
  * This class is designed to be used by any AntTask that requires audio output.
  *
- * It implements the BuildListener interface to listen for BuildEvents and could
- * be easily extended to provide audio output upon any specific build events occuring.
+ * It implements the BuildListener interface to listen for BuildEvents
+ * and could be easily extended to provide audio output upon any
+ * specific build events occurring.
  *
  * I have only tested this with .WAV and .AIFF sound file formats. Both seem to work fine.
  *
@@ -139,8 +140,21 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     private void playClip(Clip clip, int loops) {
 
         clip.loop(loops);
-        while (clip.isRunning()) {
-            // Empty block
+        do {
+            try {
+                long timeLeft =
+                    (clip.getMicrosecondLength() - clip.getMicrosecondPosition())
+                    / 1000;
+                if (timeLeft > 0) {
+                    Thread.sleep(timeLeft);
+                }
+            } catch (InterruptedException e) {
+                break;
+            }
+        } while (clip.isRunning());
+
+        if (clip.isRunning()) {
+            clip.stop();
         }
     }
 
@@ -151,6 +165,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         } catch (InterruptedException e) {
             // Ignore Exception
         }
+        clip.stop();
     }
 
     /**
@@ -162,13 +177,6 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         if (event.getType().equals(LineEvent.Type.STOP)) {
             Line line = event.getLine();
             line.close();
-        } else if (event.getType().equals(LineEvent.Type.CLOSE)) {
-            /*
-             *  There is a bug in JavaSound 0.90 (jdk1.3beta).
-             *  It prevents correct termination of the VM.
-             *  So we have to exit ourselves.
-             */
-            //System.exit(0);
         }
     }
 
