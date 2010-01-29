@@ -29,7 +29,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 3.  Once the freeze date arrives, create a branch for the release builds,
     if this was decided in the release vote. This was done for Ant 1.6, 
-    but not for Ant 1.7. 
+    but not for Ant 1.7, nor for Ant 1.8.
 
     You will need to be comfortable in handling SVN branches with multiple
     merge-backs to the main branch and even selected merges from the the main
@@ -39,6 +39,15 @@ Note: This document was updated in the context of releasing Ant 1.7.
     http://svnbook.red-bean.com/nightly/en/svn-book.html
 
     Label such branches ANT_16_BRANCH.
+    
+    If the new version is created on the trunk, create or update a branch ANT_SITE
+    and switch /www/ant.apache.org to point to ANT_SITE rather than to the trunk.
+    
+    The ANT_SITE branch and the trunk will be different during the time between 
+    the new build and the actual release, which is normally one week in order 
+    to vote on the release artifacts. During this time, ANT_SITE does not mention
+    yet the new release.
+    
 
 4.  Once the branch is setup, the version numbers in SVN are changed. On the
     branch, the project.version property in build.xml becomes 1.7Beta.
@@ -80,9 +89,13 @@ Note: This document was updated in the context of releasing Ant 1.7.
         Commit the modified/generated files
 
 6.  Ensure you have all the external libraries that Ant uses in your
-    lib/optional directory.  To find out what libraries you need, execute
+    lib/optional directory.  In fact NetRexxC/NetRexxR are the only commercial
+    dependencies as of 1.8.0 which are "hard to find". Other dependencies are
+    either provided by JDK 1.5.0 or downloadable using 
+    ant -f fetch.xml -Ddest=optional.
+    To find out whether you have all the libraries you need, execute
     the build with -verbose option and scan for lines beginning with
-    "Unable to load...".
+    "Unable to load...". 
 
 7.  Make sure that your directory tree is clean by running svn status.
     Some tests leave behind leftovers which end up in the source
@@ -165,8 +178,6 @@ Note: This document was updated in the context of releasing Ant 1.7.
     made (ant website, main jakarta website, announcements@jakarta.apache.org,
     etc).
 
-    and also perform a svn update on files in people.apache.org's
-    /www/ant.apache.org/
 
     you also need to checkout parallel to ant-core
     https://svn.apache.org/repos/asf/ant/site then go to the
@@ -223,11 +234,14 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 20. Update the ant.apache.org site :
 
-    running svn update *.html under /www/ant.apache.org should update the
-    files regenerated and committed in point 5 above (index.html, faq.html,
-    antnews.html, srcdownload.html, bindownload.html).
-
-    Update the online manual too.
+    Perform update on files in people.apache.org's /www/ant.apache.org/
+    This might mean switching /www/ant.apache.org back from the ANT_SITE branch
+    to the trunk.
+    
+    svn update runs as a cron job, what matters is to which branch the web site
+    points too.
+     
+    svn switch the online manual to the tag of the release.
 
 21. Clean up.
 
