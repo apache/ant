@@ -44,6 +44,7 @@ import junit.framework.TestSuite;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Permissions;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -898,6 +899,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
         } catch (Exception e) {
             return stack; // return the stack unfiltered
+        } finally {
+            FileUtils.close(pw);
         }
         return sw.toString();
     }

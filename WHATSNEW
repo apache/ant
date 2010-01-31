@@ -7,6 +7,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * stack traces were not reported at all by <junit/>
+ when filtertrace="on", which is the default.
+
 Other changes:
 --------------
 
