@@ -183,11 +183,11 @@ public class Cab extends MatchingTask {
         try {
             writer = new BufferedWriter(new FileWriter(listFile));
 
-        int size = files.size();
-        for (int i = 0; i < size; i++) {
-            writer.write('\"' + files.elementAt(i).toString() + '\"');
-            writer.newLine();
-        }
+            int size = files.size();
+            for (int i = 0; i < size; i++) {
+                writer.write('\"' + files.elementAt(i).toString() + '\"');
+                writer.newLine();
+            }
         } finally {
             FileUtils.close(writer);
         }
