@@ -255,9 +255,10 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             createSuiteMethod();
             createClassFooter();
 
-            FileUtils.close(writer);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            FileUtils.close(writer);
         }
     }
 

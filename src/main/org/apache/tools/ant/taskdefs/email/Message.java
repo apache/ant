@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Class representing an email message.
@@ -115,7 +116,9 @@ public class Message extends ProjectComponent {
          throws IOException {
         // We need character encoding aware printing here.
         // So, using BufferedWriter over OutputStreamWriter instead of PrintStream
-        BufferedWriter out
+        BufferedWriter out = null;
+        try {
+            out
             = charset != null ? new BufferedWriter(new OutputStreamWriter(ps, charset))
                               : new BufferedWriter(new OutputStreamWriter(ps));
         if (messageSource != null) {
@@ -137,6 +140,9 @@ public class Message extends ProjectComponent {
             out.newLine();
         }
         out.flush();
+        } finally {
+            FileUtils.close(out);
+        }
     }
 
 

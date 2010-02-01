@@ -169,10 +169,14 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
                 output.write(sb.toString());
                 resultWriter.close();
                 output.write(results.toString());
-                output.flush();
             } catch (IOException ex) {
                 throw new BuildException(ex);
             } finally {
+                try {
+                    output.flush();
+                } catch (IOException ex) {
+                    // swallow, there has likely been an exception before this
+                }
                 if (out != System.out && out != System.err) {
                     FileUtils.close(out);
                 }
