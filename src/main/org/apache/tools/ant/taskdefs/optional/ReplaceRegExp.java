@@ -448,7 +448,6 @@ public class ReplaceRegExp extends Task {
                     }
                 } while (c >= 0);
 
-                bw.flush();
             } else {
                 String buf = FileUtils.safeReadFully(br);
 
@@ -459,8 +458,9 @@ public class ReplaceRegExp extends Task {
                 }
 
                 bw.write(res);
-                bw.flush();
             }
+
+            bw.flush();
 
             r.close();
             r = null;
