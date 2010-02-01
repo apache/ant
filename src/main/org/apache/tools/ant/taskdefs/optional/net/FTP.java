@@ -1799,9 +1799,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
             }
         } finally {
-            if (bw != null) {
-                bw.close();
-            }
+            FileUtils.close(bw);
         }
 
         return dsfiles.length;
@@ -2158,13 +2156,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 transferred++;
             }
         } finally {
-            if (instream != null) {
-                try {
-                    instream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(instream);
         }
     }
 
@@ -2295,13 +2287,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
             }
         } finally {
-            if (outstream != null) {
-                try {
-                    outstream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(outstream);
         }
     }
 

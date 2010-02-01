@@ -944,9 +944,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 out.write(Constants.TERMINATED_SUCCESSFULLY + "\n");
                 out.flush();
             } finally {
-                if (out != null) {
-                    out.close();
-                }
+                FileUtils.close(out);
             }
         }
     }
@@ -960,9 +958,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     out.write(testCase + "\n");
                     out.flush();
                 } finally {
-                    if (out != null) {
-                        out.close();
-                    }
+                    FileUtils.close(out);
                 }
             } catch (IOException e) {
                 // ignored.

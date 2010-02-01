@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Keyword substitution. Input file is written to output file.
@@ -80,20 +81,8 @@ public class KeySubst extends Task {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(bw);
+            FileUtils.close(br);
         }
     }
 

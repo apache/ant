@@ -169,10 +169,16 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                 wri = new BufferedWriter(new OutputStreamWriter(out, "UTF8"));
                 wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
                 (new DOMElementWriter()).write(rootElement, wri, 0, "  ");
-                wri.flush();
             } catch (IOException exc) {
                 throw new BuildException("Unable to write log file", exc);
             } finally {
+                if (wri != null) {
+                    try {
+                        wri.flush();
+                    } catch (IOException ex) {
+                        // ignore
+                    }
+                }
                 if (out != System.out && out != System.err) {
                     FileUtils.close(wri);
                 }

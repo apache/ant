@@ -530,11 +530,14 @@ public class Translate extends MatchingTask {
                     if (needsWork) {
                         log("Processing " + srcFiles[j],
                             Project.MSG_DEBUG);
+                        BufferedWriter out = null;
+                        BufferedReader in = null;
+                        try {
                         FileOutputStream fos = new FileOutputStream(dest);
-                        BufferedWriter out
+                            out
                             = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
                         FileInputStream fis = new FileInputStream(src);
-                        BufferedReader in
+                            in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
                         LineTokenizer lineTokenizer = new LineTokenizer();
@@ -605,11 +608,9 @@ public class Translate extends MatchingTask {
                             out.write(line);
                             line = lineTokenizer.getToken(in);
                         }
-                        if (in != null) {
-                            in.close();
-                        }
-                        if (out != null) {
-                            out.close();
+                        } finally {
+                            FileUtils.close(in);
+                            FileUtils.close(out);
                         }
                         ++filesProcessed;
                     } else {
