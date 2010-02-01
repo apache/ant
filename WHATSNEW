@@ -7,9 +7,6 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
- * stack traces were not reported at all by <junit/>
- when filtertrace="on", which is the default.
-
 Other changes:
 --------------
 
@@ -23,6 +20,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+ * stack traces were not reported at all by <junit/>
+   when filtertrace="on", which is the default.
 
  * ant.bat can now also process the -noclasspath switch when it is 
    the first switch on a command line.

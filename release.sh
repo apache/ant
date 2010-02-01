@@ -17,6 +17,7 @@
 # this is a first attempt to document the build of the distribution
 # paths are hard-coded and obviously this is for a Cygwin/Windows combo
 #######################################################################
+rm -rf bootstrap build dist distribution
 unset ANT_HOME
 export JAVA_HOME=/cygdrive/c/j2sdk1.4.2_19
 export PATH=$JAVA_HOME/bin:$PATH
