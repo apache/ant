@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Class representing an email message.
@@ -115,28 +116,33 @@ public class Message extends ProjectComponent {
          throws IOException {
         // We need character encoding aware printing here.
         // So, using BufferedWriter over OutputStreamWriter instead of PrintStream
-        BufferedWriter out
-            = charset != null ? new BufferedWriter(new OutputStreamWriter(ps, charset))
-                              : new BufferedWriter(new OutputStreamWriter(ps));
-        if (messageSource != null) {
-            // Read message from a file
-            FileReader freader = new FileReader(messageSource);
+        BufferedWriter out = null;
+        try {
+            out
+                = charset != null ? new BufferedWriter(new OutputStreamWriter(ps, charset))
+                : new BufferedWriter(new OutputStreamWriter(ps));
+            if (messageSource != null) {
+                // Read message from a file
+                FileReader freader = new FileReader(messageSource);
 
-            try {
-                BufferedReader in = new BufferedReader(freader);
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    out.write(getProject().replaceProperties(line));
-                    out.newLine();
+                try {
+                    BufferedReader in = new BufferedReader(freader);
+                    String line = null;
+                    while ((line = in.readLine()) != null) {
+                        out.write(getProject().replaceProperties(line));
+                        out.newLine();
+                    }
+                } finally {
+                    freader.close();
                 }
-            } finally {
-                freader.close();
+            } else {
+                out.write(getProject().replaceProperties(buffer.substring(0)));
+                out.newLine();
             }
-        } else {
-            out.write(getProject().replaceProperties(buffer.substring(0)));
-            out.newLine();
+            out.flush();
+        } finally {
+            FileUtils.close(out);
         }
-        out.flush();
     }
 
 

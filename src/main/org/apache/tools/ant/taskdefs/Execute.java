@@ -1203,9 +1203,7 @@ public class Execute {
                     out.write(cmd[i]);
                 }
             } finally {
-                if (out != null) {
-                    out.close();
-                }
+                FileUtils.close(out);
             }
             return script;
         }

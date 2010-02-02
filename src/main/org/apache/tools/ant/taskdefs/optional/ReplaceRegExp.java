@@ -354,6 +354,7 @@ public class ReplaceRegExp extends Task {
 
         Reader r = null;
         Writer w = null;
+        BufferedWriter bw = null;
 
         try {
             if (encoding == null) {
@@ -366,7 +367,7 @@ public class ReplaceRegExp extends Task {
             }
 
             BufferedReader br = new BufferedReader(r);
-            BufferedWriter bw = new BufferedWriter(w);
+            bw = new BufferedWriter(w);
 
             boolean changes = false;
 
@@ -447,7 +448,6 @@ public class ReplaceRegExp extends Task {
                     }
                 } while (c >= 0);
 
-                bw.flush();
             } else {
                 String buf = FileUtils.safeReadFully(br);
 
@@ -458,8 +458,9 @@ public class ReplaceRegExp extends Task {
                 }
 
                 bw.write(res);
-                bw.flush();
             }
+
+            bw.flush();
 
             r.close();
             r = null;
@@ -484,6 +485,7 @@ public class ReplaceRegExp extends Task {
             }
         } finally {
             FileUtils.close(r);
+            FileUtils.close(bw);
             FileUtils.close(w);
             if (temp != null) {
                 temp.delete();
