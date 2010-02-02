@@ -375,9 +375,6 @@
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
       classpathref="classpath"/>
-    <available property="xalan2.present"
-      classname="org.apache.xalan.transformer.TransformerImpl"
-      classpathref="classpath"/>
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
       classpathref="classpath"/>
