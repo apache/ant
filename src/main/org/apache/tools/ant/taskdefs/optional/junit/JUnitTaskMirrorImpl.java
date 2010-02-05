@@ -60,9 +60,10 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
 
     /** {@inheritDoc}. */
     public JUnitTaskMirror.JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test,
+            String[] methods,
             boolean haltOnError, boolean filterTrace, boolean haltOnFailure,
             boolean showOutput, boolean logTestListenerEvents, AntClassLoader classLoader) {
-        return new JUnitTestRunner(test, haltOnError, filterTrace, haltOnFailure,
+        return new JUnitTestRunner(test, methods, haltOnError, filterTrace, haltOnFailure,
                 showOutput, logTestListenerEvents, classLoader);
     }
 

@@ -55,6 +55,7 @@ public interface JUnitTaskMirror {
     /**
      * Create a new test runner for a test.
      * @param test the test to run.
+     * @param methods names of the test methods to be run.
      * @param haltOnError if true halt the tests if an error occurs.
      * @param filterTrace if true filter the stack traces.
      * @param haltOnFailure if true halt the test if a failure occurs.
@@ -63,7 +64,7 @@ public interface JUnitTaskMirror {
      * @param classLoader      the classloader to use to create the runner.
      * @return the test runner.
      */
-    JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, boolean haltOnError,
+    JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
             boolean filterTrace, boolean haltOnFailure, boolean showOutput,
             boolean logTestListenerEvents, AntClassLoader classLoader);
 

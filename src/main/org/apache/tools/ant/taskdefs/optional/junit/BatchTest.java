@@ -19,15 +19,23 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
+import org.xml.sax.SAXException;
 
 /**
  * <p> Create then run <code>JUnitTest</code>'s based on the list of files
@@ -48,6 +56,9 @@ public final class BatchTest extends BaseTest {
     /** the list of filesets containing the testcase filename rules */
     private Resources resources = new Resources();
 
+    /** only run tests that failed during the previous run */
+    private boolean failedOnly = false;
+
     /**
      * create a new batchtest instance
      * @param project     the project it depends on.
@@ -55,6 +66,18 @@ public final class BatchTest extends BaseTest {
     public BatchTest(Project project) {
         this.project = project;
         resources.setCache(true);
+    }
+
+    /**
+     * Sets a flag that only tests that failed during the previous session
+     * should be executed.
+     * The results of the previous test execution are taken from XML report
+     * files so an XML report file with output to file should be used
+     * when this option is used.
+     * @since Ant 1.7.1
+     */
+    public void setRerunfailed(boolean rerunFailed) {
+        this.failedOnly = rerunFailed;
     }
 
     /**
@@ -124,12 +147,200 @@ public final class BatchTest extends BaseTest {
      */
     private JUnitTest[] createAllJUnitTest() {
         String[] filenames = getFilenames();
-        JUnitTest[] tests = new JUnitTest[filenames.length];
-        for (int i = 0; i < tests.length; i++) {
-            String classname = javaToClass(filenames[i]);
-            tests[i] = createJUnitTest(classname);
+        JUnitTest[] tests;
+        if (!failedOnly) {
+            tests = new JUnitTest[filenames.length];
+            for (int i = 0; i < tests.length; i++) {
+                String classname = javaToClass(filenames[i]);
+                tests[i] = createJUnitTest(classname);
+            }
+        } else {
+            List testsList = new ArrayList(10);
+            for (int i = 0; i < filenames.length; i++) {
+                String classname = javaToClass(filenames[i]);
+                File resultsFile = getXMLResultsFile(classname);
+                if (resultsFile == null) {
+                    continue;
+                }
+                List testListLines = parseResultsFile(resultsFile);
+                if ((testListLines != null) && !testListLines.isEmpty()) {
+                    final int count = testListLines.size();
+                    for (int j = 0; j < count; j++) {
+                        String line = (String) testListLines.get(j);
+                        JUnitTest test;
+                        try {
+                            test = parseTestListLine(line); //may return null
+                        } catch (IllegalArgumentException ex) {
+                            project.log(
+                                    "File " + resultsFile
+                                    + " contained invalid description of tests: "
+                                    + ex.getMessage(),
+                                    Project.MSG_WARN);
+                            break;
+                        }
+                        if (test != null) {
+                            testsList.add(test);
+                        }
+                    }
+                }
+            }
+            if (!testsList.isEmpty()) {
+                tests = (JUnitTest[])
+                        testsList.toArray(new JUnitTest[testsList.size()]);
+            } else {
+                tests = new JUnitTest[0];
+            }
         }
         return tests;
+    }
+
+    /**
+     * Finds an XML report file for the given class name.
+     * @param testClassName name of a test class for which a result file should
+     *                      be found
+     * @return XML report file for the given class name,
+     *         or <code>null</code> if the report file does not exist
+     *         or if it is not a plain file
+     */
+    private File getXMLResultsFile(String testClassName) {
+        File file = new File(getTodir(), "TEST-" + testClassName + ".xml");
+        if (!file.isFile()) {
+            project.log("XML results file " + file + " does not exist",
+                        Project.MSG_VERBOSE);
+            return null;
+        }
+        return file;
+    }
+
+    /**
+     * Parses the given XML report file.
+     * @param file XML report file to be parsed
+     * @return list of test specification lines,
+     *         or <code>null</code> if the file does not exist
+     *         or if some error occured while reading it or during parsing
+     */
+    private List parseResultsFile(File file) {
+        if (!file.canRead()) {
+            project.log("Cannot read XML results file " + file,
+                        Project.MSG_WARN);
+            return null;
+        }
+        project.log("Parsing file " + file, Project.MSG_VERBOSE);
+
+        Reader reader = null;
+        try {
+            reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), "UTF8"));
+            return XMLResultParser.parseResultsFile(reader);
+        } catch (IOException ex1) {
+            project.log("Error while reading XML results file " + file,
+                        ex1,
+                        Project.MSG_ERR);
+            return null;
+        } catch (SAXException ex2) {
+            project.log("Error while parsing XML results file " + file,
+                        ex2,
+                        Project.MSG_ERR);
+            return null;
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    //give up
+                }
+            }
+        }
+    }
+
+    /**
+     * Parses one line of a test list file and creates <code>JUnitTest</code>
+     * instances for the tests corresponding to the specification on the line.
+     * @param line string describing a test
+     * @return <code>JUnitTest</code> that would execute test methods that are
+     *         specified by the given line;
+     *         or <code>null</code> if an empty test would be created
+     * @exception java.lang.IllegalArgumentException
+     *            if the line is malformed
+     */
+    private JUnitTest parseTestListLine(String line)
+                                            throws IllegalArgumentException {
+        String className;
+        String methodsList;
+        int colonIndex = line.indexOf(':');
+        if (colonIndex == -1) {
+            // no specification of test methods
+            className = line.trim();
+            methodsList = null;
+        } else {
+            className = line.substring(0, colonIndex).trim();
+            methodsList = line.substring(colonIndex + 1);
+        }
+
+        checkClassNameIsValid(className);
+        if ("junit.framework.JUnit4TestCaseFacade".equals(className)) {
+            // This is an artificial test case failure.
+            // It is used e.g. to report that a test class did not have any
+            // test methods.
+            return null;
+        }
+
+        if (methodsList == null) {
+            return createJUnitTest(className);
+        } else {
+            String[] methods = JUnitTest.parseTestMethodNamesList(methodsList);
+            return (methods.length != 0) ? createJUnitTest(className, methods)
+                                         : null;
+        }
+    }
+
+    /**
+     * Checks whether the passed string is a valid class name.
+     * @param className class name to be checked
+     * @throws java.lang.IllegalArgumentException
+     *         if the name is not a valid class name
+     */
+    private void checkClassNameIsValid(String className) throws IllegalArgumentException {
+        final String errMsg = "Invalid class name";
+        int dotIndex = className.indexOf('.');
+        if (dotIndex == -1) {
+            checkJavaIdentifier(className, errMsg);
+        } else {
+            int previousDotIndex = -1;
+            do {
+                checkJavaIdentifier(className.substring(previousDotIndex + 1, dotIndex),
+                                    errMsg);
+                previousDotIndex = dotIndex;
+                dotIndex = className.indexOf('.', previousDotIndex + 1);
+            } while (dotIndex != -1);
+            checkJavaIdentifier(className.substring(previousDotIndex + 1),
+                                errMsg);
+        }
+    }
+
+    /**
+     * Checks whether the passed string is a valid Java identifier.
+     * @param name name to be checked
+     * @param errMsg message to used in the thrown exception if the name
+     *               is found invalid
+     * @throws java.lang.IllegalArgumentException
+     *         if the name is not a valid Java identifier
+     */
+    private static void checkJavaIdentifier(String name,
+                                            String errMsg)
+                                    throws IllegalArgumentException {
+        int length = name.length();
+        if ((length == 0) || !Character.isJavaIdentifierStart(name.charAt(0))) {
+            throw new IllegalArgumentException(errMsg + ": " + name);
+        }
+        if (length > 1) {
+            final char[] chars = name.substring(1).toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                if (!Character.isJavaIdentifierPart(chars[i])) {
+                    throw new IllegalArgumentException(errMsg + ": " + name);
+                }
+            }
+        }
     }
 
     /**
@@ -182,8 +393,23 @@ public final class BatchTest extends BaseTest {
      * @return the <tt>JUnitTest</tt> over the given classname.
      */
     private JUnitTest createJUnitTest(String classname) {
+       return createJUnitTest(classname, null);
+   }
+
+   /**
+    * Create a <tt>JUnitTest</tt> that has the same property as this
+    * <tt>BatchTest</tt> instance.
+    * @param classname the name of the class that should be run as a
+    * <tt>JUnitTest</tt>. It must be a fully qualified name.
+    * @param methods array of names of test methods within the class
+    *                to be executed, or <code>null</code> if all test methods
+    *                in the test suite given by the class should be executed
+    * @return the <tt>JUnitTest</tt> over the given classname and test methods.
+    */
+   private JUnitTest createJUnitTest(String classname, String[] methods) {
         JUnitTest test = new JUnitTest();
         test.setName(classname);
+        test.setMethods(methods);
         test.setHaltonerror(this.haltOnError);
         test.setHaltonfailure(this.haltOnFail);
         test.setFiltertrace(this.filtertrace);
