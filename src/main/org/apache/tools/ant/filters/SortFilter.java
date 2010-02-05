@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;filterchain&gt;
  *           &lt;filterreader classname=&quot;org.apache.tools.ant.filters.SortFilter&quot;&gt;
  *             &lt;param name=&quot;comparator&quot; value=&quot;org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
- *           &lt;/filterreader/&gt;
+ *           &lt;/filterreader&gt;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
@@ -110,7 +110,7 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;filterchain&gt;
  *           &lt;sortfilter&gt;
  *               &lt;evenfirst/&gt;
- *           &lt;/sortfilter/&gt;
+ *           &lt;/sortfilter&gt;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre></blockquote>
