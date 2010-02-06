@@ -237,7 +237,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      *             list
      * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
-    static String[] parseTestMethodNamesList(String methodNames)
+    public static String[] parseTestMethodNamesList(String methodNames)
                                             throws IllegalArgumentException {
         if (methodNames == null) {
             throw new IllegalArgumentException("methodNames is <null>");
