@@ -1408,7 +1408,7 @@ public class JUnitTask extends Task {
      * @exception BuildException if some of the tests matching the described
      *                           conditions has invalid value of the
      *                           <code>methods</code> attribute
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     private void checkMethodLists() throws BuildException {
         if (tests.isEmpty()) {

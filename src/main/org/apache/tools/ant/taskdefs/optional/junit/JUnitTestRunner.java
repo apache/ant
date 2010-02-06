@@ -222,7 +222,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * @param haltOnFailure whether to stop the run if failure is found.
      * @param showOutput    whether to send output to System.out/.err as well as formatters.
      * @param logTestListenerEvents whether to print TestListener events.
-     * @since Ant 1.7
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     public JUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
@@ -283,7 +283,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Constructor to use when the user has specified a classpath.
-     * @since Ant 1.7
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     public JUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,

@@ -99,7 +99,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param filtertrace if true filter stack traces.
      * @param methods if true run only test methods that failed during the
      *                previous run of the test suite
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
                      boolean filtertrace, String[] methods) {
@@ -116,7 +116,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param value comma-separated list of names of individual test methods
      *              to be executed,
      *              or <code>null</code> if all test methods should be executed
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     public void setMethods(String value) {
         methodsList = value;
@@ -128,7 +128,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * Sets names of individual test methods to be executed.
      * @param value non-empty array of names of test methods to be executed
      * @see #setMethods(String)
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     void setMethods(String[] value) {
         methods = value;
@@ -158,7 +158,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      *         specified, <code>false</code> otherwise
      * @see #setMethods(java.lang.String)
      * @see #setMethods(java.lang.String[])
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     boolean hasMethodsSpecified() {
         return methodsSpecified;
@@ -170,7 +170,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @return array of names of the individual test methods to be executed,
      *         or <code>null</code> if all test methods in the suite
      *         defined by the test class will be executed
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     String[] getMethods() {
         if (methodsSpecified && (methods == null)) {
@@ -185,7 +185,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @return the comma-separated list of test method names, or an empty
      *         string of no method is to be executed, or <code>null</code>
      *         if no method is specified
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     String getMethodsString() {
         if ((methodsList == null) && methodsSpecified) {
@@ -210,7 +210,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * of the {@link #methodsList} field, if it has not been computed yet.
      * @exception BuildException if the value of the {@link #methodsList} field
      *                           was invalid
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     void resolveMethods() {
         if ((methods == null) && methodsSpecified) {
@@ -235,7 +235,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      *             a comma-separated list of valid Java identifiers;
      *             an empty string is acceptable and is handled as an empty
      *             list
-     * @since Ant 1.7.1
+     * @since https://svn.apache.org/repos/asf/ant/core/branches/run-single-test-method/
      */
     static String[] parseTestMethodNamesList(String methodNames)
                                             throws IllegalArgumentException {
