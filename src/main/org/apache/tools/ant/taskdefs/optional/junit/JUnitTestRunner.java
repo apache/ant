@@ -456,6 +456,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     } catch (ClassNotFoundException e) {
                         // OK, fall back to JUnit 3.
                     }
+                    }
                     junit4 = junit4TestAdapterClass != null;
 
                     if (junit4) {
@@ -491,7 +492,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             }
                             suite = testSuite;
                         }
-                    }
                     }
 
                 }
