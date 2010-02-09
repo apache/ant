@@ -7,8 +7,17 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * Tasks that iterate over task or type definitions, references or
+   targets now iterate over copies instead of the live maps to avoid
+   ConcurrentModificationExceptions if another thread changes the
+   maps.
+   Bugzilla Report 48310.
+
 Other changes:
 --------------
+
+ * Project provides new get methods that return copies instead of the
+   live maps of task and type definitions, references and targets.
 
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================

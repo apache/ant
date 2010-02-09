@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.IntrospectionHelper;
@@ -95,22 +96,24 @@ public class AntStructure extends Task {
             }
 
             printer.printHead(out, getProject(),
-                              getProject().getTaskDefinitions(),
-                              getProject().getDataTypeDefinitions());
+                              new Hashtable(getProject().getTaskDefinitions()),
+                              new Hashtable(getProject().getDataTypeDefinitions()));
 
             printer.printTargetDecl(out);
 
-            Enumeration dataTypes = getProject().getDataTypeDefinitions().keys();
-            while (dataTypes.hasMoreElements()) {
-                String typeName = (String) dataTypes.nextElement();
+            Iterator dataTypes = getProject().getCopyOfDataTypeDefinitions()
+                .keySet().iterator();
+            while (dataTypes.hasNext()) {
+                String typeName = (String) dataTypes.next();
                 printer.printElementDecl(
                     out, getProject(), typeName,
                     (Class) getProject().getDataTypeDefinitions().get(typeName));
             }
 
-            Enumeration tasks = getProject().getTaskDefinitions().keys();
-            while (tasks.hasMoreElements()) {
-                String tName = (String) tasks.nextElement();
+            Iterator tasks = getProject().getCopyOfTaskDefinitions().keySet()
+                .iterator();
+            while (tasks.hasNext()) {
+                String tName = (String) tasks.next();
                 printer.printElementDecl(out, getProject(), tName,
                                          (Class) getProject().getTaskDefinitions().get(tName));
             }
