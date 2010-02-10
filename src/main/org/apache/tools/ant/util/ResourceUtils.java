@@ -666,6 +666,9 @@ public class ResourceUtils {
             while (expected != null) {
                 String actual = in2.readLine();
                 if (!expected.equals(actual)) {
+                    if (actual == null) {
+                        return 1;
+                    }
                     return expected.compareTo(actual);
                 }
                 expected = in1.readLine();

@@ -13,6 +13,11 @@ Fixed bugs:
    maps.
    Bugzilla Report 48310.
 
+ * The filesmatch condition threw a NullPointerException when
+   comparing text files and the second file contained fewer lines than
+   the first one.
+   Bugzilla Report 48715.
+
 Other changes:
 --------------
 
