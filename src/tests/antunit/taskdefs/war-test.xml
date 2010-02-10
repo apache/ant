@@ -184,4 +184,15 @@
     <unzip src="${output}/test.war" dest="${output}/out"/>
     <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
   </target>
+
+  <target name="testOnlyOneWebXml">
+    <mkdir dir="${input}/WEB-INF"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/WEB-INF/web.xml"/>
+    <touch file="${input}/x.xml"/>
+    <war destfile="${output}/test.war" webxml="${input}/x.xml">
+      <fileset dir="${input}"/>
+    </war>
+    <au:assertLogContains text="Warning: selected war files include a second WEB-INF/web.xml which will be ignored."/>
+  </target>
 </project>
