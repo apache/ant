@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<project name="war-test" basedir="." default="antunit"
+<project name="war-test" default="antunit"
        xmlns:au="antlib:org.apache.ant.antunit">
 
   <import file="../antunit-base.xml" />
@@ -34,10 +34,6 @@
     <presetdef name="expandwar">
       <unzip src="${input}/test.war" dest="${input}"/>
     </presetdef>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${input}"/>
   </target>
 
   <!--test that you can patch a fileset reference into a lib element-->
