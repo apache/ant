@@ -26,5 +26,6 @@
     <ear destfile="${output}/test.ear" appxml="${input}/x.xml">
       <fileset dir="${input}"/>
     </ear>
+    <au:assertLogContains text="Warning: selected ear files include a META-INF/application.xml which will be ignored (please use appxml attribute to ear task)"/>
   </target>
 </project>

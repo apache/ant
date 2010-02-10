@@ -18,6 +18,10 @@ Fixed bugs:
    the first one.
    Bugzilla Report 48715.
 
+ * Regression: The <ear> task would allow multiple
+   META-INF/application.xml files to be added.
+   Bugzilla Report 6836.
+
 Other changes:
 --------------
 
