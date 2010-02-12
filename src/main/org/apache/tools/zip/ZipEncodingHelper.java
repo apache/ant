@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -191,6 +192,16 @@ abstract class ZipEncodingHelper {
     static final String UTF8 = "UTF8";
 
     /**
+     * name of the encoding UTF-8 used for comparisions.
+     */
+    private static final String UTF8_LC = UTF8.toLowerCase(Locale.ENGLISH);
+
+    /**
+     * variant name of the encoding UTF-8 used for comparisions.
+     */
+    private static final String UTF_DASH_8_LC = "utf-8";
+
+    /**
      * name of the encoding UTF-8
      */
     static final ZipEncoding UTF8_ZIP_ENCODING = new FallbackZipEncoding(UTF8);
@@ -239,7 +250,7 @@ abstract class ZipEncodingHelper {
             // check platform's default encoding
             encoding = System.getProperty("file.encoding");
         }
-        return UTF8.equalsIgnoreCase(encoding)
-            || "utf-8".equalsIgnoreCase(encoding);
+        String enc = encoding.toLowerCase(Locale.ENGLISH);
+        return UTF8_LC.equals(enc) || UTF_DASH_8_LC.equals(enc);
     }
 }
