@@ -408,9 +408,6 @@
   &lt;chmod&gt; or &lt;exec&gt; doesn't work in Ant
         1.3 on Unix
       </a></li>
-                <li><a href="#javadoc-cannot-execute">
-  JavaDoc failed: java.io.IOException: javadoc: cannot execute
-      </a></li>
                 <li><a href="#delegating-classloader">
   &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;
@@ -423,47 +420,15 @@
   &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt; - Ant 1.6.x version
       </a></li>
-                <li><a href="#winxp-jdk14-ant14">
-  When running Ant 1.4 on Windows XP and JDK 1.4, I get
-      various errors when trying to <code>&lt;exec&gt;</code>, fork
-      <code>&lt;java&gt;</code> or access environment
-      variables.
-      </a></li>
-                <li><a href="#1.5-cygwin-sh">
-  The <code>ant</code> wrapper script of Ant 1.5 fails
-      for Cygwin if <code>ANT_HOME</code> is set to a Windows style
-      path.
-      </a></li>
-                <li><a href="#1.5.2-zip-broken">
-  <code>&lt;zip&gt;</code> is broken in Ant 1.5.2.
-      </a></li>
                 <li><a href="#unknownelement.taskcontainer">
   
         Why do my custom task containers see Unknown Elements in Ant 1.6
         - they worked in Ant 1.5?
       
       </a></li>
-                <li><a href="#java.exception.stacktrace">
-  
-        The program I run via &lt;java&gt; throws an exception but I
-        can't seem to get the full stack trace.
-      
-      </a></li>
-                <li><a href="#junit-no-runtime-xml">
-  
-        Using format="xml", &lt;junit&gt; fails with a
-        <code>NoClassDefFoundError</code> if forked.
-      
-      </a></li>
-                <li><a href="#xalan-jdk1.5">
-  
-        <code>&lt;junitreport&gt;</code> doesn't work with JDK 1.5 but
-        worked fine with JDK 1.4.
-      
-      </a></li>
                 <li><a href="#oom-on-mac">
   
-        Ant runs into an infinite loop/throws an OutOufMemoryError
+        Ant runs into an infinite loop/throws an OutOfMemoryError
         when I compile my project under Mac OS X.
       
       </a></li>
@@ -1924,14 +1889,6 @@ tr -d '\r' &lt; $ANT_HOME/bin/antRun &gt; /tmp/foo
 mv /tmp/foo $ANT_HOME/bin/antRun
 </pre>
                     <p class="faq">
-      <a name="javadoc-cannot-execute"></a>
-      JavaDoc failed: java.io.IOException: javadoc: cannot execute
-    </p>
-                  <p>There is a bug in the Solaris reference implementation of
-        the JDK (see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>).
-        This also appears to be true under Linux. Moving the JDK to
-        the front of the PATH fixes the problem.</p>
-                    <p class="faq">
       <a name="delegating-classloader"></a>
       &lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;
@@ -2138,48 +2095,6 @@ mv /tmp/foo $ANT_HOME/bin/antRun
     &lt;/taskdef&gt;
 </pre>
                     <p class="faq">
-      <a name="winxp-jdk14-ant14"></a>
-      When running Ant 1.4 on Windows XP and JDK 1.4, I get
-      various errors when trying to <code>&lt;exec&gt;</code>, fork
-      <code>&lt;java&gt;</code> or access environment
-      variables.
-    </p>
-                  <p>Ant &lt; 1.5 doesn't recognize Windows XP as a flavor
-        of Windows that runs <code>CMD.EXE</code> instead of
-        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
-        XP is Windows 2000 so the problem doesn't show up
-        there.</p>
-                        <p>Apart from upgrading to Ant 1.5 or better, setting the
-        environment variable <code>ANT_OPTS</code> to
-        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
-        been confirmed as a workaround.</p>
-                    <p class="faq">
-      <a name="1.5-cygwin-sh"></a>
-      The <code>ant</code> wrapper script of Ant 1.5 fails
-      for Cygwin if <code>ANT_HOME</code> is set to a Windows style
-      path.
-    </p>
-                  <p>This problem has been reported only hours after Ant 1.5 has
-        been released, see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
-        10664</a> and all its duplicates.</p>
-                        <p>A fixed version of the wrapper script can be found <a href="http://ant.apache.org/old-releases/v1.5/errata/">here</a>.
-        Simply replace your script with this version.</p>
-                    <p class="faq">
-      <a name="1.5.2-zip-broken"></a>
-      <code>&lt;zip&gt;</code> is broken in Ant 1.5.2.
-    </p>
-                  <p>Yes, it is.</p>
-                        <p>The problem reported by most people - see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17648">Bug
-        17648</a> and all its duplicates - is that Ant creates
-        archives that a partially unreadable by WinZIP.  Luckily
-        <code>jar</code> deals with the archives and so the generated
-        jars/wars/ears will most likely work for you anyway.</p>
-                        <p>There are additional problems, see bugs <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17780">Bug
-        17780</a>, <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17871">Bug
-        17871</a> and <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18403">Bug
-        18403</a>.  All of them are supposed to be fixed with Ant
-        1.5.3 (and only 18403 should exist in 1.5.3beta1).</p>
-                    <p class="faq">
       <a name="unknownelement.taskcontainer"></a>
       
         Why do my custom task containers see Unknown Elements in Ant 1.6
@@ -2229,61 +2144,9 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           This approach should work for ant1.5 and ant1.6.
         </p>
                     <p class="faq">
-      <a name="java.exception.stacktrace"></a>
-      
-        The program I run via &lt;java&gt; throws an exception but I
-        can't seem to get the full stack trace.
-      
-    </p>
-                  <p>This is a know bug that has been fixed after the release of
-        Ant 1.6.1.</p>
-                        <p>As a workaround, run your &lt;java&gt; task with
-        <code>fork="true"</code> and Ant will display the full
-        trace.</p>
-                    <p class="faq">
-      <a name="junit-no-runtime-xml"></a>
-      
-        Using format="xml", &lt;junit&gt; fails with a
-        <code>NoClassDefFoundError</code> if forked.
-      
-    </p>
-                  <p>The XML formatter needs the <a href="http://www.w3.org/DOM/">DOM classes</a> to work.  If you
-        are using JDK 1.4 or later they are included with your Java
-        Runtime and this problem won't occur.  If you are running JDK
-        1.3 or earlier, the DOM classes have to be on your
-        &lt;junit&gt; task's &lt;classpath&gt;.</p>
-                        <p>Prior to Ant 1.6.0 Ant would include the DOM classes from
-        the XML parser that is used by Ant itself if you set the
-        includeAntRuntime attribute to true (the default).  With Ant
-        1.6.0 this has been changed as this behavior made it
-        impossible to use a different XML parser in your tests.</p>
-                        <p>This means that you have to take care of the DOM classes
-        explicitly starting with Ant 1.6.0.  If you don't need to set
-        up a different XML parser for your tests, the easiest solution
-        is to add</p>
-                        <pre class="code">
-&lt;pathelement path=&quot;${ant.home}/lib/xml-apis.jar:${ant.home}/lib/xercesImpl.jar&quot;/&gt;
-</pre>
-                        <p>to your task's &lt;classpath&gt;.</p>
-                    <p class="faq">
-      <a name="xalan-jdk1.5"></a>
-      
-        <code>&lt;junitreport&gt;</code> doesn't work with JDK 1.5 but
-        worked fine with JDK 1.4.
-      
-    </p>
-                  <p>While JDK 1.4.x contains a version of Xalan-J 2, JDK 1.5
-        (and later?) have <a href="http://java.sun.com/j2se/1.5.0/compatibility.html#4959783">moved
-        to XSLTC</a>.  Since this task uses Xalan's redirect
-        extensions for its internal stylesheet, Ant prior to 1.6.2 didn't support
-        XSLTC.  This means that you have to install <a href="http://xml.apache.org/xalan-j/">Xalan-J 2</a> in order
-        to use this task with JDK 1.5 in older versions of Ant.</p>
-                        <p>Starting with Ant 1.6.2 <code>&lt;junitreport&gt;</code>
-        supports JDK 1.5.</p>
-                    <p class="faq">
       <a name="oom-on-mac"></a>
       
-        Ant runs into an infinite loop/throws an OutOufMemoryError
+        Ant runs into an infinite loop/throws an OutOfMemoryError
         when I compile my project under Mac OS X.
       
     </p>
