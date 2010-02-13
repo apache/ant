@@ -467,11 +467,11 @@
         Ant's SVN repository - the build file
         <code>docs.xml</code> at the top level of the ant SVN
         module (trunk) is used to drive Anakia.</p>
-                        <p>This file assumes that you have the
-        <code>jakarta-site2</code> CVS module checked out as well, but
-        if you follow the instruction from Anakia's homepage, you
-        should get it to work without that.  Just make sure all
-        required jars are in the task's classpath.</p>
+                        <p>To transform the xml into html, one needs velocity 1.4.
+        The command to run is :</p>
+                        <p>
+        <code>ant -Dvelocity.dir=[installation path of velocity] -f docs.xml</code>
+        </p>
                                 <p class="faq">
       <a name="what-is-ant"></a>
       What is Apache Ant?
