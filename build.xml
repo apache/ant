@@ -33,7 +33,7 @@
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
   <!-- this is the groupId of ant in the Maven repository -->
-  <property name="groupid" value="org.apache.ant"/>
+  <property name="groupid" value="org/apache/ant"/>
   <property name="project.version" value="1.8.1alpha"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
   <property name="pom.version" value="1.8.1-SNAPSHOT"/>
@@ -161,8 +161,6 @@
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
   <property name="java-repository.dir" value="java-repository/${groupid}"/>
-  <property name="java-repository.jars.dir" value="${java-repository.dir}/jars"/>
-  <property name="java-repository.poms.dir" value="${java-repository.dir}/poms"/>
 
   <!--
        ===================================================================
@@ -895,7 +893,7 @@
   </target>
 
 
-  <macrodef name="checksums">
+  <macrodef name="checksums-mvn" description="only md5 and sha1 are needed for the maven directory structure">
     <element name="resources" implicit="true"/>
     <sequential>
       <checksum algorithm="md5">
@@ -904,6 +902,14 @@
       <checksum algorithm="sha1">
         <resources/>
       </checksum>
+    </sequential>
+  </macrodef>
+  <macrodef name="checksums">
+    <element name="resources" implicit="true"/>
+    <sequential>
+      <checksums-mvn>
+        <resources/>
+      </checksums-mvn>
       <checksum fileext=".sha512" algorithm="sha-512">
         <resources/>
       </checksum>
@@ -921,7 +927,7 @@
         <fileset dir="${src.dir}/etc/poms">
             <include name="*/pom.xml"/>
         </fileset>
-        <mapper type="regexp" from="^(.*)[/\\]pom.xml" to="\1-${project.version}.pom"/>
+        <mapper type="regexp" from="^(.*)[/\\]pom.xml" to="\1.pom"/>
         <filterchain>
             <tokenfilter>
                 <replaceregex pattern="${pom.version}" replace="${project.version}"/>
@@ -932,18 +938,14 @@
         <fileset dir="${src.dir}/etc/poms">
             <include name="pom.xml"/>
         </fileset>
-        <mapper type="glob" from="pom.xml" to="ant-parent-${project.version}.pom"/>
+        <mapper type="glob" from="pom.xml" to="ant-parent.pom"/>
         <filterchain>
             <tokenfilter>
                 <replaceregex pattern="${pom.version}" replace="${project.version}"/>
             </tokenfilter>
         </filterchain>
     </copy>
-    <checksums>
-        <fileset dir="${dist.lib}">
-            <include name="*.pom"/>
-        </fileset>
-    </checksums>
+
 
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}" includes="${expandproperty.files}">
@@ -1119,8 +1121,7 @@
     <mkdir dir="${dist.base}"/>
     <mkdir dir="${dist.base.source}"/>
     <mkdir dir="${dist.base.binaries}"/>
-    <mkdir dir="${java-repository.jars.dir}"/>
-    <mkdir dir="${java-repository.poms.dir}"/>
+    <mkdir dir="${java-repository.dir}"/>
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
@@ -1165,29 +1166,24 @@
       src="${dist.base.binaries}/${dist.name}-bin.tar"/>
     <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
 
-    <copy todir="${java-repository.jars.dir}">
+    <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
         <include name="ant*.jar"/>
       </fileset>
-      <mapper type="glob" from="*.jar" to="*-${project.version}.jar"/>
+      <mapper type="regexp" from="ant(.*).jar" to="ant\1/${project.version}/ant\1-${project.version}.jar"/>
     </copy>
-    <copy todir="${java-repository.poms.dir}">
+    <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
         <include name="*.pom"/>
-        <include name="*.sha1"/>
-        <include name="*.sha512"/>
-        <include name="*.md5"/>
       </fileset>
       <mapper>
-        <mapper type="glob" from="*.pom" to="*.pom"/>
-        <mapper type="glob" from="*.pom.sha1" to="*.pom.sha1"/>
-        <mapper type="glob" from="*.pom.sha512" to="*.pom.sha512"/>
-        <mapper type="glob" from="*.pom.md5" to="*.pom.md5"/>
+        <mapper type="regexp" from="ant(.*).pom" to="ant\1/${project.version}/ant\1-${project.version}.pom"/>
       </mapper>
     </copy>
-    <checksums>
-      <fileset dir="${java-repository.jars.dir}" includes="*${project.version}.jar"/>
-    </checksums>
+    <checksums-mvn>
+      <fileset dir="${java-repository.dir}" includes="**/*${project.version}.jar"/>
+      <fileset dir="${java-repository.dir}" includes="**/*${project.version}.pom"/>
+   </checksums-mvn>
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.binaries}/">
@@ -1260,17 +1256,16 @@
     <fail unless="ssh.passphrase" message="set a property with your ssh passphrase"/>
     <fail unless="ssh.keyfile" message="set a property with your ssh keyfile"/>
     <property name="ssh.knownhosts" location="${user.home}/.ssh/known_hosts" />
-    <property name="ssh.host" value="cvs.apache.org"/>
+    <property name="ssh.host" value="people.apache.org"/>
     <property name="ssh.verbose" value="false"/>
     <property name="ssh.base.directory" value="/www/www.apache.org/dist"/>
     <property name="ssh.dist.directory" value="${ssh.base.directory}/ant"/>
-    <property name="ssh.java-repository.directory" value="/www/people.apache.org/repo/m1-ibiblio-rsync-repository/ant"/>
+    <property name="ssh.java-repository.directory" value="/www/people.apache.org/repo/m2-ibiblio-rsync-repository/${groupid}"/>
     <echo >
       Uploading Ant version ${project.version}
       to host ${ssh.host} as ${apache.user}
       distribution to ${ssh.dist.directory}
-      JAR files to ${ssh.java-repository.directory}/jars
-      POM files to ${ssh.java-repository.directory}/poms
+      maven artefacts to ${ssh.java-repository.directory}	
       Known hosts = ${ssh.knownhosts}
     </echo>
   </target>
@@ -1282,14 +1277,6 @@
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
       command="mkdir -p ${ssh.dist.directory}" />
-    <sshexec username="${apache.user}" host="${ssh.host}"
-      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
-      knownhosts="${ssh.knownhosts}"
-      command="mkdir -p ${ssh.java-repository.directory}/jars"/>
-    <sshexec username="${apache.user}" host="${ssh.host}"
-      keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
-      knownhosts="${ssh.knownhosts}"
-      command="mkdir -p ${ssh.java-repository.directory}/poms"/>
   </target>
 
   <target name="upload" description="--> uploads the distribution"
@@ -1306,8 +1293,8 @@
       keyfile="${ssh.keyfile}" passphrase="${ssh.passphrase}"
       knownhosts="${ssh.knownhosts}"
       verbose="${ssh.verbose}">
-      <fileset dir="java-repository/ant">
-        <include name="*/*${project.version}*"/>
+      <fileset dir="java-repository/${groupid}">
+        <include name="**/*${project.version}*"/>
       </fileset>
      </scp>
   </target>
@@ -1387,6 +1374,7 @@
   <target name="-javadocs.do" if="jdk1.5+" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
+      maxmemory="1000M"	
       destdir="${build.javadocs}"
       author="true"
       version="true"
