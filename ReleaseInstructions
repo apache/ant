@@ -113,11 +113,22 @@ Note: This document was updated in the context of releasing Ant 1.7.
     https://svn.apache.org/repos/asf/ant/core/tags/ANT_170_B1 \
     -m "Tagging version 1.7.0Beta1 of Ant"
 
-    Revision 437509 ?\195?\188bertragen.
+    Revision 437509 Uebertragen.
 
 9.  Sign the distribution files using the following simple script
+
+    @TODO : document using commons-openpgp to sign the artefacts,
+    change the build file to do this
+ 
     #!/bin/sh
+    # signing the various source and binary archives of the entire distribution
     for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
+    do
+         echo "Signing " $i
+         gpg -a -b --force-v3-sigs $i
+    done
+    # signing the maven artefacts
+    for i in `/usr/bin/find java-repository \( -name "*.pom" -o -name  "*.jar" \)`
     do
          echo "Signing " $i
          gpg -a -b --force-v3-sigs $i
@@ -219,36 +230,15 @@ Note: This document was updated in the context of releasing Ant 1.7.
       from distribution
       to   /www/www.apache.org/dist/ant/[source|binaries].
 
-      this can be done using the target upload of the build.xml
-
       
       and 
 
-      from java-repository
+      from java-repository/org/apache/ant
+
       to  
-      /www/people.apache.org/repo/m2-ibiblio-rsync-repository in a maven2
-      directory structure. You can use the Maven Ant tasks (better) or do it
-      by hand. 
-      
-      the directory structure for one artefact should look like that
-      
-   under
-   /www/people.apache.org/repo/m2-ibiblio-rsync-repository
-   
-    this is an example for version 1.8.0 of the ant-apache-regexp jar
-    
-    the build.xml of ant will be changed later to be able to produce this 
-    automatically
 
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.jar.sha1
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.pom.md5
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.pom.sha1
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.jar.md5
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.pom
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.jar 
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.pom.asc
-./org/apache/ant/ant-apache-regexp/1.8.0/ant-apache-regexp-1.8.0.jar.asc 
-
+      /www/people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/ant
+      
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
 
