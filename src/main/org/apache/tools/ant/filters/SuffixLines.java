@@ -126,8 +126,8 @@ public final class SuffixLines
      *               May be <code>null</code>, in which case no suffix
      *               is added.
      */
-    public void setSuffix(final String append) {
-        this.suffix = append;
+    public void setSuffix(final String suffix) {
+        this.suffix = suffix;
     }
 
     /**

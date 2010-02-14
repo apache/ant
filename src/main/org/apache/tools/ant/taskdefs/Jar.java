@@ -249,7 +249,8 @@ public class Jar extends Zip {
      * jars on Java 1.4 or earlier Ant will not include META-INF
      * unless explicitly asked to.</p>
      *
-     * @see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">
+     * jar -i omits service providers in index.list</a>
      * @since Ant 1.8.0
      * @param flag a <code>boolean</code> value, defaults to false
      */

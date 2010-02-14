@@ -100,7 +100,6 @@ public class PatternSet extends DataType implements Cloneable {
          * @param cond A property name or expression.  If the
          *             expression evaluates to true or a property of
          *             its value is present, the name is invalid.
-         * @param cond A property name or expression.
          * @since Ant 1.8.0
          */
         public void setUnless(Object cond) {
