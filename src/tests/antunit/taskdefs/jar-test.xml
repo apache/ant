@@ -179,4 +179,18 @@
     <au:assertResourceContains value="Second-Origin: test.jar"
                                resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
+
+  <target name="testDuplicateFail">
+    <mkdir dir="${input}/1"/>
+    <mkdir dir="${input}/2"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/1/a.txt"/>
+    <touch file="${input}/2/a.txt"/>
+    <au:expectfailure message="Duplicate file">
+      <jar destfile="${output}/test.jar" duplicate="fail">
+        <fileset dir="${input}/1"/>
+        <fileset dir="${input}/2"/>
+      </jar>
+    </au:expectfailure>
+  </target>
 </project>
