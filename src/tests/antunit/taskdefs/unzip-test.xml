@@ -59,7 +59,7 @@
           >
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
-    <copy file="zip/Bugzilla-46559.zip" tofile="${input}/test.zip"/>
+    <copy file="broken_cd.zip" tofile="${input}/test.zip"/>
     <au:expectfailure>
       <unzip src="${input}/test.zip" dest="${output}"/>
     </au:expectfailure>

@@ -219,7 +219,7 @@ public class ZipResource extends ArchiveResource {
         setDirectory(e.isDirectory());
         setSize(e.getSize());
         setMode(e.getUnixMode());
-        extras = e.getExtraFields();
+        extras = e.getExtraFields(true);
         method = e.getMethod();
     }
 

@@ -1026,7 +1026,7 @@ public class Zip extends MatchingTask {
                 try {
                     is = zf.getInputStream(ze);
                     zipFile(is, zOut, prefix + name, ze.getTime(),
-                            fromArchive, mode, ze.getExtraFields());
+                            fromArchive, mode, ze.getExtraFields(true));
                 } finally {
                     doCompress = oldCompress;
                     FileUtils.close(is);

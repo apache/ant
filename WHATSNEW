@@ -31,6 +31,9 @@ Other changes:
  * Project provides new get methods that return copies instead of the
    live maps of task and type definitions, references and targets.
 
+ * Ant is now more lenient with ZIP extra fields and will be able to
+   read archives that it failed to read in earlier versions.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
