@@ -4,8 +4,8 @@ Changes from Ant 1.8.0 TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
- * Ant no longer ships with Xerces or the XML APIs but relies on the
-   Java runtime to provide a parser and matching API versions.
+ * Ant no longer ships with Apache Xerces-J or the XML APIs but relies
+   on the Java runtime to provide a parser and matching API versions.
 
 Fixed bugs:
 -----------
