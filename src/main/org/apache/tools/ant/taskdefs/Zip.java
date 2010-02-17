@@ -1723,7 +1723,7 @@ public class Zip extends MatchingTask {
         throws IOException {
         // fromArchive is used in subclasses overriding this method
 
-        if (entries.contains(vPath)) {
+        if (entries.containsKey(vPath)) {
 
             if (duplicate.equals("preserve")) {
                 logWhenWriting(vPath + " already added, skipping",
