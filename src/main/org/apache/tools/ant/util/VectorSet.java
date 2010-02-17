@@ -153,8 +153,10 @@ public final class VectorSet extends Vector {
         // shouldn't trust it
         if (set.remove(o)) {
             int index = indexOf(o);
-            System.arraycopy(elementData, index + 1, elementData, index,
-                             size() - index);
+            if (index < elementData.length - 1) {
+                System.arraycopy(elementData, index + 1, elementData, index,
+                                 elementData.length - index - 1);
+            }
             elementCount--;
             return true;
         }
