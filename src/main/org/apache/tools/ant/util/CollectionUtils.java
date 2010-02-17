@@ -209,7 +209,7 @@ public class CollectionUtils {
     }
 
     /**
-     * Returns a collection containg all elements of the iterator.
+     * Returns a collection containing all elements of the iterator.
      *
      * @since Ant 1.8.0
      */
