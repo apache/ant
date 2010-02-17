@@ -27,11 +27,13 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Holds the data of a jar manifest.
@@ -399,10 +401,7 @@ public class Manifest {
         private String name = null;
 
         /** The section's attributes.*/
-        private Hashtable attributes = new Hashtable();
-
-        /** Index used to retain the attribute ordering */
-        private Vector attributeIndex = new VectorSet();
+        private Map attributes = new LinkedHashMap();
 
         /**
          * The name of the section; optional -default is the main section.
@@ -597,7 +596,7 @@ public class Manifest {
          *         key of an attribute of the section.
          */
         public Enumeration getAttributeKeys() {
-            return attributeIndex.elements();
+            return CollectionUtils.asEnumeration(attributes.keySet().iterator());
         }
 
         /**
@@ -624,7 +623,6 @@ public class Manifest {
         public void removeAttribute(String attributeName) {
             String key = attributeName.toLowerCase();
             attributes.remove(key);
-            attributeIndex.removeElement(key);
         }
 
         /**
@@ -732,9 +730,6 @@ public class Manifest {
             }
             String attributeKey = attribute.getKey();
             attributes.put(attributeKey, attribute);
-            if (!attributeIndex.contains(attributeKey)) {
-                attributeIndex.addElement(attributeKey);
-            }
         }
 
         /**
@@ -782,10 +777,7 @@ public class Manifest {
     private Section mainSection = new Section();
 
     /** The named sections of this manifest */
-    private Hashtable sections = new Hashtable();
-
-    /** Index of sections - used to retain order of sections in manifest */
-    private Vector sectionIndex = new VectorSet();
+    private Map sections = new LinkedHashMap();
 
     /**
      * Construct a manifest from Ant's default manifest file.
@@ -899,9 +891,6 @@ public class Manifest {
             throw new BuildException("Sections must have a name");
         }
         sections.put(sectionName, section);
-        if (!sectionIndex.contains(sectionName)) {
-            sectionIndex.addElement(sectionName);
-        }
     }
 
     /**
@@ -1042,9 +1031,9 @@ public class Manifest {
             }
         }
 
-        Enumeration e = sectionIndex.elements();
-        while (e.hasMoreElements()) {
-            String sectionName = (String) e.nextElement();
+        Iterator e = sections.keySet().iterator();
+        while (e.hasNext()) {
+            String sectionName = (String) e.next();
             Section section = getSection(sectionName);
             section.write(writer, flatten);
         }
@@ -1080,9 +1069,9 @@ public class Manifest {
         }
 
         // create a vector and add in the warnings for all the sections
-        Enumeration e = sections.elements();
-        while (e.hasMoreElements()) {
-            Section section = (Section) e.nextElement();
+        Iterator e = sections.values().iterator();
+        while (e.hasNext()) {
+            Section section = (Section) e.next();
             Enumeration e2 = section.getWarnings();
             while (e2.hasMoreElements()) {
                 warnings.addElement(e2.nextElement());
@@ -1173,6 +1162,6 @@ public class Manifest {
      * @return an Enumeration of section names
      */
     public Enumeration getSectionNames() {
-        return sectionIndex.elements();
+        return CollectionUtils.asEnumeration(sections.keySet().iterator());
     }
 }
