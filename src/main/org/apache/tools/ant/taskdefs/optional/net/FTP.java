@@ -32,10 +32,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -54,6 +56,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.RetryHandler;
 import org.apache.tools.ant.util.Retryable;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Basic FTP client. Performs the following actions:
@@ -116,7 +119,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
     private Vector filesets = new Vector();
-    private Vector dirCache = new Vector();
+    private Set dirCache = new HashSet();
     private int transferred = 0;
     private String remoteFileSep = "/";
     private int port = DEFAULT_FTP_PORT;
@@ -354,12 +357,12 @@ public class FTP extends Task implements FTPTaskConfig {
                 excludes = new String[0];
             }
 
-            filesIncluded = new Vector();
+            filesIncluded = new VectorSet();
             filesNotIncluded = new Vector();
-            filesExcluded = new Vector();
-            dirsIncluded = new Vector();
+            filesExcluded = new VectorSet();
+            dirsIncluded = new VectorSet();
             dirsNotIncluded = new Vector();
-            dirsExcluded = new Vector();
+            dirsExcluded = new VectorSet();
 
             try {
                 String cwd = ftp.printWorkingDirectory();
@@ -1919,7 +1922,7 @@ public class FTP extends Task implements FTPTaskConfig {
                                                  + "directory: " + ftp.getReplyString());
                     }
                 }
-                dirCache.addElement(dir);
+                dirCache.add(dir);
             }
             ftp.changeWorkingDirectory(cwd);
         }

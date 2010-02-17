@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * An abstract implementation of the analyzer interface providing support
@@ -39,7 +40,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     private Path classPath = new Path(null);
 
     /** The list of root classes */
-    private Vector rootClasses = new Vector();
+    private final Vector rootClasses = new VectorSet();
 
     /** true if dependencies have been determined */
     private boolean determined = false;

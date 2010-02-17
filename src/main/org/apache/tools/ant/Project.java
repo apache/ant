@@ -48,6 +48,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -1799,7 +1800,7 @@ public class Project implements ResourceFactory {
      */
     public final Vector topoSort(String[] root, Hashtable targetTable,
                                  boolean returnAll) throws BuildException {
-        Vector ret = new Vector();
+        Vector ret = new VectorSet();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
 

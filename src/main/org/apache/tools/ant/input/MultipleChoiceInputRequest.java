@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.input;
 
+import java.util.LinkedHashSet;
 import java.util.Vector;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Vector;
  * @since Ant 1.5
  */
 public class MultipleChoiceInputRequest extends InputRequest {
-    private Vector choices = new Vector();
+    private final LinkedHashSet choices;
 
     /**
      * @param prompt The prompt to show to the user.  Must not be null.
@@ -38,14 +39,14 @@ public class MultipleChoiceInputRequest extends InputRequest {
         if (choices == null) {
             throw new IllegalArgumentException("choices must not be null");
         }
-        this.choices = choices;
+        this.choices = new LinkedHashSet(choices);
     }
 
     /**
      * @return The possible values.
      */
     public Vector getChoices() {
-        return choices;
+        return new Vector(choices);
     }
 
     /**

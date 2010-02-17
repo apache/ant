@@ -20,6 +20,8 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.io.File;
 
@@ -29,7 +31,7 @@ import java.io.File;
 public class Directory {
 
     private File directory;
-    private ArrayList childDirectories;
+    private Set childDirectories;
     private ArrayList files;
     private Directory parent;
 
@@ -48,7 +50,7 @@ public class Directory {
      */
     public Directory(File directory , Directory parent) {
         this.parent = parent;
-        this.childDirectories = new ArrayList();
+        this.childDirectories = new LinkedHashSet();
         this.files = new ArrayList();
         this.directory = directory;
     }
@@ -117,8 +119,8 @@ public class Directory {
      * @return the child directory, or null if not found
      */
     public Directory getChild(File dir) {
-        for (int i = 0; i < childDirectories.size(); i++) {
-            Directory current = (Directory) childDirectories.get(i);
+        for (Iterator i = childDirectories.iterator(); i.hasNext(); ) {
+            Directory current = (Directory) i.next();
             if (current.getDirectory().equals(dir)) {
                 return current;
             }
