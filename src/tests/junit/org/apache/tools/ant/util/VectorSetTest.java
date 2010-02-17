@@ -113,7 +113,8 @@ public class VectorSetTest extends TestCase {
         v = new VectorSet(3, 1);
         Object a = new Object();
         v.add(a);
-        v.add(new Object());
+        Object b = new Object();
+        v.add(b);
         v.add(O);
         assertEquals(3, v.size());
         assertEquals(3, v.capacity());
@@ -121,6 +122,7 @@ public class VectorSetTest extends TestCase {
         assertEquals(2, v.size());
         assertFalse(v.remove(O));
         assertSame(a, v.elementAt(0));
+        assertSame(b, v.elementAt(1));
     }
 
     public void testRemoveAtFrontWhenSizeEqualsCapacity() {
@@ -128,13 +130,15 @@ public class VectorSetTest extends TestCase {
         v.add(O);
         Object a = new Object();
         v.add(a);
-        v.add(new Object());
+        Object b = new Object();
+        v.add(b);
         assertEquals(3, v.size());
         assertEquals(3, v.capacity());
         assertTrue(v.remove(O));
         assertEquals(2, v.size());
         assertFalse(v.remove(O));
         assertSame(a, v.elementAt(0));
+        assertSame(b, v.elementAt(1));
     }
 
     public void testRemoveInMiddleWhenSizeEqualsCapacity() {
@@ -142,13 +146,15 @@ public class VectorSetTest extends TestCase {
         Object a = new Object();
         v.add(a);
         v.add(O);
-        v.add(new Object());
+        Object b = new Object();
+        v.add(b);
         assertEquals(3, v.size());
         assertEquals(3, v.capacity());
         assertTrue(v.remove(O));
         assertEquals(2, v.size());
         assertFalse(v.remove(O));
         assertSame(a, v.elementAt(0));
+        assertSame(b, v.elementAt(1));
     }
 
     public void testRemoveAll() {

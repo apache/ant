@@ -25,6 +25,9 @@ Fixed bugs:
    META-INF/application.xml files to be added.
    Bugzilla Report 6836.
 
+ * VectorSet#remove(Object) would fail if the size of the vector
+   equaled its capacity.
+
 Other changes:
 --------------
 
