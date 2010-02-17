@@ -47,7 +47,7 @@ public class ProjectHelper {
     /** Polymorphic attribute  */
     public static final String ANT_TYPE = "ant-type";
 
-    /** Lowercase version of {@link ANT_TYPE} used for comparisions */
+    /** Lowercase version of {@link ANT_TYPE} used for comparisons */
     public static final String ANT_TYPE_LC =
         ANT_TYPE.toLowerCase(Locale.ENGLISH);
 
