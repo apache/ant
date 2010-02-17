@@ -37,8 +37,24 @@ import java.util.Vector;
  *
  * @since Ant 1.8.0
  */
-public class VectorSet extends Vector {
+public final class VectorSet extends Vector {
     private final HashSet set = new HashSet();
+
+    public VectorSet() { super(); }
+
+    public VectorSet(int initialCapacity) { super(initialCapacity); }
+
+    public VectorSet(int initialCapacity, int capacityIncrement) {
+        super(initialCapacity, capacityIncrement);
+    }
+
+    public VectorSet(Collection c) {
+        if (c != null) {
+            for (Iterator i = c.iterator(); i.hasNext(); ) {
+                add(i.next());
+            }
+        }
+    }
 
     public synchronized boolean add(Object o) {
         if (!set.contains(o)) {

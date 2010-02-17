@@ -31,6 +31,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Holds the data of a jar manifest.
@@ -401,7 +402,7 @@ public class Manifest {
         private Hashtable attributes = new Hashtable();
 
         /** Index used to retain the attribute ordering */
-        private Vector attributeIndex = new Vector();
+        private Vector attributeIndex = new VectorSet();
 
         /**
          * The name of the section; optional -default is the main section.
@@ -784,7 +785,7 @@ public class Manifest {
     private Hashtable sections = new Hashtable();
 
     /** Index of sections - used to retain order of sections in manifest */
-    private Vector sectionIndex = new Vector();
+    private Vector sectionIndex = new VectorSet();
 
     /**
      * Construct a manifest from Ant's default manifest file.
