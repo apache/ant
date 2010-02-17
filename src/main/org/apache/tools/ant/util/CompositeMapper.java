@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
- * A <CODE>ContainerMapper</CODE> that unites the results of its constituent
- * <CODE>FileNameMapper</CODE>s into a single set of result filenames.
+ * A <code>ContainerMapper</code> that unites the results of its constituent
+ * <code>FileNameMapper</code>s into a single set of result filenames.
  */
 public class CompositeMapper extends ContainerMapper {
 
