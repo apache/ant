@@ -871,35 +871,35 @@ public class Tar extends MatchingTask {
          * @return true if value is "truncate".
          */
         public boolean isTruncateMode() {
-            return TRUNCATE.equalsIgnoreCase(getValue());
+            return equalsIgnoreCase(TRUNCATE, getValue());
         }
 
         /**
          * @return true if value is "warn".
          */
         public boolean isWarnMode() {
-            return WARN.equalsIgnoreCase(getValue());
+            return equalsIgnoreCase(WARN, getValue());
         }
 
         /**
          * @return true if value is "gnu".
          */
         public boolean isGnuMode() {
-            return GNU.equalsIgnoreCase(getValue());
+            return equalsIgnoreCase(GNU, getValue());
         }
 
         /**
          * @return true if value is "fail".
          */
         public boolean isFailMode() {
-            return FAIL.equalsIgnoreCase(getValue());
+            return equalsIgnoreCase(FAIL, getValue());
         }
 
         /**
          * @return true if value is "omit".
          */
         public boolean isOmitMode() {
-            return OMIT.equalsIgnoreCase(getValue());
+            return equalsIgnoreCase(OMIT, getValue());
         }
     }
 

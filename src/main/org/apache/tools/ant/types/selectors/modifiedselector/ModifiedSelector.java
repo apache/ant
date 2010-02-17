@@ -20,10 +20,11 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
 // Java
-import java.util.Comparator;
-import java.util.Vector;
-import java.util.Iterator;
 import java.io.File;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Vector;
 
 // Ant
 import org.apache.tools.ant.Project;
@@ -720,6 +721,8 @@ public class ModifiedSelector extends BaseExtendSelector
     public void useParameter(Parameter parameter) {
         String key = parameter.getName();
         String value = parameter.getValue();
+        String valueLC =
+            value != null ? value.toLowerCase(Locale.ENGLISH) : null;
         if ("cache".equals(key)) {
             CacheName cn = new CacheName();
             cn.setValue(value);
@@ -734,19 +737,19 @@ public class ModifiedSelector extends BaseExtendSelector
             setComparator(cn);
         } else if ("update".equals(key)) {
             boolean updateValue =
-                ("true".equalsIgnoreCase(value))
+                ("true".equals(valueLC))
                 ? true
                 : false;
             setUpdate(updateValue);
         } else if ("delayupdate".equals(key)) {
             boolean updateValue =
-                ("true".equalsIgnoreCase(value))
+                ("true".equals(valueLC))
                 ? true
                 : false;
             setDelayUpdate(updateValue);
         } else if ("seldirs".equals(key)) {
             boolean sdValue =
-                ("true".equalsIgnoreCase(value))
+                ("true".equals(valueLC))
                 ? true
                 : false;
             setSeldirs(sdValue);

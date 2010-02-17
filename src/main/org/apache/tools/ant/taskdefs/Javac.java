@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
@@ -88,6 +89,8 @@ public class Javac extends MatchingTask {
     private static final String MODERN = "modern";
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
+    private static final String EXTJAVAC_LC =
+        EXTJAVAC.toLowerCase(Locale.ENGLISH);
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -679,7 +682,9 @@ public class Javac extends MatchingTask {
      * @return true if this is a forked invocation
      */
     public boolean isForkedJavac() {
-        return fork || "extJavac".equals(getCompiler());
+        String c = getCompiler();
+        return fork ||
+            (c != null && EXTJAVAC_LC.equals(c.toLowerCase(Locale.ENGLISH)));
     }
 
     /**
@@ -758,29 +763,31 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(String anImplementation) {
-        if (JAVAC16.equalsIgnoreCase(anImplementation)
-                || JAVAC15.equalsIgnoreCase(anImplementation)
-                || JAVAC14.equalsIgnoreCase(anImplementation)
-                || JAVAC13.equalsIgnoreCase(anImplementation)) {
+        anImplementation = anImplementation != null
+            ? anImplementation.toLowerCase(Locale.ENGLISH) : null;
+        if (JAVAC16.equals(anImplementation)
+                || JAVAC15.equals(anImplementation)
+                || JAVAC14.equals(anImplementation)
+                || JAVAC13.equals(anImplementation)) {
             return MODERN;
         }
-        if (JAVAC12.equalsIgnoreCase(anImplementation)
-                || JAVAC11.equalsIgnoreCase(anImplementation)) {
+        if (JAVAC12.equals(anImplementation)
+                || JAVAC11.equals(anImplementation)) {
             return CLASSIC;
         }
-        if (MODERN.equalsIgnoreCase(anImplementation)) {
+        if (MODERN.equals(anImplementation)) {
             String nextSelected = assumedJavaVersion();
-            if (JAVAC16.equalsIgnoreCase(nextSelected)
-                    || JAVAC15.equalsIgnoreCase(nextSelected)
-                    || JAVAC14.equalsIgnoreCase(nextSelected)
-                    || JAVAC13.equalsIgnoreCase(nextSelected)) {
+            if (JAVAC16.equals(nextSelected)
+                    || JAVAC15.equals(nextSelected)
+                    || JAVAC14.equals(nextSelected)
+                    || JAVAC13.equals(nextSelected)) {
                 return nextSelected;
             }
         }
         if (CLASSIC.equals(anImplementation)) {
             return assumedJavaVersion();
         }
-        if (EXTJAVAC.equalsIgnoreCase(anImplementation)) {
+        if (EXTJAVAC_LC.equals(anImplementation)) {
             return assumedJavaVersion();
         }
         return null;
@@ -1007,7 +1014,7 @@ public class Javac extends MatchingTask {
         String compilerImpl = getCompilerVersion();
         if (fork) {
             if (isJdkCompiler(compilerImpl)) {
-                compilerImpl = "extJavac";
+                compilerImpl = EXTJAVAC;
             } else {
                 log("Since compiler setting isn't classic or modern, "
                     + "ignoring fork setting.", Project.MSG_WARN);

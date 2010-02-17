@@ -32,6 +32,7 @@ import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.apache.tools.ant.input.DefaultInputHandler;
@@ -1714,9 +1715,10 @@ public class Project implements ResourceFactory {
      *         <code>false</code> otherwise.
      */
     public static boolean toBoolean(String s) {
-        return ("on".equalsIgnoreCase(s)
-                || "true".equalsIgnoreCase(s)
-                || "yes".equalsIgnoreCase(s));
+        String lc = s == null ? null : s.toLowerCase(Locale.ENGLISH);
+        return ("on".equals(lc)
+                || "true".equals(lc)
+                || "yes".equals(lc));
     }
 
     /**

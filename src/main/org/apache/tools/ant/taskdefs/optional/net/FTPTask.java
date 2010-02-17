@@ -588,7 +588,9 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * synonym for -1.
      */
     public void setRetriesAllowed(String retriesAllowed) {
-        if ("FOREVER".equalsIgnoreCase(retriesAllowed)) {
+        String r = retriesAllowed != null
+            ? retriesAllowed.toUpperCase(Locale.ENGLISH) : null;
+        if ("FOREVER".equals(r)) {
             this.retriesAllowed = Retryable.RETRY_FOREVER;
         } else {
             try {
@@ -862,7 +864,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
          * @return the SYMBOL representing the given action.
          */
         public int getAction() {
-            String actionL = getValue().toLowerCase(Locale.US);
+            String actionL = getValue().toLowerCase(Locale.ENGLISH);
 
             if (actionL.equals("send") || actionL.equals("put")) {
                 return SEND_FILES;
@@ -921,7 +923,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
          * the attribute, in the context of the supplied action
          */
         public long getMilliseconds(int action) {
-            String granularityU = getValue().toUpperCase(Locale.US);
+            String granularityU = getValue().toUpperCase(Locale.ENGLISH);
 
             if ("".equals(granularityU)) {
                 if (action == SEND_FILES) {

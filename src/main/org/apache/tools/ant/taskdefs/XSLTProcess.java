@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -1366,14 +1367,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              */
             public void setDynamicAttribute(String name, String value) throws BuildException {
                 // only 'name' and 'value' exist.
-                if ("name".equalsIgnoreCase(name)) {
+                String nameLC = name != null
+                    ? name.toLowerCase(Locale.ENGLISH) : null;
+                if ("name".equals(nameLC)) {
                     this.name = value;
-                } else if ("value".equalsIgnoreCase(name)) {
+                } else if ("value".equals(nameLC)) {
                     // a value must be of a given type
                     // say boolean|integer|string that are mostly used.
-                    if ("true".equalsIgnoreCase(value)) {
+                    String valueLC = value != null
+                        ? value.toLowerCase(Locale.ENGLISH) : null;
+                    if ("true".equals(valueLC)) {
                         this.value = Boolean.TRUE;
-                    } else if ("false".equalsIgnoreCase(value)) {
+                    } else if ("false".equals(valueLC)) {
                         this.value = Boolean.FALSE;
                     } else {
                         try {

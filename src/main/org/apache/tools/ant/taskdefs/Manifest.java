@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -89,6 +90,15 @@ public class Manifest {
 
     /** Encoding to be used for JAR files. */
     public static final String JAR_ENCODING = "UTF-8";
+
+    private static final String ATTRIBUTE_MANIFEST_VERSION_LC =
+        ATTRIBUTE_MANIFEST_VERSION.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_NAME_LC =
+        ATTRIBUTE_NAME.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_FROM_LC =
+        ATTRIBUTE_FROM.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_CLASSPATH_LC =
+        ATTRIBUTE_CLASSPATH.toLowerCase(Locale.ENGLISH);
 
     /**
      * An attribute for the manifest.
@@ -238,7 +248,7 @@ public class Manifest {
             if (name == null) {
                 return null;
             }
-            return name.toLowerCase();
+            return name.toLowerCase(Locale.ENGLISH);
         }
 
         /**
@@ -491,8 +501,10 @@ public class Manifest {
         public void merge(Section section, boolean mergeClassPaths)
             throws ManifestException {
             if (name == null && section.getName() != null
-                || name != null
-                && !(name.equalsIgnoreCase(section.getName()))) {
+                || (name != null && section.getName() != null
+                    && !(name.toLowerCase(Locale.ENGLISH)
+                         .equals(section.getName().toLowerCase(Locale.ENGLISH))))
+                ) {
                 throw new ManifestException("Unable to merge sections "
                     + "with different names");
             }
@@ -501,8 +513,10 @@ public class Manifest {
             Attribute classpathAttribute = null;
             while (e.hasMoreElements()) {
                 String attributeName = (String) e.nextElement();
+                String attributeNameLC =
+                    attributeName.toLowerCase(Locale.ENGLISH);
                 Attribute attribute = section.getAttribute(attributeName);
-                if (attributeName.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
+                if (attributeNameLC.equals(ATTRIBUTE_CLASSPATH_LC)) {
                     if (classpathAttribute == null) {
                         classpathAttribute = new Attribute();
                         classpathAttribute.setName(ATTRIBUTE_CLASSPATH);
@@ -586,7 +600,7 @@ public class Manifest {
          *         instances.
          */
         public Attribute getAttribute(String attributeName) {
-            return (Attribute) attributes.get(attributeName.toLowerCase());
+            return (Attribute) attributes.get(attributeName.toLowerCase(Locale.ENGLISH));
         }
 
         /**
@@ -608,7 +622,7 @@ public class Manifest {
          *         in the section
          */
         public String getAttributeValue(String attributeName) {
-            Attribute attribute = getAttribute(attributeName.toLowerCase());
+            Attribute attribute = getAttribute(attributeName.toLowerCase(Locale.ENGLISH));
             if (attribute == null) {
                 return null;
             }
@@ -621,7 +635,7 @@ public class Manifest {
          * @param attributeName the name of the attribute to be removed.
          */
         public void removeAttribute(String attributeName) {
-            String key = attributeName.toLowerCase();
+            String key = attributeName.toLowerCase(Locale.ENGLISH);
             attributes.remove(key);
         }
 
@@ -658,7 +672,8 @@ public class Manifest {
             if (attribute.getName() == null || attribute.getValue() == null) {
                 throw new BuildException("Attributes must have name and value");
             }
-            if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_NAME)) {
+            String attributeKey = attribute.getKey();
+            if (attributeKey.equals(ATTRIBUTE_NAME_LC)) {
                 warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes "
                     + "should not occur in the main section and must be the "
                     + "first element in all other sections: \""
@@ -666,13 +681,12 @@ public class Manifest {
                 return attribute.getValue();
             }
 
-            if (attribute.getKey().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
+            if (attributeKey.startsWith(ATTRIBUTE_FROM_LC)) {
                 warnings.addElement(ERROR_FROM_FORBIDDEN
                     + attribute.getName() + ": " + attribute.getValue() + "\"");
             } else {
                 // classpath attributes go into a vector
-                String attributeKey = attribute.getKey();
-                if (attributeKey.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
+                if (attributeKey.equals(ATTRIBUTE_CLASSPATH_LC)) {
                     Attribute classpathAttribute =
                         (Attribute) attributes.get(attributeKey);
 
@@ -856,7 +870,8 @@ public class Manifest {
             Section section = new Section();
             if (nextSectionName == null) {
                 Attribute sectionName = new Attribute(line);
-                if (!sectionName.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
+                if (!sectionName.getName().toLowerCase(Locale.ENGLISH)
+                    .equals(ATTRIBUTE_NAME_LC)) {
                     throw new ManifestException("Manifest sections should "
                         + "start with a \"" + ATTRIBUTE_NAME
                         + "\" attribute and not \""
@@ -905,7 +920,7 @@ public class Manifest {
         if (attribute.getKey() == null || attribute.getValue() == null) {
             throw new BuildException("Attributes must have name and value");
         }
-        if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_MANIFEST_VERSION)) {
+        if (attribute.getKey().equals(ATTRIBUTE_MANIFEST_VERSION_LC)) {
             manifestVersion = attribute.getValue();
         } else {
             mainSection.addConfiguredAttribute(attribute);

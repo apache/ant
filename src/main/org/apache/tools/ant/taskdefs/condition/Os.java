@@ -29,11 +29,11 @@ import org.apache.tools.ant.BuildException;
  */
 public class Os implements Condition {
     private static final String OS_NAME =
-        System.getProperty("os.name").toLowerCase(Locale.US);
+        System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
     private static final String OS_ARCH =
-        System.getProperty("os.arch").toLowerCase(Locale.US);
+        System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
     private static final String OS_VERSION =
-        System.getProperty("os.version").toLowerCase(Locale.US);
+        System.getProperty("os.version").toLowerCase(Locale.ENGLISH);
     private static final String PATH_SEP =
         System.getProperty("path.separator");
 
@@ -142,7 +142,7 @@ public class Os implements Condition {
      *               </ul>
      */
     public void setFamily(String f) {
-        family = f.toLowerCase(Locale.US);
+        family = f.toLowerCase(Locale.ENGLISH);
     }
 
     /**
@@ -151,7 +151,7 @@ public class Os implements Condition {
      * @param name   The OS name
      */
     public void setName(String name) {
-        this.name = name.toLowerCase(Locale.US);
+        this.name = name.toLowerCase(Locale.ENGLISH);
     }
 
     /**
@@ -160,7 +160,7 @@ public class Os implements Condition {
      * @param arch   The OS architecture
      */
     public void setArch(String arch) {
-        this.arch = arch.toLowerCase(Locale.US);
+        this.arch = arch.toLowerCase(Locale.ENGLISH);
     }
 
     /**
@@ -169,7 +169,7 @@ public class Os implements Condition {
      * @param version   The OS version
      */
     public void setVersion(String version) {
-        this.version = version.toLowerCase(Locale.US);
+        this.version = version.toLowerCase(Locale.ENGLISH);
     }
 
     /**

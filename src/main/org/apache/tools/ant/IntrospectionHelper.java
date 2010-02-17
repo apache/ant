@@ -378,7 +378,7 @@ public final class IntrospectionHelper {
     public void setAttribute(Project p, Object element, String attributeName,
             Object value) throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(
-                attributeName.toLowerCase(Locale.US));
+                attributeName.toLowerCase(Locale.ENGLISH));
         if (as == null && value != null) {
             if (element instanceof DynamicAttributeNS) {
                 DynamicAttributeNS dc = (DynamicAttributeNS) element;
@@ -391,7 +391,7 @@ public final class IntrospectionHelper {
             }
             if (element instanceof DynamicAttribute) {
                 DynamicAttribute dc = (DynamicAttribute) element;
-                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value.toString());
+                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.ENGLISH), value.toString());
                 return;
             }
             if (attributeName.indexOf(':') >= 0) {
@@ -529,7 +529,7 @@ public final class IntrospectionHelper {
         }
         NestedCreator nc = null;
         if (uri.equals(parentUri) || uri.length() == 0) {
-            nc = (NestedCreator) nestedCreators.get(name.toLowerCase(Locale.US));
+            nc = (NestedCreator) nestedCreators.get(name.toLowerCase(Locale.ENGLISH));
         }
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
@@ -573,7 +573,7 @@ public final class IntrospectionHelper {
         if (nestedElement == null && parent instanceof DynamicElement) {
             DynamicElement dc = (DynamicElement) parent;
             nestedElement =
-                dc.createDynamicElement(localName.toLowerCase(Locale.US));
+                dc.createDynamicElement(localName.toLowerCase(Locale.ENGLISH));
         }
         return nestedElement;
     }
@@ -740,7 +740,7 @@ public final class IntrospectionHelper {
     public boolean supportsReflectElement(
         String parentUri, String elementName) {
         String name = ProjectHelper.extractNameFromComponentName(elementName);
-        if (!nestedCreators.containsKey(name.toLowerCase(Locale.US))) {
+        if (!nestedCreators.containsKey(name.toLowerCase(Locale.ENGLISH))) {
             return false;
         }
         String uri = ProjectHelper.extractUriFromComponentName(elementName);
@@ -781,7 +781,7 @@ public final class IntrospectionHelper {
         if (elementName == null) {
             return;
         }
-        NestedCreator ns = (NestedCreator) nestedCreators.get(elementName.toLowerCase(Locale.US));
+        NestedCreator ns = (NestedCreator) nestedCreators.get(elementName.toLowerCase(Locale.ENGLISH));
         if (ns == null) {
             return;
         }
@@ -1274,7 +1274,7 @@ public final class IntrospectionHelper {
      * @return the lower-cased method name with the prefix removed.
      */
     private static String getPropertyName(String methodName, String prefix) {
-        return methodName.substring(prefix.length()).toLowerCase(Locale.US);
+        return methodName.substring(prefix.length()).toLowerCase(Locale.ENGLISH);
     }
 
     /**

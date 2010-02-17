@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -259,7 +260,7 @@ public class WaitFor extends ConditionBase {
          * @return a multipler (a long value)
          */
         public long getMultiplier() {
-            String key = getValue().toLowerCase();
+            String key = getValue().toLowerCase(Locale.ENGLISH);
             Long l = (Long) timeTable.get(key);
             return l.longValue();
         }

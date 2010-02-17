@@ -47,6 +47,10 @@ public class ProjectHelper {
     /** Polymorphic attribute  */
     public static final String ANT_TYPE = "ant-type";
 
+    /** Lowercase version of {@link ANT_TYPE} used for comparisions */
+    public static final String ANT_TYPE_LC =
+        ANT_TYPE.toLowerCase(Locale.ENGLISH);
+
     /**
      * Name of JVM system property which provides the name of the
      * ProjectHelper class to use.
@@ -261,7 +265,7 @@ public class ProjectHelper {
             // reflect these into the target
             String value = replaceProperties(project, attrs.getValue(i), project.getProperties());
             try {
-                ih.setAttribute(project, target, attrs.getName(i).toLowerCase(Locale.US), value);
+                ih.setAttribute(project, target, attrs.getName(i).toLowerCase(Locale.ENGLISH), value);
             } catch (BuildException be) {
                 // id attribute must be set externally
                 if (!attrs.getName(i).equals("id")) {

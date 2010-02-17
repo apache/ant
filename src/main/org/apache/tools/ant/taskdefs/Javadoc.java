@@ -1343,7 +1343,7 @@ public class Javadoc extends Task {
          * specified.
          */
         public void setScope (String verboseScope) throws BuildException {
-            verboseScope = verboseScope.toLowerCase(Locale.US);
+            verboseScope = verboseScope.toLowerCase(Locale.ENGLISH);
 
             boolean[] elements = new boolean[SCOPE_ELEMENTS.length];
 

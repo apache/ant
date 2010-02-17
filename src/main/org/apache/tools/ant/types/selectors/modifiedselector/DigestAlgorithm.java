@@ -21,6 +21,7 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Locale;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -92,7 +93,8 @@ public class DigestAlgorithm implements Algorithm {
      * @param algorithm the digest algorithm to use
      */
     public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+        this.algorithm = algorithm != null
+            ? algorithm.toUpperCase(Locale.ENGLISH) : null;
     }
 
 
@@ -138,7 +140,7 @@ public class DigestAlgorithm implements Algorithm {
      * @return <i>true</i> if all is ok, otherwise <i>false</i>.
      */
     public boolean isValid() {
-        return "SHA".equalsIgnoreCase(algorithm) || "MD5".equalsIgnoreCase(algorithm);
+        return "SHA".equals(algorithm) || "MD5".equals(algorithm);
     }
 
 

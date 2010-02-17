@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.apache.tools.ant.types.Comparison;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -169,18 +170,21 @@ public class SizeSelector extends BaseExtendSelector {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (SIZE_KEY.equalsIgnoreCase(paramname)) {
+                if (paramname != null) {
+                    paramname = paramname.toLowerCase(Locale.ENGLISH);
+                }
+                if (SIZE_KEY.equals(paramname)) {
                     try {
                         setValue(Long.parseLong(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid size setting "
                                 + parameters[i].getValue());
                     }
-                } else if (UNITS_KEY.equalsIgnoreCase(paramname)) {
+                } else if (UNITS_KEY.equals(paramname)) {
                     ByteUnits units = new ByteUnits();
                     units.setValue(parameters[i].getValue());
                     setUnits(units);
-                } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
+                } else if (WHEN_KEY.equals(paramname)) {
                     SizeComparisons scmp = new SizeComparisons();
                     scmp.setValue(parameters[i].getValue());
                     setWhen(scmp);

@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -101,7 +102,7 @@ public class Recorder extends Task implements SubBuildListener {
      * @param action The action for the entry to take: start or stop.
      */
     public void setAction(ActionChoices action) {
-        if (action.getValue().equalsIgnoreCase("start")) {
+        if (action.getValue().toLowerCase(Locale.ENGLISH).equals("start")) {
             start = Boolean.TRUE;
         } else {
             start = Boolean.FALSE;

@@ -185,14 +185,15 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public synchronized void setAttribute(String name, String value) {
-        if (name.equalsIgnoreCase(ProjectHelper.ANT_TYPE)) {
+        String nameLC = name.toLowerCase(Locale.ENGLISH);
+        if (nameLC.equals(ProjectHelper.ANT_TYPE_LC)) {
             this.polyType = value;
         } else {
             if (attributeNames == null) {
                 attributeNames = new ArrayList();
                 attributeMap = new HashMap();
             }
-            if (name.toLowerCase(Locale.US).equals("refid")) {
+            if (nameLC.equals("refid")) {
                 attributeNames.add(0, name);
             } else {
                 attributeNames.add(name);

@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
@@ -71,7 +72,10 @@ public class TypeSelector extends BaseExtendSelector {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (TYPE_KEY.equalsIgnoreCase(paramname)) {
+                if (paramname != null) {
+                    paramname = paramname.toLowerCase(Locale.ENGLISH);
+                }
+                if (TYPE_KEY.equals(paramname)) {
                     FileType t = new FileType();
                     t.setValue(parameters[i].getValue());
                     setType(t);

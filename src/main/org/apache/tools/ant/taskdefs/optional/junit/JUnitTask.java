@@ -1569,7 +1569,9 @@ public class JUnitTask extends Task {
             if (summary) {
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
-                f.setWithOutAndErr("withoutanderr".equalsIgnoreCase(summaryValue));
+                String s = summaryValue != null
+                    ? summaryValue.toLowerCase(Locale.ENGLISH) : null;
+                f.setWithOutAndErr("withoutanderr".equals(s));
                 delegate.addVmExit(test, f, getDefaultOutput(), message, testCase);
             }
         } finally {

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -521,7 +522,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param f String (yes/no)
      */
     public void setForce(String f) {
-        if (f != null && f.equalsIgnoreCase("yes")) {
+        if (f != null && f.toLowerCase(Locale.ENGLISH).equals("yes")) {
             force = "yes";
         } else {
             force = "no";

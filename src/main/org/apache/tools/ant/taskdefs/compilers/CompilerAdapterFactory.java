@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -98,28 +99,29 @@ public final class CompilerAdapterFactory {
     public static CompilerAdapter getCompiler(String compilerType, Task task,
                                               Path classpath)
         throws BuildException {
-            if (compilerType.equalsIgnoreCase("jikes")) {
+        String compilerTypeLC = compilerType.toLowerCase(Locale.ENGLISH);
+            if (compilerTypeLC.equals("jikes")) {
                 return new Jikes();
             }
-            if (compilerType.equalsIgnoreCase("extJavac")) {
+            if (compilerTypeLC.equals("extjavac")) {
                 return new JavacExternal();
             }
-            if (compilerType.equalsIgnoreCase("classic")
-                || compilerType.equalsIgnoreCase("javac1.1")
-                || compilerType.equalsIgnoreCase("javac1.2")) {
+            if (compilerTypeLC.equals("classic")
+                || compilerTypeLC.equals("javac1.1")
+                || compilerTypeLC.equals("javac1.2")) {
                 task.log("This version of java does "
                                          + "not support the classic "
                                          + "compiler; upgrading to modern",
                                          Project.MSG_WARN);
-                compilerType = "modern";
+                compilerTypeLC = "modern";
             }
             //on java<=1.3 the modern falls back to classic if it is not found
             //but on java>=1.4 we just bail out early
-            if (compilerType.equalsIgnoreCase("modern")
-                || compilerType.equalsIgnoreCase("javac1.3")
-                || compilerType.equalsIgnoreCase("javac1.4")
-                || compilerType.equalsIgnoreCase("javac1.5")
-                || compilerType.equalsIgnoreCase("javac1.6")) {
+            if (compilerTypeLC.equals("modern")
+                || compilerTypeLC.equals("javac1.3")
+                || compilerTypeLC.equals("javac1.4")
+                || compilerTypeLC.equals("javac1.5")
+                || compilerTypeLC.equals("javac1.6")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
@@ -137,18 +139,18 @@ public final class CompilerAdapterFactory {
                 }
             }
 
-            if (compilerType.equalsIgnoreCase("jvc")
-                || compilerType.equalsIgnoreCase("microsoft")) {
+            if (compilerTypeLC.equals("jvc")
+                || compilerTypeLC.equals("microsoft")) {
                 return new Jvc();
             }
-            if (compilerType.equalsIgnoreCase("kjc")) {
+            if (compilerTypeLC.equals("kjc")) {
                 return new Kjc();
             }
-            if (compilerType.equalsIgnoreCase("gcj")) {
+            if (compilerTypeLC.equals("gcj")) {
                 return new Gcj();
             }
-            if (compilerType.equalsIgnoreCase("sj")
-                || compilerType.equalsIgnoreCase("symantec")) {
+            if (compilerTypeLC.equals("sj")
+                || compilerTypeLC.equals("symantec")) {
                 return new Sj();
             }
             return resolveClassName(compilerType,

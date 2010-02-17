@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types.optional.image;
 
 import java.awt.Color;
+import java.util.Locale;
 
 /**
  *
@@ -69,7 +70,7 @@ public final class ColorMapper {
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
     public static Color getColorByName(String colorName) {
-        colorName = colorName.toLowerCase();
+        colorName = colorName.toLowerCase(Locale.ENGLISH);
 
         if (colorName.equals(COLOR_BLACK)) {
             return Color.black;

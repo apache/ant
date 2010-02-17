@@ -20,6 +20,7 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
+import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -167,7 +168,7 @@ public class BorlandGenerateClient extends Task {
 
         log("client jar file is " + clientjarfile);
 
-        if (mode.equalsIgnoreCase(FORK_MODE)) {
+        if (mode.toLowerCase(Locale.ENGLISH).equals(FORK_MODE)) {
             executeFork();
         } else {
             executeJava();

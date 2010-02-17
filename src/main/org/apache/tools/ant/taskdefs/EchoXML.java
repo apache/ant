@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.util.Locale;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -105,6 +106,8 @@ public class EchoXML extends XMLFragment {
     public static class NamespacePolicy extends EnumeratedAttribute {
         private static final String IGNORE = "ignore";
         private static final String ELEMENTS = "elementsOnly";
+        private static final String ELEMENTS_LC =
+            ELEMENTS.toLowerCase(Locale.ENGLISH);
         private static final String ALL = "all";
 
         public static final NamespacePolicy DEFAULT
@@ -121,13 +124,14 @@ public class EchoXML extends XMLFragment {
         }
 
         public DOMElementWriter.XmlNamespacePolicy getPolicy() {
-            String s = getValue();
-            if (IGNORE.equalsIgnoreCase(s)) {
+            String v = getValue();
+            String s = v != null ? v.toLowerCase(Locale.ENGLISH) : null;
+            if (IGNORE.equals(s)) {
                 return DOMElementWriter.XmlNamespacePolicy.IGNORE;
-            } else if (ELEMENTS.equalsIgnoreCase(s)) {
+            } else if (ELEMENTS_LC.equals(s)) {
                 return
                     DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS;
-            } else if (ALL.equalsIgnoreCase(s)) {
+            } else if (ALL.equals(s)) {
                 return DOMElementWriter.XmlNamespacePolicy.QUALIFY_ALL;
             } else {
                 throw new BuildException("Invalid namespace policy: " + s);

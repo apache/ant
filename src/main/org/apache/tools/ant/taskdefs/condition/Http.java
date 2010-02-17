@@ -75,7 +75,7 @@ public class Http extends ProjectComponent implements Condition {
      */
     public void setRequestMethod(String method) {
         this.requestMethod = method == null ? DEFAULT_REQUEST_METHOD
-            : method.toUpperCase(Locale.US);
+            : method.toUpperCase(Locale.ENGLISH);
     }
 
     /**

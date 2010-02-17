@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.types;
 
+import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -150,4 +151,12 @@ public abstract class EnumeratedAttribute {
         return getValue();
     }
 
+    protected static boolean equalsIgnoreCase(String expected, String actual) {
+        if (expected == null) {
+            return actual == null;
+        }
+        return actual != null && expected.length() == actual.length()
+            && expected.toLowerCase(Locale.ENGLISH)
+            .equals(actual.toLowerCase(Locale.ENGLISH));
+    }
 }
