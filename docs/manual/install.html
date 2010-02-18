@@ -183,25 +183,6 @@ Windows NT-platforms, OS/2 Warp, Novell Netware 6, OpenVMS and MacOS X.
 The platforms used most for development are, in no particular order,
 Linux, MacOS X, Windows XP and Unix; these are therefore that platforms
 that tend to work best. As of Ant1.7, Windows 9x is no longer supported.
-<p>
-To build and use Ant, you must have a JAXP-compliant XML parser installed and
-available on your classpath, such as Xerces.</p>
-<p>
-The binary distribution of Ant includes the latest version of the
-<a href="http://xml.apache.org/xerces2-j/index.html" target="_top">Apache Xerces2</a> XML parser.
-Please see
-<a href="http://java.sun.com/xml/" target="_top">http://java.sun.com/xml/</a>
-for more information about JAXP.
-If you wish to use a different JAXP-compliant parser, you should remove
-<code>xercesImpl.jar</code> and <code>xml-apis.jar</code>
-from Ant's <code>lib</code> directory.
-<p>
-You can then either put the JARs of your preferred parser into Ant's
-<code>lib</code> directory or put the jars on the system classpath.
-Some parts of Ant will fail if you use an old parser, especially one
-that is not namespace-aware. In particular, avoid the Crimson parser.</p>
-
-<p>Tip: "ant -diagnostics" will list the XML parser used and its location.</p>
 
 <p>
 For the current version of Ant, you will also need a JDK installed on

@@ -38,7 +38,6 @@ if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
 if     "%OS%" == "Windows_NT" if exist build\nul rmdir/s/q build
 if not "%OS%" == "Windows_NT" if exist build\nul deltree/y build
 
-SET LOCALCLASSPATH=lib\xercesImpl.jar;lib\xml-apis.jar
 for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
 if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
@@ -46,7 +45,7 @@ if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\c
 set TOOLS=src\main\org\apache\tools
 set CLASSDIR=build\classes
 
-SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
+SET CLASSPATH=%CLASSDIR%;src\main;%CLASSPATH%
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
@@ -132,6 +131,5 @@ set ANT_HOME=%OLDANTHOME%
 set OLDJAVA=
 set OLDJAVAC=
 set BOOTOLDCLASSPATH=
-set LOCALCLASSPATH=
 set OLDANTHOME=
 set TOOLS=

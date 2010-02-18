@@ -730,7 +730,7 @@
       </metainf>
       <manifest>
         <attribute name="Class-Path"
-          value="ant.jar xml-apis.jar xercesImpl.jar xalan.jar"/>
+          value="ant.jar xalan.jar"/>
       </manifest>
     </jar>
 

@@ -41,28 +41,6 @@
       <version>1.8.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <!-- the implementation jar of the xerces jar will be used by ant to parse
-      XML files, particularly the build files, if the JDK does not provide a parser
-      xercesImpl.jar is provided with ant -->
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.9.0</version>
-      <optional>true</optional>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <!-- xml-apis contains the org.w3c.dom package 
-        since ant is using DOM APIS to parse the XML build file and do other XML related activities
-        xml-apis is a compile time dependency
-        a version of xml-apis.jar is delivered with ant -->
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>1.3.04</version>
-      <optional>true</optional>
-      <scope>compile</scope>
-    </dependency>
-
   </dependencies>
   <build>
     <plugins>

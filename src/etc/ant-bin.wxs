@@ -59,8 +59,6 @@
           <File DiskId="1" Id="file24" Name="ant.jar" Vital="yes" src="$(var.dist.dir)/lib\ant.jar" />
           <File DiskId="1" Id="file25" Name="LIBRAR_1.PRO" LongName="libraries.properties" Vital="yes" src="$(var.dist.dir)/lib\libraries.properties" />
           <File DiskId="1" Id="file26" Name="README" Vital="yes" src="$(var.dist.dir)/lib\README" />
-          <File DiskId="1" Id="file27" Name="XERCES_1.JAR" LongName="xercesImpl.jar" Vital="yes" src="$(var.dist.dir)/lib\xercesImpl.jar" />
-          <File DiskId="1" Id="file28" Name="xml-apis.jar" Vital="yes" src="$(var.dist.dir)/lib\xml-apis.jar" />
         </Component>
       </Directory>
       <Directory Id="directory1" Name="bin">
