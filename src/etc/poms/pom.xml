@@ -90,7 +90,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <module>ant-nodeps</module>
     <module>ant-swing</module>
     <module>ant-testutil</module>
-    <module>ant-trax</module>
   </modules>
   <dependencies>
      <dependency>

@@ -185,16 +185,6 @@
     </or>
   </selector>
 
-  <!-- depends on external libraries -->
-  <selector id="needs.trax">
-    <or>
-      <filename name="${optional.package}/TraXLiaison*"/>
-      <filename name="${optional.package}/XSLTTraceSupport*"/>
-      <filename name="${optional.package}/XsltTest*"/>
-      <filename name="${type.package}/XMLCatalogBuildFileTest*"/>
-    </or>
-  </selector>
-
   <selector id="needs.apache-resolver">
     <filename name="${apache.resolver.type.package}/**"/>
   </selector>
@@ -357,19 +347,6 @@
     <available property="netrexx.present"
       classname="netrexx.lang.Rexx"
       classpathref="classpath"/>
-    <available property="trax.present"
-      classname="javax.xml.transform.Transformer"
-      classpathref="classpath"/>
-    <condition property="trax.impl.present">
-      <or>
-        <and>
-          <isset property="javax.xml.transform.TransformerFactory"/>
-          <available classname="${javax.xml.transform.TransformerFactory}"
-            classpathref="classpath"/>
-        </and>
-        <available resource="META-INF/services/javax.xml.transform.TransformerFactory"/>
-      </or>
-    </condition>
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
       classpathref="classpath"/>
@@ -560,7 +537,6 @@
             <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
 
-            <selector refid="needs.trax" unless="trax.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
             <selector refid="needs.apache-regexp"
@@ -743,7 +719,6 @@
         <not>
           <or>
             <selector refid="ant.launcher"/>
-            <selector refid="needs.trax"/>
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
             <selector refid="needs.apache-regexp"/>
@@ -784,7 +759,6 @@
       </sequential>
     </macrodef>
 
-    <optional-jar dep="trax"/>
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
     <optional-jar dep="apache-regexp"/>
@@ -1665,17 +1639,11 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
 
     <condition property="run.antunit.report">
-      <and>
-        <isset property="run.antunit" />
-        <isset property="trax.impl.present" />
-      </and>
+      <isset property="run.antunit" />
     </condition>
 
     <condition property="run.junit.report">
-      <and>
-        <isset property="run.junit" />
-        <isset property="trax.impl.present" />
-      </and>
+      <isset property="run.junit" />
     </condition>
   </target>
 
@@ -1761,17 +1729,8 @@ see ${build.junit.reports} / ${antunit.reports}
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java"/>
 
-          <!-- These tests need a TraX implementation like xalan2 or saxon -->
-          <exclude name="${optional.package}/TraXLiaisonTest.java"
-            unless="trax.impl.present"/>
-          <exclude name="${optional.package}/XsltTest.java"
-            unless="trax.impl.present"/>
-          <exclude name="${ant.package}/types/XMLCatalogBuildFileTest.java"
-            unless="trax.impl.present"/>
           <exclude name="${optional.package}/junit/JUnitReportTest.java"
             unless="run.junitreport"/>
-          <exclude name="${taskdefs.package}/StyleTest.java"
-            unless="trax.impl.present"/>
 
           <!-- needs xerces to work -->
           <exclude name="${ant.package}/IncludeTest.java"

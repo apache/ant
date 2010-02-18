@@ -59,7 +59,6 @@
             <include>org/apache/tools/ant/util/regexp/Jdk14Regexp*</include>
           </includes>
           <excludes>
-            <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/junit/**</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/perforce/**</exclude>

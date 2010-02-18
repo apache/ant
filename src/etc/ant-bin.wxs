@@ -53,9 +53,7 @@
           <File DiskId="1" Id="file18" Name="ANT-ST_2.JAR" LongName="ant-starteam.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-starteam.jar" />
           <File DiskId="1" Id="file19" Name="ANT-ST_1.JAR" LongName="ant-stylebook.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-stylebook.jar" />
           <File DiskId="1" Id="file20" Name="ANT-SW_1.JAR" LongName="ant-swing.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-swing.jar" />
-          <File DiskId="1" Id="file21" Name="ant-trax.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-trax.jar" />
           <File DiskId="1" Id="file22" Name="ANT-WE_1.JAR" LongName="ant-weblogic.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-weblogic.jar" />
-          <File DiskId="1" Id="file23" Name="ANT-XA_1.JAR" LongName="ant-xalan1.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-xalan1.jar" />
           <File DiskId="1" Id="file24" Name="ant.jar" Vital="yes" src="$(var.dist.dir)/lib\ant.jar" />
           <File DiskId="1" Id="file25" Name="LIBRAR_1.PRO" LongName="libraries.properties" Vital="yes" src="$(var.dist.dir)/lib\libraries.properties" />
           <File DiskId="1" Id="file26" Name="README" Vital="yes" src="$(var.dist.dir)/lib\README" />
