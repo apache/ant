@@ -22,7 +22,6 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
-import java.util.Locale;
 
 /**
  * Draw an arc.
@@ -74,12 +73,11 @@ public class Arc extends BasicShape implements DrawOperation {
      * @todo refactor using an EnumeratedAttribute
      */
     public void setType(String strType) {
-        String stype = strType.toLowerCase(Locale.ENGLISH);
-        if (stype.equals("open")) {
+        if (strType.equalsIgnoreCase("open")) {
             type = Arc2D.OPEN;
-        } else if (stype.equals("pie")) {
+        } else if (strType.equalsIgnoreCase("pie")) {
             type = Arc2D.PIE;
-        } else if (stype.equals("chord")) {
+        } else if (strType.equalsIgnoreCase("chord")) {
             type = Arc2D.CHORD;
         }
     }

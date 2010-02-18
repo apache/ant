@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.util.Locale;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
@@ -134,17 +133,14 @@ public class FilenameSelector extends BaseExtendSelector {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (paramname != null) {
-                    paramname = paramname.toLowerCase(Locale.ENGLISH);
-                }
-                if (NAME_KEY.equals(paramname)) {
+                if (NAME_KEY.equalsIgnoreCase(paramname)) {
                     setName(parameters[i].getValue());
-                } else if (CASE_KEY.equals(paramname)) {
+                } else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
                             parameters[i].getValue()));
-                } else if (NEGATE_KEY.equals(paramname)) {
+                } else if (NEGATE_KEY.equalsIgnoreCase(paramname)) {
                     setNegate(Project.toBoolean(parameters[i].getValue()));
-                } else if (REGEX_KEY.equals(paramname)) {
+                } else if (REGEX_KEY.equalsIgnoreCase(paramname)) {
                     setRegex(parameters[i].getValue());
                 } else {
                     setError("Invalid parameter " + paramname);

@@ -47,10 +47,6 @@ public class ProjectHelper {
     /** Polymorphic attribute  */
     public static final String ANT_TYPE = "ant-type";
 
-    /** Lowercase version of {@link ANT_TYPE} used for comparisons */
-    public static final String ANT_TYPE_LC =
-        ANT_TYPE.toLowerCase(Locale.ENGLISH);
-
     /**
      * Name of JVM system property which provides the name of the
      * ProjectHelper class to use.

@@ -501,7 +501,7 @@ public class Available extends Task implements Condition {
          * @return true if the value specifies a directory.
          */
         public boolean isDir() {
-            return equalsIgnoreCase("dir", getValue());
+            return "dir".equalsIgnoreCase(getValue());
         }
 
         /**
@@ -510,7 +510,7 @@ public class Available extends Task implements Condition {
          * @return true if the value specifies a file.
          */
         public boolean isFile() {
-            return equalsIgnoreCase("file", getValue());
+            return "file".equalsIgnoreCase(getValue());
         }
 
     }

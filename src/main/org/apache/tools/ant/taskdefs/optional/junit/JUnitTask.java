@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Locale;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -1078,8 +1077,7 @@ public class JUnitTask extends Task {
      * @return true if the run should be withoutput and error
      */
     private boolean equalsWithOutAndErr(String summaryOption) {
-        return summaryOption != null && "withoutanderr".equals(
-            summaryOption.toLowerCase(Locale.ENGLISH));
+        return "withoutanderr".equalsIgnoreCase(summaryOption);
     }
 
     private void checkIncludeSummary(CommandlineJava cmd) {
@@ -1569,9 +1567,7 @@ public class JUnitTask extends Task {
             if (summary) {
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
-                String s = summaryValue != null
-                    ? summaryValue.toLowerCase(Locale.ENGLISH) : null;
-                f.setWithOutAndErr("withoutanderr".equals(s));
+                f.setWithOutAndErr(equalsWithOutAndErr(summaryValue));
                 delegate.addVmExit(test, f, getDefaultOutput(), message, testCase);
             }
         } finally {

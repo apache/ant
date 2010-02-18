@@ -21,7 +21,6 @@ package org.apache.tools.ant.util.optional;
 import org.apache.tools.ant.BuildException;
 
 import java.util.Iterator;
-import java.util.Locale;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.ReflectWrapper;
@@ -90,7 +89,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             for (Iterator i = getBeans().keySet().iterator(); i.hasNext();) {
                 String key = (String) i.next();
                 Object value = getBeans().get(key);
-                if ("FX".equals(getLanguage().toUpperCase(Locale.ENGLISH))) {
+                if ("FX".equalsIgnoreCase(getLanguage())) {
                     engine.invoke(
                         "put", String.class, key
                         + ":" + value.getClass().getName(),

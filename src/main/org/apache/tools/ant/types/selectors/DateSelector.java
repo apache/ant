@@ -171,30 +171,27 @@ public class DateSelector extends BaseExtendSelector {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (paramname != null) {
-                    paramname = paramname.toLowerCase(Locale.ENGLISH);
-                }
-                if (MILLIS_KEY.equals(paramname)) {
+                if (MILLIS_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMillis(Long.parseLong(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid millisecond setting "
                                 + parameters[i].getValue());
                     }
-                } else if (DATETIME_KEY.equals(paramname)) {
+                } else if (DATETIME_KEY.equalsIgnoreCase(paramname)) {
                     setDatetime(parameters[i].getValue());
-                } else if (CHECKDIRS_KEY.equals(paramname)) {
+                } else if (CHECKDIRS_KEY.equalsIgnoreCase(paramname)) {
                     setCheckdirs(Project.toBoolean(parameters[i].getValue()));
-                } else if (GRANULARITY_KEY.equals(paramname)) {
+                } else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setGranularity(Integer.parseInt(parameters[i].getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid granularity setting "
                             + parameters[i].getValue());
                     }
-                } else if (WHEN_KEY.equals(paramname)) {
+                } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     setWhen(new TimeComparison(parameters[i].getValue()));
-                } else if (PATTERN_KEY.equals(paramname)) {
+                } else if (PATTERN_KEY.equalsIgnoreCase(paramname)) {
                     setPattern(parameters[i].getValue());
                 } else {
                     setError("Invalid parameter " + paramname);

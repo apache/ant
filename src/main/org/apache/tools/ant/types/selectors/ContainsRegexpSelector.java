@@ -22,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
@@ -83,9 +82,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (paramname != null
-                    && EXPRESSION_KEY.equals(paramname
-                                             .toLowerCase(Locale.ENGLISH))) {
+                if (EXPRESSION_KEY.equalsIgnoreCase(paramname)) {
                     setExpression(parameters[i].getValue());
                 } else {
                     setError("Invalid parameter " + paramname);

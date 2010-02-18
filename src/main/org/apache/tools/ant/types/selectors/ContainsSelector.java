@@ -22,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -113,15 +112,12 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (paramname != null) {
-                    paramname = paramname.toLowerCase(Locale.ENGLISH);
-                }
-                if (CONTAINS_KEY.equals(paramname)) {
+                if (CONTAINS_KEY.equalsIgnoreCase(paramname)) {
                     setText(parameters[i].getValue());
-                } else if (CASE_KEY.equals(paramname)) {
+                } else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
                             parameters[i].getValue()));
-                } else if (WHITESPACE_KEY.equals(paramname)) {
+                } else if (WHITESPACE_KEY.equalsIgnoreCase(paramname)) {
                     setIgnorewhitespace(Project.toBoolean(
                             parameters[i].getValue()));
                 } else {

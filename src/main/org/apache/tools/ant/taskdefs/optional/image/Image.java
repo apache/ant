@@ -408,10 +408,9 @@ public class Image extends MatchingTask {
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
         }
-        String enc = str_encoding.toLowerCase(Locale.ENGLISH);
-        if (enc.equals("jpg")) {
+        if (str_encoding.equalsIgnoreCase("jpg")) {
             str_encoding = "JPEG";
-        } else if (enc.equals("tif")) {
+        } else if (str_encoding.equalsIgnoreCase("tif")) {
             str_encoding = "TIFF";
         }
     }

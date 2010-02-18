@@ -25,7 +25,6 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
@@ -96,7 +95,7 @@ public class P4Label extends P4Base {
             desc = "AntLabel";
         }
 
-        if (lock != null && !lock.toLowerCase(Locale.ENGLISH).equals("locked")) {
+        if (lock != null && !lock.equalsIgnoreCase("locked")) {
             log("lock attribute invalid - ignoring", Project.MSG_WARN);
         }
 
@@ -137,7 +136,7 @@ public class P4Label extends P4Base {
             Project.MSG_INFO);
 
         //Now lock if required
-        if (lock != null && lock.toLowerCase(Locale.ENGLISH).equals("locked")) {
+        if (lock != null && lock.equalsIgnoreCase("locked")) {
 
             log("Modifying lock status to 'locked'", Project.MSG_INFO);
 

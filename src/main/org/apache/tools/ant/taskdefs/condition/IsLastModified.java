@@ -22,7 +22,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -120,8 +119,7 @@ public class IsLastModified extends ProjectComponent implements Condition {
         if (millis >= 0) {
             return millis;
         }
-        if (dateTime != null
-            && "now".equals(dateTime.toLowerCase(Locale.ENGLISH))) {
+        if ("now".equalsIgnoreCase(dateTime)) {
             return System.currentTimeMillis();
         }
         DateFormat df = dfFactory.getPrimaryFormat();

@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
-import java.util.Locale;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -81,12 +80,11 @@ public final class JspCompilerAdapterFactory {
                                                  AntClassLoader loader)
         throws BuildException {
 
-        String compilerTypeLC = compilerType.toLowerCase(Locale.ENGLISH);
-        if (compilerTypeLC.equals("jasper")) {
+        if (compilerType.equalsIgnoreCase("jasper")) {
             //tomcat4.0 gets the old mangler
             return new JasperC(new JspNameMangler());
         }
-        if (compilerTypeLC.equals("jasper41")) {
+        if (compilerType.equalsIgnoreCase("jasper41")) {
             //tomcat4.1 gets the new one
             return new JasperC(new Jasper41Mangler());
         }

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
@@ -89,8 +88,6 @@ public class Javac extends MatchingTask {
     private static final String MODERN = "modern";
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
-    private static final String EXTJAVAC_LC =
-        EXTJAVAC.toLowerCase(Locale.ENGLISH);
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -682,9 +679,7 @@ public class Javac extends MatchingTask {
      * @return true if this is a forked invocation
      */
     public boolean isForkedJavac() {
-        String c = getCompiler();
-        return fork ||
-            (c != null && EXTJAVAC_LC.equals(c.toLowerCase(Locale.ENGLISH)));
+        return fork || EXTJAVAC.equalsIgnoreCase(getCompiler());
     }
 
     /**
@@ -763,31 +758,29 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(String anImplementation) {
-        anImplementation = anImplementation != null
-            ? anImplementation.toLowerCase(Locale.ENGLISH) : null;
-        if (JAVAC16.equals(anImplementation)
-                || JAVAC15.equals(anImplementation)
-                || JAVAC14.equals(anImplementation)
-                || JAVAC13.equals(anImplementation)) {
+        if (JAVAC16.equalsIgnoreCase(anImplementation)
+                || JAVAC15.equalsIgnoreCase(anImplementation)
+                || JAVAC14.equalsIgnoreCase(anImplementation)
+                || JAVAC13.equalsIgnoreCase(anImplementation)) {
             return MODERN;
         }
-        if (JAVAC12.equals(anImplementation)
-                || JAVAC11.equals(anImplementation)) {
+        if (JAVAC12.equalsIgnoreCase(anImplementation)
+                || JAVAC11.equalsIgnoreCase(anImplementation)) {
             return CLASSIC;
         }
-        if (MODERN.equals(anImplementation)) {
+        if (MODERN.equalsIgnoreCase(anImplementation)) {
             String nextSelected = assumedJavaVersion();
-            if (JAVAC16.equals(nextSelected)
-                    || JAVAC15.equals(nextSelected)
-                    || JAVAC14.equals(nextSelected)
-                    || JAVAC13.equals(nextSelected)) {
+            if (JAVAC16.equalsIgnoreCase(nextSelected)
+                    || JAVAC15.equalsIgnoreCase(nextSelected)
+                    || JAVAC14.equalsIgnoreCase(nextSelected)
+                    || JAVAC13.equalsIgnoreCase(nextSelected)) {
                 return nextSelected;
             }
         }
-        if (CLASSIC.equals(anImplementation)) {
+        if (CLASSIC.equalsIgnoreCase(anImplementation)) {
             return assumedJavaVersion();
         }
-        if (EXTJAVAC_LC.equals(anImplementation)) {
+        if (EXTJAVAC.equalsIgnoreCase(anImplementation)) {
             return assumedJavaVersion();
         }
         return null;

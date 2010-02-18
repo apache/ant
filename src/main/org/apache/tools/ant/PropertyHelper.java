@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -1146,13 +1145,13 @@ public class PropertyHelper implements GetProperty {
             return (Boolean) value;
         }
         if (value instanceof String) {
-            String s = ((String) value).toLowerCase(Locale.ENGLISH);
+            String s = (String) value;
             if (Project.toBoolean(s)) {
                 return Boolean.TRUE;
             }
-            if ("off".equals(s)
-                || "false".equals(s)
-                || "no".equals(s)) {
+            if ("off".equalsIgnoreCase(s)
+                || "false".equalsIgnoreCase(s)
+                || "no".equalsIgnoreCase(s)) {
                 return Boolean.FALSE;
             }
         }

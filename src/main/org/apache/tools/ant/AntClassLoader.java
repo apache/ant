@@ -37,7 +37,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.Locale;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
@@ -1280,7 +1279,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 sealedString = mainAttributes.getValue(Name.SEALED);
             }
         }
-        if (sealedString != null && sealedString.toLowerCase(Locale.ENGLISH).equals("true")) {
+        if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
             try {
                 sealBase = new URL(FileUtils.getFileUtils().toURI(container.getAbsolutePath()));
             } catch (MalformedURLException e) {

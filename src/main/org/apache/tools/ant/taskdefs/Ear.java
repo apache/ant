@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -40,8 +39,6 @@ public class Ear extends Jar {
     private File deploymentDescriptor;
     private boolean descriptorAdded;
     private static final String XML_DESCRIPTOR_PATH = "META-INF/application.xml";
-    private static final String XML_DESCRIPTOR_PATH_LC =
-        XML_DESCRIPTOR_PATH.toLowerCase(Locale.ENGLISH);
 
     /**
      * Create an Ear task.
@@ -127,8 +124,7 @@ public class Ear extends Jar {
         // attribute - or if it's being added twice, meaning the same
         // file is specified by the "appxml" attribute and in a
         // <fileset> element.
-        String vPathLowerCase = vPath.toLowerCase(Locale.ENGLISH);
-        if (XML_DESCRIPTOR_PATH_LC.equals(vPathLowerCase))  {
+        if (XML_DESCRIPTOR_PATH.equalsIgnoreCase(vPath))  {
             if (deploymentDescriptor == null
                 || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {

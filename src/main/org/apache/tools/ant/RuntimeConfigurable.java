@@ -25,7 +25,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -185,15 +184,14 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public synchronized void setAttribute(String name, String value) {
-        String nameLC = name.toLowerCase(Locale.ENGLISH);
-        if (nameLC.equals(ProjectHelper.ANT_TYPE_LC)) {
+        if (name.equalsIgnoreCase(ProjectHelper.ANT_TYPE)) {
             this.polyType = value;
         } else {
             if (attributeNames == null) {
                 attributeNames = new ArrayList();
                 attributeMap = new HashMap();
             }
-            if (nameLC.equals("refid")) {
+            if (name.equalsIgnoreCase("refid")) {
                 attributeNames.add(0, name);
             } else {
                 attributeNames.add(name);

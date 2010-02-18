@@ -233,8 +233,7 @@ public class Touch extends Task {
         }
         if (dateTime != null && !dateTimeConfigured) {
             long workmillis = millis;
-            if (dateTime != null
-                && "now".equals(dateTime.toLowerCase(Locale.ENGLISH))) {
+            if ("now".equalsIgnoreCase(dateTime)) {
                 workmillis = System.currentTimeMillis();
             } else {
                 DateFormat df = dfFactory.getPrimaryFormat();

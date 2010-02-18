@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
@@ -95,17 +94,14 @@ public class DepthSelector extends BaseExtendSelector {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
-                if (paramname != null) {
-                    paramname = paramname.toLowerCase(Locale.ENGLISH);
-                }
-                if (MIN_KEY.equals(paramname)) {
+                if (MIN_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMin(Integer.parseInt(parameters[i].getValue()));
                     } catch (NumberFormatException nfe1) {
                         setError("Invalid minimum value "
                                 + parameters[i].getValue());
                     }
-                } else if (MAX_KEY.equals(paramname)) {
+                } else if (MAX_KEY.equalsIgnoreCase(paramname)) {
                     try {
                         setMax(Integer.parseInt(parameters[i].getValue()));
                     } catch (NumberFormatException nfe1) {

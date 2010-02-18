@@ -27,7 +27,6 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.io.File;
 import java.util.Vector;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -84,12 +83,11 @@ public class P4Fstat extends P4Base {
      * @param filter should be one of all|existing|non-existing.
      */
     public void setShowFilter(String filter) {
-        filter = filter.toLowerCase(Locale.ENGLISH);
-        if (filter.equals("all")) {
+        if (filter.equalsIgnoreCase("all")) {
             show = SHOW_ALL;
-        } else if (filter.equals("existing")) {
+        } else if (filter.equalsIgnoreCase("existing")) {
             show = SHOW_EXISTING;
-        } else if (filter.equals("non-existing")) {
+        } else if (filter.equalsIgnoreCase("non-existing")) {
             show = SHOW_NON_EXISTING;
         } else {
             throw new BuildException("P4Fstat: ShowFilter should be one of: "

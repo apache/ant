@@ -21,7 +21,6 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.Locale;
 
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
@@ -88,17 +87,14 @@ public class LeadPipeInputStream extends PipedInputStream {
             result = super.read();
         } catch (IOException eyeOhEx) {
             String msg = eyeOhEx.getMessage();
-            if (msg != null) {
-                msg = msg.toLowerCase(Locale.ENGLISH);
-            }
-            if ("write end dead".equals(msg)) {
+            if ("write end dead".equalsIgnoreCase(msg)) {
                 if (super.in > 0 && super.out < super.buffer.length
                     && super.out > super.in) {
                     result = super.buffer[super.out++] & BYTE_MASK;
                 }
             } else {
-                log("error at LeadPipeInputStream.read():  "
-                    + eyeOhEx.getMessage(), Project.MSG_INFO);
+                log("error at LeadPipeInputStream.read():  " + msg,
+                    Project.MSG_INFO);
             }
         }
         return result;

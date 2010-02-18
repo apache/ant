@@ -37,7 +37,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -342,7 +341,7 @@ public class Jar extends Zip {
             Enumeration e = zf.entries();
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
-                if (ze.getName().toUpperCase(Locale.ENGLISH).equals(MANIFEST_NAME)) {
+                if (ze.getName().equalsIgnoreCase(MANIFEST_NAME)) {
                     InputStreamReader isr =
                         new InputStreamReader(zf.getInputStream(ze), "UTF-8");
                     return getManifest(isr);
@@ -383,7 +382,7 @@ public class Jar extends Zip {
             Enumeration e = zf.entries();
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
-                if (ze.getName().toUpperCase(Locale.ENGLISH).equals(INDEX_NAME)) {
+                if (ze.getName().equalsIgnoreCase(INDEX_NAME)) {
                     return true;
                 }
             }
@@ -693,12 +692,11 @@ public class Jar extends Zip {
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
         throws IOException {
-        String vPathUC = vPath != null ? vPath.toUpperCase(Locale.ENGLISH) : null;
-        if (MANIFEST_NAME.equals(vPathUC))  {
+        if (MANIFEST_NAME.equalsIgnoreCase(vPath))  {
             if (isFirstPass()) {
                 filesetManifest(fromArchive, is);
             }
-        } else if (INDEX_NAME.equals(vPathUC) && index) {
+        } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
             logWhenWriting("Warning: selected " + archiveType
                            + " files include a " + INDEX_NAME + " which will"
                            + " be replaced by a newly generated one.",
@@ -967,7 +965,7 @@ public class Jar extends Zip {
             message.append(br);
             message.append("Location: ").append(getLocation());
             message.append(br);
-            if (strict.getValue().toLowerCase(Locale.ENGLISH).equals("fail")) {
+            if (strict.getValue().equalsIgnoreCase("fail")) {
                 throw new BuildException(message.toString(), getLocation());
             } else {
                 logWhenWriting(message.toString(), strict.getLogLevel());
@@ -1169,8 +1167,7 @@ public class Jar extends Zip {
                     });
             }
             for (int j = 0; j < resources[0].length; j++) {
-                if (resources[0][j].getName().toUpperCase(Locale.ENGLISH)
-                    .equals(MANIFEST_NAME)) {
+                if (resources[0][j].getName().equalsIgnoreCase(MANIFEST_NAME)) {
                     manifests[i] = new Resource[] {resources[0][j]};
                     break;
                 }

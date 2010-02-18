@@ -726,8 +726,7 @@ public class SQLExec extends JDBCTask {
                 StringTokenizer st = new StringTokenizer(line);
                 if (st.hasMoreTokens()) {
                     String token = st.nextToken();
-                    if (token != null
-                        && "REM".equals(token.toUpperCase(Locale.ENGLISH))) {
+                    if ("REM".equalsIgnoreCase(token)) {
                         continue;
                     }
                 }

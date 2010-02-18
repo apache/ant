@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -517,10 +516,9 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         if (autoResponse == null) {
             return FLAG_AUTORESPONSE_DEF;
         }
-        autoResponse = autoResponse.toUpperCase(Locale.ENGLISH);
-        if (autoResponse.equals("Y")) {
+        if (autoResponse.equalsIgnoreCase("Y")) {
             return FLAG_AUTORESPONSE_YES;
-        } else if (autoResponse.equals("N")) {
+        } else if (autoResponse.equalsIgnoreCase("N")) {
             return FLAG_AUTORESPONSE_NO;
         } else {
             return FLAG_AUTORESPONSE_DEF;

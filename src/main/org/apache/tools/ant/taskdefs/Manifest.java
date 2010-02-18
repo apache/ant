@@ -513,10 +513,8 @@ public class Manifest {
             Attribute classpathAttribute = null;
             while (e.hasMoreElements()) {
                 String attributeName = (String) e.nextElement();
-                String attributeNameLC =
-                    attributeName.toLowerCase(Locale.ENGLISH);
                 Attribute attribute = section.getAttribute(attributeName);
-                if (attributeNameLC.equals(ATTRIBUTE_CLASSPATH_LC)) {
+                if (attributeName.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
                     if (classpathAttribute == null) {
                         classpathAttribute = new Attribute();
                         classpathAttribute.setName(ATTRIBUTE_CLASSPATH);
@@ -870,8 +868,7 @@ public class Manifest {
             Section section = new Section();
             if (nextSectionName == null) {
                 Attribute sectionName = new Attribute(line);
-                if (!sectionName.getName().toLowerCase(Locale.ENGLISH)
-                    .equals(ATTRIBUTE_NAME_LC)) {
+                if (!sectionName.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
                     throw new ManifestException("Manifest sections should "
                         + "start with a \"" + ATTRIBUTE_NAME
                         + "\" attribute and not \""
