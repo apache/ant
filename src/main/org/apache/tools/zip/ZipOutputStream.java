@@ -96,11 +96,18 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     static final String DEFAULT_ENCODING = null;
 
-     /**
+    /**
      * General purpose flag, which indicates that filenames are
      * written in utf-8.
      */
-    public static final int EFS_FLAG = 1 << 11;
+    public static final int UFT8_NAMES_FLAG = 1 << 11;
+
+    /**
+     * General purpose flag, which indicates that filenames are
+     * written in utf-8.
+     * @deprecated use {@link #UFT8_NAMES_FLAG} instead
+     */
+    public static final int EFS_FLAG = UFT8_NAMES_FLAG;
 
     /**
      * Current entry.
@@ -265,9 +272,10 @@ public class ZipOutputStream extends FilterOutputStream {
     private RandomAccessFile raf = null;
 
     /**
-     * whether to use the EFS flag when writing UTF-8 filenames or not.
+     * whether to use the general purpose bit flag when writing UTF-8
+     * filenames or not.
      */
-    private boolean useEFS = true; 
+    private boolean useUTF8Flag = true; 
 
     /**
      * Whether to encode non-encodable file names as UTF-8.
@@ -341,7 +349,7 @@ public class ZipOutputStream extends FilterOutputStream {
     public void setEncoding(final String encoding) {
         this.encoding = encoding;
         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-        useEFS &= ZipEncodingHelper.isUTF8(encoding);
+        useUTF8Flag &= ZipEncodingHelper.isUTF8(encoding);
     }
 
     /**
@@ -362,7 +370,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * <p>Defaults to true.</p>
      */
     public void setUseLanguageEncodingFlag(boolean b) {
-        useEFS = b && ZipEncodingHelper.isUTF8(encoding);
+        useUTF8Flag = b && ZipEncodingHelper.isUTF8(encoding);
     }
 
     /**
@@ -1050,7 +1058,7 @@ public class ZipOutputStream extends FilterOutputStream {
 
         // CheckStyle:MagicNumber OFF
         int versionNeededToExtract = 10;
-        int generalPurposeFlag = (useEFS || utfFallback) ? EFS_FLAG : 0;
+        int generalPurposeFlag = (useUTF8Flag || utfFallback) ? UFT8_NAMES_FLAG : 0;
         if (zipMethod == DEFLATED && raf == null) {
             // requires version 2 as we are going to store length info
             // in the data descriptor
