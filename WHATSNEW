@@ -29,6 +29,9 @@ Fixed bugs:
 
  * VectorSet#remove(Object) would fail if the size of the vector
    equaled its capacity.
+   
+ * Regression : ant -diagnostics was returning with exit code 1
+   Bugzilla Report 48782  
 
 Other changes:
 --------------
