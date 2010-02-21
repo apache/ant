@@ -238,7 +238,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         final Thread result
             = new ThreadWithPumper(new StreamPumper(is, os,
                                                     closeWhenExhausted,
-                                                    Os.isFamily("windows")));
+                                                    true));
         result.setDaemon(true);
         return result;
     }

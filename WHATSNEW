@@ -31,7 +31,10 @@ Fixed bugs:
    equaled its capacity.
    
  * Regression : ant -diagnostics was returning with exit code 1
-   Bugzilla Report 48782  
+   Bugzilla Report 48782
+   
+*  Fix for exec task sometimes inserts extraneous newlines
+   Bugzilla Report 48746      
 
 Other changes:
 --------------
