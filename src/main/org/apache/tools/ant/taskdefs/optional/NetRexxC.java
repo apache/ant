@@ -73,6 +73,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <li>suppressVariableNotUsed</li>
  * <li>suppressExceptionNotSignalled</li>
  * <li>suppressDeprecation</li>
+ * <li>removeKeepExtension</li>
  * </ul>
  * Of these arguments, the <b>srcdir</b> argument is required.
  *
@@ -126,6 +127,7 @@ public class NetRexxC extends MatchingTask {
     private boolean suppressVariableNotUsed = false;
     private boolean suppressExceptionNotSignalled = false;
     private boolean suppressDeprecation = false;
+    private boolean removeKeepExtension = false;
 
     // constants for the messages to suppress by flags and their corresponding properties
     static final String MSG_METHOD_ARGUMENT_NOT_USED
@@ -144,6 +146,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Set whether literals are treated as binary, rather than NetRexx types.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default is false.
      * @param binary a <code>boolean</code> value.
      */
     public void setBinary(boolean binary) {
@@ -162,8 +166,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Set whether comments are passed through to the generated java source.
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is false
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param comments a <code>boolean</code> value.
      */
     public void setComments(boolean comments) {
@@ -172,9 +176,9 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Set whether error messages come out in compact or verbose format. Valid
-     * true values are "on" or "true". Anything else sets the flag to false.
-     * The default value is false
+     * Set whether error messages come out in compact or verbose format.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is true.
      * @param compact a <code>boolean</code> value.
      */
     public void setCompact(boolean compact) {
@@ -183,10 +187,10 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Set whether the NetRexx compiler should compile the generated java code
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is true. Setting this flag to false, will
-     * automatically set the keep flag to true.
+     * Set whether the NetRexx compiler should compile the generated java code.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is true.
+     * Setting this flag to false, will automatically set the keep flag to true.
      * @param compile a <code>boolean</code> value.
      */
     public void setCompile(boolean compile) {
@@ -198,9 +202,10 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Set whether or not messages should be displayed on the 'console' Valid
-     * true values are "on" or "true". Anything else sets the flag to false.
-     * The default value is true.
+     * Set whether or not compiler messages should be displayed on the 'console'.
+     * Note that this task will rely on the default value for filtering compile messages.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param console a <code>boolean</code> value.
      */
     public void setConsole(boolean console) {
@@ -210,6 +215,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether variable cross references are generated.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param crossref a <code>boolean</code> value.
      */
     public void setCrossref(boolean crossref) {
@@ -219,9 +226,10 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Set whether decimal arithmetic should be used for the netrexx code.
-     * Binary arithmetic is used when this flag is turned off. Valid true
-     * values are "on" or "true". Anything else sets the flag to false. The
-     * default value is true.
+     * Setting this to off will report decimal arithmetic as an error, for
+     * performance critical applications.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is true.
      * @param decimal a <code>boolean</code> value.
      */
     public void setDecimal(boolean decimal) {
@@ -249,8 +257,8 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Sets whether variables must be declared explicitly before use. Valid
-     * true values are "on" or "true". Anything else sets the flag to false.
+     * Sets whether variables must be declared explicitly before use.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      * @param explicit a <code>boolean</code> value.
      */
@@ -262,6 +270,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Whether the generated java code is formatted nicely or left to match
      * NetRexx line numbers for call stack debugging.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value false.
      * @param format a <code>boolean</code> value.
      */
     public void setFormat(boolean format) {
@@ -270,9 +280,8 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Whether the generated java code is produced Valid true values are "on"
-     * or "true". Anything else sets the flag to false. The default value is
-     * false.
+     * Whether the generated java code is produced.
+     * This is not implemented yet.
      * @param java a <code>boolean</code> value.
      */
     public void setJava(boolean java) {
@@ -283,9 +292,11 @@ public class NetRexxC extends MatchingTask {
     /**
      * Sets whether the generated java source file should be kept after
      * compilation. The generated files will have an extension of .java.keep,
-     * <b>not</b> .java Valid true values are "on" or "true". Anything else
-     * sets the flag to false. The default value is false.
+     * <b>not</b> .java. See setRemoveKeepExtension
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param keep a <code>boolean</code> value.
+     * @see #setRemoveKeepExtension(boolean)
      */
     public void setKeep(boolean keep) {
         this.keep = keep;
@@ -294,6 +305,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Whether the compiler text logo is displayed when compiling.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param logo a <code>boolean</code> value.
      */
     public void setLogo(boolean logo) {
@@ -302,9 +315,9 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Whether the generated .java file should be replaced when compiling
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is false.
+     * Whether the generated .java file should be replaced when compiling.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param replace a <code>boolean</code> value.
      */
     public void setReplace(boolean replace) {
@@ -314,8 +327,9 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Sets whether the compiler messages will be written to NetRexxC.log as
-     * well as to the console Valid true values are "on" or "true". Anything
-     * else sets the flag to false. The default value is false.
+     * well as to the console.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param savelog a <code>boolean</code> value.
      */
     public void setSavelog(boolean savelog) {
@@ -325,9 +339,9 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Tells the NetRexx compiler to store the class files in the same
-     * directory as the source files. The alternative is the working directory
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is true.
+     * directory as the source files. The alternative is the working directory.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is true.
      * @param sourcedir a <code>boolean</code> value.
      */
     public void setSourcedir(boolean sourcedir) {
@@ -347,9 +361,9 @@ public class NetRexxC extends MatchingTask {
     /**
      * Tells the NetRexx compiler that method calls always need parentheses,
      * even if no arguments are needed, e.g. <code>aStringVar.getBytes</code>
-     * vs. <code>aStringVar.getBytes()</code> Valid true values are "on" or
-     * "true". Anything else sets the flag to false. The default value is
-     * false.
+     * vs. <code>aStringVar.getBytes()</code>.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param strictargs a <code>boolean</code> value.
      */
     public void setStrictargs(boolean strictargs) {
@@ -359,6 +373,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Tells the NetRexx compile that assignments must match exactly on type.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param strictassign a <code>boolean</code> value.
      */
     public void setStrictassign(boolean strictassign) {
@@ -368,6 +384,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Specifies whether the NetRexx compiler should be case sensitive or not.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param strictcase a <code>boolean</code> value.
      */
     public void setStrictcase(boolean strictcase) {
@@ -378,8 +396,9 @@ public class NetRexxC extends MatchingTask {
     /**
      * Sets whether classes need to be imported explicitly using an <code>import</code>
      * statement. By default the NetRexx compiler will import certain packages
-     * automatically Valid true values are "on" or "true". Anything else sets
-     * the flag to false. The default value is false.
+     * automatically.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param strictimport a <code>boolean</code> value.
      */
     public void setStrictimport(boolean strictimport) {
@@ -389,8 +408,9 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Sets whether local properties need to be qualified explicitly using
-     * <code>this</code> Valid true values are "on" or "true". Anything else
-     * sets the flag to false. The default value is false.
+     * <code>this</code>.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param strictprops a <code>boolean</code> value.
      */
     public void setStrictprops(boolean strictprops) {
@@ -401,6 +421,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Whether the compiler should force catching of exceptions by explicitly
      * named types.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false
      * @param strictsignal a <code>boolean</code> value.
      */
     public void setStrictsignal(boolean strictsignal) {
@@ -409,9 +431,9 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Sets whether debug symbols should be generated into the class file
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is false.
+     * Sets whether debug symbols should be generated into the class file.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param symbols a <code>boolean</code> value.
      */
     public void setSymbols(boolean symbols) {
@@ -421,8 +443,8 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Asks the NetRexx compiler to print compilation times to the console
-     * Valid true values are "on" or "true". Anything else sets the flag to
-     * false. The default value is false.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param time a <code>boolean</code> value.
      */
     public void setTime(boolean time) {
@@ -454,9 +476,9 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Tells the NetRexx compiler that the source is in UTF8 Valid true values
-     * are "on" or "true". Anything else sets the flag to false. The default
-     * value is false.
+     * Tells the NetRexx compiler that the source is in UTF8.
+     * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
+     * The default value is false.
      * @param utf8 a <code>boolean</code> value.
      */
     public void setUtf8(boolean utf8) {
@@ -535,6 +557,16 @@ public class NetRexxC extends MatchingTask {
      */
     public void setSuppressDeprecation(boolean suppressDeprecation) {
         this.suppressDeprecation = suppressDeprecation;
+    }
+
+
+    /**
+     * Tells wether the trailing .keep in nocompile-mode should be removed
+     * so that the resulting java source really ends on .java.
+     * This facilitates the use of the javadoc tool lateron.
+     */
+    public void setRemoveKeepExtension(boolean removeKeepExtension) {
+        this.removeKeepExtension = removeKeepExtension;
     }
 
 
@@ -642,6 +674,9 @@ public class NetRexxC extends MatchingTask {
         if ((p = getProject().getProperty("ant.netrexxc.suppressDeprecation")) != null) {
             this.suppressDeprecation = Project.toBoolean(p);
         }
+        if ((p = getProject().getProperty("ant.netrexxc.removeKeepExtension")) != null) {
+            this.removeKeepExtension = Project.toBoolean(p);
+        }
     }
 
 
@@ -674,6 +709,9 @@ public class NetRexxC extends MatchingTask {
                  + (compileList.size() == 1 ? "" : "s")
                  + " to " + destDir);
             doNetRexxCompile();
+            if (removeKeepExtension && (!compile || keep)) {
+                removeKeepExtensions();
+            }
         }
     }
 
@@ -695,8 +733,18 @@ public class NetRexxC extends MatchingTask {
                 File classFile =
                     new File(destDir,
                     filename.substring(0, filename.lastIndexOf('.')) + ".class");
+                File javaFile =
+                    new File(destDir,
+                    filename.substring(0, filename.lastIndexOf('.'))
+                    + (removeKeepExtension ? ".java" : ".java.keep"));
 
-                if (!compile || srcFile.lastModified() > classFile.lastModified()) {
+                // nocompile case tests against .java[.keep] file
+                if (!compile && srcFile.lastModified() > javaFile.lastModified()) {
+                    filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
+                    compileList.addElement(destFile.getAbsolutePath());
+                }
+                // compile case tests against .class file
+                else if (compile && srcFile.lastModified() > classFile.lastModified()) {
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
                 }
@@ -729,6 +777,30 @@ public class NetRexxC extends MatchingTask {
                          + " due to " + ioe.getMessage();
 
                     throw new BuildException(msg, ioe);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Rename .java.keep files (back) to .java. The netrexxc renames all
+     * .java files to .java.keep if either -keep or -nocompile option is set.
+     */
+    private void removeKeepExtensions() {
+        if (compileList.size() > 0) {
+            log("Removing .keep extension on " + compileList.size() + " file"
+                 + (compileList.size() == 1 ? "" : "s"));
+            Enumeration e = compileList.elements();
+            while (e.hasMoreElements()) {
+                String nrxName = (String) e.nextElement();
+                String baseName = nrxName.substring(0, nrxName.lastIndexOf('.'));
+                File fromFile = new File(baseName + ".java.keep");
+                File toFile = new File(baseName + ".java");
+                if (fromFile.renameTo(toFile)) {
+                    log("Successfully renamed " + fromFile + " to " + toFile, Project.MSG_VERBOSE);
+                } else {
+                    log("Failed to rename " + fromFile + " to " + toFile);
                 }
             }
         }
