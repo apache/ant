@@ -57,12 +57,6 @@ public class ResolvePropertyMap implements GetProperty {
             throw new BuildException(
                 "Property " + name + " was circularly " + "defined.");
         }
-        // Note: the master overrides (even if the name is subsequently
-        //       prefixed)
-        Object masterProperty = master.getProperty(name);
-        if (masterProperty != null) {
-            return masterProperty;
-        }
         try {
             seen.add(name);
             return parseProperties.parseProperties((String) map.get(name));
