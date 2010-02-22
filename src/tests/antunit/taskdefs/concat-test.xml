@@ -18,7 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="tearDown">
+  <target name="tearDown" depends="antunit-base.tearDown">
     <delete file="concat.resources" />
   </target>
 
