@@ -34,7 +34,10 @@ Fixed bugs:
    Bugzilla Report 48782
    
 *  Fix for exec task sometimes inserts extraneous newlines
-   Bugzilla Report 48746      
+   Bugzilla Report 48746
+   
+*  SymlinkTest#testSymbolicLinkUtilsMethods failing on MacOS
+   Bugzilla Report 48785.        
 
 Other changes:
 --------------
