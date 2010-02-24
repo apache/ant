@@ -279,7 +279,7 @@ public class Property extends Task {
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-        if (!prefix.endsWith(".")) {
+        if (prefix != null && !prefix.endsWith(".")) {
             this.prefix += ".";
         }
     }
