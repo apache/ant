@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Copies standard output and error of subprocesses to standard output and
