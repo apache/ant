@@ -15,9 +15,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+<project name="loadproperties-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
   <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}" />
+    <property name="properties.tmp" location="${input}/properties.tmp" />
+  </target>
 
   <target name="test-basic">
     <loadproperties>
@@ -66,6 +71,68 @@ a=Hello world in EBCDIC
     </echo>
     <loadproperties srcfile="${input}/ebcdic.properties" encoding="Cp1047"/>
     <au:assertPropertyEquals name="a" value="Hello world in EBCDIC"/>
+  </target>
+
+  <target name="testPrefixedProperties" depends="setUp">
+    <property name="server" value="localhost"/>
+    <echo file="${properties.tmp}">
+#http.@PORT@ = 90
+http.@PORT@ = 80
+http.@SERVER@ = ${server}
+    </echo>
+    <loadproperties srcFile="${properties.tmp}">
+      <filterchain>
+        <striplinecomments>
+          <comment value="#"/>
+        </striplinecomments>
+        <prefixlines prefix="server1."/>
+        <replacetokens>
+          <token key="PORT" value="port"/>
+          <token key="SERVER" value="server"/>
+        </replacetokens>
+        <expandproperties/>
+      </filterchain>
+    </loadproperties>
+    <property name="server1.http.url" 
+      value="http://${server1.http.server}:${server1.http.port}"/>
+  </target>
+
+  <target name="write properties.tmp" depends="setUp">
+    <echo file="${properties.tmp}">
+#tpfr.a=a
+tpfr.a=A
+tpfr.b=b\
+       e
+tpfr.c=@C@
+    </echo>
+  </target>
+
+  <presetdef name="assertPropertiesFromResourceOkay">
+    <au:assertTrue>
+      <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}" />
+    </au:assertTrue>
+  </presetdef>
+
+  <target name="testPropertiesFromResource" depends="write properties.tmp">
+    <loadproperties resource="properties.tmp" classpath="${input}">
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+  </target>
+
+  <target name="testPropertiesFromFileSet" depends="write properties.tmp">
+    <loadproperties>
+      <fileset file="${properties.tmp}" />
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+    <assertPropertiesFromResourceOkay />
   </target>
 
 </project>
