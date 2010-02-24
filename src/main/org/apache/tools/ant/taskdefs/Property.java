@@ -715,7 +715,8 @@ public class Property extends Task {
         new ResolvePropertyMap(
                                getProject(),
                                propertyHelper,
-                               propertyHelper.getExpanders()).resolveAllProperties(props);
+                               propertyHelper.getExpanders())
+            .resolveAllProperties(props, prefix);
     }
 
 }

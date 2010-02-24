@@ -77,4 +77,15 @@
     <property name="foo" location="${testfile}" relative="true" basedir=".."/>
     <au:assertPropertyEquals name="foo" value="taskdefs${file.separator}${testfile}"/>
   </target>
+
+  <target name="testNestedExpansionHonorsImmutability">
+    <mkdir dir="${input}"/>
+    <property name="x" value="x"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/x.properties"/>
+    <au:assertPropertyEquals name="y" value="x"/>
+  </target>
 </project>

@@ -35,6 +35,7 @@ public class ResolvePropertyMap implements GetProperty {
     private final ParseProperties parseProperties;
     private final GetProperty master;
     private Map map;
+    private String prefix;
 
     /**
      * Constructor with a master getproperty and a collection of expanders.
@@ -57,6 +58,19 @@ public class ResolvePropertyMap implements GetProperty {
             throw new BuildException(
                 "Property " + name + " was circularly " + "defined.");
         }
+
+        // if the property has already been set to the name it will
+        // have in the end, then return the existing value to ensure
+        // properties remain immutable
+        String masterPropertyName = name;
+        if (prefix != null) {
+            masterPropertyName = prefix + name;
+        }
+        Object masterProperty = master.getProperty(masterPropertyName);
+        if (masterProperty != null) {
+            return masterProperty;
+        }
+
         try {
             seen.add(name);
             return parseProperties.parseProperties((String) map.get(name));
@@ -68,9 +82,21 @@ public class ResolvePropertyMap implements GetProperty {
     /**
      * The action method - resolves all the properties in a map.
      * @param map the map to resolve properties in.
+     * @deprecated since Ant 1.8.1, use the two-arg method instead.
      */
     public void resolveAllProperties(Map map) {
+        resolveAllProperties(map, null);
+    }
+
+    /**
+     * The action method - resolves all the properties in a map.
+     * @param map the map to resolve properties in.
+     * @param prefix the prefix the properties defined inside the map
+     * will finally receive - may be null.
+     */
+    public void resolveAllProperties(Map map, String prefix) {
         this.map = map; // The map gets used in the getProperty callback
+        this.prefix = prefix;
         for (Iterator i = map.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
             Object result = getProperty(key);
