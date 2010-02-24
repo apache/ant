@@ -18,14 +18,6 @@
 <project name="exec-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
     <import file="../../antunit-base.xml" />
 
-  <target name="antunit">
-    <mkdir dir="${java.io.tmpdir}/antunit-exec" />
-    <antunit xmlns="antlib:org.apache.ant.antunit">
-      <plainlistener sendLogTo="both" toDir="${java.io.tmpdir}/antunit-exec" logLevel="debug" />
-      <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant" />
-    </antunit>
-  </target>
-
     <macrodef name="assert-trimmed-resource-content">
         <attribute name="content" />
         <attribute name="astext" default="true" />
