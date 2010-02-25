@@ -58,6 +58,9 @@ Other changes:
 
  * Add resource attribute to length task.
 
+ * PropertyResource will effectively proxy another Resource if ${name}
+   evaluates to a Resource object.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 

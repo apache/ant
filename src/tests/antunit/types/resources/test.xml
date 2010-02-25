@@ -15,8 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project default="all" xmlns:au="antlib:org.apache.ant.antunit"
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+
+  <import file="../../antunit-base.xml" />
 
   <property name="dirname" value="work" />
   <property name="dir" location="${dirname}" />
@@ -348,6 +350,16 @@
       <length length="10">
         <propertyresource name="testproperty" />
       </length>
+    </au:assertTrue>
+  </target>
+
+  <target name="testPropertyResolvedAsResource">
+    <string id="s" value="abcdefghij" />
+    <au:assertTrue>
+      <resourcesmatch>
+        <resource refid="s" />
+        <propertyresource name="ant.refid:s" />
+      </resourcesmatch>
     </au:assertTrue>
   </target>
 
