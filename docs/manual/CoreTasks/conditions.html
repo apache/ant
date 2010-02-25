@@ -138,7 +138,7 @@ the tests succeed.
 </ul>
 
 <h4>equals</h4>
-<p>Tests whether the two given Strings are identical</p>
+<p>Tests whether the two given values are equal.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -147,12 +147,12 @@ the tests succeed.
   </tr>
   <tr>
     <td valign="top">arg1</td>
-    <td valign="top">First string to test.</td>
+    <td valign="top">First value to test.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">arg2</td>
-    <td valign="top">Second string to test.</td>
+    <td valign="top">Second value to test.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -165,6 +165,13 @@ the tests succeed.
     <td valign="top">trim</td>
     <td valign="top">Trim whitespace from arguments before comparing
         them.  Default is false.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">forcestring</td>
+    <td valign="top">Force string comparison of <code>arg1/arg2</code>.
+        Default is false.  <em>Since Ant 1.8.1</em>
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>

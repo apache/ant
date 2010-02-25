@@ -65,6 +65,11 @@ Other changes:
  * PropertyResource will effectively proxy another Resource if ${name}
    evaluates to a Resource object.
 
+ * Added forcestring attribute to equals condition to force evaluation
+   of Object args as strings; previously only API-level usage of the
+   equals condition allowed Object args, but Ant 1.8.x+ property
+   evaluation may yield values of any type.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
