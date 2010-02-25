@@ -37,7 +37,11 @@ Fixed bugs:
    Bugzilla Report 48746
    
 *  SymlinkTest#testSymbolicLinkUtilsMethods failing on MacOS
-   Bugzilla Report 48785.        
+   Bugzilla Report 48785.
+
+*  If <concat>'s first resourcecollection child is a <resources>,
+   any subsequently added child resourcecollection joins the first.
+   Bugzilla Report 48816.        
 
 Other changes:
 --------------
