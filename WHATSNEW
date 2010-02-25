@@ -52,7 +52,9 @@ Other changes:
    Bugzilla Report 48755.
    
  * Add removeKeepExtension option to NetRexxC task.
-   Bugzilla Report 48788.  
+   Bugzilla Report 48788.
+
+ * Add prefix attribute to loadproperties task.
 
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================

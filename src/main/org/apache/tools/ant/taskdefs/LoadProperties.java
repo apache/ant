@@ -60,6 +60,11 @@ public class LoadProperties extends Task {
      * Encoding to use for input; defaults to the platform's default encoding.
      */
     private String encoding = null;
+    
+    /**
+     * Prefix for loaded properties.
+     */
+    private String prefix = null;
 
     /**
      * Set the file to load.
@@ -128,6 +133,14 @@ public class LoadProperties extends Task {
     }
 
     /**
+     * Set the prefix to load these properties under.
+     * @param prefix to set
+     */
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    /**
      * load Ant properties from the source file or resource
      *
      * @exception BuildException if something goes wrong with the build
@@ -174,6 +187,7 @@ public class LoadProperties extends Task {
 
                 Property propertyTask = new Property();
                 propertyTask.bindToOwner(this);
+                propertyTask.setPrefix(prefix);
                 propertyTask.addProperties(props);
             }
         } catch (final IOException ioe) {
