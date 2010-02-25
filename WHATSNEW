@@ -56,6 +56,8 @@ Other changes:
 
  * Add prefix attribute to loadproperties task.
 
+ * Add resource attribute to length task.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
