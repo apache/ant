@@ -179,4 +179,14 @@ tpfr.c=@C@
     <assertPropertiesFromResourceOkay />
   </target>
 
+  <target name="testLastPropertyWins">
+    <loadproperties>
+      <string>foo=foo
+foo=bar</string>
+    </loadproperties>
+    <au:assertTrue>
+      <equals arg1="bar" arg2="${foo}" />
+    </au:assertTrue>
+  </target>
+
 </project>
