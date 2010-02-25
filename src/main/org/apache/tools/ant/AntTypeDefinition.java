@@ -146,7 +146,7 @@ public class AntTypeDefinition {
      * class and the definition class is not
      * assignable from the assignable class.
      * @param project the current project.
-     * @return the exposed class - may return null if upable to load the class
+     * @return the exposed class - may return null if unable to load the class
      */
     public Class getExposedClass(Project project) {
         if (adaptToClass != null) {
