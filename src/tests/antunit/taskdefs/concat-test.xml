@@ -149,4 +149,14 @@
     </fail>
   </target>
 
+  <target name="testBug48816">
+    <concat>
+      <resources id="48816" />
+      <string value="x" />
+    </concat>
+    <au:assertTrue>
+      <resourcecount refid="48816" count="0" />
+    </au:assertTrue>
+  </target>
+
 </project>
