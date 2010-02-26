@@ -227,10 +227,6 @@
     </or>
   </selector>
 
-  <selector id="needs.stylebook">
-    <filename name="${optional.package}/StyleBook*"/>
-  </selector>
-
   <selector id="needs.javamail">
     <or>
       <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
@@ -364,9 +360,6 @@
       classpathref="classpath"/>
     <available property="antlr.present" 
       classname="antlr.Tool" 
-      classpathref="classpath"/>
-    <available property="stylebook.present"
-      classname="org.apache.stylebook.Engine"
       classpathref="classpath"/>
     <available property="apache.regexp.present"
       classname="org.apache.regexp.RE"
@@ -547,7 +540,6 @@
             <selector refid="needs.commons-logging"
               unless="commons.logging.present"/>
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
-            <selector refid="needs.stylebook" unless="stylebook.present"/>
             <selector refid="needs.javamail" unless="javamail.complete"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
@@ -727,7 +719,6 @@
             <selector refid="needs.apache-log4j"/>
             <selector refid="needs.commons-logging"/>
             <selector refid="needs.apache-bsf"/>
-            <selector refid="needs.stylebook"/>
             <selector refid="needs.javamail"/>
             <selector refid="needs.netrexx"/>
             <selector refid="needs.commons-net"/>
@@ -767,7 +758,6 @@
     <optional-jar dep="apache-log4j"/>
     <optional-jar dep="commons-logging"/>
     <optional-jar dep="apache-bsf"/>
-    <optional-jar dep="stylebook"/>
     <optional-jar dep="javamail"/>
     <optional-jar dep="netrexx"/>
     <optional-jar dep="commons-net"/>

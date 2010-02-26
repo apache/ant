@@ -51,12 +51,11 @@
           <File DiskId="1" Id="file16" Name="ANT-NE_1.JAR" LongName="ant-netrexx.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-netrexx.jar" />
           <File DiskId="1" Id="file17" Name="ANT-NO_1.JAR" LongName="ant-nodeps.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-nodeps.jar" />
           <File DiskId="1" Id="file18" Name="ANT-ST_2.JAR" LongName="ant-starteam.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-starteam.jar" />
-          <File DiskId="1" Id="file19" Name="ANT-ST_1.JAR" LongName="ant-stylebook.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-stylebook.jar" />
-          <File DiskId="1" Id="file20" Name="ANT-SW_1.JAR" LongName="ant-swing.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-swing.jar" />
-          <File DiskId="1" Id="file22" Name="ANT-WE_1.JAR" LongName="ant-weblogic.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-weblogic.jar" />
-          <File DiskId="1" Id="file24" Name="ant.jar" Vital="yes" src="$(var.dist.dir)/lib\ant.jar" />
-          <File DiskId="1" Id="file25" Name="LIBRAR_1.PRO" LongName="libraries.properties" Vital="yes" src="$(var.dist.dir)/lib\libraries.properties" />
-          <File DiskId="1" Id="file26" Name="README" Vital="yes" src="$(var.dist.dir)/lib\README" />
+          <File DiskId="1" Id="file19" Name="ANT-SW_1.JAR" LongName="ant-swing.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-swing.jar" />
+          <File DiskId="1" Id="file20" Name="ANT-WE_1.JAR" LongName="ant-weblogic.jar" Vital="yes" src="$(var.dist.dir)/lib\ant-weblogic.jar" />
+          <File DiskId="1" Id="file21" Name="ant.jar" Vital="yes" src="$(var.dist.dir)/lib\ant.jar" />
+          <File DiskId="1" Id="file22" Name="LIBRAR_1.PRO" LongName="libraries.properties" Vital="yes" src="$(var.dist.dir)/lib\libraries.properties" />
+          <File DiskId="1" Id="file23" Name="README" Vital="yes" src="$(var.dist.dir)/lib\README" />
         </Component>
       </Directory>
       <Directory Id="directory1" Name="bin">
@@ -393,7 +392,6 @@
               <File DiskId="1" Id="file572" Name="SPLASH_1.HTM" LongName="splash.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\splash.html" />
               <File DiskId="1" Id="file573" Name="SSHEXE_1.HTM" LongName="sshexec.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sshexec.html" />
               <File DiskId="1" Id="file574" Name="STARTE_1.HTM" LongName="starteam.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\starteam.html" />
-              <File DiskId="1" Id="file575" Name="STYLEB_1.HTM" LongName="stylebook.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\stylebook.html" />
               <File DiskId="1" Id="file576" Name="SYMLIN_1.HTM" LongName="symlink.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\symlink.html" />
               <File DiskId="1" Id="file577" Name="TELNET_1.HTM" LongName="telnet.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\telnet.html" />
               <File DiskId="1" Id="file578" Name="TRANSL_1.HTM" LongName="translate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\translate.html" />

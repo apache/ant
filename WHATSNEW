@@ -8,6 +8,8 @@ Changes that could break older environments:
 
  * Ant no longer ships with Apache Xerces-J or the XML APIs but relies
    on the Java runtime to provide a parser and matching API versions.
+   
+ * The stylebook ant task and the ant-stylebook.jar are removed.  
 
 Fixed bugs:
 -----------
