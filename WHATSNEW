@@ -44,6 +44,9 @@ Fixed bugs:
 *  If <concat>'s first resourcecollection child is a <resources>,
    any subsequently added child resourcecollection joins the first.
    Bugzilla Report 48816.        
+   
+*  <get> with an invalid URL could trigger an NPE in some JVMs.
+   Bugzilla Report 48833 
 
 Other changes:
 --------------

@@ -658,7 +658,12 @@ public class Get extends Task {
                         .setUseCaches(httpUseCaches);
             }
             // connect to the remote site (may take some time)
-            connection.connect();
+            try {
+                connection.connect();
+            } catch (NullPointerException e) {
+                //bad URLs can trigger NPEs in some JVMs
+                throw new BuildException("Failed to parse " + source.toString(), e);
+            }
 
             // First check on a 301 / 302 (moved) response (HTTP only)
             if (connection instanceof HttpURLConnection) {
