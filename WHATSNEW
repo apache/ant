@@ -74,7 +74,11 @@ Other changes:
    of Object args as strings; previously only API-level usage of the
    equals condition allowed Object args, but Ant 1.8.x+ property
    evaluation may yield values of any type.
-
+   
+ * BuildFileTest.assertPropertyUnset() fails with a slightly more 
+   meaningful error message
+   Bugzilla Report 48834
+   
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
