@@ -51,6 +51,16 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     }
 
     public void testXalan2Redirect() throws Exception {
+    	Class clazz = null;
+    	try {
+    		clazz = getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
+    	} catch (Exception exc) {
+    		// ignore
+    	}
+    	if (clazz == null) {
+    		System.out.println("xalan redirect is not on the classpath");
+    		return;
+    	}
         File xsl = getFile("/taskdefs/optional/xalan-redirect-in.xsl");
         liaison.setStylesheet(xsl);
         File out = new File("xalan2-redirect-out-dummy.tmp");
