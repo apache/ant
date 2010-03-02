@@ -46,7 +46,10 @@ Fixed bugs:
    Bugzilla Report 48816.        
    
 *  <get> with an invalid URL could trigger an NPE in some JVMs.
-   Bugzilla Report 48833 
+   Bugzilla Report 48833
+   
+*  Broken Pipe issue under Ubuntu Linux
+   Bugzilla Report 48789    
 
 Other changes:
 --------------

@@ -129,8 +129,6 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Stop pumping the streams.
      */
     public void stop() {
-        finish(outputThread);
-        finish(errorThread);
 
         if (inputPump != null) {
             inputPump.stop();
@@ -146,6 +144,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         } catch (IOException e) {
             // ignore
         }
+        finish(outputThread);
+        finish(errorThread);
     }
 
     private static final long JOIN_TIMEOUT = 500;
