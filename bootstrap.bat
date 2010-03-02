@@ -1,6 +1,7 @@
 @echo off
 
-REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
+REM You will need to specify JAVA_HOME.
+REM For compiling Ant Java 1.4 or higher is required.
 
 REM  Licensed to the Apache Software Foundation (ASF) under one or more
 REM  contributor license agreements.  See the NOTICE file distributed with
@@ -92,7 +93,7 @@ goto doneStart
 
 :win9xStart
 rem Slurp the command line arguments.  This loop allows for an unlimited number of
-rem agruments (up to the command line limit, anyway).
+rem arguments (up to the command line limit, anyway).
 
 set ANT_CMD_LINE_ARGS=
 
