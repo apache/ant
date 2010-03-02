@@ -40,15 +40,15 @@
   <echo file="${input}/a/c/test.properties"><![CDATA[
 foo=bar
 ]]></echo>
-  <mkdir dir="${output}"/>
-  <jar destfile="${output}/test.jar">
+  <property name="test.jar" location="${java.io.tmpdir}/test.jar"/>
+  <jar destfile="${test.jar}">
     <fileset dir="${input}"/>
   </jar>
   <delete dir="${input}"/>
 
   <import>
     <javaresource name="a/b/outer.xml">
-      <classpath location="${output}/test.jar"/>
+      <classpath location="${test.jar}"/>
     </javaresource>
   </import>
 
@@ -58,15 +58,14 @@ foo=bar
     <au:assertLogContains text="foo is bar"/>
   </target>
 
-  <target name="tearDown" depends="close, antunit-base.tearDown"/>
-
-  <target name="close">
+  <target name="tearDown" depends="antunit-base.tearDown">
     <taskdef name="close"
              classname="org.apache.tools.ant.taskdefs.CloseResources"/>
     <close>
       <javaresource name="a/b/outer.xml">
-        <classpath location="${output}/test.jar"/>
+        <classpath location="${test.jar}"/>
       </javaresource>
     </close>
+    <delete file="${test.jar}" quiet="true" deleteonexit="true"/>
   </target>
 </project>
