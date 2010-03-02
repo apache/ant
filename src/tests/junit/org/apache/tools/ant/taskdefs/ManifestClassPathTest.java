@@ -168,7 +168,7 @@ public class ManifestClassPathTest
             System.out.println("Test with drive letters only run on windows");
         } else {
             try {
-                new java.io.File("D:/").getCanonicalPath();
+                new java.io.File("D:/foo.txt").getCanonicalPath();
             } catch (java.io.IOException e) {
                 System.out.println("drive d: doesn't exist or is not ready,"
                                    + " skipping test");
