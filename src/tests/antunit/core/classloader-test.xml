@@ -23,7 +23,7 @@
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
     <condition property="gump">
-      <available resource="org/apache/xerces/jaxp/DocumentBuilderFactoryImpl.class"/>
+      <available classname="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
     </condition>
   </target>
 
