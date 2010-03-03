@@ -35,7 +35,7 @@
 public class A {
     public static void main(String[] args) {
         if (A.class.getClassLoader().getResource("org/apache/xerces/jaxp/DocumentBuilderFactoryImpl.class") != null) {
-            throw new RuntimeException("Didn't expect to find DocumenBuilderImpl");
+            throw new RuntimeException("Didn't expect to find DocumentBuilderImpl");
         }
     }
 }
@@ -54,7 +54,7 @@ public class A {
     public static void main(String[] args) {
         try {
             A.class.getClassLoader().loadClass("org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-            throw new RuntimeException("Didn't expect to find DocumenBuilderImpl");
+            throw new RuntimeException("Didn't expect to find DocumentBuilderImpl");
         } catch (ClassNotFoundException cnfe) {
         }
     }
@@ -74,7 +74,7 @@ public class A {
 public class A {
     public static void main(String[] args) {
         if (A.class.getClassLoader().getResourceAsStream("org/apache/xerces/jaxp/DocumentBuilderFactoryImpl.class") != null) {
-            throw new RuntimeException("Didn't expect to find DocumenBuilderImpl");
+            throw new RuntimeException("Didn't expect to find DocumentBuilderImpl");
         }
     }
 }
