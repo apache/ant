@@ -35,20 +35,20 @@ Fixed bugs:
  * Regression : ant -diagnostics was returning with exit code 1
    Bugzilla Report 48782
    
-*  Fix for exec task sometimes inserts extraneous newlines
+ * Fix for exec task sometimes inserts extraneous newlines
    Bugzilla Report 48746
    
-*  SymlinkTest#testSymbolicLinkUtilsMethods failing on MacOS
+ * SymlinkTest#testSymbolicLinkUtilsMethods failing on MacOS
    Bugzilla Report 48785.
 
-*  If <concat>'s first resourcecollection child is a <resources>,
+ * If <concat>'s first resourcecollection child is a <resources>,
    any subsequently added child resourcecollection joins the first.
    Bugzilla Report 48816.        
    
-*  <get> with an invalid URL could trigger an NPE in some JVMs.
+ * <get> with an invalid URL could trigger an NPE in some JVMs.
    Bugzilla Report 48833
    
-*  Broken Pipe issue under Ubuntu Linux
+ * Broken Pipe issue under Ubuntu Linux
    Bugzilla Report 48789    
 
 Other changes:
