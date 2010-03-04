@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1213,8 +1214,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             JarEntry ent = jarFile.getJarEntry(entry);
             if (ent != null) {
                 // must read the input in order to obtain certificates
-                is = jarFile.getInputStream(ent);
-                while (is.read() >= 0);
+                is = new BufferedInputStream(jarFile.getInputStream(ent));
+                byte[] b = new byte[BUFFER_SIZE];
+                while (is.read(b, 0, BUFFER_SIZE) >= 0);
             }
             return ent == null ? null : ent.getCertificates();
         } finally {

@@ -51,6 +51,10 @@ Fixed bugs:
  * Broken Pipe issue under Ubuntu Linux
    Bugzilla Report 48789    
 
+ * AntClassLoader in Ant 1.8.0 has been considerably slower than in
+   1.7.1
+   Bugzilla Report 48853
+
 Other changes:
 --------------
 
