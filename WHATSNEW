@@ -57,6 +57,9 @@ Fixed bugs:
  * AntClassLoader in Ant 1.8.0 has been considerably slower than in
    1.7.1
    Bugzilla Report 48853
+   
+ * ANT_CMD_LINE_ARGS are rippling through lower level Ant usage 
+   Bugzilla Report 48876  
 
 Other changes:
 --------------
