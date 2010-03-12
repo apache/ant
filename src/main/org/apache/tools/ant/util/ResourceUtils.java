@@ -466,7 +466,7 @@ public class ResourceUtils {
                 long count = srcChannel.size();
                 while (position < count) {
                     position +=
-                        srcChannel.transferTo(position, FileUtils.BUF_SIZE,
+                        srcChannel.transferTo(position, count - position,
                                               destChannel);
                 }
             } finally {
