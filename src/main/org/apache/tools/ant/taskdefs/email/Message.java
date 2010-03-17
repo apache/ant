@@ -141,7 +141,7 @@ public class Message extends ProjectComponent {
             }
             out.flush();
         } finally {
-            FileUtils.close(out);
+            //do not close the out writer as it is reused afterwards by the mail task
         }
     }
 

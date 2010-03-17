@@ -59,7 +59,10 @@ Fixed bugs:
    Bugzilla Report 48853
    
  * ANT_CMD_LINE_ARGS are rippling through lower level Ant usage 
-   Bugzilla Report 48876  
+   Bugzilla Report 48876
+   
+ * email : IO error sending mail with plain mimetype
+   Bug 48932    
 
 Other changes:
 --------------
