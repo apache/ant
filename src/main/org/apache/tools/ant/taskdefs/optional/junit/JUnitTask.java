@@ -789,6 +789,8 @@ public class JUnitTask extends Task {
      * @throws BuildException in case of test failures or errors
      */
     protected void execute(JUnitTest arg) throws BuildException {
+        validateTestName(arg.getName());
+
         JUnitTest test = (JUnitTest) arg.clone();
         // set the default values if not specified
         //@todo should be moved to the test class instead.
@@ -810,6 +812,20 @@ public class JUnitTask extends Task {
             // null watchdog means no timeout, you'd better not check with null
         }
         actOnTestResult(result, test, "Test " + test.getName());
+    }
+
+    /**
+     * Throws a <code>BuildException</code> if the given test name is invalid.
+     * Validity is defined as not <code>null</code>, not empty, and not the
+     * string &quot;null&quot;.
+     * @param testName the test name to be validated
+     * @throws BuildException if <code>testName</code> is not a valid test name
+     */
+    private void validateTestName(String testName) throws BuildException {
+        if (testName == null || testName.length() == 0
+            || testName.equals("null")) {
+            throw new BuildException("test name must be specified");
+        }
     }
 
     /**

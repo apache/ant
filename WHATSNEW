@@ -96,6 +96,10 @@ Other changes:
    meaningful error message
    Bugzilla Report 48834
    
+ * <junit> will now throw an exception if a test name is empty.  This
+   used to manifest itself in unrelated errors like
+   Bugzilla Report 43586.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
