@@ -68,6 +68,9 @@ Fixed bugs:
    target if "ant -p" failed.
    Bugzilla Report 48980
 
+ * <rmic>'s sourcebase attribute was broken.
+   Bugzilla Report 48970
+
 Other changes:
 --------------
 

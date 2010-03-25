@@ -76,4 +76,31 @@ public class Adapter implements RmicAdapter {
     </rmic>
     <au:assertLogContains text="adapter called"/>
   </target>
+
+  <target name="testSourceBase"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48970">
+    <mkdir dir="${input}/org/example"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/org/example/Foo.java"><![CDATA[
+package org.example;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface Foo extends Remote {
+    long bar() throws RemoteException ;
+}]]></echo>
+    <echo file="${input}/org/example/FooImpl.java"><![CDATA[
+package org.example;
+import java.rmi.RemoteException;
+public class FooImpl implements Foo {
+    public long bar() throws RemoteException {
+        return 0;
+    }
+}]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <rmic sourcebase="${input}" base="${output}">
+      <include name="**/*Impl.class"/>
+    </rmic>
+    <au:assertFileExists file="${input}/org/example/FooImpl_Stub.java"/>
+    <au:assertFileDoesntExist file="${output}/org/example/FooImpl_Stub.java"/>
+  </target>
 </project>
