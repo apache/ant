@@ -64,6 +64,10 @@ Fixed bugs:
  * email : IO error sending mail with plain mimetype
    Bug 48932    
 
+ * the complete-ant-cmd.pl script failed to create a proper cache of
+   target if "ant -p" failed.
+   Bugzilla Report 48980
+
 Other changes:
 --------------
 
