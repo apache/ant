@@ -51,7 +51,7 @@ Fixed bugs:
  * Broken Pipe issue under Ubuntu Linux
    Bugzilla Report 48789
    
-*  Properties wrongly read from file or not update during read
+ * Properties wrongly read from file or not update during read
    Bugzilla Report 48768       
 
  * AntClassLoader in Ant 1.8.0 has been considerably slower than in
