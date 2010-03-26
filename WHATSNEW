@@ -116,6 +116,9 @@ Other changes:
    1.7.1.
    Bugzilla Report 48734.
 
+ * Added SimpleBigProjectLogger, intermediate between NoBannerLogger and
+   BigProjectLogger.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
