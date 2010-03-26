@@ -8,3 +8,4 @@ Redirect /webtest/gettest/redir5-1.txt /webtest/gettest/redir5-2.txt
 Redirect /webtest/gettest/redir5-2.txt /webtest/gettest/redir5-3.txt
 Redirect /webtest/gettest/redir5-3.txt /webtest/gettest/redir5-4.txt
 Redirect /webtest/gettest/redir5-4.txt /webtest/gettest/testredir5.txt
+Redirect /webtest/gettest/local.txt testlocal.txt
