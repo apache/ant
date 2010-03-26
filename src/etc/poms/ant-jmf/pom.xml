@@ -57,7 +57,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <source>1.4</source>
           <target>1.4</target>
           <includes>
-            <include>org/apache/tools/ant//taskdefs/optional/sound/*</include>
+            <include>org/apache/tools/ant/taskdefs/optional/sound/*</include>
           </includes>
         </configuration>
       </plugin>
