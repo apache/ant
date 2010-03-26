@@ -148,7 +148,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         finish(errorThread);
     }
 
-    private static final long JOIN_TIMEOUT = 500;
+    private static final long JOIN_TIMEOUT = 200;
 
     /**
      * Waits for a thread to finish while trying to make it finish
@@ -160,11 +160,18 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      */
     protected final void finish(Thread t) {
         try {
-            t.join(JOIN_TIMEOUT);
             StreamPumper s = null;
             if (t instanceof ThreadWithPumper) {
                 s = ((ThreadWithPumper) t).getPumper();
             }
+            if (s != null && s.isFinished()) {
+                return;
+            }
+            if (!t.isAlive()) {
+                return;
+            }
+
+            t.join(JOIN_TIMEOUT);
             if (s != null && !s.isFinished()) {
                 s.stop();
             }

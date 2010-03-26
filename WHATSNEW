@@ -107,6 +107,15 @@ Other changes:
    used to manifest itself in unrelated errors like
    Bugzilla Report 43586.
 
+ * A change that made <exec> more reliable on Windows (Bugzilla Report
+   5003) strongly impacts the performance for commands that execute
+   quickly, like attrib.  Basically no single execution of a command
+   could take less than a second on Windows.
+   A few timeouts have been tweaked to allow these commands to finish
+   more quickly but still they will take longer than they did with Ant
+   1.7.1.
+   Bugzilla Report 48734.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
