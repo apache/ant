@@ -71,6 +71,10 @@ Fixed bugs:
  * <rmic>'s sourcebase attribute was broken.
    Bugzilla Report 48970
 
+ * <copy>'s failonerror didn't work as expected when copying a single
+   element resource collection to a file.
+   Bugzilla Report 49070
+
 Other changes:
 --------------
 

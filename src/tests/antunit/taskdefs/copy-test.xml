@@ -188,4 +188,69 @@ public class NullByteStreamResource extends Resource {
     </copy>
     <au:assertFileExists file="${output}/foo.jpg"/>
   </target>
+
+  <target name="testMissingFileUsingFileAttribute">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure expectedMessage="Could not find file">
+      <copy file="${input}/not-there.txt" todir="${output}"/>
+    </au:expectfailure>
+    <copy file="${input}/not-there.txt" todir="${output}"
+          failonerror="false"/>
+  </target>
+
+  <target name="testMissingFilesetRoot">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedMessage="does not exist">
+      <copy todir="${output}">
+        <fileset dir="${input}">
+          <include name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy todir="${output}" failonerror="false">
+      <fileset dir="${input}">
+        <include name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="testMissingFileUsingFilesetInclude"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49070">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure
+       expectedMessage="Cannot perform operation from directory to file.">
+      <copy tofile="${output}/foo.txt">
+        <fileset dir="${input}">
+          <include name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy tofile="${output}/foo.txt" failonerror="false">
+      <fileset dir="${input}">
+        <include name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="testMissingFileUsingFilesetFilename"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49070">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure
+       expectedMessage="Cannot perform operation from directory to file.">
+      <copy tofile="${output}/foo.txt">
+        <fileset dir="${input}">
+          <filename name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy  tofile="${output}/foo.txt" failonerror="false">
+      <fileset dir="${input}">
+        <filename name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
 </project>
