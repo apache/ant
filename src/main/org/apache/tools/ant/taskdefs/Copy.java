@@ -400,9 +400,9 @@ public class Copy extends Task {
         }
 
         try {
-        // make sure we don't have an illegal set of options
+            // make sure we don't have an illegal set of options
             try {
-        validateAttributes();
+                validateAttributes();
             } catch (BuildException e) {
                 if (failonerror
                     || !getMessage(e)
