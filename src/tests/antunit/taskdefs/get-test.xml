@@ -96,4 +96,17 @@
       <au:assertFileExists file="${output}/downloads/index.html"/>
       <au:assertFileExists file="${output}/downloads/faq.html"/>
     </target>
+
+  <target name="XtestRelativeRedirect">
+    <get  src="${location}/local.cgi" dest="${output}/other.tmp"/>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <file file="${output}/other.tmp" />
+          <contains text="local redirect succeeded"/>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertLogContains text="local.cgi moved to http" />  
+  </target>
 </project>

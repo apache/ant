@@ -678,7 +678,7 @@ public class Get extends Task {
                             + (responseCode == HttpURLConnection.HTTP_MOVED_PERM ? " permanently"
                                     : "") + " moved to " + newLocation;
                     log(message, logLevel);
-                    URL newURL = new URL(newLocation);
+                    URL newURL = new URL(aSource, newLocation);
                     if (!redirectionAllowed(aSource, newURL))
                     {
                         return null;
