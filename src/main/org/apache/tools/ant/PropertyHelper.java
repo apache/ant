@@ -188,14 +188,18 @@ public class PropertyHelper implements GetProperty {
         public String parsePropertyName(
             String s, ParsePosition pos, ParseNextProperty notUsed) {
             int index = pos.getIndex();
-            if (s.indexOf("${", index) == index) {
-                int end = s.indexOf('}', index);
-                if (end < 0) {
-                    throw new BuildException("Syntax error in property: " + s);
-                }
+            //directly check near, triggering characters:
+            if (s.length() - index >= 3
+                    && '$' == s.charAt(index) && '{' == s.charAt(index + 1)) {
                 int start = index + 2;
+                //defer to String.indexOf() for protracted check:
+                int end = s.indexOf('}', start);
+                if (end < 0) {
+                    throw new BuildException("Syntax error in property: "
+                            + s.substring(index));
+                }
                 pos.setIndex(end + 1);
-                return s.substring(start, end);
+                return start == end ? "" :  s.substring(start, end);
             }
             return null;
         }
