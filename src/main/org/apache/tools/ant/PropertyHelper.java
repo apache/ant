@@ -213,8 +213,16 @@ public class PropertyHelper implements GetProperty {
             public String parsePropertyName(
                 String s, ParsePosition pos, ParseNextProperty notUsed) {
                 int index = pos.getIndex();
-                if (s.indexOf("$$", index) == index) {
-                    pos.setIndex(++index);
+                if (s.length() - index >= 2) {
+                    /* check for $$; if found, advance by one--
+                     * this expander is at the bottom of the stack
+                     * and will thus be the last consulted,
+                     * so the next thing that ParseProperties will do
+                     * is advance the parse position beyond the second $
+                     */
+                    if ('$' == s.charAt(index) && '$' == s.charAt(++index)) {
+                        pos.setIndex(index);
+                    }
                 }
                 return null;
             }
