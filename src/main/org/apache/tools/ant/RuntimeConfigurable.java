@@ -39,6 +39,9 @@ import org.xml.sax.helpers.AttributeListImpl;
  */
 public class RuntimeConfigurable implements Serializable {
 
+    /** Serialization version */
+    private static final long serialVersionUID = 1L;
+
     /** Empty Hashtable. */
     private static final Hashtable EMPTY_HASHTABLE = new Hashtable(0);
 
