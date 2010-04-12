@@ -75,6 +75,14 @@ Fixed bugs:
    element resource collection to a file.
    Bugzilla Report 49070
 
+ * <get> no longer followed redirects if the redirect URL was relative
+   and not an absolute URL.
+   Bugzilla Report 48972
+
+ * fixed a performance degradation in the code that expands property
+   references.
+   Bugzilla Reports 48961 and 49079
+
 Other changes:
 --------------
 
