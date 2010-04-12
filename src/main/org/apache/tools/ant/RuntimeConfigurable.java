@@ -22,8 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -36,7 +36,6 @@ import org.xml.sax.helpers.AttributeListImpl;
  * Wrapper class that holds the attributes of an element, its children, and
  * any text within it. It then takes care of configuring that element at
  * runtime.
- *
  */
 public class RuntimeConfigurable implements Serializable {
 
@@ -65,22 +64,15 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Attribute names and values. While the XML spec doesn't require
      *  preserving the order ( AFAIK ), some ant tests do rely on the
-     *  exact order. The following code is copied from AttributeImpl.
-     *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
-     *  attribute Nodes can also be stored in SAX2 Attributes )
+     *  exact order. 
      * The only exception to this order is the treatment of
      * refid. A number of datatypes check if refid is set
      * when other attributes are set. This check will not
      * work if the build script has the other attribute before
      * the "refid" attribute, so now (ANT 1.7) the refid
      * attribute will be processed first.
-     * (Other than treatment of refid, could just use a LinkedHashMap,
-     * but peterreilly's rev 452635 includes no regression test.)
      */
-    private List/*<String>*/ attributeNames = null;
-
-    /** Map of attribute names to values */
-    private Map/*<String,String>*/ attributeMap = null;
+    private LinkedHashMap/*<String, String>*/ attributeMap = null;
 
     /** Text appearing within the element. */
     private StringBuffer characters = null;
@@ -187,16 +179,17 @@ public class RuntimeConfigurable implements Serializable {
         if (name.equalsIgnoreCase(ProjectHelper.ANT_TYPE)) {
             this.polyType = value;
         } else {
-            if (attributeNames == null) {
-                attributeNames = new ArrayList();
-                attributeMap = new HashMap();
+            if (attributeMap == null) {
+                attributeMap = new LinkedHashMap();
             }
-            if (name.equalsIgnoreCase("refid")) {
-                attributeNames.add(0, name);
+            if (name.equalsIgnoreCase("refid") && !attributeMap.isEmpty()) {
+                LinkedHashMap newAttributeMap = new LinkedHashMap();
+                newAttributeMap.put(name, value);
+                newAttributeMap.putAll(attributeMap);
+                attributeMap = newAttributeMap;
             } else {
-                attributeNames.add(name);
+                attributeMap.put(name, value);
             }
-            attributeMap.put(name, value);
             if (name.equals("id")) {
                 this.id = value;
             }
@@ -208,7 +201,6 @@ public class RuntimeConfigurable implements Serializable {
      * @param name the name of the attribute to be removed.
      */
     public synchronized void removeAttribute(String name) {
-        attributeNames.remove(name);
         attributeMap.remove(name);
     }
 
@@ -381,10 +373,11 @@ public class RuntimeConfigurable implements Serializable {
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(p, target.getClass());
 
-        if (attributeNames != null) {
-            for (int i = 0; i < attributeNames.size(); i++) {
-                String name = (String) attributeNames.get(i);
-                String value = (String) attributeMap.get(name);
+        if (attributeMap != null) {
+            for (Iterator iter = attributeMap.entrySet().iterator(); iter.hasNext();) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                String name = (String) entry.getKey();
+                String value = (String) entry.getValue();
 
                 // reflect these into the target
                 Object attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value);
@@ -394,11 +387,11 @@ public class RuntimeConfigurable implements Serializable {
                     // id attribute must be set externally
                     if (name.equals("id")) {
                         // Do nothing
-                    } else  if (getElementTag() == null) {
+                    } else if (getElementTag() == null) {
                         throw be;
                     } else {
                         throw new BuildException(
-                            getElementTag() +  " doesn't support the \""
+                            getElementTag() + " doesn't support the \""
                             + be.getAttribute() + "\" attribute", be);
                     }
                 } catch (BuildException be) {
@@ -432,7 +425,6 @@ public class RuntimeConfigurable implements Serializable {
         proxyConfigured = false;
         maybeConfigure(p);
     }
-
 
     /**
      * Apply presets, attributes and text are set if not currently set.
