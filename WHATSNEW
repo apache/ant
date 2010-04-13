@@ -83,6 +83,9 @@ Fixed bugs:
    references.
    Bugzilla Reports 48961 and 49079
 
+ * <jar filesetmanifest="merge"> was broken on Windows.
+   Bugzilla Report 49090
+
 Other changes:
 --------------
 

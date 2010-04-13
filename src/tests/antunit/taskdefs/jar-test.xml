@@ -193,4 +193,18 @@
       </jar>
     </au:expectfailure>
   </target>
+
+  <target name="testFileSetMerge"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49090">
+    <mkdir dir="${input}/META-INF"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/META-INF/MANIFEST.MF"><![CDATA[Test: Header
+]]></echo>
+    <jar destfile="${output}/test.jar" filesetmanifest="merge">
+      <fileset dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertResourceContains value="Test: Header"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
 </project>
