@@ -126,7 +126,9 @@ public class UnzipTest extends BuildFileTest {
     /*
      * PR 16213
      */
-    public void testSelfExtractingArchive() {
+    public void XtestSelfExtractingArchive() {
+        // disabled because we lack a self extracting archive that we
+        // are allowed to distribute - see PR 49080
         executeTarget("selfExtractingArchive");
     }
 
