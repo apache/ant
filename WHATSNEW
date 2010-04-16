@@ -86,6 +86,10 @@ Fixed bugs:
  * <jar filesetmanifest="merge"> was broken on Windows.
    Bugzilla Report 49090
 
+ * <symlink> delete failed if the link attribute was a relative path
+   to a link inside the current directory without a leading ".".
+   Bugzilla Report 49137
+
 Other changes:
 --------------
 
