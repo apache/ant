@@ -22,7 +22,7 @@ import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
-
+import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Assembles the constants declared in a Java class in
@@ -104,7 +104,7 @@ public final class ClassConstants
             if (clazz == null || clazz.length() == 0) {
                 ch = -1;
             } else {
-                final byte[] bytes = clazz.getBytes("ISO-8859-1");
+                final byte[] bytes = clazz.getBytes(ResourceUtils.ISO_8859_1);
                 try {
                     final Class javaClassHelper =
                         Class.forName(JAVA_CLASS_HELPER);

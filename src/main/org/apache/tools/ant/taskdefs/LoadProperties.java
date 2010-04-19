@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.JavaResource;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Load a file's contents as Ant properties.
@@ -181,7 +182,7 @@ public class LoadProperties extends Task {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
-                tis = new ByteArrayInputStream(text.getBytes("ISO8859_1"));
+                tis = new ByteArrayInputStream(text.getBytes(ResourceUtils.ISO_8859_1));
                 final Properties props = new Properties();
                 props.load(tis);
 
