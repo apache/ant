@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TypeAdapter;
@@ -44,7 +45,7 @@ public class AugmentReference extends Task implements TypeAdapter {
         hijackId();
         if (getProject().hasReference(id)) {
             Object result = getProject().getReference(id);
-            log("project reference " + id + "=" + String.valueOf(result));
+            log("project reference " + id + "=" + String.valueOf(result), Project.MSG_DEBUG);
             return result;
         }
         throw new IllegalStateException("Unknown reference \"" + id + "\"");
