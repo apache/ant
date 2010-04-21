@@ -138,6 +138,9 @@ Other changes:
  * Added SimpleBigProjectLogger, intermediate between NoBannerLogger and
    BigProjectLogger.
 
+ * <mappedresources> supports new attributes enablemultiplemappings
+   and cache.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 

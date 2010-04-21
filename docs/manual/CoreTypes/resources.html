@@ -1081,9 +1081,32 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
   use <em>mappedresources</em> with tasks that only allow file-system
   based resources.</p>
 
-<p><em>mappedresources</em> doesn't support any attributes.</p>
-
 <blockquote>
+  <h4>Parameters specified as attributes</h4>
+
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; enabling
+        may improve performance.  <em>Since Ant 1.8.1</em></td>
+      <td valign="top" align="center">No, default <i>false</i></td>
+    </tr>
+    <tr>
+      <td valign="top">enablemultiplemappings</td>
+      <td valign="top">
+        If true the the collection will use all the mappings for a
+        given source path. If false the it will only process the first
+        resource.
+        <em>since Ant 1.8.1</em>.</td>
+      <td align="center">No - defaults to false.</td>
+    </tr>
+  </table>
+
   <h4>Parameters specified as nested elements</h4>
   <p>A single resource collection is required.</p>
   <p>A single <a href="mapper.html">mapper</a> can be used to map

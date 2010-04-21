@@ -75,4 +75,28 @@ public class MappedResource extends ResourceDecorator {
                 ? null : getResource().as(clazz);
     }
 
+    /**
+     * Get the hash code for this Resource.
+     * @since Ant 1.8.1
+     */
+    public int hashCode() {
+        String n = getName();
+        return n == null ? super.hashCode() : n.hashCode();
+    }
+
+    /**
+     * Equality check based on the resource's name in addition to the
+     * resource itself.
+     * @since Ant 1.8.1
+     */
+    public boolean equals(Object other) {
+        if (other == null || !other.getClass().equals(getClass())) {
+            return false;
+        }
+        MappedResource m = (MappedResource) other;
+        String myName = getName();
+        String otherName = m.getName();
+        return (myName == null ? otherName == null : myName.equals(otherName))
+            && getResource().equals(m.getResource());
+    }
 }

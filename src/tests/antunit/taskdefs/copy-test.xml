@@ -116,6 +116,48 @@ public class NullByteStreamResource extends Resource {
                          actual="${output}/bar.txt"/>
   </target>
 
+  <target name="testMappedResourcesMultipleTrue">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <copy todir="${output}">
+      <mappedresources enableMultipleMappings="true">
+        <fileset dir="${input}"/>
+        <compositemapper>
+          <globmapper from="foo.*" to="bar.*"/>
+          <globmapper from="foo.*" to="baz.*"/>
+        </compositemapper>
+      </mappedresources>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/foo.txt"/>
+    <au:assertFileExists file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/baz.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/bar.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/baz.txt"/>
+  </target>
+
+  <target name="testMappedResourcesMultipleFalse">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <copy todir="${output}">
+      <mappedresources enableMultipleMappings="false">
+        <fileset dir="${input}"/>
+        <compositemapper>
+          <globmapper from="foo.*" to="bar.*"/>
+          <globmapper from="foo.*" to="baz.*"/>
+        </compositemapper>
+      </mappedresources>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/foo.txt"/>
+    <au:assertFileExists file="${output}/bar.txt"/>
+    <au:assertFileDoesntExist file="${output}/baz.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/bar.txt"/>
+  </target>
+
   <target name="testIncludeEmptyDirsDefaultsToTrue"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47168">
     <mkdir dir="${input}/foo"/>
