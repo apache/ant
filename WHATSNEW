@@ -141,6 +141,9 @@ Other changes:
  * <mappedresources> supports new attributes enablemultiplemappings
    and cache.
 
+ * Added the augment task to manipulate existing references via Ant's basic
+   introspection mechanisms.
+
 Changes from Ant 1.8.0RC1 TO Ant 1.8.0
 ======================================
 
