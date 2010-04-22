@@ -760,17 +760,34 @@ public class ProjectHelper2 extends ProjectHelper {
             String antFileProp =
                 MagicNames.ANT_FILE + "." + context.getCurrentProjectName();
             String dup = project.getProperty(antFileProp);
+            String typeProp =
+                MagicNames.ANT_FILE_TYPE + "." + context.getCurrentProjectName();
+            String dupType = project.getProperty(typeProp);
             if (dup != null && nameAttributeSet) {
-                File dupFile = new File(dup);
-                if (context.isIgnoringProjectTag() && !dupFile.equals(context.getBuildFile())) {
+                Object dupFile = null;
+                Object contextFile = null;
+                if (MagicNames.ANT_FILE_TYPE_URL.equals(dupType)) {
+                    try {
+                        dupFile = new URL(dup);
+                    } catch (java.net.MalformedURLException mue) {
+                        throw new BuildException("failed to parse "
+                                                 + dup + " as URL while looking"
+                                                 + " at a duplicate project"
+                                                 + " name.", mue);
+                    }
+                    contextFile = context.getBuildFileURL();
+                } else {
+                    dupFile = new File(dup);
+                    contextFile = context.getBuildFile();
+                }
+
+                if (context.isIgnoringProjectTag() && !dupFile.equals(contextFile)) {
                     project.log("Duplicated project name in import. Project "
                             + context.getCurrentProjectName() + " defined first in " + dup
-                            + " and again in " + context.getBuildFile(), Project.MSG_WARN);
+                            + " and again in " + contextFile, Project.MSG_WARN);
                 }
             }
             if (nameAttributeSet) {
-                String typeProp = MagicNames.ANT_FILE_TYPE + "."
-                    + context.getCurrentProjectName();
                 if (context.getBuildFile() != null) {
                     project.setUserProperty(antFileProp,
                                             context.getBuildFile().toString());
@@ -921,7 +938,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 prefix = getTargetPrefix(context);
                 if (prefix == null) {
                     throw new BuildException("can't include build file "
-                                             + context.getBuildFile()
+                                             + context.getBuildFileURL()
                                              + ", no as attribute has been given"
                                              + " and the project tag doesn't"
                                              + " specify a name attribute");

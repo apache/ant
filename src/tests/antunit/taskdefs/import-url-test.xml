@@ -51,6 +51,11 @@ foo=bar
       <classpath location="${test.jar}"/>
     </javaresource>
   </import>
+  <import>
+    <javaresource name="a/b/outer.xml">
+      <classpath location="${test.jar}"/>
+    </javaresource>
+  </import>
 
   <target name="testImportOfNestedFile" depends="foo">
     <au:assertLogContains text="In inner"/>
