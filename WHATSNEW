@@ -90,6 +90,10 @@ Fixed bugs:
    to a link inside the current directory without a leading ".".
    Bugzilla Report 49137
 
+ * <telnet> and <rexec> failed to find the expected strings when
+   waiting for responses and thus always failed.
+   Bugzilla Report 49173
+
 Other changes:
 --------------
 
