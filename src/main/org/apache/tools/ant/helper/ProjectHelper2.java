@@ -177,6 +177,28 @@ public class ProjectHelper2 extends ProjectHelper {
             parse(project, source, new RootHandler(context, mainHandler));
             // Execute the top-level target
             context.getImplicitTarget().execute();
+
+            // resolve extensionOf attributes
+            for (Iterator i = getExtensionStack().iterator(); i.hasNext(); ) {
+                String[] extensionInfo = (String[]) i.next();
+                String tgName = extensionInfo[0];
+                String name = extensionInfo[1];
+                Hashtable projectTargets = project.getTargets();
+                if (!projectTargets.containsKey(tgName)) {
+                    throw new BuildException("can't add target "
+                                             + name + " to extension-point "
+                                             + tgName
+                                             + " because the extension-point"
+                                             + " is unknown.");
+                }
+                Target t = (Target) projectTargets.get(tgName);
+                if (!(t instanceof ExtensionPoint)) {
+                    throw new BuildException("referenced target "
+                                             + tgName
+                                             + " is not an extension-point");
+                }
+                t.addDependency(name);
+            }
         }
     }
 
@@ -987,6 +1009,9 @@ public class ProjectHelper2 extends ProjectHelper {
                 project.addOrReplaceTarget(newName, newTarget);
             }
             if (extensionPoint != null) {
+                ProjectHelper helper =
+                    (ProjectHelper) context.getProject().
+                        getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
                 for (Iterator iter =
                          Target.parseDepends(extensionPoint, name, "extensionOf")
                          .iterator();
@@ -995,20 +1020,12 @@ public class ProjectHelper2 extends ProjectHelper {
                     if (isInIncludeMode()) {
                         tgName = prefix + sep + tgName;
                     }
-                    if (!projectTargets.containsKey(tgName)) {
-                        throw new BuildException("can't add target "
-                                                 + name + " to extension-point "
-                                                 + tgName
-                                                 + " because the extension-point"
-                                                 + " is unknown.");
-                    }
-                    Target t = (Target) projectTargets.get(tgName);
-                    if (!(t instanceof ExtensionPoint)) {
-                        throw new BuildException("referenced target "
-                                                 + tgName
-                                                 + " is not an extension-point");
-                    }
-                    t.addDependency(name);
+
+                    // defer extensionpoint resolution until the full
+                    // import stack has been processed
+                    helper.getExtensionStack().add(new String[] {
+                            tgName, name
+                        });
                 }
             }
         }

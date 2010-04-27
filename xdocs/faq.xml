@@ -1912,6 +1912,54 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         recursions as well.</p>
       </answer>
     </faq>
+
+    <faq id="extension-point-and-import">
+      <question><code>extension-point</code> doesn't work
+        with <code>import</code> like the documentation
+        states.</question>
+
+      <answer>
+        <p>Yes, there is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804">bug
+          in Ant 1.8.0</a>.</p>
+
+        <p>When using two build files like</p>
+        <source><![CDATA[
+importing.xml:
+<project>
+   ...
+   <import file="imported.xml"/>
+   <target name="bar" extensionOf="foo"/>
+</project>
+imported.xml:
+<project>
+   <extension-point name="foo"/>
+</project>
+]]></source>
+        <p>Ant 1.8.0 will fail, claiming there was no extension point
+          named "foo".</p>
+
+        <p>This bug has been fixed for Ant 1.8.1.  For Ant 1.8.0 there
+          is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804#c9">work-around</a>:
+          add an additional layer of importing like in</p>
+        <source><![CDATA[
+importing.xml:
+<project>
+   <target name="bar" extensionOf="foo"/>
+</project>
+imported.xml:
+<project>
+   <extension-point name="foo"/>
+</project>
+build.xml:
+<project>
+   <import file="imported.xml"/>
+   <import file="importing.xml"/>
+</project>
+]]></source>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>

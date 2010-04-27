@@ -57,19 +57,6 @@
     <au:assertLogContains text="In target bar"/>
   </target>
 
-  <target name="testExtensionPointMustBeKnown">
-    <mkdir dir="${output}"/>
-    <echo file="${output}/build.xml"><![CDATA[
-<project default="foo">
-  <extension-point name="bar" extensionOf="foo"/>
-  <extension-point name="foo"/>
-</project>]]></echo>
-    <au:expectfailure
-       expectedMessage="can't add target bar to extension-point foo because the extension-point is unknown">
-      <ant dir="${output}"/>
-    </au:expectfailure>
-  </target>
-
   <target name="testCantAddToPlainTarget">
     <mkdir dir="${output}"/>
     <echo file="${output}/build.xml"><![CDATA[
@@ -81,6 +68,24 @@
        expectedMessage="referenced target foo is not an extension-point">
       <ant dir="${output}"/>
     </au:expectfailure>
+  </target>
+
+  <target name="testExtensionPointInImportedBuildfile" description="Bug 48804">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/master.xml"><![CDATA[
+<project default="bar">
+  <extension-point name="foo"/>
+  <target name="bar" depends="foo"/>
+</project>]]></echo>
+    <echo file="${output}/build.xml"><![CDATA[
+<project>
+  <import file="master.xml"/>
+  <target name="prepare" extensionOf="foo">
+    <echo>in target prepare</echo>
+  </target>
+</project>]]></echo>
+    <ant dir="${output}" target="bar"/>
+    <au:assertLogContains text="in target prepare"/>
   </target>
 
 </project>

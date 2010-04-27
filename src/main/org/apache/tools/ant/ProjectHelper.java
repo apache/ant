@@ -19,6 +19,8 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -89,6 +91,7 @@ public class ProjectHelper {
     // that read build files using ProjectHelper ).
 
     private Vector importStack = new Vector();
+    private List extensionStack = new LinkedList();
 
     /**
      *  Import stack.
@@ -99,6 +102,18 @@ public class ProjectHelper {
      */
     public Vector getImportStack() {
         return importStack;
+    }
+
+    /**
+     * Extension stack.
+     * Used to keep track of targets that extend extension points.
+     *
+     * @return a list of two element string arrays where the first
+     * element is the name of the extensionpoint and the second the
+     * name of the target
+     */
+    public List getExtensionStack() {
+        return extensionStack;
     }
 
     private final static ThreadLocal targetPrefix = new ThreadLocal() {

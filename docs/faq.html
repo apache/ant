@@ -432,6 +432,11 @@
         when I compile my project under Mac OS X.
       
       </a></li>
+                <li><a href="#extension-point-and-import">
+  <code>extension-point</code> doesn't work
+        with <code>import</code> like the documentation
+        states.
+      </a></li>
             </ul>
     
       <h3 class="section">Answers</h3>
@@ -2184,6 +2189,49 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         there is another symlink <code>bundle</code> that points to
         the <code>Home</code> directory and will cause infite
         recursions as well.</p>
+                    <p class="faq">
+      <a name="extension-point-and-import"></a>
+      <code>extension-point</code> doesn't work
+        with <code>import</code> like the documentation
+        states.
+    </p>
+                  <p>Yes, there is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804">bug
+          in Ant 1.8.0</a>.</p>
+                        <p>When using two build files like</p>
+                        <pre class="code">
+importing.xml:
+&lt;project&gt;
+   ...
+   &lt;import file=&quot;imported.xml&quot;/&gt;
+   &lt;target name=&quot;bar&quot; extensionOf=&quot;foo&quot;/&gt;
+&lt;/project&gt;
+imported.xml:
+&lt;project&gt;
+   &lt;extension-point name=&quot;foo&quot;/&gt;
+&lt;/project&gt;
+</pre>
+                        <p>Ant 1.8.0 will fail, claiming there was no extension point
+          named "foo".</p>
+                        <p>This bug has been fixed for Ant 1.8.1.  For Ant 1.8.0 there
+          is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804#c9">work-around</a>:
+          add an additional layer of importing like in</p>
+                        <pre class="code">
+importing.xml:
+&lt;project&gt;
+   &lt;target name=&quot;bar&quot; extensionOf=&quot;foo&quot;/&gt;
+&lt;/project&gt;
+imported.xml:
+&lt;project&gt;
+   &lt;extension-point name=&quot;foo&quot;/&gt;
+&lt;/project&gt;
+build.xml:
+&lt;project&gt;
+   &lt;import file=&quot;imported.xml&quot;/&gt;
+   &lt;import file=&quot;importing.xml&quot;/&gt;
+&lt;/project&gt;
+</pre>
                     </div>
   </div>
 
