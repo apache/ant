@@ -70,7 +70,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
             * docs/manual/cover.html
             * docs/manual/credits.html
-            * build.xml (version property & manifest-version property)
+            * build.xml properties : project-version & manifest-version 
+            * POM files under src/etc/poms and subdirectories
 
         Commit your changes.
 

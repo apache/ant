@@ -26,12 +26,23 @@
   </properties>
 
 <body>
-  <section name="Ant1.8.0">
-    <h3>Februrary 8th, 2010 - Ant 1.8.0 Released</h3>
-    <p>Apache Ant 1.8.0 is now available for download as source or binary (with and without
+  <section name="Ant1.8.1">
+    <h3>May 6th, 2010 - Ant 1.8.1 Released</h3>
+    <p>Apache Ant 1.8.1 is now available for download as source or binary (with and without
       dependencies) from
       <a href="http://ant.apache.org/bindownload.cgi">http://ant.apache.org/bindownload.cgi</a>.</p>
       
+    <p>Key features of the 1.8.1 release are</p>
+    <ul>
+      <li>new task augment allows to add attributes or nested elements to previously defined references</li>
+      <li>numerous bug fixes and improvements as documented in Bugzilla
+        and in WHATSNEW</li>
+    </ul>
+      
+  </section>
+
+  <section name="Ant1.8.0">
+    <h3>Februrary 8th, 2010 - Ant 1.8.0 Released</h3>
     <p>Key features of the 1.8.0 release are</p>
     <ul>
       <li>Lexically scoped local properties, i.e. properties that are only defined inside a target, 

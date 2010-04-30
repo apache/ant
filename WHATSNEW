@@ -1,5 +1,17 @@
-Changes from Ant 1.8.0 TO current SVN version
+Changes from Ant 1.8.1 TO current SVN version
 =============================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
+Changes from Ant 1.8.0 TO Ant 1.8.1 
+===================================
 
 Changes that could break older environments:
 -------------------------------------------
