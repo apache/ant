@@ -18,7 +18,6 @@
 package org.apache.tools.ant.listener;
 
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.NoBannerLogger;
 import org.apache.tools.ant.SubBuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
@@ -33,7 +32,7 @@ import java.io.File;
  * @since Ant1.7.1
  */
 
-public class BigProjectLogger extends NoBannerLogger
+public class BigProjectLogger extends SimpleBigProjectLogger
     implements SubBuildListener {
 
     private volatile boolean subBuildStartedRaised = false;
@@ -112,22 +111,6 @@ public class BigProjectLogger extends NoBannerLogger
     public void messageLogged(BuildEvent event) {
         maybeRaiseSubBuildStarted(event);
         super.messageLogged(event);
-    }
-
-    /**
-     * Override point, extract the target name
-     *
-     * @param event the event to work on
-     * @return the target name -including the owning project name (if non-null)
-     */
-    protected String extractTargetName(BuildEvent event) {
-        String targetName = event.getTarget().getName();
-        String projectName = extractProjectName(event);
-        if (projectName != null && targetName != null) {
-            return projectName + '.' + targetName;
-        } else {
-            return targetName;
-        }
     }
 
 

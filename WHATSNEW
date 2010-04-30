@@ -1,5 +1,155 @@
-Changes from Ant 1.8.0RC1 TO current SVN version
+Changes from Ant 1.8.0 TO current SVN version
 =============================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+ * ant-trax.jar is no longer produced since TrAX is included in JDK 1.4+.
+
+ * Ant no longer ships with Apache Xerces-J or the XML APIs but relies
+   on the Java runtime to provide a parser and matching API versions.
+   
+ * The stylebook ant task and the ant-stylebook.jar are removed.  
+
+Fixed bugs:
+-----------
+
+ * Tasks that iterate over task or type definitions, references or
+   targets now iterate over copies instead of the live maps to avoid
+   ConcurrentModificationExceptions if another thread changes the
+   maps.
+   Bugzilla Report 48310.
+
+ * The filesmatch condition threw a NullPointerException when
+   comparing text files and the second file contained fewer lines than
+   the first one.
+   Bugzilla Report 48715.
+
+ * Regression: The <ear> task would allow multiple
+   META-INF/application.xml files to be added.
+   Bugzilla Report 6836.
+
+ * VectorSet#remove(Object) would fail if the size of the vector
+   equaled its capacity.
+   
+ * Regression : ant -diagnostics was returning with exit code 1
+   Bugzilla Report 48782
+   
+ * Fix for exec task sometimes inserts extraneous newlines
+   Bugzilla Report 48746
+   
+ * SymlinkTest#testSymbolicLinkUtilsMethods failing on MacOS
+   Bugzilla Report 48785.
+
+ * If <concat>'s first resourcecollection child is a <resources>,
+   any subsequently added child resourcecollection joins the first.
+   Bugzilla Report 48816.        
+   
+ * <get> with an invalid URL could trigger an NPE in some JVMs.
+   Bugzilla Report 48833
+   
+ * Broken Pipe issue under Ubuntu Linux
+   Bugzilla Report 48789
+   
+ * Properties wrongly read from file or not update during read
+   Bugzilla Report 48768       
+
+ * AntClassLoader in Ant 1.8.0 has been considerably slower than in
+   1.7.1
+   Bugzilla Report 48853
+   
+ * ANT_CMD_LINE_ARGS are rippling through lower level Ant usage 
+   Bugzilla Report 48876
+   
+ * email : IO error sending mail with plain mimetype
+   Bugzilla Report 48932    
+
+ * the complete-ant-cmd.pl script failed to create a proper cache of
+   target if "ant -p" failed.
+   Bugzilla Report 48980
+
+ * <rmic>'s sourcebase attribute was broken.
+   Bugzilla Report 48970
+
+ * <copy>'s failonerror didn't work as expected when copying a single
+   element resource collection to a file.
+   Bugzilla Report 49070
+
+ * <get> no longer followed redirects if the redirect URL was relative
+   and not an absolute URL.
+   Bugzilla Report 48972
+
+ * fixed a performance degradation in the code that expands property
+   references.
+   Bugzilla Reports 48961 and 49079
+
+ * <jar filesetmanifest="merge"> was broken on Windows.
+   Bugzilla Report 49090
+
+ * <symlink> delete failed if the link attribute was a relative path
+   to a link inside the current directory without a leading ".".
+   Bugzilla Report 49137
+
+ * <telnet> and <rexec> failed to find the expected strings when
+   waiting for responses and thus always failed.
+   Bugzilla Report 49173
+
+Other changes:
+--------------
+
+ * Project provides new get methods that return copies instead of the
+   live maps of task and type definitions, references and targets.
+
+ * Ant is now more lenient with ZIP extra fields and will be able to
+   read archives that it failed to read in earlier versions.
+   Bugzilla Report 48781.
+
+ * The <zip> family of tasks has been sped up for bigger archives.
+   Bugzilla Report 48755.
+   
+ * Add removeKeepExtension option to NetRexxC task.
+   Bugzilla Report 48788.
+
+ * Add prefix attribute to loadproperties task.
+
+ * Add resource attribute to length task.
+
+ * PropertyResource will effectively proxy another Resource if ${name}
+   evaluates to a Resource object.
+
+ * Added forcestring attribute to equals condition to force evaluation
+   of Object args as strings; previously only API-level usage of the
+   equals condition allowed Object args, but Ant 1.8.x+ property
+   evaluation may yield values of any type.
+   
+ * BuildFileTest.assertPropertyUnset() fails with a slightly more 
+   meaningful error message
+   Bugzilla Report 48834
+   
+ * <junit> will now throw an exception if a test name is empty.  This
+   used to manifest itself in unrelated errors like
+   Bugzilla Report 43586.
+
+ * A change that made <exec> more reliable on Windows (Bugzilla Report
+   5003) strongly impacts the performance for commands that execute
+   quickly, like attrib.  Basically no single execution of a command
+   could take less than a second on Windows.
+   A few timeouts have been tweaked to allow these commands to finish
+   more quickly but still they will take longer than they did with Ant
+   1.7.1.
+   Bugzilla Report 48734.
+
+ * Added SimpleBigProjectLogger, intermediate between NoBannerLogger and
+   BigProjectLogger.
+
+ * <mappedresources> supports new attributes enablemultiplemappings
+   and cache.
+
+ * Added the augment task to manipulate existing references via Ant's basic
+   introspection mechanisms.
+
+Changes from Ant 1.8.0RC1 TO Ant 1.8.0
+======================================
 
 Changes that could break older environments:
 -------------------------------------------
@@ -8,6 +158,9 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+
+ * stack traces were not reported at all by <junit/>
+   when filtertrace="on", which is the default.
 
  * ant.bat can now also process the -noclasspath switch when it is 
    the first switch on a command line.
@@ -28,10 +181,13 @@ Fixed bugs:
    it updated an existing property file.
    Bugzilla Report 48558.
 
+ * <sound> didn't work properly in recent Java VMs.
+   Bugzilla Report 48637.
+
 Other changes:
 --------------
 
-Changes from Ant 1.7.1 TO Ant 1.8.0RCx
+Changes from Ant 1.7.1 TO Ant 1.8.0RC1
 ======================================
 
 Changes that could break older environments:

@@ -184,7 +184,9 @@ public class Symlink extends DispatchTask {
                 return;
             }
             log("Removing symlink: " + link);
-            SYMLINK_UTILS.deleteSymbolicLink(new File(link), this);
+            SYMLINK_UTILS.deleteSymbolicLink(FILE_UTILS
+                                             .resolveFile(new File("."), link),
+                                             this);
         } catch (FileNotFoundException fnfe) {
             handleError(fnfe.toString());
         } catch (IOException ioe) {

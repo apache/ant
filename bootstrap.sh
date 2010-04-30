@@ -97,8 +97,6 @@ if [ -d "build" ] ; then
   rm -r build
 fi
 
-CLASSPATH=lib/xercesImpl.jar:lib/xml-apis.jar:${CLASSPATH}
-
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}
 do

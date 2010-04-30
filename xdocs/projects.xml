@@ -385,6 +385,45 @@
         </table>
       </subsection>
 
+
+      <subsection name="Flaka">
+
+        <p>The goal of Flaka is to simplify writing build scripts using
+        <ul> 
+          <li><strong>Regular control structures</strong> (<code>when</code>, <code>for</code>, <code>switch</code>, ..)</li>
+          <li><strong>Exception handling</strong></li>
+          <li>An <em>Expression Language</em> which in turn provdes:
+          <ul> 
+            <li><strong>access to underlying data objects</strong></li> 
+            <li><strong>untyped variables in addition to Ant properties</strong></li> 
+            <li><strong>powerfull expressions like <code> cond ? then : else</code></strong></li> 
+          </ul> 
+          </li>
+        </ul>
+        Checkout the <a href="http://workbench.haefelinger.it/flaka/download/manual/latest">manual's overview chapter</a> about the feature Flaka provides. Have especially a look at the section describing the expression language.
+        </p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.7 and higher </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://workbench.haefelinger.it/flaka/">http://workbench.haefelinger.it/flaka/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="mailto:wh@haefelinger.it">Contact Project Lead</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href ="http://www.apache.org/licenses/LICENSE-2.0">Apache License v.20</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+
       <subsection name="Invicta">
 
         <p>Invicta is a build management tool. Using simple project definition files,

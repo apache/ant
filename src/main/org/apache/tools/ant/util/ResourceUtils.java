@@ -66,6 +66,13 @@ public class ResourceUtils {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
+     * Name of charset "ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1".
+     *
+     * @since Ant 1.8.1
+     */
+    public static final String ISO_8859_1 = "ISO-8859-1";
+
+    /**
      * Tells which source files should be reprocessed based on the
      * last modification date of target files.
      * @param logTo where to send (more or less) interesting output.
@@ -466,7 +473,7 @@ public class ResourceUtils {
                 long count = srcChannel.size();
                 while (position < count) {
                     position +=
-                        srcChannel.transferTo(position, FileUtils.BUF_SIZE,
+                        srcChannel.transferTo(position, count - position,
                                               destChannel);
                 }
             } finally {
@@ -666,6 +673,9 @@ public class ResourceUtils {
             while (expected != null) {
                 String actual = in2.readLine();
                 if (!expected.equals(actual)) {
+                    if (actual == null) {
+                        return 1;
+                    }
                     return expected.compareTo(actual);
                 }
                 expected = in1.readLine();

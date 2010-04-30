@@ -28,7 +28,7 @@ public interface DynamicElement {
     /**
      * Create an element with the given name
      *
-     * @param name the element nbame
+     * @param name the element name
      * @throws BuildException when any error occurs
      * @return the element created
      */

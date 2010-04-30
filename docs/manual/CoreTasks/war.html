@@ -45,7 +45,7 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     be made optional. However, as most real web applications do need a web.xml file,
     it is not optional by default. The task will fail if the file is not
     included, unless the <code>needxmlfile</code> attribute
-    is set to <code>true</code>. The task
+    is set to <code>false</code>. The task
     will warn if more than one web.xml file is added to the JAR  
     through the filesets.
 </p>
@@ -84,7 +84,7 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   <tr>
     <td valign="top">needxmlfile</td>
     <td valign="top">Flag to indicate whether or not the web.xml file is needed.
-        I=it should be set to false when generating
+        It should be set to false when generating
         servlet 2.5+ WAR files without a web.xml file.
         <em>Since Ant 1.7</em></td>
     <td valign="top" align="center">No -default "true"</td>

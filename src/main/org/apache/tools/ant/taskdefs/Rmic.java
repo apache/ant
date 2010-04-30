@@ -705,7 +705,8 @@ public class Rmic extends MatchingTask {
                 continue;
             }
             String sourceFileName = StringUtils.removeSuffix(generatedFile,
-                                                             ".class");
+                                                             ".class")
+                + ".java";
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {

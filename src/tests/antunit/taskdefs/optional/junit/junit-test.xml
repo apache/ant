@@ -289,4 +289,13 @@ public class BTest extends TestCase {
     <au:assertLogDoesntContain text="Running test.HTest"/>
   </target>
 
+  <target name="testMissingTestName">
+    <property name="test.name" value="null"/>
+    <au:expectfailure message="test name must be specified">
+      <junit fork="false">
+        <test name="${test.name}"/>
+      </junit>
+    </au:expectfailure>
+  </target>
+
 </project>

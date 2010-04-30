@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,14 +35,11 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.Locale;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -213,9 +208,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     private ClassLoader parent = null;
 
     /**
-     * A hashtable of zip files opened by the classloader (File to ZipFile).
+     * A hashtable of zip files opened by the classloader (File to JarFile).
      */
-    private Hashtable zipFiles = new Hashtable();
+    private Hashtable jarFiles = new Hashtable();
 
     /** Static map of jar file/time to manifest class-path entries */
     private static Map/*<String,String>*/ pathMap = Collections.synchronizedMap(new HashMap());
@@ -488,23 +483,16 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 + pathComponent.lastModified() + "-" + pathComponent.length();
         String classpath = (String) pathMap.get(absPathPlusTimeAndLength);
         if (classpath == null) {
-            ZipFile jarFile = null;
-            InputStream manifestStream = null;
+            JarFile jarFile = null;
             try {
-                jarFile = new ZipFile(pathComponent);
-                manifestStream = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
-
-                if (manifestStream == null) {
+                jarFile = new JarFile(pathComponent);
+                Manifest manifest = jarFile.getManifest();
+                if (manifest == null) {
                     return;
                 }
-                Reader manifestReader = new InputStreamReader(manifestStream, "UTF-8");
-                org.apache.tools.ant.taskdefs.Manifest manifest
-                        = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
-                classpath = manifest.getMainSection().getAttributeValue("Class-Path");
-            } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
-                // ignore
+                classpath = manifest.getMainAttributes()
+                    .getValue(Attributes.Name.CLASS_PATH);
             } finally {
-                FileUtils.close(manifestStream);
                 if (jarFile != null) {
                     jarFile.close();
                 }
@@ -783,27 +771,27 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     private InputStream getResourceStream(File file, String resourceName) {
         try {
-            ZipFile zipFile = (ZipFile) zipFiles.get(file);
-            if (zipFile == null && file.isDirectory()) {
+            JarFile jarFile = (JarFile) jarFiles.get(file);
+            if (jarFile == null && file.isDirectory()) {
                 File resource = new File(file, resourceName);
                 if (resource.exists()) {
                     return new FileInputStream(resource);
                 }
             } else {
-                if (zipFile == null) {
+                if (jarFile == null) {
                     if (file.exists()) {
-                        zipFile = new ZipFile(file);
-                        zipFiles.put(file, zipFile);
+                        jarFile = new JarFile(file);
+                        jarFiles.put(file, jarFile);
                     } else {
                         return null;
                     }
                     //to eliminate a race condition, retrieve the entry
                     //that is in the hash table under that filename
-                    zipFile = (ZipFile) zipFiles.get(file);
+                    jarFile = (JarFile) jarFiles.get(file);
                 }
-                ZipEntry entry = zipFile.getEntry(resourceName);
+                JarEntry entry = jarFile.getJarEntry(resourceName);
                 if (entry != null) {
-                    return zipFile.getInputStream(entry);
+                    return jarFile.getInputStream(entry);
                 }
             }
         } catch (Exception e) {
@@ -997,8 +985,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     protected URL getResourceURL(File file, String resourceName) {
         try {
-            ZipFile zipFile = (ZipFile) zipFiles.get(file);
-            if (zipFile == null && file.isDirectory()) {
+            JarFile jarFile = (JarFile) jarFiles.get(file);
+            if (jarFile == null && file.isDirectory()) {
                 File resource = new File(file, resourceName);
 
                 if (resource.exists()) {
@@ -1009,15 +997,17 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                     }
                 }
             } else {
-                if (zipFile == null) {
+                if (jarFile == null) {
                     if (file.exists()) {
-                        zipFile = new ZipFile(file);
-                        zipFiles.put(file, zipFile);
+                        jarFile = new JarFile(file);
+                        jarFiles.put(file, jarFile);
                     } else {
                         return null;
                     }
+                    // potential race-condition
+                    jarFile = (JarFile) jarFiles.get(file);
                 }
-                ZipEntry entry = zipFile.getEntry(resourceName);
+                JarEntry entry = jarFile.getJarEntry(resourceName);
                 if (entry != null) {
                     try {
                         return new URL("jar:" + FILE_UTILS.getFileURL(file) + "!/" + entry);
@@ -1180,15 +1170,11 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (container.isDirectory()) {
             return null;
         }
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(container);
-            return jarFile.getManifest();
-        } finally {
-            if (jarFile != null) {
-                jarFile.close();
-            }
+        JarFile jarFile = (JarFile) jarFiles.get(container);
+        if (jarFile == null) {
+            return null;
         }
+        return jarFile.getManifest();
     }
 
     /**
@@ -1207,23 +1193,12 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         if (container.isDirectory()) {
             return null;
         }
-        JarFile jarFile = null;
-        InputStream is = null;
-        try {
-            jarFile = new JarFile(container);
-            JarEntry ent = jarFile.getJarEntry(entry);
-            if (ent != null) {
-                // must read the input in order to obtain certificates
-                is = jarFile.getInputStream(ent);
-                while (is.read() >= 0);
-            }
-            return ent == null ? null : ent.getCertificates();
-        } finally {
-            FileUtils.close(is);
-            if (jarFile != null) {
-                jarFile.close();
-            }
+        JarFile jarFile = (JarFile) jarFiles.get(container);
+        if (jarFile == null) {
+            return null;
         }
+        JarEntry ent = jarFile.getJarEntry(entry);
+        return ent == null ? null : ent.getCertificates();
     }
 
     /**
@@ -1280,7 +1255,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 sealedString = mainAttributes.getValue(Name.SEALED);
             }
         }
-        if (sealedString != null && sealedString.toLowerCase(Locale.ENGLISH).equals("true")) {
+        if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
             try {
                 sealBase = new URL(FileUtils.getFileUtils().toURI(container.getAbsolutePath()));
             } catch (MalformedURLException e) {
@@ -1413,15 +1388,15 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * files are closed.
      */
     public synchronized void cleanup() {
-        for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
-            ZipFile zipFile = (ZipFile) e.nextElement();
+        for (Enumeration e = jarFiles.elements(); e.hasMoreElements();) {
+            JarFile jarFile = (JarFile) e.nextElement();
             try {
-                zipFile.close();
+                jarFile.close();
             } catch (IOException ioe) {
                 // ignore
             }
         }
-        zipFiles = new Hashtable();
+        jarFiles = new Hashtable();
         if (project != null) {
             project.removeBuildListener(this);
         }

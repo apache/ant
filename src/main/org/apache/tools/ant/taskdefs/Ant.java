@@ -41,6 +41,7 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Main;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Build a sub-project.
@@ -333,7 +334,7 @@ public class Ant extends Task {
     public void execute() throws BuildException {
         File savedDir = dir;
         String savedAntFile = antFile;
-        Vector locals = new Vector(targets);
+        Vector locals = new VectorSet(targets);
         try {
             getNewProject();
 

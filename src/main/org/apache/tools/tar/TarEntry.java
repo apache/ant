@@ -625,7 +625,7 @@ public class TarEntry implements TarConstants {
      */
     private static String normalizeFileName(String fileName,
                                             boolean preserveLeadingSlashes) {
-        String osname = System.getProperty("os.name").toLowerCase(Locale.US);
+        String osname = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 
         if (osname != null) {
 

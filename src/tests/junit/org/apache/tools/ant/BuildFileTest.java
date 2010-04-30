@@ -428,8 +428,12 @@ public abstract class BuildFileTest extends TestCase {
      *
      * @param property property name
      */
-    public  void assertPropertyUnset(String property) {
-        assertPropertyEquals(property, null);
+    public void assertPropertyUnset(String property) {
+        String result = project.getProperty(property);
+        if (result != null) {
+            fail("Expected property " + property
+                    + " to be unset, but it is set to the value: " + result);
+        }
     }
 
     /**

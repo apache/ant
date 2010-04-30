@@ -92,4 +92,18 @@
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
+  <target name="testDeleteLinkInSameDirAsBuildFile" depends="setUp" if="isUnix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49137">
+    <mkdir dir="${output}/Templates"/>
+    <mkdir dir="${output}/project1"/>
+    <symlink action="single" link="${output}/project1/Templates"
+             resource="../Templates"/>
+    <echo file="${output}/project1/build.xml"><![CDATA[
+<project name="project1" default="build" basedir=".">
+    <target name="build">
+        <symlink action="delete" link="Templates"/>
+    </target>
+</project>]]></echo>
+    <ant antfile="${output}/project1/build.xml"/>
+  </target>
 </project>

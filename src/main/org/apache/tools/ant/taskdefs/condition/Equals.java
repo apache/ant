@@ -32,6 +32,7 @@ public class Equals implements Condition {
     private boolean trim = false;
     private boolean caseSensitive = true;
     private int args;
+    private boolean forcestring = false;
 
     /**
      * Set the first argument
@@ -107,6 +108,16 @@ public class Equals implements Condition {
     }
 
     /**
+     * Set whether to force string comparisons for non-equal, non-string objects.
+     * This allows object properties (legal in Ant 1.8.x+) to be compared as strings.
+     * @param forcestring value to set
+     * @since Ant 1.8.1
+     */
+    public void setForcestring(boolean forcestring) {
+        this.forcestring = forcestring;
+    }
+
+    /**
      * @return true if the two strings are equal
      * @exception BuildException if the attributes are not set correctly
      */
@@ -114,7 +125,13 @@ public class Equals implements Condition {
         if ((args & REQUIRED) != REQUIRED) {
             throw new BuildException("both arg1 and arg2 are required in equals");
         }
-
+        if (arg1 == arg2 || arg1 != null && arg1.equals(arg2)) {
+            return true;
+        }
+        if (forcestring) {
+            arg1 = arg1 == null || arg1 instanceof String ? arg1 : arg1.toString();
+            arg2 = arg2 == null || arg2 instanceof String ? arg2 : arg2.toString();
+        }
         if (arg1 instanceof String && trim) {
             arg1 = ((String) arg1).trim();
         }
@@ -126,6 +143,6 @@ public class Equals implements Condition {
             String s2 = (String) arg2;
             return caseSensitive ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
         }
-        return arg1 == arg2 || arg1 != null && arg1.equals(arg2);
+        return false;
     }
 }

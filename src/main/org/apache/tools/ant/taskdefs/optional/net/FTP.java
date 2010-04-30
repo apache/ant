@@ -32,10 +32,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -54,6 +56,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.RetryHandler;
 import org.apache.tools.ant.util.Retryable;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Basic FTP client. Performs the following actions:
@@ -116,7 +119,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
     private Vector filesets = new Vector();
-    private Vector dirCache = new Vector();
+    private Set dirCache = new HashSet();
     private int transferred = 0;
     private String remoteFileSep = "/";
     private int port = DEFAULT_FTP_PORT;
@@ -354,12 +357,12 @@ public class FTP extends Task implements FTPTaskConfig {
                 excludes = new String[0];
             }
 
-            filesIncluded = new Vector();
+            filesIncluded = new VectorSet();
             filesNotIncluded = new Vector();
-            filesExcluded = new Vector();
-            dirsIncluded = new Vector();
+            filesExcluded = new VectorSet();
+            dirsIncluded = new VectorSet();
             dirsNotIncluded = new Vector();
-            dirsExcluded = new Vector();
+            dirsExcluded = new VectorSet();
 
             try {
                 String cwd = ftp.printWorkingDirectory();
@@ -1799,9 +1802,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
             }
         } finally {
-            if (bw != null) {
-                bw.close();
-            }
+            FileUtils.close(bw);
         }
 
         return dsfiles.length;
@@ -1921,7 +1922,7 @@ public class FTP extends Task implements FTPTaskConfig {
                                                  + "directory: " + ftp.getReplyString());
                     }
                 }
-                dirCache.addElement(dir);
+                dirCache.add(dir);
             }
             ftp.changeWorkingDirectory(cwd);
         }
@@ -2158,13 +2159,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 transferred++;
             }
         } finally {
-            if (instream != null) {
-                try {
-                    instream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(instream);
         }
     }
 
@@ -2295,13 +2290,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
             }
         } finally {
-            if (outstream != null) {
-                try {
-                    outstream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(outstream);
         }
     }
 
@@ -2579,8 +2568,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * @return the SYMBOL representing the given action.
          */
         public int getAction() {
-            String actionL = getValue().toLowerCase(Locale.US);
-
+            String actionL = getValue().toLowerCase(Locale.ENGLISH);
             if (actionL.equals("send") || actionL.equals("put")) {
                 return SEND_FILES;
             } else if (actionL.equals("recv") || actionL.equals("get")) {
@@ -2638,8 +2626,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * the attribute, in the context of the supplied action
          */
         public long getMilliseconds(int action) {
-            String granularityU = getValue().toUpperCase(Locale.US);
-
+            String granularityU = getValue().toUpperCase(Locale.ENGLISH);
             if ("".equals(granularityU)) {
                 if (action == SEND_FILES) {
                     return GRANULARITY_MINUTE;

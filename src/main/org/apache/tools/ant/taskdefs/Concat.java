@@ -465,7 +465,7 @@ public class Concat extends Task implements ResourceCollection {
      * Stores a collection of file sets and/or file lists, used to
      * select multiple files for concatenation.
      */
-    private ResourceCollection rc;
+    private Resources rc;
 
     /** for filtering the concatenated */
     private Vector filterChains;
@@ -634,19 +634,15 @@ public class Concat extends Task implements ResourceCollection {
      * @param c the ResourceCollection to add.
      * @since Ant 1.7
      */
-    public synchronized void add(ResourceCollection c) {
-        if (rc == null) {
-            rc = c;
-            return;
+    public void add(ResourceCollection c) {
+        synchronized (this) {
+            if (rc == null) {
+                rc = new Resources();
+                rc.setProject(getProject());
+                rc.setCache(true);
+            }
         }
-        if (!(rc instanceof Resources)) {
-            Resources newRc = new Resources();
-            newRc.setProject(getProject());
-            newRc.setCache(true);
-            newRc.add(rc);
-            rc = newRc;
-        }
-        ((Resources) rc).add(c);
+        rc.add(c);
     }
 
     /**

@@ -18,7 +18,6 @@
 package org.apache.tools.ant.launch;
 
 import java.net.MalformedURLException;
-
 import java.net.URL;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -442,7 +441,7 @@ public final class Locator {
             // Found in java.home as given
             return toolsJar;
         }
-        if (javaHome.toLowerCase(Locale.US).endsWith(File.separator + "jre")) {
+        if (javaHome.toLowerCase(Locale.ENGLISH).endsWith(File.separator + "jre")) {
             javaHome = javaHome.substring(
                 0, javaHome.length() - "/jre".length());
             toolsJar = new File(javaHome + libToolsJar);
@@ -498,7 +497,7 @@ public final class Locator {
         if (!location.isDirectory()) {
             urls = new URL[1];
             String path = location.getPath();
-            String littlePath = path.toLowerCase(Locale.US);
+            String littlePath = path.toLowerCase(Locale.ENGLISH);
             for (int i = 0; i < extensions.length; ++i) {
                 if (littlePath.endsWith(extensions[i])) {
                     urls[0] = fileToURL(location);
@@ -510,7 +509,7 @@ public final class Locator {
         File[] matches = location.listFiles(
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    String littleName = name.toLowerCase(Locale.US);
+                    String littleName = name.toLowerCase(Locale.ENGLISH);
                     for (int i = 0; i < extensions.length; ++i) {
                         if (littleName.endsWith(extensions[i])) {
                             return true;

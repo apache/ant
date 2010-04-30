@@ -324,7 +324,7 @@ public class Tstamp extends Task {
          * @return an int value.
          */
         public int getCalendarField() {
-            String key = getValue().toLowerCase();
+            String key = getValue().toLowerCase(Locale.ENGLISH);
             Integer i = (Integer) calendarFields.get(key);
             return i.intValue();
         }

@@ -48,7 +48,13 @@ set of links to record, or a set of property files to create links from. </p>
   </tr>
   <tr>
     <td valign="top">link</td>
-    <td valign="top">The name of the link to be created or deleted.</td>
+    <td valign="top">The name of the link to be created or deleted.<br/>
+      <b>Note</b> this attribute is resolved against the current
+      working directory rather than the project's basedir for
+      historical reasons.  It is recommended you always use an
+      absolute path or a path like <code>${basedir}/some-path</code>
+      as its value.
+    </td>
     <td valign="center" align="center" >required for 
     action="single" or "delete". Ignored in other actions.</td>
   </tr>

@@ -51,7 +51,7 @@
           <source>1.4</source>
           <target>1.4</target>
           <includes>
-            <include>org/apache/tools/ant//taskdefs/optional/splash/*</include>
+            <include>org/apache/tools/ant/taskdefs/optional/splash/*</include>
           </includes>
         </configuration>
       </plugin>

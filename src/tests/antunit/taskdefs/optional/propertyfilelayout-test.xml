@@ -26,6 +26,7 @@ foo=bar
 #second comment
 x=1
 ]]></echo>
+    <fixcrlf file="${input}/initial.properties"/>
     <presetdef name="pf">
       <propertyfile file="${output}/created.properties">
         <entry key="foo" value="bar"/>

@@ -86,14 +86,15 @@ public class LeadPipeInputStream extends PipedInputStream {
         try {
             result = super.read();
         } catch (IOException eyeOhEx) {
-            if ("write end dead".equalsIgnoreCase(eyeOhEx.getMessage())) {
+            String msg = eyeOhEx.getMessage();
+            if ("write end dead".equalsIgnoreCase(msg)) {
                 if (super.in > 0 && super.out < super.buffer.length
                     && super.out > super.in) {
                     result = super.buffer[super.out++] & BYTE_MASK;
                 }
             } else {
-                log("error at LeadPipeInputStream.read():  "
-                    + eyeOhEx.getMessage(), Project.MSG_INFO);
+                log("error at LeadPipeInputStream.read():  " + msg,
+                    Project.MSG_INFO);
             }
         }
         return result;

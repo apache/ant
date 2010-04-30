@@ -70,12 +70,12 @@ public class Http extends ProjectComponent implements Condition {
      *               such as "GET", "HEAD", "TRACE", etc. The default
      *               if not specified is "GET".
      *
-     * @see java.net.HttpURLConnection#setRequestMethod()
+     * @see java.net.HttpURLConnection#setRequestMethod
      * @since Ant 1.8.0
      */
     public void setRequestMethod(String method) {
         this.requestMethod = method == null ? DEFAULT_REQUEST_METHOD
-            : method.toUpperCase(Locale.US);
+            : method.toUpperCase(Locale.ENGLISH);
     }
 
     /**

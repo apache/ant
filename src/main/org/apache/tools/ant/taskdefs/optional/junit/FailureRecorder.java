@@ -79,7 +79,8 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     public static final String MAGIC_PROPERTY_CLASS_LOCATION
         = "ant.junit.failureCollector";
 
-    /** Default location and name for the generated JUnit class file. {@value} */
+    /** Default location and name for the generated JUnit class file,
+     *  in the temp directory + FailedTests */
     public static final String DEFAULT_CLASS_LOCATION
         = System.getProperty("java.io.tmpdir") + "FailedTests";
 
@@ -255,9 +256,10 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             createSuiteMethod();
             createClassFooter();
 
-            FileUtils.close(writer);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            FileUtils.close(writer);
         }
     }
 
@@ -365,7 +367,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
          * The SortedMap needs comparable elements.
          * @param other the object to compare to.
          * @return the result of the comparison.
-         * @see java.lang.Comparable#compareTo(T)
+         * @see java.lang.Comparable#compareTo
          * @see SortedSet#comparator()
          */
         public int compareTo(Object other) {

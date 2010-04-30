@@ -279,7 +279,7 @@ public class Property extends Task {
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-        if (!prefix.endsWith(".")) {
+        if (prefix != null && !prefix.endsWith(".")) {
             this.prefix += ".";
         }
     }
@@ -542,7 +542,7 @@ public class Property extends Task {
                                 Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
             // load the xml based property definition
-            // use reflection because of bwc to Java 1.3
+            // use reflection because of bwc to Java 1.4
             try {
                 Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
                                                                   new Class[] {InputStream.class});
@@ -715,7 +715,8 @@ public class Property extends Task {
         new ResolvePropertyMap(
                                getProject(),
                                propertyHelper,
-                               propertyHelper.getExpanders()).resolveAllProperties(props);
+                               propertyHelper.getExpanders())
+            .resolveAllProperties(props, prefix);
     }
 
 }

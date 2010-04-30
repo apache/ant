@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.types.selectors;
 
+import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
@@ -198,4 +199,45 @@ public class SizeSelectorTest extends BaseSelectorTest {
 
     }
 
+    public void testParameterParsingLowerCase() {
+        testCaseInsensitiveParameterParsing("units");
+    }
+
+    public void testParameterParsingUpperCase() {
+        testCaseInsensitiveParameterParsing("UNITS");
+    }
+
+    public void testParameterParsingLowerCaseTurkish() {
+        Locale l = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("tr"));
+            testCaseInsensitiveParameterParsing("units");
+        } finally {
+            Locale.setDefault(l);
+        }
+    }
+
+    public void testParameterParsingUpperCaseTurkish() {
+        Locale l = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("tr"));
+            testCaseInsensitiveParameterParsing("UNITS");
+        } finally {
+            Locale.setDefault(l);
+        }
+    }
+
+    private void testCaseInsensitiveParameterParsing(String name) {
+        SizeSelector s = new SizeSelector();
+        Parameter p = new Parameter();
+        p.setName(name);
+        p.setValue("foo");
+        try {
+            s.setParameters(new Parameter[] {p});
+            fail("should have caused an exception");
+        } catch (BuildException be) {
+            assertEquals("foo is not a legal value for this attribute",
+                         be.getMessage());
+        }
+    }
 }

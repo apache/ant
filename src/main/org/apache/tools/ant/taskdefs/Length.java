@@ -68,6 +68,14 @@ public class Length extends Task implements Condition {
     }
 
     /**
+     * Set the single resource for this task.
+     * @param resource the Resource whose length to retrieve.
+     */
+    public synchronized void setResource(Resource resource) {
+        add(resource);
+    }
+
+    /**
      * Set the single file for this task.
      * @param file the <code>File</code> whose length to retrieve.
      */

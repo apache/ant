@@ -24,29 +24,40 @@
   </properties>
 
 <body>
-	<section name="Ant 1.8.0RC1">
-		<h3>January 12, 2010 - Ant 1.8.0RC1 Available</h3>
+	<section name="Ant 1.8.0">
+		<h3>February 8, 2010 - Ant 1.8.0 Available</h3>
 		<p>
-			Apache Ant 1.8.0RC1 is now available for
+			Apache Ant 1.8.0 is now available for
 			<a href="http://ant.apache.org/bindownload.cgi">download</a>
 			.
 		</p>
 		<ul>
-			<li>a new top level element extension-point allows build files to be
+		    <li>Lexically scoped local properties, i.e. properties that are only
+		        defined inside a target, 
+                sequential block or similar environment.</li>
+            <li>&lt;import&gt; can now import from any file- or URL-providing resource - 
+                this includes &lt;javaresource&gt;.</li>    
+			<li>Various improvements to the directory scanning code that help 
+			with symbolic link cycles (as can be found on MacOS X Java
+			installations for example) and improve scanning performance. 
+			For big directory trees the improvement is 
+            <a href="http://mail-archives.apache.org/mod_mbox/ant-dev/200809.mbox/%3Cy1u4p48li29.fsf@v30161.1blu.de%3E">dramatic</a>.</li>
+            <li>The way developers can extend Ant's property expansion algorithm has been rewritten 
+            (breaking the older API) to be easier to use and be more powerful.
+            </li>
+            <li>a new top level element extension-point allows build files to be
 				extended with custom targets more easily</li>
-			<li>if and unless attributes will be evaluated according to the
-				values of the properties entered
-				if these properties evaluate to true, false, on, off</li>
+			<li>At the same time the if and unless attributes have been rewritten to do the expected 
+            thing if applied to a property expansion (i.e. if="${foo}" will mean "yes, do it" 
+            if ${foo} expands to true, in Ant 1.7.1 it would mean "no" unless a property named 
+           "true" existed). This adds "testing conditions" as a new use-case to property 
+            expansion.</li>
 			<li>Ant now requires Java 1.4 or later</li>
 			<li>new task include provides an alternative to &lt;import> that
 				should be preferred when you don't want to override any targets</li>
 			<li>numerous bug fixes and improvements as documented in Bugzilla
 				and in WHATSNEW</li>
 		</ul>
-		<p>While in open source projects a final release date strongly depends
-		  on the free time of the volunteers/committers, the final release is
-      expected one to two months maximum after this RC. So Ant 1.8.0 is
-      expected between mid February and mid March 2010.</p>
 	</section>
   <section name="Ivy 2.1.0">
     <h3>October 8, 2009 - Apache Ivy 2.1.0 Released</h3>
@@ -88,73 +99,43 @@
         home page</a></p>
   </section>
 
-  <section name="Apache Ivy is an Ant Sub-Project Now!">
-    <h3>October 11, 2007 - Apache Ivy is an Ant Sub-Project Now!</h3>
-
-    <p>Apache Ivy, "A Java based tool for tracking, resolving and
-    managing project dependencies.", just finished <a
-    href="http://incubator.apache.org/">Incubation</a> and has joined
-    the Ant project.  More information will be available from the Ant
-    site soon.</p>
-
-    <p>Until we've finished the migration, you can learn more about
-    Ivy from its <a href="http://incubator.apache.org/ivy/">Incubator
-    website</a>.</p>
-  </section>
-
 
   <section name="Apache Ant">
 
-<p>
-Apache Ant is a Java-based build tool. In theory, it is kind of like
-Make, but without Make's wrinkles.
+    <p>
+		Ant is a Java library and command-line tool.
+		Ant's mission is to drive processes described in build files as targets
+		and extension points dependent upon each other.
+		The main known usage of Ant is the build of Java applications.
+		Ant supplies a number of built-in tasks allowing to compile, assemble,
+		test and run Java applications.
+		Ant can also be used effectively to build non Java applications, for
+		instance C or C++ applications. More generally, Ant can be used to
+		pilot any type of process which can be described in terms of targets
+		and tasks.
+    </p>
+	<p>
+		Ant is written in Java. Users of Ant can develop their own
+		&quot;antlibs&quot; containing Ant tasks and types, and are offered 
+		a large number of ready-made commercial or open-source &quot;antlibs&quot;.
+    </p>
+	<p>
+		Ant is extremely flexible and does not impose coding conventions or
+		directory layouts to the Java projects which adopt it as a build tool.
+	</p>
+	<p>
+		Software development projects looking for a solution combining build tool and
+		dependency management can use Ant in combination with <a href="http://ant.apache.org/ivy/">Ivy</a>.
 </p>
 
-<p>
-Why another build tool when there is already <em>make</em>, <em>gnumake</em>,
-<em>nmake</em>, <em>jam</em>, and
-others? Because all those tools have limitations that Ant's original author
-couldn't live with when developing software across multiple platforms. Make-like
-tools are inherently shell-based -- they evaluate a set of dependencies, then
-execute commands not unlike what you would issue in a shell. This means that you
-can easily extend these tools by using or writing any program for the OS that
-you are working on. However, this also means that you limit yourself to the OS,
-or at least the OS type such as Unix, that you are working on.
-</p>
 
-<p>
-Makefiles are inherently evil as well. Anybody who has worked on them for any
-time has run into the dreaded tab problem. &quot;Is my command not executing
-because I have a space in front of my tab!!!&quot; said the original author of
-Ant way too many times. Tools like Jam took care of this to a great degree, but
-still have yet another format to use and remember.
-</p>
-
-<p>
-Ant is different. Instead of a model where it is extended with shell-based
-commands, Ant is extended using Java classes. Instead of writing shell commands,
-the configuration files are XML-based, calling out a target tree where various
-tasks get executed. Each task is run by an object that implements a particular
-Task interface.
-</p>
-
-<p>
-Granted, this removes some of the expressive power that is inherent by being
-able to construct a shell command such as
-<code>`find . -name foo -exec rm {}`</code>, but it
-gives you the ability to be cross platform -- to work anywhere and everywhere.
-And hey, if you really need to execute a shell command, Ant has an
-<code>&lt;exec&gt;</code> task that
-allows different commands to be executed based on the OS that it is executing
-on.
-</p>
 
   </section>
 
   <section name="Documentation">
 
 <p>
-You can view the documentation for the current release (Apache Ant 1.8.0RC1)
+You can view the documentation for the current release (Apache Ant 1.8.0)
 <a href="manual/index.html">online</a>
 </p>
 

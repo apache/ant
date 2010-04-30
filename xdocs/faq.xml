@@ -62,11 +62,11 @@
         <code>docs.xml</code> at the top level of the ant SVN
         module (trunk) is used to drive Anakia.</p>
 
-        <p>This file assumes that you have the
-        <code>jakarta-site2</code> CVS module checked out as well, but
-        if you follow the instruction from Anakia&apos;s homepage, you
-        should get it to work without that.  Just make sure all
-        required jars are in the task&apos;s classpath.</p>
+        <p>To transform the xml into html, one needs velocity 1.4.
+        The command to run is :</p>
+        <p>
+        <code>ant -Dvelocity.dir=[installation path of velocity] -f docs.xml</code>
+        </p>
       </answer>
     </faq>
 
@@ -222,6 +222,10 @@
             <td>1.7.1</td>
             <td>27 June 2008</td>
           </tr>
+          <tr>
+            <td>1.8.0</td>
+            <td>8 February 2010</td>
+          </tr>
         </table>
       </answer>
     </faq>
@@ -234,7 +238,7 @@
         Ant?</question>
       <answer>
 
-        <p>You will need Java installed on your system, version 1.3 or
+        <p>You will need Java installed on your system, version 1.4 or
           later required, 1.5 or later strongly recommended. The later
           the version of Java, the more Ant tasks you get.</p>
 
@@ -268,7 +272,7 @@
           </tr>
 
           <tr>
-            <td>current svn trunk</td>
+            <td>1.8.0 up to current svn trunk</td>
             <td>1.4</td>
           </tr>
         </table>
@@ -1562,16 +1566,6 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </answer>
     </faq>
 
-    <faq id="javadoc-cannot-execute">
-      <question>JavaDoc failed: java.io.IOException: javadoc: cannot execute</question>
-      <answer>
-        <p>There is a bug in the Solaris reference implementation of
-        the JDK (see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>).
-        This also appears to be true under Linux. Moving the JDK to
-        the front of the PATH fixes the problem.</p>
-      </answer>
-    </faq>
-
     <faq id="delegating-classloader">
       <question>&lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;</question>
@@ -1791,10 +1785,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         dependencies on external libraries.  You can move the
         "offending" jar out of <code>ANT_HOME/lib</code>.  For the
         <code>&lt;junit&gt;</code> task it would be
-        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
-        it would be <code>ant-trax.jar</code>
-        or <code>ant-xslp.jar</code> - 
-        depending on the processor you use.</p>
+        <code>ant-junit.jar</code>.</p>
 
         <p>If you do so, you will have to <code>&lt;taskdef&gt;</code>
         all optional tasks that need the external library and use
@@ -1816,68 +1807,6 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </classpath>
     </taskdef>
 ]]></source>
-      </answer>
-    </faq>
-
-    <faq id="winxp-jdk14-ant14">
-      <question>When running Ant 1.4 on Windows XP and JDK 1.4, I get
-      various errors when trying to <code>&lt;exec&gt;</code>, fork
-      <code>&lt;java&gt;</code> or access environment
-      variables.</question>
-
-      <answer>
-
-        <p>Ant &lt; 1.5 doesn&apos;t recognize Windows XP as a flavor
-        of Windows that runs <code>CMD.EXE</code> instead of
-        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
-        XP is Windows 2000 so the problem doesn&apos;t show up
-        there.</p>
-
-        <p>Apart from upgrading to Ant 1.5 or better, setting the
-        environment variable <code>ANT_OPTS</code> to
-        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
-        been confirmed as a workaround.</p>
-      </answer>
-    </faq>
-
-    <faq id="1.5-cygwin-sh">
-      <question>The <code>ant</code> wrapper script of Ant 1.5 fails
-      for Cygwin if <code>ANT_HOME</code> is set to a Windows style
-      path.</question>
-      <answer>
-
-        <p>This problem has been reported only hours after Ant 1.5 has
-        been released, see <a
-        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
-        10664</a> and all its duplicates.</p>
-
-        <p>A fixed version of the wrapper script can be found <a
-        href="http://ant.apache.org/old-releases/v1.5/errata/">here</a>.
-        Simply replace your script with this version.</p>
-      </answer>
-    </faq>
-
-    <faq id="1.5.2-zip-broken">
-      <question><code>&lt;zip&gt;</code> is broken in Ant 1.5.2.</question>
-      <answer>
-
-        <p>Yes, it is.</p>
-
-        <p>The problem reported by most people - see <a
-        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17648">Bug
-        17648</a> and all its duplicates - is that Ant creates
-        archives that a partially unreadable by WinZIP.  Luckily
-        <code>jar</code> deals with the archives and so the generated
-        jars/wars/ears will most likely work for you anyway.</p>
-
-        <p>There are additional problems, see bugs <a
-        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17780">Bug
-        17780</a>, <a
-        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=17871">Bug
-        17871</a> and <a
-        href="http://issues.apache.org/bugzilla/show_bug.cgi?id=18403">Bug
-        18403</a>.  All of them are supposed to be fixed with Ant
-        1.5.3 (and only 18403 should exist in 1.5.3beta1).</p>
       </answer>
     </faq>
 
@@ -1932,80 +1861,9 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </answer>
     </faq>
 
-    <faq id="java.exception.stacktrace">
-      <question>
-        The program I run via &lt;java&gt; throws an exception but I
-        can't seem to get the full stack trace.
-      </question>
-      <answer>
-        <p>This is a know bug that has been fixed after the release of
-        Ant 1.6.1.</p>
-
-        <p>As a workaround, run your &lt;java&gt; task with
-        <code>fork="true"</code> and Ant will display the full
-        trace.</p>
-      </answer>
-    </faq>
-
-    <faq id="junit-no-runtime-xml">
-      <question>
-        Using format=&quot;xml&quot;, &lt;junit&gt; fails with a
-        <code>NoClassDefFoundError</code> if forked.
-      </question>
-      <answer>
-
-        <p>The XML formatter needs the <a
-        href="http://www.w3.org/DOM/">DOM classes</a> to work.  If you
-        are using JDK 1.4 or later they are included with your Java
-        Runtime and this problem won't occur.  If you are running JDK
-        1.3 or earlier, the DOM classes have to be on your
-        &lt;junit&gt; task's &lt;classpath&gt;.</p>
-
-        <p>Prior to Ant 1.6.0 Ant would include the DOM classes from
-        the XML parser that is used by Ant itself if you set the
-        includeAntRuntime attribute to true (the default).  With Ant
-        1.6.0 this has been changed as this behavior made it
-        impossible to use a different XML parser in your tests.</p>
-
-        <p>This means that you have to take care of the DOM classes
-        explicitly starting with Ant 1.6.0.  If you don't need to set
-        up a different XML parser for your tests, the easiest solution
-        is to add</p>
-
-        <source><![CDATA[
-<pathelement path="${ant.home}/lib/xml-apis.jar:${ant.home}/lib/xercesImpl.jar"/>
-]]></source>
-
-        <p>to your task's &lt;classpath&gt;.</p>
-
-      </answer>
-    </faq>
-
-    <faq id="xalan-jdk1.5">
-      <question>
-        <code>&lt;junitreport&gt;</code> doesn't work with JDK 1.5 but
-        worked fine with JDK 1.4.
-      </question>
-      <answer>
-
-        <p>While JDK 1.4.x contains a version of Xalan-J 2, JDK 1.5
-        (and later?) have <a
-        href="http://java.sun.com/j2se/1.5.0/compatibility.html#4959783">moved
-        to XSLTC</a>.  Since this task uses Xalan's redirect
-        extensions for its internal stylesheet, Ant prior to 1.6.2 didn't support
-        XSLTC.  This means that you have to install <a
-        href="http://xml.apache.org/xalan-j/">Xalan-J 2</a> in order
-        to use this task with JDK 1.5 in older versions of Ant.</p>
-
-        <p>Starting with Ant 1.6.2 <code>&lt;junitreport&gt;</code>
-        supports JDK 1.5.</p>
-
-      </answer>
-    </faq>
-
     <faq id="oom-on-mac">
       <question>
-        Ant runs into an infinite loop/throws an OutOufMemoryError
+        Ant runs into an infinite loop/throws an OutOfMemoryError
         when I compile my project under Mac OS X.
       </question>
 
@@ -2052,6 +1910,54 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         there is another symlink <code>bundle</code> that points to
         the <code>Home</code> directory and will cause infite
         recursions as well.</p>
+      </answer>
+    </faq>
+
+    <faq id="extension-point-and-import">
+      <question><code>extension-point</code> doesn't work
+        with <code>import</code> like the documentation
+        states.</question>
+
+      <answer>
+        <p>Yes, there is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804">bug
+          in Ant 1.8.0</a>.</p>
+
+        <p>When using two build files like</p>
+        <source><![CDATA[
+importing.xml:
+<project>
+   ...
+   <import file="imported.xml"/>
+   <target name="bar" extensionOf="foo"/>
+</project>
+imported.xml:
+<project>
+   <extension-point name="foo"/>
+</project>
+]]></source>
+        <p>Ant 1.8.0 will fail, claiming there was no extension point
+          named "foo".</p>
+
+        <p>This bug has been fixed for Ant 1.8.1.  For Ant 1.8.0 there
+          is
+          a <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=48804#c9">work-around</a>:
+          add an additional layer of importing like in</p>
+        <source><![CDATA[
+importing.xml:
+<project>
+   <target name="bar" extensionOf="foo"/>
+</project>
+imported.xml:
+<project>
+   <extension-point name="foo"/>
+</project>
+build.xml:
+<project>
+   <import file="imported.xml"/>
+   <import file="importing.xml"/>
+</project>
+]]></source>
       </answer>
     </faq>
   </faqsection>

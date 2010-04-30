@@ -20,10 +20,10 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
 // Java
-import java.util.Comparator;
-import java.util.Vector;
-import java.util.Iterator;
 import java.io.File;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Vector;
 
 // Ant
 import org.apache.tools.ant.Project;

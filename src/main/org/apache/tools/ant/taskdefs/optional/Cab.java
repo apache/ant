@@ -179,14 +179,18 @@ public class Cab extends MatchingTask {
         throws IOException {
         File listFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(listFile));
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(listFile));
 
-        int size = files.size();
-        for (int i = 0; i < size; i++) {
-            writer.write('\"' + files.elementAt(i).toString() + '\"');
-            writer.newLine();
+            int size = files.size();
+            for (int i = 0; i < size; i++) {
+                writer.write('\"' + files.elementAt(i).toString() + '\"');
+                writer.newLine();
+            }
+        } finally {
+            FileUtils.close(writer);
         }
-        writer.close();
 
         return listFile;
     }

@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -316,7 +317,8 @@ public class Image extends MatchingTask {
             try {
                 stream = new FileOutputStream(newFile);
 
-                JAI.create("encode", image, stream, str_encoding.toUpperCase(),
+                JAI.create("encode", image, stream,
+                           str_encoding.toUpperCase(Locale.ENGLISH),
                            null);
                 stream.flush();
             } finally {
@@ -406,9 +408,9 @@ public class Image extends MatchingTask {
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
         }
-        if (str_encoding.toLowerCase().equals("jpg")) {
+        if (str_encoding.equalsIgnoreCase("jpg")) {
             str_encoding = "JPEG";
-        } else if (str_encoding.toLowerCase().equals("tif")) {
+        } else if (str_encoding.equalsIgnoreCase("tif")) {
             str_encoding = "TIFF";
         }
     }

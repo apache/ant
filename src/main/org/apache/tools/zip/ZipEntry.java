@@ -18,12 +18,31 @@
 
 package org.apache.tools.zip;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.zip.ZipException;
 
 /**
  * Extension that adds better handling of extra fields and provides
  * access to the internal and external file attributes.
+ *
+ * <p>The extra data is expected to follow the recommendation of
+ * {@link http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+ * APPNOTE.txt}:</p>
+ * <ul>
+ *   <li>the extra byte array consists of a sequence of extra fields</li>
+ *   <li>each extra fields starts by a two byte header id followed by
+ *   a two byte sequence holding the length of the remainder of
+ *   data.</li>
+ * </ul>
+ *
+ * <p>Any extra data that cannot be parsed by the rules above will be
+ * consumed as "unparseable" extra data and treated differently by the
+ * methods of this class.  Versions prior to Apache Commons Compress
+ * 1.1 would have thrown an exception if any attempt was made to read
+ * or write extra data not conforming to the recommendation.</p>
  *
  */
 public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
@@ -37,6 +56,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     private int platform = PLATFORM_FAT;
     private long externalAttributes = 0;
     private LinkedHashMap/*<ZipShort, ZipExtraField>*/ extraFields = null;
+    private UnparseableExtraFieldData unparseableExtra = null;
     private String name = null;
 
     /**
@@ -58,7 +78,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         super(entry);
         byte[] extra = entry.getExtra();
         if (extra != null) {
-            setExtraFields(ExtraFieldUtils.parse(extra));
+            setExtraFields(ExtraFieldUtils.parse(extra, true,
+                                                 ExtraFieldUtils
+                                                 .UnparseableExtraField.READ));
         } else {
             // initializes extra data to an empty byte array
             setExtra();
@@ -75,7 +97,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         this((java.util.zip.ZipEntry) entry);
         setInternalAttributes(entry.getInternalAttributes());
         setExternalAttributes(entry.getExternalAttributes());
-        setExtraFields(entry.getExtraFields());
+        setExtraFields(entry.getExtraFields(true));
     }
 
     /**
@@ -93,10 +115,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     public Object clone() {
         ZipEntry e = (ZipEntry) super.clone();
 
-        e.extraFields = extraFields != null ? (LinkedHashMap) extraFields.clone() : null;
         e.setInternalAttributes(getInternalAttributes());
         e.setExternalAttributes(getExternalAttributes());
-        e.setExtraFields(getExtraFields());
+        e.setExtraFields(getExtraFields(true));
         return e;
     }
 
@@ -194,26 +215,46 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     public void setExtraFields(ZipExtraField[] fields) {
         extraFields = new LinkedHashMap();
         for (int i = 0; i < fields.length; i++) {
-            extraFields.put(fields[i].getHeaderId(), fields[i]);
+            if (fields[i] instanceof UnparseableExtraFieldData) {
+                unparseableExtra = (UnparseableExtraFieldData) fields[i];
+            } else {
+                extraFields.put(fields[i].getHeaderId(), fields[i]);
+            }
         }
         setExtra();
     }
 
     /**
-     * Retrieves extra fields.
+     * Retrieves all extra fields that have been parsed successfully.
      * @return an array of the extra fields
-     * @since 1.1
      */
     public ZipExtraField[] getExtraFields() {
-        if (extraFields == null) {
-            return new ZipExtraField[0];
-        }
-        ZipExtraField[] result = new ZipExtraField[extraFields.size()];
-        return (ZipExtraField[]) extraFields.values().toArray(result);
+        return getExtraFields(false);
     }
 
     /**
-     * Adds an extra fields - replacing an already present extra field
+     * Retrieves extra fields.
+     * @param includeUnparseable whether to also return unparseable
+     * extra fields as {@link UnparseableExtraFieldData} if such data
+     * exists.
+     * @return an array of the extra fields
+     * @since 1.1
+     */
+    public ZipExtraField[] getExtraFields(boolean includeUnparseable) {
+        if (extraFields == null) {
+            return !includeUnparseable || unparseableExtra == null
+                ? new ZipExtraField[0]
+                : new ZipExtraField[] { unparseableExtra };
+        }
+        List result = new ArrayList(extraFields.values());
+        if (includeUnparseable && unparseableExtra != null) {
+            result.add(unparseableExtra);
+        }
+        return (ZipExtraField[]) result.toArray(new ZipExtraField[0]);
+    }
+
+    /**
+     * Adds an extra field - replacing an already present extra field
      * of the same type.
      *
      * <p>If no extra field of the same type exists, the field will be
@@ -222,15 +263,19 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void addExtraField(ZipExtraField ze) {
-        if (extraFields == null) {
-            extraFields = new LinkedHashMap();
+        if (ze instanceof UnparseableExtraFieldData) {
+            unparseableExtra = (UnparseableExtraFieldData) ze;
+        } else {
+            if (extraFields == null) {
+                extraFields = new LinkedHashMap();
+            }
+            extraFields.put(ze.getHeaderId(), ze);
         }
-        extraFields.put(ze.getHeaderId(), ze);
         setExtra();
     }
 
     /**
-     * Adds an extra fields - replacing an already present extra field
+     * Adds an extra field - replacing an already present extra field
      * of the same type.
      *
      * <p>The new extra field will be the first one.</p>
@@ -238,18 +283,22 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void addAsFirstExtraField(ZipExtraField ze) {
-        LinkedHashMap copy = extraFields;
-        extraFields = new LinkedHashMap();
-        extraFields.put(ze.getHeaderId(), ze);
-        if (copy != null) {
-            copy.remove(ze.getHeaderId());
-            extraFields.putAll(copy);
+        if (ze instanceof UnparseableExtraFieldData) {
+            unparseableExtra = (UnparseableExtraFieldData) ze;
+        } else {
+            LinkedHashMap copy = extraFields;
+            extraFields = new LinkedHashMap();
+            extraFields.put(ze.getHeaderId(), ze);
+            if (copy != null) {
+                copy.remove(ze.getHeaderId());
+                extraFields.putAll(copy);
+            }
         }
         setExtra();
     }
 
     /**
-     * Remove an extra fields.
+     * Remove an extra field.
      * @param type the type of extra field to remove
      * @since 1.1
      */
@@ -260,6 +309,17 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         if (extraFields.remove(type) == null) {
             throw new java.util.NoSuchElementException();
         }
+        setExtra();
+    }
+
+    /**
+     * Removes unparseable extra field data.
+     */
+    public void removeUnparseableExtraFieldData() {
+        if (unparseableExtra == null) {
+            throw new java.util.NoSuchElementException();
+        }
+        unparseableExtra = null;
         setExtra();
     }
 
@@ -276,7 +336,18 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
-     * Throws an Exception if extra data cannot be parsed into extra fields.
+     * Looks up extra field data that couldn't be parsed correctly.
+     *
+     * @return null if no such field exists.
+     */
+    public UnparseableExtraFieldData getUnparseableExtraFieldData() {
+        return unparseableExtra;
+    }
+
+    /**
+     * Parses the given bytes as extra field data and consumes any
+     * unparseable data as an {@link UnparseableExtraFieldData}
+     * instance.
      * @param extra an array of bytes to be parsed into extra fields
      * @throws RuntimeException if the bytes cannot be parsed
      * @since 1.1
@@ -284,10 +355,14 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void setExtra(byte[] extra) throws RuntimeException {
         try {
-            ZipExtraField[] local = ExtraFieldUtils.parse(extra, true);
+            ZipExtraField[] local =
+                ExtraFieldUtils.parse(extra, true,
+                                      ExtraFieldUtils.UnparseableExtraField.READ);
             mergeExtraFields(local, true);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            // actually this is not be possible as of Ant 1.8.1
+            throw new RuntimeException("Error parsing extra fields for entry: "
+                                       + getName() + " - " + e.getMessage(), e);
         }
     }
 
@@ -300,7 +375,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     protected void setExtra() {
-        super.setExtra(ExtraFieldUtils.mergeLocalFileDataData(getExtraFields()));
+        super.setExtra(ExtraFieldUtils.mergeLocalFileDataData(getExtraFields(true)));
     }
 
     /**
@@ -308,7 +383,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void setCentralDirectoryExtra(byte[] b) {
         try {
-            ZipExtraField[] central = ExtraFieldUtils.parse(b, false);
+            ZipExtraField[] central =
+                ExtraFieldUtils.parse(b, false,
+                                      ExtraFieldUtils.UnparseableExtraField.READ);
             mergeExtraFields(central, false);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -331,7 +408,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public byte[] getCentralDirectoryExtra() {
-        return ExtraFieldUtils.mergeCentralDirectoryData(getExtraFields());
+        return ExtraFieldUtils.mergeCentralDirectoryData(getExtraFields(true));
     }
 
     /**
@@ -413,7 +490,12 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             setExtraFields(f);
         } else {
             for (int i = 0; i < f.length; i++) {
-                ZipExtraField existing = getExtraField(f[i].getHeaderId());
+                ZipExtraField existing;
+                if (f[i] instanceof UnparseableExtraFieldData) {
+                    existing = unparseableExtra;
+                } else {
+                    existing = getExtraField(f[i].getHeaderId());
+                }
                 if (existing == null) {
                     addExtraField(f[i]);
                 } else {

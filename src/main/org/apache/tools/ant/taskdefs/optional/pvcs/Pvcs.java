@@ -38,6 +38,7 @@ import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  *
@@ -205,7 +206,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                                     new LogOutputStream(this,
                                                         Project.MSG_WARN)));
             } finally {
-                fos.close();
+                FileUtils.close(fos);
             }
 
             if (Execute.isFailure(result) && !ignorerc) {
@@ -340,9 +341,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 line = in.readLine();
             }
         } finally {
-            if (in != null) {
-                in.close();
-            }
+            FileUtils.close(in);
         }
     }
 
@@ -366,12 +365,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 outWriter.newLine();
             }
         } finally {
-            if (inReader != null) {
-                inReader.close();
-            }
-            if (outWriter != null) {
-                outWriter.close();
-            }
+            FileUtils.close(inReader);
+            FileUtils.close(outWriter);
         }
     }
 

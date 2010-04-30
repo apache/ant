@@ -27,12 +27,19 @@
     <homepage rdf:resource="http://ant.apache.org" />
     <asfext:pmc rdf:resource="http://ant.apache.org" />
     <shortdesc>Java-based build tool</shortdesc>
-    <description>Apache Ant is a Java-based build tool. In theory, it is kind of like Make, but without Make's wrinkles.</description>
+    <description>Apache Ant is a Java-based build tool.</description>
     <bug-database rdf:resource="http://issues.apache.org/bugzilla/buglist.cgi?product=Ant" />
     <mailing-list rdf:resource="http://ant.apache.org/mail.html" />
     <download-page rdf:resource="http://ant.apache.org/bindownload.cgi" />
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/build-management" />
+    <release>
+      <Version>
+        <name>Apache Ant 1.8.0</name>
+        <created>2010-02-08</created>
+        <revision>1.8.0</revision>
+      </Version>
+    </release>
     <release>
       <Version>
         <name>Apache Ant 1.7.1</name>
@@ -50,7 +57,7 @@
     <repository>
       <SVNRepository>
         <location rdf:resource="http://svn.apache.org/repos/asf/ant"/>
-        <browse rdf:resource="http://svn.apache.org/viewcvs.cgi/ant"/>
+        <browse rdf:resource="http://svn.apache.org/viewvc/ant"/>
       </SVNRepository>
     </repository>
   </Project>

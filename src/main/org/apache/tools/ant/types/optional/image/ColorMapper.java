@@ -69,33 +69,31 @@ public final class ColorMapper {
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
     public static Color getColorByName(String colorName) {
-        colorName = colorName.toLowerCase();
-
-        if (colorName.equals(COLOR_BLACK)) {
+        if (colorName.equalsIgnoreCase(COLOR_BLACK)) {
             return Color.black;
-        } else if (colorName.equals(COLOR_BLUE)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_BLUE)) {
             return Color.blue;
-        } else if (colorName.equals(COLOR_CYAN)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_CYAN)) {
             return Color.cyan;
-        } else if (colorName.equals(COLOR_DARKGRAY) || colorName.equals(COLOR_DARKGREY)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_DARKGRAY) || colorName.equalsIgnoreCase(COLOR_DARKGREY)) {
             return Color.darkGray;
-        } else if (colorName.equals(COLOR_GRAY) || colorName.equals(COLOR_GREY)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_GRAY) || colorName.equalsIgnoreCase(COLOR_GREY)) {
             return Color.gray;
-        } else if (colorName.equals(COLOR_LIGHTGRAY) || colorName.equals(COLOR_LIGHTGREY)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_LIGHTGRAY) || colorName.equalsIgnoreCase(COLOR_LIGHTGREY)) {
             return Color.lightGray;
-        } else if (colorName.equals(COLOR_GREEN)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_GREEN)) {
             return Color.green;
-        } else if (colorName.equals(COLOR_MAGENTA)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_MAGENTA)) {
             return Color.magenta;
-        } else if (colorName.equals(COLOR_ORANGE)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_ORANGE)) {
             return Color.orange;
-        } else if (colorName.equals(COLOR_PINK)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_PINK)) {
             return Color.pink;
-        } else if (colorName.equals(COLOR_RED)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_RED)) {
             return Color.red;
-        } else if (colorName.equals(COLOR_WHITE)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_WHITE)) {
             return Color.white;
-        } else if (colorName.equals(COLOR_YELLOW)) {
+        } else if (colorName.equalsIgnoreCase(COLOR_YELLOW)) {
             return Color.yellow;
         }
         return Color.black;

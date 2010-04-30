@@ -24,7 +24,7 @@ package org.apache.tools.ant.input;
  * @since Ant 1.5
  */
 public class InputRequest {
-    private String prompt;
+    private final String prompt;
     private String input;
     private String defaultValue;
 

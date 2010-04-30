@@ -306,8 +306,8 @@ public abstract class ScriptRunnerBase {
         project = component.getProject();
         addBeans(project.getProperties());
         addBeans(project.getUserProperties());
-        addBeans(project.getTargets());
-        addBeans(project.getReferences());
+        addBeans(project.getCopyOfTargets());
+        addBeans(project.getCopyOfReferences());
         addBean("project", project);
         addBean("self", component);
     }

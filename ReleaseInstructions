@@ -105,16 +105,30 @@ Note: This document was updated in the context of releasing Ant 1.7.
     on the branch. It is important that this be a clean build. Label this with
     a tag ANT_170_B1.
 
+    The file release.sh gives an idea of how to do this build process,
+    currently in two steps, one with JDK 1.4 and one with JDK 1.5
+
     C:\dev\asf\ant-core>
     svn copy https://svn.apache.org/repos/asf/ant/core/trunk \
     https://svn.apache.org/repos/asf/ant/core/tags/ANT_170_B1 \
     -m "Tagging version 1.7.0Beta1 of Ant"
 
-    Revision 437509 ?\195?\188bertragen.
+    Revision 437509 Uebertragen.
 
 9.  Sign the distribution files using the following simple script
+
+    @TODO : document using commons-openpgp to sign the artefacts,
+    change the build file to do this
+ 
     #!/bin/sh
+    # signing the various source and binary archives of the entire distribution
     for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
+    do
+         echo "Signing " $i
+         gpg -a -b --force-v3-sigs $i
+    done
+    # signing the maven artefacts
+    for i in `/usr/bin/find java-repository \( -name "*.pom" -o -name  "*.jar" \)`
     do
          echo "Signing " $i
          gpg -a -b --force-v3-sigs $i
@@ -215,13 +229,16 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
       from distribution
       to   /www/www.apache.org/dist/ant/[source|binaries].
+
       
       and 
 
-      from java-repository/org.apache.ant
-      to   /www/people.apache.org/repo/m1-ibiblio-rsync-repository/org.apache.ant
+      from java-repository/org/apache/ant
 
-      this can be done using the target upload of the build.xml
+      to  
+
+      /www/people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/ant
+      
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
 

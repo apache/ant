@@ -230,4 +230,11 @@
     </au:assertTrue>
   </target>
 
+  <target name="testResourceAttribute">
+    <string id="s" value="foo-bar-baz" />
+    <au:assertTrue>
+      <length length="11" resource="${ant.refid:s}" />
+    </au:assertTrue>
+  </target>
+
 </project>

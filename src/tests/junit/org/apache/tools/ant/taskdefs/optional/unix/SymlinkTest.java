@@ -254,15 +254,18 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
-            //apparently OS X knows a symlink is a symlink even if the target is missing:
-            boolean mac = Os.isFamily(Os.FAMILY_MAC);
-
+            // it is not possible to find out that symbolic links pointing
+            // to inexistent files or directories are symbolic links
+            // it used to be possible to detect this on Mac
+            // this is not true under Snow Leopard and JDK 1.5
+            // Removing special handling of MacOS until someone shouts
+            // Antoine
             f = getProject().resolveFile("test-working/file.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == mac);
-            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == mac);
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == false);
+            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == false);
             assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
             assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
@@ -271,8 +274,8 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
-            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == mac);
-            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == mac);
+            assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == false);
+            assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == false);
             assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
             assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));

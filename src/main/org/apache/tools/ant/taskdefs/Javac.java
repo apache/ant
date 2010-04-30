@@ -679,7 +679,7 @@ public class Javac extends MatchingTask {
      * @return true if this is a forked invocation
      */
     public boolean isForkedJavac() {
-        return fork || "extJavac".equals(getCompiler());
+        return fork || EXTJAVAC.equalsIgnoreCase(getCompiler());
     }
 
     /**
@@ -777,7 +777,7 @@ public class Javac extends MatchingTask {
                 return nextSelected;
             }
         }
-        if (CLASSIC.equals(anImplementation)) {
+        if (CLASSIC.equalsIgnoreCase(anImplementation)) {
             return assumedJavaVersion();
         }
         if (EXTJAVAC.equalsIgnoreCase(anImplementation)) {
@@ -1007,7 +1007,7 @@ public class Javac extends MatchingTask {
         String compilerImpl = getCompilerVersion();
         if (fork) {
             if (isJdkCompiler(compilerImpl)) {
-                compilerImpl = "extJavac";
+                compilerImpl = EXTJAVAC;
             } else {
                 log("Since compiler setting isn't classic or modern, "
                     + "ignoring fork setting.", Project.MSG_WARN);

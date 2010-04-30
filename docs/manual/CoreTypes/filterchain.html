@@ -1545,4 +1545,118 @@ This may be used as follows:
   &lt;/copy&gt;
 </pre></blockquote>
 
+
+<h3><a name="sortfilter">SortFilter</a></h3>
+  <p><em>since Ant 1.8.0</em></p>
+
+<p>The sort filter reads all lines and sorts them.  The sort order can
+  be reversed and it is possible to specify a custom implementation of
+  the <code>java.util.Comparator</code> interface to get even more
+  control.</p>
+
+<table cellSpacing=0 cellPadding=2 border=1>
+  <tr>
+    <td vAlign=top><b>Parameter Name</b></td>
+    <td vAlign=top><b>Parameter Value</b></td>
+    <td vAlign=top align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td vAlign=top>reverse</td>
+    <td vAlign=top align="center">whether to reverse the sort order,
+      defaults to false.  <b>Note:</b> this parameter is ignored if
+      the comparator parameter is present as well.</td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+  <tr>
+    <td vAlign=top>comparator</td>
+    <td vAlign=top align="center">Class name of a class that
+      implements <code>java.util.Comparator</code> for Strings.  This
+      class will be used to determine the sort order of lines.</td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+</table>
+
+<p>This filter is also available using the
+  name <code>sortfilter</code>.  The <code>reverse</code> parameter
+  becomes an attribute, <code>comparator</code> can be specified by
+  using a nested element.</p>
+
+<h4>Examples:</h4>
+
+<blockquote><pre>
+  &lt;copy todir=&quot;build&quot;&gt;
+      &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
+      &lt;filterchain&gt;
+          &lt;sortfilter/&gt;
+      &lt;/filterchain&gt;
+  &lt;/copy&gt;
+</pre></blockquote>
+
+<p>
+Sort all files <code>*.txt</code> from <i>src</i> location
+into <i>build</i> location. The lines of each file are sorted in
+ascendant order comparing the lines via the
+<code>String.compareTo(Object o)</code> method.
+</p>
+
+<blockquote><pre>
+  &lt;copy todir=&quot;build&quot;&gt;
+      &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
+      &lt;filterchain&gt;
+          &lt;sortfilter reverse=&quot;true&quot;/&gt;
+      &lt;/filterchain&gt;
+  &lt;/copy&gt;
+</pre></blockquote>
+
+<p>
+Sort all files <code>*.txt</code> from <i>src</i> location into reverse
+order and copy them into <i>build</i> location.
+</p>
+
+<blockquote><pre>
+  &lt;copy todir=&quot;build&quot;&gt;
+      &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
+      &lt;filterchain&gt;
+          &lt;filterreader classname=&quot;org.apache.tools.ant.filters.SortFilter&quot;&gt;
+            &lt;param name=&quot;comparator&quot; value=&quot;org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
+          &lt;/filterreader&gt;
+      &lt;/filterchain&gt;
+  &lt;/copy&gt;
+</pre></blockquote>
+
+<p>
+Sort all files <code>*.txt</code> from <i>src</i> location using as
+sorting criterium <code>EvenFirstCmp</code> class, that sorts the file
+lines putting even lines first then odd lines for example. The modified files
+are copied into <i>build</i> location. The <code>EventFirstCmp</code>,
+has to an instanciable class via <code>Class.newInstance()</code>,
+therefore in case of inner class has to be <em>static</em>. It also has to
+implement <code>java.util.Comparator</code> interface, for example:
+</p>
+
+<pre>
+        package org.apache.tools.ant.filters;
+        ...(omitted)
+          public final class EvenFirstCmp implements &lt;b&gt;Comparator&lt;/b&gt; {
+            public int compare(Object o1, Object o2) {
+            ...(omitted)
+            }
+          }
+</pre>
+
+<p>The example above is equivalent to:</p>
+
+<blockquote><pre>
+  &lt;componentdef name="evenfirst"
+                classname="org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
+  &lt;copy todir=&quot;build&quot;&gt;
+      &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
+      &lt;filterchain&gt;
+          &lt;sortfilter&gt;
+              &lt;evenfirst/&gt;
+          &lt;/sortfilter&gt;
+      &lt;/filterchain&gt;
+  &lt;/copy&gt;
+</pre></blockquote>
+
 </body></html>

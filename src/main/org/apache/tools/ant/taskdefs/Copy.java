@@ -66,6 +66,9 @@ import org.apache.tools.ant.util.FlatFileNameMapper;
  * @ant.task category="filesystem"
  */
 public class Copy extends Task {
+    private static final String MSG_WHEN_COPYING_EMPTY_RC_TO_FILE =
+        "Cannot perform operation from directory to file.";
+
     static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
     // CheckStyle:VisibilityModifier OFF - bc
@@ -395,10 +398,22 @@ public class Copy extends Task {
             // will be removed in validateAttributes
             savedRc = (ResourceCollection) rcs.elementAt(0);
         }
-        // make sure we don't have an illegal set of options
-        validateAttributes();
 
         try {
+            // make sure we don't have an illegal set of options
+            try {
+                validateAttributes();
+            } catch (BuildException e) {
+                if (failonerror
+                    || !getMessage(e)
+                    .equals(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE)) {
+                    throw e;
+                } else {
+                    log("Warning: " + getMessage(e), Project.MSG_ERR);
+                    return;
+                }
+            }
+
             // deal with the single file
             copySingleFile();
 
@@ -631,8 +646,7 @@ public class Copy extends Task {
                                              + " files.");
                 }
                 if (rc.size() == 0) {
-                    throw new BuildException(
-                        "Cannot perform operation from directory to file.");
+                    throw new BuildException(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE);
                 } else if (rc.size() == 1) {
                     Resource res = (Resource) rc.iterator().next();
                     FileProvider r = (FileProvider) res.as(FileProvider.class);
