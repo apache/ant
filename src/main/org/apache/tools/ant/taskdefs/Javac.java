@@ -807,7 +807,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * The property to set on compliation success.
+     * The property to set on compilation success.
      * This property will not be set if the compilation
      * fails, or if there are no files to compile.
      * @param updatedProperty the property name to use.
@@ -818,7 +818,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * The property to set on compliation failure.
+     * The property to set on compilation failure.
      * This property will be set if the compilation
      * fails.
      * @param errorProperty the property name to use.
