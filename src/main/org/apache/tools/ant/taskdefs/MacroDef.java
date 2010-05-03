@@ -339,7 +339,7 @@ public class MacroDef extends AntlibDefinition  {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name.toLowerCase(Locale.US);
+            this.name = name.toLowerCase(Locale.ENGLISH);
         }
 
         /**
@@ -443,7 +443,7 @@ public class MacroDef extends AntlibDefinition  {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name.toLowerCase(Locale.US);
+            this.name = name.toLowerCase(Locale.ENGLISH);
         }
 
         /**
@@ -567,7 +567,7 @@ public class MacroDef extends AntlibDefinition  {
                 throw new BuildException(
                     "Illegal name [" + name + "] for macro element");
             }
-            this.name = name.toLowerCase(Locale.US);
+            this.name = name.toLowerCase(Locale.ENGLISH);
         }
 
         /**

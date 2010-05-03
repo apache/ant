@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
@@ -61,9 +60,6 @@ public class War extends Jar {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     /** path to web.xml file */
     private static final String XML_DESCRIPTOR_PATH = "WEB-INF/web.xml";
-    /** lower case version for comparisons */
-    private static final String XML_DESCRIPTOR_PATH_LC =
-            XML_DESCRIPTOR_PATH.toLowerCase(Locale.ENGLISH);
 
     /** Constructor for the War Task. */
     public War() {
@@ -178,10 +174,9 @@ public class War extends Jar {
         // not the one specified in the "webxml" attribute - or if
         // it's being added twice, meaning the same file is specified
         // by the "webxml" attribute and in a <fileset> element.
-        String vPathLowerCase = vPath.toLowerCase(Locale.ENGLISH);
         //by default, we add the file.
         boolean addFile = true;
-        if (XML_DESCRIPTOR_PATH_LC.equals(vPathLowerCase)) {
+        if (XML_DESCRIPTOR_PATH.equalsIgnoreCase(vPath)) {
             //a web.xml file was found. See if it is a duplicate or not
             if (addedWebXmlFile != null) {
                 //a second web.xml file, so skip it

@@ -158,13 +158,6 @@ Set -Ddest=LOCATION on the command line
    we like to get the more recent artifacts than are in the repo at the time of writing (2006-12-21)
    -->
 
-  <target name="xerces"
-      description="load an updated version of Xerces"
-      depends="init">
-    <f2 project="xerces" archive="xercesImpl"/>
-    <f2 project="xerces" archive="xml-apis" />
-  </target>
-
   <target name="networking"
     description="load networking libraries (commons-net; jsch)"
     depends="init">

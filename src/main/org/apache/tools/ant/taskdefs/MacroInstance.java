@@ -127,7 +127,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         for (Iterator i = unknownElements.iterator(); i.hasNext();) {
             UnknownElement ue = (UnknownElement) i.next();
             String name = ProjectHelper.extractNameFromComponentName(
-                ue.getTag()).toLowerCase(Locale.US);
+                ue.getTag()).toLowerCase(Locale.ENGLISH);
             if (getNsElements().get(name) == null) {
                 throw new BuildException("unsupported element " + name);
             }
@@ -199,7 +199,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 case STATE_EXPECT_NAME:
                     if (ch == '}') {
                         state = STATE_NORMAL;
-                        String name = macroName.toString().toLowerCase(Locale.US);
+                        String name = macroName.toString().toLowerCase(Locale.ENGLISH);
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
                             ret.append("@{");
@@ -278,7 +278,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
             String tag = unknownElement.getTaskType();
             if (tag != null) {
-                tag = tag.toLowerCase(Locale.US);
+                tag = tag.toLowerCase(Locale.ENGLISH);
             }
             MacroDef.TemplateElement templateElement =
                 (MacroDef.TemplateElement) getNsElements().get(tag);

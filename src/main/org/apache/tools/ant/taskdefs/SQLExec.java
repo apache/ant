@@ -1072,7 +1072,7 @@ public class SQLExec extends JDBCTask {
             // no match
             return -1;
         } else {
-            String d = delimiter.trim().toLowerCase(Locale.US);
+            String d = delimiter.trim().toLowerCase(Locale.ENGLISH);
             if (delimiterType.equals(DelimiterType.NORMAL)) {
                 // still trying to avoid wasteful copying, see
                 // StringUtils.endsWith
@@ -1087,7 +1087,7 @@ public class SQLExec extends JDBCTask {
                 }
                 while (endIndex >= 0) {
                     if (buf.substring(bufferIndex, bufferIndex + 1)
-                        .toLowerCase(Locale.US).charAt(0)
+                        .toLowerCase(Locale.ENGLISH).charAt(0)
                         != d.charAt(endIndex)) {
                         return -1;
                     }
@@ -1096,7 +1096,7 @@ public class SQLExec extends JDBCTask {
                 }
                 return bufferIndex + 1;
             } else {
-                return currentLine.trim().toLowerCase(Locale.US).equals(d)
+                return currentLine.trim().toLowerCase(Locale.ENGLISH).equals(d)
                     ? buf.length() - currentLine.length() : -1;
             }
         }

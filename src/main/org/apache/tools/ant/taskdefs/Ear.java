@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -125,9 +124,8 @@ public class Ear extends Jar {
         // attribute - or if it's being added twice, meaning the same
         // file is specified by the "appxml" attribute and in a
         // <fileset> element.
-        String vPathLowerCase = vPath.toLowerCase(Locale.ENGLISH);
-        if (XML_DESCRIPTOR_PATH.equals(vPathLowerCase))  {
-            if (deploymentDescriptor != null
+        if (XML_DESCRIPTOR_PATH.equalsIgnoreCase(vPath))  {
+            if (deploymentDescriptor == null
                 || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 logWhenWriting("Warning: selected " + archiveType

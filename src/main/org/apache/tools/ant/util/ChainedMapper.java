@@ -24,10 +24,10 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
- * A <CODE>ContainerMapper</CODE> that chains the results of the first
- * nested <CODE>FileNameMapper</CODE>s into sourcefiles for the second,
+ * A <code>ContainerMapper</code> that chains the results of the first
+ * nested <code>FileNameMapper</code>s into sourcefiles for the second,
  * the second to the third, and so on, returning the resulting mapped
- * filenames from the last nested <CODE>FileNameMapper</CODE>.
+ * filenames from the last nested <code>FileNameMapper</code>.
  */
 public class ChainedMapper extends ContainerMapper {
 

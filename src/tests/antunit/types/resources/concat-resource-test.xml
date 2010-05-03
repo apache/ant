@@ -125,4 +125,18 @@ baz
       </and>
     </au:assertTrue>
   </target>
+
+  <target name="testNonexistent">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foobar</string>
+        <concat>
+          <string>foo</string>
+          <propertyresource name="someunsetproperty" />
+          <string>bar</string>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
 </project>

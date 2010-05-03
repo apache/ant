@@ -249,7 +249,8 @@ public class Jar extends Zip {
      * jars on Java 1.4 or earlier Ant will not include META-INF
      * unless explicitly asked to.</p>
      *
-     * @see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">
+     * jar -i omits service providers in index.list</a>
      * @since Ant 1.8.0
      * @param flag a <code>boolean</code> value, defaults to false
      */
@@ -812,7 +813,15 @@ public class Jar extends Zip {
             // manifest this means we claim an update was needed and
             // only include the manifests, skipping any uptodate
             // checks here defering them for the second run
-            return new ArchiveState(true, grabManifests(rcs));
+            Resource[][] manifests = grabManifests(rcs);
+            int count = 0;
+            for (int i = 0; i < manifests.length; i++) {
+                count += manifests[i].length;
+            }
+            log("found a total of " + count + " manifests in "
+                + manifests.length + " resource collections",
+                Project.MSG_VERBOSE);
+            return new ArchiveState(true, manifests);
         }
 
         // need to handle manifest as a special check
@@ -1166,7 +1175,8 @@ public class Jar extends Zip {
                     });
             }
             for (int j = 0; j < resources[0].length; j++) {
-                if (resources[0][j].getName().equalsIgnoreCase(MANIFEST_NAME)) {
+                String name = resources[0][j].getName().replace('\\', '/');
+                if (name.equalsIgnoreCase(MANIFEST_NAME)) {
                     manifests[i] = new Resource[] {resources[0][j]};
                     break;
                 }

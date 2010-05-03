@@ -334,7 +334,11 @@
     another location. The rules for determining difference between
     the two files are as follows:
     <ol>
-    <li> If there is no 'other' file, it's different.
+    <li>If a file is only present in the resource collection you apply
+      the selector to but not in targetdir (or after applying the
+      mapper) the file is selected.
+    <li>If a file is only present in targetdir (or after applying the
+      mapper) it is ignored.
     <li> Files with different lengths are different.
     <li> If <tt>ignoreFileTimes</tt> is turned off, then differing file
     timestamps will cause files to be regarded as different.

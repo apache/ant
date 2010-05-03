@@ -183,10 +183,7 @@ elements</a>).</p>
     <td valign="top">includeantruntime</td>
     <td valign="top">Implicitly add the Ant classes required to run
       the tests and JUnit to the classpath in forked mode.
-      <b>Note:</b> Please read the <a
-      href="../../faq.html#junit-no-runtime-xml">Ant FAQ</a> if you
-      want to set this to <code>false</code> and use the XML formatter
-      at the same time.</td>
+    </td>
     <td align="center" valign="top">No; default is <code>true</code>.</td>
   </tr>
   <tr>
@@ -378,12 +375,6 @@ methods and creates a new <code>TestCase</code> which delegates only these
 failing methods. The name and the location can be specified via Java System property or Ant property
 <code>ant.junit.failureCollector</code>. The value has to point to the directory and 
 the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir</i>/FailedTests.</p>
-
-<p><b>Note:</b> Please read the <a
-href="../../faq.html#junit-no-runtime-xml">Ant FAQ</a> if you want to
-set the fork attribute to <code>true</code>, the includeAntRuntime
-attribute to <code>false</code> and use the XML formatter at the same
-time.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>

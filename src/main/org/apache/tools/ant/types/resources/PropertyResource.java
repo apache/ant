@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.ByteArrayInputStream;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.PropertyOutputStream;
 
@@ -64,8 +65,24 @@ public class PropertyResource extends Resource {
      * @return the value of the specified Property.
      */
     public String getValue() {
+        if (isReference()) {
+            return ((PropertyResource) getCheckedRef()).getValue();
+        }
         Project p = getProject();
         return p == null ? null : p.getProperty(getName());
+    }
+
+    /**
+     * Get the Object value of this PropertyResource.
+     * @return the Object value of the specified Property.
+     * @since Ant 1.8.1
+     */
+    public Object getObjectValue() {
+        if (isReference()) {
+            return ((PropertyResource) getCheckedRef()).getObjectValue();
+        }
+        Project p = getProject();
+        return p == null ? null : PropertyHelper.getProperty(p, getName());
     }
 
     /**
@@ -73,7 +90,10 @@ public class PropertyResource extends Resource {
      * @return true if the Property is set, false otherwise.
      */
     public boolean isExists() {
-        return getValue() != null;
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().isExists();
+        }
+        return getObjectValue() != null;
     }
 
     /**
@@ -82,10 +102,24 @@ public class PropertyResource extends Resource {
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
     public long getSize() {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).getSize();
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().getSize();
         }
-        return isExists() ? (long) getValue().length() : 0L;
+        Object o = getObjectValue();
+        return o == null ? 0L : (long) String.valueOf(o).length();
+    }
+
+    /**
+     * Override to implement equality with equivalent Resources,
+     * since we are capable of proxying them.
+     * @param o object to compare
+     * @return true if equal to o
+     */
+    public boolean equals(Object o) {
+        if (super.equals(o)) {
+            return true;
+        }
+        return isReferenceOrProxy() && getReferencedOrProxied().equals(o);
     }
 
     /**
@@ -93,23 +127,20 @@ public class PropertyResource extends Resource {
      * @return hash code as int.
      */
     public int hashCode() {
-        if (isReference()) {
-            return getCheckedRef().hashCode();
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().hashCode();
         }
         return super.hashCode() * PROPERTY_MAGIC;
     }
 
     /**
-     * Get the string.
-     *
-     * @return the string contents of the resource.
-     * @since Ant 1.7
+     * {@inheritDoc}
      */
     public String toString() {
-        if (isReference()) {
-            return getCheckedRef().toString();
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().toString();
         }
-        return String.valueOf(getValue());
+        return getValue();
     }
 
     /**
@@ -121,10 +152,11 @@ public class PropertyResource extends Resource {
      *         supported for this Resource type.
      */
     public InputStream getInputStream() throws IOException {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().getInputStream();
         }
-        return isExists() ? new ByteArrayInputStream(getValue().getBytes()) : UNSET;
+        Object o = getObjectValue();
+        return o == null ? UNSET : new ByteArrayInputStream(String.valueOf(o).getBytes());
     }
 
     /**
@@ -136,8 +168,8 @@ public class PropertyResource extends Resource {
      *         supported for this Resource type.
      */
     public OutputStream getOutputStream() throws IOException {
-        if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+        if (isReferenceOrProxy()) {
+            return getReferencedOrProxied().getOutputStream();
         }
         if (isExists()) {
             throw new ImmutableResourceException();
@@ -145,4 +177,30 @@ public class PropertyResource extends Resource {
         return new PropertyOutputStream(getProject(), getName());
     }
 
+    /**
+     * Learn whether this PropertyResource either refers to another Resource
+     * or proxies another Resource due to its object property value being said Resource.
+     * @return boolean
+     */
+    protected boolean isReferenceOrProxy() {
+        return isReference() || getObjectValue() instanceof Resource;
+    }
+
+    /**
+     * Get the referenced or proxied Resource, if applicable.
+     * @return Resource
+     * @throws IllegalStateException if this PropertyResource neither proxies nor
+     *                               references another Resource.
+     */
+    protected Resource getReferencedOrProxied() {
+        if (isReference()) {
+            return (Resource) getCheckedRef(Resource.class, "resource");
+        }
+        Object o = getObjectValue();
+        if (o instanceof Resource) {
+            return (Resource) o;
+        }
+        throw new IllegalStateException(
+                "This PropertyResource does not reference or proxy another Resource");
+    }
 }

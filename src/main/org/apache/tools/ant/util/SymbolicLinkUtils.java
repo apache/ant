@@ -64,7 +64,7 @@ public class SymbolicLinkUtils {
      * canonical and absolute paths of the file are identical--this
      * may lead to false positives on some platforms.</p>
      *
-     * @param file the file to test.
+     * @param file the file to test.  Must not be null.
      *
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
@@ -104,7 +104,9 @@ public class SymbolicLinkUtils {
      */
     public boolean isSymbolicLink(File parent, String name)
         throws IOException {
-        File toTest = new File(parent.getCanonicalPath(), name);
+        File toTest = parent != null
+            ? new File(parent.getCanonicalPath(), name)
+            : new File(name);
         return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
     }
 

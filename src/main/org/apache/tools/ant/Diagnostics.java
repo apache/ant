@@ -180,6 +180,9 @@ public final class Diagnostics {
      * @since Ant 1.8.0
      */
     private static URL getClassLocation(Class clazz) {
+        if (clazz.getProtectionDomain().getCodeSource() == null) {
+            return null;
+        }
         return clazz.getProtectionDomain().getCodeSource().getLocation();
     }
 

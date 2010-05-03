@@ -47,9 +47,9 @@ import org.apache.tools.ant.types.Parameter;
  * </pre>
  * 
  * <p>
- * Sort all files <code>*.txt</code> from <i>src</i> location in descendant
- * order and copy them into <i>build</i> location. The lines of each file are
- * sorted in ascendant order comparing the lines via the
+ * Sort all files <code>*.txt</code> from <i>src</i> location and copy
+ * them into <i>build</i> location. The lines of each file are sorted
+ * in ascendant order comparing the lines via the
  * <code>String.compareTo(Object o)</code> method.
  * </p>
  * 
@@ -57,9 +57,7 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;copy todir=&quot;build&quot;&gt;
  *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
  *       &lt;filterchain&gt;
- *           &lt;sortfilter/&gt;
- *             &lt;param name=&quot;reverse&quot; value=&quot;true&quot;/&gt;
- *           &lt;/sortfilter/&gt;
+ *           &lt;sortfilter reverse=&quot;true&quot;/&gt;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
@@ -75,9 +73,9 @@ import org.apache.tools.ant.types.Parameter;
  *   &lt;copy todir=&quot;build&quot;&gt;
  *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
  *       &lt;filterchain&gt;
- *           &lt;sortfilter/&gt;
+ *           &lt;filterreader classname=&quot;org.apache.tools.ant.filters.SortFilter&quot;&gt;
  *             &lt;param name=&quot;comparator&quot; value=&quot;org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
- *           &lt;/sortfilter/&gt;
+ *           &lt;/filterreader&gt;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
@@ -102,8 +100,23 @@ import org.apache.tools.ant.types.Parameter;
  *           }
  * </pre>
  * 
+ * <p>The example above is equivalent to:</p>
+ * 
+ * <blockquote><pre>
+ *   &lt;componentdef name="evenfirst"
+ *                 classname="org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
+ *   &lt;copy todir=&quot;build&quot;&gt;
+ *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
+ *       &lt;filterchain&gt;
+ *           &lt;sortfilter&gt;
+ *               &lt;evenfirst/&gt;
+ *           &lt;/sortfilter&gt;
+ *       &lt;/filterchain&gt;
+ *   &lt;/copy&gt;
+ * </pre></blockquote>
+ * 
  * <p> If parameter <code>comparator</code> is present, then
- * <code>reverse</code> parameter will not taken into account.  </p>
+ * <code>reverse</code> parameter will not be taken into account.  </p>
  * 
  * @since Ant 1.8.0
  */

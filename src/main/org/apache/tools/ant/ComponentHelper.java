@@ -202,7 +202,7 @@ public class ComponentHelper  {
     /**
      * @return A deep copy of the restrictredDefinition
      */
-    private Map getRestrictedDefintion() {
+    private Map getRestrictedDefinition() {
         Map result = new HashMap();
         synchronized (restrictedDefinitions) {
             for(Iterator i = restrictedDefinitions.entrySet().iterator();
@@ -241,7 +241,7 @@ public class ComponentHelper  {
         synchronized (this) {
             checkedNamespaces.addAll(inheritedCheckedNamespace);
         }
-        Map inheritedRestrictedDef = helper.getRestrictedDefintion();
+        Map inheritedRestrictedDef = helper.getRestrictedDefinition();
         synchronized (restrictedDefinitions) {
             restrictedDefinitions.putAll(inheritedRestrictedDef);
         }

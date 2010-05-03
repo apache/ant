@@ -48,6 +48,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -425,10 +426,10 @@ public class Project implements ResourceFactory {
     }
 
     /**
-         * Return a copy of the list of build listeners for the project.
-         * 
-         * @return a list of build listeners for the project
-         */
+     * Return a copy of the list of build listeners for the project.
+     * 
+     * @return a list of build listeners for the project
+     */
     public Vector getBuildListeners() {
         synchronized (listenersLock) {
             Vector r = new Vector(listeners.length);
@@ -1025,6 +1026,19 @@ public class Project implements ResourceFactory {
     }
 
     /**
+     * Return the current task definition map. The returned map is a
+     * copy of the &quot;live&quot; definitions.
+     *
+     * @return a map of from task name to implementing class
+     *         (String to Class).
+     *
+     * @since Ant 1.8.1
+     */
+    public Map getCopyOfTaskDefinitions() {
+        return new HashMap(getTaskDefinitions());
+    }
+
+    /**
      * Add a new datatype definition.
      * Attempting to override an existing definition with an
      * equivalent one (i.e. with the same classname) results in
@@ -1051,6 +1065,19 @@ public class Project implements ResourceFactory {
      */
     public Hashtable getDataTypeDefinitions() {
         return ComponentHelper.getComponentHelper(this).getDataTypeDefinitions();
+    }
+
+    /**
+     * Return the current datatype definition map. The returned
+     * map is a copy pf the &quot;live&quot; definitions.
+     *
+     * @return a map of from datatype name to implementing class
+     *         (String to Class).
+     *
+     * @since Ant 1.8.1
+     */
+    public Map getCopyOfDataTypeDefinitions() {
+        return new HashMap(getDataTypeDefinitions());
     }
 
     /**
@@ -1121,6 +1148,16 @@ public class Project implements ResourceFactory {
      */
     public Hashtable getTargets() {
         return targets;
+    }
+
+    /**
+     * Return the map of targets. The returned map
+     * is a copy of the &quot;live&quot; targets.
+     * @return a map from name to target (String to Target).
+     * @since Ant 1.8.1
+     */
+    public Map getCopyOfTargets() {
+        return new HashMap(targets);
     }
 
     /**
@@ -1763,7 +1800,7 @@ public class Project implements ResourceFactory {
      */
     public final Vector topoSort(String[] root, Hashtable targetTable,
                                  boolean returnAll) throws BuildException {
-        Vector ret = new Vector();
+        Vector ret = new VectorSet();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
 
@@ -1968,6 +2005,19 @@ public class Project implements ResourceFactory {
      */
     public boolean hasReference(String key) {
         return references.containsKey(key);
+    }
+
+    /**
+     * Return a map of the references in the project (String to
+     * Object).  The returned hashtable is a copy of the
+     * &quot;live&quot; references.
+     *
+     * @return a map of the references in the project (String to Object).
+     *
+     * @since Ant 1.8.1
+     */
+    public Map getCopyOfReferences() {
+        return new HashMap(references);
     }
 
     /**

@@ -98,7 +98,7 @@ or from the command line as<br>
   <tr>
     <td valign="top">console</td>
     <td valign="top">Whether or not messages should be displayed on the
-      'console'</td>
+      'console'. Note that this task will rely on the default value for filtering compile messages.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -109,7 +109,8 @@ or from the command line as<br>
   <tr>
     <td valign="top">decimal</td>
     <td valign="top">Whether decimal arithmetic should be used for the
-      NetRexx code</td>
+      NetRexx code. Setting this to off will report decimal arithmetic
+      as an error, for performance critical applications.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -177,13 +178,20 @@ or from the command line as<br>
     <td valign="top">keep</td>
     <td valign="top">Sets whether the generated java source file should be kept
       after compilation. The generated files will have an extension of
-      .java.keep, <b>not</b> .java</td>
+      .java.keep, <b>not</b> .java. Use removeKeepExtension to change that.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">logo</td>
     <td valign="top">Whether the compiler text logo is displayed when
       compiling</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">removeKeepExtension</td>
+    <td valign="top">Tells wether the trailing .keep in nocompile-mode should
+      be removed so that the resulting java source really ends on .java. This
+      facilitates the use of the javadoc tool lateron.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -283,33 +291,33 @@ or from the command line as<br>
     <td valign="top">suppressMethodArgumentNotUsed</td>
     <td valign="top">Tells whether we should filter out the
       &amp;Method argument not used&amp; messages in strictargs mode.</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">suppressPrivatePropertyNotUsed</td>
     <td valign="top">Tells whether we should filter out the
       &amp;Private Property defined, but not used&amp; messages in strictargs mode.</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">suppressVariableNotUsed</td>
     <td valign="top">Tells whether we should filter out the
       &amp;Variable set but not used&amp; messages in strictargs mode.
       Please be careful with this one, as you can hide errors behind it!</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">suppressExceptionNotSignalled</td>
     <td valign="top">Tells whether we should filter out the
       &amp;Exception is declared, but not signaled within the method&amp;
       messages in strictsignal mode.</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">suppressDeprecation</td>
     <td valign="top">Tells whether we should filter out any deprecation-messages
       of the compiler out.</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>

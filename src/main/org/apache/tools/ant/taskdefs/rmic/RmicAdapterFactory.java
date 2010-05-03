@@ -23,9 +23,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.ClasspathUtils;
 
-import java.util.Locale;
-
-
 /**
  * Creates the necessary rmic adapter, given basic criteria.
  *
@@ -96,27 +93,24 @@ public final class RmicAdapterFactory {
     public static RmicAdapter getRmic(String rmicType, Task task,
                                       Path classpath)
         throws BuildException {
-        //convert to lower case in the English locale,
-        String compiler = rmicType.toLowerCase(Locale.ENGLISH);
-
         //handle default specially by choosing the sun or kaffe compiler
-        if (DEFAULT_COMPILER.equals(compiler) || compiler.length() == 0) {
-            compiler = KaffeRmic.isAvailable()
+        if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length() == 0) {
+            rmicType = KaffeRmic.isAvailable()
                 ? KaffeRmic.COMPILER_NAME
                 : SunRmic.COMPILER_NAME;
         }
-        if (SunRmic.COMPILER_NAME.equals(compiler)) {
+        if (SunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new SunRmic();
-        } else if (KaffeRmic.COMPILER_NAME.equals(compiler)) {
+        } else if (KaffeRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new KaffeRmic();
-        } else if (WLRmic.COMPILER_NAME.equals(compiler)) {
+        } else if (WLRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new WLRmic();
-        } else if (ForkingSunRmic.COMPILER_NAME.equals(compiler)) {
+        } else if (ForkingSunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new ForkingSunRmic();
-        } else if (XNewRmic.COMPILER_NAME.equals(compiler)) {
+        } else if (XNewRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new XNewRmic();
         }
-        //no match? ask for the non-lower-cased type
+        //no match?
         return resolveClassName(rmicType,
                                 // Memory leak in line below
                                 task.getProject().createClassLoader(classpath));

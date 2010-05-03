@@ -1223,6 +1223,7 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public void rename(File from, File to) throws IOException {
+        // identical logic lives in Move.renameFile():
         from = normalize(from.getAbsolutePath()).getCanonicalFile();
         to = normalize(to.getAbsolutePath());
         if (!from.exists()) {

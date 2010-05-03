@@ -106,7 +106,9 @@ good convention, though.</p>
   <li>All child elements of the XML element corresponding to this task
     are created via this task's <code>createXXX()</code> methods or
     instantiated and added to this task via its <code>addXXX()</code>
-    methods, at run time.</li>
+    methods, at run time.  Child elements corresponding
+    to <code>addConfiguredXXX()</code> are created at this point but
+    the actual <code>addCondifgired</code> method is not called.</li>
 
   <li>All attributes of this task get set via their corresponding
     <code>setXXX</code> methods, at runtime.</li>
@@ -117,6 +119,10 @@ good convention, though.</p>
 
   <li>All attributes of all child elements get set via their corresponding
     <code>setXXX</code> methods, at runtime.</li>
+
+  <li>If child elements of the XML element corresponding to this task
+    have been created for <code>addConfiguredXXX()</code> methods,
+    those methods get invoked now.</li>
 
   <li><a name="execute"><code>execute()</code></a> is called at runtime.
     If <code>target1</code> and <code>target2</code> both depend
@@ -129,7 +135,7 @@ good convention, though.</p>
 
 <p>Ant will always expand properties before it passes the value of an
 attribute to the corresponding setter method. <b>Since Ant 1.8</b>, it is
-possible to <a href="using.html#propertyhelper">extend Ant's property handling</a>
+possible to <a href="CoreTasks/propertyhelper.html">extend Ant's property handling</a>
 such that a non-string Object may be the result of the evaluation of a string
 containing a single property reference. These will be assigned directly via
 setter methods of matching type. Since it requires some beyond-the-basics

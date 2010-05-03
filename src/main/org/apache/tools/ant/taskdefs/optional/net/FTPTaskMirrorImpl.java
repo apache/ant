@@ -50,6 +50,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.RetryHandler;
 import org.apache.tools.ant.util.Retryable;
+import org.apache.tools.ant.util.VectorSet;
 
 public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
@@ -63,7 +64,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private final FTPTask task;
-    private Vector dirCache = new Vector();
+    private Set dirCache = new HashSet();
     private int transferred = 0;
     private int skipped = 0;
 
@@ -257,12 +258,12 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 excludes = new String[0];
             }
 
-            filesIncluded = new Vector();
+            filesIncluded = new VectorSet();
             filesNotIncluded = new Vector();
-            filesExcluded = new Vector();
-            dirsIncluded = new Vector();
+            filesExcluded = new VectorSet();
+            dirsIncluded = new VectorSet();
             dirsNotIncluded = new Vector();
-            dirsExcluded = new Vector();
+            dirsExcluded = new VectorSet();
 
             try {
                 String cwd = ftp.printWorkingDirectory();
@@ -1310,7 +1311,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                                                  + "directory: " + ftp.getReplyString());
                     }
                 }
-                dirCache.addElement(dir);
+                dirCache.add(dir);
             }
             ftp.changeWorkingDirectory(cwd);
         }

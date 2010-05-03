@@ -27,6 +27,7 @@ import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.VectorSet;
 
 /**
  * A set of filters to be applied to something.
@@ -575,7 +576,7 @@ public class FilterSet extends DataType implements Cloneable {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         if (recurseDepth == 0) {
-            passedTokens = new Vector();
+            passedTokens = new VectorSet();
         }
         recurseDepth++;
         if (passedTokens.contains(parent) && !duplicateToken) {

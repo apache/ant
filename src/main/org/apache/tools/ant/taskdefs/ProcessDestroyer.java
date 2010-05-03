@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Destroys all registered <code>Process</code>es when the VM exits.
@@ -30,7 +30,7 @@ import java.util.Vector;
  */
 class ProcessDestroyer implements Runnable {
     private static final int THREAD_DIE_TIMEOUT = 20000;
-    private Vector processes = new Vector();
+    private HashSet processes = new HashSet();
     // methods to register and unregister shutdown hooks
     private Method addShutdownHookMethod;
     private Method removeShutdownHookMethod;
@@ -183,8 +183,7 @@ class ProcessDestroyer implements Runnable {
             if (processes.size() == 0) {
                 addShutdownHook();
             }
-            processes.addElement(process);
-            return processes.contains(process);
+            return processes.add(process);
         }
     }
 
@@ -198,7 +197,7 @@ class ProcessDestroyer implements Runnable {
      */
     public boolean remove(Process process) {
         synchronized (processes) {
-            boolean processRemoved = processes.removeElement(process);
+            boolean processRemoved = processes.remove(process);
             if (processRemoved && processes.size() == 0) {
                 removeShutdownHook();
             }
@@ -212,9 +211,9 @@ class ProcessDestroyer implements Runnable {
     public void run() {
         synchronized (processes) {
             running = true;
-            Enumeration e = processes.elements();
-            while (e.hasMoreElements()) {
-                ((Process) e.nextElement()).destroy();
+            Iterator e = processes.iterator();
+            while (e.hasNext()) {
+                ((Process) e.next()).destroy();
             }
         }
     }

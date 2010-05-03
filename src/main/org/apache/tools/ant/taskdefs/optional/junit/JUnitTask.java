@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Locale;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -793,6 +792,8 @@ public class JUnitTask extends Task {
      * @throws BuildException in case of test failures or errors
      */
     protected void execute(JUnitTest arg) throws BuildException {
+        validateTestName(arg.getName());
+
         JUnitTest test = (JUnitTest) arg.clone();
         // set the default values if not specified
         //@todo should be moved to the test class instead.
@@ -814,6 +815,20 @@ public class JUnitTask extends Task {
             // null watchdog means no timeout, you'd better not check with null
         }
         actOnTestResult(result, test, "Test " + test.getName());
+    }
+
+    /**
+     * Throws a <code>BuildException</code> if the given test name is invalid.
+     * Validity is defined as not <code>null</code>, not empty, and not the
+     * string &quot;null&quot;.
+     * @param testName the test name to be validated
+     * @throws BuildException if <code>testName</code> is not a valid test name
+     */
+    private void validateTestName(String testName) throws BuildException {
+        if (testName == null || testName.length() == 0
+            || testName.equals("null")) {
+            throw new BuildException("test name must be specified");
+        }
     }
 
     /**
@@ -1087,8 +1102,7 @@ public class JUnitTask extends Task {
      * @return true if the run should be withoutput and error
      */
     private boolean equalsWithOutAndErr(String summaryOption) {
-        return summaryOption != null && "withoutanderr".equals(
-            summaryOption.toLowerCase(Locale.ENGLISH));
+        return "withoutanderr".equalsIgnoreCase(summaryOption);
     }
 
     private void checkIncludeSummary(CommandlineJava cmd) {
@@ -1601,7 +1615,7 @@ public class JUnitTask extends Task {
             if (summary) {
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
                     delegate.newSummaryJUnitResultFormatter();
-                f.setWithOutAndErr("withoutanderr".equalsIgnoreCase(summaryValue));
+                f.setWithOutAndErr(equalsWithOutAndErr(summaryValue));
                 delegate.addVmExit(test, f, getDefaultOutput(), message, testCase);
             }
         } finally {

@@ -401,7 +401,7 @@ public class ExecTask extends Task {
      * @param osFamily the family to restrict to.
      */
     public void setOsFamily(String osFamily) {
-        this.osFamily = osFamily.toLowerCase(Locale.US);
+        this.osFamily = osFamily.toLowerCase(Locale.ENGLISH);
     }
 
     /**

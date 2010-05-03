@@ -110,7 +110,7 @@ public class ScriptDef extends DefBase {
          * @param name the attribute name
          */
         public void setName(String name) {
-            this.name = name.toLowerCase(Locale.US);
+            this.name = name.toLowerCase(Locale.ENGLISH);
         }
     }
 
@@ -142,7 +142,7 @@ public class ScriptDef extends DefBase {
          * @param name the name of this nested element
          */
         public void setName(String name) {
-            this.name = name.toLowerCase(Locale.US);
+            this.name = name.toLowerCase(Locale.ENGLISH);
         }
 
         /**

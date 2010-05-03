@@ -515,7 +515,8 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     protected String getAutoresponse() {
         if (autoResponse == null) {
             return FLAG_AUTORESPONSE_DEF;
-        } else if (autoResponse.equalsIgnoreCase("Y")) {
+        }
+        if (autoResponse.equalsIgnoreCase("Y")) {
             return FLAG_AUTORESPONSE_YES;
         } else if (autoResponse.equalsIgnoreCase("N")) {
             return FLAG_AUTORESPONSE_NO;

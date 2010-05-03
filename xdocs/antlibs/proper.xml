@@ -185,44 +185,6 @@
         </table>
       </subsection>
 
-      <a name="svn"/>
-      <subsection name="SVN - Subversion Support">
-
-        <p>Contains tasks that correspond to Ant's &lt;cvs&gt;,
-        &lt;cvschangelog&gt; and &lt;cvstagdiff&gt; tasks.  Requires
-        Subversion's command line client.</p>
-
-        <table>
-          <tr>
-            <th>Homepage:</th>
-            <td><a href="./svn/index.html">http://ant.apache.org/antlibs/svn/</a></td>
-          </tr>
-          <tr>
-            <th>SVN URL:</th>
-            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/svn/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/svn/trunk/</a></td>
-          </tr>
-          <tr>
-            <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/svn/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/svn/trunk/</a></td>
-          </tr>
-          <tr>
-            <th>Ant compatibility:</th>
-            <td>Ant 1.7.x</td>
-          </tr>
-          <tr>
-            <th>Added to sandbox:</th>
-            <td>2005-04-15</td>
-          </tr>
-          <tr>
-            <th>Promoted from sandbox:</th>
-            <td>2005-11-22</td>
-          </tr>
-          <tr>
-            <th>Latest Release:</th>
-            <td>None</td>
-          </tr>
-        </table>
-      </subsection>
 
     </section>
 

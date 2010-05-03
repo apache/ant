@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
@@ -97,9 +98,9 @@ public class Exec extends Task {
           dir = getProject().getBaseDir();
         }
 
-        if (myos.toLowerCase().indexOf("windows") >= 0) {
+        if (myos.toLowerCase(Locale.ENGLISH).indexOf("windows") >= 0) {
             if (!dir.equals(getProject().resolveFile("."))) {
-                if (myos.toLowerCase().indexOf("nt") >= 0) {
+                if (myos.toLowerCase(Locale.ENGLISH).indexOf("nt") >= 0) {
                     command = "cmd /c cd " + dir + " && " + command;
                 } else {
                     String ant = getProject().getProperty(MagicNames.ANT_HOME);

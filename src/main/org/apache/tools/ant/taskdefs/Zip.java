@@ -1026,7 +1026,7 @@ public class Zip extends MatchingTask {
                 try {
                     is = zf.getInputStream(ze);
                     zipFile(is, zOut, prefix + name, ze.getTime(),
-                            fromArchive, mode, ze.getExtraFields());
+                            fromArchive, mode, ze.getExtraFields(true));
                 } finally {
                     doCompress = oldCompress;
                     FileUtils.close(is);
@@ -1723,7 +1723,7 @@ public class Zip extends MatchingTask {
         throws IOException {
         // fromArchive is used in subclasses overriding this method
 
-        if (entries.contains(vPath)) {
+        if (entries.containsKey(vPath)) {
 
             if (duplicate.equals("preserve")) {
                 logWhenWriting(vPath + " already added, skipping",

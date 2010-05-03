@@ -179,4 +179,32 @@
     <au:assertResourceContains value="Second-Origin: test.jar"
                                resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
+
+  <target name="testDuplicateFail">
+    <mkdir dir="${input}/1"/>
+    <mkdir dir="${input}/2"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/1/a.txt"/>
+    <touch file="${input}/2/a.txt"/>
+    <au:expectfailure message="Duplicate file">
+      <jar destfile="${output}/test.jar" duplicate="fail">
+        <fileset dir="${input}/1"/>
+        <fileset dir="${input}/2"/>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFileSetMerge"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49090">
+    <mkdir dir="${input}/META-INF"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/META-INF/MANIFEST.MF"><![CDATA[Test: Header
+]]></echo>
+    <jar destfile="${output}/test.jar" filesetmanifest="merge">
+      <fileset dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertResourceContains value="Test: Header"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
 </project>

@@ -65,7 +65,7 @@ installation of the <a href="http://hudson.dev.java.net/">Hudson</a> CI-system w
 
 <p>JetBrains is offering Ant the service of a Continuous Build on their TeamCity system.</p>
 
-<teamcity viewlog="http://teamcity.jetbrains.com/guestAuth/viewLog.html">
+<teamcity viewlog="http://teamcity.jetbrains.com/viewLog.html">
     <project name="Apache Ant">
         <configuration id="bt133" title="Core Trunk (Windows)" command="clean test">
             <description>current development (Windows platform)</description>

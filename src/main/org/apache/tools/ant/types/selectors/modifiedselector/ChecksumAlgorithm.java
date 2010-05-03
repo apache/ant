@@ -18,7 +18,7 @@
 
 package org.apache.tools.ant.types.selectors.modifiedselector;
 
-
+import java.util.Locale;
 import java.util.zip.Checksum;
 import java.util.zip.CRC32;
 import java.util.zip.Adler32;
@@ -76,7 +76,8 @@ public class ChecksumAlgorithm implements Algorithm {
      * @param algorithm the digest algorithm to use
      */
     public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+        this.algorithm =
+            algorithm != null ? algorithm.toUpperCase(Locale.ENGLISH) : null;
     }
 
 
@@ -85,9 +86,9 @@ public class ChecksumAlgorithm implements Algorithm {
         if (checksum != null) {
             return;
         }
-        if ("CRC".equalsIgnoreCase(algorithm)) {
+        if ("CRC".equals(algorithm)) {
             checksum = new CRC32();
-        } else if ("ADLER".equalsIgnoreCase(algorithm)) {
+        } else if ("ADLER".equals(algorithm)) {
             checksum = new Adler32();
         } else {
             throw new BuildException(new NoSuchAlgorithmException());
@@ -103,7 +104,7 @@ public class ChecksumAlgorithm implements Algorithm {
      * @return <i>true</i> if all is ok, otherwise <i>false</i>.
      */
     public boolean isValid() {
-        return "CRC".equalsIgnoreCase(algorithm) || "ADLER".equalsIgnoreCase(algorithm);
+        return "CRC".equals(algorithm) || "ADLER".equals(algorithm);
     }
 
 

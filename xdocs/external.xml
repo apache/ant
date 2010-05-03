@@ -1178,11 +1178,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.byteslooser.com/idldepend/">http://www.byteslooser.com/idldepend</a></td>
+            <td><a href="http://www.coderazzi.net/idldepend/">http://www.coderazzi.net/idldepend/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:byteslooser@gmail.com">byteslooser@gmail.com</a></td>
+            <td><a href="mailto:lu@coderazzi.net">lu@coderazzi.net</a></td>
           </tr>
           <tr>
             <th>License:</th>
@@ -3793,7 +3793,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles 1.7.1 starting with NetBeans 6.5</td>
+            <td>bundles 1.8.0 starting with NetBeans 6.9</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -3903,7 +3903,9 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.ibm.com/developerworks/websphere/">http://www.ibm.com/developerworks/websphere/</a></td>
+            <td>
+            <a href="http://www.ibm.com/developerworks/websphere/">http://www.ibm.com/developerworks/websphere/</a>
+            </td>
           </tr>
           <tr>
             <th>Article:</th>
@@ -4006,6 +4008,51 @@
           <tr>
             <th>License:</th>
             <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="SvnAnt">
+
+         <p>SvnAnt is an ant task that provides an interface to Subversion revision control system
+         that is a compelling replacement for CVS in the open source community.</p>
+
+         <table class="externals">
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://subclipse.tigris.org/svnant.html">
+             Subclipse .: :. SvnAnt .: :. SvnClientAdapter</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://subclipse.tigris.org/servlets/ProjectProcess?pageID=t65B1R">subclipse: Issues and Help</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License (EPL) 1.0</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+     <subsection name="Svn4Ant">
+
+         <p>JWare/AntXtras Svn4Ant (Svn4Ant) is a complete set of native Ant tasks for managing Subversion working copies, 
+         exported directories, and repositories from a build, test, or deployment environment. 
+         Immodestly, Svn4Ant’s goal is to be the best provider of Subversion Ant components.</p>
+
+         <table class="externals">
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jwaresoftware.org/wiki/svn4ant/home">
+             Svn4Ant</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://jwaresoftware.org/wiki/general/support">Support - JWare Free Software</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="http://jwaresoftware.org/wiki-include/svn4ant/latest/LICENSE.txt">LGPL 2.1</a></td>
           </tr>
         </table>
       </subsection>

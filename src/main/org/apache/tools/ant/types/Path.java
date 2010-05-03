@@ -597,7 +597,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             addExisting(systemBootClasspath);
         }
 
-        if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
+        if (System.getProperty("java.vendor").toLowerCase(Locale.ENGLISH).indexOf("microsoft") >= 0) {
             // XXX is this code still necessary? is there any 1.2+ port?
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();

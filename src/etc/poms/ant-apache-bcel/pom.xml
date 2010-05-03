@@ -27,17 +27,17 @@
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-parent</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>1.8.0-SNAPSHOT</version>
+    <version>1.8.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-apache-bcel</artifactId>
-  <version>1.8.0-SNAPSHOT</version>
+  <version>1.8.1-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.8.0-SNAPSHOT</version>
+      <version>1.8.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

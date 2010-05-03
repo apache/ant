@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -1342,7 +1343,7 @@ public class Javadoc extends Task {
          * specified.
          */
         public void setScope (String verboseScope) throws BuildException {
-            verboseScope = verboseScope.toLowerCase(Locale.US);
+            verboseScope = verboseScope.toLowerCase(Locale.ENGLISH);
 
             boolean[] elements = new boolean[SCOPE_ELEMENTS.length];
 
@@ -2320,7 +2321,7 @@ public class Javadoc extends Task {
      * @since 1.5
      */
     private void parsePackages(Vector pn, Path sp) {
-        Vector addedPackages = new Vector();
+        HashSet addedPackages = new HashSet();
         Vector dirSets = (Vector) packageSets.clone();
 
         // for each sourcePath entry, add a directoryset with includes
@@ -2403,7 +2404,7 @@ public class Javadoc extends Task {
                         String packageName =
                             dirs[i].replace(File.separatorChar, '.');
                         if (!addedPackages.contains(packageName)) {
-                            addedPackages.addElement(packageName);
+                            addedPackages.add(packageName);
                             pn.addElement(packageName);
                         }
                     }

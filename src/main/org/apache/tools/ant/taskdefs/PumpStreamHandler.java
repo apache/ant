@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Copies standard output and error of subprocesses to standard output and
@@ -130,8 +129,6 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Stop pumping the streams.
      */
     public void stop() {
-        finish(outputThread);
-        finish(errorThread);
 
         if (inputPump != null) {
             inputPump.stop();
@@ -147,9 +144,11 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         } catch (IOException e) {
             // ignore
         }
+        finish(outputThread);
+        finish(errorThread);
     }
 
-    private static final long JOIN_TIMEOUT = 500;
+    private static final long JOIN_TIMEOUT = 200;
 
     /**
      * Waits for a thread to finish while trying to make it finish
@@ -161,11 +160,18 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      */
     protected final void finish(Thread t) {
         try {
-            t.join(JOIN_TIMEOUT);
             StreamPumper s = null;
             if (t instanceof ThreadWithPumper) {
                 s = ((ThreadWithPumper) t).getPumper();
             }
+            if (s != null && s.isFinished()) {
+                return;
+            }
+            if (!t.isAlive()) {
+                return;
+            }
+
+            t.join(JOIN_TIMEOUT);
             if (s != null && !s.isFinished()) {
                 s.stop();
             }
@@ -238,7 +244,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         final Thread result
             = new ThreadWithPumper(new StreamPumper(is, os,
                                                     closeWhenExhausted,
-                                                    Os.isFamily("windows")));
+                                                    true));
         result.setDaemon(true);
         return result;
     }

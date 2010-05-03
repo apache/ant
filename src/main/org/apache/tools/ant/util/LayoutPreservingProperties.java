@@ -140,7 +140,7 @@ public class LayoutPreservingProperties extends Properties {
 
     public void load(InputStream inStream) throws IOException {
         String s = readLines(inStream);
-        byte[] ba = s.getBytes("ISO-8859-1");
+        byte[] ba = s.getBytes(ResourceUtils.ISO_8859_1);
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         super.load(bais);
     }
@@ -251,7 +251,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     public void store(OutputStream out, String header) throws IOException {
-        OutputStreamWriter osw = new OutputStreamWriter(out, "ISO-8859-1");
+        OutputStreamWriter osw = new OutputStreamWriter(out, ResourceUtils.ISO_8859_1);
 
         int skipLines = 0;
         int totalLines = logicalLines.size();
@@ -309,7 +309,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param is the stream from which to read the data
      */
     private String readLines(InputStream is) throws IOException {
-        InputStreamReader isr = new InputStreamReader(is, "ISO-8859-1");
+        InputStreamReader isr = new InputStreamReader(is, ResourceUtils.ISO_8859_1);
         BufferedReader br = new BufferedReader(isr);
 
         if (logicalLines.size() > 0) {

@@ -83,7 +83,7 @@ sub getTargets {
     # cache-file.
     my $cacheFile = $buildFile;
     $cacheFile =~ s|(.*/)?(.*)|${1}.ant-targets-${2}|;
-    if ((!-e $cacheFile) || (-M $buildFile) < (-M $cacheFile)) {
+    if ((!-e $cacheFile) || (-z $cacheFile) || (-M $buildFile) < (-M $cacheFile)) {
         open( CACHE, '>'.$cacheFile ) || die "can\'t write $cacheFile: $!\n";
         open( HELP, "$antCmd -projecthelp -f '$buildFile'|" ) || return(); 
         my %targets;

@@ -26,11 +26,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Properties;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import java.security.Provider;
 import java.security.Security;
@@ -100,7 +101,7 @@ public class MimeMailer extends Mailer {
         }
 
         public void setContentType(String type) {
-            this.type = type.toLowerCase();
+            this.type = type.toLowerCase(Locale.ENGLISH);
         }
 
         public String getContentType() {

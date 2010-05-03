@@ -27,9 +27,13 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -86,6 +90,15 @@ public class Manifest {
 
     /** Encoding to be used for JAR files. */
     public static final String JAR_ENCODING = "UTF-8";
+
+    private static final String ATTRIBUTE_MANIFEST_VERSION_LC =
+        ATTRIBUTE_MANIFEST_VERSION.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_NAME_LC =
+        ATTRIBUTE_NAME.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_FROM_LC =
+        ATTRIBUTE_FROM.toLowerCase(Locale.ENGLISH);
+    private static final String ATTRIBUTE_CLASSPATH_LC =
+        ATTRIBUTE_CLASSPATH.toLowerCase(Locale.ENGLISH);
 
     /**
      * An attribute for the manifest.
@@ -235,7 +248,7 @@ public class Manifest {
             if (name == null) {
                 return null;
             }
-            return name.toLowerCase();
+            return name.toLowerCase(Locale.ENGLISH);
         }
 
         /**
@@ -398,10 +411,7 @@ public class Manifest {
         private String name = null;
 
         /** The section's attributes.*/
-        private Hashtable attributes = new Hashtable();
-
-        /** Index used to retain the attribute ordering */
-        private Vector attributeIndex = new Vector();
+        private Map attributes = new LinkedHashMap();
 
         /**
          * The name of the section; optional -default is the main section.
@@ -491,8 +501,10 @@ public class Manifest {
         public void merge(Section section, boolean mergeClassPaths)
             throws ManifestException {
             if (name == null && section.getName() != null
-                || name != null
-                && !(name.equalsIgnoreCase(section.getName()))) {
+                || (name != null && section.getName() != null
+                    && !(name.toLowerCase(Locale.ENGLISH)
+                         .equals(section.getName().toLowerCase(Locale.ENGLISH))))
+                ) {
                 throw new ManifestException("Unable to merge sections "
                     + "with different names");
             }
@@ -586,7 +598,7 @@ public class Manifest {
          *         instances.
          */
         public Attribute getAttribute(String attributeName) {
-            return (Attribute) attributes.get(attributeName.toLowerCase());
+            return (Attribute) attributes.get(attributeName.toLowerCase(Locale.ENGLISH));
         }
 
         /**
@@ -596,7 +608,7 @@ public class Manifest {
          *         key of an attribute of the section.
          */
         public Enumeration getAttributeKeys() {
-            return attributeIndex.elements();
+            return CollectionUtils.asEnumeration(attributes.keySet().iterator());
         }
 
         /**
@@ -608,7 +620,7 @@ public class Manifest {
          *         in the section
          */
         public String getAttributeValue(String attributeName) {
-            Attribute attribute = getAttribute(attributeName.toLowerCase());
+            Attribute attribute = getAttribute(attributeName.toLowerCase(Locale.ENGLISH));
             if (attribute == null) {
                 return null;
             }
@@ -621,9 +633,8 @@ public class Manifest {
          * @param attributeName the name of the attribute to be removed.
          */
         public void removeAttribute(String attributeName) {
-            String key = attributeName.toLowerCase();
+            String key = attributeName.toLowerCase(Locale.ENGLISH);
             attributes.remove(key);
-            attributeIndex.removeElement(key);
         }
 
         /**
@@ -659,7 +670,8 @@ public class Manifest {
             if (attribute.getName() == null || attribute.getValue() == null) {
                 throw new BuildException("Attributes must have name and value");
             }
-            if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_NAME)) {
+            String attributeKey = attribute.getKey();
+            if (attributeKey.equals(ATTRIBUTE_NAME_LC)) {
                 warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes "
                     + "should not occur in the main section and must be the "
                     + "first element in all other sections: \""
@@ -667,13 +679,12 @@ public class Manifest {
                 return attribute.getValue();
             }
 
-            if (attribute.getKey().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
+            if (attributeKey.startsWith(ATTRIBUTE_FROM_LC)) {
                 warnings.addElement(ERROR_FROM_FORBIDDEN
                     + attribute.getName() + ": " + attribute.getValue() + "\"");
             } else {
                 // classpath attributes go into a vector
-                String attributeKey = attribute.getKey();
-                if (attributeKey.equalsIgnoreCase(ATTRIBUTE_CLASSPATH)) {
+                if (attributeKey.equals(ATTRIBUTE_CLASSPATH_LC)) {
                     Attribute classpathAttribute =
                         (Attribute) attributes.get(attributeKey);
 
@@ -731,9 +742,6 @@ public class Manifest {
             }
             String attributeKey = attribute.getKey();
             attributes.put(attributeKey, attribute);
-            if (!attributeIndex.contains(attributeKey)) {
-                attributeIndex.addElement(attributeKey);
-            }
         }
 
         /**
@@ -781,10 +789,7 @@ public class Manifest {
     private Section mainSection = new Section();
 
     /** The named sections of this manifest */
-    private Hashtable sections = new Hashtable();
-
-    /** Index of sections - used to retain order of sections in manifest */
-    private Vector sectionIndex = new Vector();
+    private Map sections = new LinkedHashMap();
 
     /**
      * Construct a manifest from Ant's default manifest file.
@@ -898,9 +903,6 @@ public class Manifest {
             throw new BuildException("Sections must have a name");
         }
         sections.put(sectionName, section);
-        if (!sectionIndex.contains(sectionName)) {
-            sectionIndex.addElement(sectionName);
-        }
     }
 
     /**
@@ -915,7 +917,7 @@ public class Manifest {
         if (attribute.getKey() == null || attribute.getValue() == null) {
             throw new BuildException("Attributes must have name and value");
         }
-        if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_MANIFEST_VERSION)) {
+        if (attribute.getKey().equals(ATTRIBUTE_MANIFEST_VERSION_LC)) {
             manifestVersion = attribute.getValue();
         } else {
             mainSection.addConfiguredAttribute(attribute);
@@ -1041,9 +1043,9 @@ public class Manifest {
             }
         }
 
-        Enumeration e = sectionIndex.elements();
-        while (e.hasMoreElements()) {
-            String sectionName = (String) e.nextElement();
+        Iterator e = sections.keySet().iterator();
+        while (e.hasNext()) {
+            String sectionName = (String) e.next();
             Section section = getSection(sectionName);
             section.write(writer, flatten);
         }
@@ -1079,9 +1081,9 @@ public class Manifest {
         }
 
         // create a vector and add in the warnings for all the sections
-        Enumeration e = sections.elements();
-        while (e.hasMoreElements()) {
-            Section section = (Section) e.nextElement();
+        Iterator e = sections.values().iterator();
+        while (e.hasNext()) {
+            Section section = (Section) e.next();
             Enumeration e2 = section.getWarnings();
             while (e2.hasMoreElements()) {
                 warnings.addElement(e2.nextElement());
@@ -1172,6 +1174,6 @@ public class Manifest {
      * @return an Enumeration of section names
      */
     public Enumeration getSectionNames() {
-        return sectionIndex.elements();
+        return CollectionUtils.asEnumeration(sections.keySet().iterator());
     }
 }
