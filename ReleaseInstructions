@@ -285,8 +285,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Announce release at freshmeat.net
     (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
-    Announce release in the usenet groups comp.lang.java.softwaretools
-    and comp.lang.java.announce.
+    Announce release in the usenet group comp.lang.java.softwaretools .
 
 24. Add a new release tag to doap_Ant.rdf in Ant's trunk.
 
