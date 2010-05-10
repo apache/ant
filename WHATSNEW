@@ -4,6 +4,15 @@ Changes from Ant 1.8.1 TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+ * Prior to Ant 1.8.0 the <copy> task would overwrite read-only
+   destination files.  Starting with 1.8.0 it would only do so if
+   under special circumstances.  Ant 1.8.2 now consistently won't
+   replace a read-only file by default. The same is true for a number
+   of other tasks.
+   The <copy> task now has a new force attribute that can be used to
+   make the task overwrite read-only destinations.
+   Bugzilla Report 49261.
+
 Fixed bugs:
 -----------
 

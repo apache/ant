@@ -100,6 +100,7 @@ public class Copy extends Task {
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;
+    private boolean force = false;
 
     /**
      * Copy task constructor.
@@ -226,6 +227,17 @@ public class Copy extends Task {
      */
     public void setOverwrite(boolean overwrite) {
         this.forceOverwrite = overwrite;
+    }
+
+    /**
+     * Whether read-only destinations will be overwritten.
+     *
+     * <p>Defaults to false</p>
+     *
+     * @since Ant 1.8.2
+     */
+    public void setForce(boolean f) {
+        force = f;
     }
 
     /**
@@ -838,10 +850,13 @@ public class Copy extends Task {
                             executionFilters
                                 .addFilterSet((FilterSet) filterEnum.nextElement());
                         }
-                        fileUtils.copyFile(fromFile, toFile, executionFilters,
+                        fileUtils.copyFile(new File(fromFile), new File(toFile),
+                                           executionFilters,
                                            filterChains, forceOverwrite,
-                                           preserveLastModified, inputEncoding,
-                                           outputEncoding, getProject());
+                                           preserveLastModified,
+                                           /* append: */ false, inputEncoding,
+                                           outputEncoding, getProject(),
+                                           force);
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromFile + " to " + toFile
                             + " due to " + getDueTo(ioe);
@@ -928,9 +943,11 @@ public class Copy extends Task {
                                                    filterChains,
                                                    forceOverwrite,
                                                    preserveLastModified,
+                                                   /* append: */ false,
                                                    inputEncoding,
                                                    outputEncoding,
-                                                   getProject());
+                                                   getProject(),
+                                                   force);
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromResource
                             + " to " + toFile

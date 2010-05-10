@@ -339,9 +339,50 @@ public class ResourceUtils {
      */
     public static void copyResource(Resource source, Resource dest,
                             FilterSetCollection filters, Vector filterChains,
-                            boolean overwrite, boolean preserveLastModified, boolean append,
+                            boolean overwrite, boolean preserveLastModified,
+                                    boolean append,
                             String inputEncoding, String outputEncoding,
                             Project project)
+        throws IOException {
+        copyResource(source, dest, filters, filterChains, overwrite,
+                     preserveLastModified, append, inputEncoding,
+                     outputEncoding, project, /* force: */ false);
+    }
+
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param append Whether to append to an Appendable Resource.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     * @param force whether read-only taret files will be overwritten
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.8.2
+     */
+    public static void copyResource(Resource source, Resource dest,
+                            FilterSetCollection filters, Vector filterChains,
+                            boolean overwrite, boolean preserveLastModified,
+                                    boolean append,
+                                    String inputEncoding, String outputEncoding,
+                                    Project project, boolean force)
         throws IOException {
         if (!(overwrite || SelectorUtils.isOutOfDate(source, dest, FileUtils.getFileUtils()
                 .getFileTimestampGranularity()))) {
@@ -351,6 +392,21 @@ public class ResourceUtils {
                                              && filters.hasFilters());
         final boolean filterChainsAvailable = (filterChains != null
                                                && filterChains.size() > 0);
+
+        File destFile = null;
+        if (dest.as(FileProvider.class) != null) {
+            destFile = ((FileProvider) dest.as(FileProvider.class)).getFile();
+        }
+        if (destFile != null && destFile.isFile() && !destFile.canWrite()) {
+            if (!force) {
+                throw new IOException("can't write to read-only destination "
+                                      + "file " + destFile);
+            } else if (!FILE_UTILS.tryHardToDelete(destFile)) {
+                throw new IOException("failed to delete read-only "
+                                      + "destination file " + destFile);
+            }
+        }
+
         if (filterSetsAvailable) {
             BufferedReader in = null;
             BufferedWriter out = null;
@@ -444,11 +500,9 @@ public class ResourceUtils {
                 FileUtils.close(in);
             }
         } else if (source.as(FileProvider.class) != null
-                   && dest.as(FileProvider.class) != null) {
+                   && destFile != null) {
             File sourceFile =
                 ((FileProvider) source.as(FileProvider.class)).getFile();
-            File destFile =
-                ((FileProvider) dest.as(FileProvider.class)).getFile();
 
             File parent = destFile.getParentFile();
             if (parent != null && !parent.isDirectory()

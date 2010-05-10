@@ -314,18 +314,69 @@ public class NullByteStreamResource extends Resource {
     <attrib file="${output}/${file}" readonly="true"/>
   </target>
 
-  <target name="XtestCopyOverReadOnlyFile" depends="makeFileUnwritable">
+  <target name="testCopyOverReadOnlyFile" depends="makeFileUnwritable">
     <sleep seconds="2"/>
     <touch file="${input}/${file}"/>
-    <copy toDir="${output}">
-      <fileset dir="${input}"/>
-    </copy>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
   </target>
 
   <target name="testFilteredCopyOverReadOnlyFile" depends="makeFileUnwritable">
     <sleep seconds="2"/>
     <touch file="${input}/${file}"/>
-    <copy toDir="${output}">
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testForcedCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+    </copy>
+  </target>
+
+  <target name="testForcedFilteredCopyOverReadOnlyFile"
+          depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
       <fileset dir="${input}"/>
       <filterset>
         <filter token="foo" value="bar"/>
@@ -333,18 +384,18 @@ public class NullByteStreamResource extends Resource {
     </copy>
   </target>
 
-  <target name="XtestCopyOverReadOnlyFileWithOverwrite"
+  <target name="testForcedCopyOverReadOnlyFileWithOverwrite"
           depends="makeFileUnwritable">
     <touch file="${input}/${file}"/>
-    <copy toDir="${output}" overwrite="true">
+    <copy toDir="${output}" overwrite="true" force="true">
       <fileset dir="${input}"/>
     </copy>
   </target>
 
-  <target name="testFilteredCopyOverReadOnlyFileWithOverwrite"
+  <target name="testForcedFilteredCopyOverReadOnlyFileWithOverwrite"
           depends="makeFileUnwritable">
     <touch file="${input}/${file}"/>
-    <copy toDir="${output}" overwrite="true">
+    <copy toDir="${output}" overwrite="true" force="true">
       <fileset dir="${input}"/>
       <filterset>
         <filter token="foo" value="bar"/>
