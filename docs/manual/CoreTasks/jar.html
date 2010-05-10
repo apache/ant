@@ -463,6 +463,18 @@ and <code>${src}/resources/mypackage/image.gif</code>, they will appear
 in the same directory in the JAR (and thus be considered in the same package
 by Java).</p>
 
+<pre> &lt;jar destfile="build/main/checksites.jar"&gt;
+    &lt;fileset dir="build/main/classes"/&gt;
+    &lt;zipfileset src="lib/main/util.jar"&gt;
+    &lt;manifest&gt;
+      &lt;attribute name="Main-Class"
+            value="com.acme.checksites.Main"/&gt;
+    &lt;/manifest&gt;
+  &lt;/jar&gt;</pre>
+<p>
+  Creates an executable jar file with a main class "com.acme.checksites.Main", and
+  embeds all the classes from util.jar.
+</p>
 <pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
