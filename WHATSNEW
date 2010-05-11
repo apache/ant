@@ -17,6 +17,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * The MIME mailer ignored the port parameter when using SSL.
+   Bugzilla Report 49267.
+
 Other changes:
 --------------
 

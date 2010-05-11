@@ -157,6 +157,10 @@ public class MimeMailer extends Mailer {
                 // SMTP provider
                 props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
                 props.put("mail.smtp.socketFactory.fallback", "false");
+                if (isPortExplicitlySpecified()) {
+                    props.put("mail.smtp.socketFactory.port",
+                              String.valueOf(port));
+                }
             }
             if (user != null || password != null) {
                 props.put("mail.smtp.auth", "true");
