@@ -241,6 +241,15 @@ public class Copy extends Task {
     }
 
     /**
+     * Whether read-only destinations will be overwritten.
+     *
+     * @since Ant 1.8.2
+     */
+    public boolean getForce() {
+        return force;
+    }
+
+    /**
      * Set whether files copied from directory trees will be "flattened"
      * into a single directory.  If there are multiple files with
      * the same name in the source directory tree, only the first
@@ -856,7 +865,7 @@ public class Copy extends Task {
                                            preserveLastModified,
                                            /* append: */ false, inputEncoding,
                                            outputEncoding, getProject(),
-                                           force);
+                                           getForce());
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromFile + " to " + toFile
                             + " due to " + getDueTo(ioe);
@@ -947,7 +956,7 @@ public class Copy extends Task {
                                                    inputEncoding,
                                                    outputEncoding,
                                                    getProject(),
-                                                   force);
+                                                   getForce());
                     } catch (IOException ioe) {
                         String msg = "Failed to copy " + fromResource
                             + " to " + toFile

@@ -233,9 +233,10 @@ public class Move extends Copy {
                                     getFilterChains(),
                                     forceOverwrite,
                                     getPreserveLastModified(),
+                                    /* append: */ false,
                                     getEncoding(),
                                     getOutputEncoding(),
-                                    getProject());
+                                    getProject(), getForce());
         } catch (IOException ioe) {
             String msg = "Failed to copy " + fromFile
                     + " to " + toFile + " due to " + ioe.getMessage();
@@ -329,6 +330,18 @@ public class Move extends Copy {
                 || getFilterChains().size() > 0) {
             return false;
         }
+
+        // identical logic lives in ResourceUtils.copyResource():
+        if (destFile.isFile() && !destFile.canWrite()) {
+            if (!getForce()) {
+                throw new IOException("can't replace read-only destination "
+                                      + "file " + destFile);
+            } else if (!getFileUtils().tryHardToDelete(destFile)) {
+                throw new IOException("failed to delete read-only "
+                                      + "destination file " + destFile);
+            }
+        }
+
         // identical logic lives in FileUtils.rename():
         File parent = destFile.getParentFile();
         if (parent != null && !parent.exists()) {
