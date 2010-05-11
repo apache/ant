@@ -20,6 +20,9 @@ Fixed bugs:
  * The MIME mailer ignored the port parameter when using SSL.
    Bugzilla Report 49267.
 
+ * <xslt> ignored the classpath when using the default TraX processor.
+   Bugzilla Report 49271.
+
 Other changes:
 --------------
 
