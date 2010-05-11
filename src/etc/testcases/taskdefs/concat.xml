@@ -110,7 +110,7 @@
     <touch file="${tmp.file.2}"/>
     <!-- concat.xml is now older than tmp.file.2
          so the following should not do anything -->
-    <concat destfile="${tmp.file.2}" force="false">
+    <concat destfile="${tmp.file.2}" overwrite="false">
       <path path="concat.xml"/>
     </concat>
   </target>

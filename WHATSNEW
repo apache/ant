@@ -9,8 +9,9 @@ Changes that could break older environments:
    would only do so if under special circumstances.  Ant 1.8.2 now
    consistently won't replace a read-only file by default. The same is
    true for a number of other tasks.
-   The <copy> and <move> task now have a new force attribute that can
-   be used to make the task overwrite read-only destinations.
+   The <copy>, <move> and <echo> tasks now have a new force attribute
+   and <concat> has a new forceReadonly attribute that can be used to
+   make the task overwrite read-only destinations.
    Bugzilla Report 49261.
 
 Fixed bugs:
@@ -18,6 +19,10 @@ Fixed bugs:
 
 Other changes:
 --------------
+
+ * <concat>'s force attribute has been deprecated in favor of a new
+   overwrite attribute that is consistent with <copy>'s attribute
+   names.
 
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================

@@ -47,6 +47,7 @@ public class Echo extends Task {
     protected boolean append = false;
     /** encoding; set to null or empty means 'default' */
     private String encoding = "";
+    private boolean force = false;
 
     // by default, messages are always displayed
     protected int logLevel = Project.MSG_WARN;
@@ -63,9 +64,12 @@ public class Echo extends Task {
         final String msg = "".equals(message) ? StringUtils.LINE_SEP : message;
         try {
             ResourceUtils
-                    .copyResource(new StringResource(msg), output == null ? new LogOutputResource(
-                            this, logLevel) : output, null, null, false, false, append, null, ""
-                            .equals(encoding) ? null : encoding, getProject());
+                    .copyResource(new StringResource(msg), output == null
+                                  ? new LogOutputResource(this, logLevel)
+                                  : output,
+                                  null, null, false, false, append, null,
+                                  "".equals(encoding) ? null : encoding,
+                                  getProject(), force);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         }
@@ -145,6 +149,17 @@ public class Echo extends Task {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    /**
+     * Whether read-only destinations will be overwritten.
+     *
+     * <p>Defaults to false</p>
+     *
+     * @since Ant 1.8.2
+     */
+    public void setForce(boolean f) {
+        force = f;
     }
 
     /**

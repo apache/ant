@@ -83,10 +83,27 @@ Resource Collection</a>s are used to
           <td valign="top">
             Specifies whether or not the file specified by 'destfile'
             should be written to even if it is newer than all source files.
-            <em>since Ant 1.6</em>.
+            <strong>deprecated, use the overwrite attribute instead</strong>
             Defaults to &quot;yes&quot;.
           </td>
           <td valign="top" align="center">No</td>
+        </tr>
+        <tr>
+          <td valign="top">overwrite</td>
+          <td valign="top">
+            Specifies whether or not the file specified by 'destfile'
+            should be written to even if it is newer than all source files.
+            <em>since Ant 1.8.2</em>.
+            Defaults to &quot;yes&quot;.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
+
+        <tr>
+          <td valign="top">forceReadOnly</td>
+          <td valign="top">Overwrite read-only destination
+            files.  <em>since Ant 1.8.2</em></td>
+          <td valign="top" align="center">No; defaults to false.</td>
         </tr>
 
         <tr>
