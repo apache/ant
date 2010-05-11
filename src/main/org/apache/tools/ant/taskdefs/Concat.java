@@ -591,7 +591,7 @@ public class Concat extends Task implements ResourceCollection {
      * @deprecated use #setOverwrite instead
      */
     public void setForce(boolean forceOverwrite) {
-        this.forceOverwrite = force;
+        this.forceOverwrite = forceOverwrite;
     }
 
     /**
