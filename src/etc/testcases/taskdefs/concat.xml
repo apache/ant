@@ -115,6 +115,15 @@
     </concat>
   </target>
 
+  <target name="testoverwrite">
+    <touch file="${tmp.file.2}"/>
+    <!-- concat.xml is now older than tmp.file.2
+         so the following should still overwrite it -->
+    <concat destfile="${tmp.file.2}" overwrite="true">
+      <path path="concat.xml"/>
+    </concat>
+  </target>
+
   <target name="testheaderfooter">
     <concat>
       <header filtering="false" trim="yes">
