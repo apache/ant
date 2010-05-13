@@ -17,6 +17,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * DemuxInputStream.read() should return unsigned values
+   Bugzilla Report 49279.
+
  * The MIME mailer ignored the port parameter when using SSL.
    Bugzilla Report 49267.
 
