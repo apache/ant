@@ -640,7 +640,10 @@
       <not>
         <selector id="non-core">
           <or>
-            <filename name="${optional.package}/**"/>
+            <and>
+              <filename name="${optional.package}/**"/>
+              <not><filename name="${optional.package}/TraXLiaison*"/></not><!-- #49287 -->
+            </and>
             <filename name="${optional.type.package}/**"/>
             <filename name="${util.package}/depend/**"/>
             <filename name="${util.package}/optional/**"/>
