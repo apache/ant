@@ -1586,7 +1586,7 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
 
     <condition property="junit.testcase" value="${testcase}">
-      <available classname="${testcase}" classpathref="tests-runtime-classpath" />
+      <available classname="${testcase}" classpathref="tests-runtime-classpath" ignoresystemclasses="true"/>
     </condition>
 
     <fail>Cannot locate test ${testcase}
