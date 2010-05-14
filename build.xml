@@ -104,10 +104,10 @@
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.4"/>
   <property name="javac.source" value="1.4"/>
-  <property name="junit.fork" value="false"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
+  <property name="junit.fork" value="true"/>
   <property name="junit.forkmode" value="once"/>
   <property name="expandproperty.files"
             value="**/version.txt,**/defaultManifest.mf"/>
@@ -136,6 +136,8 @@
      -->
     <pathelement location="${src.junit}"/>
     <pathelement location="${tests.etc.dir}"/>
+    <!-- Otherwise many tests fail with "com.sun.tools.javac.Main is not on the classpath.": -->
+    <pathelement location="${java.home}/../lib/tools.jar"/>
   </path>
 
   <!--
@@ -1529,6 +1531,7 @@ see ${build.junit.reports} / ${antunit.reports}
         <property name="test.junit.vmargs" value=""/>
         <property name="ant.junit.failureCollector"
                   value="${junit.collector.dir}/${junit.collector.class}"/>
+        <!-- XXX includeantruntime="false" does not solve "multiple versions of ant detected in path for junit" warning -->
         <junit printsummary="${junit.summary}"
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"
