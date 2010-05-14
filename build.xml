@@ -339,69 +339,69 @@
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
       classname="org.apache.bsf.BSFManager"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="netrexx.present"
       classname="netrexx.lang.Rexx"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="junit.present"
       classname="junit.framework.TestCase"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="commons.net.present"
       classname="org.apache.commons.net.ftp.FTPClient"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="antlr.present" 
       classname="antlr.Tool" 
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.regexp.present"
       classname="org.apache.regexp.RE"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.oro.present"
       classname="org.apache.oro.text.regex.Perl5Matcher"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jmf.present"
       classname="javax.sound.sampled.Clip"
       classpathref="classpath"/>
     <available property="jai.present"
       classname="javax.media.jai.JAI"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jdepend.present"
       classname="jdepend.framework.JDepend"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="log4j.present"
       classname="org.apache.log4j.Logger"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="commons.logging.present"
       classname="org.apache.commons.logging.LogFactory"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="xalan.envcheck"
       classname="org.apache.xalan.xslt.EnvironmentCheck"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="which.present"
       classname="org.apache.env.Which"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <available property="xerces.present"
       classname="org.apache.xerces.parsers.SAXParser"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="bcel.present"
       classname="org.apache.bcel.Constants"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
           classpathref="classpath"/>
         <available classname="javax.mail.Transport"
-          classpathref="classpath"/>
+          classpathref="classpath" ignoresystemclasses="true"/>
       </and>
     </condition>
 
@@ -455,23 +455,23 @@
       <and>
         <available
           classname="org.apache.commons.httpclient.HttpClient"
-          classpathref="classpath"/>
+          classpathref="classpath" ignoresystemclasses="true"/>
         <isset property="commons.logging.present"/>
       </and>
     </condition>
 
     <available property="rhino.present"
       classname="org.mozilla.javascript.Scriptable"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="beanshell.present"
       classname="bsh.StringUtil"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="xerces1.present"
       classname="org.apache.xerces.framework.XMLParser"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jsch.present"
       classname="com.jcraft.jsch.Session"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <property name="build.compiler" value="modern"/>
 
