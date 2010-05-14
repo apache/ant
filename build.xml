@@ -125,6 +125,10 @@
 
   <path id="tests-classpath">
     <pathelement location="${build.classes}"/>
+    <path refid="classpath"/>
+  </path>
+  <path id="tests-runtime-classpath">
+    <path refid="tests-classpath"/>
     <pathelement location="${build.tests}"/>
     <!--
         include the test source and test data dirs
@@ -132,12 +136,7 @@
      -->
     <pathelement location="${src.junit}"/>
     <pathelement location="${tests.etc.dir}"/>
-    <path refid="classpath"/>
   </path>
-
-  <!-- turn this path into a string which is passed to the tests -->
-  <property name="tests-classpath.value"
-    refid="tests-classpath"/>
 
   <!--
         ===================================================================
@@ -1539,13 +1538,13 @@ see ${build.junit.reports} / ${antunit.reports}
           <sysproperty key="build.tests.value" value="${build.tests.value}"/>
           <sysproperty key="offline" value="${offline}"/>
           <sysproperty key="tests-classpath.value"
-                       value="${tests-classpath.value}"/>
+                       value="${toString:tests-runtime-classpath}"/>
           <sysproperty key="root" file="${basedir}"/>
           <sysproperty key="build.compiler" value="${build.compiler}"/>
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
           <classpath>
-            <path refid="tests-classpath"/>
+            <path refid="tests-runtime-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
             <!-- FIXME: remove failure collector build code for the moment
                  <path refid="failure.cp"/> 
@@ -1581,7 +1580,7 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
 
     <condition property="junit.testcase" value="${testcase}">
-      <available classname="${testcase}" classpathref="tests-classpath" />
+      <available classname="${testcase}" classpathref="tests-runtime-classpath" />
     </condition>
 
     <fail>Cannot locate test ${testcase}
@@ -1797,7 +1796,7 @@ see ${build.junit.reports} / ${antunit.reports}
   <target name="interactive-tests" description="--> runs interactive tests"
     depends="compile-tests"
     >
-    <java classpathref="tests-classpath"
+    <java classpathref="tests-runtime-classpath"
       classname="org.apache.tools.ant.taskdefs.TestProcess"
       fork="true"/>
   </target>
