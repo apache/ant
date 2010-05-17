@@ -736,7 +736,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                         } else if (!result) {
                             return;
                         }
-                        this.curpwd = this.curpwd + task.getSeparator()
+                        this.curpwd = getCurpwdPlusFileSep()
                             + currentPathElement;
                     } catch (IOException ioe) {
                         throw new BuildException("could not change working dir to "
@@ -797,7 +797,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
              * @return absolute path as string
              */
             public String getAbsolutePath() {
-                return curpwd + task.getSeparator() + ftpFile.getName();
+                return getCurpwdPlusFileSep() + ftpFile.getName();
             }
             /**
              * find out the relative path assuming that the path used to construct
@@ -941,6 +941,17 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
              */
             public String getCurpwd() {
                 return curpwd;
+            }
+            /**
+             * returns the path of the directory containing the AntFTPFile.
+             * of the full path of the file itself in case of AntFTPRootFile
+             * and appends the remote file separator if necessary.
+             * @return parent directory of the AntFTPFile
+             * @since Ant 1.8.2
+             */
+            public String getCurpwdPlusFileSep() {
+                String sep = task.getSeparator();
+                return curpwd.endsWith(sep) ? curpwd : curpwd + sep;
             }
             /**
              * find out if a symbolic link is encountered in the relative path of this file
