@@ -30,6 +30,10 @@ Fixed bugs:
    name didn't occur inside more than one directory.
    Bugzilla Report 36748.
 
+ * <ftp> could fail to download files from remote subdirectories under
+   certain circumstances.
+   Bugzilla Report 49296.
+
 Other changes:
 --------------
 
