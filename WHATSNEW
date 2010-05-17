@@ -5,8 +5,8 @@ Changes that could break older environments:
 -------------------------------------------
 
  * Prior to Ant 1.8.0 the <copy> task and several other tasks would
-   overwrite read-only destination files.  Starting with 1.8.0 it
-   would only do so if under special circumstances.  Ant 1.8.2 now
+   overwrite read-only destination files.  Starting with 1.8.0 they
+   would only do so under special circumstances.  Ant 1.8.2 now
    consistently won't replace a read-only file by default. The same is
    true for a number of other tasks.
    The <copy>, <move> and <echo> tasks now have a new force attribute
