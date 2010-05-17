@@ -36,12 +36,13 @@
           https://issues.apache.org/bugzilla/show_bug.cgi?id=36748">
     <mkdir dir="${input}"/>
     <echo file="${input}/a.txt">abc</echo>
+    <echo file="${input}/subdir/A.txt">def</echo>
     <echo file="${input}/B.txt">xyz</echo>
     <checksum totalproperty="total">
       <fileset dir="${input}"/>
     </checksum>
     <au:assertPropertyEquals name="total"
-                             value="709a9cf15c8834c59c7eeb07522cdf56"/>
+                             value="f4d688789d32e6ca6bc93c504dbc6b46"/>
   </target>
 
 </project>

@@ -26,6 +26,10 @@ Fixed bugs:
  * <xslt> ignored the classpath when using the default TraX processor.
    Bugzilla Report 49271.
 
+ * <checksum>'s totalproperty only worked reliably if the same file
+   name didn't occur inside more than one directory.
+   Bugzilla Report 36748.
+
 Other changes:
 --------------
 
