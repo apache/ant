@@ -664,20 +664,20 @@ ant and the external package (e.g. <code>ant-apache-oro-1.6.2-3jpp.noarch.rpm</c
 However, JPackage does not package proprietary software, and since some of the
 optional packages depend on proprietary jars, they must be handled as follows.
 This may violate the spirit of JPackage, but it is necessary if you need these proprietary packages.
-For example, suppose you want to install support for starteam, which jpackage does not
+For example, suppose you want to install support for netrexx, which jpackage does not
 support:
 <ol>
 <li>Decide where you want to deploy the extra jars.  One option is in <code>$ANT_HOME/lib</code>,
 which, for JPackage is usually <code>/usr/share/ant/lib</code>.  Another, less messy option
 is to create an <code>.ant/lib</code> subdirectory of your home directory and place your
 non-jpackage ant jars there, thereby avoiding mixing jpackage
-libraries with non-jpacakge stuff in the same folder.
+libraries with non-jpackage stuff in the same folder.
 More information on where Ant finds its libraries is available
 <a href="http://ant.apache.org/manual/running.html#libs">here</a></li>
 <li>Download a non-jpackage binary distribution from the regular
     <a href="http://ant.apache.org/bindownload.cgi" target="_top">Apache Ant site</a></li>
 <li>Unzip or untar the distribution into a temporary directory</li>
-<li>Copy the linking jar, in this case <code>ant-starteam.jar</code>, into the library directory you
+<li>Copy the linking jar, in this case <code>ant-jai.jar</code>, into the library directory you
 chose in step 1 above.</li>
 <li>Copy the proprietary jar itself into the same directory.</li>
 </ol>
@@ -1022,12 +1022,6 @@ Already included Java 1.4+</td>
     <td>image task</td>
     <td><a href="https://jai.dev.java.net/"
         target="_top">https://jai.dev.java.net/</a></td>
-  </tr>
-  <tr>
-    <td>Starteam SDK</td>
-    <td>Starteam version management tasks</td>
-    <td><a href="http://www.borland.com/downloads/download_starteam.html"
-        target="_top">http://www.borland.com/downloads/download_starteam.html</a></td>
   </tr>
 </table>
 <br>
