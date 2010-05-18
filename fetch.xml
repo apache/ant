@@ -99,6 +99,7 @@ Set -Ddest=LOCATION on the command line
     <macrodef name="f2">
       <attribute name="project" />
       <attribute name="archive" default="@{project}"/>
+      <attribute name="repository" default="${m2.repo}"/>
       <sequential>
         <fail>
         Unknown archive @{archive} -no property @{archive}.version defined.
@@ -112,6 +113,7 @@ Set -Ddest=LOCATION on the command line
           <dependency groupID="@{project}"
             artifactID="@{archive}"
             version="${@{archive}.version}"/>
+          <remoteRepository url="@{repository}" />
         </artifact:dependencies>
         <!-- now we are left with the problem of getting the files
              into our directory -->
@@ -241,9 +243,15 @@ Set -Ddest=LOCATION on the command line
     <f2 project="tomcat" archive="jasper-runtime"/>
     <f2 project="javax.servlet" archive="servlet-api"/>
   </target>
+  
+  <target name="jai" depends="init"
+          description="load java advanced imaging">
+    <f2 project="javax.media" archive="jai-core" repository="http://repository.jboss.org/maven2"/>
+    <f2 project="com.sun.media" archive="jai-codec" repository="http://repository.jboss.org/maven2"/>
+  </target>
 
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc" />
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai" />
 
 </project>
