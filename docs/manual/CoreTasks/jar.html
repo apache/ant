@@ -426,34 +426,39 @@ depend on your manifest:</p>
   
 <h3>Examples</h3>
 
-<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
+<h4>Simple</h4>
+<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 
-<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
+
+<h4>With filters</h4>
+
+<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        excludes=&quot;**/Test.class&quot;
-  /&gt;</pre>
+  /&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
 
-<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
+<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        includes=&quot;mypackage/test/**&quot;
        excludes=&quot;**/Test.class&quot;
-  /&gt;</pre>
+  /&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
 
-<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
+<h4>Multiple filesets</h4>
+<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
              excludes=&quot;**/Test.class&quot;
     /&gt;
     &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
-  &lt;/jar&gt;</pre>
+  &lt;/jar&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory and also
 in the <code>${src}/resources</code> directory together into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
@@ -463,19 +468,25 @@ and <code>${src}/resources/mypackage/image.gif</code>, they will appear
 in the same directory in the JAR (and thus be considered in the same package
 by Java).</p>
 
-<pre> &lt;jar destfile="build/main/checksites.jar"&gt;
+<h4>Using zipfileset</h4>
+
+<blockquote><pre> &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
-    &lt;zipfileset src="lib/main/util.jar"&gt;
+    &lt;zipfileset includes="**/*.class"&gt;
+      &lt;fileset dir="lib/main" includes="**/*.jar"/&gt;
+    &lt;/zipfileset&gt;
     &lt;manifest&gt;
       &lt;attribute name="Main-Class"
             value="com.acme.checksites.Main"/&gt;
     &lt;/manifest&gt;
-  &lt;/jar&gt;</pre>
+  &lt;/jar&gt;</pre></blockquote>
 <p>
   Creates an executable jar file with a main class "com.acme.checksites.Main", and
-  embeds all the classes from util.jar.
+  embeds all the classes from all the jars in <code>lib/main</code>.
 </p>
-<pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
+
+<h4>Inline manifest</h4>
+<blockquote><pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
       &lt;!-- Who is building this jar? --&gt;
@@ -489,13 +500,14 @@ by Java).</p>
         &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
       &lt;/section&gt;
     &lt;/manifest&gt;
-  &lt;/jar&gt;</pre>
+  &lt;/jar&gt;</pre></blockquote>
 <p>
 This is an example of an inline manifest specification including the version of the build
 program (Implementation-Version). Note that the Built-By attribute will take the value of the Ant 
 property ${user.name}. The manifest produced by the above would look like this:
 </p>
-<pre><code>Manifest-Version: 1.0
+
+<blockquote><pre><code>Manifest-Version: 1.0
 Built-By: conor
 Implementation-Vendor: ACME inc.
 Implementation-Title: GreatProduct
@@ -503,8 +515,9 @@ Implementation-Version: 1.0.0beta2
 Created-By: Apache Ant 1.7.0
 
 Name: common/MyClass.class
-Sealed: false</code></pre>
+Sealed: false</code></pre></blockquote>
 
+<h4>Service Provider</h4>
 
 <p>
   The following shows how to create a jar file specifing a service
@@ -516,6 +529,8 @@ Sealed: false</code></pre>
            provider="org.acme.PinkyLanguage"/&gt;
 &lt;/jar&gt;
 </pre></blockquote>
+
+
 
 <p>
   The following shows how to create a jar file specifing a service
