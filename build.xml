@@ -644,7 +644,12 @@
           <or>
             <and>
               <filename name="${optional.package}/**"/>
-              <not><filename name="${optional.package}/TraXLiaison*"/></not><!-- #49287 -->
+              <not><!-- #49287 -->
+                <or>
+                  <filename name="${optional.package}/TraXLiaison*"/>
+                  <filename name="${optional.package}/XSLTTraceSupport*"/>
+                </or>
+              </not>
             </and>
             <filename name="${optional.type.package}/**"/>
             <filename name="${util.package}/depend/**"/>
