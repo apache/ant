@@ -309,7 +309,7 @@ Set -Ddest=LOCATION on the command line
     <f2 project="com.sun.media" archive="jai-codec" repository="http://repository.jboss.org/maven2"/>
   </target>
 
-  <target name="netrexx" depends="init-no-m2,-setup-temp-cache,-fetch-netrexx,-cleanup-temp-cache"
+  <target name="netrexx" depends="init-no-m2,-setup-temp-cache,networking,-fetch-netrexx,-cleanup-temp-cache"
           description="load NetRexx compiler" />
 
   <target name="-fetch-netrexx" depends="-setup-temp-cache"
