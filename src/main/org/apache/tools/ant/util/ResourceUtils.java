@@ -528,9 +528,9 @@ public class ResourceUtils {
                 long position = 0;
                 long count = srcChannel.size();
                 while (position < count) {
-                    long chunck = Math.min(MAX_IO_CHUNCK_SIZE, count - position);
+                    long chunk = Math.min(MAX_IO_CHUNCK_SIZE, count - position);
                     position +=
-                        srcChannel.transferTo(position, chunck,
+                        srcChannel.transferTo(position, chunk,
                                               destChannel);
                 }
             } finally {
