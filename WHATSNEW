@@ -17,6 +17,11 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * The Sun JVM tries to mmap the entire file during a copy. 
+   For large files this is not feasible. 
+   We now explicitly request to copy at most 16 MiB per request.
+   Bugzilla Report 49326.
+   
  * DemuxInputStream.read() should return unsigned values
    Bugzilla Report 49279.
 

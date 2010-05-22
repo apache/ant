@@ -72,6 +72,8 @@ public class ResourceUtils {
      */
     public static final String ISO_8859_1 = "ISO-8859-1";
 
+    private static final long MAX_IO_CHUNCK_SIZE = 16*1024*1024; // 16 MB
+
     /**
      * Tells which source files should be reprocessed based on the
      * last modification date of target files.
@@ -526,8 +528,9 @@ public class ResourceUtils {
                 long position = 0;
                 long count = srcChannel.size();
                 while (position < count) {
+                    long chunck = Math.min(MAX_IO_CHUNCK_SIZE, count - position);
                     position +=
-                        srcChannel.transferTo(position, count - position,
+                        srcChannel.transferTo(position, chunck,
                                               destChannel);
                 }
             } finally {
