@@ -252,6 +252,9 @@ Note: This document was updated in the context of releasing Ant 1.7.
        expand org.apache.ant 
        right click the upload that you just did
        select the context menu entry "Close"
+       once this is done, you have to again select your upload in the web interface,
+       right click, and select the menu entry promote.
+       4 hours later, the artefacts will be in the maven central repository.
       
 
     * remove the symbolic links from /www/www.apache.org/dist/ant.
