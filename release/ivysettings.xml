@@ -16,10 +16,10 @@
 -->
 <ivysettings>
   <credentials host="repository.apache.org" realm="Sonatype Nexus Repository Manager" username="${upload.user}" passwd="${upload.password}"/>
-  <caches defaultCacheDir="${user.dir}/.ivy2/cache"/>
+  <caches defaultCacheDir="${user.home}/.ivy2/cache"/>
   <resolvers>
     <ibiblio name="public" m2compatible="true"/>
-    <url name="nexus" checksums="">
+    <url name="nexus">
       <artifact pattern="${upload.url}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision].[ext]" />
     </url>
   </resolvers>
