@@ -14,6 +14,8 @@ Changes that could break older environments:
    make the task overwrite read-only destinations.
    Bugzilla Report 49261.
 
+ * Removed ant-nodeps.jar; it is now merged into ant.jar.
+
 Fixed bugs:
 -----------
 

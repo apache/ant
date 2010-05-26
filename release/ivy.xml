@@ -100,10 +100,6 @@
     <artifact name="ant-netrexx" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-netrexx" type="jar" ext="jar"/>
     <artifact name="ant-netrexx" type="jar.asc" ext="jar.asc"/>
-    <artifact name="ant-nodeps" type="pom" ext="pom"/>
-    <artifact name="ant-nodeps" type="pom.asc" ext="pom.asc"/>
-    <artifact name="ant-nodeps" type="jar" ext="jar"/>
-    <artifact name="ant-nodeps" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-swing" type="pom" ext="pom"/>
     <artifact name="ant-swing" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-swing" type="jar" ext="jar"/>

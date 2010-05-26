@@ -44,7 +44,6 @@
   <property name="taskdefs.package" value="${ant.package}/taskdefs"/>
   <property name="condition.package" value="${taskdefs.package}/condition"/>
   <property name="optional.package" value="${taskdefs.package}/optional"/>
-  <property name="optional.condition.package" value="${optional.package}/condition"/>
   <property name="type.package" value="${ant.package}/types"/>
   <property name="optional.type.package" value="${type.package}/optional"/>
   <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
@@ -173,7 +172,7 @@
   <selector id="needs.jdk1.5+">
     <or>
       <filename name="${taskdefs.package}/AptTest*"/>
-      <filename name="${util.package}/java15/*"/>
+      <filename name="${util.package}/java15/"/>
       <filename name="${ant.package}/loader/*5*"/>
     </or>
   </selector>
@@ -187,11 +186,11 @@
   </selector>
 
   <selector id="needs.apache-resolver">
-    <filename name="${apache.resolver.type.package}/**"/>
+    <filename name="${apache.resolver.type.package}/"/>
   </selector>
 
   <selector id="needs.junit">
-    <filename name="${optional.package}/junit/**"/>
+    <filename name="${optional.package}/junit/"/>
   </selector>
 
   <selector id="needs.apache-regexp">
@@ -201,14 +200,14 @@
   <selector id="needs.apache-oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
-      <filename name="${optional.package}/perforce/*"/>
+      <filename name="${optional.package}/perforce/"/>
     </or>
   </selector>
 
   <selector id="needs.apache-bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
-      <filename name="${util.package}/depend/bcel/*"/>
+      <filename name="${util.package}/depend/bcel/"/>
       <filename name="${optional.type.package}/depend/ClassFileSetTest*"/>
     </or>
   </selector>
@@ -251,26 +250,26 @@
   </selector>
 
   <selector id="needs.jmf">
-    <filename name="${optional.package}/sound/*"/>
+    <filename name="${optional.package}/sound/"/>
   </selector>
 
   <selector id="needs.jai">
     <or>
-      <filename name="${optional.package}/image/*"/>
-      <filename name="${optional.type.package}/image/*"/>
+      <filename name="${optional.package}/image/"/>
+      <filename name="${optional.type.package}/image/"/>
     </or>
   </selector>
 
   <selector id="needs.jdepend">
-    <filename name="${optional.package}/jdepend/*"/>
+    <filename name="${optional.package}/jdepend/"/>
   </selector>
 
   <selector id="needs.swing">
-    <filename name="${optional.package}/splash/*"/>
+    <filename name="${optional.package}/splash/"/>
   </selector>
 
   <selector id="needs.jsch">
-    <filename name="${optional.package}/ssh/*"/>
+    <filename name="${optional.package}/ssh/"/>
   </selector>
 
   <!-- needs TraceListenerEx3 interface implemented by PrintTraceListener -->
@@ -279,7 +278,7 @@
   </selector>
 
   <selector id="ant.launcher">
-    <filename name="${ant.package}/launch/**/*"/>
+    <filename name="${ant.package}/launch/"/>
   </selector>
 
   <patternset id="onlinetests">
@@ -640,32 +639,28 @@
       manifest="${manifest}"
       whenmanifestonly="fail">
       <not>
-        <selector id="non-core">
-          <or>
-            <and>
-              <filename name="${optional.package}/**"/>
-              <not><!-- #49287 -->
-                <or>
-                  <filename name="${optional.package}/TraXLiaison*"/>
-                  <filename name="${optional.package}/XSLTTraceSupport*"/>
-                </or>
-              </not>
-            </and>
-            <filename name="${optional.type.package}/**"/>
-            <filename name="${util.package}/depend/**"/>
-            <filename name="${util.package}/optional/**"/>
-            <selector refid="needs.apache-log4j"/>
-            <selector refid="needs.commons-logging"/>
-            <selector refid="needs.apache-bcel"/>
-            <selector refid="needs.apache-bsf"/>
-            <selector refid="needs.apache-regexp"/>
-            <selector refid="needs.apache-resolver"/>
-            <selector refid="needs.apache-oro"/>
-            <selector refid="needs.jdk1.5+"/>
-            <selector refid="needs.javamail"/>
-            <selector refid="ant.launcher"/>
-          </or>
-        </selector>
+        <or>
+          <!-- Verification: (cd dist/lib; for j in *.jar; do jar tf $j; done) | egrep -v '/$|META-INF/MANIFEST\.MF' | sort | uniq -d -->
+          <selector refid="needs.antlr"/>
+          <selector refid="needs.apache-bcel"/>
+          <selector refid="needs.apache-bsf"/>
+          <selector refid="needs.apache-log4j"/>
+          <selector refid="needs.apache-oro"/>
+          <selector refid="needs.apache-regexp"/>
+          <selector refid="needs.apache-resolver"/>
+          <selector refid="needs.apache-xalan2"/>
+          <selector refid="needs.commons-logging"/>
+          <selector refid="needs.commons-net"/>
+          <selector refid="needs.jai"/>
+          <selector refid="needs.javamail"/>
+          <selector refid="needs.jdepend"/>
+          <selector refid="needs.jmf"/>
+          <selector refid="needs.jsch"/>
+          <selector refid="needs.junit"/>
+          <selector refid="needs.netrexx"/>
+          <selector refid="needs.swing"/>
+          <selector refid="ant.launcher"/>
+        </or>
       </not>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
@@ -709,42 +704,6 @@
         <attribute name="Class-Path"
           value="ant.jar xalan.jar"/>
       </manifest>
-    </jar>
-
-    <jar destfile="${build.lib}/ant-nodeps.jar"
-      basedir="${build.classes}"
-      manifest="${manifest.tmp}"
-      whenmanifestonly="${optional.jars.whenmanifestonly}">
-      <and>
-        <selector refid="non-core"/>
-        <not>
-          <or>
-            <selector refid="ant.launcher"/>
-            <selector refid="needs.apache-resolver"/>
-            <selector refid="needs.junit"/>
-            <selector refid="needs.apache-regexp"/>
-            <selector refid="needs.apache-oro"/>
-            <selector refid="needs.apache-bcel"/>
-            <selector refid="needs.apache-log4j"/>
-            <selector refid="needs.commons-logging"/>
-            <selector refid="needs.apache-bsf"/>
-            <selector refid="needs.javamail"/>
-            <selector refid="needs.netrexx"/>
-            <selector refid="needs.commons-net"/>
-            <selector refid="needs.antlr"/>
-            <selector refid="needs.jmf"/>
-            <selector refid="needs.jai"/>
-            <selector refid="needs.jdepend"/>
-            <selector refid="needs.swing"/>
-            <selector refid="needs.jsch"/>
-            <selector refid="needs.apache-xalan2"/>
-          </or>
-        </not>
-      </and>
-      <metainf dir="${build.dir}">
-        <include name="LICENSE.txt"/>
-        <include name="NOTICE.txt"/>
-      </metainf>
     </jar>
 
     <macrodef name="optional-jar">
@@ -1026,7 +985,7 @@
 
     <copy todir="${src.dist.docs}">
       <fileset dir="${docs.dir}">
-        <exclude name="manual/api/**"/>
+        <exclude name="manual/api/"/>
         <patternset refid="site.excludes"/>
       </fileset>
     </copy>
@@ -1106,7 +1065,7 @@
         <include name="${dist.name}/bin/*.py"/>
       </zipfileset>
       <fileset dir="${dist.name}/..">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/bin/*.pl"/>
@@ -1126,7 +1085,7 @@
         <include name="${dist.name}/bin/*.py"/>
       </tarfileset>
       <tarfileset dir="${dist.name}/.." username="ant" group="ant">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/bin/*.pl"/>
@@ -1160,7 +1119,6 @@
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.binaries}/">
-        <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
@@ -1177,7 +1135,7 @@
         <include name="${dist.name}/build.sh"/>
       </zipfileset>
       <fileset dir="${dist.name}/..">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
       </fileset>
@@ -1192,7 +1150,7 @@
         <include name="${dist.name}/build.sh"/>
       </tarfileset>
       <tarfileset dir="${dist.name}/.." username="ant" group="ant">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
@@ -1205,7 +1163,6 @@
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.source}/">
-        <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
@@ -1684,7 +1641,7 @@ see ${build.junit.reports} / ${antunit.reports}
           <exclude name="${ant.package}/types/selectors/BaseSelectorTest.java"/>
 
           <!-- helper classes, not testcases -->
-          <exclude name="org/example/**"/>
+          <exclude name="org/example/"/>
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
           <exclude name="${optional.package}/junit/TestFormatter.java"/>
 
