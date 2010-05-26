@@ -122,7 +122,7 @@ And of course, the ubiquitous <b>clean</b> target.
 
 With standard target names, it is easy to build encompassing Ant build
 files which just hand off the work to the classes below using the
-<a href="manual/CoreTasks/ant.html">ant</a>
+<a href="manual/Tasks/ant.html">ant</a>
 task. For example. the clean target could be handed down to the <tt>intf</tt> and
 <tt>impl</tt> subdirectories from a parent directory
 
@@ -147,9 +147,9 @@ entry points is therefore very useful, even before a project becomes big and com
 </h3>
 
 If Ant does not do what you want, you can use the
-<a href="manual/CoreTasks/exec.html">exec</a> and
-<a href="manual/CoreTasks/java.html">java</a> tasks or
-<a href="manual/OptionalTasks/script.html">inline scripting</a> to extend it. In a
+<a href="manual/Tasks/exec.html">exec</a> and
+<a href="manual/Tasks/java.html">java</a> tasks or
+<a href="manual/Tasks/script.html">inline scripting</a> to extend it. In a
 project with many <tt>build.xml</tt> files, you soon find that having a single
 central place for implementing the functionality keeps maintenance
 overhead down. Implementing task extensions through Java code seems
@@ -180,7 +180,7 @@ Embrace Automated Testing
 
 <b>(alternatively "recriminate early, recriminate often")</b>
 <p>
-Ant lets you call <a href="manual/OptionalTasks/junit.html">JUnit</a>
+Ant lets you call <a href="manual/Tasks/junit.html">JUnit</a>
 tasks, which unit test the code your team has written. Automated testing
 may seem like extra work at first, but JUnit makes writing unit tests so
 easy that you have almost no reason not to. Invest the time in learning
@@ -203,7 +203,7 @@ given the choice.
 <p>
 System tests are harder to automate than unit tests, but if you can
 write java code to stress large portions of the system - even if the code
-can not run as JUnit tasks - then the <a href= "manual/CoreTasks/java.html">java</a>
+can not run as JUnit tasks - then the <a href= "manual/Tasks/java.html">java</a>
 task can be used to invoke them. It is best to specify that you want a
 new JVM for these tests, so that a significant crash does not break the
 full build. The Junit extensions such as 
@@ -263,8 +263,8 @@ The common barriers to cross-platform Ant are the use of command line
 tools (exec tasks) which are not portable, path issues, and hard coding
 in the location of things.
 
-<h3>Command Line apps: <a href="manual/CoreTasks/exec.html">Exec</a> /
- <a href= "manual/CoreTasks/apply.html">Apply</a></h3>
+<h3>Command Line apps: <a href="manual/Tasks/exec.html">Exec</a> /
+ <a href= "manual/Tasks/apply.html">Apply</a></h3>
 
 The trouble with external invocation is that not all functions are found
 cross platform, and those that are often have different names - DOS
@@ -307,7 +307,7 @@ attributes), or by including a fileset of <tt>*.jar</tt> in the classpath
 definition.
 <p>
 There is also the <a
-href="manual/CoreTasks/pathconvert.html">PathConvert</a> task which
+href="manual/Tasks/pathconvert.html">PathConvert</a> task which
 can put a fully resolved path into a property. Why do that? Because then 
 you can use that path in other ways - such as pass it as a parameter to 
 some application you are calling, or use the replace task to patch it
@@ -326,14 +326,14 @@ find any <tt>.java</tt> files. The Java compiler is of course case sensitive - y
 not have a class 'ExampleThree' implemented in "examplethree.java".
 
 <p>
-Some tasks only work on one platform - <a href= "manual/CoreTasks/chmod.html">
+Some tasks only work on one platform - <a href= "manual/Tasks/chmod.html">
 Chmod</a> being a classic example. These tasks usually result in just a
 warning message on an unsupported platform - the rest of the target's
 tasks will still be called. Other tasks degrade their functionality on
 platforms or Java versions. In particular, any task which adjusts the
 timestamp of files can not do so properly on Java 1.1. Tasks which can
-do that - <a href="manual/CoreTasks/get.html">Get</a>, <a
-href="manual/CoreTasks/touch.html">Touch</a> and <A href="manual/CoreTasks/unzip.html">
+do that - <a href="manual/Tasks/get.html">Get</a>, <a
+href="manual/Tasks/touch.html">Touch</a> and <A href="manual/Tasks/unzip.html">
 Unjar/Unwar/Unzip</a> for example, degrade their functionality on
 Java1.1, usually resorting to the current timestamp instead.
 
@@ -348,7 +348,7 @@ on Windows, OS/2 and Unix and hence called from Ant without issues. The
 perl code can be left to resolve its own platform issues. Don't forget to
 set the line endings of the file to the appropriate platform when you
 redistribute Perl code; <a
-href="manual/CoreTasks/fixcrlf.html">fixCRLF</a> 
+href="manual/Tasks/fixcrlf.html">fixCRLF</a> 
 can do that for you.
 
 <a name="team">
@@ -381,36 +381,36 @@ processes for deploying Java to remote sites are reasonably well
 evolved in Ant. That is because we all have to do it these days, so
 many people have put in the effort to make the tasks easier.
 <p>
-Ant can <a href="manual/CoreTasks/jar.html">Jar</a>, <a href=
-"manual/CoreTasks/tar.html">Tar</a> or <a
-href="manual/CoreTasks/zip.html">Zip</a> files for deployment, while the
-<a href="manual/CoreTasks/war.html">War</a> task extends the jar task
+Ant can <a href="manual/Tasks/jar.html">Jar</a>, <a href=
+"manual/Tasks/tar.html">Tar</a> or <a
+href="manual/Tasks/zip.html">Zip</a> files for deployment, while the
+<a href="manual/Tasks/war.html">War</a> task extends the jar task
 for better servlet deployment. 
-<a href ="manual/OptionalTasks/jlink.html">Jlink</a> is a
+<a href ="manual/Tasks/jlink.html">Jlink</a> is a
 jar generation file which lets you merge multiple sub jars. This is
 ideal for a build process in which separate jars are generated by sub
 projects, yet the final output is a merged jar. <a href=
-"manual/OptionalTasks/cab.html">Cab</a> can be used on Win32 boxes to
+"manual/Tasks/cab.html">Cab</a> can be used on Win32 boxes to
 build a cab file which is useful if you still have to target IE deployment.
 
 <p>
 The <a href="index.html#ftp">ftp</a> task lets you move stuff up to a
 server. Beware of putting the ftp password in the build file - a property
 file with tight access control is slightly better. The <a href=
-"manual/CoreTasks/fixcrlf.html">FixCRLF</a> task is often a useful interim step if
+"manual/Tasks/fixcrlf.html">FixCRLF</a> task is often a useful interim step if
 you need to to adjust the line endings of files. A
 WebDav task has long been discussed, which would provide a more secure
 upload to web servers, but it is still in the todo list. Rumour has it
 that there is such a task in the jakarta-slide libraries. With MacOS X,
 Linux and Windows XP all supporting WebDAV file systems, you may even be able
-to use <a href="manual/CoreTasks/copy.html">copy</a> to deploy
+to use <a href="manual/Tasks/copy.html">copy</a> to deploy
 though a firewall. 
 
 <p>
-EJB deployment is aided by the <a href="manual/OptionalTasks/ejb.html">ejb</a> tasks,
+EJB deployment is aided by the <a href="manual/Tasks/ejb.html">ejb</a> tasks,
 while the 
 <a
-href="manual/OptionalTasks/serverdeploy.html">serverdeploy</a>
+href="manual/Tasks/serverdeploy.html">serverdeploy</a>
 suite can deploy to multiple servers. The popularity of Ant has
 encouraged vendors to produce their own deployment tasks which they
 redistribute with their servers. For example, the Tomcat4.1 installation
@@ -418,9 +418,9 @@ includes tasks to deploy, undeploy and reload web applications.
 
 <p>
 Finally, there are of course the fallbacks of just copying files to a
-destination using <a href="manual/CoreTasks/copy.html">Copy</a> and <a href="index.html#copydir">Copydir</a> , or just sending them to a person or
-process using <a href="manual/CoreTasks/mail.html">Mail</a> or the attachment
-aware <a href= "manual/OptionalTasks/mimemail.html">MimeMail</a>.
+destination using <a href="manual/Tasks/copy.html">Copy</a> and <a href="index.html#copydir">Copydir</a> , or just sending them to a person or
+process using <a href="manual/Tasks/mail.html">Mail</a> or the attachment
+aware <a href= "manual/Tasks/mimemail.html">MimeMail</a>.
 In one project our team even used Ant to build CD images through a build followed
 by a long set of Copy tasks, which worked surprisingly well, certainly
 easier than when we mailed them to the free email service on
@@ -673,7 +673,7 @@ Tips and Tricks</h2>
     get
 </b><dd>
 
-The <a href="manual/CoreTasks/get.html">get</a> task can fetch any URL, so be used
+The <a href="manual/Tasks/get.html">get</a> task can fetch any URL, so be used
 to trigger remote server side code during the build process, from remote
 server restarts to sending SMS/pager messages to the developer
 cellphones.
@@ -683,7 +683,7 @@ i18n
 </b><dd>
 
 Internationalisation is always trouble. Ant helps here with the <a href=
-"manual/OptionalTasks/native2ascii.html">native2ascii</a> task which can escape out all non
+"manual/Tasks/native2ascii.html">native2ascii</a> task which can escape out all non
 ascii characters into unicode. You can use this to write java files
 which include strings (and indeed comments) in your own non-ASCII
 language and then use native2ascii to convert to ascii prior to feeding
@@ -758,7 +758,7 @@ XML entity expansion is handled during the parsing process.
 <p>
 The <tt>&lt;import&gt;</tt> task does powerful things, such as let you override targets,
 and use ant properties to name the location of the file to import. Consult the
-<a href="manual/CoreTasks/import.html">documentation</a> for the specifics of
+<a href="manual/Tasks/import.html">documentation</a> for the specifics of
 these features.  
 
 <p>
@@ -791,7 +791,7 @@ Implement complex Ant builds through XSL
 </b><dd>
 
 XSLT can be used to dynamically generate build.xml files from a source
-xml file, with the <a href="manual/CoreTasks/style.html">xslt</a> task controlling
+xml file, with the <a href="manual/Tasks/style.html">xslt</a> task controlling
 the transform. This is the current recommended strategy for creating
 complex build files dynamically. However, its use is still apparently
 quite rare - which means you will be on the bleeding edge of technology.

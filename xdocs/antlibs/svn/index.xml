@@ -42,14 +42,14 @@
       <subsection name="svn">
         <p>A very thin layer on top of the command line executable,
         comparable to <a
-        href="http://ant.apache.org/manual/CoreTasks/cvs.html">the CVS
+        href="http://ant.apache.org/manual/Tasks/cvs.html">the CVS
         task</a>.</p>
       </subsection>
 
       <subsection name="changelog">
         <p>Creates a log of change comments between two revisions,
         comparable to <a
-        href="http://ant.apache.org/manual/CoreTasks/changelog.html">CvsChangeLog</a>.</p>
+        href="http://ant.apache.org/manual/Tasks/changelog.html">CvsChangeLog</a>.</p>
       </subsection>
 
       <subsection name="*diff">
@@ -60,7 +60,7 @@
         for the changes between two revisions.</p>
 
         <p>Together comparable to <a
-        href="http://ant.apache.org/manual/CoreTasks/cvstagdiff.html">CvsTagDiff</a>.</p>
+        href="http://ant.apache.org/manual/Tasks/cvstagdiff.html">CvsTagDiff</a>.</p>
       </subsection>
     </section>
 
