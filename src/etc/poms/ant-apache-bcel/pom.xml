@@ -56,8 +56,8 @@
           <source>1.4</source>
           <target>1.4</target>
           <includes>
-            <include>org/apache/tools/ant/tfilters/util/JavaClassHelper*</include>
-            <include>org/apache/tools/ant/tutil/depend/bcel/*</include>
+            <include>org/apache/tools/ant/filters/util/JavaClassHelper*</include>
+            <include>org/apache/tools/ant/util/depend/bcel/*</include>
           </includes>
         </configuration>
       </plugin>
