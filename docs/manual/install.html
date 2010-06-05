@@ -27,7 +27,7 @@
 <h2><a name="getting">Getting Ant</a></h2>
 
 <h3>The Short Story</h3>
-<p>To get up and running with Ant quickly, follow these steps:
+<p>To get up and running with the binary edition of Ant quickly, follow these steps:
 <ol>
 <li>Make sure you have a Java environment installed, See <a href="#sysrequirements">System
 Requirements</a> for details.</li>
@@ -36,13 +36,18 @@ Requirements</a> for details.</li>
 <li>Set environmental variables <code>JAVA_HOME</code> to your Java environment, <code>ANT_HOME</code> to
 the directory you uncompressed Ant to, and add <code>${ANT_HOME}/bin</code> (Unix) or
 <code>%ANT_HOME%/bin</code> (Windows) to your <code>PATH</code>. See <a href="#setup">Setup</a> for details.</li>
-<li>Optionally, run <code>ant -f fetch.xml -Ddest=system</code> to get the library dependencies
-of most of the Ant optional tasks. If you don't do this, many of the optional Ant tasks will not be available. See <a href="#optionalTasks">Optional Tasks</a> for
-details and other options for the -Ddest parameter.</li>
+<li>Optionally, from the <code>ANT_HOME</code> directory run <code>ant -f fetch.xml -Ddest=system</code> to get
+the library dependencies of most of the Ant tasks that require them. If you don't do this, many of the dependent
+Ant tasks will not be available. See <a href="#optionalTasks">Optional Tasks</a> for details and other options
+for the -Ddest parameter.</li>
 <li>Optionally, add any desired Antlibs. See <a href="http://ant.apache.org/antlibs/proper.html" target="_top">Ant Libraries</a> for a list.
 </ol>
 </p>
-The short story for working with the Ant source code is:
+<p>
+Note that the links in the list above will give more details about each of the steps,
+should you need them. Or you can just continue reading the rest of this document.
+</p>
+The short story for working with the Ant source code (not needed if you are working with the binary edition) is:
 <ol>
 <li>Get the source code. See <a href="#sourceEdition">Source Edition</a> for details.</li>
 <li> Build Ant. See <a href="#buildingant">Building Ant</a> for details.</li>
@@ -459,9 +464,9 @@ libraries must be added to Ant's classpath, in any of the following ways:
 </p>
 
 <p>
-Note that not all dependencies are gathered using <code>fetch.xml</code>. For example, netrexx.jar and jai.jar
-require you to manually download the files. See <a href="#librarydependencies">Library Dependencies</a>.for the
-URLs where you can get these files.
+Note that not all dependencies are gathered using <code>fetch.xml</code>. Tasks that depend on
+commercial software, in particular, will require you to have the commercial software installed
+in order to be used.
 </p>
 
 <p>The Apache Ant Project also provides additional tasks and types that are available as separately
