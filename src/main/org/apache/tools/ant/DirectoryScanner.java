@@ -1458,7 +1458,7 @@ public class DirectoryScanner
      * @param path the path to check.
      * @return whether all the specified directory's contents are excluded.
      */
-    private boolean contentsExcluded(TokenizedPath path) {
+    /* package */ boolean contentsExcluded(TokenizedPath path) {
         for (int i = 0; i < excludePatterns.length; i++) {
             if (excludePatterns[i].endsWith(SelectorUtils.DEEP_TREE_MATCH)
                 && excludePatterns[i].withoutLastToken()
@@ -1783,7 +1783,7 @@ public class DirectoryScanner
      *
      * @since Ant 1.6.3
      */
-    private synchronized void ensureNonPatternSetsReady() {
+    /* package */ synchronized void ensureNonPatternSetsReady() {
         if (!areNonPatternSetsReady) {
             includePatterns = fillNonPatternSet(includeNonPatterns, includes);
             excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
