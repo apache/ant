@@ -1055,7 +1055,8 @@ public class JUnitTask extends Task {
 
             if (!FILE_UTILS.tryHardToDelete(propsFile)) {
                 throw new BuildException("Could not delete temporary "
-                                         + "properties file.");
+                                         + "properties file '"
+                                         + propsFile.getAbsolutePath() + "'.");
             }
         }
 

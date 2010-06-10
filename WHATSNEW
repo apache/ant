@@ -41,6 +41,10 @@ Fixed bugs:
    certain circumstances.
    Bugzilla Report 49296.
 
+ * <junit> will now produce better diagnostics when it fails to delete
+   a temporary file.
+   Bugzilla Report 49419.
+
 Other changes:
 --------------
 
