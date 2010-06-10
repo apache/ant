@@ -31,24 +31,24 @@ public class DefaultLoggerTest extends TestCase {
     private static String msg(Throwable error, boolean verbose) {
         StringBuffer m = new StringBuffer();
         DefaultLogger.throwableMessage(m, error, verbose);
-        return m.toString().replace(StringUtils.LINE_SEP.charAt(0), '\n');
+        return m.toString();
     }
 
     public void testThrowableMessage() throws Exception { // #43398
         BuildException be = new BuildException("oops", new Location("build.xml", 1, 0));
         assertEquals(
-                "build.xml:1: oops\n",
+                "build.xml:1: oops" + StringUtils.LINE_SEP,
                 msg(be, false));
         be = ProjectHelper.addLocationToBuildException(be, new Location("build.xml", 2, 0));
         assertEquals(
-                "build.xml:2: The following error occurred while executing this line:\n" +
-                "build.xml:1: oops\n",
+                "build.xml:2: The following error occurred while executing this line:" + StringUtils.LINE_SEP +
+                "build.xml:1: oops" + StringUtils.LINE_SEP,
                 msg(be, false));
         be = ProjectHelper.addLocationToBuildException(be, new Location("build.xml", 3, 0));
         assertEquals(
-                "build.xml:3: The following error occurred while executing this line:\n" +
-                "build.xml:2: The following error occurred while executing this line:\n" +
-                "build.xml:1: oops\n",
+                "build.xml:3: The following error occurred while executing this line:" + StringUtils.LINE_SEP +
+                "build.xml:2: The following error occurred while executing this line:" + StringUtils.LINE_SEP +
+                "build.xml:1: oops" + StringUtils.LINE_SEP,
                 msg(be, false));
         Exception x = new Exception("problem") {
             public void printStackTrace(PrintWriter w) {
@@ -57,19 +57,19 @@ public class DefaultLoggerTest extends TestCase {
             }
         };
         assertEquals(
-                "problem\n" +
-                "  at p.C.m\n",
+                "problem" + StringUtils.LINE_SEP +
+                "  at p.C.m" + StringUtils.LINE_SEP,
                 msg(x, false));
         be = new BuildException(x, new Location("build.xml", 1, 0));
         assertEquals(
-                "build.xml:1: problem\n" +
-                "  at p.C.m\n",
+                "build.xml:1: problem" + StringUtils.LINE_SEP +
+                "  at p.C.m" + StringUtils.LINE_SEP,
                 msg(be, false));
         be = ProjectHelper.addLocationToBuildException(be, new Location("build.xml", 2, 0));
         assertEquals(
-                "build.xml:2: The following error occurred while executing this line:\n" +
-                "build.xml:1: problem\n" +
-                "  at p.C.m\n",
+                "build.xml:2: The following error occurred while executing this line:" + StringUtils.LINE_SEP +
+                "build.xml:1: problem" + StringUtils.LINE_SEP +
+                "  at p.C.m" + StringUtils.LINE_SEP,
                 msg(be, false));
     }
 
