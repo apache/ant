@@ -149,10 +149,7 @@ public class LocatorTest extends TestCase {
      */
     public void testFileFromRemoteShare() throws Throwable {
         String resolved = Locator.fromJarURI(SHARED_JAR_URI);
-        assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, unix);
-        assertResolved(SHARED_JAR_URI, LAUNCHER_JAR.replace('/', '\\'),
-                       resolved, windows);
-        File f=new File(resolved);
+        File f = new File(resolved);
         String path = f.getAbsolutePath();
         if (windows) {
             assertEquals(0, path.indexOf("\\\\"));
