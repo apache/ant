@@ -881,7 +881,7 @@ public class JUnitTask extends Task {
             FILE_UTILS.close(writer);
 
             try {
-                casesFile.delete();
+                FILE_UTILS.tryHardToDelete(casesFile);
             } catch (Exception e) {
                 log(e.toString(), Project.MSG_ERR);
             }
@@ -979,7 +979,7 @@ public class JUnitTask extends Task {
             props.store(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
         } catch (java.io.IOException e) {
-            propsFile.delete();
+            FILE_UTILS.tryHardToDelete(propsFile);
             throw new BuildException("Error creating temporary properties "
                                      + "file.", e, getLocation());
         }
@@ -1034,7 +1034,7 @@ public class JUnitTask extends Task {
             } finally {
                 FileUtils.close(br);
                 if (vmWatcher.exists()) {
-                    vmWatcher.delete();
+                    FILE_UTILS.tryHardToDelete(vmWatcher);
                 }
             }
 
@@ -1053,7 +1053,7 @@ public class JUnitTask extends Task {
                 logVmCrash(feArray, test, vmCrashString);
             }
 
-            if (!propsFile.delete()) {
+            if (!FILE_UTILS.tryHardToDelete(propsFile)) {
                 throw new BuildException("Could not delete temporary "
                                          + "properties file.");
             }
