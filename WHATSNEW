@@ -45,6 +45,12 @@ Fixed bugs:
    a temporary file.
    Bugzilla Report 49419.
 
+ * Ant would often scan directories even though there were known to
+   only hold excluded files when evaluating filesets.  This never
+   resulted in worng results but degraded performance of the scan
+   itself.
+   Bugzilla Report 49420.
+
 Other changes:
 --------------
 

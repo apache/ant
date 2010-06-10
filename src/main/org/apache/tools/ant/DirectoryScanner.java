@@ -1255,7 +1255,8 @@ public class DirectoryScanner
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(newPath)) {
+                    if (fast && couldHoldIncluded(newPath)
+                        && !contentsExcluded(newPath)) {
                         scandir(file, newPath, fast, children,
                                 directoryNamesFollowed);
                     }
