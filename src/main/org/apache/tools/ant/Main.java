@@ -193,7 +193,6 @@ public class Main implements AntMain {
                          ClassLoader coreLoader) {
 
         try {
-            Diagnostics.validateVersion();
             processArgs(args);
         } catch (Throwable exc) {
             handleLogfile();

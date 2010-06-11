@@ -127,7 +127,7 @@ its <i>depends</i>-clause the "compile" is executed before).
 <h2>Use the Task</h2>
 <p>But after creating the jar we want to use our new Task. Therefore we need a
 new target "use". Before we can use our new task we have to declare it with
-<a href="http://ant.apache.org/manual/CoreTasks/taskdef.html" target="_blank">
+<a href="http://ant.apache.org/manual/Tasks/taskdef.html" target="_blank">
 <code>&lt;taskdef&gt;</code> [2]</a>. And for easier process we change the default clause:
 <pre class="code">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -284,7 +284,7 @@ arguments of the set-method:<ul>
 <li>some more classes (e.g. <i>java.io.File</i>; see
     <a href="develop.html#set-magic">Manual
     'Writing Your Own Task' [3]</a>)</li>
-<li>Any Java Object parsed from Ant 1.8's <a href="CoreTasks/propertyhelper.html">Property
+<li>Any Java Object parsed from Ant 1.8's <a href="Tasks/propertyhelper.html">Property
 Helper</a></li>
 </ul>
 Before calling the set-method all properties are resolved. So a <tt>&lt;helloworld message="${msg}"/&gt;</tt>
@@ -756,7 +756,7 @@ The last sources and the buildfile are also available
 
 Used Links:<br>
 &nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/properties.html#built-in-props">http://ant.apache.org/manual/properties.html#built-in-props</a><br>
-&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/CoreTasks/taskdef.html">http://ant.apache.org/manual/CoreTasks/taskdef.html</a><br>
+&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/Tasks/taskdef.html">http://ant.apache.org/manual/Tasks/taskdef.html</a><br>
 &nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br>
 &nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br>
 &nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br>

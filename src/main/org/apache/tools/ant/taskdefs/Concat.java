@@ -471,6 +471,8 @@ public class Concat extends Task implements ResourceCollection {
     private Vector filterChains;
     /** ignore dates on input files */
     private boolean forceOverwrite = true;
+    /** overwrite read-only files */
+    private boolean force = false;
     /** String to place at the start of the concatented stream */
     private TextElement footer;
     /** String to place at the end of the concatented stream */
@@ -526,6 +528,7 @@ public class Concat extends Task implements ResourceCollection {
         eolString = StringUtils.LINE_SEP;
         rc = null;
         ignoreEmpty = true;
+        force = false;
     }
 
     // Attribute setters.
@@ -581,12 +584,36 @@ public class Concat extends Task implements ResourceCollection {
 
     /**
      * Force overwrite existing destination file
-     * @param force if true always overwrite, otherwise only overwrite
-     *              if the output file is older any of the input files.
+     * @param forceOverwrite if true always overwrite, otherwise only
+     *              overwrite if the output file is older any of the
+     *              input files.
      * @since Ant 1.6
+     * @deprecated use #setOverwrite instead
      */
-    public void setForce(boolean force) {
-        this.forceOverwrite = force;
+    public void setForce(boolean forceOverwrite) {
+        this.forceOverwrite = forceOverwrite;
+    }
+
+    /**
+     * Force overwrite existing destination file
+     * @param forceOverwrite if true always overwrite, otherwise only
+     *              overwrite if the output file is older any of the
+     *              input files.
+     * @since Ant 1.8.2
+     */
+    public void setOverwrite(boolean forceOverwrite) {
+        setForce(forceOverwrite);
+    }
+
+    /**
+     * Whether read-only destinations will be overwritten.
+     *
+     * <p>Defaults to false</p>
+     *
+     * @since Ant 1.8.2
+     */
+    public void setForceReadOnly(boolean f) {
+        force = f;
     }
 
     /**
@@ -761,9 +788,11 @@ public class Concat extends Task implements ResourceCollection {
         }
         try {
             //most of these are defaulted because the concat-as-a-resource code hijacks a lot:
-            ResourceUtils.copyResource(new ConcatResource(c), dest == null ? new LogOutputResource(
-                    this, Project.MSG_WARN) : dest, null, null, true, false, append, null, null,
-                    getProject());
+            ResourceUtils.copyResource(new ConcatResource(c), dest == null
+                                       ? new LogOutputResource(this, Project.MSG_WARN)
+                                       : dest,
+                                       null, null, true, false, append, null,
+                                       null, getProject(), force);
         } catch (IOException e) {
             throw new BuildException("error concatenating content to " + dest, e);
         }

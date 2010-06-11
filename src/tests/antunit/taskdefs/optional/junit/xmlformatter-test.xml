@@ -50,4 +50,43 @@ public class A extends TestCase {
     <xmlvalidate file="${output}/TEST-org.example.A.xml"
                  lenient="true"/>
   </target>
+
+  <target name="testEntities"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49404">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/A.java"><![CDATA[
+package org.example;
+import junit.framework.TestCase;
+public class A extends TestCase {
+    public void testX() {
+       assertTrue("&amp;&", false);
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/A.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="xml"/>
+    </junit>
+    <xmlvalidate file="${output}/TEST-org.example.A.xml"
+                 lenient="true"/>
+    <!--
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="message=&quot;&amp;amp;amp;&amp;amp;"/>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="message=AssertionFailedError: &amp;amp;&amp;"/>
+    -->
+  </target>
+
 </project>

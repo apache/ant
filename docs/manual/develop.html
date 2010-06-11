@@ -41,7 +41,7 @@
     conversions for you, see <a href="#set-magic">below</a>.</li>
 
   <li>If your task shall contain other tasks as nested elements (like
-  <a href="CoreTasks/parallel.html"><code>parallel</code></a>), your
+  <a href="Tasks/parallel.html"><code>parallel</code></a>), your
   class must implement the interface
   <code>org.apache.tools.ant.TaskContainer</code>.  If you do so, your
   task can not support any other nested elements.  See 
@@ -135,7 +135,7 @@ good convention, though.</p>
 
 <p>Ant will always expand properties before it passes the value of an
 attribute to the corresponding setter method. <b>Since Ant 1.8</b>, it is
-possible to <a href="CoreTasks/propertyhelper.html">extend Ant's property handling</a>
+possible to <a href="Tasks/propertyhelper.html">extend Ant's property handling</a>
 such that a non-string Object may be the result of the evaluation of a string
 containing a single property reference. These will be assigned directly via
 setter methods of matching type. Since it requires some beyond-the-basics
@@ -486,9 +486,9 @@ for the following events</P>
 </ul>
 
 <p>If the build file invokes another build file via <a
-href="CoreTasks/ant.html"><code>&lt;ant&gt;</code></a> or <a
-href="CoreTasks/subant.html"><code>&lt;subant&gt;</code></a> or uses <a
-href="CoreTasks/antcall.html"><code>&lt;antcall&gt;</code></a>, you are creating a
+href="Tasks/ant.html"><code>&lt;ant&gt;</code></a> or <a
+href="Tasks/subant.html"><code>&lt;subant&gt;</code></a> or uses <a
+href="Tasks/antcall.html"><code>&lt;antcall&gt;</code></a>, you are creating a
 new Ant "project" that will send target and task level events of its
 own but never sends build started/finished events.  Ant 1.6.2
 introduces an extension of the BuildListener interface named

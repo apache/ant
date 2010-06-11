@@ -228,7 +228,7 @@
           </tr>
           <tr>
             <td>1.8.1</td>
-            <td>6 May 2010</td>
+            <td>7 May 2010</td>
           </tr>
         </table>
       </answer>
@@ -335,7 +335,7 @@ Apache Ant version 1.6.2 compiled on July 16 2004
     <faq id="precompile-jsps">
       <question>How to I precompile Java Server Pages (JSPs)?</question>
       <answer>
-        <p>Ant has a built in optional task <a href="/manual/OptionalTasks/jspc.html">&lt;jspc&gt;</a>
+        <p>Ant has a built in optional task <a href="/manual/Tasks/jspc.html">&lt;jspc&gt;</a>
         which was intended for that. <b>But this task is deprecated.</b>
         Here the alternative suggested by the manual:</p>
         <p><i>Instead of relying on container specific JSP-compilers we suggest deploying
@@ -682,7 +682,7 @@ shell-prompt> m4 foo.m4 > foo
         course, comes with the overhead of adding JAR files to support
         the language, to say nothing of the added maintenance in requiring
         two languages to implement a single system. See the
-        <a href="manual/OptionalTasks/script.html">
+        <a href="manual/Tasks/script.html">
         <code>&lt;script&gt;</code> task documentation</a> for more
         details.</p>
       </answer>

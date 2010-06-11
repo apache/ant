@@ -124,4 +124,111 @@
                                value="Y"/>
   </target>
 
+  <!-- stolen from ../types/readwrite-test.xml - create a read-only file -->
+  <property name="file" value="testfile"/>
+  <condition property="unix">
+    <os family="unix"/>
+  </condition>
+  <target name="createTestdir">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <touch file="${output}/${file}"/>
+  </target>
+  <target name="makeFileUnwritable"
+          depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
+  <target name="makeFileUnwritable-Unix" id="unix">
+    <chmod file="${output}/${file}" perm="444"/>
+  </target>
+  <target name="makeFileUnwritable-Windows" unless="unix">
+    <attrib file="${output}/${file}" readonly="true"/>
+  </target>
+
+  <target name="testMoveOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't replace read-only destination file ">
+      <move toDir="${output}">
+        <fileset dir="${input}"/>
+      </move>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredMoveOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <move toDir="${output}">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </move>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMoveOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't replace read-only destination file ">
+      <move toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+      </move>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredMoveOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <move toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </move>
+    </au:expectfailure>
+  </target>
+
+  <target name="testForcedMoveOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <move toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+    </move>
+  </target>
+
+  <target name="testForcedFilteredMoveOverReadOnlyFile"
+          depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <move toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </move>
+  </target>
+
+  <target name="testForcedMoveOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <move toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+    </move>
+  </target>
+
+  <target name="testForcedFilteredMoveOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <move toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </move>
+  </target>
 </project>

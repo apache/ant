@@ -34,17 +34,16 @@
   <property name="name" value="ant"/>
   <!-- this is the groupId of ant in the Maven repository -->
   <property name="groupid" value="org/apache/ant"/>
-  <property name="project.version" value="1.8.1"/>
+  <property name="project.version" value="1.8.2alpha"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
-  <property name="pom.version" value="1.8.1-SNAPSHOT"/>
-  <property name="manifest-version" value="1.8.1"/>
+  <property name="pom.version" value="1.8.2-SNAPSHOT"/>
+  <property name="manifest-version" value="1.8.2"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="taskdefs.package" value="${ant.package}/taskdefs"/>
   <property name="condition.package" value="${taskdefs.package}/condition"/>
   <property name="optional.package" value="${taskdefs.package}/optional"/>
-  <property name="optional.condition.package" value="${optional.package}/condition"/>
   <property name="type.package" value="${ant.package}/types"/>
   <property name="optional.type.package" value="${type.package}/optional"/>
   <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
@@ -104,10 +103,10 @@
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.4"/>
   <property name="javac.source" value="1.4"/>
-  <property name="junit.fork" value="false"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
+  <property name="junit.fork" value="true"/>
   <property name="junit.forkmode" value="once"/>
   <property name="expandproperty.files"
             value="**/version.txt,**/defaultManifest.mf"/>
@@ -125,6 +124,10 @@
 
   <path id="tests-classpath">
     <pathelement location="${build.classes}"/>
+    <path refid="classpath"/>
+  </path>
+  <path id="tests-runtime-classpath">
+    <path refid="tests-classpath"/>
     <pathelement location="${build.tests}"/>
     <!--
         include the test source and test data dirs
@@ -132,12 +135,9 @@
      -->
     <pathelement location="${src.junit}"/>
     <pathelement location="${tests.etc.dir}"/>
-    <path refid="classpath"/>
+    <!-- Otherwise many tests fail with "com.sun.tools.javac.Main is not on the classpath.": -->
+    <pathelement location="${java.home}/../lib/tools.jar"/>
   </path>
-
-  <!-- turn this path into a string which is passed to the tests -->
-  <property name="tests-classpath.value"
-    refid="tests-classpath"/>
 
   <!--
         ===================================================================
@@ -172,7 +172,7 @@
   <selector id="needs.jdk1.5+">
     <or>
       <filename name="${taskdefs.package}/AptTest*"/>
-      <filename name="${util.package}/java15/*"/>
+      <filename name="${util.package}/java15/"/>
       <filename name="${ant.package}/loader/*5*"/>
     </or>
   </selector>
@@ -186,11 +186,11 @@
   </selector>
 
   <selector id="needs.apache-resolver">
-    <filename name="${apache.resolver.type.package}/**"/>
+    <filename name="${apache.resolver.type.package}/"/>
   </selector>
 
   <selector id="needs.junit">
-    <filename name="${optional.package}/junit/**"/>
+    <filename name="${optional.package}/junit/"/>
   </selector>
 
   <selector id="needs.apache-regexp">
@@ -200,14 +200,14 @@
   <selector id="needs.apache-oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
-      <filename name="${optional.package}/perforce/*"/>
+      <filename name="${optional.package}/perforce/"/>
     </or>
   </selector>
 
   <selector id="needs.apache-bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
-      <filename name="${util.package}/depend/bcel/*"/>
+      <filename name="${util.package}/depend/bcel/"/>
       <filename name="${optional.type.package}/depend/ClassFileSetTest*"/>
     </or>
   </selector>
@@ -250,26 +250,26 @@
   </selector>
 
   <selector id="needs.jmf">
-    <filename name="${optional.package}/sound/*"/>
+    <filename name="${optional.package}/sound/"/>
   </selector>
 
   <selector id="needs.jai">
     <or>
-      <filename name="${optional.package}/image/*"/>
-      <filename name="${optional.type.package}/image/*"/>
+      <filename name="${optional.package}/image/"/>
+      <filename name="${optional.type.package}/image/"/>
     </or>
   </selector>
 
   <selector id="needs.jdepend">
-    <filename name="${optional.package}/jdepend/*"/>
+    <filename name="${optional.package}/jdepend/"/>
   </selector>
 
   <selector id="needs.swing">
-    <filename name="${optional.package}/splash/*"/>
+    <filename name="${optional.package}/splash/"/>
   </selector>
 
   <selector id="needs.jsch">
-    <filename name="${optional.package}/ssh/*"/>
+    <filename name="${optional.package}/ssh/"/>
   </selector>
 
   <!-- needs TraceListenerEx3 interface implemented by PrintTraceListener -->
@@ -278,7 +278,7 @@
   </selector>
 
   <selector id="ant.launcher">
-    <filename name="${ant.package}/launch/**/*"/>
+    <filename name="${ant.package}/launch/"/>
   </selector>
 
   <patternset id="onlinetests">
@@ -339,69 +339,69 @@
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
       classname="org.apache.bsf.BSFManager"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="netrexx.present"
       classname="netrexx.lang.Rexx"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="junit.present"
       classname="org.junit.Test"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="commons.net.present"
       classname="org.apache.commons.net.ftp.FTPClient"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="antlr.present" 
       classname="antlr.Tool" 
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.regexp.present"
       classname="org.apache.regexp.RE"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="apache.oro.present"
       classname="org.apache.oro.text.regex.Perl5Matcher"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jmf.present"
       classname="javax.sound.sampled.Clip"
       classpathref="classpath"/>
     <available property="jai.present"
       classname="javax.media.jai.JAI"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jdepend.present"
       classname="jdepend.framework.JDepend"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="log4j.present"
       classname="org.apache.log4j.Logger"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="commons.logging.present"
       classname="org.apache.commons.logging.LogFactory"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="xalan.envcheck"
       classname="org.apache.xalan.xslt.EnvironmentCheck"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="which.present"
       classname="org.apache.env.Which"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <available property="xerces.present"
       classname="org.apache.xerces.parsers.SAXParser"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="bcel.present"
       classname="org.apache.bcel.Constants"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
           classpathref="classpath"/>
         <available classname="javax.mail.Transport"
-          classpathref="classpath"/>
+          classpathref="classpath" ignoresystemclasses="true"/>
       </and>
     </condition>
 
@@ -455,23 +455,23 @@
       <and>
         <available
           classname="org.apache.commons.httpclient.HttpClient"
-          classpathref="classpath"/>
+          classpathref="classpath" ignoresystemclasses="true"/>
         <isset property="commons.logging.present"/>
       </and>
     </condition>
 
     <available property="rhino.present"
       classname="org.mozilla.javascript.Scriptable"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="beanshell.present"
       classname="bsh.StringUtil"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="xerces1.present"
       classname="org.apache.xerces.framework.XMLParser"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
     <available property="jsch.present"
       classname="com.jcraft.jsch.Session"
-      classpathref="classpath"/>
+      classpathref="classpath" ignoresystemclasses="true"/>
 
     <property name="build.compiler" value="modern"/>
 
@@ -639,24 +639,28 @@
       manifest="${manifest}"
       whenmanifestonly="fail">
       <not>
-        <selector id="non-core">
-          <or>
-            <filename name="${optional.package}/**"/>
-            <filename name="${optional.type.package}/**"/>
-            <filename name="${util.package}/depend/**"/>
-            <filename name="${util.package}/optional/**"/>
-            <selector refid="needs.apache-log4j"/>
-            <selector refid="needs.commons-logging"/>
-            <selector refid="needs.apache-bcel"/>
-            <selector refid="needs.apache-bsf"/>
-            <selector refid="needs.apache-regexp"/>
-            <selector refid="needs.apache-resolver"/>
-            <selector refid="needs.apache-oro"/>
-            <selector refid="needs.jdk1.5+"/>
-            <selector refid="needs.javamail"/>
-            <selector refid="ant.launcher"/>
-          </or>
-        </selector>
+        <or>
+          <!-- Verification: (cd dist/lib; for j in *.jar; do jar tf $j; done) | egrep -v '/$|META-INF/MANIFEST\.MF' | sort | uniq -d -->
+          <selector refid="needs.antlr"/>
+          <selector refid="needs.apache-bcel"/>
+          <selector refid="needs.apache-bsf"/>
+          <selector refid="needs.apache-log4j"/>
+          <selector refid="needs.apache-oro"/>
+          <selector refid="needs.apache-regexp"/>
+          <selector refid="needs.apache-resolver"/>
+          <selector refid="needs.apache-xalan2"/>
+          <selector refid="needs.commons-logging"/>
+          <selector refid="needs.commons-net"/>
+          <selector refid="needs.jai"/>
+          <selector refid="needs.javamail"/>
+          <selector refid="needs.jdepend"/>
+          <selector refid="needs.jmf"/>
+          <selector refid="needs.jsch"/>
+          <selector refid="needs.junit"/>
+          <selector refid="needs.netrexx"/>
+          <selector refid="needs.swing"/>
+          <selector refid="ant.launcher"/>
+        </or>
       </not>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
@@ -700,42 +704,6 @@
         <attribute name="Class-Path"
           value="ant.jar xalan.jar"/>
       </manifest>
-    </jar>
-
-    <jar destfile="${build.lib}/ant-nodeps.jar"
-      basedir="${build.classes}"
-      manifest="${manifest.tmp}"
-      whenmanifestonly="${optional.jars.whenmanifestonly}">
-      <and>
-        <selector refid="non-core"/>
-        <not>
-          <or>
-            <selector refid="ant.launcher"/>
-            <selector refid="needs.apache-resolver"/>
-            <selector refid="needs.junit"/>
-            <selector refid="needs.apache-regexp"/>
-            <selector refid="needs.apache-oro"/>
-            <selector refid="needs.apache-bcel"/>
-            <selector refid="needs.apache-log4j"/>
-            <selector refid="needs.commons-logging"/>
-            <selector refid="needs.apache-bsf"/>
-            <selector refid="needs.javamail"/>
-            <selector refid="needs.netrexx"/>
-            <selector refid="needs.commons-net"/>
-            <selector refid="needs.antlr"/>
-            <selector refid="needs.jmf"/>
-            <selector refid="needs.jai"/>
-            <selector refid="needs.jdepend"/>
-            <selector refid="needs.swing"/>
-            <selector refid="needs.jsch"/>
-            <selector refid="needs.apache-xalan2"/>
-          </or>
-        </not>
-      </and>
-      <metainf dir="${build.dir}">
-        <include name="LICENSE.txt"/>
-        <include name="NOTICE.txt"/>
-      </metainf>
     </jar>
 
     <macrodef name="optional-jar">
@@ -1017,7 +985,7 @@
 
     <copy todir="${src.dist.docs}">
       <fileset dir="${docs.dir}">
-        <exclude name="manual/api/**"/>
+        <exclude name="manual/api/"/>
         <patternset refid="site.excludes"/>
       </fileset>
     </copy>
@@ -1097,7 +1065,7 @@
         <include name="${dist.name}/bin/*.py"/>
       </zipfileset>
       <fileset dir="${dist.name}/..">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/bin/*.pl"/>
@@ -1117,7 +1085,7 @@
         <include name="${dist.name}/bin/*.py"/>
       </tarfileset>
       <tarfileset dir="${dist.name}/.." username="ant" group="ant">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/bin/*.pl"/>
@@ -1151,7 +1119,6 @@
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.binaries}/">
-        <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
@@ -1168,7 +1135,7 @@
         <include name="${dist.name}/build.sh"/>
       </zipfileset>
       <fileset dir="${dist.name}/..">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
       </fileset>
@@ -1183,7 +1150,7 @@
         <include name="${dist.name}/build.sh"/>
       </tarfileset>
       <tarfileset dir="${dist.name}/.." username="ant" group="ant">
-        <include name="${dist.name}/**"/>
+        <include name="${dist.name}/"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
@@ -1196,7 +1163,6 @@
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.source}/">
-        <include name="**/*"/>
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
@@ -1527,6 +1493,7 @@ see ${build.junit.reports} / ${antunit.reports}
         <property name="test.junit.vmargs" value=""/>
         <property name="ant.junit.failureCollector"
                   value="${junit.collector.dir}/${junit.collector.class}"/>
+        <!-- XXX includeantruntime="false" does not solve "multiple versions of ant detected in path for junit" warning -->
         <junit printsummary="${junit.summary}"
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"
@@ -1539,13 +1506,13 @@ see ${build.junit.reports} / ${antunit.reports}
           <sysproperty key="build.tests.value" value="${build.tests.value}"/>
           <sysproperty key="offline" value="${offline}"/>
           <sysproperty key="tests-classpath.value"
-                       value="${tests-classpath.value}"/>
+                       value="${toString:tests-runtime-classpath}"/>
           <sysproperty key="root" file="${basedir}"/>
           <sysproperty key="build.compiler" value="${build.compiler}"/>
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
           <classpath>
-            <path refid="tests-classpath"/>
+            <path refid="tests-runtime-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
             <!-- FIXME: remove failure collector build code for the moment
                  <path refid="failure.cp"/> 
@@ -1581,7 +1548,7 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
 
     <condition property="junit.testcase" value="${testcase}">
-      <available classname="${testcase}" classpathref="tests-classpath" />
+      <available classname="${testcase}" classpathref="tests-runtime-classpath" ignoresystemclasses="true"/>
     </condition>
 
     <fail>Cannot locate test ${testcase}
@@ -1674,7 +1641,7 @@ see ${build.junit.reports} / ${antunit.reports}
           <exclude name="${ant.package}/types/selectors/BaseSelectorTest.java"/>
 
           <!-- helper classes, not testcases -->
-          <exclude name="org/example/**"/>
+          <exclude name="org/example/"/>
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
           <exclude name="${optional.package}/junit/TestFormatter.java"/>
 
@@ -1797,7 +1764,7 @@ see ${build.junit.reports} / ${antunit.reports}
   <target name="interactive-tests" description="--> runs interactive tests"
     depends="compile-tests"
     >
-    <java classpathref="tests-classpath"
+    <java classpathref="tests-runtime-classpath"
       classname="org.apache.tools.ant.taskdefs.TestProcess"
       fork="true"/>
   </target>

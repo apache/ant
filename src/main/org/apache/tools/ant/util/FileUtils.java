@@ -513,12 +513,55 @@ public class FileUtils {
      */
     public void copyFile(File sourceFile, File destFile,
                          FilterSetCollection filters, Vector filterChains,
-                         boolean overwrite, boolean preserveLastModified, boolean append,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
                          String inputEncoding, String outputEncoding,
                          Project project) throws IOException {
-        ResourceUtils.copyResource(new FileResource(sourceFile), new FileResource(destFile),
-                filters, filterChains, overwrite, preserveLastModified, append, inputEncoding,
-                outputEncoding, project);
+        copyFile(sourceFile, destFile, filters, filterChains, overwrite,
+                 preserveLastModified, append, inputEncoding, outputEncoding,
+                 project, /* force: */ false);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param append whether to append to the destination file.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     * @param force whether to overwrite read-only destination files.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.8.2
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
+                         String inputEncoding, String outputEncoding,
+                         Project project, boolean force) throws IOException {
+        ResourceUtils.copyResource(new FileResource(sourceFile),
+                                   new FileResource(destFile),
+                                   filters, filterChains, overwrite,
+                                   preserveLastModified, append, inputEncoding,
+                                   outputEncoding, project, force);
     }
 
     // CheckStyle:ParameterNumberCheck ON

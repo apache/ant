@@ -26,11 +26,11 @@
 
 <h2><a name="directorybasedtasks">Directory-based Tasks</a></h2>
 <p>Some tasks use directory trees for the actions they perform.
-For example, the <a href="CoreTasks/javac.html">javac</a> task, which
+For example, the <a href="Tasks/javac.html">javac</a> task, which
 compiles a directory tree with <code>.java</code> files into
 <code>.class</code> files, is one of these directory-based tasks. Because
 some of these tasks do so much work with a directory tree, the task itself
-can act as an implicit <a href="CoreTypes/fileset.html">FileSet</a>.</p>
+can act as an implicit <a href="Types/fileset.html">FileSet</a>.</p>
 <p>Whether the fileset is implicit or not, it can often be very useful to
 work on a subset of the directory tree. This section describes how you can
 select a subset of such a directory tree when using one of these
@@ -41,16 +41,16 @@ which can be used at the same time:</p>
   <li>Only include files and directories that match any
     <code>include</code> patterns and do not match any
     <code>exclude</code> patterns in a given
-    <a href="CoreTypes/patternset.html">PatternSet</a>.</li>
+    <a href="Types/patternset.html">PatternSet</a>.</li>
   <li>Select files based on selection criteria defined by a collection of
-    <a href="CoreTypes/selectors.html">selector</a> nested elements.</li>
+    <a href="Types/selectors.html">selector</a> nested elements.</li>
 </ul>
 <h3><a name="patternset">Patternset</a></h3>
 
 <p>We said that Directory-based tasks can sometimes act as an implicit
-<a href="CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a>,
+<a href="Types/fileset.html"><code>&lt;fileset&gt;</code></a>,
 but in addition to that, a FileSet acts as an implicit
-<a href="CoreTypes/patternset.html"><code>&lt;patternset&gt;</code></a>.</p>
+<a href="Types/patternset.html"><code>&lt;patternset&gt;</code></a>.</p>
 
 <p>The inclusion and exclusion elements of the implicit PatternSet can be
 specified inside the directory-based task (or explicit fileset) via
@@ -190,13 +190,13 @@ For example, <code>mypackage/test/</code> is interpreted as if it were
 way to select just the files you want.</p>
 
 <h3><a name="selectors">Selectors</a></h3>
-<p>The <a href="CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a>,
+<p>The <a href="Types/fileset.html"><code>&lt;fileset&gt;</code></a>,
 whether implicit or explicit in the
 directory-based task, also acts as an
-<a href="CoreTypes/selectors.html#andselect"><code>&lt;and&gt;</code></a>
+<a href="Types/selectors.html#andselect"><code>&lt;and&gt;</code></a>
 selector container. This can be used to create arbitrarily complicated
 selection criteria for the files the task should work with. See the
-<a href="CoreTypes/selectors.html">Selector</a> documentation for more
+<a href="Types/selectors.html">Selector</a> documentation for more
 information.</p>
 
 <h3><a name="tasklist">Standard Tasks/Filesets</a></h3>
@@ -204,32 +204,32 @@ information.</p>
 the rules given here. This list, a subset of those, is a list of standard ant
 tasks that can act as an implicit fileset:</p>
 <ul>
-      <li><a href="CoreTasks/checksum.html"><code>&lt;checksum&gt;</code></a></li>
-  <li><a href="CoreTasks/copydir.html"><code>&lt;copydir&gt;</code></a> (deprecated)</li>
-  <li><a href="CoreTasks/delete.html"><code>&lt;delete&gt;</code></a></li>
-  <li><a href="CoreTasks/dependset.html"><code>&lt;dependset&gt;</code></a></li>
-  <li><a href="CoreTasks/fixcrlf.html"><code>&lt;fixcrlf&gt;</code></a></li>
-  <li><a href="CoreTasks/javac.html"><code>&lt;javac&gt;</code></a></li>
-  <li><a href="CoreTasks/replace.html"><code>&lt;replace&gt;</code></a></li>
-  <li><a href="CoreTasks/rmic.html"><code>&lt;rmic&gt;</code></a></li>
-  <li><a href="CoreTasks/style.html"><code>&lt;style&gt;</code> (aka <code>&lt;xslt&gt;</code>)</a></li>
-  <li><a href="CoreTasks/tar.html"><code>&lt;tar&gt;</code></a></li>
-  <li><a href="CoreTasks/zip.html"><code>&lt;zip&gt;</code></a></li>
-  <li><a href="OptionalTasks/ejb.html#ddcreator"><code>&lt;ddcreator&gt;</code></a></li>
-  <li><a href="OptionalTasks/ejb.html#ejbjar"><code>&lt;ejbjar&gt;</code></a></li>
-  <li><a href="OptionalTasks/ejb.html#ejbc"><code>&lt;ejbc&gt;</code></a></li>
-  <li><a href="OptionalTasks/cab.html"><code>&lt;cab&gt;</code></a></li>
-  <li><a href="OptionalTasks/native2ascii.html"><code>&lt;native2ascii&gt;</code></a></li>
-  <li><a href="OptionalTasks/netrexxc.html"><code>&lt;netrexxc&gt;</code></a></li>
+      <li><a href="Tasks/checksum.html"><code>&lt;checksum&gt;</code></a></li>
+  <li><a href="Tasks/copydir.html"><code>&lt;copydir&gt;</code></a> (deprecated)</li>
+  <li><a href="Tasks/delete.html"><code>&lt;delete&gt;</code></a></li>
+  <li><a href="Tasks/dependset.html"><code>&lt;dependset&gt;</code></a></li>
+  <li><a href="Tasks/fixcrlf.html"><code>&lt;fixcrlf&gt;</code></a></li>
+  <li><a href="Tasks/javac.html"><code>&lt;javac&gt;</code></a></li>
+  <li><a href="Tasks/replace.html"><code>&lt;replace&gt;</code></a></li>
+  <li><a href="Tasks/rmic.html"><code>&lt;rmic&gt;</code></a></li>
+  <li><a href="Tasks/style.html"><code>&lt;style&gt;</code> (aka <code>&lt;xslt&gt;</code>)</a></li>
+  <li><a href="Tasks/tar.html"><code>&lt;tar&gt;</code></a></li>
+  <li><a href="Tasks/zip.html"><code>&lt;zip&gt;</code></a></li>
+  <li><a href="Tasks/ejb.html#ddcreator"><code>&lt;ddcreator&gt;</code></a></li>
+  <li><a href="Tasks/ejb.html#ejbjar"><code>&lt;ejbjar&gt;</code></a></li>
+  <li><a href="Tasks/ejb.html#ejbc"><code>&lt;ejbc&gt;</code></a></li>
+  <li><a href="Tasks/cab.html"><code>&lt;cab&gt;</code></a></li>
+  <li><a href="Tasks/native2ascii.html"><code>&lt;native2ascii&gt;</code></a></li>
+  <li><a href="Tasks/netrexxc.html"><code>&lt;netrexxc&gt;</code></a></li>
   <li>
-    <a href="OptionalTasks/renameextensions.html"><code>&lt;renameextensions&gt;</code></a>
+    <a href="Tasks/renameextensions.html"><code>&lt;renameextensions&gt;</code></a>
   </li>
-  <li><a href="OptionalTasks/depend.html"><code>&lt;depend&gt;</code></a></li>
-  <li><a href="OptionalTasks/translate.html"><code>&lt;translate&gt;</code></a></li>
-  <li><a href="OptionalTasks/image.html"><code>&lt;image&gt;</code></a></li>
-  <li><a href="OptionalTasks/jlink.html"><code>&lt;jlink&gt;</code></a> (deprecated)</li>
-  <li><a href="OptionalTasks/jspc.html"><code>&lt;jspc&gt;</code></a></li>
-  <li><a href="OptionalTasks/wljspc.html"><code>&lt;wljspc&gt;</code></a></li>
+  <li><a href="Tasks/depend.html"><code>&lt;depend&gt;</code></a></li>
+  <li><a href="Tasks/translate.html"><code>&lt;translate&gt;</code></a></li>
+  <li><a href="Tasks/image.html"><code>&lt;image&gt;</code></a></li>
+  <li><a href="Tasks/jlink.html"><code>&lt;jlink&gt;</code></a> (deprecated)</li>
+  <li><a href="Tasks/jspc.html"><code>&lt;jspc&gt;</code></a></li>
+  <li><a href="Tasks/wljspc.html"><code>&lt;wljspc&gt;</code></a></li>
 </ul>
 
 <h3><a name="examples">Examples</a></h3>
@@ -288,7 +288,7 @@ attribute.</p>
 
 <p>This is the default list; note that you can modify the list of
 default excludes by using the <a
-href="CoreTasks/defaultexcludes.html">defaultexcludes</a> task.</p>
+href="Tasks/defaultexcludes.html">defaultexcludes</a> task.</p>
 
 
 

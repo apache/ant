@@ -56,7 +56,7 @@
       <subsection name="FAQ about Borland Application Server tasks">
         <p>Benoit Moussaud, the original author of the Borland
         Application Server specific <a
-        href="manual/OptionalTasks/ejb.html#ejbtasks">EJB tasks</a> has put
+        href="manual/Tasks/ejb.html#ejbtasks">EJB tasks</a> has put
         together a FAQ for this specific subtask.</p>
 
         <table class="externals">

@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -37,6 +38,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -156,6 +158,19 @@ public class Execute {
             return procEnvironment;
         }
         procEnvironment = new Vector();
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            try {
+                Map/*<String,String>*/ env = (Map) System.class.getMethod("getenv", new Class[0]).invoke(null, new Object[0]);
+                Iterator it = env.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry entry = (Map.Entry) it.next();
+                    procEnvironment.add(entry.getKey() + "=" + entry.getValue());
+                }
+                return procEnvironment;
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+        }
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Execute exe = new Execute(new PumpStreamHandler(out));

@@ -108,6 +108,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
+    /** Name of the TRAX Liaison class */
+    private static final String TRAX_LIAISON_CLASS =
+                        "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
+
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -670,13 +674,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception Exception if the processor cannot be loaded.
      */
     private void resolveProcessor(String proc) throws Exception {
+        String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
-            liaison = new org.apache.tools.ant.taskdefs.optional.TraXLiaison();
+            classname = TRAX_LIAISON_CLASS;
         } else {
             //anything else is a classname
-            Class clazz = loadClass(proc);
-            liaison = (XSLTLiaison) clazz.newInstance();
+            classname = proc;
         }
+        Class clazz = loadClass(classname);
+        liaison = (XSLTLiaison) clazz.newInstance();
     }
 
     /**
@@ -910,7 +916,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             } else {
                 try {
                     resolveProcessor(PROCESSOR_TRAX);
-                } catch (Exception e1) { // should not happen
+                } catch (Throwable e1) {
+                    e1.printStackTrace();
                     handleError(e1);
                 }
             }

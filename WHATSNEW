@@ -4,11 +4,62 @@ Changes from Ant 1.8.1 TO current SVN version
 Changes that could break older environments:
 -------------------------------------------
 
+ * Prior to Ant 1.8.0 the <copy> task and several other tasks would
+   overwrite read-only destination files.  Starting with 1.8.0 they
+   would only do so under special circumstances.  Ant 1.8.2 now
+   consistently won't replace a read-only file by default. The same is
+   true for a number of other tasks.
+   The <copy>, <move> and <echo> tasks now have a new force attribute
+   and <concat> has a new forceReadonly attribute that can be used to
+   make the task overwrite read-only destinations.
+   Bugzilla Report 49261.
+
+ * Removed ant-nodeps.jar; it is now merged into ant.jar.
+
 Fixed bugs:
 -----------
 
+ * The Sun JVM tries to mmap the entire file during a copy. 
+   For large files this is not feasible. 
+   We now explicitly request to copy at most 16 MiB per request.
+   Bugzilla Report 49326.
+   
+ * DemuxInputStream.read() should return unsigned values
+   Bugzilla Report 49279.
+
+ * The MIME mailer ignored the port parameter when using SSL.
+   Bugzilla Report 49267.
+
+ * <xslt> ignored the classpath when using the default TraX processor.
+   Bugzilla Report 49271.
+
+ * <checksum>'s totalproperty only worked reliably if the same file
+   name didn't occur inside more than one directory.
+   Bugzilla Report 36748.
+
+ * <ftp> could fail to download files from remote subdirectories under
+   certain circumstances.
+   Bugzilla Report 49296.
+
+ * <junit> will now produce better diagnostics when it fails to delete
+   a temporary file.
+   Bugzilla Report 49419.
+
+ * Ant would often scan directories even though there were known to
+   only hold excluded files when evaluating filesets.  This never
+   resulted in worng results but degraded performance of the scan
+   itself.
+   Bugzilla Report 49420.
+
+ * <javac> failed for long command lines on OS/2.
+   Bugzilla Report 49425.
+
 Other changes:
 --------------
+
+ * <concat>'s force attribute has been deprecated in favor of a new
+   overwrite attribute that is consistent with <copy>'s attribute
+   names.
 
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================

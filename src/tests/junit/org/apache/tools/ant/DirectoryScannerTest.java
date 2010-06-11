@@ -19,9 +19,9 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -554,5 +554,16 @@ public class DirectoryScannerTest extends BuildFileTest {
         assertTrue("gamma.xml is excluded",
                    files.contains("alpha/beta/gamma/gamma.xml"
                                   .replace('/', File.separatorChar)));
+    }
+
+    public void testContentsExcluded() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File("."));
+        ds.setIncludes(new String[] {"**"});
+        ds.addDefaultExcludes();
+        ds.ensureNonPatternSetsReady();
+        File f = new File(".svn");
+        TokenizedPath p = new TokenizedPath(f.getAbsolutePath());
+        assertTrue(ds.contentsExcluded(p));
     }
 }
