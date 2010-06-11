@@ -530,8 +530,7 @@ public class ResourceUtils {
                 while (position < count) {
                     long chunk = Math.min(MAX_IO_CHUNK_SIZE, count - position);
                     position +=
-                        srcChannel.transferTo(position, chunk,
-                                              destChannel);
+                        destChannel.transferFrom(srcChannel, position, chunk);
                 }
             } finally {
                 FileUtils.close(srcChannel);
