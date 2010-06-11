@@ -51,6 +51,9 @@ Fixed bugs:
    itself.
    Bugzilla Report 49420.
 
+ * <javac> failed for long command lines on OS/2.
+   Bugzilla Report 49425.
+
 Other changes:
 --------------
 

@@ -45,7 +45,15 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @since Ant 1.3
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
-    private static final int COMMAND_LINE_LIMIT = 4096;  // 4K
+    private static final int COMMAND_LINE_LIMIT;
+    static {
+        if (Os.isFamily("os/2")) {
+            // OS/2 CMD.EXE has a much smaller limit around 1K
+            COMMAND_LINE_LIMIT = 1000;
+        } else {
+            COMMAND_LINE_LIMIT = 4096;  // 4K
+        }
+    }
     // CheckStyle:VisibilityModifier OFF - bc
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
