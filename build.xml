@@ -190,7 +190,16 @@
   </selector>
 
   <selector id="needs.junit">
-    <filename name="${optional.package}/junit/"/>
+    <and>
+      <filename name="${optional.package}/junit/"/>
+      <not>
+        <filename name="${optional.package}/junit/JUnit4TestMethodAdapter*"/>
+      </not>
+    </and>
+  </selector>
+
+  <selector id="needs.junit4">
+    <filename name="${optional.package}/junit/JUnit4TestMethodAdapter*"/>
   </selector>
 
   <selector id="needs.apache-regexp">
@@ -349,10 +358,12 @@
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
       classpathref="classpath" ignoresystemclasses="true"/>
-    <condition property="junit.present">
+    <available property="junit.present"
+      classname="junit.framework.TestCase"
+      classpathref="classpath" ignoresystemclasses="true"/>
+    <condition property="junit4.present">
       <and>
         <!-- Need JDK 5+ to compile since junit-4*.jar uses new bytecode format -->
-        <!-- (could also try to compile all but JUnit4TestMethodAdapter but you would need to add junit-3*.jar to CP yourself) -->
         <available classname="java.net.Proxy"/>
         <available
           classname="org.junit.Test"
@@ -539,6 +550,7 @@
 
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
+            <selector refid="needs.junit4" unless="junit4.present"/>
             <selector refid="needs.apache-regexp"
               unless="apache.regexp.present"/>
             <selector refid="needs.apache-oro" unless="apache.oro.present"/>
@@ -664,6 +676,7 @@
           <selector refid="needs.jmf"/>
           <selector refid="needs.jsch"/>
           <selector refid="needs.junit"/>
+          <selector refid="needs.junit4"/>
           <selector refid="needs.netrexx"/>
           <selector refid="needs.swing"/>
           <selector refid="ant.launcher"/>
@@ -727,6 +740,7 @@
 
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
+    <optional-jar dep="junit4"/>
     <optional-jar dep="apache-regexp"/>
     <optional-jar dep="apache-oro"/>
     <optional-jar dep="apache-bcel"/>

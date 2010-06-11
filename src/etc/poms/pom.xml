@@ -85,6 +85,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <module>ant-jmf</module>
     <module>ant-jsch</module>
     <module>ant-junit</module>
+    <module>ant-junit4</module>
     <module>ant-launcher</module>
     <module>ant-netrexx</module>
     <module>ant-swing</module>
