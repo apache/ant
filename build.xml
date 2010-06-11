@@ -349,9 +349,16 @@
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
       classpathref="classpath" ignoresystemclasses="true"/>
-    <available property="junit.present"
-      classname="org.junit.Test"
-      classpathref="classpath" ignoresystemclasses="true"/>
+    <condition property="junit.present">
+      <and>
+        <!-- Need JDK 5+ to compile since junit-4*.jar uses new bytecode format -->
+        <!-- (could also try to compile all but JUnit4TestMethodAdapter but you would need to add junit-3*.jar to CP yourself) -->
+        <available classname="java.net.Proxy"/>
+        <available
+          classname="org.junit.Test"
+          classpathref="classpath" ignoresystemclasses="true"/>
+      </and>
+    </condition>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
       classpathref="classpath" ignoresystemclasses="true"/>
