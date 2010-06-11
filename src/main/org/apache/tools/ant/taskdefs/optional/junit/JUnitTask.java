@@ -728,6 +728,7 @@ public class JUnitTask extends Task {
                 new SplitClassLoader(myLoader, path, getProject(),
                                      new String[] {
                                          "BriefJUnitResultFormatter",
+                                         "JUnit4TestMethodAdapter",
                                          "JUnitResultFormatter",
                                          "JUnitTaskMirrorImpl",
                                          "JUnitTestRunner",
@@ -751,6 +752,8 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
+        checkMethodLists();
+
         setupJUnitDelegate();
 
         List testLists = new ArrayList();
@@ -851,6 +854,9 @@ public class JUnitTask extends Task {
             while (iter.hasNext()) {
                 test = (JUnitTest) iter.next();
                 printDual(writer, logWriter, test.getName());
+                if (test.getMethods() != null) {
+                    printDual(writer, logWriter, ":" + test.getMethodsString().replace(',', '+'));
+                }
                 if (test.getTodir() == null) {
                     printDual(writer, logWriter,
                               "," + getProject().resolveFile("."));
@@ -922,6 +928,9 @@ public class JUnitTask extends Task {
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
             cmd.createArgument().setValue(test.getName());
+            if (test.getMethods() != null) {
+                cmd.createArgument().setValue(Constants.METHOD_NAMES + test.getMethodsString());
+            }
         } else {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
             cmd.createArgument().setValue(Constants.TESTSFILE + casesFile);
@@ -1322,7 +1331,7 @@ public class JUnitTask extends Task {
             if (classLoader != null) {
                 classLoader.setThreadContextLoader();
             }
-            runner = delegate.newJUnitTestRunner(test, test.getHaltonerror(),
+            runner = delegate.newJUnitTestRunner(test, test.getMethods(), test.getHaltonerror(),
                                          test.getFiltertrace(),
                                          test.getHaltonfailure(), false,
                                          true, classLoader);
@@ -1405,6 +1414,29 @@ public class JUnitTask extends Task {
         }
         enums[enums.length - 1] = tests.elements();
         return Enumerations.fromCompound(enums);
+    }
+
+    /**
+     * Verifies all <code>test</code> elements having the <code>methods</code>
+     * attribute specified and having the <code>if</code>-condition resolved
+     * to true, that the value of the <code>methods</code> attribute is valid.
+     * @exception BuildException if some of the tests matching the described
+     *                           conditions has invalid value of the
+     *                           <code>methods</code> attribute
+     * @since 1.8.2
+     */
+    private void checkMethodLists() throws BuildException {
+        if (tests.isEmpty()) {
+            return;
+        }
+
+        Enumeration testsEnum = tests.elements();
+        while (testsEnum.hasMoreElements()) {
+            JUnitTest test = (JUnitTest) testsEnum.nextElement();
+            if (test.hasMethodsSpecified() && test.shouldRun(getProject())) {
+                test.resolveMethods();
+            }
+        }
     }
 
     /**

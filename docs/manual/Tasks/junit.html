@@ -431,6 +431,26 @@ the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir
     <td align="center">Yes</td>
   </tr>
   <tr>
+    <td valign="top">methods</td>
+    <td valign="top">Comma-separated list of names of test case methods to execute.
+      <em>Since 1.8.2</em>
+      <p>The <code>methods</code> attribute can be useful in the following scenarios:</p>
+      <ul>
+        <li>A test method has failed and you want to re-run the test method
+            to test a fix or re-run the test under the Java debugger without
+            having to wait for the other (possibly long running) test methods
+            to complete.</li>
+        <li>One or more test methods are running slower than expected and you
+            want to re-run them under a Java profiler (without the overhead
+            of running the profiler whilst other test methods are being
+            executed).</li>
+      </ul>
+      <p>If the <code>methods</code> attribute is used but no test method
+      is specified, then no test method from the suite will be executed.</p>
+    </td>
+    <td align="center">No; default is to run all test methods in the suite.</td>
+  </tr>  
+  <tr>
     <td valign="top">fork</td>
     <td valign="top">Run the tests in a separate VM.
       Overrides value set in <code>&lt;junit&gt;</code>.</td>

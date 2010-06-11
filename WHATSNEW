@@ -61,6 +61,9 @@ Other changes:
    overwrite attribute that is consistent with <copy>'s attribute
    names.
 
+ * You can now specify a list of methods to run in a JUnit test case.
+   Bugzilla Report 34748.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

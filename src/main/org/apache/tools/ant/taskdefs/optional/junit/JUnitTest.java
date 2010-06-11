@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 
@@ -41,6 +42,19 @@ public class JUnitTest extends BaseTest implements Cloneable {
     /** the name of the test case */
     private String name = null;
 
+    /**
+     * whether the list of test methods has been specified
+     * @see #setMethods(java.lang.String)
+     * @see #setMethods(java.lang.String[])
+     */
+    private boolean methodsSpecified = false;
+
+    /** comma-separated list of names of test methods to execute */
+    private String methodsList = null;
+
+    /** the names of test methods to execute */
+    private String[] methods = null;
+    
     /** the name of the result file */
     private String outfile = null;
 
@@ -73,11 +87,53 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param filtertrace if true filter stack traces.
      */
     public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
-                     boolean filtertrace) {
+            boolean filtertrace) {
+        this(name, haltOnError, haltOnFailure, filtertrace, null);
+    }    
+    
+    /**
+     * Constructor with options.
+     * @param name the name of the test.
+     * @param haltOnError if true halt the tests if there is an error.
+     * @param haltOnFailure if true halt the tests if there is a failure.
+     * @param filtertrace if true filter stack traces.
+     * @param methods if true run only test methods that failed during the
+     *                previous run of the test suite
+     * @since 1.8.2
+     */
+    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
+                     boolean filtertrace, String[] methods) {
         this.name  = name;
         this.haltOnError = haltOnError;
         this.haltOnFail = haltOnFailure;
         this.filtertrace = filtertrace;
+        this.methods = methods;
+        this.methodsSpecified = (methods != null);
+    }
+
+    /**
+     * Sets names of individual test methods to be executed.
+     * @param value comma-separated list of names of individual test methods
+     *              to be executed,
+     *              or <code>null</code> if all test methods should be executed
+     * @since 1.8.2
+     */
+    public void setMethods(String value) {
+        methodsList = value;
+        methodsSpecified = (value != null);
+        methods = null;
+    }
+
+    /**
+     * Sets names of individual test methods to be executed.
+     * @param value non-empty array of names of test methods to be executed
+     * @see #setMethods(String)
+     * @since 1.8.2
+     */
+    void setMethods(String[] value) {
+        methods = value;
+        methodsSpecified = (value != null);
+        methodsList = null;
     }
 
     /**
@@ -94,6 +150,189 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     public void setOutfile(String value) {
         outfile = value;
+    }
+
+    /**
+     * Informs whether a list of test methods has been specified in this test.
+     * @return <code>true</code> if test methods to be executed have been
+     *         specified, <code>false</code> otherwise
+     * @see #setMethods(java.lang.String)
+     * @see #setMethods(java.lang.String[])
+     * @since 1.8.2
+     */
+    boolean hasMethodsSpecified() {
+        return methodsSpecified;
+    }
+
+    /**
+     * Get names of individual test methods to be executed.
+     *
+     * @return array of names of the individual test methods to be executed,
+     *         or <code>null</code> if all test methods in the suite
+     *         defined by the test class will be executed
+     * @since 1.8.2
+     */
+    String[] getMethods() {
+        if (methodsSpecified && (methods == null)) {
+            resolveMethods();
+        }
+        return methods;
+    }
+
+    /**
+     * Gets a comma-separated list of names of methods that are to be executed
+     * by this test.
+     * @return the comma-separated list of test method names, or an empty
+     *         string of no method is to be executed, or <code>null</code>
+     *         if no method is specified
+     * @since 1.8.2
+     */
+    String getMethodsString() {
+        if ((methodsList == null) && methodsSpecified) {
+            if (methods.length == 0) {
+                methodsList = "";
+            } else if (methods.length == 1) {
+                methodsList = methods[0];
+            } else {
+                StringBuffer buf = new StringBuffer(methods.length * 16);
+                buf.append(methods[0]);
+                for (int i = 1; i < methods.length; i++) {
+                    buf.append(',').append(methods[i]);
+                }
+                methodsList = buf.toString();
+            }
+        }
+        return methodsList;
+    }
+
+    /**
+     * Computes the value of the {@link #methods} field from the value
+     * of the {@link #methodsList} field, if it has not been computed yet.
+     * @exception BuildException if the value of the {@link #methodsList} field
+     *                           was invalid
+     * @since 1.8.2
+     */
+    void resolveMethods() {
+        if ((methods == null) && methodsSpecified) {
+            try {
+                methods = parseTestMethodNamesList(methodsList);
+            } catch (IllegalArgumentException ex) {
+                throw new BuildException(
+                        "Invalid specification of test methods: \""
+                            + methodsList
+                            + "\"; expected: comma-separated list of valid Java identifiers",
+                        ex);
+            }
+        }
+    }
+
+    /**
+     * Parses a comma-separated list of method names and check their validity.
+     * @param methodNames comma-separated list of method names to be parsed
+     * @return array of individual test method names
+     * @exception  java.lang.IllegalArgumentException
+     *             if the given string is <code>null</code> or if it is not
+     *             a comma-separated list of valid Java identifiers;
+     *             an empty string is acceptable and is handled as an empty
+     *             list
+     * @since 1.8.2
+     */
+    public static String[] parseTestMethodNamesList(String methodNames)
+                                            throws IllegalArgumentException {
+        if (methodNames == null) {
+            throw new IllegalArgumentException("methodNames is <null>");
+        }
+
+        methodNames = methodNames.trim();
+
+        int length = methodNames.length();
+        if (length == 0) {
+            return new String[0];
+        }
+
+        /* strip the trailing comma, if any */
+        if (methodNames.charAt(length - 1) == ',') {
+            methodNames = methodNames.substring(0, length - 1).trim();
+            length = methodNames.length();
+            if (length == 0) {
+                throw new IllegalArgumentException("Empty method name");
+            }
+        }
+
+        final char[] chars = methodNames.toCharArray();
+        /* easy detection of one particular case of illegal string: */
+        if (chars[0] == ',') {
+            throw new IllegalArgumentException("Empty method name");
+        }
+        /* count number of method names: */
+        int wordCount = 1;
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] == ',') {
+                wordCount++;
+            }
+        }
+        /* prepare the resulting array: */
+        String[] result = new String[wordCount];
+        /* parse the string: */
+        final int stateBeforeWord = 1;
+        final int stateInsideWord = 2;
+        final int stateAfterWord = 3;
+        //
+        int state = stateBeforeWord;
+        int wordStartIndex = -1;
+        int wordIndex = 0;
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            switch (state) {
+                case stateBeforeWord:
+                    if (c == ',') {
+                        throw new IllegalArgumentException("Empty method name");
+                    } else if (c == ' ') {
+                        // remain in the same state
+                    } else if (Character.isJavaIdentifierStart(c)) {
+                        wordStartIndex = i;
+                        state = stateInsideWord;
+                    } else {
+                        throw new IllegalArgumentException("Illegal start of method name: " + c);
+                    }
+                    break;
+                case stateInsideWord:
+                    if (c == ',') {
+                        result[wordIndex++] = new String(methodNames.substring(wordStartIndex, i));
+                        state = stateBeforeWord;
+                    } else if (c == ' ') {
+                        result[wordIndex++] = new String(methodNames.substring(wordStartIndex, i));
+                        state = stateAfterWord;
+                    } else if (Character.isJavaIdentifierPart(c)) {
+                        // remain in the same state
+                    } else {
+                        throw new IllegalArgumentException("Illegal character in method name: " + c);
+                    }
+                    break;
+                case stateAfterWord:
+                    if (c == ',') {
+                        state = stateBeforeWord;
+                    } else if (c == ' ') {
+                        // remain in the same state
+                    } else {
+                        throw new IllegalArgumentException("Space in method name");
+                    }
+                    break;
+                default:
+                    // this should never happen
+            }
+        }
+        switch (state) {
+            case stateBeforeWord:
+            case stateAfterWord:
+                break;
+            case stateInsideWord:
+                result[wordIndex++] = new String(methodNames.substring(wordStartIndex, chars.length));
+                break;
+            default:
+                // this should never happen
+        }
+        return result;
     }
 
     /**

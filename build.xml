@@ -350,7 +350,7 @@
       classname="org.apache.xalan.trace.TraceListenerEx3"
       classpathref="classpath" ignoresystemclasses="true"/>
     <available property="junit.present"
-      classname="junit.framework.TestCase"
+      classname="org.junit.Test"
       classpathref="classpath" ignoresystemclasses="true"/>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
