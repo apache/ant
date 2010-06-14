@@ -4,7 +4,7 @@
     xmlns:redirect="org.apache.xalan.lib.Redirect"
     xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
     extension-element-prefixes="redirect">
-<xsl:output method="html" indent="yes" encoding="US-ASCII"/>
+<xsl:output method="html" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -97,14 +97,28 @@
             <xsl:apply-templates select="." mode="class.details"/>
         </redirect:write>
         <xsl:if test="string-length(./system-out)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@name}-out.txt">
-                <xsl:value-of select="./system-out" />
-            </redirect:write>
+          <redirect:write file="{$output.dir}/{$package.dir}/{@name}-out.html">
+            <html>
+              <head>
+                <title>Standard Output from <xsl:value-of select="@name"/></title>
+              </head>
+              <body>
+                <pre><xsl:value-of select="./system-out"/></pre>
+              </body>
+            </html>
+          </redirect:write>
         </xsl:if>
         <xsl:if test="string-length(./system-err)!=0">
-            <redirect:write file="{$output.dir}/{$package.dir}/{@name}-err.txt">
-                <xsl:value-of select="./system-err" />
-            </redirect:write>
+          <redirect:write file="{$output.dir}/{$package.dir}/{@name}-err.html">
+            <html>
+              <head>
+                <title>Standard Error from <xsl:value-of select="@name"/></title>
+              </head>
+              <body>
+                <pre><xsl:value-of select="./system-err"/></pre>
+              </body>
+            </html>
+          </redirect:write>
         </xsl:if>
     </xsl:for-each>
 </xsl:template>
@@ -264,7 +278,7 @@ h6 {
             <xsl:if test="string-length(./system-out)!=0">
                 <div class="Properties">
                     <a>
-                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-out.txt</xsl:attribute>
+                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-out.html</xsl:attribute>
                         System.out &#187;
                     </a>
                 </div>
@@ -272,7 +286,7 @@ h6 {
             <xsl:if test="string-length(./system-err)!=0">
                 <div class="Properties">
                     <a>
-                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-err.txt</xsl:attribute>
+                        <xsl:attribute name="href">./<xsl:value-of select="@name"/>-err.html</xsl:attribute>
                         System.err &#187;
                     </a>
                 </div>

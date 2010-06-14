@@ -57,6 +57,9 @@ Fixed bugs:
  * <javac> failed for long command lines on OS/2.
    Bugzilla Report 49425.
 
+ * <junitreport> did not handle encodings well for stdout/stderr.
+   Bugzilla Report 49418.
+
 Other changes:
 --------------
 
