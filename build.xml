@@ -343,83 +343,89 @@
        ===================================================================
   -->
   <target name="check_for_optional_packages">
+    <condition property="ignoresystemclasses">
+      <not>
+        <equals arg1="${build.sysclasspath}" arg2="only"/>
+      </not>
+    </condition>
+    <property name="ignoresystemclasses" value="false"/>
     <available property="jdk1.5+" classname="java.net.Proxy"/>
     <available property="jdk1.6+" classname="java.util.ServiceLoader"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
       classname="org.apache.bsf.BSFManager"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="netrexx.present"
       classname="netrexx.lang.Rexx"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="apache.resolver.present"
       classname="org.apache.xml.resolver.tools.CatalogResolver"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="recent.xalan2.present"
       classname="org.apache.xalan.trace.TraceListenerEx3"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="junit.present"
       classname="junit.framework.TestCase"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <condition property="junit4.present">
       <and>
         <!-- Need JDK 5+ to compile since junit-4*.jar uses new bytecode format -->
         <available classname="java.net.Proxy"/>
         <available
           classname="org.junit.Test"
-          classpathref="classpath" ignoresystemclasses="true"/>
+          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
       </and>
     </condition>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="commons.net.present"
       classname="org.apache.commons.net.ftp.FTPClient"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="antlr.present" 
       classname="antlr.Tool" 
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="apache.regexp.present"
       classname="org.apache.regexp.RE"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="apache.oro.present"
       classname="org.apache.oro.text.regex.Perl5Matcher"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="jmf.present"
       classname="javax.sound.sampled.Clip"
       classpathref="classpath"/>
     <available property="jai.present"
       classname="javax.media.jai.JAI"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="jdepend.present"
       classname="jdepend.framework.JDepend"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="log4j.present"
       classname="org.apache.log4j.Logger"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="commons.logging.present"
       classname="org.apache.commons.logging.LogFactory"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="xalan.envcheck"
       classname="org.apache.xalan.xslt.EnvironmentCheck"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="which.present"
       classname="org.apache.env.Which"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <available property="xerces.present"
       classname="org.apache.xerces.parsers.SAXParser"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="bcel.present"
       classname="org.apache.bcel.Constants"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
           classpathref="classpath"/>
         <available classname="javax.mail.Transport"
-          classpathref="classpath" ignoresystemclasses="true"/>
+          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
       </and>
     </condition>
 
@@ -473,23 +479,23 @@
       <and>
         <available
           classname="org.apache.commons.httpclient.HttpClient"
-          classpathref="classpath" ignoresystemclasses="true"/>
+          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
         <isset property="commons.logging.present"/>
       </and>
     </condition>
 
     <available property="rhino.present"
       classname="org.mozilla.javascript.Scriptable"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="beanshell.present"
       classname="bsh.StringUtil"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="xerces1.present"
       classname="org.apache.xerces.framework.XMLParser"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="jsch.present"
       classname="com.jcraft.jsch.Session"
-      classpathref="classpath" ignoresystemclasses="true"/>
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <property name="build.compiler" value="modern"/>
 
@@ -1569,7 +1575,7 @@ see ${build.junit.reports} / ${antunit.reports}
     </condition>
 
     <condition property="junit.testcase" value="${testcase}">
-      <available classname="${testcase}" classpathref="tests-runtime-classpath" ignoresystemclasses="true"/>
+      <available classname="${testcase}" classpathref="tests-runtime-classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     </condition>
 
     <fail>Cannot locate test ${testcase}
