@@ -78,6 +78,12 @@ Other changes:
  * You can now specify a list of methods to run in a JUnit test case.
    Bugzilla Report 34748.
 
+ * properties in files read because of the -propertyfile command line
+   option will get now resolved against other properties that are
+   defined before the project starts executing (those from the same or
+   other propertfiles or defined via the -D option).
+   Bugzilla Report 18732.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

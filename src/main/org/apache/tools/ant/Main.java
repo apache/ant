@@ -37,6 +37,7 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ProxySetup;
@@ -762,12 +763,20 @@ public class Main implements AntMain {
 
                 project.init();
 
+                // resolve properties
+                PropertyHelper propertyHelper
+                    = (PropertyHelper) PropertyHelper.getPropertyHelper(project);
+                HashMap props = new HashMap(definedProps);
+                new ResolvePropertyMap(project, propertyHelper,
+                                       propertyHelper.getExpanders())
+                    .resolveAllProperties(props, null);
+
                 // set user-define properties
-                Enumeration e = definedProps.keys();
-                while (e.hasMoreElements()) {
-                    String arg = (String) e.nextElement();
-                    String value = (String) definedProps.get(arg);
-                    project.setUserProperty(arg, value);
+                for (Iterator e = props.entrySet().iterator(); e.hasNext(); ) {
+                    Map.Entry ent = (Map.Entry) e.next();
+                    String arg = (String) ent.getKey();
+                    Object value = ent.getValue();
+                    project.setUserProperty(arg, String.valueOf(value));
                 }
 
                 project.setUserProperty(MagicNames.ANT_FILE,
