@@ -53,17 +53,17 @@ public class DOMElementWriterTest extends TestCase {
     }
 
     public void testEncode() {
-        assertEquals("&#20;", w.encode("&#20;"));
-        assertEquals("&#x20;", w.encode("&#x20;"));
-        assertEquals("&#xA0;", w.encode("&#xA0;"));
+        assertEquals("&amp;#20;", w.encode("&#20;"));
+        assertEquals("&amp;#x20;", w.encode("&#x20;"));
+        assertEquals("&amp;#xA0;", w.encode("&#xA0;"));
         assertEquals("&amp;#A0;", w.encode("&#A0;"));
         assertEquals("20;", w.encode("20;"));
         assertEquals("&amp;#20", w.encode("&#20"));
-        assertEquals("&quot;", w.encode("&quot;"));
-        assertEquals("&apos;", w.encode("&apos;"));
-        assertEquals("&gt;", w.encode("&gt;"));
-        assertEquals("&lt;", w.encode("&lt;"));
-        assertEquals("&amp;", w.encode("&amp;"));
+        assertEquals("&amp;quot;", w.encode("&quot;"));
+        assertEquals("&amp;apos;", w.encode("&apos;"));
+        assertEquals("&amp;gt;", w.encode("&gt;"));
+        assertEquals("&amp;lt;", w.encode("&lt;"));
+        assertEquals("&amp;amp;", w.encode("&amp;"));
         assertEquals("&quot;", w.encode("\""));
         assertEquals("&lt;", w.encode("<"));
         assertEquals("&amp;", w.encode("&"));

@@ -16,6 +16,14 @@ Changes that could break older environments:
 
  * Removed ant-nodeps.jar; it is now merged into ant.jar.
 
+ * DOMElementWriter#encode used to employ special code before encoding
+   ampersands so that &#123; remained &#123; rather than being turned
+   into &amp;#123;.  This is no longer the case, ampersands will now
+   be encoded unconditionally.
+   This affects <echoxml> task as well as the XML logger or JUnit
+   formatter where ampersands will now always get encoded.
+   Bugzilla Report 49404.
+
 Fixed bugs:
 -----------
 

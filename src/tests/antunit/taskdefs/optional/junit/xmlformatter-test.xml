@@ -79,14 +79,12 @@ public class A extends TestCase {
     </junit>
     <xmlvalidate file="${output}/TEST-org.example.A.xml"
                  lenient="true"/>
-    <!--
     <au:assertResourceContains
         resource="${output}/TEST-org.example.A.xml"
         value="message=&quot;&amp;amp;amp;&amp;amp;"/>
     <au:assertResourceContains
         resource="${output}/TEST-org.example.A.xml"
-        value="message=AssertionFailedError: &amp;amp;&amp;"/>
-    -->
+        value="AssertionFailedError: &amp;amp;amp;&amp;"/>
   </target>
 
 </project>

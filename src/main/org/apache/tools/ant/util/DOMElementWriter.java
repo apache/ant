@@ -429,13 +429,7 @@ public class DOMElementWriter {
                 sb.append("&quot;");
                 break;
             case '&':
-                int nextSemi = value.indexOf(";", i);
-                if (nextSemi < 0
-                    || !isReference(value.substring(i, nextSemi + 1))) {
-                    sb.append("&amp;");
-                } else {
-                    sb.append('&');
-                }
+                sb.append("&amp;");
                 break;
             default:
                 if (isLegalCharacter(c)) {
