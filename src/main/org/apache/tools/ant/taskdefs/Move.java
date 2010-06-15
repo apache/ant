@@ -349,7 +349,7 @@ public class Move extends Copy {
         } else if (destFile.isFile()) {
             sourceFile = getFileUtils().normalize(sourceFile.getAbsolutePath()).getCanonicalFile();
             destFile = getFileUtils().normalize(destFile.getAbsolutePath());
-            if (destFile.equals(sourceFile)) {
+            if (destFile.getAbsolutePath().equals(sourceFile.getAbsolutePath())) {
                 //no point in renaming a file to its own canonical version...
                 log("Rename of " + sourceFile + " to " + destFile
                     + " is a no-op.", Project.MSG_VERBOSE);

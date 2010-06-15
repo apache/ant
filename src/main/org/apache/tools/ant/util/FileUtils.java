@@ -1273,7 +1273,7 @@ public class FileUtils {
             System.err.println("Cannot rename nonexistent file " + from);
             return;
         }
-        if (from.equals(to)) {
+        if (from.getAbsolutePath().equals(to.getAbsolutePath())) {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
         }
