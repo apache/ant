@@ -467,19 +467,7 @@ public class DOMElementWriter {
             }
         }
 
-        String result = sb.substring(0);
-        int cdEnd = result.indexOf("]]>");
-        while (cdEnd != -1) {
-            sb.setLength(cdEnd);
-            // CheckStyle:MagicNumber OFF
-            sb.append("&#x5d;&#x5d;&gt;")
-                .append(result.substring(cdEnd + 3));
-            // CheckStyle:MagicNumber ON
-            result = sb.substring(0);
-            cdEnd = result.indexOf("]]>");
-        }
-
-        return result;
+        return sb.toString().replace("]]>", "]]]]><![CDATA[>");
     }
 
     /**

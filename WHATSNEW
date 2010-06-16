@@ -20,6 +20,9 @@ Changes that could break older environments:
    ampersands so that &#123; remained &#123; rather than being turned
    into &amp;#123;.  This is no longer the case, ampersands will now
    be encoded unconditionally.
+   Also DOMElementWriter#encodeData will treat CDATA sections containing a
+   literal "]]>" sequence different now - it will split the CDATA
+   section between the second "]" and ">" and create two sections.
    This affects <echoxml> task as well as the XML logger or JUnit
    formatter where ampersands will now always get encoded.
    Bugzilla Report 49404.
