@@ -19,40 +19,44 @@
 package org.apache.tools.ant;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.PrintStream;
 import junit.framework.TestCase;
+import org.apache.tools.ant.util.FileUtils;
 
 public class PropertyFileCLITest extends TestCase {
 
     public void testPropertyResolution() throws Exception {
-        File props = File.createTempFile("propertyfilecli", ".properties");
-        props.deleteOnExit();
-        FileWriter fw = new FileWriter(props);
-        fw.write("w=world\nmessage=Hello, ${w}\n");
-        fw.close();
-        File build = File.createTempFile("propertyfilecli", ".xml");
-        build.deleteOnExit();
-        fw = new FileWriter(build);
-        fw.write("<project><echo>${message}</echo></project>");
-        fw.close();
-        PrintStream sysOut = System.out;
-        StringBuffer sb = new StringBuffer();
+        FileUtils fu = FileUtils.getFileUtils();
+        File props = fu.createTempFile("propertyfilecli", ".properties",
+                                       null, true, true);
+        File build = fu.createTempFile("propertyfilecli", ".xml", null, true,
+                                       true);
+        File log = fu.createTempFile("propertyfilecli", ".log", null, true,
+                                     true);
+        FileWriter fw = null;
+        FileReader fr = null;
         try {
-            PrintStream out =
-                new PrintStream(new BuildFileTest.AntOutputStream(sb));
-            System.setOut(out);
+            fw = new FileWriter(props);
+            fw.write("w=world\nmessage=Hello, ${w}\n");
+            fw.close();
+            fw = new FileWriter(build);
+            fw.write("<project><echo>${message}</echo></project>");
+            fw.close();
+            fw = null;
             Main m = new NoExitMain();
             m.startAnt(new String[] {
                     "-propertyfile", props.getAbsolutePath(),
-                    "-f", build.getAbsolutePath()
+                    "-f", build.getAbsolutePath(),
+                    "-l", log.getAbsolutePath()
                 }, null, null);
+            String l = FileUtils.safeReadFully(fr = new FileReader(log));
+            assertTrue("expected log to contain 'Hello, world' but was " + l,
+                       l.indexOf("Hello, world") > -1);
         } finally {
-            System.setOut(sysOut);
+            FileUtils.close(fw);
+            FileUtils.close(fr);
         }
-        String log = sb.toString();
-        assertTrue("expected log to contain 'Hello, world' but was " + log,
-                   log.indexOf("Hello, world") > -1);
     }
 
     private static class NoExitMain extends Main {
