@@ -61,7 +61,7 @@ Fixed bugs:
 
  * Ant would often scan directories even though there were known to
    only hold excluded files when evaluating filesets.  This never
-   resulted in worng results but degraded performance of the scan
+   resulted in wrong results but degraded performance of the scan
    itself.
    Bugzilla Report 49420.
 
@@ -82,9 +82,9 @@ Other changes:
    Bugzilla Report 34748.
 
  * properties in files read because of the -propertyfile command line
-   option will get now resolved against other properties that are
+   option will now get resolved against other properties that are
    defined before the project starts executing (those from the same or
-   other propertfiles or defined via the -D option).
+   earlier -propertfiles or defined via the -D option).
    Bugzilla Report 18732.
 
 Changes from Ant 1.8.0 TO Ant 1.8.1 
