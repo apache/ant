@@ -411,8 +411,8 @@ public class DOMElementWriter {
      * @return the encoded string.
      */
     public String encode(String value) {
-        StringBuffer sb = new StringBuffer();
         int len = value.length();
+        StringBuffer sb = new StringBuffer(len);
         for (int i = 0; i < len; i++) {
             char c = value.charAt(i);
             switch (c) {
@@ -458,8 +458,8 @@ public class DOMElementWriter {
 
      */
     public String encodedata(final String value) {
-        StringBuffer sb = new StringBuffer();
         int len = value.length();
+        StringBuffer sb = new StringBuffer(len);
         for (int i = 0; i < len; ++i) {
             char c = value.charAt(i);
             if (isLegalCharacter(c)) {
@@ -467,7 +467,7 @@ public class DOMElementWriter {
             }
         }
 
-        return sb.toString().replace("]]>", "]]]]><![CDATA[>");
+        return StringUtils.replace(sb.substring(0), "]]>", "]]]]><![CDATA[>");
     }
 
     /**
