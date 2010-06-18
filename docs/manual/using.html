@@ -262,6 +262,12 @@ or semicolon-separated lists of locations. The <code>path</code>
 attribute is intended to be used with predefined paths - in any other
 case, multiple elements with <code>location</code> attributes should be
 preferred.</p>
+<p><em>Since Ant 1.8.2</em> the location attribute can also contain a
+  wildcard in its last path component (i.e. it can end in a
+  &quot;*&quot;) in order to support wildcard CLASSPATHs introduced
+  with Java6.  Ant will not expand or evaluate the wildcards and the
+  resulting path may not work as anything else but a CLASSPATH - or
+  even as a CLASSPATH for a Java VM prior to Java6.</p>
 <p>As a shortcut, the <code>&lt;classpath&gt;</code> tag
 supports <code>path</code> and
 <code>location</code> attributes of its own, so:</p>

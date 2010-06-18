@@ -87,6 +87,14 @@ Other changes:
    earlier -propertfiles or defined via the -D option).
    Bugzilla Report 18732.
 
+ * <pathelement>s can now contain wildcards in order to use wildcard
+   CLASSPATH entries introduced with Java6.
+   The wildcards are not expanded or even evaluated by Ant and will be
+   used literally.  The resulting path may be unusable as a CLASSPATH
+   for Java versions prior to Java6 and likely doesn't mean anything
+   when used in any other way than a CLASSPATH for a forked Java VM. 
+   Bugzilla Report 46842.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

@@ -39,4 +39,13 @@
     </path>
   </target>
 
+  <target name="test-wildcard"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46842">
+    <path id="with-wildcard">
+      <pathelement location="*"/>
+    </path>
+    <au:assertEquals expected="${basedir}${file.separator}*"
+                     actual="${toString:with-wildcard}"/>
+  </target>
+
 </project>
