@@ -1145,7 +1145,7 @@ public class JUnitTask extends Task {
                 for (Enumeration e = loader.getResources(projectResourceName);
                      e.hasMoreElements();) {
                     URL current = (URL) e.nextElement();
-                    if (previous != null && !current.equals(previous)) {
+                    if (previous != null && !urlEquals(current, previous)) {
                         log("WARNING: multiple versions of ant detected "
                             + "in path for junit "
                             + LINE_SEP + "         " + previous
@@ -1163,6 +1163,30 @@ public class JUnitTask extends Task {
                 loader.cleanup();
             }
         }
+    }
+
+    /**
+     * Compares URLs for equality but takes case-sensitivity into
+     * account when comparing file URLs and ignores the jar specific
+     * part of the URL if present.
+     */
+    private static boolean urlEquals(URL u1, URL u2) {
+        String url1 = maybeStripJarAndClass(u1);
+        String url2 = maybeStripJarAndClass(u2);
+        if (url1.startsWith("file:") && url2.startsWith("file:")) {
+            return new File(FILE_UTILS.fromURI(url1))
+                .equals(new File(FILE_UTILS.fromURI(url2)));
+        }
+        return u1.equals(u2);
+    }
+
+    private static String maybeStripJarAndClass(URL u) {
+        String s = u.toString();
+        if (s.startsWith("jar:")) {
+            int pling = s.indexOf("!");
+            s = s.substring(4, pling == -1 ? s.length() : pling);
+        }
+        return s;
     }
 
     /**

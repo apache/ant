@@ -71,6 +71,11 @@ Fixed bugs:
  * <junitreport> did not handle encodings well for stdout/stderr.
    Bugzilla Report 49418.
 
+ * <junit> could issue a warning about multiple versions of Ant on the
+   CLASSPATH if two CLASSPATH entries differed in case on a
+   case-insensitive file system.
+   Bugzilla Report 49041.
+
 Other changes:
 --------------
 
