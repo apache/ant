@@ -88,4 +88,49 @@
     <au:assertLogContains text="in target prepare"/>
   </target>
 
+  <target name="testMissingExtensionPointCausesError">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/build.xml"><![CDATA[
+<project default="bar">
+  <target name="bar" extensionOf="foo"/>
+</project>]]></echo>
+    <au:expectfailure
+        expectedMessage="can't add target bar to extension-point foo because the extension-point is unknown">
+      <ant dir="${output}" target="bar"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMissingExtensionPointCausesWarningWhenConfigured">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/build.xml"><![CDATA[
+<project default="bar">
+  <target name="bar" extensionOf="foo" onMissingExtensionPoint="warn"/>
+</project>]]></echo>
+    <ant dir="${output}" target="bar"/>
+    <au:assertLogContains level="warning"
+        text="can't add target bar to extension-point foo because the extension-point is unknown" />
+  </target>
+
+  <target name="testMissingExtensionPointIgnoredWhenConfigured">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/build.xml"><![CDATA[
+<project default="bar">
+  <target name="bar" extensionOf="foo" onMissingExtensionPoint="ignore"/>
+</project>]]></echo>
+    <ant dir="${output}" target="bar"/>
+    <au:assertLogDoesntContain level="warning"
+        text="can't add target bar to extension-point foo because the extension-point is unknown" />
+  </target>
+
+  <target name="testOnlyAllowsExtensionPointMissingAttributeWhenExtensionOfPresent">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/build.xml"><![CDATA[
+<project default="bar">
+  <target name="bar" onMissingExtensionPoint="ignore"/>
+</project>]]></echo>
+    <au:expectfailure
+        expectedMessage="onMissingExtensionPoint attribute cannot be specified unless extensionOf is specified">
+      <ant dir="${output}" target="bar"/>
+    </au:expectfailure>
+  </target>
 </project>

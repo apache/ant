@@ -82,6 +82,23 @@ public class ProjectHelper {
         helper.parse(project, buildFile);
     }
 
+    /**
+     * Possible value for target's onMissingExtensionPoint attribute:
+     * fail if the extension-point is not defined.
+     */
+    public static final String MISSING_EP_FAIL = "fail";
+    /**
+     * Possible value for target's onMissingExtensionPoint attribute:
+     * warn if the extension-point is not defined.
+     */
+    public static final String MISSING_EP_WARN = "warn";
+    /**
+     * Possible value for target's onMissingExtensionPoint attribute:
+     * ignore the extensionOf attribute if the extension-point is not
+     * defined.
+     */
+    public static final String MISSING_EP_IGNORE = "ignore";
+
     /** Default constructor */
     public ProjectHelper() {
     }
@@ -108,9 +125,11 @@ public class ProjectHelper {
      * Extension stack.
      * Used to keep track of targets that extend extension points.
      *
-     * @return a list of two element string arrays where the first
-     * element is the name of the extensionpoint and the second the
-     * name of the target
+     * @return a list of three element string arrays where the first
+     * element is the name of the extensionpoint, the second the name
+     * of the target and the third one of the MISSINS_EP constants
+     * defined inside this class - it determines how to deal with
+     * targets that want to extend missing extension-points.
      */
     public List getExtensionStack() {
         return extensionStack;

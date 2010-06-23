@@ -205,6 +205,17 @@
         <em>since Ant 1.8.0.</em></td>
       <td align="center" valign="top">No</td>
     </tr>
+    <tr>
+      <td valign="top">onMissingExtensionPoint</td>
+      <td valign="top">What to do if this target tries to extend a
+        missing
+        <a href="#extension-points">extension-point</a>. ("fail",
+        "warn", "ignore").
+        <em>since Ant 1.8.2.</em></td>
+      <td align="center" valign="top">No. Not allowed unless
+        <code>extensionOf</code> is present. Defaults to <code>fail</code>. 
+      </td>
+    </tr>
   </table>
 
   <p>A target name can be any alphanumeric string valid in the
