@@ -32,6 +32,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-netrexx</artifactId>
   <version>1.8.2-SNAPSHOT</version>
+  <name>Apache Ant + NetRexx</name>
   <description>NetRexxC task
     dependency can be downloaded from http://www.ibm.com/software/awdtools/netrexx/download.html</description>
   <dependencies>

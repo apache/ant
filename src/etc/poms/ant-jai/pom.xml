@@ -33,6 +33,7 @@
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-jai</artifactId>
   <version>1.8.2-SNAPSHOT</version>
+  <name>Apache Ant + JAI</name>
   <description>image task and corresponding types.
   jai (Java Advanced Imaging) is not available in public Maven repositories, therefore the dependencies are included with a scope provided
     the download URL is http://java.sun.com/products/java-media/jai/
