@@ -47,6 +47,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jant/core/trunk</developerConnection>
     <url>http://svn.apache.org/repos/asf/ant/core/trunk</url>
   </scm>
+  <ciManagement>
+    <system>hudson</system>
+    <url>http://hudson.zones.apache.org/hudson/job/Ant_BuildFromPOMs/</url>
+  </ciManagement>
   <mailingLists>
     <mailingList>
       <name>Ant Developers List</name>
