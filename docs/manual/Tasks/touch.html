@@ -34,6 +34,18 @@ resource collections (which also includes directories).  Prior to Ant
 1.7 only FileSet or <a href="../Types/filelist.html">Filelist</a>
 (since Ant 1.6) have been supported.</p>
 
+<p>Ant uses the API of <code>java.io.File</code> to set the last
+  modification time which has some limitations.  For example the
+  timestamp granularity depends on the operating system and sometimes
+  the operating system may allow a granularity smaller than
+  milliseconds.  If you need more control you have to fall back to
+  the <code>&lt;exec&gt;</code> task and native commands.</p>
+
+<p>Starting with Ant 1.8.2 Ant will log a warning message if it fails
+  to change the file modification time.  This will happen if you try
+  to change the modification time of a file you do not own on many
+  Unix systems, for example.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
