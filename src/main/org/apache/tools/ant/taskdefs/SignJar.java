@@ -435,7 +435,7 @@ public class SignJar extends AbstractJarSignerTask {
 
         // restore the lastModified attribute
         if (preserveLastModified) {
-            targetFile.setLastModified(lastModified);
+            FILE_UTILS.setFileLastModified(targetFile, lastModified);
         }
     }
 
