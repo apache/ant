@@ -60,6 +60,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/ssh/*</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/taskdefs/optional/ssh/*</include>
+          </testIncludes>
         </configuration>
       </plugin>
     </plugins>

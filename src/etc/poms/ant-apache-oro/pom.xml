@@ -60,6 +60,9 @@
             <include>org/apache/tools/ant/util/regexp/JakartaOro*</include>
             <include>org/apache/tools/ant/taskdefs/optional/perforce/*</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/taskdefs/optional/perforce/*</include>
+          </testIncludes>
         </configuration>
       </plugin>
     </plugins>
