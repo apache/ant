@@ -112,6 +112,11 @@ Other changes:
    scenarios where a given extension-point may or may not exist.
    Bugzilla Report 49473.   
 
+ * Ant now logs a warning message if it fails to change the file
+   modification time in for example when using <touch> or preserving
+   timestamps in various tasks.
+   Bugzilla Report 49485.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

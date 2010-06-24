@@ -345,7 +345,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
             ((FileResource) getCheckedRef()).touch(modTime);
             return;
         }
-        getNotNullFile().setLastModified(modTime);
+        if (!getNotNullFile().setLastModified(modTime)) {
+            log("Failed to change file modification time", Project.MSG_WARN);
+        }
     }
 
     /**
