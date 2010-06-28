@@ -81,6 +81,11 @@ Fixed bugs:
    case-insensitive file system.
    Bugzilla Report 49041.
 
+ * The <restrict> resource collection was checking every resource even if
+   we actually just want the first one, like in the exemple of use of
+   resourcelist in the documentation (getting the first available resource
+   from a mirror list).
+
 Other changes:
 --------------
 
