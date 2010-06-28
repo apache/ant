@@ -843,6 +843,7 @@ public class Redirector {
                 errorPrintStream = new PrintStream(errorStream);
             }
             errorPrintStream.print(output);
+            errorPrintStream.flush();
         }
     }
 

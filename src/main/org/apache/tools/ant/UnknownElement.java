@@ -269,9 +269,9 @@ public class UnknownElement extends Task {
      */
     protected void handleErrorFlush(String output) {
         if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorOutput(output);
+            ((Task) realThing).handleErrorFlush(output);
         } else {
-            super.handleErrorOutput(output);
+            super.handleErrorFlush(output);
         }
     }
 
