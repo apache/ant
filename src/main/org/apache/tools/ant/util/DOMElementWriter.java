@@ -332,7 +332,7 @@ public class DOMElementWriter {
             }
             out.write(attr.getName());
             out.write("=\"");
-            out.write(encode(attr.getValue()));
+            out.write(encodeAttributeValue(attr.getValue()));
             out.write("\"");
         }
 
@@ -411,6 +411,21 @@ public class DOMElementWriter {
      * @return the encoded string.
      */
     public String encode(String value) {
+        return encode(value, false);
+    }
+
+    /**
+     * Escape &lt;, &gt; &amp; &apos;, &quot; as their entities, \n,
+     * \r and \t as numeric entities and drop characters that are
+     * illegal in XML documents.
+     * @param value the string to encode.
+     * @return the encoded string.
+     */
+    public String encodeAttributeValue(String value) {
+        return encode(value, true);
+    }
+
+    private String encode(String value, boolean encodeWhitespace) {
         int len = value.length();
         StringBuffer sb = new StringBuffer(len);
         for (int i = 0; i < len; i++) {
@@ -430,6 +445,15 @@ public class DOMElementWriter {
                 break;
             case '&':
                 sb.append("&amp;");
+                break;
+            case '\r':
+            case '\n':
+            case '\t':
+                if (encodeWhitespace) {
+                    sb.append("&#x").append(Integer.toHexString(c)).append(";");
+                } else {
+                    sb.append(c);
+                }
                 break;
             default:
                 if (isLegalCharacter(c)) {

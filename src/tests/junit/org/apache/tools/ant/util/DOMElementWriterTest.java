@@ -68,6 +68,40 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("&lt;", w.encode("<"));
         assertEquals("&amp;", w.encode("&"));
         assertEquals("", w.encode("\u0017"));
+        assertEquals("\r\n\t", w.encode("\r\n\t"));
+    }
+
+    public void testEncodeAttributeValue() {
+        assertEquals("&amp;#20;", w.encodeAttributeValue("&#20;"));
+        assertEquals("&amp;#x20;", w.encodeAttributeValue("&#x20;"));
+        assertEquals("&amp;#xA0;", w.encodeAttributeValue("&#xA0;"));
+        assertEquals("&amp;#A0;", w.encodeAttributeValue("&#A0;"));
+        assertEquals("20;", w.encodeAttributeValue("20;"));
+        assertEquals("&amp;#20", w.encodeAttributeValue("&#20"));
+        assertEquals("&amp;quot;", w.encodeAttributeValue("&quot;"));
+        assertEquals("&amp;apos;", w.encodeAttributeValue("&apos;"));
+        assertEquals("&amp;gt;", w.encodeAttributeValue("&gt;"));
+        assertEquals("&amp;lt;", w.encodeAttributeValue("&lt;"));
+        assertEquals("&amp;amp;", w.encodeAttributeValue("&amp;"));
+        assertEquals("&quot;", w.encodeAttributeValue("\""));
+        assertEquals("&lt;", w.encodeAttributeValue("<"));
+        assertEquals("&amp;", w.encodeAttributeValue("&"));
+        assertEquals("", w.encodeAttributeValue("\u0017"));
+        assertEquals("&#xd;&#xa;&#x9;", w.encodeAttributeValue("\r\n\t"));
+    }
+
+    public void testAttributeWithWhitespace() throws IOException {
+        Document d = DOMUtils.newDocument();
+        Element root = d.createElement("root");
+        root.setAttribute("foo", "bar\nbaz");
+        StringWriter sw = new StringWriter();
+        DOMElementWriter w = new DOMElementWriter();
+        w.write(root, sw, 0, "  ");
+        assertEquals("<root foo=\"bar&#xa;baz\" />" + StringUtils.LINE_SEP,
+                     sw.toString());
+    }
+
+    public void testEncodeData() {
         assertEquals("&#20;\"20;&", w.encodedata("&#20;\"20;&"));
         assertEquals("", w.encodedata("\u0017"));
     }
