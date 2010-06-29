@@ -32,6 +32,14 @@ Changes that could break older environments:
    onMissingExtensionPoint attribute.
    Bugzilla Report 49473.   
 
+ * When using <property file="..." prefix="..."/> properties defined
+   inside the same file will only get used in expansions if the ${}
+   reference uses the same prefix.  This is different from Ant 1.8.1
+   but is the same behavior Ant 1.8.0 and earlier exhibited.
+   A new attribute prefixValues can be used to re-enable the behavior
+   of Ant 1.8.1.
+   Bugzilla Report 49373.
+
 Fixed bugs:
 -----------
 

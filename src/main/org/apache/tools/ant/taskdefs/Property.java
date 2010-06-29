@@ -94,6 +94,7 @@ public class Property extends Task {
     private boolean valueAttributeUsed = false;
     private boolean relative = false;
     private File basedir;
+    private boolean prefixValues = false;
 
     protected boolean userProperty; // set read-only properties
     // CheckStyle:VisibilityModifier ON
@@ -291,6 +292,26 @@ public class Property extends Task {
      */
     public String getPrefix() {
         return prefix;
+    }
+
+    /**
+     * Whether to apply the prefix when expanding properties on the
+     * right hand side of a properties file as well.
+     *
+     * @since Ant 1.8.2
+     */
+    public void setPrefixValues(boolean b) {
+        prefixValues = b;
+    }
+
+    /**
+     * Whether to apply the prefix when expanding properties on the
+     * right hand side of a properties file as well.
+     *
+     * @since Ant 1.8.2
+     */
+    public boolean getPrefixValues() {
+        return prefixValues;
     }
 
     /**
@@ -716,7 +737,7 @@ public class Property extends Task {
                                getProject(),
                                propertyHelper,
                                propertyHelper.getExpanders())
-            .resolveAllProperties(props, prefix);
+            .resolveAllProperties(props, getPrefix(), getPrefixValues());
     }
 
 }

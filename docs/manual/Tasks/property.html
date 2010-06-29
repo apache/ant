@@ -155,6 +155,14 @@ SYSTEM).
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">prefixValues</td>
+    <td valign="top">Whether to apply the prefix when expanding the
+      right hand side of properties loaded using <code>file</code>,
+      <code>resource</code>, or <code>url</code>.
+      <em>Since Ant 1.8.2</em></td>
+    <td align="center" valign="top">No (default=<tt>false</tt>)</td>
+  </tr>
+  <tr>
     <td valign="top">relative</td>
     <td valign="top">If set to <tt>true</tt> the relative path
       to <tt>basedir</tt> is set.  <em>Since Ant 1.8.0</em></td>
@@ -198,7 +206,7 @@ to be your home directory.  Where the &quot;user.home&quot; property resolves to
 the file system depends on the operating system version and the JVM implementation.
 On Unix based systems, this will map to the user's home directory. On modern Windows
 variants, this will most likely resolve to the user's directory in the &quot;Documents
-and Settings&quot; folder. Older windows variants such as Windows 98/ME are less
+and Settings&quot; or &quot;Users&quot; folder. Older windows variants such as Windows 98/ME are less
 predictable, as are other operating system/JVM combinations.</p>
 
 <pre>
@@ -247,8 +255,12 @@ project, that team members can customize.
 <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Properties.html#load(java.io.InputStream)">by Sun</a>.
 This makes it hard for Team Ant to field bug reports about it.
 <li>Trailing spaces are not stripped. It may have been what you wanted.
-<li>Want unusual characters? Escape them \u0456 or \" style.
-<li>Ant Properties are expanded in the file.
+<li>Want unusual characters? Escape them \u0456 or \&quot; style.
+<li>Ant Properties are expanded in the file
+<li>If you want to expand properties defined inside the same file and
+  you use the prefix attribute of the task, you must use the same
+  prefix when expanding the properties or
+  set <code>prefixValues</code> to true.</li>
 </ol>
 In-file property expansion is very cool. Learn to use it.
 <p>

@@ -769,7 +769,7 @@ public class Main implements AntMain {
                 HashMap props = new HashMap(definedProps);
                 new ResolvePropertyMap(project, propertyHelper,
                                        propertyHelper.getExpanders())
-                    .resolveAllProperties(props, null);
+                    .resolveAllProperties(props, null, false);
 
                 // set user-define properties
                 for (Iterator e = props.entrySet().iterator(); e.hasNext(); ) {

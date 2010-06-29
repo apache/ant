@@ -93,7 +93,7 @@ y=$${x}
 ]]></echo>
     <property file="${input}/y.properties" prefix="foo"/>
     <!-- passes in Ant 1.8.0 and 1.7.1, fails in 1.8.1 -->
-    <!--au:assertPropertyEquals name="foo.y" value="x"/-->
+    <au:assertPropertyEquals name="foo.y" value="x"/>
     <echo file="${input}/z.properties"><![CDATA[
 x=y
 y=$${bar.x}
@@ -121,8 +121,8 @@ x=3
     <au:assertPropertyEquals name="foo.x" value="3"/>
   </target>
 
-    <!-- passes in Ant 1.7.1 and 1.8.0, fails in 1.8.1 -->
-  <target name="NOtestNestedExpansionDoesntUsePrefix"
+  <!-- passes in Ant 1.7.1 and 1.8.0, fails in 1.8.1 -->
+  <target name="testNestedExpansionDoesntUsePrefix"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49373">
     <mkdir dir="${input}"/>
     <property name="x" value="x"/>

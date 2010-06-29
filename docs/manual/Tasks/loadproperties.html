@@ -33,10 +33,11 @@ Also if the file is missing, the build is halted with an error, rather
 than a warning being printed.
 </p>
 
-<p>If you want to simulate <a href="property.html">property</a>'s
-prefix attribute, please use <a
-href="../Types/filterchain.html#prefixlines">prefixlines</a>
-filter.</p>
+<p><strong>Note:</strong> the default value of this
+task's <code>prefixValues</code> attribute is different from the
+default value of the same attribute in
+the <a href="property.html"><code>&lt;property&gt;</code></a>
+task.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -77,6 +78,13 @@ filter.</p>
     <td valign="top">Prefix to apply to loaded properties;
       a "." is appended to the prefix if not specified. <em>Since Ant 1.8.1</em></td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">prefixValues</td>
+    <td valign="top">Whether to apply the prefix when expanding the
+      right hand side of the properties.
+      <em>Since Ant 1.8.2</em></td>
+    <td align="center" valign="top">No (default=<tt>true</tt>)</td>
   </tr>
 </table>
 
