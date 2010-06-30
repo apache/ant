@@ -45,6 +45,13 @@ public class DOMElementWriter {
 
     private static final int HEX = 16;
 
+    private static final String[] WS_ENTITIES = new String['\r' - '\t' + 1];
+    static {
+        for (int i = '\t'; i < '\r' + 1; i++) {
+            WS_ENTITIES[i - '\t'] = "&#x" + Integer.toHexString(i) + ";";
+        }
+    }
+
     /** prefix for generated prefixes */
     private static final String NS = "ns";
 
@@ -425,11 +432,11 @@ public class DOMElementWriter {
         return encode(value, true);
     }
 
-    private String encode(String value, boolean encodeWhitespace) {
-        int len = value.length();
-        StringBuffer sb = new StringBuffer(len);
+    private String encode(final String value, final boolean encodeWhitespace) {
+        final int len = value.length();
+        final StringBuffer sb = new StringBuffer(len);
         for (int i = 0; i < len; i++) {
-            char c = value.charAt(i);
+            final char c = value.charAt(i);
             switch (c) {
             case '<':
                 sb.append("&lt;");
@@ -450,7 +457,7 @@ public class DOMElementWriter {
             case '\n':
             case '\t':
                 if (encodeWhitespace) {
-                    sb.append("&#x").append(Integer.toHexString(c)).append(";");
+                    sb.append(WS_ENTITIES[c - '\t']);
                 } else {
                     sb.append(c);
                 }
@@ -482,10 +489,10 @@ public class DOMElementWriter {
 
      */
     public String encodedata(final String value) {
-        int len = value.length();
+        final int len = value.length();
         StringBuffer sb = new StringBuffer(len);
         for (int i = 0; i < len; ++i) {
-            char c = value.charAt(i);
+            final char c = value.charAt(i);
             if (isLegalCharacter(c)) {
                 sb.append(c);
             }
@@ -543,7 +550,7 @@ public class DOMElementWriter {
      * @return true if the character is allowed.
      * @since 1.10, Ant 1.5
      */
-    public boolean isLegalCharacter(char c) {
+    public boolean isLegalCharacter(final char c) {
         // CheckStyle:MagicNumber OFF
         if (c == 0x9 || c == 0xA || c == 0xD) {
             return true;
