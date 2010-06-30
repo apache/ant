@@ -498,6 +498,7 @@ public class Execute {
                 watchdog.stop();
             }
             streamHandler.stop();
+            closeStreams(process);
 
             if (watchdog != null) {
                 watchdog.checkException();
