@@ -66,20 +66,31 @@ public class ResolvePropertyMap implements GetProperty {
         }
 
         try {
+
+            // If the property we are looking up is a key in the map
+            // (first call into this method from resolveAllProperties)
+            // or we've been asked to prefix the value side (later
+            // recursive calls via the GetProperty interface) the
+            // prefix must be prepended when looking up the property
+            // outside of the map.
             String fullKey = name;
-            if (prefix != null && prefixValues) {
+            if (prefix != null && (expandingLHS || prefixValues)) {
                 fullKey = prefix + name;
             }
-            Object masterValue = expandingLHS
-                ? null : master.getProperty(fullKey);
-            // if the property is defined outside of this map don't
-            // consult the map at all.
+
+            Object masterValue = master.getProperty(fullKey);
             if (masterValue != null) {
+                // If the property already has a value outside of the
+                // map, use that value to enforce property
+                // immutability.
+
                 return masterValue;
             }
 
-            expandingLHS = false;
             seen.add(name);
+            expandingLHS = false;
+            // will recurse into this method for each property
+            // reference found in the map's value
             return parseProperties.parseProperties((String) map.get(name));
         } finally {
             seen.remove(name);
@@ -125,19 +136,7 @@ public class ResolvePropertyMap implements GetProperty {
         for (Iterator i = map.keySet().iterator(); i.hasNext();) {
             expandingLHS = true;
             String key = (String) i.next();
-
-            // if the property has already been set to the name it
-            // will have in the end, then return the existing value to
-            // ensure properties remain immutable
-            String fullKey = key;
-            if (prefix != null) {
-                fullKey = prefix + key;
-            }
-            Object result = master.getProperty(fullKey);
-
-            if (result == null) {
-                result = getProperty(key);
-            }
+            Object result = getProperty(key);
             String value = result == null ? "" : result.toString();
             map.put(key, value);
         }
