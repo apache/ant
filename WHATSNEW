@@ -25,6 +25,8 @@ Changes that could break older environments:
    section between the second "]" and ">" and create two sections.
    This affects <echoxml> task as well as the XML logger or JUnit
    formatter where ampersands will now always get encoded.
+   In addition DOMElementWriter will now replace the characters \t, \r
+   and \n in attribute values by entity references.
    Bugzilla Report 49404.
 
  * The list elements returned by ProjectHelper#getExtensionStack are
