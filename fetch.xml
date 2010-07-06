@@ -224,6 +224,7 @@ Set -Ddest=LOCATION on the command line
     depends="init">
     <f2 project="commons-net" />
     <f2 project="com.jcraft" archive="jsch"/>
+    <available property="have.commons.net" classname="org.apache.commons.net.ftp.FTPClientConfig"/>
   </target>
 
   <target name="regexp"
@@ -309,13 +310,24 @@ Set -Ddest=LOCATION on the command line
     <f2 project="com.sun.media" archive="jai-codec" repository="http://repository.jboss.org/maven2"/>
   </target>
 
-  <target name="netrexx" depends="init-no-m2,-setup-temp-cache,networking,-fetch-netrexx,-cleanup-temp-cache"
+  <target name="netrexx" depends="init-no-m2,-setup-temp-cache,networking,-fetch-netrexx,-fetch-netrexx-no-commons-net,-cleanup-temp-cache"
           description="load NetRexx compiler" />
 
   <target name="-fetch-netrexx" depends="-setup-temp-cache"
-          description="FTPs NetRexx compiler from IBM site">
+          description="FTPs NetRexx compiler from IBM site" if="have.commons.net">
     <get-ftp-file host="ftp.software.ibm.com" remotedir="/software/awdtools/netrexx"
             filename="NetRexx.zip" localdir="${temp.dir}" />
+    <copy todir="${dest.dir}" flatten="true">
+      <zipfileset src="${temp.dir}/NetRexx.zip">
+        <include name="NetRexx\lib\NetRexxC.jar" />
+        <include name="NetRexx\browse\license.txt" />
+      </zipfileset>
+    </copy>
+  </target>
+
+  <target name="-fetch-netrexx-no-commons-net" depends="-setup-temp-cache"
+          description="FTPs NetRexx compiler from IBM site" unless="have.commons.net">
+    <get src="ftp://ftp.software.ibm.com/software/awdtools/netrexx/NetRexx.zip" dest="${temp.dir}/NetRexx.zip" skipexisting="true"/>
     <copy todir="${dest.dir}" flatten="true">
       <zipfileset src="${temp.dir}/NetRexx.zip">
         <include name="NetRexx\lib\NetRexxC.jar" />
