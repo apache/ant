@@ -17,7 +17,9 @@
 -->
 <!--
   This POM has been created manually by the Ant Development Team for
-  Apache Gump in order to redirect users of very old Ant versions.
+  Apache Gump in order to help users of very old Ant versions (the POM
+  inside the mvn repository has not been created by Ant developers and
+  lacks a dependency on ant-launcher).
   The versions are completely irrelevant for Gump.
   Don't use it for any other purpose.
 -->
@@ -26,9 +28,12 @@
   <groupId>ant</groupId>
   <artifactId>ant</artifactId>
   <version>1.6.5</version>
-  <distributionManagement>
-    <relocation>
-      <groupId>org.apache.ant</groupId>
-    </relocation>
-  </distributionManagement>
+  <dependencies>
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant-launcher</artifactId>
+      <version>1.6.5</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
 </project>
