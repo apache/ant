@@ -29,6 +29,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -652,8 +654,6 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
-        getCommandline()
-            .setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
     }
 
     /**
@@ -716,16 +716,17 @@ public class JUnitTask extends Task {
      * @since Ant 1.7.1
      */
     protected void setupJUnitDelegate() {
-        ClassLoader myLoader = JUnitTask.class.getClassLoader();
+        final ClassLoader myLoader = JUnitTask.class.getClassLoader();
         if (splitJunit) {
-            Path path = new Path(getProject());
+            final Path path = new Path(getProject());
             path.add(antRuntimeClasses);
             Path extra = getCommandline().getClasspath();
             if (extra != null) {
                 path.add(extra);
             }
-            mirrorLoader =
-                new SplitClassLoader(myLoader, path, getProject(),
+            mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return new SplitClassLoader(myLoader, path, getProject(),
                                      new String[] {
                                          "BriefJUnitResultFormatter",
                                          "JUnit4TestMethodAdapter",
@@ -739,6 +740,8 @@ public class JUnitTask extends Task {
                                          "TearDownOnVmCrash",
                                          "XMLJUnitResultFormatter",
                                      });
+                }
+            });
         } else {
             mirrorLoader = myLoader;
         }
@@ -884,7 +887,7 @@ public class JUnitTask extends Task {
             log(e.toString(), Project.MSG_ERR);
             throw new BuildException(e);
         } finally {
-            FILE_UTILS.close(writer);
+            FileUtils.close(writer);
 
             try {
                 FILE_UTILS.tryHardToDelete(casesFile);
@@ -925,7 +928,6 @@ public class JUnitTask extends Task {
         } catch (CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
         }
-        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
             cmd.createArgument().setValue(test.getName());
             if (test.getMethods() != null) {
@@ -1177,13 +1179,13 @@ public class JUnitTask extends Task {
             return new File(FILE_UTILS.fromURI(url1))
                 .equals(new File(FILE_UTILS.fromURI(url2)));
         }
-        return u1.equals(u2);
+        return url1.equals(url2);
     }
 
     private static String maybeStripJarAndClass(URL u) {
         String s = u.toString();
         if (s.startsWith("jar:")) {
-            int pling = s.indexOf("!");
+            int pling = s.indexOf('!');
             s = s.substring(4, pling == -1 ? s.length() : pling);
         }
         return s;
@@ -1723,6 +1725,7 @@ public class JUnitTask extends Task {
     protected CommandlineJava getCommandline() {
         if (commandline == null) {
             commandline = new CommandlineJava();
+            commandline.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         }
         return commandline;
     }
@@ -1940,7 +1943,7 @@ public class JUnitTask extends Task {
     /**
      * A value class that contains the result of a test.
      */
-    protected class TestResultHolder {
+    protected static class TestResultHolder {
         // CheckStyle:VisibilityModifier OFF - bc
         /** the exit code of the test. */
         public int exitCode = JUnitTaskMirror.JUnitTestRunnerMirror.ERRORS;
@@ -2019,7 +2022,7 @@ public class JUnitTask extends Task {
      */
     private static JUnitTest createDummyTestForBatchTest(JUnitTest test) {
         JUnitTest t = (JUnitTest) test.clone();
-        int index = test.getName().indexOf(".");
+        int index = test.getName().indexOf('.');
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch
         String pack = index > 0 ? test.getName().substring(0, index + 1) : "";

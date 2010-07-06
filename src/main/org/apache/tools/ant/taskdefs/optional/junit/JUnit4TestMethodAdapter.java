@@ -74,7 +74,7 @@ public class JUnit4TestMethodAdapter implements Test {
             }
         }
         this.testClass = testClass;
-        this.methodNames = methodNames;
+        this.methodNames = (String[]) methodNames.clone();
         this.cache = Cache.instance;
 
         // Warning: If 'testClass' is an old-style (pre-JUnit-4) class,
@@ -194,6 +194,8 @@ public class JUnit4TestMethodAdapter implements Test {
      * of type {@code JUnit4TestAdapter}.
      */
     private static final class Cache extends JUnit4TestAdapterCache {
+        
+        private static final long serialVersionUID = 8454901854293461610L;
 
 	private static final Cache instance = new Cache();
 

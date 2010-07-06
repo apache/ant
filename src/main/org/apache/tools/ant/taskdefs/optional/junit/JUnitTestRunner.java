@@ -289,13 +289,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents,
                            ClassLoader loader) {
-        JUnitTestRunner.filtertrace = filtertrace;
+        JUnitTestRunner.filtertrace = filtertrace; // XXX clumsy, should use instance field somehow
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
         this.showOutput = showOutput;
         this.logTestListenerEvents = logTestListenerEvents;
-        this.methods = methods;
+        this.methods = methods != null ? (String[]) methods.clone() : null;
         this.loader = loader;
     }
 

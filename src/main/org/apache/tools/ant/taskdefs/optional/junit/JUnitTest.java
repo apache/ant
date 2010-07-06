@@ -97,8 +97,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param haltOnError if true halt the tests if there is an error.
      * @param haltOnFailure if true halt the tests if there is a failure.
      * @param filtertrace if true filter stack traces.
-     * @param methods if true run only test methods that failed during the
-     *                previous run of the test suite
+     * @param methods if non-null run only these test methods
      * @since 1.8.2
      */
     public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
@@ -107,8 +106,8 @@ public class JUnitTest extends BaseTest implements Cloneable {
         this.haltOnError = haltOnError;
         this.haltOnFail = haltOnFailure;
         this.filtertrace = filtertrace;
-        this.methods = methods;
-        this.methodsSpecified = (methods != null);
+        this.methodsSpecified = methods != null;
+        this.methods = methodsSpecified ? (String[]) methods.clone() : null;
     }
 
     /**
@@ -298,10 +297,10 @@ public class JUnitTest extends BaseTest implements Cloneable {
                     break;
                 case stateInsideWord:
                     if (c == ',') {
-                        result[wordIndex++] = new String(methodNames.substring(wordStartIndex, i));
+                        result[wordIndex++] = methodNames.substring(wordStartIndex, i);
                         state = stateBeforeWord;
                     } else if (c == ' ') {
-                        result[wordIndex++] = new String(methodNames.substring(wordStartIndex, i));
+                        result[wordIndex++] = methodNames.substring(wordStartIndex, i);
                         state = stateAfterWord;
                     } else if (Character.isJavaIdentifierPart(c)) {
                         // remain in the same state
@@ -327,7 +326,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
             case stateAfterWord:
                 break;
             case stateInsideWord:
-                result[wordIndex++] = new String(methodNames.substring(wordStartIndex, chars.length));
+                result[wordIndex++] = methodNames.substring(wordStartIndex, chars.length);
                 break;
             default:
                 // this should never happen
