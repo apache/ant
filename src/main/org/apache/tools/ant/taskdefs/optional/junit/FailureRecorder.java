@@ -249,7 +249,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             File sourceFile = new File((getLocationName() + ".java"));
             verbose("Write collector class to '" + sourceFile.getAbsolutePath() + "'");
 
-            if (!sourceFile.delete()) {
+            if (sourceFile.exists() && !sourceFile.delete()) {
                 throw new IOException("could not delete " + sourceFile);
             }
             writer = new BufferedWriter(new FileWriter(sourceFile));
