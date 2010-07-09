@@ -96,6 +96,10 @@ Fixed bugs:
    resourcelist in the documentation (getting the first available resource
    from a mirror list).
 
+ * A race condition could lead to build failures if multiple <mkdir>
+   tasks were trying to create the same directory.
+   Bugzilla Report 49572.
+
 Other changes:
 --------------
 
