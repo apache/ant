@@ -717,6 +717,44 @@
        </table>
      </subsection>
 
+     <subsection name="Commons Configuration Ant Task">
+       <p>A set of Ant task that help convert Apache Commons
+       Configuration property files into build properties, java Enum's
+       (that are populated at runtime), and any exportable property /
+       env file desired (e.g., csh, bash, bat, etc.).</p>
+
+       <p>This project provides the following tasks: 
+       <ul>
+         <li><b>CreateEnumTask</b>: Creates a Java enum based on
+         commons configuration property files. </li>
+         <li><b>ExportPropertiesTask</b>: Exports commons
+         configuration properties to a external file in a using a
+         specified format.</li>
+         <li><b>LoadPropertiesTask</b>: Loads commons configuration
+         properties into pre-generated Java enum.</li>
+       </ul>
+       </p>
+
+       <table class="externals">
+         <tr>
+           <th>Compatibility:</th>
+           <td>Ant 1.6 and above</td>
+         </tr>
+         <tr>
+           <th>URL:</th>
+           <td><a href="http://code.google.com/p/commonsconfiganttask/">http://code.google.com/p/commonsconfiganttask/</a></td>
+         </tr>
+         <tr>
+           <th>Contact:</th>
+           <td><a href="mailto:ndunn.at.me.com">ndunn at me.com</a></td>
+         </tr>
+         <tr>
+           <th>License:</th>
+           <td>Apache License 2.0</td>
+         </tr>
+       </table>
+     </subsection>
+
      <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
