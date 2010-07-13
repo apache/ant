@@ -208,6 +208,7 @@ public class Resources extends DataType implements ResourceCollection {
         if (isReference()) {
             return getCheckedRef().toString();
         }
+        validate();
         if (coll == null || coll.isEmpty()) {
             return "";
         }

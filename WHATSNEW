@@ -100,6 +100,12 @@ Fixed bugs:
    tasks were trying to create the same directory.
    Bugzilla Report 49572.
 
+ * the toString() method of the Resources class - and thus any
+   ${toString:} expansion of a reference to a <resources> element -
+   didn't iterate over its nested elements if it hadn't done so prior
+   to the toString invocation already.
+   Bugzilla Report 49588.
+
 Other changes:
 --------------
 
