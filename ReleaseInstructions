@@ -230,7 +230,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     * upload the new release files to
 
       from distribution
-      to   /www/www.apache.org/dist/ant/[source|binaries].
+      to   /www/www.apache.org/dist/ant/[source|binaries|manual].
 
       
     * upload the maven artifacts located under java-repository/org/apache/ant
@@ -280,7 +280,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 21. Clean up.
 
     * remove the remaining files of the previous release and betas from
-      /www/www.apache.org/dist/ant/[source|binaries].
+      /www/www.apache.org/dist/ant/[source|binaries|manual].
       This includes the old release notes.
 
     (+)

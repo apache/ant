@@ -148,6 +148,7 @@
   <property name="dist.base" value="distribution"/>
   <property name="dist.base.source" value="${dist.base}/source"/>
   <property name="dist.base.binaries" value="${dist.base}/binaries"/>
+  <property name="dist.base.manual" value="${dist.base}/manual"/>
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
@@ -1080,6 +1081,7 @@
     <mkdir dir="${dist.base}"/>
     <mkdir dir="${dist.base.source}"/>
     <mkdir dir="${dist.base.binaries}"/>
+    <mkdir dir="${dist.base.manual}"/>
     <mkdir dir="${java-repository.dir}"/>
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
@@ -1142,10 +1144,32 @@
     <checksums-mvn>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.jar"/>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.pom"/>
-   </checksums-mvn>
+    </checksums-mvn>
+
+    <zip destfile="${dist.base.manual}/${dist.name}-manual.zip">
+      <zipfileset dir="${dist.name}/docs/manual" prefix="${dist.name}"/>
+      <zipfileset file="NOTICE" prefix="${dist.name}"/>
+    </zip>
+    <tar longfile="gnu"
+         destfile="${dist.base.manual}/${dist.name}-manual.tar">
+      <tarfileset dir="${dist.name}/docs/manual" prefix="${dist.name}"/>
+      <tarfileset file="NOTICE" prefix="${dist.name}"/>
+    </tar>
+    <gzip destfile="${dist.base.manual}/${dist.name}-manual.tar.gz"
+          src="${dist.base.manual}/${dist.name}-manual.tar"/>
+    <bzip2 destfile="${dist.base.manual}/${dist.name}-manual.tar.bz2"
+           src="${dist.base.manual}/${dist.name}-manual.tar"/>
+    <delete file="${dist.base.manual}/${dist.name}-manual.tar"/>
+
     <delete dir="${dist.name}"/>
     <checksums>
       <fileset dir="${dist.base.binaries}/">
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.md5"/>
+        <exclude name="**/*.sha1"/>
+        <exclude name="**/*.sha512"/>
+      </fileset>
+      <fileset dir="${dist.base.manual}/">
         <exclude name="**/*.asc"/>
         <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
