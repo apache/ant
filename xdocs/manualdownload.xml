@@ -95,18 +95,21 @@ may not be available on all mirrors for a few days.</div>
 <a href="[preferred]/ant/manual/apache-ant-1.8.1-manual.zip">apache-ant-1.8.1-manual.zip</a>
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.zip.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.zip.sha512">SHA512</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive:
 <a href="[preferred]/ant/manual/apache-ant-1.8.1-manual.tar.gz">apache-ant-1.8.1-manual.tar.gz</a>
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.gz.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.gz.sha512">SHA512</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive:
 <a href="[preferred]/ant/manual/apache-ant-1.8.1-manual.tar.bz2">apache-ant-1.8.1-manual.tar.bz2</a>
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.bz2.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.bz2.sha512">SHA512</a>]
 [<a href="http://www.apache.org/dist/ant/manual/apache-ant-1.8.1-manual.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </section>
@@ -122,7 +125,7 @@ found <a href="http://archive.apache.org/dist/ant/manual/">here</a>..</p>
 <section name="Verify Releases">
 
 <p>It is essential that you verify the integrity of the downloaded
-files using the PGP signature or the SHA1 or MD5 checksums.  The
+files using the PGP signature or the SHA1, SHA512 or MD5 checksums.  The
 checksums are not as strong indicators as the PGP signature.</p>
 
 <p>The PGP signatures can be verified using PGP or GPG.  First
@@ -154,8 +157,8 @@ is also available for Windows users.  Follow the
 to verify the package.</p>
 
 <p>Alternatively, you can verify the checksums on the files.  Unix
-programs called <code>md5</code>/<code>sha1</code> or
-<code>md5sum</code>/<code>sha1sum</code> are included in many unix
+programs called <code>md5</code>/<code>sha1</code>/<code>sha512</code> or
+<code>md5sum</code>/<code>sha1sum</code>/<code>sha512sum</code> are included in many unix
 distributions.  <code>*sum</code> is also available as part of <a
 href="http://www.gnu.org/software/textutils/textutils.html">GNU
 Textutils</a>.  Windows users can get binary md5 programs from <a
