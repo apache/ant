@@ -118,9 +118,7 @@ may not be available on all mirrors for a few days.</div>
 <section name="Old Ant Releases">
 
 <p>Older releases of Ant can be found <a
-href="http://archive.apache.org/dist/ant/binaries/">here</a>.  Those
-releases are only provided as <code>zip</code> archives that can be
-extracted by <code>jar xf </code><em>archive.zip</em> - we highly
+href="http://archive.apache.org/dist/ant/binaries/">here</a>.  We highly
 recommend to not use those releases but upgrade to Ant's <a
 href="[location]#Current Release of Ant">latest</a> release.</p>
 
