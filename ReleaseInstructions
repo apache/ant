@@ -85,6 +85,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
             manual under "Documentation")
             * xdocs/srcdownload.xml
             * xdocs/bindownload.xml
+            * xdocs/manualdownload.xml
 
         Generate the html files by invoking ant on docs.xml
         (use -projecthelp for instructions).
@@ -313,11 +314,13 @@ Note: This document was updated in the context of releasing Ant 1.7.
      the xdocs and the generated html from the branch and will complain if there
      are discrepancies in version numbers.
 
-(**) Mirrors : the srcdownload.html and bindownload.html each list a number of
-     mirrors. For ant 1.6.0 the mirrors picked up the new version in 8 hours
-     or less, the release having been done at midnight on Dec 18th, the
-     mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
-     contain a note advising users to be patient immediately after the release.
+(**) Mirrors : the srcdownload.html, bindownload.html and
+     manualdownload.html each list a number of mirrors. For ant 1.6.0
+     the mirrors picked up the new version in 8 hours or less, the
+     release having been done at midnight on Dec 18th, the mirrors had
+     it on Dec 19th at 8 am. The
+     srcdownload/bindownload/manualdownload pages all contain a note
+     advising users to be patient immediately after the release.
 
 (+)  Don't expect the old releases to disappear from
      www.apache.org/dist as soon as the new releases are there.
