@@ -48,6 +48,7 @@
             <menu name="Download">
                 <item name="Binary Distributions" href="http://ant.apache.org/bindownload.cgi"/>
                 <item name="Source Distributions" href="http://ant.apache.org/srcdownload.cgi"/>
+                <item name="Ant Manual" href="http://ant.apache.org/manualdownload.cgi"/>
             </menu>
 
             <menu name="Contributing">
