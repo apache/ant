@@ -32,6 +32,8 @@
   <property name="apache-realhost" value="freyr" />
   <property name="apache-ip4" value="140.211.11.131" />
     
+  <property name="apache-realhost.gump" value="140" />
+
   <property name="xs4all-hostname" value="www.xs4all.nl" />
   <property name="xs4all-domain" value="xs4all.nl" />
   <property name="xs4all-realhost" value="www" />
@@ -47,14 +49,24 @@
 
     <target name="testApache" depends="setUp">
       <hostinfo prefix="apache" host="${apache-hostname}"/>
-      <au:assertEquals expected="${apache-realhost}" actual="${apache.NAME}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-realhost}" arg2="${apache.NAME}"/>
+          <equals arg1="${apache-realhost}.gump" arg2="${apache.NAME}"/>
+        </or>
+      </au:assertTrue>
       <au:assertEquals expected="${apache-domain}" actual="${apache.DOMAIN}"/>
       <au:assertEquals expected="${apache-ip4}" actual="${apache.ADDR4}"/>
     </target>
 
     <target name="testApacheNoPrefix" depends="setUp">
       <hostinfo host="${apache-hostname}"/>
-      <au:assertEquals expected="${apache-realhost}" actual="${NAME}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-realhost}" arg2="${NAME}"/>
+          <equals arg1="${apache-realhost}.gump" arg2="${NAME}"/>
+        </or>
+      </au:assertTrue>
       <au:assertEquals expected="${apache-domain}" actual="${DOMAIN}"/>
       <au:assertEquals expected="${apache-ip4}" actual="${ADDR4}"/>
     </target>
