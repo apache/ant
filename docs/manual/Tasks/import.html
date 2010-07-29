@@ -29,20 +29,28 @@
   </p>
 
   <p>
-    <b>Note</b> this task heavily relies on the ProjectHelper
+    On execution it will select the proper ProjectHelper to parse the imported
+    file, using the same algorithm as the one executed at
+    <a href="../projecthelper.html">startup</a>. The selected ProjectHelper
+    instance will then be responsible to actually parse the imported file.
+  </p>
+
+  <p>
+    <b>Note</b> as seen above, this task heavily relies on the ProjectHelper
     implementation and doesn't really perform any work of its own.  If
     you have configured Ant to use a ProjectHelper other than Ant's
     default, this task may or may not work.
   </p>
 
   <p>
-    On execution it will read another Ant file into
-    the same Project. This means that it basically works like the 
+    In the common use case where only Ant's default project helper is
+    used, it basically works like the 
     <a href="http://ant.apache.org/faq.html#xml-entity-include">Entity
       Includes as explained in the Ant FAQ</a>, as if the imported file was
     contained in the importing file, minus the top <code>&lt;project&gt;</code>
     tag.
   </p>
+
   <p>
     The import task may only be used as a top-level task. This means that
     it may not be used in a target.

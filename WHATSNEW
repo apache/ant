@@ -92,7 +92,7 @@ Fixed bugs:
    Bugzilla Report 49041.
 
  * The <restrict> resource collection was checking every resource even if
-   we actually just want the first one, like in the exemple of use of
+   we actually just want the first one, like in the example of use of
    resourcelist in the documentation (getting the first available resource
    from a mirror list).
 
@@ -141,6 +141,13 @@ Other changes:
    modification time in for example when using <touch> or preserving
    timestamps in various tasks.
    Bugzilla Report 49485.
+
+ * ProjectHelpers can now be installed dynamically via the <projecthelper>
+   Ant task.
+
+ * <import> is now able to switch to the proper ProjectHelper to parse
+   the imported resource. This means that several kinds of different build
+   files can import each other.
 
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================

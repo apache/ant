@@ -34,7 +34,7 @@ import org.apache.tools.ant.util.LoaderUtils;
 /**
  * Repository of {@link ProjectHelper} found in the classpath or via
  * some System properties.
-
+ * 
  * <p>See the ProjectHelper documentation in the manual.</p>
  * 
  * @since Ant 1.8.0
@@ -57,6 +57,18 @@ public class ProjectHelperRepository {
     private static final Class[] NO_CLASS = new Class[0];
     private static final Object[] NO_OBJECT = new Object[0];
 
+    private static Constructor PROJECTHELPER2_CONSTRUCTOR;
+
+    static {
+        try {
+            PROJECTHELPER2_CONSTRUCTOR = ProjectHelper2.class
+                    .getConstructor(NO_CLASS);
+        } catch (Exception e) {
+            // ProjectHelper2 must be available
+            throw new RuntimeException(e);
+        }
+    }
+
     public static ProjectHelperRepository getInstance() {
         return instance;
     }
@@ -67,7 +79,7 @@ public class ProjectHelperRepository {
 
     private void collectProjectHelpers() {
         // First, try the system property
-        ProjectHelper projectHelper = getProjectHelperBySystemProperty();
+        Constructor projectHelper = getProjectHelperBySystemProperty();
         registerProjectHelper(projectHelper);
 
         // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
@@ -100,35 +112,63 @@ public class ProjectHelperRepository {
                 e.printStackTrace(System.err);
             }
         }
-
-        // last but not least, ant default project helper
-        projectHelper = new ProjectHelper2();
-        registerProjectHelper(projectHelper);
     }
 
-    private void registerProjectHelper(ProjectHelper projectHelper) {
-        if (projectHelper == null) {
+    /**
+     * Register the specified project helper into the repository.
+     * <p>
+     * The helper will be added after all the already registered helpers, but
+     * before the default one (ProjectHelper2)
+     * 
+     * @param helperClassName
+     *            the fully qualified name of the helper
+     * @throws BuildException
+     *             if the class cannot be loaded or if there is no constructor
+     *             with no argument
+     * @since Ant 1.8.2
+     */
+    public void registerProjectHelper(String helperClassName)
+            throws BuildException {
+        registerProjectHelper(getHelperConstructor(helperClassName));
+    }
+
+    /**
+     * Register the specified project helper into the repository.
+     * <p>
+     * The helper will be added after all the already registered helpers, but
+     * before the default one (ProjectHelper2)
+     * 
+     * @param helperClass
+     *            the class of the helper
+     * @throws BuildException
+     *             if there is no constructor with no argument
+     * @since Ant 1.8.2
+     */
+    public void registerProjectHelper(Class helperClass) throws BuildException {
+        try {
+            registerProjectHelper(helperClass.getConstructor(NO_CLASS));
+        } catch (NoSuchMethodException e) {
+            throw new BuildException("Couldn't find no-arg constructor in "
+                    + helperClass.getName());
+        }
+    }
+
+    private void registerProjectHelper(Constructor helperConstructor) {
+        if (helperConstructor == null) {
             return;
         }
         if (DEBUG) {
-            System.out.println("ProjectHelper " +
-                               projectHelper.getClass().getName()
-                               + " registered.");
+            System.out.println("ProjectHelper "
+                    + helperConstructor.getClass().getName() + " registered.");
         }
-        try {
-            helpers.add(projectHelper.getClass().getConstructor(NO_CLASS));
-        } catch (NoSuchMethodException nse) {
-            // impossible to get here
-            throw new BuildException("Couldn't find no-arg constructor in "
-                                     + projectHelper.getClass().getName());
-        }
+        helpers.add(helperConstructor);
     }
 
-    private ProjectHelper getProjectHelperBySystemProperty() {
+    private Constructor getProjectHelperBySystemProperty() {
         String helperClass = System.getProperty(ProjectHelper.HELPER_PROPERTY);
         try {
             if (helperClass != null) {
-                return newHelper(helperClass);
+                return getHelperConstructor(helperClass);
             }
         } catch (SecurityException e) {
             System.err.println("Unable to load ProjectHelper class \""
@@ -142,7 +182,7 @@ public class ProjectHelperRepository {
         return null;
     }
 
-    private ProjectHelper getProjectHelperByService(InputStream is) {
+    private Constructor getProjectHelperByService(InputStream is) {
         try {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
@@ -158,7 +198,7 @@ public class ProjectHelperRepository {
             rd.close();
 
             if (helperClassName != null && !"".equals(helperClassName)) {
-                return newHelper(helperClassName);
+                return getHelperConstructor(helperClassName);
             }
         } catch (Exception e) {
             System.out.println("Unable to load ProjectHelper from service "
@@ -171,21 +211,21 @@ public class ProjectHelperRepository {
     }
 
     /**
-     * Creates a new helper instance from the name of the class. It'll
-     * first try the thread class loader, then Class.forName() will
-     * load from the same loader that loaded this class.
+     * Get the constructor with not argument of an helper from its class name.
+     * It'll first try the thread class loader, then Class.forName() will load
+     * from the same loader that loaded this class.
      * 
      * @param helperClass
      *            The name of the class to create an instance of. Must not be
      *            <code>null</code>.
      * 
-     * @return a new instance of the specified class.
+     * @return the constructor of the specified class.
      * 
      * @exception BuildException
-     *                if the class cannot be found or cannot be appropriate
-     *                instantiated.
+     *                if the class cannot be found or if a constructor with no
+     *                argument cannot be found.
      */
-    private ProjectHelper newHelper(String helperClass) throws BuildException {
+    private Constructor getHelperConstructor(String helperClass) throws BuildException {
         ClassLoader classLoader = LoaderUtils.getContextClassLoader();
         try {
             Class clazz = null;
@@ -199,7 +239,7 @@ public class ProjectHelperRepository {
             if (clazz == null) {
                 clazz = Class.forName(helperClass);
             }
-            return ((ProjectHelper) clazz.newInstance());
+            return clazz.getConstructor(NO_CLASS);
         } catch (Exception e) {
             throw new BuildException(e);
         }
@@ -266,17 +306,25 @@ public class ProjectHelperRepository {
 
     private static class ConstructingIterator implements Iterator {
         private final Iterator nested;
+        private boolean empty = false;
 
         ConstructingIterator(Iterator nested) {
             this.nested = nested;
         }
 
         public boolean hasNext() {
-            return nested.hasNext();
+            return nested.hasNext() || !empty;
         }
 
         public Object next() {
-            Constructor c = (Constructor) nested.next();
+            Constructor c;
+            if (nested.hasNext()) {
+                c = (Constructor) nested.next();
+            } else {
+                // last but not least, ant default project helper
+                empty = true;
+                c = PROJECTHELPER2_CONSTRUCTOR;
+            }
             try {
                 return c.newInstance(NO_OBJECT);
             } catch (Exception e) {

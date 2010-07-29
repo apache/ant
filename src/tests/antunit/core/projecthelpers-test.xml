@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml"/>
+
+  <property name="projecthelperin" location="${java.io.tmpdir}/projecthelperinput"/>
+  <property name="projecthelperout" location="${java.io.tmpdir}/projecthelperoutput"/>
+
+  <target name="compileHelpers">
+    <mkdir dir="${projecthelperin}/org/apache/tools/ant"/>
+    <mkdir dir="${projecthelperout}/org/apache/tools/ant"/>
+
+    <echo file="${projecthelperin}/org/apache/tools/ant/ReferencerProjectHelper.java">
+<!-- helper that just delegate the parsing to the xml build with the proper name -->
+<![CDATA[
+        package org.apache.tools.ant;
+
+        import org.apache.tools.ant.helper.ProjectHelper2;
+        import org.apache.tools.ant.types.Resource;
+        import org.apache.tools.ant.types.resources.FileResource;
+
+        public class ReferencerProjectHelper extends ProjectHelper2 {
+
+            public boolean canParseBuildFile(Resource buildFile) {
+                return buildFile instanceof FileResource && buildFile.getName().endsWith(".xmlref");
+            }
+
+            public String getDefaultBuildFile() {
+                return "build.xmlref";
+            }
+
+            public boolean canParseAntlibDescriptor(Resource resource) {
+                return resource instanceof FileResource && resource.getName().endsWith(".xmlref");
+            }
+
+            public void parse(Project project, Object source, RootHandler handler)
+                    throws BuildException {
+                FileResource file = (FileResource) source;
+                String name = file.getName();
+                Resource actual = new FileResource(file.getFile().getParentFile(), name.substring(0, name.length() - 3));
+                // switch to the parsing of the xml build file
+                super.parse(project, actual, handler);
+            }
+        }
+]]></echo>
+    <javac srcdir="${projecthelperin}" destdir="${projecthelperout}"/>
+  </target>
+
+  <target name="defineHelpers" depends="compileHelpers">
+    <typedef name="referencerhelper" classname="org.apache.tools.ant.ReferencerProjectHelper">
+      <classpath location="${projecthelperout}"/>
+    </typedef>
+    <projecthelper>
+      <referencerhelper/>
+    </projecthelper>
+  </target>
+
+  <target name="testCrossTargets" depends="defineHelpers">
+    <ant antfile="projecthelpers/build-cross-targets.xml" />
+  </target>
+
+  <target name="testManyImport" depends="defineHelpers">
+    <ant antfile="projecthelpers/build-many-import.xml" />
+  </target>
+
+  <target name="testCrossExtension" depends="defineHelpers">
+    <ant antfile="projecthelpers/build-cross-extension.xml" />
+  </target>
+
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete dir="${projecthelperin}"/>
+    <delete dir="${projecthelperout}"/>
+  </target>
+</project>
