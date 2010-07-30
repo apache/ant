@@ -31,7 +31,7 @@
       href="#Compiler%20Implementations">Compiler Implementations</a>,
       <a href="#IDE%20and%20Editor%20Integration">IDE integration
       tools</a>, <a href="#Source%20Control%20ystems">Source Control
-      Systems</a>, loggers, you name it. If you've written
+      Systems</a>, <a href="#Loggers">Loggers</a>, you name it. If you've written
       something that should be included, please post all relevant
       information to one of the mailing lists.  For details, see the
       <a href="faq.html#adding-external-tasks">FAQ</a>.</p>
@@ -4096,5 +4096,32 @@
 
     </section>
 
+    <section name="Loggers">
+      <subsection name="AntStatistics">
+
+        <p><a href="http://code.google.com/p/antstatistics/">AntStatistics</a> logs execution times for
+        all build targets and displays them at the end of the build. Furthermore execution times of
+        past builds are collected and graphed in a chart.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://code.google.com/p/antstatistics/">http://code.google.com/p/antstatistics/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://code.google.com/p/antstatistics/issues/list">issue tracker</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
   </body>
 </document>
