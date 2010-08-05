@@ -672,7 +672,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception Exception if the processor cannot be loaded.
      */
     private void resolveProcessor(String proc) throws Exception {
-        String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
             liaison = new org.apache.tools.ant.taskdefs.optional.TraXLiaison();
         } else {
