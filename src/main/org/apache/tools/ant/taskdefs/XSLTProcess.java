@@ -108,10 +108,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
-    /** Name of the TRAX Liaison class */
-    private static final String TRAX_LIAISON_CLASS =
-                        "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
-
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -340,6 +336,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             return;
         }
         try {
+            setupLoader();
+
             if (sysProperties.size() > 0) {
                 sysProperties.setSystem();
             }
@@ -676,13 +674,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private void resolveProcessor(String proc) throws Exception {
         String classname;
         if (proc.equals(PROCESSOR_TRAX)) {
-            classname = TRAX_LIAISON_CLASS;
+            liaison = new org.apache.tools.ant.taskdefs.optional.TraXLiaison();
         } else {
             //anything else is a classname
-            classname = proc;
+            Class clazz = loadClass(proc);
+            liaison = (XSLTLiaison) clazz.newInstance();
         }
-        Class clazz = loadClass(classname);
-        liaison = (XSLTLiaison) clazz.newInstance();
     }
 
     /**
@@ -695,12 +692,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception Exception if the class could not be loaded.
      */
     private Class loadClass(String classname) throws Exception {
-        if (classpath == null) {
+        setupLoader();
+        if (loader == null) {
             return Class.forName(classname);
         }
-        loader = getProject().createClassLoader(classpath);
-        loader.setThreadContextLoader();
         return Class.forName(classname, true, loader);
+    }
+
+    /**
+     * If a custom classpath has been defined but no loader created
+     * yet, create the classloader and set it as the context
+     * classloader.
+     */
+    private void setupLoader() {
+        if (classpath != null && loader == null) {
+            loader = getProject().createClassLoader(classpath);
+            loader.setThreadContextLoader();
+        }
     }
 
     /**
