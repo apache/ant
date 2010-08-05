@@ -391,6 +391,9 @@ file mapping will take place with each iteration.  This grants the
 user the capacity to receive input from, and send output to, different
 files for each sourcefile.
 </p>
+<p>In <i>parallel</i>-mode the redirector will be reset for each batch
+  of executions (with <i>maxparallel</i> &gt; 0) and null will be used
+  a source file just like it is in the case of <code>exec</code>.</p>
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;apply executable=&quot;ls&quot;&gt;

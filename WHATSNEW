@@ -110,6 +110,11 @@ Fixed bugs:
    to the toString invocation already.
    Bugzilla Report 49588.
 
+ * <apply> in parallel mode didn't work together with a nested
+   <redirector> if maxparallel was <= 0 (the default) or no source
+   files matched.
+   Bugzilla Report 49594.
+
 Other changes:
 --------------
 
