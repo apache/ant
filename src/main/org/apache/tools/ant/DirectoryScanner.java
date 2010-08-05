@@ -170,6 +170,26 @@ public class DirectoryScanner
         SelectorUtils.DEEP_TREE_MATCH + "/.svn",
         SelectorUtils.DEEP_TREE_MATCH + "/.svn/" + SelectorUtils.DEEP_TREE_MATCH,
 
+        // Git
+        SelectorUtils.DEEP_TREE_MATCH + "/.git",
+        SelectorUtils.DEEP_TREE_MATCH + "/.git/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitattributes",
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitignore",
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitmodules",
+
+        // Mercurial
+        SelectorUtils.DEEP_TREE_MATCH + "/.hg",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hg/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgignore",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgsub",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgsubstate",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgtags",
+
+        // Bazaar
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzr",
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzr/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzrignore",
+
         // Mac
         SelectorUtils.DEEP_TREE_MATCH + "/.DS_Store"
     };

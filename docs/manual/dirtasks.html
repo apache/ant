@@ -265,7 +265,7 @@ as an implicit fileset.</p>
 
 <h3><a name="defaultexcludes">Default Excludes</a></h3>
 <p>There are a set of definitions that are excluded by default from all
-directory-based tasks. They are:</p>
+directory-based tasks. As of Ant 1.8.1 they are:</p>
 <pre>
      **/*~
      **/#*#
@@ -281,6 +281,23 @@ directory-based tasks. They are:</p>
      **/.svn
      **/.svn/**
      **/.DS_Store
+</pre>
+<p>Ant 1.8.2 adds the folllowing default excludes:</p>
+<pre>
+     **/.git
+     **/.git/**
+     **/.gitattributes
+     **/.gitignore
+     **/.gitmodules
+     **/.hg
+     **/.hg/**
+     **/.hgignore
+     **/.hgsub
+     **/.hgsubstate
+     **/.hgtags
+     **/.bzr
+     **/.bzr/**
+     **/.bzrignore
 </pre>
 <p>If you do not want these default excludes applied, you may disable
 them with the <code>defaultexcludes=&quot;no&quot;</code>

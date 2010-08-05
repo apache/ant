@@ -42,6 +42,10 @@ Changes that could break older environments:
    of Ant 1.8.1.
    Bugzilla Report 49373.
 
+ * The files and directories used by Git, Mercurial and Bazaar to
+   store their information are now excluded by the defaultexcludes.
+   Bugzilla Report 49624.
+
 Fixed bugs:
 -----------
 
