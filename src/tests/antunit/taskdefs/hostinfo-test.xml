@@ -29,7 +29,7 @@
       
   <property name="apache-hostname" value="www.apache.org" />
   <property name="apache-domain" value="apache.org" />
-  <property name="apache-realhost" value="freyr" />
+  <property name="apache-realhost" value="eos-new" />
   <property name="apache-ip4" value="140.211.11.131" />
     
   <property name="apache-realhost.gump" value="140" />
