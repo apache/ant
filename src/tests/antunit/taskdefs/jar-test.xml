@@ -207,4 +207,23 @@
     <au:assertResourceContains value="Test: Header"
                                resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
+
+  <target name="testZipfilesetMerge"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49605">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/MANIFEST.MF">Manifest-Version: 1.0
+Main-Class: MyClass
+
+</echo>
+    <jar destfile="${input}/manifesttest.jar"
+         filesetmanifest="merge">
+      <zipfileset file="${input}/MANIFEST.MF" prefix="META-INF"/>
+    </jar>
+    <unjar src="${input}/manifesttest.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Main-Class: MyClass"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
 </project>

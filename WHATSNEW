@@ -115,6 +115,10 @@ Fixed bugs:
    files matched.
    Bugzilla Report 49594.
 
+ * <jar filesetmanifest="merge"> didn't work for manifests added via
+   <zipfileset>s that used the prefix or fullpath attributes.
+   Bugzilla Report 49605.
+
 Other changes:
 --------------
 
