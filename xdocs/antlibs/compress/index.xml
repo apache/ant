@@ -27,11 +27,11 @@
       <p>This Antlib contains tasks and resources that provide
         compression/uncompression and archival/unarchival capabilities
         based on <a href="http://commons.apache.org/compress/">Apache
-        Commons Compress</a>.  Using Apache Commons Compress 1.0 this
+        Commons Compress</a>.  Using Apache Commons Compress 1.1 this
         Antlib supports gzip and bzip2 compression and ar, cpio, tar
         and zip archives.</p>
 
-      <p>The current code base is based on the 1.0 release of Commons
+      <p>The current code base is based on the 1.1 release of Commons
         Compress but it is expected that this Antlib follows Commons
         Compress' development and will add new compression or
         archiving formats as they are provided by the underlying
