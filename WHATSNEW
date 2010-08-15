@@ -119,10 +119,6 @@ Fixed bugs:
    <zipfileset>s that used the prefix or fullpath attributes.
    Bugzilla Report 49605.
 
- * If forked, after finished <java> was still reading the input stream
-   for a bunch of characters, then stealing them from a following <input>.
-   Bugzilla Report 49119.
-
 Other changes:
 --------------
 
