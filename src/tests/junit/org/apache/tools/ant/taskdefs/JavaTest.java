@@ -317,6 +317,7 @@ public class JavaTest extends BuildFileTest {
             }
             if (os != null) {
                 Thread t = new Thread(new StreamPumper(System.in, os, true));
+                t.setName("PipeEntryPoint " + args[0]);
                 t.start();
                 try {
                     t.join();
