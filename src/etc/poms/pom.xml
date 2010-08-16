@@ -49,7 +49,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   </scm>
   <ciManagement>
     <system>hudson</system>
-    <url>http://hudson.zones.apache.org/hudson/job/Ant_BuildFromPOMs/</url>
+    <url>https://hudson.apache.org/hudson/job/Ant_BuildFromPOMs/</url>
   </ciManagement>
   <mailingLists>
     <mailingList>
