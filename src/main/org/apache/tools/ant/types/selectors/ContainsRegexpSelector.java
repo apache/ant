@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Selector that filters files based on a regular expression.
@@ -42,8 +44,17 @@ public class ContainsRegexpSelector extends BaseExtendSelector
     private String userProvidedExpression = null;
     private RegularExpression myRegExp = null;
     private Regexp myExpression = null;
+    private boolean caseSensitive = true;
+    private boolean multiLine = false;
+    private boolean singleLine = false;
     /** Key to used for parameterized custom selector */
     public static final String EXPRESSION_KEY = "expression";
+    /** Parameter name for the casesensitive attribute. */
+    private static final String CS_KEY = "casesensitive";
+    /** Parameter name for the multiline attribute. */
+    private static final String ML_KEY = "multiline";
+    /** Parameter name for the singleline attribute. */
+    private static final String SL_KEY = "singleline";
 
     /**
      * Creates a new <code>ContainsRegexpSelector</code> instance.
@@ -72,6 +83,34 @@ public class ContainsRegexpSelector extends BaseExtendSelector
     }
 
     /**
+     * Whether to ignore case or not.
+     * @param b if false, ignore case.
+     * @since Ant 1.8.2
+     */
+    public void setCaseSensitive(boolean b) {
+        caseSensitive = b;
+    }
+
+    /**
+     * Whether to match should be multiline.
+     * @param b the value to set.
+     * @since Ant 1.8.2
+     */
+    public void setMultiLine(boolean b) {
+        multiLine = b;
+    }
+
+    /**
+     * Whether to treat input as singleline ('.' matches newline).
+     * Corresponsds to java.util.regex.Pattern.DOTALL.
+     * @param b the value to set.
+     * @since Ant 1.8.2
+     */
+    public void setSingleLine(boolean b) {
+        singleLine = b;
+    }
+
+    /**
      * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
@@ -84,6 +123,13 @@ public class ContainsRegexpSelector extends BaseExtendSelector
                 String paramname = parameters[i].getName();
                 if (EXPRESSION_KEY.equalsIgnoreCase(paramname)) {
                     setExpression(parameters[i].getValue());
+                } else if (CS_KEY.equalsIgnoreCase(paramname)) {
+                    setCaseSensitive(Project
+                                     .toBoolean(parameters[i].getValue()));
+                } else if (ML_KEY.equalsIgnoreCase(paramname)) {
+                    setMultiLine(Project.toBoolean(parameters[i].getValue()));
+                } else if (SL_KEY.equalsIgnoreCase(paramname)) {
+                    setSingleLine(Project.toBoolean(parameters[i].getValue()));
                 } else {
                     setError("Invalid parameter " + paramname);
                 }
@@ -148,7 +194,10 @@ public class ContainsRegexpSelector extends BaseExtendSelector
 
             while (teststr != null) {
 
-                if (myExpression.matches(teststr)) {
+                if (myExpression.matches(teststr,
+                                         RegexpUtil.asOptions(caseSensitive,
+                                                              multiLine,
+                                                              singleLine))) {
                     return true;
                 }
                 teststr = in.readLine();

@@ -557,6 +557,28 @@
         match true in every file</td>
         <td valign="top" align="center">Yes</td>
       </tr>
+      <tr>
+        <td valign="top">casesensitive</td>
+        <td valign="top">Perform a case sensitive match.  Default is
+          true. <em>since Ant 1.8.2</em></td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">multiline</td>
+        <td valign="top">
+          Perform a multi line match.
+          Default is false. <em>since Ant 1.8.2</em></td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">singleline</td>
+        <td valign="top">
+          This allows '.' to match new lines.
+          SingleLine is not to be confused with multiline, SingleLine is a perl
+          regex term, it corresponds to dotall in java regex.
+          Default is false. <em>since Ant 1.8.2</em></td>
+        <td valign="top" align="center">No</td>
+      </tr>
     </table>
 
     <p>Here is an example of how to use the regular expression Selector:</p>

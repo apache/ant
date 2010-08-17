@@ -169,6 +169,13 @@ Other changes:
  * <copy tofile=""> now also works for non-filesystem resources.
    Bugzilla Report 49756.
 
+ * The <linecontainsregexp> filter now supports a casesensitive
+   attribute.
+
+ * The <containsregexp> selector now supports casesensitive, multiline
+   and singleline attributes.
+   Bugzilla Report 49764.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
