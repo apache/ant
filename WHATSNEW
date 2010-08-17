@@ -166,6 +166,9 @@ Other changes:
    the imported resource. This means that several kinds of different build
    files can import each other.
 
+ * <copy tofile=""> now also works for non-filesystem resources.
+   Bugzilla Report 49756.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

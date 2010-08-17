@@ -102,6 +102,10 @@ public class Copy extends Task {
     private long granularity = 0;
     private boolean force = false;
 
+    // used to store the single non-file resource to copy when the
+    // tofile attribute has been used
+    private Resource singleResource = null;
+
     /**
      * Copy task constructor.
      */
@@ -550,11 +554,15 @@ public class Copy extends Task {
                 }
             }
 
-            if (nonFileResources.size() > 0) {
+            if (nonFileResources.size() > 0 || singleResource != null) {
                 Resource[] nonFiles =
                     (Resource[]) nonFileResources.toArray(new Resource[nonFileResources.size()]);
                 // restrict to out-of-date resources
                 Map map = scan(nonFiles, destDir);
+                if (singleResource != null) {
+                    map.put(singleResource,
+                            new String[] { destFile.getAbsolutePath() });
+                }
                 try {
                     doResourceOperations(map);
                 } catch (BuildException e) {
@@ -568,6 +576,7 @@ public class Copy extends Task {
         } finally {
             // clean up again, so this instance can be used a second
             // time
+            singleResource = null;
             file = savedFile;
             destFile = savedDestFile;
             destDir = savedDestDir;
@@ -661,10 +670,9 @@ public class Copy extends Task {
                     "Cannot concatenate multiple files into a single file.");
             } else {
                 ResourceCollection rc = (ResourceCollection) rcs.elementAt(0);
-                if (!rc.isFilesystemOnly()) {
+                if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
                     throw new BuildException("Only FileSystem resources are"
-                                             + " supported when concatenating"
-                                             + " files.");
+                                             + " supported.");
                 }
                 if (rc.size() == 0) {
                     throw new BuildException(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE);
@@ -672,7 +680,11 @@ public class Copy extends Task {
                     Resource res = (Resource) rc.iterator().next();
                     FileProvider r = (FileProvider) res.as(FileProvider.class);
                     if (file == null) {
-                        file = r.getFile();
+                        if (r != null) {
+                            file = r.getFile();
+                        } else {
+                            singleResource = res;
+                        }
                         rcs.removeElementAt(0);
                     } else {
                         throw new BuildException(

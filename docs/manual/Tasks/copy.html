@@ -73,12 +73,15 @@ operation as <a href="../Types/filterset.html">filtersets</a>.
     <td valign="top">The file to copy to.</td>
     <td valign="top" align="center" rowspan="2">With the <code>file</code>
       attribute, either <code>tofile</code> or <code>todir</code> can be used.<br/>
-      With nested resource collection elements, if the collection
-      contains non-filesystem resources, the number of included files
+
+      With nested resource collection elements, if the number of
+      included resources
       is greater than 1, or if only the <code>dir</code> attribute is
       specified in the <code>&lt;fileset&gt;</code>, or if the
       <code>file</code> attribute is also specified, then only
-      <code>todir</code> is allowed.</td>
+      <code>todir</code> is allowed.<br/>
+      <em>Prior to Ant 1.8.2</em> the <code>tofile</code> attribute
+      only supported filesystem resources top copy from.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
