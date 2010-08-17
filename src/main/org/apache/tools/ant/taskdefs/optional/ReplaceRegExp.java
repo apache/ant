@@ -43,6 +43,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Performs regular expression string replacements in a text
@@ -513,23 +514,7 @@ public class ReplaceRegExp extends Task {
                                      + "time.");
         }
 
-        int options = 0;
-
-        if (flags.indexOf('g') != -1) {
-            options |= Regexp.REPLACE_ALL;
-        }
-
-        if (flags.indexOf('i') != -1) {
-            options |= Regexp.MATCH_CASE_INSENSITIVE;
-        }
-
-        if (flags.indexOf('m') != -1) {
-            options |= Regexp.MATCH_MULTILINE;
-        }
-
-        if (flags.indexOf('s') != -1) {
-            options |= Regexp.MATCH_SINGLELINE;
-        }
+        int options = RegexpUtil.asOptions(flags);
 
         if (file != null && file.exists()) {
             try {

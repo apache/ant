@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Selector that filters files based on the filename.
@@ -185,10 +186,7 @@ public class FilenameSelector extends BaseExtendSelector {
                 reg.setPattern(regex);
                 expression = reg.getRegexp(getProject());
             }
-            int options = Regexp.MATCH_DEFAULT;
-            if (!casesensitive) {
-                options |= Regexp.MATCH_CASE_INSENSITIVE;
-            }
+            int options = RegexpUtil.asOptions(casesensitive);
             return expression.matches(filename, options) == !negated;
         }
     }

@@ -19,9 +19,9 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.types.RegularExpression;
-import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Simple regular expression condition.
@@ -112,16 +112,7 @@ public class Matches extends ProjectComponent implements Condition {
         if (regularExpression == null) {
             throw new BuildException("Missing pattern in matches.");
         }
-        int options = RegexpMatcher.MATCH_DEFAULT;
-        if (!caseSensitive) {
-            options = options | RegexpMatcher.MATCH_CASE_INSENSITIVE;
-        }
-        if (multiLine) {
-            options = options | RegexpMatcher.MATCH_MULTILINE;
-        }
-        if (singleLine) {
-            options = options | RegexpMatcher.MATCH_SINGLELINE;
-        }
+        int options = RegexpUtil.asOptions(caseSensitive, multiLine, singleLine);
         Regexp regexp = regularExpression.getRegexp(getProject());
         return regexp.matches(string, options);
     }

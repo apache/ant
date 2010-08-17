@@ -29,6 +29,7 @@ import org.apache.tools.ant.util.Tokenizer;
 import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * This splits up input into tokens and passes
@@ -705,22 +706,6 @@ public class TokenFilter extends BaseFilterReader
      * @return the Regexp option bits
      */
     public static int convertRegexOptions(String flags) {
-        if (flags == null) {
-            return 0;
-        }
-        int options = 0;
-        if (flags.indexOf('g') != -1) {
-            options |= Regexp.REPLACE_ALL;
-        }
-        if (flags.indexOf('i') != -1) {
-            options |= Regexp.MATCH_CASE_INSENSITIVE;
-        }
-        if (flags.indexOf('m') != -1) {
-            options |= Regexp.MATCH_MULTILINE;
-        }
-        if (flags.indexOf('s') != -1) {
-            options |= Regexp.MATCH_SINGLELINE;
-        }
-        return options;
+        return RegexpUtil.asOptions(flags);
     }
 }
