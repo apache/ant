@@ -18,6 +18,10 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete file="${tmp}" quiet="true"/>
+  </target>
+
   <target name="testCreateWithoutPrefix"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49755">
     <tempfile property="tmp" createfile="true"/>
