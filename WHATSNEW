@@ -119,6 +119,10 @@ Fixed bugs:
    <zipfileset>s that used the prefix or fullpath attributes.
    Bugzilla Report 49605.
 
+ * <tempfile createfile="true"> would cause an error unless the prefix
+   attribute has been specified.
+   Bugzilla Report 49755.
+
 Other changes:
 --------------
 

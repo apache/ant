@@ -898,6 +898,8 @@ public class FileUtils {
         return createTempFile(prefix, suffix, parentDir, false, false);
     }
 
+    private static final String NULL_PLACEHOLDER = "null";
+
     /**
      * Create a temporary file in a given directory.
      *
@@ -925,6 +927,12 @@ public class FileUtils {
         String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
+        if (prefix == null) {
+            prefix = NULL_PLACEHOLDER;
+        }
+        if (suffix == null) {
+            suffix = NULL_PLACEHOLDER;
+        }
 
         if (createFile) {
             try {
