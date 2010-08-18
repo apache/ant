@@ -21,10 +21,14 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
@@ -212,6 +216,49 @@ public class JavaTest extends BuildFileTest {
 
     public void testRedirector2() {
         executeTarget("redirector2");
+    }
+
+    public void testReleasedInput() throws Exception {
+        PipedOutputStream out = new PipedOutputStream();
+        final PipedInputStream in = new PipedInputStream(out);
+        project.setInputHandler(new DefaultInputHandler() {
+            protected InputStream getInputStream() {
+                return in;
+            }
+        });
+        project.setDefaultInputStream(in);
+
+        Java java = new Java();
+        java.setProject(project);
+        java.setClassname("org.apache.tools.ant.Main");
+        java.setArgs("-version");
+        java.setFork(true);
+        // note: due to the missing classpath it will fail, but the input stream
+        // reader will be read
+        java.execute();
+
+        Thread inputThread = new Thread(new Runnable() {
+            public void run() {
+                Input input = new Input();
+                input.setProject(project);
+                input.setAddproperty("input.value");
+                input.execute();
+            }
+        });
+        inputThread.start();
+
+        // wait a little bit for the task to wait for input
+        Thread.sleep(100);
+
+        // write some stuff in the input stream to be catched by the input task
+        out.write("foo\n".getBytes());
+        out.flush();
+        out.write("bar\n".getBytes());
+        out.flush();
+
+        inputThread.join(2000);
+
+        assertEquals("foo", project.getProperty("input.value"));
     }
 
     /**

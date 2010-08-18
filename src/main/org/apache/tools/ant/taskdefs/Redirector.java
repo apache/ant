@@ -753,9 +753,9 @@ public class Redirector {
      */
     public ExecuteStreamHandler createHandler() throws BuildException {
         createStreams();
+        boolean nonBlockingRead = input == null && inputString == null;
         return new PumpStreamHandler(getOutputStream(), getErrorStream(),
-                getInputStream());
-
+                getInputStream(), nonBlockingRead);
     }
 
     /**

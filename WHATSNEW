@@ -123,6 +123,10 @@ Fixed bugs:
    attribute has been specified.
    Bugzilla Report 49755.
 
+ * If forked, after finished <java> was still reading the input stream
+   for a bunch of characters, then stealing them from a following <input>.
+   Bugzilla Report 49119.
+
 Other changes:
 --------------
 
