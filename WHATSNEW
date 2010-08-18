@@ -127,6 +127,11 @@ Fixed bugs:
    for a bunch of characters, then stealing them from a following <input>.
    Bugzilla Report 49119.
 
+ * Ant could be leaking threads for each forked process (started by
+   <exec>, <apply>, <java> or similar tasks) that didn't receive input
+   from a resource or string explicitly.
+   Bugzilla Report 49587.
+
 Other changes:
 --------------
 
