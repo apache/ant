@@ -104,7 +104,9 @@
 
   <target name="captureToSummary">
     <property name="fork" value="true"/>
-    <junit fork="${fork}" printSummary="withOutAndErr">
+    <property name="enableEvents" value="false"/>
+    <junit fork="${fork}" printSummary="withOutAndErr"
+           enableTestListenerEvents="${enableEvents}">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.Printer"/>
       <classpath refid="test"/>
     </junit>

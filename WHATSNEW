@@ -46,6 +46,12 @@ Changes that could break older environments:
    store their information are now excluded by the defaultexcludes.
    Bugzilla Report 49624.
 
+ * The <junit> task no longer generates TestListener events - which
+   have been introduced in ant 1.7.0 - by default.  The task has a new
+   attribute enableTestListenerEvents and a new "magic" property
+   ant.junit.enabletestlistenerevents has been added that can be used
+   to reinstate the old behavior.
+
 Fixed bugs:
 -----------
 

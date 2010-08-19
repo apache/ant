@@ -235,6 +235,19 @@ elements</a>).</p>
       <em>since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
   </tr>    
+  <tr>
+    <td valign="top">enableTestListenerEvents</td>
+    <td valign="top">Whether Ant should send fine grained information
+      about the running tests to Ant's logging system at the verbose
+      level.  Such events may be used by custom test listeners to show
+      the progress of tests.<br/>
+      Defaults to <code>false</code>.<br/>
+      Can be overridden by a <a href="#enabletestlistenerevents">magic
+        property</a>.<br/>
+      <em>since Ant 1.8.2</em> - <strong>Ant 1.7.0 to 1.8.1 behave as
+        if this attribute was true by default.</strong></td>
+    <td align="center" valign="top">No</td>
+  </tr>    
 </table>
 
 <p>By using the <code>errorproperty</code> and <code>failureproperty</code>
@@ -634,6 +647,20 @@ supported.</p>
 </pre>
 
 <p>to your <code>junit</code> task.</p>
+
+<h3><a name="enabletestlistenerevents"><code>ant.junit.enabletestlistenerevents</a>
+  magic property</h3>
+
+<p><em>Since Ant 1.8.2</em> the <code>enableTestListenerEvents</code>
+  attribute of the task controls whether fine grained logging messages
+  will be sent to the task's verbose log.  In addition to this
+  attribute Ant will consult the
+  property <code>ant.junit.enabletestlistenerevents</code> and the
+  value of the property overrides the setting of the attribute.</p>
+
+<p>This property exists so that containers running Ant that depend on
+  the additional logging events can ensure they will be generated even
+  if the build file disables them.</p>
 
 <h3>Examples</h3>
 

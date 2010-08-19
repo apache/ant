@@ -165,6 +165,7 @@ public class JUnitTask extends Task {
     private ForkMode forkMode = new ForkMode("perTest");
 
     private boolean splitJunit = false;
+    private boolean enableTestListenerEvents = false;
     private JUnitTaskMirror delegate;
     private ClassLoader mirrorLoader;
 
@@ -185,6 +186,12 @@ public class JUnitTask extends Task {
      */
     public static final String TESTLISTENER_PREFIX =
         "junit.framework.TestListener: ";
+
+    /**
+     * Name of magic property that enables test listener events.
+     */
+    public static final String ENABLE_TESTLISTENER_EVENTS =
+        "ant.junit.enabletestlistenerevents";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -673,6 +680,32 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Whether test listener events shall be generated.
+     *
+     * <p>Defaults to false.</p>
+     * 
+     * <p>This value will be overridden by the magic property
+     * ant.junit.enabletestlistenerevents if it has been set.</p>
+     *
+     * @since Ant 1.8.2
+     */
+    public void setEnableTestListenerEvents(boolean b) {
+        enableTestListenerEvents = b;
+    }
+
+    /**
+     * Whether test listener events shall be generated.
+     * @since Ant 1.8.2
+     */
+    public boolean getEnableTestListenerEvents() {
+        String e = getProject().getProperty(ENABLE_TESTLISTENER_EVENTS);
+        if (e != null) {
+            return Project.toBoolean(e);
+        }
+        return enableTestListenerEvents;
+    }
+
+    /**
      * Adds the jars or directories containing Ant, this task and
      * JUnit to the classpath - this should make the forked JVM work
      * without having to specify them directly.
@@ -953,8 +986,9 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(Constants.LOG_FAILED_TESTS
                                       + String.valueOf(logFailedTests));
 
-        cmd.createArgument().setValue(
-            Constants.LOGTESTLISTENEREVENTS + "true"); // #31885
+        // #31885
+        cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS
+                                      + String.valueOf(getEnableTestListenerEvents()));
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
@@ -1209,7 +1243,7 @@ public class JUnitTask extends Task {
 
     /**
      * Pass output sent to System.out to the TestRunner so it can
-     * collect ot for the formatters.
+     * collect it for the formatters.
      *
      * @param output output coming from System.out
      * @since Ant 1.5
@@ -1360,7 +1394,8 @@ public class JUnitTask extends Task {
             runner = delegate.newJUnitTestRunner(test, test.getMethods(), test.getHaltonerror(),
                                          test.getFiltertrace(),
                                          test.getHaltonfailure(), false,
-                                         true, classLoader);
+                                         getEnableTestListenerEvents(),
+                                         classLoader);
             if (summary) {
 
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
