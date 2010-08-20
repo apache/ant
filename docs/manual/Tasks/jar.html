@@ -468,13 +468,31 @@ and <code>${src}/resources/mypackage/image.gif</code>, they will appear
 in the same directory in the JAR (and thus be considered in the same package
 by Java).</p>
 
-<h4>Using zipfileset</h4>
+<h4>Merging archives</h4>
 
 <blockquote><pre> &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
-    &lt;zipfileset includes="**/*.class"&gt;
-      &lt;fileset dir="lib/main" includes="**/*.jar"/&gt;
-    &lt;/zipfileset&gt;
+    &lt;zipfileset includes="**/*.class" src="lib/main/some.jar"/&gt;
+    &lt;manifest&gt;
+      &lt;attribute name="Main-Class"
+            value="com.acme.checksites.Main"/&gt;
+    &lt;/manifest&gt;
+  &lt;/jar&gt;</pre></blockquote>
+<p>
+  Creates an executable jar file with a main class "com.acme.checksites.Main", and
+  embeds all the classes from the jar <code>lib/main/some.jar</code>.
+</p>
+
+<blockquote><pre> &lt;jar destfile="build/main/checksites.jar"&gt;
+    &lt;fileset dir="build/main/classes"/&gt;
+    &lt;restrict&gt;
+     &lt;name name="**/*.class"/&gt;
+     &lt;archives&gt;
+       &lt;zips&gt;
+         &lt;fileset dir="lib/main" includes="**/*.jar"/&gt;
+       &lt;/zips&gt;
+     &lt;/archives&gt;
+    &lt;/restrict&gt;
     &lt;manifest&gt;
       &lt;attribute name="Main-Class"
             value="com.acme.checksites.Main"/&gt;
