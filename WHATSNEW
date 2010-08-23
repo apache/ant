@@ -138,6 +138,10 @@ Fixed bugs:
    from a resource or string explicitly.
    Bugzilla Report 49587.
 
+ * Project#setDefault threw an excpetion when null was passed in as
+   argument, even though the javadoc says, null is a valid value.
+   Bugzilla Report 49803.
+
 Other changes:
 --------------
 
