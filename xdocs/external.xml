@@ -1414,7 +1414,7 @@
       <subsection name="J2ME Ant Tasks">
 
         <p>There are different sets of tasks to help build <a
-        href="http://java.sun.com/j2me/">Java 2 Platform, Micro
+        href="http://www.oracle.com/technetwork/java/javame/overview/index.html">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
 
         <subsubsection name="Antenna">

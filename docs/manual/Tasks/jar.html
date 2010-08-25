@@ -73,12 +73,12 @@ attribute of a zipfileset in a Zip task. The one difference is that if the
 include an empty one for you.)</p>
 
 <p>Manifests are processed by the Jar task according to the
-<a target="_blank" href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file specification.</a>
+<a target="_blank" href="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html">Jar file specification.</a>
 Note in particular that this may result in manifest lines greater than 72 bytes
 being wrapped and continued on the next line.</p>
 
 <p>The Jar task checks whether you specified package information according to the
-<a target="_blank" href="http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning">
+<a target="_blank" href="http://download.oracle.com/javase/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning">
 versioning specification</a>.</p>
 
 <p><b>Please note that the zip format allows multiple files of the same
@@ -196,7 +196,7 @@ to a value other than its default, <code>"add"</code>.</b></p>
   <tr>
     <td valign="top">index</td>
     <td valign="top">whether to create an <A
-    HREF="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">index
+    HREF="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Index">index
     list</A> to speed up classloading.  This is a JDK 1.3+ specific
     feature.  Unless you specify additional jars with nested <a
     href="#indexjars"><code>indexjars</code></a> elements, only the
@@ -383,7 +383,7 @@ depend on your manifest:</p>
 <p>
   The nested <code>service</code> element specifies a service.
   Services are described by
-  <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider</a>.
+  <a href="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider</a>.
   The approach is to have providers JARs include files named by the service
   provided, for example,
   META-INF/services/javax.script.ScriptEngineFactory
