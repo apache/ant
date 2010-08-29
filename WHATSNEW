@@ -55,6 +55,14 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * hostinfo now prefers addresses with a hostname over addresses without 
+   a hostname, provided the addresses have the same scope.
+   For local lookup, no IP address will be put in NAME / DOMAIN anymore.
+   For remote lookup, if a host name was provided and only an IP address is 
+   found, the IP address will no longer overwrite the host name provided to the
+   task.
+   Bugzilla Report 49513
+
  * mmap-based file copy problems under JDK 1.4 on Linux.
    Bugzilla Report 49430.
 
