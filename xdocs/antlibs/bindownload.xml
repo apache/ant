@@ -128,19 +128,44 @@ mirrors for a few days.</div>
 [<a href="http://www.apache.org/dist/ant/antlibs/antunit/binaries/apache-ant-antunit-1.1-bin.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </li>
+
+<li>Apache Compress Ant Library 1.0
+<ul>
+<li><code>.zip</code> archive:
+<a href="[preferred]/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.zip">apache-ant-compress-1.0-bin.zip</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.zip.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.zip.md5">MD5</a>]</li>
+
+<li><code>.tar.gz</code> archive:
+<a href="[preferred]/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.gz">apache-ant-compress-1.0-bin.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.gz.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.gz.md5">MD5</a>]</li>
+
+<li><code>.tar.bz2</code> archive:
+<a href="[preferred]/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.bz2">apache-ant-compress-1.0-bin.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.bz2.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/binaries/apache-ant-compress-1.0-bin.tar.bz2.md5">MD5</a>]</li>
 </ul>
+</li>
+
+</ul>
+
 </section>
 
-<!--section name="Old Ant Releases">
+<section name="Old Antlib Releases">
 
-<p>Older releases of Ant can be found <a
-href="http://archive.apache.org/dist/ant/binaries/">here</a>.  Those
-releases are only provided as <code>zip</code> archives that can be
-extracted by <code>jar xf </code><em>archive.zip</em> - we highly
-recommend to not use those releases but upgrade to Ant's <a
-href="[location]#Current Release of Ant">latest</a> release.</p>
+<p>Older releases of Ant Libraries can be found <a
+href="http://archive.apache.org/dist/ant/antlibs/">here</a>.
+We highly recommend to not use those releases but upgrade to the <a
+href="[location]#Current Antlib Releases">latest</a> releases.</p>
 
-</section-->
+</section>
 
 <section name="Verify Releases">
 

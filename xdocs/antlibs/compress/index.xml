@@ -23,6 +23,18 @@
   </properties>
 
   <body>
+    <section name="Compress Ant Library 1.0">
+      <h3>August 30, 2010 - Apache Compress Ant Library 1.0
+      Available</h3>
+
+      <p>Apache Compress Ant Library 1.0 is now available for
+      download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+    </section>
+
     <section name="Compress Antlib">
       <p>This Antlib contains tasks and resources that provide
         compression/uncompression and archival/unarchival capabilities
