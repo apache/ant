@@ -195,7 +195,7 @@ public class HostInfo extends Task {
                 // address without hostname
                 if (best.isLoopbackAddress()
                         || best.isLinkLocalAddress()
-                        || !hasHostName(best)) {
+                        || (best.isSiteLocalAddress() && !hasHostName(best))) {
                     best = current;
                 }
             } else {
