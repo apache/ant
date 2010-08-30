@@ -32,8 +32,8 @@
   <property name="apache-realhost" value="eos-new" />
   <property name="apache-ip4" value="140.211.11.131" />
     
-  <property name="apache-realhost.gump" value="140" />
-  <property name="apache-domain.gump" value="211.11.131" />
+  <property name="apache-realhost.gump" value="www" />
+  <property name="apache-domain.gump" value="apache.org" />
 
   <property name="xs4all-hostname" value="www.xs4all.nl" />
   <property name="xs4all-domain" value="xs4all.nl" />
