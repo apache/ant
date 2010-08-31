@@ -79,11 +79,11 @@
           </tr>
           <tr>
             <th>SVN URL:</th>
-            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/compress/">https://svn.apache.org/repos/asf/ant/antlibs/compress/</a></td>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/compress/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/compress/trunk/</a></td>
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/</a></td>
+            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
