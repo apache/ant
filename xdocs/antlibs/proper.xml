@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/antunit/trunk/">http://svn.apache.org/viewvc/ant/antlibs/antunit/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -83,7 +83,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/compress/trunk/">http://svn.apache.org/viewvc/ant/antlibs/compress/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -126,7 +126,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/dotnet/trunk/">http://svn.apache.org/viewvc/ant/antlibs/dotnet/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -164,7 +164,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/props/trunk/">http://svn.apache.org/viewvc/ant/antlibs/props/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>

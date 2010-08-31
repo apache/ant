@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -50,7 +50,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/dbpatch/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/dbpatch/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/dbpatch/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/dbpatch/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -78,7 +78,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/debian/trunk/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/debian/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/debian/trunk/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/debian/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -108,7 +108,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/fscache/trunk/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/fscache/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/fscache/trunk/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/fscache/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -195,7 +195,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/manual4eclipse/trunk/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/manual4eclipse/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/manual4eclipse/trunk/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/manual4eclipse/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -226,7 +226,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/minify/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/minify/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/minify/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/minify/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -252,7 +252,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/starteam/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/starteam/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/starteam/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/starteam/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -308,7 +308,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/weblogic/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/weblogic/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/weblogic/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/weblogic/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -341,7 +341,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/antunit/trunk/">http://svn.apache.org/viewcvs.cgi/ant/sandbox/antlibs/antunit/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/sandbox/antlibs/antunit/trunk/">http://svn.apache.org/viewvc/ant/sandbox/antlibs/antunit/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
