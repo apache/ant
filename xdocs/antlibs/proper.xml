@@ -185,9 +185,41 @@
         </table>
       </subsection>
 
+      <a name="vss"/>
+      <subsection name="VSS - Microsoft Visual SourceSafe Tasks">
 
+        <p>This antlib provides an interface to the Microsoft Visual SourceSafe SCM. The original tasks 
+        (org.apache.tools.ant.taskdefs.optional.vss) have been expanded upon in this antlib. 
+        Some fixes to issues in the original tasks have also been incorporated.</p>
+
+        <table>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="http://svn.apache.org/repos/asf/ant/antlibs/vss/trunk/">http://svn.apache.org/repos/asf/ant/antlibs/vss/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/vss/trunk/">http://svn.apache.org/viewvc/ant/antlibs/vss/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2006-04-26  </td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2010-09-02</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
     </section>
-
   </body>
 </document>
 
