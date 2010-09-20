@@ -203,6 +203,9 @@ Other changes:
    and singleline attributes.
    Bugzilla Report 49764.
 
+ * A new <cutdirsmapper> can be used like wget's --cut-dirs option to
+   strip leading directories from file names.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

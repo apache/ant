@@ -919,7 +919,44 @@ list of mapped names reset after every invocation.
     <code>&lt;mapper <b>type</b>&gt;</code> attribute.
   </p>
 
+<h4><a name="cutdirs-mapper">cutdirsmapper (since Ant 1.8.2)</a></h4>
 
+<p>This mapper strips a configured number of leading directories from
+  the source file name.</p>
+
+<b>Examples:</b>
+<blockquote><pre>
+&lt;cutdirsmapper dirs="1"/&gt;
+</pre></blockquote>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file names</b></td>
+  </tr>
+  <tr>
+    <td valign="center"><code>foo/bar/A.txt</code></td>
+    <td valign="top"><code>bar/A.txt</code></td>
+  </tr>
+</table>
+
+<p>The cutdirsmapper has no
+corresponding <code>&lt;mapper <b>type</b>&gt;</code> attribute.</p>
+
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">dirs</td>
+      <td valign="top">
+        Number of directories to strip (must be a positive number).
+      </td>
+      <td align="center" valign="top">Yes</td>
+    </tr>
+  </table>
 
 </body>
 </html>
