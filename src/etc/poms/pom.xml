@@ -52,7 +52,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   </distributionManagement>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/ant/core/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jant/core/trunk</developerConnection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/ant/core/trunk</developerConnection>
     <url>http://svn.apache.org/repos/asf/ant/core/trunk</url>
   </scm>
   <ciManagement>
