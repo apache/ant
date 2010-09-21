@@ -150,6 +150,9 @@ Fixed bugs:
    argument, even though the javadoc says, null is a valid value.
    Bugzilla Report 49803.
 
+ * runant.py would swallow the first argument if CLASSPATH wasn't set.
+   Bugzilla Report 49963.
+
 Other changes:
 --------------
 
