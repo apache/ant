@@ -845,7 +845,7 @@
     </antcall>
   </target>
 
-  <target name="dist_javadocs" depends="javadocs">
+  <target name="dist_javadocs" depends="javadocs" if="jdk1.5+">
     <mkdir dir="${dist.javadocs}"/>
     <copy todir="${dist.javadocs}" overwrite="true">
       <fileset dir="${build.javadocs}"/>
