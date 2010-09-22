@@ -49,14 +49,24 @@ href="property.html">property task</a>).</p>
 by using nested property tags. These properties are always passed
 to the new project and any project created in that project
 regardless of the setting of <i>inheritAll</i>.  This allows you to
-parameterize your subprojects.  Properties defined on the command line
-cannot be overridden by nested <code>&lt;property&gt;</code> elements.</p>
+parameterize your subprojects.</p>
 
 <p>When more than one nested <code>&lt;property&gt;</code> element
   would set a property of the same name, the one declared last will
   win.  This is for backwards compatibility reasons even so it is
   different from the way <code>&lt;property&gt;</code> tasks in build
   files behave.</p>
+
+<p>Properties defined on the command line cannot be overridden by
+  nested <code>&lt;property&gt;</code> elements.  <em>Since Ant
+  1.8.0.</em> the same is true for nested structures
+  of <code>&lt;ant&gt;</code> tasks: if a build file <em>A</em>
+  invokes <em>B</em> via an <code>&lt;ant&gt;</code> task setting a
+  property with a nested <code>&lt;property&gt;</code> element
+  and <em>B</em> contains an <code>&lt;ant&gt;</code> tasks
+  invoking <em>C</em>, <em>C</em> will see the value set
+  in <em>A</em>, even if <em>B</em> used a
+  nested <code>&lt;property&gt;</code> element as well.</p>
 
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
