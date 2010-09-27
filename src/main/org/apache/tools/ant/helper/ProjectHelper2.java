@@ -279,7 +279,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 uri = url.toString();
                 int pling = -1;
                 if (uri.startsWith("jar:file")
-                    && (pling = uri.indexOf("!")) > -1) {
+                    && (pling = uri.indexOf("!/")) > -1) {
                     zf = new ZipFile(org.apache.tools.ant.launch.Locator
                                      .fromJarURI(uri), "UTF-8");
                     inputStream =

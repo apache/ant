@@ -153,6 +153,10 @@ Fixed bugs:
  * runant.py would swallow the first argument if CLASSPATH wasn't set.
    Bugzilla Report 49963.
 
+ * <taskdef> failed to load resources from jar files contained in a
+   directory that has a "!" in its name.
+   Bugzilla Report 50007.
+
 Other changes:
 --------------
 

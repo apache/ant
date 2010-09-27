@@ -281,7 +281,7 @@ public final class Locator {
      * @since Ant1.7.1
      */
     public static String fromJarURI(String uri) {
-        int pling = uri.indexOf('!');
+        int pling = uri.indexOf("!/");
         String jarName = uri.substring("jar:".length(), pling);
         return fromURI(jarName);
     }
