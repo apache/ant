@@ -20,6 +20,8 @@
 
   <target name="setUp">
     <mkdir dir="${input}/org/example"/>
+    <property name="tmpdir" location="../../../../build/ant-unit/taskdef"/>
+    <mkdir dir="${tmpdir}"/>
     <echoxml file="${input}/org/example/antlib.xml">
       <antlib>
         <taskdef name="echooo"
@@ -30,7 +32,7 @@
 
   <target name="testPlainDir" depends="setUp">
     <tempfile property="jar" deleteonexit="true"
-              destdir="${java.io.tmpdir}" prefix="test" suffix=".jar"/>
+              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
     <jar destfile="${jar}">
       <fileset dir="${input}"/>
     </jar>
@@ -43,7 +45,7 @@
 
   <target name="testDirWithPling" depends="setUp"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
-    <property name="dir" location="${java.io.tmpdir}/pl!ng"/>
+    <property name="dir" location="${tmpdir}/pl!ng"/>
     <mkdir dir="${dir}"/>
     <tempfile property="jar" deleteonexit="true" destdir="${dir}"
               prefix="test" suffix=".jar"/>
@@ -61,7 +63,7 @@
        by ClassLoader.getResources() -->
   <target name="NOtestDirWithPlingAtEnd" depends="setUp"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
-    <property name="dir" location="${java.io.tmpdir}/pling!"/>
+    <property name="dir" location="${tmpdir}/pling!"/>
     <mkdir dir="${dir}"/>
     <tempfile property="jar" deleteonexit="true" destdir="${dir}"
               prefix="test" suffix=".jar"/>
@@ -77,7 +79,7 @@
 
   <target name="testPlingInJar" depends="setUp">
     <tempfile property="jar" deleteonexit="true"
-              destdir="${java.io.tmpdir}" prefix="test" suffix=".jar"/>
+              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
     <move file="${input}/org/example/antlib.xml"
           tofile="${input}/org/examp!e/antlib.xml"/>
     <jar destfile="${jar}">
@@ -92,7 +94,7 @@
 
   <target name="testPlingInJarAtEnd" depends="setUp">
     <tempfile property="jar" deleteonexit="true"
-              destdir="${java.io.tmpdir}" prefix="test" suffix=".jar"/>
+              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
     <move file="${input}/org/example/antlib.xml"
           tofile="${input}/org/example!/antlib.xml"/>
     <jar destfile="${jar}">
