@@ -19,15 +19,17 @@
 package org.apache.tools.ant.loader;
 
 import java.util.Enumeration;
+import java.io.Closeable;
 import java.io.IOException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Overrides getResources which became non-final in Java5
+ * Overrides getResources which became non-final in Java5 and
+ * implements Closeable
  */
-public class AntClassLoader5 extends AntClassLoader {
+public class AntClassLoader5 extends AntClassLoader implements Closeable {
     /**
      * Creates a classloader for the given project using the classpath given.
      *
@@ -52,5 +54,10 @@ public class AntClassLoader5 extends AntClassLoader {
     /** {@inheritDoc} */
     public Enumeration getResources(String name) throws IOException {
         return getNamedResources(name);
+    }
+
+    /** {@inheritDoc} */
+    public void close() {
+        cleanup();
     }
 }
