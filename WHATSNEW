@@ -157,6 +157,10 @@ Fixed bugs:
    directory that has a "!" in its name.
    Bugzilla Report 50007.
 
+ * ant.bat exit strategy improvements and issues
+   make the exit codes work in environments where 4NT or MKS are installed
+   Bugzilla Report 41039.
+
 Other changes:
 --------------
 

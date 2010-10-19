@@ -191,13 +191,6 @@ if not "%_ANT_CMD_LINE_ARGS%"=="" set ANT_CMD_LINE_ARGS=
 
 if "%ANT_ERROR%"=="0" goto mainEnd
 
-rem Set the return code if we are not in NT.  We can only set
-rem a value of 1, but it's better than nothing.
-if not "%OS%"=="Windows_NT" echo 1 > nul | choice /n /c:1
-
-rem Set the ERRORLEVEL if we are running NT.
-if "%OS%"=="Windows_NT" color 00
-
 goto omega
 
 :mainEnd
@@ -222,3 +215,4 @@ if exist "%USERPROFILE%\antrc_post.bat" call "%USERPROFILE%\antrc_post.bat"
 
 :omega
 
+exit /b %ANT_ERROR%
