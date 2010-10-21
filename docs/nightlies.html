@@ -214,9 +214,9 @@ Note that these are no official builds and they are not endorsed or even support
 But if you have problems with <i>testing</i> the latest (successful) build, you are welcome to post
 that on the <a href="mail.html#Developer%20List:%20dev@ant.apache.org">developer mailinglist</a>.
 You can directly access the builds of Ant and Ivy on these CI installations:</p>
-                                <p>The Apache Software Foundation <a href="http://hudson.zones.apache.org/hudson/">hosts</a> an
-installation of the <a href="http://hudson.dev.java.net/">Hudson</a> CI-system which Ant + Ivy
-<a href="http://hudson.zones.apache.org/hudson/view/Ant/">use</a>.</p>
+                                <p>The Apache Software Foundation <a href="http://hudson.apache.org/hudson/">hosts</a> an
+installation of the <a href="http://hudson-ci.org/">Hudson</a> CI-system which Ant + Ivy
+<a href="http://hudson.apache.org/hudson/view/Ant/">use</a>.</p>
                                     <table class="ContinuousBuild">
     <tr>
       <th>Title</th>
@@ -227,30 +227,78 @@ installation of the <a href="http://hudson.dev.java.net/">Hudson</a> CI-system w
       <th>last success</th>
     </tr>
             <tr><td colspan="6" class="title"><b>Apache Ant</b></td></tr>
+                        <tr>
+      <td class="title">Ant Trunk on JDK 1.4</td>
+      <td class="description">current development on the lowest defined JDK</td>
+      <td class="command">build.sh</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_JDK_1.4/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_JDK_1.4/lastSuccessfulBuild/">last success</a></td>
+    </tr>
+                        <tr>
+      <td class="title">Ant Trunk Tests on JDK 1.4</td>
+      <td class="description">current development on the lowest defined JDK</td>
+      <td class="command">build.sh allclean test</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_JDK_1.4_Test/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_JDK_1.4_Test/lastSuccessfulBuild/">last success</a></td>
+    </tr>
+                        <tr>
+      <td class="title">Checks Ant POMs by building Ant from the POMs.</td>
+      <td class="description">Checks the POMs by building Ant by Maven</td>
+      <td class="command">maven src/etc/poms/pom.xml clean package</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_BuildFromPOMs/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_BuildFromPOMs/lastSuccessfulBuild/">last success</a></td>
+    </tr>
+                        <tr>
+      <td class="title">Ivy Core Trunk</td>
+      <td class="description">Metric checks of Ant Trunk (Findbugs, RAT, Checkstyle)</td>
+      <td class="command">ant allclean distribution | ant -f check.xml dumphtml findbugs rat</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_Nightly/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant_Nightly/lastSuccessfulBuild/">last success</a></td>
+    </tr>
+                        <tr>
+      <td class="title">Ant JDK-Matrix</td>
+      <td class="description">Checks Ant Trunk against several JDKs (1.4, 1.5, 1.6)</td>
+      <td class="command">ant test</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant-Build-Matrix/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ant-Build-Matrix/lastSuccessfulBuild/">last success</a></td>
+    </tr>
                 <tr><td colspan="6" class="title"><b>Apache Ivy</b></td></tr>
                         <tr>
       <td class="title">Ivy Core Trunk</td>
       <td class="description">current development</td>
-      <td class="command"></td>
+      <td class="command">ant clean jar</td>
               <td class="when">continuously</td>
-            <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//Ivy/lastBuild/">last build</a></td>
-      <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//Ivy/lastSuccessfulBuild/">last success</a></td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ivy/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ivy/lastSuccessfulBuild/">last success</a></td>
+    </tr>
+                        <tr>
+      <td class="title">Ivy Core Trunk Checks</td>
+      <td class="description">Metric checks of Ivy Trunk (Findbugs, RAT, Checkstyle)</td>
+      <td class="command">ant findbugs checkstyle-internal | ant -f build-release.xml rat</td>
+              <td class="when">continuously</td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ivy-check/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/Ivy-check/lastSuccessfulBuild/">last success</a></td>
     </tr>
                         <tr>
       <td class="title">IvyDE Trunk</td>
       <td class="description">current development</td>
-      <td class="command"></td>
+      <td class="command">ant clean hudson-prepare | ant dist checkstyle rat</td>
               <td class="when">continuously</td>
-            <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//IvyDE/lastBuild/">last build</a></td>
-      <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//IvyDE/lastSuccessfulBuild/">last success</a></td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/IvyDE/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/IvyDE/lastSuccessfulBuild/">last success</a></td>
     </tr>
                         <tr>
       <td class="title">Eclipse Updatesite</td>
       <td class="description">Update your Eclipse installation with the latest Ivy/IvyDE</td>
-      <td class="command"></td>
+      <td class="command">ant hudson-prepare | ant hudson-build</td>
               <td class="when">continuously</td>
-            <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//IvyDE-updatesite/lastBuild/">last build</a></td>
-      <td class="link"><a href="http://hudson.zones.apache.org/hudson/view/Ant//IvyDE-updatesite/lastSuccessfulBuild/">last success</a></td>
+            <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/IvyDE-updatesite/lastBuild/">last build</a></td>
+      <td class="link"><a href="http://hudson.apache.org/hudson/view/Ant/job/IvyDE-updatesite/lastSuccessfulBuild/">last success</a></td>
     </tr>
                 </table>
                                 <p>JetBrains is offering Ant the service of a Continuous Build on their TeamCity system.</p>
