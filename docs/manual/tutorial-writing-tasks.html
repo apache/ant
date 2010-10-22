@@ -31,11 +31,13 @@ tasks.</p>
 <li><a href="#use1">Use the Task</a></li>
 <li><a href="#TaskAdapter">Integration with TaskAdapter</a></li>
 <li><a href="#derivingFromTask">Deriving from Ant's Task</a></li>
+<li><a href="#accessTaskProject">Accessing the Task's Project</a></li>
 <li><a href="#attributes">Attributes</a></li>
 <li><a href="#NestedText">Nested Text</a></li>
 <li><a href="#NestedElements">Nested Elements</a></li>
 <li><a href="#complex">Our task in a little more complex version</a></li>
 <li><a href="#TestingTasks">Test the Task</a></li>
+<li><a href="#Debugging">Debugging</a></li>
 <li><a href="#resources">Resources</a></li>
 </ul></p>
 
@@ -232,6 +234,18 @@ use:
 [helloworld] I am used in: C:\tmp\anttests\MyFirstTask\build.xml:23:
 </pre>
 
+<a name="accessTaskProject">
+<h2>Accessing the Task's Project</h2>
+<p>The parent project of your custom task may be accessed through method <code>getProject()</code>.  However, do not call this from the custom task constructor, as the return value will be null.  Later, when node attributes or text are set, or method <code>execute()</code> is called, the Project object is available.</p>
+<p>Here are two useful methods from class Project:
+<ul>
+  <li><code>String getProperty(String propertyName)</code></li>
+  <li>
+    <code>String replaceProperties(String value)</code>
+  </li>
+</ul
+</p>
+<p>The method <code>replaceProperties()</code> is discussed further in section <a href="#NestedText">Nested Text</a>.</p>
 
 <a name="attributes">
 <h2>Attributes</h2>
@@ -298,6 +312,7 @@ For that you have to provide a <tt>public void addText(String text)</tt> method.
 <pre class="code">
 ...
 public class HelloWorld extends Task {
+    private String message;
     ...
     public void addText(String text) {
         message = text;
@@ -308,6 +323,12 @@ public class HelloWorld extends Task {
 But here properties are <b>not</b> resolved! For resolving properties we have to use
 Project's <tt>replaceProperties(String propname) : String</tt> method which takes the
 property name as argument and returns its value (or ${propname} if not set).</p>
+<p>Thus, to replace properties in the nested node text, our method <code>addText()</code> can be written as:</p>
+<pre class="code">
+    public void addText(String text) {
+        message = getProject().replaceProperties(text);
+    }
+</pre>
 
 
 <a name="NestedElements"></a>
@@ -733,6 +754,21 @@ BUILD SUCCESSFUL
 Total time: 7 seconds
 C:\tmp\anttests\MyFirstTask&gt;
 </pre></p>
+
+
+<a name="Debugging"></a
+<h2>Debugging</h2>
+
+<p>Try running Ant with the flag <code>-verbose</code>.  For more information, try flag <code>-debug</code>.</p>
+<p>For deeper issues, you may need to run the custom task code in a Java debugger.  First, get the source for Ant and build it with debugging information.</p>
+<p>Since Ant is a large project, it can be a little tricky to set the right breakpoints.  Here are two important breakpoints for version 1.8:
+<ul>
+  <li>Initial <code>main()</code> function: <code>com.apache.tools.ant.launch.Launcher.main()</code></li>
+  <li>Task entry point: <code>com.apache.tools.ant.UnknownElement.execute()</code></li>
+</ul>
+</p>
+<p>If you need to debug when a task attribute or the text is set, begin by debugging into method <code>execute()</code> of your custom task.  Then set breakpoints in other methods.  This will ensure the class byte-code has been loaded by the Java VM.</p>
+
 
 
 <a name="resources"></a>
