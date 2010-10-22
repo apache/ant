@@ -52,7 +52,7 @@
   
   <!-- Findbugs: Getting Findbugs -->
   <property name="findbugs.download.name" 
-            value="findbugs-1.3.5"
+            value="findbugs-1.3.9"
             description="Name of the download file without suffix. Also the internal root directory of the ZIP."/>
   <property name="findbugs.download.file" 
             value="${findbugs.download.name}.zip"
