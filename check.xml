@@ -92,13 +92,13 @@
             value="${rat.report.dir}/report.html"
             description="RAT-Report file"/>
   <property name="rat.version"
-            value="0.6"
+            value="0.7"
             description="Which Version of RAT to use"/>
 
 
 
   <target name="init-ivy">
-    <property name="ivy.version"  value="2.0.0-beta1"/>
+    <property name="ivy.version"  value="2.2.0"/>
     <property name="ivy.jar.url"  value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
     <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
@@ -111,7 +111,7 @@
   </target>
 
   <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
-    <ivy:cachepath organisation="checkstyle" module="checkstyle" revision="4.3"
+    <ivy:cachepath organisation="checkstyle" module="checkstyle" revision="4.4"
                    inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
     <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
     <mkdir dir="${checkstyle.reportdir}"/>
