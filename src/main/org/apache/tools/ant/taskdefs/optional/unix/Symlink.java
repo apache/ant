@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import java.util.Vector;
 import java.util.HashSet;
@@ -560,8 +561,10 @@ public class Symlink extends DispatchTask {
                 File inc = new File(dir, incs[j]);
                 File pf = inc.getParentFile();
                 Properties lnks = new Properties();
+                InputStream is = null;
                 try {
-                    lnks.load(new BufferedInputStream(new FileInputStream(inc)));
+                    is = new BufferedInputStream(new FileInputStream(inc));
+                    lnks.load(is);
                     pf = pf.getCanonicalFile();
                 } catch (FileNotFoundException fnfe) {
                     handleError("Unable to find " + incs[j] + "; skipping it.");
@@ -570,6 +573,8 @@ public class Symlink extends DispatchTask {
                     handleError("Unable to open " + incs[j]
                                 + " or its parent dir; skipping it.");
                     continue;
+                } finally {
+                    FileUtils.close(is);
                 }
                 lnks.list(new PrintStream(
                     new LogOutputStream(this, Project.MSG_INFO)));

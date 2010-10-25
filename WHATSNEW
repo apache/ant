@@ -169,6 +169,10 @@ Fixed bugs:
  * <delete> ignored <fileset>'s errorOnMissingDir attribute
    Bugzilla Report 50124.
 
+ * <symlink> failed to close files when reading a list of symbolic
+   links from a properties file.
+   Bugzilla Report 50136.
+
 Other changes:
 --------------
 
