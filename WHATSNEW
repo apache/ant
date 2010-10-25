@@ -183,6 +183,10 @@ Fixed bugs:
    wrong.
    Bugzilla Report 45227.
 
+ * <propertyfile> didn't preserve the original linefeed style when
+   updating a file.
+   Bugzilla Report 50049.
+
 Other changes:
 --------------
 

@@ -32,8 +32,13 @@ very useful when wanting to make unattended modifications to
 configuration files for application servers and
 applications. Currently, the task maintains a working property file
 with the ability to add properties or make changes to existing
-ones. Since Ant 1.8.0 comments and layout of the original properties
+ones. <em>Since Ant 1.8.0</em> comments and layout of the original properties
 file are preserved.</p>
+
+<p><em>Since Ant 1.8.2</em> the linefeed-style of the original file
+  will be preserved as well, as long as style used to be consistent.
+  In general, linefeeds of the updated file will be the same as the
+  first linefeed found when reading it.</p>
 
 <hr>
 <h2><a name="proptask">PropertyFile Task</a></h2>
