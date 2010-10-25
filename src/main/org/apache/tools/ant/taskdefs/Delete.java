@@ -603,6 +603,10 @@ public class Delete extends MatchingTask {
                 fs.setProject(getProject());
             }
             final File fsDir = fs.getDir();
+            if (!fs.getErrorOnMissingDir() &&
+                (fsDir == null || !fsDir.exists())) {
+                continue;
+            }
             if (fsDir == null) {
                 throw new BuildException(
                         "File or Resource without directory or file specified");
