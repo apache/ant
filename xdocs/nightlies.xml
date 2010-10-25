@@ -44,10 +44,10 @@ You can directly access the builds of Ant and Ivy on these CI installations:</p>
 
 <p>The Apache Software Foundation <a href="http://hudson.apache.org/hudson/">hosts</a> an
 installation of the <a href="http://hudson-ci.org/">Hudson</a> CI-system which Ant + Ivy
-<a href="http://hudson.apache.org/hudson/view/Ant/">use</a>.</p>
+<a href="https://hudson.apache.org/hudson/view/A-F/view/Ant/">use</a>.</p>
 
 <!-- TODO: insert the job commands  //job/@command  -->
-<hudson base="http://hudson.apache.org/hudson/view/Ant">
+<hudson base="https://hudson.apache.org/hudson/view/A-F/view/Ant/">
     <project name="Apache Ant">
         <job id="Ant_JDK_1.4" title="Ant Trunk on JDK 1.4" command="build.sh">
             <description>current development on the lowest defined JDK</description>
