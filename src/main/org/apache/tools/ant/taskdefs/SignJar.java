@@ -378,7 +378,7 @@ public class SignJar extends AbstractJarSignerTask {
      * @throws BuildException
      */
     private void signOneJar(File jarSource, File jarTarget)
-            throws BuildException {
+        throws BuildException {
 
 
         File targetFile = jarTarget;
@@ -401,11 +401,15 @@ public class SignJar extends AbstractJarSignerTask {
             addValue(cmd, value);
         }
 
+        try {
         //DO NOT SET THE -signedjar OPTION if source==dest
         //unless you like fielding hotspot crash reports
-        if (!jarSource.equals(targetFile)) {
+        if (!FILE_UTILS.areSame(jarSource, targetFile)) {
             addValue(cmd, "-signedjar");
             addValue(cmd, targetFile.getPath());
+        }
+        } catch (IOException ioex) {
+            throw new BuildException(ioex);
         }
 
         if (internalsf) {

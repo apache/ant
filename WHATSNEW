@@ -161,6 +161,11 @@ Fixed bugs:
    make the exit codes work in environments where 4NT or MKS are installed
    Bugzilla Report 41039.
 
+ * <signjar> would fail if used via its Java API and the File passed
+   into the setJar method was not "normalized" (i.e. contained ".."
+   segments).
+   Bugzilla Report 50081
+
 Other changes:
 --------------
 

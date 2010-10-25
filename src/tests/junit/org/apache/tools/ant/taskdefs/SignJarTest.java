@@ -106,4 +106,24 @@ public class SignJarTest extends BuildFileTest {
         }
     }
 
+    /**
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=50081
+     */
+    public void testSignUnnormalizedJar() throws Exception {
+        executeTarget("jar");
+        File testJar = new File(getProject().getProperty("test.jar"));
+        File testJarParent = testJar.getParentFile();
+        File f = new File(testJarParent,
+                          "../" + testJarParent.getName() + "/"
+                          + testJar.getName());
+        assertFalse(testJar.equals(f));
+        assertEquals(testJar.getCanonicalPath(), f.getCanonicalPath());
+        SignJar s = new SignJar();
+        s.setProject(getProject());
+        s.setJar(f);
+        s.setAlias("testonly");
+        s.setStorepass("apacheant");
+        s.setKeystore("testkeystore");
+        s.execute();
+    }
 }

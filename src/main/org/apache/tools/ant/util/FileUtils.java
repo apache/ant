@@ -1257,6 +1257,25 @@ public class FileUtils {
     }
 
     /**
+     * Are the two File instances pointing to the same object on the
+     * file system?
+     * @since Ant 1.8.2
+     */
+    public boolean areSame(File f1, File f2) throws IOException {
+        if (f1 == null && f2 == null) {
+            return true;
+        }
+        if (f1 == null || f2 == null) {
+            return false;
+        }
+        File f1Normalized = normalize(f1.getAbsolutePath());
+        File f2Normalized = normalize(f2.getAbsolutePath());
+        return f1Normalized.equals(f2Normalized)
+            || f1Normalized.getCanonicalFile().equals(f2Normalized
+                                                      .getCanonicalFile());
+    }
+
+    /**
      * Renames a file, even if that involves crossing file system boundaries.
      *
      * <p>This will remove <code>to</code> (if it exists), ensure that
@@ -1285,8 +1304,7 @@ public class FileUtils {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
         }
-        if (to.exists() &&
-            !(from.equals(to.getCanonicalFile()) || tryHardToDelete(to))) {
+        if (to.exists() && !(areSame(from, to) || tryHardToDelete(to))) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();

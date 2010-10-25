@@ -355,7 +355,7 @@ public class Move extends Copy {
                     + " is a no-op.", Project.MSG_VERBOSE);
                 return true;
             }
-            if (!(sourceFile.equals(destFile.getCanonicalFile()) || destFile.delete())) {
+            if (!(getFileUtils().areSame(sourceFile, destFile) || destFile.delete())) {
                 throw new BuildException("Unable to remove existing file " + destFile);
             }
         }
