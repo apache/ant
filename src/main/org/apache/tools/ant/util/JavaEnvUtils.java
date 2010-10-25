@@ -91,6 +91,8 @@ public final class JavaEnvUtils {
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
+    /** Whether this is the GNU VM (gcj/gij) */
+    private static boolean gijDetected;
 
     /** array of packages in the runtime */
     private static Vector jrePackages;
@@ -137,6 +139,13 @@ public final class JavaEnvUtils {
             kaffeDetected = true;
         } catch (Throwable t) {
             // swallow as this simply doesn't seem to be Kaffe
+        }
+        gijDetected = false;
+        try {
+            Class.forName("gnu.gcj.Core");
+            gijDetected = true;
+        } catch (Throwable t) {
+            // swallow as this simply doesn't seem to be gcj/gij
         }
     }
 
@@ -196,6 +205,15 @@ public final class JavaEnvUtils {
      */
     public static boolean isKaffe() {
         return kaffeDetected;
+    }
+
+    /**
+     * Checks whether the current Java VM is the GNU interpreter gij
+     * or we are running in a gcj precompiled binary.
+     * @return true if the current Java VM is gcj/gij.
+     */
+    public static boolean isGij() {
+        return gijDetected;
     }
 
     /**

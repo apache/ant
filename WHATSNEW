@@ -229,6 +229,9 @@ Other changes:
  * A new <cutdirsmapper> can be used like wget's --cut-dirs option to
    strip leading directories from file names.
 
+ * <javah> now supports the GNU project's gcjh compiler.
+   Bugzilla Report 50149.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
