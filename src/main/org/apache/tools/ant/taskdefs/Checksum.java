@@ -61,6 +61,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Checksum extends MatchingTask implements Condition {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NIBBLE = 4;
     private static final int WORD = 16;
     private static final int BUFFER_SIZE = 8 * 1024;
@@ -531,6 +532,15 @@ public class Checksum extends MatchingTask implements Condition {
                         fos.write(format.format(new Object[] {
                                                     checksum,
                                                     src.getName(),
+                                                    FILE_UTILS
+                                                    .getRelativePath(dest
+                                                                     .getParentFile(),
+                                                                     src),
+                                                    FILE_UTILS
+                                                    .getRelativePath(getProject()
+                                                                     .getBaseDir(),
+                                                                     src),
+                                                    src.getAbsolutePath()
                                                 }).getBytes());
                         fos.write(StringUtils.LINE_SEP.getBytes());
                         fos.close();

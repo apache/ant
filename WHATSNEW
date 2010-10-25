@@ -232,6 +232,10 @@ Other changes:
  * <javah> now supports the GNU project's gcjh compiler.
    Bugzilla Report 50149.
 
+ * <checksum> supports additional views of a file's path as elements
+   for a custom pattern.
+   Bugzilla Report 50114.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

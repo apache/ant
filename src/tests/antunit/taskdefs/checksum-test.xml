@@ -45,4 +45,39 @@
                              value="f4d688789d32e6ca6bc93c504dbc6b46"/>
   </target>
 
+  <target name="testChecksumPattern2">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <echo file="${input}/a.txt">abc</echo>
+    <checksum todir="${output}" pattern="{2}">
+      <fileset dir="${input}"/>
+    </checksum>
+    <au:assertResourceContains
+        resource="${output}/a.txt.MD5"
+        value="../testinput/a.txt"/>
+  </target>
+
+  <target name="testChecksumPattern3">
+    <mkdir dir="${output}"/>
+    <checksum todir="${output}" pattern="{3}">
+      <fileset dir=".." includes="types/fileset-test.xml"/>
+    </checksum>
+    <au:assertResourceContains
+        resource="${output}/types/fileset-test.xml.MD5"
+        value="../types/fileset-test.xml"/>
+  </target>
+
+  <target name="testChecksumPattern4">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <property name="a" location="${input}/a.txt"/>
+    <echo file="${a}">abc</echo>
+    <checksum todir="${output}" pattern="{4}">
+      <fileset dir="${input}"/>
+    </checksum>
+    <au:assertResourceContains
+        resource="${output}/a.txt.MD5"
+        value="${a}"/>
+  </target>
+
 </project>

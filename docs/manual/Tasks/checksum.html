@@ -113,10 +113,16 @@ or set the <tt>fileext</tt> attribute.
   <tr>
     <td valign="top">pattern</td>
     <td valign="top">Specifies the pattern to use as a pattern
-    suitable for <a
-    href="http://download.oracle.com/javase/6/docs/api/java/text/MessageFormat.html">MessageFormat</a>
+    suitable
+    for <a href="http://download.oracle.com/javase/6/docs/api/java/text/MessageFormat.html">MessageFormat</a>
     where <code>{0}</code> is replaced with the checksum and
-      <code>{1}</code> with the file name. <em>Since Ant 1.7.0</em></td>
+      <code>{1}</code> with the file name. <em>Since Ant
+      1.7.0</em><br/>
+      <em>starting with Ant 1.8.2</em> <code>{2}</code> is replaced by
+      the path of the file relative to the checksum file being
+      written, <code>{3}</code> with tha path of the file relative to
+      the project's basedir and <code>{4}</code> with the absolute
+      path of the file.</td>
     <td valign="top" align="center">No - default is &quot;{0}&quot;.</td>
   </tr>
   <tr>
