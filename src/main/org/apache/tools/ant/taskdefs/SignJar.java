@@ -402,12 +402,12 @@ public class SignJar extends AbstractJarSignerTask {
         }
 
         try {
-        //DO NOT SET THE -signedjar OPTION if source==dest
-        //unless you like fielding hotspot crash reports
-        if (!FILE_UTILS.areSame(jarSource, targetFile)) {
-            addValue(cmd, "-signedjar");
-            addValue(cmd, targetFile.getPath());
-        }
+            //DO NOT SET THE -signedjar OPTION if source==dest
+            //unless you like fielding hotspot crash reports
+            if (!FILE_UTILS.areSame(jarSource, targetFile)) {
+                addValue(cmd, "-signedjar");
+                addValue(cmd, targetFile.getPath());
+            }
         } catch (IOException ioex) {
             throw new BuildException(ioex);
         }
