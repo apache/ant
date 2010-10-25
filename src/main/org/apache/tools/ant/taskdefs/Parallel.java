@@ -350,7 +350,10 @@ public class Parallel extends Task
                 interrupted = true;
             }
 
-            killAll(running);
+            if (!timedOut && !failOnAny) {
+                // https://issues.apache.org/bugzilla/show_bug.cgi?id=49527
+                killAll(running);
+            }
         }
 
         if (interrupted) {

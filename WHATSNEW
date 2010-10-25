@@ -173,6 +173,10 @@ Fixed bugs:
    links from a properties file.
    Bugzilla Report 50136.
 
+ * <parallel> could allow tasks to start executing even if a task
+   scheduled to run before them timed out.
+   Bugzilla Report 49527
+
 Other changes:
 --------------
 
