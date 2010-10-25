@@ -2057,7 +2057,7 @@ public class JUnitTask extends Task {
      */
     private static JUnitTest createDummyTestForBatchTest(JUnitTest test) {
         JUnitTest t = (JUnitTest) test.clone();
-        int index = test.getName().indexOf('.');
+        int index = test.getName().lastIndexOf('.');
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch
         String pack = index > 0 ? test.getName().substring(0, index + 1) : "";

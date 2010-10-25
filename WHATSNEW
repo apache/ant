@@ -175,7 +175,13 @@ Fixed bugs:
 
  * <parallel> could allow tasks to start executing even if a task
    scheduled to run before them timed out.
-   Bugzilla Report 49527
+   Bugzilla Report 49527.
+
+ * If a <junit> batch with multiple tests times out Ant logs a message
+   about a test named Batch-With-Multiple-Tests since 1.8.0 but the
+   logic that determined the Java package of this pseudo-test has been
+   wrong.
+   Bugzilla Report 45227.
 
 Other changes:
 --------------
