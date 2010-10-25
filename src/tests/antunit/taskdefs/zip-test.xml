@@ -122,4 +122,15 @@
       <au:assertDestIsOutofdate src="${output}/jar.jar"
                                dest="${output}/reference.jar"/>
     </target>
+
+    <target name="testFilesetInsideResources"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50115">
+      <mkdir dir="${output}"/>
+      <zip destfile="${output}/test.zip" whenempty="skip">
+        <resources>
+          <fileset dir="${output}" includes="d**"/>
+        </resources>
+      </zip>
+      <au:assertFileDoesntExist file="${output}/test.zip"/>
+    </target>
 </project>
