@@ -350,15 +350,22 @@ that don't match the <code>from</code> pattern will be ignored.</p>
     <!--                                        -->
 
 <h4><a name="regexp-mapper">regexp</a></h4>
-<p>Both <code>to</code> and <code>from</code> are required and define regular
-expressions. If the source file name matches the <code>from</code>
-pattern, the target file name will be constructed from the
+
+<p>Both <code>to</code> and <code>from</code> are required and define
+regular expressions. If the source file name (as a whole or in part)
+matches the <code>from</code> pattern, the target file name will be
+constructed from the
 <code>to</code> pattern, using <code>\0</code> to <code>\9</code> as
-back-references for the full
-match (<code>\0</code>) or the matches of the subexpressions in
-parentheses.
-Source
-files not matching the <code>from</code> pattern will be ignored.</p>
+back-references for the full match (<code>\0</code>) or the matches of
+the subexpressions in parentheses.  The <code>to</code> pattern
+determines the <strong>whole</strong> file name, so if you wanted to
+replace the extension of a file you should not use <code>from="\.old$"
+to=".new"</code> but rather <code>from="(.*)\.old$" to="\1.new"</code>
+(or rather use a glob mapper in this case).</p>
+
+<p>Source files not matching the <code>from</code> pattern will be
+ignored.</p>
+
 <p>Note that you need to escape a dollar-sign (<code>$</code>) with
 another dollar-sign in Ant.</p>
 <p>The regexp mapper needs a supporting library and an implementation
