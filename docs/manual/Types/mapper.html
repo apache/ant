@@ -368,27 +368,30 @@ ignored.</p>
 
 <p>Note that you need to escape a dollar-sign (<code>$</code>) with
 another dollar-sign in Ant.</p>
+
 <p>The regexp mapper needs a supporting library and an implementation
 of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
-hides the specifics of the library. Ant comes with implementations for
-<a href="http://download.oracle.com/javase/6/docs/api/java/util/regex/package-summary.html"  target="_top">the java.util.regex package</a>,
-<a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a> and <a
-href="http://jakarta.apache.org/oro/" target="_top">jakarta-ORO</a>. If you compile
-from sources and plan to use one of them, make sure the libraries are
-in your <code>CLASSPATH</code>. For information about using <a
+  hides the specifics of the library.  <em>Since Ant 1.8.0</em> Ant
+  requires Java 1.4 to run, so the implementation based on
+  the <code>java.util.regex</code> package will always be available.
+  You can still use Jakarta ORO or Jakarta Regex instead if your
+  provide the corresponding jar in your CLASSPATH.</p>
+
+<p>For information about using <a
 href="http://www.cacas.org/~wes/java/" target="_top">gnu.regexp</a> or <a
 href="http://www.crocodile.org/~sts/Rex/" target="_top">gnu.rex</a> with Ant, see <a
 href="http://marc.theaimsgroup.com/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
 article.</p>
-<p>If you want to use one of the supported regular expression
-  libraries you need to also use
-  the corresponding <code>ant-[jakarta-oro, jakarta-regexp, apache-oro, apache-regexp}.jar</code>
+
+<p>If you want to use one of the regular expression
+  libraries other than <code>java.util.regex</code> you need to also use
+  the corresponding <code>ant-[apache-oro, apache-regexp].jar</code>
 from the Ant release you are using.
 Make sure, both will be loaded from the same
 classpath, that is either put them into your <code>CLASSPATH</code>,
 <code>ANT_HOME/lib</code> directory or a nested
 <code>&lt;classpath&gt;</code> element of the mapper - you cannot have
-<code>ant-[jakarta-oro, jakarta-regexp, apache-oro, apache-regexp].jar</code> in <code>ANT_HOME/lib</code>
+<code>ant-[apache-oro, apache-regexp].jar</code> in <code>ANT_HOME/lib</code>
  and the library
 in a nested <code>&lt;classpath&gt;</code>.</p>
 <p>Ant will choose the regular-expression library based on the
