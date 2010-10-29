@@ -1332,7 +1332,7 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            // either we there are non-fileset resources or we
+            // either there are non-fileset resources or we
             // (re-)create the archive anyway
             return new ArchiveState(needsUpdate, initialResources);
         }
