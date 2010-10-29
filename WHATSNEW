@@ -254,6 +254,10 @@ Other changes:
    in verbose runs.
    Bugzilla Report 48836.
 
+ * StringUtils.parseHumanSizes() should turn parse failures into
+   BuildExceptions.
+   Bugzilla Report 48835.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
