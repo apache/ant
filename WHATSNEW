@@ -250,6 +250,10 @@ Other changes:
    for a custom pattern.
    Bugzilla Report 50114.
 
+ * JUnit XMLResultAggregator logs the stack trace of caught IO exceptions
+   in verbose runs.
+   Bugzilla Report 48836.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
