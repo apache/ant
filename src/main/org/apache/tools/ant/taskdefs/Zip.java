@@ -1243,6 +1243,19 @@ public class Zip extends MatchingTask {
         return new ArchiveState(as2.isOutOfDate(), toAdd);
     }
 
+    /*
+     * This is yet a hacky construct to extend the getResourcesToAdd
+     * method so we can pass the information whether non-fileset
+     * resources have been available to it without having to move the
+     * withEmpty behavior checks (since it would break subclasses in
+     * several ways otherwise).
+     */
+    private static ThreadLocal haveNonFileSetResourcesToAdd = new ThreadLocal() {
+            protected Object initialValue() {
+                return Boolean.FALSE;
+            }
+        };
+
     /**
      * Collect the resources that are newer than the corresponding
      * entries (or missing) in the original archive.
@@ -1272,6 +1285,7 @@ public class Zip extends MatchingTask {
 
         Resource[][] initialResources = grabResources(filesets);
         if (isEmpty(initialResources)) {
+            if (Boolean.FALSE.equals(haveNonFileSetResourcesToAdd.get())) {
             if (needsUpdate && doUpdate) {
                 /*
                  * This is a rather hairy case.
@@ -1314,6 +1328,10 @@ public class Zip extends MatchingTask {
                     needsUpdate = true;
                 }
             }
+            }
+
+            // either we there are non-fileset resources or we
+            // (re-)create the archive anyway
             return new ArchiveState(needsUpdate, initialResources);
         }
 
@@ -1429,7 +1447,9 @@ public class Zip extends MatchingTask {
          */
 
         Resource[][] initialResources = grabNonFileSetResources(rcs);
-        if (isEmpty(initialResources)) {
+        boolean empty = isEmpty(initialResources);
+        haveNonFileSetResourcesToAdd.set(Boolean.valueOf(!empty));
+        if (empty) {
             // no emptyBehavior handling since the FileSet version
             // will take care of it.
             return new ArchiveState(needsUpdate, initialResources);
@@ -1934,6 +1954,7 @@ public class Zip extends MatchingTask {
             resources.removeElement(zf);
         }
         filesetsFromGroupfilesets.removeAllElements();
+        haveNonFileSetResourcesToAdd.set(Boolean.FALSE);
     }
 
     /**

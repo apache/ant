@@ -187,6 +187,11 @@ Fixed bugs:
    updating a file.
    Bugzilla Report 50049.
 
+ * <zip>'s whenEmpty behavior never consulted the non-fileset
+   resources so the task could fail even though resources have been
+   provided using non-fileset resource collections.
+   Bugzilla Issue 50115.
+
 Other changes:
 --------------
 
