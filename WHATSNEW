@@ -192,6 +192,9 @@ Fixed bugs:
    provided using non-fileset resource collections.
    Bugzilla Issue 50115.
 
+*  ftp chmod could throw a NPE.
+   Bugzilla report 50217.
+
 Other changes:
 --------------
 

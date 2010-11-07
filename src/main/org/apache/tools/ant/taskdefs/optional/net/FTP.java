@@ -2102,7 +2102,7 @@ public class FTP extends Task implements FTPTaskConfig {
             myReply = ftp.getReplyStrings();
 
             for (int x = 0; x < myReply.length; x++) {
-                if (myReply[x].indexOf("200") == -1) {
+                if (myReply[x] != null && myReply[x].indexOf("200") == -1) {
                     log(myReply[x], Project.MSG_WARN);
                 }
             }
