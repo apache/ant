@@ -85,7 +85,7 @@ public class BindTargets extends Task {
         Iterator itTarget = targets.iterator();
         while (itTarget.hasNext()) {
             helper.getExtensionStack().add(
-                    new String[] { (String) itTarget.next(), extensionPoint,
+                    new String[] { extensionPoint, (String) itTarget.next(),
                                             onMissingExtensionPoint });
         }
 
