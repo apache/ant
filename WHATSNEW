@@ -195,6 +195,10 @@ Fixed bugs:
 *  ftp chmod could throw a NPE.
    Bugzilla report 50217.
 
+*  The project help (-p option in the command line) will now print
+   the dependencies of the targets in debug mode (-d on the command
+   line)
+
 Other changes:
 --------------
 
