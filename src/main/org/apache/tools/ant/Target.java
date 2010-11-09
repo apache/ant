@@ -46,7 +46,7 @@ public class Target implements TaskContainer {
     private String unlessCondition = "";
 
     /** List of targets this target is dependent on. */
-    private List dependencies = null;
+    private List/*<String>*/ dependencies = null;
 
     /** Children of this target (tasks and data types). */
     private List children = new ArrayList();
@@ -245,7 +245,7 @@ public class Target implements TaskContainer {
     /**
      * Returns an enumeration of the dependencies of this target.
      *
-     * @return an enumeration of the dependencies of this target
+     * @return an enumeration of the dependencies of this target (enumeration of String)
      */
     public Enumeration getDependencies() {
         return Collections
