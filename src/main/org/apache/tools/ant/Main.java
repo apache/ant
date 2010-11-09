@@ -1210,7 +1210,7 @@ public class Main implements AntMain {
             if (!dependencies.isEmpty()) {
                 Enumeration deps = (Enumeration) dependencies.elementAt(i);
                 if (deps.hasMoreElements()) {
-                    msg.append("   depends of: ");
+                    msg.append("   depends on: ");
                     while (deps.hasMoreElements()) {
                         msg.append(deps.nextElement());
                         if (deps.hasMoreElements()) {
