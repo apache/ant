@@ -24,7 +24,6 @@ import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 import junit.framework.TestCase;
@@ -235,8 +234,8 @@ public class SQLExecTest extends TestCase {
             return false;
         }
 
-        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-            throw new SQLFeatureNotSupportedException();
+        public Logger getParentLogger() /*throws SQLFeatureNotSupportedException*/ {
+            return Logger.getAnonymousLogger();
         }
     }
 
