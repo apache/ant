@@ -399,6 +399,10 @@ public final class Diagnostics {
         out.println(MagicNames.ANT_VERSION + ": " + p.getProperty(MagicNames.ANT_VERSION));
         out.println(MagicNames.ANT_JAVA_VERSION + ": "
                 + p.getProperty(MagicNames.ANT_JAVA_VERSION));
+        out.println("Is this the Kaffe VM? "
+                    + (JavaEnvUtils.isKaffe() ? "yes" : "no"));
+        out.println("Is this gij/gcj? "
+                    + (JavaEnvUtils.isGij() ? "yes" : "no"));
         out.println(MagicNames.ANT_LIB + ": " + p.getProperty(MagicNames.ANT_LIB));
         out.println(MagicNames.ANT_HOME + ": " + p.getProperty(MagicNames.ANT_HOME));
     }

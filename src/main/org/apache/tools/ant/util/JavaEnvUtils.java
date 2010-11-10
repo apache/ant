@@ -210,6 +210,7 @@ public final class JavaEnvUtils {
     /**
      * Checks whether the current Java VM is the GNU interpreter gij
      * or we are running in a gcj precompiled binary.
+     * @since Ant 1.8.2
      * @return true if the current Java VM is gcj/gij.
      */
     public static boolean isGij() {
