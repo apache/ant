@@ -94,6 +94,9 @@ public final class JavaEnvUtils {
     /** Whether this is the GNU VM (gcj/gij) */
     private static boolean gijDetected;
 
+    /** Whether this is Apache Harmony */
+    private static boolean harmonyDetected;
+
     /** array of packages in the runtime */
     private static Vector jrePackages;
 
@@ -146,6 +149,13 @@ public final class JavaEnvUtils {
             gijDetected = true;
         } catch (Throwable t) {
             // swallow as this simply doesn't seem to be gcj/gij
+        }
+        harmonyDetected = false;
+        try {
+            Class.forName("org.apache.harmony.luni.util.Base64");
+            harmonyDetected = true;
+        } catch (Throwable t) {
+            // swallow as this simply doesn't seem to be Apache Harmony
         }
     }
 
@@ -215,6 +225,15 @@ public final class JavaEnvUtils {
      */
     public static boolean isGij() {
         return gijDetected;
+    }
+
+    /**
+     * Checks whether the current VM is Apache Harmony.
+     * @since Ant 1.8.2
+     * @return true if the current VM is Apache Harmony.
+     */
+    public static boolean isApacheHarmony() {
+        return harmonyDetected;
     }
 
     /**
