@@ -31,8 +31,29 @@
 <a href="../targets.html#extension-points">extension point</a>. It will make the
 list of targets dependencies of the extension point.</p>
 
+<p>This target is useful when you want to have a target participate to another
+build workflow, build workflow which explicitly expose an extension point for
+that kind of insertion. But the target to bind and the extension point to
+bind to are both declared in some imported build files. Modifying directly the
+target dependency graph of these external build files may have a side effect
+on some other project which import them. This task helps then to modify the
+target dependencies but only in your context.
+</p>
+
+<p>Note: this task is quite equivalent to the definition of an intermediate
+target which will be the bridge between the target to bind and the extension
+point. For instance:
+</p>
+<blockquote><pre>&lt;bindtargets targets="jar,javadoc" extensionPoint="dist" /&gt;</pre></blockquote>
+is quite equivalent to:
+<blockquote><pre>&lt;target name="bind-to-dist" depends="jar,javadoc" extensionOf="dist" /&gt;</pre></blockquote>
+<p>
+This task basically avoid the creation of a target.
+</p>
+
 <p>The bindtargets task may only be used as a top-level task. This means that
-it may not be used in a target.</p>
+it may not be used in a target. This is making the target dependency graph static
+and predictable as soon as every build file is loaded.</p>
 
 <p><b>Since Ant 1.8.2</b></p>
 
@@ -64,7 +85,7 @@ it may not be used in a target.</p>
 
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;bindtargets targets=&quot;build-jar,build-src-jar&quot; extensionPoint=&quot;dist&quot;/&gt;
+&lt;bindtargets targets=&quot;build-jar,build-src-jar&quot; extensionPoint=&quot;dist&quot; /&gt;
 </pre></blockquote>
 
 </body>
