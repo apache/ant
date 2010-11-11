@@ -24,7 +24,7 @@
        <menusection name="Home" index="0"         href="/index.html">
             <menu name="Apache Ant">
                 <item name="Welcome"               href="/index.html"/>
-                <item name="License"               href="/license.html"/>
+                <item name="License"               href="http://www.apache.org/licenses/LICENSE-2.0.html"/>
                 <item name="News"                  href="/antnews.html"/>
             </menu>
 
@@ -56,12 +56,12 @@
                 <item name="Subversion Repositories"      href="/svn.html"/>
                 <item name="Nightly+Continuous Builds"    href="/nightlies.html"/>
                 <item name="Bug Database"                 href="/bugs.html"/>
+                <item name="Security"                     href="http://www.apache.org/security/"/>
             </menu>
 
             <menu name="Sponsorship">
                 <item name="Thanks"                href="http://www.apache.org/foundation/thanks.html"/>
                 <item name="Sponsorship"           href="http://www.apache.org/foundation/sponsorship.html"/>
-                <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>
 
             <menu name="Project Management">

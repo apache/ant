@@ -51,6 +51,10 @@
 		Software development projects looking for a solution combining build tool and
 		dependency management can use Ant in combination with <a href="http://ant.apache.org/ivy/">Apache Ivy</a>.
 </p>
+
+        <p>The Apache Ant project is part of
+          the <a href="http://www.apache.org/">Apache Software
+          Foundation</a>.</p>
   </section>
 
   <section name="Apache Ivy 2.2.0">
