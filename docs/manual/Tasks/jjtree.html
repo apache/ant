@@ -36,7 +36,7 @@ JJTree is run through JavaCC to create the parser.
 <p>To use the jjtree task, set the <i>target</i> attribute to the name
 of the JJTree grammar file to process. You also need to specify the directory
 containing the JavaCC installation using the <i>javacchome</i> attribute,
-so that ant can find the JavaCC classes. Optionally, you can also set the
+so that Ant can find the JavaCC classes. Optionally, you can also set the
 <i>outputdirectory</i>
 to write the generated JavaCC grammar and node files to a specific directory.
 Otherwise jjtree writes the generated JavaCC grammar and node files to the directory
@@ -535,7 +535,7 @@ is set to true when invoking JJTree.
 </table>
 
 <p>*) <u>Footnote</u>: When running JJTree with the Ant taskdef <i>jjtree</i> the option <code>-OUTPUT_DIRECTORY</code> must always 
-be set, because the project's basedir and the ant working directory might differ. So even if you don't specify the jjtree taskdef 
+be set, because the project's basedir and the Ant working directory might differ. So even if you don't specify the jjtree taskdef 
 <i>outputdirectory</i> JJTree will be called with the <code>-OUTPUT_DIRECTORY</code> set to the project's basedirectory. 
 But when the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if relative to this 
 <code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute or contains a drive letter we have a 
