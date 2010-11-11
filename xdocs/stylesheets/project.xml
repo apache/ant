@@ -76,7 +76,7 @@
             <menu name="Projects">
                 <item name="Welcome"               href="/projects/index.html"/>
             </menu>
-            <menu name="Ant Libraries">
+            <menu name="Apache Ant Libraries">
                 <item name="Introduction"          href="/antlibs/index.html"/>
                 <item name="Charter"               href="/antlibs/charter.html"/>
                 <item name="Ant Libraries"         href="/antlibs/proper.html"/>
@@ -84,13 +84,13 @@
                 <item name="Binary Distributions" href="http://ant.apache.org/antlibs/bindownload.cgi"/>
                 <item name="Source Distributions" href="http://ant.apache.org/antlibs/srcdownload.cgi"/>
             </menu>
-            <menu name="Ivy">
+            <menu name="Apache Ivy">
                 <item name="Introduction"         href="/projects/ivy.html"/>
                 <item name="Homepage"             href="http://ant.apache.org/ivy/"/>
                 <item name="Distributions"        href="http://ant.apache.org/ivy/download.cgi"/>
                 <item name="Wiki"                 href="http://cwiki.apache.org/IVY/"/>
             </menu>
-            <menu name="IvyDE">
+            <menu name="Apache IvyDE">
                 <item name="Introduction"         href="/projects/ivyde.html"/>
                 <item name="Homepage"             href="http://ant.apache.org/ivy/ivyde"/>
                 <item name="Screenshots"          href="http://ant.apache.org/ivy/ivyde/screenshots.html"/>
