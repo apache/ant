@@ -24,7 +24,12 @@
 
 <body>
 
-<section name="Downloading Ant">
+<section name="Apache Ant">
+  <p>Apache Ant is a Java library and command-line tool that help
+  building software.</p>
+</section>
+
+<section name="Downloading Apache Ant">
 
 <p>Use the links below to download a binary distribution of Ant from
 one of our mirrors.  It is good practice to

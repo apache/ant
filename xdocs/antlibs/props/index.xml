@@ -19,14 +19,14 @@
 
   <properties>
     <index value="1"/>
-    <title>Props Antlib</title>
+    <title>Apache Props Antlib</title>
   </properties>
 
   <body>
 
-    <section name="Props Antlib">
+    <section name="Apache Props Antlib">
 
-      <p>This is a library of supplementary handlers for Ant
+      <p>This is a library of supplementary handlers for Apache Ant
         properties resolution.</p>
 
       <p>The types provided are instances of

@@ -19,13 +19,13 @@
 
   <properties>
     <index value="1"/>
-    <title>Subversion Ant Library</title>
+    <title>Apache Subversion Ant Library</title>
   </properties>
 
   <body>
 
     <section name="Idea">
-      <p>The main purpose of this Ant library is to provide the same
+      <p>The main purpose of this Apache Ant library is to provide the same
       level of support that Ant provides for CVS.  This means the
       tasks are wrappers on top of the command line client (read: you
       still need to install an svn client) and there is not much more

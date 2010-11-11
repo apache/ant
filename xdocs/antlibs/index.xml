@@ -19,15 +19,15 @@
 
   <properties>
     <index value="1"/>
-    <title>The Ant Libraries Subproject</title>
+    <title>The Apache Ant Libraries Subproject</title>
   </properties>
 
   <body>
 
-    <section name="The Ant Libraries Subproject">
-      <h3>Ant Libraries - or Antlibs for short</h3>
+    <section name="The Apache Ant Libraries Subproject">
+      <h3>Apache Ant Libraries - or Antlibs for short</h3>
 
-      <p>With Ant 1.6.0 and the ant libraries concept creating
+      <p>With Apache Ant 1.6.0 and the ant libraries concept creating
       libraries of Ant tasks that are easy to get dropped into an
       existing Ant installation has become far easier.</p>
 

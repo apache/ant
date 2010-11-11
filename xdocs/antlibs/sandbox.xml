@@ -19,14 +19,14 @@
 
   <properties>
     <index value="1"/>
-    <title>Ant Libraries - The Sandbox</title>
+    <title>Apache Ant Libraries - The Sandbox</title>
   </properties>
 
   <body>
 
-    <section name="Ant Libraries - The Sandbox">
+    <section name="Apache Ant Libraries - The Sandbox">
 
-      <p>The sandbox is the place where new Ant Libraries start their
+      <p>The sandbox is the place where new Apache Ant Libraries start their
       life, it is a playground for Ant committers and other
       contributors who find committers to sponsor their ideas.</p>
 

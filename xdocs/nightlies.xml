@@ -27,7 +27,7 @@
 <section name="Nightly Builds">
 
 <p>We don't provide binary nightly builds at the moment, but if you
-want to build Ant from sources, you can use a <a
+want to build Apache Ant from sources, you can use a <a
 href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
 
 </section>

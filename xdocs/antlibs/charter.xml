@@ -19,14 +19,14 @@
 
   <properties>
     <index value="1"/>
-    <title>Ant Libraries - Charter</title>
+    <title>Apache Ant Libraries - Charter</title>
   </properties>
 
   <body>
     <section name="Charter">
     
       <p>Below is the text of the proposal that has been accepted by
-      the Ant PMC.  Further amendments are expected.</p>
+      the Apache Ant PMC.  Further amendments are expected.</p>
 
       <source>
 Proposal to Create a Ant-Libraries Sub-Project in Apache Ant

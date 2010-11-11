@@ -27,7 +27,7 @@
       <question>Where do I find the latest version of this
         document?</question>
       <answer>
-        <p>The latest version can always be found at Ant&apos;s homepage
+        <p>The latest version can always be found at Apache Ant&apos;s homepage
           <a href="http://ant.apache.org/faq.html">http://ant.apache.org/faq.html</a>.</p>
       </answer>
     </faq>
@@ -239,7 +239,7 @@
   <faqsection title="Installation">
     <faq id="java-version">
       <question>Which version of Java is required to run
-        Ant?</question>
+        Apache Ant?</question>
       <answer>
 
         <p>You will need Java installed on your system, version 1.4 or
@@ -335,7 +335,7 @@ Apache Ant version 1.6.2 compiled on July 16 2004
     <faq id="precompile-jsps">
       <question>How to I precompile Java Server Pages (JSPs)?</question>
       <answer>
-        <p>Ant has a built in optional task <a href="/manual/Tasks/jspc.html">&lt;jspc&gt;</a>
+        <p>Apache Ant has a built in optional task <a href="/manual/Tasks/jspc.html">&lt;jspc&gt;</a>
         which was intended for that. <b>But this task is deprecated.</b>
         Here the alternative suggested by the manual:</p>
         <p><i>Instead of relying on container specific JSP-compilers we suggest deploying
@@ -809,7 +809,7 @@ shell-prompt> m4 foo.m4 > foo
       <question>General Advice</question>
       <answer>
 
-        <p>There are many reasons why Ant doesn&apos;t behave as
+        <p>There are many reasons why Apache Ant doesn&apos;t behave as
         expected, not all of them are due to Ant bugs.  See our <a
         href="problems.html">Having Problems?</a> page for hints that
         may help pinning down the reasons for your problem.</p>
@@ -1093,9 +1093,9 @@ shell-prompt> m4 foo.m4 > foo
     </faq>
   </faqsection>
 
-  <faqsection title="Ant and IDEs/Editors">
+  <faqsection title="Apache Ant and IDEs/Editors">
     <faq id="integration">
-      <question>Is Ant supported by my IDE/Editor?</question>
+      <question>Is Apache Ant supported by my IDE/Editor?</question>
       <answer>
         <p>See the <a href="external.html#IDE and Editor Integration">section
         on IDE integration</a> on our External Tools and Tasks page.</p>
@@ -1190,7 +1190,7 @@ while(<STDIN>) {
             <a href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">this
             page</a> by Michel Casabianca for a solution to this
             problem.  Note that the DTD you can download at this page
-            is based on Ant 0.3.1.</li>
+            is based on Apache Ant 0.3.1.</li>
 
             <li>It may even be an invalid DTD.  As Ant allows tasks
             writers to define arbitrary elements, name collisions will
@@ -1478,7 +1478,7 @@ public void buildFinished(BuildEvent e) {
 
       <answer>
 
-        <p>When Ant forks a new process for example by using the
+        <p>When Apache Ant forks a new process for example by using the
           <code>&lt;exec&gt;</code>, <code>&lt;apply&gt;</code>
           or <code>&lt;java&gt;</code> tasks, it will also start a
           new thread reading from standard input and sending

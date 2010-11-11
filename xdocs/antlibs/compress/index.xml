@@ -19,11 +19,11 @@
 
   <properties>
     <index value="1"/>
-    <title>Compress Antlib</title>
+    <title>Apache Compress Antlib</title>
   </properties>
 
   <body>
-    <section name="Compress Ant Library 1.0">
+    <section name="Apache Compress Ant Library 1.0">
       <h3>August 30, 2010 - Apache Compress Ant Library 1.0
       Available</h3>
 

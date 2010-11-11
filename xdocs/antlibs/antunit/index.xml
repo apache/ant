@@ -19,12 +19,12 @@
 
   <properties>
     <index value="1"/>
-    <title>AntUnit</title>
+    <title>Apache AntUnit</title>
   </properties>
 
   <body>
 
-    <section name="AntUnit 1.1">
+    <section name="Apache AntUnit 1.1">
       <h3>September 26, 2008 - Apache AntUnit 1.1 Released</h3>
 
       <p>Apache AntUnit 1.1 is now available for download as <a
@@ -56,7 +56,7 @@
     </section>
 
     <section name="Idea">
-      <p>Initially all tests for Ant tasks were written as individual
+      <p>Initially all tests for Apache Ant tasks were written as individual
       <a href="http://www.junit.org/">JUnit</a> test cases.  Pretty
       soon it was clear that most tests needed to perform common tasks
       like reading a build file, initializing a project instance with
