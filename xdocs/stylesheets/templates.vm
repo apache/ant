@@ -285,6 +285,7 @@
 
 #macro (footer)
       <p class="copyright">
+      Apache Ant, Apache Ivy, Ant, Ivy, Apache, the Apache feather logo, and the Apache Ant project logos are trademarks of The Apache Software Foundation.
         <script type="text/javascript" language="JavaScript"><!--
                 document.write(" - "+"Last Published: " + document.lastModified);
               //  -->

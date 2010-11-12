@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -23,7 +23,7 @@
 
   <body>
     <section name="FAQs">
-      <subsection name="At Apache Ant's website">
+      <subsection name="At Apache Ant&amp;#2122;'s website">
 
         <p>Starting with the release of Apache Ant 1.4 the Ant's FAQ is
         bundled with the distribution, the most recent version can

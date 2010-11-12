@@ -19,7 +19,7 @@
 
   <properties>
     <index value="1"/>
-    <title>Apache Ant Libraries</title>
+    <title>Apache Ant&amp;#2122; Libraries</title>
   </properties>
 
   <body>
@@ -27,7 +27,7 @@
     <section name="Apache Ant Libraries">
 
       <a name="antunit"/>
-      <subsection name="Apache AntUnit - Unit Test Framework for Ant Tasks">
+      <subsection name="Apache AntUnit&amp;#2122; - Unit Test Framework for Ant Tasks">
 
         <p>Apache AntUnit borrows ideas from JUnit 3.x and the &lt;junit&gt;
         task.  It provides a task that runs build files as unit tests
@@ -67,7 +67,7 @@
       </subsection>
 
       <a name="compress"/>
-      <subsection name="Compress">
+      <subsection name="Apache Compress Antlib&amp;#2122;">
         <p>The Apache Compress Antlib offers tasks and types for additional
         archive formats like CPIO and AR supported
         by <a href="http://commons.apache.org/compress/">Apache

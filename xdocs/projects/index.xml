@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -25,7 +25,7 @@
 
 <body>
 
-  <section name="Welcome to the Apache Ant Projects Area">
+  <section name="Welcome to the Apache Ant&amp;#x2122; Projects Area">
     <h3>This is where the Apache Ant sub-projects live!</h3>
 
     <p>Now, that Apache Ant has become an Apache Top-Level Project it is time to make space on this

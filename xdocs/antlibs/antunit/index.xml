@@ -24,6 +24,11 @@
 
   <body>
 
+    <section name="Apache AntUnit&amp;#x2122;">
+      <p>Apache AntUnit is an Antlib that provides a test framework
+        for Apache Ant tasks and types.</p>
+    </section>
+
     <section name="Apache AntUnit 1.1">
       <h3>September 26, 2008 - Apache AntUnit 1.1 Released</h3>
 

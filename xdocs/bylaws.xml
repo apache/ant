@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -23,7 +23,7 @@
   </properties>
 
 <body>
-  <section name="Apache Ant Project Bylaws">
+  <section name="Apache Ant&amp;#2122; Project Bylaws">
     <p>
       This document defines the bylaws under which the Apache Ant project
       operates. It defines the roles and responsibilities of the
