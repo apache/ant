@@ -1010,7 +1010,7 @@ public class Main implements AntMain {
                 in.close();
 
                 StringBuffer msg = new StringBuffer();
-                msg.append("Apache Ant version ");
+                msg.append("Apache Ant(TM) version ");
                 msg.append(props.getProperty("VERSION"));
                 msg.append(" compiled on ");
                 msg.append(props.getProperty("DATE"));
