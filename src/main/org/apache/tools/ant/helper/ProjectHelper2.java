@@ -184,15 +184,16 @@ public class ProjectHelper2 extends ProjectHelper {
                 String[] extensionInfo = (String[]) i.next();
                 String tgName = extensionInfo[0];
                 String name = extensionInfo[1];
-                String missingBehaviour = extensionInfo[2];
+                OnMissingExtensionPoint missingBehaviour = OnMissingExtensionPoint
+                        .valueOf(extensionInfo[2]);
                 Hashtable projectTargets = project.getTargets();
                 if (!projectTargets.containsKey(tgName)) {
                     String message = "can't add target " + name
                         + " to extension-point " + tgName
                         + " because the extension-point is unknown.";
-                    if (missingBehaviour.equals(MISSING_EP_FAIL)) {
+                    if (missingBehaviour == OnMissingExtensionPoint.FAIL) {
                         throw new BuildException(message);
-                    } else if (missingBehaviour.equals(MISSING_EP_WARN)) {
+                    } else if (missingBehaviour == OnMissingExtensionPoint.WARN) {
                         Target target = (Target) projectTargets.get(name);
                         context.getProject().log(target,
                                                  "Warning: " + message,
@@ -914,7 +915,7 @@ public class ProjectHelper2 extends ProjectHelper {
             String name = null;
             String depends = "";
             String extensionPoint = null;
-            String extensionPointMissing = null;
+            OnMissingExtensionPoint extensionPointMissing = null;
 
             Project project = context.getProject();
             Target target = "target".equals(tag)
@@ -951,7 +952,11 @@ public class ProjectHelper2 extends ProjectHelper {
                 } else if (key.equals("extensionOf")) {
                     extensionPoint = value;
                 } else if (key.equals("onMissingExtensionPoint")) {
-                    extensionPointMissing = value;
+                    try {
+                        extensionPointMissing = OnMissingExtensionPoint.valueOf(value);
+                    } catch (IllegalArgumentException e) {
+                        throw new BuildException("Invalid onMissingExtensionPoint " + value);
+                    }
                 } else {
                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context
                                                 .getLocator());
@@ -1039,25 +1044,12 @@ public class ProjectHelper2 extends ProjectHelper {
                         tgName = prefix + sep + tgName;
                     }
                     if (extensionPointMissing == null) {
-                        extensionPointMissing = MISSING_EP_FAIL;
+                        extensionPointMissing = OnMissingExtensionPoint.FAIL;
                     }
-                    if (extensionPointMissing.equals(MISSING_EP_FAIL) ||
-                        extensionPointMissing.equals(MISSING_EP_IGNORE) ||
-                        extensionPointMissing.equals(MISSING_EP_WARN)) {
-                        // defer extensionpoint resolution until the full
-                        // import stack has been processed
-                        helper.getExtensionStack().add(new String[] {
-                                tgName, name, extensionPointMissing
-                            });
-                    } else {
-                        throw new BuildException("onMissingExtensionPoint"
-                                                 + " attribute can only be '"
-                                                 + MISSING_EP_FAIL
-                                                 + "', '" + MISSING_EP_WARN
-                                                 + "' or '" + MISSING_EP_IGNORE
-                                                 + "'", 
-                                                 target.getLocation());
-                    }
+                    // defer extensionpoint resolution until the full
+                    // import stack has been processed
+                    helper.getExtensionStack().add(new String[] {
+                            tgName, name, extensionPointMissing.name() });
                 }
             }
         }

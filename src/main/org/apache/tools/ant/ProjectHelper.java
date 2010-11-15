@@ -83,21 +83,57 @@ public class ProjectHelper {
     }
 
     /**
-     * Possible value for target's onMissingExtensionPoint attribute:
-     * fail if the extension-point is not defined.
+     * Possible value for target's onMissingExtensionPoint attribute. It determines how to deal with
+     * targets that want to extend missing extension-points.
+     * <p>
+     * This class behaves like a Java 1.5 Enum class.
+     * 
+     * @since 1.8.2
      */
-    public static final String MISSING_EP_FAIL = "fail";
-    /**
-     * Possible value for target's onMissingExtensionPoint attribute:
-     * warn if the extension-point is not defined.
-     */
-    public static final String MISSING_EP_WARN = "warn";
-    /**
-     * Possible value for target's onMissingExtensionPoint attribute:
-     * ignore the extensionOf attribute if the extension-point is not
-     * defined.
-     */
-    public static final String MISSING_EP_IGNORE = "ignore";
+    public final static class OnMissingExtensionPoint {
+
+        /** fail if the extension-point is not defined */
+        public static final OnMissingExtensionPoint FAIL = new OnMissingExtensionPoint(
+                "fail");
+
+        /** warn if the extension-point is not defined */
+        public static final OnMissingExtensionPoint WARN = new OnMissingExtensionPoint(
+                "warn");
+
+        /** ignore the extensionOf attribute if the extension-point is not defined */
+        public static final OnMissingExtensionPoint IGNORE = new OnMissingExtensionPoint(
+                "ignore");
+
+        private static final OnMissingExtensionPoint[] values = new OnMissingExtensionPoint[] {
+                                FAIL, WARN, IGNORE };
+
+        private final String name;
+
+        private OnMissingExtensionPoint(String name) {
+            this.name = name;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public String toString() {
+            return name;
+        }
+
+        public static OnMissingExtensionPoint valueOf(String name) {
+            if (name == null) {
+                throw new NullPointerException();
+            }
+            for (int i = 0; i < values.length; i++) {
+                if (name.equals(values[i].name())) {
+                    return values[i];
+                }
+            }
+            throw new IllegalArgumentException(
+                    "Unknown onMissingExtensionPoint " + name);
+        }
+    }
 
     /** Default constructor */
     public ProjectHelper() {
@@ -127,9 +163,8 @@ public class ProjectHelper {
      *
      * @return a list of three element string arrays where the first
      * element is the name of the extensionpoint, the second the name
-     * of the target and the third one of the MISSINS_EP constants
-     * defined inside this class - it determines how to deal with
-     * targets that want to extend missing extension-points.
+     * of the target and the third the name of the enum like class
+     * {@link OnMissingExtensionPoint}.
      */
     public List getExtensionStack() {
         return extensionStack;

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.ProjectHelper.OnMissingExtensionPoint;
 import org.apache.tools.ant.Task;
 
 /**
@@ -34,13 +35,21 @@ public class BindTargets extends Task {
 
     private List/* <String> */targets = new ArrayList();
 
-    private String onMissingExtensionPoint;
+    private OnMissingExtensionPoint onMissingExtensionPoint;
 
     public void setExtensionPoint(String extensionPoint) {
         this.extensionPoint = extensionPoint;
     }
 
     public void setOnMissingExtensionPoint(String onMissingExtensionPoint) {
+        try {
+            this.onMissingExtensionPoint = OnMissingExtensionPoint.valueOf(onMissingExtensionPoint);
+        } catch (IllegalArgumentException e) {
+            throw new BuildException("Invalid onMissingExtensionPoint: " + onMissingExtensionPoint);
+        }
+    }
+
+    public void setOnMissingExtensionPoint(OnMissingExtensionPoint onMissingExtensionPoint) {
         this.onMissingExtensionPoint = onMissingExtensionPoint;
     }
 
@@ -66,18 +75,7 @@ public class BindTargets extends Task {
         }
 
         if (onMissingExtensionPoint == null) {
-            onMissingExtensionPoint = ProjectHelper.MISSING_EP_FAIL;
-        }
-        if (!onMissingExtensionPoint.equals(ProjectHelper.MISSING_EP_FAIL)
-                && !onMissingExtensionPoint
-                        .equals(ProjectHelper.MISSING_EP_IGNORE)
-                && !onMissingExtensionPoint
-                        .equals(ProjectHelper.MISSING_EP_WARN)) {
-            throw new BuildException("onMissingExtensionPoint"
-                    + " attribute can only be '"
-                    + ProjectHelper.MISSING_EP_FAIL + "', '"
-                    + ProjectHelper.MISSING_EP_WARN + "' or '"
-                    + ProjectHelper.MISSING_EP_IGNORE + "'", getLocation());
+            onMissingExtensionPoint = OnMissingExtensionPoint.FAIL;
         }
         ProjectHelper helper = (ProjectHelper) getProject().getReference(
                 ProjectHelper.PROJECTHELPER_REFERENCE);
@@ -86,7 +84,7 @@ public class BindTargets extends Task {
         while (itTarget.hasNext()) {
             helper.getExtensionStack().add(
                     new String[] { extensionPoint, (String) itTarget.next(),
-                                            onMissingExtensionPoint });
+                                            onMissingExtensionPoint.name() });
         }
 
     }
