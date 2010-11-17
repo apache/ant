@@ -58,7 +58,7 @@ installation of the <a href="http://hudson-ci.org/">Hudson</a> CI-system which A
         <job id="Ant_BuildFromPOMs" title="Checks Ant POMs by building Ant from the POMs." command="maven src/etc/poms/pom.xml clean package">
             <description>Checks the POMs by building Ant by Maven</description>
         </job>
-        <job id="Ant_Nightly" title="Ivy Core Trunk" command="ant allclean distribution | ant -f check.xml dumphtml findbugs rat">
+        <job id="Ant_Nightly" title="Ant Nightly" command="ant allclean distribution | ant -f check.xml dumphtml findbugs rat">
             <description>Metric checks of Ant Trunk (Findbugs, RAT, Checkstyle)</description>
         </job>
         <job id="Ant-Build-Matrix" title="Ant JDK-Matrix" command="ant test">
@@ -72,6 +72,8 @@ installation of the <a href="http://hudson-ci.org/">Hudson</a> CI-system which A
         <job id="Ivy-check" title="Ivy Core Trunk Checks" command="ant findbugs checkstyle-internal | ant -f build-release.xml rat">
             <description>Metric checks of Ivy Trunk (Findbugs, RAT, Checkstyle)</description>
         </job>
+    </project>
+    <project name="Apache IvyDE">
         <job id="IvyDE" title="IvyDE Trunk" command="ant clean hudson-prepare | ant dist checkstyle rat">
             <description>current development</description>
         </job>
