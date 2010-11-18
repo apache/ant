@@ -46,11 +46,12 @@ public class SignJarTest extends BuildFileTest {
 
     /**
      * check for being offline
-     * @return true iff the system property "offline" is "true"
+     * @return true if the system property "offline" is "true"
      */
     private boolean isOffline() {
         return Boolean.getBoolean("offline");
     }
+
     public void testSigFile() {
         executeTarget("sigfile");
         SignJarChild sj = new SignJarChild();

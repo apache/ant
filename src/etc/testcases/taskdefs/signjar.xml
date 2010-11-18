@@ -22,8 +22,8 @@
   <property name="subdir" location="${sign.dir}/subdir" />
   <property name="test.jar" location="${sign.dir}/signtest.jar" />
   <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
-  
-  
+
+
   <macrodef name="assertSigned">
     <attribute name="jar" default="${test.jar}" />
     <sequential>
@@ -46,7 +46,7 @@
   </presetdef>
 
 
-  
+
   <presetdef name="sign">
     <sign-base jar="${test.jar}" />
   </presetdef>
@@ -55,13 +55,13 @@
     <mkdir dir="${sign.dir}" />
     <mkdir dir="${subdir}" />
   </target>
-  
+
   <target name="jar" depends="init">
     <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
-  </target>  
+  </target>
 
-  
-  
+
+
   <target name="clean">
     <delete dir="${sign.dir}"/>
   </target>
@@ -69,33 +69,33 @@
   <target name="help">
     <echo>This build is for use with Ant's test cases</echo>
   </target>
-  
+
   <target name="basic" depends="jar">
     <sign />
-    <assertSigned/>             
+    <assertSigned/>
   </target>
 
   <target name="sigfile" depends="jar">
     <sign sigfile="TEST"/>
-    <assertSigned/>             
+    <assertSigned/>
   </target>
 
   <target name="invalidchars" depends="jar">
     <sign alias="test@nly"/>
-    <assertSigned/>             
+    <assertSigned/>
   </target>
 
   <target name="urlKeystoreFile" depends="jar">
     <sign keystore="file://../testkeystore"
        maxmemory="128m"/>
-    <assertSigned/>             
+    <assertSigned/>
   </target>
 
   <target name="urlKeystoreHTTP" depends="jar">
     <sign
       keystore="http://ant.apache.org/webtest/testkeystore"
       />
-    <assertSigned/>             
+    <assertSigned/>
   </target>
 
   <target name="testTsaLocalhost" depends="jar">
@@ -103,4 +103,3 @@
   </target>
 
 </project>
-
