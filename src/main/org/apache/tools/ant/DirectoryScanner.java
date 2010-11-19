@@ -1248,7 +1248,7 @@ public class DirectoryScanner
             TokenizedPath newPath = new TokenizedPath(path, newfiles[i]);
             File file = new File(dir, newfiles[i]);
             String[] children = file.list();
-            if (children == null) { // probably file
+            if (children == null || file.isFile()) {
                 if (isIncluded(newPath)) {
                     accountForIncludedFile(newPath, file);
                 } else {
