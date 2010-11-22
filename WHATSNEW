@@ -273,6 +273,8 @@ Other changes:
  * New task <bindtargets> to make a list of targets bound to some
    specified extension point.
 
+ * Initial support for OpenJDK7 has been added.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
