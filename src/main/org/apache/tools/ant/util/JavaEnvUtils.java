@@ -89,6 +89,11 @@ public final class JavaEnvUtils {
     /** Number Version constant for Java 1.6 */
     public static final int VERSION_1_6 = 16;
 
+    /** Version constant for Java 1.7 */
+    public static final String JAVA_1_7 = "1.7";
+    /** Number Version constant for Java 1.7 */
+    public static final int VERSION_1_7 = 17;
+
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
     /** Whether this is the GNU VM (gcj/gij) */
@@ -131,6 +136,9 @@ public final class JavaEnvUtils {
             javaVersionNumber++;
             Class.forName("java.util.ServiceLoader");
             javaVersion = JAVA_1_6;
+            javaVersionNumber++;
+            Class.forName("java.nio.file.FileSystem");
+            javaVersion = JAVA_1_7;
             javaVersionNumber++;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
@@ -362,6 +370,7 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector();
         switch(javaVersionNumber) {
+            case VERSION_1_7:
             case VERSION_1_6:
             case VERSION_1_5:
                 //In Java1.5, the apache stuff moved.
@@ -412,6 +421,7 @@ public final class JavaEnvUtils {
         Vector tests = new Vector();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
+            case VERSION_1_7:
             case VERSION_1_6:
             case VERSION_1_5:
                 tests.addElement(
