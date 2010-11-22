@@ -532,11 +532,11 @@ public class Checksum extends MatchingTask implements Condition {
                         fos.write(format.format(new Object[] {
                                                     checksum,
                                                     src.getName(),
-                                                    FILE_UTILS
+                                                    FileUtils
                                                     .getRelativePath(dest
                                                                      .getParentFile(),
                                                                      src),
-                                                    FILE_UTILS
+                                                    FileUtils
                                                     .getRelativePath(getProject()
                                                                      .getBaseDir(),
                                                                      src),

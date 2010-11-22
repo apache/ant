@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.ProxySetup;

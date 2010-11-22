@@ -19,8 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.net;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 

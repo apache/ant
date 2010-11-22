@@ -43,7 +43,6 @@ public class EchoPropertiesTest extends BuildFileTest {
     private static final String GOOD_OUTFILE_XML = "test.xml";
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
     private static final String TEST_VALUE = "isSet";
-    private static final String BAD_OUTFILE = ".";
 
     public EchoPropertiesTest(String name) {
         super(name);

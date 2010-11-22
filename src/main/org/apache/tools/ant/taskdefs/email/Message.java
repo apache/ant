@@ -26,7 +26,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Class representing an email message.

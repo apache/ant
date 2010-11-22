@@ -62,7 +62,6 @@ public class JavaTest extends BuildFileTest {
         //final String propname="tests-classpath.value";
         //String testClasspath=System.getProperty(propname);
         //System.out.println("Test cp="+testClasspath);
-        String propname="tests-classpath.value";
         String runFatal=System.getProperty("junit.run.fatal.tests");
         if(runFatal!=null)
             runFatalTests=true;

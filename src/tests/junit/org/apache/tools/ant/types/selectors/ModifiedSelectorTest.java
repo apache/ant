@@ -55,9 +55,6 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
     //  =====================  attributes  =====================
 
 
-    /** Package of the CacheSelector classes. */
-    private static String pkg = "org.apache.tools.ant.types.selectors.modifiedselector";
-
     /** Path where the testclasses are. */
     private Path testclasses = null;
 
@@ -459,7 +456,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         // clear the cache
         cache.delete();
         Iterator it3 = cache.iterator();
-        assertFalse("Cache is not empty", it1.hasNext());
+        assertFalse("Cache is not empty", it3.hasNext());
     }
 
 

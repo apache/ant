@@ -482,7 +482,7 @@ public class Property extends Task {
                 try {
                     File from = untypedValue instanceof File ? (File)untypedValue : new File(untypedValue.toString());
                     File to = basedir != null ? basedir : getProject().getBaseDir();
-                    String relPath = FileUtils.getFileUtils().getRelativePath(to, from);
+                    String relPath = FileUtils.getRelativePath(to, from);
                     relPath = relPath.replace('/', File.separatorChar);
                     addProperty(name, relPath);
                 } catch (Exception e) {

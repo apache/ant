@@ -282,7 +282,6 @@ public class ScpFromMessage extends AbstractSshMessage {
 
     private void setLastModified(File localFile) throws JSchException {
         SftpATTRS fileAttributes = null;
-        String remotePath = null;
         ChannelSftp channel = openSftpChannel();
         channel.connect();
         try {

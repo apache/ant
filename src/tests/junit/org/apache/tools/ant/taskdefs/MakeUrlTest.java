@@ -85,7 +85,6 @@ public class MakeUrlTest extends BuildFileTest {
     public void testFileset() {
         executeTarget("testFileset");
         assertPropertyContains("testFileset", ".xml ");
-        String result = getProperty("testFileset");
         assertPropertyEndsWith("testFileset", ".xml");
     }
 

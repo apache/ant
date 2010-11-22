@@ -26,7 +26,6 @@ package org.apache.tools.zip;
 public final class ZipLong implements Cloneable {
 
     private static final int WORD = 4;
-    private static final int BYTE_BIT_SIZE = 8;
     private static final int BYTE_MASK = 0xFF;
 
     private static final int BYTE_1 = 1;

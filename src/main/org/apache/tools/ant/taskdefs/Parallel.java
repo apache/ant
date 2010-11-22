@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.List;

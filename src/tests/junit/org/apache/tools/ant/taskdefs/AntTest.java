@@ -101,7 +101,6 @@ public class AntTest extends BuildFileTest {
     public void testDoNotInheritBasedir() {
         File dir1 = getProjectDir();
         File dir2 = project.resolveFile("ant");
-        String basedir = getProjectDir().getAbsolutePath();
         testBaseDirs("doNotInheritBasedir",
                      new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()

@@ -403,7 +403,7 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
 
             if (def != null && !def.equals("")) {
-                helperImpl.project.setDefaultTarget(def);
+                helperImpl.project.setDefault(def);
             } else {
                 throw new BuildException("The default attribute is required");
             }

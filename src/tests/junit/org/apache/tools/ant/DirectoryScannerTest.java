@@ -20,7 +20,6 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 import java.io.File;
