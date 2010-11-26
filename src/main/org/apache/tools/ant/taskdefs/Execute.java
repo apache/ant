@@ -672,12 +672,10 @@ public class Execute {
             if (osEnv.remove(key) == null && environmentCaseInSensitive) {
                 // not found, maybe perform a case insensitive search
 
-                // Nb: using default locale as key is a env name
-                key = key.toLowerCase();
-
                 for (Iterator it = osEnv.keySet().iterator(); it.hasNext(); ) {
                     String osEnvItem = (String) it.next();
-                    if (osEnvItem.toLowerCase().equals(key)) {
+                    // Nb: using default locale as key is a env name
+                    if (osEnvItem.toLowerCase().equals(key.toLowerCase())) {
                         // Use the original casiness of the key
                         key = osEnvItem;
                         break;
