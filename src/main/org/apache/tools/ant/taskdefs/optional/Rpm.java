@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -44,10 +45,9 @@ import org.apache.tools.ant.types.Path;
  */
 public class Rpm extends Task {
 
-    private static final String PATH1 = "PATH=";
-    private static final String PATH2 = "Path=";
-    private static final String PATH3 = "path=";
-    private static final int PATH_LEN = PATH1.length();
+    private static final String PATH1 = "PATH";
+    private static final String PATH2 = "Path";
+    private static final String PATH3 = "path";
 
     /**
      * the spec file
@@ -317,13 +317,12 @@ public class Rpm extends Task {
      * @since 1.6
      */
     protected String guessRpmBuildCommand() {
-        Vector env = Execute.getProcEnvironment();
-        String path = null;
-        for (Enumeration e = env.elements(); e.hasMoreElements();) {
-            String var = (String) e.nextElement();
-            if (var.startsWith(PATH1) || var.startsWith(PATH2) || var.startsWith(PATH3)) {
-                path = var.substring(PATH_LEN);
-                break;
+        Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
+        String path = (String) env.get(PATH1);
+        if (path == null) {
+            path = (String) env.get(PATH2);
+            if (path == null) {
+                path = (String) env.get(PATH3);
             }
         }
 

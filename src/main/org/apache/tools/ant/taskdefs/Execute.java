@@ -26,8 +26,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -73,7 +75,7 @@ public class Execute {
     private static String antWorkingDirectory = System.getProperty("user.dir");
     private static CommandLauncher vmLauncher = null;
     private static CommandLauncher shellLauncher = null;
-    private static Vector procEnvironment = null;
+    private static Map/*<String, String>*/ procEnvironment = null;
 
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
@@ -150,27 +152,26 @@ public class Execute {
     /**
      * Find the list of environment variables for this process.
      *
-     * @return a vector containing the environment variables.
-     * The vector elements are strings formatted like variable = value.
+     * @return a map containing the environment variables.
+     * @since Ant 1.8.2
      */
-    public static synchronized Vector getProcEnvironment() {
+    public static synchronized Map/*<String,String>*/ getEnvironmentVariables() {
         if (procEnvironment != null) {
             return procEnvironment;
         }
-        procEnvironment = new Vector();
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)
+            && !Os.isFamily("openvms")) {
             try {
-                Map/*<String,String>*/ env = (Map) System.class.getMethod("getenv", new Class[0]).invoke(null, new Object[0]);
-                Iterator it = env.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    procEnvironment.add(entry.getKey() + "=" + entry.getValue());
-                }
+                procEnvironment = (Map) System.class
+                    .getMethod("getenv", new Class[0])
+                    .invoke(null, new Object[0]);
                 return procEnvironment;
             } catch (Exception x) {
                 x.printStackTrace();
             }
         }
+
+        procEnvironment = new LinkedHashMap();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Execute exe = new Execute(new PumpStreamHandler(out));
@@ -185,7 +186,7 @@ public class Execute {
                 new BufferedReader(new StringReader(toString(out)));
 
             if (Os.isFamily("openvms")) {
-                procEnvironment = addVMSLogicals(procEnvironment, in);
+                procEnvironment = getVMSLogicals(in);
                 return procEnvironment;
             }
             String var = null;
@@ -202,20 +203,40 @@ public class Execute {
                 } else {
                     // New env var...append the previous one if we have it.
                     if (var != null) {
-                        procEnvironment.addElement(var);
+                        int eq = var.indexOf("=");
+                        procEnvironment.put(var.substring(0, eq),
+                                            var.substring(eq + 1));
                     }
                     var = line;
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.
             if (var != null) {
-                procEnvironment.addElement(var);
+                int eq = var.indexOf("=");
+                procEnvironment.put(var.substring(0, eq), var.substring(eq + 1));
             }
         } catch (java.io.IOException exc) {
             exc.printStackTrace();
             // Just try to see how much we got
         }
         return procEnvironment;
+    }
+
+    /**
+     * Find the list of environment variables for this process.
+     *
+     * @return a vector containing the environment variables.
+     * The vector elements are strings formatted like variable = value.
+     * @deprecated use #getEnvironmentVariables instead
+     */
+    public static synchronized Vector getProcEnvironment() {
+        Vector v = new Vector();
+        Iterator it = getEnvironmentVariables().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            v.add(entry.getKey() + "=" + entry.getValue());
+        }
+        return v;
     }
 
     /**
@@ -639,36 +660,41 @@ public class Execute {
         if (Os.isFamily("openvms")) {
             return env;
         }
-        Vector osEnv = (Vector) getProcEnvironment().clone();
+        Map/*<String, String>*/ osEnv =
+            new LinkedHashMap(getEnvironmentVariables());
         for (int i = 0; i < env.length; i++) {
             String keyValue = env[i];
-            // Get key including "="
-            String key = keyValue.substring(0, keyValue.indexOf('=') + 1);
-            if (environmentCaseInSensitive) {
-                // Nb: using default locale as key is a env name
-                key = key.toLowerCase();
-            }
-            int size = osEnv.size();
+            String key = keyValue.substring(0, keyValue.indexOf('='));
             // Find the key in the current enviroment copy
             // and remove it.
-            for (int j = 0; j < size; j++) {
-                String osEnvItem = (String) osEnv.elementAt(j);
-                String convertedItem = environmentCaseInSensitive
-                    ? osEnvItem.toLowerCase() : osEnvItem;
-                if (convertedItem.startsWith(key)) {
-                    osEnv.removeElementAt(j);
-                    if (environmentCaseInSensitive) {
+
+            // Try without changing case first
+            if (osEnv.remove(key) == null && environmentCaseInSensitive) {
+                // not found, maybe perform a case insensitive search
+
+                // Nb: using default locale as key is a env name
+                key = key.toLowerCase();
+
+                for (Iterator it = osEnv.keySet().iterator(); it.hasNext(); ) {
+                    String osEnvItem = (String) it.next();
+                    if (osEnvItem.toLowerCase().equals(key)) {
                         // Use the original casiness of the key
-                        keyValue = osEnvItem.substring(0, key.length())
-                            + keyValue.substring(key.length());
+                        key = osEnvItem;
+                        break;
                     }
-                    break;
                 }
             }
+
             // Add the key to the enviromnent copy
-            osEnv.addElement(keyValue);
+            osEnv.put(key, keyValue.substring(key.length() + 1));
         }
-        return (String[]) (osEnv.toArray(new String[osEnv.size()]));
+
+        ArrayList l = new ArrayList();
+        for (Iterator it = osEnv.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) it.next();
+            l.add(entry.getKey() + "=" + entry.getValue());
+        }
+        return (String[]) (l.toArray(new String[osEnv.size()]));
     }
 
     /**
@@ -711,17 +737,17 @@ public class Execute {
     }
 
     /**
-     * This method is VMS specific and used by getProcEnvironment().
+     * This method is VMS specific and used by getEnvironmentVariables().
      *
-     * Parses VMS logicals from <code>in</code> and adds them to
-     * <code>environment</code>.  <code>in</code> is expected to be the
+     * Parses VMS logicals from <code>in</code> and returns them as a Map.
+     * <code>in</code> is expected to be the
      * output of "SHOW LOGICAL".  The method takes care of parsing the output
      * correctly as well as making sure that a logical defined in multiple
      * tables only gets added from the highest order table.  Logicals with
      * multiple equivalence names are mapped to a variable with multiple
      * values separated by a comma (,).
      */
-    private static Vector addVMSLogicals(Vector environment, BufferedReader in)
+    private static Map getVMSLogicals(BufferedReader in)
         throws IOException {
         HashMap logicals = new HashMap();
         String logName = null, logValue = null, newLogName;
@@ -755,11 +781,7 @@ public class Execute {
         if (logName != null) {
             logicals.put(logName, logValue);
         }
-        for (Iterator i = logicals.keySet().iterator(); i.hasNext();) {
-            String logical = (String) i.next();
-            environment.add(logical + "=" + logicals.get(logical));
-        }
-        return environment;
+        return logicals;
     }
 
     /**

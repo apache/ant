@@ -21,8 +21,9 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -454,14 +455,9 @@ public class ExecTask extends Task {
                 }
             }
             if (p == null) {
-                Vector envVars = Execute.getProcEnvironment();
-                Enumeration e = envVars.elements();
-                while (e.hasMoreElements()) {
-                    String line = (String) e.nextElement();
-                    if (isPath(line)) {
-                        p = new Path(getProject(), getPath(line));
-                        break;
-                    }
+                String path = getPath(Execute.getEnvironmentVariables());
+                if (path != null) {
+                    p = new Path(getProject(), path);
                 }
             }
             if (p != null) {
@@ -723,5 +719,10 @@ public class ExecTask extends Task {
 
     private String getPath(String line) {
         return line.substring("PATH=".length());
+    }
+
+    private String getPath(Map/*<String, String>*/ map) {
+        String p = (String) map.get("PATH");
+        return p != null ? p : (String) map.get("Path");
     }
 }

@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Vector;
-import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -593,16 +593,11 @@ public class JDependTask extends Task {
         }
 
         if (includeRuntime) {
-            Vector v = Execute.getProcEnvironment();
-            Enumeration e = v.elements();
-            while (e.hasMoreElements()) {
-                String s = (String) e.nextElement();
-                if (s.startsWith("CLASSPATH=")) {
-                    commandline.createClasspath(getProject()).createPath()
-                        .append(new Path(getProject(),
-                                         s.substring("CLASSPATH=".length()
-                                                     )));
-                }
+            Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
+            String cp = (String) env.get("CLASSPATH");
+            if (cp != null) {
+                commandline.createClasspath(getProject()).createPath()
+                    .append(new Path(getProject(), cp));
             }
             log("Implicitly adding " + runtimeClasses + " to CLASSPATH",
                 Project.MSG_VERBOSE);

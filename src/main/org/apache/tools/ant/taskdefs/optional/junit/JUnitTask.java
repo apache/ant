@@ -132,7 +132,7 @@ public class JUnitTask extends Task {
 
     private static final String LINE_SEP
         = System.getProperty("line.separator");
-    private static final String CLASSPATH = "CLASSPATH=";
+    private static final String CLASSPATH = "CLASSPATH";
     private CommandlineJava commandline;
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
@@ -1114,16 +1114,11 @@ public class JUnitTask extends Task {
      */
     private void checkIncludeAntRuntime(CommandlineJava cmd) {
         if (includeAntRuntime) {
-            Vector v = Execute.getProcEnvironment();
-            Enumeration e = v.elements();
-            while (e.hasMoreElements()) {
-                String s = (String) e.nextElement();
-                if (s.startsWith(CLASSPATH)) {
-                    cmd.createClasspath(getProject()).createPath()
-                        .append(new Path(getProject(),
-                                         s.substring(CLASSPATH.length()
-                                                     )));
-                }
+            Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
+            String cp = (String) env.get(CLASSPATH);
+            if (cp != null) {
+                cmd.createClasspath(getProject()).createPath()
+                    .append(new Path(getProject(), cp));
             }
             log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
                 Project.MSG_VERBOSE);

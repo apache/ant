@@ -664,16 +664,10 @@ public class Property extends Task {
             prefix += ".";
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
-        Vector osEnv = Execute.getProcEnvironment();
-        for (Enumeration e = osEnv.elements(); e.hasMoreElements();) {
-            String entry = (String) e.nextElement();
-            int pos = entry.indexOf('=');
-            if (pos == -1) {
-                log("Ignoring: " + entry, Project.MSG_WARN);
-            } else {
-                props.put(prefix + entry.substring(0, pos),
-                          entry.substring(pos + 1));
-            }
+        Map osEnv = Execute.getEnvironmentVariables();
+        for (Iterator e = osEnv.entrySet().iterator(); e.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) e.next();
+            props.put(prefix + entry.getKey(), entry.getValue());
         }
         addProperties(props);
     }
