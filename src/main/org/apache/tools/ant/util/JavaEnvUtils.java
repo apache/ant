@@ -134,7 +134,7 @@ public final class JavaEnvUtils {
             Class.forName("java.net.Proxy");
             javaVersion = JAVA_1_5;
             javaVersionNumber++;
-            Class.forName("java.util.ServiceLoader");
+            Class.forName("java.net.CookieStore");
             javaVersion = JAVA_1_6;
             javaVersionNumber++;
             Class.forName("java.nio.file.FileSystem");

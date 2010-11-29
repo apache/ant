@@ -275,6 +275,12 @@ Other changes:
 
  * Initial support for OpenJDK7 has been added.
 
+ * Ant now uses java.net.CookieStore rather than
+   java.util.ServiceLocator to detect whether the environment is a
+   Java 1.6 system.  This means releases of gcj/gij at the time of
+   this release of Ant are detected as Java 1.5 and not 1.6.
+   Bugzilla Report 50256.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
