@@ -63,15 +63,6 @@ according to <a href="http://java.sun.com/dtd/properties.dtd">Suns DTD</a>,
 if Java5+ is present. For this the name of the file, resource or url has 
 to end with <tt>.xml</tt>.</p>
 
-<h4>OpenVMS Users</h4>
-<p>With the <code>environment</code> attribute this task will load all defined
-logicals on an OpenVMS system.  Logicals with multiple equivalence names get
-mapped to a property whose value is a comma separated list of all equivalence
-names.  If a logical is defined in multiple tables, only the most local
-definition is available (the table priority order being PROCESS, JOB, GROUP,
-SYSTEM).
-</p>
-
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -175,6 +166,33 @@ SYSTEM).
     <td align="center" valign="top">No (default=<tt>${basedir}</tt>)</td>
   </tr>
 </table>
+
+<h4>OpenVMS Users</h4>
+<p>With the <code>environment</code> attribute this task will load all defined
+logicals on an OpenVMS system.  Logicals with multiple equivalence names get
+mapped to a property whose value is a comma separated list of all equivalence
+names.  If a logical is defined in multiple tables, only the most local
+definition is available (the table priority order being PROCESS, JOB, GROUP,
+SYSTEM).
+</p>
+
+<h4>Any OS except OpenVMS</h4>
+<p>Starting with Ant 1.8.2 if Ant detects it is running of a Java 1.5
+  VM (or better) Ant will use <code>System.getenv</code> rather than
+  its own OS dependent native implementation.  For some OSes this
+  causes minor differences when compared to older versions of Ant.
+  For a full list
+  see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=49366">Bugzilla
+  Issue 49366</a>.  In particular:</p>
+<ul>
+  <li>On Windows Ant will now return additional "environment
+    variables" that correspond to the drive specific current working
+    directories when Ant is run from the command line.  The keys of
+    these variables starts with an equals sign.</li>
+  <li>Some users reported that some Cygwin specific variables (in
+    particular PROMPT) was no longer present.</li>
+  <li>On OS/2 Ant no longer returns the BEGINLIBPATH variable.</li>
+</ul>
 
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
