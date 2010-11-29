@@ -31,6 +31,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterExtension;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -934,7 +935,10 @@ public class Javac extends MatchingTask {
      */
     protected void scanDir(File srcDir, File destDir, String[] files) {
         GlobPatternMapper m = new GlobPatternMapper();
-        m.setFrom("*.java");
+        String[] extensions = findSupportedFileExtensions();
+        
+        for (int i = 0; i < extensions.length; i++) {
+            m.setFrom(extensions[i]);
         m.setTo("*.class");
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
@@ -949,6 +953,33 @@ public class Javac extends MatchingTask {
                     compileList.length, newFiles.length);
             compileList = newCompileList;
         }
+        }
+    }
+
+    private String[] findSupportedFileExtensions() {
+        String compilerImpl = getCompiler();
+        CompilerAdapter adapter =
+            nestedAdapter != null ? nestedAdapter :
+            CompilerAdapterFactory.getCompiler(compilerImpl, this,
+                                               createCompilerClasspath());
+        String[] extensions = null;
+        if (adapter instanceof CompilerAdapterExtension) {
+            extensions =
+                ((CompilerAdapterExtension) adapter).getSupportedFileExtensions();
+        } 
+
+        if (extensions == null) {
+            extensions = new String[] { "java" };
+        }
+
+        // now process the extensions to ensure that they are the
+        // right format
+        for (int i = 0; i < extensions.length; i++) {
+            if (!extensions[i].startsWith("*.")) {
+                extensions[i] = "*." + extensions[i];
+            }
+        }
+        return extensions; 
     }
 
     /**

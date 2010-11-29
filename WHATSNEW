@@ -281,6 +281,11 @@ Other changes:
    this release of Ant are detected as Java 1.5 and not 1.6.
    Bugzilla Report 50256.
 
+ * It is now possible to write a compiler adapter for <javac> that
+   compiles sources with extensions other than .java (but that still
+   compile to .class files).
+   Bugzilla Report 48829.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 

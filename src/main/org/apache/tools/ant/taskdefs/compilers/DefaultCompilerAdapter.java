@@ -44,7 +44,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *
  * @since Ant 1.3
  */
-public abstract class DefaultCompilerAdapter implements CompilerAdapter {
+public abstract class DefaultCompilerAdapter
+    implements CompilerAdapter, CompilerAdapterExtension {
+
     private static final int COMMAND_LINE_LIMIT;
     static {
         if (Os.isFamily("os/2")) {
@@ -125,6 +127,15 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     public Javac getJavac() {
         return attributes;
+    }
+
+    /**
+     * By default, only recognize files with a Java extension,
+     * but specialized compilers can recognize multiple kinds
+     * of files.
+     */
+    public String[] getSupportedFileExtensions() {
+        return new String[] { "java" };
     }
 
     /**
