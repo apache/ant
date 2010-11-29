@@ -939,20 +939,20 @@ public class Javac extends MatchingTask {
         
         for (int i = 0; i < extensions.length; i++) {
             m.setFrom(extensions[i]);
-        m.setTo("*.class");
-        SourceFileScanner sfs = new SourceFileScanner(this);
-        File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
+            m.setTo("*.class");
+            SourceFileScanner sfs = new SourceFileScanner(this);
+            File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
 
-        if (newFiles.length > 0) {
-            lookForPackageInfos(srcDir, newFiles);
-            File[] newCompileList
-                = new File[compileList.length + newFiles.length];
-            System.arraycopy(compileList, 0, newCompileList, 0,
-                    compileList.length);
-            System.arraycopy(newFiles, 0, newCompileList,
-                    compileList.length, newFiles.length);
-            compileList = newCompileList;
-        }
+            if (newFiles.length > 0) {
+                lookForPackageInfos(srcDir, newFiles);
+                File[] newCompileList
+                    = new File[compileList.length + newFiles.length];
+                System.arraycopy(compileList, 0, newCompileList, 0,
+                                 compileList.length);
+                System.arraycopy(newFiles, 0, newCompileList,
+                                 compileList.length, newFiles.length);
+                compileList = newCompileList;
+            }
         }
     }
 
