@@ -62,6 +62,27 @@
     <a href="../Types/antlib.html">Antlib</a> section.
   </p>
 
+  <p>If you are defining tasks or types that share the same classpath
+    with multiple taskdef or typedef tasks, the corresponding classes
+    will be loaded by different
+    Java <a href="http://download.oracle.com/javase/1.4.2/docs/api/java/lang/ClassLoader.html">ClassLoaders</a>.
+    Two classes with the same name loaded via different ClassLoaders
+    are not the same class from the point of view of the Java VM, they
+    don't share static variables and instances of these classes can't
+    access private methods or attributes of instances defined by "the
+    other class" of the same name.  They don't even belong to the same
+    Java package and can't access package private code, either.</p>
+
+  <p>The best way to load several tasks/types that are supposed to
+    cooperate with each other via shared Java code is to use the
+    resource attribute and an antlib descriptor.  If this is not
+    possible, the second best option is to use the loaderref attribute
+    and specify the same name for each and every typedef/taskdef -
+    this way the classes will share the same ClassLoader.  Note that
+    the typedef/taskdef tasks must use identical classpath defintions
+    (this includes the order of path components) for the loaderref
+    attribute to work.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
