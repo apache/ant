@@ -46,6 +46,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.LinkedHashtable;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.FlatFileNameMapper;
@@ -88,9 +89,9 @@ public class Copy extends Task {
     protected boolean includeEmpty = true;
     protected boolean failonerror = true;
 
-    protected Hashtable fileCopyMap = new Hashtable();
-    protected Hashtable dirCopyMap = new Hashtable();
-    protected Hashtable completeDirMap = new Hashtable();
+    protected Hashtable fileCopyMap = new LinkedHashtable();
+    protected Hashtable dirCopyMap = new LinkedHashtable();
+    protected Hashtable completeDirMap = new LinkedHashtable();
 
     protected Mapper mapperElement = null;
     protected FileUtils fileUtils;
