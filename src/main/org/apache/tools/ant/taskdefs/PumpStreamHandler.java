@@ -264,7 +264,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param is the input stream to copy from.
      * @param os the output stream to copy to.
      * @param closeWhenExhausted if true close the inputstream.
-     * @param useAvailable set it to <code>true</code> to use simulated non
+     * @param nonBlockingIO set it to <code>true</code> to use simulated non
      *                     blocking IO.
      * @return a thread object that does the pumping, subclasses
      * should return an instance of {@link ThreadWithPumper

@@ -28,7 +28,8 @@ import org.apache.tools.ant.util.FileNameMapper;
  * <p>This mapper was inspired by a user-list thread that mentioned
  * wget's --cut-dirs option.</p>
  *
- * @see http://mail-archives.apache.org/mod_mbox/ant-user/201009.mbox/%3C51772743BEA5D44A9EA5BF52AADDD6FB010E96F6@hammai008.delphi.local%3E
+ * @see <a href="http://mail-archives.apache.org/mod_mbox/ant-user/201009.mbox/%3C51772743BEA5D44A9EA5BF52AADDD6FB010E96F6@hammai008.delphi.local%3E">
+ * simplify copy with regexpmapper</a>
  */
 public class CutDirsMapper implements FileNameMapper {
     private int dirs = 0;

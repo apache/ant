@@ -119,7 +119,7 @@ public abstract class AbstractResourceCollectionWrapper
      * Do compute the size of the resource collection. The implementation of
      * this function is allowed to be not thread safe.
      * 
-     * @return
+     * @return size of resource collection.
      */
     protected abstract int getSize();
 
