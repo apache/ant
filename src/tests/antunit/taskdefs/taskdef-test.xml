@@ -43,7 +43,7 @@
     <au:assertLogContains text="Hello"/>
   </target>
 
-  <target name="testDirWithPling" depends="setUp"
+  <target name="testDirWithPling" depends="setUp" if="jdk1.6+"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
     <property name="dir" location="${tmpdir}/pl!ng"/>
     <mkdir dir="${dir}"/>

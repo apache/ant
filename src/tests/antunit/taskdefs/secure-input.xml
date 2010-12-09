@@ -20,7 +20,6 @@
 	<import file="../antunit-base.xml"/>
 	
 	<target name="setUp">
-		<available property="jdk1.6+" classname="java.util.ServiceLoader"/>
 	</target>
 		
 	<target name="test-secure-input" if="jdk1.6+">
