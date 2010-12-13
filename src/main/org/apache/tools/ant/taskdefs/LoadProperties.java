@@ -66,6 +66,7 @@ public class LoadProperties extends Task {
      * Prefix for loaded properties.
      */
     private String prefix = null;
+    private boolean prefixValues = true;
 
     /**
      * Set the file to load.
@@ -142,6 +143,16 @@ public class LoadProperties extends Task {
     }
 
     /**
+     * Whether to apply the prefix when expanding properties on the
+     * right hand side of a properties file as well.
+     *
+     * @since Ant 1.8.2
+     */
+    public void setPrefixValues(boolean b) {
+        prefixValues = b;
+    }
+
+    /**
      * load Ant properties from the source file or resource
      *
      * @exception BuildException if something goes wrong with the build
@@ -189,6 +200,7 @@ public class LoadProperties extends Task {
                 Property propertyTask = new Property();
                 propertyTask.bindToOwner(this);
                 propertyTask.setPrefix(prefix);
+                propertyTask.setPrefixValues(prefixValues);
                 propertyTask.addProperties(props);
             }
         } catch (final IOException ioe) {

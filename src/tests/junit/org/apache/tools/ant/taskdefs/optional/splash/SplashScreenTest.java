@@ -38,7 +38,7 @@ public class SplashScreenTest {
 
         // give it some time to display
         try {
-            Thread.currentThread().sleep(2000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
         } // end of try-catch
 
@@ -46,7 +46,7 @@ public class SplashScreenTest {
         System.err.println("finished");
 
         try {
-            Thread.currentThread().sleep(2000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
         } // end of try-catch
         System.err.println("exiting");

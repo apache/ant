@@ -29,6 +29,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -130,7 +132,7 @@ public class JUnitTask extends Task {
 
     private static final String LINE_SEP
         = System.getProperty("line.separator");
-    private static final String CLASSPATH = "CLASSPATH=";
+    private static final String CLASSPATH = "CLASSPATH";
     private CommandlineJava commandline;
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
@@ -163,6 +165,7 @@ public class JUnitTask extends Task {
     private ForkMode forkMode = new ForkMode("perTest");
 
     private boolean splitJunit = false;
+    private boolean enableTestListenerEvents = false;
     private JUnitTaskMirror delegate;
     private ClassLoader mirrorLoader;
 
@@ -183,6 +186,12 @@ public class JUnitTask extends Task {
      */
     public static final String TESTLISTENER_PREFIX =
         "junit.framework.TestListener: ";
+
+    /**
+     * Name of magic property that enables test listener events.
+     */
+    public static final String ENABLE_TESTLISTENER_EVENTS =
+        "ant.junit.enabletestlistenerevents";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -652,8 +661,6 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
-        getCommandline()
-            .setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
     }
 
     /**
@@ -670,6 +677,32 @@ public class JUnitTask extends Task {
             }
         }
         this.tmpDir = tmpDir;
+    }
+
+    /**
+     * Whether test listener events shall be generated.
+     *
+     * <p>Defaults to false.</p>
+     * 
+     * <p>This value will be overridden by the magic property
+     * ant.junit.enabletestlistenerevents if it has been set.</p>
+     *
+     * @since Ant 1.8.2
+     */
+    public void setEnableTestListenerEvents(boolean b) {
+        enableTestListenerEvents = b;
+    }
+
+    /**
+     * Whether test listener events shall be generated.
+     * @since Ant 1.8.2
+     */
+    public boolean getEnableTestListenerEvents() {
+        String e = getProject().getProperty(ENABLE_TESTLISTENER_EVENTS);
+        if (e != null) {
+            return Project.toBoolean(e);
+        }
+        return enableTestListenerEvents;
     }
 
     /**
@@ -716,18 +749,20 @@ public class JUnitTask extends Task {
      * @since Ant 1.7.1
      */
     protected void setupJUnitDelegate() {
-        ClassLoader myLoader = JUnitTask.class.getClassLoader();
+        final ClassLoader myLoader = JUnitTask.class.getClassLoader();
         if (splitJunit) {
-            Path path = new Path(getProject());
+            final Path path = new Path(getProject());
             path.add(antRuntimeClasses);
             Path extra = getCommandline().getClasspath();
             if (extra != null) {
                 path.add(extra);
             }
-            mirrorLoader =
-                new SplitClassLoader(myLoader, path, getProject(),
+            mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return new SplitClassLoader(myLoader, path, getProject(),
                                      new String[] {
                                          "BriefJUnitResultFormatter",
+                                         "JUnit4TestMethodAdapter",
                                          "JUnitResultFormatter",
                                          "JUnitTaskMirrorImpl",
                                          "JUnitTestRunner",
@@ -738,6 +773,8 @@ public class JUnitTask extends Task {
                                          "TearDownOnVmCrash",
                                          "XMLJUnitResultFormatter",
                                      });
+                }
+            });
         } else {
             mirrorLoader = myLoader;
         }
@@ -751,6 +788,8 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
+        checkMethodLists();
+
         setupJUnitDelegate();
 
         List testLists = new ArrayList();
@@ -851,6 +890,9 @@ public class JUnitTask extends Task {
             while (iter.hasNext()) {
                 test = (JUnitTest) iter.next();
                 printDual(writer, logWriter, test.getName());
+                if (test.getMethods() != null) {
+                    printDual(writer, logWriter, ":" + test.getMethodsString().replace(',', '+'));
+                }
                 if (test.getTodir() == null) {
                     printDual(writer, logWriter,
                               "," + getProject().resolveFile("."));
@@ -878,10 +920,10 @@ public class JUnitTask extends Task {
             log(e.toString(), Project.MSG_ERR);
             throw new BuildException(e);
         } finally {
-            FILE_UTILS.close(writer);
+            FileUtils.close(writer);
 
             try {
-                casesFile.delete();
+                FILE_UTILS.tryHardToDelete(casesFile);
             } catch (Exception e) {
                 log(e.toString(), Project.MSG_ERR);
             }
@@ -919,9 +961,11 @@ public class JUnitTask extends Task {
         } catch (CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
         }
-        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
             cmd.createArgument().setValue(test.getName());
+            if (test.getMethods() != null) {
+                cmd.createArgument().setValue(Constants.METHOD_NAMES + test.getMethodsString());
+            }
         } else {
             log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
             cmd.createArgument().setValue(Constants.TESTSFILE + casesFile);
@@ -942,8 +986,9 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(Constants.LOG_FAILED_TESTS
                                       + String.valueOf(logFailedTests));
 
-        cmd.createArgument().setValue(
-            Constants.LOGTESTLISTENEREVENTS + "true"); // #31885
+        // #31885
+        cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS
+                                      + String.valueOf(getEnableTestListenerEvents()));
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
@@ -979,7 +1024,7 @@ public class JUnitTask extends Task {
             props.store(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
         } catch (java.io.IOException e) {
-            propsFile.delete();
+            FILE_UTILS.tryHardToDelete(propsFile);
             throw new BuildException("Error creating temporary properties "
                                      + "file.", e, getLocation());
         }
@@ -1034,7 +1079,7 @@ public class JUnitTask extends Task {
             } finally {
                 FileUtils.close(br);
                 if (vmWatcher.exists()) {
-                    vmWatcher.delete();
+                    FILE_UTILS.tryHardToDelete(vmWatcher);
                 }
             }
 
@@ -1053,9 +1098,10 @@ public class JUnitTask extends Task {
                 logVmCrash(feArray, test, vmCrashString);
             }
 
-            if (!propsFile.delete()) {
+            if (!FILE_UTILS.tryHardToDelete(propsFile)) {
                 throw new BuildException("Could not delete temporary "
-                                         + "properties file.");
+                                         + "properties file '"
+                                         + propsFile.getAbsolutePath() + "'.");
             }
         }
 
@@ -1068,16 +1114,11 @@ public class JUnitTask extends Task {
      */
     private void checkIncludeAntRuntime(CommandlineJava cmd) {
         if (includeAntRuntime) {
-            Vector v = Execute.getProcEnvironment();
-            Enumeration e = v.elements();
-            while (e.hasMoreElements()) {
-                String s = (String) e.nextElement();
-                if (s.startsWith(CLASSPATH)) {
-                    cmd.createClasspath(getProject()).createPath()
-                        .append(new Path(getProject(),
-                                         s.substring(CLASSPATH.length()
-                                                     )));
-                }
+            Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
+            String cp = (String) env.get(CLASSPATH);
+            if (cp != null) {
+                cmd.createClasspath(getProject()).createPath()
+                    .append(new Path(getProject(), cp));
             }
             log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
                 Project.MSG_VERBOSE);
@@ -1135,7 +1176,7 @@ public class JUnitTask extends Task {
                 for (Enumeration e = loader.getResources(projectResourceName);
                      e.hasMoreElements();) {
                     URL current = (URL) e.nextElement();
-                    if (previous != null && !current.equals(previous)) {
+                    if (previous != null && !urlEquals(current, previous)) {
                         log("WARNING: multiple versions of ant detected "
                             + "in path for junit "
                             + LINE_SEP + "         " + previous
@@ -1156,6 +1197,30 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Compares URLs for equality but takes case-sensitivity into
+     * account when comparing file URLs and ignores the jar specific
+     * part of the URL if present.
+     */
+    private static boolean urlEquals(URL u1, URL u2) {
+        String url1 = maybeStripJarAndClass(u1);
+        String url2 = maybeStripJarAndClass(u2);
+        if (url1.startsWith("file:") && url2.startsWith("file:")) {
+            return new File(FILE_UTILS.fromURI(url1))
+                .equals(new File(FILE_UTILS.fromURI(url2)));
+        }
+        return url1.equals(url2);
+    }
+
+    private static String maybeStripJarAndClass(URL u) {
+        String s = u.toString();
+        if (s.startsWith("jar:")) {
+            int pling = s.indexOf('!');
+            s = s.substring(4, pling == -1 ? s.length() : pling);
+        }
+        return s;
+    }
+
+    /**
      * Create a temporary file to pass the properties to a new process.
      * Will auto-delete on (graceful) exit.
      * The file will be in the project basedir unless tmpDir declares
@@ -1173,7 +1238,7 @@ public class JUnitTask extends Task {
 
     /**
      * Pass output sent to System.out to the TestRunner so it can
-     * collect ot for the formatters.
+     * collect it for the formatters.
      *
      * @param output output coming from System.out
      * @since Ant 1.5
@@ -1321,10 +1386,11 @@ public class JUnitTask extends Task {
             if (classLoader != null) {
                 classLoader.setThreadContextLoader();
             }
-            runner = delegate.newJUnitTestRunner(test, test.getHaltonerror(),
+            runner = delegate.newJUnitTestRunner(test, test.getMethods(), test.getHaltonerror(),
                                          test.getFiltertrace(),
                                          test.getHaltonfailure(), false,
-                                         true, classLoader);
+                                         getEnableTestListenerEvents(),
+                                         classLoader);
             if (summary) {
 
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =
@@ -1404,6 +1470,29 @@ public class JUnitTask extends Task {
         }
         enums[enums.length - 1] = tests.elements();
         return Enumerations.fromCompound(enums);
+    }
+
+    /**
+     * Verifies all <code>test</code> elements having the <code>methods</code>
+     * attribute specified and having the <code>if</code>-condition resolved
+     * to true, that the value of the <code>methods</code> attribute is valid.
+     * @exception BuildException if some of the tests matching the described
+     *                           conditions has invalid value of the
+     *                           <code>methods</code> attribute
+     * @since 1.8.2
+     */
+    private void checkMethodLists() throws BuildException {
+        if (tests.isEmpty()) {
+            return;
+        }
+
+        Enumeration testsEnum = tests.elements();
+        while (testsEnum.hasMoreElements()) {
+            JUnitTest test = (JUnitTest) testsEnum.nextElement();
+            if (test.hasMethodsSpecified() && test.shouldRun(getProject())) {
+                test.resolveMethods();
+            }
+        }
     }
 
     /**
@@ -1666,6 +1755,7 @@ public class JUnitTask extends Task {
     protected CommandlineJava getCommandline() {
         if (commandline == null) {
             commandline = new CommandlineJava();
+            commandline.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         }
         return commandline;
     }
@@ -1883,7 +1973,7 @@ public class JUnitTask extends Task {
     /**
      * A value class that contains the result of a test.
      */
-    protected class TestResultHolder {
+    protected static class TestResultHolder {
         // CheckStyle:VisibilityModifier OFF - bc
         /** the exit code of the test. */
         public int exitCode = JUnitTaskMirror.JUnitTestRunnerMirror.ERRORS;
@@ -1962,7 +2052,7 @@ public class JUnitTask extends Task {
      */
     private static JUnitTest createDummyTestForBatchTest(JUnitTest test) {
         JUnitTest t = (JUnitTest) test.clone();
-        int index = test.getName().indexOf(".");
+        int index = test.getName().lastIndexOf('.');
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch
         String pack = index > 0 ? test.getName().substring(0, index + 1) : "";

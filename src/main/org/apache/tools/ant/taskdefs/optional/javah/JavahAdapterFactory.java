@@ -42,6 +42,8 @@ public class JavahAdapterFactory {
     public static String getDefault() {
         if (JavaEnvUtils.isKaffe()) {
             return Kaffeh.IMPLEMENTATION_NAME;
+        } else if (JavaEnvUtils.isGij()) {
+            return Gcjh.IMPLEMENTATION_NAME;
         }
         return SunJavah.IMPLEMENTATION_NAME;
     }
@@ -82,6 +84,9 @@ public class JavahAdapterFactory {
         if ((JavaEnvUtils.isKaffe() && choice == null)
             || Kaffeh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Kaffeh();
+        } else if ((JavaEnvUtils.isGij() && choice == null)
+            || Gcjh.IMPLEMENTATION_NAME.equals(choice)) {
+            return new Gcjh();
         } else if (SunJavah.IMPLEMENTATION_NAME.equals(choice)) {
             return new SunJavah();
         } else if (choice != null) {

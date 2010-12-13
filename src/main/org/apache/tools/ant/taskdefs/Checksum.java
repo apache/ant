@@ -61,6 +61,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Checksum extends MatchingTask implements Condition {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NIBBLE = 4;
     private static final int WORD = 16;
     private static final int BUFFER_SIZE = 8 * 1024;
@@ -457,15 +458,7 @@ public class Checksum extends MatchingTask implements Condition {
         File directory;
         if (todir != null) {
             // A separate directory was explicitly declared
-            String path = (String) relativeFilePaths.get(file);
-            if (path == null) {
-                //bug 37386. this should not occur, but it has, once.
-                throw new BuildException(
-                    "Internal error: "
-                    + "relativeFilePaths could not match file"
-                    + file + "\n"
-                    + "please file a bug report on this");
-            }
+            String path = getRelativeFilePath(file);
             directory = new File(todir, path).getParentFile();
             // Create the directory, as it might not exist.
             directory.mkdirs();
@@ -539,6 +532,15 @@ public class Checksum extends MatchingTask implements Condition {
                         fos.write(format.format(new Object[] {
                                                     checksum,
                                                     src.getName(),
+                                                    FileUtils
+                                                    .getRelativePath(dest
+                                                                     .getParentFile(),
+                                                                     src),
+                                                    FileUtils
+                                                    .getRelativePath(getProject()
+                                                                     .getBaseDir(),
+                                                                     src),
+                                                    src.getAbsolutePath()
                                                 }).getBytes());
                         fos.write(StringUtils.LINE_SEP.getBytes());
                         fos.close();
@@ -559,8 +561,8 @@ public class Checksum extends MatchingTask implements Condition {
                             File f2 = (File) o2;
                             return f1 == null ? (f2 == null ? 0 : -1)
                                 : (f2 == null ? 1
-                                   : f1.getName().compareTo(f2.getName())
-                                   );
+                                   : getRelativeFilePath(f1)
+                                   .compareTo(getRelativeFilePath(f2)));
                         }
                     });
                 // Loop over the checksums and generate a total hash.
@@ -573,7 +575,7 @@ public class Checksum extends MatchingTask implements Condition {
                     messageDigest.update(digest);
 
                     // Add the file path
-                    String fileName = (String) relativeFilePaths.get(src);
+                    String fileName = getRelativeFilePath(src);
                     messageDigest.update(fileName.getBytes());
                 }
                 String totalChecksum = createDigestString(messageDigest.digest());
@@ -652,6 +654,21 @@ public class Checksum extends MatchingTask implements Condition {
         } finally {
             FileUtils.close(diskChecksumReader);
         }
+    }
+
+    /**
+     * @since Ant 1.8.2
+     */
+    private String getRelativeFilePath(File f) {
+        String path = (String) relativeFilePaths.get(f);
+        if (path == null) {
+            //bug 37386. this should not occur, but it has, once.
+            throw new BuildException("Internal error: "
+                                     + "relativeFilePaths could not match file "
+                                     + f + "\n"
+                                     + "please file a bug report on this");
+        }
+        return path;
     }
 
     /**

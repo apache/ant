@@ -342,6 +342,12 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             }
             if (f.exists()) {
                 setLocation(f);
+            } else if (f.getParentFile() != null && f.getParentFile().exists()
+                       && containsWildcards(f.getName())) {
+                setLocation(f);
+                log("adding " + f + " which contains wildcards and may not"
+                    + " do what you intend it to do depending on your OS or"
+                    + " version of Java", Project.MSG_VERBOSE);
             } else {
                 log("dropping " + f + " from path as it doesn't exist",
                     Project.MSG_VERBOSE);
@@ -759,4 +765,14 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         }
         return preserveBC.booleanValue();
     }
+
+    /**
+     * Does the given file name contain wildcards?
+     * @since Ant 1.8.2
+     */
+    private static boolean containsWildcards(String path) {
+        return path != null
+            && (path.indexOf("*") > -1 || path.indexOf("?") > -1);
+    }
+
 }

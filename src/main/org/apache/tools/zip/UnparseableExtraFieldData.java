@@ -22,9 +22,11 @@ package org.apache.tools.zip;
  * Wrapper for extra field data that doesn't conform to the recommended format of header-tag + size + data.
  *
  * <p>The header-id is artificial (and not listed as a know ID in
- * {@link http://www.pkware.com/documents/casestudies/APPNOTE.TXT
- * APPNOTE.TXT}.  Since it isn't used anywhere except to satisfy the
+ * the .ZIP File Format Specification).  
+ * Since it isn't used anywhere except to satisfy the
  * ZipExtraField contract it shouldn't matter anyway.</p>
+ * @see <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+ * APPNOTE.TXT">.ZIP File Format Specification</a>
  * @since Ant 1.8.1
  */
 public final class UnparseableExtraFieldData

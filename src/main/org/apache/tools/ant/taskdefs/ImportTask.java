@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelperRepository;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -213,7 +214,22 @@ public class ImportTask extends Task {
             setProjectHelperProps(prefix, prefixSeparator,
                                   isInIncludeMode());
 
-            helper.parse(getProject(), importedResource);
+            ProjectHelper subHelper = ProjectHelperRepository.getInstance().getProjectHelperForBuildFile(
+                    importedResource);
+
+            // push current stacks into the sub helper
+            subHelper.getImportStack().addAll(helper.getImportStack());
+            subHelper.getExtensionStack().addAll(helper.getExtensionStack());
+            getProject().addReference(ProjectHelper.PROJECTHELPER_REFERENCE, subHelper);
+
+            subHelper.parse(getProject(), importedResource);
+
+            // push back the stack from the sub helper to the main one
+            getProject().addReference(ProjectHelper.PROJECTHELPER_REFERENCE, helper);
+            helper.getImportStack().clear();
+            helper.getImportStack().addAll(subHelper.getImportStack());
+            helper.getExtensionStack().clear();
+            helper.getExtensionStack().addAll(subHelper.getExtensionStack());
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());

@@ -708,6 +708,11 @@ public class ExecuteOn extends ExecTask {
             String[] command = getCommandline(s, b);
             log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
             exe.setCommandline(command);
+            if (redirectorElement != null) {
+                setupRedirector();
+                redirectorElement.configure(redirector, null);
+                exe.setStreamHandler(redirector.createHandler());
+            }
             runExecute(exe);
         } else {
             int stillToDo = fileNames.size();

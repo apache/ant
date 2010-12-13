@@ -279,6 +279,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             } catch (IOException e) {
                 log("Error while accessing file " + file + ": "
                     + e.getMessage(), Project.MSG_ERR);
+                log("Error while accessing file " + file + ": "
+                    + e.getMessage(), e, Project.MSG_VERBOSE);
             }
         }
         return rootElement;

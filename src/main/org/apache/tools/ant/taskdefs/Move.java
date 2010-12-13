@@ -233,9 +233,10 @@ public class Move extends Copy {
                                     getFilterChains(),
                                     forceOverwrite,
                                     getPreserveLastModified(),
+                                    /* append: */ false,
                                     getEncoding(),
                                     getOutputEncoding(),
-                                    getProject());
+                                    getProject(), getForce());
         } catch (IOException ioe) {
             String msg = "Failed to copy " + fromFile
                     + " to " + toFile + " due to " + ioe.getMessage();
@@ -329,6 +330,18 @@ public class Move extends Copy {
                 || getFilterChains().size() > 0) {
             return false;
         }
+
+        // identical logic lives in ResourceUtils.copyResource():
+        if (destFile.isFile() && !destFile.canWrite()) {
+            if (!getForce()) {
+                throw new IOException("can't replace read-only destination "
+                                      + "file " + destFile);
+            } else if (!getFileUtils().tryHardToDelete(destFile)) {
+                throw new IOException("failed to delete read-only "
+                                      + "destination file " + destFile);
+            }
+        }
+
         // identical logic lives in FileUtils.rename():
         File parent = destFile.getParentFile();
         if (parent != null && !parent.exists()) {
@@ -336,13 +349,13 @@ public class Move extends Copy {
         } else if (destFile.isFile()) {
             sourceFile = getFileUtils().normalize(sourceFile.getAbsolutePath()).getCanonicalFile();
             destFile = getFileUtils().normalize(destFile.getAbsolutePath());
-            if (destFile.equals(sourceFile)) {
+            if (destFile.getAbsolutePath().equals(sourceFile.getAbsolutePath())) {
                 //no point in renaming a file to its own canonical version...
                 log("Rename of " + sourceFile + " to " + destFile
                     + " is a no-op.", Project.MSG_VERBOSE);
                 return true;
             }
-            if (!(sourceFile.equals(destFile.getCanonicalFile()) || destFile.delete())) {
+            if (!(getFileUtils().areSame(sourceFile, destFile) || destFile.delete())) {
                 throw new BuildException("Unable to remove existing file " + destFile);
             }
         }

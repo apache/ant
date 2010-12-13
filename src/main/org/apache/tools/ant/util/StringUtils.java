@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.BuildException;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
@@ -239,7 +241,11 @@ public final class StringUtils {
             }
             humanSize = humanSize.substring(0, humanSize.length() - trim);
         }
-        return factor * Long.parseLong(humanSize);
+        try {
+            return factor * Long.parseLong(humanSize);
+        } catch (NumberFormatException e) {
+            throw new BuildException("Failed to parse \"" + humanSize + "\"", e);
+        }
     }
 
     /**

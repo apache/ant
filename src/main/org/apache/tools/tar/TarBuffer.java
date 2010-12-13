@@ -418,7 +418,7 @@ public class TarBuffer {
     /**
      * Flush the current data block if it has any data in it.
      */
-    private void flushBlock() throws IOException {
+    void flushBlock() throws IOException {
         if (debug) {
             System.err.println("TarBuffer.flushBlock() called.");
         }

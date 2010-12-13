@@ -24,9 +24,9 @@
 
 <body>
 
-<h1>Running Ant</h1>
+<h1>Running Apache Ant</h1>
 <h2><a name="commandline">Command Line</a></h2>
-<p> If you've installed Ant as described in the
+<p> If you've installed Apache Ant as described in the
 <a href="install.html"> Installing Ant</a> section,
 running Ant from the command-line is simple: just type
 <code>ant</code>.</p>
@@ -56,7 +56,7 @@ the <nobr><code>-D<i>property</i>=<i>value</i></code></nobr> option,
 where <i>property</i> is the name of the property,
 and <i>value</i> is the value for that property. If you specify a
 property that is also set in the build file
-(see the <a href="CoreTasks/property.html">property</a> task),
+(see the <a href="Tasks/property.html">property</a> task),
 the value specified on the
 command line will override the value specified in the
 build file.
@@ -67,7 +67,7 @@ the value of environment variables; just pass
 to Ant. You can then access
 these variables inside your build file as <code>${MYVAR}</code>.
 You can also access environment variables using the
-<a href="CoreTasks/property.html"> property</a> task's
+<a href="Tasks/property.html"> property</a> task's
 <code>environment</code> attribute.
 </p>
 
@@ -296,7 +296,7 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>ant.file</code></td>
   <td>read only: full filename of the build file</td>
   <td>This is set to the name of the build file. In
-  <a href="CoreTasks/import.html">
+  <a href="Tasks/import.html">
   &lt;import&gt;-ed</a> files, this is set to the containing build file.
   </td>
 </tr>
@@ -306,7 +306,7 @@ org.apache.tools.ant.Executor implementation specified here.
   <td>read only: full filename of the build file of Ant projects
   </td>
   <td>This is set to the name of a file by project;
-  this lets you determine the location of <a href="CoreTasks/import.html">
+  this lets you determine the location of <a href="Tasks/import.html">
   &lt;import&gt;-ed</a> files,
   </td>
 </tr>
@@ -329,7 +329,7 @@ org.apache.tools.ant.Executor implementation specified here.
 <tr>
   <td><code>ant.netrexxc.*</code></td>
   <td>several formats</td>
-  <td>Use specified values as defaults for <a href="OptionalTasks/netrexxc.html">netrexxc</a>.
+  <td>Use specified values as defaults for <a href="Tasks/netrexxc.html">netrexxc</a>.
   </td>
 </tr>
 <tr>
@@ -344,7 +344,7 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>ant.regexp.regexpimpl</code></td>
   <td>classname</td>
   <td>classname for a RegExp implementation; if not set Ant uses JDK 1.4's implementation;
-      <a href="CoreTypes/mapper.html#regexp-mapper">RegExp-Mapper</a>
+      <a href="Types/mapper.html#regexp-mapper">RegExp-Mapper</a>
       "Choice of regular expression implementation"
   </td>
 </tr>
@@ -366,49 +366,49 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>build.compiler</code></td>
   <td>name</td>
   <td>Specify the default compiler to use.
-      see <a href="CoreTasks/javac.html">javac</a>,
-      <a href="OptionalTasks/ejb.html#ejbjar_weblogic">EJB Tasks</a>
+      see <a href="Tasks/javac.html">javac</a>,
+      <a href="Tasks/ejb.html#ejbjar_weblogic">EJB Tasks</a>
       (compiler attribute),
-      <a href="OptionalTasks/javah.html">javah</a>
+      <a href="Tasks/javah.html">javah</a>
   </td>
 </tr>
 <tr>
   <td><code>build.compiler.emacs</code></td>
   <td>boolean (default false)</td>
   <td>Enable emacs-compatible error messages.
-      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+      see <a href="Tasks/javac.html">javac</a> "Jikes Notes"
   </td>
 </tr>
 <tr>
   <td><code>build.compiler.fulldepend</code></td>
   <td>boolean (default false)</td>
   <td>Enable full dependency checking
-      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+      see <a href="Tasks/javac.html">javac</a> "Jikes Notes"
   </td>
 </tr>
 <tr>
   <td><code>build.compiler.jvc.extensions</code></td>
   <td>boolean (default true)</td>
   <td>enable Microsoft extensions of their java compiler
-      see <a href="CoreTasks/javac.html">javac</a> "Jvc Notes"
+      see <a href="Tasks/javac.html">javac</a> "Jvc Notes"
   </td>
 </tr>
 <tr>
   <td><code>build.compiler.pedantic</code></td>
   <td>boolean (default false)</td>
   <td>Enable pedantic warnings.
-      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+      see <a href="Tasks/javac.html">javac</a> "Jikes Notes"
   </td>
 </tr>
 <tr>
   <td><code>build.compiler.warnings</code></td>
   <td>Deprecated flag</td>
-  <td> see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes" </td>
+  <td> see <a href="Tasks/javac.html">javac</a> "Jikes Notes" </td>
 </tr>
 <tr>
   <td><code>build.rmic</code></td>
   <td>name</td>
-  <td>control the <a href="CoreTasks/rmic.html">rmic</a> compiler </td>
+  <td>control the <a href="Tasks/rmic.html">rmic</a> compiler </td>
 </tr>
 <tr>
   <td><code>build.sysclasspath</code></td>
@@ -420,8 +420,8 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>file.encoding</code></td>
   <td>name of a supported character set (e.g. UTF-8, ISO-8859-1, US-ASCII)</td>
   <td>use as default character set of email messages; use as default for source-, dest- and bundleencoding
-      in <a href="OptionalTasks/translate.html">translate</a> <br>
-      see JavaDoc of <a target="_blank" href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
+      in <a href="Tasks/translate.html">translate</a> <br>
+      see JavaDoc of <a target="_blank" href="http://download.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
       for more information about character sets (not used in Ant, but has nice docs).
   </td>
 </tr>
@@ -450,14 +450,14 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>p4.port, p4.client, p4.user</code></td>
   <td>several formats</td>
   <td>Specify defaults for port-, client- and user-setting of the
-      <a href="OptionalTasks/perforce.html">perforce</a> tasks.
+      <a href="Tasks/perforce.html">perforce</a> tasks.
   </td>
 </tr>
 <tr>
   <td><code>websphere.home</code></td>
   <td>path</td>
   <td>Points to home directory of websphere.
-      see <a href="OptionalTasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
+      see <a href="Tasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
   </td>
 </tr>
 <tr>

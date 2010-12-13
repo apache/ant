@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.taskdefs.optional.XsltTest;
 import org.apache.tools.ant.util.FileUtils;
 
 

@@ -24,9 +24,9 @@
 
 <body>
 
-<section name="Downloading Antlibs">
+<section name="Downloading Apache Antlibs">
 
-<p>Use the links below to download a source distribution of Antlibs from
+<p>Use the links below to download a source distribution of Apache Antlibs from
 one of our mirrors.  It is good practice to
 <a href="[location]#Verify Releases">verify the integrity</a>
 of the distribution files, especially if you are using one of our
@@ -128,19 +128,42 @@ mirrors for a few days.</div>
 [<a href="http://www.apache.org/dist/ant/antlibs/antunit/source/apache-ant-antunit-1.1-src.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </li>
+
+<li>Apache Compress Ant Library 1.0
+<ul>
+<li><code>.zip</code> archive:
+<a href="[preferred]/ant/antlibs/compress/source/apache-ant-compress-1.0-src.zip">apache-ant-compress-1.0-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.zip.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.zip.md5">MD5</a>]</li>
+
+<li><code>.tar.gz</code> archive:
+<a href="[preferred]/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.gz">apache-ant-compress-1.0-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.gz.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.gz.md5">MD5</a>]</li>
+
+<li><code>.tar.bz2</code> archive:
+<a href="[preferred]/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.bz2">apache-ant-compress-1.0-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.bz2.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/antlibs/compress/source/apache-ant-compress-1.0-src.tar.bz2.md5">MD5</a>]</li>
+</ul>
+</li>
 </ul>
 </section>
 
-<!--section name="Old Ant Releases">
+<section name="Old Antlib Releases">
 
-<p>Older releases of Ant can be found <a
-href="http://archive.apache.org/dist/ant/source/">here</a>.  Those
-releases are only provided as <code>zip</code> archives that can be
-extracted by <code>jar xf </code><em>archive.zip</em> - we highly
-recommend to not use those releases but upgrade to Ant's <a
-href="[location]#Current Release of Ant">latest</a> release.</p>
+<p>Older releases of Ant Libraries can be found <a
+href="http://archive.apache.org/dist/ant/antlibs/">here</a>.
+We highly recommend to not use those releases but upgrade to the <a
+href="[location]#Current Antlib Releases">latest</a> releases.</p>
 
-</section-->
+</section>
 
 <section name="Verify Releases">
 

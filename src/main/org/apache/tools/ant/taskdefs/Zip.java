@@ -1243,6 +1243,19 @@ public class Zip extends MatchingTask {
         return new ArchiveState(as2.isOutOfDate(), toAdd);
     }
 
+    /*
+     * This is yet another hacky construct to extend the FileSet[]
+     * getResourcesToAdd method so we can pass the information whether
+     * non-fileset resources have been available to it without having
+     * to move the withEmpty behavior checks (since either would break
+     * subclasses in several ways).
+     */
+    private static ThreadLocal haveNonFileSetResourcesToAdd = new ThreadLocal() {
+            protected Object initialValue() {
+                return Boolean.FALSE;
+            }
+        };
+
     /**
      * Collect the resources that are newer than the corresponding
      * entries (or missing) in the original archive.
@@ -1272,48 +1285,55 @@ public class Zip extends MatchingTask {
 
         Resource[][] initialResources = grabResources(filesets);
         if (isEmpty(initialResources)) {
-            if (needsUpdate && doUpdate) {
-                /*
-                 * This is a rather hairy case.
-                 *
-                 * One of our subclasses knows that we need to update the
-                 * archive, but at the same time, there are no resources
-                 * known to us that would need to be added.  Only the
-                 * subclass seems to know what's going on.
-                 *
-                 * This happens if <jar> detects that the manifest has changed,
-                 * for example.  The manifest is not part of any resources
-                 * because of our support for inline <manifest>s.
-                 *
-                 * If we invoke createEmptyZip like Ant 1.5.2 did,
-                 * we'll loose all stuff that has been in the original
-                 * archive (bugzilla report 17780).
-                 */
-                return new ArchiveState(true, initialResources);
+            if (Boolean.FALSE.equals(haveNonFileSetResourcesToAdd.get())) {
+                if (needsUpdate && doUpdate) {
+                    /*
+                     * This is a rather hairy case.
+                     *
+                     * One of our subclasses knows that we need to
+                     * update the archive, but at the same time, there
+                     * are no resources known to us that would need to
+                     * be added.  Only the subclass seems to know
+                     * what's going on.
+                     *
+                     * This happens if <jar> detects that the manifest
+                     * has changed, for example.  The manifest is not
+                     * part of any resources because of our support
+                     * for inline <manifest>s.
+                     *
+                     * If we invoke createEmptyZip like Ant 1.5.2 did,
+                     * we'll loose all stuff that has been in the
+                     * original archive (bugzilla report 17780).
+                     */
+                    return new ArchiveState(true, initialResources);
+                }
+
+                if (emptyBehavior.equals("skip")) {
+                    if (doUpdate) {
+                        logWhenWriting(archiveType + " archive " + zipFile
+                                       + " not updated because no new files were"
+                                       + " included.", Project.MSG_VERBOSE);
+                    } else {
+                        logWhenWriting("Warning: skipping " + archiveType
+                                       + " archive " + zipFile
+                                       + " because no files were included.",
+                                       Project.MSG_WARN);
+                    }
+                } else if (emptyBehavior.equals("fail")) {
+                    throw new BuildException("Cannot create " + archiveType
+                                             + " archive " + zipFile
+                                             + ": no files were included.",
+                                             getLocation());
+                } else {
+                    // Create.
+                    if (!zipFile.exists())  {
+                        needsUpdate = true;
+                    }
+                }
             }
 
-            if (emptyBehavior.equals("skip")) {
-                if (doUpdate) {
-                    logWhenWriting(archiveType + " archive " + zipFile
-                                   + " not updated because no new files were"
-                                   + " included.", Project.MSG_VERBOSE);
-                } else {
-                    logWhenWriting("Warning: skipping " + archiveType
-                                   + " archive " + zipFile
-                                   + " because no files were included.",
-                                   Project.MSG_WARN);
-                }
-            } else if (emptyBehavior.equals("fail")) {
-                throw new BuildException("Cannot create " + archiveType
-                                         + " archive " + zipFile
-                                         + ": no files were included.",
-                                         getLocation());
-            } else {
-                // Create.
-                if (!zipFile.exists())  {
-                    needsUpdate = true;
-                }
-            }
+            // either there are non-fileset resources or we
+            // (re-)create the archive anyway
             return new ArchiveState(needsUpdate, initialResources);
         }
 
@@ -1429,7 +1449,9 @@ public class Zip extends MatchingTask {
          */
 
         Resource[][] initialResources = grabNonFileSetResources(rcs);
-        if (isEmpty(initialResources)) {
+        boolean empty = isEmpty(initialResources);
+        haveNonFileSetResourcesToAdd.set(Boolean.valueOf(!empty));
+        if (empty) {
             // no emptyBehavior handling since the FileSet version
             // will take care of it.
             return new ArchiveState(needsUpdate, initialResources);
@@ -1934,6 +1956,7 @@ public class Zip extends MatchingTask {
             resources.removeElement(zf);
         }
         filesetsFromGroupfilesets.removeAllElements();
+        haveNonFileSetResourcesToAdd.set(Boolean.FALSE);
     }
 
     /**

@@ -131,4 +131,11 @@
     </delete>
     <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>
   </target>
+
+  <target name="testFilesetWithMissingButIgnoredDir"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50124">
+    <delete>
+      <fileset dir="${input}/not-there" errorOnMissingDir="false"/>
+    </delete>
+  </target>
 </project>

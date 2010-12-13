@@ -241,4 +241,49 @@ x=1
     <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
   </target>
 
+
+  <target name="testPreservesDosLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="dos" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="dos" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
+
+  <target name="testPreservesUnixLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="unix" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="unix" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
+
+  <target name="testPreservesMacLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="mac" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="mac" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
 </project>

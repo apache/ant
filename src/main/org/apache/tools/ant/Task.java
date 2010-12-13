@@ -408,7 +408,7 @@ public abstract class Task extends ProjectComponent {
             replacement.setProject(getProject());
             replacement.setTaskType(taskType);
             replacement.setTaskName(taskName);
-            replacement.setLocation(location);
+            replacement.setLocation(getLocation());
             replacement.setOwningTarget(target);
             replacement.setRuntimeConfigurableWrapper(wrapper);
             wrapper.setProxy(replacement);

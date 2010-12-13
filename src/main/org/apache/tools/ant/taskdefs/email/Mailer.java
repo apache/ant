@@ -50,6 +50,7 @@ public abstract class Mailer {
     // CheckStyle:VisibilityModifier ON
     private boolean ignoreInvalidRecipients = false;
     private boolean starttls = false;
+    private boolean portExplicitlySpecified = false;
 
     /**
      * Set the mail server.
@@ -67,6 +68,22 @@ public abstract class Mailer {
      */
     public void setPort(int port) {
         this.port = port;
+    }
+
+    /**
+     * Whether the port has been explicitly specified by the user. 
+     * @since Ant 1.8.2
+     */
+    public void setPortExplicitlySpecified(boolean explicit) {
+        portExplicitlySpecified = explicit;
+    }
+
+    /**
+     * Whether the port has been explicitly specified by the user. 
+     * @since Ant 1.8.2
+     */
+    protected boolean isPortExplicitlySpecified() {
+        return portExplicitlySpecified;
     }
 
     /**

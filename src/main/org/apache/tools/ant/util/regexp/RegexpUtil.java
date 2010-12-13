@@ -46,4 +46,64 @@ public class RegexpUtil {
     public static int removeFlag(int options, int flag) {
         return (options & (0xFFFFFFFF - flag));
     }
+
+    /**
+     * convert regex option flag characters to regex options
+     * <dl>
+     *   <li>g -  Regexp.REPLACE_ALL</li>
+     *   <li>i -  RegexpMatcher.MATCH_CASE_INSENSITIVE</li>
+     *   <li>m -  RegexpMatcher.MATCH_MULTILINE</li>
+     *   <li>s -  RegexpMatcher.MATCH_SINGLELINE</li>
+     * </dl>
+     * @param flags the string containing the flags
+     * @return the Regexp option bits
+     * @since Ant 1.8.2
+     */
+    public static int asOptions(String flags) {
+        int options = RegexpMatcher.MATCH_DEFAULT;
+        if (flags != null) {
+            options = asOptions(flags.indexOf('i') == -1,
+                                flags.indexOf('m') != -1,
+                                flags.indexOf('s') != -1);
+            if (flags.indexOf('g') != -1) {
+                options |= Regexp.REPLACE_ALL;
+            }
+        }
+        return options;
+    }
+
+    /**
+     * Convert flag to regex options.
+     *
+     * @param caseSensitive opposite of RegexpMatcher.MATCH_CASE_INSENSITIVE
+     * @return the Regexp option bits
+     * @since Ant 1.8.2
+     */
+    public static int asOptions(boolean caseSensitive) {
+        return asOptions(caseSensitive, false, false);
+    }
+
+    /**
+     * Convert flags to regex options.
+     *
+     * @param caseSensitive opposite of RegexpMatcher.MATCH_CASE_INSENSITIVE
+     * @param multiLine RegexpMatcher.MATCH_MULTILINE
+     * @param singleLine RegexpMatcher.MATCH_SINGLELINE
+     * @return the Regexp option bits
+     * @since Ant 1.8.2
+     */
+    public static int asOptions(boolean caseSensitive, boolean multiLine,
+                                boolean singleLine) {
+        int options = RegexpMatcher.MATCH_DEFAULT;
+        if (!caseSensitive) {
+            options = options | RegexpMatcher.MATCH_CASE_INSENSITIVE;
+        }
+        if (multiLine) {
+            options = options | RegexpMatcher.MATCH_MULTILINE;
+        }
+        if (singleLine) {
+            options = options | RegexpMatcher.MATCH_SINGLELINE;
+        }
+        return options;
+    }
 }

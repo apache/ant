@@ -69,7 +69,7 @@ public class EmailTask extends Task {
     private String encoding = AUTO;
     /** host running SMTP  */
     private String host = "localhost";
-    private int port = SMTP_PORT;
+    private Integer port = null;
     /** subject field  */
     private String subject = null;
     /** any text  */
@@ -161,7 +161,7 @@ public class EmailTask extends Task {
      * @param port The port to use.
      */
     public void setMailport(int port) {
-        this.port = port;
+        this.port = new Integer(port);
     }
 
     /**
@@ -549,7 +549,13 @@ public class EmailTask extends Task {
 
             // pass the params to the mailer
             mailer.setHost(host);
-            mailer.setPort(port);
+            if (port != null) {
+                mailer.setPort(port.intValue());
+                mailer.setPortExplicitlySpecified(true);
+            } else {
+                mailer.setPort(SMTP_PORT);
+                mailer.setPortExplicitlySpecified(false);
+            }
             mailer.setUser(user);
             mailer.setPassword(password);
             mailer.setSSL(ssl);

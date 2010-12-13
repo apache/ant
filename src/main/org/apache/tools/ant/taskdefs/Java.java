@@ -732,7 +732,7 @@ public class Java extends Task {
         if (redirector.getErrorStream() != null) {
             redirector.handleErrorFlush(output);
         } else {
-            super.handleErrorOutput(output);
+            super.handleErrorFlush(output);
         }
     }
 

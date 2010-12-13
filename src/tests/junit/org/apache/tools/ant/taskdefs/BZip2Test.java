@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
 import java.io.BufferedInputStream;
@@ -31,9 +30,6 @@ import java.io.IOException;
 /**
  */
 public class BZip2Test extends BuildFileTest {
-
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     public BZip2Test(String name) {
         super(name);

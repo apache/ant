@@ -28,7 +28,7 @@
   <p>A target is a container of tasks that cooperate to reach a
     desired state during the build process.</p>
 
-  <p>Targets can depend on other targets and Ant ensures that these
+  <p>Targets can depend on other targets and Apache Ant ensures that these
     other targets have been executed before the current target. For
     example you might have a target for compiling and a
     target for creating a distributable. You can only build a
@@ -131,7 +131,7 @@
     option is used.</p>
 
   <p>It is a good practice to place
-    your <a href="CoreTasks/tstamp.html">tstamp</a> tasks in a
+    your <a href="Tasks/tstamp.html">tstamp</a> tasks in a
     so-called <i>initialization</i> target, on which all other targets
     depend. Make sure that target is always the first one in the
     depends list of the other targets. In this manual, most
@@ -205,6 +205,17 @@
         <em>since Ant 1.8.0.</em></td>
       <td align="center" valign="top">No</td>
     </tr>
+    <tr>
+      <td valign="top">onMissingExtensionPoint</td>
+      <td valign="top">What to do if this target tries to extend a
+        missing
+        <a href="#extension-points">extension-point</a>. ("fail",
+        "warn", "ignore").
+        <em>since Ant 1.8.2.</em></td>
+      <td align="center" valign="top">No. Not allowed unless
+        <code>extensionOf</code> is present. Defaults to <code>fail</code>. 
+      </td>
+    </tr>
   </table>
 
   <p>A target name can be any alphanumeric string valid in the
@@ -245,7 +256,7 @@
 
   <p>The main purpose of an extension-point is to act as an extension
     point for build files designed to
-    be <a href="CoreTasks/import.html">imported</a>.  In the imported
+    be <a href="Tasks/import.html">imported</a>.  In the imported
     file an extension-point defines a state that must be reached and
     targets from other build files can join the depends list of said
     extension-point in order to contribute to that state.</p>

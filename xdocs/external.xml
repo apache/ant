@@ -18,7 +18,6 @@
 <document>
 
   <properties>
-    <author email="bodewig@apache.org">Stefan Bodewig</author>
     <title>External Tools and Tasks</title>
     <!-- Last link check: 2009-03-06 -->
   </properties>
@@ -32,7 +31,7 @@
       href="#Compiler%20Implementations">Compiler Implementations</a>,
       <a href="#IDE%20and%20Editor%20Integration">IDE integration
       tools</a>, <a href="#Source%20Control%20ystems">Source Control
-      Systems</a>, loggers, you name it. If you've written
+      Systems</a>, <a href="#Loggers">Loggers</a>, you name it. If you've written
       something that should be included, please post all relevant
       information to one of the mailing lists.  For details, see the
       <a href="faq.html#adding-external-tasks">FAQ</a>.</p>
@@ -718,6 +717,44 @@
        </table>
      </subsection>
 
+     <subsection name="Commons Configuration Ant Task">
+       <p>A set of Ant task that help convert Apache Commons
+       Configuration property files into build properties, java Enum's
+       (that are populated at runtime), and any exportable property /
+       env file desired (e.g., csh, bash, bat, etc.).</p>
+
+       <p>This project provides the following tasks: 
+       <ul>
+         <li><b>CreateEnumTask</b>: Creates a Java enum based on
+         commons configuration property files. </li>
+         <li><b>ExportPropertiesTask</b>: Exports commons
+         configuration properties to a external file in a using a
+         specified format.</li>
+         <li><b>LoadPropertiesTask</b>: Loads commons configuration
+         properties into pre-generated Java enum.</li>
+       </ul>
+       </p>
+
+       <table class="externals">
+         <tr>
+           <th>Compatibility:</th>
+           <td>Ant 1.6 and above</td>
+         </tr>
+         <tr>
+           <th>URL:</th>
+           <td><a href="http://code.google.com/p/commonsconfiganttask/">http://code.google.com/p/commonsconfiganttask/</a></td>
+         </tr>
+         <tr>
+           <th>Contact:</th>
+           <td><a href="mailto:ndunn.at.me.com">ndunn at me.com</a></td>
+         </tr>
+         <tr>
+           <th>License:</th>
+           <td>Apache License 2.0</td>
+         </tr>
+       </table>
+     </subsection>
+
      <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
@@ -1377,7 +1414,7 @@
       <subsection name="J2ME Ant Tasks">
 
         <p>There are different sets of tasks to help build <a
-        href="http://java.sun.com/j2me/">Java 2 Platform, Micro
+        href="http://www.oracle.com/technetwork/java/javame/overview/index.html">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
 
         <subsubsection name="Antenna">
@@ -3793,7 +3830,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles 1.8.0 starting with NetBeans 6.9 (1.8.1 for next major release)</td>
+            <td>bundles 1.8.0 starting with NetBeans 6.9; 1.8.1 for 6.9.1</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -4059,5 +4096,32 @@
 
     </section>
 
+    <section name="Loggers">
+      <subsection name="AntStatistics">
+
+        <p><a href="http://code.google.com/p/antstatistics/">AntStatistics</a> logs execution times for
+        all build targets and displays them at the end of the build. Furthermore execution times of
+        past builds are collected and graphed in a chart.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://code.google.com/p/antstatistics/">http://code.google.com/p/antstatistics/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://code.google.com/p/antstatistics/issues/list">issue tracker</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
   </body>
 </document>

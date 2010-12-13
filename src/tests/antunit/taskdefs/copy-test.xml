@@ -295,4 +295,148 @@ public class NullByteStreamResource extends Resource {
     </copy>
   </target>
 
+  <!-- stolen from ../types/readwrite-test.xml - create a read-only file -->
+  <property name="file" value="testfile"/>
+  <condition property="unix">
+    <os family="unix"/>
+  </condition>
+  <target name="createTestdir">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <touch file="${output}/${file}"/>
+  </target>
+  <target name="makeFileUnwritable"
+          depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
+  <target name="makeFileUnwritable-Unix" id="unix">
+    <chmod file="${output}/${file}" perm="444"/>
+  </target>
+  <target name="makeFileUnwritable-Windows" unless="unix">
+    <attrib file="${output}/${file}" readonly="true"/>
+  </target>
+
+  <target name="testCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testForcedCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+    </copy>
+  </target>
+
+  <target name="testForcedFilteredCopyOverReadOnlyFile"
+          depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="testForcedCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+    </copy>
+  </target>
+
+  <target name="testForcedFilteredCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="testCopyWithResourceAndFile"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49756"
+          >
+    <mkdir dir="${input}"/>
+    <au:assertFileDoesntExist file="${input}/somefile"/>
+    <copy tofile="${input}/somefile">
+      <first>
+        <union>
+          <restrict>
+            <exists/>
+            <fileset file="${input}/somefile"/>
+          </restrict>
+          <string value="default contents"/>
+        </union>
+      </first>
+    </copy>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertResourceContains resource="${input}/somefile"
+                               value="default contents"/>
+    <delete file="${input}/somefile"/>
+    <touch file="${input}/somefile"/>
+    <copy tofile="${input}/somefile">
+      <first>
+        <union>
+          <restrict>
+            <exists/>
+            <fileset file="${input}/somefile"/>
+          </restrict>
+          <string value="default contents"/>
+        </union>
+      </first>
+    </copy>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertResourceDoesntContain resource="${input}/somefile"
+                                    value="default contents"/>
+  </target>
 </project>

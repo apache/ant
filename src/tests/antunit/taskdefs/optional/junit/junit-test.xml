@@ -24,9 +24,10 @@
 
   <macrodef name="empty-test">
     <attribute name="classname"/>
+    <attribute name="package" default="test"/>
     <sequential>
       <echo file="${input}/@{classname}.java"><![CDATA[
-package test;
+package @{package};
 import junit.framework.TestCase;
 
 public class @{classname} extends TestCase {
@@ -44,9 +45,9 @@ public class @{classname} extends TestCase {
   <target name="testTimeoutLogOfBatchTests">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
-    <empty-test classname="ATest"/>
+    <empty-test classname="ATest" package="org.apache.ant.test"/>
       <echo file="${input}/BTest.java"><![CDATA[
-package test;
+package org.apache.ant.test;
 import junit.framework.TestCase;
 
 public class BTest extends TestCase {
@@ -55,8 +56,8 @@ public class BTest extends TestCase {
     }
 }
 ]]>  </echo>
-    <empty-test classname="CTest"/>
-    <empty-test classname="DTest"/>
+    <empty-test classname="CTest" package="org.apache.ant.test"/>
+    <empty-test classname="DTest" package="org.apache.ant.test"/>
     <javac srcdir="${input}" destdir="${output}">
       <classpath refid="junit"/>
     </javac>
@@ -71,6 +72,7 @@ public class BTest extends TestCase {
     </junit>
     <au:assertLogContains text="ATest"/>
     <au:assertLogContains text="BTest"/>
+    <au:assertLogContains text="org.apache.ant.test.Batch-With-Multiple-Tests"/>
     <au:assertLogDoesntContain text="CTest"/>
     <au:assertLogDoesntContain text="DTest"/>
   </target>

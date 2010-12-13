@@ -26,7 +26,7 @@
 
   <section name="The Apache License Version 2.0">
     <p>The Apache License Version 2.0 applies 
-    to all releases of Ant starting with ant 1.6.1</p>
+    to all releases of Apache Ant starting with Ant 1.6.1</p>
 
     <source>/*
  *                                 Apache License
@@ -258,7 +258,7 @@
 </source>
 </section>
   <section name="The Apache Software License, Version 1.1">
-<p> The Apache Software License, Version 1.1, applies to all versions of up to ant 1.6.0 included.</p>
+<p> The Apache Software License, Version 1.1, applies to all versions of up to Apache Ant 1.6.0 included.</p>
     <source>/*
  * ============================================================================
  *                   The Apache Software License, Version 1.1

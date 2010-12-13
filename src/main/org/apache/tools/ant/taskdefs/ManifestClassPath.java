@@ -78,7 +78,6 @@ public class ManifestClassPath extends Task {
 
         String[] elements = path.list();
         StringBuffer buffer = new StringBuffer();
-        StringBuffer element = new StringBuffer();
         for (int i = 0; i < elements.length; ++i) {
             // Normalize the current file
             File pathEntry = new File(elements[i]);

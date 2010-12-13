@@ -19,17 +19,17 @@
 
   <properties>
     <index value="1"/>
-    <title>Ant Libraries</title>
+    <title>Apache Ant&amp;#x2122; Libraries</title>
   </properties>
 
   <body>
 
-    <section name="Ant Libraries">
+    <section name="Apache Ant Libraries">
 
       <a name="antunit"/>
-      <subsection name="AntUnit - Unit Test Framework for Ant Tasks">
+      <subsection name="Apache AntUnit&amp;#x2122; - Unit Test Framework for Ant Tasks">
 
-        <p>AntUnit borrows ideas from JUnit 3.x and the &lt;junit&gt;
+        <p>Apache AntUnit borrows ideas from JUnit 3.x and the &lt;junit&gt;
         task.  It provides a task that runs build files as unit tests
         as well as a number of assertion tasks to support the
         idea.</p>
@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/antunit/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/antunit/trunk/">http://svn.apache.org/viewvc/ant/antlibs/antunit/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -67,8 +67,8 @@
       </subsection>
 
       <a name="compress"/>
-      <subsection name="Compress">
-        <p>The compress library offers tasks and types for additional
+      <subsection name="Apache Compress Antlib&amp;#x2122;">
+        <p>The Apache Compress Antlib offers tasks and types for additional
         archive formats like CPIO and AR supported
         by <a href="http://commons.apache.org/compress/">Apache
         Commons Compress</a>.</p>
@@ -79,11 +79,11 @@
           </tr>
           <tr>
             <th>SVN URL:</th>
-            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/compress/">https://svn.apache.org/repos/asf/ant/antlibs/compress/</a></td>
+            <td><a href="https://svn.apache.org/repos/asf/ant/antlibs/compress/trunk/">https://svn.apache.org/repos/asf/ant/antlibs/compress/trunk/</a></td>
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/compress/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/compress/trunk/">http://svn.apache.org/viewvc/ant/antlibs/compress/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -99,7 +99,7 @@
           </tr>
           <tr>
             <th>Latest Release:</th>
-            <td>None</td>
+            <td>1.0 released on August 30, 2010</td>
           </tr>
         </table>
       </subsection>
@@ -126,7 +126,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/dotnet/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/dotnet/trunk/">http://svn.apache.org/viewvc/ant/antlibs/dotnet/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -164,7 +164,7 @@
           </tr>
           <tr>
             <th>ViewSVN:</th>
-            <td><a href="http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/">http://svn.apache.org/viewcvs.cgi/ant/antlibs/props/trunk/</a></td>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/props/trunk/">http://svn.apache.org/viewvc/ant/antlibs/props/trunk/</a></td>
           </tr>
           <tr>
             <th>Ant compatibility:</th>
@@ -185,9 +185,41 @@
         </table>
       </subsection>
 
+      <a name="vss"/>
+      <subsection name="VSS - Microsoft Visual SourceSafe Tasks">
 
+        <p>This antlib provides an interface to the Microsoft Visual SourceSafe SCM. The original tasks 
+        (org.apache.tools.ant.taskdefs.optional.vss) have been expanded upon in this antlib. 
+        Some fixes to issues in the original tasks have also been incorporated.</p>
+
+        <table>
+          <tr>
+            <th>SVN URL:</th>
+            <td><a href="http://svn.apache.org/repos/asf/ant/antlibs/vss/trunk/">http://svn.apache.org/repos/asf/ant/antlibs/vss/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>ViewSVN:</th>
+            <td><a href="http://svn.apache.org/viewvc/ant/antlibs/vss/trunk/">http://svn.apache.org/viewvc/ant/antlibs/vss/trunk/</a></td>
+          </tr>
+          <tr>
+            <th>Ant compatibility:</th>
+            <td>Ant 1.7.x</td>
+          </tr>
+          <tr>
+            <th>Added to sandbox:</th>
+            <td>2006-04-26  </td>
+          </tr>
+          <tr>
+            <th>Promoted from sandbox:</th>
+            <td>2010-09-02</td>
+          </tr>
+          <tr>
+            <th>Latest Release:</th>
+            <td>None</td>
+          </tr>
+        </table>
+      </subsection>
     </section>
-
   </body>
 </document>
 

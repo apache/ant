@@ -729,7 +729,9 @@ public class Project implements ResourceFactory {
      *                      no default target.
      */
     public void setDefault(String defaultTarget) {
-        setUserProperty(MagicNames.PROJECT_DEFAULT_TARGET, defaultTarget);
+        if (defaultTarget != null) {
+            setUserProperty(MagicNames.PROJECT_DEFAULT_TARGET, defaultTarget);
+        }
         this.defaultTarget = defaultTarget;
     }
 

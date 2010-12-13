@@ -27,7 +27,7 @@
 <section name="Nightly Builds">
 
 <p>We don't provide binary nightly builds at the moment, but if you
-want to build Ant from sources, you can use a <a
+want to build Apache Ant from sources, you can use a <a
 href="http://svn.apache.org/snapshots/ant/">Subversion snapshot</a>.</p>
 
 </section>
@@ -42,22 +42,42 @@ But if you have problems with <i>testing</i> the latest (successful) build, you 
 that on the <a href="mail.html#Developer%20List:%20dev@ant.apache.org">developer mailinglist</a>.
 You can directly access the builds of Ant and Ivy on these CI installations:</p>
 
-<p>The Apache Software Foundation <a href="http://hudson.zones.apache.org/hudson/">hosts</a> an
-installation of the <a href="http://hudson.dev.java.net/">Hudson</a> CI-system which Ant + Ivy
-<a href="http://hudson.zones.apache.org/hudson/view/Ant/">use</a>.</p>
+<p>The Apache Software Foundation <a href="http://hudson.apache.org/hudson/">hosts</a> an
+installation of the <a href="http://hudson-ci.org/">Hudson</a> CI-system which Ant + Ivy
+<a href="https://hudson.apache.org/hudson/view/A-F/view/Ant/">use</a>.</p>
 
 <!-- TODO: insert the job commands  //job/@command  -->
-<hudson base="http://hudson.zones.apache.org/hudson/view/Ant/">
+<hudson base="https://hudson.apache.org/hudson/view/A-F/view/Ant/">
     <project name="Apache Ant">
+        <job id="Ant_JDK_1.4" title="Ant Trunk on JDK 1.4" command="build.sh">
+            <description>current development on the lowest defined JDK</description>
+        </job>
+        <job id="Ant_JDK_1.4_Test" title="Ant Trunk Tests on JDK 1.4" command="build.sh allclean test">
+            <description>current development on the lowest defined JDK</description>
+        </job>
+        <job id="Ant_BuildFromPOMs" title="Checks Ant POMs by building Ant from the POMs." command="maven src/etc/poms/pom.xml clean package">
+            <description>Checks the POMs by building Ant by Maven</description>
+        </job>
+        <job id="Ant_Nightly" title="Ant Nightly" command="ant allclean distribution | ant -f check.xml dumphtml findbugs rat">
+            <description>Metric checks of Ant Trunk (Findbugs, RAT, Checkstyle)</description>
+        </job>
+        <job id="Ant-Build-Matrix" title="Ant JDK-Matrix" command="ant test">
+            <description>Checks Ant Trunk against several JDKs (1.4, 1.5, 1.6)</description>
+        </job>
     </project>
     <project name="Apache Ivy">
-        <job id="Ivy" title="Ivy Core Trunk" command="">
+        <job id="Ivy" title="Ivy Core Trunk" command="ant clean jar">
             <description>current development</description>
         </job>
-        <job id="IvyDE" title="IvyDE Trunk" command="">
+        <job id="Ivy-check" title="Ivy Core Trunk Checks" command="ant findbugs checkstyle-internal | ant -f build-release.xml rat">
+            <description>Metric checks of Ivy Trunk (Findbugs, RAT, Checkstyle)</description>
+        </job>
+    </project>
+    <project name="Apache IvyDE">
+        <job id="IvyDE" title="IvyDE Trunk" command="ant clean hudson-prepare | ant dist checkstyle rat">
             <description>current development</description>
         </job>
-        <job id="IvyDE-updatesite" title="Eclipse Updatesite" command="">
+        <job id="IvyDE-updatesite" title="Eclipse Updatesite" command="ant hudson-prepare | ant hudson-build">
             <description>Update your Eclipse installation with the latest Ivy/IvyDE</description>
         </job>
     </project>

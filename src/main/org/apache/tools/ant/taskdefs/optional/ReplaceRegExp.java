@@ -31,7 +31,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
@@ -43,6 +42,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Performs regular expression string replacements in a text
@@ -513,23 +513,7 @@ public class ReplaceRegExp extends Task {
                                      + "time.");
         }
 
-        int options = 0;
-
-        if (flags.indexOf('g') != -1) {
-            options |= Regexp.REPLACE_ALL;
-        }
-
-        if (flags.indexOf('i') != -1) {
-            options |= Regexp.MATCH_CASE_INSENSITIVE;
-        }
-
-        if (flags.indexOf('m') != -1) {
-            options |= Regexp.MATCH_MULTILINE;
-        }
-
-        if (flags.indexOf('s') != -1) {
-            options |= Regexp.MATCH_SINGLELINE;
-        }
+        int options = RegexpUtil.asOptions(flags);
 
         if (file != null && file.exists()) {
             try {

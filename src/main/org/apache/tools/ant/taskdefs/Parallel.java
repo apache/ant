@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.List;
@@ -350,7 +349,10 @@ public class Parallel extends Task
                 interrupted = true;
             }
 
-            killAll(running);
+            if (!timedOut && !failOnAny) {
+                // https://issues.apache.org/bugzilla/show_bug.cgi?id=49527
+                killAll(running);
+            }
         }
 
         if (interrupted) {

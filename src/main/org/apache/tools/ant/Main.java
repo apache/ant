@@ -20,7 +20,6 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +36,7 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ProxySetup;
@@ -193,7 +193,6 @@ public class Main implements AntMain {
                          ClassLoader coreLoader) {
 
         try {
-            Diagnostics.validateVersion();
             processArgs(args);
         } catch (Throwable exc) {
             handleLogfile();
@@ -763,12 +762,20 @@ public class Main implements AntMain {
 
                 project.init();
 
+                // resolve properties
+                PropertyHelper propertyHelper
+                    = (PropertyHelper) PropertyHelper.getPropertyHelper(project);
+                HashMap props = new HashMap(definedProps);
+                new ResolvePropertyMap(project, propertyHelper,
+                                       propertyHelper.getExpanders())
+                    .resolveAllProperties(props, null, false);
+
                 // set user-define properties
-                Enumeration e = definedProps.keys();
-                while (e.hasMoreElements()) {
-                    String arg = (String) e.nextElement();
-                    String value = (String) definedProps.get(arg);
-                    project.setUserProperty(arg, value);
+                for (Iterator e = props.entrySet().iterator(); e.hasNext(); ) {
+                    Map.Entry ent = (Map.Entry) e.next();
+                    String arg = (String) ent.getKey();
+                    Object value = ent.getValue();
+                    project.setUserProperty(arg, String.valueOf(value));
                 }
 
                 project.setUserProperty(MagicNames.ANT_FILE,
@@ -787,7 +794,8 @@ public class Main implements AntMain {
 
                 if (projectHelp) {
                     printDescription(project);
-                    printTargets(project, msgOutputLevel > Project.MSG_INFO);
+                    printTargets(project, msgOutputLevel > Project.MSG_INFO,
+                            msgOutputLevel > Project.MSG_VERBOSE);
                     return;
                 }
 
@@ -1001,7 +1009,7 @@ public class Main implements AntMain {
                 in.close();
 
                 StringBuffer msg = new StringBuffer();
-                msg.append("Apache Ant version ");
+                msg.append("Apache Ant(TM) version ");
                 msg.append(props.getProperty("VERSION"));
                 msg.append(" compiled on ");
                 msg.append(props.getProperty("DATE"));
@@ -1072,7 +1080,8 @@ public class Main implements AntMain {
      * @param printSubTargets Whether or not subtarget names should also be
      *                        printed.
      */
-    private static void printTargets(Project project, boolean printSubTargets) {
+    private static void printTargets(Project project, boolean printSubTargets,
+            boolean printDependencies) {
         // find the target with the longest name
         int maxLength = 0;
         Map ptargets = removeDuplicateTargets(project.getTargets());
@@ -1083,7 +1092,9 @@ public class Main implements AntMain {
         // on the presence of a description
         Vector topNames = new Vector();
         Vector topDescriptions = new Vector();
+        Vector/*<Enumeration<String>>*/ topDependencies = new Vector();
         Vector subNames = new Vector();
+        Vector/*<Enumeration<String>>*/ subDependencies = new Vector();
 
         for (Iterator i = ptargets.values().iterator(); i.hasNext();) {
             currentTarget = (Target) i.next();
@@ -1096,6 +1107,9 @@ public class Main implements AntMain {
             if (targetDescription == null) {
                 int pos = findTargetPosition(subNames, targetName);
                 subNames.insertElementAt(targetName, pos);
+                if (printDependencies) {
+                    subDependencies.insertElementAt(currentTarget.getDependencies(), pos);
+                }
             } else {
                 int pos = findTargetPosition(topNames, targetName);
                 topNames.insertElementAt(targetName, pos);
@@ -1103,18 +1117,21 @@ public class Main implements AntMain {
                 if (targetName.length() > maxLength) {
                     maxLength = targetName.length();
                 }
+                if (printDependencies) {
+                    topDependencies.insertElementAt(currentTarget.getDependencies(), pos);
+                }
             }
         }
 
-        printTargets(project, topNames, topDescriptions, "Main targets:",
-                     maxLength);
+        printTargets(project, topNames, topDescriptions, topDependencies,
+                "Main targets:", maxLength);
         //if there were no main targets, we list all subtargets
         //as it means nothing has a description
         if (topNames.size() == 0) {
             printSubTargets = true;
         }
         if (printSubTargets) {
-            printTargets(project, subNames, null, "Other targets:", 0);
+            printTargets(project, subNames, null, subDependencies, "Other targets:", 0);
         }
 
         String defaultTarget = project.getDefaultTarget();
@@ -1157,6 +1174,9 @@ public class Main implements AntMain {
      *                     no descriptions are displayed.
      *                     If non-<code>null</code>, this should have
      *                     as many elements as <code>names</code>.
+     * @param topDependencies The list of dependencies for each target.
+     *                        The dependencies are listed as a non null
+     *                        enumeration of String.
      * @param heading The heading to display.
      *                Should not be <code>null</code>.
      * @param maxlen The maximum length of the names of the targets.
@@ -1165,7 +1185,8 @@ public class Main implements AntMain {
      *               <i>are</i> shorter than this).
      */
     private static void printTargets(Project project, Vector names,
-                                     Vector descriptions, String heading,
+                                     Vector descriptions, Vector dependencies,
+                                     String heading,
                                      int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");
@@ -1185,6 +1206,19 @@ public class Main implements AntMain {
                 msg.append(descriptions.elementAt(i));
             }
             msg.append(lSep);
+            if (!dependencies.isEmpty()) {
+                Enumeration deps = (Enumeration) dependencies.elementAt(i);
+                if (deps.hasMoreElements()) {
+                    msg.append("   depends on: ");
+                    while (deps.hasMoreElements()) {
+                        msg.append(deps.nextElement());
+                        if (deps.hasMoreElements()) {
+                            msg.append(", ");
+                        }
+                    }
+                    msg.append(lSep);                
+                }
+            }
         }
         project.log(msg.toString(), Project.MSG_WARN);
     }

@@ -24,7 +24,7 @@
 
 <p>After reading the tutorial about <a href="tutorial-writing-tasks.html">writing
 tasks [1]</a> this tutorial explains how to get and set properties and how to use
-nested filesets and paths. Finally it explains how to contribute tasks to Ant.</p>
+nested filesets and paths. Finally it explains how to contribute tasks to Apache Ant.</p>
 
 <h2>Content</h2>
 <p><ul>
@@ -551,7 +551,7 @@ form you do that depends on your favourite. But inside Ant there is a common for
 it has advantages if you use that: all task users know that form, this form is requested if
 you decide to contribute your task. So we will doc our task in that form.</p>
 
-<p>If you have a look at the manual page of the <a href="CoreTasks/java.html">Java task [5]</a>
+<p>If you have a look at the manual page of the <a href="Tasks/java.html">Java task [5]</a>
    you will see that it:<ul>
 <li>is plain html</li>
 <li>starts with the name</li>
@@ -715,8 +715,7 @@ information on that.</p>
 <li>Patch files generated using cvs diff -u <b><i>to do</i></b></li>
 <li>patch files include a patch to defaults.properties to register the
 tasks <b><i>to do</i></b></li>
-<li>patch files include a patch to coretasklist.html or
-optionaltasklist.html to link to the new task page <b><i>to do</i></b></li>
+<li>patch files include a patch to tasklist.html to link to the new task page <b><i>to do</i></b></li>
 <li>Message to dev contains [SUBMIT] and task name in subject <b><i>to do</i></b></li>
 <li>Message body contains a rationale for the task <b><i>to do</i></b></li>
 <li>Message attachments contain the required files -source, documentation,
@@ -783,9 +782,9 @@ necessary and saves a lot of work if you modify existing source :-)</i>.
 <li>delete the dependency to "use.init" in the find.xml </li>
 <li>in FindTest.java change the line <tt>configureProject("build.xml");</tt> to
     <tt>configureProject("src/etc/testcases/taskdefs/find.xml");</tt> </li>
-<li>move the find.html to ANTHOME/docs/manual/CoreTasks/find.html </li>
-<li>add a <tt>&lt;a href="CoreTasks/find.html"&gt;Find&lt;/a&gt;&lt;br&gt;</tt>
-    in the ANTHOME/docs/manual/coretasklist.html </li>
+<li>move the find.html to ANTHOME/docs/manual/Tasks/find.html </li>
+<li>add a <tt>&lt;a href="Tasks/find.html"&gt;Find&lt;/a&gt;&lt;br&gt;</tt>
+    in the ANTHOME/docs/manual/tasklist.html </li>
 </ul>
 
 Now our modifications are done and we will retest it:
@@ -837,7 +836,7 @@ is the same as directly after the cvs update (without our modifications).</p>
 <h3>Test on JDK 1.2</h3>
 <p>Until version 1.5 Ant must be able to run on a JDK 1.1. With version 1.6 this is not a
 requisite any more. But JDK 1.2 is a must-to-work-with. So we have to test that. You can download older
-JDKs from <a href="http://java.sun.com/products/archive/index.html">Sun [8]</a>.</p>
+JDKs from <a href="http://www.oracle.com/technetwork/java/archive-139210.html">Oracle [8]</a>.</p>
 
 <p>Clean the ANT_HOME variable, delete the <i>build, bootstrap</i> and <i>dist</i> directory
 and point JAVA_HOME to the JDK 1.2 home directory. Then do the <tt>build</tt>, set ANT_HOME
@@ -850,7 +849,7 @@ and run <tt>ant test</tt> (like above).</p>
 <h3>Checkstyle</h3>
 <p>There are many things we have to ensure. Indentation with 4 spaces, blanks here and there, ...
 (all described in the <a href="../ant_task_guidelines.html">Ant Task Guidelines [6]</a> which
-includes the <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Sun code style
+includes the <a href="http://www.oracle.com/technetwork/java/codeconvtoc-136057.html">Sun code style
 [9]</a>). Because there are so many things we would be happy to have a tool for do the checks.
 There is one: checkstyle. Checkstyle is available at <a href="http://checkstyle.sourceforge.net/">
 Sourceforge [10]</a> and Ant provides with the <tt>check.xml</tt> a buildfile which will do the job
@@ -954,11 +953,11 @@ Now the new task is uploaded into the bug database.
 &nbsp;&nbsp;[2] <a href="tutorial-tasks-filesets-properties.zip">tutorial-tasks-filesets-properties.zip</a><br>
 &nbsp;&nbsp;[3] <a href="properties.html#built-in-props">properties.html#built-in-props</a><br>
 &nbsp;&nbsp;[4] <a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a><br>
-&nbsp;&nbsp;[5] <a href="CoreTasks/java.html">CoreTasks/java.html</a><br>
+&nbsp;&nbsp;[5] <a href="Tasks/java.html">Tasks/java.html</a><br>
 &nbsp;&nbsp;[6] <a href="http://ant.apache.org/ant_task_guidelines.html">http://ant.apache.org/ant_task_guidelines.html</a><br>
 &nbsp;&nbsp;[7] <a href="http://ant.apache.org/cvs.html">http://ant.apache.org/cvs.html</a><br>
-&nbsp;&nbsp;[8] <a href="http://java.sun.com/products/archive/index.html">http://java.sun.com/products/archive/index.html</a><br>
-&nbsp;&nbsp;[9] <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</a><br>
+&nbsp;&nbsp;[8] <a href="http://www.oracle.com/technetwork/java/archive-139210.html">http://www.oracle.com/technetwork/java/archive-139210.html</a><br>
+&nbsp;&nbsp;[9] <a href="http://www.oracle.com/technetwork/java/codeconvtoc-136057.html">http://www.oracle.com/technetwork/java/codeconvtoc-136057.html</a><br>
 &nbsp;&nbsp;[10] <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a><br>
 &nbsp;&nbsp;[11] <a href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a><br>
 &nbsp;&nbsp;[12] <a href="http://issues.apache.org/bugzilla/createaccount.cgi">http://issues.apache.org/bugzilla/createaccount.cgi</a><br>

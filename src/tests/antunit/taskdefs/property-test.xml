@@ -87,5 +87,50 @@ y=$${x}
 ]]></echo>
     <property file="${input}/x.properties"/>
     <au:assertPropertyEquals name="y" value="x"/>
+    <echo file="${input}/y.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/y.properties" prefix="foo"/>
+    <!-- passes in Ant 1.8.0 and 1.7.1, fails in 1.8.1 -->
+    <au:assertPropertyEquals name="foo.y" value="x"/>
+    <echo file="${input}/z.properties"><![CDATA[
+x=y
+y=$${bar.x}
+]]></echo>
+    <property file="${input}/z.properties" prefix="bar"/>
+    <!-- passes in Ant 1.7.1 and 1.8.1, fails in 1.8.0 -->
+    <au:assertPropertyEquals name="bar.y" value="y"/>
+  </target>
+
+  <!-- passes in Ant 1.7.1 and 1.8.1, fails in 1.8.0 -->
+  <target name="testMultiplePrefixes"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48768">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=1
+y=2
+]]></echo>
+    <property file="${input}/x.properties"/>
+    <au:assertPropertyEquals name="x" value="1"/>
+    <au:assertPropertyEquals name="y" value="2"/>
+    <echo file="${input}/y.properties"><![CDATA[
+x=3
+]]></echo>
+    <property file="${input}/y.properties" prefix="foo"/>
+    <au:assertPropertyEquals name="foo.x" value="3"/>
+  </target>
+
+  <!-- passes in Ant 1.7.1 and 1.8.0, fails in 1.8.1 -->
+  <target name="testNestedExpansionDoesntUsePrefix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49373">
+    <mkdir dir="${input}"/>
+    <property name="x" value="x"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/x.properties" prefix="foo"/>
+    <au:assertPropertyEquals name="foo.y" value="x"/>
   </target>
 </project>

@@ -24,6 +24,7 @@ import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -231,6 +232,10 @@ public class SQLExecTest extends TestCase {
 
         public boolean jdbcCompliant() {
             return false;
+        }
+
+        public Logger getParentLogger() /*throws SQLFeatureNotSupportedException*/ {
+            return Logger.getAnonymousLogger();
         }
     }
 

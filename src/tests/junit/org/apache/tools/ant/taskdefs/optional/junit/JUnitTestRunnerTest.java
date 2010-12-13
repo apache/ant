@@ -33,6 +33,22 @@ public class JUnitTestRunnerTest extends TestCase {
         super(name);
     }
 
+    // check that a valid method name generates no errors
+    public void testValidMethod(){
+        TestRunner runner = createRunnerForTestMethod(ValidMethodTestCase.class,"testA");
+        runner.run();
+        assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
+    }
+
+    // check that having an invalid method name generates an error
+    public void testInvalidMethod(){
+        TestRunner runner = createRunnerForTestMethod(InvalidMethodTestCase.class,"testInvalid");
+        runner.run();
+        String error = runner.getFormatter().getError();
+        // might be FAILURES or ERRORS depending on JUnit version?
+        assertTrue(error, runner.getRetCode() != JUnitTestRunner.SUCCESS);
+    }    
+    
     // check that having no suite generates no errors
     public void testNoSuite(){
         TestRunner runner = createRunner(NoSuiteTestCase.class);
@@ -87,14 +103,22 @@ public class JUnitTestRunnerTest extends TestCase {
     }
 
     protected TestRunner createRunner(Class clazz){
-        return new TestRunner(new JUnitTest(clazz.getName()), true, true, true);
+        return new TestRunner(new JUnitTest(clazz.getName()), null, 
+                                            true, true, true);
     }
 
+    protected TestRunner createRunnerForTestMethod(Class clazz, String method){
+        return new TestRunner(new JUnitTest(clazz.getName()), new String[] {method},
+                                            true, true, true);
+    }    
+    
     // the test runner that wrap the dummy formatter that interests us
     private final static class TestRunner extends JUnitTestRunner {
         private ResultFormatter formatter = new ResultFormatter();
-        TestRunner(JUnitTest test, boolean haltonerror, boolean filtertrace, boolean haltonfailure){
-            super(test, haltonerror, filtertrace,  haltonfailure, TestRunner.class.getClassLoader());
+        TestRunner(JUnitTest test, String[] methods, boolean haltonerror,
+                   boolean filtertrace, boolean haltonfailure){
+            super(test, methods, haltonerror, filtertrace,  haltonfailure, 
+                  false, false, TestRunner.class.getClassLoader());
             // use the classloader that loaded this class otherwise
             // it will not be able to run inner classes if this test
             // is ran in non-forked mode.
@@ -133,6 +157,24 @@ public class JUnitTestRunnerTest extends TestCase {
     public static class NoTestCase {
     }
 
+    public static class InvalidMethodTestCase extends TestCase {
+        public InvalidMethodTestCase(String name){ super(name); }
+        public void testA(){
+            throw new NullPointerException("thrown on purpose");
+        }
+    }
+
+    public static class ValidMethodTestCase extends TestCase {
+        public ValidMethodTestCase(String name){ super(name); }
+        public void testA(){
+            // expected to be executed
+        }
+        public void testB(){
+            // should not be executed
+            throw new NullPointerException("thrown on purpose");
+        }
+    }    
+    
     public static class InvalidTestCase extends TestCase {
         public InvalidTestCase(String name){
             super(name);

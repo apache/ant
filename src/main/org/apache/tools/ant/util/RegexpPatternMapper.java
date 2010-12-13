@@ -22,6 +22,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
+import org.apache.tools.ant.util.regexp.RegexpUtil;
 
 /**
  * Implementation of FileNameMapper that does regular expression
@@ -67,11 +68,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      * @since Ant 1.6.3
      */
     public void setCaseSensitive(boolean caseSensitive) {
-        if (!caseSensitive) {
-            regexpOptions = RegexpMatcher.MATCH_CASE_INSENSITIVE;
-        } else {
-            regexpOptions = 0;
-        }
+        regexpOptions = RegexpUtil.asOptions(caseSensitive);
     }
 
     /**

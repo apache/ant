@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one or more
+   Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
    The ASF licenses this file to You under the Apache License, Version 2.0
@@ -24,7 +24,12 @@
 
 <body>
 
-<section name="Downloading Ant">
+<section name="Apache Ant&amp;#x2122;">
+  <p>Apache Ant is a Java library and command-line tool that help
+  building software.</p>
+</section>
+
+<section name="Downloading Apache Ant">
 
 <p>Use the links below to download a source distribution of Ant from
 one of our mirrors.  It is good practice to
@@ -70,14 +75,14 @@ Other mirrors: <select name="Preferred">
 </form>
 </section>
 
-<section name="Current Release of Ant">
+<section name="Current Release of Apache Ant">
 
-<p>Currently, Apache Ant 1.8.0 is the best available version, see the
+<p>Currently, Apache Ant 1.8.1 is the best available version, see the
 <a href="[preferred]/ant/README.html">release notes</a>.</p>
 
 <div class="warning">
 <div class="label">Note</div>
-<div class="content">Ant 1.8.0 was released on 8-Feb-2010 and
+<div class="content">Ant 1.8.1 was released on 7-May-2010 and
 may not be available on all mirrors for a few days.</div>
 </div>
 <br></br>
@@ -89,22 +94,25 @@ may not be available on all mirrors for a few days.</div>
 
 <ul>
 <li><code>.zip</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.8.0-src.zip">apache-ant-1.8.0-src.zip</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.zip.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.zip.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.zip.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.8.1-src.zip">apache-ant-1.8.1-src.zip</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.zip.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.zip.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.zip.md5">MD5</a>]</li>
 
 <li><code>.tar.gz</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.8.0-src.tar.gz">apache-ant-1.8.0-src.tar.gz</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.gz.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.gz.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.gz.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.8.1-src.tar.gz">apache-ant-1.8.1-src.tar.gz</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.gz.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.gz.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.gz.md5">MD5</a>]</li>
 
 <li><code>.tar.bz2</code> archive:
-<a href="[preferred]/ant/source/apache-ant-1.8.0-src.tar.bz2">apache-ant-1.8.0-src.tar.bz2</a>
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.bz2.asc">PGP</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.bz2.sha1">SHA1</a>]
-[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.0-src.tar.bz2.md5">MD5</a>]</li>
+<a href="[preferred]/ant/source/apache-ant-1.8.1-src.tar.bz2">apache-ant-1.8.1-src.tar.bz2</a>
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.bz2.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.bz2.sha1">SHA1</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.bz2.sha512">SHA512</a>]
+[<a href="http://www.apache.org/dist/ant/source/apache-ant-1.8.1-src.tar.bz2.md5">MD5</a>]</li>
 </ul>
 </section>
 
@@ -112,9 +120,7 @@ may not be available on all mirrors for a few days.</div>
 <section name="Old Ant Releases">
 
 <p>Older releases of Ant can be found <a
-href="http://archive.apache.org/dist/ant/source/">here</a>.  Those
-releases are only provided as <code>zip</code> archives that can be
-extracted by <code>jar xf </code><em>archive.zip</em> - we highly
+href="http://archive.apache.org/dist/ant/source/">here</a>.  We highly
 recommend to not use those releases but upgrade to Ant's <a
 href="[location]#Current Release of Ant">latest</a> release.</p>
 
@@ -123,7 +129,7 @@ href="[location]#Current Release of Ant">latest</a> release.</p>
 <section name="Verify Releases">
 
 <p>It is essential that you verify the integrity of the downloaded
-files using the PGP signature or the SHA1 or MD5 checksums.  The
+files using the PGP signature or the SHA1, SHA512 or MD5 checksums.  The
 checksums are not as strong indicators as the PGP signature.</p>
 
 <p>The PGP signatures can be verified using PGP or GPG.  First
@@ -136,22 +142,22 @@ using</p>
 
 <p><code>
 % pgpk -a KEYS<br />
-% pgpv apache-ant-1.8.0-src.tar.gz.asc<br />
+% pgpv apache-ant-1.8.1-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % pgp -ka KEYS<br />
-% pgp apache-ant-1.8.0-src.tar.gz.asc<br />
+% pgp apache-ant-1.8.1-src.tar.gz.asc<br />
 </code>
 <em>or</em><br />
 <code>
 % gpg --import KEYS<br />
-% gpg --verify apache-ant-1.8.0-src.tar.gz.asc
+% gpg --verify apache-ant-1.8.1-src.tar.gz.asc
 </code></p>
 
 <p>Alternatively, you can verify the checksums on the files.  Unix
-programs called <code>md5</code>/<code>sha1</code> or
-<code>md5sum</code>/<code>sha1sum</code> are included in many unix
+programs called <code>md5</code>/<code>sha1</code>/<code>sha512</code> or
+<code>md5sum</code>/<code>sha1sum</code>/<code>sha512sum</code> are included in many unix
 distributions.  <code>*sum</code> is also available as part of <a
 href="http://www.gnu.org/software/textutils/textutils.html">GNU
 Textutils</a>.  Windows users can get binary md5 programs from <a

@@ -29,7 +29,7 @@
       <p>Please read the <a
       href="http://jakarta.apache.org/site/mail.html">guidelines of
       the Jakarta Project</a> before subscribing and posting to any of
-      the lists below.  They apply to Ant's lists as well.</p>
+      the lists below.  They apply to Apache Ant's lists as well.</p>
 
       <p>The user and dev list are subscriber only lists, this means
       you have to subscribe before you can post to the list.  Please
@@ -51,7 +51,7 @@
 
         <p>This list is for developers that are using Ant in their own
         projects to ask questions, share knowledge, and discuss issues
-        related to using Ant as a build tool.</p>
+        related to using Apache Ant as a build tool.</p>
       </subsection>
 
       <subsection name="Ivy User List: ivy-user@ant.apache.org">
@@ -64,7 +64,7 @@
 
         <p>This list is for developers that are using Ivy or IvyDE in
         their own projects to ask questions, share knowledge, and
-        discuss issues related to using Ivy with or without Ant.</p>
+        discuss issues related to using Apache Ivy with or without Apache Ant.</p>
       </subsection>
 
       <subsection name="Developer List: dev@ant.apache.org">
@@ -76,8 +76,8 @@
           <a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Third Party Archive</a>
         </p>
 
-        <p>This is the list where participating developers of the Ant
-        build tool, Ivy or the Ant libraries developed by the Ant team
+        <p>This is the list where participating developers of the Apache Ant
+        build tool, Apache Ivy or the Ant libraries developed by the Ant team
         meet and discuss issues, code changes/additions, etc.</p>
       </subsection>
 
@@ -125,7 +125,7 @@
         <ul>
           <li><a href="http://mail-archives.apache.org/mod_mbox/">List Index on mail-archives.apache.org</a></li>
           <li><a href="http://ant.apache.org/mail/">Full mbox archives of all lists</a></li>
-          <li><a href="http://marc.theaimsgroup.com/">Mailing list Archives</a></li>
+          <li><a href="http://marc.info/">Mailing list Archives</a></li>
           <li><a href="http://news.gmane.org/gmane.comp.jakarta.ant.devel/">Ant Developer List on gmane</a></li>
           <li><a href="http://news.gmane.org/gmane.comp.jakarta.ant.user/">Ant User List on gmane</a></li>
           <li><a href="http://old.nabble.com/Ant---Dev-f108.html">Ant Developer List on nabble</a></li>

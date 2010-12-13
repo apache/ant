@@ -132,6 +132,7 @@ public class TarOutputStream extends FilterOutputStream {
         // http://issues.apache.org/bugzilla/show_bug.cgi?id=28776
         writeEOFRecord();
         writeEOFRecord();
+        buffer.flushBlock();
     }
 
     /**

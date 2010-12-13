@@ -19,19 +19,35 @@
 
   <properties>
     <index value="1"/>
-    <title>Compress Antlib</title>
+    <title>Apache Compress Antlib</title>
   </properties>
 
   <body>
-    <section name="Compress Antlib">
+    <section name="Apache Compress Antlib&amp;#x2122;">
       <p>This Antlib contains tasks and resources that provide
         compression/uncompression and archival/unarchival capabilities
         based on <a href="http://commons.apache.org/compress/">Apache
-        Commons Compress</a>.  Using Apache Commons Compress 1.0 this
-        Antlib supports gzip and bzip2 compression and ar, cpio, tar
-        and zip archives.</p>
+          Commons Compress</a>.  Using Apache Commons Compress 1.1
+        this.</p>
+    </section>
 
-      <p>The current code base is based on the 1.0 release of Commons
+    <section name="Compress Ant Library 1.0">
+      <h3>August 30, 2010 - Apache Compress Ant Library 1.0
+      Available</h3>
+
+      <p>Apache Compress Ant Library 1.0 is now available for
+      download as <a
+      href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a
+      href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+    </section>
+
+    <section name="Introduction">
+      <p>Using Apache Commons Compress this Antlib supports gzip and
+        bzip2 compression and ar, cpio, tar and zip archives.</p>
+
+      <p>The current code base is based on the 1.1 release of Commons
         Compress but it is expected that this Antlib follows Commons
         Compress' development and will add new compression or
         archiving formats as they are provided by the underlying

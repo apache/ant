@@ -25,11 +25,11 @@
 <body>
   <h1>Properties</h1>
 
-  <p>Properties are key-value-pairs where Ant tries to
+  <p>Properties are key-value-pairs where Apache Ant tries to
     expand <code>${key}</code> to <code>value</code> at runtime.</p>
 
   <p>There are many tasks that can set properties, the most common one
-    is the <a href="CoreTasks/property.html">property</a> task.  In
+    is the <a href="Tasks/property.html">property</a> task.  In
     addition properties can be defined
     via <a href="running.html">command line arguments</a> or similar
     mechanisms from outside of Ant.</p>
@@ -40,14 +40,14 @@
     defined they are available for any task or target invoked
     subsequently - it is not possible to set a property in a child
     build process created via
-    the <a href="CoreTasks/ant.html">ant</a>, antcall or subant tasks
+    the <a href="Tasks/ant.html">ant</a>, antcall or subant tasks
     and make it available to the calling build process, though.</p>
 
   <p>Starting with Ant 1.8.0
-    the <a href="CoreTasks/local.html">local</a> task can be used to
+    the <a href="Tasks/local.html">local</a> task can be used to
     create properties that are locally scoped to a target or
-    a <a href="CoreTasks/sequential.html">sequential</a> element like
-    the one of the <a href="CoreTasks/macrodef.html">macrodef</a>
+    a <a href="Tasks/sequential.html">sequential</a> element like
+    the one of the <a href="Tasks/macrodef.html">macrodef</a>
     task.</p>
 
   <h2><a name="built-in-props">Built-in Properties</a></h2>
@@ -57,7 +57,7 @@
     example, <code>${os.name}</code> expands to the name of the
     operating system.</p>
   <p>For a list of system properties see
-    <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/System.html#getProperties()">the Javadoc of System.getProperties</a>.
+    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/System.html#getProperties%28%29">the Javadoc of System.getProperties</a>.
   </p>
 
   <p>In addition, Ant has some built-in properties:</p>
@@ -109,7 +109,7 @@ ant.library.dir     the directory that has been used to load Ant's
     marker interface) to take care of discrete tasks such as property
     setting, retrieval, parsing, etc. This makes Ant's property
     handling highly extensible; also of interest is the
-    new <a href="CoreTasks/propertyhelper.html">propertyhelper</a>
+    new <a href="Tasks/propertyhelper.html">propertyhelper</a>
     task used to manipulate the PropertyHelper and its delegates from
     the context of the Ant buildfile.
 
@@ -139,7 +139,7 @@ ant.library.dir     the directory that has been used to load Ant's
         would
         be <code>org.apache.tools.ant.property.LocalProperties</code>
         which implements storage
-        for <a href="CoreTasks/local.html">local properties</a>.</p>
+        for <a href="Tasks/local.html">local properties</a>.</p>
 
       <p>Another reason to implement this interface is if you wanted
         to provide your own "property protocol" like
@@ -157,7 +157,7 @@ ant.library.dir     the directory that has been used to load Ant's
         would
         be <code>org.apache.tools.ant.property.LocalProperties</code>
         which implements storage
-        for <a href="CoreTasks/local.html">local properties</a>.</p>
+        for <a href="Tasks/local.html">local properties</a>.</p>
     </li>
 
   </ul>

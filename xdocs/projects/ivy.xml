@@ -19,15 +19,15 @@
 
   <properties>
     <index value="1"/>
-    <title>The Ivy Subproject</title>
+    <title>The Apache Ivy Subproject</title>
   </properties>
 
   <body>
 
-    <section name="The Ivy Subproject">
+    <section name="The Apache Ivy&amp;#x2122; Subproject">
       <h3>Apache Ivy</h3>
 
-      <p>Ivy is a simple yet powerful dependency manager featuring continuous integration,
+      <p>Apache Ivy is a simple yet powerful dependency manager featuring continuous integration,
       dependencies of dependencies management, multiple repositories including ibiblio and
       high performance (use of a local cache).</p>
 

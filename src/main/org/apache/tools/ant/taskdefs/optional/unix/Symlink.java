@@ -29,24 +29,25 @@
 
 package org.apache.tools.ant.taskdefs.optional.unix;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 
-import java.util.Vector;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Vector;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.dispatch.DispatchTask;
 import org.apache.tools.ant.dispatch.DispatchUtils;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -560,8 +561,10 @@ public class Symlink extends DispatchTask {
                 File inc = new File(dir, incs[j]);
                 File pf = inc.getParentFile();
                 Properties lnks = new Properties();
+                InputStream is = null;
                 try {
-                    lnks.load(new BufferedInputStream(new FileInputStream(inc)));
+                    is = new BufferedInputStream(new FileInputStream(inc));
+                    lnks.load(is);
                     pf = pf.getCanonicalFile();
                 } catch (FileNotFoundException fnfe) {
                     handleError("Unable to find " + incs[j] + "; skipping it.");
@@ -570,6 +573,8 @@ public class Symlink extends DispatchTask {
                     handleError("Unable to open " + incs[j]
                                 + " or its parent dir; skipping it.");
                     continue;
+                } finally {
+                    FileUtils.close(is);
                 }
                 lnks.list(new PrintStream(
                     new LogOutputStream(this, Project.MSG_INFO)));

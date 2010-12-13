@@ -19,12 +19,17 @@
 
   <properties>
     <index value="1"/>
-    <title>AntUnit</title>
+    <title>Apache AntUnit</title>
   </properties>
 
   <body>
 
-    <section name="AntUnit 1.1">
+    <section name="Apache AntUnit&amp;#x2122;">
+      <p>Apache AntUnit is an Antlib that provides a test framework
+        for Apache Ant tasks and types.</p>
+    </section>
+
+    <section name="Apache AntUnit 1.1">
       <h3>September 26, 2008 - Apache AntUnit 1.1 Released</h3>
 
       <p>Apache AntUnit 1.1 is now available for download as <a
@@ -56,12 +61,12 @@
     </section>
 
     <section name="Idea">
-      <p>Initially all tests for Ant tasks were written as individual
+      <p>Initially all tests for Apache Ant tasks were written as individual
       <a href="http://www.junit.org/">JUnit</a> test cases.  Pretty
       soon it was clear that most tests needed to perform common tasks
       like reading a build file, initializing a project instance with
       it and executing a target.  At this point <a
-      href="http://svn.apache.org/viewcvs.cgi/ant/core/trunk/src/testcases/org/apache/tools/ant/BuildFileTest.java">BuildFileTest</a>
+      href="http://svn.apache.org/viewvc/ant/core/trunk/src/testcases/org/apache/tools/ant/BuildFileTest.java">BuildFileTest</a>
       was invented, a base class for almost all task test cases.</p>
 
       <p>BuildFileTest works fine and in fact has been picked up by <a

@@ -26,7 +26,6 @@ import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
-import org.apache.tools.ant.types.resources.FileResource;
 
 import java.util.Iterator;
 import java.io.File;

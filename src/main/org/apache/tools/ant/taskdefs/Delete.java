@@ -27,7 +27,6 @@ import java.util.Comparator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
@@ -603,6 +602,10 @@ public class Delete extends MatchingTask {
                 fs.setProject(getProject());
             }
             final File fsDir = fs.getDir();
+            if (!fs.getErrorOnMissingDir() &&
+                (fsDir == null || !fsDir.exists())) {
+                continue;
+            }
             if (fsDir == null) {
                 throw new BuildException(
                         "File or Resource without directory or file specified");

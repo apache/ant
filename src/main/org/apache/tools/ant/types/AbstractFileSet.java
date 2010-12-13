@@ -444,6 +444,15 @@ public abstract class AbstractFileSet extends DataType
      }
 
     /**
+     * Gets whether an error is/shold be thrown if the base directory
+     * does not exist.
+     * @since Ant 1.8.2
+     */
+     public boolean getErrorOnMissingDir() {
+         return errorOnMissingDir;
+     }
+
+    /**
      * Returns the directory scanner needed to access the files to process.
      * @return a <code>DirectoryScanner</code> instance.
      */

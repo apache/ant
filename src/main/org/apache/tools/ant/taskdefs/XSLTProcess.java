@@ -336,6 +336,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             return;
         }
         try {
+            setupLoader();
+
             if (sysProperties.size() > 0) {
                 sysProperties.setSystem();
             }
@@ -689,12 +691,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception Exception if the class could not be loaded.
      */
     private Class loadClass(String classname) throws Exception {
-        if (classpath == null) {
+        setupLoader();
+        if (loader == null) {
             return Class.forName(classname);
         }
-        loader = getProject().createClassLoader(classpath);
-        loader.setThreadContextLoader();
         return Class.forName(classname, true, loader);
+    }
+
+    /**
+     * If a custom classpath has been defined but no loader created
+     * yet, create the classloader and set it as the context
+     * classloader.
+     */
+    private void setupLoader() {
+        if (classpath != null && loader == null) {
+            loader = getProject().createClassLoader(classpath);
+            loader.setThreadContextLoader();
+        }
     }
 
     /**
@@ -910,7 +923,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             } else {
                 try {
                     resolveProcessor(PROCESSOR_TRAX);
-                } catch (Exception e1) { // should not happen
+                } catch (Throwable e1) {
+                    e1.printStackTrace();
                     handleError(e1);
                 }
             }

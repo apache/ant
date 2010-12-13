@@ -26,7 +26,7 @@
 <h2>Proxy Configuration</h2>
 
 <p>
-This page discussing proxy issues on command-line ant.
+This page discussing proxy issues on command-line Apache Ant.
 Consult your IDE documentation for IDE-specific information upon proxy setup.
 </p>
 
@@ -174,7 +174,7 @@ command line.
 
 <h3>SetProxy Task</h3>
 <p>
-    The <a href="OptionalTasks/setproxy.html">setproxy task</a> can be used to
+    The <a href="Tasks/setproxy.html">setproxy task</a> can be used to
     explicitly set a proxy in a build file. This manipulates the many proxy 
     configuration properties of a JVM, and controls the proxy settings for all 
     network operations in the same JVM from that moment. 
@@ -243,7 +243,7 @@ command line.
 </p>    
     If you wish to have
     a forked process pick up the Ant's settings, use the 
-    <a href="CoreTypes/propertyset.html"><code>&lt;syspropertyset&gt;</code></a>
+    <a href="Types/propertyset.html"><code>&lt;syspropertyset&gt;</code></a>
     element to propagate the normal proxy settings. The following propertyset
     is a datatype which can be referenced in a <code>&lt;java&gt;</code> task to
     pass down the current values.
@@ -284,7 +284,7 @@ use one of the alternate mechanisms to configure the JVM.
 <h4>Further reading</h4>
 
 <ul>
-<li><a href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">
+<li><a href="http://download.oracle.com/javase/1.5.0/docs/guide/net/properties.html">
 Java Networking Properties</a>. Notice how not all proxy settings are documented
 there.
 <li><a href="http://blogs.sun.com/roller/resources/jcc/Proxies.pdf">Proxies</a>

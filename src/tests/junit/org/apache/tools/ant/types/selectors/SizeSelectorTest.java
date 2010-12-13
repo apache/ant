@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors;
 
 import java.util.Locale;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 
 /**
@@ -28,8 +27,6 @@ import org.apache.tools.ant.types.Parameter;
  *
  */
 public class SizeSelectorTest extends BaseSelectorTest {
-
-    private Project project;
 
     public SizeSelectorTest(String name) {
         super(name);

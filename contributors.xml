@@ -72,6 +72,10 @@
   </name>
   <name>
     <first>Andrew</first>
+    <last>Eisenberg</last>
+  </name>
+  <name>
+    <first>Andrew</first>
     <last>Everitt</last>
   </name>
   <name>
@@ -155,6 +159,10 @@
   <name>
     <first>Bernd</first>
     <last>Dutkowski</last>
+  </name>
+  <name>
+    <first>Bernhard</first>
+    <last>Rosenkraenzer</last>
   </name>
   <name>
     <first>Brad</first>
@@ -304,6 +312,10 @@
     <last>Ferrin</last>
   </name>
   <name>
+    <first>Danny</first>
+    <last>Yates</last>
+  </name>
+  <name>
     <first>Dante</first>
     <last>Briones</last>
   </name>
@@ -370,12 +382,22 @@
     <last>Slager</last>
   </name>
   <name>
+    <first>Devon</first>
+    <middle>C.</middle>
+    <last>Miller</last>
+  </name>
+  <name>
     <first>Diane</first>
     <last>Holt</last>
   </name>
   <name>
     <first>dIon</first>
     <last>Gillard</last>
+  </name>
+  <name>
+    <first>Dmitry</first>
+    <middle>A.</middle>
+    <last>Kuminov</last>
   </name>
   <name>
     <first>Dominique</first>
@@ -729,6 +751,11 @@
   </name>
   <name>
     <first>Kevin</first>
+    <middle>Connor</middle>
+    <last>Arpe</last>
+  </name>
+  <name>
+    <first>Kevin</first>
     <last>Greiner</last>
   </name>
   <name>
@@ -802,6 +829,10 @@
   <name>
     <first>Mariusz</first>
     <last>Nowostawski</last>
+  </name>
+  <name>
+    <first>Mark</first>
+    <last>DeLaFranier</last>
   </name>
   <name>
     <first>Mark</first>
@@ -1440,5 +1471,9 @@
   <name>
     <first>Zdenek</first>
     <last>Wagner</last>
+  </name>
+  <name>
+    <first/>
+    <last>riasol</last>
   </name>
 </contributors>

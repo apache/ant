@@ -30,8 +30,11 @@
   <property name="apache-hostname" value="www.apache.org" />
   <property name="apache-domain" value="apache.org" />
   <property name="apache-realhost" value="eos" />
-  <property name="apache-ip4" value="140.211.11.130" />
+  <property name="apache-ip4" value="140.211.11.131" />
     
+  <property name="apache-realhost.gump" value="www" />
+  <property name="apache-domain.gump" value="apache.org" />
+
   <property name="xs4all-hostname" value="www.xs4all.nl" />
   <property name="xs4all-domain" value="xs4all.nl" />
   <property name="xs4all-realhost" value="www" />
@@ -47,15 +50,35 @@
 
     <target name="testApache" depends="setUp">
       <hostinfo prefix="apache" host="${apache-hostname}"/>
-      <au:assertEquals expected="${apache-realhost}" actual="${apache.NAME}"/>
-      <au:assertEquals expected="${apache-domain}" actual="${apache.DOMAIN}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-realhost}" arg2="${apache.NAME}"/>
+          <equals arg1="${apache-realhost.gump}" arg2="${apache.NAME}"/>
+        </or>
+      </au:assertTrue>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-domain}" arg2="${apache.DOMAIN}"/>
+          <equals arg1="${apache-domain.gump}" arg2="${apache.DOMAIN}"/>
+        </or>
+      </au:assertTrue>
       <au:assertEquals expected="${apache-ip4}" actual="${apache.ADDR4}"/>
     </target>
 
     <target name="testApacheNoPrefix" depends="setUp">
       <hostinfo host="${apache-hostname}"/>
-      <au:assertEquals expected="${apache-realhost}" actual="${NAME}"/>
-      <au:assertEquals expected="${apache-domain}" actual="${DOMAIN}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-realhost}" arg2="${NAME}"/>
+          <equals arg1="${apache-realhost.gump}" arg2="${NAME}"/>
+        </or>
+      </au:assertTrue>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-domain}" arg2="${DOMAIN}"/>
+          <equals arg1="${apache-domain.gump}" arg2="${DOMAIN}"/>
+        </or>
+      </au:assertTrue>
       <au:assertEquals expected="${apache-ip4}" actual="${ADDR4}"/>
     </target>
 

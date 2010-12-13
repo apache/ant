@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -37,23 +35,17 @@ import org.apache.tools.ant.types.resources.selectors.ResourceSelectorContainer;
 public class Restrict
     extends ResourceSelectorContainer implements ResourceCollection {
 
-    private BaseResourceCollectionWrapper w = new BaseResourceCollectionWrapper() {
+    private LazyResourceCollectionWrapper w = new  LazyResourceCollectionWrapper() {
         /**
          * Restrict the nested ResourceCollection based on the nested selectors.
-         * @return a Collection of Resources.
          */
-        protected Collection getCollection() {
-            ArrayList result = new ArrayList();
-outer:      for (Iterator ri = w.getResourceCollection().iterator(); ri.hasNext();) {
-                Resource r = (Resource) ri.next();
-                for (Iterator i = getSelectors(); i.hasNext();) {
-                    if (!((ResourceSelector) (i.next())).isSelected(r)) {
-                        continue outer;
-                    }
+        protected boolean filterResource(Resource r) {
+            for (Iterator i = getSelectors(); i.hasNext();) {
+                if (!((ResourceSelector) (i.next())).isSelected(r)) {
+                    return true;
                 }
-                result.add(r);
             }
-            return result;
+            return false;
         }
     };
 

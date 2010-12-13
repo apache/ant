@@ -756,4 +756,37 @@
     <au:assertLogContains text="${z}.bar,x out" />
   </target>
 
+  <target name="testRedirectorWithParallel" if="test.can.run" depends="xyz">
+    <apply executable="sh" dest="${input}" parallel="true" addsourcefile="yes">
+      <arg value="parrot.sh" />
+      <targetfile/>
+      <fileset refid="xyz" />
+      <globmapper from="*" to="*.bar"/>
+      <redirector output="${output}/all_out.txt" append="yes"/>
+    </apply>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="x.bar out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="x.bar err"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="x out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="x err"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="y.bar out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="y.bar err"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="y out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="y err"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="z.bar out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="z.bar err"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="z out"/>
+    <au:assertResourceContains resource="${output}/all_out.txt"
+                               value="z err"/>
+  </target>
 </project>

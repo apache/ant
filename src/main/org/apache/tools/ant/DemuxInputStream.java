@@ -30,6 +30,7 @@ import java.io.InputStream;
  */
 public class DemuxInputStream extends InputStream {
 
+    private static final int MASK_8BIT = 0xFF;
     /**
      * The project to from which to get input.
      */
@@ -54,7 +55,7 @@ public class DemuxInputStream extends InputStream {
         if (project.demuxInput(buffer, 0, 1) == -1) {
             return -1;
         }
-        return buffer[0];
+        return buffer[0] & MASK_8BIT;
     }
 
 

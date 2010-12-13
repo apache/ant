@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.ProxySetup;
@@ -72,7 +71,6 @@ public final class Diagnostics {
     private static final int SECONDS_PER_MILLISECOND = 1000;
     private static final int SECONDS_PER_MINUTE = 60;
     private static final int MINUTES_PER_HOUR = 60;
-    private static final String TEST_CLASS = "org.apache.tools.ant.taskdefs.optional.EchoProperties";
 
     /**
      * The error text when a security manager blocks access to a property.
@@ -87,42 +85,19 @@ public final class Diagnostics {
     }
 
     /**
-     * Check if optional tasks are available. Not that it does not check
-     * for implementation version. Use <tt>validateVersion()</tt> for this.
-     * @return <tt>true</tt> if optional tasks are available.
+     * Doesn't do anything.
+     * @deprecated Obsolete since Ant 1.8.2
+     * @return <tt>true</tt>
      */
     public static boolean isOptionalAvailable() {
-        try {
-            Class.forName(TEST_CLASS);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
         return true;
     }
 
     /**
-     * Check if core and optional implementation version do match.
-     * @throws BuildException if the implementation version of optional tasks
-     * does not match the core implementation version.
+     * Doesn't do anything.
+     * @deprecated Obsolete since Ant 1.8.2
      */
     public static void validateVersion() throws BuildException {
-        try {
-            Class optional = Class.forName(TEST_CLASS);
-            String coreVersion = getImplementationVersion(Main.class);
-            String optionalVersion = getImplementationVersion(optional);
-
-            if (coreVersion != null && !coreVersion.equals(optionalVersion)) {
-                throw new BuildException("Invalid implementation version "
-                        + "between Ant core and Ant optional tasks.\n"
-                        + " core    : " + coreVersion + " in "
-                        + getClassLocation(Main.class)
-                        + "\n" + " optional: " + optionalVersion + " in "
-                        + getClassLocation(optional));
-            }
-        } catch (ClassNotFoundException e) {
-            // ignore
-            ignoreThrowable(e);
-        }
     }
 
     /**
@@ -332,16 +307,6 @@ public final class Diagnostics {
         out.println("core tasks     : " + getImplementationVersion(Main.class)
                     + " in " + getClassLocation(Main.class));
 
-        Class optional = null;
-        try {
-            optional = Class.forName(TEST_CLASS);
-            out.println("optional tasks : " + getImplementationVersion(optional)
-                        + " in " + getClassLocation(optional));
-        } catch (ClassNotFoundException e) {
-            ignoreThrowable(e);
-            out.println("optional tasks : not available");
-        }
-
         header(out, "ANT PROPERTIES");
         doReportAntProperties(out);
 
@@ -433,6 +398,12 @@ public final class Diagnostics {
         out.println(MagicNames.ANT_VERSION + ": " + p.getProperty(MagicNames.ANT_VERSION));
         out.println(MagicNames.ANT_JAVA_VERSION + ": "
                 + p.getProperty(MagicNames.ANT_JAVA_VERSION));
+        out.println("Is this the Apache Harmony VM? "
+                    + (JavaEnvUtils.isApacheHarmony() ? "yes" : "no"));
+        out.println("Is this the Kaffe VM? "
+                    + (JavaEnvUtils.isKaffe() ? "yes" : "no"));
+        out.println("Is this gij/gcj? "
+                    + (JavaEnvUtils.isGij() ? "yes" : "no"));
         out.println(MagicNames.ANT_LIB + ": " + p.getProperty(MagicNames.ANT_LIB));
         out.println(MagicNames.ANT_HOME + ": " + p.getProperty(MagicNames.ANT_HOME));
     }

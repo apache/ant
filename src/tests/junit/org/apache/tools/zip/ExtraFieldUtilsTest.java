@@ -18,7 +18,6 @@
 
 package org.apache.tools.zip;
 
-import java.util.Arrays;
 import junit.framework.TestCase;
 
 /**
@@ -108,7 +107,6 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
         assertTrue("type field 2", ze[1] instanceof UnparseableExtraFieldData);
         assertEquals("data length field 2", 4,
                      ze[1].getLocalFileDataLength().getValue());
-        byte[] expectedData = new byte[4];
         for (int i = 0; i < 4; i++) {
             assertEquals("byte number " + i,
                          data2[data.length - 5 + i],

@@ -106,8 +106,8 @@ public class AntStructure extends Task {
             while (dataTypes.hasNext()) {
                 String typeName = (String) dataTypes.next();
                 printer.printElementDecl(
-                    out, getProject(), typeName,
-                    (Class) getProject().getDataTypeDefinitions().get(typeName));
+                                         out, getProject(), typeName,
+                                         (Class) getProject().getDataTypeDefinitions().get(typeName));
             }
 
             Iterator tasks = getProject().getCopyOfTaskDefinitions().keySet()
@@ -266,13 +266,14 @@ public class AntStructure extends Task {
         private void printTargetAttrs(PrintWriter out, String tag) {
             out.print("<!ATTLIST ");
             out.println(tag);
-            out.println("          id          ID    #IMPLIED");
-            out.println("          name        CDATA #REQUIRED");
-            out.println("          if          CDATA #IMPLIED");
-            out.println("          unless      CDATA #IMPLIED");
-            out.println("          depends     CDATA #IMPLIED");
-            out.println("          extensionOf CDATA #IMPLIED");
-            out.println("          description CDATA #IMPLIED>");
+            out.println("          id                      ID    #IMPLIED");
+            out.println("          name                    CDATA #REQUIRED");
+            out.println("          if                      CDATA #IMPLIED");
+            out.println("          unless                  CDATA #IMPLIED");
+            out.println("          depends                 CDATA #IMPLIED");
+            out.println("          extensionOf             CDATA #IMPLIED");
+            out.println("          onMissingExtensionPoint CDATA #IMPLIED");
+            out.println("          description             CDATA #IMPLIED>");
             out.println("");
         }
 

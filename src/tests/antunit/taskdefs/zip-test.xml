@@ -122,4 +122,36 @@
       <au:assertDestIsOutofdate src="${output}/jar.jar"
                                dest="${output}/reference.jar"/>
     </target>
+
+    <target name="testFilesetInsideResources"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50115">
+      <mkdir dir="${input}/test2"/>
+      <touch file="${input}/test1.txt"/>
+      <mkdir dir="${output}"/>
+      <mkdir dir="${output}/expand"/>
+      <zip destfile="${output}/test.zip" whenempty="skip">
+        <resources>
+          <fileset dir="${input}" includes="test**"/>
+        </resources>
+      </zip>
+      <au:assertLogDoesntContain text="skipping zip archive"/>
+      <unzip src="${output}/test.zip" dest="${output}/expand"/>
+      <au:assertFileExists file="${output}/expand/test1.txt"/>
+      <!--au:assertFileExists file="${output}/expand/test2"/-->
+    </target>
+
+    <target name="testWhenEmptyChecksNonFileSets"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50115">
+      <mkdir dir="${input}/"/>
+      <touch file="${input}/test1.txt"/>
+      <mkdir dir="${output}"/>
+      <mkdir dir="${output}/expand"/>
+      <zip destfile="${output}/test.zip" whenempty="fail">
+        <resources>
+          <fileset dir="${input}" includes="test**"/>
+        </resources>
+      </zip>
+      <unzip src="${output}/test.zip" dest="${output}/expand"/>
+      <au:assertFileExists file="${output}/expand/test1.txt"/>
+    </target>
 </project>

@@ -174,8 +174,8 @@
       #else
         <td class="when">continuously</td>
       #end
-      <td class="link"><a href="$base/$jobId/lastBuild/">last build</a></td>
-      <td class="link"><a href="$base/$jobId/lastSuccessfulBuild/">last success</a></td>
+      <td class="link"><a href="$base/job/$jobId/lastBuild/">last build</a></td>
+      <td class="link"><a href="$base/job/$jobId/lastSuccessfulBuild/">last success</a></td>
     </tr>
 #end
 

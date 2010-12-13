@@ -19,12 +19,17 @@
 
   <properties>
     <index value="1"/>
-    <title>.NET Ant Library</title>
+    <title>Apache .NET Ant Library</title>
   </properties>
 
   <body>
 
-    <section name=".NET Ant Library 1.0">
+    <section name="Apache .NET Ant Library&amp;#x2122;">
+      <p>The Apache .NET Antlib provides tasks that support
+        development of .NET software with Apache Ant.</p>
+    </section>
+
+    <section name="Apache .NET Ant Library 1.0">
       <h3>November 6, 2006 - Apache .NET Ant Library 1.0
       Available</h3>
 

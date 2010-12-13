@@ -163,6 +163,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      */
     private static String crashFile = null;
 
+    /** Names of test methods to execute */
+    private String[] methods = null;
+    
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
@@ -205,7 +208,26 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents) {
-        this(test, haltOnError, filtertrace, haltOnFailure, showOutput,
+        this(test, null, haltOnError, filtertrace, haltOnFailure, showOutput,
+             logTestListenerEvents, null);
+    }
+
+    /**
+     * Constructor for fork=true or when the user hasn't specified a
+     * classpath.
+     * @param test the test to run.
+     * @param methods names of methods of the test to be executed.
+     * @param haltOnError whether to stop the run if an error is found.
+     * @param filtertrace whether to filter junit.*.* stack frames out of exceptions
+     * @param haltOnFailure whether to stop the run if failure is found.
+     * @param showOutput    whether to send output to System.out/.err as well as formatters.
+     * @param logTestListenerEvents whether to print TestListener events.
+     * @since 1.8.2
+     */
+    public JUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
+                           boolean showOutput, boolean logTestListenerEvents) {
+        this(test, methods, haltOnError, filtertrace, haltOnFailure, showOutput,
              logTestListenerEvents, null);
     }
 
@@ -254,12 +276,26 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents,
                            ClassLoader loader) {
-        JUnitTestRunner.filtertrace = filtertrace;
+        this(test, null, haltOnError, filtertrace, haltOnFailure, showOutput, 
+             logTestListenerEvents, loader);
+    }
+
+
+    /**
+     * Constructor to use when the user has specified a classpath.
+     * @since 1.8.2
+     */
+    public JUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
+                           boolean showOutput, boolean logTestListenerEvents,
+                           ClassLoader loader) {
+        JUnitTestRunner.filtertrace = filtertrace; // XXX clumsy, should use instance field somehow
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
         this.showOutput = showOutput;
         this.logTestListenerEvents = logTestListenerEvents;
+        this.methods = methods != null ? (String[]) methods.clone() : null;
         this.loader = loader;
     }
 
@@ -340,15 +376,19 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                               loader);
                 }
 
+                final boolean testMethodsSpecified = (methods != null);
+
                 // check for a static suite method first, even when using
                 // JUnit 4
                 Method suiteMethod = null;
+                if (!testMethodsSpecified) {
                 try {
                     // check if there is a suite method
                     suiteMethod = testClass.getMethod("suite", new Class[0]);
                 } catch (NoSuchMethodException e) {
                     // no appropriate suite method found. We don't report any
                     // error here since it might be perfectly normal.
+                }
                 }
 
                 if (suiteMethod != null) {
@@ -359,7 +399,23 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
                 } else {
                     Class junit4TestAdapterClass = null;
+                    boolean useSingleMethodAdapter = false;
 
+                    if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
+                        // Do not use JUnit 4 API for running JUnit 3.x
+                        // tests - it is not able to run individual test
+                        // methods.
+                        //
+                        // Technical details:
+                        // org.junit.runner.Request.method(Class, String).getRunner()
+                        // would return a runner which always executes all
+                        // test methods. The reason is that the Runner would be
+                        // an instance of class
+                        // org.junit.internal.runners.OldTestClassRunner
+                        // that does not implement interface Filterable - so it
+                        // is unable to filter out test methods not matching
+                        // the requested name.
+                    } else {
                     // Check for JDK 5 first. Will *not* help on JDK 1.4
                     // if only junit-4.0.jar in CP because in that case
                     // linkage of whole task will already have failed! But
@@ -373,29 +429,69 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                         if (loader == null) {
                             junit4TestAdapterClass =
                                 Class.forName(JUNIT_4_TEST_ADAPTER);
+                            if (testMethodsSpecified) {
+                                /*
+                                 * We cannot try to load the JUnit4TestAdapter
+                                 * before trying to load JUnit4TestMethodAdapter
+                                 * because it might fail with
+                                 * NoClassDefFoundException, instead of plain
+                                 * ClassNotFoundException.
+                                 */
+                                junit4TestAdapterClass = Class.forName(
+                                    "org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter");
+                                useSingleMethodAdapter = true;
+                            }
                         } else {
                             junit4TestAdapterClass =
                                 Class.forName(JUNIT_4_TEST_ADAPTER,
                                               true, loader);
+                            if (testMethodsSpecified) {
+                                junit4TestAdapterClass =
+                                    Class.forName(
+                                        "org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter",
+                                        true, loader);
+                                useSingleMethodAdapter = true;
+                            }
                         }
                     } catch (ClassNotFoundException e) {
                         // OK, fall back to JUnit 3.
+                    }
                     }
                     junit4 = junit4TestAdapterClass != null;
 
                     if (junit4) {
                         // Let's use it!
+                        Class[] formalParams;
+                        Object[] actualParams;
+                        if (useSingleMethodAdapter) {
+                            formalParams = new Class[] {Class.class, String[].class};
+                            actualParams = new Object[] {testClass, methods};
+                        } else {
+                            formalParams = new Class[] {Class.class};
+                            actualParams = new Object[] {testClass};
+                        }
                         suite =
                             (Test) junit4TestAdapterClass
-                            .getConstructor(new Class[] {Class.class}).
-                            newInstance(new Object[] {testClass});
+                            .getConstructor(formalParams).
+                            newInstance(actualParams);
                     } else {
                         // Use JUnit 3.
 
                         // try to extract a test suite automatically this
                         // will generate warnings if the class is no
                         // suitable Test
-                        suite = new TestSuite(testClass);
+                        if (!testMethodsSpecified) {
+                            suite = new TestSuite(testClass);
+                        } else if (methods.length == 1) {
+                            suite = TestSuite.createTest(testClass, methods[0]);
+                        } else {
+                            TestSuite testSuite = new TestSuite(testClass.getName());
+                            for (int i = 0; i < methods.length; i++) {
+                                testSuite.addTest(
+                                    TestSuite.createTest(testClass, methods[i]));
+                            }
+                            suite = testSuite;
+                        }
                     }
 
                 }
@@ -670,11 +766,16 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * <tr><td>logtestlistenerevents</td><td>log TestListener events to
      * System.out.</td><td>false</td></tr>
      *
+     * <tr><td>methods</td><td>Comma-separated list of names of individual
+     * test methods to execute.
+     * </td><td>null</td></tr>
+     *
      * </table>
      * @param args the command line arguments.
      * @throws IOException on error.
      */
     public static void main(String[] args) throws IOException {
+        String[] methods = null;
         boolean haltError = false;
         boolean haltFail = false;
         boolean stackfilter = true;
@@ -696,7 +797,15 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
 
         for (int i = 1; i < args.length; i++) {
-            if (args[i].startsWith(Constants.HALT_ON_ERROR)) {
+            if (args[i].startsWith(Constants.METHOD_NAMES)) {
+                try {
+                    String methodsList = args[i].substring(Constants.METHOD_NAMES.length());
+                    methods = JUnitTest.parseTestMethodNamesList(methodsList);
+                } catch (IllegalArgumentException ex) {
+                    System.err.println("Invalid specification of test method names: " + args[i]);
+                    System.exit(ERRORS);
+                }
+            } else if (args[i].startsWith(Constants.HALT_ON_ERROR)) {
                 haltError = Project.toBoolean(args[i].substring(Constants.HALT_ON_ERROR.length()));
             } else if (args[i].startsWith(Constants.HALT_ON_FAILURE)) {
                 haltFail = Project.toBoolean(args[i].substring(Constants.HALT_ON_FAILURE.length()));
@@ -744,18 +853,30 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 java.io.BufferedReader reader =
                     new java.io.BufferedReader(new java.io.FileReader(args[0]));
                 String testCaseName;
+                String[] testMethodNames;
                 int code = 0;
                 boolean errorOccurred = false;
                 boolean failureOccurred = false;
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer st = new StringTokenizer(line, ",");
-                    testCaseName = st.nextToken();
+                    String testListSpec = st.nextToken();
+                    int colonIndex = testListSpec.indexOf(':');
+                    if (colonIndex == -1) {
+                        testCaseName = testListSpec;
+                        testMethodNames = null;
+                    } else {
+                        testCaseName = testListSpec.substring(0, colonIndex);
+                        testMethodNames = JUnitTest.parseTestMethodNamesList(
+                                                    testListSpec
+                                                    .substring(colonIndex + 1)
+                                                    .replace('+', ','));
+                    }
                     JUnitTest t = new JUnitTest(testCaseName);
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
                     t.setProperties(props);
-                    code = launch(t, haltError, stackfilter, haltFail,
+                    code = launch(t, testMethodNames, haltError, stackfilter, haltFail,
                                   showOut, outputToFormat,
                                   logTestListenerEvents);
                     errorOccurred = (code == ERRORS);
@@ -783,7 +904,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             JUnitTest t = new JUnitTest(args[0]);
             t.setProperties(props);
             returnCode = launch(
-                t, haltError, stackfilter, haltFail,
+                t, methods, haltError, stackfilter, haltFail,
                 showOut, outputToFormat, logTestListenerEvents);
         }
 
@@ -917,12 +1038,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * @since Ant 1.6.2
      */
-    private static int launch(JUnitTest t, boolean haltError,
+    private static int launch(JUnitTest t, String[] methods, boolean haltError,
                               boolean stackfilter, boolean haltFail,
                               boolean showOut, boolean outputToFormat,
                               boolean logTestListenerEvents) {
         JUnitTestRunner runner =
-            new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut,
+            new JUnitTestRunner(t, methods, haltError, stackfilter, haltFail, showOut,
                                 logTestListenerEvents, null);
         runner.forked = true;
         runner.outputToFormatters = outputToFormat;

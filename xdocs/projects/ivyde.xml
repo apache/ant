@@ -19,15 +19,15 @@
 
   <properties>
     <index value="1"/>
-    <title>The IvyDE Subproject</title>
+    <title>The Apache IvyDE Subproject</title>
   </properties>
 
   <body>
 
-    <section name="The IvyDE Subproject">
+    <section name="The Apache IvyDE&amp;#x2122; Subproject">
       <h3>Apache IvyDE</h3>
 
-      <ul>IvyDE is the Eclipse plugin which intergrate Ivy into your java development enviromnent. It includes:
+      <ul>Apache IvyDE is the Eclipse plugin which intergrates Apache Ivy into your java development enviromnent. It includes:
         <li>an Ivy xml files editor: creation wizard, html preview and completion for Ivy xml tag, attributes but also attributes' values.</li>
         <li>an Ivy settings files editor: completion for xml tag, attributes but also attributes' values.</li>
         <li>a classpath container: automatic downloads, access "resolve" task from your IDE, and resolve in Eclipse's workspace</li>

@@ -19,16 +19,16 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-<title>The Ant frontend: ProjectHelper</title>
+<title>The Apache Ant frontend: ProjectHelper</title>
 </head>
 
 <body>
-<h1>The Ant frontend: ProjectHelper</h1>
+<h1>The Apache Ant frontend: ProjectHelper</h1>
 
 <h2><a name="definition">What is a ProjectHelper?</a></h2>
 
 <p>
-The <code>ProjectHelper</code> in Ant is responsible for parsing the build file
+The <code>ProjectHelper</code> in Apache Ant is responsible for parsing the build file
 and creating java instances representing the build workflow. It also signals which
 kind of file it can parse, and which file name it expects as default input file.
 </p>
@@ -45,6 +45,12 @@ The immediate benefit of a such abstraction it that it is possible to make Ant
 understand other kind of descriptive languages than XML. Some experiments have
 been done around a pure java frontend, and a groovy one too (ask the dev mailing
 list for further info about these).
+</p>
+
+<p>Since Ant 1.8.2, the <a href="Tasks/import.html">import</a> task will also
+try to use the proper helper to parse the imported file. So it is possible to
+write different build files in different languages and have them import each
+other.
 </p>
 
 <h2><a name="repository">How is Ant is selecting the proper ProjectHelper</a></h2>
@@ -122,7 +128,7 @@ capable of and what is is expecting:
 </p>
 
 <p>
-Now that you have your implementation ready, you have to declare it to Ant. Two
+Now that you have your implementation ready, you have to declare it to Ant. Three
 solutions here:
 <ul>
     <li>use the system property <code>org.apache.tools.ant.ProjectHelper</code>
@@ -132,6 +138,10 @@ solutions here:
         <code>META-INF/services/org.apache.tools.ant.ProjectHelper</code>.
         And then in this file just put the fully qualified name of your
         implementation</li>
+    <li>use the <a href="Tasks/projecthelper.html">projecthelper</a> task (since
+        Ant 1.8.2) which will install dynamically an helper in the internal helper
+        'repository'. Then your helper can be used on the next call to the
+        <a href="Tasks/import.html">import</a> task.</li>
 </ul>
 </p>
 

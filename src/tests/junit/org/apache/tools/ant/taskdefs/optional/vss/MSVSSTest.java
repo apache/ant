@@ -38,13 +38,11 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
 
     private Commandline commandline;
 
-    private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";
     private static final String VSS_PROJECT_PATH = "/SourceRoot/Project";
     private static final String DS_VSS_PROJECT_PATH = "$/SourceRoot/Project";
     private static final String VSS_USERNAME = "ant";
     private static final String VSS_PASSWORD = "rocks";
     private static final String LOCAL_PATH = "testdir";
-    private static final String SRC_FILE = "Class1.java";
     private static final String SRC_LABEL = "label1";
     private static final String LONG_LABEL = "123456789012345678901234567890";
     private static final String SRC_COMMENT = "I fixed a bug";

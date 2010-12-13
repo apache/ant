@@ -1096,11 +1096,6 @@ public class ComponentHelper  {
             return getTypeClass((String) key);
         }
 
-        Object create(String name) {
-            AntTypeDefinition def = getDefinition(name);
-            return (def == null) ? null : def.create(project);
-        }
-
         Class getTypeClass(String name) {
             AntTypeDefinition def = getDefinition(name);
             return (def == null) ? null : def.getTypeClass(project);

@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.tools.ant.BuildException;
@@ -326,8 +327,10 @@ public class FormatterElement {
                 // there is already a project reference so dont overwrite this
                 needToSetProjectReference = false;
             }
-        } catch (Exception e) {
+        } catch (NoSuchFieldException e) {
             // no field present, so no previous reference exists
+        } catch (IllegalAccessException e) {
+            throw new BuildException(e);
         }
 
         if (needToSetProjectReference) {
@@ -335,8 +338,12 @@ public class FormatterElement {
             try {
                 setter = r.getClass().getMethod("setProject", new Class[] {Project.class});
                 setter.invoke(r, new Object[] {project});
-            } catch (Exception e) {
+            } catch (NoSuchMethodException e) {
                 // no setProject to invoke; just ignore
+            } catch (IllegalAccessException e) {
+                throw new BuildException(e);
+            } catch (InvocationTargetException e) {
+                throw new BuildException(e);
             }
         }
 

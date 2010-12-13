@@ -101,7 +101,7 @@
                               <span class="sel">Welcome</span>
                               </li>
                             <li>
-                                    <a href="./license.html">License</a>
+                                    <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
                                 </li>
                             <li>
                                     <a href="./antnews.html">News</a>
@@ -141,6 +141,9 @@
                             <li>
                                     <a href="http://ant.apache.org/srcdownload.cgi">Source Distributions</a>
                                 </li>
+                            <li>
+                                    <a href="http://ant.apache.org/manualdownload.cgi">Ant Manual</a>
+                                </li>
                       </ul>
         </li>
               <li class="menuheader">Contributing
@@ -157,6 +160,9 @@
                             <li>
                                     <a href="./bugs.html">Bug Database</a>
                                 </li>
+                            <li>
+                                    <a href="http://www.apache.org/security/">Security</a>
+                                </li>
                       </ul>
         </li>
               <li class="menuheader">Sponsorship
@@ -166,9 +172,6 @@
                                 </li>
                             <li>
                                     <a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
-                                </li>
-                            <li>
-                                    <a href="http://www.apache.org/foundation/contributing.html">Donations</a>
                                 </li>
                       </ul>
         </li>
@@ -201,83 +204,11 @@
   <div class="content">
     <h1 class="title">Welcome</h1>
             <h3 class="section">
-      <a name="Ant 1.8.0"></a>
-      Ant 1.8.0
+      <a name="Apache Ant&amp;#x2122;"></a>
+      Apache Ant&#x2122;
     </h3>
-                        <h3>February 8, 2010 - Ant 1.8.0 Available</h3>
-                                <p>
-			Apache Ant 1.8.0 is now available for
-			<a href="http://ant.apache.org/bindownload.cgi">download</a>
-			.
-		</p>
-                                <ul>
-		    <li>Lexically scoped local properties, i.e. properties that are only
-		        defined inside a target, 
-                sequential block or similar environment.</li>
-            <li>&lt;import&gt; can now import from any file- or URL-providing resource - 
-                this includes &lt;javaresource&gt;.</li>    
-			<li>Various improvements to the directory scanning code that help 
-			with symbolic link cycles (as can be found on MacOS X Java
-			installations for example) and improve scanning performance. 
-			For big directory trees the improvement is 
-            <a href="http://mail-archives.apache.org/mod_mbox/ant-dev/200809.mbox/%3Cy1u4p48li29.fsf@v30161.1blu.de%3E">dramatic</a>.</li>
-            <li>The way developers can extend Ant's property expansion algorithm has been rewritten 
-            (breaking the older API) to be easier to use and be more powerful.
-            </li>
-            <li>a new top level element extension-point allows build files to be
-				extended with custom targets more easily</li>
-			<li>At the same time the if and unless attributes have been rewritten to do the expected 
-            thing if applied to a property expansion (i.e. if="${foo}" will mean "yes, do it" 
-            if ${foo} expands to true, in Ant 1.7.1 it would mean "no" unless a property named 
-           "true" existed). This adds "testing conditions" as a new use-case to property 
-            expansion.</li>
-			<li>Ant now requires Java 1.4 or later</li>
-			<li>new task include provides an alternative to &lt;import&gt; that
-				should be preferred when you don't want to override any targets</li>
-			<li>numerous bug fixes and improvements as documented in Bugzilla
-				and in WHATSNEW</li>
-		</ul>
-                        <h3 class="section">
-      <a name="Ivy 2.1.0"></a>
-      Ivy 2.1.0
-    </h3>
-                        <h3>October 8, 2009 - Apache Ivy 2.1.0 Released</h3>
-                                <p>Apache Ivy 2.1.0 is now available for download as source or binary (with and without
-      dependencies) from
-      <a href="http://ant.apache.org/ivy/download.cgi">http://ant.apache.org/ivy/download.cgi</a>.</p>
-                                <p>Key features of the 2.1.0 release are</p>
-                                <ul>
-      <li>enhanced Maven2 compatibility, with several bug fixes and
-        more pom features covered</li>
-      <li>new options for the Ivy Ant tasks and commandline</li>
-      <li>configuration intersections and configuration groups</li>
-      <li>numerous bug fixes and improvements as documented in Jira
-        and in the release notes</li>
-    </ul>
-                                <p>For more information see
-      the <a href="http://ant.apache.org/ivy/">Ivy home page</a>.</p>
-                        <h3 class="section">
-      <a name="AntUnit 1.1"></a>
-      AntUnit 1.1
-    </h3>
-                        <h3>September 26, 2008 - Apache AntUnit 1.1 Released</h3>
-                                <p>Apache AntUnit 1.1 Beta is now available for download as <a href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
-      or <a href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
-      release.</p>
-                                <p>In addition to a few bugfixes and some new assertions AntUnit
-      1.1 allows test listeners to receive the log output of the
-      project under test.  Both plainlistener and xmllistener have
-      an option that makes them echo the project's output into their
-      respective logs.</p>
-                                <p>For more information see the <a href="antlibs/antunit/">Antlib's
-        home page</a></p>
-                        <h3 class="section">
-      <a name="Apache Ant"></a>
-      Apache Ant
-    </h3>
-                        <p>
-		Ant is a Java library and command-line tool.
-		Ant's mission is to drive processes described in build files as targets
+                        <p>Apache Ant is a Java library and command-line tool who's
+		mission is to drive processes described in build files as targets
 		and extension points dependent upon each other.
 		The main known usage of Ant is the build of Java applications.
 		Ant supplies a number of built-in tasks allowing to compile, assemble,
@@ -298,14 +229,66 @@
 	</p>
                                 <p>
 		Software development projects looking for a solution combining build tool and
-		dependency management can use Ant in combination with <a href="http://ant.apache.org/ivy/">Ivy</a>.
+		dependency management can use Ant in combination with <a href="http://ant.apache.org/ivy/">Apache Ivy</a>.
 </p>
+                                <p>The Apache Ant project is part of
+          the <a href="http://www.apache.org/">Apache Software
+          Foundation</a>.</p>
+                        <h3 class="section">
+      <a name="Apache Ivy 2.2.0"></a>
+      Apache Ivy 2.2.0
+    </h3>
+                        <h3>September 30, 2010 - Apache Ivy 2.2.0 Released</h3>
+                                <p>Apache Ivy 2.2.0 is now available for download as source or binary (with and without
+      dependencies) from
+      <a href="http://ant.apache.org/ivy/download.cgi">http://ant.apache.org/ivy/download.cgi</a>.</p>
+                                <p>Key features of the 2.2.0 release are</p>
+                                <ul>
+      <li>enhanced Maven2 compatibility, with several bug fixes and
+        more pom features covered</li>
+      <li>new parent mechanism for Ivy files</li>
+      <li>improved pom generation from an ivy.xml file</li>
+      <li>automated PGP signature generation when uploading artifacts</li>
+      <li>numerous bug fixes and improvements as documented in Jira
+        and in the release notes</li>
+    </ul>
+                                <p>For more information see
+      the <a href="http://ant.apache.org/ivy/">Ivy home page</a>.</p>
+                        <h3 class="section">
+      <a name="Apache Ant1.8.1"></a>
+      Apache Ant1.8.1
+    </h3>
+                        <h3>May 7th, 2010 - Apache Ant 1.8.1 Released</h3>
+                                <p>Apache Ant 1.8.1 is now available for download as source or binary (with and without
+      dependencies) from
+      <a href="http://ant.apache.org/bindownload.cgi">http://ant.apache.org/bindownload.cgi</a>.</p>
+                                <p>Key features of the 1.8.1 release are</p>
+                                <ul>
+      <li>new task augment allows to add attributes or nested elements to previously defined references</li>
+      <li>numerous bug fixes and improvements as documented in Bugzilla
+        and in WHATSNEW</li>
+    </ul>
+                        <h3 class="section">
+      <a name="Apache AntUnit 1.1"></a>
+      Apache AntUnit 1.1
+    </h3>
+                        <h3>September 26, 2008 - Apache AntUnit 1.1 Released</h3>
+                                <p>Apache AntUnit 1.1 is now available for download as <a href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
+      or <a href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
+      release.</p>
+                                <p>In addition to a few bugfixes and some new assertions AntUnit
+      1.1 allows test listeners to receive the log output of the
+      project under test.  Both plainlistener and xmllistener have
+      an option that makes them echo the project's output into their
+      respective logs.</p>
+                                <p>For more information see the <a href="antlibs/antunit/">Antlib's
+        home page</a></p>
                         <h3 class="section">
       <a name="Documentation"></a>
       Documentation
     </h3>
                         <p>
-You can view the documentation for the current release (Apache Ant 1.8.0)
+You can view the documentation for the current release (Apache Ant 1.8.1)
 <a href="manual/index.html">online</a>
 </p>
                                 <p>
@@ -318,9 +301,9 @@ Comprehensive documentation is included in the source and binary distributions.
                         <ul>
 <li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
 <li><a href="mail.html">Join Mailing Lists</a></li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
+<li><a href="http://marc.info/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
 </li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
+<li><a href="http://marc.info/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
 </li>
 </ul>
                 
@@ -328,6 +311,7 @@ Comprehensive documentation is included in the source and binary distributions.
   </div>
 
         <p class="copyright">
+      Apache Ant, Apache Ivy, Ant, Ivy, Apache, the Apache feather logo, and the Apache Ant project logos are trademarks of The Apache Software Foundation.
         <script type="text/javascript" language="JavaScript"><!--
                 document.write(" - "+"Last Published: " + document.lastModified);
               //  -->

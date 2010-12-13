@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Mapper;
 
 import java.io.File;
@@ -30,8 +29,6 @@ import java.io.File;
  *
  */
 public class PresentSelectorTest extends BaseSelectorTest {
-
-    private Project project;
 
     public PresentSelectorTest(String name) {
         super(name);

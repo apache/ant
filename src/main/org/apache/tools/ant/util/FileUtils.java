@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.HttpURLConnection;
@@ -513,12 +512,55 @@ public class FileUtils {
      */
     public void copyFile(File sourceFile, File destFile,
                          FilterSetCollection filters, Vector filterChains,
-                         boolean overwrite, boolean preserveLastModified, boolean append,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
                          String inputEncoding, String outputEncoding,
                          Project project) throws IOException {
-        ResourceUtils.copyResource(new FileResource(sourceFile), new FileResource(destFile),
-                filters, filterChains, overwrite, preserveLastModified, append, inputEncoding,
-                outputEncoding, project);
+        copyFile(sourceFile, destFile, filters, filterChains, overwrite,
+                 preserveLastModified, append, inputEncoding, outputEncoding,
+                 project, /* force: */ false);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param append whether to append to the destination file.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     * @param force whether to overwrite read-only destination files.
+     *
+     * @throws IOException if the copying fails.
+     *
+     * @since Ant 1.8.2
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
+                         String inputEncoding, String outputEncoding,
+                         Project project, boolean force) throws IOException {
+        ResourceUtils.copyResource(new FileResource(sourceFile),
+                                   new FileResource(destFile),
+                                   filters, filterChains, overwrite,
+                                   preserveLastModified, append, inputEncoding,
+                                   outputEncoding, project, force);
     }
 
     // CheckStyle:ParameterNumberCheck ON
@@ -855,6 +897,8 @@ public class FileUtils {
         return createTempFile(prefix, suffix, parentDir, false, false);
     }
 
+    private static final String NULL_PLACEHOLDER = "null";
+
     /**
      * Create a temporary file in a given directory.
      *
@@ -882,6 +926,12 @@ public class FileUtils {
         String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
+        if (prefix == null) {
+            prefix = NULL_PLACEHOLDER;
+        }
+        if (suffix == null) {
+            suffix = NULL_PLACEHOLDER;
+        }
 
         if (createFile) {
             try {
@@ -1206,6 +1256,25 @@ public class FileUtils {
     }
 
     /**
+     * Are the two File instances pointing to the same object on the
+     * file system?
+     * @since Ant 1.8.2
+     */
+    public boolean areSame(File f1, File f2) throws IOException {
+        if (f1 == null && f2 == null) {
+            return true;
+        }
+        if (f1 == null || f2 == null) {
+            return false;
+        }
+        File f1Normalized = normalize(f1.getAbsolutePath());
+        File f2Normalized = normalize(f2.getAbsolutePath());
+        return f1Normalized.equals(f2Normalized)
+            || f1Normalized.getCanonicalFile().equals(f2Normalized
+                                                      .getCanonicalFile());
+    }
+
+    /**
      * Renames a file, even if that involves crossing file system boundaries.
      *
      * <p>This will remove <code>to</code> (if it exists), ensure that
@@ -1230,12 +1299,11 @@ public class FileUtils {
             System.err.println("Cannot rename nonexistent file " + from);
             return;
         }
-        if (from.equals(to)) {
+        if (from.getAbsolutePath().equals(to.getAbsolutePath())) {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
         }
-        if (to.exists() &&
-            !(from.equals(to.getCanonicalFile()) || tryHardToDelete(to))) {
+        if (to.exists() && !(areSame(from, to) || tryHardToDelete(to))) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();

@@ -23,9 +23,7 @@
       <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Apache Ant - External Tools and Tasks</title>
         <link type="text/css" href="./page.css" rel="stylesheet">
-          <meta name="author" content="Stefan Bodewig">
-  <meta name="email" content="bodewig@apache.org">
-      </head>
+        </head>
 
     <body>
       <p class="navpath">
@@ -99,7 +97,7 @@
                                     <a href="./index.html">Welcome</a>
                                 </li>
                             <li>
-                                    <a href="./license.html">License</a>
+                                    <a href="http://www.apache.org/licenses/LICENSE-2.0.html">License</a>
                                 </li>
                             <li>
                                     <a href="./antnews.html">News</a>
@@ -139,6 +137,9 @@
                             <li>
                                     <a href="http://ant.apache.org/srcdownload.cgi">Source Distributions</a>
                                 </li>
+                            <li>
+                                    <a href="http://ant.apache.org/manualdownload.cgi">Ant Manual</a>
+                                </li>
                       </ul>
         </li>
               <li class="menuheader">Contributing
@@ -155,6 +156,9 @@
                             <li>
                                     <a href="./bugs.html">Bug Database</a>
                                 </li>
+                            <li>
+                                    <a href="http://www.apache.org/security/">Security</a>
+                                </li>
                       </ul>
         </li>
               <li class="menuheader">Sponsorship
@@ -164,9 +168,6 @@
                                 </li>
                             <li>
                                     <a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
-                                </li>
-                            <li>
-                                    <a href="http://www.apache.org/foundation/contributing.html">Donations</a>
                                 </li>
                       </ul>
         </li>
@@ -205,7 +206,7 @@
                         <p>This page lists external resources for Apache Ant: <a href="#Tasks">Tasks</a>, <a href="#Compiler%20Implementations">Compiler Implementations</a>,
       <a href="#IDE%20and%20Editor%20Integration">IDE integration
       tools</a>, <a href="#Source%20Control%20ystems">Source Control
-      Systems</a>, loggers, you name it. If you've written
+      Systems</a>, <a href="#Loggers">Loggers</a>, you name it. If you've written
       something that should be included, please post all relevant
       information to one of the mailing lists.  For details, see the
       <a href="faq.html#adding-external-tasks">FAQ</a>.</p>
@@ -1452,6 +1453,67 @@
       </tr>
           </table>
                                                           <h4 class="subsection">
+        <a name="Commons Configuration Ant Task"></a>
+        Commons Configuration Ant Task
+      </h4>
+                        <p>A set of Ant task that help convert Apache Commons
+       Configuration property files into build properties, java Enum's
+       (that are populated at runtime), and any exportable property /
+       env file desired (e.g., csh, bash, bat, etc.).</p>
+                                <p>This project provides the following tasks: 
+       <ul>
+         <li><b>CreateEnumTask</b>: Creates a Java enum based on
+         commons configuration property files. </li>
+         <li><b>ExportPropertiesTask</b>: Exports commons
+         configuration properties to a external file in a using a
+         specified format.</li>
+         <li><b>LoadPropertiesTask</b>: Loads commons configuration
+         properties into pre-generated Java enum.</li>
+       </ul>
+       </p>
+                                      <table class="externals" cellspacing="1" cellpadding="4">
+              <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Compatibility:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          Ant 1.6 and above
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          URL:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="http://code.google.com/p/commonsconfiganttask/">http://code.google.com/p/commonsconfiganttask/</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Contact:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="mailto:ndunn.at.me.com">ndunn at me.com</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          License:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          Apache License 2.0
+      </td>
+      </tr>
+          </table>
+                                                          <h4 class="subsection">
         <a name="Configure"></a>
         Configure
       </h4>
@@ -2644,7 +2706,7 @@
         <a name="J2ME Ant Tasks"></a>
         J2ME Ant Tasks
       </h4>
-                        <p>There are different sets of tasks to help build <a href="http://java.sun.com/j2me/">Java 2 Platform, Micro
+                        <p>There are different sets of tasks to help build <a href="http://www.oracle.com/technetwork/java/javame/overview/index.html">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
                                       <h5 class="subsection">
         <a name="Antenna"></a>
@@ -6939,7 +7001,7 @@
       </th>
                           <td colspan="1" rowspan="1"
       valign="top" align="left">
-          bundles 1.8.0 starting with NetBeans 6.9
+          bundles 1.8.0 starting with NetBeans 6.9; 1.8.1 for 6.9.1
       </td>
       </tr>
                   <tr>
@@ -7414,6 +7476,59 @@
                           <td colspan="1" rowspan="1"
       valign="top" align="left">
           <a href="http://jwaresoftware.org/wiki-include/svn4ant/latest/LICENSE.txt">LGPL 2.1</a>
+      </td>
+      </tr>
+          </table>
+                                            <h3 class="section">
+      <a name="Loggers"></a>
+      Loggers
+    </h3>
+                              <h4 class="subsection">
+        <a name="AntStatistics"></a>
+        AntStatistics
+      </h4>
+                        <p><a href="http://code.google.com/p/antstatistics/">AntStatistics</a> logs execution times for
+        all build targets and displays them at the end of the build. Furthermore execution times of
+        past builds are collected and graphed in a chart.</p>
+                                      <table class="externals" cellspacing="1" cellpadding="4">
+              <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Compatibility:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          Ant 1.3
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          URL:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="http://code.google.com/p/antstatistics/">http://code.google.com/p/antstatistics/</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Contact:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="http://code.google.com/p/antstatistics/issues/list">issue tracker</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          License:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          Apache License 2.0
       </td>
       </tr>
           </table>

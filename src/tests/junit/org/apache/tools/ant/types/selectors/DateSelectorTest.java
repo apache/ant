@@ -19,12 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
-
-import java.text.SimpleDateFormat;
-import java.text.ParsePosition;
-import java.util.Date;
 
 
 /**
@@ -32,8 +27,6 @@ import java.util.Date;
  *
  */
 public class DateSelectorTest extends BaseSelectorTest {
-
-    private Project project;
 
     public DateSelectorTest(String name) {
         super(name);
@@ -175,8 +168,6 @@ public class DateSelectorTest extends BaseSelectorTest {
 
             s = (DateSelector)getInstance();
             s.setDatetime("11/21/2001 4:55 AM");
-            SimpleDateFormat formatter = new SimpleDateFormat();
-            Date d = formatter.parse("11/21/2001 4:55 AM",new ParsePosition(0));
 
             long milliseconds = s.getMillis();
             s.setWhen(equal);

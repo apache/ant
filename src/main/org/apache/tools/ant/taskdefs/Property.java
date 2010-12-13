@@ -94,6 +94,7 @@ public class Property extends Task {
     private boolean valueAttributeUsed = false;
     private boolean relative = false;
     private File basedir;
+    private boolean prefixValues = false;
 
     protected boolean userProperty; // set read-only properties
     // CheckStyle:VisibilityModifier ON
@@ -294,6 +295,26 @@ public class Property extends Task {
     }
 
     /**
+     * Whether to apply the prefix when expanding properties on the
+     * right hand side of a properties file as well.
+     *
+     * @since Ant 1.8.2
+     */
+    public void setPrefixValues(boolean b) {
+        prefixValues = b;
+    }
+
+    /**
+     * Whether to apply the prefix when expanding properties on the
+     * right hand side of a properties file as well.
+     *
+     * @since Ant 1.8.2
+     */
+    public boolean getPrefixValues() {
+        return prefixValues;
+    }
+
+    /**
      * Sets a reference to an Ant datatype
      * declared elsewhere.
      * Only yields reasonable results for references
@@ -461,7 +482,7 @@ public class Property extends Task {
                 try {
                     File from = untypedValue instanceof File ? (File)untypedValue : new File(untypedValue.toString());
                     File to = basedir != null ? basedir : getProject().getBaseDir();
-                    String relPath = FileUtils.getFileUtils().getRelativePath(to, from);
+                    String relPath = FileUtils.getRelativePath(to, from);
                     relPath = relPath.replace('/', File.separatorChar);
                     addProperty(name, relPath);
                 } catch (Exception e) {
@@ -643,16 +664,10 @@ public class Property extends Task {
             prefix += ".";
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
-        Vector osEnv = Execute.getProcEnvironment();
-        for (Enumeration e = osEnv.elements(); e.hasMoreElements();) {
-            String entry = (String) e.nextElement();
-            int pos = entry.indexOf('=');
-            if (pos == -1) {
-                log("Ignoring: " + entry, Project.MSG_WARN);
-            } else {
-                props.put(prefix + entry.substring(0, pos),
-                          entry.substring(pos + 1));
-            }
+        Map osEnv = Execute.getEnvironmentVariables();
+        for (Iterator e = osEnv.entrySet().iterator(); e.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) e.next();
+            props.put(prefix + entry.getKey(), entry.getValue());
         }
         addProperties(props);
     }
@@ -716,7 +731,7 @@ public class Property extends Task {
                                getProject(),
                                propertyHelper,
                                propertyHelper.getExpanders())
-            .resolveAllProperties(props, prefix);
+            .resolveAllProperties(props, getPrefix(), getPrefixValues());
     }
 
 }

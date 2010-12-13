@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 
 /**
@@ -27,8 +26,6 @@ import org.apache.tools.ant.types.Parameter;
  *
  */
 public class FilenameSelectorTest extends BaseSelectorTest {
-
-    private Project project;
 
     public FilenameSelectorTest(String name) {
         super(name);

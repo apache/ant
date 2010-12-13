@@ -125,15 +125,13 @@ public class LineOrientedOutputStreamTest extends TestCase {
     private class DummyStream extends LineOrientedOutputStream {
         private boolean invoked;
         protected void processLine(String line) {
-            LineOrientedOutputStreamTest.this.assertFalse("Only one line",
-                                                          invoked);
-            LineOrientedOutputStreamTest.this.assertEquals(LINE, line);
+            assertFalse("Only one line", invoked);
+            assertEquals(LINE, line);
             invoked = true;
         }
 
         private void assertInvoked() {
-            LineOrientedOutputStreamTest.this.assertTrue("At least one line",
-                                                          invoked);
+            assertTrue("At least one line", invoked);
         }
     }
 }// LineOrientedOutputStreamTest

@@ -27,8 +27,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PushbackReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
@@ -78,7 +78,7 @@ import java.util.Properties;
  * although the key-value pair <code>beta=two</code> is removed.</p>
  */
 public class LayoutPreservingProperties extends Properties {
-    private static final String LS = System.getProperty("line.separator");
+    private String LS = StringUtils.LINE_SEP;
 
     /**
      * Logical lines have escaping and line continuation taken care
@@ -310,14 +310,15 @@ public class LayoutPreservingProperties extends Properties {
      */
     private String readLines(InputStream is) throws IOException {
         InputStreamReader isr = new InputStreamReader(is, ResourceUtils.ISO_8859_1);
-        BufferedReader br = new BufferedReader(isr);
+        PushbackReader pbr = new PushbackReader(isr, 1);
 
         if (logicalLines.size() > 0) {
             // we add a blank line for spacing
             logicalLines.add(new Blank());
         }
 
-        String s = br.readLine();
+        String s = readFirstLine(pbr);
+        BufferedReader br = new BufferedReader(pbr);
 
         boolean continuation = false;
         boolean comment = false;
@@ -364,6 +365,46 @@ public class LayoutPreservingProperties extends Properties {
             s = br.readLine();
         }
         return fileBuffer.toString();
+    }
+
+    /**
+     * Reads the first line and determines the EOL-style of the file
+     * (relies on the style to be consistent, of course).
+     *
+     * <p>Sets LS as a side-effect.</p>
+     *
+     * @return the first line without any line separator, leaves the
+     * reader positioned after the first line separator
+     *
+     * @since Ant 1.8.2
+     */
+    private String readFirstLine(PushbackReader r) throws IOException {
+        StringBuffer sb = new StringBuffer(80);
+        int ch = r.read();
+        boolean hasCR = false;
+        // when reaching EOF before the first EOL, assume native line
+        // feeds
+        LS = StringUtils.LINE_SEP;
+
+        while (ch >= 0) {
+            if (hasCR && ch != '\n') {
+                // line feed is sole CR
+                r.unread(ch);
+                break;
+            }
+
+            if (ch == '\r') {
+                LS = "\r";
+                hasCR = true;
+            } else if (ch == '\n') {
+                LS = hasCR ? "\r\n" : "\n";
+                break;
+            } else {
+                sb.append((char) ch);
+            }
+            ch = r.read();
+        }
+        return sb.toString();
     }
 
     /**

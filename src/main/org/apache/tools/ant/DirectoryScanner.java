@@ -20,7 +20,6 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -169,6 +168,26 @@ public class DirectoryScanner
         // Subversion
         SelectorUtils.DEEP_TREE_MATCH + "/.svn",
         SelectorUtils.DEEP_TREE_MATCH + "/.svn/" + SelectorUtils.DEEP_TREE_MATCH,
+
+        // Git
+        SelectorUtils.DEEP_TREE_MATCH + "/.git",
+        SelectorUtils.DEEP_TREE_MATCH + "/.git/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitattributes",
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitignore",
+        SelectorUtils.DEEP_TREE_MATCH + "/.gitmodules",
+
+        // Mercurial
+        SelectorUtils.DEEP_TREE_MATCH + "/.hg",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hg/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgignore",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgsub",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgsubstate",
+        SelectorUtils.DEEP_TREE_MATCH + "/.hgtags",
+
+        // Bazaar
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzr",
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzr/" + SelectorUtils.DEEP_TREE_MATCH,
+        SelectorUtils.DEEP_TREE_MATCH + "/.bzrignore",
 
         // Mac
         SelectorUtils.DEEP_TREE_MATCH + "/.DS_Store"
@@ -1228,7 +1247,7 @@ public class DirectoryScanner
             TokenizedPath newPath = new TokenizedPath(path, newfiles[i]);
             File file = new File(dir, newfiles[i]);
             String[] children = file.list();
-            if (children == null) { // probably file
+            if (children == null || (children.length == 0 && file.isFile())) {
                 if (isIncluded(newPath)) {
                     accountForIncludedFile(newPath, file);
                 } else {
@@ -1255,7 +1274,8 @@ public class DirectoryScanner
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(newPath)) {
+                    if (fast && couldHoldIncluded(newPath)
+                        && !contentsExcluded(newPath)) {
                         scandir(file, newPath, fast, children,
                                 directoryNamesFollowed);
                     }
@@ -1458,7 +1478,7 @@ public class DirectoryScanner
      * @param path the path to check.
      * @return whether all the specified directory's contents are excluded.
      */
-    private boolean contentsExcluded(TokenizedPath path) {
+    /* package */ boolean contentsExcluded(TokenizedPath path) {
         for (int i = 0; i < excludePatterns.length; i++) {
             if (excludePatterns[i].endsWith(SelectorUtils.DEEP_TREE_MATCH)
                 && excludePatterns[i].withoutLastToken()
@@ -1783,7 +1803,7 @@ public class DirectoryScanner
      *
      * @since Ant 1.6.3
      */
-    private synchronized void ensureNonPatternSetsReady() {
+    /* package */ synchronized void ensureNonPatternSetsReady() {
         if (!areNonPatternSetsReady) {
             includePatterns = fillNonPatternSet(includeNonPatterns, includes);
             excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);

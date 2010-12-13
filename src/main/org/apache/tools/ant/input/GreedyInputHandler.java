@@ -31,8 +31,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class GreedyInputHandler extends DefaultInputHandler {
 
-    private static final int BUFFER_SIZE = 1024;
-
     /**
      * Empty no-arg constructor
      */

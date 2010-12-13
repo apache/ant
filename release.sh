@@ -31,6 +31,9 @@ export PATH=$JAVA_HOME/bin:$PATH
 echo ANT_HOME=$ANT_HOME
 echo JAVA_HOME=$JAVA_HOME
 which java
-echo running second build under JDK 1.5 including tests
-./build.sh distribution run-tests
+echo running second build under JDK 1.5
+./build.sh dist-lite 
+echo running third build to run the tests and do the distribution
+dist/bin/ant -nouserlib -lib lib/optional  run-tests distribution
+
 

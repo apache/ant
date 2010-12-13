@@ -24,7 +24,7 @@
        <menusection name="Home" index="0"         href="/index.html">
             <menu name="Apache Ant">
                 <item name="Welcome"               href="/index.html"/>
-                <item name="License"               href="/license.html"/>
+                <item name="License"               href="http://www.apache.org/licenses/LICENSE-2.0.html"/>
                 <item name="News"                  href="/antnews.html"/>
             </menu>
 
@@ -48,6 +48,7 @@
             <menu name="Download">
                 <item name="Binary Distributions" href="http://ant.apache.org/bindownload.cgi"/>
                 <item name="Source Distributions" href="http://ant.apache.org/srcdownload.cgi"/>
+                <item name="Ant Manual" href="http://ant.apache.org/manualdownload.cgi"/>
             </menu>
 
             <menu name="Contributing">
@@ -55,12 +56,12 @@
                 <item name="Subversion Repositories"      href="/svn.html"/>
                 <item name="Nightly+Continuous Builds"    href="/nightlies.html"/>
                 <item name="Bug Database"                 href="/bugs.html"/>
+                <item name="Security"                     href="http://www.apache.org/security/"/>
             </menu>
 
             <menu name="Sponsorship">
                 <item name="Thanks"                href="http://www.apache.org/foundation/thanks.html"/>
                 <item name="Sponsorship"           href="http://www.apache.org/foundation/sponsorship.html"/>
-                <item name="Donations"             href="http://www.apache.org/foundation/contributing.html"/>
             </menu>
 
             <menu name="Project Management">
@@ -75,7 +76,7 @@
             <menu name="Projects">
                 <item name="Welcome"               href="/projects/index.html"/>
             </menu>
-            <menu name="Ant Libraries">
+            <menu name="Apache Ant Libraries">
                 <item name="Introduction"          href="/antlibs/index.html"/>
                 <item name="Charter"               href="/antlibs/charter.html"/>
                 <item name="Ant Libraries"         href="/antlibs/proper.html"/>
@@ -83,13 +84,13 @@
                 <item name="Binary Distributions" href="http://ant.apache.org/antlibs/bindownload.cgi"/>
                 <item name="Source Distributions" href="http://ant.apache.org/antlibs/srcdownload.cgi"/>
             </menu>
-            <menu name="Ivy">
+            <menu name="Apache Ivy">
                 <item name="Introduction"         href="/projects/ivy.html"/>
                 <item name="Homepage"             href="http://ant.apache.org/ivy/"/>
                 <item name="Distributions"        href="http://ant.apache.org/ivy/download.cgi"/>
                 <item name="Wiki"                 href="http://cwiki.apache.org/IVY/"/>
             </menu>
-            <menu name="IvyDE">
+            <menu name="Apache IvyDE">
                 <item name="Introduction"         href="/projects/ivyde.html"/>
                 <item name="Homepage"             href="http://ant.apache.org/ivy/ivyde"/>
                 <item name="Screenshots"          href="http://ant.apache.org/ivy/ivyde/screenshots.html"/>
