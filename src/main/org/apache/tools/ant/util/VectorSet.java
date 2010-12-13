@@ -76,13 +76,13 @@ public final class VectorSet extends Vector {
         // Vector.add seems to delegate to insertElementAt, but this
         // is not documented so we may better implement it ourselves
         if (set.add(o)) {
-            ensureCapacity(size() + 1);
-            Object[] elems = new Object[elementData.length];
-            System.arraycopy(elementData, 0, elems, 0, index);
-            elems[index] = o;
-            System.arraycopy(elementData, index, elems, index + 1,
-                             size() - index);
-            elementData = elems;
+            int count = size();
+            ensureCapacity(count + 1);
+            if (index != count) {
+                System.arraycopy(elementData, index, elementData, index + 1,
+                                 count - index);
+            }
+            elementData[index] = o;
             elementCount++;
         }
     }

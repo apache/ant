@@ -286,6 +286,10 @@ Other changes:
    compile to .class files).
    Bugzilla Report 48829.
 
+ * The performance of VectorSet#add(Object) has been improved which
+   should also benefit any operation that scans directories in Ant.
+   Bugzilla Report 50200.
+
 Changes from Ant 1.8.0 TO Ant 1.8.1 
 ===================================
 
