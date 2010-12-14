@@ -28,8 +28,7 @@ import java.util.zip.ZipException;
  * access to the internal and external file attributes.
  *
  * <p>The extra data is expected to follow the recommendation of
- * {@link http://www.pkware.com/documents/casestudies/APPNOTE.TXT
- * APPNOTE.txt}:</p>
+ * the .ZIP File Format Specification created by PKWARE Inc. :</p>
  * <ul>
  *   <li>the extra byte array consists of a sequence of extra fields</li>
  *   <li>each extra fields starts by a two byte header id followed by
@@ -42,6 +41,8 @@ import java.util.zip.ZipException;
  * methods of this class.  Versions prior to Apache Commons Compress
  * 1.1 would have thrown an exception if any attempt was made to read
  * or write extra data not conforming to the recommendation.</p>
+ * @see <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">
+ * .ZIP File Format Specification</a> 
  *
  */
 public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
