@@ -147,7 +147,7 @@ Fixed bugs:
    Bugzilla Report 49587.
 
  * Project#setDefault threw an exception when null was passed in as
-   argument, even though the javadoc says, null is a valid value.
+   argument, even though the Javadoc says null is a valid value.
    Bugzilla Report 49803.
 
  * runant.py would swallow the first argument if CLASSPATH wasn't set.
@@ -223,8 +223,8 @@ Other changes:
    when used in any other way than a CLASSPATH for a forked Java VM. 
    Bugzilla Report 46842.
 
- * A new attribute allows targets to deal with non-existant extensions
-   points, i.e. they can extend and extension-point if it has been
+ * A new attribute allows targets to deal with nonexistent extension
+   points, i.e. they can extend an extension-point if it has been
    defined or silently work as plain targets if it hasn't.  This is
    useful for targets that get included/imported in different
    scenarios where a given extension-point may or may not exist.

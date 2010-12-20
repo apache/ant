@@ -147,7 +147,6 @@ undefined='<xsl:value-of select="$undefined"/>'
     </xslt>
   </target>
 
-  <available property="jdk1.5+" classname="java.net.Proxy"/>
 
   <target name="testTraceJdk14" unless="jdk1.5+" depends="setUp">
     <xslt in="${legacy.dir}/data.xml"
