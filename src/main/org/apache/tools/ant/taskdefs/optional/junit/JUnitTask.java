@@ -718,6 +718,7 @@ public class JUnitTask extends Task {
         addClasspathEntry("/org/apache/tools/ant/launch/AntMain.class");
         addClasspathEntry("/org/apache/tools/ant/Task.class");
         addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
+        addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter.class");
     }
 
     private static JUnitTaskMirror createMirror(JUnitTask task, ClassLoader loader) {

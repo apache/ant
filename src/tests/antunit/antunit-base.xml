@@ -20,6 +20,7 @@
   <property name="input" location="${java.io.tmpdir}/testinput"/>
   <property name="output" location="${java.io.tmpdir}/testoutput"/>
   <available property="jdk1.6+" classname="java.util.ServiceLoader"/>
+  <available property="jdk1.5+" classname="java.net.Proxy"/>
 
   <target name="tearDown">
     <delete dir="${input}"/>
