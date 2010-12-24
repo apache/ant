@@ -891,7 +891,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-	    <td><a href="http://ant-doxygen.blogspot.com">http://ant-doxygen.blogspot.com</a></td>
+            <td><a href="http://ant-doxygen.blogspot.com">http://ant-doxygen.blogspot.com</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
@@ -900,6 +900,31 @@
           <tr>
             <th>License:</th>
             <td>Apache License 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="dtAnt">
+        <p>dtAnt allows integrating dynaTrace Application Performance Management 
+                into your ant builds. This way you can easily record performance metrics 
+                of your tests including transactional performance data. 
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="https://community.dynatrace.com/community/display/DL/Ant+Task+for+dynaTrace+3">https://community.dynatrace.com/community/display/DL/Ant+Task+for+dynaTrace+3</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://support.dynatrace.com/">dynaTrace Support</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="https://community.dynatrace.com/community/download/attachments/5144912/dynaTraceBSD.txt">dynaTrace BSD</a></td>
           </tr>
         </table>
       </subsection>
@@ -3399,7 +3424,7 @@
             <td>Apache License 2.0</td>
           </tr>
         </table>      
-	  </subsection>
+      </subsection>
 
       <subsection name="XMLReleaseNotes (XRN)">
 
