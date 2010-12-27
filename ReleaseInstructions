@@ -118,27 +118,17 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     Revision 437509 Uebertragen.
 
-9.  Sign the distribution files using the following simple script
+9.  Sign the distribution files using the script release/signit.xml 
 
-    @TODO : document using commons-openpgp to sign the artefacts,
-    change the build file to do this
- 
-    #!/bin/sh
-    # signing the various source and binary archives of the entire distribution
-    for i in `/usr/bin/find distribution \( -name "*.bz2" -o -name  "*.zip" -o -name "*.gz" \)`
-    do
-         echo "Signing " $i
-         gpg -a -b --force-v3-sigs $i
-    done
-    # signing the maven artefacts
-    for i in `/usr/bin/find java-repository \( -name "*.pom" -o -name  "*.jar" \)`
-    do
-         echo "Signing " $i
-         gpg -a -b --force-v3-sigs $i
-    done
+    This script requires using commons-openpgp to sign the artefacts,
 
-    The --force-v3-sigs will improve the interoperability with PGP 5.x,
-    see <http://www.gnupg.org/(en)/documentation/faqs.html#q5.5>.
+    This tool can be checked out from 
+    http:/svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
+    You have to build it using maven
+    
+    You can create a property file .gnupg.properties in your home directory 
+    with your key id
+    and pass your key passphrase on the command line with -Dpassword=****
 
     Before you do that, ensure that the key you use is inside the KEYS
     file in Ant's SVN repository
