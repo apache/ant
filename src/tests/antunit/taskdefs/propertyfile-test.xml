@@ -23,7 +23,8 @@
       <mkdir dir="${output}"/>
     </target>
 
-    <target name="testInternationalText" depends="-fileResourceSetup">
+    <target name="testInternationalText" depends="-fileResourceSetup"
+        description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50515">
         <property name="line1" value="萬 利 食 品 批 發 公 司" />
         <property name="line2" value="TEL: (123)123-1234" />
         <propertyfile file="${output}/test.properties">
