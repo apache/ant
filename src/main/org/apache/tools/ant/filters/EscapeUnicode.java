@@ -20,6 +20,8 @@ package org.apache.tools.ant.filters;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.apache.tools.ant.util.UnicodeUtil;
+
 /**
  * This method converts non-latin characters to unicode escapes.
  * Useful to load properties containing non latin
@@ -85,14 +87,7 @@ public class EscapeUnicode
             if (ch != -1) {
                 char achar = (char) ch;
                 if (achar >= '\u0080') {
-                    unicodeBuf = new StringBuffer("u0000");
-                    String s = Integer.toHexString(ch);
-                    //replace the last 0s by the chars contained in s
-                    for (int i = 0; i < s.length(); i++) {
-                        unicodeBuf.setCharAt(unicodeBuf.length()
-                                             - s.length() + i,
-                                             s.charAt(i));
-                    }
+                    unicodeBuf = UnicodeUtil.EscapeUnicode(achar);
                     ch = '\\';
                 }
             }
