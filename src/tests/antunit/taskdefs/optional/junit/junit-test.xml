@@ -300,19 +300,7 @@ public class BTest extends TestCase {
     </au:expectfailure>
   </target>
 
-	<target name="-setUp.methods" depends="setUp">
-	  <property name="junit-3.8.2.location" location="../../../../lib/optional/junit-3.8.2.jar"/>
-	  <property name="junit-4.8.1.location" location="../../../../lib/optional/junit-4.8.1.jar"/>
-	  <condition property="test.can.run">
-	     <and>
-	     	<available file="${junit-3.8.2.location}"/>
-	     	<available file="${junit-4.8.1.location}"/>
-	     	<isset property="jdk1.5+"/>
-	     </and>
-	  </condition>
-	</target>
-
-	<target name="testFailNone" depends="-setUp.methods" if="test.can.run">
+	<target name="testTestMethods" if="jdk1.5+">
 		<echo file="${input}/T1.java">public class T1 extends
 			junit.framework.TestCase {
 			public void testOK() {}
@@ -330,23 +318,16 @@ public class BTest extends TestCase {
 		<javac srcdir="${input}" destdir="${output}" includes="T1.java,T2.java" source="5"
 			 includeantruntime="false" >
 			 <classpath>
-			   <pathelement path="${java.class.path}"/>
+			   <path refid="junit"/>
 			 </classpath>
 		</javac>
-		<junit fork="true" printsummary="true" failureproperty="test.failed" errorproperty="test.haseerror">
+		<junit fork="true" printsummary="true" haltonerror="true">
 			<classpath>
 			  <pathelement location="${output}"/>
-			  <pathelement location="${junit-3.8.2.location}"/>
-			  <pathelement location="${junit-4.8.1.location}"/>
+		          <path refid="junit"/>
 			</classpath>
 			<test name="T1" methods="testOK" />
 			<test name="T2" methods="ok" />
 		</junit>
-		<au:assertFalse>
-		<or>
-		   <isset property="test.failed"/>
-		   <isset property="test.haserror"/>
-		</or>
-		</au:assertFalse>
 	</target>
 </project>
