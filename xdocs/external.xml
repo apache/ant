@@ -3855,7 +3855,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles 1.8.0 starting with NetBeans 6.9; 1.8.1 for 6.9.1</td>
+            <td>bundles 1.8.0 starting with NetBeans 6.9; 1.8.1 for 6.9.1; 1.8.2 for 7.0</td>
           </tr>
           <tr>
             <th>URL:</th>
