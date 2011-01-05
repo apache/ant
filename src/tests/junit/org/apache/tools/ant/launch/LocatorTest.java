@@ -172,6 +172,10 @@ public class LocatorTest extends TestCase {
         char umlauted = result.charAt(1);
         assertEquals("expected 0xf6 (\u00f6), but got " + Integer.toHexString(umlauted) + " '"
                 + umlauted + "'", 0xf6, umlauted);
+        assertEquals("file:/tmp/a%C3%A7a%C3%AD%20berry", Locator.encodeURI("file:/tmp/a\u00E7a\u00ED berry"));
+        assertEquals("file:/tmp/a\u00E7a\u00ED berry", Locator.decodeUri("file:/tmp/a%C3%A7a%C3%AD%20berry"));
+        assertEquals("file:/tmp/a\u00E7a\u00ED berry", Locator.decodeUri("file:/tmp/a\u00E7a\u00ED%20berry")); // #50543
+        assertEquals("file:/tmp/hezky \u010Desky", Locator.decodeUri("file:/tmp/hezky%20\u010Desky")); // non-ISO-8859-1 variant
     }
 
     public void testOddLowAsciiURI() throws Exception {

@@ -312,8 +312,11 @@ public final class Locator {
                         sb.write((char) ((i1 << NIBBLE) + i2));
                     }
                 }
-            } else {
+            } else if (c >= 0x0000 && c < 0x0080) {
                 sb.write(c);
+            } else { // #50543
+                byte[] bytes = String.valueOf(c).getBytes(URI_ENCODING);
+                sb.write(bytes, 0, bytes.length);
             }
         }
         return sb.toString(URI_ENCODING);
