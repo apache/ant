@@ -104,6 +104,8 @@ public class JavaCC extends Task {
     protected static final String ORG_JJTREE_CLASS = COM_JJTREE_CLASS;
     protected static final String ORG_JJDOC_CLASS = COM_JJDOC_CLASS;
 
+    private String maxMemory = null;
+
     /**
      * Sets the LOOKAHEAD grammar option.
      * @param lookahead an <code>int</code> value.
@@ -309,6 +311,16 @@ public class JavaCC extends Task {
     }
 
     /**
+     * Corresponds -Xmx.
+     *
+     * @param max max memory parameter.
+     * @since Ant 1.8.3
+     */
+    public void setMaxmemory(String max) {
+        maxMemory = max;
+    }
+
+    /**
      * Constructor
      */
     public JavaCC() {
@@ -361,8 +373,8 @@ public class JavaCC extends Task {
         cmdl.setClassname(JavaCC.getMainClass(classpath,
                                               JavaCC.TASKDEF_TYPE_JAVACC));
 
+        cmdl.setMaxmemory(maxMemory);
         final Commandline.Argument arg = cmdl.createVmArgument();
-        arg.setValue("-mx140M");
         arg.setValue("-Dinstall.root=" + javaccHome.getAbsolutePath());
 
         Execute.runCommand(this, cmdl.getCommandline());

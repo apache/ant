@@ -58,6 +58,7 @@ public class JJDoc extends Task {
 
     private CommandlineJava cmdl = new CommandlineJava();
 
+    private String maxMemory = null;
 
     /**
      * Sets the TEXT BNF documentation option.
@@ -100,6 +101,16 @@ public class JJDoc extends Task {
      */
     public void setJavacchome(File javaccHome) {
         this.javaccHome = javaccHome;
+    }
+
+    /**
+     * Corresponds -Xmx.
+     *
+     * @param max max memory parameter.
+     * @since Ant 1.8.3
+     */
+    public void setMaxmemory(String max) {
+        maxMemory = max;
     }
 
     /**
@@ -154,8 +165,8 @@ public class JJDoc extends Task {
         cmdl.setClassname(JavaCC.getMainClass(classpath,
                                               JavaCC.TASKDEF_TYPE_JJDOC));
 
+        cmdl.setMaxmemory(maxMemory);
         final Commandline.Argument arg = cmdl.createVmArgument();
-        arg.setValue("-mx140M");
         arg.setValue("-Dinstall.root=" + javaccHome.getAbsolutePath());
 
         final Execute process =

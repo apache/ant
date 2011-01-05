@@ -10,6 +10,10 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * The <javacc>, <jjtree> and <jjdoc> now support a new maxmemory
+   attribute.
+   Bugzilla Report 50513.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

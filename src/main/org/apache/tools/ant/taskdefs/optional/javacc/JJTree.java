@@ -67,6 +67,7 @@ public class JJTree extends Task {
 
     private CommandlineJava cmdl = new CommandlineJava();
 
+    private String maxMemory = null;
 
     /**
      * Sets the BUILD_NODE_FILES grammar option.
@@ -193,6 +194,16 @@ public class JJTree extends Task {
     }
 
     /**
+     * Corresponds -Xmx.
+     *
+     * @param max max memory parameter.
+     * @since Ant 1.8.3
+     */
+    public void setMaxmemory(String max) {
+        maxMemory = max;
+    }
+
+    /**
      * Constructor
      */
     public JJTree() {
@@ -267,8 +278,8 @@ public class JJTree extends Task {
         cmdl.setClassname(JavaCC.getMainClass(classpath,
                                               JavaCC.TASKDEF_TYPE_JJTREE));
 
+        cmdl.setMaxmemory(maxMemory);
         final Commandline.Argument arg = cmdl.createVmArgument();
-        arg.setValue("-mx140M");
         arg.setValue("-Dinstall.root=" + javaccHome.getAbsolutePath());
 
         final Execute process =
