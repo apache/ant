@@ -7,6 +7,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * Encoding of unicode escape sequences by the property file task
+   Bugzilla Report 50515.
+
 Other changes:
 --------------
 
