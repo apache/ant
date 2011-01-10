@@ -26,7 +26,7 @@ import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 /**
  * A selector that selects writable files.
  *
- * <p>Writable is definied in terms of java.io.File#canWrite, this
+ * <p>Writable is defined in terms of java.io.File#canWrite, this
  * means the selector will accept any file that exists and is
  * writable by the application.</p>
  *
