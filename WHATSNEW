@@ -10,6 +10,10 @@ Fixed bugs:
  * Encoding of unicode escape sequences by the property file task
    Bugzilla Report 50515.
 
+ * The code that implicitly sets the -source switch if only -target is
+   in <javac> was broken for Java 5 and 6.
+   Bugzilla Report 50578.
+
 Other changes:
 --------------
 

@@ -361,7 +361,7 @@ public abstract class DefaultCompilerAdapter
                 setImplicitSourceSwitch((assumeJava15() || assumeJava16())
                                         ? "1.5 in JDK 1.5 and 1.6"
                                         : "1.7 in JDK 1.7",
-                                        cmd, s, t);
+                                        cmd, t, s);
             } else if (assumeJava17() && (t.equals("1.5") || t.equals("1.6"))) {
                 setImplicitSourceSwitch("1.7 in JDK 1.7", cmd, t, t);
             }
