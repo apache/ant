@@ -904,31 +904,6 @@
         </table>
       </subsection>
 
-      <subsection name="dtAnt">
-        <p>dtAnt allows integrating dynaTrace Application Performance Management 
-                into your ant builds. This way you can easily record performance metrics 
-                of your tests including transactional performance data. 
-        </p>
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.6 and higher</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="https://community.dynatrace.com/community/display/DL/Ant+Task+for+dynaTrace+3">https://community.dynatrace.com/community/display/DL/Ant+Task+for+dynaTrace+3</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://support.dynatrace.com/">dynaTrace Support</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td><a href="https://community.dynatrace.com/community/download/attachments/5144912/dynaTraceBSD.txt">dynaTrace BSD</a></td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="DTDDoc">
         <p>DTDDoc is here to help you to document your DTD's efficiently. It is a
         straightforward extension of the javadoc concept to the DTD file format.</p>
@@ -949,6 +924,31 @@
           <tr>
             <th>License:</th>
             <td>X11 (Open Source)</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="dynaTrace Ant Task">
+        <p>dtAnt allows integrating automated performance analysis
+                 into your ant builds. This way you can easily record performance metrics
+                 of your tests and get alerts to performance regressions.</p>
+                 
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.dynatrace.com/antTask">http://www.dynatrace.com/antTask</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://support.dynatrace.com/">dynaTrace Support</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="https://community.dynatrace.com/community/download/attachments/5144912/dynaTraceBSD.txt">dynaTrace BSD</a></td>
           </tr>
         </table>
       </subsection>
