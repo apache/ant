@@ -1253,62 +1253,6 @@
         </table>
       </subsection>
 
-      <subsection name="Image">
-        <p>Image task generates and transforms images. It exposes the
-        imaging capability available in Java2D, Java Advanced Imaging,
-        ImageIO, etc., as set of nested elements.</p>
-
-        <p>Image transformations such as &quot;resize&quot;
-        (scale),&quot;overlay&quot; (one image on another),
-        &quot;border&quot; (add a border), &quot;text&quot; (text on
-        image), &quot;crop&quot; (a sub-image of a bigger image),
-        &quot;rotate&quot;, &quot;grayscale&quot; (change a color
-        image to shades of gray).<br/>
-        Now it supports transparency (making images translucent), a
-        bestfit option for Resize, simple support for images within
-        a security-constraint, a preliminary support (if pjatools.jar
-        is available) for saving files as GIF and some other fixes.</p>
-
-        <p>IMPORTANT: You will need the PMIW (Poor Man's Imaging Wrapper) jar
-        for all the operations and the pjatools jar for GIF encoding/ saving
-        support.</p>
-        
-        <p>Note: The website encourage the use of Ants internal image tasks. While the development
-        of these image tasks is stopped the development of the underlying PMIW should occur.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a
-                href="http://www.mullassery.com/software/ANT/">http://www.mullassery.com/software/ANT/</a></td>
-          </tr>
-          <tr>
-            <th>pmiw jar</th>
-            <td><a
-                href="http://www.mullassery.com/software/PMIW/">http://www.mullassery.com/software/PMIW/</a>
-                (Poor Man's Imaging Wrapper)</td>
-          </tr>
-          <tr>
-            <th>pjatools jar</th>
-            <td><a
-                href="http://www.eteks.com/pja/en/">http://www.eteks.com/pja/en/</a>
-                (pjatools for GIF encoding support)</td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.mullassery.com">Abey Mullassery</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>Apache Software License 1.1</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="Importscrubber">
         <p>Removes unnecessary import statements from a Java source code file.</p>
 
