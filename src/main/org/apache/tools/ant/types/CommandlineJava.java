@@ -678,13 +678,14 @@ public class CommandlineJava implements Cloneable {
                                   + "the target VM doesn't support it.");
             }
         } else {
-            if (bootclasspath != null) {
-                return bootclasspath.concatSystemBootClasspath(isCloneVm()
-                                                               ? "last"
-                                                               : "ignore");
-            } else if (isCloneVm()) {
-                return Path.systemBootClasspath;
+            Path b = bootclasspath;
+            if (b == null) {
+                b = new Path(null);
             }
+            // even with no user-supplied bootclasspath
+            // build.sysclasspath could be set to something other than
+            // "ignore" and thus create one
+            return b.concatSystemBootClasspath(isCloneVm() ? "last" : "ignore");
         }
         return new Path(null);
     }
