@@ -27,6 +27,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.Union;
@@ -552,11 +553,11 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         Path result = new Path(getProject());
 
         String order = defValue;
-        if (getProject() != null) {
-            String o = getProject().getProperty("build.sysclasspath");
-            if (o != null) {
-                order = o;
-            }
+        String o = getProject() != null 
+            ? getProject().getProperty(MagicNames.BUILD_SYSCLASSPATH)
+            : System.getProperty(MagicNames.BUILD_SYSCLASSPATH);
+        if (o != null) {
+            order = o;
         }
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
@@ -574,7 +575,8 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         } else {
             // last: don't trust the developer
             if (!order.equals("last")) {
-                log("invalid value for build.sysclasspath: " + order,
+                log("invalid value for " + MagicNames.BUILD_SYSCLASSPATH
+                    + ": " + order,
                     Project.MSG_WARN);
             }
             result.addExisting(this);
