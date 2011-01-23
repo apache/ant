@@ -16,10 +16,12 @@
   limitations under the License.
 -->
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml"/>
+
   <property name="ant.build.dir" location="../../../../../build"/>
   <property name="my.build.dir"
             location="${ant.build.dir}/ant-unit/uuencode-dir"/>
-  <property name="classes.dir" location="${my.build.dir}/classes"/>
+  <property name="classes.dir" location="${output}"/>
 
   <available property="sun.uudecode.avail" classname="sun.misc.UUDecoder"/>
 

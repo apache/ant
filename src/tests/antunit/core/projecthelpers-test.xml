@@ -19,8 +19,8 @@
 
   <import file="../antunit-base.xml"/>
 
-  <property name="projecthelperin" location="${java.io.tmpdir}/projecthelperinput"/>
-  <property name="projecthelperout" location="${java.io.tmpdir}/projecthelperoutput"/>
+  <property name="projecthelperin" location="${input}"/>
+  <property name="projecthelperout" location="${output}"/>
 
   <target name="compileHelpers">
     <mkdir dir="${projecthelperin}/org/apache/tools/ant"/>
@@ -83,8 +83,4 @@
     <ant antfile="projecthelpers/build-cross-extension.xml" />
   </target>
 
-  <target name="tearDown" depends="antunit-base.tearDown">
-    <delete dir="${projecthelperin}"/>
-    <delete dir="${projecthelperout}"/>
-  </target>
 </project>

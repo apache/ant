@@ -20,7 +20,7 @@
 
   <import file="../propertyhelpers.xml" as="ph"/>
 
-  <target name="tearDown" depends="antunit-base.tearDown,ph.tearDown">
+  <target name="tearDown" depends="antunit-base.tearDown">
     <delete dir="foo"/>
   </target>
 
