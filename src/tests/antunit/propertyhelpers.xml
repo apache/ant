@@ -16,14 +16,13 @@
   limitations under the License.
 -->
 <project>
-  <property name="propin" location="${java.io.tmpdir}/propertyhelperinput"/>
-  <property name="propout" location="${java.io.tmpdir}/propertyhelperoutput"/>
+  <import file="antunit-base.xml"/>
 
   <target name="compileHelpers">
-    <mkdir dir="${propin}/org/apache/ant/propertyhelper"/>
-    <mkdir dir="${propout}/org/apache/ant/propertyhelper"/>
+    <mkdir dir="${input}/org/apache/ant/propertyhelper"/>
+    <mkdir dir="${output}/org/apache/ant/propertyhelper"/>
 
-    <echo file="${propin}/org/apache/ant/propertyhelper/URLHelper.java"><![CDATA[
+    <echo file="${input}/org/apache/ant/propertyhelper/URLHelper.java"><![CDATA[
 package org.apache.ant.propertyhelper;
 
 import org.apache.tools.ant.PropertyHelper;
@@ -40,7 +39,7 @@ public class URLHelper implements PropertyHelper.PropertyEvaluator {
     }
 }
 ]]></echo>
-    <echo file="${propin}/org/apache/ant/propertyhelper/JavaHelper.java"><![CDATA[
+    <echo file="${input}/org/apache/ant/propertyhelper/JavaHelper.java"><![CDATA[
 package org.apache.ant.propertyhelper;
 
 import java.io.File;
@@ -69,26 +68,21 @@ public class JavaHelper extends ProjectComponent
     }
 }
 ]]></echo>
-    <javac srcdir="${propin}" destdir="${propout}"/>
+    <javac srcdir="${input}" destdir="${output}"/>
   </target>
 
   <target name="defineHelpers" depends="compileHelpers">
     <componentdef name="urlhelper"
              classname="org.apache.ant.propertyhelper.URLHelper">
-      <classpath location="${propout}"/>
+      <classpath location="${output}"/>
     </componentdef>
     <componentdef name="javahelper"
              classname="org.apache.ant.propertyhelper.JavaHelper">
-      <classpath location="${propout}"/>
+      <classpath location="${output}"/>
     </componentdef>
     <propertyhelper>
       <urlhelper/>
       <javahelper/>
     </propertyhelper>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${propin}"/>
-    <delete dir="${propout}"/>
   </target>
 </project>
