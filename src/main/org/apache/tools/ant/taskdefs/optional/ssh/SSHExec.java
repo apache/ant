@@ -61,7 +61,8 @@ public class SSHExec extends SSHBase {
 
     private String outputProperty = null;   // like <exec>
     private File outputFile = null;   // like <exec>
-    private String inputProperty = null;   // like <exec>
+    private String inputProperty = null;
+    private String inputString = null;   // like <exec>
     private File inputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
 
@@ -119,6 +120,8 @@ public class SSHExec extends SSHBase {
      * If used, the content of the file is piped to the remote command
      *
      * @param input  The file which provides the input data for the remote command
+     *
+     * @since Ant 1.8.0
      */
     public void setInput(File input) {
         inputFile = input;
@@ -127,10 +130,24 @@ public class SSHExec extends SSHBase {
     /**
      * If used, the content of the property is piped to the remote command
      *
-     * @param inputProperty  The property which contains the input data for the remote command.
+     * @param inputProperty The property which contains the input data
+     * for the remote command.
+     *
+     * @since Ant 1.8.0
      */
     public void setInputProperty(String inputProperty) {
     	this.inputProperty = inputProperty;
+    }
+
+    /**
+     * If used, the string is piped to the remote command.
+     *
+     * @param inputString the input data for the remote command.
+     *
+     * @since Ant 1.8.3
+     */
+    public void setInputString(String inputString) {
+    	this.inputString = inputString;
     }
 
     /**
@@ -174,9 +191,13 @@ public class SSHExec extends SSHBase {
             throw new BuildException("Command or commandResource is required.");
         }
 
-        if (inputFile != null && inputProperty != null) {
-            throw new BuildException("You can't specify both inputFile and"
-                                     + " inputProperty.");
+        int numberOfInputs = (inputFile != null ? 1 : 0)
+            + (inputProperty != null ? 1 : 0)
+            + (inputString != null ? 1 : 0);
+        if (numberOfInputs > 1) {
+            throw new BuildException("You can't specify more than one of"
+                                     + " inputFile, inputProperty and"
+                                     + " inputString.");
         }
         if (inputFile != null && !inputFile.exists()) {
             throw new BuildException("The input file "
@@ -253,6 +274,9 @@ public class SSHExec extends SSHBase {
             if (inputData != null) {
                 istream = new ByteArrayInputStream(inputData.getBytes()) ;
             }        	
+        }
+        if (inputString != null) {
+            istream = new ByteArrayInputStream(inputString.getBytes());
         }
 
         try {

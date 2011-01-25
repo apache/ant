@@ -21,6 +21,11 @@ Other changes:
    attribute.
    Bugzilla Report 50513.
 
+ * the documented inputstring attribute of sshexec has been
+   implemented and the actually existing attribute inputproperty
+   documented.
+   Bugzilla Report 50576.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

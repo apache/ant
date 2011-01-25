@@ -145,7 +145,7 @@ and won't work with versions of jsch earlier than
     <td valign="top">input</td>
     <td valign="top">A file from which the executed command's standard
       input is taken. This attribute is mutually exclusive with the
-      inputstring attribute.<br/>
+      inputstring and inputproperty attributes.<br/>
       When executing more than one command via commandResource, input
       will be read for each command.
       <em>since Ant 1.8.0</em></td>
@@ -159,13 +159,24 @@ and won't work with versions of jsch earlier than
     <td align="center">No, defaults to false</td>
   </tr>
   <tr>
-    <td valign="top">inputstring</td>
-    <td valign="top">A string which serves as the input stream for the
-      executed command. This attribute is mutually exclusive with the
-      input attribute.<br/>
+    <td valign="top">inputproperty</td>
+    <td valign="top">Name of a property who's content serves as the
+      input stream for the executed command. This attribute is
+      mutually exclusive with the input and inputstring
+      attributes.<br/>
       When executing more than one command via commandResource, input
       will be read for each command.
       <em>since Ant 1.8.0</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">inputstring</td>
+    <td valign="top">A string which serves as the input stream for the
+      executed command. This attribute is mutually exclusive with the
+      input and inputproperty attributes.<br/>
+      When executing more than one command via commandResource, input
+      will be read for each command.
+      <em>since Ant 1.8.3</em></td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
