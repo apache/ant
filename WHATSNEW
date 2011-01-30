@@ -14,6 +14,9 @@ Fixed bugs:
    has been specified in <javac> was broken for Java 5 and 6.
    Bugzilla Report 50578.
 
+ * MailLogger ignore the Maillogger.starttls.enable property.
+   Bugzilla Report 50668.
+
 Other changes:
 --------------
 

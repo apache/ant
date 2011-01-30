@@ -377,7 +377,7 @@ public class MailLogger extends DefaultLogger {
         mailer.setUser(values.user());
         mailer.setPassword(values.password());
         mailer.setSSL(values.ssl());
-        mailer.setEnableStartTLS(values.ssl());
+        mailer.setEnableStartTLS(values.starttls());
         Message mymessage =
             new Message(values.body().length() > 0 ? values.body() : message);
         mymessage.setProject(project);
