@@ -352,7 +352,8 @@ public class ExecuteOn extends ExecTask {
         try {
             Vector fileNames = new Vector();
             Vector baseDirs = new Vector();
-            for (int i = 0; i < filesets.size(); i++) {
+            final int size = filesets.size();
+            for (int i = 0; i < size; i++) {
                 String currentType = type;
                 AbstractFileSet fs = (AbstractFileSet) filesets.elementAt(i);
                 if (fs instanceof DirSet) {

@@ -509,7 +509,8 @@ public class Symlink extends DispatchTask {
      */
     private HashSet findLinks(Vector v) {
         HashSet result = new HashSet();
-        for (int i = 0; i < v.size(); i++) {
+        final int size = v.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) v.get(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[][] fnd = new String[][]
@@ -547,7 +548,8 @@ public class Symlink extends DispatchTask {
     private Properties loadLinks(Vector v) {
         Properties finalList = new Properties();
         // loop through the supplied file sets:
-        for (int i = 0; i < v.size(); i++) {
+        final int size = v.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) v.elementAt(i);
             DirectoryScanner ds = new DirectoryScanner();
             fs.setupDirectoryScanner(ds, getProject());

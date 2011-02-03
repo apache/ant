@@ -144,7 +144,8 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             localFile.mkdirs();
         }
         java.util.Vector files = channel.ls(remoteFile);
-        for (int i = 0; i < files.size(); i++) {
+        final int size = files.size();
+        for (int i = 0; i < size; i++) {
             ChannelSftp.LsEntry le = (ChannelSftp.LsEntry) files.elementAt(i);
             String name = le.getFilename();
             if (le.getAttrs().isDir()) {

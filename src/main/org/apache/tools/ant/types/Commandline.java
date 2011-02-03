@@ -386,7 +386,8 @@ public class Commandline implements Cloneable {
      * @since Ant 1.6
      */
     public void addArgumentsToList(ListIterator list) {
-        for (int i = 0; i < arguments.size(); i++) {
+        final int size = arguments.size();
+        for (int i = 0; i < size; i++) {
             Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
             if (s != null) {

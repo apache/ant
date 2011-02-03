@@ -859,7 +859,8 @@ public class Main implements AntMain {
         // Add the default listener
         project.addBuildListener(createLogger());
 
-        for (int i = 0; i < listeners.size(); i++) {
+        final int count = listeners.size();
+        for (int i = 0; i < count; i++) {
             String className = (String) listeners.elementAt(i);
             BuildListener listener =
                     (BuildListener) ClasspathUtils.newInstance(className,
@@ -1152,8 +1153,9 @@ public class Main implements AntMain {
      * @return the correct place in the list for the given name
      */
     private static int findTargetPosition(Vector names, String name) {
-        int res = names.size();
-        for (int i = 0; i < names.size() && res == names.size(); i++) {
+        final int size = names.size();
+        int res = size;
+        for (int i = 0; i < size && res == size; i++) {
             if (name.compareTo((String) names.elementAt(i)) < 0) {
                 res = i;
             }
@@ -1197,7 +1199,8 @@ public class Main implements AntMain {
         }
         StringBuffer msg = new StringBuffer();
         msg.append(heading + lSep + lSep);
-        for (int i = 0; i < names.size(); i++) {
+        final int size = names.size();
+        for (int i = 0; i < size; i++) {
             msg.append(" ");
             msg.append(names.elementAt(i));
             if (descriptions != null) {

@@ -464,7 +464,8 @@ public class Copy extends Task {
             HashMap dirsByBasedir = new HashMap();
             HashSet baseDirs = new HashSet();
             ArrayList nonFileResources = new ArrayList();
-            for (int i = 0; i < rcs.size(); i++) {
+            final int size = rcs.size();
+            for (int i = 0; i < size; i++) {
                 ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
 
                 // Step (1) - beware of the ZipFileSet

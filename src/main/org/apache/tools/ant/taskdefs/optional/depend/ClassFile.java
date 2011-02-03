@@ -90,7 +90,8 @@ public class ClassFile {
 
         Vector classRefs = new Vector();
 
-        for (int i = 0; i < constantPool.size(); ++i) {
+        final int size = constantPool.size();
+        for (int i = 0; i < size; ++i) {
             ConstantPoolEntry entry = constantPool.getEntry(i);
 
             if (entry != null

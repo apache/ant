@@ -289,9 +289,10 @@ public class MimeMailer extends Mailer {
 
     private static InternetAddress[] internetAddresses(Vector list)
         throws AddressException, UnsupportedEncodingException {
-        InternetAddress[] addrs = new InternetAddress[list.size()];
+        final int size = list.size();
+        InternetAddress[] addrs = new InternetAddress[size];
 
-        for (int i = 0; i < list.size(); ++i) {
+        for (int i = 0; i < size; ++i) {
             EmailAddress addr = (EmailAddress) list.elementAt(i);
 
             String name = addr.getName();

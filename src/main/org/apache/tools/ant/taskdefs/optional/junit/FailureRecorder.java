@@ -151,7 +151,8 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
         // check if already registered
         boolean alreadyRegistered = false;
         Vector allListeners = project.getBuildListeners();
-        for (int i = 0; i < allListeners.size(); i++) {
+        final int size = allListeners.size();
+        for (int i = 0; i < size; i++) {
             Object listener = allListeners.get(i);
             if (listener instanceof FailureRecorder) {
                 alreadyRegistered = true;

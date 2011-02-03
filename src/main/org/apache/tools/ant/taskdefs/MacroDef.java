@@ -161,10 +161,11 @@ public class MacroDef extends AntlibDefinition  {
          * @return true if they are similar, false otherwise
          */
         public boolean similar(NestedSequential other) {
-            if (nested.size() != other.nested.size()) {
+            final int size = nested.size();
+            if (size != other.nested.size()) {
                 return false;
             }
-            for (int i = 0; i < nested.size(); ++i) {
+            for (int i = 0; i < size; ++i) {
                 UnknownElement me = (UnknownElement) nested.get(i);
                 UnknownElement o = (UnknownElement) other.nested.get(i);
                 if (!me.similar(o)) {
@@ -185,7 +186,8 @@ public class MacroDef extends AntlibDefinition  {
         ret.setNamespace("");
         ret.setQName("sequential");
         new RuntimeConfigurable(ret, "sequential");
-        for (int i = 0; i < nestedSequential.getNested().size(); ++i) {
+        final int size = nestedSequential.getNested().size();
+        for (int i = 0; i < size; ++i) {
             UnknownElement e =
                 (UnknownElement) nestedSequential.getNested().get(i);
             ret.addChild(e);
@@ -259,7 +261,8 @@ public class MacroDef extends AntlibDefinition  {
                 "the name \"" + attribute.getName()
                 + "\" has already been used by the text element");
         }
-        for (int i = 0; i < attributes.size(); ++i) {
+        final int size = attributes.size();
+        for (int i = 0; i < size; ++i) {
             Attribute att = (Attribute) attributes.get(i);
             if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(

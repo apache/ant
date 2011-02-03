@@ -310,7 +310,8 @@ public class XMLValidateTask extends Task {
             }
         }
 
-        for (int i = 0; i < filesets.size(); i++) {
+        final int size = filesets.size();
+        for (int i = 0; i < size; i++) {
 
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
@@ -355,13 +356,15 @@ public class XMLValidateTask extends Task {
                 setFeature(XmlConstants.FEATURE_VALIDATION, true);
             }
             // set the feature from the attribute list
-            for (int i = 0; i < attributeList.size(); i++) {
+            final int attSize = attributeList.size();
+            for (int i = 0; i < attSize; i++) {
                 Attribute feature = (Attribute) attributeList.elementAt(i);
                 setFeature(feature.getName(), feature.getValue());
 
             }
             // Sets properties
-            for (int i = 0; i < propertyList.size(); i++) {
+            final int propSize = propertyList.size();
+            for (int i = 0; i < propSize; i++) {
                 final Property prop = (Property) propertyList.elementAt(i);
                 setProperty(prop.getName(), prop.getValue());
             }

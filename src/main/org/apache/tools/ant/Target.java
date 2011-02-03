@@ -383,7 +383,8 @@ public class Target implements TaskContainer {
         try {
             // use index-based approach to avoid ConcurrentModificationExceptions;
             // also account for growing target children
-            for (int i = 0; i < children.size(); i++) {
+            final int size = children.size();
+            for (int i = 0; i < size; i++) {
                 Object o = children.get(i);
                 if (o instanceof Task) {
                     Task task = (Task) o;

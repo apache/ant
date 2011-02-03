@@ -820,7 +820,8 @@ public class FTP extends Task implements FTPTaskConfig {
                     throw new BuildException("could not change working dir to "
                                              + parent.curpwd);
                 }
-                for (int fcount = 0; fcount < pathElements.size() - 1; fcount++) {
+                final int size = pathElements.size();
+                for (int fcount = 0; fcount < size - 1; fcount++) {
                     String currentPathElement = (String) pathElements.elementAt(fcount);
                     try {
                         boolean result = this.client.changeWorkingDirectory(currentPathElement);
@@ -843,7 +844,7 @@ public class FTP extends Task implements FTPTaskConfig {
                     }
 
                 }
-                String lastpathelement = (String) pathElements.elementAt(pathElements.size() - 1);
+                String lastpathelement = (String) pathElements.elementAt(size - 1);
                 FTPFile [] theFiles = listFiles(this.curpwd);
                 this.ftpFile = getFile(theFiles, lastpathelement);
             }
@@ -946,7 +947,8 @@ public class FTP extends Task implements FTPTaskConfig {
                 Vector pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
                 Vector pathElements2 = SelectorUtils.tokenizePath(currentPath, remoteFileSep);
                 String relPath = currentRelativePath;
-                for (int pcount = pathElements2.size(); pcount < pathElements.size(); pcount++) {
+                final int size = pathElements.size();
+                for (int pcount = pathElements2.size(); pcount < size; pcount++) {
                     String currentElement = (String) pathElements.elementAt(pcount);
                     FTPFile[] theFiles = listFiles(currentPath);
                     FTPFile theFile = null;
@@ -1838,7 +1840,8 @@ public class FTP extends Task implements FTPTaskConfig {
             throw new BuildException("at least one fileset must be specified.");
         } else {
             // get files from filesets
-            for (int i = 0; i < filesets.size(); i++) {
+            final int size = filesets.size();
+            for (int i = 0; i < size; i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
 
                 if (fs != null) {

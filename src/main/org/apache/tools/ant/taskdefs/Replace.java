@@ -607,7 +607,8 @@ public class Replace extends MatchingTask {
      */
     public void validateReplacefilters()
             throws BuildException {
-        for (int i = 0; i < replacefilters.size(); i++) {
+        final int size = replacefilters.size();
+        for (int i = 0; i < size; i++) {
             Replacefilter element =
                 (Replacefilter) replacefilters.get(i);
             element.validate();
@@ -727,7 +728,8 @@ public class Replace extends MatchingTask {
      * Flushes all filters.
      */
     private void flushFilterChain() {
-        for (int i = 0; i < replacefilters.size(); i++) {
+        final int size = replacefilters.size();
+        for (int i = 0; i < size; i++) {
             Replacefilter filter = (Replacefilter) replacefilters.get(i);
             filter.flush();
         }
@@ -738,7 +740,8 @@ public class Replace extends MatchingTask {
      * @return true if the filter chain produced new output.
      */
     private boolean processFilterChain() {
-        for (int i = 0; i < replacefilters.size(); i++) {
+        final int size = replacefilters.size();
+        for (int i = 0; i < size; i++) {
             Replacefilter filter = (Replacefilter) replacefilters.get(i);
             if (!filter.process()) {
                 return false;
@@ -755,7 +758,8 @@ public class Replace extends MatchingTask {
      */
     private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
         StringBuffer buf = inputBuffer;
-        for (int i = 0; i < replacefilters.size(); i++) {
+        final int size = replacefilters.size();
+        for (int i = 0; i < size; i++) {
             Replacefilter filter = (Replacefilter) replacefilters.get(i);
             filter.setInputBuffer(buf);
             buf = filter.getOutputBuffer();
@@ -768,7 +772,8 @@ public class Replace extends MatchingTask {
      * @param filename <code>String</code>.
      */
     private void logFilterChain(String filename) {
-        for (int i = 0; i < replacefilters.size(); i++) {
+        final int size = replacefilters.size();
+        for (int i = 0; i < size; i++) {
             Replacefilter filter = (Replacefilter) replacefilters.get(i);
             log("Replacing in " + filename + ": " + filter.getToken()
                     + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);

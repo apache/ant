@@ -753,7 +753,8 @@ public class FileUtils {
             }
         }
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < s.size(); i++) {
+        final int size = s.size();
+        for (int i = 0; i < size; i++) {
             if (i > 1) {
                 // not before the filesystem root and not after it, since root
                 // already contains one

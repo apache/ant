@@ -622,16 +622,17 @@ public class UnknownElement extends Task {
             return false;
         }
         // Are the sub elements the same ?
-        if (children == null || children.size() == 0) {
+        final int childrenSize = children == null ? 0 : children.size();
+        if (childrenSize == 0) {
             return other.children == null || other.children.size() == 0;
         }
         if (other.children == null) {
             return false;
         }
-        if (children.size() != other.children.size()) {
+        if (childrenSize != other.children.size()) {
             return false;
         }
-        for (int i = 0; i < children.size(); ++i) {
+        for (int i = 0; i < childrenSize; ++i) {
             UnknownElement child = (UnknownElement) children.get(i);
             if (!child.similar(other.children.get(i))) {
                 return false;

@@ -167,7 +167,8 @@ public class WLJspc extends MatchingTask {
         this.scanDir(files);
         log("Compiling " + filesToDo.size() + " JSP files");
 
-        for (int i = 0; i < filesToDo.size(); i++) {
+        final int size = filesToDo.size();
+        for (int i = 0; i < size; i++) {
             //XXX
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky!

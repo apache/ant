@@ -70,7 +70,8 @@ public class Rotate extends TransformOperation implements DrawOperation {
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = null;
         Graphics2D graphics = null;
-        for (int i = 0; i < instructions.size(); i++) {
+        final int size = instructions.size();
+        for (int i = 0; i < size; i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
@@ -102,7 +103,8 @@ public class Rotate extends TransformOperation implements DrawOperation {
      * @return the image.
      */
     public PlanarImage executeDrawOperation() {
-        for (int i = 0; i < instructions.size(); i++) {
+        final int size = instructions.size();
+        for (int i = 0; i < size; i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children

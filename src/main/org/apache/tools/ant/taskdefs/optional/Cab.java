@@ -155,7 +155,8 @@ public class Cab extends MatchingTask {
      */
     protected boolean isUpToDate(Vector files) {
         boolean upToDate = true;
-        for (int i = 0; i < files.size() && upToDate; i++) {
+        final int size = files.size();
+        for (int i = 0; i < size && upToDate; i++) {
             String file = files.elementAt(i).toString();
             if (FILE_UTILS.resolveFile(baseDir, file).lastModified()
                     > cabFile.lastModified()) {
@@ -183,7 +184,7 @@ public class Cab extends MatchingTask {
         try {
             writer = new BufferedWriter(new FileWriter(listFile));
 
-            int size = files.size();
+            final int size = files.size();
             for (int i = 0; i < size; i++) {
                 writer.write('\"' + files.elementAt(i).toString() + '\"');
                 writer.newLine();

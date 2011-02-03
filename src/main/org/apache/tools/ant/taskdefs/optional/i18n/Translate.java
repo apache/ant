@@ -495,7 +495,8 @@ public class Translate extends MatchingTask {
      */
     private void translate() throws BuildException {
         int filesProcessed = 0;
-        for (int i = 0; i < filesets.size(); i++) {
+        final int size = filesets.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] srcFiles = ds.getIncludedFiles();

@@ -146,7 +146,8 @@ public class Scale extends TransformOperation implements DrawOperation {
     /** {@inheritDoc}. */
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = null;
-        for (int i = 0; i < instructions.size(); i++) {
+        final int size = instructions.size();
+        for (int i = 0; i < size; i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
                 return performScale(image);
@@ -163,7 +164,8 @@ public class Scale extends TransformOperation implements DrawOperation {
 
     /** {@inheritDoc}. */
     public PlanarImage executeDrawOperation() {
-        for (int i = 0; i < instructions.size(); i++) {
+        final int size = instructions.size();
+        for (int i = 0; i < size; i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
                 PlanarImage image = null;

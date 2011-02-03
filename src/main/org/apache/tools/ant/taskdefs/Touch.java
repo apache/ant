@@ -309,7 +309,8 @@ public class Touch extends Task {
         // deal with filesets in a special way since the task
         // originally also used the directories and Union won't return
         // them.
-        for (int i = 0; i < filesets.size(); i++) {
+        final int size = filesets.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File fromDir = fs.getDir(getProject());

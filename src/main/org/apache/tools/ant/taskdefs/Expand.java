@@ -258,7 +258,8 @@ public class Expand extends Task {
             boolean included = false;
             Set includePatterns = new HashSet();
             Set excludePatterns = new HashSet();
-            for (int v = 0, size = patternsets.size(); v < size; v++) {
+            final int size = patternsets.size();
+            for (int v = 0; v < size; v++) {
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
                 String[] incls = p.getIncludePatterns(getProject());
                 if (incls == null || incls.length == 0) {

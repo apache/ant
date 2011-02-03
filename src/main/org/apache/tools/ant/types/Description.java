@@ -78,7 +78,8 @@ public class Description extends DataType {
             return null;
         }
         StringBuffer description = new StringBuffer();
-        for (int i = 0; i < targets.size(); i++) {
+        final int size = targets.size();
+        for (int i = 0; i < size; i++) {
             Target t = (Target) targets.elementAt(i);
             concatDescriptions(project, t, description);
         }
@@ -94,7 +95,8 @@ public class Description extends DataType {
         if (tasks == null) {
             return;
         }
-        for (int i = 0; i < tasks.size(); i++) {
+        final int size = tasks.size();
+        for (int i = 0; i < size; i++) {
             Task task = (Task) tasks.elementAt(i);
             if (!(task instanceof UnknownElement)) {
                 continue;

@@ -77,7 +77,8 @@ public class IdentityStack extends Stack {
      * @see java.util.Vector#indexOf(Object, int)
      */
     public synchronized int indexOf(Object o, int pos) {
-        for (int i = pos; i < size(); i++) {
+        final int size = size();
+        for (int i = pos; i < size; i++) {
             if (get(i) == o) {
                 return i;
             }

@@ -352,7 +352,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     public void run() {
         res = new TestResult();
         res.addListener(wrapListener(this));
-        for (int i = 0; i < formatters.size(); i++) {
+        final int size = formatters.size();
+        for (int i = 0; i < size; i++) {
             res.addListener(wrapListener((TestListener) formatters.elementAt(i)));
         }
 
@@ -506,7 +507,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             fireStartTestSuite();
             startTestSuiteSuccess = true;
             if (exception != null) { // had an exception constructing suite
-                for (int i = 0; i < formatters.size(); i++) {
+                final int formatterSize = formatters.size();
+                for (int i = 0; i < formatterSize; i++) {
                     ((TestListener) formatters.elementAt(i))
                         .addError(null, exception);
                 }
@@ -705,7 +707,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private void sendOutAndErr(String out, String err) {
-        for (int i = 0; i < formatters.size(); i++) {
+        final int size = formatters.size();
+        for (int i = 0; i < size; i++) {
             JUnitResultFormatter formatter =
                 ((JUnitResultFormatter) formatters.elementAt(i));
 
@@ -715,14 +718,16 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private void fireStartTestSuite() {
-        for (int i = 0; i < formatters.size(); i++) {
+        final int size = formatters.size();
+        for (int i = 0; i < size; i++) {
             ((JUnitResultFormatter) formatters.elementAt(i))
                 .startTestSuite(junitTest);
         }
     }
 
     private void fireEndTestSuite() {
-        for (int i = 0; i < formatters.size(); i++) {
+        final int size = formatters.size();
+        for (int i = 0; i < size; i++) {
             ((JUnitResultFormatter) formatters.elementAt(i))
                 .endTestSuite(junitTest);
         }
@@ -946,7 +951,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 registerTestCase(JUnitVersionHelper.getTestCaseName(arg0));
             }
         });
-        for (int i = 0; i < fromCmdLine.size(); i++) {
+        final int size = fromCmdLine.size();
+        for (int i = 0; i < size; i++) {
             FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
             if (multipleTests && fe.getUseFile()) {
                 File destFile =

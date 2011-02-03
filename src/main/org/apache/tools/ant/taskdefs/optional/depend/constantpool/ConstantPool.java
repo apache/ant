@@ -165,7 +165,8 @@ public class ConstantPool {
     public int getClassEntry(String className) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof ClassCPInfo) {
@@ -191,7 +192,8 @@ public class ConstantPool {
     public int getConstantEntry(Object constantValue) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof ConstantCPInfo) {
@@ -221,7 +223,8 @@ public class ConstantPool {
                                  String methodType) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof MethodRefCPInfo) {
@@ -255,7 +258,8 @@ public class ConstantPool {
                                           String interfaceMethodType) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof InterfaceMethodRefCPInfo) {
@@ -291,7 +295,8 @@ public class ConstantPool {
                                 String fieldType) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof FieldRefCPInfo) {
@@ -320,7 +325,8 @@ public class ConstantPool {
     public int getNameAndTypeEntry(String name, String type) {
         int index = -1;
 
-        for (int i = 0; i < entries.size() && index == -1; ++i) {
+        final int size = entries.size();
+        for (int i = 0; i < size && index == -1; ++i) {
             Object element = entries.elementAt(i);
 
             if (element instanceof NameAndTypeCPInfo) {
@@ -344,7 +350,7 @@ public class ConstantPool {
      */
     public String toString() {
         StringBuffer sb = new StringBuffer("\n");
-        int size = entries.size();
+        final int size = entries.size();
 
         for (int i = 0; i < size; ++i) {
             sb.append("[" + i + "] = " + getEntry(i) + "\n");

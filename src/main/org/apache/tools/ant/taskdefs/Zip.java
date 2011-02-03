@@ -602,7 +602,8 @@ public class Zip extends MatchingTask {
             fs.setDir(baseDir);
             vfss.addElement(fs);
         }
-        for (int i = 0; i < resources.size(); i++) {
+        final int size = resources.size();
+        for (int i = 0; i < size; i++) {
             ResourceCollection rc = (ResourceCollection) resources.elementAt(i);
             vfss.addElement(rc);
         }
@@ -672,7 +673,8 @@ public class Zip extends MatchingTask {
                     oldFiles.setSrc(renamedFile);
                     oldFiles.setDefaultexcludes(false);
 
-                    for (int i = 0; i < addedFiles.size(); i++) {
+                    final int addSize = addedFiles.size();
+                    for (int i = 0; i < addSize; i++) {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
                         ne.setName((String) addedFiles.elementAt(i));
                     }
@@ -823,7 +825,8 @@ public class Zip extends MatchingTask {
     /** Process groupfilesets */
     private void processGroupFilesets() {
         // Add the files found in groupfileset to fileset
-        for (int i = 0; i < groupfilesets.size(); i++) {
+        final int size = groupfilesets.size();
+        for (int i = 0; i < size; i++) {
 
             logWhenWriting("Processing groupfileset ", Project.MSG_VERBOSE);
             FileSet fs = (FileSet) groupfilesets.elementAt(i);

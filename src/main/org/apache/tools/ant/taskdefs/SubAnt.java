@@ -293,7 +293,8 @@ public class SubAnt extends Task {
         ant = createAntTask(directory);
         String antfilename = file.getAbsolutePath();
         ant.setAntfile(antfilename);
-        for (int i = 0; i < targets.size(); i++) {
+        final int size = targets.size();
+        for (int i = 0; i < size; i++) {
             TargetElement targetElement = (TargetElement) targets.get(i);
             ant.addConfiguredTarget(targetElement);
         }

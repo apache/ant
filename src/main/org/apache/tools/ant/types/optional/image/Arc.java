@@ -104,7 +104,8 @@ public class Arc extends BasicShape implements DrawOperation {
         }
 
 
-        for (int i = 0; i < instructions.size(); i++) {
+        final int size = instructions.size();
+        for (int i = 0; i < size; i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
             if (instr instanceof DrawOperation) {
                 PlanarImage img = ((DrawOperation) instr).executeDrawOperation();

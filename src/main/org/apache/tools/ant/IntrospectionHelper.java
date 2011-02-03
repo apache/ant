@@ -1585,7 +1585,8 @@ public final class IntrospectionHelper {
      */
     private void insertAddTypeMethod(Method method) {
         Class argClass = method.getParameterTypes()[0];
-        for (int c = 0; c < addTypeMethods.size(); ++c) {
+        final int size = addTypeMethods.size();
+        for (int c = 0; c < size; ++c) {
             Method current = (Method) addTypeMethods.get(c);
             if (current.getParameterTypes()[0].equals(argClass)) {
                 if (method.getName().equals("addConfigured")) {
@@ -1616,7 +1617,8 @@ public final class IntrospectionHelper {
         Class matchedClass = null;
         Method matchedMethod = null;
 
-        for (int i = 0; i < methods.size(); ++i) {
+        final int size = methods.size();
+        for (int i = 0; i < size; ++i) {
             Method method = (Method) methods.get(i);
             Class  methodClass = method.getParameterTypes()[0];
             if (methodClass.isAssignableFrom(paramClass)) {
@@ -1663,7 +1665,8 @@ public final class IntrospectionHelper {
             return null;
         }
         synchronized (definitions) {
-            for (int i = 0; i < definitions.size(); ++i) {
+            final int size = definitions.size();
+            for (int i = 0; i < size; ++i) {
                 AntTypeDefinition d = (AntTypeDefinition) definitions.get(i);
                 Class exposedClass = d.getExposedClass(helper.getProject());
                 if (exposedClass == null) {

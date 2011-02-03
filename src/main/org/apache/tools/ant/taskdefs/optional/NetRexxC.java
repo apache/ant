@@ -846,7 +846,8 @@ public class NetRexxC extends MatchingTask {
         String eol = System.getProperty("line.separator");
         StringBuffer niceSourceList = new StringBuffer("Files to be compiled:" + eol);
 
-        for (int i = 0; i < compileList.size(); i++) {
+        final int size = compileList.size();
+        for (int i = 0; i < size; i++) {
             niceSourceList.append("    ");
             niceSourceList.append(compileList.elementAt(i).toString());
             niceSourceList.append(eol);

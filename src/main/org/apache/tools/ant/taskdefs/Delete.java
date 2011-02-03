@@ -593,7 +593,8 @@ public class Delete extends MatchingTask {
             filesets.add(implicit);
         }
 
-        for (int i = 0, size = filesets.size(); i < size; i++) {
+        final int size = filesets.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) filesets.get(i);
             if (fs.getProject() == null) {
                 log("Deleting fileset with no project specified;"

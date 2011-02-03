@@ -129,7 +129,8 @@ public class P4Fstat extends P4Base {
 
         filelist = new StringBuffer();
 
-        for (int i = 0; i < filesets.size(); i++) {
+        final int size = filesets.size();
+        for (int i = 0; i < size; i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
@@ -181,7 +182,8 @@ public class P4Fstat extends P4Base {
 
     private void printRes(ArrayList ar, String header) {
         log(header, Project.MSG_INFO);
-        for (int i = 0; i < ar.size(); i++) {
+        final int size = ar.size();
+        for (int i = 0; i < size; i++) {
             log((String) ar.get(i), Project.MSG_INFO);
         }
     }

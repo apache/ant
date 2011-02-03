@@ -407,7 +407,8 @@ public class EchoProperties extends Task {
                 return result;
             }
         };
-        for (int i = 0; i < keyList.size(); i++) {
+        final int size = keyList.size();
+        for (int i = 0; i < size; i++) {
             String name = keyList.get(i).toString();
             String value = allProps.get(name).toString();
             props.setProperty(name, value);

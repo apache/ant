@@ -1509,7 +1509,8 @@ public class Javadoc extends Task {
          */
         public String getPackages() {
             StringBuffer p = new StringBuffer();
-            for (int i = 0; i < packages.size(); i++) {
+            final int size = packages.size();
+            for (int i = 0; i < size; i++) {
                 if (i > 0) {
                     p.append(":");
                 }

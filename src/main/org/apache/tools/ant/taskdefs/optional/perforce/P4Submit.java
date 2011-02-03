@@ -119,7 +119,8 @@ public class P4Submit extends P4Base {
                     Vector myarray = new Vector();
                     util.split(myarray, line);
                     boolean found = false;
-                    for (int counter = 0; counter < myarray.size(); counter++) {
+                    final int size = myarray.size();
+                    for (int counter = 0; counter < size; counter++) {
                         if (found) {
                             String chnum = (String) myarray.elementAt(counter + 1);
                             int changenumber = Integer.parseInt(chnum);

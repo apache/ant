@@ -899,7 +899,8 @@ public class Java extends Task {
     protected void run(String classname, Vector args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname(classname);
-        for (int i = 0; i < args.size(); i++) {
+        final int size = args.size();
+        for (int i = 0; i < size; i++) {
             cmdj.createArgument().setValue((String) args.elementAt(i));
         }
         run(cmdj);

@@ -207,7 +207,8 @@ public class LayoutPreservingProperties extends Properties {
             (LayoutPreservingProperties) super.clone();
         dolly.keyedPairLines = (HashMap) this.keyedPairLines.clone();
         dolly.logicalLines = (ArrayList) this.logicalLines.clone();
-        for (int j = 0; j < dolly.logicalLines.size(); j++) {
+        final int size = dolly.logicalLines.size();
+        for (int j = 0; j < size; j++) {
             LogicalLine line = (LogicalLine) dolly.logicalLines.get(j);
             if (line instanceof Pair) {
                 Pair p = (Pair) line;

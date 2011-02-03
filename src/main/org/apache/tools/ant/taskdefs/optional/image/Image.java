@@ -290,7 +290,8 @@ public class Image extends MatchingTask {
             try {
                 input = new FileSeekableStream(file);
                 image = JAI.create("stream", input);
-                for (int i = 0; i < instructions.size(); i++) {
+                final int size = instructions.size();
+                for (int i = 0; i < size; i++) {
                     Object instr = instructions.elementAt(i);
                     if (instr instanceof TransformOperation) {
                         image = ((TransformOperation) instr)
@@ -374,7 +375,8 @@ public class Image extends MatchingTask {
                 writeCount += processDir(srcDir, files, dest, mapper);
             }
             // deal with the filesets
-            for (int i = 0; i < filesets.size(); i++) {
+            final int size = filesets.size();
+            for (int i = 0; i < size; i++) {
                 final FileSet fs = (FileSet) filesets.elementAt(i);
                 final DirectoryScanner ds =
                     fs.getDirectoryScanner(getProject());

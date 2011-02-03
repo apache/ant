@@ -323,7 +323,8 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         if (uriResolver != null) {
             transformer.setURIResolver(uriResolver);
         }
-        for (int i = 0; i < outputProperties.size(); i++) {
+        final int size = outputProperties.size();
+        for (int i = 0; i < size; i++) {
             final String[] pair = (String[]) outputProperties.elementAt(i);
             transformer.setOutputProperty(pair[0], pair[1]);
         }
@@ -419,7 +420,8 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         tfactory.setErrorListener(this);
 
         // specific attributes for the transformer
-        for (int i = 0; i < attributes.size(); i++) {
+        final int size = attributes.size();
+        for (int i = 0; i < size; i++) {
             final Object[] pair = (Object[]) attributes.elementAt(i);
             tfactory.setAttribute((String) pair[0], pair[1]);
         }
