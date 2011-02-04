@@ -29,16 +29,19 @@
         development of .NET software with Apache Ant.</p>
     </section>
 
-    <section name="Apache .NET Ant Library 1.0">
-      <h3>November 6, 2006 - Apache .NET Ant Library 1.0
+    <section name="Apache .NET Ant Library 1.1">
+      <h3>February 4, 2011 - Apache .NET Ant Library 1.1
       Available</h3>
 
-      <p>Apache .NET Ant Library 1.0 is now available for
+      <p>Apache .NET Ant Library 1.1 is now available for
       download as <a
       href="http://ant.apache.org/antlibs/bindownload.cgi">binary</a>
       or <a
       href="http://ant.apache.org/antlibs/srcdownload.cgi">source</a>
       release.</p>
+
+      <p>This release fixes a few bugs and adds new tasks for the
+        F# compiler and the tallow tool of the WiX toolkit.</p>
     </section>
 
     <section name="Idea">
