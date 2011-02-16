@@ -53,7 +53,7 @@ public interface FileNameMapper {
      *
      * @param sourceFileName the name of the source file relative to
      *                       some given basedirectory.
-     * @return an array of strings if the ruld applies to the source file, or
+     * @return an array of strings if the rule applies to the source file, or
      *         null if it does not.
      */
     String[] mapFileName(String sourceFileName);
