@@ -16,6 +16,9 @@ Fixed bugs:
 
  * MailLogger ignore the Maillogger.starttls.enable property.
    Bugzilla Report 50668.
+   
+ * Delete task example does not work
+   Bugzilla Report 50816.  
 
 Other changes:
 --------------
