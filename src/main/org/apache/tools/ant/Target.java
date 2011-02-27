@@ -383,8 +383,9 @@ public class Target implements TaskContainer {
         try {
             // use index-based approach to avoid ConcurrentModificationExceptions;
             // also account for growing target children
-            final int size = children.size();
-            for (int i = 0; i < size; i++) {
+        	// do not optimize this loop by replacing children.size() by a variable
+        	// as children can be added dynamically as in RhinoScriptTest where a target is adding work for itself
+            for (int i = 0; i < children.size(); i++) {
                 Object o = children.get(i);
                 if (o instanceof Task) {
                     Task task = (Task) o;
