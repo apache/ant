@@ -26,7 +26,8 @@
   <property name="test3.jar" location="${java.io.tmpdir}/test3.jar"/>
   <property name="test4.jar" location="${java.io.tmpdir}/test4.jar"/>
   <property name="test5.jar" location="${java.io.tmpdir}/test5.jar"/>
-  <available property="jdk1.6+" classname="java.util.ServiceLoader"/>
+  <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
+  <available property="jdk1.6+" classname="java.net.CookieStore"/>
   <available property="jdk1.5+" classname="java.net.Proxy"/>
   <condition property="build.sysclasspath.only">
     <equals arg1="${build.sysclasspath}" arg2="only"/>
