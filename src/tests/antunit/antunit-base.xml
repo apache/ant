@@ -36,13 +36,13 @@
     <delete dir="${input}"/>
     <delete dir="${output}"/>
     <delete dir="${resources}"/>
-    <delete file="${test.jar}" failonerror="false"/>
-    <delete file="${test.jar}" failonerror="false"/>
-    <delete file="${test1.jar}" failonerror="false"/>
-    <delete file="${test2.jar}" failonerror="false"/>
-    <delete file="${test3.jar}" failonerror="false"/>
-    <delete file="${test4.jar}" failonerror="false"/>
-    <delete file="${test5.jar}" failonerror="false"/>
+    <delete file="${test.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test1.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test2.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test3.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test4.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test5.jar}" failonerror="false" deleteonexit="true"/>
   </target>
 
   <target name="antunit">
