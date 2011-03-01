@@ -31,13 +31,11 @@
   </target>
 
   <target name="testPlainDir" depends="setUp">
-    <tempfile property="jar" deleteonexit="true"
-              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
-    <jar destfile="${jar}">
+    <jar destfile="${test1.jar}">
       <fileset dir="${input}"/>
     </jar>
     <taskdef resource="org/example/antlib.xml"
-             classpath="${jar}"
+             classpath="${test1.jar}"
              uri="urn:test:plain"/>
     <echooo xmlns="urn:test:plain">Hello</echooo>
     <au:assertLogContains text="Hello"/>
@@ -47,13 +45,11 @@
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
     <property name="dir" location="${tmpdir}/pl!ng"/>
     <mkdir dir="${dir}"/>
-    <tempfile property="jar" deleteonexit="true" destdir="${dir}"
-              prefix="test" suffix=".jar"/>
-    <jar destfile="${jar}">
+    <jar destfile="${test2.jar}">
       <fileset dir="${input}"/>
     </jar>
     <taskdef resource="org/example/antlib.xml"
-             classpath="${jar}"
+             classpath="${test2.jar}"
              uri="urn:test:indir"/>
     <echooo xmlns="urn:test:indir">Hello</echooo>
     <au:assertLogContains text="Hello"/>
@@ -65,43 +61,37 @@
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
     <property name="dir" location="${tmpdir}/pling!"/>
     <mkdir dir="${dir}"/>
-    <tempfile property="jar" deleteonexit="true" destdir="${dir}"
-              prefix="test" suffix=".jar"/>
-    <jar destfile="${jar}">
+     <jar destfile="${test3.jar}">
       <fileset dir="${input}"/>
     </jar>
     <taskdef resource="org/example/antlib.xml"
-             classpath="${jar}"
+             classpath="${test3.jar}"
              uri="urn:test:atend"/>
     <echooo xmlns="urn:test:atend">Hello</echooo>
     <au:assertLogContains text="Hello"/>
   </target>
 
   <target name="testPlingInJar" depends="setUp">
-    <tempfile property="jar" deleteonexit="true"
-              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
     <move file="${input}/org/example/antlib.xml"
           tofile="${input}/org/examp!e/antlib.xml"/>
-    <jar destfile="${jar}">
+    <jar destfile="${test4.jar}">
       <fileset dir="${input}"/>
     </jar>
     <taskdef resource="org/examp!e/antlib.xml"
-             classpath="${jar}"
+             classpath="${test4.jar}"
              uri="urn:test:injar"/>
     <echooo xmlns="urn:test:injar">Hello</echooo>
     <au:assertLogContains text="Hello"/>
   </target>
 
   <target name="testPlingInJarAtEnd" depends="setUp">
-    <tempfile property="jar" deleteonexit="true"
-              destdir="${tmpdir}" prefix="test" suffix=".jar"/>
-    <move file="${input}/org/example/antlib.xml"
+     <move file="${input}/org/example/antlib.xml"
           tofile="${input}/org/example!/antlib.xml"/>
-    <jar destfile="${jar}">
+    <jar destfile="${test5.jar}">
       <fileset dir="${input}"/>
     </jar>
     <taskdef resource="org/example!/antlib.xml"
-             classpath="${jar}"
+             classpath="${test5.jar}"
              uri="urn:test:injaratend"/>
     <echooo xmlns="urn:test:injaratend">Hello</echooo>
     <au:assertLogContains text="Hello"/>

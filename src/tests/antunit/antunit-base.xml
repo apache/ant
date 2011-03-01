@@ -17,14 +17,32 @@
 -->
 <project name="antunit-base">
 
-  <property name="input" location="${java.io.tmpdir}/testinput"/>
+  <property name="input" location="${java.io.tmpdir}testinput"/>
   <property name="output" location="${java.io.tmpdir}/testoutput"/>
+  <property name="resources" location="${java.io.tmpdir}/resources"/>
+  <property name="test.jar" location="${java.io.tmpdir}/test.jar"/>
+  <property name="test1.jar" location="${java.io.tmpdir}/test1.jar"/>
+  <property name="test2.jar" location="${java.io.tmpdir}/test2.jar"/>
+  <property name="test3.jar" location="${java.io.tmpdir}/test3.jar"/>
+  <property name="test4.jar" location="${java.io.tmpdir}/test4.jar"/>
+  <property name="test5.jar" location="${java.io.tmpdir}/test5.jar"/>
   <available property="jdk1.6+" classname="java.util.ServiceLoader"/>
   <available property="jdk1.5+" classname="java.net.Proxy"/>
+  <condition property="build.sysclasspath.only">
+    <equals arg1="${build.sysclasspath}" arg2="only"/>
+  </condition>
 
   <target name="tearDown">
     <delete dir="${input}"/>
     <delete dir="${output}"/>
+    <delete dir="${resources}"/>
+    <delete file="${test.jar}" failonerror="false"/>
+    <delete file="${test.jar}" failonerror="false"/>
+    <delete file="${test1.jar}" failonerror="false"/>
+    <delete file="${test2.jar}" failonerror="false"/>
+    <delete file="${test3.jar}" failonerror="false"/>
+    <delete file="${test4.jar}" failonerror="false"/>
+    <delete file="${test5.jar}" failonerror="false"/>
   </target>
 
   <target name="antunit">

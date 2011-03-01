@@ -16,17 +16,17 @@
   limitations under the License.
 -->
 <project name="test-input" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-	
-	<import file="../antunit-base.xml"/>
-	
-	<target name="setUp">
-	</target>
-		
-	<target name="test-secure-input" if="jdk1.6+">
-		<input message="secure-input:>" addproperty="the.password">
-			<handler classname="org.apache.tools.ant.input.SecureInputHandler"/>
-		</input>
-		<au:assertPropertySet name="the.password"/>
-	</target>
-	
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+  </target>
+
+  <target name="test-secure-input" if="jdk1.6+">
+    <input message="secure-input:>" addproperty="the.password">
+      <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+    </input>
+    <au:assertPropertySet name="the.password" />
+  </target>
+
 </project>

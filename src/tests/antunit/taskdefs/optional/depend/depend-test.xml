@@ -86,31 +86,30 @@ public class Main {
 }
 ]]></echo>
 
-    <property name="dest1" location="${output}/dest1"/>
     <property name="dest2" location="${output}/dest2"/>
 
-    <mkdir dir="${dest1}"/>
+    <mkdir dir="${resources}"/>
     <mkdir dir="${dest2}"/>
 
-    <javac srcdir="${src1}" destdir="${dest1}"/>
-    <javac srcdir="${src2}" destdir="${dest2}" classpath="${dest1}"/>
+    <javac srcdir="${src1}" destdir="${resources}"/>
+    <javac srcdir="${src2}" destdir="${dest2}" classpath="${resources}"/>
     <sleep seconds="3" />
     <touch file="${src1}/a/B.java" />
-    <javac srcdir="${src1}" destdir="${dest1}"/>
+    <javac srcdir="${src1}" destdir="${resources}"/>
     <au:assertFileExists file="${dest2}/b/Main.class"/>
   </target>
 
   <target name="testClasspathJar" depends="classpathTestSetUp">
 
-    <jar destfile="${output}/dest1.jar" basedir="${dest1}"/>
-    <delete dir="${dest1}"/>
-    <path id="dest1-id">
-      <pathelement location="${output}/dest1.jar"/>
+    <jar destfile="${test.jar}" basedir="${resources}"/>
+    <delete dir="${resources}"/>
+    <path id="resources-id">
+      <pathelement location="${test.jar}"/>
     </path>
 
     <depend srcDir="${src2}"
             destDir="${dest2}" cache="${output}"
-            classpathref="dest1-id"
+            classpathref="resources-id"
             />
     <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
 
@@ -118,13 +117,13 @@ public class Main {
 
   <target name="testClasspathDir" depends="classpathTestSetUp">
 
-    <path id="dest1-id">
-      <pathelement location="${dest1}"/>
+    <path id="resources-id">
+      <pathelement location="${resources}"/>
     </path>
 
     <depend srcDir="${src2}"
             destDir="${dest2}" cache="${output}"
-            classpathref="dest1-id"
+            classpathref="resources-id"
             />
     <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
 

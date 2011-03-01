@@ -19,68 +19,65 @@
 
   <import file="../antunit-base.xml" />
 
-  <property name="classes.dir" value="../../../../build/classes"/>
+  <property name="classes.dir" value="../../../../build/classes" />
   <property name="sign.dir" location="${output}" />
   <property name="subdir" location="${sign.dir}/subdir" />
-  <property name="test.jar" location="${sign.dir}/signtest.jar" />
-  <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
-  <property name="testkeystore" location="../../../etc/testcases/testkeystore"/>
-  
+  <property name="signtest.jar" location="${sign.dir}/signtest.jar" />
+  <property name="subdirsigntest.jar" location="${subdir}/signtest.jar" />
+  <property name="testkeystore" location="../../../etc/testcases/testkeystore" />
+
   <macrodef name="assertSigned">
-    <attribute name="jar" default="${test.jar}" />
+    <attribute name="jar" default="${signtest.jar}" />
     <sequential>
       <au:assertTrue message="not signed: @{jar}">
-        <issigned file="@{jar}"/>
+        <issigned file="@{jar}" />
       </au:assertTrue>
     </sequential>
   </macrodef>
 
   <presetdef name="sign-base">
-    <signjar alias="testonly" keystore="${testkeystore}"
-           storepass="apacheant"/>
+    <signjar alias="testonly" keystore="${testkeystore}" storepass="apacheant" />
   </presetdef>
 
   <presetdef name="verify-base">
-    <verifyjar keystore="${testkeystore}"
-           storepass="apacheant"/>
+    <verifyjar keystore="${testkeystore}" storepass="apacheant" />
   </presetdef>
 
   <presetdef name="sign">
-    <sign-base jar="${test.jar}" />
+    <sign-base jar="${signtest.jar}" />
   </presetdef>
 
   <target name="setUp">
     <mkdir dir="${sign.dir}" />
     <mkdir dir="${subdir}" />
   </target>
-  
+
   <target name="jar" depends="setUp">
-    <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
-  </target>  
+    <jar jarfile="${signtest.jar}" basedir="${classes.dir}" includes="**/Task.class" />
+  </target>
 
   <target name="basic" depends="jar">
     <sign />
   </target>
 
   <target name="testBasic" depends="basic">
-    <assertSigned/>             
+    <assertSigned />
   </target>
 
   <target name="testMaxmemory" depends="jar">
-    <sign maxmemory="128m"/>
-    <assertSigned/>             
+    <sign maxmemory="128m" />
+    <assertSigned />
   </target>
 
   <target name="testPreserveLastModified" depends="jar">
-    <touch file="${test.jar}" datetime="06/28/2000 2:02 pm"/>
-    <sign 
-    	preservelastmodified="true"/>
+    <touch file="${signtest.jar}" datetime="06/28/2000 2:02 pm" />
+    <sign preservelastmodified="true" />
     <assertSigned />
     <fail message="preserveLastModified did not preserve the last modified time">
       <condition>
         <not>
-          <isfileselected file="${test.jar}" >
-            <date datetime="06/28/2000 2:02 pm" when="equal"/>
+          <isfileselected file="${signtest.jar}">
+            <date datetime="06/28/2000 2:02 pm" when="equal" />
           </isfileselected>
         </not>
       </condition>
@@ -89,117 +86,117 @@
 
   <target name="testFileset" depends="jar">
     <sign-base>
-      <fileset file="${test.jar}" />
+      <fileset file="${signtest.jar}" />
     </sign-base>
-    <assertSigned/>
+    <assertSigned />
   </target>
 
   <target name="testFilesetAndJar" depends="jar">
-    <sign-base jar="${test.jar}" lazy="true">
-      <fileset file="${test.jar}" />
+    <sign-base jar="${signtest.jar}" lazy="true">
+      <fileset file="${signtest.jar}" />
     </sign-base>
-    <assertSigned/>
+    <assertSigned />
   </target>
-  
+
   <target name="testFilesetAndSignedJar" depends="jar">
     <au:expectfailure expectedMessage="You cannot specify the signed JAR when using paths or filesets">
       <sign-base signedjar="${sign.dir}/newfile.jar">
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
       </sign-base>
     </au:expectfailure>
   </target>
-  
+
   <target name="testPath" depends="jar">
     <sign-base>
       <path>
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
       </path>
     </sign-base>
-    <assertSigned/>
+    <assertSigned />
   </target>
 
   <target name="testPathAndJar" depends="jar">
-    <sign-base jar="${test.jar}" lazy="true">
+    <sign-base jar="${signtest.jar}" lazy="true">
       <path>
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
       </path>
     </sign-base>
-    <assertSigned/>
+    <assertSigned />
   </target>
-  
+
   <target name="testPathAndSignedJar" depends="jar">
     <au:expectfailure expectedMessage="You cannot specify the signed JAR when using paths or filesets">
       <sign-base signedjar="${sign.dir}/newfile.jar">
         <path>
-          <fileset file="${test.jar}" />
+          <fileset file="${signtest.jar}" />
         </path>
       </sign-base>
     </au:expectfailure>
   </target>
-  
+
   <target name="testSignedJar" depends="jar">
-    <sign signedjar="${subdirtest.jar}"/>
-    <assertSigned jar="${subdirtest.jar}"/>
+    <sign signedjar="${subdirsigntest.jar}" />
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
 
   <target name="testDestDirAndSignedJar" depends="jar">
     <au:expectfailure expectedMessage="'destdir' and 'signedjar' cannot both be set">
-      <sign destDir="${subdir}" signedjar="${sign.dir}/newfile.jar"/>
+      <sign destDir="${subdir}" signedjar="${sign.dir}/newfile.jar" />
     </au:expectfailure>
   </target>
 
   <target name="testDestDir" depends="jar">
     <sign destDir="${subdir}" />
-    <assertSigned jar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
-  
+
   <target name="testDestDirFileset" depends="jar">
     <sign-base destDir="${subdir}">
-      <fileset file="${test.jar}" />
+      <fileset file="${signtest.jar}" />
     </sign-base>
-    <assertSigned jar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
-  
+
   <target name="testDestDirPath" depends="jar">
     <sign-base destDir="${subdir}">
       <path>
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
       </path>
     </sign-base>
-    <assertSigned jar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
-  
+
   <target name="testMapperNoDest" depends="jar">
     <au:expectfailure expectedMessage="The destDir attribute is required if a mapper is set">
-      <sign-base >
+      <sign-base>
         <flattenmapper />
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
       </sign-base>
     </au:expectfailure>
   </target>
-  
+
   <target name="testMapperFileset" depends="jar">
     <sign-base destDir="${subdir}">
-      <fileset file="${test.jar}" />
+      <fileset file="${signtest.jar}" />
       <flattenmapper />
     </sign-base>
-    <assertSigned jar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
 
   <target name="testMapperPath" depends="jar">
     <sign-base destDir="${subdir}">
       <path>
-        <pathelement location="${test.jar}" />
+        <pathelement location="${signtest.jar}" />
       </path>
       <flattenmapper />
     </sign-base>
-    <assertSigned jar="${subdirtest.jar}"/>
+    <assertSigned jar="${subdirsigntest.jar}" />
   </target>
 
   <target name="testTwoMappers" depends="jar">
     <au:expectfailure expectedMessage="Too many mappers">
       <sign-base destDir="${subdir}">
-        <fileset file="${test.jar}" />
+        <fileset file="${signtest.jar}" />
         <flattenmapper />
         <flattenmapper />
       </sign-base>
@@ -208,13 +205,11 @@
 
   <target name="testNoAlias" depends="jar">
     <au:expectfailure expectedMessage="alias attribute must be set">
-      <signjar keystore="${testkeystore}"
-               jar="${test.jar}"
-               storepass="apacheant"/>
+      <signjar keystore="${testkeystore}" jar="${signtest.jar}" storepass="apacheant" />
     </au:expectfailure>
   </target>
 
-  <target name="testNoFiles" >
+  <target name="testNoFiles">
     <au:expectfailure expectedMessage="jar must be set through jar attribute">
       <sign-base />
     </au:expectfailure>
@@ -222,9 +217,7 @@
 
   <target name="testNoStorePass" depends="jar">
     <au:expectfailure expectedMessage="storepass attribute must be set">
-      <signjar keystore="${testkeystore}"
-               alias="testonly"
-               jar="${test.jar}"/>
+      <signjar keystore="${testkeystore}" alias="testonly" jar="${signtest.jar}" />
     </au:expectfailure>
   </target>
 
@@ -232,39 +225,39 @@
     <sign>
       <sysproperty key="ant.home" value="${ant.home}" />
     </sign>
-    <assertSigned/>    
+    <assertSigned />
   </target>
-  
+
   <target name="testVerifyJar" depends="basic">
-    <verify-base jar="${test.jar}"/>
+    <verify-base jar="${signtest.jar}" />
   </target>
 
   <target name="testVerifyJarCertificates" depends="basic">
-    <verify-base jar="${test.jar}" certificates="true" verbose="true"/>
+    <verify-base jar="${signtest.jar}" certificates="true" verbose="true" />
   </target>
-  
+
   <target name="testVerifyJarUnsigned" depends="jar">
-    <au:expectfailure expectedMessage="Failed to verify ${test.jar}">
-      <verify-base jar="${test.jar}"/>
+    <au:expectfailure expectedMessage="Failed to verify ${signtest.jar}">
+      <verify-base jar="${signtest.jar}" />
     </au:expectfailure>
   </target>
-  
+
   <target name="NOtestVerifyJarNotInKeystore" depends="basic">
     <au:expectfailure>
-      <verifyjar jar="${test.jar}" certificates="true" verbose="true"/>
+      <verifyjar jar="${signtest.jar}" certificates="true" verbose="true" />
     </au:expectfailure>
   </target>
-    
+
   <target name="testVerifyFileset" depends="basic">
-    <verify-base >
-      <fileset file="${test.jar}" />
+    <verify-base>
+      <fileset file="${signtest.jar}" />
     </verify-base>
   </target>
 
   <target name="testVerifyPath" depends="basic">
-    <verify-base >
+    <verify-base>
       <path>
-        <pathelement location="${test.jar}" />
+        <pathelement location="${signtest.jar}" />
       </path>
     </verify-base>
   </target>
@@ -274,6 +267,6 @@
       <verify-base />
     </au:expectfailure>
   </target>
-  
+
 </project>
 

@@ -15,20 +15,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="files-test" default="antunit"
-         xmlns:au="antlib:org.apache.ant.antunit">
+<project name="files-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
   <target name="antunit">
     <au:antunit>
-      <au:plainlistener />
-      <file file="${ant.file}" />
+      <au:plainlistener/>
+      <file file="${ant.file}"/>
     </au:antunit>
   </target>
-  
+
   <target name="setUp">
     <property name="out" value="out"/>
   </target>
-  
+
   <target name="tearDown">
     <delete dir="${out}"/>
   </target>
@@ -38,7 +37,7 @@
     <mkdir dir="${out}"/>
     <copy todir="${out}">
       <!-- threw a java.lang.NullPointerException -->
-	  <files refid="foo"/>
+      <files refid="foo"/>
     </copy>
   </target>
 

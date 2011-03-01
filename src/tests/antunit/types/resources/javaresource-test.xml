@@ -47,7 +47,7 @@
        actual="${output}/org/apache/tools/ant/antlib.xml"/>
   </target>
 
-  <target name="testParentFirstFalse" depends="-setUpAntlibXmlInInput">
+  <target name="testParentFirstFalse" depends="-setUpAntlibXmlInInput" unless="build.sysclasspath.only">
     <copy todir="${output}">
       <javaresource name="org/apache/tools/ant/antlib.xml"
                     parentFirst="false">

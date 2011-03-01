@@ -19,7 +19,6 @@
   <import file="../antunit-base.xml" />
 
   <target name="-create-rmic-adapter">
-    <property name="adapter.dir" location="${output}/adapter"/>
     <mkdir dir="${input}/org/example"/>
     <echo file="${input}/org/example/Adapter.java"><![CDATA[
 package org.example;
@@ -46,13 +45,13 @@ public class Adapter implements RmicAdapter {
         return new Path(null);
     }
 }]]></echo>
-    <mkdir dir="${adapter.dir}"/>
-    <javac srcdir="${input}" destdir="${adapter.dir}"/>
+    <mkdir dir="${resources}"/>
+    <javac srcdir="${input}" destdir="${resources}"/>
   </target>
 
   <target name="testCompilerNotFound" depends="-create-rmic-adapter">
     <au:expectfailure>
-      <rmic base="${adapter.dir}" includes="**/*.class"
+      <rmic base="${resources}" includes="**/*.class"
             compiler="org.example.Adapter"/>
     </au:expectfailure>
     <au:assertLogDoesntContain text="adapter called"/>
@@ -60,18 +59,18 @@ public class Adapter implements RmicAdapter {
 
   <target name="testCompilerClasspath" depends="-create-rmic-adapter"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
-    <rmic base="${adapter.dir}" includes="**/*.class"
+    <rmic base="${resources}" includes="**/*.class"
           compiler="org.example.Adapter">
-      <compilerclasspath location="${adapter.dir}"/>
+      <compilerclasspath location="${resources}"/>
     </rmic>
     <au:assertLogContains text="adapter called"/>
   </target>
 
   <target name="testCompilerAsNestedElement" depends="-create-rmic-adapter">
     <componentdef classname="org.example.Adapter" name="myjavac">
-      <classpath location="${adapter.dir}"/>
+      <classpath location="${resources}"/>
     </componentdef>
-    <rmic base="${adapter.dir}" includes="**/*.class">
+    <rmic base="${resources}" includes="**/*.class">
       <myjavac/>
     </rmic>
     <au:assertLogContains text="adapter called"/>

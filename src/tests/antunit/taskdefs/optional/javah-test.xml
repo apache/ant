@@ -19,9 +19,9 @@
   <import file="../../antunit-base.xml" />
 
   <target name="-create-javah-adapter">
-    <property name="adapter.dir" location="${output}/adapter"/>
-    <mkdir dir="${input}/org/example"/>
-    <echo file="${input}/org/example/Adapter.java"><![CDATA[
+    <mkdir dir="${input}/org/example" />
+    <echo file="${input}/org/example/Adapter.java">
+      <![CDATA[
 package org.example;
 import org.apache.tools.ant.taskdefs.optional.javah.JavahAdapter;
 import org.apache.tools.ant.taskdefs.optional.Javah;
@@ -31,36 +31,35 @@ public class Adapter implements JavahAdapter {
         System.err.println("adapter called");
         return true;
     }
-}]]></echo>
-    <mkdir dir="${adapter.dir}"/>
-    <javac srcdir="${input}" destdir="${adapter.dir}"/>
+}]]>
+    </echo>
+    <mkdir dir="${resources}" />
+    <javac srcdir="${input}" destdir="${resources}" />
   </target>
 
   <target name="testAdapterNotFound" depends="-create-javah-adapter">
     <au:expectfailure>
-      <javah class="org.example.Adapter" destdir="${output}"
-             implementation="org.example.Adapter"/>
+      <javah class="org.example.Adapter" destdir="${output}" implementation="org.example.Adapter" />
     </au:expectfailure>
-    <au:assertLogDoesntContain text="adapter called"/>
+    <au:assertLogDoesntContain text="adapter called" />
   </target>
 
-  <target name="testImplementationClasspath" depends="-create-javah-adapter"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
-    <javah class="org.example.Adapter" destdir="${output}"
-           implementation="org.example.Adapter">
-      <implementationclasspath location="${adapter.dir}"/>
+  <target name="testImplementationClasspath" depends="-create-javah-adapter" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <mkdir dir="${output}" />
+    <javah class="org.example.Adapter" destdir="${output}" implementation="org.example.Adapter">
+      <implementationclasspath location="${resources}" />
     </javah>
-    <au:assertLogContains text="adapter called"/>
+    <au:assertLogContains text="adapter called" />
   </target>
 
-  <target name="testImplementationAsNestedElement"
-          depends="-create-javah-adapter">
+  <target name="testImplementationAsNestedElement" depends="-create-javah-adapter">
     <componentdef classname="org.example.Adapter" name="myjavac">
-      <classpath location="${adapter.dir}"/>
+      <classpath location="${resources}" />
     </componentdef>
+    <mkdir dir="${output}" />
     <javah class="org.example.Adapter" destdir="${output}">
-      <myjavac/>
+      <myjavac />
     </javah>
-    <au:assertLogContains text="adapter called"/>
+    <au:assertLogContains text="adapter called" />
   </target>
 </project>

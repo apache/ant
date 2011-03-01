@@ -19,7 +19,6 @@
   <import file="../../antunit-base.xml" />
 
   <target name="-create-native2ascii-adapter">
-    <property name="adapter.dir" location="${output}/adapter"/>
     <mkdir dir="${input}/org/example"/>
     <echo file="${input}/org/example/Adapter.java"><![CDATA[
 package org.example;
@@ -33,8 +32,8 @@ public class Adapter implements Native2AsciiAdapter {
         return true;
     }
 }]]></echo>
-    <mkdir dir="${adapter.dir}"/>
-    <javac srcdir="${input}" destdir="${adapter.dir}"/>
+    <mkdir dir="${resources}"/>
+    <javac srcdir="${input}" destdir="${resources}"/>
   </target>
 
   <target name="testAdapterNotFound" depends="-create-native2ascii-adapter">
@@ -49,7 +48,7 @@ public class Adapter implements Native2AsciiAdapter {
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
     <native2ascii src="${input}" dest="${output}" includes="**/*.java"
                   implementation="org.example.Adapter">
-      <implementationclasspath location="${adapter.dir}"/>
+      <implementationclasspath location="${resources}"/>
     </native2ascii>
     <au:assertLogContains text="adapter called"/>
   </target>
@@ -57,7 +56,7 @@ public class Adapter implements Native2AsciiAdapter {
   <target name="testImplementationAsNestedElement"
           depends="-create-native2ascii-adapter">
     <componentdef classname="org.example.Adapter" name="myjavac">
-      <classpath location="${adapter.dir}"/>
+      <classpath location="${resources}"/>
     </componentdef>
     <native2ascii src="${input}" dest="${output}" includes="**/*.java">
       <myjavac/>

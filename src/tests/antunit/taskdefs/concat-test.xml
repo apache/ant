@@ -22,11 +22,11 @@
     <delete file="concat.resources" />
   </target>
 
-  <property name="encodeStringDest" location="${output}/encodeStringDest"/>
+  <property name="encodeStringDest" location="${output}/encodeStringDest" />
 
   <target name="testBinaryAppend">
-    <property name="binaryAppendDest" location="${output}/binaryAppendDest"/>
-    <mkdir dir="${output}"/>
+    <property name="binaryAppendDest" location="${output}/binaryAppendDest" />
+    <mkdir dir="${output}" />
     <au:assertTrue message="prerequisite conditions unmet">
       <length length="0">
         <!-- allow for nonexistent OR zero-length: -->
@@ -47,8 +47,7 @@
 
   <target name="testStringEncoding" if="os.unix">
     <property name="br" value="${line.separator}" />
-    <concat destfile="${encodeStringDest}"
-            outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+    <concat destfile="${encodeStringDest}" outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
     <au:assertTrue>
       <resourcesmatch astext="true">
         <file file="utf-16.expected" />
@@ -56,17 +55,16 @@
       </resourcesmatch>
     </au:assertTrue>
   </target>
-	
+
   <target name="testStringEncodingWindows" if="os.windows">
     <property name="br" value="${line.separator}" />
-	<concat destfile="${encodeStringDest}"
-	        outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
-	<au:assertTrue>
-	  <resourcesmatch astext="true">
-	    <file file="utf-16.expected.windows" />
-	    <file file="${encodeStringDest}" />
-	  </resourcesmatch>
-	</au:assertTrue>
+    <concat destfile="${encodeStringDest}" outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.expected.windows" />
+        <file file="${encodeStringDest}" />
+      </resourcesmatch>
+    </au:assertTrue>
   </target>
 
   <target name="testDoNotFixNestedText" description="Bugzilla 42369">
@@ -79,45 +77,45 @@
   </target>
 
   <target name="testIgnoreEmptyFalseFileIsCreated">
-    <mkdir dir="${input}"/>
-    <mkdir dir="${output}"/>
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
     <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="false">
-      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
     </concat>
-    <au:assertFileExists file="${output}/TESTDEST"/>
+    <au:assertFileExists file="${output}/TESTDEST" />
   </target>
-	
+
   <target name="testIgnoreEmptyTrueFileIsNotCreated">
-    <mkdir dir="${input}"/>
-    <mkdir dir="${output}"/>
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
     <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="true">
-      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
     </concat>
-    <au:assertFileDoesntExist file="${output}/TESTDEST"/>
+    <au:assertFileDoesntExist file="${output}/TESTDEST" />
   </target>
-	
+
   <target name="testIgnoreEmptyFalseFileIsCreatedIncludesHeader">
-    <mkdir dir="${input}"/>
-    <mkdir dir="${output}"/>
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
     <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
-      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
       <header filtering="false" trim="yes">
 	header
       </header>
     </concat>
-    <au:assertFileExists file="${output}/TESTDEST"/>
-    <au:assertResourceContains resource="${output}/TESTDEST" value="header"/>
+    <au:assertFileExists file="${output}/TESTDEST" />
+    <au:assertResourceContains resource="${output}/TESTDEST" value="header" />
   </target>
-	
+
   <target name="testIgnoreEmptyFalseFileIsCreatedIncludesFooter">
-    <mkdir dir="${input}"/>
-    <mkdir dir="${output}"/>
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
     <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
-      <filelist dir="${input}" files="thisfiledoesnotexist"/>
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
       <footer filtering="no">footer</footer>
     </concat>
-    <au:assertFileExists file="${output}/TESTDEST"/>
-    <au:assertResourceContains resource="${output}/TESTDEST" value="footer"/>
+    <au:assertFileExists file="${output}/TESTDEST" />
+    <au:assertResourceContains resource="${output}/TESTDEST" value="footer" />
   </target>
 
   <target name="testResources">
