@@ -17,7 +17,7 @@
 -->
 <project name="antunit-base">
 
-  <property name="input" location="${java.io.tmpdir}testinput"/>
+  <property name="input" location="${java.io.tmpdir}/testinput"/>
   <property name="output" location="${java.io.tmpdir}/testoutput"/>
   <property name="resources" location="${java.io.tmpdir}/resources"/>
   <property name="test.jar" location="${java.io.tmpdir}/test.jar"/>
