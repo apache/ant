@@ -37,7 +37,6 @@
     <delete dir="${output}"/>
     <delete dir="${resources}"/>
     <delete file="${test.jar}" failonerror="false" deleteonexit="true"/>
-    <delete file="${test.jar}" failonerror="false" deleteonexit="true"/>
     <delete file="${test1.jar}" failonerror="false" deleteonexit="true"/>
     <delete file="${test2.jar}" failonerror="false" deleteonexit="true"/>
     <delete file="${test3.jar}" failonerror="false" deleteonexit="true"/>
