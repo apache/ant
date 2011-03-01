@@ -265,7 +265,7 @@
   <target name="testhttpurl1" unless="offline">
     <au:assertTrue>
       <length when="greater" length="0">
-        <url url="http://www.w3.org/MarkUp" />
+        <url url="http://www.w3.org/MarkUp/" />
       </length>
     </au:assertTrue>
   </target>
