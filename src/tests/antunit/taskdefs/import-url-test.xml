@@ -40,7 +40,6 @@
   <echo file="${input}/a/c/test.properties"><![CDATA[
 foo=bar
 ]]></echo>
-  <property name="test.jar" location="${java.io.tmpdir}/test.jar"/>
   <jar destfile="${test.jar}">
     <fileset dir="${input}"/>
   </jar>
@@ -63,7 +62,7 @@ foo=bar
     <au:assertLogContains text="foo is bar"/>
   </target>
 
-  <target name="tearDown" depends="antunit-base.tearDown">
+  <target name="tearDown">
     <taskdef name="close"
              classname="org.apache.tools.ant.taskdefs.CloseResources"/>
     <close>
@@ -72,5 +71,6 @@ foo=bar
       </javaresource>
     </close>
     <delete file="${test.jar}" quiet="true" deleteonexit="true"/>
+    <antcall target="antunit-base.tearDown"/>
   </target>
 </project>
