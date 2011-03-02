@@ -16,6 +16,7 @@
   limitations under the License.
 -->
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../../antunit-base.xml" />
   <property name="ant-build" location="../../../../../../build"/>
   <property name="build-junit-dir" location="${ant-build}/ant-unit/junit-dir"/>
   <property name="reports.dir" location="${build-junit-dir}/report"/>
@@ -48,7 +49,7 @@
 
   <macrodef name="assert-log-contains" backtrace="no">
     <sequential>
-      <au:assertLogContains text="Hello From Test" />
+      <au:assertLogContains text="Hello From Test"/>
     </sequential>
   </macrodef>
 
