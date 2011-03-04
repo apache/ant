@@ -19,41 +19,40 @@
   <import file="../antunit-base.xml" />
 
   <target name="setUp">
-    <mkdir dir="${input}"/>
-    <echo file="${input}/foo.txt">Hello, world</echo>
-    <echo file="${input}/x.properties">a=b</echo>
-    <mkdir dir="${output}"/>
-    <jar destfile="${output}/javaresource-test.jar">
-      <fileset dir="${input}"/>
-    </jar>
+    <mkdir dir="${resources}"/>
+    <echo file="${resources}/foo.txt">Hello, world</echo>
+    <echo file="${resources}/x.properties">a=b</echo>
   </target>
 
   <target name="testReadFromFile" depends="setUp">
     <concat>
       <javaresource name="foo.txt">
-        <classpath location="${input}"/>
+        <classpath location="${resources}"/>
       </javaresource>
     </concat>
     <au:assertLogContains text="Hello, world"/>
     <loadproperties>
       <javaresource name="x.properties">
-        <classpath location="${input}"/>
+        <classpath location="${resources}"/>
       </javaresource>
     </loadproperties>
     <au:assertPropertyEquals name="a" value="b"/>
   </target>
 
   <target name="testReadFromJar" depends="setUp">
-    <delete dir="${input}"/>
+    <jar destfile="${test.jar}">
+      <fileset dir="${resources}"/>
+    </jar>
+    <delete dir="${resources}"/>
     <concat>
       <javaresource name="foo.txt">
-        <classpath location="${output}/javaresource-test.jar"/>
+        <classpath location="${test.jar}"/>
       </javaresource>
     </concat>
     <au:assertLogContains text="Hello, world"/>
     <loadproperties>
       <javaresource name="x.properties">
-        <classpath location="${output}/javaresource-test.jar"/>
+        <classpath location="${test.jar}"/>
       </javaresource>
     </loadproperties>
     <au:assertPropertyEquals name="a" value="b"/>
