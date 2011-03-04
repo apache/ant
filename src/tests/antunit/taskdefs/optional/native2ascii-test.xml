@@ -36,7 +36,9 @@ public class Adapter implements Native2AsciiAdapter {
     <javac srcdir="${input}" destdir="${resources}"/>
   </target>
 
-  <target name="testAdapterNotFound" depends="-create-native2ascii-adapter">
+  <target name="testAdapterNotFound" depends="-create-native2ascii-adapter" unless="build.sysclasspath.only">
+    <!-- under gump the failure will not happen because the ${resources} directory is systematically on the classpath 
+         what would be cool would be a task which removes a path element from the classpath. Do we have that ? -->
     <au:expectfailure>
       <native2ascii src="${input}" dest="${output}" includes="**/*.java"
                     implementation="org.example.Adapter"/>
