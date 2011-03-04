@@ -49,7 +49,7 @@ public class Adapter implements RmicAdapter {
     <javac srcdir="${input}" destdir="${resources}"/>
   </target>
 
-  <target name="testCompilerNotFound" depends="-create-rmic-adapter">
+  <target name="testCompilerNotFound" depends="-create-rmic-adapter" unless="build.sysclasspath.only">
     <au:expectfailure>
       <rmic base="${resources}" includes="**/*.class"
             compiler="org.example.Adapter"/>
