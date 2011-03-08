@@ -20,6 +20,11 @@ Fixed bugs:
  * Delete task example does not work
    Bugzilla Report 50816.  
 
+ * <splash>'s proxy handling has been delegated to <setproxy>
+   internally so the two tasks are consistent.  <splash>'s way of not
+   setting a proxy caused problems with other Java libraries.
+   Bugzilla Report 50888.
+
 Other changes:
 --------------
 
