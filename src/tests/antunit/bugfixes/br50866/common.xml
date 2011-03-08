@@ -1,0 +1,8 @@
+<project name="common" default="default">
+    <target name="common-init">
+        <property name="prop-common-init" value="br50866" />
+    </target>
+    <target name="common" depends="common-init">
+        <property name="prop-common" value="br50866" />
+    </target>
+</project>

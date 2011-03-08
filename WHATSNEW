@@ -25,6 +25,10 @@ Fixed bugs:
    setting a proxy caused problems with other Java libraries.
    Bugzilla Report 50888.
 
+ * Include task breaks dependencies or extension-points for multiple
+   files.
+   Bugzilla Report 50866.
+
 Other changes:
 --------------
 

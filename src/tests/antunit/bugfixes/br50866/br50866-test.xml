@@ -1,0 +1,13 @@
+<project name="br50866" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+    <import file="../../antunit-base.xml" />
+
+    <include file="middle.xml" />
+
+    <target name="testinclude" depends="middle.common,middle.middle">
+        <au:assertPropertyEquals name="prop-common-init" value="br50866"/>
+        <au:assertPropertyEquals name="prop-common" value="br50866"/>
+        <au:assertPropertyEquals name="prop-middle" value="br50866"/>
+    </target>
+
+</project>

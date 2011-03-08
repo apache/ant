@@ -206,10 +206,14 @@ public class ImportTask extends Task {
         boolean oldIncludeMode = ProjectHelper.isInIncludeMode();
         String oldSep = ProjectHelper.getCurrentPrefixSeparator();
         try {
-            String prefix = targetPrefix;
+            String prefix;
             if (isInIncludeMode() && oldPrefix != null
                 && targetPrefix != null) {
                 prefix = oldPrefix + oldSep + targetPrefix;
+            } else if (targetPrefix != null) {
+                prefix = targetPrefix;
+            } else {
+                prefix = oldPrefix;
             }
             setProjectHelperProps(prefix, prefixSeparator,
                                   isInIncludeMode());

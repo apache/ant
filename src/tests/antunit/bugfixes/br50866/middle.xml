@@ -1,0 +1,7 @@
+<project name="middle" default="default">
+    <import file="common.xml" optional="true" />
+
+    <target name="middle" depends="common-init">
+        <property name="prop-middle" value="br50866" />
+    </target>
+</project>
