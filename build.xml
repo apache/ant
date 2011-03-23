@@ -62,7 +62,7 @@
   <property name="java.dir" value="${src.dir}/main"/>
   <property name="script.dir" value="${src.dir}/script"/>
   <property name="lib.dir" value="lib"/>
-  <property name="docs.dir" value="docs"/>
+  <property name="manual.dir" value="manual"/>
   <property name="etc.dir" value="${src.dir}/etc"/>
   <property name="src.junit" value="${src.dir}/tests/junit"/>
   <property name="src.antunit" value="${src.dir}/tests/antunit"/>
@@ -152,13 +152,13 @@
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
-  <property name="dist.docs" value="${dist.dir}/docs"/>
+  <property name="dist.manual" value="${dist.dir}/manual"/>
   <property name="dist.etc" value="${dist.dir}/etc"/>
-  <property name="dist.javadocs" value="${dist.dir}/docs/manual/api"/>
+  <property name="dist.javadocs" value="${dist.dir}/manual/api"/>
 
   <property name="src.dist.dir" value="dist-src"/>
   <property name="src.dist.src" value="${src.dist.dir}/src"/>
-  <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
+  <property name="src.dist.manual" value="${src.dist.dir}/manual"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
 
   <property name="java-repository.dir" value="java-repository/${groupid}"/>
@@ -324,18 +324,6 @@
     <include name="${regexp.package}/RegexpTest*"/>
     <include name="${optional.package}/AbstractXSLTLiaisonTest*"/>
     <include name="${ant.package}/types/AbstractFileSetTest*"/>
-  </patternset>
-
-  <!--
-       ===================================================================
-         Set up a patternsets that matches the parts of our site that
-         should not be part of the distribution.
-       ===================================================================
-  -->
-  <patternset id="site.excludes">
-    <exclude name="bindownload.html"/>
-    <exclude name="srcdownload.html"/>
-    <exclude name="*.cgi"/>
   </patternset>
 
   <!--
@@ -716,7 +704,7 @@
         </section>
       </manifest>
 
-      <fileset dir="${docs.dir}">
+      <fileset dir="${manual.dir}">
         <include name="images/ant_logo_large.gif"/>
       </fileset>
     </jar>
@@ -880,7 +868,7 @@
   </macrodef>
 
   <target name="internal_dist" depends="dist-lite,dist_javadocs">
-    <mkdir dir="${dist.docs}"/>
+    <mkdir dir="${dist.manual}"/>
     <mkdir dir="${dist.etc}"/>
 
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
@@ -910,17 +898,8 @@
     </copy>
 
 
-    <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}" includes="${expandproperty.files}">
-        <patternset refid="site.excludes"/>
-      </fileset>
-      <filterchain refid="ant.filters"/>
-    </copy>
-
-    <copy todir="${dist.docs}" filtering="false">
-      <fileset dir="${docs.dir}" excludes="${expandproperty.files}">
-        <patternset refid="site.excludes"/>
-      </fileset>
+    <copy todir="${dist.manual}">
+      <fileset dir="${manual.dir}" />
     </copy>
 
     <copy todir="${dist.dir}">
@@ -1014,10 +993,9 @@
       <fileset dir="${src.dir}"/>
     </copy>
 
-    <copy todir="${src.dist.docs}">
-      <fileset dir="${docs.dir}">
-        <exclude name="manual/api/"/>
-        <patternset refid="site.excludes"/>
+    <copy todir="${src.dist.manual}">
+      <fileset dir="${manual.dir}">
+        <exclude name="api/"/>
       </fileset>
     </copy>
 
@@ -1150,12 +1128,12 @@
     </checksums-mvn>
 
     <zip destfile="${dist.base.manual}/${dist.name}-manual.zip">
-      <zipfileset dir="${dist.name}/docs/manual" prefix="${dist.name}"/>
+      <zipfileset dir="${dist.name}/manual" prefix="${dist.name}"/>
       <zipfileset file="NOTICE" prefix="${dist.name}"/>
     </zip>
     <tar longfile="gnu"
          destfile="${dist.base.manual}/${dist.name}-manual.tar">
-      <tarfileset dir="${dist.name}/docs/manual" prefix="${dist.name}"/>
+      <tarfileset dir="${dist.name}/manual" prefix="${dist.name}"/>
       <tarfileset file="NOTICE" prefix="${dist.name}"/>
     </tar>
     <gzip destfile="${dist.base.manual}/${dist.name}-manual.tar.gz"
