@@ -18,10 +18,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
@@ -260,6 +262,40 @@ public class JavaTest extends BuildFileTest {
         assertEquals("foo", project.getProperty("input.value"));
     }
 
+    public void testFlushedInput() throws Exception {
+        final PipedOutputStream out = new PipedOutputStream();
+        final PipedInputStream in = new PipedInputStream(out);
+        project.setInputHandler(new DefaultInputHandler() {
+            protected InputStream getInputStream() {
+                return in;
+            }
+        });
+        project.setDefaultInputStream(in);
+
+        final boolean[] timeout = new boolean[1];
+        timeout[0] = false;
+
+        Thread writingThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    // wait a little bit to have the target executed
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // don't care
+                }
+                try {
+                    out.write("foo-FlushedInput\n".getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        writingThread.setDaemon(true);
+
+        writingThread.start();
+        executeTarget("flushedInput");
+    }
+
     /**
      * entry point class with no dependencies other
      * than normal JRE runtime
@@ -372,4 +408,12 @@ public class JavaTest extends BuildFileTest {
             }
         }
     }
+
+    public static class ReadPoint {
+        public static void main(String[] args) throws IOException {
+            String line = new BufferedReader(new InputStreamReader(System.in)).readLine();
+            System.out.println(line);
+        }
+    }
+
 }

@@ -29,6 +29,9 @@ Fixed bugs:
    files.
    Bugzilla Report 50866.
 
+ * Read on System.in hangs for forked java task.
+   Bugzilla Report 50960.
+
 Other changes:
 --------------
 

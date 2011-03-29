@@ -387,6 +387,11 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
 
     </target>
 
+    <target name="flushedInput">
+        <java classname="org.apache.tools.ant.taskdefs.JavaTest$$ReadPoint" fork="true"
+            classpath="${tests-classpath.value}" failonerror="true" timeout="2000" />
+    </target>
+
     <target name="cleanup">
         <delete>
             <fileset file="${logFile}" />
@@ -395,4 +400,5 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="foo" />
+
 </project>
