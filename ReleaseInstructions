@@ -39,15 +39,6 @@ Note: This document was updated in the context of releasing Ant 1.7.
     http://svnbook.red-bean.com/nightly/en/svn-book.html
 
     Label such branches ANT_16_BRANCH.
-    
-    If the new version is created on the trunk, create or update a branch ANT_SITE
-    and switch /www/ant.apache.org to point to ANT_SITE rather than to the trunk.
-    
-    The ANT_SITE branch and the trunk will be different during the time between 
-    the new build and the actual release, which is normally one week in order 
-    to vote on the release artifacts. During this time, ANT_SITE does not mention
-    yet the new release.
-    
 
 4.  Once the branch is setup, the version numbers in SVN are changed. On the
     branch, the project.version property in build.xml becomes 1.7Beta.
@@ -68,28 +59,18 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
         On the branch only :
 
-            * docs/manual/cover.html
-            * docs/manual/credits.html
+            * manual/cover.html
+            * manual/credits.html
             * build.xml properties : project-version & manifest-version 
             * POM files under src/etc/poms and subdirectories
             * ivy.xml in release subdirectory
 
         Commit your changes.
 
-        On the branch and on the main trunk (*):
+        On the branch and on the main trunk:
 
             * WHATSNEW
-            * xdocs/antnews.xml (Announcement)
-            * xdocs/faq.xml (Ant's history details - not for betas)
-            * xdocs/index.xml (Announcement, latest release details, link to
-            manual under "Documentation")
-            * xdocs/srcdownload.xml
-            * xdocs/bindownload.xml
-            * xdocs/manualdownload.xml
 
-        Generate the html files by invoking ant on docs.xml
-        (use -projecthelp for instructions).
-        Commit the modified/generated files
 
 6.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  In fact NetRexxC/NetRexxR are the only commercial
@@ -123,7 +104,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     This script requires using commons-openpgp to sign the artefacts,
 
     This tool can be checked out from 
-    http:/svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
+    http://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
     You have to build it using maven
     
     You can create a property file .gnupg.properties in your home directory 
@@ -185,12 +166,6 @@ Note: This document was updated in the context of releasing Ant 1.7.
     made (ant website, main jakarta website, announcements@jakarta.apache.org,
     etc).
 
-
-    you also need to checkout parallel to ant-core
-    https://svn.apache.org/repos/asf/ant/site then go to the
-    subdirectory generated svn propedit svn:externals to change the
-    location of the manual
-
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
 
@@ -202,9 +177,6 @@ Note: This document was updated in the context of releasing Ant 1.7.
 17. Try to advertise the need for testing of the betas as much as possible.
     This would eliminate the need to release minor patch versions like
     we had to do when releasing Ant 1.4.
-
-    To monitor the number of downloads, look at the access_log
-    file under /usr/local/apache2/logs
 
 18. When the final beta is considered OK, propose a vote on dev@ant to
     officially adopt the latest beta as the Ant 1.6 release. If it is passed,
@@ -255,18 +227,28 @@ Note: This document was updated in the context of releasing Ant 1.7.
     * Make sure that the symbolic link README.html points to the new
       RELEASE-NOTES.
 
-    (**)
+    (*)
 
 20. Update the ant.apache.org site :
 
-    Perform update on files in people.apache.org's /www/ant.apache.org/
-    This might mean switching /www/ant.apache.org back from the ANT_SITE branch
-    to the trunk.
-    
-    svn update runs as a cron job, what matters is to which branch the web site
-    points too.
+    The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
+
+    Update the following files for version number:
+
+    * source/antnews.xml (Announcement)
+    * source/faq.xml (Ant's history details - not for betas)
+    * source/index.xml (Announcement, latest release details, link to
+    manual under "Documentation")
+    * source/srcdownload.xml
+    * source/bindownload.xml
+    * source/manualdownload.xml
+
+    Generate the html files by invoking 'ant docs'
+    Commit the modified/generated files in the 'production' folder, it will go
+    live on ant.apache.org in a matter on seconds.
      
-    svn switch the online manual to the tag of the release.
+    Change the version of the manual published on the site: change the URL in the
+    svn:externals of the 'production' folder.
 
 21. Clean up.
 
@@ -298,13 +280,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 25. You can now reacquaint yourself with your family and friends.
 
-(*)  the xdocs need to be updated on both the branch and the HEAD revision
-     because traditionally the ant.apache.org web site reflects the HEAD
-     revision of the xdocs, but the users downloading a distribution will get
-     the xdocs and the generated html from the branch and will complain if there
-     are discrepancies in version numbers.
-
-(**) Mirrors : the srcdownload.html, bindownload.html and
+(*)  Mirrors : the srcdownload.html, bindownload.html and
      manualdownload.html each list a number of mirrors. For ant 1.6.0
      the mirrors picked up the new version in 8 hours or less, the
      release having been done at midnight on Dec 18th, the mirrors had
