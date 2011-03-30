@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="docs" default="txt2html">
+
+    <available property="jdk1.5+" classname="java.net.Proxy"/>
+    <target name="txt2html">
+        <fail unless="jdk1.5+" message="Tomcat BuildUtils requires Java5+"/>
+        <property name="build.dir" value="build"/>
+        <tempfile property="temp.dir"/>
+        <mkdir dir="${temp.dir}/org/apache/tomcat/buildutil"/>
+        <get src="http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/tomcat/buildutil/Txt2Html.java?revision=987920&amp;view=co"
+             dest="${temp.dir}/org/apache/tomcat/buildutil/Txt2Html.java"/>
+        <javac srcdir="${temp.dir}" destdir="${temp.dir}" includeAntRuntime="true"/>
+        <taskdef name="txt2html" classname="org.apache.tomcat.buildutil.Txt2Html" classpath="${temp.dir}"/>
+        <mkdir dir="${build.dir}/html"/>
+        <txt2html todir="${build.dir}/html">
+            <fileset file="WHATSNEW"/>
+        </txt2html>
+        <delete dir="${temp.dir}"/>
+    </target>
+
+</project>
