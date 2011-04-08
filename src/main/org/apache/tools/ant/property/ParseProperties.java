@@ -35,8 +35,8 @@ public class ParseProperties implements ParseNextProperty {
 
     /**
      * Constructor with a getProperty.
-     * @param project the current ant project.
-     * @param expanders a sequence of exapanders
+     * @param project the current Ant project.
+     * @param expanders a sequence of expanders
      * @param getProperty property resolver.
      */
     public ParseProperties(Project project, Collection expanders, GetProperty getProperty) {
@@ -47,7 +47,7 @@ public class ParseProperties implements ParseNextProperty {
 
     /**
      * Get the project.
-     * @return the current ant project.
+     * @return the current Ant project.
      */
     public Project getProject() {
         return project;
