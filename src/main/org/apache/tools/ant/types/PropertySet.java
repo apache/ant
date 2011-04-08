@@ -31,6 +31,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.resources.MappedResource;
 import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
@@ -292,37 +293,9 @@ public class PropertySet extends DataType implements ResourceCollection {
             return getRef().getProperties();
         }
         dieOnCircularReference();
-        Set names = null;
-        Project prj = getProject();
-        Hashtable props =
-            prj == null ? getAllSystemProperties() : prj.getProperties();
+        Hashtable props = getEffectiveProperties();
+        Set names = getPropertyNames(props);
 
-        //quick & dirty, to make nested mapped p-sets work:
-        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
-            PropertySet set = (PropertySet) e.nextElement();
-            props.putAll(set.getProperties());
-        }
-
-        if (getDynamic() || cachedNames == null) {
-            names = new HashSet();
-            addPropertyNames(names, props);
-            // Add this PropertySet's nested PropertySets' property names.
-            for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
-                PropertySet set = (PropertySet) e.nextElement();
-                names.addAll(set.getProperties().keySet());
-            }
-            if (negate) {
-                //make a copy...
-                HashSet complement = new HashSet(props.keySet());
-                complement.removeAll(names);
-                names = complement;
-            }
-            if (!getDynamic()) {
-                cachedNames = names;
-            }
-        } else {
-            names = cachedNames;
-        }
         FileNameMapper m = null;
         Mapper myMapper = getMapper();
         if (myMapper != null) {
@@ -347,6 +320,42 @@ public class PropertySet extends DataType implements ResourceCollection {
             }
         }
         return properties;
+    }
+
+    private Hashtable getEffectiveProperties() {
+        Project prj = getProject();
+        Hashtable result = prj == null ? getAllSystemProperties() : prj.getProperties();
+        //quick & dirty, to make nested mapped p-sets work:
+        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
+            PropertySet set = (PropertySet) e.nextElement();
+            result.putAll(set.getProperties());
+        }
+        return result;
+    }
+
+    private Set getPropertyNames(Hashtable props) {
+        Set names;
+        if (getDynamic() || cachedNames == null) {
+            names = new HashSet();
+            addPropertyNames(names, props);
+            // Add this PropertySet's nested PropertySets' property names.
+            for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
+                PropertySet set = (PropertySet) e.nextElement();
+                names.addAll(set.getProperties().keySet());
+            }
+            if (negate) {
+                //make a copy...
+                HashSet complement = new HashSet(props.keySet());
+                complement.removeAll(names);
+                names = complement;
+            }
+            if (!getDynamic()) {
+                cachedNames = names;
+            }
+        } else {
+            names = cachedNames;
+        }
+        return names;
     }
 
     /**
@@ -498,13 +507,20 @@ public class PropertySet extends DataType implements ResourceCollection {
             return getRef().iterator();
         }
         dieOnCircularReference();
-        final Enumeration e = getProperties().propertyNames();
+        Hashtable props = getEffectiveProperties();
+        Set names = getPropertyNames(props);
+
+        Mapper myMapper = getMapper();
+        final FileNameMapper m = myMapper == null ? null : myMapper.getImplementation();
+        final Iterator iter = names.iterator();
+
         return new Iterator() {
             public boolean hasNext() {
-                return e.hasMoreElements();
+                return iter.hasNext();
             }
             public Object next() {
-                return new PropertyResource(getProject(), (String) e.nextElement());
+                PropertyResource p = new PropertyResource(getProject(), (String) iter.next());
+                return m == null ? (Resource) p : new MappedResource(p, m);
             }
             public void remove() {
                 throw new UnsupportedOperationException();

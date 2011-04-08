@@ -34,6 +34,9 @@ Fixed bugs:
 
  * FileResource specified using basedir/name attributes was non-functional.
 
+ * Resource collection implementation of mapped PropertySet returned
+   unusable resources.
+
 Other changes:
 --------------
 
