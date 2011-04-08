@@ -17,7 +17,11 @@
  *
 -->
 
-<project>
+<project name="test-propertyset" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
   <property name="fooA" value="FooA"/>
   <property name="barB" value="BarB"/>
 
@@ -48,14 +52,14 @@
     </sequential>
   </macrodef>
 
-  <target name="reference-to-two-references">
+  <target name="test-reference-to-two-references">
     <expect.equals
       test="reference to two references"
       exp="barB=BarB, fooA=FooA"
       got="${toString:my-set}"/>
   </target>
 
-  <target name="nested-mapped">
+  <target name="test-nested-mapped">
     <propertyset id="nested-mapped">
       <propertyset>
         <propertyset refid="properties-starting-with-foo"/>
@@ -72,7 +76,7 @@
       got="${toString:nested-mapped}"/>
   </target>
 
-  <target name="nested-mapped-mapped">
+  <target name="test-nested-mapped-mapped">
     <propertyset id="nested-mapped-mapped">
       <propertyset>
         <propertyset refid="properties-starting-with-foo"/>
