@@ -19,7 +19,14 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.property.GetProperty;
+import org.apache.tools.ant.property.ParseProperties;
+import org.apache.tools.ant.types.PropertySet;
 
 /**
  * Expands Ant properties, if any, in the data.
@@ -34,8 +41,10 @@ import org.apache.tools.ant.Project;
 public final class ExpandProperties
     extends BaseFilterReader
     implements ChainableReader {
+
     /** Data that must be read from, if not null. */
     private String queuedData = null;
+    private PropertySet propertySet;
 
     /**
      * Constructor for "dummy" instances.
@@ -54,6 +63,17 @@ public final class ExpandProperties
      */
     public ExpandProperties(final Reader in) {
         super(in);
+    }
+
+    /**
+     * Restrict the expanded properties using a PropertySet.
+     * @param propertySet replacement lookup
+     */
+    public void add(PropertySet propertySet) {
+        if (this.propertySet != null) {
+            throw new BuildException("expandproperties filter accepts only one propertyset");
+        }
+        this.propertySet = propertySet;
     }
 
     /**
@@ -88,7 +108,20 @@ public final class ExpandProperties
                 ch = -1;
             } else {
                 Project project = getProject();
-                queuedData = project.replaceProperties(queuedData);
+                GetProperty getProperty;
+                if (propertySet == null) {
+                    getProperty = PropertyHelper.getPropertyHelper(project);
+                } else {
+                    final Properties props = propertySet.getProperties();
+                    getProperty = new GetProperty() {
+                        
+                        public Object getProperty(String name) {
+                            return props.getProperty(name);
+                        }
+                    };
+                }
+                queuedData = new ParseProperties(project, PropertyHelper.getPropertyHelper(project)
+                        .getExpanders(), getProperty).parseProperties(queuedData).toString();
                 return read();
             }
         }
@@ -108,6 +141,7 @@ public final class ExpandProperties
     public Reader chain(final Reader rdr) {
         ExpandProperties newFilter = new ExpandProperties(rdr);
         newFilter.setProject(getProject());
+        newFilter.add(propertySet);
         return newFilter;
     }
 }

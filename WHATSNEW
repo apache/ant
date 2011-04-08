@@ -52,6 +52,10 @@ Other changes:
  * The concat task now permits the name of its exposed resource
    by means of its 'resourcename' attribute.
 
+ * The expandproperties filter now accepts a nested propertyset
+   which, if specified, provides the properties for expansion.
+   Bugzilla Report 51044.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

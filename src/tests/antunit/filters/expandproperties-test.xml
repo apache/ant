@@ -36,4 +36,42 @@
     </au:assertTrue>
   </target>
 
+  <target name="testSubset">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="FOO $${bar} BAZ" />
+        <concat>
+          <string value="$${foo} $${bar} $${baz}" />
+          <filterchain>
+            <expandproperties>
+              <propertyset>
+                <propertyref name="foo" />
+                <propertyref name="baz" />
+              </propertyset>
+            </expandproperties>
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testMappedPropertySet">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="FOO BAR BAZ" />
+        <concat>
+          <string value="$${food} $${bard} $${bazd}" />
+          <filterchain>
+            <expandproperties>
+              <propertyset>
+                <propertyref builtin="all" />
+                <globmapper from="*" to="*d" />
+              </propertyset>
+            </expandproperties>
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
 </project>

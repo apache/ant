@@ -273,6 +273,22 @@ Convenience method:
 &lt;/loadfile&gt;
 </pre></blockquote>
 
+<p>As of Ant <strong>1.8.3</strong>, a nested
+ <a href="propertyset.html">PropertySet</a> can be specified:
+
+<blockquote><pre>
+&lt;property name=&quot;weather&quot; value=&quot;rain&quot;/&gt;
+&lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;expandproperties&gt;
+      &lt;propertyset&gt;
+        &lt;propertyref name="weather" /&gt;
+      &lt;/propertyset&gt;
+    &lt;/expandproperties&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</pre></blockquote>
+
 <h3><a name="headfilter">HeadFilter</a></h3>
 
 This filter reads the first few lines from the data supplied to it.
