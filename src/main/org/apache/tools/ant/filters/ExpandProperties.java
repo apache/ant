@@ -42,8 +42,10 @@ public final class ExpandProperties
     extends BaseFilterReader
     implements ChainableReader {
 
-    /** Data that must be read from, if not null. */
-    private String queuedData = null;
+    private static final int EOF = -1;
+
+    private char[] buffer;
+    private int index;
     private PropertySet propertySet;
 
     /**
@@ -89,24 +91,9 @@ public final class ExpandProperties
      * during reading
      */
     public int read() throws IOException {
-
-        int ch = -1;
-
-        if (queuedData != null && queuedData.length() == 0) {
-            queuedData = null;
-        }
-
-        if (queuedData != null) {
-            ch = queuedData.charAt(0);
-            queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
-                queuedData = null;
-            }
-        } else {
-            queuedData = readFully();
-            if (queuedData == null || queuedData.length() == 0) {
-                ch = -1;
-            } else {
+        if (index > EOF) {
+            if (buffer == null) {
+                String data = readFully();
                 Project project = getProject();
                 GetProperty getProperty;
                 if (propertySet == null) {
@@ -114,18 +101,22 @@ public final class ExpandProperties
                 } else {
                     final Properties props = propertySet.getProperties();
                     getProperty = new GetProperty() {
-                        
+
                         public Object getProperty(String name) {
                             return props.getProperty(name);
                         }
                     };
                 }
-                queuedData = new ParseProperties(project, PropertyHelper.getPropertyHelper(project)
-                        .getExpanders(), getProperty).parseProperties(queuedData).toString();
-                return read();
+                buffer = new ParseProperties(project, PropertyHelper.getPropertyHelper(project)
+                        .getExpanders(), getProperty).parseProperties(data).toString()
+                        .toCharArray();
             }
+            if (index < buffer.length) {
+                return buffer[index++];
+            }
+            index = EOF;
         }
-        return ch;
+        return EOF;
     }
 
     /**
