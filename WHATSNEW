@@ -44,6 +44,9 @@ Other changes:
    documented.
    Bugzilla Report 50576.
 
+ * The concat task now permits the name of its exposed resource
+   by means of its 'resourcename' attribute.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

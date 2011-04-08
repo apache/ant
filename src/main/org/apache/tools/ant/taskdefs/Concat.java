@@ -424,7 +424,8 @@ public class Concat extends Task implements ResourceCollection {
                     : new ReaderInputStream(rdr, outputEncoding);
         }
         public String getName() {
-            return "concat (" + String.valueOf(c) + ")";
+            return resourceName == null
+                    ? "concat (" + String.valueOf(c) + ")" : resourceName;
         }
     }
 
@@ -486,6 +487,8 @@ public class Concat extends Task implements ResourceCollection {
     /** whether to not create dest if no source files are
      * available */
     private boolean ignoreEmpty = true;
+    /** exposed resource name */
+    private String resourceName;
 
     private ReaderFactory resourceReaderFactory  = new ReaderFactory() {
         public Reader getReader(Object o) throws IOException {
@@ -625,6 +628,15 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void setIgnoreEmpty(boolean ignoreEmpty) {
         this.ignoreEmpty = ignoreEmpty;
+    }
+
+    /**
+     * Set the name that will be reported by the exposed {@link Resource}.
+     * @param resourceName to set
+     * @since Ant 1.8.3
+     */
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
     // Nested element creators.

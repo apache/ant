@@ -139,4 +139,22 @@ baz
     </au:assertTrue>
   </target>
 
+  <target name="testResourceName">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <name name="snicklefritz" />
+          <resources>
+            <concat resourceName="snicklefritz">
+              whatever
+            </concat>
+            <concat>
+              whatever
+            </concat>
+          </resources>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
 </project>
