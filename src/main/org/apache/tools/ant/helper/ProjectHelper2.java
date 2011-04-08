@@ -93,12 +93,12 @@ public class ProjectHelper2 extends ProjectHelper {
     }
 
     /**
-     * Parse the given URL as an antlib descriptor an return the
+     * Parse the given URL as an antlib descriptor and return the
      * content as something that can be turned into an Antlib task.
      *
      * <p>simply delegates to {@link #parseUnknownElement
      * parseUnknownElement} if the resource provides an URL and throws
-     * an exceptipn otherwise.</p>
+     * an exception otherwise.</p>
      *
      * @since Ant 1.8.0
      */
