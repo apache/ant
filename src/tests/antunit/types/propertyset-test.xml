@@ -97,4 +97,29 @@
       got="${toString:nested-mapped-mapped}"/>
   </target>
 
+  <target name="testResources">
+    <au:assertTrue>
+      <resourcecount count="2">
+        <restrict>
+          <exists />
+          <resources refid="my-set" />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testMappedResources">
+    <au:assertTrue>
+      <resourcecount count="2">
+        <restrict>
+          <exists />
+          <propertyset>
+            <propertyset refid="my-set" />
+            <globmapper from="bar*" to="far*" />
+          </propertyset>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
 </project>
