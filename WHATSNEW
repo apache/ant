@@ -32,6 +32,8 @@ Fixed bugs:
  * Read on System.in hangs for forked java task.
    Bugzilla Report 50960.
 
+ * FileResource specified using basedir/name attributes was non-functional.
+
 Other changes:
 --------------
 

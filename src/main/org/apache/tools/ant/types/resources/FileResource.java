@@ -108,6 +108,16 @@ public class FileResource extends Resource implements Touchable, FileProvider,
             return ((FileResource) getCheckedRef()).getFile();
         }
         dieOnCircularReference();
+        synchronized (this) {
+            if (file == null) {
+                //try to resolve file set via basedir/name property setters:
+                File d = getBaseDir();
+                String n = super.getName();
+                if (n != null) {
+                    setFile(FILE_UTILS.resolveFile(d, n));
+                }
+            }
+        }
         return file;
     }
 
