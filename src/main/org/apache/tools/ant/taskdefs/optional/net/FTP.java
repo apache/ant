@@ -88,8 +88,10 @@ public class FTP extends Task implements FTPTaskConfig {
     protected static final int CHMOD = 5;
     protected static final int RM_DIR = 6;
     protected static final int SITE_CMD = 7;
-    /** return code of ftp - not implemented in commons-net version 1.0 */
+    /** return code of ftp */
     private static final int CODE_521 = 521;
+    private static final int CODE_550 = 550;
+    private static final int CODE_553 = 553;
 
     /** adjust uptodate calculations where server timestamps are HH:mm and client's
      * are HH:mm:ss */
@@ -2375,7 +2377,7 @@ public class FTP extends Task implements FTPTaskConfig {
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
                     if (!(ignoreNoncriticalErrors
-                          && (rc == FTPReply.CODE_550 || rc == FTPReply.CODE_553
+                          && (rc == CODE_550 || rc == CODE_553
                               || rc == CODE_521))) {
                         throw new BuildException("could not create directory: "
                                                  + ftp.getReplyString());
@@ -2406,7 +2408,7 @@ public class FTP extends Task implements FTPTaskConfig {
         throws BuildException {
         int rc = ftp.getReplyCode();
         if (!(ignoreNoncriticalErrors
-              && (rc == FTPReply.CODE_550 || rc == FTPReply.CODE_553 || rc == CODE_521))) {
+              && (rc == CODE_550 || rc == CODE_553 || rc == CODE_521))) {
             throw new BuildException("could not create directory: "
                                      + ftp.getReplyString());
         }

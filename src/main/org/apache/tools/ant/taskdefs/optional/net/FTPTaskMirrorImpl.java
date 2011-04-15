@@ -54,8 +54,10 @@ import org.apache.tools.ant.util.VectorSet;
 
 public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
-    /** return code of ftp - not implemented in commons-net version 1.0 */
+    /** return code of ftp */
     private static final int CODE_521 = 521;
+    private static final int CODE_550 = 550;
+    private static final int CODE_553 = 553;
 
     /** Date formatter used in logging, note not thread safe! */
     private static final SimpleDateFormat TIMESTAMP_LOGGING_SDF =
@@ -1775,8 +1777,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     //  to indicate that an attempt to create a directory has
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
-                    if (!(task.isIgnoreNoncriticalErrors() && (rc == FTPReply.CODE_550
-                                                               || rc == FTPReply.CODE_553 || rc == CODE_521))) {
+                    if (!(task.isIgnoreNoncriticalErrors() && (rc == CODE_550
+                                                               || rc == CODE_553
+                                                               || rc == CODE_521))) {
                         throw new BuildException("could not create directory: "
                                                  + ftp.getReplyString());
                     }
@@ -1805,8 +1808,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     private void handleMkDirFailure(FTPClient ftp)
         throws BuildException {
         int rc = ftp.getReplyCode();
-        if (!(task.isIgnoreNoncriticalErrors() && (rc == FTPReply.CODE_550
-                                                   || rc == FTPReply.CODE_553 || rc == CODE_521))) {
+        if (!(task.isIgnoreNoncriticalErrors() && (rc == CODE_550
+                                                   || rc == CODE_553
+                                                   || rc == CODE_521))) {
             throw new BuildException("could not create directory: "
                                      + ftp.getReplyString());
         }
