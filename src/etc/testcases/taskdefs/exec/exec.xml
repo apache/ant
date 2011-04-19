@@ -16,11 +16,11 @@
   limitations under the License.
 -->
 <project name="exec-test" default="spawn" basedir=".">
+    <property name="output" location="${java.io.tmpdir}/testoutput"/>
     <target name="init">
         <!-- this property can be overriden programatically in the Java test case -->
         <property name="timeToWait" value="10"/>
         <!-- this property can be overriden programatically in the Java test case -->
-        <property name="output" location="${java.io.tmpdir}/testoutput"/>
         <mkdir dir="${output}"/>
         <property name="logFile" value="${output}/spawn.log"/>
         <property environment="env"/>
@@ -28,7 +28,6 @@
         <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
         <!-- CYGWIN -->
         <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
-        <property name="test.can.run" value="1"/>
         <condition property="test.can.run">
             <or>
                 <isset property="sh.executable"/>
@@ -65,5 +64,7 @@
     </target>
 
     <target name="cleanup">
+        <delete file="${logFile}"/>
+        <delete dir="${output}"/>
     </target>
 </project>
