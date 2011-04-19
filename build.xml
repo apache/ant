@@ -79,6 +79,7 @@
   <property name="bootstrap.dir" value="bootstrap"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.lib" value="${build.dir}/lib"/>
+  <property name="build.lib-src" value="${build.dir}/lib-src"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
@@ -289,6 +290,33 @@
 
   <selector id="ant.launcher">
     <filename name="${ant.package}/launch/"/>
+  </selector>
+
+  <selector id="ant.core">
+    <not>
+      <or>
+        <selector refid="needs.antlr"/>
+        <selector refid="needs.apache-bcel"/>
+        <selector refid="needs.apache-bsf"/>
+        <selector refid="needs.apache-log4j"/>
+        <selector refid="needs.apache-oro"/>
+        <selector refid="needs.apache-regexp"/>
+        <selector refid="needs.apache-resolver"/>
+        <selector refid="needs.apache-xalan2"/>
+        <selector refid="needs.commons-logging"/>
+        <selector refid="needs.commons-net"/>
+        <selector refid="needs.jai"/>
+        <selector refid="needs.javamail"/>
+        <selector refid="needs.jdepend"/>
+        <selector refid="needs.jmf"/>
+        <selector refid="needs.jsch"/>
+        <selector refid="needs.junit"/>
+        <selector refid="needs.junit4"/>
+        <selector refid="needs.netrexx"/>
+        <selector refid="needs.swing"/>
+        <selector refid="ant.launcher"/>
+      </or>
+    </not>
   </selector>
 
   <patternset id="onlinetests">
@@ -646,6 +674,10 @@
       basedir="${build.classes}"
       whenmanifestonly="fail">
       <selector refid="ant.launcher"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
       <manifest>
         <attribute name="Main-Class" value="org.apache.tools.ant.launch.Launcher"/>
       </manifest>
@@ -655,31 +687,8 @@
       basedir="${build.classes}"
       manifest="${manifest}"
       whenmanifestonly="fail">
-      <not>
-        <or>
-          <!-- Verification: (cd dist/lib; for j in *.jar; do jar tf $j; done) | egrep -v '/$|META-INF/MANIFEST\.MF' | sort | uniq -d -->
-          <selector refid="needs.antlr"/>
-          <selector refid="needs.apache-bcel"/>
-          <selector refid="needs.apache-bsf"/>
-          <selector refid="needs.apache-log4j"/>
-          <selector refid="needs.apache-oro"/>
-          <selector refid="needs.apache-regexp"/>
-          <selector refid="needs.apache-resolver"/>
-          <selector refid="needs.apache-xalan2"/>
-          <selector refid="needs.commons-logging"/>
-          <selector refid="needs.commons-net"/>
-          <selector refid="needs.jai"/>
-          <selector refid="needs.javamail"/>
-          <selector refid="needs.jdepend"/>
-          <selector refid="needs.jmf"/>
-          <selector refid="needs.jsch"/>
-          <selector refid="needs.junit"/>
-          <selector refid="needs.junit4"/>
-          <selector refid="needs.netrexx"/>
-          <selector refid="needs.swing"/>
-          <selector refid="ant.launcher"/>
-        </or>
-      </not>
+      <!-- Verification: (cd dist/lib; for j in *.jar; do jar tf $j; done) | egrep -v '/$|META-INF/MANIFEST\.MF' | sort | uniq -d -->
+      <selector refid="ant.core"/>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
         <include name="NOTICE.txt"/>
@@ -732,6 +741,10 @@
           manifest="${manifest.tmp}"
           whenmanifestonly="${optional.jars.whenmanifestonly}">
           <selector refid="needs.@{dep}"/>
+          <metainf dir="${build.dir}">
+            <include name="LICENSE.txt"/>
+            <include name="NOTICE.txt"/>
+          </metainf>
         </jar>
       </sequential>
     </macrodef>
@@ -770,6 +783,97 @@
     <jar destfile="${build.lib}/${name}-testutil.jar"
       basedir="${build.tests}">
       <patternset refid="useful.tests"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
+    </jar>
+  </target>
+
+  <!--
+       ===================================================================
+         Create the all of the Apache Ant source jars
+       ===================================================================
+  -->
+  <target name="jars-sources" description="--> creates the Apache Ant source jars">
+    <mkdir dir="${build.lib-src}" />
+    <jar destfile="${build.lib-src}/${name}-launcher.jar"
+      basedir="${java.dir}"
+      whenmanifestonly="fail">
+      <selector refid="ant.launcher"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
+    </jar>
+
+    <jar destfile="${build.lib-src}/${name}.jar"
+      basedir="${java.dir}"
+      whenmanifestonly="fail">
+      <selector refid="ant.core"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
+    </jar>
+
+    <jar destfile="${build.lib-src}/${bootstrap.jar}"
+      basedir="${java.dir}"
+      whenmanifestonly="fail">
+      <include name="${ant.package}/Main.java"/>
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
+    </jar>
+
+    <macrodef name="optional-src-jar">
+      <attribute name="dep"/>
+      <sequential>
+        <jar destfile="${build.lib-src}/${optional.jars.prefix}-@{dep}.jar"
+          basedir="${java.dir}"
+          whenmanifestonly="${optional.jars.whenmanifestonly}">
+          <selector refid="needs.@{dep}"/>
+          <metainf dir="${build.dir}">
+            <include name="LICENSE.txt"/>
+            <include name="NOTICE.txt"/>
+          </metainf>
+        </jar>
+      </sequential>
+    </macrodef>
+
+    <optional-src-jar dep="apache-resolver"/>
+    <optional-src-jar dep="junit"/>
+    <optional-src-jar dep="junit4"/>
+    <optional-src-jar dep="apache-regexp"/>
+    <optional-src-jar dep="apache-oro"/>
+    <optional-src-jar dep="apache-bcel"/>
+    <optional-src-jar dep="apache-log4j"/>
+    <optional-src-jar dep="commons-logging"/>
+    <optional-src-jar dep="apache-bsf"/>
+    <optional-src-jar dep="javamail"/>
+    <optional-src-jar dep="netrexx"/>
+    <optional-src-jar dep="commons-net"/>
+    <optional-src-jar dep="antlr"/>
+    <optional-src-jar dep="jmf"/>
+    <optional-src-jar dep="jai"/>
+    <optional-src-jar dep="swing"/>
+    <optional-src-jar dep="jsch"/>
+    <optional-src-jar dep="jdepend"/>
+    <optional-src-jar dep="apache-xalan2"/>
+
+  </target>
+
+  <target name="test-jar-source"
+    description="--> creates the Apache Ant Test Utilities source jar">
+    <mkdir dir="${build.lib-src}" />
+    <jar destfile="${build.lib-src}/${name}-testutil.jar"
+      basedir="${java.dir}">
+      <patternset refid="useful.tests" />
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
     </jar>
   </target>
 
@@ -1054,7 +1158,7 @@
          Create the binary distribution
        ===================================================================
   -->
-  <target name="main_distribution"
+  <target name="main_distribution" depends="jars-sources,test-jar-source"
     description="--> creates the zip and tar distributions">
     <delete dir="${dist.base}"/>
     <delete dir="${dist.name}"/>
@@ -1122,8 +1226,23 @@
         <mapper type="regexp" from="ant(.*).pom" to="ant\1/${project.version}/ant\1-${project.version}.pom"/>
       </mapper>
     </copy>
+    <copy todir="${java-repository.dir}">
+      <fileset dir="${build.lib-src}">
+        <include name="ant*.jar"/>
+      </fileset>
+      <mapper type="regexp" from="ant(.*).jar" to="ant\1/${project.version}/ant\1-${project.version}-sources.jar"/>
+    </copy>
+    <jar destfile="${java-repository.dir}/ant/${project.version}/ant-${project.version}-javadocs.jar"
+      basedir="${build.javadocs}">
+      <metainf dir="${build.dir}">
+        <include name="LICENSE.txt"/>
+        <include name="NOTICE.txt"/>
+      </metainf>
+    </jar>
     <checksums-mvn>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.jar"/>
+      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-sources.jar"/>
+      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-javadocs.jar"/>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.pom"/>
     </checksums-mvn>
 

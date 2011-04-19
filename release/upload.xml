@@ -22,5 +22,5 @@
   <ivy:resolve file="ivy.xml"/>  
   <ivy:retrieve/>
   <ivy:deliver/>
-  <ivy:publish publishivy="false" artifactspattern="${basedir}/../java-repository/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision].[ext]" resolver="nexus"/>
+  <ivy:publish publishivy="false" artifactspattern="${basedir}/../java-repository/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]" resolver="nexus"/>
 </project>
