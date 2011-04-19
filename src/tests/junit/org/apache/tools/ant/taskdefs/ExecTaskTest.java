@@ -103,6 +103,10 @@ public class ExecTaskTest extends BuildFileTest {
         logFile = new File(logFile.getAbsolutePath());
         assertTrue("log file found after spawn", logFile.exists());
     }
+    
+    public void testOutAndErr() {
+        project.executeTarget("test-out-and-err");
+    }
 
     private static class MonitoredBuild implements Runnable {
         private Thread worker;
