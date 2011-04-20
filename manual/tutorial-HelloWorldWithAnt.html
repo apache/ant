@@ -414,11 +414,13 @@ Now we add a junit instruction to our buildfile:</p>
 <pre class="code">
     ...
 
+    &lt;path <b>id="application"</b> location="${jar.dir}/${ant.project.name}.jar"/&gt;
+
     &lt;target name="run" depends="jar"&gt;
         &lt;java fork="true" classname="${main-class}"&gt;
             &lt;classpath&gt;
                 &lt;path refid="classpath"/&gt;
-                &lt;path <b>id="application"</b> location="${jar.dir}/${ant.project.name}.jar"/&gt;
+                <b>&lt;path refid="application"/&gt;</b>
             &lt;/classpath&gt;
         &lt;/java&gt;
     &lt;/target&gt;
@@ -440,7 +442,8 @@ Now we add a junit instruction to our buildfile:</p>
 
 </pre>
 
-<p>We reuse the path to our own jar file as defined in run-target by giving it an ID.
+<p>We reuse the path to our own jar file as defined in run-target by
+  giving it an ID and making it globally available.
 The <tt>printsummary=yes</tt> lets us see more detailed information than just a "FAILED" or "PASSED" message.
 How much tests failed? Some errors? Printsummary lets us know. The classpath is set up to find our classes.
 To run tests the <tt>batchtest</tt> here is used, so you could easily add more test classes in the future just
