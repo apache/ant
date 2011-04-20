@@ -37,6 +37,13 @@ Fixed bugs:
  * Resource collection implementation of mapped PropertySet returned
    unusable resources.
 
+ * The hasmethod condition failed with a NullPointerException when
+   ignoresystemclasses is true and Ant tried to load a "restricted
+   class" - i.e. a class that the Java VM will only accept when loaded
+   via the bootclassloader (a java.* class).
+   It will now fail with a more useful error message.
+   Bugzilla Report 51035.
+
 Other changes:
 --------------
 

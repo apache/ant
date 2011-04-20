@@ -113,10 +113,12 @@ public class HasMethod extends ProjectComponent implements Condition {
                 try {
                     return loader.findClass(classname);
                 } catch (SecurityException se) {
-                    // class found but restricted name; this is
-                    // actually the case we're looking for in JDK 1.3+,
-                    // so catch the exception and return
-                    return null;
+                    // class found but restricted name
+                    throw new BuildException("class \"" + classname
+                                             + "\" was found but a"
+                                             + " SecurityException has been"
+                                             + " raised while loading it",
+                                             se);
                 }
             } else if (loader != null) {
                 // How do we ever get here?
