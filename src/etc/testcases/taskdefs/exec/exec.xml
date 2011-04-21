@@ -28,6 +28,8 @@
         <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
         <!-- CYGWIN -->
         <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
+        <!-- WINDOWS + CYGWIN -->
+        <available file="sh.exe" filepath="${env.Path}" property="sh.exe.executable"/>
         <condition property="test.can.run">
             <or>
                 <isset property="sh.executable"/>
