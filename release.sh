@@ -50,7 +50,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 echo ANT_HOME=$ANT_HOME
 echo JAVA_HOME=$JAVA_HOME
 which java
-echo running build under JDK %JDK_VERSION%
+echo running build under JDK $JDK_VERSION
 ./build.sh dist-lite 
 echo running the tests and doing the distribution
 dist/bin/ant -nouserlib -lib lib/optional  run-tests distribution
