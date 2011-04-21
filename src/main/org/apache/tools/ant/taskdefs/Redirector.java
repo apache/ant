@@ -37,6 +37,8 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.util.LineOrientedOutputStream;
+import org.apache.tools.ant.util.LineOrientedOutputStreamRedirector;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 import org.apache.tools.ant.util.ReaderInputStream;
@@ -720,8 +722,8 @@ public class Redirector {
             OutputStreamFunneler funneler = new OutputStreamFunneler(
                     outputStream, funnelTimeout);
             try {
-                outputStream = funneler.getFunnelInstance();
-                errorStream = funneler.getFunnelInstance();
+                outputStream = new LineOrientedOutputStreamRedirector(funneler.getFunnelInstance());
+                errorStream = new LineOrientedOutputStreamRedirector(funneler.getFunnelInstance());
             } catch (IOException eyeOhEx) {
                 throw new BuildException(
                         "error splitting output/error streams", eyeOhEx);

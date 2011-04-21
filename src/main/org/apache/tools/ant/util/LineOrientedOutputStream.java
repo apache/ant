@@ -66,10 +66,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * Flush this log stream
      * @throws IOException if there is an error.
      */
-    public final void flush() throws IOException {
-        if (buffer.size() > 0) {
-            processBuffer();
-        }
+    public void flush() throws IOException {
     }
 
     /**
@@ -97,7 +94,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * Writes all remaining
      * @throws IOException if there is an error.
      */
-    public final void close() throws IOException {
+    public void close() throws IOException {
         if (buffer.size() > 0) {
             processBuffer();
         }
