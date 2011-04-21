@@ -208,11 +208,11 @@
         <loadfile property="redirect.out.contents" srcfile="${outfile}" />
 
         <condition property="r1file">
-            <equals arg1="${redirect.out.contents}" arg2="foo" />
+            <equals arg1="${redirect.out.contents}" arg2="foo${line.separator}" />
         </condition>
 
         <fail unless="r1file">${outfile}:
-&quot;${redirect.out.contents}&quot; expected &quot;foo&quot;</fail>
+&quot;${redirect.out.contents}&quot; expected &quot;foo&#010;&quot;</fail>
 
         <condition property="r1prop">
             <equals arg1="${redirect.err}" arg2="" />
@@ -248,11 +248,11 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
         <loadfile property="redirect.out.contents2" srcfile="${outfile}" />
 
         <condition property="r2file">
-            <equals arg1="${redirect.out.contents2}" arg2="foobar" />
+            <equals arg1="${redirect.out.contents2}" arg2="foo${line.separator}bar${line.separator}" />
         </condition>
 
         <fail unless="r2file">${outfile}:
-&quot;${redirect.out.contents2}&quot; expected &quot;foobar&quot;</fail>
+&quot;${redirect.out.contents2}&quot; expected &quot;foo&#010;bar&#010;&quot;</fail>
 
         <condition property="r2prop">
             <!-- property should not change -->

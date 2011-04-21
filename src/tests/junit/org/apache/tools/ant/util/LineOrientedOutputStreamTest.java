@@ -84,13 +84,13 @@ public class LineOrientedOutputStreamTest extends TestCase {
     public void testFlushArray() throws IOException {
         writeByteArray();
         stream.flush();
-        stream.assertInvoked();
+        stream.assertNotInvoked();
     }
 
     public void testFlushSingleBytes() throws IOException {
         writeSingleBytes();
         stream.flush();
-        stream.assertInvoked();
+        stream.assertNotInvoked();
     }
 
     public void testCloseArray() throws IOException {
@@ -132,6 +132,9 @@ public class LineOrientedOutputStreamTest extends TestCase {
 
         private void assertInvoked() {
             assertTrue("At least one line", invoked);
+        }
+        private void assertNotInvoked() {
+            assertTrue("No output", invoked==false);
         }
     }
 }// LineOrientedOutputStreamTest
