@@ -45,7 +45,11 @@ Fixed bugs:
    Bugzilla Report 51035.
 
  * Exec task may mix the stderr and stdout output while logging it
-   Bugzilla Report 50507.   
+   Bugzilla Report 50507.
+   
+ * Missing space between "finished" and timestamp in task/target 
+   finish message from ProfileLogger.
+   Bugzilla Report 51109.     
 
 Other changes:
 --------------

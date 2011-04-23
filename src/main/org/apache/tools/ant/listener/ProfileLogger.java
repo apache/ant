@@ -93,10 +93,10 @@ public class ProfileLogger extends DefaultLogger {
         String msg = null;
         if (start != null) {
             long diff = now.getTime() - start.getTime();
-            msg = StringUtils.LINE_SEP + name + ": finished" + now + " ("
+            msg = StringUtils.LINE_SEP + name + ": finished " + now + " ("
                     + diff + "ms)";
         } else {
-            msg = StringUtils.LINE_SEP + name + ": finished" + now
+            msg = StringUtils.LINE_SEP + name + ": finished " + now
                     + " (unknown duration, start not detected)";
         }
         printMessage(msg, out, event.getPriority());
