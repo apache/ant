@@ -23,10 +23,12 @@ unset ANT_HOME
 cygwin=false;
 darwin=false;
 mingw=false;
+linux=false;
 case "`uname`" in
   CYGWIN*) cygwin=true ;;
   Darwin*) darwin=true;;
   MINGW*) mingw=true ;;
+  Linux) linux=true ;;
 esac
 # running first build under JDK 1.4 under cygwin
 if $cygwin ; then
@@ -46,6 +48,10 @@ if $darwin; then
    export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
    JDK_VERSION=1.6
 fi  
+if $linux; then
+   export JAVA_HOME=/usr/lib/jvm/java-6-openjdk
+   JDK_VERSION=1.6
+fi
 export PATH=$JAVA_HOME/bin:$PATH
 echo ANT_HOME=$ANT_HOME
 echo JAVA_HOME=$JAVA_HOME
