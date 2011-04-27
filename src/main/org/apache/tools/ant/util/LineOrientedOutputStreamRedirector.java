@@ -19,10 +19,15 @@ package org.apache.tools.ant.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 /**
- * provide a concrete implementation of LineOrientedOutputStream
+ * Output stream which buffer and redirect a stream line by line.
+ * <p>
+ * If the source stream doesn't end with a end of line, one will be added. This
+ * is particularly useful in combination with the OutputStreamFunneler so each
+ * funneled stream get its line.
+ * 
  * @since Ant 1.8.3
- *
  */
 public class LineOrientedOutputStreamRedirector
         extends
