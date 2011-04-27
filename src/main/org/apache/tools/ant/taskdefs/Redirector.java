@@ -717,7 +717,7 @@ public class Redirector {
                     .toString();
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE,
                     appendErr, createEmptyFilesErr);
-        } else if (!(logError || outputStream == null)) {
+        } else if (!(logError || outputStream == null) && errorProperty == null) {
             long funnelTimeout = 0L;
             OutputStreamFunneler funneler = new OutputStreamFunneler(
                     outputStream, funnelTimeout);
