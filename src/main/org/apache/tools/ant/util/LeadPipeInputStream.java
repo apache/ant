@@ -87,7 +87,8 @@ public class LeadPipeInputStream extends PipedInputStream {
             result = super.read();
         } catch (IOException eyeOhEx) {
             String msg = eyeOhEx.getMessage();
-            if ("write end dead".equalsIgnoreCase(msg)) {
+            if ("write end dead".equalsIgnoreCase(msg)
+                    || "pipe broken".equalsIgnoreCase(msg)) {
                 if (super.in > 0 && super.out < super.buffer.length
                     && super.out > super.in) {
                     result = super.buffer[super.out++] & BYTE_MASK;
