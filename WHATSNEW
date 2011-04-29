@@ -51,6 +51,10 @@ Fixed bugs:
    finish message from ProfileLogger.
    Bugzilla Report 51109.     
 
+ * Redirecting the output of a java, exec or apply task could print in the
+   error output stream some "Pipe broken" errors.
+   Bugzilla Report 48789.
+
 Other changes:
 --------------
 
