@@ -46,8 +46,7 @@
     <a href="#coreselect"><code>Core Selectors</code></a>.
     </p>
 
-    <a name="coreselect"></a>
-    <h3>Core Selectors</h3>
+    <h3><a name="coreselect">Core Selectors</a></h3>
 
     <p>Core selectors are the ones that come standard
     with Ant. They can be used within a fileset and can be contained
@@ -95,8 +94,7 @@
         Select files if they are writable.</li>
     </ul>
 
-    <a name="containsselect"></a>
-    <h4>Contains Selector</h4>
+    <h4><a name="containsselect">Contains Selector</a></h4>
 
     <p>The <code>&lt;contains&gt;</code> tag in a FileSet limits
     the files defined by that fileset to only those which contain the
@@ -149,8 +147,7 @@
     <code>script</code>.</p>
 
 
-    <a name="dateselect"></a>
-    <h4>Date Selector</h4>
+    <h4><a name="dateselect">Date Selector</a></h4>
 
     <p>The <code>&lt;date&gt;</code> tag in a FileSet will put
     a limit on the files specified by the include tag, so that tags
@@ -231,8 +228,7 @@
     January 1, 2001.</p>
 
 
-    <a name="dependselect"></a>
-    <h4>Depend Selector</h4>
+    <h4><a name="dependselect">Depend Selector</a></h4>
 
     <p>The <code>&lt;depend&gt;</code> tag selects files
     whose last modified date is later than another, equivalent file in
@@ -284,8 +280,7 @@
     </p>
 
 
-    <a name="depthselect"></a>
-    <h4>Depth Selector</h4>
+    <h4><a name="depthselect">Depth Selector</a></h4>
 
     <p>The <code>&lt;depth&gt;</code> tag selects files based on
     how many directory levels deep they are in relation to the base
@@ -415,8 +410,7 @@
     and selects those who are different, disregarding file times.
     </p>
 
-    <a name="filenameselect"></a>
-    <h4>Filename Selector</h4>
+    <h4><a name="filenameselect">Filename Selector</a></h4>
 
     <p>The <code>&lt;filename&gt;</code> tag acts like the
     <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code>
@@ -474,8 +468,7 @@
     <p>Selects all the cascading style sheet files.</p>
 
 
-    <a name="presentselect"></a>
-    <h4>Present Selector</h4>
+    <h4><a name="presentselect">Present Selector</a></h4>
 
     <p>The <code>&lt;present&gt;</code> tag selects files
     that have an equivalent file in another directory tree.</p>
@@ -533,8 +526,7 @@
       1.5 release.
     </p>
 
-    <a name="regexpselect"></a>
-    <h4>Regular Expression Selector</h4>
+    <h4><a name="regexpselect">Regular Expression Selector</a></h4>
 
     <p>The <code>&lt;containsregexp&gt;</code> tag in a FileSet limits
     the files defined by that fileset to only those which contents contain a
@@ -593,8 +585,7 @@
     (have a 4,5 or 6 followed by a period and a number from 0 to 9).
 
 
-    <a name="sizeselect"></a>
-    <h4>Size Selector</h4>
+    <h4><a name="sizeselect">Size Selector</a></h4>
 
     <p>The <code>&lt;size&gt;</code> tag in a FileSet will put
     a limit on the files specified by the include tag, so that tags
@@ -654,8 +645,7 @@
 
     <p>Selects all JAR files that are larger than 4096 bytes.</p>
 
-    <a name="typeselect"></a>
-    <h4>Type Selector</h4>
+    <h4><a name="typeselect">Type Selector</a></h4>
 
     <p>The <code>&lt;type&gt;</code> tag selects files of a certain type:
     directory or regular.</p>
@@ -702,8 +692,7 @@
 </pre></blockquote>
 
 
-    <a name="modified"></a>
-    <h4>Modified Selector</h4>
+    <h4><a name="modified">Modified Selector</a></h4>
     <p>The <code>&lt;modified&gt;</code> selector computes a value for a file, compares that
     to the value stored in a cache and select the file, if these two values
     differ.</p>
@@ -975,14 +964,12 @@
     <p>Uses <tt>com.mycompany.MyCache</tt> from a jar outside of Ants own classpath
     as cache implementation</p>
 
-  <a name="ModSelNote"></a>
-  <h4>Note on RuleBasedCollator</h4>
+  <h4><a name="ModSelNote">Note on RuleBasedCollator</a></h4>
   <p>The RuleBasedCollator needs a format for its work, but its needed while
   instantiation. There is a problem in the initialization algorithm for this
   case. Therefore you should not use this (or tell me the workaround :-).</p>
 
-      <a name="signedselector"></a>
-      <h4>Signed Selector</h4>
+      <h4><a name="signedselector">Signed Selector</a></h4>
 
       <p>
         The <code>&lt;signedselector&gt;</code> tag selects signed files and optionaly
@@ -1004,8 +991,7 @@
         </tr>
       </table>
 
-      <a name="readable"></a>
-      <h4>Readable Selector</h4>
+      <h4><a name="readable">Readable Selector</a></h4>
 
       <p>The <code>&lt;readable&gt;</code> selector selects only files
         that are readable.  Ant only invokes
@@ -1013,8 +999,7 @@
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
 
-      <a name="writable"></a>
-      <h4>Writable Selector</h4>
+      <h4><a name="writable">Writable Selector</a></h4>
 
       <p>The <code>&lt;writable&gt;</code> selector selects only files
         that are writable.  Ant only invokes
@@ -1022,8 +1007,7 @@
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
 
-      <a name="scriptselector"></a>
-      <h4>Script Selector</h4>
+      <h4><a name="scriptselector">Script Selector</a></h4>
 
       <p>
         The <code>&lt;scriptselector&gt;</code> element enables you
@@ -1183,8 +1167,7 @@
 </pre>
 Select files whose filename length is even.
 
-    <a name="selectcontainers"></a>
-    <h3>Selector Containers</h3>
+    <h3><a name="selectcontainers">Selector Containers</a></h3>
 
     <p>To create more complex selections, a variety of selectors that
     contain other selectors are available for your use. They combine the
@@ -1235,8 +1218,7 @@ Select files whose filename length is even.
       <li><code>&lt;size&gt;</code></li>
     </ul>
 
-    <a name="andselect"></a>
-    <h4>And Selector</h4>
+    <h4><a name="andselect">And Selector</a></h4>
 
     <p>The <code>&lt;and&gt;</code> tag selects files that are
     selected by all of the elements it contains. It returns as
@@ -1260,8 +1242,7 @@ Select files whose filename length is even.
     </p>
 
 
-    <a name="majorityselect"></a>
-    <h4>Majority Selector</h4>
+    <h4><a name="majorityselect">Majority Selector</a></h4>
 
     <p>The <code>&lt;majority&gt;</code> tag selects files provided
     that a majority of the contained elements also select it. Ties are
@@ -1303,8 +1284,7 @@ Select files whose filename length is even.
     </p>
 
 
-    <a name="noneselect"></a>
-    <h4>None Selector</h4>
+    <h4><a name="noneselect">None Selector</a></h4>
 
     <p>The <code>&lt;none&gt;</code> tag selects files that are
     not selected by any of the elements it contains. It returns as
@@ -1330,8 +1310,7 @@ Select files whose filename length is even.
     </p>
 
 
-    <a name="notselect"></a>
-    <h4>Not Selector</h4>
+    <h4><a name="notselect">Not Selector</a></h4>
 
     <p>The <code>&lt;not&gt;</code> tag reverses the meaning of the
     single selector it contains.
@@ -1352,8 +1331,7 @@ Select files whose filename length is even.
     </p>
 
 
-    <a name="orselect"></a>
-    <h4>Or Selector</h4>
+    <h4><a name="orselect">Or Selector</a></h4>
 
     <p>The <code>&lt;or&gt;</code> tag selects files that are
     selected by any one of the elements it contains. It returns as
@@ -1379,8 +1357,7 @@ Select files whose filename length is even.
     </p>
 
 
-    <a name="selectorselect"></a>
-    <h4>Selector Reference</h4>
+    <h4><a name="selectorselect">Selector Reference</a></h4>
 
     <p>The <code>&lt;selector&gt;</code> tag is used to create selectors
     that can be reused through references. It is the only selector which can
@@ -1477,8 +1454,7 @@ Select files whose filename length is even.
     <p>A fileset that conditionally contains Java source files and Test
     source and class files.</p>
 
-    <a name="customselect"></a>
-    <h3>Custom Selectors</h3>
+    <h3><a name="customselect">Custom Selectors</a></h3>
 
     <p>You can write your own selectors and use them within the selector
     containers by specifying them within the <code>&lt;custom&gt;</code> tag.</p>
