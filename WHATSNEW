@@ -55,6 +55,10 @@ Fixed bugs:
    error output stream some "Pipe broken" errors.
    Bugzilla Report 48789.
 
+ * ZipFile failed to clean up some resources which could lead to
+   OutOfMemoryException while unzipping large archives.
+   Bugzilla Report 42969.
+
 Other changes:
 --------------
 

@@ -269,7 +269,13 @@ public class ZipFile {
                 return bis;
             case ZipEntry.DEFLATED:
                 bis.addDummy();
-                return new InflaterInputStream(bis, new Inflater(true));
+                final Inflater inflater = new Inflater(true);
+                return new InflaterInputStream(bis, inflater) {
+                    public void close() throws IOException {
+                        super.close();
+                        inflater.end();
+                    }
+                };
             default:
                 throw new ZipException("Found unsupported compression method "
                                        + ze.getMethod());
