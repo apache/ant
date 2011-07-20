@@ -362,6 +362,7 @@ public final class Diagnostics {
         } catch (SecurityException  e) {
             ignoreThrowable(e);
             out.println("Access to System.getProperties() blocked " + "by a security manager");
+            return;
         }
         for (Enumeration keys = sysprops.propertyNames();
             keys.hasMoreElements();) {

@@ -1643,7 +1643,7 @@ public final class IntrospectionHelper {
     }
 
 
-    private class MethodAndObject {
+    private static class MethodAndObject {
         private Method method;
         private Object object;
         public MethodAndObject(Method method, Object object) {
