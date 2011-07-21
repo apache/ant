@@ -337,6 +337,12 @@ archive.</p>
     jars from your CLASSPATH reads and writes UTF-8 names, it doesn't
     set or recognize any flags or unicode extra fields.</li>
 
+  <li>Starting with Java7 <code>java.util.zip</code> writes UTF-8 by
+    default and uses the language encoding flag.  It is possible to
+    specify a different encoding when reading/writing ZIPs via new
+    constructors.  The package now recognizes the language encoding
+    flag when reading and ignores the Unicode extra fields.</li>
+
   <li>7Zip writes CodePage 437 by default but uses UTF-8 and the
     language encoding flag when writing entries that cannot be encoded
     as CodePage 437 (similar to the zip task with fallbacktoUTF8 set
@@ -367,8 +373,8 @@ archive.</p>
 <p>If you are creating jars, then java.util.zip is your main
   consumer.  We recommend you set the encoding to UTF-8 and keep the
   language encoding flag enabled.  The flag won't help or hurt
-  java.util.zip but archivers that support it will show the correct
-  file names.</p>
+  java.util.zip prior to Java7 but archivers that support it will show
+  the correct file names.</p>
 
 <p>For maximum interop it is probably best to set the encoding to
   UTF-8, enable the language encoding flag and create unicode extra
