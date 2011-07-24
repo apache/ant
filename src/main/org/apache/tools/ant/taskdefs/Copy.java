@@ -102,6 +102,7 @@ public class Copy extends Task {
     private String outputEncoding = null;
     private long granularity = 0;
     private boolean force = false;
+    private boolean quiet = false;
 
     // used to store the single non-file resource to copy when the
     // tofile attribute has been used
@@ -283,6 +284,18 @@ public class Copy extends Task {
     public void setIncludeEmptyDirs(boolean includeEmpty) {
         this.includeEmpty = includeEmpty;
     }
+
+	/**
+	 * Set quiet mode. Used to hide messages when a file or directory to be
+	 * copied does not exist.
+	 * 
+	 * @param quiet
+	 *            whether or not to display error messages when a file or
+	 *            directory does not exist. Default is false.
+	 */
+	public void setQuiet(boolean quiet) {
+		this.quiet = quiet;
+	}
 
     /**
      * Set method of handling mappers that return multiple
@@ -480,7 +493,9 @@ public class Copy extends Task {
                                                        .DOES_NOT_EXIST_POSTFIX)) {
                             throw e;
                         } else {
-                            log("Warning: " + getMessage(e), Project.MSG_ERR);
+                            if (!quiet) {
+                                log("Warning: " + getMessage(e), Project.MSG_ERR);
+                            }
                             continue;
                         }
                     }
@@ -509,7 +524,9 @@ public class Copy extends Task {
                             String message = "Warning: Could not find resource "
                                 + r.toLongString() + " to copy.";
                             if (!failonerror) {
-                                log(message, Project.MSG_ERR);
+                                if (!quiet) {
+                                    log(message, Project.MSG_ERR);
+                                }
                             } else {
                                 throw new BuildException(message);
                             }
@@ -550,7 +567,9 @@ public class Copy extends Task {
                 doFileOperations();
             } catch (BuildException e) {
                 if (!failonerror) {
-                    log("Warning: " + getMessage(e), Project.MSG_ERR);
+                    if (!quiet) {
+                        log("Warning: " + getMessage(e), Project.MSG_ERR);
+                    }
                 } else {
                     throw e;
                 }
@@ -569,7 +588,9 @@ public class Copy extends Task {
                     doResourceOperations(map);
                 } catch (BuildException e) {
                     if (!failonerror) {
-                        log("Warning: " + getMessage(e), Project.MSG_ERR);
+                        if (!quiet) {
+                            log("Warning: " + getMessage(e), Project.MSG_ERR);
+                        }
                     } else {
                         throw e;
                     }
@@ -615,7 +636,9 @@ public class Copy extends Task {
                 String message = "Warning: Could not find file "
                     + file.getAbsolutePath() + " to copy.";
                 if (!failonerror) {
-                    log(message, Project.MSG_ERR);
+                    if (!quiet) {
+                      log(message, Project.MSG_ERR);
+                    }
                 } else {
                     throw new BuildException(message);
                 }

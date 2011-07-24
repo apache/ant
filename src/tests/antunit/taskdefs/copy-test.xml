@@ -241,6 +241,13 @@ public class NullByteStreamResource extends Resource {
           failonerror="false"/>
   </target>
 
+  <target name="testQuiet">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <copy file="${input}/not-there.txt" todir="${output}" failonerror="false" quiet="true" />
+  	<au:assertLogDoesntContain text="Could not find file" />
+  </target>
+
   <target name="testMissingFilesetRoot">
     <mkdir dir="${output}"/>
     <au:expectfailure expectedMessage="does not exist">
