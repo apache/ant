@@ -60,7 +60,7 @@ Fixed bugs:
    Bugzilla Report 42969.
 
  * quiet attribute added to the copy and move tasks, to be used together
-   with failonerror=true, so warnings won't get logged 
+   with failonerror=false, so warnings won't get logged 
    Bugzilla Report 48789.
 
 Other changes:
