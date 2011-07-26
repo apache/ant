@@ -63,6 +63,10 @@ Fixed bugs:
    with failonerror=false, so warnings won't get logged 
    Bugzilla Report 48789.
 
+ * System.in was closed and not readable anymore by the DefaultInputHandler 
+   when Ant is used via its Java API.
+   Bugzilla Report 51161
+
 Other changes:
 --------------
 

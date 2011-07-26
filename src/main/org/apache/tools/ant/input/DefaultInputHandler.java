@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.KeepAliveInputStream;
 
 /**
  * Prompts on System.err, reads input from System.in
@@ -118,6 +119,6 @@ public class DefaultInputHandler implements InputHandler {
      * @return the input stream from which the user input should be read.
      */
     protected InputStream getInputStream() {
-        return System.in;
+        return KeepAliveInputStream.wrapSystemIn();
     }
 }
