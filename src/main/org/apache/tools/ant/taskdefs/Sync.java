@@ -36,6 +36,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.selectors.FileSelector;
@@ -65,6 +66,7 @@ public class Sync extends Task {
     private SyncTarget syncTarget;
 
     private Restrict resources = null;
+    private Resources nestedResources = null;
 
     // Override Task#init
     /**
@@ -401,9 +403,10 @@ public class Sync extends Task {
             if (resources == null) {
                 resources = new Restrict();
                 resources.add(new Exists());
+                resources.add(nestedResources = new Resources());
                 myCopy.add(resources);
             }
-            resources.add(rc);
+            nestedResources.add(rc);
         }
     }
 

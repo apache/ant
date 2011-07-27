@@ -142,4 +142,13 @@
     <au:assertFileDoesntExist file="${output}/d"/>
   </target>
 
+  <!-- really only tests no exception is thrown -->
+  <target name="testCanAddMultipleResources" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51462">
+    <sync todir="${output}">
+      <file file="${input}/x"/>
+      <file file="${input}/y"/>
+    </sync>
+  </target>
+
 </project>

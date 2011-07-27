@@ -67,6 +67,9 @@ Fixed bugs:
    when Ant is used via its Java API.
    Bugzilla Report 51161
 
+ * <sync> only supported a single non-fileset resource collection even
+   though the manual said it could be multiple.
+
 Other changes:
 --------------
 
