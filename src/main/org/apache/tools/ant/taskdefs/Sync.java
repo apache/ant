@@ -65,8 +65,7 @@ public class Sync extends Task {
     // Similar to a fileset, but doesn't allow dir attribute to be set
     private SyncTarget syncTarget;
 
-    private Restrict resources = null;
-    private Resources nestedResources = null;
+    private Resources resources = null;
 
     // Override Task#init
     /**
@@ -401,12 +400,12 @@ public class Sync extends Task {
             myCopy.add(rc);
         } else {
             if (resources == null) {
-                resources = new Restrict();
-                resources.add(new Exists());
-                resources.add(nestedResources = new Resources());
-                myCopy.add(resources);
+                Restrict r = new Restrict(); 
+                r.add(new Exists());
+                r.add(resources = new Resources());
+                myCopy.add(r);
             }
-            nestedResources.add(rc);
+            resources.add(rc);
         }
     }
 
