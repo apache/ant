@@ -70,4 +70,26 @@ public class AugmentReference extends Task implements TypeAdapter {
             wrapper.setElementTag("augmented reference \"" + id + "\"");
         }
     }
+
+    /**
+     * Overridden to restore the wrapper once it is no longer needed.
+     * @since Ant 1.8.3
+     */
+    public void execute() {
+        restoreWrapperId();
+    }
+
+    /**
+     * Needed if two different targets reuse the same instance.
+     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=50894
+     */
+    private synchronized void restoreWrapperId() {
+        if (id != null) {
+            log("restoring augment wrapper " + id, Project.MSG_DEBUG);
+            RuntimeConfigurable wrapper = getWrapper();
+            wrapper.setAttribute("id", id);
+            wrapper.setElementTag(getTaskName());
+        }
+    }
+
 }

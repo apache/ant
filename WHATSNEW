@@ -73,6 +73,10 @@ Fixed bugs:
  * <sync> didn't work properly when working on resource collections.
    Bugzilla Report 51462.
 
+ * <augment> cause a NullPointerException if it was used in a target
+   that was invoked by multiple targets from the command line.
+   Bugzilla Report 50894.
+
 Other changes:
 --------------
 
