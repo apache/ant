@@ -487,13 +487,10 @@ public class Sync extends Task {
         protected Map scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
 
-            Map m = super.scan(resources, toDir);
-
-            Iterator iter = m.keySet().iterator();
-            while (iter.hasNext()) {
-                nonOrphans.add(((Resource) iter.next()).getName());
+            for (int i = 0; i < resources.length; i++) {
+                nonOrphans.add(resources[i].getName());
             }
-            return m;
+            return super.scan(resources, toDir);
         }
 
         /**

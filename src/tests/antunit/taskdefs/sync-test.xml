@@ -151,4 +151,25 @@
     </sync>
   </target>
 
+  <target name="testSyncWithResources" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51462">
+    <sync todir="${output}">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="*" to="test/*"/>
+      </mappedresources>
+    </sync>
+    <au:assertFileDoesntExist file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/test/a/foo.txt"/>
+
+    <sync todir="${output}">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="*" to="test/*"/>
+      </mappedresources>
+    </sync>
+    <au:assertFileDoesntExist file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/test/a/foo.txt"/>
+  </target>
+
 </project>

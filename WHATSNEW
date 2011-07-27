@@ -70,6 +70,9 @@ Fixed bugs:
  * <sync> only supported a single non-fileset resource collection even
    though the manual said it could be multiple.
 
+ * <sync> didn't work properly when working on resource collections.
+   Bugzilla Report 51462.
+
 Other changes:
 --------------
 
