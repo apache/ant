@@ -89,6 +89,7 @@ public class AugmentReference extends Task implements TypeAdapter {
             RuntimeConfigurable wrapper = getWrapper();
             wrapper.setAttribute("id", id);
             wrapper.setElementTag(getTaskName());
+            id = null;
         }
     }
 
