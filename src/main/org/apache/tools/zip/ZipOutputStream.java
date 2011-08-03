@@ -409,6 +409,7 @@ public class ZipOutputStream extends FilterOutputStream {
         writeCentralDirectoryEnd();
         offsets.clear();
         entries.clear();
+        def.end();
     }
 
     /**

@@ -57,6 +57,7 @@ Fixed bugs:
 
  * ZipFile failed to clean up some resources which could lead to
    OutOfMemoryException while unzipping large archives.
+   A similar problem in ZipArchiveOutputStream has been fixed as well.
    Bugzilla Report 42969.
 
  * quiet attribute added to the copy and move tasks, to be used together
