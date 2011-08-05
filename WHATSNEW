@@ -78,6 +78,10 @@ Fixed bugs:
    that was invoked by multiple targets from the command line.
    Bugzilla Report 50894.
 
+ * The ZipFile class could read past the start of the file if the
+   given file is not a ZIP archive and it is smaller than the size of
+   a ZIP "end of central directory record".
+
 Other changes:
 --------------
 

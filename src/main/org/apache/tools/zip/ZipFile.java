@@ -451,12 +451,16 @@ public class ZipFile {
         throws IOException {
         boolean found = false;
         long off = archive.length() - MIN_EOCD_SIZE;
-        long stopSearching = Math.max(0L, archive.length() - MAX_EOCD_SIZE);
+        final long stopSearching =
+            Math.max(0L, archive.length() - MAX_EOCD_SIZE);
         if (off >= 0) {
-            archive.seek(off);
-            byte[] sig = ZipOutputStream.EOCD_SIG;
-            int curr = archive.read();
-            while (off >= stopSearching && curr != -1) {
+            final byte[] sig = ZipOutputStream.EOCD_SIG;
+            for (; off >= stopSearching; off--) {
+                archive.seek(off);
+                int curr = archive.read();
+                if (curr == -1) {
+                    break;
+                }
                 if (curr == sig[POS_0]) {
                     curr = archive.read();
                     if (curr == sig[POS_1]) {
@@ -470,8 +474,6 @@ public class ZipFile {
                         }
                     }
                 }
-                archive.seek(--off);
-                curr = archive.read();
             }
         }
         if (!found) {
