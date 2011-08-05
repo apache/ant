@@ -87,4 +87,40 @@ public class A extends TestCase {
         value="AssertionFailedError: &amp;amp;amp;&amp;"/>
   </target>
 
+  <target name="XtestMessageWithTheWordMore">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/A.java"><![CDATA[
+package org.example;
+import junit.framework.TestCase;
+public class A extends TestCase {
+    public void testX() {
+        assertTrue("Expected more than one result", 0 > 1);
+    }
+    public void testY() {
+        assertTrue("Expected less than one result", 2 < 1);
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/A.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="xml"/>
+    </junit>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="junit.framework.AssertionFailedError: Expected less than one result"/>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="junit.framework.AssertionFailedError: Expected more than one result"/>
+  </target>
+
 </project>
