@@ -87,7 +87,7 @@ public class A extends TestCase {
         value="AssertionFailedError: &amp;amp;amp;&amp;"/>
   </target>
 
-  <target name="XtestMessageWithTheWordMore">
+  <target name="testMessageWithTheWordMore">
     <mkdir dir="${input}/org/example"/>
     <echo file="${input}/org/example/A.java"><![CDATA[
 package org.example;

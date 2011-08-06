@@ -1018,11 +1018,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
         String line;
         try {
+            boolean firstLine = true;
             while ((line = br.readLine()) != null) {
-                if (!filterLine(line)) {
+                if (firstLine || !filterLine(line)) {
                     pw.write(line);
                     pw.newLine();
                 }
+                firstLine = false;
             }
         } catch (Exception e) {
             return stack; // return the stack unfiltered
