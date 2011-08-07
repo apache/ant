@@ -100,6 +100,10 @@ Other changes:
  * The expandproperties filter now accepts a nested propertyset
    which, if specified, provides the properties for expansion.
    Bugzilla Report 51044.
+
+ * <junit filtertrace="true"/> will no longer filter out the very
+   first line of the stacktrace containing the original exception
+   message even if it matches one of the filter expressions.
    
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
