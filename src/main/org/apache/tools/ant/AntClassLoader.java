@@ -33,6 +33,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.Attributes;
@@ -127,6 +128,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
          */
         public Object nextElement() {
             URL ret = this.nextResource;
+            if (ret == null) {
+                throw new NoSuchElementException();
+            }
             findNextResource();
             return ret;
         }

@@ -4,6 +4,12 @@ Changes from Ant 1.8.2 TO Ant 1.8.3
 Changes that could break older environments:
 -------------------------------------------
 
+ * The Enumeration returned by AntClassLoader#getResources used to
+   return null in nextElement after hasNextElement would return false.
+   It has been changed to throw a NoSuchElementException instead so
+   that it now adheres to the contract of java.util.Enumeration.
+   Bugzilla Report 51579.
+
 Fixed bugs:
 -----------
 
