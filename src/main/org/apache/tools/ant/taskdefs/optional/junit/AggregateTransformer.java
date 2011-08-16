@@ -38,6 +38,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.TempFile;
+import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -260,10 +261,13 @@ public class AggregateTransformer {
         paramx.setName("output.dir");
         paramx.setExpression(toDir.getAbsolutePath());
         final long t0 = System.currentTimeMillis();
+        TraXLiaison.DISABLE_SECURE_PROCESSING.set(Boolean.TRUE);
         try {
             xsltTask.execute();
         } catch (Exception e) {
             throw new BuildException("Errors while applying transformations: " + e.getMessage(), e);
+        } finally {
+            TraXLiaison.DISABLE_SECURE_PROCESSING.set(null);
         }
         final long dt = System.currentTimeMillis() - t0;
         task.log("Transform time: " + dt + "ms");

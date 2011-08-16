@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -417,6 +418,17 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
                 throw new BuildException(e);
             }
         }
+
+        if (Boolean.TRUE.equals(DISABLE_SECURE_PROCESSING.get())) {
+            try {
+                Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
+                _isNotSecureProcessing.setAccessible(true);
+                _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
+            } catch (Exception x) {
+                project.log(x.toString(), Project.MSG_DEBUG);
+            }
+        }
+
         tfactory.setErrorListener(this);
 
         // specific attributes for the transformer
@@ -431,6 +443,11 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         }
         return tfactory;
     }
+    /**
+     * Not part of any stable API.
+     * @see #51668
+     */
+    public static final ThreadLocal/*<Boolean>*/ DISABLE_SECURE_PROCESSING = new ThreadLocal();
 
 
     /**

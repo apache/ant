@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.security.Permission;
 import junit.framework.TestCase;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
@@ -32,11 +34,17 @@ public class XMLResultAggregatorTest extends TestCase {
     }
 
     public void testFrames() throws Exception {
+        // For now, skip this test on JDK 6 (and below); see below for why:
+        try {
+            Class.forName("java.nio.file.Files");
+        } catch (ClassNotFoundException x) {
+            return;
+        }
         final File d = new File(System.getProperty("java.io.tmpdir"), "XMLResultAggregatorTest");
         new Delete() {{removeDir(d);}}; // is there no utility method for this?
         assertTrue(d.getAbsolutePath(), d.mkdir());
         File xml = new File(d, "x.xml");
-        PrintWriter pw = new PrintWriter(xml);
+        PrintWriter pw = new PrintWriter(new FileOutputStream(xml));
         try {
             pw.println("<testsuite errors='0' failures='0' name='my.UnitTest' tests='1'>");
             pw.println(" <testcase classname='my.UnitTest' name='testSomething'/>");
@@ -55,6 +63,20 @@ public class XMLResultAggregatorTest extends TestCase {
         Project project = new Project();
         project.init();
         task.setProject(project);
+        /* getResourceAsStream override unnecessary on JDK 7. Ought to work around JAXP #6723276 in JDK 6, but causes a TypeCheckError in FunctionCall for reasons TBD:
+        Thread.currentThread().setContextClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
+            public InputStream getResourceAsStream(String name) {
+                if (name.startsWith("META-INF/services/")) {
+                    return new ByteArrayInputStream(new byte[0]);
+                }
+                return super.getResourceAsStream(name);
+            }
+        });
+        */
+        // Use the JRE's Xerces, not lib/optional/xerces.jar:
+        Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
+        // Tickle #51668:
+        System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
         task.execute();
         assertTrue(new File(d, "index.html").isFile());
     }
