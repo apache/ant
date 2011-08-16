@@ -1575,7 +1575,7 @@
 
   <target name="run-which" depends="check_for_optional_packages"
     if="which.present">
-    <java classname="org.apache.env.Which" taskname="which"/>
+    <java classname="org.apache.env.Which" taskname="which" classpathref="classpath"/>
   </target>
 
   <!-- test to see if we are online or not. can take a while when we are off line, so
