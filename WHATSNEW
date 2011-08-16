@@ -111,6 +111,8 @@ Other changes:
    first line of the stacktrace containing the original exception
    message even if it matches one of the filter expressions.
    
+ * Upgraded to Apache AntUnit 1.2
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 
