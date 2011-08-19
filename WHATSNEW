@@ -116,6 +116,8 @@ Other changes:
    
  * Upgraded to Apache AntUnit 1.2
 
+ * Provide read access to Mkdir.dir.  Bugzilla Report 51684.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 
