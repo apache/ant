@@ -84,6 +84,15 @@ public class Mkdir extends Task {
     public void setDir(File dir) {
         this.dir = dir;
     }
+
+    /**
+     * Get the directory to create.
+     * @return File
+     */
+    public File getDir() {
+        return dir;
+    }
+
     /**
      * Attempt to fix possible race condition when creating
      * directories on WinXP. If the mkdirs does not work,
