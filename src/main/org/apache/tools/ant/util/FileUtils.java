@@ -1562,8 +1562,19 @@ public class FileUtils {
      * @since Ant 1.8.0
      */
     public boolean tryHardToDelete(File f) {
+        return tryHardToDelete(f, ON_WINDOWS);
+    }
+
+    /**
+     * If delete does not work, call System.gc() if asked to, wait a
+     * little and try again.
+     *
+     * @return whether deletion was successful
+     * @since Ant 1.8.3
+     */
+    public boolean tryHardToDelete(File f, boolean runGC) {
         if (!f.delete()) {
-            if (ON_WINDOWS) {
+            if (runGC) {
                 System.gc();
             }
             try {
@@ -1575,7 +1586,6 @@ public class FileUtils {
         }
         return true;
     }
-
 
     /**
      * Calculates the relative path between two files.

@@ -118,6 +118,11 @@ Other changes:
 
  * Provide read access to Mkdir.dir.  Bugzilla Report 51684.
 
+ * <delete> has a new attribute performGCOnFailedDelete that may -
+   when set to true - help resolve some problems with deleting empty
+   directories on NFS shares.
+   Bugzilla Report 45807.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

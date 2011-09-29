@@ -27,6 +27,7 @@ import java.util.Comparator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
@@ -119,6 +120,7 @@ public class Delete extends MatchingTask {
     private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static SymbolicLinkUtils SYMLINK_UTILS =
         SymbolicLinkUtils.getSymbolicLinkUtils();
+    private boolean performGc = Os.isFamily("windows");
 
     /**
      * Set the name of a single file to be removed.
@@ -195,6 +197,19 @@ public class Delete extends MatchingTask {
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
         this.includeEmpty = includeEmpty;
+    }
+
+    /**
+     * Whether to perform a garbage collection before retrying a failed delete.
+     *
+     * <p>This may be required on Windows (where it is set to true by
+     * default) but also on other operating systems, for example when
+     * deleting directories from an NFS share.</p>
+     *
+     * @since Ant 1.8.3
+     */
+    public void setPerformGcOnFailedDelete(boolean b) {
+        performGc = b;
     }
 
    /**
@@ -719,7 +734,7 @@ public class Delete extends MatchingTask {
      * wait a little and try again.
      */
     private boolean delete(File f) {
-        if (!FILE_UTILS.tryHardToDelete(f)) {
+        if (!FILE_UTILS.tryHardToDelete(f, performGc)) {
             if (deleteOnExit) {
                 int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
                 log("Failed to delete " + f + ", calling deleteOnExit."
