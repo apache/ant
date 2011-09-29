@@ -168,6 +168,19 @@ there is a directory by the same name in <i>todir</i>, the action will fail.
     on separate machines with clocks being out of sync.  <em>since Ant
     1.6</em>.</td>
   </tr>
+  <tr>
+    <td valign="top">performGCOnFailedDelete</td>
+    <td valign="top">
+      If Ant fails to delete a file or directory it will retry the
+      operation once.  If this flag is set to true it will perform a
+      garbage collection before retrying the delete.<br/>
+      Setting this flag to true is known to resolve some problems on
+      Windows (where it defaults to true) but also for directory trees
+      residing on an NFS share.
+      <em>Since Ant 1.8.3</em></td>
+    <td align="center" valign="top">No, default &quot;true&quot; on
+      Windows and &quot;true&quot; on any other OS.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>mapper</h4>
