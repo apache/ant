@@ -80,7 +80,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testPackageInfoJava" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">
+  <target name="setUpForPackageInfoJava">
     <mkdir dir="${javac-dir}/src/a" />
     <mkdir dir="${build-dir}" />
     <echo file="${javac-dir}/src/a/package-info.java">
@@ -92,7 +92,11 @@
     </echo>
     <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="first-pass" />
     <au:assertPropertyEquals name="first-pass" value="true" />
+  </target>
 
+  <target name="testPackageInfoJava"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">
     <!-- no changes, shouldn't recompile, the initial bug -->
     <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="second-pass" />
     <au:assertFalse>
@@ -108,6 +112,30 @@
       <file file="${build-dir}/a" />
     </touch>
     <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="third-pass" />
+    <au:assertPropertyEquals name="third-pass" value="true" />
+  </target>
+
+  <target name="testPackageInfoJavaNoDest"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51947">
+    <javac srcdir="${javac-dir}/src" updatedProperty="first-pass" />
+    <au:assertPropertyEquals name="first-pass" value="true" />
+
+    <!-- no changes, shouldn't recompile, the initial bug -->
+    <javac srcdir="${javac-dir}/src" updatedProperty="second-pass" />
+    <au:assertFalse>
+      <isset property="second-pass" />
+    </au:assertFalse>
+    <sleep seconds="2" />
+
+    <!-- change package-info.java but make containing target dir even
+         more recent - the regression in Ant 1.7.1 -->
+    <touch file="${javac-dir}/src/a/package-info.java" />
+    <sleep seconds="2" />
+    <touch>
+      <file file="${javac-dir}/src/a" />
+    </touch>
+    <javac srcdir="${javac-dir}/src" updatedProperty="third-pass" />
     <au:assertPropertyEquals name="third-pass" value="true" />
   </target>
 

@@ -91,6 +91,13 @@ Fixed bugs:
    given file is not a ZIP archive and it is smaller than the size of
    a ZIP "end of central directory record".
 
+ * <javac> would create the empty package-info.class file in the wrong
+   directory if no destdir was specified.  Note it may still pick the
+   wrong directory if you specify more than one source directory but
+   no destDir.  It is highly recommended that you always explicitly
+   specify the destDir attribute.
+   Bugzilla Report 51947.
+
 Other changes:
 --------------
 

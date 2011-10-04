@@ -1134,7 +1134,10 @@ public class Javac extends MatchingTask {
             if (adapter.execute()) {
                 // Success
                 try {
-                    generateMissingPackageInfoClasses();
+                    generateMissingPackageInfoClasses(destDir != null
+                                                      ? destDir
+                                                      : getProject()
+                                                      .resolveFile(src.list()[0]));
                 } catch (IOException x) {
                     // Should this be made a nonfatal warning?
                     throw new BuildException(x, getLocation());
@@ -1194,12 +1197,12 @@ public class Javac extends MatchingTask {
      * Otherwise this task's up-to-date tracking mechanisms do not work.
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
      */
-    private void generateMissingPackageInfoClasses() throws IOException {
+    private void generateMissingPackageInfoClasses(File dest) throws IOException {
         for (Iterator i = packageInfos.entrySet().iterator(); i.hasNext(); ) {
             Map.Entry entry = (Map.Entry) i.next();
             String pkg = (String) entry.getKey();
             Long sourceLastMod = (Long) entry.getValue();
-            File pkgBinDir = new File(destDir, pkg.replace('/', File.separatorChar));
+            File pkgBinDir = new File(dest, pkg.replace('/', File.separatorChar));
             pkgBinDir.mkdirs();
             File pkgInfoClass = new File(pkgBinDir, "package-info.class");
             if (pkgInfoClass.isFile() && pkgInfoClass.lastModified() >= sourceLastMod.longValue()) {
