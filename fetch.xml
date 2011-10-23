@@ -305,8 +305,8 @@ Set -Ddest=LOCATION on the command line
 
   <target name="jai" depends="init"
           description="load java advanced imaging">
-    <f2 project="javax.media" archive="jai-core" repository="http://repository.jboss.org/maven2"/>
-    <f2 project="com.sun.media" archive="jai-codec" repository="http://repository.jboss.org/maven2"/>
+    <f2 project="javax.media" archive="jai-core" repository="https://repository.jboss.org/nexus/content/groups/public/"/>
+    <f2 project="com.sun.media" archive="jai-codec" repository="https://repository.jboss.org/nexus/content/groups/public/"/>
   </target>
 
   <target name="netrexx" depends="init-no-m2,-setup-temp-cache,-fetch-netrexx,-fetch-netrexx-no-commons-net"
