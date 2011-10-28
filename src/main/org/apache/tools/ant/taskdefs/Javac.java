@@ -131,6 +131,8 @@ public class Javac extends MatchingTask {
     private boolean includeDestClasses = true;
     private CompilerAdapter nestedAdapter = null;
 
+    private boolean createMissingPackageInfoClass = true;
+
     /**
      * Javac task for compilation of Java files.
      */
@@ -885,6 +887,17 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Whether package-info.class files will be created by Ant
+     * matching package-info.java files that have been compiled but
+     * didn't create class files themselves.
+     *
+     * @since Ant 1.8.3
+     */
+    public void setCreateMissingPackageInfoClass(boolean b) {
+        createMissingPackageInfoClass = b;
+    }
+
+    /**
      * Executes the task.
      * @exception BuildException if an error occurs
      */
@@ -1133,6 +1146,7 @@ public class Javac extends MatchingTask {
             // finally, lets execute the compiler!!
             if (adapter.execute()) {
                 // Success
+                if (createMissingPackageInfoClass) {
                 try {
                     generateMissingPackageInfoClasses(destDir != null
                                                       ? destDir
@@ -1141,6 +1155,7 @@ public class Javac extends MatchingTask {
                 } catch (IOException x) {
                     // Should this be made a nonfatal warning?
                     throw new BuildException(x, getLocation());
+                }
                 }
             } else {
                 // Fail path

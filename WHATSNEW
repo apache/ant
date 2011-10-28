@@ -134,7 +134,12 @@ Other changes:
    property hasn't been set when the resource was empty even if the
    quiet attribute was set to true.  They will now use VERBOSE
    instead.
-   Bugzilla Report 52107.   
+   Bugzilla Report 52107.
+
+ * <javac> has a new attribute createMissingPackageInfoClass that can
+   be set to false to prevent Ant from creating empty dummy classes
+   used for up-to-date-ness checks.
+   Bugzilla Report 52096.
 
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================

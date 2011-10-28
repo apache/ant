@@ -441,6 +441,22 @@ invoking the compiler.</p>
     </td>
     <td align="center" valign="top">No - default is "true"</td>
   </tr>
+  <tr>
+    <td valign="top">createMissingPackageInfoClass</td>
+    <td valign="top">
+      Some package level annotations in <code>package-info.java</code>
+      files don't create any <code>package-info.class</code> files so
+      Ant would recompile the same file every time.<br/>
+      Starting with Ant 1.8 Ant will create an
+      empty <code>package-info.class</code> for
+      each <code>package-info.java</code> if there isn't one created
+      by the compiler.<br/>
+      In some setups this additional class causes problems and it can
+      be suppressed by setting this attribute to "false".
+      <em>Since Ant 1.8.3</em>.
+    </td>
+    <td align="center" valign="top">No - default is "true"</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>

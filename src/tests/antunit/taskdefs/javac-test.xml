@@ -139,6 +139,18 @@
     <au:assertPropertyEquals name="third-pass" value="true" />
   </target>
 
+  <target name="testSuppressPackageInfoClass"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=52096">
+    <au:assertFileExists file="${build-dir}/a/package-info.class"/>
+    <delete file="${build-dir}/a/package-info.class"/>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}"
+           createMissingPackageInfoClass="false"
+           updatedProperty="second-pass" />
+    <au:assertPropertyEquals name="second-pass" value="true" />
+    <au:assertFileDoesntExist file="${build-dir}/a/package-info.class"/>
+  </target>
+
   <target name="-create-javac-adapter">
     <property name="adapter.dir" location="${output}/adapter" />
     <mkdir dir="${input}/org/example" />
