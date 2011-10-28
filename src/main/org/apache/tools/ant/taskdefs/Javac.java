@@ -949,7 +949,7 @@ public class Javac extends MatchingTask {
     protected void scanDir(File srcDir, File destDir, String[] files) {
         GlobPatternMapper m = new GlobPatternMapper();
         String[] extensions = findSupportedFileExtensions();
-        
+
         for (int i = 0; i < extensions.length; i++) {
             m.setFrom(extensions[i]);
             m.setTo("*.class");
@@ -1147,15 +1147,15 @@ public class Javac extends MatchingTask {
             if (adapter.execute()) {
                 // Success
                 if (createMissingPackageInfoClass) {
-                try {
-                    generateMissingPackageInfoClasses(destDir != null
-                                                      ? destDir
-                                                      : getProject()
-                                                      .resolveFile(src.list()[0]));
-                } catch (IOException x) {
-                    // Should this be made a nonfatal warning?
-                    throw new BuildException(x, getLocation());
-                }
+                    try {
+                        generateMissingPackageInfoClasses(destDir != null
+                                                          ? destDir
+                                                          : getProject()
+                                                          .resolveFile(src.list()[0]));
+                    } catch (IOException x) {
+                        // Should this be made a nonfatal warning?
+                        throw new BuildException(x, getLocation());
+                    }
                 }
             } else {
                 // Fail path
