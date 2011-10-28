@@ -130,6 +130,12 @@ Other changes:
    deleting empty directories on NFS shares.
    Bugzilla Report 45807.
 
+ * <loadfile> and <loadresource> used to log at level INFO to signal a
+   property hasn't been set when the resource was empty even if the
+   quiet attribute was set to true.  They will now use VERBOSE
+   instead.
+   Bugzilla Report 52107.   
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

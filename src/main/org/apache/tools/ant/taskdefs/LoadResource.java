@@ -179,7 +179,8 @@ public class LoadResource extends Task {
 
                 text = crh.readFully(instream);
             } else {
-                log("Do not set property " + property + " as its length is 0.");
+                log("Do not set property " + property + " as its length is 0.",
+                    quiet ? Project.MSG_VERBOSE : Project.MSG_INFO);
             }
 
             if (text != null) {
