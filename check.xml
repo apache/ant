@@ -50,26 +50,6 @@
 
   <taskdef resource="simiantask.properties"/>
   
-  <!-- Findbugs: Getting Findbugs -->
-  <property name="findbugs.download.name" 
-            value="findbugs-1.3.9"
-            description="Name of the download file without suffix. Also the internal root directory of the ZIP."/>
-  <property name="findbugs.download.file" 
-            value="${findbugs.download.name}.zip"
-            description="The filename of the ZIP."/>
-  <property name="findbugs.download.url"  
-            value="http://garr.dl.sourceforge.net/sourceforge/findbugs/${findbugs.download.file}"
-            description="The download adress at a mirror of Sourceforge."/>
-  <property name="findbugs.download.to"   
-            value=".downloads"
-            description="Where to store the download and 'install' Findbugs."/>
-  <available 
-    property="findbugs.home" 
-    value="${findbugs.download.to}/${findbugs.download.name}"
-    file="${findbugs.download.to}/${findbugs.download.name}/lib/findbugs.jar"
-    description="Check if Findbugs is already installed."
-  />
-
   <!-- Findbugs: Running Findbugs -->
   <property name="findbugs.reportdir" 
             location="${build.dir}/reports/findbugs" 
@@ -181,25 +161,15 @@
   	<fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
-  <target name="init-findbugs" unless="findbugs.home">
-    <mkdir dir="${findbugs.download.to}"/>
-    <get src="${findbugs.download.url}" dest="${findbugs.download.to}/${findbugs.download.file}"/>
-    <unzip src="${findbugs.download.to}/${findbugs.download.file}" dest="${findbugs.download.to}"/>
-    <property name="findbugs.home" location="${findbugs.download.to}/${findbugs.download.name}"/>
-    <mkdir dir="${findbugs.home}/plugin"/>
-  </target>
-
-  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-findbugs" xmlns:fb="http://findbugs.sourceforge.net/">
-    <path id="findbugs.real.classpath">
-      <fileset dir="${findbugs.home}/lib" includes="*.jar"/>
-    </path>
-
+  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy" xmlns:fb="http://findbugs.sourceforge.net/">
+    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="1.3.9"
+                   inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
     <!-- Load the Findbugs AntTasks -->               
     <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties" classpathref="findbugs.real.classpath" />
         
     <!-- Start Findbugs -->
     <mkdir dir="${findbugs.reportdir}"/>
-    <fb:findbugs home="${findbugs.home}"
+    <fb:findbugs pluginlistref="findbugs.real.classpath"
                  classpathref="findbugs.real.classpath"
                  output="xml:withMessages"
                  outputFile="${findbugs.reportdir}/${findbugs.raw}"
