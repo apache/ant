@@ -36,8 +36,7 @@
     <property name="basedir" value="/home/jkf/programming/gretant_sourceforge/sampleproject"></property>
     <property name="os.arch" value="i386"></property>
     <property name="java.io.tmpdir" value="/tmp"></property>
-    <property name="line.separator" value="
-"></property>
+    <property name="line.separator" value="&#xd;&#xa;"></property>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."></property>
     <property name="java.awt.fonts" value=""></property>
     <property name="os.name" value="Linux"></property>

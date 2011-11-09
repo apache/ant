@@ -707,7 +707,9 @@ h6 {
     <xsl:param name="string"/>
     <xsl:param name="tmp1" select="stringutils:replace(string($string),'\','\\')"/>
     <xsl:param name="tmp2" select="stringutils:replace(string($tmp1),&quot;'&quot;,&quot;\&apos;&quot;)"/>
-    <xsl:value-of select="$tmp2"/>
+    <xsl:param name="tmp3" select="stringutils:replace(string($tmp2),&quot;&#10;&quot;,'\n')"/>
+    <xsl:param name="tmp4" select="stringutils:replace(string($tmp3),&quot;&#13;&quot;,'\r')"/>
+    <xsl:value-of select="$tmp4"/>
 </xsl:template>
 
 

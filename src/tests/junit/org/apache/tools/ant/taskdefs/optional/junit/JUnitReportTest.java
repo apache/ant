@@ -104,6 +104,9 @@ public class JUnitReportTest extends BuildFileTest {
             assertTrue("output must contain <br>:\n" + report,
                        report.indexOf("junit.framework.AssertionFailedError: DOEG<br>")
                    > -1);
+            assertTrue("#51049: output must translate line breaks:\n" + report,
+                       report.indexOf("cur['line.separator'] = '\\r\\n';")
+                   > -1);
         } finally {
             FileUtils.close(r);
         }

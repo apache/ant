@@ -13,6 +13,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * <junitreport> mishandled ${line.separator}.
+   Bugzilla Report 51049.
+
  * <junitreport> did not work in embedded environments on JDK 7.
    Bugzilla Report 51668.
 
