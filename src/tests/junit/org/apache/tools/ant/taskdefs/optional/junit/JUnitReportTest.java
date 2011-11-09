@@ -101,8 +101,8 @@ public class JUnitReportTest extends BuildFileTest {
             r = new FileReader(new File(System.getProperty("root"),
                                         "src/etc/testcases/taskdefs/optional/junitreport/test/html/sampleproject/coins/0_CoinTest.html"));
             String report = FileUtils.readFully(r);
-            assertTrue("output must contain <br>",
-                       report.indexOf("junit.framework.AssertionFailedError: DOEG<br/>")
+            assertTrue("output must contain <br>:\n" + report,
+                       report.indexOf("junit.framework.AssertionFailedError: DOEG<br>")
                    > -1);
         } finally {
             FileUtils.close(r);
