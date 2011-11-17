@@ -144,6 +144,9 @@ Other changes:
    used for up-to-date-ness checks.
    Bugzilla Report 52096.
 
+ * URLResources#isExists has become less noisy.
+   Bugzilla Report 51802.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

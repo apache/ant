@@ -226,7 +226,7 @@ public class URLResource extends Resource implements URLProvider {
             return false;
         }
         try {
-            connect();
+            connect(Project.MSG_VERBOSE);
             return true;
         } catch (IOException e) {
             return false;
@@ -363,7 +363,19 @@ public class URLResource extends Resource implements URLProvider {
      * Ensure that we have a connection.
      * @throws IOException if the connection cannot be established.
      */
-    protected synchronized void connect() throws IOException {
+    protected void connect() throws IOException {
+        connect(Project.MSG_ERR);
+    }
+
+    /**
+     * Ensure that we have a connection.
+     * @param logLevel severity to use when logging connection errors.
+     * Should be one of the <code>MSG_</code> constants in {@link
+     * Project Project}.
+     * @throws IOException if the connection cannot be established.
+     * @since Ant 1.8.2
+     */
+    protected synchronized void connect(int logLevel) throws IOException {
         URL u = getURL();
         if (u == null) {
             throw new BuildException("URL not set");
@@ -373,7 +385,7 @@ public class URLResource extends Resource implements URLProvider {
                 conn = u.openConnection();
                 conn.connect();
             } catch (IOException e) {
-                log(e.toString(), Project.MSG_ERR);
+                log(e.toString(), logLevel);
                 conn = null;
                 throw e;
             }
