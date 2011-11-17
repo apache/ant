@@ -359,15 +359,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 // via style attribute
                 File stylesheet = getProject().resolveFile(xslFile);
                 if (!stylesheet.exists()) {
-                    stylesheet = FILE_UTILS.resolveFile(baseDir, xslFile);
+                    File alternative = FILE_UTILS.resolveFile(baseDir, xslFile);
                     /*
                      * shouldn't throw out deprecation warnings before we know,
                      * the wrong version has been used.
                      */
-                    if (stylesheet.exists()) {
+                    if (alternative.exists()) {
                         log("DEPRECATED - the 'style' attribute should be "
                             + "relative to the project's");
                         log("             basedir, not the tasks's basedir.");
+                        stylesheet = alternative;
                     }
                 }
                 FileResource fr = new FileResource();
