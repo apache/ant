@@ -101,6 +101,9 @@ Fixed bugs:
    specify the destDir attribute.
    Bugzilla Report 51947.
 
+ * packagemapper now honors the handleDirSep attribute.
+   Bugzilla Report 51068.
+
 Other changes:
 --------------
 
