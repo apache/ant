@@ -451,12 +451,14 @@ public class Main implements AntMain {
             throw new BuildException("Build failed");
         }
 
-        // make sure it's not a directory (this falls into the ultra
-        // paranoid lets check everything category
-
         if (buildFile.isDirectory()) {
-            System.out.println("What? Buildfile: " + buildFile + " is a dir!");
-            throw new BuildException("Build failed");
+            File whatYouMeant = new File(buildFile, "build.xml");
+            if (whatYouMeant.isFile()) {
+                buildFile = whatYouMeant;
+            } else {
+                System.out.println("What? Buildfile: " + buildFile + " is a dir!");
+                throw new BuildException("Build failed");
+            }
         }
 
         // Normalize buildFile for re-import detection

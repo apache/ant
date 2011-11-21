@@ -107,6 +107,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * -f/-file/-buildfile accepts a directory containing build.xml.
+
  * The <javacc>, <jjtree> and <jjdoc> now support a new maxmemory
    attribute.
    Bugzilla Report 50513.
