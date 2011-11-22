@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Iterator;
 
 import org.apache.tools.ant.util.CollectionUtils;
+import org.apache.tools.ant.taskdefs.MacroInstance;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
 
@@ -382,8 +383,15 @@ public class RuntimeConfigurable implements Serializable {
                 String name = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                // reflect these into the target
-                Object attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value);
+                // reflect these into the target, defer for
+                // MacroInstance where properties are expanded for the
+                // nested sequential
+                Object attrValue = null;
+                if (target instanceof MacroInstance) {
+                    attrValue = value;
+                } else {
+                    attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value);
+                }
                 try {
                     ih.setAttribute(p, target, name, attrValue);
                 } catch (UnsupportedAttributeException be) {

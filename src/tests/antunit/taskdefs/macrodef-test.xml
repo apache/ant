@@ -33,5 +33,16 @@
     <au:assertLogContains text="THIS IS NOT DEFAULT LOG"/>
   </target>
 
+  <target name="testDoubleExpandedProperties"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=42046">
+    <macrodef name="indirect">
+      <attribute name="value"/>
+      <sequential>
+        <echo message="@{value}"/>
+      </sequential>
+    </macrodef>
+    <indirect value="$${basedir}"/>
+    <au:assertLogContains text="{basedir}"/>
+  </target>
 
 </project>

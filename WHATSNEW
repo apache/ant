@@ -104,6 +104,10 @@ Fixed bugs:
  * packagemapper now honors the handleDirSep attribute.
    Bugzilla Report 51068.
 
+ * the attributes of macrodef tasks had their values run through
+   property expansion twice.
+   Bugzilla Report 42046.
+
 Other changes:
 --------------
 

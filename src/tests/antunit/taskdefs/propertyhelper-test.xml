@@ -107,7 +107,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testLoadProperties" if="prereqs-ok">
+  <target name="XtestLoadPropertiesWithObjects" if="prereqs-ok" depends="setUp">
     <au:assertFalse>
       <isset property="object2" />
     </au:assertFalse>
@@ -123,6 +123,24 @@
     </loadproperties>
     <au:assertPropertyEquals name="object2" value="${object}" />
     <au:assertPropertyEquals name="object2" value="${OBJECT}" />
+  </target>
+
+  <target name="testLoadPropertiesWithStrings" if="prereqs-ok" depends="setUp">
+    <au:assertFalse>
+      <isset property="string2" />
+    </au:assertFalse>
+    <string id="props" value="string2=$${string}" />
+    <!-- verify the property is not yet expanded -->
+    <au:assertTrue>
+      <length length="17">
+        <resource refid="props" />
+      </length>
+    </au:assertTrue>
+    <loadproperties>
+      <resource refid="props" />
+    </loadproperties>
+    <au:assertPropertyEquals name="string2" value="${string}" />
+    <au:assertPropertyEquals name="string2" value="${STRING}" />
   </target>
 
 </project>
