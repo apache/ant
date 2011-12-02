@@ -110,6 +110,7 @@ public class Jvc extends DefaultCompilerAdapter {
         logAndAddFilesToCompile(cmd);
 
         return
-            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+            executeExternalCompile(cmd.getCommandline(), firstFileName,
+                                   false) == 0;
     }
 }

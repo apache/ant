@@ -108,6 +108,10 @@ Fixed bugs:
    property expansion twice.
    Bugzilla Report 42046.
 
+ * jvc doesn't like it if source file names in argument files are
+   quoted.
+   Bugzilla Report 31667.
+
 Other changes:
 --------------
 
