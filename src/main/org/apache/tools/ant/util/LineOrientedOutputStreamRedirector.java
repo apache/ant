@@ -33,8 +33,19 @@ public class LineOrientedOutputStreamRedirector
         extends
             LineOrientedOutputStream {
     private OutputStream stream;
+
+    // these should be in the ASCII range and hopefully are single bytes
+    // (for LF and CR respectively) for any encoding thrown at this class
+    private static final byte[] EOL =
+        System.getProperty("line.separator").getBytes();
+
     public LineOrientedOutputStreamRedirector(OutputStream stream) {
         this.stream = stream;
+    }
+    
+    protected void processLine(byte[] b) throws IOException {
+        stream.write(b);
+        stream.write(EOL);
     }
     
     protected void processLine(String line) throws IOException {
