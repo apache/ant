@@ -74,6 +74,43 @@ public class ReaderInputStreamTest extends TestCase {
         System.out.println("Preample len is " + bytes.length);
     }
     
+    public void testIso88591ToUtf8() throws Exception {
+        InputStreamReader fin = null;
+        ReaderInputStream r = null;
+        FileInputStream utf8 = null;
+        try {
+            fin = new InputStreamReader(new FileInputStream("src/tests/antunit/taskdefs/exec/input/iso8859-1"),
+                                        "ISO8859_1");
+            r = new ReaderInputStream(fin, "UTF8");
+
+            ByteArrayOutputStream actualOS = new ByteArrayOutputStream();
+            int b = r.read();
+            while (b > -1) {
+                actualOS.write((byte) b);
+                b = r.read();
+            }
+
+            utf8 = new FileInputStream("src/tests/antunit/taskdefs/exec/expected/utf-8");
+            ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
+            b = utf8.read();
+            while (b > -1) {
+                expectedOS.write((byte) b);
+                b = utf8.read();
+            }
+
+            byte[] expected = expectedOS.toByteArray();
+            byte[] actual = actualOS.toByteArray();
+            assertEquals("length", expected.length, actual.length);
+            for (int i = 0; i < actual.length; i++) {
+                assertEquals("byte " + i, expected[i], actual[i]);
+            }
+        } finally {
+            FileUtils.close(fin);
+            FileUtils.close(r);
+            FileUtils.close(utf8);
+        }
+    }
+
     private void compareBytes(String s, String encoding) throws Exception {
         byte[] expected = s.getBytes(encoding);
         
