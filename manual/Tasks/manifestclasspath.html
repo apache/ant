@@ -46,6 +46,11 @@ it silently ignores entries for which it cannot find any corresponding file.</p>
 specification by the <code>&lt;manifest&gt;</code> element, where the
 defined property is re-referenced.</p>
 
+<p>For this task to work properly the relative path from the file
+  given in the <code>jarfile</code> attribute to the elements of the
+  nested <code>classpath</code> must be the same as you expect them to
+  be when deploying the jar.</p>
+
 <p><em>since Apache Ant 1.7</em></p>
 
 <h3>Parameters</h3>
