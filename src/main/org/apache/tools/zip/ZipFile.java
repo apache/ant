@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Inflater;
@@ -509,7 +510,7 @@ public class ZipFile {
      */
     private void resolveLocalFileHeaderData(Map entriesWithoutUTF8Flag)
         throws IOException {
-        Enumeration e = getEntries();
+        Enumeration e = Collections.enumeration(new HashSet(entries.keySet()));
         while (e.hasMoreElements()) {
             ZipEntry ze = (ZipEntry) e.nextElement();
             OffsetEntry offsetEntry = (OffsetEntry) entries.get(ze);
@@ -540,9 +541,14 @@ public class ZipFile {
                 + SHORT + SHORT + fileNameLen + extraFieldLen;
 
             if (entriesWithoutUTF8Flag.containsKey(ze)) {
+                // changing the name of a ZipEntry is going to change
+                // the hashcode
+                // - see https://issues.apache.org/jira/browse/COMPRESS-164
+                entries.remove(ze);
                 setNameAndCommentFromExtraFields(ze,
                                                  (NameAndComment)
                                                  entriesWithoutUTF8Flag.get(ze));
+                entries.put(ze, offsetEntry);
             }
         }
     }

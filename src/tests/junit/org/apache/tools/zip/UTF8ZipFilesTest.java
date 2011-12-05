@@ -19,6 +19,7 @@
 package org.apache.tools.zip;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -81,9 +82,9 @@ public class UTF8ZipFilesTest extends TestCase {
         try {
             createTestFile(file, US_ASCII, false, true);
             zf = new ZipFile(file, US_ASCII, true);
-            assertNotNull(zf.getEntry(ASCII_TXT));
-            assertNotNull(zf.getEntry(EURO_FOR_DOLLAR_TXT));
-            assertNotNull(zf.getEntry(OIL_BARREL_TXT));
+            assertCanRead(zf, ASCII_TXT);
+            assertCanRead(zf, EURO_FOR_DOLLAR_TXT);
+            assertCanRead(zf, OIL_BARREL_TXT);
         } finally {
             ZipFile.closeQuietly(zf);
             if (file.exists()) {
@@ -229,6 +230,18 @@ public class UTF8ZipFilesTest extends TestCase {
             assertEquals(crc.getValue(), ucpf.getNameCRC32());
             assertEquals(expectedName, new String(ucpf.getUnicodeName(),
                                                   UTF_8));
+        }
+    }
+
+    private static void assertCanRead(ZipFile zf, String fileName) throws IOException {
+        ZipEntry entry = zf.getEntry(fileName);
+        assertNotNull("Entry " + fileName + " doesn't exist", entry);
+        InputStream is = zf.getInputStream(entry);
+        assertNotNull("InputStream is null", is);
+        try {
+            is.read();
+        } finally {
+            is.close();
         }
     }
 

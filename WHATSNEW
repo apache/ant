@@ -112,6 +112,9 @@ Fixed bugs:
    quoted.
    Bugzilla Report 31667.
 
+ * ZipFile didn't work properly for archives using unicode extra
+   fields rather than UTF-8 filenames and the EFS-Flag.
+
 Other changes:
 --------------
 
