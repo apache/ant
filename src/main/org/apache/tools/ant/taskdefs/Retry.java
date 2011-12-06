@@ -40,6 +40,11 @@ public class Retry extends Task implements TaskContainer {
     private int retryCount = 1;
 
     /**
+     * The time to wait between retries in milliseconds, default to 0.
+     */
+    private int retryDelay = 0;
+
+    /**
      * set the task
      * @param t the task to retry.
      */
@@ -58,6 +63,18 @@ public class Retry extends Task implements TaskContainer {
      */
     public void setRetryCount(int n) {
         retryCount = n;
+    }
+
+    /**
+     * set the delay between retries (in miliseconds)
+     * @param n the time between retries.
+     * @since Ant 1.8.3
+     */
+    public void setRetryDelay(int retryDelay) {
+        if (retryDelay < 0) {
+            throw new BuildException("delay must be a non-negative number");
+        }
+        this.retryDelay = retryDelay;
     }
 
     /**
@@ -81,8 +98,21 @@ public class Retry extends Task implements TaskContainer {
                     exceptionMessage.append(errorMessages);
                     throw new BuildException(exceptionMessage.toString(), getLocation());
                 }
-                log("Attempt [" + i + "]: error occurred; retrying...", e, Project.MSG_INFO);
+                String msg;
+                if (retryDelay > 0) {
+                    msg = "Attempt [" + i + "]: error occurred; retrying after " + retryDelay + " ms...";
+                } else {
+                    msg = "Attempt [" + i + "]: error occurred; retrying...";
+                }
+                log(msg, e, Project.MSG_INFO);
                 errorMessages.append(StringUtils.LINE_SEP);
+                if (retryDelay > 0) {
+                    try {
+                        Thread.sleep(retryDelay);
+                    } catch (InterruptedException ie) {
+                        // Ignore Exception
+                    }
+                }
             }
         }
     }

@@ -163,6 +163,10 @@ Other changes:
  * URLResources#isExists has become less noisy.
    Bugzilla Report 51802.
 
+ * The <retry> task has a new optional attribute retryDelay that can
+   be used to make the task sleep between retry attempts.
+   Bugzilla Report 52076.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 
