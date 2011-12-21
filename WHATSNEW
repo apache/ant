@@ -167,6 +167,10 @@ Other changes:
    be used to make the task sleep between retry attempts.
    Bugzilla Report 52076.
 
+ * <signjar> has new attributes that control the signature and digest
+   algorithms.
+   Bugzilla Report 52344.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 

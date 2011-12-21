@@ -110,6 +110,16 @@ public class SignJar extends AbstractJarSignerTask {
     private boolean force = false;
 
     /**
+     * signature algorithm
+     */
+    private String sigAlg;
+
+    /**
+     * digest algorithm
+     */
+    private String digestAlg;
+
+    /**
      * error string for unit test verification: {@value}
      */
     public static final String ERROR_TODIR_AND_SIGNEDJAR
@@ -276,6 +286,38 @@ public class SignJar extends AbstractJarSignerTask {
     }
 
     /**
+     * Signature Algorithm; optional
+     *
+     * @param sigAlg the signature algorithm
+     */
+    public void setSigAlg(String sigAlg) {
+        this.sigAlg = sigAlg;
+    }
+
+    /**
+     * Signature Algorithm; optional
+     */
+    public String getSigAlg() {
+        return sigAlg;
+    }
+
+    /**
+     * Digest Algorithm; optional
+     *
+     * @param digestAlg the digest algorithm
+     */
+    public void setDigestAlg(String digestAlg) {
+        this.digestAlg = digestAlg;
+    }
+
+    /**
+     * Digest Algorithm; optional
+     */
+    public String getDigestAlg() {
+        return digestAlg;
+    }
+
+    /**
      * sign the jar(s)
      *
      * @throws BuildException on errors
@@ -418,6 +460,16 @@ public class SignJar extends AbstractJarSignerTask {
 
         if (sectionsonly) {
             addValue(cmd, "-sectionsonly");
+        }
+
+        if (sigAlg != null) {
+            addValue(cmd, "-sigalg");
+            addValue(cmd, sigAlg);
+        }
+
+        if (digestAlg != null) {
+            addValue(cmd, "-digestalg");
+            addValue(cmd, digestAlg);
         }
 
         //add -tsa operations if declared

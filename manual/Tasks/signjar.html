@@ -158,6 +158,16 @@ block</td>
       <em>since Ant 1.8.0</em>.</td>
     <td align="center" valign="top">No; default false</td>
   </tr>  
+  <tr>
+    <td valign="top">sigalg</td>
+    <td valign="top">name of signature algorithm</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">digestalg</td>
+    <td valign="top">name of digest algorithm</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Parameters as nested elements</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -230,6 +240,24 @@ all be copied to this directory, not to subdirectories.
 <p>
 Sign all the JAR files in dist/**/*.jar <i>in-situ</i>. Lazy signing is used,
 so the files will only be signed if they are not already signed.
+</p>
+  <blockquote><pre>
+&lt;signjar
+    alias="testonly" keystore="testkeystore"
+    storepass="apacheant"
+    sigalg="MD5withRSA"
+    digestalg="SHA1"&gt;
+  &lt;path&gt;
+    &lt;fileset dir="dist" includes="**/*.jar" /&gt;
+  &lt;/path&gt;
+&lt;/signjar&gt;
+</pre></blockquote>
+<p>
+Sign all the JAR files in dist/**/*.jar using the digest algorithm SHA1 and the
+signature algorithm MD5withRSA. This is especially useful when you want to use
+the JDK 7 jarsigner (which uses SHA256 and SHA256withRSA as default) to create
+signed jars that will be deployed on platforms not supporting SHA256 and
+SHA256withRSA.
 </p>
 <h3>About timestamp signing</h3>
 
