@@ -17,7 +17,8 @@ Fixed bugs:
    Bugzilla Report 51049.
 
  * <junitreport> did not work in embedded environments on JDK 7.
-   Bugzilla Report 51668.
+   Nor did <xslt> when using Xalan redirects.
+   Bugzilla Report 51668, 52382.
 
  * Encoding of unicode escape sequences by the property file task
    Bugzilla Report 50515.

@@ -261,13 +261,10 @@ public class AggregateTransformer {
         paramx.setName("output.dir");
         paramx.setExpression(toDir.getAbsolutePath());
         final long t0 = System.currentTimeMillis();
-        TraXLiaison.DISABLE_SECURE_PROCESSING.set(Boolean.TRUE);
         try {
             xsltTask.execute();
         } catch (Exception e) {
             throw new BuildException("Errors while applying transformations: " + e.getMessage(), e);
-        } finally {
-            TraXLiaison.DISABLE_SECURE_PROCESSING.set(null);
         }
         final long dt = System.currentTimeMillis() - t0;
         task.log("Transform time: " + dt + "ms");

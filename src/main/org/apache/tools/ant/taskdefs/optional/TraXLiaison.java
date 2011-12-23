@@ -419,12 +419,12 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
             }
         }
 
-        if (Boolean.TRUE.equals(DISABLE_SECURE_PROCESSING.get())) {
-            try {
-                Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
-                _isNotSecureProcessing.setAccessible(true);
-                _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
-            } catch (Exception x) {
+        try { // #51668, #52382
+            Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
+            _isNotSecureProcessing.setAccessible(true);
+            _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
+        } catch (Exception x) {
+            if (project != null) {
                 project.log(x.toString(), Project.MSG_DEBUG);
             }
         }
@@ -443,11 +443,6 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         }
         return tfactory;
     }
-    /**
-     * Not part of any stable API.
-     * @see #51668
-     */
-    public static final ThreadLocal/*<Boolean>*/ DISABLE_SECURE_PROCESSING = new ThreadLocal();
 
 
     /**

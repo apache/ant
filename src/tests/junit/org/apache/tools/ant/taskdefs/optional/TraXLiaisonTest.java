@@ -5,7 +5,10 @@ import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.JAXPUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.security.Permission;
 
 import junit.framework.AssertionFailedError;
 
@@ -65,11 +68,26 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         liaison.setStylesheet(xsl);
         File out = new File("xalan2-redirect-out-dummy.tmp");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xsl");
+        ClassLoader orig = Thread.currentThread().getContextClassLoader();
         try {
             liaison.addParam("xalan-version", "2");
+            // Use the JRE's Xerces, not lib/optional/xerces.jar:
+            Thread.currentThread().setContextClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
+                public InputStream getResourceAsStream(String name) {
+                    if (name.startsWith("META-INF/services/")) {
+                        // work around JAXP #6723276 in JDK 6
+                        return new ByteArrayInputStream(new byte[0]);
+                    }
+                    return super.getResourceAsStream(name);
+                }
+            });
+            // Tickle #52382:
+            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
             liaison.transform(in, out);
         } finally {
             out.delete();
+            Thread.currentThread().setContextClassLoader(orig);
+            System.setSecurityManager(null);
         }
     }
 
