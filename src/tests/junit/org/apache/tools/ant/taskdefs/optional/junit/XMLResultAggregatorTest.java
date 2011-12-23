@@ -41,7 +41,9 @@ public class XMLResultAggregatorTest extends TestCase {
             return;
         }
         final File d = new File(System.getProperty("java.io.tmpdir"), "XMLResultAggregatorTest");
-        new Delete() {{removeDir(d);}}; // is there no utility method for this?
+        if (d.exists()) {
+            new Delete() {{removeDir(d);}}; // is there no utility method for this?
+        }
         assertTrue(d.getAbsolutePath(), d.mkdir());
         File xml = new File(d, "x.xml");
         PrintWriter pw = new PrintWriter(new FileOutputStream(xml));
