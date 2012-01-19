@@ -71,7 +71,7 @@ Fixed bugs:
  * ZipFile failed to clean up some resources which could lead to
    OutOfMemoryException while unzipping large archives.
    A similar problem in ZipArchiveOutputStream has been fixed as well.
-   Bugzilla Report 42969.
+   Bugzilla Report 42696.
 
  * quiet attribute added to the copy and move tasks, to be used together
    with failonerror=false, so warnings won't get logged 
@@ -103,7 +103,7 @@ Fixed bugs:
    Bugzilla Report 51947.
 
  * packagemapper now honors the handleDirSep attribute.
-   Bugzilla Report 51068.
+   Bugzilla Report 51086.
 
  * the attributes of macrodef tasks had their values run through
    property expansion twice.
@@ -148,7 +148,7 @@ Other changes:
  * <delete> and <move> have a new attribute performGCOnFailedDelete
    that may - when set to true - help resolve some problems with
    deleting empty directories on NFS shares.
-   Bugzilla Report 45807.
+   Bugzilla Report 45786.
 
  * <loadfile> and <loadresource> used to log at level INFO to signal a
    property hasn't been set when the resource was empty even if the
@@ -162,7 +162,7 @@ Other changes:
    Bugzilla Report 52096.
 
  * URLResources#isExists has become less noisy.
-   Bugzilla Report 51802.
+   Bugzilla Report 51829.
 
  * The <retry> task has a new optional attribute retryDelay that can
    be used to make the task sleep between retry attempts.
