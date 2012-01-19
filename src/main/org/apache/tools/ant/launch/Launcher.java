@@ -269,7 +269,7 @@ public class Launcher {
 
         setProperty(JAVA_CLASS_PATH, baseClassPath.toString());
 
-        URLClassLoader loader = new URLClassLoader(jars);
+        URLClassLoader loader = new URLClassLoader(jars, Launcher.class.getClassLoader());
         Thread.currentThread().setContextClassLoader(loader);
         Class mainClass = null;
         int exitCode = 0;
