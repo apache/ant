@@ -558,8 +558,8 @@ public class DirectoryScanner
      */
     public static String[] getDefaultExcludes() {
         synchronized (defaultExcludes) {
-        return (String[]) defaultExcludes.toArray(new String[defaultExcludes
-                                                             .size()]);
+            return (String[]) defaultExcludes.toArray(new String[defaultExcludes
+                                                                 .size()]);
         }
     }
 
@@ -575,7 +575,7 @@ public class DirectoryScanner
      */
     public static boolean addDefaultExclude(String s) {
         synchronized (defaultExcludes) {
-        return defaultExcludes.add(s);
+            return defaultExcludes.add(s);
         }
     }
 
@@ -592,7 +592,7 @@ public class DirectoryScanner
      */
     public static boolean removeDefaultExclude(String s) {
         synchronized (defaultExcludes) {
-        return defaultExcludes.remove(s);
+            return defaultExcludes.remove(s);
         }
     }
 
@@ -604,9 +604,9 @@ public class DirectoryScanner
     public static void resetDefaultExcludes() {
         synchronized (defaultExcludes) {
             defaultExcludes.clear();
-        for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
-            defaultExcludes.add(DEFAULTEXCLUDES[i]);
-        }
+            for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
+                defaultExcludes.add(DEFAULTEXCLUDES[i]);
+            }
         }
     }
 
