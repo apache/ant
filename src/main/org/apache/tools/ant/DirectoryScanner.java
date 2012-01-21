@@ -216,7 +216,7 @@ public class DirectoryScanner
      *
      * @see #addDefaultExcludes()
      */
-    private static Set defaultExcludes = new HashSet();
+    private static final Set defaultExcludes = new HashSet();
     static {
         resetDefaultExcludes();
     }
@@ -557,8 +557,10 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static String[] getDefaultExcludes() {
+        synchronized (defaultExcludes) {
         return (String[]) defaultExcludes.toArray(new String[defaultExcludes
                                                              .size()]);
+        }
     }
 
     /**
@@ -572,7 +574,9 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static boolean addDefaultExclude(String s) {
+        synchronized (defaultExcludes) {
         return defaultExcludes.add(s);
+        }
     }
 
     /**
@@ -587,7 +591,9 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static boolean removeDefaultExclude(String s) {
+        synchronized (defaultExcludes) {
         return defaultExcludes.remove(s);
+        }
     }
 
     /**
@@ -596,9 +602,11 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static void resetDefaultExcludes() {
-        defaultExcludes = new HashSet();
+        synchronized (defaultExcludes) {
+            defaultExcludes.clear();
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             defaultExcludes.add(DEFAULTEXCLUDES[i]);
+        }
         }
     }
 
@@ -1739,11 +1747,11 @@ public class DirectoryScanner
     public synchronized void addDefaultExcludes() {
         int excludesLength = excludes == null ? 0 : excludes.length;
         String[] newExcludes;
-        newExcludes = new String[excludesLength + defaultExcludes.size()];
+        String[] defaultExcludesTemp = getDefaultExcludes();
+        newExcludes = new String[excludesLength + defaultExcludesTemp.length];
         if (excludesLength > 0) {
             System.arraycopy(excludes, 0, newExcludes, 0, excludesLength);
         }
-        String[] defaultExcludesTemp = getDefaultExcludes();
         for (int i = 0; i < defaultExcludesTemp.length; i++) {
             newExcludes[i + excludesLength] =
                 defaultExcludesTemp[i].replace('/', File.separatorChar)

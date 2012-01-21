@@ -119,6 +119,9 @@ Fixed bugs:
  * ZipFile didn't work properly for archives using unicode extra
    fields rather than UTF-8 filenames and the EFS-Flag.
 
+ * Access to DirectoryScanner's default excludes wasn't synchronized.
+   BigZilla Report 52188.
+
 Other changes:
 --------------
 
