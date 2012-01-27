@@ -80,6 +80,7 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC18 = "javac1.8";
     private static final String JAVAC17 = "javac1.7";
     private static final String JAVAC16 = "javac1.6";
     private static final String JAVAC15 = "javac1.5";
@@ -149,6 +150,8 @@ public class Javac extends MatchingTask {
             return JAVAC16;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
             return JAVAC17;
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
+            return JAVAC18;
         } else {
             return CLASSIC;
         }
@@ -600,7 +603,7 @@ public class Javac extends MatchingTask {
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * values depend on the compiler, for jdk 1.4 the valid values are
-     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "5", "6" and "7".
+     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "5", "6", "7" and "8".
      * @param target the target VM
      */
     public void setTarget(String target) {
@@ -765,6 +768,7 @@ public class Javac extends MatchingTask {
 
     private String getAltCompilerName(String anImplementation) {
         if (JAVAC17.equalsIgnoreCase(anImplementation)
+                || JAVAC18.equalsIgnoreCase(anImplementation)
                 || JAVAC16.equalsIgnoreCase(anImplementation)
                 || JAVAC15.equalsIgnoreCase(anImplementation)
                 || JAVAC14.equalsIgnoreCase(anImplementation)
@@ -778,6 +782,7 @@ public class Javac extends MatchingTask {
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             String nextSelected = assumedJavaVersion();
             if (JAVAC17.equalsIgnoreCase(nextSelected)
+                    || JAVAC18.equalsIgnoreCase(nextSelected)
                     || JAVAC16.equalsIgnoreCase(nextSelected)
                     || JAVAC15.equalsIgnoreCase(nextSelected)
                     || JAVAC14.equalsIgnoreCase(nextSelected)
@@ -1014,6 +1019,7 @@ public class Javac extends MatchingTask {
     protected boolean isJdkCompiler(String compilerImpl) {
         return MODERN.equals(compilerImpl)
             || CLASSIC.equals(compilerImpl)
+            || JAVAC18.equals(compilerImpl)
             || JAVAC17.equals(compilerImpl)
             || JAVAC16.equals(compilerImpl)
             || JAVAC15.equals(compilerImpl)

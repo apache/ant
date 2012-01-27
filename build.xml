@@ -369,6 +369,7 @@
     <available property="jdk1.5+" classname="java.net.Proxy"/>
     <available property="jdk1.6+" classname="java.net.CookieStore"/>
     <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
+    <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="harmony"
                classname="org.apache.harmony.luni.util.Base64"/>

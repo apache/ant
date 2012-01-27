@@ -348,7 +348,7 @@ public abstract class DefaultCompilerAdapter
             } else {
                 cmd.createArgument().setValue(source);
             }
-        } else if ((assumeJava15() || assumeJava16() || assumeJava17())
+        } else if ((assumeJava15() || assumeJava16() || assumeJava17() || assumeJava18())
                    && attributes.getTarget() != null) {
             String t = attributes.getTarget();
             if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
@@ -360,10 +360,15 @@ public abstract class DefaultCompilerAdapter
                 }
                 setImplicitSourceSwitch((assumeJava15() || assumeJava16())
                                         ? "1.5 in JDK 1.5 and 1.6"
-                                        : "1.7 in JDK 1.7",
+                                        : (assumeJava17()
+                                           ? "1.7 in JDK 1.7"
+                                           : "1.8 in JDK 1.8"),
                                         cmd, t, s);
             } else if (assumeJava17() && (t.equals("1.5") || t.equals("1.6"))) {
                 setImplicitSourceSwitch("1.7 in JDK 1.7", cmd, t, t);
+            } else if (assumeJava18() &&
+                       (t.equals("1.5") || t.equals("1.6") || t.equals("1.7"))) {
+                setImplicitSourceSwitch("1.8 in JDK 1.8", cmd, t, t);
             }
         }
         return cmd;
@@ -635,6 +640,21 @@ public abstract class DefaultCompilerAdapter
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7))
             || ("extJavac".equals(attributes.getCompilerVersion())
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7));
+    }
+
+    /**
+     * Shall we assume JDK 1.8 command line switches?
+     * @return true if JDK 1.8
+     * @since Ant 1.8.3
+     */
+    protected boolean assumeJava18() {
+        return "javac1.8".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8));
     }
 
     /**
