@@ -588,13 +588,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.6.3
      */
     protected boolean assumeJava14() {
-        return "javac1.4".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
+        return assumeJavaXY("javac1.4", JavaEnvUtils.JAVA_1_4);
     }
 
     /**
@@ -603,13 +597,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.6.3
      */
     protected boolean assumeJava15() {
-        return "javac1.5".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
+        return assumeJavaXY("javac1.5", JavaEnvUtils.JAVA_1_5);
     }
 
     /**
@@ -618,13 +606,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.7
      */
     protected boolean assumeJava16() {
-        return "javac1.6".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6));
+        return assumeJavaXY("javac1.6", JavaEnvUtils.JAVA_1_6);
     }
 
     /**
@@ -633,13 +615,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.2
      */
     protected boolean assumeJava17() {
-        return "javac1.7".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7));
+        return assumeJavaXY("javac1.7", JavaEnvUtils.JAVA_1_7);
     }
 
     /**
@@ -648,13 +624,21 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.3
      */
     protected boolean assumeJava18() {
-        return "javac1.8".equals(attributes.getCompilerVersion())
+        return assumeJavaXY("javac1.8", JavaEnvUtils.JAVA_1_8);
+    }
+
+    /**
+     * Shall we assume command line switches for the given version of Java?
+     * @since Ant 1.8.3
+     */
+    private boolean assumeJavaXY(String javacXY, String javaEnvVersionXY) {
+        return javacXY.equals(attributes.getCompilerVersion())
             || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8))
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
             || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8))
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
             || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8));
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY));
     }
 
     /**
