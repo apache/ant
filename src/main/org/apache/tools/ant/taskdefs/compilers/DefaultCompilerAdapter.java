@@ -348,28 +348,16 @@ public abstract class DefaultCompilerAdapter
             } else {
                 cmd.createArgument().setValue(source);
             }
-        } else if ((assumeJava15() || assumeJava16() || assumeJava17() || assumeJava18())
+        } else if (!assumeJava13() && !assumeJava14()
                    && attributes.getTarget() != null) {
             String t = attributes.getTarget();
-            if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
-                || t.equals("1.4")) {
                 String s = t;
                 if (t.equals("1.1") || t.equals("1.2")) {
                     // 1.5.0 doesn't support -source 1.1 or 1.2
                     s = "1.3";
                 }
-                setImplicitSourceSwitch((assumeJava15() || assumeJava16())
-                                        ? "1.5 in JDK 1.5 and 1.6"
-                                        : (assumeJava17()
-                                           ? "1.7 in JDK 1.7"
-                                           : "1.8 in JDK 1.8"),
-                                        cmd, t, s);
-            } else if (assumeJava17() && (t.equals("1.5") || t.equals("1.6") || t.equals("5") || t.equals("6"))) {
-                setImplicitSourceSwitch("1.7 in JDK 1.7", cmd, t, t);
-            } else if (assumeJava18() &&
-                       (t.equals("1.5") || t.equals("1.6") || t.equals("1.7")
-                        || t.equals("5") || t.equals("6") || t.equals("7"))) {
-                setImplicitSourceSwitch("1.8 in JDK 1.8", cmd, t, t);
+            if (mustSetSourceForTarget(t)) {
+                setImplicitSourceSwitch(cmd, t, s);
             }
         }
         return cmd;
@@ -671,12 +659,13 @@ public abstract class DefaultCompilerAdapter
         return assumeJava11() ? null : "-g:none";
     }
 
-    private void setImplicitSourceSwitch(String defaultDetails, Commandline cmd,
+    private void setImplicitSourceSwitch(Commandline cmd,
                                          String target, String source) {
         attributes.log("", Project.MSG_WARN);
         attributes.log("          WARNING", Project.MSG_WARN);
         attributes.log("", Project.MSG_WARN);
-        attributes.log("The -source switch defaults to " + defaultDetails + ".",
+        attributes.log("The -source switch defaults to " + getDefaultSource()
+                       + ".",
                        Project.MSG_WARN);
         attributes.log("If you specify -target " + target
                        + " you now must also specify -source " + source
@@ -688,5 +677,40 @@ public abstract class DefaultCompilerAdapter
         cmd.createArgument().setValue(source);
     }
 
+    /**
+     * A string that describes the default value for -source of the
+     * selected JDK's javac.
+     */
+    private String getDefaultSource() {
+        if (assumeJava15() || assumeJava16()) {
+            return "1.5 in JDK 1.5 and 1.6";
+        }
+        if (assumeJava17()) {
+            return "1.7 in JDK 1.7";
+        }
+        if (assumeJava18()) {
+            return "1.8 in JDK 1.8";
+        }
+        return "";
+    }
+
+    /**
+     * Whether the selected -target is known to be incompatible with
+     * the default -source value of the selected JDK's javac.
+     *
+     * <p>Assumes it will never be called unless the selected JDK is
+     * at least Java 1.5.</p>
+     *
+     * @param t the -target value, must not be null
+     */
+    private boolean mustSetSourceForTarget(String t) {
+        if (t.startsWith("1.")) {
+            t = t.substring(2);
+        }
+        return t.equals("1") || t.equals("2") || t.equals("3") || t.equals("4")
+            || ((t.equals("5") || t.equals("6"))
+                && !assumeJava15() && !assumeJava16())
+            || (t.equals("7") && !assumeJava17());
+    }
 }
 
