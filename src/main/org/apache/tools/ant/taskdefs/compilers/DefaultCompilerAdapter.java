@@ -341,21 +341,11 @@ public abstract class DefaultCompilerAdapter
         if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             String source = attributes.getSource();
-            if (source.equals("1.1") || source.equals("1.2")) {
-                // support for -source 1.1 and -source 1.2 has been
-                // added with JDK 1.4.2 - and isn't present in 1.5.0+
-                cmd.createArgument().setValue("1.3");
-            } else {
-                cmd.createArgument().setValue(source);
-            }
+            cmd.createArgument().setValue(adjustSourceValue(source));
         } else if (!assumeJava13() && !assumeJava14()
                    && attributes.getTarget() != null) {
             String t = attributes.getTarget();
-                String s = t;
-                if (t.equals("1.1") || t.equals("1.2")) {
-                    // 1.5.0 doesn't support -source 1.1 or 1.2
-                    s = "1.3";
-                }
+            String s = adjustSourceValue(t);
             if (mustSetSourceForTarget(t)) {
                 setImplicitSourceSwitch(cmd, t, s);
             }
@@ -711,6 +701,18 @@ public abstract class DefaultCompilerAdapter
             || ((t.equals("5") || t.equals("6"))
                 && !assumeJava15() && !assumeJava16())
             || (t.equals("7") && !assumeJava17());
+    }
+
+
+    /**
+     * Turn the task's attribute for -source into soemthing that is
+     * understood by all javac's after 1.4.
+     *
+     * <p>support for -source 1.1 and -source 1.2 has been added with
+     * JDK 1.4.2 but isn't present in 1.5.0+</p>
+     */
+    private String adjustSourceValue(String source) {
+        return (source.equals("1.1") || source.equals("1.2")) ? "1.3" : source;
     }
 }
 
