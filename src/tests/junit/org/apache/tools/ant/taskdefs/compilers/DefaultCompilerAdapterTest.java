@@ -99,14 +99,12 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource("1.6", "javac1.7",
                    "If you specify -target 1.6 you now must also specify"
                    + " -source 1.6", "1.6");
-        /* FIXME - should be adapted as well
         testSource("5", "javac1.7",
                    "If you specify -target 5 you now must also specify"
                    + " -source 5", "5");
         testSource("6", "javac1.7",
                    "If you specify -target 6 you now must also specify"
                    + " -source 6", "6");
-        */
         testSource(null, "javac1.7", "", "1.7");
         testSource(null, "javac1.7", "", "7");
     }
@@ -122,7 +120,6 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource("1.7", "javac1.8",
                    "If you specify -target 1.7 you now must also specify"
                    + " -source 1.7", "1.7");
-        /* FIXME - should be adapted as well
         testSource("5", "javac1.8",
                    "If you specify -target 5 you now must also specify"
                    + " -source 5", "5");
@@ -132,7 +129,6 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource("7", "javac1.8",
                    "If you specify -target 7 you now must also specify"
                    + " -source 7", "7");
-        */
         testSource(null, "javac1.8", "", "1.8");
         testSource(null, "javac1.8", "", "8");
     }

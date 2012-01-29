@@ -364,10 +364,11 @@ public abstract class DefaultCompilerAdapter
                                            ? "1.7 in JDK 1.7"
                                            : "1.8 in JDK 1.8"),
                                         cmd, t, s);
-            } else if (assumeJava17() && (t.equals("1.5") || t.equals("1.6"))) {
+            } else if (assumeJava17() && (t.equals("1.5") || t.equals("1.6") || t.equals("5") || t.equals("6"))) {
                 setImplicitSourceSwitch("1.7 in JDK 1.7", cmd, t, t);
             } else if (assumeJava18() &&
-                       (t.equals("1.5") || t.equals("1.6") || t.equals("1.7"))) {
+                       (t.equals("1.5") || t.equals("1.6") || t.equals("1.7")
+                        || t.equals("5") || t.equals("6") || t.equals("7"))) {
                 setImplicitSourceSwitch("1.8 in JDK 1.8", cmd, t, t);
             }
         }
