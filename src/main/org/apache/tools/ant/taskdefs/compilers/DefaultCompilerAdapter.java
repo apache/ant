@@ -354,9 +354,9 @@ public abstract class DefaultCompilerAdapter
             if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
                 || t.equals("1.4")) {
                 String s = t;
-                if (t.equals("1.1")) {
-                    // 1.5.0 doesn't support -source 1.1
-                    s = "1.2";
+                if (t.equals("1.1") || t.equals("1.2")) {
+                    // 1.5.0 doesn't support -source 1.1 or 1.2
+                    s = "1.3";
                 }
                 setImplicitSourceSwitch((assumeJava15() || assumeJava16())
                                         ? "1.5 in JDK 1.5 and 1.6"

@@ -138,13 +138,12 @@ public class DefaultCompilerAdapterTest extends TestCase {
     }
 
     private void commonSourceDowngrades(String javaVersion) {
-        // FIXME, should be minimum 1.3 as -source
-        testSource("1.2", javaVersion,
+        testSource("1.3", javaVersion,
                    "If you specify -target 1.1 you now must also specify"
-                   + " -source 1.2", "1.1");
-        testSource("1.2", javaVersion,
+                   + " -source 1.3", "1.1");
+        testSource("1.3", javaVersion,
                    "If you specify -target 1.2 you now must also specify"
-                   + " -source 1.2", "1.2");
+                   + " -source 1.3", "1.2");
         testSource("1.3", javaVersion,
                    "If you specify -target 1.3 you now must also specify"
                    + " -source 1.3", "1.3");
