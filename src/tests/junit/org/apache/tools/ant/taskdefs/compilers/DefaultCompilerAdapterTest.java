@@ -45,6 +45,13 @@ public class DefaultCompilerAdapterTest extends TestCase {
         }
 
         public boolean execute() { return false; }
+
+        /**
+         * public to avoid classloader issues.
+         */
+        public Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
+            return super.setupModernJavacCommandlineSwitches(cmd);
+        }
     }
 
     public void testSourceIsIgnoredForJavac13() {
