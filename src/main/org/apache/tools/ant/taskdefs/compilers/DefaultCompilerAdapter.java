@@ -338,16 +338,15 @@ public abstract class DefaultCompilerAdapter
      */
     protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
-        if (attributes.getSource() != null && !assumeJava13()) {
-            cmd.createArgument().setValue("-source");
-            String source = attributes.getSource();
-            cmd.createArgument().setValue(adjustSourceValue(source));
-        } else if (!assumeJava13() && !assumeJava14()
-                   && attributes.getTarget() != null) {
-            String t = attributes.getTarget();
-            String s = adjustSourceValue(t);
-            if (mustSetSourceForTarget(t)) {
-                setImplicitSourceSwitch(cmd, t, s);
+        if (!assumeJava13()) { // -source added with JDK 1.4
+            final String t = attributes.getTarget();
+            if (attributes.getSource() != null) {
+                cmd.createArgument().setValue("-source");
+                cmd.createArgument()
+                    .setValue(adjustSourceValue(attributes.getSource()));
+
+            } else if (t != null && mustSetSourceForTarget(t)) {
+                setImplicitSourceSwitch(cmd, t, adjustSourceValue(t));
             }
         }
         return cmd;
@@ -694,6 +693,9 @@ public abstract class DefaultCompilerAdapter
      * @param t the -target value, must not be null
      */
     private boolean mustSetSourceForTarget(String t) {
+        if (assumeJava14()) {
+            return false;
+        }
         if (t.startsWith("1.")) {
             t = t.substring(2);
         }
