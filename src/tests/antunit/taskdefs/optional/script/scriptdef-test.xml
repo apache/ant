@@ -35,6 +35,16 @@
     </or>
   </condition>
 
+  <!-- auto doesn't verify the language is supported and selects BSF
+       even if the JavaScriptEngine is not there -->
+  <condition property="script.manager" value="javax">
+    <and>
+      <not>
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
+      </not>
+      <isset property="prereqs-ok"/>
+    </and>
+  </condition>
   <property name="script.manager" value="auto" />
 
   <string id="script.code">
