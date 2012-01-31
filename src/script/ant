@@ -176,10 +176,7 @@ if $rpm_mode && [ -x /usr/bin/build-classpath ] ; then
         *.rpmnew) ;;
         *)
           for dep in `cat "$file"`; do
-            case "$OPT_JAR_LIST" in
-            *"$dep"*) ;;
-            *) OPT_JAR_LIST="$OPT_JAR_LIST${OPT_JAR_LIST:+ }$dep"
-            esac
+            OPT_JAR_LIST="$OPT_JAR_LIST${OPT_JAR_LIST:+ }$dep"
           done
         esac
       fi
