@@ -65,6 +65,7 @@ public class SSHExec extends SSHBase {
     private String inputString = null;   // like <exec>
     private File inputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
+    private boolean usePty = false;
 
     private Resource commandResource = null;
 
@@ -169,6 +170,14 @@ public class SSHExec extends SSHBase {
      */
     public void setOutputproperty(String property) {
         outputProperty = property;
+    }
+
+    /**
+     * Whether a pseudo-tty should be allocated.
+     * @since Apache Ant 1.8.3
+     */
+    public void setUsePty(boolean b) {
+        usePty = b;
     }
 
     /**
@@ -290,6 +299,7 @@ public class SSHExec extends SSHBase {
             if (istream != null) {
                 channel.setInputStream(istream);
             }
+            channel.setPty(usePty);
             channel.connect();
             // wait for it to finish
             thread =

@@ -183,6 +183,9 @@ Other changes:
 
  * Initial support for Java 8.
 
+ * <sshexec> can optionally create a pseudo terminal (like ssh -t)
+   Bugzilla Report 52554.
+
 Changes from Ant 1.8.1 TO Ant 1.8.2
 ===================================
 
