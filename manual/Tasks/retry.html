@@ -40,6 +40,12 @@ its <em>retrycount</em> has been exceeded. If this happens a BuildException is t
     <td valign="top">number of times to attempt to execute the nested task</td>
     <td valign="top" align="center">Yes</td>
   </tr>
+  <tr> 
+    <td valign="top">retrydelay</td>
+    <td valign="top">number of milliseconds to wait between retry attempts
+    task. <em>Since Apache Ant 1.8.3</em></td>
+    <td valign="top" align="center">No, defaults to no delay</td>
+  </tr>
 </table>
 <p>Any valid Ant task may be embedded within the retry task.</p>
 
