@@ -123,7 +123,11 @@ Fixed bugs:
    fields rather than UTF-8 filenames and the EFS-Flag.
 
  * Access to DirectoryScanner's default excludes wasn't synchronized.
-   BigZilla Report 52188.
+   Bugzilla Report 52188.
+
+ * When a Project instance was created by a custom tasks its
+   createTask method didn't work.
+   Bugzilla Report 50788.
 
 Other changes:
 --------------

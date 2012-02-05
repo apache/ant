@@ -855,6 +855,14 @@ public class ComponentHelper  {
             return; // Already processed
         }
         checkedNamespaces.add(uri);
+
+        if (antTypeTable.size() == 0) {
+            // Project instance doesn't know the tasks and types
+            // defined in defaults.properties, likely created by the
+            // user - without those definitions it cannot parse antlib
+            // files as taskdef, typedef and friends are unknown
+            initDefaultDefinitions();
+        }
         Typedef definer = new Typedef();
         definer.setProject(project);
         definer.init();
