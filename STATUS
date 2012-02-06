@@ -2,9 +2,9 @@ Apache Ant Status
 Last modified at 2010-07-20
 
 Release:
-    Current:        1.8.1  (in SVN Tag: ANT_181)
+    Current:        1.8.2  (in SVN Tag: ANT_182)
     Maintenance:    -
-    Development:    1.8.2  (in SVN Branch: trunk)
+    Development:    1.9.0  (in SVN Branch: trunk)
 
 Assets:
     DNS:                ant.apache.org
