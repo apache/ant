@@ -34,7 +34,7 @@
   <target name="test-atleast-fail">
     <property name="version" value="1.8.9" />
     <au:assertFalse>
-      <antversion atleast="1.9.0" />
+      <antversion atleast="1.1000.0" />
     </au:assertFalse>
   </target>
 
