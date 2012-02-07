@@ -30,8 +30,8 @@
     <artifact name="ant" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant" type="source" ext="jar" e:classifier="sources" />
     <artifact name="ant" type="source.asc" ext="jar.asc" e:classifier="sources" />
-    <artifact name="ant" type="javadocs" ext="jar" e:classifier="javadocs" />
-    <artifact name="ant" type="javadocs.asc" ext="jar.asc" e:classifier="javadocs" />
+    <artifact name="ant" type="javadoc" ext="jar" e:classifier="javadoc" />
+    <artifact name="ant" type="javadoc.asc" ext="jar.asc" e:classifier="javadoc" />
     <artifact name="ant-antlr" type="pom" ext="pom"/>
     <artifact name="ant-antlr" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-antlr" type="jar" ext="jar"/>
