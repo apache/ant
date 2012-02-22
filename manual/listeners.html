@@ -116,6 +116,11 @@ listeners and loggers.</p>
     <td width="34%">BuildLogger</td>
   </tr>
   <tr>
+    <td width="33%"><code><a href="#SimpleBigProjectLogger">org.apache.tools.ant.listener.SimpleBigProjectLogger</a></code></td>
+    <td width="33%">Prints the project name for subprojects only, otherwise like NoBannerLogger <em>Since Ant 1.8.1</em></td>
+    <td width="34%">BuildLogger</td>
+  </tr>
+  <tr>
     <td width="33%"><code><a href="#ProfileLogger">org.apache.tools.ant.listener.ProfileLogger</a></code></td>
     <td width="33%">The default logger, with start times, end times and
     durations added for each task and target.</td>
@@ -482,7 +487,35 @@ Exiting project "junit"
 <code>ant  -logger org.apache.tools.ant.listener.BigProjectLogger</code>
 </blockquote>
 
+<h3><a name="SimpleBigProjectLogger">SimpleBigProjectLogger</a></h3>
+<p>Like <code>BigProjectLogger</code>, project-qualified target names are printed,
+useful for big builds with subprojects.
+Otherwise it is as quiet as <code>NoBannerLogger</code>:</p>
+<pre>
+Buildfile: /sources/myapp/build.xml
 
+myapp-lib.compile:
+Created dir: /sources/myapp/lib/build/classes
+Compiling 1 source file to /sources/myapp/lib/build/classes
+
+myapp-lib.jar:
+Building jar: /sources/myapp/lib/build/lib.jar
+
+myapp.compile:
+Created dir: /sources/myapp/build/classes
+Compiling 2 source files to /sources/myapp/build/classes
+
+myapp.jar:
+Building jar: /sources/myapp/build/myapp.jar
+
+BUILD SUCCESSFUL
+Total time: 1 second
+</pre>
+<p><b>since Ant 1.8.1</b></p>
+<p>To use this listener, use the command:</p>
+<blockquote>
+<code>ant -logger org.apache.tools.ant.listener.SimpleBigProjectLogger</code>
+</blockquote>
 
 <h3><a name="ProfileLogger">ProfileLogger</a></h3>
 <p>This logger stores the time needed for executing a task, target and the whole build and prints
