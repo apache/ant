@@ -224,7 +224,7 @@ public class ManifestTest extends BuildFileTest {
         value = mainSection.getAttributeValue(NOT_LONG_NAME);
         assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
         
-        BufferedReader in = new BufferedReader(new FileReader(EXPANDED_MANIFEST));
+        BufferedReader in = new BufferedReader(new FileReader(new File(System.getProperty("root"), EXPANDED_MANIFEST)));
         
         Set set = new HashSet();
         String read = in.readLine();

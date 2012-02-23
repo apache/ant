@@ -79,7 +79,7 @@ public class ReaderInputStreamTest extends TestCase {
         ReaderInputStream r = null;
         FileInputStream utf8 = null;
         try {
-            fin = new InputStreamReader(new FileInputStream("src/tests/antunit/taskdefs/exec/input/iso8859-1"),
+            fin = new InputStreamReader(new FileInputStream(new File(System.getProperty("root"), "src/tests/antunit/taskdefs/exec/input/iso8859-1")),
                                         "ISO8859_1");
             r = new ReaderInputStream(fin, "UTF8");
 
@@ -90,7 +90,7 @@ public class ReaderInputStreamTest extends TestCase {
                 b = r.read();
             }
 
-            utf8 = new FileInputStream("src/tests/antunit/taskdefs/exec/expected/utf-8");
+            utf8 = new FileInputStream(new File(System.getProperty("root"), "src/tests/antunit/taskdefs/exec/expected/utf-8"));
             ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
             b = utf8.read();
             while (b > -1) {
