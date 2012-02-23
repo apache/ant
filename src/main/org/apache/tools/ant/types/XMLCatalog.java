@@ -1072,6 +1072,13 @@ public class XMLCatalog extends DataType
                 // Apache resolver's resolveEntity method to cover
                 // this possibility.
                 //
+                if (base == null) {
+                    try {
+                        base = FILE_UTILS.getFileURL(getProject().getBaseDir()).toString();
+                    } catch (MalformedURLException x) {
+                        throw new TransformerException(x);
+                    }
+                }
                 try {
                     result =
                         (SAXSource) resolve.invoke(resolverImpl,

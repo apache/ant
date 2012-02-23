@@ -7,6 +7,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * External XML catalog resolver failed to use project basedir when given an
+   unmentioned relative path like the internal resolver does.
+   Bugzilla Report 52754.
+
 Other changes:
 --------------
 
