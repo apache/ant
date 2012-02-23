@@ -56,8 +56,7 @@
                 <replaceregex pattern="^\s*\[exec\] some blablablablablablablablablablablabla info message out$" flags="m" />
             </filterchain>
         </loadfile>
-        <echo>${test-out-and-err}</echo>
-        <fail message="output indicates a mixup of out and err">
+        <fail message="output indicates a mixup of out and err: '${test-out-and-err}'">
             <condition>
                 <contains string="${test-out-and-err}" substring="[exec]" />
             </condition>
