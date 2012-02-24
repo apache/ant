@@ -76,7 +76,7 @@
        ===================================================================
   -->
   <property name="build.dir" value="build"/>
-  <property name="bootstrap.dir" value="bootstrap"/>
+  <property name="bootstrap.dir" location="bootstrap"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.lib-src" value="${build.dir}/lib-src"/>
@@ -150,7 +150,7 @@
   <property name="dist.base.source" value="${dist.base}/source"/>
   <property name="dist.base.binaries" value="${dist.base}/binaries"/>
   <property name="dist.base.manual" value="${dist.base}/manual"/>
-  <property name="dist.dir" value="dist"/>
+  <property name="dist.dir" location="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
   <property name="dist.manual" value="${dist.dir}/manual"/>
@@ -1923,6 +1923,17 @@ see ${build.junit.reports} / ${antunit.reports}
 
   <target name="antunit-tests" depends="dump-info,build,test-init"
           if="run.antunit" description="--> run the antunit tests">
+
+    <fail message="AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.">
+      <condition>
+        <not>
+          <or>
+            <equals arg1="${ant.home}" arg2="${bootstrap.dir}"/>
+            <equals arg1="${ant.home}" arg2="${dist.dir}"/>
+          </or>
+        </not>
+      </condition>
+    </fail>
 
     <condition property="antunit.includes" value="${antunit.testcase}"
                else="**/test.xml,**/*-test.xml">
