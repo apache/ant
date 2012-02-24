@@ -60,6 +60,7 @@
   </target>
 
   <target name="testRecreateNewerFileSetup" depends="test4">
+    <sleep seconds="2"/>
     <touch file="jar.xml"/>
   </target>
 
