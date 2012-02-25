@@ -124,7 +124,7 @@ Fixed bugs:
    Bugzilla Report 51086.
 
  * the attributes of macrodef tasks had their values run through
-   property expansion twice.
+   property expansion twice. Still true by default, but can be disabled.
    Bugzilla Report 42046.
 
  * jvc doesn't like it if source file names in argument files are
