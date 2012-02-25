@@ -2,8 +2,8 @@ Apache Ant Status
 Last modified at 2010-07-20
 
 Release:
-    Current:        1.8.2  (in SVN Tag: ANT_182)
-    Maintenance:    -
+    Current:        1.8.3  (in SVN Tag: ANT_183)
+    Maintenance:    1.8.x  (in SVN Branch: ANT_18_BRANCH)
     Development:    1.9.0  (in SVN Branch: trunk)
 
 Assets:
