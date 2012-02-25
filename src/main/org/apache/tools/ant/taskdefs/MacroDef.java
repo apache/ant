@@ -331,6 +331,7 @@ public class MacroDef extends AntlibDefinition  {
         private String name;
         private String defaultValue;
         private String description;
+        private boolean doubleExpanding = true;
 
         /**
          * The name of the attribute.
@@ -384,6 +385,25 @@ public class MacroDef extends AntlibDefinition  {
          */
         public String getDescription() {
             return description;
+        }
+
+        /**
+         * See {@link #isDoubleExpanding} for explanation.
+         * @param doubleExpanding true to expand twice, false for just once
+         * @since Ant 1.8.3
+         */
+        public void setDoubleExpanding(boolean doubleExpanding) {
+            this.doubleExpanding = doubleExpanding;
+        }
+
+        /**
+         * Determines whether {@link RuntimeConfigurable#maybeConfigure(Project, boolean)} will reevaluate this property.
+         * For compatibility reasons (#52621) it will, though for most applications (#42046) it should not.
+         * @return true if expanding twice (the default), false for just once
+         * @since Ant 1.8.3
+         */
+        public boolean isDoubleExpanding() {
+            return doubleExpanding;
         }
 
         /**

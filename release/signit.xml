@@ -29,8 +29,12 @@
         location="${user.home}/.m2/repository/org/bouncycastle/bcpg-jdk12/130/bcpg-jdk12-130.jar"/>
     </classpath>
   </taskdef>
-  <signer secring="${user.home}/AppData/Roaming/gnupg/secring.gpg"
-    pubring="${user.home}/AppData/Roaming/gnupg/pubring.gpg" password="${password}" keyid="${keyid}">
+  <condition property="gpg.dir" value="${user.home}/AppData/Roaming/gnupg">
+    <os family="windows"/>
+  </condition>
+  <property name="gpg.dir" location="${user.home}/.gnupg"/>
+  <signer secring="${gpg.dir}/secring.gpg"
+    pubring="${gpg.dir}/pubring.gpg" password="${password}" keyid="${keyid}">
     <fileset dir="../java-repository">
       <include name="**/*.jar"/>
       <include name="**/*.pom"/>

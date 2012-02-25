@@ -20,7 +20,7 @@
   <resolvers>
     <ibiblio name="public" m2compatible="true"/>
     <url name="nexus">
-      <artifact pattern="${upload.url}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision].[ext]" />
+      <artifact pattern="${upload.url}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
     </url>
   </resolvers>
   <modules>
