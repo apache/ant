@@ -1233,7 +1233,7 @@
       </fileset>
       <mapper type="regexp" from="ant(.*).jar" to="ant\1/${project.version}/ant\1-${project.version}-sources.jar"/>
     </copy>
-    <jar destfile="${java-repository.dir}/ant/${project.version}/ant-${project.version}-javadocs.jar"
+    <jar destfile="${java-repository.dir}/ant/${project.version}/ant-${project.version}-javadoc.jar"
       basedir="${build.javadocs}">
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
@@ -1243,7 +1243,7 @@
     <checksums-mvn>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.jar"/>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}-sources.jar"/>
-      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-javadocs.jar"/>
+      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-javadoc.jar"/>
       <fileset dir="${java-repository.dir}" includes="**/*${project.version}.pom"/>
     </checksums-mvn>
 
