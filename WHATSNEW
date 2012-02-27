@@ -11,6 +11,9 @@ Fixed bugs:
    unmentioned relative path like the internal resolver does.
    Bugzilla Report 52754.
 
+ * Fixed some potential stream leaks.
+   Bugzilla Reports 52738, 52740, 52742.
+
 Other changes:
 --------------
 
