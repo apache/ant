@@ -1708,31 +1708,34 @@ public class Javadoc extends Task {
         }
 
         File tmpList = null;
-        BufferedWriter srcListWriter = null;
-
+        FileWriter wr = null;
         try {
             /**
              * Write sourcefiles and package names to a temporary file
              * if requested.
              */
+            BufferedWriter srcListWriter = null;
             if (useExternalFile) {
                 tmpList = FILE_UTILS.createTempFile("javadoc", "", null, true, true);
                 toExecute.createArgument()
                     .setValue("@" + tmpList.getAbsolutePath());
-                srcListWriter = new BufferedWriter(
-                    new FileWriter(tmpList.getAbsolutePath(),
-                                   true));
+                wr = new FileWriter(tmpList.getAbsolutePath(), true);
+                srcListWriter = new BufferedWriter(wr);
             }
 
             doSourceAndPackageNames(
                 toExecute, packagesToDoc, sourceFilesToDoc,
                 useExternalFile, tmpList, srcListWriter);
+
+            if (useExternalFile) {
+                srcListWriter.flush();
+            }
         } catch (IOException e) {
             tmpList.delete();
             throw new BuildException("Error creating temporary file",
                                      e, getLocation());
         } finally {
-            FileUtils.close(srcListWriter);
+            FileUtils.close(wr);
         }
 
         if (packageList != null) {
