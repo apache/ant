@@ -12,7 +12,7 @@ Fixed bugs:
    Bugzilla Report 52754.
 
  * Fixed some potential stream leaks.
-   Bugzilla Reports 52738, 52740, 52742.
+   Bugzilla Reports 52738, 52740, 52742, 52743.
 
 Other changes:
 --------------

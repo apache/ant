@@ -21,11 +21,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -351,23 +351,16 @@ public class ReplaceRegExp extends Task {
     protected void doReplace(File f, int options)
          throws IOException {
         File temp = FILE_UTILS.createTempFile("replace", ".txt", null, true, true);
-
-        Reader r = null;
-        Writer w = null;
-        BufferedWriter bw = null;
-
         try {
-            if (encoding == null) {
-                r = new FileReader(f);
-                w = new FileWriter(temp);
-            } else {
-                r = new InputStreamReader(new FileInputStream(f), encoding);
-                w = new OutputStreamWriter(new FileOutputStream(temp),
-                                           encoding);
-            }
+            InputStream is = new FileInputStream(f);
+            try {
+                Reader r = encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is);
+                OutputStream os = new FileOutputStream(temp);
+                try {
+                    Writer w = encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os);
 
-            BufferedReader br = new BufferedReader(r);
-            bw = new BufferedWriter(w);
+                    BufferedReader br = new BufferedReader(r);
+                    BufferedWriter bw = new BufferedWriter(w);
 
             boolean changes = false;
 
@@ -462,11 +455,6 @@ public class ReplaceRegExp extends Task {
 
             bw.flush();
 
-            r.close();
-            r = null;
-            w.close();
-            w = null;
-
             if (changes) {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
@@ -483,10 +471,13 @@ public class ReplaceRegExp extends Task {
             } else {
                 log("No change made", Project.MSG_DEBUG);
             }
+                } finally {
+                    os.close();
+                }
+            } finally {
+                is.close();
+            }
         } finally {
-            FileUtils.close(r);
-            FileUtils.close(bw);
-            FileUtils.close(w);
             if (temp != null) {
                 temp.delete();
             }
