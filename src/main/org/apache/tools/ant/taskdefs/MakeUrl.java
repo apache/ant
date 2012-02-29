@@ -75,7 +75,7 @@ public class MakeUrl extends Task {
 
     // error message strings
     /** Missing file */
-    public static final String ERROR_MISSING_FILE = "A source file is missing :";
+    public static final String ERROR_MISSING_FILE = "A source file is missing: ";
     /** No property defined */
     public static final String ERROR_NO_PROPERTY = "No property defined";
     /** No files defined */
