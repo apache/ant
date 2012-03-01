@@ -73,9 +73,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 
 6.  Ensure you have all the external libraries that Ant uses in your
-    lib/optional directory.  In fact NetRexxC/NetRexxR are the only commercial
-    dependencies as of 1.8.0 which are "hard to find". Other dependencies are
-    either provided by JDK 1.5.0 or downloadable using 
+    lib/optional directory.  All dependencies are either provided by
+    JDK 1.5.0 or downloadable using
     ant -f fetch.xml -Ddest=optional.
     To find out whether you have all the libraries you need, execute
     the build with -verbose option and scan for lines beginning with
@@ -114,8 +113,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Before you do that, ensure that the key you use is inside the KEYS
     file in Ant's SVN repository
     <https://svn.apache.org/repos/asf/ant/antlibs/common/trunk/KEYS> -
-    and that you perform a svn update on the KEYS file in
-    /www/www.apache.org/dist/ant/common
+    and that you copy the KEYS file to
+    /www/www.apache.org/dist/ant
 
     Also make sure you have sent the key that you use to a public
     keyserver.
@@ -143,8 +142,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 13. Once the vote has passed, create the release directory,
     something like v1.7.0Beta1, push the release and RELEASE-NOTES files
-    into this directory.  Create a symbolic link named README.html
-    that points to the RELEASE-NOTES.
+    into this directory.  Create a hardlink named README.html
+    that points to the RELEASE-NOTES (or copy over the RELEASE-NOTES file)
 
     The files should go to /www/www.apache.org/dist/ant/ on people.apache.org.
 
@@ -163,10 +162,9 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     If it looks OK, announce it on dev@ant and user@ant. After a few
     days pass and there are no major problems, a wider announcement is
-    made (ant website, main jakarta website, announcements@jakarta.apache.org,
-    etc).
+    made (ant website, announce@apache.org, etc).
 
-    Announce beta releases at freshmeat.net (Stefan Bodewig is the
+    Announce beta releases at freecode.com (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
 
 16. As problems in the beta are discovered, there may be a need for
@@ -220,12 +218,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
        4 hours later, the artefacts will be in the maven central repository.
       
 
-    * remove the symbolic links from /www/www.apache.org/dist/ant.
-
-    * Create proper -current symlinks in /www/www.apache.org/dist/ant/
-
-    * Make sure that the symbolic link README.html points to the new
-      RELEASE-NOTES.
+    * Make README.html points to the new RELEASE-NOTES or is a copy of
+      it.
 
     (*)
 
@@ -243,7 +237,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     * source/bindownload.xml
     * source/manualdownload.xml
 
-    Generate the html files by invoking 'ant docs'
+    Generate the html files by invoking 'ant'
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
      
@@ -268,15 +262,12 @@ Note: This document was updated in the context of releasing Ant 1.7.
       Also identify the webpages to which the announcements must go. ]]
 
     Apache mailing lists that should get the announcements:
-    announcements@jakarta.apache.org, announcements@xml.apache.org,
     announce@apache.org, dev@ant and user@ant.
 
-    Announce release at freshmeat.net
+    Announce release at freecode.com
     (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
-    Announce release in the usenet group comp.lang.java.softwaretools .
-
-24. Add a new release tag to doap_Ant.rdf in Ant's trunk.
+24. Add a new release tag to doap_Ant.rdf in Ant's site.
 
 25. You can now reacquaint yourself with your family and friends.
 
