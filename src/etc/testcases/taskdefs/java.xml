@@ -395,7 +395,6 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     <target name="cleanup">
         <delete failonerror="false">
             <fileset file="${logFile}" />
-            <fileset dir="${tmp}" includes="redirect*" />
         </delete>
     </target>
 
