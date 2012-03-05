@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types;
 
 import java.util.Iterator;
+import org.apache.tools.ant.types.resources.FileProvider;
 
 /**
  * Interface describing a collection of Resources.
@@ -41,8 +42,8 @@ public interface ResourceCollection {
     /**
      * Indicate whether this ResourceCollection is composed entirely of
      * Resources accessible via local filesystem conventions.  If true,
-     * all Resources returned from this ResourceCollection should be
-     * instances of FileResource.
+     * all resources returned from this collection should
+     * respond with a {@link FileProvider} when asked via {@link Resource#as}.
      * @return whether this is a filesystem-only resource collection.
      */
     boolean isFilesystemOnly();
