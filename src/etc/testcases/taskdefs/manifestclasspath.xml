@@ -218,19 +218,21 @@
     </target>
 
   <target name="testSameDrive">
-    <manifestclasspath jarfile="C:/Temp/e.jar"
+    <property name="temp" location="${java.io.tmpdir}"/>
+    <manifestclasspath jarfile="${temp}\e.jar"
                        maxParentLevels="99" property="cp">
       <classpath>
-        <pathelement location="C:/a/b/x.jar"/>
+        <pathelement location="${temp}\..\a\b\x.jar"/>
       </classpath>
     </manifestclasspath>
   </target>
 
   <target name="testDifferentDrive">
-    <manifestclasspath jarfile="C:/Temp/e.jar"
+    <property name="temp" location="${java.io.tmpdir}"/>
+    <manifestclasspath jarfile="${temp}\e.jar"
                        maxParentLevels="99" property="cp">
       <classpath>
-        <pathelement location="D:/a/b/x.jar"/>
+        <pathelement location="D:\a\b\x.jar"/>
       </classpath>
     </manifestclasspath>
   </target>
