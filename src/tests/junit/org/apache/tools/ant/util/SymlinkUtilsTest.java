@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 public class SymlinkUtilsTest extends TestCase {
 
@@ -28,7 +28,7 @@ public class SymlinkUtilsTest extends TestCase {
         SymbolicLinkUtils.getSymbolicLinkUtils();
 
     public void testRootIsNoSymlink() throws IOException {
-        if (File.pathSeparatorChar == ';') {
+        if (Os.isFamily("windows")) {
             return; // test is meaningless on Windows
         }
         assertFalse(SYMLINK_UTILS.isSymbolicLink("/"));
