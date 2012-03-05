@@ -254,8 +254,12 @@ public class JavaTest extends BuildFileTest {
         // write some stuff in the input stream to be catched by the input task
         out.write("foo\n".getBytes());
         out.flush();
-        out.write("bar\n".getBytes());
-        out.flush();
+        try {
+            out.write("bar\n".getBytes());
+            out.flush();
+        } catch (IOException x) {
+            // "Pipe closed" on XP; ignore?
+        }
 
         inputThread.join(2000);
 
