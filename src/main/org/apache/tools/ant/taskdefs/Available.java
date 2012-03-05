@@ -442,17 +442,13 @@ public class Available extends Task implements Condition {
                 loader = getProject().createClassLoader(classpath);
                 loader.setParentFirst(false);
                 loader.addJavaLibraries();
-                if (loader != null) {
-                    try {
-                        loader.findClass(classname);
-                    } catch (SecurityException se) {
-                        // class found but restricted name; this is
-                        // actually the case we're looking for in JDK 1.3+,
-                        // so catch the exception and return
-                        return true;
-                    }
-                } else {
-                    return false;
+                try {
+                    loader.findClass(classname);
+                } catch (SecurityException se) {
+                    // class found but restricted name; this is
+                    // actually the case we're looking for in JDK 1.3+,
+                    // so catch the exception and return
+                    return true;
                 }
             } else if (loader != null) {
                 loader.loadClass(classname);
