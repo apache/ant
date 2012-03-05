@@ -1758,7 +1758,7 @@ see ${build.junit.reports} / ${antunit.reports}
 
   <target name="junit-report" depends="junit-tests,junit-report-only" />
 
-  <target name="junit-report-only" depends="test-init" if="run.junit.report">
+  <target name="junit-report-only" depends="test-init" if="${run.junit.report}">
     <mkdir dir="${build.junit.reports}" />
     <junitreport todir="${build.junit.reports}">
       <fileset dir="${build.junit.xml}">
