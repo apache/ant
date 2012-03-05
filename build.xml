@@ -1929,7 +1929,7 @@ see ${build.junit.reports} / ${antunit.reports}
       </or>
     </condition>
   </target>
-  <target name="-antunit-warn-location" depends="-antunit-check-location" unless="${antunit.recommended.location}">
+  <target name="-antunit-warn-location" depends="-antunit-check-location" if="run.antunit" unless="${antunit.recommended.location}">
       <echo>AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.</echo>
   </target>
   <target name="antunit-tests" depends="dump-info,build,test-init,-antunit-warn-location"
