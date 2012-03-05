@@ -27,7 +27,7 @@ public interface ResourceCollection {
 
     /**
      * Get an Iterator over the contents of this ResourceCollection, whose elements
-     * are <code>org.apache.tools.ant.types.Resource</code> instances.
+     * are {@link Resource} instances.
      * @return an Iterator of Resources.
      */
     Iterator iterator();
