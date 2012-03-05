@@ -186,7 +186,7 @@
 
     <!--redirection testcases don't want to run under junit unless forked-->
     <target name="redirect1">
-        <property name="outfile" location="${tmp}/redirect.out" />
+        <tempfile property="outfile" destdir="${tmp}" prefix="redirect" suffix=".out" deleteonexit="true"/>
 
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
@@ -224,7 +224,7 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="redirect2" depends="redirect1">
-        <property name="outfile" location="${tmp}/redirect.out" />
+        <tempfile property="outfile" destdir="${tmp}" prefix="redirect" suffix=".out" deleteonexit="true"/>
 
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
@@ -265,8 +265,8 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="redirect3">
-        <property name="outfile" location="${tmp}/redirect.out" />
-        <property name="errfile" location="${tmp}/redirect.err" />
+        <tempfile property="outfile" destdir="${tmp}" prefix="redirect" suffix=".out" deleteonexit="true"/>
+        <tempfile property="errfile" destdir="${tmp}" prefix="redirect" suffix=".err" deleteonexit="true"/>
 
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
@@ -303,8 +303,8 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="redirector1">
-        <property name="outfile" location="${tmp}/redirector.out" />
-        <property name="errfile" location="${tmp}/redirector.err" />
+        <tempfile property="outfile" destdir="${tmp}" prefix="redirect" suffix=".out" deleteonexit="true"/>
+        <tempfile property="errfile" destdir="${tmp}" prefix="redirect" suffix=".err" deleteonexit="true"/>
 
         <java taskname="foo" classname="${pipeapp}" fork="true"
               classpath="${tests-classpath.value}">
@@ -338,8 +338,8 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="redirector2" depends="redirector1">
-        <property name="outfile" location="${tmp}/redirector.out" />
-        <property name="errfile" location="${tmp}/redirector.err" />
+        <tempfile property="outfile" destdir="${tmp}" prefix="redirect" suffix=".out" deleteonexit="true"/>
+        <tempfile property="errfile" destdir="${tmp}" prefix="redirect" suffix=".err" deleteonexit="true"/>
 
         <!-- fork here; some VMs can be ill-behaved with files,
             such as W!nd0ws -->
@@ -393,7 +393,7 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     </target>
 
     <target name="cleanup">
-        <delete>
+        <delete failonerror="false">
             <fileset file="${logFile}" />
             <fileset dir="${tmp}" includes="redirect*" />
         </delete>
