@@ -24,7 +24,8 @@
   <macrodef name="expectabsent">
     <attribute name="target" default="${dir}"/>
     <sequential>
-      <fail>
+      <fileset id="detritus" dir="@{target}" erroronmissingdir="false"/>
+      <fail message="${toString:detritus}">
         <condition>
           <available file="@{target}" />
         </condition>
