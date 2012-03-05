@@ -47,7 +47,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <repository>
       <id>dummy</id>
       <name>Dummy to avoid accidental deploys</name>
-      <url></url>
+      <url>http://nowhere.net/</url>
     </repository>
   </distributionManagement>
   <scm>
