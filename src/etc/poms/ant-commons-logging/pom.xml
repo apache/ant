@@ -55,7 +55,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <includes>
-            <include>org/apache/tools/ant/tlistener/CommonsLoggingListener*</include>
+            <include>org/apache/tools/ant/listener/CommonsLoggingListener*</include>
           </includes>
         </configuration>
       </plugin>
