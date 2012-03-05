@@ -352,6 +352,8 @@ public class ReplaceRegExp extends Task {
          throws IOException {
         File temp = FILE_UTILS.createTempFile("replace", ".txt", null, true, true);
         try {
+            boolean changes = false;
+
             InputStream is = new FileInputStream(f);
             try {
                 Reader r = encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is);
@@ -361,8 +363,6 @@ public class ReplaceRegExp extends Task {
 
                     BufferedReader br = new BufferedReader(r);
                     BufferedWriter bw = new BufferedWriter(w);
-
-            boolean changes = false;
 
             log("Replacing pattern '" + regex.getPattern(getProject())
                 + "' with '" + subs.getExpression(getProject())
@@ -455,6 +455,12 @@ public class ReplaceRegExp extends Task {
 
             bw.flush();
 
+                } finally {
+                    os.close();
+                }
+            } finally {
+                is.close();
+            }
             if (changes) {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
@@ -470,12 +476,6 @@ public class ReplaceRegExp extends Task {
                 }
             } else {
                 log("No change made", Project.MSG_DEBUG);
-            }
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
             }
         } finally {
             if (temp != null) {
