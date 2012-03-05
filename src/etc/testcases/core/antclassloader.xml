@@ -61,15 +61,16 @@ package org.example;
 public class Foo {}
 ]]></echo>
       <javac srcdir="${tmp.dir.nonascii}"
-             destdir="${tmp.dir.nonascii}"/>
-      <jar destfile="${tmp.dir}/test.jar">
+             destdir="${tmp.dir.nonascii}" source="1.4"/>
+      <tempfile property="test.jar" destdir="${tmp.dir}" suffix="test" prefix=".jar" deleteonexit="true"/>
+      <jar destfile="${test.jar}">
         <fileset dir="${tmp.dir.nonascii}" includes="**/*.class"/>
       </jar>
     </target>
 
     <target name="signTestJar" depends="prepareGetPackageTest">
       <signjar alias="testonly" keystore="../testkeystore"
-               storepass="apacheant" jar="${tmp.dir}/test.jar"/>
+               storepass="apacheant" jar="${test.jar}"/>
     </target>
 
     <target name="createNonJar">

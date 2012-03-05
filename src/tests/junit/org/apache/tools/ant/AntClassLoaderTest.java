@@ -20,7 +20,9 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.net.URL;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Test case for ant class loader
@@ -107,8 +109,7 @@ public class AntClassLoaderTest extends BuildFileTest {
     public void testGetPackage() throws Exception {
         executeTarget("prepareGetPackageTest");
         Path myPath = new Path(getProject());
-        myPath.setLocation(new File(getProject().getProperty("tmp.dir")
-                                    + "/test.jar"));
+        myPath.setLocation(new File(getProject().getProperty("test.jar")));
         getProject().setUserProperty("build.sysclasspath","ignore");
         loader = getProject().createClassLoader(myPath);
         assertNotNull("should find class", loader.findClass("org.example.Foo"));
@@ -119,21 +120,20 @@ public class AntClassLoaderTest extends BuildFileTest {
     public void testCodeSource() throws Exception {
         executeTarget("prepareGetPackageTest");
         Path myPath = new Path(getProject());
-        myPath.setLocation(new File(getProject().getProperty("tmp.dir")
-                                    + "/test.jar"));
+        File testJar = new File(getProject().getProperty("test.jar"));
+        myPath.setLocation(testJar);
         getProject().setUserProperty("build.sysclasspath","ignore");
         loader = getProject().createClassLoader(myPath);
         Class foo = loader.findClass("org.example.Foo");
-        String codeSourceLocation =
-            foo.getProtectionDomain().getCodeSource().getLocation().toString();
-        assertTrue(codeSourceLocation + " should point to test.jar",
-                   codeSourceLocation.endsWith("test.jar"));
+        URL codeSourceLocation =
+            foo.getProtectionDomain().getCodeSource().getLocation();
+        assertEquals(codeSourceLocation + " should point to test.jar",
+                   FileUtils.getFileUtils().getFileURL(testJar), codeSourceLocation);
     }
 
     public void testSignedJar() throws Exception {
         executeTarget("signTestJar");
-        File jar = new File(getProject().getProperty("tmp.dir")
-                            + "/test.jar");
+        File jar = new File(getProject().getProperty("test.jar"));
 
         Path myPath = new Path(getProject());
         myPath.setLocation(jar);
