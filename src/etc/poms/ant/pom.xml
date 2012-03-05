@@ -89,8 +89,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
           <excludes>
             <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
             <exclude>org/apache/tools/ant/types/resolver/**</exclude>
