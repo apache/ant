@@ -1921,20 +1921,19 @@ see ${build.junit.reports} / ${antunit.reports}
       fork="true"/>
   </target>
 
-  <target name="antunit-tests" depends="dump-info,build,test-init"
+  <target name="-antunit-check-location">
+    <condition property="antunit.recommended.location">
+      <or>
+        <equals arg1="${ant.home}" arg2="${bootstrap.dir}"/>
+        <equals arg1="${ant.home}" arg2="${dist.dir}"/>
+      </or>
+    </condition>
+  </target>
+  <target name="-antunit-warn-location" depends="-antunit-check-location" unless="${antunit.recommended.location}">
+      <echo>AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.</echo>
+  </target>
+  <target name="antunit-tests" depends="dump-info,build,test-init,-antunit-warn-location"
           if="run.antunit" description="--> run the antunit tests">
-
-    <fail message="AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.">
-      <condition>
-        <not>
-          <or>
-            <equals arg1="${ant.home}" arg2="${bootstrap.dir}"/>
-            <equals arg1="${ant.home}" arg2="${dist.dir}"/>
-          </or>
-        </not>
-      </condition>
-    </fail>
-
     <condition property="antunit.includes" value="${antunit.testcase}"
                else="**/test.xml,**/*-test.xml">
       <isset property="antunit.testcase" />
