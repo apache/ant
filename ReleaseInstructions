@@ -140,12 +140,15 @@ Note: This document was updated in the context of releasing Ant 1.7.
     if at least three PMC members have voted +1 and more +1s than -1s
     have been cast.  The vote will run for a week.
 
-13. Once the vote has passed, create the release directory,
-    something like v1.7.0Beta1, push the release and RELEASE-NOTES files
-    into this directory.  Create a hardlink named README.html
-    that points to the RELEASE-NOTES (or copy over the RELEASE-NOTES file)
+13. Once the vote has passed, the distrib artifacts should be published the
+    apache dist. It is managed via svnpubsub so the release should be
+    committed to the subversion repository
+    https://dist.apache.org/repos/dist/release/ant/.
 
-    The files should go to /www/www.apache.org/dist/ant/ on people.apache.org.
+    In order to keep the main dist area of a reasonable size, old releases
+    should be removed. They will disapear from the main dist but will still be
+    available via the archive. To do so, just use the "svn rm" command against
+    the artifacts or folders to remove.
 
 14. Address the available release tags in BugZilla. Create a new tag 1.7.0Beta1.
     If there is a separate main branch, create a 1.8alpha tag.
