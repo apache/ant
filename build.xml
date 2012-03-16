@@ -85,6 +85,7 @@
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="build.junit.xml" location="${build.tests}/xml"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
+  <property name="antunit.tmpdir" location="${build.dir}/antunit/tmp"/>
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
   <property name="antunit.loglevel" value="none"/>
   <property name="build.junit.reports" location="${build.tests}/reports"/>
@@ -1948,6 +1949,9 @@ see ${build.junit.reports} / ${antunit.reports}
                excludes="${antunit.excludes}" />
       <au:plainlistener logLevel="${antunit.loglevel}"/>
       <au:xmllistener todir="${antunit.xml}" />
+      <propertyset>
+        <propertyref name="antunit.tmpdir"/>
+      </propertyset>
     </au:antunit>
   </target>
 

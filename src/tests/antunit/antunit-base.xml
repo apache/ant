@@ -17,15 +17,16 @@
 -->
 <project name="antunit-base">
 
-  <property name="input" location="${java.io.tmpdir}/testinput"/>
-  <property name="output" location="${java.io.tmpdir}/testoutput"/>
-  <property name="resources" location="${java.io.tmpdir}/resources"/>
-  <property name="test.jar" location="${java.io.tmpdir}/test.jar"/>
-  <property name="test1.jar" location="${java.io.tmpdir}/test1.jar"/>
-  <property name="test2.jar" location="${java.io.tmpdir}/test2.jar"/>
-  <property name="test3.jar" location="${java.io.tmpdir}/test3.jar"/>
-  <property name="test4.jar" location="${java.io.tmpdir}/test4.jar"/>
-  <property name="test5.jar" location="${java.io.tmpdir}/test5.jar"/>
+  <property name="antunit.tmpdir" location="${java.io.tmpdir}"/>
+  <property name="input" location="${antunit.tmpdir}/testinput"/>
+  <property name="output" location="${antunit.tmpdir}/testoutput"/>
+  <property name="resources" location="${antunit.tmpdir}/resources"/>
+  <property name="test.jar" location="${antunit.tmpdir}/test.jar"/>
+  <property name="test1.jar" location="${antunit.tmpdir}/test1.jar"/>
+  <property name="test2.jar" location="${antunit.tmpdir}/test2.jar"/>
+  <property name="test3.jar" location="${antunit.tmpdir}/test3.jar"/>
+  <property name="test4.jar" location="${antunit.tmpdir}/test4.jar"/>
+  <property name="test5.jar" location="${antunit.tmpdir}/test5.jar"/>
   <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
   <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
   <available property="jdk1.6+" classname="java.net.CookieStore"/>
