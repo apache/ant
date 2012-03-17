@@ -84,7 +84,7 @@
   <target name="testDeleteWithNoPermissionToRenameTarget"
           depends="init" if="unix">
     <!-- must be outside of ${output} or "base" tearDown will fail -->
-    <property name="chmod.tmp" location="${java.io.tmpdir}/ant-symlink-test"/>
+    <property name="chmod.tmp" location="${output}/../ant-symlink-test"/>
     <mkdir dir="${chmod.tmp}/A"/>
     <chmod perm="555" dir="${chmod.tmp}"/>
     <symlink link="${output}/link" resource="${chmod.tmp}/A"/>

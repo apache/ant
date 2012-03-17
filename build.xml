@@ -84,6 +84,7 @@
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="build.junit.xml" location="${build.tests}/xml"/>
+  <property name="build.junit.tmpdir" location="${build.tests}/tmp"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
   <property name="antunit.tmpdir" location="${build.dir}/antunit/tmp"/>
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
@@ -1664,6 +1665,7 @@ see ${build.junit.reports} / ${antunit.reports}
           <sysproperty key="build.compiler" value="${build.compiler}"/>
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
+          <sysproperty key="java.io.tmpdir" file="${build.junit.tmpdir}"/>
           <classpath>
             <path refid="tests-runtime-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
