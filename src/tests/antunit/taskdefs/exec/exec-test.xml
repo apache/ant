@@ -658,7 +658,7 @@ public class Hello {
 }]]></echo>
       <mkdir dir="${output}"/>
       <javac srcdir="${input}" destdir="${output}"/>
-      <exec executable="java">
+      <exec executable="java" failonerror="true">
         <arg line="-cp ${output} org.example.CallHello"/>
       </exec>
       <au:assertLogContains text="finished"/>

@@ -33,6 +33,11 @@
   <!-- https://issues.apache.org/bugzilla/show_bug.cgi?id=46285 -->
   <target name="testNumericEntities">
     <echo>&#xe4;&#169;</echo>
+    <mkdir dir="${output}"/>
+    <concat destfile="${output}/log">
+      <au:logcontent/>
+    </concat>
+    <au:assertResourceContains value="ä©" resource="${output}/log"/>
     <au:assertLogContains text="ä©"/>
   </target>
 
