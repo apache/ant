@@ -24,7 +24,7 @@
     <copy todir="${output}">
       <archives>
         <zips>
-          <fileset dir="../../../../../build/lib"
+          <fileset dir="${ant.home}/lib"
                    includes="ant-*.jar"/>
         </zips>
       </archives>
@@ -43,7 +43,7 @@
     <copy todir="${output}">
       <archives>
         <zips>
-          <fileset dir="../../../../../build/lib"
+          <fileset dir="${ant.home}/lib"
                    includes="ant-launcher.jar"/>
         </zips>
         <tars>
@@ -63,7 +63,7 @@
     <mkdir dir="${output}"/>
     <archives id="ref">
       <zips>
-        <fileset dir="../../../../../build/lib"
+        <fileset dir="${ant.home}/lib"
                  includes="ant-launcher.jar"/>
       </zips>
     </archives>
