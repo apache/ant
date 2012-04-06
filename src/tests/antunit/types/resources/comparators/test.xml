@@ -22,7 +22,7 @@
   <import file="../../../antunit-base.xml" />
 
   <property name="dirname" value="work" />
-  <property name="dir" location="${dirname}" />
+  <property name="dir" location="${output}/${dirname}" />
   <property name="echolevel" value="debug" />
 
   <target name="tearDown">

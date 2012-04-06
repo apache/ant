@@ -20,10 +20,10 @@
   <import file="../../antunit-base.xml" />
 
   <property name="dirname" value="work" />
-  <property name="dir" location="${dirname}" />
-  <property name="zip" location="${dirname}.zip" />
-  <property name="jar" location="${dirname}.jar" />
-  <property name="file" location="${dirname}/file.txt" />
+  <property name="dir" location="${output}/${dirname}" />
+  <property name="zip" location="${output}/${dirname}.zip" />
+  <property name="jar" location="${output}/${dirname}.jar" />
+  <property name="file" location="${output}/${dirname}/file.txt" />
     
   <condition property="offline">
     <not>
