@@ -206,9 +206,7 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <au:assertTrue>
-      <equals arg1="${sorttp}" arg2="a,a.dir" />
-    </au:assertTrue>
+    <au:assertPropertyEquals name="sorttp" value="a,a.dir" />
   </target>
 
   <target name="testrvtype" depends="setUp">
@@ -270,9 +268,7 @@
       </sort>
       <flattenmapper />
     </pathconvert>
-    <au:assertTrue>
-      <equals arg1="${sortcmp2}" arg2="d,c,f,a,e,b" />
-    </au:assertTrue>
+    <au:assertPropertyEquals name="sortcmp2" value="d,c,f,a,e,b" />
   </target>
 
   <target name="compoundsort" depends="testcompoundsort1,testcompoundsort2" />
