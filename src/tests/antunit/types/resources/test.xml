@@ -170,7 +170,9 @@
           </path>
           <pathelement id="pe" location="${dir}" /> <!-- 1 -->
           <filelist id="fl" dir="${bar}" files="1,2,3,a,b,c" /> <!-- 6 -->
-          <files id="f" includes="${bar}/" /> <!-- 13; 3 overlap fl -->
+          <files id="f"> <!-- 13; 3 overlap fl -->
+            <include name="${bar}/"/>
+          </files>
         </path>
       </resourcecount>
     </au:assertTrue>
@@ -212,10 +214,16 @@
     <au:assertTrue>
       <resourcecount count="4">
         <union>
-          <files includes="${foo.a}/w,${foo.a}/x" /> <!-- 1 -->
+          <files> <!-- 1 -->
+            <include name="${foo.a}/w"/>
+            <include name="${foo.a}/x"/>
+          </files>
           <fileset dir="${foo.a}" includes="x,y" /> <!-- 2; net 1 -->
           <filelist dir="${foo.a}" files="v" /> <!-- 1 -->
-          <files includes="${foo.a}/y,${foo.a}/z" /> <!-- 2; net 1 -->
+          <files>  <!-- 2; net 1 -->
+            <include name="${foo.a}/y"/>
+            <include name="${foo.a}/z"/>
+          </files>
         </union>
       </resourcecount>
     </au:assertTrue>
