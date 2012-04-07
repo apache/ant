@@ -33,11 +33,10 @@
   <!-- https://issues.apache.org/bugzilla/show_bug.cgi?id=46285 -->
   <target name="testNumericEntities">
     <echo>&#xe4;&#169;</echo>
-    <mkdir dir="${output}"/>
-    <concat destfile="${output}/log">
+    <loadresource property="foo">
       <au:logcontent/>
-    </concat>
-    <au:assertResourceContains value="ä©" resource="${output}/log"/>
+    </loadresource>
+    <au:assertPropertyEquals name="foo" value="ä©"/>
     <au:assertLogContains text="ä©"/>
   </target>
 
