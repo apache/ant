@@ -259,7 +259,7 @@
   <target name="testcompoundsort2" depends="setUp">
     <pathconvert property="sortcmp2" pathsep=",">
       <sort>
-        <files includes="${dir}/?" />
+        <fileset dir="${dir}" includes="?"/>
         <rcmp:size />
         <rcmp:content />
         <rcmp:reverse>
