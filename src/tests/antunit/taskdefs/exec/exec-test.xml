@@ -631,7 +631,7 @@
     <target name="testDoesntWaitForChildren"
             description="https://issues.apache.org/bugzilla/show_bug.cgi?id=5003">
       <condition property="java"
-                 value="${java.home}/bin/javaw.exe"
+                 value="${java.home}/bin/java.exe"
                  else="${java.home}/bin/java">
         <os family="dos"/>
       </condition>
@@ -639,15 +639,15 @@
       <pathconvert dirsep="/" property="out">
         <path location="${output}"/>
       </pathconvert>
-      <pathconvert dirsep="/" property="javaP">
-        <path location="${java}"/>
-      </pathconvert>
       <echo file="${input}/org/example/CallHello.java"><![CDATA[
 package org.example;
 public class CallHello {
     public static void main(String[] args)
         throws Exception {
-        Runtime.getRuntime().exec("${javaP} -cp ${out} org.example.Hello");
+        String[] cmd = new String[] {
+            "${java}", "-cp", "${out}", "org.example.Hello"
+        };
+        Runtime.getRuntime().exec(cmd);
         Thread.sleep(1 * 1000);
         System.out.println("finished");
     }
