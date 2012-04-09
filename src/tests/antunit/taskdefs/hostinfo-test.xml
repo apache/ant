@@ -67,6 +67,7 @@
 
     <target name="testApacheNoPrefix" depends="setUp">
       <hostinfo host="${apache-hostname}"/>
+      <au:assertEquals expected="${apache-realhost}" actual="${NAME}"/>
       <au:assertTrue>
         <or>
           <equals arg1="${apache-realhost}" arg2="${NAME}"/>
