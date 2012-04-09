@@ -639,13 +639,16 @@
       <pathconvert dirsep="/" property="out">
         <path location="${output}"/>
       </pathconvert>
+      <pathconvert dirsep="/" property="javaP">
+        <path location="${java}"/>
+      </pathconvert>
       <echo file="${input}/org/example/CallHello.java"><![CDATA[
 package org.example;
 public class CallHello {
     public static void main(String[] args)
         throws Exception {
         String[] cmd = new String[] {
-            "${java}", "-cp", "${out}", "org.example.Hello"
+            "${javaP}", "-cp", "${out}", "org.example.Hello"
         };
         Runtime.getRuntime().exec(cmd);
         Thread.sleep(1 * 1000);
@@ -667,7 +670,9 @@ public class Hello {
       <mkdir dir="${output}"/>
       <javac srcdir="${input}" destdir="${output}"/>
       <exec executable="${java}" failonerror="true">
-        <arg line="-cp ${output} org.example.CallHello"/>
+        <arg value="-cp"/>
+        <arg value="${output}"/>
+        <arg value="org.example.CallHello"/>
       </exec>
       <au:assertLogContains text="finished"/>
       <au:assertLogDoesntContain text="Hello 20"/>
