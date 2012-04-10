@@ -30,6 +30,7 @@
   <property name="apache-hostname" value="www.apache.org" />
   <property name="apache-domain" value="apache.org" />
   <property name="apache-realhost" value="eos" />
+  <property name="apache-realhost.alt" value="aurora-2012" />
   <property name="apache-ip4" value="140.211.11.131" />
     
   <property name="apache-realhost.gump" value="www" />
@@ -53,6 +54,7 @@
       <au:assertTrue>
         <or>
           <equals arg1="${apache-realhost}" arg2="${apache.NAME}"/>
+          <equals arg1="${apache-realhost.alt}" arg2="${apache.NAME}"/>
           <equals arg1="${apache-realhost.gump}" arg2="${apache.NAME}"/>
         </or>
       </au:assertTrue>
@@ -67,10 +69,10 @@
 
     <target name="testApacheNoPrefix" depends="setUp">
       <hostinfo host="${apache-hostname}"/>
-      <au:assertEquals expected="${apache-realhost}" actual="${NAME}"/>
       <au:assertTrue>
         <or>
           <equals arg1="${apache-realhost}" arg2="${NAME}"/>
+          <equals arg1="${apache-realhost.alt}" arg2="${NAME}"/>
           <equals arg1="${apache-realhost.gump}" arg2="${NAME}"/>
         </or>
       </au:assertTrue>
