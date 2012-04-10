@@ -32,7 +32,8 @@
   <property name="apache-realhost" value="eos" />
   <property name="apache-realhost.alt" value="aurora-2012" />
   <property name="apache-ip4" value="140.211.11.131" />
-    
+  <property name="apache-ip4.alt" value="192.87.106.229"/>
+
   <property name="apache-realhost.gump" value="www" />
   <property name="apache-domain.gump" value="apache.org" />
 
@@ -64,7 +65,12 @@
           <equals arg1="${apache-domain.gump}" arg2="${apache.DOMAIN}"/>
         </or>
       </au:assertTrue>
-      <au:assertEquals expected="${apache-ip4}" actual="${apache.ADDR4}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-ip4}" arg2="${apache.ADDR4}"/>
+          <equals arg1="${apache-ip4.alt}" arg2="${apache.ADDR4}"/>
+        </or>
+      </au:assertTrue>
     </target>
 
     <target name="testApacheNoPrefix" depends="setUp">
@@ -82,7 +88,12 @@
           <equals arg1="${apache-domain.gump}" arg2="${DOMAIN}"/>
         </or>
       </au:assertTrue>
-      <au:assertEquals expected="${apache-ip4}" actual="${ADDR4}"/>
+      <au:assertTrue>
+        <or>
+          <equals arg1="${apache-ip4}" arg2="${ADDR4}"/>
+          <equals arg1="${apache-ip4.alt}" arg2="${ADDR4}"/>
+        </or>
+      </au:assertTrue>
     </target>
 
     <target name="testReverse" depends="setUp">
