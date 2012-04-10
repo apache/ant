@@ -71,6 +71,7 @@ foo=bar
       </javaresource>
     </close>
     <delete file="${test.jar}" quiet="true" deleteonexit="true"/>
-    <antcall target="antunit-base.tearDown"/>
+    <!-- Calling antunit-base.tearDown sometimes causes ISEs in <import> in Ant-Build-Matrix: -->
+    <delete dir="${input}"/>
   </target>
 </project>
