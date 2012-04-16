@@ -104,8 +104,8 @@
   <property name="chmod.maxparallel" value="250"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
-  <property name="javac.target" value="1.4"/>
-  <property name="javac.source" value="1.4"/>
+  <property name="javac.target" value="1.5"/>
+  <property name="javac.source" value="1.5"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
@@ -172,14 +172,6 @@
          files that have dependencies that are not available
        ===================================================================
   -->
-  <!-- depends on JDK version -->
-  <selector id="needs.jdk1.5+">
-    <or>
-      <filename name="${taskdefs.package}/AptTest*"/>
-      <filename name="${util.package}/java15/"/>
-      <filename name="${ant.package}/loader/*5*"/>
-    </or>
-  </selector>
 
   <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,
        but not all of them -->
@@ -368,7 +360,6 @@
       </not>
     </condition>
     <property name="ignoresystemclasses" value="false"/>
-    <available property="jdk1.5+" classname="java.net.Proxy"/>
     <available property="jdk1.6+" classname="java.net.CookieStore"/>
     <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
     <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
@@ -390,15 +381,9 @@
     <available property="junit.present"
       classname="junit.framework.TestCase"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <condition property="junit4.present">
-      <and>
-        <!-- Need JDK 5+ to compile since junit-4*.jar uses new bytecode format -->
-        <available classname="java.net.Proxy"/>
-        <available
-          classname="org.junit.Test"
-          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-      </and>
-    </condition>
+    <available property="junit4.present"
+      classname="org.junit.Test"
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="antunit.present"
       classname="org.apache.ant.antunit.AntUnit"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
@@ -574,11 +559,10 @@
       <selector id="conditional-patterns">
         <not>
           <or>
-            <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
 
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
-            <selector refid="needs.junit" unless="junit.present"/>
+            <selector refid="needs.junit" unless="junit.present"/> <!-- XXX should perhaps use -source 1.4? -->
             <selector refid="needs.junit4" unless="junit4.present"/>
             <selector refid="needs.apache-regexp"
               unless="apache.regexp.present"/>
@@ -600,8 +584,6 @@
             <selector refid="needs.xmlschema" unless="xmlschema.present"/>
             <selector refid="needs.apache-xalan2"
                       unless="recent.xalan2.present"/>
-            <!-- Java 1.4's built-in Xalan is first on the classpath -->
-            <selector refid="needs.apache-xalan2" unless="jdk1.5+"/>
           </or>
         </not>
       </selector>
@@ -943,7 +925,7 @@
     </antcall>
   </target>
 
-  <target name="dist_javadocs" depends="javadocs" if="jdk1.5+">
+  <target name="dist_javadocs" depends="javadocs">
     <mkdir dir="${dist.javadocs}"/>
     <copy todir="${dist.javadocs}" overwrite="true">
       <fileset dir="${build.javadocs}"/>
@@ -1449,13 +1431,8 @@
     </uptodate>
   </target>
 
-  <target name="javadocs" depends="prepare, javadoc_check, check_for_optional_packages, -javadocs.do, -javadocs.dont"
-    description="--> creates the API documentation"/>
-    
-  <target name="-javadocs.dont" unless="jdk1.5+">
-    <echo>Javadoc creation of Ant's API does not work with JDK 1.4. Please use a newer one.</echo>
-  </target>
-  <target name="-javadocs.do" if="jdk1.5+" unless="javadoc.notrequired">
+  <target name="javadocs" depends="prepare, javadoc_check, check_for_optional_packages"
+    description="--> creates the API documentation" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
       maxmemory="1000M"	
