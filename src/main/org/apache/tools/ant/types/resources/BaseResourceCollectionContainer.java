@@ -37,8 +37,8 @@ import org.apache.tools.ant.types.ResourceCollection;
  */
 public abstract class BaseResourceCollectionContainer
         extends DataType implements ResourceCollection, Cloneable {
-    private List rc = new ArrayList();
-    private Collection coll = null;
+    private List<ResourceCollection> rc = new ArrayList<ResourceCollection>();
+    private Collection<Resource> coll = null;
     private boolean cache = true;
 
     /**
@@ -134,7 +134,7 @@ public abstract class BaseResourceCollectionContainer
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
-    public final synchronized Iterator iterator() {
+    public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((BaseResourceCollectionContainer) getCheckedRef()).iterator();
         }
@@ -211,7 +211,7 @@ public abstract class BaseResourceCollectionContainer
      * Get the nested ResourceCollections.
      * @return List.
      */
-    public final synchronized List getResourceCollections() {
+    public final synchronized List<ResourceCollection> getResourceCollections() {
         dieOnCircularReference();
         return Collections.unmodifiableList(rc);
     }
@@ -220,7 +220,7 @@ public abstract class BaseResourceCollectionContainer
      * Template method for subclasses to return a Collection object of Resources.
      * @return Collection.
      */
-    protected abstract Collection getCollection();
+    protected abstract Collection<Resource> getCollection();
 
     /**
      * Implement clone.  The set of nested resource
@@ -260,7 +260,7 @@ public abstract class BaseResourceCollectionContainer
         return sb.toString();
     }
 
-    private synchronized Collection cacheCollection() {
+    private synchronized Collection<Resource> cacheCollection() {
         if (coll == null || !isCache()) {
             coll = getCollection();
         }

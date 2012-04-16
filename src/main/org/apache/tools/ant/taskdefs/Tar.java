@@ -568,11 +568,9 @@ public class Tar extends MatchingTask {
         } else if (rc.isFilesystemOnly()) {
             HashSet basedirs = new HashSet();
             HashMap basedirToFilesMap = new HashMap();
-            Iterator iter = rc.iterator();
-            while (iter.hasNext()) {
-                Resource res = (Resource) iter.next();
+            for (Resource res : rc) {
                 FileResource r = ResourceUtils
-                    .asFileResource((FileProvider) res.as(FileProvider.class));
+                    .asFileResource(res.as(FileProvider.class));
                 File base = r.getBaseDir();
                 if (base == null) {
                     base = Copy.NULL_FILE_PLACEHOLDER;
@@ -589,7 +587,7 @@ public class Tar extends MatchingTask {
                     files.add(r.getName());
                 }
             }
-            iter = basedirs.iterator();
+            Iterator iter = basedirs.iterator();
             while (iter.hasNext()) {
                 File base = (File) iter.next();
                 Vector f = (Vector) basedirToFilesMap.get(base);
@@ -599,9 +597,9 @@ public class Tar extends MatchingTask {
                           files);
             }
         } else { // non-file resources
-            Iterator iter = rc.iterator();
+            Iterator<Resource> iter = rc.iterator();
             while (upToDate && iter.hasNext()) {
-                Resource r = (Resource) iter.next();
+                Resource r = iter.next();
                 upToDate = archiveIsUpToDate(r);
             }
         }
@@ -667,16 +665,12 @@ public class Tar extends MatchingTask {
                 tarFile(f, tOut, name, tfs);
             }
         } else if (rc.isFilesystemOnly()) {
-            Iterator iter = rc.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
-                File f = ((FileProvider) r.as(FileProvider.class)).getFile();
+            for (Resource r : rc) {
+                File f = r.as(FileProvider.class).getFile();
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources
-            Iterator iter = rc.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
+            for (Resource r : rc) {
                 tarResource(r, tOut, r.getName(), tfs);
             }
         }

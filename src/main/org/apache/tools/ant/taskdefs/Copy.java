@@ -517,9 +517,7 @@ public class Copy extends Task {
                                    "Only FileSystem resources are supported.");
                     }
 
-                    Iterator resources = rc.iterator();
-                    while (resources.hasNext()) {
-                        Resource r = (Resource) resources.next();
+                    for (Resource r : rc) {
                         if (!r.isExists()) {
                             String message = "Warning: Could not find resource "
                                 + r.toLongString() + " to copy.";
@@ -535,7 +533,7 @@ public class Copy extends Task {
 
                         File baseDir = NULL_FILE_PLACEHOLDER;
                         String name = r.getName();
-                        FileProvider fp = (FileProvider) r.as(FileProvider.class);
+                        FileProvider fp = r.as(FileProvider.class);
                         if (fp != null) {
                             FileResource fr = ResourceUtils.asFileResource(fp);
                             baseDir = getKeyFile(fr.getBaseDir());
@@ -702,8 +700,8 @@ public class Copy extends Task {
                 if (rc.size() == 0) {
                     throw new BuildException(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE);
                 } else if (rc.size() == 1) {
-                    Resource res = (Resource) rc.iterator().next();
-                    FileProvider r = (FileProvider) res.as(FileProvider.class);
+                    Resource res = rc.iterator().next();
+                    FileProvider r = res.as(FileProvider.class);
                     if (file == null) {
                         if (r != null) {
                             file = r.getFile();

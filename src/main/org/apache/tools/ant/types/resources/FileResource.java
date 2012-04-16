@@ -262,27 +262,24 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return a negative integer, zero, or a positive integer as this FileResource
      *         is less than, equal to, or greater than the specified Resource.
      */
-    public int compareTo(Object another) {
+    public int compareTo(Resource another) {
         if (isReference()) {
-            return ((Comparable) getCheckedRef()).compareTo(another);
+            return ((Resource) getCheckedRef()).compareTo(another);
         }
         if (this.equals(another)) {
             return 0;
         }
-        if (another instanceof Resource) {
-            Resource r = (Resource) another;
-            FileProvider otherFP = (FileProvider) r.as(FileProvider.class);
-            if (otherFP != null) {
-                File f = getFile();
-                if (f == null) {
-                    return -1;
-                }
-                File of = otherFP.getFile();
-                if (of == null) {
-                    return 1;
-                }
-                return f.compareTo(of);
+        FileProvider otherFP = another.as(FileProvider.class);
+        if (otherFP != null) {
+            File f = getFile();
+            if (f == null) {
+                return -1;
             }
+            File of = otherFP.getFile();
+            if (of == null) {
+                return 1;
+            }
+            return f.compareTo(of);
         }
         return super.compareTo(another);
     }

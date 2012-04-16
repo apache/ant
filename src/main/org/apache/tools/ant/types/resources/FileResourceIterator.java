@@ -22,12 +22,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * Iterator of FileResources from filenames.
  * @since Ant 1.7
  */
-public class FileResourceIterator implements Iterator {
+public class FileResourceIterator implements Iterator<Resource> {
     private Project project;
     private File basedir;
     private String[] files;
@@ -121,7 +122,7 @@ public class FileResourceIterator implements Iterator {
      * Get the next element from this FileResourceIterator.
      * @return the next Object.
      */
-    public Object next() {
+    public Resource next() {
         return nextResource();
     }
 

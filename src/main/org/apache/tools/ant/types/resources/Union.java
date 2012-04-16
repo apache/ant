@@ -113,7 +113,7 @@ public class Union extends BaseResourceCollectionContainer {
      *        should contain Strings instead of Resources.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection(boolean asString) {
+    protected Collection getCollection(boolean asString) { // XXX untypable
         List rc = getResourceCollections();
         if (rc.isEmpty()) {
             return Collections.EMPTY_LIST;

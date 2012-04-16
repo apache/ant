@@ -126,7 +126,7 @@ public abstract class ArchiveFileSet extends FileSet {
             throw new BuildException("only single argument resource collections"
                                      + " are supported as archives");
         }
-        setSrcResource((Resource) a.iterator().next());
+        setSrcResource(a.iterator().next());
     }
 
     /**
@@ -188,7 +188,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         dieOnCircularReference();
         if (src != null) {
-            FileProvider fp = (FileProvider) src.as(FileProvider.class);
+            FileProvider fp = src.as(FileProvider.class);
             if (fp != null) {
                 return fp.getFile();
             }
@@ -308,7 +308,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return Iterator of Resources.
      * @since Ant 1.7
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((ResourceCollection) (getRef(getProject()))).iterator();
         }

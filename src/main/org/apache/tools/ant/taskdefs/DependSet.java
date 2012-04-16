@@ -101,7 +101,7 @@ public class DependSet extends MatchingTask {
         private HideMissingBasedir(FileSet fs) {
             this.fs = fs;
         }
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             return basedirExists() ? fs.iterator() : Resources.EMPTY_ITERATOR;
         }
         public int size() {
@@ -252,20 +252,20 @@ public class DependSet extends MatchingTask {
         Restrict r = new Restrict();
         r.add(rsel);
         r.add(rc);
-        for (Iterator i = r.iterator(); i.hasNext();) {
-            log("Warning: " + i.next() + " modified in the future.", Project.MSG_WARN);
+        for (Resource res : r) {
+            log("Warning: " + res + " modified in the future.", Project.MSG_WARN);
         }
     }
 
     private Resource getXest(ResourceCollection rc, ResourceComparator c) {
-        Iterator i = rc.iterator();
+        Iterator<Resource> i = rc.iterator();
         if (!i.hasNext()) {
             return null;
 
         }
-        Resource xest = (Resource) i.next();
+        Resource xest = i.next();
         while (i.hasNext()) {
-            Resource next = (Resource) i.next();
+            Resource next = i.next();
             if (c.compare(xest, next) < 0) {
                 xest = next;
             }
@@ -289,8 +289,7 @@ public class DependSet extends MatchingTask {
 
     private void logMissing(ResourceCollection missing, String what) {
         if (verbose) {
-            for (Iterator i = missing.iterator(); i.hasNext(); ) {
-                Resource r = (Resource) i.next();
+            for (Resource r : missing) {
                 log("Expected " + what + " " + r.toLongString()
                     + " is missing.");
             }

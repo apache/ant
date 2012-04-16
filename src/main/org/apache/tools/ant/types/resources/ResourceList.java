@@ -112,7 +112,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
-    public final synchronized Iterator iterator() {
+    public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((ResourceList) getCheckedRef()).iterator();
         }
@@ -175,8 +175,8 @@ public class ResourceList extends DataType implements ResourceCollection {
             dieOnCircularReference();
             for (Iterator iter = textDocuments.iterator(); iter.hasNext(); ) {
                 ResourceCollection rc = (ResourceCollection) iter.next();
-                for (Iterator r = rc.iterator(); r.hasNext(); ) {
-                    cachedResources.add(read((Resource) r.next()));
+                for (Resource r : rc) {
+                    cachedResources.add(read(r));
                 }
             }
             cached = true;

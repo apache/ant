@@ -541,10 +541,9 @@ public class Replace extends MatchingTask {
             }
 
             if (resources != null) {
-                for (Iterator i = resources.iterator(); i.hasNext(); ) {
+                for (Resource r : resources) {
                     FileProvider fp =
-                        (FileProvider) ((Resource) i.next())
-                        .as(FileProvider.class);
+                    r.as(FileProvider.class);
                     processFile(fp.getFile());
                 }
             }

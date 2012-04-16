@@ -1077,7 +1077,7 @@ public class Zip extends MatchingTask {
                 continue;
             }
             File base = null;
-            FileProvider fp = (FileProvider) resources[i].as(FileProvider.class);
+            FileProvider fp = resources[i].as(FileProvider.class);
             if (fp != null) {
                 base = ResourceUtils.asFileResource(fp).getBaseDir();
             }
@@ -1481,7 +1481,7 @@ public class Zip extends MatchingTask {
 
             for (int j = 0; j < initialResources[i].length; j++) {
                 FileProvider fp =
-                    (FileProvider) initialResources[i][j].as(FileProvider.class);
+                    initialResources[i][j].as(FileProvider.class);
                 if (fp != null && zipFile.equals(fp.getFile())) {
                     throw new BuildException("A zip file cannot include "
                                              + "itself", getLocation());
@@ -1585,11 +1585,9 @@ public class Zip extends MatchingTask {
     protected Resource[][] grabNonFileSetResources(ResourceCollection[] rcs) {
         Resource[][] result = new Resource[rcs.length][];
         for (int i = 0; i < rcs.length; i++) {
-            Iterator iter = rcs[i].iterator();
             ArrayList dirs = new ArrayList();
             ArrayList files = new ArrayList();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
+            for (Resource r : rcs[i]) {
                 if (r.isExists()) {
                     if (r.isDirectory()) {
                         dirs.add(r);

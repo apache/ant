@@ -267,11 +267,11 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     }
 
     private String resourceToURI(Resource resource) {
-        FileProvider fp = (FileProvider) resource.as(FileProvider.class);
+        FileProvider fp = resource.as(FileProvider.class);
         if (fp != null) {
             return FILE_UTILS.toURI(fp.getFile().getAbsolutePath());
         }
-        URLProvider up = (URLProvider) resource.as(URLProvider.class);
+        URLProvider up = resource.as(URLProvider.class);
         if (up != null) {
             URL u = up.getURL();
             return String.valueOf(u);

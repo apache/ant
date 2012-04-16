@@ -159,8 +159,8 @@ public class ImportTask extends Task {
         if (fromFileAttribute != null) {
             resources.add(fromFileAttribute);
         }
-        for (Iterator i = resourcesToImport.iterator(); i.hasNext(); ) {
-            importResource(helper, (Resource) i.next());
+        for (Resource r : resourcesToImport) {
+            importResource(helper, r);
         }
     }
 
@@ -184,7 +184,7 @@ public class ImportTask extends Task {
         }
 
         File importedFile = null;
-        FileProvider fp = (FileProvider) importedResource.as(FileProvider.class);
+        FileProvider fp = importedResource.as(FileProvider.class);
         if (fp != null) {
             importedFile = fp.getFile();
         }

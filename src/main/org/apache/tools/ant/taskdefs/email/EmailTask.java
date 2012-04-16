@@ -531,11 +531,8 @@ public class EmailTask extends Task {
             // identify which files should be attached
             Vector files = new Vector();
             if (attachments != null) {
-                Iterator iter = attachments.iterator();
-
-                while (iter.hasNext()) {
-                    Resource r = (Resource) iter.next();
-                    files.addElement(((FileProvider) r.as(FileProvider.class))
+                for (Resource r : attachments) {
+                    files.addElement(r.as(FileProvider.class)
                                      .getFile());
                 }
             }

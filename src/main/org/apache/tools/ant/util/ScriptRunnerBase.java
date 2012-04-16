@@ -249,9 +249,7 @@ public abstract class ScriptRunnerBase {
      * @throws BuildException if a resource cannot be read
      */
     public void loadResources(ResourceCollection collection) {
-        Iterator resources = collection.iterator();
-        while (resources.hasNext()) {
-            Resource resource = (Resource) resources.next();
+        for (Resource resource : collection) {
             loadResource(resource);
         }
     }

@@ -96,7 +96,7 @@ public class Restrict
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public final synchronized Iterator iterator() {
+    public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((Restrict) getCheckedRef()).iterator();
         }

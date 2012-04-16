@@ -39,7 +39,7 @@ public class LazyResourceCollectionTest extends TestCase {
             return resources.size();
         }
 
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             StringResourceIterator it = new StringResourceIterator();
             createdIterators.add(it);
             return it;
@@ -75,7 +75,7 @@ public class LazyResourceCollectionTest extends TestCase {
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
         lazyCollection.add(collectionTest);
 
-        Iterator it = lazyCollection.iterator();
+        Iterator<Resource> it = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
         StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators
                 .get(0);
@@ -120,9 +120,9 @@ public class LazyResourceCollectionTest extends TestCase {
         lazyCollection.add(collectionTest);
 
         assertTrue(lazyCollection.isCache());
-        Iterator it1 = lazyCollection.iterator();
+        Iterator<Resource> it1 = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
-        Iterator it2 = lazyCollection.iterator();
+        Iterator<Resource> it2 = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
 
         StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators

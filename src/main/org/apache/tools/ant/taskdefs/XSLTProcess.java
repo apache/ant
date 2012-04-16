@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -277,7 +276,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             handleError("The style element must be specified with exactly one"
                         + " nested resource.");
         } else {
-            setXslResource((Resource) rc.iterator().next());
+            setXslResource(rc.iterator().next());
         }
     }
 
@@ -749,15 +748,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     private void processResources(Resource stylesheet) {
-        Iterator iter = resources.iterator();
-        while (iter.hasNext()) {
-            Resource r = (Resource) iter.next();
+        for (Resource r : resources) {
             if (!r.isExists()) {
                 continue;
             }
             File base = baseDir;
             String name = r.getName();
-            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            FileProvider fp = r.as(FileProvider.class);
             if (fp != null) {
                 FileResource f = ResourceUtils.asFileResource(fp);
                 base = f.getBaseDir();
@@ -1173,7 +1170,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 // a resource, but we can set it as a file. So,
                 // we make an attempt to get it as a file
                 FileProvider fp =
-                    (FileProvider) stylesheet.as(FileProvider.class);
+                    stylesheet.as(FileProvider.class);
                 if (fp != null) {
                     liaison.setStylesheet(fp.getFile());
                 } else {

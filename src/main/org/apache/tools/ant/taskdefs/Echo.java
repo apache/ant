@@ -103,7 +103,7 @@ public class Echo extends Task {
             throw new BuildException("Cannot set > 1 output target");
         }
         this.output = output;
-        FileProvider fp = (FileProvider) output.as(FileProvider.class);
+        FileProvider fp = output.as(FileProvider.class);
         this.file = fp != null ? fp.getFile() : null;
     }
 

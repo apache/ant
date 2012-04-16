@@ -296,10 +296,8 @@ public class Touch extends Task {
             return;
         }
         // deal with the resource collections
-        Iterator iter = resources.iterator();
-        while (iter.hasNext()) {
-            Resource r = (Resource) iter.next();
-            Touchable t = (Touchable) r.as(Touchable.class);
+        for (Resource r : resources) {
+            Touchable t = r.as(Touchable.class);
             if (t == null) {
                 throw new BuildException("Can't touch " + r);
             }
@@ -341,12 +339,12 @@ public class Touch extends Task {
 
     private void touch(Resource r, long defaultTimestamp) {
         if (fileNameMapper == null) {
-            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            FileProvider fp = r.as(FileProvider.class);
             if (fp != null) {
                 // use this to create file and deal with non-writable files
                 touch(fp.getFile(), defaultTimestamp);
             } else {
-                ((Touchable) r.as(Touchable.class)).touch(defaultTimestamp);
+                r.as(Touchable.class).touch(defaultTimestamp);
             }
         } else {
             String[] mapped = fileNameMapper.mapFileName(r.getName());

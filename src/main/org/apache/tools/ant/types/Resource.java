@@ -36,7 +36,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
  * @since Ant 1.5.2
  * @see org.apache.tools.ant.types.resources.Touchable
  */
-public class Resource extends DataType implements Cloneable, Comparable, ResourceCollection {
+public class Resource extends DataType implements Comparable<Resource>, ResourceCollection {
 
     /** Constant unknown size */
     public static final long UNKNOWN_SIZE = -1;
@@ -270,13 +270,9 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
      *         is less than, equal to, or greater than the specified Resource.
      * @since Ant 1.6
      */
-    public int compareTo(Object other) {
+    public int compareTo(Resource other) {
         if (isReference()) {
-            return ((Comparable) getCheckedRef()).compareTo(other);
-        }
-        if (!(other instanceof Resource)) {
-            throw new IllegalArgumentException(
-                "Can only be compared with Resources");
+            return ((Resource) getCheckedRef()).compareTo(other);
         }
         return toString().compareTo(other.toString());
     }
@@ -291,7 +287,7 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
         if (isReference()) {
             return getCheckedRef().equals(other);
         }
-        return other.getClass().equals(getClass()) && compareTo(other) == 0;
+        return other.getClass().equals(getClass()) && compareTo((Resource) other) == 0;
     }
 
     /**
@@ -344,14 +340,14 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         return isReference() ? ((Resource) getCheckedRef()).iterator()
-            : new Iterator() {
+            : new Iterator<Resource>() {
             private boolean done = false;
             public boolean hasNext() {
                 return !done;
             }
-            public Object next() {
+            public Resource next() {
                 if (done) {
                     throw new NoSuchElementException();
                 }
@@ -436,7 +432,7 @@ public class Resource extends DataType implements Cloneable, Comparable, Resourc
      *
      * @since Ant 1.8.0
      */
-    public Object as(Class clazz) {
-        return clazz.isAssignableFrom(getClass()) ? this : null;
+    public <T> T as(Class<T> clazz) {
+        return clazz.isAssignableFrom(getClass()) ? clazz.cast(this) : null;
     }
 }

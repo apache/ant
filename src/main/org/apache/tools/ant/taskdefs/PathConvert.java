@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -361,8 +362,8 @@ public class PathConvert extends Task {
             ResourceCollection resources = isPreserveDuplicates() ? (ResourceCollection) path : new Union(path);
             List ret = new ArrayList();
             FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
-            for (Iterator iter = resources.iterator(); iter.hasNext(); ) {
-                String[] mapped = mapperImpl.mapFileName(String.valueOf(iter.next()));
+            for (Resource r : resources) {
+                String[] mapped = mapperImpl.mapFileName(String.valueOf(r));
                 for (int m = 0; mapped != null && m < mapped.length; ++m) {
                     ret.add(mapped[m]);
                 }

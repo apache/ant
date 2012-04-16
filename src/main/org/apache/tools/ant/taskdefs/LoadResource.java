@@ -229,7 +229,7 @@ public class LoadResource extends Task {
             throw new BuildException("only single argument resource collections"
                                      + " are supported");
         }
-        src = (Resource) a.iterator().next();
+        src = a.iterator().next();
     }
 
 }

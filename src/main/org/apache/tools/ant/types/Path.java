@@ -121,7 +121,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
          * Create an iterator.
          * @return an iterator.
          */
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             return new FileResourceIterator(getProject(), null, parts);
         }
 
@@ -701,7 +701,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
-    public final synchronized Iterator iterator() {
+    public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((Path) getCheckedRef()).iterator();
         }

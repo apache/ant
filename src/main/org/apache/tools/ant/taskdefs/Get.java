@@ -29,7 +29,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
-import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -84,9 +83,8 @@ public class Get extends Task {
     public void execute() throws BuildException {
         checkAttributes();
 
-        for (Iterator iter = sources.iterator(); iter.hasNext(); ) {
-            Resource r = (Resource) iter.next();
-            URLProvider up = (URLProvider) r.as(URLProvider.class);
+        for (Resource r : sources) {
+            URLProvider up = r.as(URLProvider.class);
             URL source = up.getURL();
 
             File dest = destination;
@@ -157,9 +155,8 @@ public class Get extends Task {
     public boolean doGet(int logLevel, DownloadProgress progress)
             throws IOException {
         checkAttributes();
-        for (Iterator iter = sources.iterator(); iter.hasNext(); ) {
-            Resource r = (Resource) iter.next();
-            URLProvider up = (URLProvider) r.as(URLProvider.class);
+        for (Resource r : sources) {
+            URLProvider up = r.as(URLProvider.class);
             URL source = up.getURL();
             return doGet(source, destination, logLevel, progress);
         }
@@ -251,8 +248,8 @@ public class Get extends Task {
             throw new BuildException("at least one source is required",
                                      getLocation());
         }
-        for (Iterator iter = sources.iterator(); iter.hasNext(); ) {
-            Object up = ((Resource) iter.next()).as(URLProvider.class);
+        for (Resource r : sources) {
+            URLProvider up = r.as(URLProvider.class);
             if (up == null) {
                 throw new BuildException("Only URLProvider resources are"
                                          + " supported", getLocation());

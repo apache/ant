@@ -230,8 +230,7 @@ public class Length extends Task implements Condition {
     }
 
     private void handleResources(Handler h) {
-        for (Iterator i = resources.iterator(); i.hasNext();) {
-            Resource r = (Resource) i.next();
+        for (Resource r : resources) {
             if (!r.isExists()) {
                 log(r + " does not exist", Project.MSG_WARN);
             }

@@ -189,8 +189,7 @@ public class ResourceUtils {
         source = Union.getInstance(source);
 
         Union result = new Union();
-        for (Iterator iter = source.iterator(); iter.hasNext();) {
-            final Resource sr = (Resource) iter.next();
+        for (Resource sr : source) {
             String srName = sr.getName();
             srName = srName == null
                 ? srName : srName.replace('/', File.separatorChar);
@@ -223,7 +222,7 @@ public class ResourceUtils {
             r.add(targetColl);
             if (r.size() > 0) {
                 result.add(sr);
-                Resource t = (Resource) (r.iterator().next());
+                Resource t = r.iterator().next();
                 logTo.log(sr.getName() + " added as " + t.getName()
                     + (t.isExists() ? " is outdated." : " doesn\'t exist."),
                     Project.MSG_VERBOSE);
@@ -397,7 +396,7 @@ public class ResourceUtils {
 
         File destFile = null;
         if (dest.as(FileProvider.class) != null) {
-            destFile = ((FileProvider) dest.as(FileProvider.class)).getFile();
+            destFile = dest.as(FileProvider.class).getFile();
         }
         if (destFile != null && destFile.isFile() && !destFile.canWrite()) {
             if (!force) {
@@ -504,7 +503,7 @@ public class ResourceUtils {
         } else if (source.as(FileProvider.class) != null
                    && destFile != null) {
             File sourceFile =
-                ((FileProvider) source.as(FileProvider.class)).getFile();
+                source.as(FileProvider.class).getFile();
 
             File parent = destFile.getParentFile();
             if (parent != null && !parent.isDirectory()
@@ -557,7 +556,7 @@ public class ResourceUtils {
             }
         }
         if (preserveLastModified) {
-            Touchable t = (Touchable) dest.as(Touchable.class);
+            Touchable t = dest.as(Touchable.class);
             if (t != null) {
                 setLastModified(t, source.getLastModified());
             }
@@ -759,16 +758,15 @@ public class ResourceUtils {
         Restrict future = new Restrict();
         future.add(sel);
         future.add(rc);
-        for (Iterator iter = future.iterator(); iter.hasNext();) {
-            logTo.log("Warning: " + ((Resource) iter.next()).getName()
-                     + " modified in the future.", Project.MSG_WARN);
+        for (Resource r : future) {
+            logTo.log("Warning: " + r.getName() + " modified in the future.", Project.MSG_WARN);
         }
     }
 
     private static OutputStream getOutputStream(Resource resource, boolean append, Project project)
             throws IOException {
         if (append) {
-            Appendable a = (Appendable) resource.as(Appendable.class);
+            Appendable a = resource.as(Appendable.class);
             if (a != null) {
                 return a.getAppendOutputStream();
             }

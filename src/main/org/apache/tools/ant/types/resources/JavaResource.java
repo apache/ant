@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * A Resource representation of something loadable via a Java classloader.
@@ -102,9 +103,9 @@ public class JavaResource extends AbstractClasspathResource
      * JavaResource is less than, equal to, or greater than the
      * specified Resource.
      */
-    public int compareTo(Object another) {
+    public int compareTo(Resource another) {
         if (isReference()) {
-            return ((Comparable) getCheckedRef()).compareTo(another);
+            return ((Resource) getCheckedRef()).compareTo(another);
         }
         if (another.getClass().equals(getClass())) {
             JavaResource otherjr = (JavaResource) another;

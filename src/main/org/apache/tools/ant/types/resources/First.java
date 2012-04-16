@@ -20,6 +20,8 @@ package org.apache.tools.ant.types.resources;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * ResourceCollection that contains the first <code>count</code> elements of
@@ -32,10 +34,10 @@ public class First extends SizeLimitCollection {
      * Take the first <code>count</code> elements.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection() {
+    protected Collection<Resource> getCollection() {
         int ct = getValidCount();
-        Iterator iter = getResourceCollection().iterator();
-        ArrayList al = new ArrayList(ct);
+        Iterator<Resource> iter = getResourceCollection().iterator();
+        List<Resource> al = new ArrayList<Resource>(ct);
         for (int i = 0; i < ct && iter.hasNext(); i++) {
             al.add(iter.next());
         }

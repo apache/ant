@@ -2307,11 +2307,8 @@ public class Javadoc extends Task {
                     rc = fs2;
                 }
             }
-            Iterator iter = rc.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
-                sf.addElement(new SourceFile(((FileProvider) r.as(FileProvider.class))
-                                             .getFile()));
+            for (Resource r : rc) {
+                sf.addElement(new SourceFile(r.as(FileProvider.class).getFile()));
             }
         }
     }

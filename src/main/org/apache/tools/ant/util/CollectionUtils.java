@@ -213,8 +213,8 @@ public class CollectionUtils {
      *
      * @since Ant 1.8.0
      */
-    public static Collection asCollection(final Iterator iter) {
-        List l = new ArrayList();
+    public static <T> Collection<T> asCollection(final Iterator<? extends T> iter) {
+        List<T> l = new ArrayList<T>();
         while (iter.hasNext()) {
             l.add(iter.next());
         }

@@ -188,7 +188,7 @@ public class FileList extends DataType implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((FileList) getRef(getProject())).iterator();
         }

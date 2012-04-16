@@ -24,14 +24,13 @@ import org.apache.tools.ant.types.resources.FileProvider;
  * Interface describing a collection of Resources.
  * @since Ant 1.7
  */
-public interface ResourceCollection {
+public interface ResourceCollection extends Iterable<Resource> {
 
     /**
-     * Get an Iterator over the contents of this ResourceCollection, whose elements
-     * are {@link Resource} instances.
-     * @return an Iterator of Resources.
+     * Gets the contents of this collection.
+     * @return all resources in the collection
      */
-    Iterator iterator();
+    Iterator<Resource> iterator();
 
     /**
      * Learn the number of contained Resources.

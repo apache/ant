@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -417,9 +416,7 @@ public class ExecuteOn extends ExecTask {
             }
 
             if (resources != null) {
-                Iterator iter = resources.iterator();
-                while (iter.hasNext()) {
-                    Resource res = (Resource) iter.next();
+                for (Resource res : resources) {
 
                     if (!res.isExists() && ignoreMissing) {
                         continue;
@@ -427,7 +424,7 @@ public class ExecuteOn extends ExecTask {
 
                     File base = null;
                     String name = res.getName();
-                    FileProvider fp = (FileProvider) res.as(FileProvider.class);
+                    FileProvider fp = res.as(FileProvider.class);
                     if (fp != null) {
                         FileResource fr = ResourceUtils.asFileResource(fp);
                         base = fr.getBaseDir();

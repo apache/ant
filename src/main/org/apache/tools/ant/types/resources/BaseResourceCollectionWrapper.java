@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.resources;
 
 import java.util.Collection;
 import java.util.Iterator;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * Base class for a ResourceCollection that wraps a single nested
@@ -28,9 +29,9 @@ import java.util.Iterator;
 public abstract class BaseResourceCollectionWrapper
     extends AbstractResourceCollectionWrapper {
 
-    private Collection coll = null;
+    private Collection<Resource> coll = null;
 
-    protected Iterator createIterator() {
+    protected Iterator<Resource> createIterator() {
         return cacheCollection().iterator();
     }
 
@@ -42,9 +43,9 @@ public abstract class BaseResourceCollectionWrapper
      * Template method for subclasses to return a Collection of Resources.
      * @return Collection.
      */
-    protected abstract Collection getCollection();
+    protected abstract Collection<Resource> getCollection();
 
-    private synchronized Collection cacheCollection() {
+    private synchronized Collection<Resource> cacheCollection() {
         if (coll == null || !isCache()) {
             coll = getCollection();
         }

@@ -85,7 +85,7 @@ public abstract class AbstractResourceCollectionWrapper
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public final synchronized Iterator iterator() {
+    public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((AbstractResourceCollectionWrapper) getCheckedRef()).iterator();
         }
@@ -101,7 +101,7 @@ public abstract class AbstractResourceCollectionWrapper
      * 
      * @return the iterator on the resource collection
      */
-    protected abstract Iterator createIterator();
+    protected abstract Iterator<Resource> createIterator();
 
     /**
      * Fulfill the ResourceCollection contract.

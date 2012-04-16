@@ -67,7 +67,7 @@ public abstract class ResourceDecorator extends Resource {
                                      + " are supported");
         }
         setChecked(false);
-        resource = (Resource) a.iterator().next();
+        resource = a.iterator().next();
     }
 
     /**
@@ -159,14 +159,14 @@ public abstract class ResourceDecorator extends Resource {
     /**
      * {@inheritDoc}
      */
-    public Object as(Class clazz) {
+    public <T> T as(Class<T> clazz) {
         return getResource().as(clazz);
     }
 
     /**
      * {@inheritDoc}
      */
-    public int compareTo(Object other) {
+    public int compareTo(Resource other) {
         if (other == this) {
             return 0;
         }

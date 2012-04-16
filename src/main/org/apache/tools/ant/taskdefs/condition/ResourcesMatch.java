@@ -71,7 +71,7 @@ public class ResourcesMatch implements Condition {
                 "You must specify one or more nested resource collections");
         }
         if (resources.size() > 1) {
-            Iterator i = resources.iterator();
+            Iterator<Resource> i = resources.iterator();
             Resource r1 = (Resource) i.next();
             Resource r2 = null;
 

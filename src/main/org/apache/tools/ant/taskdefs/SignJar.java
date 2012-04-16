@@ -385,11 +385,9 @@ public class SignJar extends AbstractJarSignerTask {
             //and the mapper is ready to map from source dirs to dest files
             //now we iterate through every JAR giving source and dest names
             // deal with the paths
-            Iterator iter = sources.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
+            for (Resource r : sources) {
                 FileResource fr = ResourceUtils
-                    .asFileResource((FileProvider) r.as(FileProvider.class));
+                    .asFileResource(r.as(FileProvider.class));
 
                 //calculate our destination directory; it is either the destDir
                 //attribute, or the base dir of the fileset (for in situ updates)

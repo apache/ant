@@ -23,9 +23,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
+import org.apache.tools.ant.types.Resource;
 
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.ZipResource;
@@ -68,10 +70,8 @@ public class ZipExtraFieldTest extends TestCase {
             testInstance.add(new ResourceCollection() {
                     public boolean isFilesystemOnly() { return false; }
                     public int size() { return 1; }
-                    public Iterator iterator() {
-                        ArrayList l = new ArrayList();
-                        l.add(r);
-                        return l.iterator();
+                    public Iterator<Resource> iterator() {
+                        return Collections.<Resource>singleton(r).iterator();
                     }
                 });
             testInstance.execute();

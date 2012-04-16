@@ -597,9 +597,7 @@ public class SQLExec extends JDBCTask {
 
             if (resources != null) {
                 // deal with the resources
-                Iterator iter = resources.iterator();
-                while (iter.hasNext()) {
-                    Resource r = (Resource) iter.next();
+                for (Resource r : resources) {
                     // Make a transaction for each resource
                     Transaction t = createTransaction();
                     t.setSrcResource(r);
@@ -623,13 +621,13 @@ public class SQLExec extends JDBCTask {
                         log("Opening PrintStream to output Resource " + output, Project.MSG_VERBOSE);
                         OutputStream os = null;
                         FileProvider fp =
-                            (FileProvider) output.as(FileProvider.class);
+                            output.as(FileProvider.class);
                         if (fp != null) {
                             os = new FileOutputStream(fp.getFile(), append);
                         } else {
                             if (append) {
                                 Appendable a =
-                                    (Appendable) output.as(Appendable.class);
+                                    output.as(Appendable.class);
                                 if (a != null) {
                                     os = a.getAppendOutputStream();
                                 }
@@ -1030,7 +1028,7 @@ public class SQLExec extends JDBCTask {
                 throw new BuildException("only single argument resource "
                                          + "collections are supported.");
             }
-            setSrcResource((Resource) a.iterator().next());
+            setSrcResource(a.iterator().next());
         }
 
         /**

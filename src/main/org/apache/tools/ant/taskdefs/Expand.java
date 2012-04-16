@@ -132,15 +132,13 @@ public class Expand extends Task {
                 expandFile(FILE_UTILS, source, dest);
             }
         }
-        Iterator iter = resources.iterator();
-        while (iter.hasNext()) {
-            Resource r = (Resource) iter.next();
+        for (Resource r : resources) {
             if (!r.isExists()) {
                 log("Skipping '" + r.getName() + "' because it doesn't exist.");
                 continue;
             }
 
-            FileProvider fp = (FileProvider) r.as(FileProvider.class);
+            FileProvider fp = r.as(FileProvider.class);
             if (fp != null) {
                 expandFile(FILE_UTILS, fp.getFile(), dest);
             } else {

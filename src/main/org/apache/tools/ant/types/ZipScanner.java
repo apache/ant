@@ -59,7 +59,7 @@ public class ZipScanner extends ArchiveScanner {
         ZipFile zf = null;
 
         File srcFile = null;
-        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        FileProvider fp = src.as(FileProvider.class);
         if (fp != null) {
             srcFile = fp.getFile();
         } else {

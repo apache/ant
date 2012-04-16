@@ -95,7 +95,7 @@ public class Delete extends MatchingTask {
             this.dirs = dirs;
             Arrays.sort(this.dirs, REVERSE);
         }
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             return new FileResourceIterator(project, basedir, dirs);
         }
         public boolean isFilesystemOnly() { return true; }
@@ -640,7 +640,7 @@ public class Delete extends MatchingTask {
                         public int size() {
                             return files.length;
                         }
-                        public Iterator iterator() {
+                        public Iterator<Resource> iterator() {
                             return new FileResourceIterator(getProject(),
                                                             fsDir, files);
                         }
@@ -683,11 +683,10 @@ public class Delete extends MatchingTask {
         }
         try {
             if (resourcesToDelete.isFilesystemOnly()) {
-                for (Iterator iter = resourcesToDelete.iterator(); iter.hasNext();) {
+                for (Resource r : resourcesToDelete) {
                     // nonexistent resources could only occur if we already
                     // deleted something from a fileset:
-                    Resource r = (Resource) iter.next();
-                    File f = ((FileProvider) r.as(FileProvider.class))
+                    File f = r.as(FileProvider.class)
                               .getFile();
                     if (!f.exists()) {
                         continue;

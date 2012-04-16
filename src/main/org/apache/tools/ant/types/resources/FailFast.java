@@ -23,13 +23,14 @@ import java.util.Iterator;
 import java.util.WeakHashMap;
 import java.util.NoSuchElementException;
 import java.util.ConcurrentModificationException;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * Helper class for ResourceCollections to return Iterators
  * that fail on changes to the object.
  * @since Ant 1.7
  */
-/*package-private*/ class FailFast implements Iterator {
+/*package-private*/ class FailFast implements Iterator<Resource> {
     private static final WeakHashMap MAP = new WeakHashMap();
 
     /**
@@ -67,7 +68,7 @@ import java.util.ConcurrentModificationException;
     }
 
     private Object parent;
-    private Iterator wrapped;
+    private Iterator<Resource> wrapped;
 
     /**
      * Construct a new FailFast Iterator wrapping the specified Iterator
@@ -75,7 +76,7 @@ import java.util.ConcurrentModificationException;
      * @param o the parent Object.
      * @param i the wrapped Iterator.
      */
-    FailFast(Object o, Iterator i) {
+    FailFast(Object o, Iterator<Resource> i) {
         if (o == null) {
             throw new IllegalArgumentException("parent object is null");
         }
@@ -106,7 +107,7 @@ import java.util.ConcurrentModificationException;
      * @return the next element.
      * @throws NoSuchElementException if no more elements.
      */
-    public Object next() {
+    public Resource next() {
         if (wrapped == null || !wrapped.hasNext()) {
             throw new NoSuchElementException();
         }

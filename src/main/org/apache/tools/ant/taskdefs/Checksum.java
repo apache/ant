@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Set;
@@ -394,9 +393,8 @@ public class Checksum extends MatchingTask implements Condition {
         }
         try {
             if (resources != null) {
-                for (Iterator i = resources.iterator(); i.hasNext();) {
-                    Resource r = (Resource) i.next();
-                    File src = ((FileProvider) r.as(FileProvider.class))
+                for (Resource r : resources) {
+                    File src = r.as(FileProvider.class)
                         .getFile();
                     if (totalproperty != null || todir != null) {
                         // Use '/' to calculate digest based on file name.

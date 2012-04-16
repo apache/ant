@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -15,12 +14,12 @@ public class LazyResourceCollectionWrapper extends
         AbstractResourceCollectionWrapper {
 
     /** List of cached resources */
-    private List cachedResources = new ArrayList();
+    private final List<Resource> cachedResources = new ArrayList<Resource>();
 
     private FilteringIterator filteringIterator;
 
-    protected Iterator createIterator() {
-        Iterator iterator;
+    protected Iterator<Resource> createIterator() {
+        Iterator<Resource> iterator;
         if (isCache()) {
             if (filteringIterator == null) {
                 // no worry of thread safety here, see function's contract
@@ -37,7 +36,7 @@ public class LazyResourceCollectionWrapper extends
     protected int getSize() {
         // to compute the size, just iterate: the iterator will take care of
         // caching
-        Iterator it = createIterator();
+        Iterator<Resource> it = createIterator();
         int size = 0;
         while (it.hasNext()) {
             it.next();
@@ -57,15 +56,15 @@ public class LazyResourceCollectionWrapper extends
         return false;
     }
 
-    private class FilteringIterator implements Iterator {
+    private class FilteringIterator implements Iterator<Resource> {
 
         Resource next = null;
 
         boolean ended = false;
 
-        protected final Iterator it;
+        protected final Iterator<Resource> it;
 
-        public FilteringIterator(Iterator it) {
+        public FilteringIterator(Iterator<Resource> it) {
             this.it = it;
         }
 
@@ -78,7 +77,7 @@ public class LazyResourceCollectionWrapper extends
                     ended = true;
                     return false;
                 }
-                next = (Resource) it.next();
+                next = it.next();
                 if (filterResource(next)) {
                     next = null;
                 }
@@ -86,7 +85,7 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-        public Object next() {
+        public Resource next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException();
             }
@@ -104,11 +103,11 @@ public class LazyResourceCollectionWrapper extends
      * Iterator that will put in the shared cache array list the selected
      * resources
      */
-    private class CachedIterator implements Iterator {
+    private class CachedIterator implements Iterator<Resource> {
 
         int cusrsor = 0;
 
-        private final Iterator it;
+        private final Iterator<Resource> it;
 
         /**
          * Default constructor
@@ -117,7 +116,7 @@ public class LazyResourceCollectionWrapper extends
          *            the iterator which will provide the resources to put in
          *            cache
          */
-        public CachedIterator(Iterator it) {
+        public CachedIterator(Iterator<Resource> it) {
             this.it = it;
         }
 
@@ -132,13 +131,13 @@ public class LazyResourceCollectionWrapper extends
                     return false;
                 }
                 // put in cache the next resource
-                Resource r = (Resource) it.next();
+                Resource r = it.next();
                 cachedResources.add(r);
             }
             return true;
         }
 
-        public Object next() {
+        public Resource next() {
             // first check that we have some to deliver
             if (!hasNext()) {
                 throw new NoSuchElementException();

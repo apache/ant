@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.CollectionUtils;
 
@@ -45,7 +46,7 @@ public class Resources extends DataType implements ResourceCollection {
         public boolean isFilesystemOnly() {
             return true;
         }
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             return EMPTY_ITERATOR;
         }
         public int size() {
@@ -54,8 +55,8 @@ public class Resources extends DataType implements ResourceCollection {
     };
 
     /** static empty Iterator */
-    public static final Iterator EMPTY_ITERATOR = new Iterator() {
-        public Object next() {
+    public static final Iterator<Resource> EMPTY_ITERATOR = new Iterator<Resource>() {
+        public Resource next() {
             throw new NoSuchElementException();
         }
         public boolean hasNext() {
@@ -66,19 +67,19 @@ public class Resources extends DataType implements ResourceCollection {
         }
     };
 
-    private class MyCollection extends AbstractCollection {
-        private Collection cached;
+    private class MyCollection extends AbstractCollection<Resource> {
+        private Collection<Resource> cached;
 
         MyCollection() {
         }
         public int size() {
             return getCache().size();
         }
-        public Iterator iterator() {
+        public Iterator<Resource> iterator() {
             return getCache().iterator();
         }
-        private synchronized Collection getCache() {
-            Collection coll = cached;
+        private synchronized Collection<Resource> getCache() {
+            Collection<Resource> coll = cached;
             if (coll == null) {
                 coll = CollectionUtils.asCollection(new MyIterator());
                 if (cache) {
@@ -87,9 +88,9 @@ public class Resources extends DataType implements ResourceCollection {
             }
             return coll;
         }
-        private class MyIterator implements Iterator {
+        private class MyIterator implements Iterator<Resource> {
             private Iterator rci = getNested().iterator();
-            private Iterator ri = null;
+            private Iterator<Resource> ri = null;
 
             public boolean hasNext() {
                 boolean result = ri != null && ri.hasNext();
@@ -99,7 +100,7 @@ public class Resources extends DataType implements ResourceCollection {
                 }
                 return result;
             }
-            public Object next() {
+            public Resource next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
@@ -112,7 +113,7 @@ public class Resources extends DataType implements ResourceCollection {
     }
 
     private Vector rc;
-    private Collection coll;
+    private Collection<Resource> coll;
     private boolean cache = false;
 
     /**
@@ -162,7 +163,7 @@ public class Resources extends DataType implements ResourceCollection {
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public synchronized Iterator iterator() {
+    public synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef().iterator();
         }
@@ -213,11 +214,11 @@ public class Resources extends DataType implements ResourceCollection {
             return "";
         }
         StringBuffer sb = new StringBuffer();
-        for (Iterator i = coll.iterator(); i.hasNext();) {
+        for (Resource r : coll) {
             if (sb.length() > 0) {
                 sb.append(File.pathSeparatorChar);
             }
-            sb.append(i.next());
+            sb.append(r);
         }
         return sb.toString();
     }

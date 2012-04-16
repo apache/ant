@@ -20,9 +20,11 @@ package org.apache.tools.ant.types.resources;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**
@@ -36,17 +38,17 @@ public class Last extends SizeLimitCollection {
      * Take the last <code>count</code> elements.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection() {
+    protected Collection<Resource> getCollection() {
         int count = getValidCount();
         ResourceCollection rc = getResourceCollection();
         int i = count;
-        Iterator iter = rc.iterator();
+        Iterator<Resource> iter = rc.iterator();
         int size = rc.size();
         for (; i < size; i++) {
             iter.next();
         }
 
-        ArrayList al = new ArrayList(count);
+        List<Resource> al = new ArrayList<Resource>(count);
         for (; iter.hasNext(); i++) {
             al.add(iter.next());
         }

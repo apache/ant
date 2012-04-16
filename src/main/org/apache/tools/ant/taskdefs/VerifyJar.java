@@ -89,10 +89,8 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         try {
             Path sources = createUnifiedSourcePath();
-            Iterator iter = sources.iterator();
-            while (iter.hasNext()) {
-                Resource r = (Resource) iter.next();
-                FileProvider fr = (FileProvider) r.as(FileProvider.class);
+            for (Resource r : sources) {
+                FileProvider fr = r.as(FileProvider.class);
                 verifyOneJar(fr.getFile());
             }
 

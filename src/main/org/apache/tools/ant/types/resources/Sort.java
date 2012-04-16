@@ -26,6 +26,7 @@ import java.util.Collections;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
@@ -47,13 +48,13 @@ public class Sort extends BaseResourceCollectionWrapper {
      * Sort the contained elements.
      * @return a Collection of Resources.
      */
-    protected synchronized Collection getCollection() {
+    protected synchronized Collection<Resource> getCollection() {
         ResourceCollection rc = getResourceCollection();
-        Iterator iter = rc.iterator();
+        Iterator<Resource> iter = rc.iterator();
         if (!(iter.hasNext())) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
-        List result = (List) CollectionUtils.asCollection(iter);
+        List<Resource> result = (List<Resource>) CollectionUtils.asCollection(iter);
         Collections.sort(result, comp);
         return result;
     }

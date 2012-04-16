@@ -91,7 +91,7 @@ public abstract class Unpack extends Task {
             throw new BuildException(
                 "the archive " + src.getName() + " can't be a directory");
         }
-        FileProvider fp = (FileProvider) src.as(FileProvider.class);
+        FileProvider fp = src.as(FileProvider.class);
         if (fp != null) {
             source = fp.getFile();
         } else if (!supportsNonFileResources()) {
@@ -113,7 +113,7 @@ public abstract class Unpack extends Task {
             throw new BuildException("only single argument resource collections"
                                      + " are supported as archives");
         }
-        setSrcResource((Resource) a.iterator().next());
+        setSrcResource(a.iterator().next());
     }
 
     /**

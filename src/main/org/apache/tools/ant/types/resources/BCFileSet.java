@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.util.Iterator;
 
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * Utility FileSet that includes directories for backwards-compatibility
@@ -46,7 +47,7 @@ public class BCFileSet extends FileSet {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).iterator();
         }

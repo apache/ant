@@ -26,7 +26,7 @@ import org.apache.tools.ant.types.Resource;
  * Abstract Resource Comparator.
  * @since Ant 1.7
  */
-public abstract class ResourceComparator extends DataType implements Comparator {
+public abstract class ResourceComparator extends DataType implements Comparator<Resource> {
 
     /**
      * Compare two objects.
@@ -36,11 +36,11 @@ public abstract class ResourceComparator extends DataType implements Comparator 
      *         argument is less than, equal to, or greater than the second.
      * @throws ClassCastException if either argument is null.
      */
-    public final int compare(Object foo, Object bar) {
+    public final int compare(Resource foo, Resource bar) {
         dieOnCircularReference();
         ResourceComparator c =
             isReference() ? (ResourceComparator) getCheckedRef() : this;
-        return c.resourceCompare((Resource) foo, (Resource) bar);
+        return c.resourceCompare(foo, bar);
     }
 
     /**

@@ -113,13 +113,13 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
     /**
      * Suppress FileProvider, re-implement Appendable
      */
-    public Object as(Class clazz) {
+    public <T> T as(Class<T> clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
             if (isAppendSupported()) {
                 final Appendable a =
-                    (Appendable) getResource().as(Appendable.class);
+                    getResource().as(Appendable.class);
                 if (a != null) {
-                    return new Appendable() {
+                    return clazz.cast(new Appendable() {
                         public OutputStream getAppendOutputStream()
                                 throws IOException {
                             OutputStream out = a.getAppendOutputStream();
@@ -128,7 +128,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
                             }
                             return out;
                         }
-                    };
+                    });
                 }
             }
             return null;

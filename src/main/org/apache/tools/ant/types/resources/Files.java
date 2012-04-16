@@ -27,6 +27,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.AbstractSelectorContainer;
@@ -38,8 +39,8 @@ import org.apache.tools.ant.types.selectors.AbstractSelectorContainer;
 public class Files extends AbstractSelectorContainer
     implements ResourceCollection {
 
-    private static final Iterator EMPTY_ITERATOR
-        = Collections.EMPTY_SET.iterator();
+    private static final Iterator<Resource> EMPTY_ITERATOR
+        = Collections.<Resource>emptySet().iterator();
 
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
@@ -309,7 +310,7 @@ public class Files extends AbstractSelectorContainer
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public synchronized Iterator iterator() {
+    public synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef().iterator();
         }
@@ -385,7 +386,7 @@ public class Files extends AbstractSelectorContainer
         if (isReference()) {
             return getRef().toString();
         }
-        Iterator i = iterator();
+        Iterator<Resource> i = iterator();
         if (!i.hasNext()) {
             return "";
         }

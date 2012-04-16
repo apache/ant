@@ -38,13 +38,13 @@ public class FileSystem extends ResourceComparator {
      * @throws ClassCastException if either resource is not an instance of FileResource.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        FileProvider fooFP = (FileProvider) foo.as(FileProvider.class);
+        FileProvider fooFP = foo.as(FileProvider.class);
         if (fooFP == null) {
             throw new ClassCastException(foo.getClass()
                                          + " doesn't provide files");
         }
         File foofile = fooFP.getFile();
-        FileProvider barFP = (FileProvider) bar.as(FileProvider.class);
+        FileProvider barFP = bar.as(FileProvider.class);
         if (barFP == null) {
             throw new ClassCastException(bar.getClass()
                                          + " doesn't provide files");

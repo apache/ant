@@ -70,7 +70,7 @@ public class MappedResource extends ResourceDecorator {
      * Suppress FileProvider
      * @param clazz the type to implement
      */
-    public Object as(Class clazz) {
+    public <T> T as(Class<T> clazz) {
         return FileProvider.class.isAssignableFrom(clazz) 
                 ? null : getResource().as(clazz);
     }

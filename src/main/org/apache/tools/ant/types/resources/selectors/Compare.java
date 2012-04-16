@@ -111,8 +111,8 @@ public class Compare extends DataType implements ResourceSelector {
         }
         dieOnCircularReference();
         int t = 0, f = 0;
-        for (Iterator it = control.iterator(); it.hasNext();) {
-            if (when.evaluate(comp.compare(r, (Resource) it.next()))) {
+        for (Resource res : control) {
+            if (when.evaluate(comp.compare(r, res))) {
                 t++;
             } else {
                 f++;

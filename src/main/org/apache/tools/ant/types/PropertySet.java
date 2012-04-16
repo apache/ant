@@ -502,7 +502,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef().iterator();
         }
@@ -514,11 +514,11 @@ public class PropertySet extends DataType implements ResourceCollection {
         final FileNameMapper m = myMapper == null ? null : myMapper.getImplementation();
         final Iterator iter = names.iterator();
 
-        return new Iterator() {
+        return new Iterator<Resource>() {
             public boolean hasNext() {
                 return iter.hasNext();
             }
-            public Object next() {
+            public Resource next() {
                 PropertyResource p = new PropertyResource(getProject(), (String) iter.next());
                 return m == null ? (Resource) p : new MappedResource(p, m);
             }

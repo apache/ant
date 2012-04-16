@@ -37,7 +37,7 @@ public class ConcatResourceInputStream extends InputStream {
 
     private static final int EOF = -1;
     private boolean eof = false;
-    private Iterator iter;
+    private Iterator<Resource> iter;
     private InputStream currentStream;
     private ProjectComponent managingPc;
     private boolean ignoreErrors = false;

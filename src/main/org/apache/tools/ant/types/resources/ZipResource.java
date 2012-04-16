@@ -75,7 +75,7 @@ public class ZipResource extends ArchiveResource {
      * @return the zipfile as a File.
      */
     public File getZipfile() {
-        FileProvider fp = (FileProvider) getArchive().as(FileProvider.class);
+        FileProvider fp = getArchive().as(FileProvider.class);
         return fp.getFile();
     }
 

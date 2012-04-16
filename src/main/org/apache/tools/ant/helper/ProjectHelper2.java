@@ -104,7 +104,7 @@ public class ProjectHelper2 extends ProjectHelper {
      */
     public UnknownElement parseAntlibDescriptor(Project containingProject,
                                                 Resource resource) {
-        URLProvider up = (URLProvider) resource.as(URLProvider.class);
+        URLProvider up = resource.as(URLProvider.class);
         if (up == null) {
             throw new BuildException("Unsupported resource type: " + resource);
         }
@@ -235,12 +235,12 @@ public class ProjectHelper2 extends ProjectHelper {
             url = (URL) source;
         } else if (source instanceof Resource) {
             FileProvider fp =
-                (FileProvider) ((Resource) source).as(FileProvider.class);
+                ((Resource) source).as(FileProvider.class);
             if (fp != null) {
                 buildFile = fp.getFile();
             } else {
                 URLProvider up =
-                    (URLProvider) ((Resource) source).as(URLProvider.class);
+                    ((Resource) source).as(URLProvider.class);
                 if (up != null) {
                     url = up.getURL();
                 }

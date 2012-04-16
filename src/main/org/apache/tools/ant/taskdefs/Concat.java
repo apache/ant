@@ -814,9 +814,9 @@ public class Concat extends Task implements ResourceCollection {
      * Implement ResourceCollection.
      * @return Iterator<Resource>.
      */
-    public Iterator iterator() {
+    public Iterator<Resource> iterator() {
         validate();
-        return Collections.singletonList(new ConcatResource(getResources())).iterator();
+        return Collections.<Resource>singletonList(new ConcatResource(getResources())).iterator();
     }
 
     /**
@@ -905,8 +905,8 @@ public class Concat extends Task implements ResourceCollection {
         Restrict noexistRc = new Restrict();
         noexistRc.add(NOT_EXISTS);
         noexistRc.add(rc);
-        for (Iterator i = noexistRc.iterator(); i.hasNext();) {
-            log(i.next() + " does not exist.", Project.MSG_ERR);
+        for (Resource r : noexistRc) {
+            log(r + " does not exist.", Project.MSG_ERR);
         }
         Restrict result = new Restrict();
         result.add(EXISTS);
@@ -918,8 +918,7 @@ public class Concat extends Task implements ResourceCollection {
         if (dest == null || forceOverwrite) {
             return false;
         }
-        for (Iterator i = c.iterator(); i.hasNext();) {
-            Resource r = (Resource) i.next();
+        for (Resource r : c) {
             if (SelectorUtils.isOutOfDate(r, dest, FILE_UTILS.getFileTimestampGranularity())) {
                 return false;
             }

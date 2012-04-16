@@ -39,7 +39,7 @@ public class WritableSelector implements FileSelector, ResourceSelector {
     }
 
     public boolean isSelected(Resource r) {
-        FileProvider fp = (FileProvider) r.as(FileProvider.class);
+        FileProvider fp = r.as(FileProvider.class);
         if (fp != null) {
             return isSelected(null, null, fp.getFile());
         }
