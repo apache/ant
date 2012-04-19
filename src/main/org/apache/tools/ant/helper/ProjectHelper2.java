@@ -180,8 +180,7 @@ public class ProjectHelper2 extends ProjectHelper {
             context.getImplicitTarget().execute();
 
             // resolve extensionOf attributes
-            for (Iterator i = getExtensionStack().iterator(); i.hasNext(); ) {
-                String[] extensionInfo = (String[]) i.next();
+            for (String[] extensionInfo : getExtensionStack()) {
                 String tgName = extensionInfo[0];
                 String name = extensionInfo[1];
                 OnMissingExtensionPoint missingBehaviour = OnMissingExtensionPoint

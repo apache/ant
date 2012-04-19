@@ -166,7 +166,7 @@ public class ProjectHelper {
      * of the target and the third the name of the enum like class
      * {@link OnMissingExtensionPoint}.
      */
-    public List getExtensionStack() {
+    public List<String[]> getExtensionStack() {
         return extensionStack;
     }
 
