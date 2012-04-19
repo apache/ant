@@ -1035,11 +1035,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 ProjectHelper helper =
                     (ProjectHelper) context.getProject().
                     getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
-                for (Iterator iter =
-                         Target.parseDepends(extensionPoint, name, "extensionOf")
-                         .iterator();
-                     iter.hasNext(); ) {
-                    String tgName = (String) iter.next();
+                for (String tgName : Target.parseDepends(extensionPoint, name, "extensionOf")) {
                     if (isInIncludeMode()) {
                         tgName = prefix + sep + tgName;
                     }

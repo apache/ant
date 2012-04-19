@@ -18,7 +18,6 @@
 package org.apache.tools.ant;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -56,7 +55,7 @@ import java.util.List;
 public class TaskConfigurationChecker {
 
     /** List of all collected error messages. */
-    private List/*<String>*/ errors = new ArrayList();
+    private List<String> errors = new ArrayList<String>();
 
     /** Task for which the configuration should be checked. */
     private final Task task;
@@ -100,8 +99,7 @@ public class TaskConfigurationChecker {
             sb.append(task.getTaskName());
             sb.append(">:");
             sb.append(System.getProperty("line.separator"));
-            for (Iterator it = errors.iterator(); it.hasNext();) {
-                String msg = (String) it.next();
+            for (String msg : errors) {
                 sb.append("- ");
                 sb.append(msg);
                 sb.append(System.getProperty("line.separator"));

@@ -135,10 +135,10 @@ public class Target implements TaskContainer {
         }
     }
 
-    public static List/*<String>*/ parseDepends(String depends,
+    public static List<String> parseDepends(String depends,
                                                 String targetName,
                                                 String attributeName) {
-        ArrayList list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         if (depends.length() > 0) {
             StringTokenizer tok =
                 new StringTokenizer(depends, ",", true);
