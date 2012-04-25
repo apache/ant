@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -563,18 +562,7 @@ public class Property extends Task {
                                 Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
             // load the xml based property definition
-            // use reflection because of bwc to Java 1.4
-            try {
-                Method loadXmlMethod = props.getClass().getMethod("loadFromXML",
-                                                                  new Class[] {InputStream.class});
-                loadXmlMethod.invoke(props, new Object[] {is});
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                log("Can not load xml based property definition on Java < 5");
-            } catch (Exception e) {
-                // no-op
-                e.printStackTrace();
-            }
+            props.loadFromXML(is);
         } else {
             // load ".properties" format
             props.load(is);
