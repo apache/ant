@@ -547,7 +547,7 @@ public class CBZip2OutputStream extends OutputStream
 
     private int blockCRC;
     private int combinedCRC;
-    private int allowableBlockSize;
+    private final int allowableBlockSize;
 
     /**
      * All memory intensive stuff.
@@ -635,6 +635,9 @@ public class CBZip2OutputStream extends OutputStream
 
         this.blockSize100k = blockSize;
         this.out = out;
+
+        /* 20 is just a paranoia constant */
+        this.allowableBlockSize = (this.blockSize100k * BZip2Constants.baseBlockSize) - 20;
         init();
     }
 
@@ -788,9 +791,6 @@ public class CBZip2OutputStream extends OutputStream
         for (int i = 256; --i >= 0;) {
             inUse[i] = false;
         }
-
-        /* 20 is just a paranoia constant */
-        this.allowableBlockSize = (this.blockSize100k * BZip2Constants.baseBlockSize) - 20;
     }
 
     private void endBlock() throws IOException {
