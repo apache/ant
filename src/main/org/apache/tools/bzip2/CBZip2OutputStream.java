@@ -24,8 +24,8 @@
 
 package org.apache.tools.bzip2;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * An output stream that compresses into the BZip2 format (without the file
@@ -529,17 +529,10 @@ public class CBZip2OutputStream extends OutputStream
     private int last;
 
     /**
-     * Index in fmap[] of original string after sorting.
-     */
-    private int origPtr;
-
-    /**
      * Always: in the range 0 .. 9. The current block size is 100000 * this
      * number.
      */
     private final int blockSize100k;
-
-    private boolean blockRandomised;
 
     private int bsBuff;
     private int bsLive;
@@ -548,14 +541,6 @@ public class CBZip2OutputStream extends OutputStream
     private int nInUse;
 
     private int nMTF;
-
-    /*
-     * Used when sorting. If too many long comparisons happen, we stop sorting,
-     * randomise the block slightly, and try again.
-     */
-    private int workDone;
-    private int workLimit;
-    private boolean firstAttempt;
 
     private int currentChar = -1;
     private int runLength = 0;
@@ -567,7 +552,8 @@ public class CBZip2OutputStream extends OutputStream
     /**
      * All memory intensive stuff.
      */
-    private CBZip2OutputStream.Data data;
+    private Data data;
+    private BlockSort blockSorter;
 
     private OutputStream out;
 
@@ -592,7 +578,7 @@ public class CBZip2OutputStream extends OutputStream
      * Constructs a new <tt>CBZip2OutputStream</tt> with a blocksize of 900k.
      *
      * <p>
-     * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
+     * <b>Attention: </b>The caller is responsible to write the two BZip2 magic
      * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
      * constructor.
      * </p>
@@ -613,7 +599,7 @@ public class CBZip2OutputStream extends OutputStream
      * Constructs a new <tt>CBZip2OutputStream</tt> with specified blocksize.
      *
      * <p>
-     * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
+     * <b>Attention: </b>The caller is responsible to write the two BZip2 magic
      * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
      * constructor.
      * </p>
@@ -652,6 +638,8 @@ public class CBZip2OutputStream extends OutputStream
         init();
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void write(final int b) throws IOException {
         if (this.out != null) {
             write0(b);
@@ -660,6 +648,19 @@ public class CBZip2OutputStream extends OutputStream
         }
     }
 
+    /**
+     * Writes the current byte to the buffer, run-length encoding it
+     * if it has been repeated at least four times (the first step
+     * RLEs sequences of four identical bytes).
+     *
+     * <p>Flushes the current block before writing data if it is
+     * full.</p>
+     *
+     * <p>"write to the buffer" means adding to data.buffer starting
+     * two steps "after" this.last - initially starting at index 1
+     * (not 0) - and updating this.last to point to the last index
+     * written minus 1.</p>
+     */
     private void writeRun() throws IOException {
         final int lastShadow = this.last;
 
@@ -717,6 +718,7 @@ public class CBZip2OutputStream extends OutputStream
     /**
      * Overriden to close the stream.
      */
+    @Override
     protected void finalize() throws Throwable {
         finish();
         super.finalize();
@@ -735,10 +737,12 @@ public class CBZip2OutputStream extends OutputStream
             } finally {
                 this.out = null;
                 this.data = null;
+                this.blockSorter = null;
             }
         }
     }
 
+    @Override
     public void close() throws IOException {
         if (out != null) {
             OutputStream outShadow = this.out;
@@ -747,6 +751,7 @@ public class CBZip2OutputStream extends OutputStream
         }
     }
 
+    @Override
     public void flush() throws IOException {
         OutputStream outShadow = this.out;
         if (outShadow != null) {
@@ -760,6 +765,7 @@ public class CBZip2OutputStream extends OutputStream
         // this.out.write('Z');
 
         this.data = new Data(this.blockSize100k);
+        this.blockSorter = new BlockSort(this.data);
 
         /*
          * Write `magic' bytes h indicating file-format == huffmanised, followed
@@ -821,12 +827,8 @@ public class CBZip2OutputStream extends OutputStream
         /* Now the block's CRC, so it is in a known place. */
         bsPutInt(this.blockCRC);
 
-        /* Now a single bit indicating randomisation. */
-        if (this.blockRandomised) {
-            bsW(1, 1);
-        } else {
-            bsW(1, 0);
-        }
+        /* Now a single bit indicating no randomisation. */
+        bsW(1, 0);
 
         /* Finally, block's contents proper. */
         moveToFrontCodeAndSend();
@@ -857,6 +859,7 @@ public class CBZip2OutputStream extends OutputStream
         return this.blockSize100k;
     }
 
+    @Override
     public void write(final byte[] buf, int offs, final int len)
         throws IOException {
         if (offs < 0) {
@@ -879,6 +882,10 @@ public class CBZip2OutputStream extends OutputStream
         }
     }
 
+    /**
+     * Keeps track of the last bytes written and implicitly performs
+     * run-length encoding as the first step of the bzip2 algorithm.
+     */
     private void write0(int b) throws IOException {
         if (this.currentChar != -1) {
             b &= 0xff;
@@ -990,7 +997,7 @@ public class CBZip2OutputStream extends OutputStream
         sendMTFValues6(nGroups, alphaSize);
 
         /* And finally, the block data proper */
-        sendMTFValues7(nSelectors);
+        sendMTFValues7();
     }
 
     private void sendMTFValues0(final int nGroups, final int alphaSize) {
@@ -1343,7 +1350,7 @@ public class CBZip2OutputStream extends OutputStream
         this.bsLive = bsLiveShadow;
     }
 
-    private void sendMTFValues7(final int nSelectors) throws IOException {
+    private void sendMTFValues7() throws IOException {
         final Data dataShadow = this.data;
         final byte[][] len = dataShadow.sendMTFValues_len;
         final int[][] code = dataShadow.sendMTFValues_code;
@@ -1391,545 +1398,22 @@ public class CBZip2OutputStream extends OutputStream
     }
 
     private void moveToFrontCodeAndSend() throws IOException {
-        bsW(24, this.origPtr);
+        bsW(24, this.data.origPtr);
         generateMTFValues();
         sendMTFValues();
     }
 
-    /**
-     * This is the most hammered method of this class.
-     *
-     * <p>
-     * This is the version using unrolled loops. Normally I never use such ones
-     * in Java code. The unrolling has shown a noticable performance improvement
-     * on JRE 1.4.2 (Linux i586 / HotSpot Client). Of course it depends on the
-     * JIT compiler of the vm.
-     * </p>
-     */
-    private boolean mainSimpleSort(final Data dataShadow, final int lo,
-                                   final int hi, final int d) {
-        final int bigN = hi - lo + 1;
-        if (bigN < 2) {
-            return this.firstAttempt && (this.workDone > this.workLimit);
-        }
-
-        int hp = 0;
-        while (INCS[hp] < bigN) {
-            hp++;
-        }
-
-        final int[] fmap = dataShadow.fmap;
-        final char[] quadrant = dataShadow.quadrant;
-        final byte[] block = dataShadow.block;
-        final int lastShadow = this.last;
-        final int lastPlus1 = lastShadow + 1;
-        final boolean firstAttemptShadow = this.firstAttempt;
-        final int workLimitShadow = this.workLimit;
-        int workDoneShadow = this.workDone;
-
-        // Following block contains unrolled code which could be shortened by
-        // coding it in additional loops.
-
-        HP: while (--hp >= 0) {
-            final int h = INCS[hp];
-            final int mj = lo + h - 1;
-
-            for (int i = lo + h; i <= hi;) {
-                // copy
-                for (int k = 3; (i <= hi) && (--k >= 0); i++) {
-                    final int v = fmap[i];
-                    final int vd = v + d;
-                    int j = i;
-
-                    // for (int a;
-                    // (j > mj) && mainGtU((a = fmap[j - h]) + d, vd,
-                    // block, quadrant, lastShadow);
-                    // j -= h) {
-                    // fmap[j] = a;
-                    // }
-                    //
-                    // unrolled version:
-
-                    // start inline mainGTU
-                    boolean onceRunned = false;
-                    int a = 0;
-
-                    HAMMER: while (true) {
-                        if (onceRunned) {
-                            fmap[j] = a;
-                            if ((j -= h) <= mj) {
-                                break HAMMER;
-                            }
-                        } else {
-                            onceRunned = true;
-                        }
-
-                        a = fmap[j - h];
-                        int i1 = a + d;
-                        int i2 = vd;
-
-                        // following could be done in a loop, but
-                        // unrolled it for performance:
-                        if (block[i1 + 1] == block[i2 + 1]) {
-                            if (block[i1 + 2] == block[i2 + 2]) {
-                                if (block[i1 + 3] == block[i2 + 3]) {
-                                    if (block[i1 + 4] == block[i2 + 4]) {
-                                        if (block[i1 + 5] == block[i2 + 5]) {
-                                            if (block[(i1 += 6)] == block[(i2 += 6)]) {
-                                                int x = lastShadow;
-                                                X: while (x > 0) {
-                                                    x -= 4;
-
-                                                    if (block[i1 + 1] == block[i2 + 1]) {
-                                                        if (quadrant[i1] == quadrant[i2]) {
-                                                            if (block[i1 + 2] == block[i2 + 2]) {
-                                                                if (quadrant[i1 + 1] == quadrant[i2 + 1]) {
-                                                                    if (block[i1 + 3] == block[i2 + 3]) {
-                                                                        if (quadrant[i1 + 2] == quadrant[i2 + 2]) {
-                                                                            if (block[i1 + 4] == block[i2 + 4]) {
-                                                                                if (quadrant[i1 + 3] == quadrant[i2 + 3]) {
-                                                                                    if ((i1 += 4) >= lastPlus1) {
-                                                                                        i1 -= lastPlus1;
-                                                                                    }
-                                                                                    if ((i2 += 4) >= lastPlus1) {
-                                                                                        i2 -= lastPlus1;
-                                                                                    }
-                                                                                    workDoneShadow++;
-                                                                                    continue X;
-                                                                                } else if ((quadrant[i1 + 3] > quadrant[i2 + 3])) {
-                                                                                    continue HAMMER;
-                                                                                } else {
-                                                                                    break HAMMER;
-                                                                                }
-                                                                            } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                                                                continue HAMMER;
-                                                                            } else {
-                                                                                break HAMMER;
-                                                                            }
-                                                                        } else if ((quadrant[i1 + 2] > quadrant[i2 + 2])) {
-                                                                            continue HAMMER;
-                                                                        } else {
-                                                                            break HAMMER;
-                                                                        }
-                                                                    } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                                                        continue HAMMER;
-                                                                    } else {
-                                                                        break HAMMER;
-                                                                    }
-                                                                } else if ((quadrant[i1 + 1] > quadrant[i2 + 1])) {
-                                                                    continue HAMMER;
-                                                                } else {
-                                                                    break HAMMER;
-                                                                }
-                                                            } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                                                                continue HAMMER;
-                                                            } else {
-                                                                break HAMMER;
-                                                            }
-                                                        } else if ((quadrant[i1] > quadrant[i2])) {
-                                                            continue HAMMER;
-                                                        } else {
-                                                            break HAMMER;
-                                                        }
-                                                    } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                                                        continue HAMMER;
-                                                    } else {
-                                                        break HAMMER;
-                                                    }
-
-                                                }
-                                                break HAMMER;
-                                            } // while x > 0
-                                            else {
-                                                if ((block[i1] & 0xff) > (block[i2] & 0xff)) {
-                                                    continue HAMMER;
-                                                } else {
-                                                    break HAMMER;
-                                                }
-                                            }
-                                        } else if ((block[i1 + 5] & 0xff) > (block[i2 + 5] & 0xff)) {
-                                            continue HAMMER;
-                                        } else {
-                                            break HAMMER;
-                                        }
-                                    } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                        continue HAMMER;
-                                    } else {
-                                        break HAMMER;
-                                    }
-                                } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                    continue HAMMER;
-                                } else {
-                                    break HAMMER;
-                                }
-                            } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                                continue HAMMER;
-                            } else {
-                                break HAMMER;
-                            }
-                        } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                            continue HAMMER;
-                        } else {
-                            break HAMMER;
-                        }
-
-                    } // HAMMER
-                    // end inline mainGTU
-
-                    fmap[j] = v;
-                }
-
-                if (firstAttemptShadow && (i <= hi)
-                    && (workDoneShadow > workLimitShadow)) {
-                    break HP;
-                }
-            }
-        }
-
-        this.workDone = workDoneShadow;
-        return firstAttemptShadow && (workDoneShadow > workLimitShadow);
-    }
-
-    private static void vswap(int[] fmap, int p1, int p2, int n) {
-        n += p1;
-        while (p1 < n) {
-            int t = fmap[p1];
-            fmap[p1++] = fmap[p2];
-            fmap[p2++] = t;
-        }
-    }
-
-    private static byte med3(byte a, byte b, byte c) {
-        return (a < b) ? (b < c ? b : a < c ? c : a) : (b > c ? b : a > c ? c
-                                                        : a);
-    }
-
     private void blockSort() {
-        this.workLimit = WORK_FACTOR * this.last;
-        this.workDone = 0;
-        this.blockRandomised = false;
-        this.firstAttempt = true;
-        mainSort();
-
-        if (this.firstAttempt && (this.workDone > this.workLimit)) {
-            randomiseBlock();
-            this.workLimit = this.workDone = 0;
-            this.firstAttempt = false;
-            mainSort();
-        }
-
-        int[] fmap = this.data.fmap;
-        this.origPtr = -1;
-        for (int i = 0, lastShadow = this.last; i <= lastShadow; i++) {
-            if (fmap[i] == 0) {
-                this.origPtr = i;
-                break;
-            }
-        }
-
-        // assert (this.origPtr != -1) : this.origPtr;
+        blockSorter.blockSort(data, last);
     }
 
-    /**
-     * Method "mainQSort3", file "blocksort.c", BZip2 1.0.2
+    /*
+     * Performs Move-To-Front on the Burrows-Wheeler transformed
+     * buffer, storing the MTFed data in data.sfmap in RUNA/RUNB
+     * run-length-encoded form.
+     *
+     * <p>Keeps track of byte frequencies in data.mtfFreq at the same time.</p>
      */
-    private void mainQSort3(final Data dataShadow, final int loSt,
-                            final int hiSt, final int dSt) {
-        final int[] stack_ll = dataShadow.stack_ll;
-        final int[] stack_hh = dataShadow.stack_hh;
-        final int[] stack_dd = dataShadow.stack_dd;
-        final int[] fmap = dataShadow.fmap;
-        final byte[] block = dataShadow.block;
-
-        stack_ll[0] = loSt;
-        stack_hh[0] = hiSt;
-        stack_dd[0] = dSt;
-
-        for (int sp = 1; --sp >= 0;) {
-            final int lo = stack_ll[sp];
-            final int hi = stack_hh[sp];
-            final int d = stack_dd[sp];
-
-            if ((hi - lo < SMALL_THRESH) || (d > DEPTH_THRESH)) {
-                if (mainSimpleSort(dataShadow, lo, hi, d)) {
-                    return;
-                }
-            } else {
-                final int d1 = d + 1;
-                final int med = med3(block[fmap[lo] + d1],
-                                     block[fmap[hi] + d1], block[fmap[(lo + hi) >>> 1] + d1]) & 0xff;
-
-                int unLo = lo;
-                int unHi = hi;
-                int ltLo = lo;
-                int gtHi = hi;
-
-                while (true) {
-                    while (unLo <= unHi) {
-                        final int n = ((int) block[fmap[unLo] + d1] & 0xff)
-                            - med;
-                        if (n == 0) {
-                            final int temp = fmap[unLo];
-                            fmap[unLo++] = fmap[ltLo];
-                            fmap[ltLo++] = temp;
-                        } else if (n < 0) {
-                            unLo++;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    while (unLo <= unHi) {
-                        final int n = ((int) block[fmap[unHi] + d1] & 0xff)
-                            - med;
-                        if (n == 0) {
-                            final int temp = fmap[unHi];
-                            fmap[unHi--] = fmap[gtHi];
-                            fmap[gtHi--] = temp;
-                        } else if (n > 0) {
-                            unHi--;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    if (unLo <= unHi) {
-                        final int temp = fmap[unLo];
-                        fmap[unLo++] = fmap[unHi];
-                        fmap[unHi--] = temp;
-                    } else {
-                        break;
-                    }
-                }
-
-                if (gtHi < ltLo) {
-                    stack_ll[sp] = lo;
-                    stack_hh[sp] = hi;
-                    stack_dd[sp] = d1;
-                    sp++;
-                } else {
-                    int n = ((ltLo - lo) < (unLo - ltLo)) ? (ltLo - lo)
-                        : (unLo - ltLo);
-                    vswap(fmap, lo, unLo - n, n);
-                    int m = ((hi - gtHi) < (gtHi - unHi)) ? (hi - gtHi)
-                        : (gtHi - unHi);
-                    vswap(fmap, unLo, hi - m + 1, m);
-
-                    n = lo + unLo - ltLo - 1;
-                    m = hi - (gtHi - unHi) + 1;
-
-                    stack_ll[sp] = lo;
-                    stack_hh[sp] = n;
-                    stack_dd[sp] = d;
-                    sp++;
-
-                    stack_ll[sp] = n + 1;
-                    stack_hh[sp] = m - 1;
-                    stack_dd[sp] = d1;
-                    sp++;
-
-                    stack_ll[sp] = m;
-                    stack_hh[sp] = hi;
-                    stack_dd[sp] = d;
-                    sp++;
-                }
-            }
-        }
-    }
-
-    private void mainSort() {
-        final Data dataShadow = this.data;
-        final int[] runningOrder = dataShadow.mainSort_runningOrder;
-        final int[] copy = dataShadow.mainSort_copy;
-        final boolean[] bigDone = dataShadow.mainSort_bigDone;
-        final int[] ftab = dataShadow.ftab;
-        final byte[] block = dataShadow.block;
-        final int[] fmap = dataShadow.fmap;
-        final char[] quadrant = dataShadow.quadrant;
-        final int lastShadow = this.last;
-        final int workLimitShadow = this.workLimit;
-        final boolean firstAttemptShadow = this.firstAttempt;
-
-        // Set up the 2-byte frequency table
-        for (int i = 65537; --i >= 0;) {
-            ftab[i] = 0;
-        }
-
-        /*
-         * In the various block-sized structures, live data runs from 0 to
-         * last+NUM_OVERSHOOT_BYTES inclusive. First, set up the overshoot area
-         * for block.
-         */
-        for (int i = 0; i < NUM_OVERSHOOT_BYTES; i++) {
-            block[lastShadow + i + 2] = block[(i % (lastShadow + 1)) + 1];
-        }
-        for (int i = lastShadow + NUM_OVERSHOOT_BYTES +1; --i >= 0;) {
-            quadrant[i] = 0;
-        }
-        block[0] = block[lastShadow + 1];
-
-        // Complete the initial radix sort:
-
-        int c1 = block[0] & 0xff;
-        for (int i = 0; i <= lastShadow; i++) {
-            final int c2 = block[i + 1] & 0xff;
-            ftab[(c1 << 8) + c2]++;
-            c1 = c2;
-        }
-
-        for (int i = 1; i <= 65536; i++)
-            ftab[i] += ftab[i - 1];
-
-        c1 = block[1] & 0xff;
-        for (int i = 0; i < lastShadow; i++) {
-            final int c2 = block[i + 2] & 0xff;
-            fmap[--ftab[(c1 << 8) + c2]] = i;
-            c1 = c2;
-        }
-
-        fmap[--ftab[((block[lastShadow + 1] & 0xff) << 8) + (block[1] & 0xff)]] = lastShadow;
-
-        /*
-         * Now ftab contains the first loc of every small bucket. Calculate the
-         * running order, from smallest to largest big bucket.
-         */
-        for (int i = 256; --i >= 0;) {
-            bigDone[i] = false;
-            runningOrder[i] = i;
-        }
-
-        for (int h = 364; h != 1;) {
-            h /= 3;
-            for (int i = h; i <= 255; i++) {
-                final int vv = runningOrder[i];
-                final int a = ftab[(vv + 1) << 8] - ftab[vv << 8];
-                final int b = h - 1;
-                int j = i;
-                for (int ro = runningOrder[j - h]; (ftab[(ro + 1) << 8] - ftab[ro << 8]) > a; ro = runningOrder[j
-                                                                                                                - h]) {
-                    runningOrder[j] = ro;
-                    j -= h;
-                    if (j <= b) {
-                        break;
-                    }
-                }
-                runningOrder[j] = vv;
-            }
-        }
-
-        /*
-         * The main sorting loop.
-         */
-        for (int i = 0; i <= 255; i++) {
-            /*
-             * Process big buckets, starting with the least full.
-             */
-            final int ss = runningOrder[i];
-
-            // Step 1:
-            /*
-             * Complete the big bucket [ss] by quicksorting any unsorted small
-             * buckets [ss, j]. Hopefully previous pointer-scanning phases have
-             * already completed many of the small buckets [ss, j], so we don't
-             * have to sort them at all.
-             */
-            for (int j = 0; j <= 255; j++) {
-                final int sb = (ss << 8) + j;
-                final int ftab_sb = ftab[sb];
-                if ((ftab_sb & SETMASK) != SETMASK) {
-                    final int lo = ftab_sb & CLEARMASK;
-                    final int hi = (ftab[sb + 1] & CLEARMASK) - 1;
-                    if (hi > lo) {
-                        mainQSort3(dataShadow, lo, hi, 2);
-                        if (firstAttemptShadow
-                            && (this.workDone > workLimitShadow)) {
-                            return;
-                        }
-                    }
-                    ftab[sb] = ftab_sb | SETMASK;
-                }
-            }
-
-            // Step 2:
-            // Now scan this big bucket so as to synthesise the
-            // sorted order for small buckets [t, ss] for all t != ss.
-
-            for (int j = 0; j <= 255; j++) {
-                copy[j] = ftab[(j << 8) + ss] & CLEARMASK;
-            }
-
-            for (int j = ftab[ss << 8] & CLEARMASK, hj = (ftab[(ss + 1) << 8] & CLEARMASK); j < hj; j++) {
-                final int fmap_j = fmap[j];
-                c1 = block[fmap_j] & 0xff;
-                if (!bigDone[c1]) {
-                    fmap[copy[c1]] = (fmap_j == 0) ? lastShadow : (fmap_j - 1);
-                    copy[c1]++;
-                }
-            }
-
-            for (int j = 256; --j >= 0;)
-                ftab[(j << 8) + ss] |= SETMASK;
-
-            // Step 3:
-            /*
-             * The ss big bucket is now done. Record this fact, and update the
-             * quadrant descriptors. Remember to update quadrants in the
-             * overshoot area too, if necessary. The "if (i < 255)" test merely
-             * skips this updating for the last bucket processed, since updating
-             * for the last bucket is pointless.
-             */
-            bigDone[ss] = true;
-
-            if (i < 255) {
-                final int bbStart = ftab[ss << 8] & CLEARMASK;
-                final int bbSize = (ftab[(ss + 1) << 8] & CLEARMASK) - bbStart;
-                int shifts = 0;
-
-                while ((bbSize >> shifts) > 65534) {
-                    shifts++;
-                }
-
-                for (int j = 0; j < bbSize; j++) {
-                    final int a2update = fmap[bbStart + j];
-                    final char qVal = (char) (j >> shifts);
-                    quadrant[a2update] = qVal;
-                    if (a2update < NUM_OVERSHOOT_BYTES) {
-                        quadrant[a2update + lastShadow + 1] = qVal;
-                    }
-                }
-            }
-
-        }
-    }
-
-    private void randomiseBlock() {
-        final boolean[] inUse = this.data.inUse;
-        final byte[] block = this.data.block;
-        final int lastShadow = this.last;
-
-        for (int i = 256; --i >= 0;)
-            inUse[i] = false;
-
-        int rNToGo = 0;
-        int rTPos = 0;
-        for (int i = 0, j = 1; i <= lastShadow; i = j, j++) {
-            if (rNToGo == 0) {
-                rNToGo = (char) BZip2Constants.rNums[rTPos];
-                if (++rTPos == 512) {
-                    rTPos = 0;
-                }
-            }
-
-            rNToGo--;
-            block[j] ^= ((rNToGo == 1) ? 1 : 0);
-
-            // handle 16 bit signed numbers
-            inUse[block[j] & 0xff] = true;
-        }
-
-        this.blockRandomised = true;
-    }
-
     private void generateMTFValues() {
         final int lastShadow = this.last;
         final Data dataShadow = this.data;
@@ -2033,9 +1517,10 @@ public class CBZip2OutputStream extends OutputStream
         this.nMTF = wr + 1;
     }
 
-    private static final class Data extends Object {
+    static final class Data extends Object {
 
         // with blockSize 900k
+        /* maps unsigned byte => "does it occur in block" */
         final boolean[] inUse = new boolean[256]; // 256 byte
         final byte[] unseqToSeq = new byte[256]; // 256 byte
         final int[] mtfFreq = new int[MAX_ALPHA_SIZE]; // 1032 byte
@@ -2054,23 +1539,19 @@ public class CBZip2OutputStream extends OutputStream
         final byte[] sendMTFValues2_pos = new byte[N_GROUPS]; // 6 byte
         final boolean[] sentMTFValues4_inUse16 = new boolean[16]; // 16 byte
 
-        final int[] stack_ll = new int[QSORT_STACK_SIZE]; // 4000 byte
-        final int[] stack_hh = new int[QSORT_STACK_SIZE]; // 4000 byte
-        final int[] stack_dd = new int[QSORT_STACK_SIZE]; // 4000 byte
-
-        final int[] mainSort_runningOrder = new int[256]; // 1024 byte
-        final int[] mainSort_copy = new int[256]; // 1024 byte
-        final boolean[] mainSort_bigDone = new boolean[256]; // 256 byte
-
         final int[] heap = new int[MAX_ALPHA_SIZE + 2]; // 1040 byte
         final int[] weight = new int[MAX_ALPHA_SIZE * 2]; // 2064 byte
         final int[] parent = new int[MAX_ALPHA_SIZE * 2]; // 2064 byte
 
-        final int[] ftab = new int[65537]; // 262148 byte
         // ------------
         // 333408 byte
 
+        /* holds the RLEd block of original data starting at index 1.
+         * After sorting the last byte added to the buffer is at index
+         * 0. */
         final byte[] block; // 900021 byte
+        /* maps index in Burrows-Wheeler transformed block => index of
+         * byte in original block */
         final int[] fmap; // 3600000 byte
         final char[] sfmap; // 3600000 byte
         // ------------
@@ -2078,11 +1559,12 @@ public class CBZip2OutputStream extends OutputStream
         // ============
 
         /**
-         * Array instance identical to sfmap, both are used only
-         * temporarily and indepently, so we do not need to allocate
-         * additional memory.
+         * Index of original line in Burrows-Wheeler table.
+         *
+         * <p>This is the index in fmap that points to the last byte
+         * of the original data.</p>
          */
-        final char[] quadrant;
+        int origPtr;
 
         Data(int blockSize100k) {
             super();
@@ -2091,7 +1573,6 @@ public class CBZip2OutputStream extends OutputStream
             this.block = new byte[(n + 1 + NUM_OVERSHOOT_BYTES)];
             this.fmap = new int[n];
             this.sfmap = new char[2 * n];
-            this.quadrant = this.sfmap;
         }
 
     }

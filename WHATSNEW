@@ -14,6 +14,10 @@ Fixed bugs:
  * Fixed some potential stream leaks.
    Bugzilla Reports 52738, 52740, 52742, 52743.
 
+ * Ported libbzip2's fallback sort algorithm to CBZip2OutputStream to
+   speed up compression in certain edge cases.  Merge from Commons
+   Compress.
+
 Other changes:
 --------------
 
