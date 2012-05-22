@@ -27,12 +27,12 @@
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-parent</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-jdepend</artifactId>
-  <version>1.8.3</version>
+  <version>1.8.4</version>
   <name>Apache Ant + JDepend</name>
   <description>task jdepend invoking the jdepend parser. There is also a version 2.9.1 of the
     jdepend parser available on the maven repository</description>
@@ -40,7 +40,7 @@
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.8.3</version>
+      <version>1.8.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
