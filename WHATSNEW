@@ -1,4 +1,4 @@
-Changes from Ant 1.8.3 TO Ant 1.9.0
+Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
 
 Changes that could break older environments:
@@ -14,12 +14,22 @@ Fixed bugs:
  * Fixed some potential stream leaks.
    Bugzilla Reports 52738, 52740, 52742, 52743.
 
+Other changes:
+--------------
+
+Changes from Ant 1.8.3 TO Ant 1.8.4
+===================================
+
+Fixed bugs:
+-----------
+
  * Ported libbzip2's fallback sort algorithm to CBZip2OutputStream to
    speed up compression in certain edge cases.  Merge from Commons
    Compress.
 
-Other changes:
---------------
+   Using specially crafted inputs this can be used as a denial of
+   service attack.
+   See http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2098
 
 Changes from Ant 1.8.2 TO Ant 1.8.3
 ===================================
