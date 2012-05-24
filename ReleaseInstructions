@@ -119,8 +119,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Also make sure you have sent the key that you use to a public
     keyserver.
 
-10. The beta distribution is now ready to go. Bundle it up into a tar.gz file
-    and scp to your apache account.
+10. The beta distribution is now ready to go. Commit it to
+    https://dist.apache.org/repos/dist/dev/ant
 
 11. Meanwhile, convert the part of the WHATSNEW file covering the changes
     since the last release into HTML for the README file on the
@@ -134,11 +134,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Change the title to something like "Release Notes of Apache Ant
     1.7.0Beta2" (from the default txt2html)
 
-
-12. Once this is uploaded, unpack things in your home directory
-    and call for a release vote on dev@ant.  The vote will only pass
-    if at least three PMC members have voted +1 and more +1s than -1s
-    have been cast.  The vote will run for a week.
+12. Once this is committed call for a release vote on dev@ant.  The
+    vote will only pass if at least three PMC members have voted +1
+    and more +1s than -1s have been cast.  The vote will run for a
+    week.
 
 13. Once the vote has passed, the distrib artifacts should be published the
     apache dist. It is managed via svnpubsub so the release should be
@@ -191,10 +190,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
 19. This time you'll have to do some house-keeping for the old
     release:
 
-    * upload the new release files to
+    * commit the new release files to
 
       from distribution
-      to   /www/www.apache.org/dist/ant/[source|binaries|manual].
+      to   https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
 
       
     * upload the maven artifacts located under java-repository/org/apache/ant
@@ -250,7 +249,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 21. Clean up.
 
     * remove the remaining files of the previous release and betas from
-      /www/www.apache.org/dist/ant/[source|binaries|manual].
+      https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
       This includes the old release notes.
 
     (+)
