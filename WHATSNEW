@@ -4,6 +4,13 @@ Changes from Ant 1.8.4 TO Ant 1.9.0
 Changes that could break older environments:
 -------------------------------------------
 
+ * FixCRLF used to treat the EOL value ASIS to convert to the system property 
+   line.separator. Specified was that ASIS would leave the EOL characters alone,
+   the task now really leaves the EOL characters alone. This also implies that
+   EOL ASIS will not insert a newline even if fixlast is set to true.
+   Bugzilla report 53036
+   
+
 Fixed bugs:
 -----------
 

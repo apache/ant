@@ -239,9 +239,6 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
 
     private static String calculateEolString(CrLf eol) {
         // Calculate the EOL string per the current config
-        if (eol == CrLf.ASIS) {
-            return System.getProperty("line.separator");
-        }
         if (eol == CrLf.CR || eol == CrLf.MAC) {
             return "\r";
         }
@@ -265,7 +262,10 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
         // Change all EOL characters to match the calculated EOL string. If
         // configured to do so, append a trailing EOL so that the file ends on
         // a EOL.
-        in = new NormalizeEolFilter(in, calculateEolString(eol), getFixlast());
+        if (eol != CrLf.ASIS)
+        {
+            in = new NormalizeEolFilter(in, calculateEolString(eol), getFixlast());
+        }
 
         if (tabs != AddAsisRemove.ASIS) {
             // If filtering Java source, prevent changes to whitespace in
