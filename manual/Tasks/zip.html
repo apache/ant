@@ -311,7 +311,7 @@ archive.</p>
   zip family of tasks support an
   option <code>createUnicodeExtraFields</code> since Ant 1.8.0 which
   makes Ant write these extra fields either for all entries ("always")
-  or only those whose name cannot be encoded using the spcified
+  or only those whose name cannot be encoded using the specified
   encoding (not-encodeable), it defaults to "never" since the extra
   fields create bigger archives.</p>
 
@@ -464,7 +464,7 @@ The code
   &lt;/zip&gt;
 </pre>
 <p>
-<p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
+<p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that matches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
 The same can be achieved with
 <pre>
   &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;

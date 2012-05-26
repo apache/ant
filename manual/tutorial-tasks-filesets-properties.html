@@ -301,7 +301,7 @@ can implement our task, so that these test cases will pass.</p>
 is a common way, because we separate the prerequisites from the real work. On <b>//2</b> we iterate
 over all nested filesets. If we don't want to handle multiple filesets, the <tt>addFileset()</tt>
 method has to reject the further calls. We can get the result of a fileset via its DirectoryScanner
-like done in <b>//3</b>. After that we create a plattform independend String representation of
+like done in <b>//3</b>. After that we create a platform independend String representation of
 the file path (<b>//4</b>, can be done in other ways of course). We have to do the <tt>replace()</tt>,
 because we work with a simple string comparison. Ant itself is platform independant and can
 therefore run on filesystems with slash (/, e.g. Linux) or backslash (\, e.g. Windows) as
@@ -313,7 +313,7 @@ location of the file as property, if we had found one (<b>//6</b>).</p>
 
 <p>Ok, much more easier in this simple case would be to add the <i>file</i> as additional
 <i>include</i> element to all filesets. But I wanted to show how to handle complex situations
-whithout being complex :-)</p>
+without being complex :-)</p>
 
 <p>The test case uses the ant property <i>ant.home</i> as reference. This property is set by the
 <tt>Launcher</tt> class which starts ant. We can use that property in our buildfiles as a
@@ -744,7 +744,7 @@ cd ant                                                                       //3
 cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic update                //4
 </pre></p>
 
-<p>We use the <i>-d</i> flag on <b>//1</b> to specifiy the cvs directory. You can
+<p>We use the <i>-d</i> flag on <b>//1</b> to specify the cvs directory. You can
 specify the environment variable CVSROOT with that value and after that you haven�t
 to use that flag any more. On <b>//2</b> we get the whole cvs tree of ant. (Sorry,
 but that uses a lot of time ... 10 up to 30 minutes are not unusual ... but this has
@@ -905,7 +905,7 @@ entry. For both we need some information:</p>
       all locations as a property. See the included manual for details.</td>
 </tr>
 <tr>
-  <th>attachements</th>
+  <th>attachments</th>
   <td><i>all files needed to apply the path</td>
   <td>Archive containing a patch with the new and modified resources</td>
 </tr>
@@ -926,9 +926,9 @@ and the steps described there if you haven't one.</p>
 <li>Choose "Ant" as product </li>
 <li>Version is the last "Alpha (nightly)" (at this time 1.7)</li>
 <li>Component is "Core tasks"</li>
-<li>Plattform and Severity are ok with "Other" and "Normal"</li>
+<li>Platform and Severity are ok with "Other" and "Normal"</li>
 <li>Initial State is ok with "New"</li>
-<li>Same with the empy "Assigned to"</li>
+<li>Same with the empty "Assigned to"</li>
 <li>It is not required to add yourself as CC, because you are the reporter and therefore will be
     informed on changes</li>
 <li>URL: no url required</li>

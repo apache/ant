@@ -79,7 +79,7 @@ So the buildfile contains three targets.
 This buildfile uses often the same value (src, classes, MyTask.jar), so we should rewrite that
 using <code>&lt;property&gt;</code>s. On second there are some handicaps: <code>&lt;javac&gt;</code> requires that the destination
 directory exists; a call of "clean" with a non existing classes directory will fail; "jar" requires
-the execution of some steps bofore. So the refactored code is:
+the execution of some steps before. So the refactored code is:
 
 <pre class="code">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -208,7 +208,7 @@ Here is project 'MyTask'.
 <h2>Deriving from Ant's Task</h2>
 <p>Ok, that works ... But usually you will extend <tt>org.apache.tools.ant.Task</tt>.
 That class is integrated in Ant, get's the project-reference, provides documentation
-fiels, provides easier access to the logging facility and (very useful) gives you
+fields, provides easier access to the logging facility and (very useful) gives you
 the exact location where <i>in the buildfile</i> this task instance is used.</p>
 
 <p>Oki-doki - let's us use some of these:</p>

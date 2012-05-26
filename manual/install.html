@@ -167,7 +167,7 @@ files are organized as follows.
   <td>ant-current-src.zip</td>
   <td>
     ZIP-Archive containing the sources of Ant. If you have this you could compile Ant itself.
-    If you do not have the <i>required</i> dependencies, the classes depeding on them are just not
+    If you do not have the <i>required</i> dependencies, the classes depending on them are just not
     built. Again, it is preferred to use the standard way of getting the source package described above
     to make your download quicker and to reduce the load on Apache servers.
   </td>
@@ -308,7 +308,7 @@ installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
   <td width="5%">&nbsp;</td>
   <td>
     <p>On these systems you will also need to configure more environment
-       space to cater for the environment variables used in the Ant lauch script.
+       space to cater for the environment variables used in the Ant launch script.
        To do this, you will need to add or update the following line in
        the <code>config.sys</code> file
     </p>
@@ -381,7 +381,7 @@ Apache Ant version 1.7.1 compiled on June 27 2008
 <b>ANT_HOME</b> is used by the launcher script for finding the libraries.
 <b>JAVA_HOME</b> is used by the launcher for finding the JDK/JRE to use. (JDK is recommended as some tasks
 require the java tools.) If not set, the launcher tries to find one via the %PATH% environment variable.
-<b>PATH</b> is set for user convinience. With that set you can just start <i>ant</i> instead of always typing
+<b>PATH</b> is set for user convenience. With that set you can just start <i>ant</i> instead of always typing
 <i>the/complete/path/to/your/ant/installation/bin/ant</i>.
 </p>
 
@@ -878,7 +878,7 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
         of rhino's javascript.
       </p>
       <p>
-        <strong>Note</strong>: BSF 2.4.0 uses jakarata-commons-logging
+        <strong>Note</strong>: BSF 2.4.0 uses jakarta-commons-logging
         so it needs the commons-logging.jar.
       </p>
       </td>
@@ -888,7 +888,7 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
     <td>Groovy jars</td>
     <td>Groovy with script and scriptdef tasks<br>
       You need to get the groovy jar and two asm jars from a groovy
-      installation. The jars are groovy-[version].jar, asm-[vesion].jar and
+      installation. The jars are groovy-[version].jar, asm-[version].jar and
       asm-util-[version].jar and antlr-[version].jar.
       As of groovy version 1.0-JSR-06, the jars are
       groovy-1.0-JSR-06.jar, antlr-2.7.5.jar, asm-2.2.jar and asm-util-2.2.jar.
@@ -926,7 +926,7 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
   </tr>
   <tr>
     <td>jpython.jar</td>
-    <td>Python with script task <b>deprecated, jython is the prefered engine</b></td>
+    <td>Python with script task <b>deprecated, jython is the preferred engine</b></td>
     <td><a href="http://www.jpython.org/" target="_top">http://www.jpython.org/</a></td>
   </tr>
   <tr>
@@ -1049,7 +1049,7 @@ absent.</li>
 <li>JVM system properties
 </li>
 
-<li>The status of the temp directory. If this is not writeable, or its clock is
+<li>The status of the temp directory. If this is not writable, or its clock is
 horribly wrong (possible if it is on a network drive), a lot of tasks will fail
 with obscure error messages.</li>
 
@@ -1067,7 +1067,7 @@ your location, then dependency logic may get confused.
 </p>
 
 <p>
-    For under-IDE diagostics, use the &lt;diagnostics&gt; task to run the same
+    For under-IDE diagnostics, use the &lt;diagnostics&gt; task to run the same
     tests as an ant task. This can be added to a diagnostics target in a build
     file to see what tasks are available under the IDE, what the XML parser and
     classpath is, etc.

@@ -226,7 +226,7 @@ threadsPerProcessor attributes.  Spinning up all 40 of those tasks could cripple
 the system for memory and CPU time.  By limiting the number of
 concurrent executions you can reduce contention for CPU, memory and disk IO, 
 and so actually finish faster.  This is also a good
-candidiate for use of threadCount (and possibly threadsPerProcessor) because
+candidate for use of threadCount (and possibly threadsPerProcessor) because
 each task is independent (every new JVM is forked) and has no dependencies on
 the other tasks.</p>
 

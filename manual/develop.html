@@ -80,7 +80,7 @@ good convention, though.</p>
     The xml element that contains the tag corresponding to the
     task gets converted to an UnknownElement at parser time.
     This UnknownElement gets placed in a list within a target
-    object, or recursivly within another UnknownElement.
+    object, or recursively within another UnknownElement.
   </li>
   <li>
     When the target is executed, each UnknownElement is invoked
@@ -262,7 +262,7 @@ the methods will be called, but we don't know which, this depends on
 the implementation of your Java virtual machine.</p>
 
   <h3><a name="nestedtype">Nested Types</a></h3>
-If your task needs to nest an arbitary type that has been defined
+If your task needs to nest an arbitrary type that has been defined
   using <code>&lt;typedef&gt;</code> you have two options.
   <ol>
     <li><code>public void add(Type type)</code></li>
@@ -510,7 +510,7 @@ If you wish to attach a listener from the command line you may use the
 <p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
-<p><b>Note: </b>A listener must not access System.out and System.err directly since ouput on 
+<p><b>Note: </b>A listener must not access System.out and System.err directly since output on 
 these streams is redirected by Ant's core to the build event system. Accessing these 
 streams can cause an infinite loop in Ant. Depending on the version of Ant, this will
 either cause the build to terminate or the Java VM to run out of Stack space. A logger, also, may 

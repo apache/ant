@@ -356,7 +356,7 @@ For another layout ... have a look inside Log4J's documentation about using othe
 <h2>Configuration files</h2>
 <p>Why we have used Log4J? "It's highly configurable"? No - all is hard coded! But that is not the debt of Log4J - it's
 ours. We had coded <tt>BasicConfigurator.configure();</tt> which implies a simple, but hard coded configuration. More
-confortable would be using a property file. In the java source delete the BasicConfiguration-line from the main() method
+comfortable would be using a property file. In the java source delete the BasicConfiguration-line from the main() method
 (and the related import-statement). Log4J will search then for a configuration as described in it's manual. Then create 
 a new file <tt>src/log4j.properties</tt>. That's the default name for Log4J's configuration and using that name would make 
 life easier - not only the framework knows what is inside, you too!</p>

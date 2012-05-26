@@ -69,7 +69,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
 </ul>
     Vendors such as BEA and IBM now provide custom Ant tasks to work with their
     particular products. More importantly, EJB3.0 renders this whole process obsolete.
-    Accordingly, developement of these tasks is effectively frozen. Bug reports
+    Accordingly, development of these tasks is effectively frozen. Bug reports
     and especially patches are welcome, but there is no pressing need to add
     support for new application servers. Nobody should be writing new EJB2.x applications
     and definitely not new EJB2.x servers.
@@ -1386,7 +1386,7 @@ the classpath of the ejbdeploy tool and set the <i>websphere.home</i> property (
 in the descriptor dir:</p>
 
 <pre>
-    &lt;property name=&quot;webpshere.home&quot; value=&quot;${was4.home}&quot;/&gt;
+    &lt;property name=&quot;websphere.home&quot; value=&quot;${was4.home}&quot;/&gt;
     &lt;ejbjar srcdir="${build.class}" descriptordir="etc/ejb"&gt;
       &lt;include name="*-ejb-jar.xml"/&gt;
       &lt;websphere dbvendor="DB2UDBOS390_V6"

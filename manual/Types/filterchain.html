@@ -178,7 +178,7 @@ distribution.
     a class. However the bytes arrive to the filter as a sequence
     of characters. This means that one must be careful on the
     choice of character encoding to use. Most encoding lose information
-    on conversion from an arbitary sequence of bytes to characters
+    on conversion from an arbitrary sequence of bytes to characters
     and back again to bytes. In particular the usual default
     character encodings (CP152 and UTF-8) do.
     For this reason, <em>since Ant 1.7</em>, the character
@@ -1042,12 +1042,12 @@ a token and either returns a string or a null.
 It the string is not null it is passed to the next filter. This
 proceeds until all the filters are called.
 If a string is returned after all the filters, the string is
-outputs with its associated token delimitier
+outputs with its associated token delimiter
 (if one is present).
 The trailing delimiter may be overridden by the <i>delimOutput</i>
 attribute.
 <p>
-<a name="backslash"><em>blackslash interpretation</em></a>
+<a name="backslash"><em>backslash interpretation</em></a>
 A number of attributes (including <i>delimOutput</i>) interpret
 backslash escapes. The following are understood: \n, \r, \f, \t
 and \\.
@@ -1344,7 +1344,7 @@ concerning the choice of regular expression implementation.
   <tr>
     <td vAlign=top>replace</td>
     <td vAlign=top>The substitution pattern to replace the matched
-      regular expression. When omitted the orignal token is returned.
+      regular expression. When omitted the original token is returned.
     </td>
     <td vAlign=top align="center">No</td>
   </tr>
@@ -1650,7 +1650,7 @@ order and copy them into <i>build</i> location.
 Sort all files <code>*.txt</code> from <i>src</i> location using as
 sorting criterium <code>EvenFirstCmp</code> class, that sorts the file
 lines putting even lines first then odd lines for example. The modified files
-are copied into <i>build</i> location. The <code>EventFirstCmp</code>,
+are copied into <i>build</i> location. The <code>EvenFirstCmp</code>,
 has to an instanciable class via <code>Class.newInstance()</code>,
 therefore in case of inner class has to be <em>static</em>. It also has to
 implement <code>java.util.Comparator</code> interface, for example:
