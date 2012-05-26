@@ -21,7 +21,7 @@ package org.apache.tools.mail;
 import java.io.IOException;
 
 /**
- * Specialized IOException that get thrown if SMPT's QUIT command fails.
+ * Specialized IOException that get thrown if SMTP's QUIT command fails.
  *
  * <p>This seems to happen with some version of MS Exchange that
  * doesn't respond with a 221 code immediately.  See <a

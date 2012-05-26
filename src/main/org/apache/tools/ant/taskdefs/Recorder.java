@@ -198,7 +198,7 @@ public class Recorder extends Task implements SubBuildListener {
     /**
      * Gets the recorder that's associated with the passed in name. If the
      * recorder doesn't exist, then a new one is created.
-     * @param name the name of the recoder
+     * @param name the name of the recorder
      * @param proj the current project
      * @return a recorder
      * @throws BuildException on error

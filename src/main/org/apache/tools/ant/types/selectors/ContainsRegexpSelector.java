@@ -102,7 +102,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
 
     /**
      * Whether to treat input as singleline ('.' matches newline).
-     * Corresponsds to java.util.regex.Pattern.DOTALL.
+     * Corresponds to java.util.regex.Pattern.DOTALL.
      * @param b the value to set.
      * @since Ant 1.8.2
      */

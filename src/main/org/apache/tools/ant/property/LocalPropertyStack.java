@@ -41,7 +41,7 @@ public class LocalPropertyStack {
 
     /**
      * Add a local property.
-     * @param property the name of the local proeprty.
+     * @param property the name of the local property.
      */
     public void addLocal(String property) {
         if (!stack.isEmpty()) {

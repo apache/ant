@@ -46,7 +46,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * The maxwaitunit and checkeveryunit are allowed to have the following values:
  * millisecond, second, minute, hour, day and week. The default is millisecond.
  *
- * For programmatic use/subclassing, there are two methods that may be overrridden,
+ * For programmatic use/subclassing, there are two methods that may be overridden,
  * <code>processSuccess</code> and <code>processTimeout</code>
  * @since Ant 1.5
  *
@@ -188,7 +188,7 @@ public class WaitFor extends ConditionBase {
     }
 
     /**
-     * Get the maxiumum wait time, in milliseconds.
+     * Get the maximum wait time, in milliseconds.
      * @since Ant 1.8
      * @return how long to wait before timing out
      */

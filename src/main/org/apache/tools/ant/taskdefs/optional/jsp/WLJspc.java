@@ -251,7 +251,7 @@ public class WLJspc extends MatchingTask {
     /**
      * Set the package under which the compiled classes go
      *
-     * @param packageName the package name for the clases
+     * @param packageName the package name for the classes
      */
     public void setPackage(String packageName) {
 

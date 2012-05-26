@@ -444,7 +444,7 @@ public abstract class AbstractFileSet extends DataType
      }
 
     /**
-     * Gets whether an error is/shold be thrown if the base directory
+     * Gets whether an error is/should be thrown if the base directory
      * does not exist.
      * @since Ant 1.8.2
      */
@@ -799,7 +799,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Add an arbitary selector.
+     * Add an arbitrary selector.
      * @param selector the <code>FileSelector</code> to add.
      * @since Ant 1.6
      */

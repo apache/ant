@@ -116,7 +116,7 @@ public class SplashTask extends Task {
     /**
      * how long to show the splash screen in milliseconds,
      * optional; default 5000 ms.
-     * @param duration the spash duration in milliseconds
+     * @param duration the splash duration in milliseconds
      */
     public void setShowduration(int duration) {
         this.showDuration = duration;

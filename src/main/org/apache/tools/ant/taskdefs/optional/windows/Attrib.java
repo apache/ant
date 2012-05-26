@@ -172,7 +172,7 @@ public class Attrib extends ExecuteOn {
 
     /**
      * Check if the os is valid.
-     * Defauls is to allow windows
+     * Default is to allow windows
      * @return true if the os is valid.
      */
     protected boolean isValidOs() {

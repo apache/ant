@@ -55,7 +55,7 @@ public class AntlibDefinition extends Task {
 
     /**
      * The URI for this definition.
-     * @return The URI for this defintion.
+     * @return The URI for this definition.
      */
     public String getURI() {
         return uri;

@@ -192,7 +192,7 @@ public class SymbolicLinkUtils {
      * accidentally invoked on a real file, the real file will not be
      * harmed, but silently ignored.</p>
      *
-     * <p>Normaly this method works by
+     * <p>Normally this method works by
      * getting the canonical path of the link, using the canonical path to
      * rename the resource (breaking the link) and then deleting the link.
      * The resource is then returned to its original name inside a finally

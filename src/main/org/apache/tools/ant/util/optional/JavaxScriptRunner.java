@@ -61,7 +61,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
      * @param execName the name that will be passed to the
      *                 scripting engine for this script execution.
      *
-     * @exception BuildException if someting goes wrong exectuing the script.
+     * @exception BuildException if something goes wrong executing the script.
      */
     public void executeScript(String execName) throws BuildException {
         evaluateScript(execName);

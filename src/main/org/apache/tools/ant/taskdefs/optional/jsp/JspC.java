@@ -640,7 +640,7 @@ public class JspC extends MatchingTask {
 
     /**
      * get a filename from our jsp file.
-     * @param mangler the jsp filename managler.
+     * @param mangler the jsp filename manager.
      * @param srcFile the source file.
      * @param srcDir  the source directory.
      * @param dest    the destination directory.

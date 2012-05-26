@@ -247,7 +247,7 @@ public class PropertySet extends DataType implements ResourceCollection {
 
     /**
      * Get the dynamic attribute.
-     * @return true if the property set is to be evalulated each time it is used.
+     * @return true if the property set is to be evaluated each time it is used.
      */
     public boolean getDynamic() {
         if (isReference()) {

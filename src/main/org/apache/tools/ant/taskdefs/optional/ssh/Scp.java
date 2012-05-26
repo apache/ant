@@ -182,7 +182,7 @@ public class Scp extends SSHBase {
     }
 
     /**
-     * Adds a FileSet tranfer to remote host.  NOTE: Either
+     * Adds a FileSet transfer to remote host.  NOTE: Either
      * addFileSet() or setFile() are required.  But, not both.
      *
      * @param set FileSet to send to remote host.

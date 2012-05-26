@@ -178,7 +178,7 @@ public interface SelectorContainer {
     void addModified(ModifiedSelector selector);
 
     /**
-     * add an arbitary selector
+     * add an arbitrary selector
      * @param selector the selector to add
      * @since Ant 1.6
      */

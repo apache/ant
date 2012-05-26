@@ -46,9 +46,9 @@ import org.apache.tools.mail.MailMessage;
  *  <ul>
  *    <li> MailLogger.mailhost [default: localhost] - Mail server to use</li>
  *    <li> MailLogger.port [default: 25] - Default port for SMTP </li>
- *    <li> Maillogger.user [no default] - user name for SMPT auth
+ *    <li> Maillogger.user [no default] - user name for SMTP auth
  *    (requires JavaMail)</li>
- *    <li> Maillogger.password [no default] - password for SMPT auth
+ *    <li> Maillogger.password [no default] - password for SMTP auth
  *    (requires JavaMail)</li>
  *    <li> Maillogger.ssl [default: false] - on or true if ssl is
  *    needed (requires JavaMail)</li>

@@ -458,7 +458,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Specify max memory of the JVM.
      * -mx or -Xmx depending on VM version.
-     * @param max the string to pass to the jvm to specifiy the max memory.
+     * @param max the string to pass to the jvm to specify the max memory.
      */
     public void setMaxmemory(String max) {
         this.maxMemory = max;

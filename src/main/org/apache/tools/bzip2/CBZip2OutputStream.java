@@ -719,7 +719,7 @@ public class CBZip2OutputStream extends OutputStream
     }
 
     /**
-     * Overriden to close the stream.
+     * Overridden to close the stream.
      */
     @Override
     protected void finalize() throws Throwable {

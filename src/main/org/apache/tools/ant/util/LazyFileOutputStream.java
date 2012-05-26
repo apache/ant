@@ -131,7 +131,7 @@ public class LazyFileOutputStream extends OutputStream {
      * @param b the byte array.
      * @param offset write from this index.
      * @param len    the number of bytes to write.
-     * @throws IOException if there is a probem.
+     * @throws IOException if there is a problem.
      */
     public synchronized void write(byte[] b, int offset, int len)
         throws IOException {

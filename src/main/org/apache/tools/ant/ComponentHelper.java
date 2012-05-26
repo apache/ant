@@ -389,7 +389,7 @@ public class ComponentHelper  {
     /**
      * Returns the current task definition hashtable. The returned hashtable is
      * "live" and so should not be modified.  Also, the returned table may be 
-     * modifed asynchronously.
+     * modified asynchronously.
      *
      * @return a map of from task name to implementing class
      *         (String to Class).
@@ -448,7 +448,7 @@ public class ComponentHelper  {
     /**
      * This returns a list of restricted definitions for a name.
      * The returned List is "live" and so should not be modified.  
-     * Also, the returned list may be modifed asynchronously.  
+     * Also, the returned list may be modified asynchronously.  
      * Any access must be guarded with a lock on the list itself.
      * 
      * @param componentName the name to use.

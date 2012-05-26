@@ -38,7 +38,7 @@ public class UUEncoder {
     private String name;
 
     /**
-     * Constructor specifing a name for the encoded buffer, begin
+     * Constructor specifying a name for the encoded buffer, begin
      * line will be:
      * <pre>
      *   begin 644 [NAME]

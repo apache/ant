@@ -88,7 +88,7 @@ public abstract class AbstractAccessTask
     }
 
     /**
-     * Prevent the use of the addsourcefile atribute.
+     * Prevent the use of the addsourcefile attribute.
      *
      * @ant.attribute ignore="true"
      * @param b A user supplied boolean we won't accept.

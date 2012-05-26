@@ -214,7 +214,7 @@ public class Zip extends MatchingTask {
         UnicodeExtraField.NEVER;
 
     /**
-     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * Whether to fall back to UTF-8 if a name cannot be encoded using
      * the specified encoding.
      *
      * @since Ant 1.8.0
@@ -532,7 +532,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * Whether to fall back to UTF-8 if a name cannot be encoded using
      * the specified encoding.
      *
      * <p>Defaults to false.</p>
@@ -544,7 +544,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Whether to fall back to UTF-8 if a name cannot be enoded using
+     * Whether to fall back to UTF-8 if a name cannot be encoded using
      * the specified encoding.
      *
      * @since Ant 1.8.0
@@ -1183,7 +1183,7 @@ public class Zip extends MatchingTask {
      * third arg if they already know that the archive is
      * out-of-date.</p>
      *
-     * <p>This method first delegates to getNonFileSetResourceToAdd
+     * <p>This method first delegates to getNonFileSetResourcesToAdd
      * and then invokes the FileSet-arg version.  All this to keep
      * backwards compatibility for subclasses that don't know how to
      * deal with non-FileSet ResourceCollections.</p>

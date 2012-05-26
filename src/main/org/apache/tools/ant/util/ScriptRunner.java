@@ -18,7 +18,7 @@
 package org.apache.tools.ant.util;
 
 /**
- * This class is here for backwards compatiblity.
+ * This class is here for backwards compatibility.
  * @deprecated Implementation moved to another location. Use
  *             that org.apache.tools.ant.types.optional.ScriptRunner instead.
  */

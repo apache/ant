@@ -48,7 +48,7 @@ public class ScriptCondition extends AbstractScriptComponent implements Conditio
     }
 
     /**
-     * get the current value of the conditon
+     * get the current value of the condition
      * @return true if the condition
      */
     public boolean getValue() {

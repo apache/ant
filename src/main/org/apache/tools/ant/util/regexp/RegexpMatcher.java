@@ -34,7 +34,7 @@ public interface RegexpMatcher {
     int MATCH_DEFAULT          = 0x00000000;
 
     /***
-     * Perform a case insenstive match
+     * Perform a case insensitive match
      */
     int MATCH_CASE_INSENSITIVE = 0x00000100;
 

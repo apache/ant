@@ -454,7 +454,7 @@ public class SubAnt extends Task {
     /**
      * Corresponds to <code>&lt;ant&gt;</code>'s
      * nested <code>&lt;propertyset&gt;</code> element.
-     * @param ps the propertset
+     * @param ps the propertyset
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);

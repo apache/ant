@@ -1061,7 +1061,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Control deprecation infromation
+     * Control deprecation information
      *
      * @param b If true, do not include deprecated information.
      */
@@ -1184,7 +1184,7 @@ public class Javadoc extends Task {
         private URL packagelistURL;
         private boolean resolveLink = false;
 
-        /** Constructor for LinkArguement */
+        /** Constructor for LinkArgument */
         public LinkArgument() {
             //empty
         }
@@ -1497,14 +1497,14 @@ public class Javadoc extends Task {
         }
         /**
          * Add a package nested element.
-         * @param pn a nested element specifing the package.
+         * @param pn a nested element specifying the package.
          */
         public void addPackage(PackageName pn) {
             packages.addElement(pn);
         }
 
         /**
-         * Get the packages as a collon separated list.
+         * Get the packages as a colon separated list.
          * @return the packages as a string
          */
         public String getPackages() {

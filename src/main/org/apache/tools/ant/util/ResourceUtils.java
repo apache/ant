@@ -372,7 +372,7 @@ public class ResourceUtils {
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
      * @param project the project instance.
-     * @param force whether read-only taret files will be overwritten
+     * @param force whether read-only target files will be overwritten
      *
      * @throws IOException if the copying fails.
      *

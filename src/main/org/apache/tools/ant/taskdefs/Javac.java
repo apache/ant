@@ -863,7 +863,7 @@ public class Javac extends MatchingTask {
     /**
      * Get the result of the javac task (success or failure).
      * @return true if compilation succeeded, or
-     *         was not neccessary, false if the compilation failed.
+     *         was not necessary, false if the compilation failed.
      */
     public boolean getTaskSuccess() {
         return taskSuccess;

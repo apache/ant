@@ -25,7 +25,7 @@ import java.lang.reflect.Constructor;
 /**
  * This class contains all the information
  * on a particular ant type,
- * the classname, adaptor and the class
+ * the classname, adapter and the class
  * it should be assignable from.
  * This type replaces the task/datatype split
  * of pre ant 1.6.
@@ -239,7 +239,7 @@ public class AntTypeDefinition {
      * <dl>
      *   <li>if the class can be created.</li>
      *   <li>if an adapter class can be created</li>
-     *   <li>if the type is assignable from adapto</li>
+     *   <li>if the type is assignable from adapter</li>
      *   <li>if the type can be used with the adapter class</li>
      * </dl>
      * @param project the current project.
@@ -302,7 +302,7 @@ public class AntTypeDefinition {
      * @param newclass class to create
      * @param project the project to use
      * @return a newly constructed and bound instance.
-     * @throws NoSuchMethodException  no good construtor.
+     * @throws NoSuchMethodException  no good constructor.
      * @throws InstantiationException cannot initialize the object.
      * @throws IllegalAccessException cannot access the object.
      * @throws InvocationTargetException error in invocation.

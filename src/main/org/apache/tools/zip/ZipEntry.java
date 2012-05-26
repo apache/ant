@@ -190,7 +190,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * by&quot; part of the central file header.
      *
      * @return PLATFORM_FAT unless {@link #setUnixMode setUnixMode}
-     * has been called, in which case PLATORM_UNIX will be returned.
+     * has been called, in which case PLATFORM_UNIX will be returned.
      *
      * @since Ant 1.5.2
      */

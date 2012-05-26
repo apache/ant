@@ -72,10 +72,10 @@ public class SQLExampleTask extends JDBCTask {
 
         } finally {
             if (stmt != null) {
-                try {stmt.close();}catch (SQLException ingore) {}
+                try {stmt.close();}catch (SQLException ignore) {}
             }
             if (conn != null) {
-                try {conn.close();}catch (SQLException ingore) {}
+                try {conn.close();}catch (SQLException ignore) {}
             }
         }
     }

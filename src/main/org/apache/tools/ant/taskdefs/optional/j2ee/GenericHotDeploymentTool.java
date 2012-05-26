@@ -52,7 +52,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *  Add a nested argment element to hand to the JVM running the
+     *  Add a nested argument element to hand to the JVM running the
      *  deployment tool.
      *  Creates a nested arg element.
      *  @return A Commandline.Argument object representing the
@@ -112,7 +112,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *  The name of the class to execute to perfom
+     *  The name of the class to execute to perform
      *  deployment; required.
      *  Example: "com.foobar.tools.deploy.DeployTool"
      *  @param className The fully qualified class name of the class

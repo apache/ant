@@ -41,7 +41,7 @@ public class ZipFileSet extends ArchiveFileSet {
     }
 
     /**
-     * Constructor using a fileset arguement.
+     * Constructor using a fileset argument.
      * @param fileset the fileset to use
      */
     protected ZipFileSet(FileSet fileset) {
@@ -49,7 +49,7 @@ public class ZipFileSet extends ArchiveFileSet {
     }
 
     /**
-     * Constructor using a zipfileset arguement.
+     * Constructor using a zipfileset argument.
      * @param fileset the zipfileset to use
      */
     protected ZipFileSet(ZipFileSet fileset) {

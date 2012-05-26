@@ -225,7 +225,7 @@ public abstract class AbstractClasspathResource extends Resource {
     }
 
     /**
-     * open the inpout stream from a specific classloader
+     * open the input stream from a specific classloader
      * @param cl the classloader to use. Will be null if the system classloader is used
      * @return an open input stream for the resource
      * @throws IOException if an error occurs.

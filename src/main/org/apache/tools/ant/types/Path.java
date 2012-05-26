@@ -53,7 +53,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * &lt;/sometask&gt;<br>
  * </code>
  * <p>
- * The object implemention <code>sometask</code> must provide a method called
+ * The object implementation <code>sometask</code> must provide a method called
  * <code>createSomepath</code> which returns an instance of <code>Path</code>.
  * Nested path definitions are handled by the Path object and must be labeled
  * <code>pathelement</code>.<p>

@@ -1088,7 +1088,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
     /**
      * Executable a retryable object.
-     * @param h the retry hander.
+     * @param h the retry handler.
      * @param r the object that should be retried until it succeeds
      *          or the number of retrys is reached.
      * @param descr a description of the command that is being run.

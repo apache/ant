@@ -762,7 +762,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * failures?</td><td>false</td></tr>
      *
      * <tr><td>formatter</td><td>A JUnitResultFormatter given as
-     * classname,filename. If filename is ommitted, System.out is
+     * classname,filename. If filename is omitted, System.out is
      * assumed.</td><td>none</td></tr>
      *
      * <tr><td>showoutput</td><td>send output to System.err/.out as

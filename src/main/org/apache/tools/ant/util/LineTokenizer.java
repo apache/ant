@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
- * class to tokenize the input as lines seperated
+ * class to tokenize the input as lines separated
  * by \r (mac style), \r\n (dos/windows style) or \n (unix style)
  * @since Ant 1.6
  */

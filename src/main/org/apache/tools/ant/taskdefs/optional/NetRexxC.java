@@ -561,7 +561,7 @@ public class NetRexxC extends MatchingTask {
 
 
     /**
-     * Tells wether the trailing .keep in nocompile-mode should be removed
+     * Tells whether the trailing .keep in nocompile-mode should be removed
      * so that the resulting java source really ends on .java.
      * This facilitates the use of the javadoc tool lateron.
      */

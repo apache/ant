@@ -178,7 +178,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets locale specific language of resource bundle; optional.
-     * @param bundleLanguage langage of the bundle
+     * @param bundleLanguage language of the bundle
      */
     public void setBundleLanguage(String bundleLanguage) {
         this.bundleLanguage = bundleLanguage;

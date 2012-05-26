@@ -29,7 +29,7 @@ public class Environment {
     // CheckStyle:VisibilityModifier OFF - bc
 
     /**
-     * a vector of type Enviromment.Variable
+     * a vector of type Environment.Variable
      * @see Variable
      */
     protected Vector variables;

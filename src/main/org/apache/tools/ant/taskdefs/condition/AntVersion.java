@@ -52,7 +52,7 @@ public class AntVersion extends Task implements Condition {
     }
 
     /**
-     * Evalute the condition.
+     * Evaluate the condition.
      * @return true if the condition is true.
      * @throws BuildException if an error occurs.
      */

@@ -63,7 +63,7 @@ public interface MSVSSConstants {
 
     /**  The text for replacing writable files   */
     String WRITABLE_REPLACE = "replace";
-    /**  The text for skiping writable files  */
+    /**  The text for skipping writable files  */
     String WRITABLE_SKIP = "skip";
     /**  The text for failing on writable files  */
     String WRITABLE_FAIL = "fail";

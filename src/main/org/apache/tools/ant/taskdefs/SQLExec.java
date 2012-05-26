@@ -204,7 +204,7 @@ public class SQLExec extends JDBCTask {
     private boolean rawBlobs;
 
     /**
-     * delimers must match in case and whitespace is significant.
+     * delimiters must match in case and whitespace is significant.
      * @since Ant 1.8.0
      */
     private boolean strictDelimiterMatching = true;
@@ -245,7 +245,7 @@ public class SQLExec extends JDBCTask {
     private String csvQuoteChar = null;
 
     /**
-     * Whether a warning is an error - in which case onError aplies.
+     * Whether a warning is an error - in which case onError applies.
      * @since Ant 1.8.0
      */
     private boolean treatWarningsAsErrors = false;
@@ -478,9 +478,9 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * If false, delimiters will be searched for in a case-insesitive
-     * manner (i.e. delimer="go" matches "GO") and surrounding
-     * whitespace will be ignored (delimter="go" matches "GO ").
+     * If false, delimiters will be searched for in a case-insensitive
+     * manner (i.e. delimiter="go" matches "GO") and surrounding
+     * whitespace will be ignored (delimiter="go" matches "GO ").
      * @since Ant 1.8.0
      */
     public void setStrictDelimiterMatching(boolean b) {
@@ -496,7 +496,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Whether a warning is an error - in which case onError aplies.
+     * Whether a warning is an error - in which case onError applies.
      * @since Ant 1.8.0
      */
     public void setTreatWarningsAsErrors(boolean b) {

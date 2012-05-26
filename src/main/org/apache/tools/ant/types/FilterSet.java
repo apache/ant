@@ -62,7 +62,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
 
         /**
-         * No-argument conmstructor.
+         * No-argument constructor.
          */
         public Filter() {
         }

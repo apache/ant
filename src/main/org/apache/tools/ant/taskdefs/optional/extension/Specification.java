@@ -265,7 +265,7 @@ public final class Specification {
     /**
      * Get the title of the specification.
      *
-     * @return the title of speciication
+     * @return the title of specification
      */
     public String getSpecificationTitle() {
         return specificationTitle;
@@ -318,10 +318,10 @@ public final class Specification {
 
     /**
      * Return an array containing sections to which specification applies
-     * or null if relevent to no sections.
+     * or null if relevant to no sections.
      *
      * @return an array containing sections to which specification applies
-     *         or null if relevent to no sections.
+     *         or null if relevant to no sections.
      */
     public String[] getSections() {
         if (null == sections) {
@@ -339,7 +339,7 @@ public final class Specification {
      *
      * @param other the other specification
      * @return the enum indicating the compatibility (or lack thereof)
-     *         of specifed Package Specification
+     *         of specified Package Specification
      */
     public Compatibility getCompatibilityWith(final Specification other) {
         // Specification Name must match

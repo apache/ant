@@ -23,7 +23,7 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
  */
 public interface LogListener {
     /**
-     * Method for the loglistener to implement to recieve log messages.
+     * Method for the loglistener to implement to receive log messages.
      * @param message the message to log
      */
     void log(String message);

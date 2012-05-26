@@ -84,7 +84,7 @@ import org.apache.tools.ant.types.Parameter;
  * Sort all files <code>*.txt</code> from <i>src</i> location using as
  * sorting criterium <code>EvenFirstCmp</code> class, that sorts the file
  * lines putting even lines first then odd lines for example. The modified files
- * are copied into <i>build</i> location. The <code>EventFirstCmp</code>,
+ * are copied into <i>build</i> location. The <code>EvenFirstCmp</code>,
  * has to an instanciable class via <code>Class.newInstance()</code>,
  * therefore in case of inner class has to be <em>static</em>. It also has to
  * implement <code>java.util.Comparator</code> interface, for example:

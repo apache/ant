@@ -30,7 +30,7 @@ import org.apache.tools.ant.taskdefs.Sequential;
 import org.apache.tools.ant.taskdefs.WaitFor;
 
 /**
- * Task to provide functional testing under Ant, with a fairly complex worflow of:
+ * Task to provide functional testing under Ant, with a fairly complex workflow of:
  *
  * <ul>
  * <li>Conditional execution</li>

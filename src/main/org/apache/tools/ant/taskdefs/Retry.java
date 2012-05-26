@@ -66,7 +66,7 @@ public class Retry extends Task implements TaskContainer {
     }
 
     /**
-     * set the delay between retries (in miliseconds)
+     * set the delay between retries (in milliseconds)
      * @param n the time between retries.
      * @since Ant 1.8.3
      */

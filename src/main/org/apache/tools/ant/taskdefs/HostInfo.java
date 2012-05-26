@@ -93,7 +93,7 @@ public class HostInfo extends Task {
      * 
      * @param aHost
      *            the name or the address of the host, data for the local host
-     *            will be retrieved if ommited.
+     *            will be retrieved if omitted.
      * @since Ant 1.8
      */
     public void setHost(String aHost) {

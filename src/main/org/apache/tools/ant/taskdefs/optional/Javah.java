@@ -373,7 +373,7 @@ public class Javah extends Task {
 
     /**
      * Choose the implementation for this particular task.
-     * @param impl the name of the implemenation.
+     * @param impl the name of the implementation.
      * @since Ant 1.6.3
      */
     public void setImplementation(String impl) {

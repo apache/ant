@@ -1702,7 +1702,7 @@ public class FTP extends Task implements FTPTaskConfig {
 
     /**
      * Executable a retryable object.
-     * @param h the retry hander.
+     * @param h the retry handler.
      * @param r the object that should be retried until it succeeds
      *          or the number of retrys is reached.
      * @param descr a description of the command that is being run.
@@ -2245,7 +2245,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * Retrieve a single file from the remote host. <code>filename</code> may
      * contain a relative path specification. <p>
      *
-     * The file will then be retreived using the entire relative path spec -
+     * The file will then be retrieved using the entire relative path spec -
      * no attempt is made to change directories. It is anticipated that this
      * may eventually cause problems with some FTP servers, but it simplifies
      * the coding.</p>

@@ -104,7 +104,7 @@ public class Apt
     }
 
     /**
-     * Construtor for Apt task.
+     * Constructor for Apt task.
      * This sets the apt compiler adapter as the compiler in the super class.
      */
     public Apt() {

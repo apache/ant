@@ -26,7 +26,7 @@ package org.apache.tools.ant.taskdefs;
  */
 public interface XSLTLiaison2 extends XSLTLiaison {
     /**
-     * Configure the liasion from the XSLTProcess task
+     * Configure the liaision from the XSLTProcess task
      * @param xsltTask the XSLTProcess task
      */
     void configure(XSLTProcess xsltTask);

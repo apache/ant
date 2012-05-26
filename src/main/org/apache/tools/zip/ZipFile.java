@@ -252,7 +252,7 @@ public class ZipFile {
      * Returns an InputStream for reading the contents of the given entry.
      * @param ze the entry to get the stream for.
      * @return a stream to read the entry from.
-     * @throws IOException if unable to create an input stream from the zipenty
+     * @throws IOException if unable to create an input stream from the zipentry
      * @throws ZipException if the zipentry has an unsupported
      * compression method
      */

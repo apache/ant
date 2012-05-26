@@ -652,7 +652,7 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         /**
-         * End a namepace prefix to uri mapping
+         * End a namespace prefix to uri mapping
          *
          * @param prefix the prefix that is not mapped anymore
          */

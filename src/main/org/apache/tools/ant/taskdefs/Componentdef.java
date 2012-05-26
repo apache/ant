@@ -19,9 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 /**
- * Adds a compenent definition to the current project.
+ * Adds a component definition to the current project.
  * used in the current project. Two attributes are needed, the name that identifies
- * this compenent uniquely, and the full name of the class (
+ * this component uniquely, and the full name of the class (
  * including the packages) that
  * implements this component.</p>
  * @since Ant 1.8

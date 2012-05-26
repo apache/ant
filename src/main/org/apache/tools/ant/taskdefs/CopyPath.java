@@ -159,7 +159,7 @@ public class CopyPath extends Task {
     }
 
     /**
-     * This is a very minimal derivative of the nomal copy logic.
+     * This is a very minimal derivative of the normal copy logic.
      *
      * @throws BuildException
      *             if something goes wrong with the build.

@@ -27,8 +27,8 @@ import org.apache.tools.ant.taskdefs.Java;
  *  This is <b>not</b> the same as creating the application archive.
  *  This task assumes the archive (EAR, JAR, or WAR) file has been
  *  assembled and is supplied as the "source" attribute.
- *  <p>In the end, this task assembles the commadline parameters
- *  and runs the weblogic.deploy tool in a seperate JVM.
+ *  <p>In the end, this task assembles the commandline parameters
+ *  and runs the weblogic.deploy tool in a separate JVM.
  *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool

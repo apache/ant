@@ -167,7 +167,7 @@ public class Directory {
 
     /**
      * Convert a file path to an array of path components.
-     * This uses File.sepatator to split the file path string.
+     * This uses File.separator to split the file path string.
      * @param thePath the file path string to convert
      * @return an array of path components
      */

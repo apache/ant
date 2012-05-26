@@ -292,7 +292,7 @@ public class TarEntry implements TarConstants {
      * Descendancy is determined by the name of the descendant
      * starting with this entry's name.
      *
-     * @param desc Entry to be checked as a descendent of this.
+     * @param desc Entry to be checked as a descendant of this.
      * @return True if entry is a descendant of this.
      */
     public boolean isDescendent(TarEntry desc) {

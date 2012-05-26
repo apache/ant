@@ -60,7 +60,7 @@ public class URLResolver implements ExtensionResolver {
 
     /**
      * Returns the file resolved from URL and directory
-     * @param extension the extention
+     * @param extension the extension
      * @param project the project
      * @return file the file resolved
      * @throws BuildException if the URL is invalid

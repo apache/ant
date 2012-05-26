@@ -41,7 +41,7 @@ public class KeepAliveOutputStream extends FilterOutputStream {
     /**
      * Constructor of KeepAliveOutputStream.
      *
-     * @param out an OutputStream value, it shoudl be standard output.
+     * @param out an OutputStream value, it should be standard output.
      */
     public KeepAliveOutputStream(OutputStream out) {
         super(out);
@@ -49,7 +49,7 @@ public class KeepAliveOutputStream extends FilterOutputStream {
 
     /**
      * This method does nothing.
-     * @throws IOException as we are overridding FilterOutputStream.
+     * @throws IOException as we are overriding FilterOutputStream.
      */
     public void close() throws IOException {
         // do not close the stream

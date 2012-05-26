@@ -21,7 +21,7 @@ package org.apache.tools.ant.util.facade;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Extension of Commandline.Argument with a new attribute that choses
+ * Extension of Commandline.Argument with a new attribute that chooses
  * a specific implementation of the facade.
  *
  *
@@ -48,7 +48,7 @@ public class ImplementationSpecificArgument extends Commandline.Argument {
      * implementation matches the chosen implementation.
      * @see org.apache.tools.ant.types.Commandline.Argument#getParts()
      * @param chosenImpl the implementation to check against.
-     * @return the parts if the implemention matches or an zero length
+     * @return the parts if the implementation matches or an zero length
      *         array if not.
      */
     public final String[] getParts(String chosenImpl) {

@@ -18,7 +18,7 @@
 package org.apache.tools.ant.types;
 
 /**
- * Parameterizable objects take genric key value pairs.
+ * Parameterizable objects take generic key value pairs.
  *
  */
 public interface Parameterizable {

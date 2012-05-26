@@ -47,7 +47,7 @@ public class TarFileSet extends ArchiveFileSet {
     }
 
     /**
-     * Constructor using a fileset arguement.
+     * Constructor using a fileset argument.
      * @param fileset the fileset to use
      */
     protected TarFileSet(FileSet fileset) {
@@ -55,7 +55,7 @@ public class TarFileSet extends ArchiveFileSet {
     }
 
     /**
-     * Constructor using a tarfileset arguement.
+     * Constructor using a tarfileset argument.
      * @param fileset the tarfileset to use
      */
     protected TarFileSet(TarFileSet fileset) {

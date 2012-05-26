@@ -51,7 +51,7 @@ public class RegexpPatternMapper implements FileNameMapper {
     private int     regexpOptions = 0;
 
     /**
-     * Attribute specifing whether to ignore the difference
+     * Attribute specifying whether to ignore the difference
      * between / and \ (the two common directory characters).
      * @param handleDirSep a boolean, default is false.
      * @since Ant 1.6.3
@@ -61,7 +61,7 @@ public class RegexpPatternMapper implements FileNameMapper {
     }
 
     /**
-     * Attribute specifing whether to ignore the case difference
+     * Attribute specifying whether to ignore the case difference
      * in the names.
      *
      * @param caseSensitive a boolean, default is false.

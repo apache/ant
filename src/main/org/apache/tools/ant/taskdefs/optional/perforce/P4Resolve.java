@@ -101,7 +101,7 @@ public class P4Resolve extends P4Base {
     /**
      * read the simulation mode flag
      * @return flag indicating whether one wants just to simulate
-     * the p4 resolve operation whithout actually doing it
+     * the p4 resolve operation without actually doing it
      */
     public boolean isSimulationmode() {
         return simulationmode;

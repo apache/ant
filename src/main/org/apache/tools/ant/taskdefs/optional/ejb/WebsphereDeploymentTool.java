@@ -251,7 +251,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to enable internal tracing when set, optional, default false.
      *
-     * @param trace a <code>boolean</code> vaule.
+     * @param trace a <code>boolean</code> value.
      */
     public void setTrace(boolean trace) {
         this.trace = trace;
@@ -308,7 +308,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Decide, wether ejbdeploy should be called or not;
+     * Decide, whether ejbdeploy should be called or not;
      * optional, default true.
      *
      * @param ejbdeploy a <code>boolean</code> value.

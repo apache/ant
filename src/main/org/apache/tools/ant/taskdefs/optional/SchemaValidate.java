@@ -37,7 +37,7 @@ import java.net.MalformedURLException;
 /**
  * Validate XML Schema documents.
  * This task validates XML schema documents. It requires an XML parser
- * that handles the relevant SAx, Xerces or JAXP options.
+ * that handles the relevant SAX, Xerces or JAXP options.
  *
  * To resolve remote referencies, Ant may need its proxy set up, using the
  * setproxy task.

@@ -118,7 +118,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
     /**
      * Constructor for DescriptorHandler.
-     * @param task the task that owns this desciptor
+     * @param task the task that owns this descriptor
      * @param srcDir the source directory
      */
     public DescriptorHandler(Task task, File srcDir) {

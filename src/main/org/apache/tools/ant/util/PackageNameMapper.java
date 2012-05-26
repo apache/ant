@@ -21,7 +21,7 @@ import java.io.File;
 
 /**
  * Maps directory name matches into a dotted package name. This is
- * useful for matching JUnit test cases againt their XML formatter
+ * useful for matching JUnit test cases against their XML formatter
  * results.
  * <pre>
  * &lt;mapper classname="org.apache.tools.ant.util.PackageNameMapper"

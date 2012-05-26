@@ -344,7 +344,7 @@ public class ReplaceRegExp extends Task {
     /**
      *  Perform the replacement on a file
      *
-     * @param f the file to perform the relacement on
+     * @param f the file to perform the replacement on
      * @param options the regular expressions options
      * @exception IOException if an error occurs
      */

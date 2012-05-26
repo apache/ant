@@ -351,7 +351,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     /**
      * Remove trailing slash if present.
      * @param s the file name to trim.
-     * @return the trimed file name.
+     * @return the trimmed file name.
      */
     protected static final String trimSeparator(String s) {
         return s.endsWith("/") ? s.substring(0, s.length() - 1) : s;

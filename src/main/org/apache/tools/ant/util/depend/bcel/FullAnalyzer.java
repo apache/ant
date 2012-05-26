@@ -58,7 +58,7 @@ public class FullAnalyzer extends AbstractAnalyzer {
      * @param files a vector to be populated with the files which contain
      *      the dependency classes
      * @param classes a vector to be populated with the names of the
-     *      depencency classes.
+     *      dependency classes.
      */
     protected void determineDependencies(Vector files, Vector classes) {
         // we get the root classes and build up a set of

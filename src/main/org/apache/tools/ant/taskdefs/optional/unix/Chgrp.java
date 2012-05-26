@@ -50,7 +50,7 @@ public class Chgrp extends AbstractAccessTask {
     }
 
     /**
-     * Set the group atribute.
+     * Set the group attribute.
      *
      * @param group    The new group for the file(s) or directory(ies)
      */
@@ -72,7 +72,7 @@ public class Chgrp extends AbstractAccessTask {
     }
 
     /**
-     * We don't want to expose the executable atribute, so overide it.
+     * We don't want to expose the executable attribute, so override it.
      *
      * @param e User supplied executable that we won't accept.
      */

@@ -52,7 +52,7 @@ public final class Extension {
      * are not required for the library to operate but if present will be used.
      * It is NOT part of the official "Optional Package" specification.
      *
-     * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependnecy">
+     * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependency">
      *      Installed extension dependency</a>
      */
     public static final Attributes.Name OPTIONAL_EXTENSION_LIST
@@ -221,7 +221,7 @@ public final class Extension {
      * are no such optional packages, a zero-length list is returned.
      *
      * @param manifest Manifest to be parsed
-     * @return the dependencies that are specified in manifes
+     * @return the dependencies that are specified in manifest
      */
     public static Extension[] getRequired(final Manifest manifest) {
         return getListed(manifest, Attributes.Name.EXTENSION_LIST);
@@ -430,7 +430,7 @@ public final class Extension {
      *
      * @param required Description of the required optional package
      * @return the enum indicating the compatibility (or lack thereof)
-     *         of specifed extension
+     *         of specified extension
      */
     public Compatibility getCompatibilityWith(final Extension required) {
         // Extension Name must match

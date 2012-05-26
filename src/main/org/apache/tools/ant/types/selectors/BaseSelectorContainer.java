@@ -320,7 +320,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
     }
 
     /**
-     * add an arbitary selector
+     * add an arbitrary selector
      * @param selector the selector to add
      * @since Ant 1.6
      */

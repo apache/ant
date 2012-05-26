@@ -314,7 +314,7 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
-     * add an arbitary selector
+     * add an arbitrary selector
      * @param selector the selector to add
      * @since Ant 1.6
      */

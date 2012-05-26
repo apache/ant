@@ -44,7 +44,7 @@ import java.io.IOException;
  * Clearly, however, bulk file comparisons is inefficient; anything that can
  * use timestamps is to be preferred. If this selector must be used, use it
  * over as few files as possible, perhaps following it with an &lt;uptodate;&gt
- * to keep the descendent routines conditional.
+ * to keep the descendant routines conditional.
  *
  */
 public class DifferentSelector extends MappingSelector {

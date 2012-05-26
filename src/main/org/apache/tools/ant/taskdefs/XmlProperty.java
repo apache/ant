@@ -649,7 +649,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     /**
      * Include the semantic attribute name as part of the property name.
      * Ignored if semanticAttributes is not set to true.
-     * @param includeSemanticAttribute if true include the sematic attribute
+     * @param includeSemanticAttribute if true include the semantic attribute
      *                                 name.
      */
     public void setIncludeSemanticAttribute(boolean includeSemanticAttribute) {

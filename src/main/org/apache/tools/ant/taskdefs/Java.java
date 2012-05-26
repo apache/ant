@@ -354,7 +354,7 @@ public class Java extends Task {
     /**
      * If set, system properties will be copied to the cloned VM--as
      * well as the bootclasspath unless you have explicitly specified
-     * a bootclaspath.
+     * a bootclasspath.
      *
      * <p>Doesn't have any effect unless fork is true.</p>
      * @param cloneVm if true copy system properties.

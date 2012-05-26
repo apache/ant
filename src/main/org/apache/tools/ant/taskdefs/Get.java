@@ -442,7 +442,7 @@ public class Get extends Task {
 
     /**
      * Interface implemented for reporting
-     * progess of downloading.
+     * progress of downloading.
      */
     public interface DownloadProgress {
         /**

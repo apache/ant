@@ -123,7 +123,7 @@ public class FacadeTaskHelper {
     /**
      * Retrieves the command line arguments enabled for the current
      * facade implementation.
-     * @return an array of command line arguements.
+     * @return an array of command line arguments.
      */
     public String[] getArgs() {
         List tmp = new ArrayList(args.size());

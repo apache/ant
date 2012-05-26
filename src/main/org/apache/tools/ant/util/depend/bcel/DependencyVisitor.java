@@ -51,7 +51,7 @@ public class DependencyVisitor extends EmptyVisitor {
         return dependencies.keys();
     }
 
-    /** Clear the curretn set of collected dependencies. */
+    /** Clear the current set of collected dependencies. */
     public void clearDependencies() {
         dependencies.clear();
     }

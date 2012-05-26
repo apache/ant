@@ -32,7 +32,7 @@ public class LocalProperties
 
     /**
      * Get a localproperties for the given project.
-     * @param project the project to retieve the localproperties for.
+     * @param project the project to retrieve the localproperties for.
      * @return the localproperties.
      */
     public static synchronized LocalProperties get(Project project) {

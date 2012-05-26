@@ -112,7 +112,7 @@ public class SoundTask extends Task {
 
         /**
          * Sets the duration in milliseconds the file should be played; optional.
-         * @param duration the duration in millisconds
+         * @param duration the duration in milliseconds
          */
         public void setDuration(Long duration) {
             this.duration = duration;

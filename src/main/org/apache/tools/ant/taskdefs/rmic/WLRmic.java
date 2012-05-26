@@ -49,7 +49,7 @@ public class WLRmic extends DefaultRmicAdapter {
     public static final String WL_RMI_STUB_SUFFIX = "_WLStub";
     /** The skeleton suffix */
     public static final String WL_RMI_SKEL_SUFFIX = "_WLSkel";
-    /** upsupported error message */
+    /** unsupported error message */
     public static final String UNSUPPORTED_STUB_OPTION = "Unsupported stub option: ";
 
     /**

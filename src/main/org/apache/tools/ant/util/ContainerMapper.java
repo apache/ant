@@ -46,7 +46,7 @@ public abstract class ContainerMapper implements FileNameMapper {
      * This class used to contain an add method and an
      * addConfiguredMapper method. Dur to ordering,
      * the add method was always called first. This
-     * addConfigued method has been added to allow
+     * addConfigured method has been added to allow
      * chaining to work correctly.
      * @param fileNameMapper a <code>FileNameMapper</code>.
      */

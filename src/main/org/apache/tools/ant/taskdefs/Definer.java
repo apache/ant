@@ -568,7 +568,7 @@ public abstract class Definer extends DefBase {
      * used by derived classes, used instead of
      * the adaptTo attribute.
      *
-     * @param adaptToClass the class for adapto.
+     * @param adaptToClass the class for adaptor.
      */
     protected void setAdaptToClass(Class adaptToClass) {
         this.adaptToClass = adaptToClass;

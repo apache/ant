@@ -72,7 +72,7 @@ import java.util.Enumeration;
  * msg.sendAndClose();
  * </pre></blockquote>
  * <p>
- * Be sure to set the from address, then set the recepient
+ * Be sure to set the from address, then set the recipient
  * addresses, then set the subject and other headers, then get the
  * PrintStream, then write the message, and finally send and close.
  * The class does minimal error checking internally; it counts on the mail

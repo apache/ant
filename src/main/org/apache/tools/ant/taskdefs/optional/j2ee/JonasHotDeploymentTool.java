@@ -30,8 +30,8 @@ import org.apache.tools.ant.types.Path;
  *  has been assembled and is supplied as the "source" attribute.
  *  <p>
  *
- *  In the end, this task assembles the commadline parameters and
- *  runs the weblogic.deploy tool in a seperate JVM.
+ *  In the end, this task assembles the commandline parameters and
+ *  runs the weblogic.deploy tool in a separate JVM.
  *
  *@see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *@see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool

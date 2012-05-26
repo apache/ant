@@ -27,7 +27,7 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
 /**
  * A Bzip2 compressed resource.
  *
- * <p>Wraps around another resource, delegates all quries to that
+ * <p>Wraps around another resource, delegates all queries to that
  * other resource but uncompresses/compresses streams on the fly.</p>
  *
  * @since Ant 1.7

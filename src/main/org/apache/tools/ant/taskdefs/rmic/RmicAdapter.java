@@ -61,7 +61,7 @@ public interface RmicAdapter {
 
     /**
      * The CLASSPATH this rmic process will use.
-     * @return the classpaht this rmic process will use
+     * @return the classpath this rmic process will use
      */
     Path getClasspath();
 }

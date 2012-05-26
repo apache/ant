@@ -200,7 +200,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
      * Get whether the stream is to be treated as though it contains Java
      * source.
      * <P>
-     * This attribute is only used in assocation with the &quot;<i><b>tab</b></i>&quot;
+     * This attribute is only used in association with the &quot;<i><b>tab</b></i>&quot;
      * attribute. Tabs found in Java literals are protected from changes by this
      * filter.
      *

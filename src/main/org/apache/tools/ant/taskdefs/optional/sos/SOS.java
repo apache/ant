@@ -219,7 +219,7 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Get the executable to run. Add the path if it was specifed in the build file
+     * Get the executable to run. Add the path if it was specified in the build file
      *
      * @return the executable to run.
      */

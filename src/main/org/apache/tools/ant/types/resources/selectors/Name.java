@@ -96,7 +96,7 @@ public class Name implements ResourceSelector {
     }
 
     /**
-     * Attribute specifing whether to ignore the difference
+     * Attribute specifying whether to ignore the difference
      * between / and \ (the two common directory characters).
      * @param handleDirSep a boolean, default is false.
      * @since Ant 1.8.0

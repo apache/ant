@@ -207,7 +207,7 @@ public class ProjectHelper {
     /**
      * The separator between the prefix and the target name.
      *
-     * <p>May be set by &lt;import&gt;'s prefixSeperator attribute.</p>
+     * <p>May be set by &lt;import&gt;'s prefixSeparator attribute.</p>
      *
      * @since Ant 1.8.0
      */
@@ -484,7 +484,7 @@ public class ProjectHelper {
      * For BC purposes the names from the ant core uri will be
      * mapped to "name", other names will be mapped to
      * uri + ":" + name.
-     * @param uri   The namepace URI
+     * @param uri   The namespace URI
      * @param name  The localname
      * @return      The stringified form of the ns name
      */

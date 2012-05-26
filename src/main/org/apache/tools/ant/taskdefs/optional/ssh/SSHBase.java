@@ -191,7 +191,7 @@ public abstract class SSHBase extends Task implements LogListener {
     }
 
     /**
-     * Open an ssh seession.
+     * Open an ssh session.
      * @return the opened session
      * @throws JSchException on error
      */

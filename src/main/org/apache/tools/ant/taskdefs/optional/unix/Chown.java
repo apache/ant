@@ -50,7 +50,7 @@ public class Chown extends AbstractAccessTask {
     }
 
     /**
-     * Set the owner atribute.
+     * Set the owner attribute.
      *
      * @param owner    The new owner for the file(s) or directory(ies)
      */
@@ -72,7 +72,7 @@ public class Chown extends AbstractAccessTask {
     }
 
     /**
-     * We don't want to expose the executable atribute, so overide it.
+     * We don't want to expose the executable attribute, so override it.
      *
      * @param e User supplied executable that we won't accept.
      */

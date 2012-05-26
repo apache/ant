@@ -90,7 +90,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /** Classpath to use when trying to load the XSL processor */
     private Path classpath = null;
 
-    /** The Liason implementation to use to communicate with the XSL
+    /** The Liaison implementation to use to communicate with the XSL
      *  processor */
     private XSLTLiaison liaison;
 
@@ -905,9 +905,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Get the Liason implementation to use in processing.
+     * Get the Liaison implementation to use in processing.
      *
-     * @return an instance of the XSLTLiason interface.
+     * @return an instance of the XSLTLiaison interface.
      */
     protected XSLTLiaison getLiaison() {
         // if processor wasn't specified, use TraX.
@@ -1010,7 +1010,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * Set whether this param should be used.  It will be used if
-         * the expression evalutes to true or the name of a property
+         * the expression evaluates to true or the name of a property
          * which has been set, otherwise it won't.
          * @param ifCond evaluated expression
          * @since Ant 1.8.0
@@ -1021,7 +1021,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * Set whether this param should be used.  It will be used if
-         * the expression evalutes to true or the name of a property
+         * the expression evaluates to true or the name of a property
          * which has been set, otherwise it won't.
          * @param ifProperty evaluated expression
          */
@@ -1156,7 +1156,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         try {
             log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
-            // We call liason.configure() and then liaison.setStylesheet()
+            // We call liaison.configure() and then liaison.setStylesheet()
             // so that the internal variables of liaison can be set up
             if (liaison instanceof XSLTLiaison2) {
                 ((XSLTLiaison2) liaison).configure(this);

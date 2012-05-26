@@ -34,7 +34,7 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * This is the default implementation for the RmicAdapter interface.
  * Currently, this is a cut-and-paste of the original rmic task and
- * DefaultCopmpilerAdapter.
+ * DefaultCompilerAdapter.
  *
  * @since Ant 1.4
  */

@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 /**
  * Aggregates all &lt;junit&gt; XML formatter testsuite data under
  * a specific directory and transforms the results via XSLT.
- * It is not particulary clean but
+ * It is not particularly clean but
  * should be helpful while I am thinking about another technique.
  *
  * <p> The main problem is due to the fact that a JVM can be forked for a testcase
@@ -207,7 +207,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /**
      * Write the DOM tree to a file.
      * @param doc the XML document to dump to disk.
-     * @param file the filename to write the document to. Should obviouslly be a .xml file.
+     * @param file the filename to write the document to. Should obviously be a .xml file.
      * @throws IOException thrown if there is an error while writing the content.
      */
     protected void writeDOMTree(Document doc, File file) throws IOException {

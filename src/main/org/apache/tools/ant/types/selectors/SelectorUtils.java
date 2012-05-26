@@ -658,7 +658,7 @@ public final class SelectorUtils {
     /**
      * "Flattens" a string by removing all whitespace (space, tab, linefeed,
      * carriage return, and formfeed). This uses StringTokenizer and the
-     * default set of tokens as documented in the single arguement constructor.
+     * default set of tokens as documented in the single argument constructor.
      *
      * @param input a String to remove all whitespace.
      * @return a String that has had all whitespace removed.

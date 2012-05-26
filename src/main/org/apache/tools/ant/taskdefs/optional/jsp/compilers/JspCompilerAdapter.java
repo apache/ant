@@ -25,7 +25,7 @@ import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
  * The interface that all jsp compiler adapters must adher to.
  *
  * <p>A compiler adapter is an adapter that interprets the jspc's
- * parameters in preperation to be passed off to the compier this
+ * parameters in preperation to be passed off to the compiler this
  * adapter represents.  As all the necessary values are stored in the
  * Jspc task itself, the only thing all adapters need is the jsp
  * task, the execute command and a parameterless constructor (for

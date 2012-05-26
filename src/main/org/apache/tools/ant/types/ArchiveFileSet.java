@@ -77,7 +77,7 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
-     * Constructor using a fileset arguement.
+     * Constructor using a fileset argument.
      * @param fileset the fileset to use
      */
     protected ArchiveFileSet(FileSet fileset) {
@@ -85,7 +85,7 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
-     * Constructor using a archive fileset arguement.
+     * Constructor using a archive fileset argument.
      * @param fileset the archivefileset to use
      */
     protected ArchiveFileSet(ArchiveFileSet fileset) {
@@ -200,7 +200,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * Performs the check for circular references and returns the
      * referenced object.
      * This is an override which does not delegate to the superclass; instead it invokes
-     * {@link #getRef(Project)}, because that conains the special support for fileset
+     * {@link #getRef(Project)}, because that contains the special support for fileset
      * references, which can be handled by all ArchiveFileSets.
      * @param p the Ant Project instance against which to resolve references.
      * @return the dereferenced object.

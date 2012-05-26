@@ -26,7 +26,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * A set of helper methods related to locating executables or checking
- * conditons of a given Java installation.
+ * conditions of a given Java installation.
  *
  * @since Ant 1.5
  */
@@ -186,7 +186,7 @@ public final class JavaEnvUtils {
 
     /**
      * Returns the version of Java this class is running under.
-     * This number can be used for comparisions; it will always be
+     * This number can be used for comparisons; it will always be
      * @return the version of Java as a number 10x the major/minor,
      * e.g Java1.5 has a value of 15
      */

@@ -95,7 +95,7 @@ public class JarLibAvailableTask extends Task {
     /**
      * Execute the task.
      *
-     * @throws BuildException if somethign goes wrong.
+     * @throws BuildException if something goes wrong.
      */
     public void execute() throws BuildException {
         validate();

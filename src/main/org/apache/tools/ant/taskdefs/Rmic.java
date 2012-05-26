@@ -486,7 +486,7 @@ public class Rmic extends MatchingTask {
      * Sets the compiler implementation to use; optional,
      * defaults to the value of the <code>build.rmic</code> property,
      * or failing that, default compiler for the current VM
-     * @param compiler the compiler implemention to use
+     * @param compiler the compiler implementation to use
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {

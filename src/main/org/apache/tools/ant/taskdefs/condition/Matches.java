@@ -93,7 +93,7 @@ public class Matches extends ProjectComponent implements Condition {
 
     /**
      * Whether to treat input as singleline ('.' matches newline).
-     * Corresponsds to java.util.regex.Pattern.DOTALL.
+     * Corresponds to java.util.regex.Pattern.DOTALL.
      * @param b the value to set.
      */
     public void setSingleLine(boolean b) {

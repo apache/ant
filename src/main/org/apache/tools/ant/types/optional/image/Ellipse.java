@@ -43,7 +43,7 @@ public class Ellipse extends BasicShape implements DrawOperation {
 
     /**
      * Set the height.
-     * @param height the height of the elipse.
+     * @param height the height of the ellipse.
      */
     public void setHeight(int height) {
         this.height = height;

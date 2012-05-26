@@ -51,7 +51,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  * in a persistent manner.</p>
  *
  * <p>The ModifiedSelector is implemented as a <b>CoreSelector</b> and uses default
- * values for all its attributes therefore the simpliest example is <pre>
+ * values for all its attributes therefore the simplest example is <pre>
  *   &lt;copy todir="dest"&gt;
  *       &lt;filelist dir="src"&gt;
  *           &lt;modified/&gt;
@@ -95,7 +95,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  * element, so that the selector can find the classes. <pre>
  *   &lt;modified cacheclassname="com.mycompany.MyCache"&gt;
  *       &lt;classpath&gt;
- *           &lt;pathelement location="lib/mycompony-antutil.jar"/&gt;
+ *           &lt;pathelement location="lib/mycompany-antutil.jar"/&gt;
  *       &lt;/classpath&gt;
  *   &lt;/modified&gt;
  * </pre></p>
@@ -808,7 +808,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals that the last target has finished.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void buildFinished(BuildEvent event) {
         if (getDelayUpdate()) {

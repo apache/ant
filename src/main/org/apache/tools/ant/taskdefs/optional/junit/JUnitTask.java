@@ -238,7 +238,7 @@ public class JUnitTask extends Task {
      * Property to set to "true" if there is a error in a test.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
-     * JUnitTest (test), however, it can possibly be overriden by
+     * JUnitTest (test), however, it can possibly be overridden by
      * their own properties.</p>
      * @param propertyName the name of the property to set in the
      * event of an error.
@@ -268,7 +268,7 @@ public class JUnitTask extends Task {
      * Property to set to "true" if there is a failure in a test.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
-     * JUnitTest (test), however, it can possibly be overriden by
+     * JUnitTest (test), however, it can possibly be overridden by
      * their own properties.</p>
      * @param propertyName the name of the property to set in the
      * event of an failure.
@@ -311,7 +311,7 @@ public class JUnitTask extends Task {
      * <p>Only tests with the same configuration of haltonerror,
      * haltonfailure, errorproperty, failureproperty and filtertrace
      * can share a forked Java VM, so even if you set the value to
-     * "once", Ant may need to fork mutliple VMs.</p>
+     * "once", Ant may need to fork multiple VMs.</p>
      * @param mode the mode to use.
      * @since Ant 1.6.2
      */
@@ -428,7 +428,7 @@ public class JUnitTask extends Task {
 
     /**
      * Adds a system property that tests can access.
-     * This might be useful to tranfer Ant properties to the
+     * This might be useful to transfer Ant properties to the
      * testcases when JVM forking is not enabled.
      *
      * @since Ant 1.3
@@ -442,7 +442,7 @@ public class JUnitTask extends Task {
 
     /**
      * Adds a system property that tests can access.
-     * This might be useful to tranfer Ant properties to the
+     * This might be useful to transfer Ant properties to the
      * testcases when JVM forking is not enabled.
      * @param sysp new environment variable to add
      * @since Ant 1.6
@@ -459,7 +459,7 @@ public class JUnitTask extends Task {
      * Adds a set of properties that will be used as system properties
      * that tests can access.
      *
-     * This might be useful to tranfer Ant properties to the
+     * This might be useful to transfer Ant properties to the
      * testcases when JVM forking is not enabled.
      *
      * @param sysp set of properties to be added
@@ -644,7 +644,7 @@ public class JUnitTask extends Task {
     /**
      * If set, system properties will be copied to the cloned VM - as
      * well as the bootclasspath unless you have explicitly specified
-     * a bootclaspath.
+     * a bootclasspath.
      *
      * <p>Doesn't have any effect unless fork is true.</p>
      * @param cloneVm a <code>boolean</code> value.

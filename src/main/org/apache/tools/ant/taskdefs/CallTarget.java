@@ -184,7 +184,7 @@ public class CallTarget extends Task {
 
     /**
      * Handles input.
-     * Deleate to the created project, if present, otherwise
+     * Delegate to the created project, if present, otherwise
      * call the super class.
      * @param buffer the buffer into which data is to be read.
      * @param offset the offset into the buffer at which data is stored.
