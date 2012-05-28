@@ -24,6 +24,10 @@ Fixed bugs:
  * Updated documentation to fix spelling errors / broken links.
    Bugzilla Reports 53215, 53291, 53202
    
+ * Unable to override system properties. It was not possible not to override
+   system properties from the command line (or from a property file).
+   Bugzilla Report 51792
+   
 Other changes:
 --------------
 
