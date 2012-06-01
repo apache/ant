@@ -151,7 +151,6 @@ public class Main implements AntMain {
     
     
     private static final GetProperty NOPROPERTIES = new GetProperty(){
-        @Override
         public Object getProperty(String aName) {
             // No existing property takes precedence
             return null;
