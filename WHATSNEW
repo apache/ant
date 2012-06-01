@@ -28,6 +28,9 @@ Fixed bugs:
    system properties from the command line (or from a property file).
    Bugzilla Report 51792
    
+ * <javac> by default fails when run on JDK 8.
+   Bugzilla Report 53347.
+
 Other changes:
 --------------
 
