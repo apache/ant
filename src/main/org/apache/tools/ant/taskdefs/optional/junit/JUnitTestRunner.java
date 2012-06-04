@@ -396,7 +396,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // if there is a suite method available, then try
                     // to extract the suite from it. If there is an error
                     // here it will be caught below and reported.
-                    suite = (Test) suiteMethod.invoke(null, new Class[0]);
+                    suite = (Test) suiteMethod.invoke(null, new Object[0]);
 
                 } else {
                     Class junit4TestAdapterClass = null;
