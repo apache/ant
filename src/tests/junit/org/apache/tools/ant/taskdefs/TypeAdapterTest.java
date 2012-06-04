@@ -101,8 +101,7 @@ public class TypeAdapterTest extends BuildFileTest {
 
         public Method getExecuteMethod(Class proxyClass) {
             try {
-                Method execMethod = proxyClass.getMethod(
-                    execMethodName, null);
+                Method execMethod = proxyClass.getMethod(execMethodName);
                 if (!Void.TYPE.equals(execMethod.getReturnType())) {
                     String message =
                         "return type of " + execMethodName + "() should be "
@@ -137,7 +136,7 @@ public class TypeAdapterTest extends BuildFileTest {
             getProject().setProjectReference(proxy);
             Method executeMethod = getExecuteMethod(proxy.getClass());
             try {
-                executeMethod.invoke(proxy, null);
+                executeMethod.invoke(proxy);
             } catch (java.lang.reflect.InvocationTargetException ie) {
                 log("Error in " + proxy.getClass(), Project.MSG_ERR);
                 Throwable t = ie.getTargetException();
