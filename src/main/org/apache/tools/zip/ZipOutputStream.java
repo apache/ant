@@ -1288,7 +1288,6 @@ public class ZipOutputStream extends FilterOutputStream {
      * Writes the &quot;ZIP64 End of central dir record&quot; and
      * &quot;ZIP64 End of central dir locator&quot;.
      * @throws IOException on error
-     * @since 1.3
      */
     protected void writeZip64CentralDirectory() throws IOException {
         if (zip64Mode == Zip64Mode.Never) {
@@ -1431,8 +1430,6 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * Get the existing ZIP64 extended information extra field or
      * create a new one and add it to the entry.
-     *
-     * @since 1.3
      */
     private Zip64ExtendedInformationExtraField getZip64Extra(ZipEntry ze) {
         if (entry != null) {
@@ -1462,8 +1459,6 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * Is there a ZIP64 extended information extra field for the
      * entry?
-     *
-     * @since 1.3
      */
     private boolean hasZip64Extra(ZipEntry ze) {
         return ze.getExtraField(Zip64ExtendedInformationExtraField
@@ -1475,8 +1470,6 @@ public class ZipOutputStream extends FilterOutputStream {
      * If the mode is AsNeeded and the entry is a compressed entry of
      * unknown size that gets written to a non-seekable stream the
      * change the default to Never.
-     *
-     * @since 1.3
      */
     private Zip64Mode getEffectiveZip64Mode(ZipEntry ze) {
         if (zip64Mode != Zip64Mode.AsNeeded
