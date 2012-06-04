@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
  * marks leading to unreadable ZIP entries on some operating
  * systems.</p>
  * 
- * <p>Furthermore this implementation is unable to tell, whether a
+ * <p>Furthermore this implementation is unable to tell whether a
  * given name can be safely encoded or not.</p>
  * 
  * <p>This implementation acts as a last resort implementation, when
@@ -53,7 +53,7 @@ class FallbackZipEncoding implements ZipEncoding {
     /**
      * Construct a fallback zip encoding, which uses the given charset.
      * 
-     * @param charset The name of the charset or <code>null</code> for
+     * @param charset The name of the charset or {@code null} for
      *                the platform's default character set.
      */
     public FallbackZipEncoding(String charset) {
@@ -73,7 +73,7 @@ class FallbackZipEncoding implements ZipEncoding {
      * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
     public ByteBuffer encode(String name) throws IOException {
-        if (this.charset == null) {
+        if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return ByteBuffer.wrap(name.getBytes());
         } else {
             return ByteBuffer.wrap(name.getBytes(this.charset));
@@ -85,7 +85,7 @@ class FallbackZipEncoding implements ZipEncoding {
      * org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
     public String decode(byte[] data) throws IOException {
-        if (this.charset == null) {
+        if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return new String(data);
         } else {
             return new String(data,this.charset);

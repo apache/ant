@@ -21,12 +21,11 @@ package org.apache.tools.zip;
 /**
  * Wrapper for extra field data that doesn't conform to the recommended format of header-tag + size + data.
  *
- * <p>The header-id is artificial (and not listed as a know ID in
- * the .ZIP File Format Specification).  
- * Since it isn't used anywhere except to satisfy the
+ * <p>The header-id is artificial (and not listed as a known ID in
+ * {@link <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">
+ * APPNOTE.TXT</a>}).  Since it isn't used anywhere except to satisfy the
  * ZipExtraField contract it shouldn't matter anyway.</p>
- * @see <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT
- * APPNOTE.TXT">.ZIP File Format Specification</a>
+ *
  * @since Ant 1.8.1
  */
 public final class UnparseableExtraFieldData
@@ -103,7 +102,6 @@ public final class UnparseableExtraFieldData
      * @param buffer the buffer to read data from
      * @param offset offset into buffer to read data
      * @param length the length of data
-     * @exception ZipException on error
      */
     public void parseFromCentralDirectoryData(byte[] buffer, int offset,
                                               int length) {

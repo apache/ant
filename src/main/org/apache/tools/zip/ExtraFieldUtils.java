@@ -38,14 +38,15 @@ public class ExtraFieldUtils {
      *
      * @since 1.1
      */
-    private static final Map implementations;
+    private static final Map<ZipShort, Class<?>> implementations;
 
     static {
-        implementations = new HashMap();
+        implementations = new HashMap<ZipShort, Class<?>>();
         register(AsiExtraField.class);
         register(JarMarker.class);
         register(UnicodePathExtraField.class);
         register(UnicodeCommentExtraField.class);
+        register(Zip64ExtendedInformationExtraField.class);
     }
 
     /**
@@ -57,7 +58,7 @@ public class ExtraFieldUtils {
      *
      * @since 1.1
      */
-    public static void register(Class c) {
+    public static void register(Class<?> c) {
         try {
             ZipExtraField ze = (ZipExtraField) c.newInstance();
             implementations.put(ze.getHeaderId(), c);
@@ -81,7 +82,7 @@ public class ExtraFieldUtils {
      */
     public static ZipExtraField createExtraField(ZipShort headerId)
         throws InstantiationException, IllegalAccessException {
-        Class c = (Class) implementations.get(headerId);
+        Class<?> c = implementations.get(headerId);
         if (c != null) {
             return (ZipExtraField) c.newInstance();
         }
@@ -132,7 +133,7 @@ public class ExtraFieldUtils {
     public static ZipExtraField[] parse(byte[] data, boolean local,
                                         UnparseableExtraField onUnparseableData)
         throws ZipException {
-        List v = new ArrayList();
+        List<ZipExtraField> v = new ArrayList<ZipExtraField>();
         int start = 0;
         LOOP:
         while (start <= data.length - WORD) {
@@ -158,7 +159,7 @@ public class ExtraFieldUtils {
                                                             data.length - start);
                     }
                     v.add(field);
-                    /*FALLTHROUGH*/
+                    //$FALL-THROUGH$
                 case UnparseableExtraField.SKIP_KEY:
                     // since we cannot parse the data we must assume
                     // the extra field consumes the whole rest of the
@@ -189,7 +190,7 @@ public class ExtraFieldUtils {
         }
 
         ZipExtraField[] result = new ZipExtraField[v.size()];
-        return (ZipExtraField[]) v.toArray(result);
+        return v.toArray(result);
     }
 
     /**
@@ -205,8 +206,8 @@ public class ExtraFieldUtils {
             lastIsUnparseableHolder ? data.length - 1 : data.length;
 
         int sum = WORD * regularExtraFieldCount;
-        for (int i = 0; i < data.length; i++) {
-            sum += data[i].getLocalFileDataLength().getValue();
+        for (ZipExtraField element : data) {
+            sum += element.getLocalFileDataLength().getValue();
         }
 
         byte[] result = new byte[sum];
@@ -240,8 +241,8 @@ public class ExtraFieldUtils {
             lastIsUnparseableHolder ? data.length - 1 : data.length;
 
         int sum = WORD * regularExtraFieldCount;
-        for (int i = 0; i < data.length; i++) {
-            sum += data[i].getCentralDirectoryLength().getValue();
+        for (ZipExtraField element : data) {
+            sum += element.getCentralDirectoryLength().getValue();
         }
         byte[] result = new byte[sum];
         int start = 0;

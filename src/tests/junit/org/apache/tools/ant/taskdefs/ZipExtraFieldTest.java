@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.zip.JarMarker;
+import org.apache.tools.zip.Zip64ExtendedInformationExtraField;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
@@ -79,8 +80,10 @@ public class ZipExtraFieldTest extends TestCase {
             zf = new ZipFile(f);
             ZipEntry ze = zf.getEntry("x");
             assertNotNull(ze);
-            assertEquals(1, ze.getExtraFields().length);
+            assertEquals(2, ze.getExtraFields().length);
             assertTrue(ze.getExtraFields()[0] instanceof JarMarker);
+            assertTrue(ze.getExtraFields()[1]
+                       instanceof Zip64ExtendedInformationExtraField);
         } finally {
             ZipFile.closeQuietly(zf);
             if (f.exists()) {

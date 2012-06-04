@@ -9,7 +9,6 @@ Changes that could break older environments:
    the task now really leaves the EOL characters alone. This also implies that
    EOL ASIS will not insert a newline even if fixlast is set to true.
    Bugzilla report 53036
-   
 
 Fixed bugs:
 -----------
@@ -33,6 +32,10 @@ Fixed bugs:
 
 Other changes:
 --------------
+
+* merged the ZIP package from Commons Compress, it can now read
+  archives using Zip64 extensions (files and archives bigger that 4GB
+  and with more that 64k entries).
 
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================

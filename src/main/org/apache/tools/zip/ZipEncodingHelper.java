@@ -62,10 +62,10 @@ abstract class ZipEncodingHelper {
         }
     }
 
-    private static final Map simpleEncodings;
+    private static final Map<String, SimpleEncodingHolder> simpleEncodings;
 
     static {
-        simpleEncodings = new HashMap();
+        simpleEncodings = new HashMap<String, SimpleEncodingHolder>();
 
         char[] cp437_high_chars =
             new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
@@ -203,7 +203,7 @@ abstract class ZipEncodingHelper {
     /**
      * Instantiates a zip encoding.
      * 
-     * @param name The name of the zip encoding. Specify <code>null</code> for
+     * @param name The name of the zip encoding. Specify {@code null} for
      *             the platform's default encoding.
      * @return A zip encoding for the given encoding name.
      */
@@ -218,8 +218,7 @@ abstract class ZipEncodingHelper {
             return new FallbackZipEncoding();
         }
 
-        SimpleEncodingHolder h =
-            (SimpleEncodingHolder) simpleEncodings.get(name);
+        SimpleEncodingHolder h = simpleEncodings.get(name);
 
         if (h!=null) {
             return h.getEncoding();

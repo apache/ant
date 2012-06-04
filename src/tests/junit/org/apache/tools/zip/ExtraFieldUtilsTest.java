@@ -29,17 +29,26 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
         super(name);
     }
 
+    /**
+     * Header-ID of a ZipExtraField not supported by Ant.
+     *
+     * <p>Used to be ZipShort(1) but this is the ID of the Zip64 extra
+     * field.</p>
+     */
+    static final ZipShort UNRECOGNIZED_HEADER = new ZipShort(0x5555);
+
     private AsiExtraField a;
     private UnrecognizedExtraField dummy;
     private byte[] data;
     private byte[] aLocal;
 
+    @Override
     public void setUp() {
         a = new AsiExtraField();
         a.setMode(0755);
         a.setDirectory(true);
         dummy = new UnrecognizedExtraField();
-        dummy.setHeaderId(new ZipShort(1));
+        dummy.setHeaderId(UNRECOGNIZED_HEADER);
         dummy.setLocalFileDataData(new byte[] {0});
         dummy.setCentralDirectoryData(new byte[] {0});
 
@@ -167,7 +176,8 @@ public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
 
     public void testMergeWithUnparseableData() throws Exception {
         ZipExtraField d = new UnparseableExtraFieldData();
-        d.parseFromLocalFileData(new byte[] {1, 0, 1, 0}, 0, 4);
+        byte[] b = UNRECOGNIZED_HEADER.getBytes();
+        d.parseFromLocalFileData(new byte[] {b[0], b[1], 1, 0}, 0, 4);
         byte[] local =
             ExtraFieldUtils.mergeLocalFileDataData(new ZipExtraField[] {a, d});
         assertEquals("local length", data.length - 1, local.length);

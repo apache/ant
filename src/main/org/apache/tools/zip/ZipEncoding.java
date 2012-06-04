@@ -68,7 +68,7 @@ interface ZipEncoding {
      *         character sequences are mapped to a sequence of utf-16
      *         words encoded in the format <code>%Uxxxx</code>.  It is
      *         assumed, that the byte buffer is positioned at the
-     *         beinning of the encoded result, the byte buffer has a
+     *         beginning of the encoded result, the byte buffer has a
      *         backing array and the limit of the byte buffer points
      *         to the end of the encoded result.
      * @throws IOException 

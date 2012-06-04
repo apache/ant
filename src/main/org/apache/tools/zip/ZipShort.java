@@ -18,17 +18,18 @@
 
 package org.apache.tools.zip;
 
+import static org.apache.tools.zip.ZipConstants.BYTE_MASK;
+
 /**
  * Utility class that represents a two byte integer with conversion
  * rules for the big endian byte order of ZIP files.
  *
  */
 public final class ZipShort implements Cloneable {
-    private static final int BYTE_MASK = 0xFF;
     private static final int BYTE_1_MASK = 0xFF00;
     private static final int BYTE_1_SHIFT = 8;
 
-    private int value;
+    private final int value;
 
     /**
      * Create instance from a number.
@@ -95,7 +96,7 @@ public final class ZipShort implements Cloneable {
      * Helper method to get the value as a java int from two bytes starting at given array offset
      * @param bytes the array of bytes
      * @param offset the offset to start
-     * @return the correspondanding java int value
+     * @return the corresponding java int value
      */
     public static int getValue(byte[] bytes, int offset) {
         int value = (bytes[offset + 1] << BYTE_1_SHIFT) & BYTE_1_MASK;
@@ -106,7 +107,7 @@ public final class ZipShort implements Cloneable {
     /**
      * Helper method to get the value as a java int from a two-byte array
      * @param bytes the array of bytes
-     * @return the correspondanding java int value
+     * @return the corresponding java int value
      */
     public static int getValue(byte[] bytes) {
         return getValue(bytes, 0);
@@ -118,6 +119,7 @@ public final class ZipShort implements Cloneable {
      * @return true if the objects are equal
      * @since 1.1
      */
+    @Override
     public boolean equals(Object o) {
         if (o == null || !(o instanceof ZipShort)) {
             return false;
@@ -130,10 +132,12 @@ public final class ZipShort implements Cloneable {
      * @return the value stored in the ZipShort
      * @since 1.1
      */
+    @Override
     public int hashCode() {
         return value;
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();
@@ -141,5 +145,10 @@ public final class ZipShort implements Cloneable {
             // impossible
             throw new RuntimeException(cnfe);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ZipShort value: " + value;
     }
 }

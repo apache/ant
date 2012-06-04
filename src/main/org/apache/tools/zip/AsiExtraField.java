@@ -45,6 +45,9 @@ import java.util.zip.ZipException;
  * <p>Short is two bytes and Long is four bytes in big endian byte and
  * word order, device numbers are currently not supported.</p>
  *
+ * <p>Since the documentation this class is based upon doesn't mention
+ * the character encoding of the file name at all, it is assumed that
+ * it uses the current platform's default encoding.</p>
  */
 public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
 
@@ -116,6 +119,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
                           + 2         // UID
                           + 2         // GID
                           + getLinkedFile().getBytes().length);
+                          // Uses default charset - see class Javadoc
     }
 
     /**
@@ -138,7 +142,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         byte[] data = new byte[getLocalFileDataLength().getValue() - WORD];
         System.arraycopy(ZipShort.getBytes(getMode()), 0, data, 0, 2);
 
-        byte[] linkArray = getLinkedFile().getBytes();
+        byte[] linkArray = getLinkedFile().getBytes(); // Uses default charset - see class Javadoc
         // CheckStyle:MagicNumber OFF
         System.arraycopy(ZipLong.getBytes(linkArray.length),
                          0, data, 2, WORD);
@@ -311,7 +315,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
             link = "";
         } else {
             System.arraycopy(tmp, 10, linkArray, 0, linkArray.length);
-            link = new String(linkArray);
+            link = new String(linkArray); // Uses default charset - see class Javadoc
         }
         // CheckStyle:MagicNumber ON
         setDirectory((newMode & DIR_FLAG) != 0);
@@ -334,6 +338,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
         return type | (mode & PERM_MASK);
     }
 
+    @Override
     public Object clone() {
         try {
             AsiExtraField cloned = (AsiExtraField) super.clone();
