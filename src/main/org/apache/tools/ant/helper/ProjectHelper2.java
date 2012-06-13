@@ -1019,7 +1019,11 @@ public class ProjectHelper2 extends ProjectHelper {
                 // In an imported file (and not completely
                 // ignoring the project tag or having a preconfigured prefix)
                 String newName = prefix + sep + name;
-                Target newTarget = usedTarget ? new Target(target) : target;
+                Target newTarget = target;
+                if (usedTarget) {
+                    newTarget = "target".equals(tag)
+                            ? new Target(target) : new ExtensionPoint(target);
+                }
                 newTarget.setName(newName);
                 context.getCurrentTargets().put(newName, newTarget);
                 project.addOrReplaceTarget(newName, newTarget);

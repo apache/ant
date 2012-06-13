@@ -30,6 +30,9 @@ Fixed bugs:
  * <javac> by default fails when run on JDK 8.
    Bugzilla Report 53347.
 
+ * ExtensionPoint doesn't work with nested import/include
+   Bugzilla Report 53405.
+
 Other changes:
 --------------
 

@@ -88,6 +88,80 @@
     <au:assertLogContains text="in target prepare"/>
   </target>
 
+  <target name="testExtensionPointInIncludedBuildfileWithNestedInclude">
+    <mkdir dir="output"/>
+    <echo file="output/abstract-compile.xml"><![CDATA[
+<project name="abstract-compile">
+  <extension-point name="compile"/>
+</project>]]></echo>
+    <echo file="output/compile-java.xml"><![CDATA[
+<project name="compile-java">
+  <include file="abstract-compile.xml" as="abstract-compile"/>
+  <target name="compile-java" extensionOf="abstract-compile.compile">
+    <echo>in compile java</echo>
+  </target>
+</project>]]></echo>
+    <echo file="output/build.xml"><![CDATA[
+<project name="master">
+  <include file="compile-java.xml" as="compile"/>
+</project>]]></echo>
+    <!-- here prefix should be concatened from each include first 
+         "compile" then "abstract-compile"-->
+    <ant dir="output" target="compile.abstract-compile.compile"/>
+    <au:assertLogContains text="in compile java"/>
+
+  </target>
+
+  <target name="testExtensionPointInIncludedBuildfileWithNestedImport">
+    <mkdir dir="output"/>
+    <echo file="output/abstract-compile.xml"><![CDATA[
+<project name="abstract-compile">
+  <extension-point name="compile"/>
+</project>]]></echo>
+    <echo file="output/compile-java.xml"><![CDATA[
+<project name="compile-java">
+  <import file="abstract-compile.xml"/>
+  <target name="compile-java" extensionOf="compile">
+    <echo>in compile java</echo>
+  </target>
+</project>]]></echo>
+    <echo file="output/build.xml"><![CDATA[
+<project name="master">
+  <include file="compile-java.xml" as="compile"/>
+</project>]]></echo>
+    <!-- here the prefix should be "compile" as the import containing
+         the extension point is done inside an include using "compile"
+         as prefix -->
+    <ant dir="output" target="compile.compile"/>
+    <au:assertLogContains text="in compile java"/>
+
+  </target>
+
+  <target name="testExtensionPointInImportedBuildfileWithNestedImport">
+    <mkdir dir="output"/>
+    <echo file="output/abstract-compile.xml"><![CDATA[
+<project name="abstract-compile">
+  <extension-point name="compile"/>
+</project>]]></echo>
+    <echo file="output/compile-java.xml"><![CDATA[
+<project name="compile-java">
+  <import file="abstract-compile.xml"/>
+  <target name="compile-java" extensionOf="compile">
+    <echo>in compile java</echo>
+  </target>
+</project>]]></echo>
+    <echo file="output/build.xml"><![CDATA[
+<project name="master">
+  <import file="compile-java.xml"/>
+</project>]]></echo>
+    <!-- here extension point should not be prefixed at all -->
+    <ant dir="output" target="compile"/>
+    <au:assertLogContains text="in compile java"/>
+
+  </target>
+
+
+
   <target name="testMissingExtensionPointCausesError">
     <mkdir dir="${output}"/>
     <echo file="${output}/build.xml"><![CDATA[

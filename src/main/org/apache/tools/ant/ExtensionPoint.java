@@ -25,8 +25,19 @@ package org.apache.tools.ant;
  */
 public class ExtensionPoint extends Target {
 
-    // no "clone" constructor since I'm not really sure where it is
-    // used
+    public ExtensionPoint() {
+
+    }
+
+    /**
+     * Cloning constructor.
+     * @param other the Target to clone.
+     */
+    public ExtensionPoint(Target other) {
+        //Should we have a clone constructor taking an ExtensionPoint as parameter?
+        super(other);
+    }
+
 
     private static final String NO_CHILDREN_ALLOWED
         = "you must not nest child elements into an extension-point";
