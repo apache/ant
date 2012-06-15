@@ -15,7 +15,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class VmsCommandLauncher extends Java13CommandLauncher {
 
-    public VmsCommandLauncher() throws NoSuchMethodException {
+    public VmsCommandLauncher() {
         super();
     }
 

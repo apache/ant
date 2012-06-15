@@ -3,6 +3,9 @@ package org.apache.tools.ant.taskdefs.launcher;
 import java.io.File;
 import java.io.IOException;
 
+import static org.apache.tools.ant.MagicNames.ANT_SHELL_LAUNCHER_REF_ID;
+import static org.apache.tools.ant.MagicNames.ANT_VM_LAUNCHER_REF_ID;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
@@ -14,8 +17,6 @@ import org.apache.tools.ant.util.FileUtils;
  * in the current working directory.
  */
 public class CommandLauncher {
-    private static final String ANT_SHELL_LAUNCHER_REF_ID = "ant.shellLauncher";
-    private static final String ANT_VM_LAUNCHER_REF_ID = "ant.vmLauncher";
 
     protected static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -23,13 +24,8 @@ public class CommandLauncher {
     private static CommandLauncher shellLauncher = null;
 
     static {
-        // Try using a JDK 1.3 launcher
-        try {
-            if(!Os.isFamily("os/2")) {
-                vmLauncher = new Java13CommandLauncher();
-            }
-        } catch(NoSuchMethodException exc) {
-            // Ignore and keep trying
+        if(!Os.isFamily("os/2")) {
+            vmLauncher = new Java13CommandLauncher();
         }
 
         if (Os.isFamily("mac") && !Os.isFamily("unix")) {
@@ -46,23 +42,22 @@ public class CommandLauncher {
                 shellLauncher = new WinNTCommandLauncher(baseLauncher);
             } else {
                 // Windows 98/95 - need to use an auxiliary script
-                shellLauncher = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
+                shellLauncher =
+                    new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         } else if (Os.isFamily("netware")) {
 
             CommandLauncher baseLauncher = new CommandLauncher();
 
-            shellLauncher = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
+            shellLauncher =
+                new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
         } else if (Os.isFamily("openvms")) {
             // OpenVMS
-            try {
-                shellLauncher = new VmsCommandLauncher();
-            } catch(NoSuchMethodException exc) {
-                // Ignore and keep trying
-            }
+            shellLauncher = new VmsCommandLauncher();
         } else {
             // Generic
-            shellLauncher = new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
+            shellLauncher = new ScriptCommandLauncher("bin/antRun",
+                new CommandLauncher());
         }
     }
 
@@ -80,9 +75,11 @@ public class CommandLauncher {
      * @throws IOException
      *         if attempting to run a command in a specific directory.
      */
-    public Process exec(Project project, String[] cmd, String[] env) throws IOException {
+    public Process exec(Project project, String[] cmd, String[] env)
+        throws IOException {
         if(project != null) {
-            project.log("Execute:CommandLauncher: " + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
+            project.log("Execute:CommandLauncher: "
+                + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
         }
         return Runtime.getRuntime().exec(cmd, env);
     }
@@ -105,23 +102,22 @@ public class CommandLauncher {
      * @throws IOException
      *         if trying to change directory.
      */
-    public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException {
-        if(workingDir == null) {
+    public Process exec(Project project, String[] cmd, String[] env,
+                        File workingDir) throws IOException {
+        if (workingDir == null) {
             return exec(project, cmd, env);
         }
         throw new IOException("Cannot execute a process in different "
-                              + "directory under this JVM");
+            + "directory under this JVM");
     }
 
+    /**
+     * Obtains the shell launcher configured for the given project or
+     * the default shell launcher.
+     */
     public static CommandLauncher getShellLauncher(Project project) {
-        CommandLauncher launcher = null;
-        if(project != null) {
-            launcher = (CommandLauncher) project
-                .getReference(ANT_SHELL_LAUNCHER_REF_ID);
-        }
-        if (launcher == null) {
-            launcher = getSystemLauncher(ANT_SHELL_LAUNCHER_REF_ID);
-        }
+        CommandLauncher launcher = extractLauncher(ANT_SHELL_LAUNCHER_REF_ID,
+                                                   project);
         if (launcher == null) {
             launcher = shellLauncher;
         }
@@ -129,17 +125,28 @@ public class CommandLauncher {
         return launcher;
     }
 
+    /**
+     * Obtains the VM launcher configured for the given project or
+     * the default VM launcher.
+     */
     public static CommandLauncher getVMLauncher(Project project) {
+        CommandLauncher launcher = extractLauncher(ANT_VM_LAUNCHER_REF_ID,
+                                                   project);
+        if (launcher == null) {
+            launcher = vmLauncher;
+        }
+        return launcher;
+    }
+
+    private static CommandLauncher extractLauncher(String referenceName,
+                                                   Project project) {
         CommandLauncher launcher = null;
         if (project != null) {
-            launcher = (CommandLauncher)project.getReference(ANT_VM_LAUNCHER_REF_ID);
+            launcher = (CommandLauncher) project.getReference(referenceName);
         }
 
         if (launcher == null) {
-            launcher = getSystemLauncher(ANT_VM_LAUNCHER_REF_ID);
-        }
-        if (launcher == null) {
-            launcher = vmLauncher;
+            launcher = getSystemLauncher(referenceName);
         }
         return launcher;
     }
@@ -169,13 +176,21 @@ public class CommandLauncher {
         return launcher;
     }
 
-    public static void setVMLauncher(Project project, CommandLauncher launcher) {
+    /**
+     * Sets the VM launcher to use for the given project.
+     */
+    public static void setVMLauncher(Project project,
+                                     CommandLauncher launcher) {
         if (project != null) {
             project.addReference(ANT_VM_LAUNCHER_REF_ID, launcher);
         }
     }
 
-    public static void setShellLauncher(Project project, CommandLauncher launcher) {
+    /**
+     * Sets the shell launcher to use for the given project.
+     */
+    public static void setShellLauncher(Project project,
+                                        CommandLauncher launcher) {
         if (project != null) {
             project.addReference(ANT_SHELL_LAUNCHER_REF_ID, launcher);
         }

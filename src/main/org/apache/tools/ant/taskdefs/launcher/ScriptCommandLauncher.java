@@ -46,7 +46,7 @@ public class ScriptCommandLauncher extends CommandLauncherProxy {
         }
         // Locate the auxiliary script
         String antHome = project.getProperty(MagicNames.ANT_HOME);
-        if(antHome == null) {
+        if (antHome == null) {
             throw new IOException("Cannot locate antRun script: "
                                   + "Property '" + MagicNames.ANT_HOME
                                   + "' not found");
@@ -57,7 +57,7 @@ public class ScriptCommandLauncher extends CommandLauncherProxy {
 
         // Build the command
         File commandDir = workingDir;
-        if(workingDir == null) {
+        if (workingDir == null) {
             commandDir = project.getBaseDir();
         }
         String[] newcmd = new String[cmd.length + 2];

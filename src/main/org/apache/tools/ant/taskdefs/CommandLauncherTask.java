@@ -4,6 +4,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.launcher.CommandLauncher;
 
+/**
+ * Task that configures the {@link
+ * org.apache.tools.ant.taskdefs.launcher.CommandLauncher} to used
+ * when starting external processes.
+ * @since Ant 1.9.0
+ */
 public class CommandLauncherTask extends Task {
     private boolean vmLauncher;
     private CommandLauncher commandLauncher;

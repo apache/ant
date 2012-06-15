@@ -38,7 +38,7 @@ public class PerlScriptCommandLauncher extends CommandLauncherProxy {
     public Process exec(Project project, String[] cmd, String[] env,
                         File workingDir) throws IOException {
         if (project == null) {
-            if(workingDir == null) {
+            if (workingDir == null) {
                 return exec(project, cmd, env);
             }
             throw new IOException("Cannot locate antRun script: "

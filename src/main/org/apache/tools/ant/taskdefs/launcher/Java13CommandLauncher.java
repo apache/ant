@@ -13,10 +13,6 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class Java13CommandLauncher extends CommandLauncher {
 
-    public Java13CommandLauncher() throws NoSuchMethodException {
-        // Used to verify if Java13 is available, is prerequisite in ant 1.8
-    }
-
     /**
      * Launches the given command in a new process, in the given
      * working directory.
