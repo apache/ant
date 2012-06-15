@@ -10,6 +10,10 @@ Changes that could break older environments:
    EOL ASIS will not insert a newline even if fixlast is set to true.
    Bugzilla report 53036
 
+ * The CommandLauncher hierarchy that used to be a set of inner
+   classes of Execute has been extracted to the
+   org.apache.tools.ant.taskdefs.launcher package.
+
 Fixed bugs:
 -----------
 
@@ -36,9 +40,14 @@ Fixed bugs:
 Other changes:
 --------------
 
-* merged the ZIP package from Commons Compress, it can now read
-  archives using Zip64 extensions (files and archives bigger that 4GB
-  and with more that 64k entries).
+ * merged the ZIP package from Commons Compress, it can now read
+   archives using Zip64 extensions (files and archives bigger that 4GB
+   and with more that 64k entries).
+
+ * a new task <commandlaucher> can be used to configure the
+   CommandLauncher used by Ant when forking external programs or new
+   Java VMs.
+   Bugzilla Report 52706.
 
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
