@@ -23,10 +23,17 @@
 
 package org.apache.tools.tar;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.tools.zip.ZipEncoding;
+import org.apache.tools.zip.ZipEncodingHelper;
 
 /**
  * The TarInputStream reads a UNIX tar archive as an InputStream.
@@ -59,12 +66,23 @@ public class TarInputStream extends FilterInputStream {
 
     // CheckStyle:VisibilityModifier ON
 
+    private final ZipEncoding encoding;
+
     /**
      * Constructor for TarInputStream.
      * @param is the input stream to use
      */
     public TarInputStream(InputStream is) {
         this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, String encoding) {
+        this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, encoding);
     }
 
     /**
@@ -80,16 +98,38 @@ public class TarInputStream extends FilterInputStream {
      * Constructor for TarInputStream.
      * @param is the input stream to use
      * @param blockSize the block size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, String encoding) {
+        this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
      * @param recordSize the record size to use
      */
     public TarInputStream(InputStream is, int blockSize, int recordSize) {
-        super(is);
+        this(is, blockSize, recordSize, null);
+    }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, int recordSize,
+                          String encoding) {
+        super(is);
         this.buffer = new TarBuffer(is, blockSize, recordSize);
         this.readBuf = null;
         this.oneBuf = new byte[1];
         this.debug = false;
         this.hasHitEOF = false;
+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
     }
 
     /**
@@ -106,6 +146,7 @@ public class TarInputStream extends FilterInputStream {
      * Closes this stream. Calls the TarBuffer's close() method.
      * @throws IOException on error
      */
+    @Override
     public void close() throws IOException {
         buffer.close();
     }
@@ -131,6 +172,7 @@ public class TarInputStream extends FilterInputStream {
      * @return The number of available bytes for the current entry.
      * @throws IOException for signature
      */
+    @Override
     public int available() throws IOException {
         if (entrySize - entryOffset > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
@@ -148,6 +190,7 @@ public class TarInputStream extends FilterInputStream {
      * @return the number actually skipped
      * @throws IOException on error
      */
+    @Override
     public long skip(long numToSkip) throws IOException {
         // REVIEW
         // This is horribly inefficient, but it ensures that we
@@ -171,6 +214,7 @@ public class TarInputStream extends FilterInputStream {
      *
      * @return False.
      */
+    @Override
     public boolean markSupported() {
         return false;
     }
@@ -180,12 +224,14 @@ public class TarInputStream extends FilterInputStream {
      *
      * @param markLimit The limit to mark.
      */
+    @Override
     public void mark(int markLimit) {
     }
 
     /**
      * Since we do not support marking just yet, we do nothing.
      */
+    @Override
     public void reset() {
     }
 
@@ -230,44 +276,37 @@ public class TarInputStream extends FilterInputStream {
             readBuf = null;
         }
 
-        byte[] headerBuf = buffer.readRecord();
-
-        if (headerBuf == null) {
-            if (debug) {
-                System.err.println("READ NULL RECORD");
-            }
-            hasHitEOF = true;
-        } else if (buffer.isEOFRecord(headerBuf)) {
-            if (debug) {
-                System.err.println("READ EOF RECORD");
-            }
-            hasHitEOF = true;
-        }
+        byte[] headerBuf = getRecord();
 
         if (hasHitEOF) {
             currEntry = null;
-        } else {
-            currEntry = new TarEntry(headerBuf);
-
-            if (debug) {
-                System.err.println("TarInputStream: SET CURRENTRY '"
-                        + currEntry.getName()
-                        + "' size = "
-                        + currEntry.getSize());
-            }
-
-            entryOffset = 0;
-
-            entrySize = currEntry.getSize();
+            return null;
         }
 
-        if (currEntry != null && currEntry.isGNULongNameEntry()) {
+        try {
+            currEntry = new TarEntry(headerBuf, encoding);
+        } catch (IllegalArgumentException e) {
+            IOException ioe = new IOException("Error detected parsing the header");
+            ioe.initCause(e);
+            throw ioe;
+        }
+        if (debug) {
+            System.err.println("TarInputStream: SET CURRENTRY '"
+                               + currEntry.getName()
+                               + "' size = "
+                               + currEntry.getSize());
+        }
+
+        entryOffset = 0;
+        entrySize = currEntry.getSize();
+
+        if (currEntry.isGNULongNameEntry()) {
             // read in the name
             StringBuffer longName = new StringBuffer();
             byte[] buf = new byte[SMALL_BUFFER_SIZE];
             int length = 0;
             while ((length = read(buf)) >= 0) {
-                longName.append(new String(buf, 0, length));
+                longName.append(new String(buf, 0, length)); // TODO default charset?
             }
             getNextEntry();
             if (currEntry == null) {
@@ -283,7 +322,174 @@ public class TarInputStream extends FilterInputStream {
             currEntry.setName(longName.toString());
         }
 
+        if (currEntry.isPaxHeader()){ // Process Pax headers
+            paxHeaders();
+        }
+
+        if (currEntry.isGNUSparse()){ // Process sparse files
+            readGNUSparse();
+        }
+
+        // If the size of the next element in the archive has changed
+        // due to a new size being reported in the posix header
+        // information, we update entrySize here so that it contains
+        // the correct value.
+        entrySize = currEntry.getSize();
         return currEntry;
+    }
+
+    /**
+     * Get the next record in this tar archive. This will skip
+     * over any remaining data in the current entry, if there
+     * is one, and place the input stream at the header of the
+     * next entry.
+     * If there are no more entries in the archive, null will
+     * be returned to indicate that the end of the archive has
+     * been reached.
+     *
+     * @return The next header in the archive, or null.
+     * @throws IOException on error
+     */
+    private byte[] getRecord() throws IOException {
+        if (hasHitEOF) {
+            return null;
+        }
+
+        byte[] headerBuf = buffer.readRecord();
+
+        if (headerBuf == null) {
+            if (debug) {
+                System.err.println("READ NULL RECORD");
+            }
+            hasHitEOF = true;
+        } else if (buffer.isEOFRecord(headerBuf)) {
+            if (debug) {
+                System.err.println("READ EOF RECORD");
+            }
+            hasHitEOF = true;
+        }
+
+        return hasHitEOF ? null : headerBuf;
+    }
+
+    private void paxHeaders() throws IOException{
+        Map<String, String> headers = parsePaxHeaders(this);
+        getNextEntry(); // Get the actual file entry
+        applyPaxHeadersToCurrentEntry(headers);
+    }
+
+    Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
+        Map<String, String> headers = new HashMap<String, String>();
+        // Format is "length keyword=value\n";
+        while(true){ // get length
+            int ch;
+            int len = 0;
+            int read = 0;
+            while((ch = i.read()) != -1) {
+                read++;
+                if (ch == ' '){ // End of length string
+                    // Get keyword
+                    ByteArrayOutputStream coll = new ByteArrayOutputStream();
+                    while((ch = i.read()) != -1) {
+                        read++;
+                        if (ch == '='){ // end of keyword
+                            String keyword = coll.toString("UTF-8");
+                            // Get rest of entry
+                            byte[] rest = new byte[len - read];
+                            int got = i.read(rest);
+                            if (got != len - read){
+                                throw new IOException("Failed to read "
+                                                      + "Paxheader. Expected "
+                                                      + (len - read)
+                                                      + " bytes, read "
+                                                      + got);
+                            }
+                            // Drop trailing NL
+                            String value = new String(rest, 0,
+                                                      len - read - 1, "UTF-8");
+                            headers.put(keyword, value);
+                            break;
+                        }
+                        coll.write((byte) ch);
+                    }
+                    break; // Processed single header
+                }
+                len *= 10;
+                len += ch - '0';
+            }
+            if (ch == -1){ // EOF
+                break;
+            }
+        }
+        return headers;
+    }
+
+    private void applyPaxHeadersToCurrentEntry(Map<String, String> headers) {
+        /*
+         * The following headers are defined for Pax.
+         * atime, ctime, charset: cannot use these without changing TarEntry fields
+         * mtime
+         * comment
+         * gid, gname
+         * linkpath
+         * size
+         * uid,uname
+         * SCHILY.devminor, SCHILY.devmajor: don't have setters/getters for those
+         */
+        for (Entry<String, String> ent : headers.entrySet()){
+            String key = ent.getKey();
+            String val = ent.getValue();
+            if ("path".equals(key)){
+                currEntry.setName(val);
+            } else if ("linkpath".equals(key)){
+                currEntry.setLinkName(val);
+            } else if ("gid".equals(key)){
+                currEntry.setGroupId(Integer.parseInt(val));
+            } else if ("gname".equals(key)){
+                currEntry.setGroupName(val);
+            } else if ("uid".equals(key)){
+                currEntry.setUserId(Integer.parseInt(val));
+            } else if ("uname".equals(key)){
+                currEntry.setUserName(val);
+            } else if ("size".equals(key)){
+                currEntry.setSize(Long.parseLong(val));
+            } else if ("mtime".equals(key)){
+                currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
+            } else if ("SCHILY.devminor".equals(key)){
+                currEntry.setDevMinor(Integer.parseInt(val));
+            } else if ("SCHILY.devmajor".equals(key)){
+                currEntry.setDevMajor(Integer.parseInt(val));
+            }
+        }
+    }
+
+    /**
+     * Adds the sparse chunks from the current entry to the sparse chunks,
+     * including any additional sparse entries following the current entry.
+     * 
+     * @throws IOException on error 
+     * 
+     * @todo Sparse files get not yet really processed. 
+     */
+    private void readGNUSparse() throws IOException {
+        /* we do not really process sparse files yet
+        sparses = new ArrayList();
+        sparses.addAll(currEntry.getSparses());
+        */
+        if (currEntry.isExtended()) {
+            TarArchiveSparseEntry entry;
+            do {
+                byte[] headerBuf = getRecord();
+                if (hasHitEOF) {
+                    currEntry = null;
+                    break;
+                }
+                entry = new TarArchiveSparseEntry(headerBuf);
+                /* we do not really process sparse files yet
+                sparses.addAll(entry.getSparses());
+                */
+            } while (entry.isExtended());
+        }
     }
 
     /**
@@ -294,6 +500,7 @@ public class TarInputStream extends FilterInputStream {
      * @return The byte read, or -1 at EOF.
      * @throws IOException on error
      */
+    @Override
     public int read() throws IOException {
         int num = read(oneBuf, 0, 1);
         return num == -1 ? -1 : ((int) oneBuf[0]) & BYTE_MASK;
@@ -312,6 +519,7 @@ public class TarInputStream extends FilterInputStream {
      * @return The number of bytes read, or -1 at EOF.
      * @throws IOException on error
      */
+    @Override
     public int read(byte[] buf, int offset, int numToRead) throws IOException {
         int totalRead = 0;
 
@@ -399,4 +607,14 @@ public class TarInputStream extends FilterInputStream {
             out.write(buf, 0, numRead);
         }
     }
+
+    /**
+     * Whether this class is able to read the given entry.
+     *
+     * <p>May return false if the current entry is a sparse file.</p>
+     */
+    public boolean canReadEntryData(TarEntry te) {
+        return !te.isGNUSparse();
+    }
 }
+

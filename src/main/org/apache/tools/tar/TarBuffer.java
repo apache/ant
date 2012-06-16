@@ -51,12 +51,13 @@ public class TarBuffer {
 
     private InputStream     inStream;
     private OutputStream    outStream;
-    private byte[]          blockBuffer;
+    private final int       blockSize;
+    private final int       recordSize;
+    private final int       recsPerBlock;
+    private final byte[]    blockBuffer;
+
     private int             currBlkIdx;
     private int             currRecIdx;
-    private int             blockSize;
-    private int             recordSize;
-    private int             recsPerBlock;
     private boolean         debug;
 
     /**
@@ -83,10 +84,7 @@ public class TarBuffer {
      * @param recordSize the record size to use
      */
     public TarBuffer(InputStream inStream, int blockSize, int recordSize) {
-        this.inStream = inStream;
-        this.outStream = null;
-
-        this.initialize(blockSize, recordSize);
+        this(inStream, null, blockSize, recordSize);
     }
 
     /**
@@ -113,16 +111,15 @@ public class TarBuffer {
      * @param recordSize the record size to use
      */
     public TarBuffer(OutputStream outStream, int blockSize, int recordSize) {
-        this.inStream = null;
-        this.outStream = outStream;
-
-        this.initialize(blockSize, recordSize);
+        this(null, outStream, blockSize, recordSize);
     }
 
     /**
-     * Initialization common to all constructors.
+     * Private constructor to perform common setup.
      */
-    private void initialize(int blockSize, int recordSize) {
+    private TarBuffer(InputStream inStream, OutputStream outStream, int blockSize, int recordSize) {
+        this.inStream = inStream;
+        this.outStream = outStream;
         this.debug = false;
         this.blockSize = blockSize;
         this.recordSize = recordSize;
@@ -194,10 +191,8 @@ public class TarBuffer {
             throw new IOException("reading (via skip) from an output buffer");
         }
 
-        if (currRecIdx >= recsPerBlock) {
-            if (!readBlock()) {
-                return;    // UNDONE
-            }
+        if (currRecIdx >= recsPerBlock && !readBlock()) {
+            return;    // UNDONE
         }
 
         currRecIdx++;
@@ -216,13 +211,14 @@ public class TarBuffer {
         }
 
         if (inStream == null) {
+            if (outStream == null) {
+                throw new IOException("input buffer is closed");
+            }
             throw new IOException("reading from an output buffer");
         }
 
-        if (currRecIdx >= recsPerBlock) {
-            if (!readBlock()) {
-                return null;
-            }
+        if (currRecIdx >= recsPerBlock && !readBlock()) {
+            return null;
         }
 
         byte[] result = new byte[recordSize];
@@ -337,6 +333,9 @@ public class TarBuffer {
         }
 
         if (outStream == null) {
+            if (inStream == null){
+                throw new IOException("Output buffer is closed");
+            }
             throw new IOException("writing to an input buffer");
         }
 
@@ -374,6 +373,9 @@ public class TarBuffer {
         }
 
         if (outStream == null) {
+            if (inStream == null){
+                throw new IOException("Output buffer is closed");
+            }
             throw new IOException("writing to an input buffer");
         }
 
@@ -454,9 +456,8 @@ public class TarBuffer {
         } else if (inStream != null) {
             if (inStream != System.in) {
                 inStream.close();
-
-                inStream = null;
             }
+            inStream = null;
         }
     }
 }

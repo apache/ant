@@ -49,6 +49,9 @@ Other changes:
    Java VMs.
    Bugzilla Report 52706.
 
+ * merged the TAR package from Commons Compress, it can now read
+   archives using POSIX extension headers and STAR extensions.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

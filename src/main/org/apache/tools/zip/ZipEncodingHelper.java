@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Static helper functions for robustly encoding filenames in zip files. 
  */
-abstract class ZipEncodingHelper {
+public abstract class ZipEncodingHelper {
 
     /**
      * A class, which holds the high characters of a simple encoding
@@ -207,7 +207,7 @@ abstract class ZipEncodingHelper {
      *             the platform's default encoding.
      * @return A zip encoding for the given encoding name.
      */
-    static ZipEncoding getZipEncoding(String name) {
+    public static ZipEncoding getZipEncoding(String name) {
  
         // fallback encoding is good enough for utf-8.
         if (isUTF8(name)) {

@@ -24,8 +24,12 @@
 package org.apache.tools.tar;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Locale;
+
+import org.apache.tools.zip.ZipEncoding;
 
 /**
  * This class represents an entry in a Tar archive. It consists
@@ -72,13 +76,44 @@ import java.util.Locale;
  * char devmajor[8];
  * char devminor[8];
  * } header;
+ * All unused bytes are set to null.
+ * New-style GNU tar files are slightly different from the above.
+ * For values of size larger than 077777777777L (11 7s)
+ * or uid and gid larger than 07777777L (7 7s)
+ * the sign bit of the first byte is set, and the rest of the
+ * field is the binary representation of the number.
+ * See TarUtils.parseOctalOrBinary.
+ * </pre>
+ * 
+ * <p>
+ * The C structure for a old GNU Tar Entry's header is:
+ * <pre>
+ * struct oldgnu_header {
+ * char unused_pad1[345]; // TarConstants.PAD1LEN_GNU       - offset 0
+ * char atime[12];        // TarConstants.ATIMELEN_GNU      - offset 345
+ * char ctime[12];        // TarConstants.CTIMELEN_GNU      - offset 357
+ * char offset[12];       // TarConstants.OFFSETLEN_GNU     - offset 369
+ * char longnames[4];     // TarConstants.LONGNAMESLEN_GNU  - offset 381
+ * char unused_pad2;      // TarConstants.PAD2LEN_GNU       - offset 385
+ * struct sparse sp[4];   // TarConstants.SPARSELEN_GNU     - offset 386
+ * char isextended;       // TarConstants.ISEXTENDEDLEN_GNU - offset 482
+ * char realsize[12];     // TarConstants.REALSIZELEN_GNU   - offset 483
+ * char unused_pad[17];   // TarConstants.PAD3LEN_GNU       - offset 495
+ * };
+ * </pre>
+ * Whereas, "struct sparse" is:
+ * <pre>
+ * struct sparse {
+ * char offset[12];   // offset 0
+ * char numbytes[12]; // offset 12
+ * };
  * </pre>
  *
  */
 
 public class TarEntry implements TarConstants {
     /** The entry's name. */
-    private StringBuffer name;
+    private String name;
 
     /** The entry's permission mode. */
     private int mode;
@@ -99,22 +134,30 @@ public class TarEntry implements TarConstants {
     private byte linkFlag;
 
     /** The entry's link name. */
-    private StringBuffer linkName;
+    private String linkName;
 
     /** The entry's magic tag. */
-    private StringBuffer magic;
+    private String magic;
+    /** The version of the format */
+    private String version;
 
     /** The entry's user name. */
-    private StringBuffer userName;
+    private String userName;
 
     /** The entry's group name. */
-    private StringBuffer groupName;
+    private String groupName;
 
     /** The entry's major device number. */
     private int devMajor;
 
     /** The entry's minor device number. */
     private int devMinor;
+
+    /** If an extension sparse header follows. */
+    private boolean isExtended;
+
+    /** The entry's real size in case of a sparse file. */
+    private long realSize;
 
     /** The entry's file reference */
     private File file;
@@ -134,10 +177,11 @@ public class TarEntry implements TarConstants {
     /**
      * Construct an empty entry and prepares the header values.
      */
-    private TarEntry () {
-        this.magic = new StringBuffer(TMAGIC);
-        this.name = new StringBuffer();
-        this.linkName = new StringBuffer();
+    private TarEntry() {
+        this.magic = MAGIC_POSIX;
+        this.version = VERSION_POSIX;
+        this.name = "";
+        this.linkName = "";
 
         String user = System.getProperty("user.name", "");
 
@@ -147,8 +191,8 @@ public class TarEntry implements TarConstants {
 
         this.userId = 0;
         this.groupId = 0;
-        this.userName = new StringBuffer(user);
-        this.groupName = new StringBuffer("");
+        this.userName = user;
+        this.groupName = "";
         this.file = null;
     }
 
@@ -178,19 +222,16 @@ public class TarEntry implements TarConstants {
 
         this.devMajor = 0;
         this.devMinor = 0;
-        this.name = new StringBuffer(name);
+        this.name = name;
         this.mode = isDir ? DEFAULT_DIR_MODE : DEFAULT_FILE_MODE;
         this.linkFlag = isDir ? LF_DIR : LF_NORMAL;
         this.userId = 0;
         this.groupId = 0;
         this.size = 0;
         this.modTime = (new Date()).getTime() / MILLIS_PER_SECOND;
-        this.linkName = new StringBuffer("");
-        this.userName = new StringBuffer("");
-        this.groupName = new StringBuffer("");
-        this.devMajor = 0;
-        this.devMinor = 0;
-
+        this.linkName = "";
+        this.userName = "";
+        this.groupName = "";
     }
 
     /**
@@ -203,8 +244,20 @@ public class TarEntry implements TarConstants {
         this(name);
         this.linkFlag = linkFlag;
         if (linkFlag == LF_GNUTYPE_LONGNAME) {
-            magic = new StringBuffer(GNU_TMAGIC);
+            magic = GNU_TMAGIC;
+            version = VERSION_GNU_SPACE;
         }
+    }
+
+    /**
+     * Construct an entry for a file. File is set to file, and the
+     * header is constructed from information from the file.
+     * The name is set from the normalized file path.
+     *
+     * @param file The file that the entry represents.
+     */
+    public TarEntry(File file) {
+        this(file, normalizeFileName(file.getPath(), false));
     }
 
     /**
@@ -212,29 +265,31 @@ public class TarEntry implements TarConstants {
      * header is constructed from information from the file.
      *
      * @param file The file that the entry represents.
+     * @param fileName the name to be used for the entry.
      */
-    public TarEntry(File file) {
+    public TarEntry(File file, String fileName) {
         this();
 
         this.file = file;
 
-        String fileName = normalizeFileName(file.getPath(), false);
-        this.linkName = new StringBuffer("");
-        this.name = new StringBuffer(fileName);
+        this.linkName = "";
 
         if (file.isDirectory()) {
             this.mode = DEFAULT_DIR_MODE;
             this.linkFlag = LF_DIR;
 
-            int nameLength = name.length();
-            if (nameLength == 0 || name.charAt(nameLength - 1) != '/') {
-                this.name.append("/");
+            int nameLength = fileName.length();
+            if (nameLength == 0 || fileName.charAt(nameLength - 1) != '/') {
+                this.name = fileName + "/";
+            } else {
+                this.name = fileName;
             }
             this.size = 0;
         } else {
             this.mode = DEFAULT_FILE_MODE;
             this.linkFlag = LF_NORMAL;
             this.size = file.length();
+            this.name = fileName;
         }
 
         this.modTime = file.lastModified() / MILLIS_PER_SECOND;
@@ -247,10 +302,25 @@ public class TarEntry implements TarConstants {
      * to null.
      *
      * @param headerBuf The header bytes from a tar archive entry.
+     * @throws IllegalArgumentException if any of the numeric fields have an invalid format
      */
     public TarEntry(byte[] headerBuf) {
         this();
         parseTarHeader(headerBuf);
+    }
+
+    /**
+     * Construct an entry from an archive's header bytes. File is set
+     * to null.
+     *
+     * @param headerBuf The header bytes from a tar archive entry.
+     * @param encoding encoding to use for file names
+     * @throws IllegalArgumentException if any of the numeric fields have an invalid format
+     */
+    public TarEntry(byte[] headerBuf, ZipEncoding encoding)
+        throws IOException {
+        this();
+        parseTarHeader(headerBuf, encoding);
     }
 
     /**
@@ -271,6 +341,7 @@ public class TarEntry implements TarConstants {
      * @param it Entry to be checked for equality.
      * @return True if the entries are equal.
      */
+    @Override
     public boolean equals(Object it) {
         if (it == null || getClass() != it.getClass()) {
             return false;
@@ -283,6 +354,7 @@ public class TarEntry implements TarConstants {
      *
      * @return the entry hashcode
      */
+    @Override
     public int hashCode() {
         return getName().hashCode();
     }
@@ -314,7 +386,7 @@ public class TarEntry implements TarConstants {
      * @param name This entry's new name.
      */
     public void setName(String name) {
-        this.name = new StringBuffer(normalizeFileName(name, false));
+        this.name = normalizeFileName(name, false);
     }
 
     /**
@@ -333,6 +405,15 @@ public class TarEntry implements TarConstants {
      */
     public String getLinkName() {
         return linkName.toString();
+    }
+
+    /**
+     * Set this entry's link name.
+     * 
+     * @param link the link name to use.
+     */
+    public void setLinkName(String link) {
+        this.linkName = link;
     }
 
     /**
@@ -386,7 +467,7 @@ public class TarEntry implements TarConstants {
      * @param userName This entry's new user name.
      */
     public void setUserName(String userName) {
-        this.userName = new StringBuffer(userName);
+        this.userName = userName;
     }
 
     /**
@@ -404,7 +485,7 @@ public class TarEntry implements TarConstants {
      * @param groupName This entry's new group name.
      */
     public void setGroupName(String groupName) {
-        this.groupName = new StringBuffer(groupName);
+        this.groupName = groupName;
     }
 
     /**
@@ -488,11 +569,88 @@ public class TarEntry implements TarConstants {
      * Set this entry's file size.
      *
      * @param size This entry's new file size.
+     * @throws IllegalArgumentException if the size is &lt; 0.
      */
     public void setSize(long size) {
+        if (size < 0){
+            throw new IllegalArgumentException("Size is out of range: "+size);
+        }
         this.size = size;
     }
 
+    /**
+     * Get this entry's major device number.
+     *
+     * @return This entry's major device number.
+     */
+    public int getDevMajor() {
+        return devMajor;
+    }
+
+    /**
+     * Set this entry's major device number.
+     *
+     * @param devNo This entry's major device number.
+     * @throws IllegalArgumentException if the devNo is &lt; 0.
+     */
+    public void setDevMajor(int devNo) {
+        if (devNo < 0){
+            throw new IllegalArgumentException("Major device number is out of "
+                                               + "range: " + devNo);
+        }
+        this.devMajor = devNo;
+    }
+
+    /**
+     * Get this entry's minor device number.
+     *
+     * @return This entry's minor device number.
+     */
+    public int getDevMinor() {
+        return devMinor;
+    }
+
+    /**
+     * Set this entry's minor device number.
+     *
+     * @param devNo This entry's minor device number.
+     * @throws IllegalArgumentException if the devNo is &lt; 0.
+     */
+    public void setDevMinor(int devNo) {
+        if (devNo < 0){
+            throw new IllegalArgumentException("Minor device number is out of "
+                                               + "range: " + devNo);
+        }
+        this.devMinor = devNo;
+    }
+
+    /**
+     * Indicates in case of a sparse file if an extension sparse header
+     * follows.
+     *
+     * @return true if an extension sparse header follows.
+     */
+    public boolean isExtended() {
+        return isExtended;
+    }
+
+    /**
+     * Get this entry's real file size in case of a sparse file.
+     *
+     * @return This entry's real file size.
+     */
+    public long getRealSize() {
+        return realSize;
+    }
+
+    /**
+     * Indicate if this entry is a GNU sparse block 
+     *
+     * @return true if this is a sparse extension provided by GNU tar
+     */
+    public boolean isGNUSparse() {
+        return linkFlag == LF_GNUTYPE_SPARSE;
+    }
 
     /**
      * Indicate if this entry is a GNU long name block
@@ -501,7 +659,26 @@ public class TarEntry implements TarConstants {
      */
     public boolean isGNULongNameEntry() {
         return linkFlag == LF_GNUTYPE_LONGNAME
-                           && name.toString().equals(GNU_LONGLINK);
+                           && name.equals(GNU_LONGLINK);
+    }
+
+    /**
+     * Check if this is a Pax header.
+     * 
+     * @return {@code true} if this is a Pax header.
+     */
+    public boolean isPaxHeader(){
+        return linkFlag == LF_PAX_EXTENDED_HEADER_LC
+            || linkFlag == LF_PAX_EXTENDED_HEADER_UC;
+    }
+
+    /**
+     * Check if this is a Pax header.
+     * 
+     * @return {@code true} if this is a Pax header.
+     */
+    public boolean isGlobalPaxHeader(){
+        return linkFlag == LF_PAX_GLOBAL_EXTENDED_HEADER;
     }
 
     /**
@@ -523,6 +700,54 @@ public class TarEntry implements TarConstants {
         }
 
         return false;
+    }
+
+    /**
+     * Check if this is a "normal file"
+     */
+    public boolean isFile() {
+        if (file != null) {
+            return file.isFile();
+        }
+        if (linkFlag == LF_OLDNORM || linkFlag == LF_NORMAL) {
+            return true;
+        }
+        return !getName().endsWith("/");
+    }
+
+    /**
+     * Check if this is a symbolic link entry.
+     */
+    public boolean isSymbolicLink() {
+        return linkFlag == LF_SYMLINK;
+    }
+
+    /**
+     * Check if this is a link entry.
+     */
+    public boolean isLink() {
+        return linkFlag == LF_LINK;
+    }
+
+    /**
+     * Check if this is a character device entry.
+     */
+    public boolean isCharacterDevice() {
+        return linkFlag == LF_CHR;
+    }
+
+    /**
+     * Check if this is a block device entry.
+     */
+    public boolean isBlockDevice() {
+        return linkFlag == LF_BLK;
+    }
+
+    /**
+     * Check if this is a FIFO (pipe) entry.
+     */
+    public boolean isFIFO() {
+        return linkFlag == LF_FIFO;
     }
 
     /**
@@ -549,17 +774,46 @@ public class TarEntry implements TarConstants {
     /**
      * Write an entry's header information to a header buffer.
      *
+     * <p>This method does not use the star/GNU tar/BSD tar extensions.</p>
+     *
      * @param outbuf The tar entry header buffer to fill in.
      */
     public void writeEntryHeader(byte[] outbuf) {
+        try {
+            writeEntryHeader(outbuf, TarUtils.DEFAULT_ENCODING, false);
+        } catch (IOException ex) {
+            try {
+                writeEntryHeader(outbuf, TarUtils.FALLBACK_ENCODING, false);
+            } catch (IOException ex2) {
+                // impossible
+                throw new RuntimeException(ex2);
+            }
+        }
+    }
+
+    /**
+     * Write an entry's header information to a header buffer.
+     *
+     * @param outbuf The tar entry header buffer to fill in.
+     * @param encoding encoding to use when writing the file name.
+     * @param starMode whether to use the star/GNU tar/BSD tar
+     * extension for numeric fields if their value doesn't fit in the
+     * maximum size of standard tar archives
+     */
+    public void writeEntryHeader(byte[] outbuf, ZipEncoding encoding,
+                                 boolean starMode) throws IOException {
         int offset = 0;
 
-        offset = TarUtils.getNameBytes(name, outbuf, offset, NAMELEN);
-        offset = TarUtils.getOctalBytes(mode, outbuf, offset, MODELEN);
-        offset = TarUtils.getOctalBytes(userId, outbuf, offset, UIDLEN);
-        offset = TarUtils.getOctalBytes(groupId, outbuf, offset, GIDLEN);
-        offset = TarUtils.getLongOctalBytes(size, outbuf, offset, SIZELEN);
-        offset = TarUtils.getLongOctalBytes(modTime, outbuf, offset, MODTIMELEN);
+        offset = TarUtils.formatNameBytes(name, outbuf, offset, NAMELEN,
+                                          encoding);
+        offset = writeEntryHeaderField(mode, outbuf, offset, MODELEN, starMode);
+        offset = writeEntryHeaderField(userId, outbuf, offset, UIDLEN,
+                                       starMode);
+        offset = writeEntryHeaderField(groupId, outbuf, offset, GIDLEN,
+                                       starMode);
+        offset = writeEntryHeaderField(size, outbuf, offset, SIZELEN, starMode);
+        offset = writeEntryHeaderField(modTime, outbuf, offset, MODTIMELEN,
+                                       starMode);
 
         int csOffset = offset;
 
@@ -568,12 +822,18 @@ public class TarEntry implements TarConstants {
         }
 
         outbuf[offset++] = linkFlag;
-        offset = TarUtils.getNameBytes(linkName, outbuf, offset, NAMELEN);
-        offset = TarUtils.getNameBytes(magic, outbuf, offset, MAGICLEN);
-        offset = TarUtils.getNameBytes(userName, outbuf, offset, UNAMELEN);
-        offset = TarUtils.getNameBytes(groupName, outbuf, offset, GNAMELEN);
-        offset = TarUtils.getOctalBytes(devMajor, outbuf, offset, DEVLEN);
-        offset = TarUtils.getOctalBytes(devMinor, outbuf, offset, DEVLEN);
+        offset = TarUtils.formatNameBytes(linkName, outbuf, offset, NAMELEN,
+                                          encoding);
+        offset = TarUtils.formatNameBytes(magic, outbuf, offset, PURE_MAGICLEN);
+        offset = TarUtils.formatNameBytes(version, outbuf, offset, VERSIONLEN);
+        offset = TarUtils.formatNameBytes(userName, outbuf, offset, UNAMELEN,
+                                          encoding);
+        offset = TarUtils.formatNameBytes(groupName, outbuf, offset, GNAMELEN,
+                                          encoding);
+        offset = writeEntryHeaderField(devMajor, outbuf, offset, DEVLEN,
+                                       starMode);
+        offset = writeEntryHeaderField(devMinor, outbuf, offset, DEVLEN,
+                                       starMode);
 
         while (offset < outbuf.length) {
             outbuf[offset++] = 0;
@@ -581,42 +841,122 @@ public class TarEntry implements TarConstants {
 
         long chk = TarUtils.computeCheckSum(outbuf);
 
-        TarUtils.getCheckSumOctalBytes(chk, outbuf, csOffset, CHKSUMLEN);
+        TarUtils.formatCheckSumOctalBytes(chk, outbuf, csOffset, CHKSUMLEN);
+    }
+
+    private int writeEntryHeaderField(long value, byte[] outbuf, int offset,
+                                      int length, boolean starMode) {
+        if (!starMode && (value < 0
+                          || value >= (1l << (3 * (length - 1))))) {
+            // value doesn't fit into field when written as octal
+            // number, will be written to PAX header or causes an
+            // error
+            return TarUtils.formatLongOctalBytes(0, outbuf, offset, length);
+        }
+        return TarUtils.formatLongOctalOrBinaryBytes(value, outbuf, offset,
+                                                     length);
     }
 
     /**
      * Parse an entry's header information from a header buffer.
      *
      * @param header The tar entry header buffer to get information from.
+     * @throws IllegalArgumentException if any of the numeric fields have an invalid format
      */
     public void parseTarHeader(byte[] header) {
+        try {
+            parseTarHeader(header, TarUtils.DEFAULT_ENCODING);
+        } catch (IOException ex) {
+            try {
+                parseTarHeader(header, TarUtils.DEFAULT_ENCODING, true);
+            } catch (IOException ex2) {
+                // not really possible
+                throw new RuntimeException(ex2);
+            }
+        }
+    }
+
+    /**
+     * Parse an entry's header information from a header buffer.
+     *
+     * @param header The tar entry header buffer to get information from.
+     * @param encoding encoding to use for file names
+     * @throws IllegalArgumentException if any of the numeric fields
+     * have an invalid format
+     */
+    public void parseTarHeader(byte[] header, ZipEncoding encoding)
+        throws IOException {
+        parseTarHeader(header, encoding, false);
+    }
+
+    private void parseTarHeader(byte[] header, ZipEncoding encoding,
+                                final boolean oldStyle)
+        throws IOException {
         int offset = 0;
 
-        name = TarUtils.parseName(header, offset, NAMELEN);
+        name = oldStyle ? TarUtils.parseName(header, offset, NAMELEN)
+            : TarUtils.parseName(header, offset, NAMELEN, encoding);
         offset += NAMELEN;
-        mode = (int) TarUtils.parseOctal(header, offset, MODELEN);
+        mode = (int) TarUtils.parseOctalOrBinary(header, offset, MODELEN);
         offset += MODELEN;
-        userId = (int) TarUtils.parseOctal(header, offset, UIDLEN);
+        userId = (int) TarUtils.parseOctalOrBinary(header, offset, UIDLEN);
         offset += UIDLEN;
-        groupId = (int) TarUtils.parseOctal(header, offset, GIDLEN);
+        groupId = (int) TarUtils.parseOctalOrBinary(header, offset, GIDLEN);
         offset += GIDLEN;
-        size = TarUtils.parseOctal(header, offset, SIZELEN);
+        size = TarUtils.parseOctalOrBinary(header, offset, SIZELEN);
         offset += SIZELEN;
-        modTime = TarUtils.parseOctal(header, offset, MODTIMELEN);
+        modTime = TarUtils.parseOctalOrBinary(header, offset, MODTIMELEN);
         offset += MODTIMELEN;
         offset += CHKSUMLEN;
         linkFlag = header[offset++];
-        linkName = TarUtils.parseName(header, offset, NAMELEN);
+        linkName = oldStyle ? TarUtils.parseName(header, offset, NAMELEN)
+            : TarUtils.parseName(header, offset, NAMELEN, encoding);
         offset += NAMELEN;
-        magic = TarUtils.parseName(header, offset, MAGICLEN);
-        offset += MAGICLEN;
-        userName = TarUtils.parseName(header, offset, UNAMELEN);
+        magic = TarUtils.parseName(header, offset, PURE_MAGICLEN);
+        offset += PURE_MAGICLEN;
+        version = TarUtils.parseName(header, offset, VERSIONLEN);
+        offset += VERSIONLEN;
+        userName = oldStyle ? TarUtils.parseName(header, offset, UNAMELEN)
+            : TarUtils.parseName(header, offset, UNAMELEN, encoding);
         offset += UNAMELEN;
-        groupName = TarUtils.parseName(header, offset, GNAMELEN);
+        groupName = oldStyle ? TarUtils.parseName(header, offset, GNAMELEN)
+            : TarUtils.parseName(header, offset, GNAMELEN, encoding);
         offset += GNAMELEN;
-        devMajor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
+        devMajor = (int) TarUtils.parseOctalOrBinary(header, offset, DEVLEN);
         offset += DEVLEN;
-        devMinor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
+        devMinor = (int) TarUtils.parseOctalOrBinary(header, offset, DEVLEN);
+        offset += DEVLEN;
+
+        int type = evaluateType(header);
+        switch (type) {
+        case FORMAT_OLDGNU: {
+            offset += ATIMELEN_GNU;
+            offset += CTIMELEN_GNU;
+            offset += OFFSETLEN_GNU;
+            offset += LONGNAMESLEN_GNU;
+            offset += PAD2LEN_GNU;
+            offset += SPARSELEN_GNU;
+            isExtended = TarUtils.parseBoolean(header, offset);
+            offset += ISEXTENDEDLEN_GNU;
+            realSize = TarUtils.parseOctal(header, offset, REALSIZELEN_GNU);
+            offset += REALSIZELEN_GNU;
+            break;
+        }
+        case FORMAT_POSIX:
+        default: {
+            String prefix = oldStyle
+                ? TarUtils.parseName(header, offset, PREFIXLEN)
+                : TarUtils.parseName(header, offset, PREFIXLEN, encoding);
+            // SunOS tar -E does not add / to directory names, so fix
+            // up to be consistent
+            if (isDirectory() && !name.endsWith("/")){
+                name = name + "/";
+            }
+            if (prefix.length() > 0){
+                name = prefix + "/" + name;
+            }
+        }
+        }
     }
 
     /**
@@ -660,5 +1000,86 @@ public class TarEntry implements TarConstants {
             fileName = fileName.substring(1);
         }
         return fileName;
+    }
+
+    /**
+     * Evaluate an entry's header format from a header buffer.
+     *
+     * @param header The tar entry header buffer to evaluate the format for.
+     * @return format type
+     */
+    private int evaluateType(byte[] header) {
+        if (matchAsciiBuffer(GNU_TMAGIC, header, MAGIC_OFFSET, PURE_MAGICLEN)) {
+            return FORMAT_OLDGNU;
+        }
+        if (matchAsciiBuffer(MAGIC_POSIX, header, MAGIC_OFFSET, PURE_MAGICLEN)) {
+            return FORMAT_POSIX;
+        }
+        return 0;
+    }
+
+    /**
+     * Check if buffer contents matches Ascii String.
+     * 
+     * @param expected
+     * @param buffer
+     * @param offset
+     * @param length
+     * @return {@code true} if buffer is the same as the expected string
+     */
+    private static boolean matchAsciiBuffer(String expected, byte[] buffer,
+                                            int offset, int length){
+        byte[] buffer1;
+        try {
+            buffer1 = expected.getBytes("ASCII");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e); // Should not happen
+        }
+        return isEqual(buffer1, 0, buffer1.length, buffer, offset, length,
+                       false);
+    }
+
+    /**
+     * Compare byte buffers, optionally ignoring trailing nulls
+     * 
+     * @param buffer1
+     * @param offset1
+     * @param length1
+     * @param buffer2
+     * @param offset2
+     * @param length2
+     * @param ignoreTrailingNulls
+     * @return {@code true} if buffer1 and buffer2 have same contents, having regard to trailing nulls
+     */
+    private static boolean isEqual(
+            final byte[] buffer1, final int offset1, final int length1,
+            final byte[] buffer2, final int offset2, final int length2,
+            boolean ignoreTrailingNulls){
+        int minLen=length1 < length2 ? length1 : length2;
+        for (int i=0; i < minLen; i++){
+            if (buffer1[offset1+i] != buffer2[offset2+i]){
+                return false;
+            }
+        }
+        if (length1 == length2){
+            return true;
+        }
+        if (ignoreTrailingNulls){
+            if (length1 > length2){
+                for(int i = length2; i < length1; i++){
+                    if (buffer1[offset1+i] != 0){
+                        return false;
+                    }
+                }
+            } else {
+                for(int i = length1; i < length2; i++){
+                    if (buffer2[offset2+i] != 0){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
