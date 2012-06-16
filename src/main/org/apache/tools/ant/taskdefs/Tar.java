@@ -198,7 +198,8 @@ public class Tar extends MatchingTask {
      * <li>  truncate - paths are truncated to the maximum length
      * <li>  fail - paths greater than the maximum cause a build exception
      * <li>  warn - paths greater than the maximum cause a warning and GNU is used
-     * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
+     * <li>  gnu - extensions used by older versions of GNU tar are used for any paths greater than the maximum.
+     * <li>  posix - use POSIX PAX extension headers for any paths greater than the maximum.  Supported by all modern tar implementations.
      * <li>  omit - paths greater than the maximum are omitted from the archive
      * </ul>
      * @param mode the mode to handle long file names.
@@ -299,6 +300,8 @@ public class Tar extends MatchingTask {
                 } else if (longFileMode.isFailMode()
                             || longFileMode.isOmitMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
+                } else if (longFileMode.isPosixMode()) {
+                    tOut.setLongFileMode(TarOutputStream.LONGFILE_POSIX);
                 } else {
                     // warn or GNU
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
@@ -844,9 +847,12 @@ public class Tar extends MatchingTask {
             FAIL = "fail",
             TRUNCATE = "truncate",
             GNU = "gnu",
+            POSIX = "posix",
             OMIT = "omit";
 
-        private final String[] validModes = {WARN, FAIL, TRUNCATE, GNU, OMIT};
+        private final String[] validModes = {
+            WARN, FAIL, TRUNCATE, GNU, POSIX, OMIT
+        };
 
         /** Constructor, defaults to "warn" */
         public TarLongFileMode() {
@@ -894,6 +900,13 @@ public class Tar extends MatchingTask {
          */
         public boolean isOmitMode() {
             return OMIT.equalsIgnoreCase(getValue());
+        }
+
+        /**
+         * @return true if value is "posix".
+         */
+        public boolean isPosixMode() {
+            return POSIX.equalsIgnoreCase(getValue());
         }
     }
 

@@ -43,23 +43,43 @@ to be applied to the tar entries. This is useful, for example, when preparing ar
   for directories.</p>
 
 <p>Early versions of tar did not support path lengths greater than 100
-characters. Modern versions of tar do so, but in incompatible ways.
-The behaviour of the tar task when it encounters such paths is
-controlled by the <i>longfile</i> attribute.
+  characters. Over time several incompatible extensions have been
+  developed until a new POSIX standard was created that added so
+  called PAX extension headers (as the pax utility first introduced
+  them) that among another things addressed file names longer than 100
+  characters.  All modern implementations of tar support PAX extension
+  headers.</p>
+
+<p>Ant's tar support predates the standard with PAX extension headers,
+  it supports different dialects that can be enabled using the
+  <i>longfile</i> attribute.
 If the longfile attribute is set to <code>fail</code>, any long paths will
 cause the tar task to fail.  If the longfile attribute is set to
 <code>truncate</code>, any long paths will be truncated to the 100 character
 maximum length prior to adding to the archive. If the value of the longfile
 attribute is set to <code>omit</code> then files containing long paths will be
 omitted from the archive.  Either option ensures that the archive can be
-untarred by any compliant version of tar. If the loss of path or file
+untarred by any compliant version of tar.</p>
+
+<p>If the loss of path or file
 information is not acceptable, and it rarely is, longfile may be set to the
-value <code>gnu</code>. The tar task will then produce a GNU tar file which
+value <code>gnu</code> or <code>posix</code>.  With <code>posix</code>
+  Ant will add PAX extension headers, with <code>gnu</code> it adds
+  GNU tar specific extensions that newer versions of GNU tar call
+  "oldgnu".  GNU tar still creates these extensions by default but
+  supports PAX extension headers as well.  Either choice will produce
+  a tar file which
 can have arbitrary length paths. Note however, that the resulting archive will
-only be able to be untarred with GNU tar.  The default for the longfile
+only be able to be untarred with tar tools that support the chosen format.
+
+<p>The default for the longfile
 attribute is <code>warn</code> which behaves just like the gnu option except
 that it produces a warning for each file path encountered that does not match
-the limit.</p>
+the limit.  It uses gnu rather than posix for backwards compatibility
+  reasons.</p>
+
+<p>To achivieve best interoperability you should use
+  either <code>fail</code> or <code>posix</code> for the longfile attribute.</p>
 
 <p>This task can perform compression by setting the compression attribute to "gzip"
 or "bzip2".</p>
@@ -85,7 +105,7 @@ or "bzip2".</p>
     <td valign="top">longfile</td>
     <td valign="top">Determines how long files (&gt;100 chars) are to be
        handled.  Allowable values are &quot;truncate&quot;, &quot;fail&quot;,
-       &quot;warn&quot;, &quot;omit&quot; and &quot;gnu&quot;.  Default is
+       &quot;warn&quot;, &quot;omit&quot;, &quot;gnu&quot; and &quot;posix&quot;.  Default is
        &quot;warn&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>

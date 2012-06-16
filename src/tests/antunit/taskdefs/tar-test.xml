@@ -90,4 +90,29 @@
     </tar>
     <au:assertDestIsOutofdate src="${output}/foo.tar" dest="${output}/bar.tar"/>
   </target>
+
+  <target name="-longfileSetup" depends="setUp">
+    <property name="longfile.dir.name"
+              value="this/path/name/contains/more/than/one/hundred/characters/in/order/to/test/the/GNU/and/POSIX/long/file/name/capability/round"/>
+    <property name="longfile.file.name"
+              value="${longfile.dir.name}/tripped"/>
+    <mkdir dir="${input}/${longfile.dir.name}"/>
+    <touch file="${input}/${longfile.file.name}"/>
+  </target>
+
+  <target name="testLongfileGNU" depends="-longfileSetup">
+    <tar destfile="${output}/x.tar" longfile="gnu">
+      <fileset dir="${input}"/>
+    </tar>
+    <untar dest="${output}" src="${output}/x.tar"/>
+    <au:assertFileExists file="${output}/${longfile.file.name}"/>
+  </target>
+
+  <target name="testLongfilePOSIX" depends="-longfileSetup">
+    <tar destfile="${output}/x.tar" longfile="posix">
+      <fileset dir="${input}"/>
+    </tar>
+    <untar dest="${output}" src="${output}/x.tar"/>
+    <au:assertFileExists file="${output}/${longfile.file.name}"/>
+  </target>
 </project>

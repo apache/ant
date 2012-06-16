@@ -58,6 +58,14 @@ Other changes:
  * <bunzip2> will now properly expand files created by pbzip2 and
    similar tools that create files with multiple bzip2 streams.
 
+ * <tar> now supports a new "posix" option for longfile-mode which
+   will make it create PAX extension headers for long file names.  PAX
+   extension headers are supported by all modern implementations of
+   tar including GNU tar.
+   This option should now be used in preference to "warn" or "gnu" as
+   it is more portable.  For backwards compatibility reasons "warn"
+   will still create "gnu" extensions rather than "posix" extensions.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

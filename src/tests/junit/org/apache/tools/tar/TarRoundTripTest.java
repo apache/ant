@@ -35,7 +35,18 @@ public class TarRoundTripTest extends TestCase {
     /**
      * test round-tripping long (GNU) entries
      */
-    public void testLongRoundTripping() throws IOException {
+    public void testLongRoundTrippingGNU() throws IOException {
+        testLongRoundTripping(TarOutputStream.LONGFILE_GNU);
+    }
+
+    /**
+     * test round-tripping long (POSIX) entries
+     */
+    public void testLongRoundTrippingPOSIX() throws IOException {
+        testLongRoundTripping(TarOutputStream.LONGFILE_POSIX);
+    }
+
+    private void testLongRoundTripping(int mode) throws IOException {
         TarEntry original = new TarEntry(LONG_NAME);
         assertTrue("over 100 chars", LONG_NAME.length() > 100);
         assertEquals("original name", LONG_NAME, original.getName());
@@ -43,7 +54,7 @@ public class TarRoundTripTest extends TestCase {
 
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
         TarOutputStream tos = new TarOutputStream(buff);
-        tos.setLongFileMode(TarOutputStream.LONGFILE_GNU);
+        tos.setLongFileMode(mode);
         tos.putNextEntry(original);
         tos.closeEntry();
         tos.close();
