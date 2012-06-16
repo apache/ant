@@ -55,6 +55,9 @@ Other changes:
  * merged the BZIP2 package from Commons Compress, it can now
    optionally read files that contain multiple streams properly.
 
+ * <bunzip2> will now properly expand files created by pbzip2 and
+   similar tools that create files with multiple bzip2 streams.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

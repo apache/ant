@@ -75,7 +75,7 @@ public class BUnzip2 extends Unpack {
                 if (b != 'Z') {
                     throw new BuildException("Invalid bz2 file.", getLocation());
                 }
-                zIn = new CBZip2InputStream(bis);
+                zIn = new CBZip2InputStream(bis, true);
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
