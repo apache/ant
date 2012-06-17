@@ -38,7 +38,7 @@
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53399">
     <pathconvert property="p1">
       <string>xyzzy${file.separator}foo${file.separator}bar</string>
-      <packagemapper from="xyzzy/*" to="*" handledirsep="false"/>
+      <packagemapper from="xyzzy${file.separator}*" to="*" handledirsep="false"/>
     </pathconvert>
     <au:assertPropertyEquals name="p1" value="foo.bar"/>
     <pathconvert property="p2">
