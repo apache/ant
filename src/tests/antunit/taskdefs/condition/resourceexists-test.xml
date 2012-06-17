@@ -36,4 +36,12 @@
     </au:assertFalse>
   </target>
 
+  <target name="testURL">
+    <au:assertTrue>
+      <cond:resourceexists>
+        <url url="http://ant.apache.org/index.html"/>
+      </cond:resourceexists>
+    </au:assertTrue>
+  </target>
+
 </project>
