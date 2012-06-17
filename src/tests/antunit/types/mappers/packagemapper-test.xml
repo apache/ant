@@ -31,6 +31,20 @@
       <string>foo\bar</string>
       <packagemapper from="*" to="*" handledirsep="true"/>
     </pathconvert>
+    <au:assertPropertyEquals name="p2" value="foo.bar"/>
+  </target>
+
+  <target name="testMapsOnlySubstring"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53399">
+    <pathconvert property="p1">
+      <string>xyzzy${file.separator}foo${file.separator}bar</string>
+      <packagemapper from="xyzzy/*" to="*" handledirsep="false"/>
+    </pathconvert>
     <au:assertPropertyEquals name="p1" value="foo.bar"/>
+    <pathconvert property="p2">
+      <string>xyzzy${file.separator}foo${file.separator}bar</string>
+      <packagemapper from="xyzzy/*" to="*" handledirsep="true"/>
+    </pathconvert>
+    <au:assertPropertyEquals name="p2" value="foo.bar"/>
   </target>
 </project>

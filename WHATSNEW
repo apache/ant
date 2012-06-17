@@ -37,6 +37,10 @@ Fixed bugs:
  * ExtensionPoint doesn't work with nested import/include
    Bugzilla Report 53405.
 
+ * <packagemapper> failed to strip the non-matched parts with
+   handledirsep="true".
+   Bugzilla Report 53399.
+
 Other changes:
 --------------
 

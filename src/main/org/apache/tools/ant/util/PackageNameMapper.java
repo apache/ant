@@ -41,7 +41,7 @@ public class PackageNameMapper extends GlobPatternMapper {
         String var = name.substring(prefixLength,
                 name.length() - postfixLength);
         if (getHandleDirSep()) {
-            var = name.replace('/', '.').replace('\\', '.');
+            var = var.replace('/', '.').replace('\\', '.');
         }
         return var.replace(File.separatorChar, '.');
     }
