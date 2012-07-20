@@ -1579,7 +1579,7 @@ public class JUnitTask extends Task {
                 + resource;
         }
 
-        File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
+        File f = LoaderUtils.getResourceSource(JUnitTask.class.getClassLoader(),
                                                resource);
         if (f != null) {
             log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
