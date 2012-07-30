@@ -389,6 +389,11 @@ public final class IntrospectionHelper {
                 dc.setDynamicAttribute(uri, localName, qName, value.toString());
                 return;
             }
+            if (element instanceof DynamicObjectAttribute) {
+                DynamicObjectAttribute dc = (DynamicObjectAttribute) element;
+                dc.setDynamicAttribute(attributeName.toLowerCase(Locale.ENGLISH), value);
+                return;                
+            }
             if (element instanceof DynamicAttribute) {
                 DynamicAttribute dc = (DynamicAttribute) element;
                 dc.setDynamicAttribute(attributeName.toLowerCase(Locale.ENGLISH), value.toString());

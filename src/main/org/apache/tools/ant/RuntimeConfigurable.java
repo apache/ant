@@ -25,8 +25,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.taskdefs.MacroDef;
@@ -45,13 +45,14 @@ public class RuntimeConfigurable implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Empty Hashtable. */
-    private static final Hashtable EMPTY_HASHTABLE = new Hashtable(0);
+    private static final Hashtable<String, Object> EMPTY_HASHTABLE =
+            new Hashtable<String, Object>(0);
 
     /** Name of the element to configure. */
     private String elementTag = null;
 
     /** List of child element wrappers. */
-    private List/*<RuntimeConfigurable>*/ children = null;
+    private List<RuntimeConfigurable> children = null;
 
     /** The element to configure. It is only used during
      * maybeConfigure.
@@ -77,7 +78,7 @@ public class RuntimeConfigurable implements Serializable {
      * the "refid" attribute, so now (ANT 1.7) the refid
      * attribute will be processed first.
      */
-    private LinkedHashMap/*<String, String>*/ attributeMap = null;
+    private LinkedHashMap<String, Object> attributeMap = null;
 
     /** Text appearing within the element. */
     private StringBuffer characters = null;
@@ -181,14 +182,25 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public synchronized void setAttribute(String name, String value) {
+        setAttribute(name, (Object) value);
+    }
+
+    /**
+     * Set an attribute to a given value.
+     *
+     * @param name the name of the attribute.
+     * @param value the attribute's value.
+     * @since 1.9
+     */
+    public synchronized void setAttribute(String name, Object value) {
         if (name.equalsIgnoreCase(ProjectHelper.ANT_TYPE)) {
-            this.polyType = value;
+            this.polyType = value == null ? null : value.toString();
         } else {
             if (attributeMap == null) {
-                attributeMap = new LinkedHashMap();
+                attributeMap = new LinkedHashMap<String, Object>();
             }
             if (name.equalsIgnoreCase("refid") && !attributeMap.isEmpty()) {
-                LinkedHashMap newAttributeMap = new LinkedHashMap();
+                LinkedHashMap<String, Object> newAttributeMap = new LinkedHashMap<String, Object>();
                 newAttributeMap.put(name, value);
                 newAttributeMap.putAll(attributeMap);
                 attributeMap = newAttributeMap;
@@ -196,7 +208,7 @@ public class RuntimeConfigurable implements Serializable {
                 attributeMap.put(name, value);
             }
             if (name.equals("id")) {
-                this.id = value;
+                this.id = value == null ? null : value.toString();
             }
         }
     }
@@ -215,9 +227,9 @@ public class RuntimeConfigurable implements Serializable {
      * @return Attribute name to attribute value map.
      * @since Ant 1.6
      */
-    public synchronized Hashtable getAttributeMap() {
+    public synchronized Hashtable<String, Object> getAttributeMap() {
         return (attributeMap == null)
-            ? EMPTY_HASHTABLE : new Hashtable(attributeMap);
+            ? EMPTY_HASHTABLE : new Hashtable<String, Object>(attributeMap);
     }
 
     /**
@@ -379,15 +391,19 @@ public class RuntimeConfigurable implements Serializable {
             IntrospectionHelper.getHelper(p, target.getClass());
 
         if (attributeMap != null) {
-            for (Iterator iter = attributeMap.entrySet().iterator(); iter.hasNext();) {
-                Map.Entry entry = (Map.Entry) iter.next();
-                String name = (String) entry.getKey();
-                String value = (String) entry.getValue();
+            for (Entry<String, Object> entry : attributeMap.entrySet()) {
+                String name = entry.getKey();
+                Object value = entry.getValue();
 
                 // reflect these into the target, defer for
                 // MacroInstance where properties are expanded for the
                 // nested sequential
-                Object attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value);
+                Object attrValue;
+                if (value instanceof Evaluable) {
+                    attrValue = ((Evaluable) value).eval();
+                } else {
+                    attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value.toString());
+                }
                 if (target instanceof MacroInstance) {
                     for (Iterator attrs = ((MacroInstance) target).getMacroDef().getAttributes().iterator(); attrs.hasNext();) {
                         MacroDef.Attribute attr = (MacroDef.Attribute) attrs.next();
