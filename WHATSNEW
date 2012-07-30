@@ -17,6 +17,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * Incorrect URLs in Ant child POMs.
+   Bugzilla Report 53617.
+
  * Subclasses of JUnitTask did not correctly find junit.jar.
    Bugzilla Report 53571.
 
