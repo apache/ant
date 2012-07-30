@@ -226,7 +226,7 @@ public abstract class Definer extends DefBase {
             } else {
                 throw new BuildException(
                         "Only antlib URIs can be located from the URI alone,"
-                                + "not the URI " + getURI());
+                                + " not the URI '" + getURI() + "'");
             }
         }
 
