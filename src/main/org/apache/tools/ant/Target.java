@@ -529,7 +529,7 @@ public class Target implements TaskContainer {
         public boolean eval() throws BuildException {
             PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
             Object o = propertyHelper.parseProperties(condition);
-            return propertyHelper.testUnlessCondition(o);
+            return !propertyHelper.testUnlessCondition(o);
         }
 
     }
