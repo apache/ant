@@ -17,6 +17,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * Made VectorSet faster.
+   Bugzilla Report 53622.
+
  * Incorrect URLs in Ant child POMs.
    Bugzilla Report 53617.
 

@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -191,6 +192,9 @@ public final class VectorSet extends Vector {
     }
 
     public synchronized boolean retainAll(Collection c) {
+        if (!(c instanceof Set)) {
+            c = new HashSet(c);
+        }
         LinkedList l = new LinkedList();
         for (Iterator i = iterator(); i.hasNext(); ) {
             Object o = i.next();
