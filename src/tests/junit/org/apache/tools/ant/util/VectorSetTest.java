@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
@@ -206,11 +207,24 @@ public class VectorSetTest extends TestCase {
         Object c = new Object();
         v.addAll(Arrays.asList(new Object[] {O, a, b, c}));
         assertEquals(0, v.indexOf(O));
-        v.retainAll(Arrays.asList(new Object[] {c, O}));
+        assertTrue(v.retainAll(Arrays.asList(new Object[] {c, O})));
         assertEquals(2, v.size());
         assertTrue(v.contains(O));
         assertTrue(v.contains(c));
         assertEquals(0, v.indexOf(O));
+    }
+
+    public void testRetainAllReturnValueAndEmptiness() {
+        v.add(1);
+        v.add(2);
+        v.add(3);
+        assertTrue(v.retainAll(Arrays.asList(1, 2)));
+        assertEquals(2, v.size());
+        assertFalse(v.retainAll(Arrays.asList(1, 2)));
+        assertEquals(2, v.size());
+        assertTrue(v.retainAll(Arrays.asList(4, 5)));
+        assertEquals(0, v.size());
+        assertFalse(v.retainAll(Arrays.asList(4, 5)));
     }
 
     public void testSet() {
@@ -228,4 +242,24 @@ public class VectorSetTest extends TestCase {
         assertSame(a, v.get(0));
         assertEquals(1, v.size());
     }
+
+    public void testRetainAllSpeed() {
+        int size = 50000;
+        for (int i = 0; i < size; i++) {
+            v.add(i);
+            v.add(i);
+        }
+        assertEquals(size, v.size());
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i = size - 4; i < 2 * size; i++) {
+            list.add(i);
+            v.add(i);
+        }
+        long start = System.currentTimeMillis();
+        assertTrue(v.retainAll(list));
+        long stop = System.currentTimeMillis();
+        System.out.println("testRetainAllSpeed: " + (stop - start) + "msec");
+        assertEquals(v.toString(), size + 4, v.size());
+    }
+
 }
