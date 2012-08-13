@@ -50,6 +50,10 @@ Fixed bugs:
    handledirsep="true".
    Bugzilla Report 53399.
 
+ * <expandproperties> filter caused a NullPointerExcpetion when input
+   was empty.
+   Bugzilla Report 53626.
+
 Other changes:
 --------------
 

@@ -107,9 +107,13 @@ public final class ExpandProperties
                         }
                     };
                 }
-                buffer = new ParseProperties(project, PropertyHelper.getPropertyHelper(project)
-                        .getExpanders(), getProperty).parseProperties(data).toString()
-                        .toCharArray();
+                Object expanded = new ParseProperties(project, PropertyHelper
+                                                      .getPropertyHelper(project)
+                                                      .getExpanders(),
+                                                      getProperty)
+                    .parseProperties(data);
+                buffer = expanded == null ? new char[0]
+                    : expanded.toString().toCharArray();
             }
             if (index < buffer.length) {
                 return buffer[index++];

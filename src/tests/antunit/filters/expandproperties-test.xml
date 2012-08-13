@@ -74,4 +74,19 @@
     </au:assertTrue>
   </target>
 
+  <target name="testEmptyResource"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53626">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="" />
+        <concat>
+          <string value="" />
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
 </project>
