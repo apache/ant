@@ -36,6 +36,7 @@ import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.listener.SilentLogger;
 import org.apache.tools.ant.property.GetProperty;
 import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
@@ -120,6 +121,11 @@ public class Main implements AntMain {
      * Whether or not output to the log is to be unadorned.
      */
     private boolean emacsMode = false;
+
+    /**
+     * Whether or not log output should be reduced to the minimum
+     */
+    private boolean silent = false;
 
     /**
      * Whether or not this instance has successfully been
@@ -336,6 +342,8 @@ public class Main implements AntMain {
                 msgOutputLevel = Project.MSG_VERBOSE;
             } else if (arg.equals("-debug") || arg.equals("-d")) {
                 msgOutputLevel = Project.MSG_DEBUG;
+            } else if (arg.equals("-silent") || arg.equals("-S")) {
+                silent = true;
             } else if (arg.equals("-noinput")) {
                 allowInput = false;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
@@ -921,7 +929,11 @@ public class Main implements AntMain {
      */
     private BuildLogger createLogger() {
         BuildLogger logger = null;
-        if (loggerClassname != null) {
+        if (silent) {
+            logger = new SilentLogger();
+            msgOutputLevel = Project.MSG_WARN;
+            emacsMode = true;
+        } else if (loggerClassname != null) {
             try {
                 logger = (BuildLogger) ClasspathUtils.newInstance(
                         loggerClassname, Main.class.getClassLoader(),
@@ -958,6 +970,7 @@ public class Main implements AntMain {
         msg.append("  -diagnostics           print information that might be helpful to" + lSep);
         msg.append("                         diagnose or report problems." + lSep);
         msg.append("  -quiet, -q             be extra quiet" + lSep);
+        msg.append("  -silent, -S            print nothing but task outputs and build failures" + lSep);
         msg.append("  -verbose, -v           be extra verbose" + lSep);
         msg.append("  -debug, -d             print debugging information" + lSep);
         msg.append("  -emacs, -e             produce logging information without adornments"

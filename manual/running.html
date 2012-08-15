@@ -77,8 +77,10 @@ You can also access environment variables using the
 which instructs Ant to print less
 information to the console;
 <nobr><code>-verbose</code></nobr>, which causes Ant to print
-additional information to the console; and <nobr><code>-debug</code></nobr>,
-which causes Ant to print considerably more additional information.
+additional information to the console; <nobr><code>-debug</code></nobr>,
+which causes Ant to print considerably more additional information; and
+<nobr><code>-silent</code></nobr> which makes Ant print nothing but task
+output and build failures (useful to capture Ant output by scripts).
 </p>
 
 <p>It is also possible to specify one or more targets that should be executed.
@@ -104,6 +106,7 @@ Options:
   -diagnostics           print information that might be helpful to
                          diagnose or report problems.
   -quiet, -q             be extra quiet
+  -silent, -S            print nothing but task outputs and build failures
   -verbose, -v           be extra verbose
   -debug, -d             print debugging information
   -emacs, -e             produce logging information without adornments
