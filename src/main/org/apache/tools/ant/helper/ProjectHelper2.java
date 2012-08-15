@@ -180,34 +180,7 @@ public class ProjectHelper2 extends ProjectHelper {
             context.getImplicitTarget().execute();
 
             // resolve extensionOf attributes
-            for (String[] extensionInfo : getExtensionStack()) {
-                String tgName = extensionInfo[0];
-                String name = extensionInfo[1];
-                OnMissingExtensionPoint missingBehaviour = OnMissingExtensionPoint
-                        .valueOf(extensionInfo[2]);
-                Hashtable projectTargets = project.getTargets();
-                if (!projectTargets.containsKey(tgName)) {
-                    String message = "can't add target " + name
-                        + " to extension-point " + tgName
-                        + " because the extension-point is unknown.";
-                    if (missingBehaviour == OnMissingExtensionPoint.FAIL) {
-                        throw new BuildException(message);
-                    } else if (missingBehaviour == OnMissingExtensionPoint.WARN) {
-                        Target target = (Target) projectTargets.get(name);
-                        context.getProject().log(target,
-                                                 "Warning: " + message,
-                                                 Project.MSG_WARN);
-                    }
-                } else {
-                    Target t = (Target) projectTargets.get(tgName);
-                    if (!(t instanceof ExtensionPoint)) {
-                        throw new BuildException("referenced target "
-                                                 + tgName
-                                                 + " is not an extension-point");
-                    }
-                    t.addDependency(name);
-                }
-            }
+            resolveExtensionOfAttributes(project);
         }
     }
 

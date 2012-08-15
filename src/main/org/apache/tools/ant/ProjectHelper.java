@@ -606,4 +606,51 @@ public class ProjectHelper {
     public String getDefaultBuildFile() {
         return Main.DEFAULT_BUILD_FILENAME;
     }
+
+    /**
+     * Check extensionStack and inject all targets having extensionOf attributes
+     * into extensionPoint.
+     * <p>
+     * This method allow you to defer injection and have a powerful control of
+     * extensionPoint wiring.
+     * </p>
+     * <p>
+     * This should be invoked by each concrete implementation of ProjectHelper
+     * when the root "buildfile" and all imported/included buildfile are loaded.
+     * </p>
+     * 
+     * @param project The project containing the target. Must not be
+     *            <code>null</code>.
+     * @exception BuildException if OnMissingExtensionPoint.FAIL and
+     *                extensionPoint does not exist
+     * @see OnMissingExtensionPoint
+     * @since 1.9
+     */
+    public void resolveExtensionOfAttributes(Project project)
+            throws BuildException {
+        for (String[] extensionInfo : getExtensionStack()) {
+            String tgName = extensionInfo[0];
+            String name = extensionInfo[1];
+            OnMissingExtensionPoint missingBehaviour = OnMissingExtensionPoint.valueOf(extensionInfo[2]);
+            Hashtable projectTargets = project.getTargets();
+            if (!projectTargets.containsKey(tgName)) {
+                String message = "can't add target " + name
+                        + " to extension-point " + tgName
+                        + " because the extension-point is unknown.";
+                if (missingBehaviour == OnMissingExtensionPoint.FAIL) {
+                    throw new BuildException(message);
+                } else if (missingBehaviour == OnMissingExtensionPoint.WARN) {
+                    Target target = (Target) projectTargets.get(name);
+                    project.log(target, "Warning: " + message, Project.MSG_WARN);
+                }
+            } else {
+                Target t = (Target) projectTargets.get(tgName);
+                if (!(t instanceof ExtensionPoint)) {
+                    throw new BuildException("referenced target " + tgName
+                            + " is not an extension-point");
+                }
+                t.addDependency(name);
+            }
+        }
+    }
 }
