@@ -88,6 +88,9 @@ Other changes:
    and extension points.
    Bugzilla Report 53549.
 
+ * Make extension point bindable to imported prefixed targets
+   Bugzilla Report 53550.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

@@ -1011,17 +1011,24 @@ public class ProjectHelper2 extends ProjectHelper {
                 ProjectHelper helper =
                     (ProjectHelper) context.getProject().
                     getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
-                for (String tgName : Target.parseDepends(extensionPoint, name, "extensionOf")) {
-                    if (isInIncludeMode()) {
-                        tgName = prefix + sep + tgName;
-                    }
+                for (String extPointName : Target.parseDepends(extensionPoint, name, "extensionOf")) {
                     if (extensionPointMissing == null) {
                         extensionPointMissing = OnMissingExtensionPoint.FAIL;
                     }
                     // defer extensionpoint resolution until the full
                     // import stack has been processed
-                    helper.getExtensionStack().add(new String[] {
-                            tgName, name, extensionPointMissing.name() });
+                    if (isInIncludeMode()) {
+                        // if in include mode, provide prefix we're including by
+                        // so that we can try and resolve extension point from
+                        // the local file first
+                        helper.getExtensionStack().add(
+                                new String[] {extPointName, target.getName(),
+                                        extensionPointMissing.name(), prefix + sep});
+                    } else {
+                        helper.getExtensionStack().add(
+                                new String[] {extPointName, target.getName(),
+                                        extensionPointMissing.name()});
+                    }
                 }
             }
         }

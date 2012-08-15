@@ -629,27 +629,52 @@ public class ProjectHelper {
     public void resolveExtensionOfAttributes(Project project)
             throws BuildException {
         for (String[] extensionInfo : getExtensionStack()) {
-            String tgName = extensionInfo[0];
-            String name = extensionInfo[1];
+            String extPointName = extensionInfo[0];
+            String targetName = extensionInfo[1];
             OnMissingExtensionPoint missingBehaviour = OnMissingExtensionPoint.valueOf(extensionInfo[2]);
+            // if the file has been included or imported, it may have a prefix
+            // we should consider when trying to resolve the target it is
+            // extending
+            String prefixAndSep = extensionInfo.length > 3 ? extensionInfo[3] : null;
+
+            // find the target we're extending
             Hashtable projectTargets = project.getTargets();
-            if (!projectTargets.containsKey(tgName)) {
-                String message = "can't add target " + name
-                        + " to extension-point " + tgName
+            Target extPoint = null;
+            if (prefixAndSep == null) {
+                // no prefix - not from an imported/included build file
+                extPoint = (Target) projectTargets.get(extPointName);
+            } else {
+                // we have a prefix, which means we came from an include/import
+
+                // FIXME: here we handle no particular level of include. We try
+                // the fully prefixed name, and then the non-prefixed name. But
+                // there might be intermediate project in the import stack,
+                // which prefix should be tested before testing the non-prefix
+                // root name.
+
+                extPoint = (Target) projectTargets.get(prefixAndSep + extPointName);
+                if (extPoint == null) {
+                    extPoint = (Target) projectTargets.get(extPointName);
+                }
+            }
+
+            // make sure we found a point to extend on
+            if (extPoint == null) {
+                String message = "can't add target " + targetName
+                        + " to extension-point " + extPointName
                         + " because the extension-point is unknown.";
                 if (missingBehaviour == OnMissingExtensionPoint.FAIL) {
                     throw new BuildException(message);
                 } else if (missingBehaviour == OnMissingExtensionPoint.WARN) {
-                    Target target = (Target) projectTargets.get(name);
-                    project.log(target, "Warning: " + message, Project.MSG_WARN);
+                    Target t = (Target) projectTargets.get(targetName);
+                    project.log(t, "Warning: " + message, Project.MSG_WARN);
                 }
             } else {
-                Target t = (Target) projectTargets.get(tgName);
-                if (!(t instanceof ExtensionPoint)) {
-                    throw new BuildException("referenced target " + tgName
+                if (!(extPoint instanceof ExtensionPoint)) {
+                    throw new BuildException("referenced target " + extPointName
                             + " is not an extension-point");
                 }
-                t.addDependency(name);
+                extPoint.addDependency(targetName);
             }
         }
     }
