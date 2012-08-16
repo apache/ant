@@ -207,7 +207,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
         return sb.toString();
     }
 
-    @Override public int compareTo(DeweyDecimal other) {
+    public int compareTo(DeweyDecimal other) {
         final int max = Math.max(other.components.length, components.length);
         for (int i = 0; i < max; i++) {
             final int component1 = (i < components.length) ? components[ i ] : 0;
