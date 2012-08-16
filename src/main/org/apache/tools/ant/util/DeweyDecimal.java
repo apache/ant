@@ -28,10 +28,10 @@ import java.util.StringTokenizer;
  * must begin with a number.
  *
  */
-public class DeweyDecimal {
+public class DeweyDecimal implements Comparable<DeweyDecimal> {
 
     /** Array of components that make up DeweyDecimal */
-    private int[] components;
+    private final int[] components;
 
     /**
      * Construct a DeweyDecimal from an array of integer components.
@@ -58,7 +58,7 @@ public class DeweyDecimal {
 
         for (int i = 0; i < components.length; i++) {
             final String component = tokenizer.nextToken();
-            if (component.equals("")) {
+            if (component.length() == 0) {
                 throw new NumberFormatException("Empty component in string");
             }
 
@@ -194,7 +194,7 @@ public class DeweyDecimal {
      *
      * @return the string representation of DeweyDecimal.
      */
-    public String toString() {
+    @Override public String toString() {
         final StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < components.length; i++) {
@@ -206,4 +206,25 @@ public class DeweyDecimal {
 
         return sb.toString();
     }
+
+    @Override public int compareTo(DeweyDecimal other) {
+        final int max = Math.max(other.components.length, components.length);
+        for (int i = 0; i < max; i++) {
+            final int component1 = (i < components.length) ? components[ i ] : 0;
+            final int component2 = (i < other.components.length) ? other.components[ i ] : 0;
+            if (component1 != component2) {
+                return component1 - component2;
+            }
+        }
+        return 0;
+    }
+
+    @Override public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override public boolean equals(Object o) {
+        return o instanceof DeweyDecimal && isEqual((DeweyDecimal) o);
+    }
+
 }
