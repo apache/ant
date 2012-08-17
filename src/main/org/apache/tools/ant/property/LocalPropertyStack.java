@@ -18,9 +18,8 @@
 package org.apache.tools.ant.property;
 
 
-import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.tools.ant.PropertyHelper;
@@ -31,7 +30,7 @@ import org.apache.tools.ant.PropertyHelper;
  * @since Ant 1.8.0
  */
 public class LocalPropertyStack {
-    private LinkedList stack = new LinkedList();
+    private final LinkedList<Map<String, Object>> stack = new LinkedList<Map<String, Object>>();
 
     // --------------------------------------------------
     //
@@ -45,7 +44,7 @@ public class LocalPropertyStack {
      */
     public void addLocal(String property) {
         if (!stack.isEmpty()) {
-            ((Map) stack.getFirst()).put(property, NullReturn.NULL);
+            stack.getFirst().put(property, NullReturn.NULL);
         }
     }
 
@@ -53,14 +52,14 @@ public class LocalPropertyStack {
      * Enter the local scope.
      */
     public void enterScope() {
-        stack.addFirst(new HashMap());
+        stack.addFirst(new HashMap<String, Object>());
     }
 
     /**
      * Exit the local scope.
      */
     public void exitScope() {
-        ((HashMap) stack.removeFirst()).clear();
+        stack.removeFirst().clear();
     }
 
     // --------------------------------------------------
@@ -92,8 +91,7 @@ public class LocalPropertyStack {
      * @return Object value.
      */
     public Object evaluate(String property, PropertyHelper helper) {
-        for (Iterator i = stack.iterator(); i.hasNext();) {
-            Map map = (Map) i.next();
+        for (Map<String, Object> map : stack) {
             Object ret = map.get(property);
             if (ret != null) {
                 return ret;
@@ -111,7 +109,7 @@ public class LocalPropertyStack {
      */
     public boolean setNew(
         String property, Object value, PropertyHelper propertyHelper) {
-        Map map = getMapForProperty(property);
+        Map<String, Object> map = getMapForProperty(property);
         if (map == null) {
             return false;
         }
@@ -130,7 +128,7 @@ public class LocalPropertyStack {
      * @return true if this entity 'owns' the property.
      */
     public boolean set(String property, Object value, PropertyHelper propertyHelper) {
-        Map map = getMapForProperty(property);
+        Map<String, Object> map = getMapForProperty(property);
         if (map == null) {
             return false;
         }
@@ -138,9 +136,8 @@ public class LocalPropertyStack {
         return true;
     }
 
-    private Map getMapForProperty(String property) {
-        for (Iterator i = stack.iterator(); i.hasNext();) {
-            Map map = (Map) i.next();
+    private Map<String, Object> getMapForProperty(String property) {
+        for (Map<String, Object> map : stack) {
             if (map.get(property) != null) {
                 return map;
             }
