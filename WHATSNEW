@@ -14,6 +14,8 @@ Changes that could break older environments:
    classes of Execute has been extracted to the
    org.apache.tools.ant.taskdefs.launcher package.
 
+ * Any FileResource whose represented File has a parent also has a basedir.
+
 Fixed bugs:
 -----------
 
