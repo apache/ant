@@ -145,7 +145,7 @@ public final class Diagnostics {
      * @return null if there is no package or implementation version.
      * '?.?' for JDK 1.0 or 1.1.
      */
-    private static String getImplementationVersion(Class clazz) {
+    private static String getImplementationVersion(Class<?> clazz) {
         return clazz.getPackage().getImplementationVersion();
     }
 
@@ -154,7 +154,7 @@ public final class Diagnostics {
      * @param clazz the class to get the information from.
      * @since Ant 1.8.0
      */
-    private static URL getClassLocation(Class clazz) {
+    private static URL getClassLocation(Class<?> clazz) {
         if (clazz.getProtectionDomain().getCodeSource() == null) {
             return null;
         }
@@ -364,7 +364,7 @@ public final class Diagnostics {
             out.println("Access to System.getProperties() blocked " + "by a security manager");
             return;
         }
-        for (Enumeration keys = sysprops.propertyNames();
+        for (Enumeration<?> keys = sysprops.propertyNames();
             keys.hasMoreElements();) {
             String key = (String) keys.nextElement();
             String value = getProperty(key);
@@ -455,7 +455,7 @@ public final class Diagnostics {
     private static void doReportWhich(PrintStream out) {
         Throwable error = null;
         try {
-            Class which = Class.forName("org.apache.env.Which");
+            Class<?> which = Class.forName("org.apache.env.Which");
             Method method = which.getMethod(
                 "main", new Class[] {String[].class});
             method.invoke(null, new Object[]{new String[]{}});
@@ -491,7 +491,7 @@ public final class Diagnostics {
             Properties props = new Properties();
             try {
                 props.load(is);
-                for (Enumeration keys = props.keys(); keys.hasMoreElements();) {
+                for (Enumeration<?> keys = props.keys(); keys.hasMoreElements();) {
                     String key = (String) keys.nextElement();
                     String classname = props.getProperty(key);
                     try {
@@ -696,7 +696,7 @@ public final class Diagnostics {
         printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
         final String proxyDiagClassname = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
         try {
-            Class proxyDiagClass = Class.forName(proxyDiagClassname);
+            Class<?> proxyDiagClass = Class.forName(proxyDiagClassname);
             Object instance = proxyDiagClass.newInstance();
             out.println("Java1.5+ proxy settings:");
             out.println(instance.toString());

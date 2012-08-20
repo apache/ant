@@ -108,7 +108,7 @@ public final class JavaEnvUtils {
     private static boolean harmonyDetected;
 
     /** array of packages in the runtime */
-    private static Vector jrePackages;
+    private static Vector<String> jrePackages;
 
 
     static {
@@ -376,7 +376,7 @@ public final class JavaEnvUtils {
      */
 
     private static void buildJrePackages() {
-        jrePackages = new Vector();
+        jrePackages = new Vector<String>();
         switch(javaVersionNumber) {
             case VERSION_1_8:
             case VERSION_1_7:
@@ -479,7 +479,7 @@ public final class JavaEnvUtils {
      * that platforms runtime jar(s)
      * @return list of packages.
      */
-    public static Vector getJrePackages() {
+    public static Vector<String> getJrePackages() {
         if (jrePackages == null) {
             buildJrePackages();
         }

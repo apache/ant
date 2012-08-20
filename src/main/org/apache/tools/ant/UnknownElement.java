@@ -59,7 +59,7 @@ public class UnknownElement extends Task {
     /**
      * List of child elements (UnknownElements).
      */
-    private List/*<UnknownElement>*/ children = null;
+    private List<UnknownElement> children = null;
 
     /** Specifies if a predefined definition has been done */
     private boolean presetDefed = false;
@@ -77,7 +77,7 @@ public class UnknownElement extends Task {
     /**
      * @return the list of nested UnknownElements for this UnknownElement.
      */
-    public List getChildren() {
+    public List<UnknownElement> getChildren() {
         return children;
     }
 
@@ -309,7 +309,7 @@ public class UnknownElement extends Task {
      */
     public void addChild(UnknownElement child) {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<UnknownElement>();
         }
         children.add(child);
     }
@@ -336,15 +336,15 @@ public class UnknownElement extends Task {
         }
 
         String parentUri = getNamespace();
-        Class parentClass = parent.getClass();
+        Class<?> parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getProject(), parentClass);
 
 
         if (children != null) {
-            Iterator it = children.iterator();
+            Iterator<UnknownElement> it = children.iterator();
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
-                UnknownElement child = (UnknownElement) it.next();
+                UnknownElement child = it.next();
                 try {
                     if (!handleChild(
                             parentUri, ih, parent, child, childWrapper)) {
@@ -390,7 +390,7 @@ public class UnknownElement extends Task {
         // Do the runtime
         getWrapper().applyPreSet(u.getWrapper());
         if (u.children != null) {
-            List newChildren = new ArrayList();
+            List<UnknownElement> newChildren = new ArrayList<UnknownElement>();
             newChildren.addAll(u.children);
             if (children != null) {
                 newChildren.addAll(children);
@@ -668,16 +668,14 @@ public class UnknownElement extends Task {
         RuntimeConfigurable copyRC = new RuntimeConfigurable(
             ret, getTaskName());
         copyRC.setPolyType(getWrapper().getPolyType());
-        Map m = getWrapper().getAttributeMap();
-        for (Iterator i = m.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            copyRC.setAttribute(
-                (String) entry.getKey(), (String) entry.getValue());
+        Map<String, Object> m = getWrapper().getAttributeMap();
+        for (Map.Entry<String, Object> entry : m.entrySet()) {
+            copyRC.setAttribute(entry.getKey(), (String) entry.getValue());
         }
         copyRC.addText(getWrapper().getText().toString());
 
-        for (Enumeration e = getWrapper().getChildren(); e.hasMoreElements();) {
-            RuntimeConfigurable r = (RuntimeConfigurable) e.nextElement();
+        for (Enumeration<RuntimeConfigurable> e = getWrapper().getChildren(); e.hasMoreElements();) {
+            RuntimeConfigurable r = e.nextElement();
             UnknownElement ueChild = (UnknownElement) r.getProxy();
             UnknownElement copyChild = ueChild.copy(newProject);
             copyRC.addChild(copyChild.getWrapper());

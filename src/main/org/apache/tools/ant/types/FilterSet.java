@@ -177,13 +177,13 @@ public class FilterSet extends DataType implements Cloneable {
     private String endOfToken = DEFAULT_TOKEN_END;
 
     /** Contains a list of parsed tokens */
-    private Vector passedTokens;
+    private Vector<String> passedTokens;
     /** if a duplicate token is found, this is set to true */
     private boolean duplicateToken = false;
 
     private boolean recurse = true;
-    private Hashtable filterHash = null;
-    private Vector filtersFiles = new Vector();
+    private Hashtable<String, String> filterHash = null;
+    private Vector<File> filtersFiles = new Vector<File>();
     private OnMissing onMissingFiltersFile = OnMissing.FAIL;
     private boolean readingFiles = false;
 
@@ -192,7 +192,7 @@ public class FilterSet extends DataType implements Cloneable {
     /**
      * List of ordered filters and filter files.
      */
-    private Vector filters = new Vector();
+    private Vector<Filter> filters = new Vector<Filter>();
 
     /**
      * Default constructor.
@@ -207,7 +207,9 @@ public class FilterSet extends DataType implements Cloneable {
      */
     protected FilterSet(FilterSet filterset) {
         super();
-        this.filters = (Vector) filterset.getFilters().clone();
+        @SuppressWarnings("unchecked")
+        Vector<Filter> clone = (Vector<Filter>) filterset.getFilters().clone();
+        this.filters = clone;
     }
 
     /**
@@ -215,7 +217,7 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @return a Vector of Filter instances.
      */
-    protected synchronized Vector getFilters() {
+    protected synchronized Vector<Filter> getFilters() {
         if (isReference()) {
             return getRef().getFilters();
         }
@@ -247,15 +249,15 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @return   The hash of the tokens and values for quick lookup.
      */
-    public synchronized Hashtable getFilterHash() {
+    public synchronized Hashtable<String, String> getFilterHash() {
         if (isReference()) {
             return getRef().getFilterHash();
         }
         dieOnCircularReference();
         if (filterHash == null) {
-            filterHash = new Hashtable(getFilters().size());
-            for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {
-               Filter filter = (Filter) e.nextElement();
+            filterHash = new Hashtable<String, String>(getFilters().size());
+            for (Enumeration<Filter> e = getFilters().elements(); e.hasMoreElements();) {
+               Filter filter = e.nextElement();
                filterHash.put(filter.getToken(), filter.getValue());
             }
         }
@@ -368,8 +370,8 @@ public class FilterSet extends DataType implements Cloneable {
               in = new FileInputStream(filtersFile);
               props.load(in);
 
-              Enumeration e = props.propertyNames();
-              Vector filts = getFilters();
+              Enumeration<?> e = props.propertyNames();
+              Vector<Filter> filts = getFilters();
               while (e.hasMoreElements()) {
                  String strPropName = (String) e.nextElement();
                  String strValue = props.getProperty(strPropName);
@@ -450,8 +452,8 @@ public class FilterSet extends DataType implements Cloneable {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        for (Enumeration e = filterSet.getFilters().elements(); e.hasMoreElements();) {
-            addFilter((Filter) e.nextElement());
+        for (Filter filter : filterSet.getFilters()) {
+            addFilter(filter);
         }
     }
 
@@ -477,7 +479,9 @@ public class FilterSet extends DataType implements Cloneable {
         }
         try {
             FilterSet fs = (FilterSet) super.clone();
-            fs.filters = (Vector) getFilters().clone();
+            @SuppressWarnings("unchecked")
+            Vector<Filter> clonedFilters = (Vector<Filter>) getFilters().clone();
+            fs.filters = clonedFilters;
             fs.setProject(getProject());
             return fs;
         } catch (CloneNotSupportedException e) {
@@ -515,9 +519,9 @@ public class FilterSet extends DataType implements Cloneable {
         int index = line.indexOf(beginToken);
 
         if (index > -1) {
-            Hashtable tokens = getFilterHash();
+            Hashtable<String, String> tokens = getFilterHash();
             try {
-                StringBuffer b = new StringBuffer();
+                StringBuilder b = new StringBuilder();
                 int i = 0;
                 String token = null;
                 String value = null;
@@ -533,7 +537,7 @@ public class FilterSet extends DataType implements Cloneable {
                         = line.substring(index + beginToken.length(), endIndex);
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
-                        value = (String) tokens.get(token);
+                        value = tokens.get(token);
                         if (recurse && !value.equals(token)) {
                             // we have another token, let's parse it.
                             value = replaceTokens(value, token);
@@ -577,7 +581,7 @@ public class FilterSet extends DataType implements Cloneable {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         if (recurseDepth == 0) {
-            passedTokens = new VectorSet();
+            passedTokens = new VectorSet<String>();
         }
         recurseDepth++;
         if (passedTokens.contains(parent) && !duplicateToken) {
@@ -605,7 +609,7 @@ public class FilterSet extends DataType implements Cloneable {
                 }
             }
         } else if (passedTokens.size() > 0) {
-            // remove last seen token when crawling out of recursion 
+            // remove last seen token when crawling out of recursion
             passedTokens.remove(passedTokens.size() - 1);
         }
         recurseDepth--;

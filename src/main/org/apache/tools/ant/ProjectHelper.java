@@ -87,7 +87,7 @@ public class ProjectHelper {
      * targets that want to extend missing extension-points.
      * <p>
      * This class behaves like a Java 1.5 Enum class.
-     * 
+     *
      * @since 1.8.2
      */
     public final static class OnMissingExtensionPoint {
@@ -143,8 +143,8 @@ public class ProjectHelper {
     // The following properties are required by import ( and other tasks
     // that read build files using ProjectHelper ).
 
-    private Vector importStack = new Vector();
-    private List extensionStack = new LinkedList();
+    private Vector<Object> importStack = new Vector<Object>();
+    private List<String[]> extensionStack = new LinkedList<String[]>();
 
     /**
      *  Import stack.
@@ -153,7 +153,7 @@ public class ProjectHelper {
      *
      * @return the stack of import source objects.
      */
-    public Vector getImportStack() {
+    public Vector<Object> getImportStack() {
         return importStack;
     }
 
@@ -170,11 +170,7 @@ public class ProjectHelper {
         return extensionStack;
     }
 
-    private final static ThreadLocal targetPrefix = new ThreadLocal() {
-            protected Object initialValue() {
-                return (String) null;
-            }
-        };
+    private final static ThreadLocal<String> targetPrefix = new ThreadLocal<String>();
 
     /**
      * The prefix to prepend to imported target names.
@@ -186,7 +182,7 @@ public class ProjectHelper {
      * @since Ant 1.8.0
      */
     public static String getCurrentTargetPrefix() {
-        return (String) targetPrefix.get();
+        return targetPrefix.get();
     }
 
     /**
@@ -198,8 +194,8 @@ public class ProjectHelper {
         targetPrefix.set(prefix);
     }
 
-    private final static ThreadLocal prefixSeparator = new ThreadLocal() {
-            protected Object initialValue() {
+    private final static ThreadLocal<String> prefixSeparator = new ThreadLocal<String>() {
+            protected String initialValue() {
                 return ".";
             }
         };
@@ -212,7 +208,7 @@ public class ProjectHelper {
      * @since Ant 1.8.0
      */
     public static String getCurrentPrefixSeparator() {
-        return (String) prefixSeparator.get();
+        return prefixSeparator.get();
     }
 
     /**
@@ -224,8 +220,8 @@ public class ProjectHelper {
         prefixSeparator.set(sep);
     }
 
-    private final static ThreadLocal inIncludeMode = new ThreadLocal() {
-            protected Object initialValue() {
+    private final static ThreadLocal<Boolean> inIncludeMode = new ThreadLocal<Boolean>() {
+            protected Boolean initialValue() {
                 return Boolean.FALSE;
             }
         };
@@ -246,7 +242,7 @@ public class ProjectHelper {
      * @since Ant 1.8.0
      */
     public static boolean isInIncludeMode() {
-        return inIncludeMode.get() == Boolean.TRUE;
+        return Boolean.TRUE.equals(inIncludeMode.get());
     }
 
     /**
@@ -256,7 +252,7 @@ public class ProjectHelper {
      * @since Ant 1.8.0
      */
     public static void setInIncludeMode(boolean includeMode) {
-        inIncludeMode.set(includeMode ? Boolean.TRUE : Boolean.FALSE);
+        inIncludeMode.set(Boolean.valueOf(includeMode));
     }
 
     // --------------------  Parse method  --------------------
@@ -280,7 +276,7 @@ public class ProjectHelper {
 
     /**
      * Get the first project helper found in the classpath
-     * 
+     *
      * @return an project helper, never <code>null</code>
      * @see org.apache.tools.ant.ProjectHelperRepository#getHelpers()
      */
@@ -436,7 +432,7 @@ public class ProjectHelper {
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>, in which case this
      *              method returns immediately with no effect.
-     * @param keys  Mapping (String to String) of property names to their
+     * @param keys  Mapping (String to Object) of property names to their
      *              values. Must not be <code>null</code>.
      *
      * @exception BuildException if the string contains an opening
@@ -447,7 +443,7 @@ public class ProjectHelper {
      * @deprecated since 1.6.x.
      *             Use PropertyHelper.
      */
-     public static String replaceProperties(Project project, String value, Hashtable keys)
+     public static String replaceProperties(Project project, String value, Hashtable<String, Object> keys)
              throws BuildException {
         PropertyHelper ph = PropertyHelper.getPropertyHelper(project);
         return ph.replaceProperties(null, value, keys);
@@ -474,7 +470,7 @@ public class ProjectHelper {
      * @exception BuildException if the string contains an opening
      *                           <code>${</code> without a closing <code>}</code>
      */
-    public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs)
+    public static void parsePropertyString(String value, Vector<String> fragments, Vector<String> propertyRefs)
             throws BuildException {
         PropertyHelper.parsePropertyStringDefault(value, fragments, propertyRefs);
     }
@@ -587,7 +583,7 @@ public class ProjectHelper {
     /**
      * Check if the helper supports the kind of file. Some basic check on the
      * extension's file should be done here.
-     * 
+     *
      * @param buildFile
      *            the file expected to be parsed (never <code>null</code>)
      * @return true if the helper supports it
@@ -599,7 +595,7 @@ public class ProjectHelper {
 
     /**
      * The file name of the build script to be parsed if none specified on the command line
-     * 
+     *
      * @return the name of the default file (never <code>null</code>)
      * @since Ant 1.8.0
      */
@@ -618,7 +614,7 @@ public class ProjectHelper {
      * This should be invoked by each concrete implementation of ProjectHelper
      * when the root "buildfile" and all imported/included buildfile are loaded.
      * </p>
-     * 
+     *
      * @param project The project containing the target. Must not be
      *            <code>null</code>.
      * @exception BuildException if OnMissingExtensionPoint.FAIL and
@@ -638,11 +634,11 @@ public class ProjectHelper {
             String prefixAndSep = extensionInfo.length > 3 ? extensionInfo[3] : null;
 
             // find the target we're extending
-            Hashtable projectTargets = project.getTargets();
+            Hashtable<String, Target> projectTargets = project.getTargets();
             Target extPoint = null;
             if (prefixAndSep == null) {
                 // no prefix - not from an imported/included build file
-                extPoint = (Target) projectTargets.get(extPointName);
+                extPoint = projectTargets.get(extPointName);
             } else {
                 // we have a prefix, which means we came from an include/import
 
@@ -652,9 +648,9 @@ public class ProjectHelper {
                 // which prefix should be tested before testing the non-prefix
                 // root name.
 
-                extPoint = (Target) projectTargets.get(prefixAndSep + extPointName);
+                extPoint = projectTargets.get(prefixAndSep + extPointName);
                 if (extPoint == null) {
-                    extPoint = (Target) projectTargets.get(extPointName);
+                    extPoint = projectTargets.get(extPointName);
                 }
             }
 
@@ -666,7 +662,7 @@ public class ProjectHelper {
                 if (missingBehaviour == OnMissingExtensionPoint.FAIL) {
                     throw new BuildException(message);
                 } else if (missingBehaviour == OnMissingExtensionPoint.WARN) {
-                    Target t = (Target) projectTargets.get(targetName);
+                    Target t = projectTargets.get(targetName);
                     project.log(t, "Warning: " + message, Project.MSG_WARN);
                 }
             } else {

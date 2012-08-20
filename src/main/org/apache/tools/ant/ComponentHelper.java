@@ -17,28 +17,28 @@
  */
 package org.apache.tools.ant;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.File;
-import java.io.StringWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
-import org.apache.tools.ant.taskdefs.Typedef;
-import org.apache.tools.ant.taskdefs.Definer;
 import org.apache.tools.ant.launch.Launcher;
+import org.apache.tools.ant.taskdefs.Definer;
+import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -59,31 +59,31 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ComponentHelper  {
     /** Map of component name to lists of restricted definitions */
-    private Map          restrictedDefinitions = new HashMap();
+    private Map<String, List<AntTypeDefinition>>          restrictedDefinitions = new HashMap<String, List<AntTypeDefinition>>();
 
     /** Map from component name to anttypedefinition */
-    private AntTypeTable antTypeTable;
+    private final Hashtable<String, AntTypeDefinition> antTypeTable = new Hashtable<String, AntTypeDefinition>();
 
     /** Map of tasks generated from antTypeTable */
-    private final Hashtable taskClassDefinitions = new Hashtable();
+    private final Hashtable<String, Class<?>> taskClassDefinitions = new Hashtable<String, Class<?>>();
 
     /** flag to rebuild taskClassDefinitions */
     private boolean rebuildTaskClassDefinitions = true;
 
     /** Map of types generated from antTypeTable */
-    private final Hashtable typeClassDefinitions = new Hashtable();
+    private final Hashtable<String, Class<?>> typeClassDefinitions = new Hashtable<String, Class<?>>();
 
     /** flag to rebuild typeClassDefinitions */
     private boolean rebuildTypeClassDefinitions = true;
 
     /** Set of namespaces that have been checked for antlibs */
-    private final HashSet checkedNamespaces = new HashSet();
+    private final HashSet<String> checkedNamespaces = new HashSet<String>();
 
     /**
      * Stack of antlib contexts used to resolve definitions while
      *   processing antlib
      */
-    private Stack antLibStack = new Stack();
+    private Stack<String> antLibStack = new Stack<String>();
 
     /** current antlib uri */
     private String antLibCurrentUri = null;
@@ -189,38 +189,37 @@ public class ComponentHelper  {
      */
     public void setProject(Project project) {
         this.project = project;
-        antTypeTable = new AntTypeTable(project);
+//        antTypeTable = new Hashtable<String, AntTypeDefinition>(project);
     }
 
     /**
      * @return A copy of the CheckedNamespace.
      */
-    private synchronized Set getCheckedNamespace() {
-        return (Set) checkedNamespaces.clone();
+    private synchronized Set<String> getCheckedNamespace() {
+        @SuppressWarnings("unchecked")
+        final Set<String> result = (Set<String>) checkedNamespaces.clone();
+        return result;
     }
 
     /**
      * @return A deep copy of the restrictredDefinition
      */
-    private Map getRestrictedDefinition() {
-        Map result = new HashMap();
+    private Map<String, List<AntTypeDefinition>> getRestrictedDefinition() {
+        final Map<String, List<AntTypeDefinition>> result = new HashMap<String, List<AntTypeDefinition>>();
         synchronized (restrictedDefinitions) {
-            for(Iterator i = restrictedDefinitions.entrySet().iterator();
-                         i.hasNext();) {
-                Map.Entry entry = (Map.Entry) i.next();
-                List entryVal = (List) entry.getValue();
+            for (Map.Entry<String, List<AntTypeDefinition>> entry : restrictedDefinitions.entrySet()) {
+                List<AntTypeDefinition> entryVal = entry.getValue();
                 synchronized (entryVal) {
                     //copy the entryVal
-                    entryVal = new ArrayList(entryVal);
+                    entryVal = new ArrayList<AntTypeDefinition> (entryVal);
                 }
-                Object entryKey = entry.getKey();                                    
-                result.put(entryKey, entryVal);
+                result.put(entry.getKey(), entryVal);
             }
         }
         return result;
     }
 
-    
+
     /**
      * Used with creating child projects. Each child
      * project inherits the component definitions
@@ -229,19 +228,19 @@ public class ComponentHelper  {
      */
     public void initSubProject(ComponentHelper helper) {
         // add the types of the parent project
-        AntTypeTable typeTable = (AntTypeTable) helper.antTypeTable.clone();
-        synchronized (antTypeTable) { 
-            for (Iterator i = typeTable.values().iterator(); i.hasNext();) {
-                AntTypeDefinition def = (AntTypeDefinition) i.next();
+        @SuppressWarnings("unchecked")
+        final Hashtable<String, AntTypeDefinition> typeTable = (Hashtable<String, AntTypeDefinition>) helper.antTypeTable.clone();
+        synchronized (antTypeTable) {
+            for (AntTypeDefinition def : typeTable.values()) {
                 antTypeTable.put(def.getName(), def);
             }
         }
         // add the parsed namespaces of the parent project
-        Set inheritedCheckedNamespace = helper.getCheckedNamespace();
+        Set<String> inheritedCheckedNamespace = helper.getCheckedNamespace();
         synchronized (this) {
             checkedNamespaces.addAll(inheritedCheckedNamespace);
         }
-        Map inheritedRestrictedDef = helper.getRestrictedDefinition();
+        Map<String, List<AntTypeDefinition>> inheritedRestrictedDef = helper.getRestrictedDefinition();
         synchronized (restrictedDefinitions) {
             restrictedDefinitions.putAll(inheritedRestrictedDef);
         }
@@ -294,7 +293,7 @@ public class ComponentHelper  {
      *                      name is prefixed with the namespace uri and ":".
      * @return the class if found or null if not.
      */
-    public Class getComponentClass(String componentName) {
+    public Class<?> getComponentClass(String componentName) {
         AntTypeDefinition def = getDefinition(componentName);
         return def == null ? null : def.getExposedClass(project);
     }
@@ -306,7 +305,7 @@ public class ComponentHelper  {
      */
     public AntTypeDefinition getDefinition(String componentName) {
         checkNamespace(componentName);
-        return antTypeTable.getDefinition(componentName);
+        return antTypeTable.get(componentName);
     }
 
     /**
@@ -337,7 +336,7 @@ public class ComponentHelper  {
      *
      * @see #checkTaskClass(Class)
      */
-    public void addTaskDefinition(String taskName, Class taskClass) {
+    public void addTaskDefinition(String taskName, Class<?> taskClass) {
         checkTaskClass(taskClass);
         AntTypeDefinition def = new AntTypeDefinition();
         def.setName(taskName);
@@ -361,7 +360,7 @@ public class ComponentHelper  {
      *                           task. An error level message is logged before
      *                           this exception is thrown.
      */
-    public void checkTaskClass(final Class taskClass) throws BuildException {
+    public void checkTaskClass(final Class<?> taskClass) throws BuildException {
         if (!Modifier.isPublic(taskClass.getModifiers())) {
             final String message = taskClass + " is not public";
             project.log(message, Project.MSG_ERR);
@@ -388,25 +387,24 @@ public class ComponentHelper  {
 
     /**
      * Returns the current task definition hashtable. The returned hashtable is
-     * "live" and so should not be modified.  Also, the returned table may be 
+     * "live" and so should not be modified.  Also, the returned table may be
      * modified asynchronously.
      *
      * @return a map of from task name to implementing class
      *         (String to Class).
      */
-    public Hashtable getTaskDefinitions() {
+    public Hashtable<String, Class<?>> getTaskDefinitions() {
         synchronized (taskClassDefinitions) {
             synchronized (antTypeTable) {
                 if (rebuildTaskClassDefinitions) {
                     taskClassDefinitions.clear();
-                    for (Iterator i = antTypeTable.keySet().iterator(); i.hasNext();) {
-                        String name = (String) i.next();
-                        Class clazz = antTypeTable.getExposedClass(name);
+                    for (Map.Entry<String, AntTypeDefinition> e : antTypeTable.entrySet()) {
+                        final Class<?> clazz = e.getValue().getExposedClass(project);
                         if (clazz == null) {
                             continue;
                         }
                         if (Task.class.isAssignableFrom(clazz)) {
-                            taskClassDefinitions.put(name, antTypeTable.getTypeClass(name));
+                            taskClassDefinitions.put(e.getKey(), e.getValue().getTypeClass(project));
                         }
                     }
                     rebuildTaskClassDefinitions = false;
@@ -423,19 +421,18 @@ public class ComponentHelper  {
      * @return a map of from type name to implementing class
      *         (String to Class).
      */
-    public Hashtable getDataTypeDefinitions() {
+    public Hashtable<String, Class<?>> getDataTypeDefinitions() {
         synchronized (typeClassDefinitions) {
             synchronized (antTypeTable) {
                 if (rebuildTypeClassDefinitions) {
                     typeClassDefinitions.clear();
-                    for (Iterator i = antTypeTable.keySet().iterator(); i.hasNext();) {
-                        String name = (String) i.next();
-                        Class clazz = antTypeTable.getExposedClass(name);
+                    for (Map.Entry<String, AntTypeDefinition> e : antTypeTable.entrySet()) {
+                        final Class<?> clazz = e.getValue().getExposedClass(project);
                         if (clazz == null) {
                             continue;
                         }
-                        if (!(Task.class.isAssignableFrom(clazz))) {
-                            typeClassDefinitions.put(name, antTypeTable.getTypeClass(name));
+                        if (!Task.class.isAssignableFrom(clazz)) {
+                            typeClassDefinitions.put(e.getKey(), e.getValue().getTypeClass(project));
                         }
                     }
                     rebuildTypeClassDefinitions = false;
@@ -447,16 +444,16 @@ public class ComponentHelper  {
 
     /**
      * This returns a list of restricted definitions for a name.
-     * The returned List is "live" and so should not be modified.  
-     * Also, the returned list may be modified asynchronously.  
+     * The returned List is "live" and so should not be modified.
+     * Also, the returned list may be modified asynchronously.
      * Any access must be guarded with a lock on the list itself.
-     * 
+     *
      * @param componentName the name to use.
      * @return the list of restricted definitions for a particular name.
      */
-    public List getRestrictedDefinitions(String componentName) {
+    public List<AntTypeDefinition> getRestrictedDefinitions(String componentName) {
         synchronized (restrictedDefinitions) {
-            return (List) restrictedDefinitions.get(componentName);
+            return restrictedDefinitions.get(componentName);
         }
     }
 
@@ -473,8 +470,8 @@ public class ComponentHelper  {
      * @param typeClass The full name of the class implementing the datatype.
      *                  Must not be <code>null</code>.
      */
-    public void addDataTypeDefinition(String typeName, Class typeClass) {
-        AntTypeDefinition def = new AntTypeDefinition();
+    public void addDataTypeDefinition(String typeName, Class<?> typeClass) {
+        final AntTypeDefinition def = new AntTypeDefinition();
         def.setName(typeName);
         def.setClass(typeClass);
         updateDataTypeDefinition(def);
@@ -499,10 +496,10 @@ public class ComponentHelper  {
      * Returns the current datatype definition hashtable. The returned
      * hashtable is "live" and so should not be modified.
      *
-     * @return a map of from datatype name to implementing class
-     *         (String to Class).
+     * @return a map of from datatype name to datatype definition
+     *         (String to {@link AntTypeDefinition}).
      */
-    public Hashtable getAntTypeTable() {
+    public Hashtable<String, AntTypeDefinition> getAntTypeTable() {
         return antTypeTable;
     }
 
@@ -544,7 +541,7 @@ public class ComponentHelper  {
      *                           creation fails.
      */
     private Task createNewTask(String taskType) throws BuildException {
-        Class c = getComponentClass(taskType);
+        Class<?> c = getComponentClass(taskType);
         if (c == null || !(Task.class.isAssignableFrom(c))) {
             return null;
         }
@@ -614,11 +611,10 @@ public class ComponentHelper  {
         //  PR: I do not know what to do if the object class
         //      has multiple defines
         //      but this is for logging only...
-        Class elementClass = o.getClass();
+        Class<?> elementClass = o.getClass();
         String elementClassname = elementClass.getName();
         synchronized (antTypeTable) {
-            for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
-                AntTypeDefinition def = (AntTypeDefinition) i.next();
+            for (AntTypeDefinition def : antTypeTable.values()) {
                 if (elementClassname.equals(def.getClassName())
                         && (elementClass == def.getExposedClass(project))) {
                     String name = def.getName();
@@ -647,7 +643,7 @@ public class ComponentHelper  {
                 .getElementName(o, brief);
     }
 
-    private static String getUnmappedElementName(Class c, boolean brief) {
+    private static String getUnmappedElementName(Class<?> c, boolean brief) {
         if (brief) {
             String name = c.getName();
             return name.substring(name.lastIndexOf('.') + 1);
@@ -684,19 +680,19 @@ public class ComponentHelper  {
       */
     private void updateRestrictedDefinition(AntTypeDefinition def) {
         String name = def.getName();
-        List list = null;
+        List<AntTypeDefinition> list = null;
         synchronized (restrictedDefinitions) {
-            list = (List) restrictedDefinitions.get(name);
+            list = restrictedDefinitions.get(name);
             if (list == null) {
-                list = new ArrayList();
+                list = new ArrayList<AntTypeDefinition>();
                 restrictedDefinitions.put(name, list);
             }
         }
         // Check if the classname is already present and remove it
         // if it is
         synchronized (list) {
-            for (Iterator i = list.iterator(); i.hasNext();) {
-                AntTypeDefinition current = (AntTypeDefinition) i.next();
+            for (Iterator<AntTypeDefinition> i = list.iterator(); i.hasNext();) {
+                AntTypeDefinition current = i.next();
                 if (current.getClassName().equals(def.getClassName())) {
                     i.remove();
                     break;
@@ -716,12 +712,12 @@ public class ComponentHelper  {
         synchronized (antTypeTable) {
             rebuildTaskClassDefinitions = true;
             rebuildTypeClassDefinitions = true;
-            AntTypeDefinition old = antTypeTable.getDefinition(name);
+            final AntTypeDefinition old = antTypeTable.get(name);
             if (old != null) {
                 if (sameDefinition(def, old)) {
                     return;
                 }
-                Class oldClass = antTypeTable.getExposedClass(name);
+                Class<?> oldClass = old.getExposedClass(project);
                 boolean isTask = oldClass != null && Task.class.isAssignableFrom(oldClass);
                 project.log("Trying to override old definition of "
                         + (isTask ? "task " : "datatype ") + name, (def.similarDefinition(old,
@@ -762,7 +758,7 @@ public class ComponentHelper  {
     private void initTasks() {
         ClassLoader classLoader = getClassLoader(null);
         Properties props = getDefaultDefinitions(false);
-        Enumeration e = props.propertyNames();
+        Enumeration<?> e = props.propertyNames();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             String className = props.getProperty(name);
@@ -825,7 +821,7 @@ public class ComponentHelper  {
     private void initTypes() {
         ClassLoader classLoader = getClassLoader(null);
         Properties props = getDefaultDefinitions(true);
-        Enumeration e = props.propertyNames();
+        Enumeration<?> e = props.propertyNames();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             String className = props.getProperty(name);
@@ -936,7 +932,7 @@ public class ComponentHelper  {
             optional |= classname.startsWith("org.apache.tools.ant.types.optional");
 
             //start with instantiating the class.
-            Class clazz = null;
+            Class<?> clazz = null;
             try {
                 clazz = def.innerGetTypeClass();
             } catch (ClassNotFoundException e) {
@@ -1028,12 +1024,11 @@ public class ComponentHelper  {
         out.println("Action: Check that any <presetdef>/<macrodef>"
                 + " declarations have taken place.");
         if (uri.length() > 0) {
-            List matches = antTypeTable.findMatches(uri);
+            final List<AntTypeDefinition> matches = findTypeMatches(uri);
             if (matches.size() > 0) {
                 out.println();
                 out.println("The definitions in the namespace " + uri + " are:");
-                for (Iterator it = matches.iterator(); it.hasNext();) {
-                    AntTypeDefinition def = (AntTypeDefinition) it.next();
+                for (AntTypeDefinition def : matches) {
                     String local = ProjectHelper.extractNameFromComponentName(def.getName());
                     out.println("    " + local);
                 }
@@ -1086,63 +1081,20 @@ public class ComponentHelper  {
     }
 
     /**
-     * Map that contains the component definitions.
+     * Create a list of all definitions that match a prefix, usually the URI
+     * of a library
+     * @param prefix prefix to match off
+     * @return the (possibly empty) list of definitions
      */
-    private static class AntTypeTable extends Hashtable {
-        private static final long serialVersionUID = -3060442320477772028L;
-        private Project project;
-
-        AntTypeTable(Project project) {
-            this.project = project;
-        }
-
-        AntTypeDefinition getDefinition(String key) {
-            return (AntTypeDefinition) (super.get(key));
-        }
-
-        public Object get(Object key) {
-            return getTypeClass((String) key);
-        }
-
-        Class getTypeClass(String name) {
-            AntTypeDefinition def = getDefinition(name);
-            return (def == null) ? null : def.getTypeClass(project);
-        }
-
-        Class getExposedClass(String name) {
-            AntTypeDefinition def = getDefinition(name);
-            return def == null ? null : def.getExposedClass(project);
-        }
-
-        public synchronized boolean contains(Object clazz) {
-            boolean found = false;
-            if (clazz instanceof Class) {
-                for (Iterator i = values().iterator(); i.hasNext() && !found;) {
-                    found = (((AntTypeDefinition) (i.next())).getExposedClass(project) == clazz);
-                }
-            }
-            return found;
-        }
-
-        public boolean containsValue(Object value) {
-            return contains(value);
-        }
-
-        /**
-         * Create a list of all definitions that match a prefix, usually the URI
-         * of a library
-         * @param prefix prefix to match off
-         * @return the (possibly empty) list of definitions
-         */
-        public synchronized List/*<AntTypeDefinition>*/ findMatches(String prefix) {
-            ArrayList matches = new ArrayList();
-            for (Iterator i = values().iterator(); i.hasNext();) {
-                AntTypeDefinition def = (AntTypeDefinition) (i.next());
+    private List<AntTypeDefinition> findTypeMatches(String prefix) {
+        final List<AntTypeDefinition> result = new ArrayList<AntTypeDefinition>();
+        synchronized (antTypeTable) {
+            for (AntTypeDefinition def : antTypeTable.values()) {
                 if (def.getName().startsWith(prefix)) {
-                    matches.add(def);
+                    result.add(def);
                 }
             }
-            return matches;
         }
+        return result;
     }
 }

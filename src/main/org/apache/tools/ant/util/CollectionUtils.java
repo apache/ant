@@ -39,8 +39,9 @@ public class CollectionUtils {
     /**
      * Collections.emptyList() is Java5+.
      */
-    public static final List EMPTY_LIST =
-        Collections.unmodifiableList(new ArrayList(0));
+    @SuppressWarnings("rawtypes")
+    @Deprecated
+    public static final List EMPTY_LIST = Collections.EMPTY_LIST;
 
     /**
      * Please use Vector.equals() or List.equals().
@@ -50,7 +51,7 @@ public class CollectionUtils {
      * @since Ant 1.5
      * @deprecated since 1.6.x.
      */
-    public static boolean equals(Vector v1, Vector v2) {
+    public static boolean equals(Vector<?> v1, Vector<?> v2) {
         if (v1 == v2) {
             return true;
         }
@@ -73,7 +74,7 @@ public class CollectionUtils {
      * @since Ant 1.5
      * @deprecated since 1.6.x.
      */
-    public static boolean equals(Dictionary d1, Dictionary d2) {
+    public static boolean equals(Dictionary<?, ?> d1, Dictionary<?, ?> d2) {
         if (d1 == d2) {
             return true;
         }
@@ -86,7 +87,7 @@ public class CollectionUtils {
             return false;
         }
 
-        Enumeration e1 = d1.keys();
+        Enumeration<?> e1 = d1.keys();
         while (e1.hasMoreElements()) {
             Object key = e1.nextElement();
             Object value1 = d1.get(key);
@@ -108,16 +109,13 @@ public class CollectionUtils {
      *
      * @since Ant 1.8.0
      */
-    public static String flattenToString(Collection c) {
-        Iterator iter = c.iterator();
-        boolean first = true;
-        StringBuffer sb = new StringBuffer();
-        while (iter.hasNext()) {
-            if (!first) {
+    public static String flattenToString(Collection<?> c) {
+        final StringBuilder sb = new StringBuilder();
+        for (Object o : c) {
+            if (sb.length() != 0) {
                 sb.append(",");
             }
-            sb.append(String.valueOf(iter.next()));
-            first = false;
+            sb.append(o);
         }
         return sb.toString();
     }
@@ -129,9 +127,9 @@ public class CollectionUtils {
      * @since Ant 1.6
      * @deprecated since 1.6.x.
      */
-    public static void putAll(Dictionary m1, Dictionary m2) {
-        for (Enumeration it = m2.keys(); it.hasMoreElements();) {
-            Object key = it.nextElement();
+    public static <K, V> void putAll(Dictionary<? super K, ? super V> m1, Dictionary<? extends K, ? extends V> m2) {
+        for (Enumeration<? extends K> it = m2.keys(); it.hasMoreElements();) {
+            K key = it.nextElement();
             m1.put(key, m2.get(key));
         }
     }
@@ -140,7 +138,7 @@ public class CollectionUtils {
      * An empty enumeration.
      * @since Ant 1.6
      */
-    public static final class EmptyEnumeration implements Enumeration {
+    public static final class EmptyEnumeration<E> implements Enumeration<E> {
         /** Constructor for the EmptyEnumeration */
         public EmptyEnumeration() {
         }
@@ -156,7 +154,7 @@ public class CollectionUtils {
          * @return nothing.
          * @throws NoSuchElementException always.
          */
-        public Object nextElement() throws NoSuchElementException {
+        public E nextElement() throws NoSuchElementException {
             throw new NoSuchElementException();
         }
     }
@@ -169,8 +167,8 @@ public class CollectionUtils {
      * @return an enumeration representing e1 followed by e2.
      * @since Ant 1.6.3
      */
-    public static Enumeration append(Enumeration e1, Enumeration e2) {
-        return new CompoundEnumeration(e1, e2);
+    public static <E> Enumeration<E> append(Enumeration<E> e1, Enumeration<E> e2) {
+        return new CompoundEnumeration<E>(e1, e2);
     }
 
     /**
@@ -178,12 +176,12 @@ public class CollectionUtils {
      * @param iter the Iterator to adapt.
      * @return an Enumeration.
      */
-    public static Enumeration asEnumeration(final Iterator iter) {
-        return new Enumeration() {
+    public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
+        return new Enumeration<E>() {
             public boolean hasMoreElements() {
                 return iter.hasNext();
             }
-            public Object nextElement() {
+            public E nextElement() {
                 return iter.next();
             }
         };
@@ -194,12 +192,12 @@ public class CollectionUtils {
      * @param e the Enumeration to adapt.
      * @return an Iterator.
      */
-    public static Iterator asIterator(final Enumeration e) {
-        return new Iterator() {
+    public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
+        return new Iterator<E>() {
             public boolean hasNext() {
                 return e.hasMoreElements();
             }
-            public Object next() {
+            public E next() {
                 return e.nextElement();
             }
             public void remove() {
@@ -221,11 +219,11 @@ public class CollectionUtils {
         return l;
     }
 
-    private static final class CompoundEnumeration implements Enumeration {
+    private static final class CompoundEnumeration<E> implements Enumeration<E> {
 
-        private final Enumeration e1, e2;
+        private final Enumeration<E> e1, e2;
 
-        public CompoundEnumeration(Enumeration e1, Enumeration e2) {
+        public CompoundEnumeration(Enumeration<E> e1, Enumeration<E> e2) {
             this.e1 = e1;
             this.e2 = e2;
         }
@@ -234,7 +232,7 @@ public class CollectionUtils {
             return e1.hasMoreElements() || e2.hasMoreElements();
         }
 
-        public Object nextElement() throws NoSuchElementException {
+        public E nextElement() throws NoSuchElementException {
             if (e1.hasMoreElements()) {
                 return e1.nextElement();
             } else {
@@ -250,11 +248,11 @@ public class CollectionUtils {
      *
      * @since Ant 1.8.0
      */
-    public static int frequency(Collection c, Object o) {
+    public static int frequency(Collection<?> c, Object o) {
         // same as Collections.frequency introduced with JDK 1.5
         int freq = 0;
         if (c != null) {
-            for (Iterator i = c.iterator(); i.hasNext(); ) {
+            for (Iterator<?> i = c.iterator(); i.hasNext(); ) {
                 Object test = i.next();
                 if (o == null ? test == null : o.equals(test)) {
                     freq++;
@@ -263,5 +261,5 @@ public class CollectionUtils {
         }
         return freq;
     }
-            
+
 }

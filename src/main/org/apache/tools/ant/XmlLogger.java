@@ -28,6 +28,7 @@ import java.util.Stack;
 import java.util.Enumeration;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
@@ -106,16 +107,16 @@ public class XmlLogger implements BuildLogger {
     private Document doc = builder.newDocument();
 
     /** Mapping for when tasks started (Task to TimedElement). */
-    private Hashtable tasks = new Hashtable();
+    private Hashtable<Task, TimedElement> tasks = new Hashtable<Task, TimedElement>();
 
-    /** Mapping for when targets started (Task to TimedElement). */
-    private Hashtable targets = new Hashtable();
+    /** Mapping for when targets started (Target to TimedElement). */
+    private Hashtable<Target, TimedElement> targets = new Hashtable<Target, XmlLogger.TimedElement>();
 
     /**
      * Mapping of threads to stacks of elements
      * (Thread to Stack of TimedElement).
      */
-    private Hashtable threadStacks = new Hashtable();
+    private Hashtable<Thread, Stack<TimedElement>> threadStacks = new Hashtable<Thread, Stack<TimedElement>>();
 
     /**
      * When the build started.
@@ -210,10 +211,10 @@ public class XmlLogger implements BuildLogger {
      * Returns the stack of timed elements for the current thread.
      * @return the stack of timed elements for the current thread
      */
-    private Stack getStack() {
-        Stack threadStack = (Stack) threadStacks.get(Thread.currentThread());
+    private Stack<TimedElement> getStack() {
+        Stack<TimedElement> threadStack = threadStacks.get(Thread.currentThread());
         if (threadStack == null) {
-            threadStack = new Stack();
+            threadStack = new Stack<TimedElement>();
             threadStacks.put(Thread.currentThread(), threadStack);
         }
         /* For debugging purposes uncomment:
@@ -256,9 +257,9 @@ public class XmlLogger implements BuildLogger {
             targetElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
 
             TimedElement parentElement = null;
-            Stack threadStack = getStack();
+            Stack<TimedElement> threadStack = getStack();
             if (!threadStack.empty()) {
-                TimedElement poppedStack = (TimedElement) threadStack.pop();
+                TimedElement poppedStack = threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = " + poppedStack
                             + " finished target element = " + targetElement);
@@ -326,9 +327,9 @@ public class XmlLogger implements BuildLogger {
         } else {
             synchronizedAppend(targetElement.element, taskElement.element);
         }
-        Stack threadStack = getStack();
+        Stack<TimedElement> threadStack = getStack();
         if (!threadStack.empty()) {
-            TimedElement poppedStack = (TimedElement) threadStack.pop();
+            TimedElement poppedStack = threadStack.pop();
             if (poppedStack != taskElement) {
                 throw new RuntimeException("Mismatch - popped element = " + poppedStack
                         + " finished task element = " + taskElement);
@@ -348,8 +349,8 @@ public class XmlLogger implements BuildLogger {
         if (element != null) {
             return element;
         }
-        for (Enumeration e = tasks.keys(); e.hasMoreElements();) {
-            Task key = (Task) e.nextElement();
+        for (Enumeration<Task> e = tasks.keys(); e.hasMoreElements();) {
+            Task key = e.nextElement();
             if (key instanceof UnknownElement) {
                 if (((UnknownElement) key).getTask() == task) {
                     return (TimedElement) tasks.get(key);

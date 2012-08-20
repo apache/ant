@@ -34,9 +34,9 @@ import org.apache.tools.ant.util.LoaderUtils;
 /**
  * Repository of {@link ProjectHelper} found in the classpath or via
  * some System properties.
- * 
+ *
  * <p>See the ProjectHelper documentation in the manual.</p>
- * 
+ *
  * @since Ant 1.8.0
  */
 public class ProjectHelperRepository {
@@ -52,17 +52,13 @@ public class ProjectHelperRepository {
     private static ProjectHelperRepository instance =
         new ProjectHelperRepository();
 
-    private List/* <Constructor> */ helpers = new ArrayList();
+    private List<Constructor<? extends ProjectHelper>> helpers = new ArrayList<Constructor<? extends ProjectHelper>>();
 
-    private static final Class[] NO_CLASS = new Class[0];
-    private static final Object[] NO_OBJECT = new Object[0];
-
-    private static Constructor PROJECTHELPER2_CONSTRUCTOR;
+    private static Constructor<ProjectHelper2> PROJECTHELPER2_CONSTRUCTOR;
 
     static {
         try {
-            PROJECTHELPER2_CONSTRUCTOR = ProjectHelper2.class
-                    .getConstructor(NO_CLASS);
+            PROJECTHELPER2_CONSTRUCTOR = ProjectHelper2.class.getConstructor();
         } catch (Exception e) {
             // ProjectHelper2 must be available
             throw new RuntimeException(e);
@@ -79,7 +75,7 @@ public class ProjectHelperRepository {
 
     private void collectProjectHelpers() {
         // First, try the system property
-        Constructor projectHelper = getProjectHelperBySystemProperty();
+        Constructor<? extends ProjectHelper> projectHelper = getProjectHelperBySystemProperty();
         registerProjectHelper(projectHelper);
 
         // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
@@ -87,10 +83,10 @@ public class ProjectHelperRepository {
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
             if (classLoader != null) {
-                Enumeration resources =
+                Enumeration<URL> resources =
                     classLoader.getResources(ProjectHelper.SERVICE_ID);
                 while (resources.hasMoreElements()) {
-                    URL resource = (URL) resources.nextElement();
+                    URL resource = resources.nextElement();
                     projectHelper =
                         getProjectHelperByService(resource.openStream());
                     registerProjectHelper(projectHelper);
@@ -119,7 +115,7 @@ public class ProjectHelperRepository {
      * <p>
      * The helper will be added after all the already registered helpers, but
      * before the default one (ProjectHelper2)
-     * 
+     *
      * @param helperClassName
      *            the fully qualified name of the helper
      * @throws BuildException
@@ -137,23 +133,23 @@ public class ProjectHelperRepository {
      * <p>
      * The helper will be added after all the already registered helpers, but
      * before the default one (ProjectHelper2)
-     * 
+     *
      * @param helperClass
      *            the class of the helper
      * @throws BuildException
      *             if there is no constructor with no argument
      * @since Ant 1.8.2
      */
-    public void registerProjectHelper(Class helperClass) throws BuildException {
+    public void registerProjectHelper(Class<? extends ProjectHelper> helperClass) throws BuildException {
         try {
-            registerProjectHelper(helperClass.getConstructor(NO_CLASS));
+            registerProjectHelper(helperClass.getConstructor());
         } catch (NoSuchMethodException e) {
             throw new BuildException("Couldn't find no-arg constructor in "
                     + helperClass.getName());
         }
     }
 
-    private void registerProjectHelper(Constructor helperConstructor) {
+    private void registerProjectHelper(Constructor<? extends ProjectHelper> helperConstructor) {
         if (helperConstructor == null) {
             return;
         }
@@ -164,7 +160,7 @@ public class ProjectHelperRepository {
         helpers.add(helperConstructor);
     }
 
-    private Constructor getProjectHelperBySystemProperty() {
+    private Constructor<? extends ProjectHelper> getProjectHelperBySystemProperty() {
         String helperClass = System.getProperty(ProjectHelper.HELPER_PROPERTY);
         try {
             if (helperClass != null) {
@@ -182,7 +178,7 @@ public class ProjectHelperRepository {
         return null;
     }
 
-    private Constructor getProjectHelperByService(InputStream is) {
+    private Constructor<? extends ProjectHelper> getProjectHelperByService(InputStream is) {
         try {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
@@ -214,21 +210,21 @@ public class ProjectHelperRepository {
      * Get the constructor with not argument of an helper from its class name.
      * It'll first try the thread class loader, then Class.forName() will load
      * from the same loader that loaded this class.
-     * 
+     *
      * @param helperClass
      *            The name of the class to create an instance of. Must not be
      *            <code>null</code>.
-     * 
+     *
      * @return the constructor of the specified class.
-     * 
+     *
      * @exception BuildException
      *                if the class cannot be found or if a constructor with no
      *                argument cannot be found.
      */
-    private Constructor getHelperConstructor(String helperClass) throws BuildException {
+    private Constructor<? extends ProjectHelper> getHelperConstructor(String helperClass) throws BuildException {
         ClassLoader classLoader = LoaderUtils.getContextClassLoader();
         try {
-            Class clazz = null;
+            Class<?> clazz = null;
             if (classLoader != null) {
                 try {
                     clazz = classLoader.loadClass(helperClass);
@@ -239,7 +235,7 @@ public class ProjectHelperRepository {
             if (clazz == null) {
                 clazz = Class.forName(helperClass);
             }
-            return clazz.getConstructor(NO_CLASS);
+            return clazz.asSubclass(ProjectHelper.class).getConstructor();
         } catch (Exception e) {
             throw new BuildException(e);
         }
@@ -248,13 +244,12 @@ public class ProjectHelperRepository {
     /**
      * Get the helper that will be able to parse the specified build file. The helper
      * will be chosen among the ones found in the classpath
-     * 
+     *
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForBuildFile(Resource buildFile) throws BuildException {
-        Iterator it = getHelpers();
-        while (it.hasNext()) {
-            ProjectHelper helper = (ProjectHelper) it.next();
+        for (Iterator<ProjectHelper> it = getHelpers(); it.hasNext();) {
+            ProjectHelper helper = it.next();
             if (helper.canParseBuildFile(buildFile)) {
                 if (DEBUG) {
                     System.out.println("ProjectHelper "
@@ -272,13 +267,12 @@ public class ProjectHelperRepository {
     /**
      * Get the helper that will be able to parse the specified antlib. The helper
      * will be chosen among the ones found in the classpath
-     * 
+     *
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForAntlib(Resource antlib) throws BuildException {
-        Iterator it = getHelpers();
-        while (it.hasNext()) {
-            ProjectHelper helper = (ProjectHelper) it.next();
+        for (Iterator<ProjectHelper> it = getHelpers(); it.hasNext();) {
+            ProjectHelper helper = it.next();
             if (helper.canParseAntlibDescriptor(antlib)) {
                 if (DEBUG) {
                     System.out.println("ProjectHelper "
@@ -297,18 +291,18 @@ public class ProjectHelperRepository {
      * Get an iterator on the list of project helpers configured. The iterator
      * will always return at least one element as there will always be the
      * default project helper configured.
-     * 
+     *
      * @return an iterator of {@link ProjectHelper}
      */
-    public Iterator getHelpers() {
+    public Iterator<ProjectHelper> getHelpers() {
         return new ConstructingIterator(helpers.iterator());
     }
 
-    private static class ConstructingIterator implements Iterator {
-        private final Iterator nested;
+    private static class ConstructingIterator implements Iterator<ProjectHelper> {
+        private final Iterator<Constructor<? extends ProjectHelper>> nested;
         private boolean empty = false;
 
-        ConstructingIterator(Iterator nested) {
+        ConstructingIterator(Iterator<Constructor<? extends ProjectHelper>> nested) {
             this.nested = nested;
         }
 
@@ -316,17 +310,17 @@ public class ProjectHelperRepository {
             return nested.hasNext() || !empty;
         }
 
-        public Object next() {
-            Constructor c;
+        public ProjectHelper next() {
+            Constructor<? extends ProjectHelper> c;
             if (nested.hasNext()) {
-                c = (Constructor) nested.next();
+                c = nested.next();
             } else {
                 // last but not least, ant default project helper
                 empty = true;
                 c = PROJECTHELPER2_CONSTRUCTOR;
             }
             try {
-                return c.newInstance(NO_OBJECT);
+                return c.newInstance();
             } catch (Exception e) {
                 throw new BuildException("Failed to invoke no-arg constructor"
                                          + " on " + c.getName());

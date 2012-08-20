@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.WeakHashMap;
 
+
 /**
  * Logs content written by a thread and forwards the buffers onto the
  * project object which will forward the content to the appropriate
@@ -62,7 +63,7 @@ public class DemuxOutputStream extends OutputStream {
     private static final int LF = 0x0a;
 
     /** Mapping from thread to buffer (Thread to BufferInfo). */
-    private WeakHashMap buffers = new WeakHashMap();
+    private WeakHashMap<Thread, BufferInfo> buffers = new WeakHashMap<Thread, BufferInfo>();
 
     /**
      * The project to send output to.

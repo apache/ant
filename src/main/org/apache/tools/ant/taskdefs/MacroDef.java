@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
@@ -45,8 +44,8 @@ public class MacroDef extends AntlibDefinition  {
     private NestedSequential nestedSequential;
     private String     name;
     private boolean    backTrace = true;
-    private List       attributes = new ArrayList();
-    private Map        elements   = new HashMap();
+    private List<Attribute>       attributes = new ArrayList<Attribute>();
+    private Map<String, TemplateElement>        elements   = new HashMap<String, TemplateElement>();
     private String     textName   = null;
     private Text       text       = null;
     private boolean    hasImplicitElement = false;
@@ -74,8 +73,7 @@ public class MacroDef extends AntlibDefinition  {
                 "the text nested element needed a \"name\" attribute");
         }
         // Check if used by attributes
-        for (Iterator i = attributes.iterator(); i.hasNext();) {
-            Attribute attribute = (Attribute) i.next();
+        for (Attribute attribute : attributes) {
             if (text.getName().equals(attribute.getName())) {
                 throw new BuildException(
                     "the name \"" + text.getName()
@@ -134,7 +132,7 @@ public class MacroDef extends AntlibDefinition  {
      * This is a simple task container.
      */
     public static class NestedSequential implements TaskContainer {
-        private List nested = new ArrayList();
+        private List<Task> nested = new ArrayList<Task>();
 
         /**
          * Add a task or type to the container.
@@ -148,7 +146,7 @@ public class MacroDef extends AntlibDefinition  {
         /**
          * @return the list of unknown elements
          */
-        public List getNested() {
+        public List<Task> getNested() {
             return nested;
         }
 
@@ -201,7 +199,7 @@ public class MacroDef extends AntlibDefinition  {
      *
      * @return the nested Attributes
      */
-    public List getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
@@ -211,7 +209,7 @@ public class MacroDef extends AntlibDefinition  {
      * @return the map nested elements, keyed by element name, with
      *         {@link TemplateElement} values.
      */
-    public Map getElements() {
+    public Map<String, TemplateElement> getElements() {
         return elements;
     }
 

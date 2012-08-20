@@ -23,6 +23,7 @@ package org.apache.tools.ant;
  * @since Ant 1.6.3
  */
 public class UnsupportedAttributeException extends BuildException {
+    private static final long serialVersionUID = 1L;
 
     private final String attribute;
 

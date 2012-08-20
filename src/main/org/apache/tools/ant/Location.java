@@ -29,6 +29,7 @@ import org.xml.sax.Locator;
  *
  */
 public class Location implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** Name of the file. */
     private final String fileName;

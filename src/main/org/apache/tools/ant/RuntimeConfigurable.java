@@ -25,11 +25,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.apache.tools.ant.util.CollectionUtils;
-import org.apache.tools.ant.taskdefs.MacroDef;
+import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
 import org.apache.tools.ant.taskdefs.MacroInstance;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
@@ -59,9 +58,6 @@ public class RuntimeConfigurable implements Serializable {
      */
     private transient Object wrappedObject = null;
 
-    /** the creator used to make the wrapped object */
-    private transient IntrospectionHelper.Creator creator;
-
     /**
      * XML attributes for the element.
      * @deprecated since 1.6.x
@@ -70,7 +66,7 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Attribute names and values. While the XML spec doesn't require
      *  preserving the order ( AFAIK ), some ant tests do rely on the
-     *  exact order. 
+     *  exact order.
      * The only exception to this order is the treatment of
      * refid. A number of datatypes check if refid is set
      * when other attributes are set. This check will not
@@ -124,7 +120,6 @@ public class RuntimeConfigurable implements Serializable {
      * @param creator the creator object.
      */
     synchronized void setCreator(IntrospectionHelper.Creator creator) {
-        this.creator = creator;
     }
 
     /**
@@ -250,7 +245,7 @@ public class RuntimeConfigurable implements Serializable {
      *              Must not be <code>null</code>.
      */
     public synchronized void addChild(RuntimeConfigurable child) {
-        children = (children == null) ? new ArrayList() : children;
+        children = (children == null) ? new ArrayList<RuntimeConfigurable>() : children;
         children.add(child);
     }
 
@@ -263,7 +258,7 @@ public class RuntimeConfigurable implements Serializable {
      *         list.
      */
     synchronized RuntimeConfigurable getChild(int index) {
-        return (RuntimeConfigurable) children.get(index);
+        return children.get(index);
     }
 
     /**
@@ -271,8 +266,8 @@ public class RuntimeConfigurable implements Serializable {
      * @return an enumeration of the child wrappers.
      * @since Ant 1.6
      */
-    public synchronized Enumeration getChildren() {
-        return (children == null) ? new CollectionUtils.EmptyEnumeration()
+    public synchronized Enumeration<RuntimeConfigurable> getChildren() {
+        return (children == null) ? new CollectionUtils.EmptyEnumeration<RuntimeConfigurable>()
             : Collections.enumeration(children);
     }
 
@@ -405,8 +400,7 @@ public class RuntimeConfigurable implements Serializable {
                     attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value.toString());
                 }
                 if (target instanceof MacroInstance) {
-                    for (Iterator attrs = ((MacroInstance) target).getMacroDef().getAttributes().iterator(); attrs.hasNext();) {
-                        MacroDef.Attribute attr = (MacroDef.Attribute) attrs.next();
+                    for (Attribute attr : ((MacroInstance) target).getMacroDef().getAttributes()) {
                         if (attr.getName().equals(name)) {
                             if (!attr.isDoubleExpanding()) {
                                 attrValue = value;
@@ -469,8 +463,7 @@ public class RuntimeConfigurable implements Serializable {
     public void applyPreSet(RuntimeConfigurable r) {
         // Attributes
         if (r.attributeMap != null) {
-            for (Iterator i = r.attributeMap.keySet().iterator(); i.hasNext();) {
-                String name = (String) i.next();
+            for (String name : r.attributeMap.keySet()) {
                 if (attributeMap == null || attributeMap.get(name) == null) {
                     setAttribute(name, (String) r.attributeMap.get(name));
                 }
@@ -482,7 +475,7 @@ public class RuntimeConfigurable implements Serializable {
 
         // Children (this is a shadow of UnknownElement#children)
         if (r.children != null) {
-            List newChildren = new ArrayList();
+            List<RuntimeConfigurable> newChildren = new ArrayList<RuntimeConfigurable>();
             newChildren.addAll(r.children);
             if (children != null) {
                 newChildren.addAll(children);

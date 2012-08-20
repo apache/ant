@@ -26,7 +26,7 @@ import org.apache.tools.ant.MagicNames;
  * @since Ant 1.8.0
  */
 public class LocalProperties
-    extends InheritableThreadLocal
+    extends InheritableThreadLocal<LocalPropertyStack>
     implements PropertyHelper.PropertyEvaluator,
     PropertyHelper.PropertySetter {
 
@@ -62,7 +62,7 @@ public class LocalProperties
      * Get the initial value.
      * @return a new localproperties stack.
      */
-    protected synchronized Object initialValue() {
+    protected synchronized LocalPropertyStack initialValue() {
         return new LocalPropertyStack();
     }
 

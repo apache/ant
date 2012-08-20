@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -53,10 +52,10 @@ public class Target implements TaskContainer {
     private Condition unlessCondition;
 
     /** List of targets this target is dependent on. */
-    private List/*<String>*/ dependencies = null;
+    private List<String> dependencies = null;
 
     /** Children of this target (tasks and data types). */
-    private List children = new ArrayList();
+    private List<Object> children = new ArrayList<Object>();
 
     /** Since Ant 1.6.2 */
     private Location location = Location.UNKNOWN_LOCATION;
@@ -138,9 +137,8 @@ public class Target implements TaskContainer {
      *             depends on. Must not be <code>null</code>.
      */
     public void setDepends(String depS) {
-        for (Iterator iter = parseDepends(depS, getName(), "depends").iterator();
-             iter.hasNext(); ) {
-            addDependency((String) iter.next());
+        for (String dep : parseDepends(depS, getName(), "depends")) {
+            addDependency(dep);
         }
     }
 
@@ -227,15 +225,13 @@ public class Target implements TaskContainer {
      * @return an array of the tasks currently within this target
      */
     public Task[] getTasks() {
-        List tasks = new ArrayList(children.size());
-        Iterator it = children.iterator();
-        while (it.hasNext()) {
-            Object o = it.next();
+        List<Task> tasks = new ArrayList<Task>(children.size());
+        for (Object o : children) {
             if (o instanceof Task) {
-                tasks.add(o);
+                tasks.add((Task) o);
             }
         }
-        return (Task[]) tasks.toArray(new Task[tasks.size()]);
+        return tasks.toArray(new Task[tasks.size()]);
     }
 
     /**
@@ -246,7 +242,7 @@ public class Target implements TaskContainer {
      */
     public void addDependency(String dependency) {
         if (dependencies == null) {
-            dependencies = new ArrayList(2);
+            dependencies = new ArrayList<String>(2);
         }
         dependencies.add(dependency);
     }
@@ -256,9 +252,9 @@ public class Target implements TaskContainer {
      *
      * @return an enumeration of the dependencies of this target (enumeration of String)
      */
-    public Enumeration getDependencies() {
+    public Enumeration<String> getDependencies() {
         return Collections
-                .enumeration(dependencies == null ? Collections.EMPTY_LIST : dependencies);
+                .enumeration(dependencies == null ? Collections.<String> emptyList() : dependencies);
     }
 
     /**
@@ -269,7 +265,7 @@ public class Target implements TaskContainer {
      */
     public boolean dependsOn(String other) {
         Project p = getProject();
-        Hashtable t = p == null ? null : p.getTargets();
+        Hashtable<String, Target> t = p == null ? null : p.getTargets();
         return p != null && p.topoSort(getName(), t, false).contains(t.get(other));
     }
 
@@ -304,7 +300,7 @@ public class Target implements TaskContainer {
 
     /**
      * Same as {@link #setIf(String)} but requires a {@link Condition} instance
-     * 
+     *
      * @since 1.9
      */
     public void setIf(Condition condition) {
@@ -351,7 +347,7 @@ public class Target implements TaskContainer {
 
     /**
      * Same as {@link #setUnless(String)} but requires a {@link Condition} instance
-     * 
+     *
      * @since 1.9
      */
     public void setUnless(Condition condition) {

@@ -19,21 +19,20 @@ package org.apache.tools.ant;
 
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Collection;
 
-import org.apache.tools.ant.property.NullReturn;
 import org.apache.tools.ant.property.GetProperty;
+import org.apache.tools.ant.property.NullReturn;
 import org.apache.tools.ant.property.ParseNextProperty;
-import org.apache.tools.ant.property.PropertyExpander;
 import org.apache.tools.ant.property.ParseProperties;
+import org.apache.tools.ant.property.PropertyExpander;
 
 /* ISSUES:
  - ns param. It could be used to provide "namespaces" for properties, which
@@ -248,24 +247,24 @@ public class PropertyHelper implements GetProperty {
 
     private Project project;
     private PropertyHelper next;
-    private Hashtable delegates = new Hashtable();
+    private final Hashtable<Class<? extends Delegate>, List<Delegate>> delegates = new Hashtable<Class<? extends Delegate>, List<Delegate>>();
 
     /** Project properties map (usually String to String). */
-    private Hashtable properties = new Hashtable();
+    private Hashtable<String, Object> properties = new Hashtable<String, Object>();
 
     /**
      * Map of "user" properties (as created in the Ant task, for example).
      * Note that these key/value pairs are also always put into the
      * project properties, so only the project properties need to be queried.
      */
-    private Hashtable userProperties = new Hashtable();
+    private Hashtable<String, Object> userProperties = new Hashtable<String, Object>();
 
     /**
      * Map of inherited "user" properties - that are those "user"
      * properties that have been created by tasks and not been set
      * from the command line or a GUI tool.
      */
-    private Hashtable inheritedProperties = new Hashtable();
+    private Hashtable<String, Object> inheritedProperties = new Hashtable<String, Object>();
 
     /**
      * Default constructor.
@@ -414,7 +413,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8.0
      * @return the expanders.
      */
-    public Collection getExpanders() {
+    public Collection<PropertyExpander> getExpanders() {
         return getDelegates(PropertyExpander.class);
     }
 
@@ -519,8 +518,8 @@ public class PropertyHelper implements GetProperty {
      *                           <code>}</code>
      * @deprecated use the other mechanisms of this class instead
      */
-    public void parsePropertyString(String value, Vector fragments,
-                                    Vector propertyRefs) throws BuildException {
+    public void parsePropertyString(String value, Vector<String> fragments,
+                                    Vector<String> propertyRefs) throws BuildException {
         parsePropertyStringDefault(value, fragments, propertyRefs);
     }
 
@@ -535,7 +534,7 @@ public class PropertyHelper implements GetProperty {
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>, in which case this
      *              method returns immediately with no effect.
-     * @param keys  Mapping (String to String) of property names to their
+     * @param keys  Mapping (String to Object) of property names to their
      *              values. If <code>null</code>, only project properties will
      *              be used.
      *
@@ -545,7 +544,8 @@ public class PropertyHelper implements GetProperty {
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
      */
-    public String replaceProperties(String ns, String value, Hashtable keys) throws BuildException {
+    //TODO deprecate?  Recall why no longer using ns/keys params
+    public String replaceProperties(String ns, String value, Hashtable<String, Object> keys) throws BuildException {
         return replaceProperties(value);
     }
 
@@ -629,8 +629,7 @@ public class PropertyHelper implements GetProperty {
      *  @return true if the property is set.
      */
     public boolean setProperty(String name, Object value, boolean verbose) {
-        for (Iterator iter = getDelegates(PropertySetter.class).iterator(); iter.hasNext();) {
-            PropertySetter setter = (PropertySetter) iter.next();
+        for (PropertySetter setter : getDelegates(PropertySetter.class)) {
             if (setter.set(name, value, this)) {
                 return true;
             }
@@ -691,9 +690,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8.0
      */
     public void setNewProperty(String name, Object value) {
-        for (Iterator iter = getDelegates(PropertySetter.class).iterator();
-             iter.hasNext();) {
-            PropertySetter setter = (PropertySetter) iter.next();
+        for (PropertySetter setter : getDelegates(PropertySetter.class)) {
             if (setter.setNew(name, value, this)) {
                 return;
             }
@@ -841,14 +838,12 @@ public class PropertyHelper implements GetProperty {
         if (name == null) {
             return null;
         }
-        for (Iterator iter = getDelegates(PropertyEvaluator.class).iterator(); iter.hasNext();) {
-            Object o = ((PropertyEvaluator) iter.next()).evaluate(name, this);
-            if (o != null) {
-                if (o instanceof NullReturn) {
-                    return null;
-                }
-                return o;
+        for (PropertyEvaluator evaluator : getDelegates(PropertyEvaluator.class)) {
+            final Object o = evaluator.evaluate(name, this);
+            if (o == null) {
+                continue;
             }
+            return o instanceof NullReturn ? null : o;
         }
         return properties.get(name);
     }
@@ -901,10 +896,10 @@ public class PropertyHelper implements GetProperty {
      *
      * @return a hashtable containing all properties (including user properties).
      */
-    public Hashtable getProperties() {
+    public Hashtable<String, Object> getProperties() {
         //avoid concurrent modification:
         synchronized (properties) {
-            return new Hashtable(properties);
+            return new Hashtable<String, Object>(properties);
         }
         // There is a better way to save the context. This shouldn't
         // delegate to next, it's for backward compatibility only.
@@ -918,10 +913,10 @@ public class PropertyHelper implements GetProperty {
      *
      * @return a hashtable containing just the user properties
      */
-    public Hashtable getUserProperties() {
+    public Hashtable<String, Object> getUserProperties() {
         //avoid concurrent modification:
         synchronized (userProperties) {
-            return new Hashtable(userProperties);
+            return new Hashtable<String, Object>(userProperties);
         }
     }
 
@@ -933,10 +928,10 @@ public class PropertyHelper implements GetProperty {
      *
      * @return a hashtable containing just the inherited properties
      */
-    public Hashtable getInheritedProperties() {
+    public Hashtable<String, Object> getInheritedProperties() {
         //avoid concurrent modification:
         synchronized (inheritedProperties) {
-            return new Hashtable(inheritedProperties);
+            return new Hashtable<String, Object>(inheritedProperties);
         }
     }
 
@@ -944,7 +939,7 @@ public class PropertyHelper implements GetProperty {
      * special back door for subclasses, internal access to the hashtables
      * @return the live hashtable of all properties
      */
-    protected Hashtable getInternalProperties() {
+    protected Hashtable<String, Object> getInternalProperties() {
         return properties;
     }
 
@@ -953,7 +948,7 @@ public class PropertyHelper implements GetProperty {
      *
      * @return the live hashtable of user properties
      */
-    protected Hashtable getInternalUserProperties() {
+    protected Hashtable<String, Object> getInternalUserProperties() {
         return userProperties;
     }
 
@@ -962,7 +957,7 @@ public class PropertyHelper implements GetProperty {
      *
      * @return the live hashtable inherited properties
      */
-    protected Hashtable getInternalInheritedProperties() {
+    protected Hashtable<String, Object> getInternalInheritedProperties() {
         return inheritedProperties;
     }
 
@@ -984,7 +979,7 @@ public class PropertyHelper implements GetProperty {
     public void copyInheritedProperties(Project other) {
         //avoid concurrent modification:
         synchronized (inheritedProperties) {
-            Enumeration e = inheritedProperties.keys();
+            Enumeration<String> e = inheritedProperties.keys();
             while (e.hasMoreElements()) {
                 String arg = e.nextElement().toString();
                 if (other.getUserProperty(arg) != null) {
@@ -1014,7 +1009,7 @@ public class PropertyHelper implements GetProperty {
     public void copyUserProperties(Project other) {
         //avoid concurrent modification:
         synchronized (userProperties) {
-            Enumeration e = userProperties.keys();
+            Enumeration<String> e = userProperties.keys();
             while (e.hasMoreElements()) {
                 Object arg = e.nextElement();
                 if (inheritedProperties.containsKey(arg)) {
@@ -1035,7 +1030,7 @@ public class PropertyHelper implements GetProperty {
      * Default parsing method. It is here only to support backward compatibility
      * for the static ProjectHelper.parsePropertyString().
      */
-    static void parsePropertyStringDefault(String value, Vector fragments, Vector propertyRefs)
+    static void parsePropertyStringDefault(String value, Vector<String> fragments, Vector<String> propertyRefs)
             throws BuildException {
         int prev = 0;
         int pos;
@@ -1097,13 +1092,13 @@ public class PropertyHelper implements GetProperty {
      */
     public void add(Delegate delegate) {
         synchronized (delegates) {
-            for (Iterator iter = getDelegateInterfaces(delegate).iterator(); iter.hasNext();) {
-                Object key = iter.next();
-                List list = (List) delegates.get(key);
+            for (Class<? extends Delegate> key : getDelegateInterfaces(delegate)) {
+                List<Delegate> list = delegates.get(key);
                 if (list == null) {
-                    list = new ArrayList();
+                    list = new ArrayList<Delegate>();
                 } else {
-                    list = new ArrayList(list);
+                    //copy on write, top priority
+                    list = new ArrayList<Delegate>(list);
                     list.remove(delegate);
                 }
                 list.add(0, delegate);
@@ -1114,15 +1109,16 @@ public class PropertyHelper implements GetProperty {
 
     /**
      * Get the Collection of delegates of the specified type.
-     * 
+     *
      * @param type
      *            delegate type.
      * @return Collection.
      * @since Ant 1.8.0
      */
-    protected List getDelegates(Class type) {
-        List r = (List) delegates.get(type);
-        return r == null ? Collections.EMPTY_LIST : r;
+    protected <D extends Delegate> List<D> getDelegates(Class<D> type) {
+        @SuppressWarnings("unchecked")
+        final List<D> result = (List<D>) delegates.get(type);
+        return result == null ? Collections.<D> emptyList() : result;
     }
 
     /**
@@ -1131,14 +1127,16 @@ public class PropertyHelper implements GetProperty {
      * @return Set<Class>
      * @since Ant 1.8.0
      */
-    protected static Set getDelegateInterfaces(Delegate d) {
-        HashSet result = new HashSet();
-        Class c = d.getClass();
+    protected static Set<Class<? extends Delegate>> getDelegateInterfaces(Delegate d) {
+        final HashSet<Class<? extends Delegate>> result = new HashSet<Class<? extends Delegate>>();
+        Class<?> c = d.getClass();
         while (c != null) {
-            Class[] ifs = c.getInterfaces();
+            Class<?>[] ifs = c.getInterfaces();
             for (int i = 0; i < ifs.length; i++) {
                 if (Delegate.class.isAssignableFrom(ifs[i])) {
-                    result.add(ifs[i]);
+                    @SuppressWarnings("unchecked")
+                    final Class<? extends Delegate> delegateInterface = (Class<? extends Delegate>) ifs[i];
+                    result.add(delegateInterface);
                 }
             }
             c = c.getSuperclass();

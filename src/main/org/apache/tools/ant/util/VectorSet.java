@@ -19,7 +19,6 @@ package org.apache.tools.ant.util;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
@@ -38,8 +37,10 @@ import java.util.Vector;
  *
  * @since Ant 1.8.0
  */
-public final class VectorSet extends Vector {
-    private final HashSet set = new HashSet();
+public final class VectorSet<E> extends Vector<E> {
+    private static final long serialVersionUID = 1L;
+
+    private final HashSet<E> set = new HashSet<E>();
 
     public VectorSet() { super(); }
 
@@ -49,15 +50,15 @@ public final class VectorSet extends Vector {
         super(initialCapacity, capacityIncrement);
     }
 
-    public VectorSet(Collection c) {
+    public VectorSet(Collection<? extends E> c) {
         if (c != null) {
-            for (Iterator i = c.iterator(); i.hasNext(); ) {
-                add(i.next());
+            for (E e : c) {
+                add(e);
             }
         }
     }
 
-    public synchronized boolean add(Object o) {
+    public synchronized boolean add(E o) {
         if (!set.contains(o)) {
             doAdd(size(), o);
             return true;
@@ -69,11 +70,11 @@ public final class VectorSet extends Vector {
      * This implementation may not add the element at the given index
      * if it is already contained in the collection.
      */
-    public void add(int index, Object o) {
+    public void add(int index, E o) {
         doAdd(index, o);
     }
 
-    private synchronized void doAdd(int index, Object o) {
+    private synchronized void doAdd(int index, E o) {
         // Vector.add seems to delegate to insertElementAt, but this
         // is not documented so we may better implement it ourselves
         if (set.add(o)) {
@@ -88,14 +89,14 @@ public final class VectorSet extends Vector {
         }
     }
 
-    public synchronized void addElement(Object o) {
+    public synchronized void addElement(E o) {
         doAdd(size(), o);
     }
 
-    public synchronized boolean addAll(Collection c) {
+    public synchronized boolean addAll(Collection<? extends E> c) {
         boolean changed = false;
-        for (Iterator i = c.iterator(); i.hasNext(); ) {
-            changed |= add(i.next());
+        for (E e : c) {
+            changed |= add(e);
         }
         return changed;
     }
@@ -104,12 +105,11 @@ public final class VectorSet extends Vector {
      * This implementation may not add all elements at the given index
      * if any of them are already contained in the collection.
      */
-    public synchronized boolean addAll(int index, Collection c) {
+    public synchronized boolean addAll(int index, Collection<? extends E> c) {
         boolean changed = false;
-        for (Iterator i = c.iterator(); i.hasNext(); ) {
-            Object o = i.next();
-            if (!set.contains(o)) {
-                doAdd(index++, o);
+        for (E e : c) {
+            if (!set.contains(e)) {
+                doAdd(index++, e);
                 changed = true;
             }
         }
@@ -122,7 +122,8 @@ public final class VectorSet extends Vector {
     }
 
     public Object clone() {
-        VectorSet vs = (VectorSet) super.clone();
+        @SuppressWarnings("unchecked")
+        final VectorSet<E> vs = (VectorSet<E>) super.clone();
         vs.set.addAll(set);
         return vs;
     }
@@ -131,16 +132,16 @@ public final class VectorSet extends Vector {
         return set.contains(o);
     }
 
-    public synchronized boolean containsAll(Collection c) {
+    public synchronized boolean containsAll(Collection<?> c) {
         return set.containsAll(c);
     }
 
-    public void insertElementAt(Object o, int index) {
+    public void insertElementAt(E o, int index) {
         doAdd(index, o);
     }
 
-    public synchronized Object remove(int index) {
-        Object o = get(index);
+    public synchronized E remove(int index) {
+        E o = get(index);
         remove(o);
         return o;
     }
@@ -164,10 +165,10 @@ public final class VectorSet extends Vector {
         return false;
     }
 
-    public synchronized boolean removeAll(Collection c) {
+    public synchronized boolean removeAll(Collection<?> c) {
         boolean changed = false;
-        for (Iterator i = c.iterator(); i.hasNext(); ) {
-            changed |= remove(i.next());
+        for (Object o : c) {
+            changed |= remove(o);
         }
         return changed;
     }
@@ -191,13 +192,12 @@ public final class VectorSet extends Vector {
         }
     }
 
-    public synchronized boolean retainAll(Collection c) {
+    public synchronized boolean retainAll(Collection<?> c) {
         if (!(c instanceof Set)) {
-            c = new HashSet(c);
+            c = new HashSet<Object>(c);
         }
-        LinkedList l = new LinkedList();
-        for (Iterator i = iterator(); i.hasNext(); ) {
-            Object o = i.next();
+        LinkedList<E> l = new LinkedList<E>();
+        for (E o : this) {
             if (!c.contains(o)) {
                 l.addLast(o);
             }
@@ -209,8 +209,8 @@ public final class VectorSet extends Vector {
         return false;
     }
 
-    public synchronized Object set(int index, Object o) {
-        Object orig = get(index);
+    public synchronized E set(int index, E o) {
+        E orig = get(index);
         if (set.add(o)) {
             elementData[index] = o;
             set.remove(orig);
@@ -223,7 +223,7 @@ public final class VectorSet extends Vector {
         return orig;
     }
 
-    public void setElementAt(Object o, int index) {
+    public void setElementAt(E o, int index) {
         set(index, o);
     }
 

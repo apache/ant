@@ -33,9 +33,9 @@ import java.lang.reflect.Constructor;
  */
 public class AntTypeDefinition {
     private String      name;
-    private Class       clazz;
-    private Class       adapterClass;
-    private Class       adaptToClass;
+    private Class<?>       clazz;
+    private Class<?>       adapterClass;
+    private Class<?>       adaptToClass;
     private String      className;
     private ClassLoader classLoader;
     private boolean     restrict = false;
@@ -77,7 +77,7 @@ public class AntTypeDefinition {
      * As a side-effect may set the classloader and classname.
      * @param clazz the class of this definition.
      */
-    public void setClass(Class clazz) {
+    public void setClass(Class<?> clazz) {
         this.clazz = clazz;
         if (clazz == null) {
             return;
@@ -109,7 +109,7 @@ public class AntTypeDefinition {
      * required.
      * @param adapterClass the adapterClass.
      */
-    public void setAdapterClass(Class adapterClass) {
+    public void setAdapterClass(Class<?> adapterClass) {
         this.adapterClass = adapterClass;
     }
 
@@ -118,7 +118,7 @@ public class AntTypeDefinition {
      * @param adaptToClass the assignable class.
      */
 
-    public void setAdaptToClass(Class adaptToClass) {
+    public void setAdaptToClass(Class<?> adaptToClass) {
         this.adaptToClass = adaptToClass;
     }
 
@@ -148,9 +148,9 @@ public class AntTypeDefinition {
      * @param project the current project.
      * @return the exposed class - may return null if unable to load the class
      */
-    public Class getExposedClass(Project project) {
+    public Class<?> getExposedClass(Project project) {
         if (adaptToClass != null) {
-            Class z = getTypeClass(project);
+            Class<?> z = getTypeClass(project);
             if (z == null || adaptToClass.isAssignableFrom(z)) {
                 return z;
             }
@@ -163,7 +163,7 @@ public class AntTypeDefinition {
      * @param project the current project.
      * @return the type of the definition.
      */
-    public Class getTypeClass(Project project) {
+    public Class<?> getTypeClass(Project project) {
         try {
             return innerGetTypeClass();
         } catch (NoClassDefFoundError ncdfe) {
@@ -184,7 +184,7 @@ public class AntTypeDefinition {
      * @throws NoClassDefFoundError   if the there is an error
      *                                finding the class.
      */
-    public Class innerGetTypeClass() throws ClassNotFoundException {
+    public Class<?> innerGetTypeClass() throws ClassNotFoundException {
         if (clazz != null) {
             return clazz;
         }
@@ -212,7 +212,7 @@ public class AntTypeDefinition {
      * @return the component as an <code>Object</code>.
      */
     private Object icreate(Project project) {
-        Class c = getTypeClass(project);
+        Class<?> c = getTypeClass(project);
         if (c == null) {
             return null;
         }
@@ -269,7 +269,7 @@ public class AntTypeDefinition {
      * and invoke it.
      * @return the instantiated <code>Object</code>.
      */
-    private Object createAndSet(Project project, Class c) {
+    private Object createAndSet(Project project, Class<?> c) {
         try {
             Object o = innerCreateAndSet(c, project);
             return o;
@@ -307,12 +307,12 @@ public class AntTypeDefinition {
      * @throws IllegalAccessException cannot access the object.
      * @throws InvocationTargetException error in invocation.
      */
-    public Object innerCreateAndSet(Class newclass, Project project)
+    public <T> T innerCreateAndSet(Class<T> newclass, Project project)
             throws NoSuchMethodException,
             InstantiationException,
             IllegalAccessException,
             InvocationTargetException {
-        Constructor ctor = null;
+        Constructor<T> ctor;
         boolean noArg = false;
         // DataType can have a "no arg" constructor or take a single
         // Project argument.
@@ -325,7 +325,7 @@ public class AntTypeDefinition {
             noArg = false;
         }
         //now we instantiate
-        Object o = ctor.newInstance(
+        T o = ctor.newInstance(
             ((noArg) ? new Object[0] : new Object[] {project}));
 
         //set up project references.
@@ -382,7 +382,7 @@ public class AntTypeDefinition {
             .equals(((AntClassLoader) newLoader).getClasspath()));
     }
 
-    private String extractClassname(Class c) {
+    private String extractClassname(Class<?> c) {
         return (c == null) ? "<null>" : c.getClass().getName();
     }
 }

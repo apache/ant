@@ -24,11 +24,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
@@ -58,18 +61,12 @@ import org.apache.tools.ant.util.ProxySetup;
 public class Main implements AntMain {
 
     /**
-     * A Set of args are are handled by the launcher and should
+     * A Set of args that are handled by the launcher and should
      * not be seen by Main.
      */
-    private static final Set LAUNCH_COMMANDS = new HashSet();
-    static {
-        LAUNCH_COMMANDS.add("-lib");
-        LAUNCH_COMMANDS.add("-cp");
-        LAUNCH_COMMANDS.add("-noclasspath");
-        LAUNCH_COMMANDS.add("--noclasspath");
-        LAUNCH_COMMANDS.add("-nouserlib");
-        LAUNCH_COMMANDS.add("-main");
-    }
+    private static final Set<String> LAUNCH_COMMANDS = Collections
+            .unmodifiableSet(new HashSet<String>(Arrays.asList("-lib", "-cp", "-noclasspath",
+                    "--noclasspath", "-nouserlib", "-main")));
 
     /** The default build file name. {@value} */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";
@@ -87,16 +84,16 @@ public class Main implements AntMain {
     private static PrintStream err = System.err;
 
     /** The build targets. */
-    private Vector targets = new Vector();
+    private Vector<String> targets = new Vector<String>();
 
     /** Set of properties that can be used by tasks. */
     private Properties definedProps = new Properties();
 
     /** Names of classes to add as listeners to project. */
-    private Vector listeners = new Vector(1);
+    private Vector<String> listeners = new Vector<String>(1);
 
     /** File names of property files to load on startup. */
-    private Vector propertyFiles = new Vector(1);
+    private Vector<String> propertyFiles = new Vector<String>(1);
 
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
@@ -154,15 +151,15 @@ public class Main implements AntMain {
      * proxy flag: default is false
      */
     private boolean proxy = false;
-    
-    
+
+
     private static final GetProperty NOPROPERTIES = new GetProperty(){
         public Object getProperty(String aName) {
             // No existing property takes precedence
             return null;
         }};
-    
-    
+
+
 
 
     /**
@@ -219,7 +216,7 @@ public class Main implements AntMain {
         }
 
         if (additionalUserProperties != null) {
-            for (Enumeration e = additionalUserProperties.keys();
+            for (Enumeration<?> e = additionalUserProperties.keys();
                     e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String property = additionalUserProperties.getProperty(key);
@@ -438,9 +435,9 @@ public class Main implements AntMain {
                     }
                 } else {
                     // no search file specified: so search an existing default file
-                    Iterator it = ProjectHelperRepository.getInstance().getHelpers();
+                    Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
                     do {
-                        ProjectHelper helper = (ProjectHelper) it.next();
+                        ProjectHelper helper = it.next();
                         searchForThis = helper.getDefaultBuildFile();
                         if (msgOutputLevel >= Project.MSG_VERBOSE) {
                             System.out.println("Searching the default build file: " + searchForThis);
@@ -453,9 +450,9 @@ public class Main implements AntMain {
                 }
             } else {
                 // no build file specified: so search an existing default file
-                Iterator it = ProjectHelperRepository.getInstance().getHelpers();
+                Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
                 do {
-                    ProjectHelper helper = (ProjectHelper) it.next();
+                    ProjectHelper helper = it.next();
                     buildFile = new File(helper.getDefaultBuildFile());
                     if (msgOutputLevel >= Project.MSG_VERBOSE) {
                         System.out.println("Trying the default build file: " + buildFile);
@@ -628,11 +625,7 @@ public class Main implements AntMain {
 
     /** Load the property files specified by -propertyfile */
     private void loadPropertyFiles() {
-        for (int propertyFileIndex = 0;
-             propertyFileIndex < propertyFiles.size();
-             propertyFileIndex++) {
-            String filename
-                = (String) propertyFiles.elementAt(propertyFileIndex);
+        for (String filename : propertyFiles) {
             Properties props = new Properties();
             FileInputStream fis = null;
             try {
@@ -646,7 +639,7 @@ public class Main implements AntMain {
             }
 
             // ensure that -D properties take precedence
-            Enumeration propertyNames = props.propertyNames();
+            Enumeration<?> propertyNames = props.propertyNames();
             while (propertyNames.hasMoreElements()) {
                 String name = (String) propertyNames.nextElement();
                 if (definedProps.getProperty(name) == null) {
@@ -846,21 +839,20 @@ public class Main implements AntMain {
     }
 
     private void setProperties(final Project project) {
-        
+
         project.init();
-        
+
         // resolve properties
         PropertyHelper propertyHelper = (PropertyHelper) PropertyHelper
                 .getPropertyHelper(project);
-        HashMap props = new HashMap(definedProps);
-        
+        HashMap<Object, Object> props = new HashMap<Object, Object>(definedProps);
+
         ResolvePropertyMap resolver = new ResolvePropertyMap(project,
                 NOPROPERTIES, propertyHelper.getExpanders());
         resolver.resolveAllProperties(props, null, false);
 
         // set user-define properties
-        for (Iterator e = props.entrySet().iterator(); e.hasNext(); ) {
-            Map.Entry ent = (Map.Entry) e.next();
+        for (Entry<Object, Object> ent : props.entrySet()) {
             String arg = (String) ent.getKey();
             Object value = ent.getValue();
             project.setUserProperty(arg, String.valueOf(value));
@@ -1076,17 +1068,15 @@ public class Main implements AntMain {
      * @param targets the targets to filter.
      * @return the filtered targets.
      */
-    private static Map removeDuplicateTargets(Map targets) {
-        Map locationMap = new HashMap();
-        for (Iterator i = targets.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String name = (String) entry.getKey();
-            Target target = (Target) entry.getValue();
-            Target otherTarget =
-                (Target) locationMap.get(target.getLocation());
+    private static Map<String, Target> removeDuplicateTargets(Map<String, Target> targets) {
+        Map<Location, Target> locationMap = new HashMap<Location, Target>();
+        for (Entry<String, Target> entry : targets.entrySet()) {
+            String name = entry.getKey();
+            Target target = entry.getValue();
+            Target otherTarget = locationMap.get(target.getLocation());
             // Place this entry in the location map if
             //  a) location is not in the map
-            //  b) location is in map, but it's name is longer
+            //  b) location is in map, but its name is longer
             //     (an imported target will have a name. prefix)
             if (otherTarget == null
                 || otherTarget.getName().length() > name.length()) {
@@ -1094,9 +1084,8 @@ public class Main implements AntMain {
                     target.getLocation(), target); // Smallest name wins
             }
         }
-        Map ret = new HashMap();
-        for (Iterator i = locationMap.values().iterator(); i.hasNext();) {
-            Target target = (Target) i.next();
+        Map<String, Target> ret = new HashMap<String, Target>();
+        for (Target target : locationMap.values()) {
             ret.put(target.getName(), target);
         }
         return ret;
@@ -1115,25 +1104,21 @@ public class Main implements AntMain {
             boolean printDependencies) {
         // find the target with the longest name
         int maxLength = 0;
-        Map ptargets = removeDuplicateTargets(project.getTargets());
-        String targetName;
-        String targetDescription;
-        Target currentTarget;
+        Map<String, Target> ptargets = removeDuplicateTargets(project.getTargets());
         // split the targets in top-level and sub-targets depending
         // on the presence of a description
-        Vector topNames = new Vector();
-        Vector topDescriptions = new Vector();
-        Vector/*<Enumeration<String>>*/ topDependencies = new Vector();
-        Vector subNames = new Vector();
-        Vector/*<Enumeration<String>>*/ subDependencies = new Vector();
+        Vector<String> topNames = new Vector<String>();
+        Vector<String> topDescriptions = new Vector<String>();
+        Vector<Enumeration<String>> topDependencies = new Vector<Enumeration<String>>();
+        Vector<String> subNames = new Vector<String>();
+        Vector<Enumeration<String>> subDependencies = new Vector<Enumeration<String>>();
 
-        for (Iterator i = ptargets.values().iterator(); i.hasNext();) {
-            currentTarget = (Target) i.next();
-            targetName = currentTarget.getName();
+        for (Target currentTarget : ptargets.values()) {
+            String targetName = currentTarget.getName();
             if (targetName.equals("")) {
                 continue;
             }
-            targetDescription = currentTarget.getDescription();
+            String targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
             if (targetDescription == null) {
                 int pos = findTargetPosition(subNames, targetName);
@@ -1182,11 +1167,11 @@ public class Main implements AntMain {
      *
      * @return the correct place in the list for the given name
      */
-    private static int findTargetPosition(Vector names, String name) {
+    private static int findTargetPosition(Vector<String> names, String name) {
         final int size = names.size();
         int res = size;
         for (int i = 0; i < size && res == size; i++) {
-            if (name.compareTo((String) names.elementAt(i)) < 0) {
+            if (name.compareTo(names.elementAt(i)) < 0) {
                 res = i;
             }
         }
@@ -1216,8 +1201,8 @@ public class Main implements AntMain {
      *               position so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
-    private static void printTargets(Project project, Vector names,
-                                     Vector descriptions, Vector dependencies,
+    private static void printTargets(Project project, Vector<String> names,
+                                     Vector<String> descriptions, Vector<Enumeration<String>> dependencies,
                                      String heading,
                                      int maxlen) {
         // now, start printing the targets and their descriptions
@@ -1227,7 +1212,7 @@ public class Main implements AntMain {
         while (spaces.length() <= maxlen) {
             spaces += spaces;
         }
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder();
         msg.append(heading + lSep + lSep);
         final int size = names.size();
         for (int i = 0; i < size; i++) {
@@ -1235,12 +1220,12 @@ public class Main implements AntMain {
             msg.append(names.elementAt(i));
             if (descriptions != null) {
                 msg.append(
-                    spaces.substring(0, maxlen - ((String) names.elementAt(i)).length() + 2));
+                    spaces.substring(0, maxlen - names.elementAt(i).length() + 2));
                 msg.append(descriptions.elementAt(i));
             }
             msg.append(lSep);
             if (!dependencies.isEmpty()) {
-                Enumeration deps = (Enumeration) dependencies.elementAt(i);
+                Enumeration<String> deps = dependencies.elementAt(i);
                 if (deps.hasMoreElements()) {
                     msg.append("   depends on: ");
                     while (deps.hasMoreElements()) {
@@ -1249,7 +1234,7 @@ public class Main implements AntMain {
                             msg.append(", ");
                         }
                     }
-                    msg.append(lSep);                
+                    msg.append(lSep);
                 }
             }
         }

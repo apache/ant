@@ -62,5 +62,5 @@ public interface TypeAdapter {
      *
      * @param proxyClass the class to be checked.
      */
-    void checkProxyClass(Class proxyClass);
+    void checkProxyClass(Class<?> proxyClass);
 }

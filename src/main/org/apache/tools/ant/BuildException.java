@@ -54,8 +54,7 @@ public class BuildException extends RuntimeException {
      *              May be <code>null</code>.
      */
     public BuildException(String message, Throwable cause) {
-        super(message);
-        initCause(cause);
+        super(message, cause);
     }
 
     /**
