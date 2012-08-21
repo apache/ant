@@ -49,7 +49,7 @@ public class FileResourceTest extends TestCase {
         f.setName("foo/bar");
         assertEquals(new File(root, "foo/bar"), f.getFile());
         assertEquals(root, f.getBaseDir());
-        assertEquals("foo/bar", f.getName().replace('/', File.separatorChar));
+        assertEquals("foo/bar", f.getName().replace(File.separatorChar, '/'));
     }
 
     public void testFile() {
@@ -70,7 +70,7 @@ public class FileResourceTest extends TestCase {
         FileResource f = new FileResource(root, "foo/bar");
         assertEquals(new File(root, "foo/bar"), f.getFile());
         assertEquals(root, f.getBaseDir());
-        assertEquals("foo/bar", f.getName().replace('/', File.separatorChar));
+        assertEquals("foo/bar", f.getName().replace(File.separatorChar, '/'));
     }
 
     public void testProjectAndFilename() {
@@ -86,7 +86,7 @@ public class FileResourceTest extends TestCase {
         FileResource f = new FileResource(root, "foo");
         FileResource relative = f.getResource("bar").as(FileResource.class);
         assertEquals(new File(root, "foo/bar"), relative.getFile());
-        assertEquals("foo/bar", relative.getName().replace('/', File.separatorChar));
+        assertEquals("foo/bar", relative.getName().replace(File.separatorChar, '/'));
         assertEquals(root, relative.getBaseDir());
     }
 
